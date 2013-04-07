@@ -1,12 +1,13 @@
 {
   "name": "Enhanced Steam",
-  "version": "2.8",
+  "version": "2.9",
   "description": "Enhances the Steam Experience",
   "icons": { "128": "enhancedsteam.png" },
   "manifest_version": 2,
   "options_page": "options.html",
   "permissions": [
-    "storage",	
+    "storage",
+    "tabs",
 	"http://www.enhancedsteam.com/"
   ],
   "web_accessible_resources": ["game_area_warning.png", "line_chart.png", "metacritic_bg.png", "enhancedsteam.css"],
@@ -16,5 +17,14 @@
       "js": ["jQuery.min.js", "enhancedsteam.js"],
 	  "css": ["enhancedsteam.css"]
     }
-  ]
+  ],
+  "background": { "scripts": ["background.js"] },
+  "page_action": {
+    "default_icon": {
+      "19": "enhancedsteam.png",
+      "38": "enhancedsteam.png"
+    },
+    "default_title": "Enhanced Steam",
+    "default_popup": "popup.html"
+  }
 }

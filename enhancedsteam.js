@@ -645,33 +645,59 @@ if (document.URL.indexOf("steamcommunity.com/groups/") >= 0) {
 }
 
 
-if (document.URL.indexOf("/wishlist") >= 0) {
-	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
-		var appid = node.href;
-		var appid2 = get_appid(appid + "/");
-		var htmlstring;
-		
-		// get page, find cart string
-		get_http(appid + '/', function (txt) {
-			htmlstring = txt.substring(txt.indexOf('<div  class="game_area_purchase_game">') + 40, txt.indexOf('<input type="hidden" name="subid" value="') + 64);
-			if (htmlstring.length > 500) { htmlstring=""; }
-			if (htmlstring.indexOf("4.01 Transitional//EN") > 0) { htmlstring=""; }
-			if (htmlstring.substring(htmlstring.length - 1,htmlstring.length) == "<") { htmlstring = htmlstring.substring(0,htmlstring.length - 1); }
-			if (htmlstring.substring(htmlstring.length - 2,htmlstring.length) == "<d") { htmlstring = htmlstring.substring(0,htmlstring.length - 2); }
-			var subid = htmlstring.substring(htmlstring.indexOf('name="subid" value="') + 20, htmlstring.length - 18);
-			if (subid.substring(subid.length - 1,subid.length) == "\"") { subid = subid.substring(0,subid.length - 1); }
-			if (subid.substring(subid.length - 2,subid.length) == "\">") { subid = subid.substring(0,subid.length - 2); }
-			if (subid.substring(subid.length - 3,subid.length) == "\"> ") { subid = subid.substring(0,subid.length - 3); }
-			
-			if (subid == "Transitional/") { subid=0; }
-			
-			console.log(subid);
-			
-			node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
-		});
-	});
-}
+// User profile pages
+if (document.URL.indexOf("steamcommunity.com/id/") >= 0 || document.URL.indexOf("steamcommunity.com/profiles/") >= 0) {
+	// Changes the profile page
+	if (document.getElementById("profileBlock")) {
+		var steamID = document.getElementsByName("abuseID")[0].value;
 
+		var htmlstr = '<hr>';
+		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '">sAPI</a></div>';
+		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '">SteamRep</a></div>';
+		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '">backpack.tf</a></div>';
+		
+		document.getElementById("rightActionBlock").insertAdjacentHTML('beforeend', htmlstr);
+	}
+
+	// Changes user's wishlist
+	else if (document.URL.indexOf("/wishlist") >= 0) {
+		xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
+			var appid = node.href;
+			var appid2 = get_appid(appid + "/");
+			var htmlstring;
+			
+			// get page, find cart string
+			get_http(appid + '/', function (txt) {
+				htmlstring = txt.substring(txt.indexOf('<div  class="game_area_purchase_game">') + 40, txt.indexOf('<input type="hidden" name="subid" value="') + 64);
+				if (htmlstring.length > 500) { htmlstring=""; }
+				if (htmlstring.indexOf("4.01 Transitional//EN") > 0) { htmlstring=""; }
+				if (htmlstring.substring(htmlstring.length - 1,htmlstring.length) == "<") { htmlstring = htmlstring.substring(0,htmlstring.length - 1); }
+				if (htmlstring.substring(htmlstring.length - 2,htmlstring.length) == "<d") { htmlstring = htmlstring.substring(0,htmlstring.length - 2); }
+				var subid = htmlstring.substring(htmlstring.indexOf('name="subid" value="') + 20, htmlstring.length - 18);
+				if (subid.substring(subid.length - 1,subid.length) == "\"") { subid = subid.substring(0,subid.length - 1); }
+				if (subid.substring(subid.length - 2,subid.length) == "\">") { subid = subid.substring(0,subid.length - 2); }
+				if (subid.substring(subid.length - 3,subid.length) == "\"> ") { subid = subid.substring(0,subid.length - 3); }
+				
+				if (subid == "Transitional/") { subid=0; }
+				
+				console.log(subid);
+				
+				node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
+			});
+		});
+	}
+
+	// Changes user's edit page
+	else if (document.URL.indexOf("/edit") >= 0) {
+		htmlstr = '<div class="tab" id="returnTabOff">';
+    htmlstr += '<div class="tabOffL"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpLeftDark.gif" width="2" height="2" border="0"></div>';
+    htmlstr += '<div class="tabOff"><a href="http://steamcommunity.com/my/">Return to profile</a></div>';
+    htmlstr += '<div class="tabOffR"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpRightDark.gif" width="2" height="2" border="0"></div>';
+    htmlstr += '</div>';
+
+		document.getElementById("tabs").insertAdjacentHTML('beforeend', htmlstr);
+	}
+}
 
 
 // Changes Steam Greenlight pages 
