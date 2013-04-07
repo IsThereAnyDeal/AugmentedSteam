@@ -1,0 +1,132 @@
+#store_nav_area {
+	position: inline;
+	left: 0px;
+	right: 0px;
+	top: 24px;
+	height: 49px;
+}
+
+#store_nav_area .store_nav_bg {
+	height: 35px;
+	padding: 7px 0px;
+	background-image: url( 'http://cdn.store.steampowered.com/public/images/v5/store_header_gradients.png' );
+	background-repeat: repeat-x;
+	background-position: 0px -115px;
+}
+
+.store_nav {
+	height: 35px;
+}
+
+.store_nav .tab {
+	float: left;
+
+	
+	border-right: 1px solid #000000;
+	
+	cursor: pointer;
+}
+
+.store_nav .tab {
+	padding: 1px;
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer;
+
+	background: #74706f; /* Old browsers */
+	background: -moz-linear-gradient(top,  #74706f 0%, #6e6a69 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#74706f), color-stop(100%,#6e6a69)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #74706f 0%,#6e6a69 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #74706f 0%,#6e6a69 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #74706f 0%,#6e6a69 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #74706f 0%,#6e6a69 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#74706f', endColorstr='#6e6a69',GradientType=0 ); /* IE6-9 */
+}
+	.store_nav .tab > span {
+
+		font-size: 11px;
+		color: #ffffff;
+		text-transform: uppercase;
+		line-height: 33px;
+		padding: 0px 15px;
+
+		display: block;
+		background: #5a5654; /* Old browsers */
+		background: -moz-linear-gradient(top,  #5a5654 0%, #6e6a69 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5a5654), color-stop(100%,#6e6a69)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top,  #5a5654 0%,#6e6a69 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top,  #5a5654 0%,#6e6a69 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top,  #5a5654 0%,#6e6a69 100%); /* IE10+ */
+		background: linear-gradient(to bottom,  #5a5654 0%,#6e6a69 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5a5654', endColorstr='#6e6a69',GradientType=0 ); /* IE6-9 */
+
+	}
+
+	.store_nav .tab:hover > span, .store_nav .tab:hover, .store_nav .tab.focus > span, .store_nav .tab.focus {
+		background: #82807c;
+		filter: none;
+	}
+
+.store_nav .tab.active, .store_nav .tab.active:hover {
+	background: #88b5dc; /* Old browsers */
+	background: -moz-linear-gradient(top,  #88b5dc 0%, #88b5dc 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#88b5dc), color-stop(100%,#88b5dc)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #88b5dc 0%,#88b5dc 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #88b5dc 0%,#88b5dc 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #88b5dc 0%,#88b5dc 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #88b5dc 0%,#88b5dc 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#88b5dc', endColorstr='#88b5dc',GradientType=0 ); /* IE6-9 */
+}
+
+	.store_nav .tab.active > span, 	.store_nav .tab.active:hover > span {
+		background: #4f708f; /* Old browsers */
+		background: -moz-linear-gradient(top,  #4f708f 0%, #88b5dc 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4f708f), color-stop(100%,#88b5dc)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top,  #4f708f 0%,#88b5dc 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top,  #4f708f 0%,#88b5dc 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top,  #4f708f 0%,#88b5dc 100%); /* IE10+ */
+		background: linear-gradient(to bottom,  #4f708f 0%,#88b5dc 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f708f', endColorstr='#88b5dc',GradientType=0 ); /* IE6-9 */
+
+	}
+
+	.store_nav .tab > span.pulldown {
+		padding-right: 7px;
+	}
+
+	.store_nav .tab > span.pulldown > span {
+		width: 19px;
+		height: 12px;
+		padding: 0;
+		display: inline-block;
+		background-image: url( 'http://cdn.store.steampowered.com/public/images/v5/btn_arrow_down_padded.png' );
+		background-position: center;
+		background-repeat: no-repeat;
+		cursor: pointer;
+		vertical-align: text-bottom;
+	}
+	
+.searchbox {
+
+	background-image: url( 'http://cdn.store.steampowered.com/public/images/v5/store_header_search.png?v=2' );
+	
+	color: #a6a5a2;
+	width: 253px;
+	height: 27px;
+	position: inline;
+	z-index: 250;
+}
+
+.searchbox input {
+	border: none;
+	background-color: #82807c;
+	color: #cdcac1;
+	margin-top: 2px;
+	margin-left: 2px;
+	width: 208px;
+	outline: none;
+}
+
+.searchbox input.default {
+	font-style: italic;
+}

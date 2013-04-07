@@ -1,0 +1,175 @@
+<html>
+<head><title>Enhanced Steam Options</title></head>
+<script src="jQuery.min.js"></script>
+<script src="options.js"></script>
+<link href="options.css" rel="stylesheet" type="text/css" />
+
+<body>
+<center>
+<div id="contentwrapper" style="height:800px;width:800px;">
+	<div id="heading">
+		<a href="#" id="nav_store">Store</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_community">Community</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_news">News</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_about">About</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_donate">Donate</a>
+	</div>
+	
+	<div id="maincontent_store">
+		<table>
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Color for Owned Games:</font>
+				</td>
+				<td>
+					<input type="color" id="bgcolor" class="colorbutton">
+				</td>
+				<td>
+					<button id="bgdefault" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Color for Wishlist Games:</font>
+				</td>
+				<td>
+					<input type="color" id="wlcolor" class="colorbutton">
+				</td>	
+				<td>	
+					<button id="wldefault" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Show 3rd Party DRM Warnings:</font>
+				</td>
+				<td>
+					<select id="showdrm" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Show Price History Information:</font>
+				</td>
+				<td>
+					<select id="showlowestprice" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Show Metacritic User Scores:</font>
+				</td>
+				<td>
+					<select id="showmcus" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Show WSGF (Widescreen) Info:</font>
+				</td>
+				<td>
+					<select id="showwsgf" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="maincontent_community" style="display: none">
+		<table>
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Show "Total Spent" on Account Page:</font>
+				</td>
+				<td>
+					<select id="showtotal" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Show Events on Group Overview:</font>
+				</td>
+				<td>
+					<select id="showgroupevents" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td height=30>
+					<font color="8bc53f">Replace Steam Greenlight Banner:</font>
+				</td>
+				<td>
+					<select id="showgreenlightbanner" class="dropdown">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option> 
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="maincontent_news" style="display: none">
+		Changelog:
+	</div>
+	
+	<div id="maincontent_about" style="display: none">
+		About <a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam</a>:<p>
+		Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>
+		Features include:
+		<ul>
+			<li>Highlighting games you already own</li>
+			<li>Highlighting games on your wishlist</li>
+			<li>Correctly calculating bundle discounts based on games you already own</li>
+			<li>Showing you how much money you've spent on Steam for the lifetime of your account</li>
+			<li>Highlighting DLC you own on a game page</li>
+			<li>Fixing "No Image Available" game icons on your wishlist for any game or DLC</li>
+			<li>Pointing out titles with 3rd party DRM</li>
+		</ul>
+		<p>
+		If you find this Extension useful, please consider donating.
+	</div>
+	
+	<div id="maincontent_donate" style="display: none">
+		Donate:<p>
+		You can donate via Paypal here:
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+		<input type="hidden" name="cmd" value="_s-xclick">
+		<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+		">
+		<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+		<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		</form>
+		Additionally, you can <a href="http://steamcommunity.com/id/jshackles/wishlist" style="color: #8bc53f;">Browse My Steam Wishlist</a> and send me a game!<br><font size=2>(Games can be sent by email to "jshackles@gmail.com")</font><p>
+		Thanks!<br>
+		-jshackles<br>
+		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">www.EnhancedSteam.com</a>
+	</div>
+
+	<div id="save_space"><button class="btn" id="save">Save</button></div>	
+	
+	<div id="footer">		
+		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a> by jshackles
+	</div>
+</div>
+
+</body>
+</html>
