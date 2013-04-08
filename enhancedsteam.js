@@ -610,7 +610,7 @@ storage.get(function(settings) {
 var supernav_content = document.querySelectorAll("#supernav .supernav_content");
 document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
 	'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
-	'<a class="submenuitem" href="http://forums.steampowered.com/forums/">SPUF</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
+	'<a class="submenuitem" href="http://forums.steampowered.com/forums/">Forums</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
 );
 
 
@@ -700,10 +700,10 @@ if (document.URL.indexOf("://steamcommunity.com/id/") >= 0 || document.URL.index
 	// Changes user's edit page
 	else if (document.URL.indexOf("/edit") >= 0) {
 		htmlstr = '<div class="tab" id="returnTabOff">';
-    htmlstr += '<div class="tabOffL"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpLeftDark.gif" width="2" height="2" border="0"></div>';
-    htmlstr += '<div class="tabOff"><a href="http://steamcommunity.com/my/">Return to profile</a></div>';
-    htmlstr += '<div class="tabOffR"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpRightDark.gif" width="2" height="2" border="0"></div>';
-    htmlstr += '</div>';
+		htmlstr += '<div class="tabOffL"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpLeftDark.gif" width="2" height="2" border="0"></div>';
+		htmlstr += '<div class="tabOff"><a href="http://steamcommunity.com/my/">Return to profile</a></div>';
+		htmlstr += '<div class="tabOffR"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpRightDark.gif" width="2" height="2" border="0"></div>';
+		htmlstr += '</div>';
 
 		document.getElementById("tabs").insertAdjacentHTML('beforeend', htmlstr);
 	}
