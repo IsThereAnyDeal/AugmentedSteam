@@ -607,7 +607,8 @@ storage.get(function(settings) {
 
 
 // Adds a link to SPUF to the top menu
-document.querySelectorAll("#supernav .supernav_content")[1].innerHTML = document.querySelectorAll("#supernav .supernav_content")[1].innerHTML.replace(
+var supernav_content = document.querySelectorAll("#supernav .supernav_content");
+document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
 	'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
 	'<a class="submenuitem" href="http://forums.steampowered.com/forums/">SPUF</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
 );
