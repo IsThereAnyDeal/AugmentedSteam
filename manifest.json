@@ -7,8 +7,7 @@
   "options_page": "options.html",
   "permissions": [
     "storage",
-    "tabs",
-	"http://www.enhancedsteam.com/"
+    "http://www.enhancedsteam.com/"
   ],
   "web_accessible_resources": ["game_area_warning.png", "line_chart.png", "metacritic_bg.png", "enhancedsteam.css"],
   "content_scripts": [
@@ -17,14 +16,5 @@
       "js": ["jQuery.min.js", "enhancedsteam.js"],
 	  "css": ["enhancedsteam.css"]
     }
-  ],
-  "background": { "scripts": ["background.js"] },
-  "page_action": {
-    "default_icon": {
-      "19": "enhancedsteam.png",
-      "38": "enhancedsteam.png"
-    },
-    "default_title": "Enhanced Steam",
-    "default_popup": "popup.html"
-  }
+  ]
 }

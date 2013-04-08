@@ -606,6 +606,13 @@ storage.get(function(settings) {
 });
 
 
+// Adds a link to SPUF to the top menu
+document.querySelectorAll("#supernav .supernav_content")[1].innerHTML = document.querySelectorAll("#supernav .supernav_content")[1].innerHTML.replace(
+	'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
+	'<a class="submenuitem" href="http://forums.steampowered.com/forums/">SPUF</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
+);
+
+
 // Changes Steam Community Groups pages
 if (document.URL.indexOf("steamcommunity.com/groups/") >= 0) {
 
@@ -646,13 +653,15 @@ if (document.URL.indexOf("steamcommunity.com/groups/") >= 0) {
 
 
 // User profile pages
-if (document.URL.indexOf("steamcommunity.com/id/") >= 0 || document.URL.indexOf("steamcommunity.com/profiles/") >= 0) {
+if (document.URL.indexOf("://steamcommunity.com/id/") >= 0 || document.URL.indexOf("://steamcommunity.com/profiles/") >= 0) {
 	// Changes the profile page
 	if (document.getElementById("profileBlock")) {
 		var steamID = document.getElementsByName("abuseID")[0].value;
 
 		var htmlstr = '<hr>';
 		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '">sAPI</a></div>';
+		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '">SteamGifts</a></div>';
+		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '">SteamTrades</a></div>';
 		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '">SteamRep</a></div>';
 		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '">backpack.tf</a></div>';
 		
