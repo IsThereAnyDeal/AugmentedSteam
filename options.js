@@ -1,28 +1,45 @@
-// Save this script as `options.js`
 
 // Saves options to localStorage.
 function save_options() {
-	var select = document.getElementById("showtotal");
-	var bgcolortext = document.getElementById("bgcolor");
-	var wlcolortext = document.getElementById("wlcolor");
-	var selectdrm = document.getElementById("showdrm");
-	var selectlowestprice = document.getElementById("showlowestprice");
-	var selectgroupevents = document.getElementById("showgroupevents");
-	var selectgreenlightbanner = document.getElementById("showgreenlightbanner");
-	var selectmcus = document.getElementById("showmcus");
-	var selectwsgf = document.getElementById("showwsgf");
 	
-	var showtotal = select.children[select.selectedIndex].value;
-	var showdrm = selectdrm.children[selectdrm.selectedIndex].value;
-	var showlowestprice = selectlowestprice.children[selectlowestprice.selectedIndex].value;	
-	var showgroupevents = selectgroupevents.children[selectgroupevents.selectedIndex].value;
-	var showgreenlightbanner = selectgreenlightbanner.children[selectgreenlightbanner.selectedIndex].value;	
-	var bgcolor = bgcolortext.value;
-	var wlcolor = wlcolortext.value;
-	var showmcus = selectmcus.children[selectmcus.selectedIndex].value;
-	var showwsgf = selectwsgf.children[selectwsgf.selectedIndex].value;
+	// Store Options
+	bgcolor = $("#bgcolor").val();
+	wlcolor = $("#wlcolor").val();	
+	showdrm = $("#showdrm").val();
+	showlowestprice = $("#showlowestprice").val();	
+	showmcus = $("#showmcus").val();
+	showwsgf = $("#showwsgf").val();
+	
+	// Community Options
+	showtotal = $("#showtotal").val();
+	showgroupevents = $("#showgroupevents").val();
+	showgreenlightbanner = $("#showgreenlightbanner").val();
+	
+	// Profile Link Options
+	profile_steamgifts = $("#profile_steamgifts").prop('checked');
+	profile_steamtrades = $("#profile_steamtrades").prop('checked');
+	profile_steamrep = $("#profile_steamrep").prop('checked');	
+	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
+	profile_sapi = $("#profile_sapi").prop('checked');
+	profile_backpacktf = $("#profile_backpacktf").prop('checked');	
 		
-	chrome.storage.sync.set({'showtotal': showtotal, 'showmcus': showmcus, 'showwsgf': showwsgf, 'showdrm': showdrm, 'showlowestprice': showlowestprice, 'showgroupevents': showgroupevents, 'showgreenlightbanner': showgreenlightbanner, 'bgcolor': bgcolor, 'wlcolor': wlcolor}, function() {
+	chrome.storage.sync.set({
+		'showtotal': showtotal,
+		'showmcus': showmcus,
+		'showwsgf': showwsgf,
+		'showdrm': showdrm,
+		'showlowestprice': showlowestprice,
+		'showgroupevents': showgroupevents,
+		'showgreenlightbanner': showgreenlightbanner,
+		'bgcolor': bgcolor,
+		'wlcolor': wlcolor,
+		'profile_steamgifts': profile_steamgifts,
+		'profile_steamtrades': profile_steamtrades,
+		'profile_steamrep': profile_steamrep,
+		'profile_wastedonsteam': profile_wastedonsteam,
+		'profile_sapi': profile_sapi,
+		'profile_backpacktf': profile_backpacktf		
+	}, function() {
 		// Notify that we saved.
 		var status = document.getElementById("save_space");
 		status.innerHTML = "<button class='btn' id='save'>Saved.</button>";
@@ -121,148 +138,44 @@ jQuery.get('changelog.txt', function(data) {
 // Restores select box state to saved value from SyncStorage.
 function restore_options() {
 	chrome.storage.sync.get(function(settings) {
-			
-		showtotal = settings['showtotal'];
-		showdrm = settings['showdrm'];
-		showlowestprice = settings['showlowestprice'];		
-		showgroupevents = settings['showgroupevents'];
-		showgreenlightbanner = settings['showgreenlightbanner'];
-		bgcolor = settings['bgcolor'];
-		wlcolor = settings['wlcolor'];
-		showmcus = settings['showmcus'];
-		showwsgf = settings['showwsgf'];
 		
-		if (settings.showtotal === undefined) {
-			showtotal = "Yes";
-			chrome.storage.sync.set({'showtotal': showtotal}, function() {
-				console.log("set showtotal to default.");
-			});
-		}
+		// Load default values for settings if they do not exist (and sync them to Google)
+		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	chrome.storage.sync.set({'bgcolor': settings.bgcolor});	}
+		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	chrome.storage.sync.set({'wlcolor': settings.wlcolor}); }
+		if (settings.showtotal === undefined) {	settings.showtotal = "Yes";	chrome.storage.sync.set({'showtotal': settings.showtotal}); }		
+		if (settings.showmcus === undefined) { settings.showmcus = "Yes"; chrome.storage.sync.set({'showmcus': settings.showmcus}); }		
+		if (settings.showwsgf === undefined) { settings.showwsgf = "Yes"; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
+		if (settings.showdrm === undefined) { settings.showdrm = "Yes";	chrome.storage.sync.set({'showdrm': settings.showdrm}); }
+		if (settings.showlowestprice === undefined) { settings.showlowestprice = "Yes";	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }		
+		if (settings.showgroupevents === undefined) { settings.showgroupevents = "Yes";	chrome.storage.sync.set({'showgroupevents': settings.showgroupevents});	}		
+		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = "No"; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }	
+		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
+		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
+		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
+		if (settings.profile_wastedonsteam === undefined) { settings.profile_wastedonsteam = true; chrome.storage.sync.set({'profile_wastedonsteam': settings.profile_wastedonsteam}); }
+		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
+		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		
-		if (settings.showmcus === undefined) {
-			showmcus = "Yes";
-			chrome.storage.sync.set({'showmcus': showmcus}, function() {
-				console.log("set showmcus to default.");
-			});
-		}
+		// Load Store Options
+		$("#bgcolor").attr('value', settings.bgcolor);
+		$("#wlcolor").attr('value', settings.wlcolor);
+		$("#showdrm").attr('value', settings.showdrm);
+		$("#showmcus").attr('value', settings.showmcus);
+		$("#showwsgf").attr('value', settings.showwsgf);
+		$("#showlowestprice").attr('value', settings.showlowestprice);
+				
+		// Load Community Options
+		$("#showtotal").attr('value', settings.showtotal);
+		$("#showgroupevents").attr('value', settings.showgroupevents);
+		$("#showgreenlightbanner").attr('value', settings.showgreenlightbanner);
 		
-		if (settings.showwsgf === undefined) {
-			showwsgf = "Yes";
-			chrome.storage.sync.set({'showwsgf': showwsgf}, function() {
-				console.log("set showwsgf to default.");
-			});
-		}
-		
-		if (settings.showdrm === undefined) {
-			showdrm = "Yes";
-			chrome.storage.sync.set({'showdrm': showdrm}, function() {
-				console.log("set showdrm to default.");
-			});
-		}
-		
-		if (settings.showlowestprice === undefined) {
-			showlowestprice = "Yes";
-			chrome.storage.sync.set({'showlowestprice': showlowestprice}, function() {
-				console.log("set showlowestprice to default.");
-			});
-		}
-		
-		if (settings.showgroupevents === undefined) {
-			showgroupevents = "Yes";
-			chrome.storage.sync.set({'showgroupevents': showgroupevents}, function() {
-				console.log("set showgroupevents to default.");
-			});
-		}
-		
-		if (settings.showgreenlightbanner === undefined) {
-			showgreenlightbanner = "No";
-			chrome.storage.sync.set({'showgreenlightbanner': showgreenlightbanner}, function() {
-				console.log("set showgreenlightbanner to default.");
-			});
-		}
-					
-		if (settings.bgcolor === undefined) {
-			bgcolor = "#5c7836";
-			chrome.storage.sync.set({'bgcolor': bgcolor}, function() {
-				console.log("set bgcolor to default.");
-			});
-		}
-		
-		if (wlcolor === undefined) {
-			wlcolor = "#496e93";
-			chrome.storage.sync.set({'wlcolor': wlcolor}, function() {
-				console.log("set wlcolor to default.");
-			});
-		}
-		
-		var bgtext = document.getElementById("bgcolor");
-		bgtext.value = bgcolor;
-		
-		var wltext = document.getElementById("wlcolor");
-		wltext.value = wlcolor;
-		
-		var selectdrm = document.getElementById("showdrm");
-		for (var i = 0; i < selectdrm.children.length; i++) {
-			var child = selectdrm.children[i];
-			if (child.value == showdrm) {
-				child.selected = "true";
-			break;
-			}
-		}
-		
-		var selectmcus = document.getElementById("showmcus");
-		for (var i = 0; i < selectmcus.children.length; i++) {
-			var child = selectmcus.children[i];
-			if (child.value == showmcus) {
-				child.selected = "true";
-			break;
-			}
-		}
-		
-		var selectwsgf = document.getElementById("showwsgf");
-		for (var i = 0; i < selectwsgf.children.length; i++) {
-			var child = selectwsgf.children[i];
-			if (child.value == showwsgf) {
-				child.selected = "true";
-			break;
-			}
-		}
-		
-		var selectlowestprice = document.getElementById("showlowestprice");
-		for (var i = 0; i < selectlowestprice.children.length; i++) {
-			var child = selectlowestprice.children[i];
-			if (child.value == showlowestprice) {
-				child.selected = "true";
-			break;
-			}
-		}
-		
-		var selectgroupevents = document.getElementById("showgroupevents");
-		for (var i = 0; i < selectgroupevents.children.length; i++) {
-			var child = selectgroupevents.children[i];
-			if (child.value == showgroupevents) {
-				child.selected = "true";
-			break;
-			}
-		}
-		
-		var selectgreenlightbanner = document.getElementById("showgreenlightbanner");
-		for (var i = 0; i < selectgreenlightbanner.children.length; i++) {
-			var child = selectgreenlightbanner.children[i];
-			if (child.value == showgreenlightbanner) {
-				child.selected = "true";
-			break;
-			}
-		}
-	
-		var select = document.getElementById("showtotal");
-		for (var i = 0; i < select.children.length; i++) {
-			var child = select.children[i];
-			if (child.value == showtotal) {
-				child.selected = "true";
-			break;
-			}
-		}
+		// Load Profile Link Options
+		$("#profile_steamgifts").attr('checked', settings.profile_steamgifts);
+		$("#profile_steamtrades").attr('checked', settings.profile_steamtrades);
+		$("#profile_steamrep").attr('checked', settings.profile_steamrep);
+		$("#profile_wastedonsteam").attr('checked', settings.profile_wastedonsteam);
+		$("#profile_sapi").attr('checked', settings.profile_sapi);
+		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);	
 	});
 }
 
@@ -276,16 +189,6 @@ function load_defaultbgcolor() {
 function load_defaultwlcolor() {
 	var wltext = document.getElementById("wlcolor");
 	wltext.value = "#496e93";
-}
-
-function reset () {
-	chrome.storage.sync.clear;
-	chrome.storage.sync.clear(function() {
-		// Notify that we saved.
-		var status = document.getElementById("status");
-		status.innerHTML = "Options Cleared.";
-		setTimeout(function() {status.innerHTML = "";}, 750);
-	});  
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
