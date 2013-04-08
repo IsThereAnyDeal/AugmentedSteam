@@ -2,20 +2,24 @@
   "name": "Enhanced Steam",
   "version": "2.8",
   "description": "Enhances the Steam Experience",
-  "icons": { "128": "enhancedsteam.png" },
+  "icons": { "128": "img/enhancedsteam.png" },
   "manifest_version": 2,
   "options_page": "options.html",
   "permissions": [
     "storage",
     "http://www.enhancedsteam.com/"
   ],
-  "web_accessible_resources": ["game_area_warning.png", "line_chart.png", "metacritic_bg.png", "enhancedsteam.css"],
+  "web_accessible_resources": [
+    "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png",
+    "img/ico/steamgifts.ico", "img/ico/steamtrades.ico", "img/ico/steamrep.ico", "img/ico/wastedonsteam.ico", "img/ico/sapi.ico", "img/ico/backpacktf.ico",
+    "enhancedsteam.css"
+  ],
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [
     {
       "matches": ["http://store.steampowered.com/*", "https://store.steampowered.com/*", "http://steamcommunity.com/*"],
       "js": ["jQuery.min.js", "enhancedsteam.js"],
-	  "css": ["enhancedsteam.css"]
+      "css": ["enhancedsteam.css"]
     }
   ]  
 }

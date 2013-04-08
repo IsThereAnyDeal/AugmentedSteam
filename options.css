@@ -6,7 +6,7 @@ body {
 
 
 #contentwrapper {
-	background-image: url("bg-content.png");
+	background-image: url("img/bg-content.png");
 	background-repeat: no-repeat;
 	height=800px;
 	text-align:center;
@@ -80,7 +80,7 @@ body {
 
 .btn {
 	
-	background-image: url( btn_gradient.png );
+	background-image: url( img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
 	
@@ -98,7 +98,7 @@ body {
 }
 
 .colorbutton {
-	background-image: url( btn_gradient.png );
+	background-image: url( img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
 		

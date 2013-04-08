@@ -303,7 +303,7 @@ storage.get(function(settings) {
 	if (showlowestprice == "Yes") {
 		if (localappid !== null) {
 			var sgsurl = "http://www.steamgamesales.com/app/" + localappid + "/";
-			lowest_price = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("line_chart.png") + "'></div><a href='" + sgsurl + "' target='_blank'>Click here to check pricing history</a>";
+			lowest_price = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><a href='" + sgsurl + "' target='_blank'>Click here to check pricing history</a>";
 
 			var lowestpricetext = document.getElementById('game_area_purchase'); 
 			lowestpricetext.insertAdjacentHTML('afterbegin', lowest_price);			
@@ -558,49 +558,49 @@ storage.get(function(settings) {
 
 		if (gfwl) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Games for Windows Live)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Games for Windows Live)</div>');
 			otherdrm = false;
 		}
 
 		if (uplay) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Ubisoft Uplay)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Ubisoft Uplay)</div>');
 			otherdrm = false;
 		}
 
 		if (securom) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (SecuROM)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (SecuROM)</div>');
 			otherdrm = false;
 		}
 
 		if (tages) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Tages)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Tages)</div>');
 			otherdrm = false;
 		}
 
 		if (stardock) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Stardock Account Required)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Stardock Account Required)</div>');
 			otherdrm = false;
 		}
 
 		if (rockstar) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Rockstar Social Club)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Rockstar Social Club)</div>');
 			otherdrm = false;
 		}
 
 		if (kalypso) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Kalypso Launcher)</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM (Kalypso Launcher)</div>');
 			otherdrm = false;
 		}
 
 		if (otherdrm) {
 			var drm = document.getElementById('game_area_purchase'); 
-			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM</div>');
+			drm.insertAdjacentHTML('beforebegin', '<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">Warning: This title uses 3rd party DRM</div>');
 		}
 	}
 });
@@ -660,12 +660,12 @@ if (document.URL.indexOf("://steamcommunity.com/id/") >= 0 || document.URL.index
 		var steamID = document.getElementsByName("abuseID")[0].value;
 
 		var htmlstr = '<hr>';
-		htmlstr += '<div class="actionItemIcon"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><img src="http://www.steamgifts.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank">SteamGifts</a></div>';
-		htmlstr += '<div class="actionItemIcon"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><img src="http://www.steamtrades.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank">SteamTrades</a></div>';
-		htmlstr += '<div class="actionItemIcon"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><img src="http://www.steamrep.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '" target="_blank">SteamRep</a></div>';
-		htmlstr += '<div class="actionItemIcon"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><img src="http://wastedonsteam.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://wastedonsteam.com/id/' + steamID + '" target="_blank">Wasted On Steam</a></div>';
-		htmlstr += '<div class="actionItemIcon"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><img src="http://www.techieanalyst.net/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank">sAPI</a></div>';
-		htmlstr += '<div class="actionItemIcon"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><img src="http://backpack.tf/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '" target="_blank">backpack.tf</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamgifts.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank">SteamGifts</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamtrades.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank">SteamTrades</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamrep.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '" target="_blank">SteamRep</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/wastedonsteam.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://wastedonsteam.com/id/' + steamID + '" target="_blank">Wasted On Steam</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/sapi.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank">sAPI</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/backpacktf.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '" target="_blank">backpack.tf</a></div>';
 		
 		document.getElementById("rightActionBlock").insertAdjacentHTML('beforeend', htmlstr);
 	}
@@ -784,7 +784,7 @@ storage.get(function(settings) {
 			get_http("http://www.enhancedsteam.com/gamedata/metacritic.php?mcurl=" + meta_real_link, function (txt) {
 				metauserscore = txt;
 				metauserscore = metauserscore.replace(".","");		
-				var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("metacritic_bg.png") + ');">' + metauserscore + '</div>';
+				var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');">' + metauserscore + '</div>';
 				metahtml.insertAdjacentHTML('afterend', newmeta);
 			});
 		}
