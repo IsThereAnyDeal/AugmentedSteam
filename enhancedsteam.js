@@ -660,11 +660,11 @@ if (document.URL.indexOf("://steamcommunity.com/id/") >= 0 || document.URL.index
 		var steamID = document.getElementsByName("abuseID")[0].value;
 
 		var htmlstr = '<hr>';
-		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '">sAPI</a></div>';
-		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '">SteamGifts</a></div>';
-		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '">SteamTrades</a></div>';
-		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '">SteamRep</a></div>';
-		htmlstr += '<div class="actionItemNoIcon"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '">backpack.tf</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><img src="http://www.steamgifts.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank">SteamGifts</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><img src="http://www.steamtrades.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank">SteamTrades</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><img src="http://www.steamrep.com/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '" target="_blank">SteamRep</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><img src="http://www.techieanalyst.net/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank">sAPI</a></div>';
+		htmlstr += '<div class="actionItemIcon"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><img src="http://backpack.tf/favicon.ico" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '" target="_blank">backpack.tf</a></div>';
 		
 		document.getElementById("rightActionBlock").insertAdjacentHTML('beforeend', htmlstr);
 	}
