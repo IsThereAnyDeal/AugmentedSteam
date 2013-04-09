@@ -79,40 +79,17 @@ function get_appid_wishlist(t) {
 	else return null;
 }
 
-
 function get_groupname(t) {
 	if (t && t.match(/^http:\/\/steamcommunity\.com\/groups\/(\S+)/)) return RegExp.$1;
 	else return null;
 }
 
-// colors the tile for owned daily deal games
-function add_info_dd_owned(node, has_app) {
-	if (has_app) {
-		storage.get(function(settings) {
-			if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836"; storage.set({'bgcolor': settings.bgcolor}); }			
-			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.bgcolor;
-		});
-		owned = true;
-	}
-}
-
-// colors the tile for wishlist daily deal games
-function add_info_dd_wl(node, wl_app) {
-	if (wl_app) {
-		storage.get(function(settings) {
-			if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93"; storage.set({'wlcolor': settings.wlcolor}); }
-			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.wlcolor;
-		});
-	}
-}
-
 // colors the tile for owned games
-function add_info2(node, has_app) {
+function highlight_owned(node, has_app) {
 	if (has_app) {
 		storage.get(function(settings) {
 			if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
+			node.style.backgroundImage = "none";
 			node.style.backgroundColor = settings.bgcolor;
 		});
 		owned = true;
@@ -120,10 +97,11 @@ function add_info2(node, has_app) {
 }
 
 // colors the tile for wishlist games
-function add_info3(node, wl_app) {
+function highlight_wishlist(node, wl_app) {
 	if (wl_app) {
 		storage.get(function(settings) {
 			if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
+			node.style.backgroundImage = "none";
 			node.style.backgroundColor = settings.wlcolor;
 		});
 	}
@@ -135,13 +113,13 @@ function add_info(node, appid) {
 	// loads values from cache to reduce response time
 	var v = getValue(appid);	
 	if (v) {
-		add_info2(node, v[0]);
+		highlight_owned(node, v[0]);
 		return;
 	}
 	
 	var w = getValue(appid+"w");
 	if (w) {
-		add_info3(node, w[0]);
+		highlight_wishlist(node, w[0]);
 		return
 	}
 	
@@ -152,45 +130,12 @@ function add_info(node, appid) {
 			
 		if (wl_app) {
 			setValue(appid+"w", [wl_app]);
-			add_info3(node, wl_app);
+			highlight_wishlist(node, wl_app);
 		}
 		
 		if (has_app) {
 			setValue(appid, [has_app]);
-			add_info2(node, has_app);
-		}	
-	});
-}
-
-// checks to see if daily deal game is already owned
-function add_info_dd(node, appid) {
-	
-	// loads values from cache to reduce response time
-	var v = getValue(appid);	
-	if (v) {
-		add_info_dd_owned(node, v[0]);
-		return;
-	}
-	
-	var w = getValue(appid+"w");
-	if (w) {
-		add_info_dd_wl(node, w[0]);
-		return
-	}
-	
-	// sets GET request and returns as text for evaluation
-	get_http('/app/' + appid + '/', function (txt) {
-		var has_app = txt.search(/<div class="game_area_already_owned">/) > 0;
-		var wl_app = txt.search(/<p>Already on <a href/) > 0;
-		
-		if (wl_app) {
-			setValue(appid+"w", [wl_app]);
-			add_info_dd_wl(node, wl_app);
-		}
-		
-		if (has_app) {
-			setValue(appid, [has_app]);
-			add_info_dd_owned(node, has_app);
+			highlight_owned(node, has_app);
 		}	
 	});
 }
@@ -199,7 +144,7 @@ function add_info_wishlist(node, appid) {
 	// loads values from cache to reduce response time
 	var v = getValue(appid);	
 	if (v) {
-		add_info2(node, v[0]);
+		highlight_owned(node, v[0]);
 		return;
 	}
 	
@@ -209,7 +154,7 @@ function add_info_wishlist(node, appid) {
 		
 		if (has_app) {
 			setValue(appid, [has_app]);
-			add_info2(node, has_app);
+			highlight_owned(node, has_app);
 		}	
 	});
 }
@@ -257,8 +202,7 @@ var localappid = get_appid(localurl);
 
 // show pricing history
 storage.get(function(settings) {	
-	if (settings.showlowestprice === undefined) { settings.showlowestprice = "Yes"; storage.set({'showlowestprice': settings.showlowestprice}); }
-	
+	if (settings.showlowestprice === undefined) { settings.showlowestprice = "Yes"; storage.set({'showlowestprice': settings.showlowestprice}); }	
 	if (settings.showlowestprice == "Yes") {
 		if (localappid !== null) {
 			var sgsurl = "http://www.steamgamesales.com/app/" + localappid + "/";
@@ -402,12 +346,10 @@ xpath_each("//div[contains(@class,'dailydeal')]", function (node) {
 	var dd_start = node.innerHTML.indexOf('<a href="http://store.steampowered.com/app/');
 	var dd_end = node.innerHTML.indexOf('<img src=');
 	
-	var dailydeal;
-	
-	dailydeal = node.innerHTML.substring(dd_start + 9, dd_end - 8);	
+	var dailydeal = node.innerHTML.substring(dd_start + 9, dd_end - 8);	
 	
 	appid = get_appid(dailydeal);
-	add_info_dd(node, appid);
+	add_info(node, appid);
 	
 });
 
@@ -468,7 +410,6 @@ storage.get(function(settings) {
 		if (document.body.innerHTML.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
 		if (document.body.innerHTML.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
 		if (document.body.innerHTML.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-		if (document.body.innerHTML.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
 		if (document.body.innerHTML.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
 
 		// Ubisoft Uplay detection
