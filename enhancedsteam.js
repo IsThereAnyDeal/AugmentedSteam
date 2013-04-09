@@ -107,6 +107,15 @@ function highlight_wishlist(node, wl_app) {
 	}
 }
 
+// colors the tile for items with coupons
+function highlight_coupon(node) {	
+	storage.get(function(settings) {
+		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269"; storage.set({'ccolor': settings.ccolor}); }
+		node.style.backgroundImage = "none";
+		node.style.backgroundColor = settings.ccolor;
+	});
+}
+
 // checks to see if game is already owned
 function add_info(node, appid) {
 
@@ -138,6 +147,12 @@ function add_info(node, appid) {
 			highlight_owned(node, has_app);
 		}	
 	});
+	
+	var c = getValue(appid+"c");
+	if (c) {
+		highlight_coupon(node);
+		return
+	}
 }
 
 function add_info_wishlist(node, appid) {
@@ -199,6 +214,33 @@ if (document.URL.indexOf(document.URL.length - 1, document.URL.length) !== "/") 
 }
 
 var localappid = get_appid(localurl);
+
+// Get User's Coupons
+if (document.URL.indexOf("://store.steampowered.com/") >= 0) {	
+	var done = getValue("coupondone");	
+	if (done != "1") {
+		// First, find steam id (common name)
+		var txt = get_divContents('#global_actions');
+		var steamID = txt.substring(txt.indexOf('<a href="http://steamcommunity.com/id/') + 38, txt.indexOf('" class="user_avatar friend_status') - 1);
+		
+		// Now, get JSON results
+		get_http('http://steamcommunity.com/id/' + steamID + '/inventory/json/753/3/', function (txt) {
+			var coupons = txt.split("/?list_of_subs=");
+			for (var i=1;i<coupons.length;i++) {
+				
+				// For each coupon, load search page and return first appID in results (not sure how this works for multi-game coupons?)
+				var searchID = coupons[i].substring(0, coupons[i].indexOf('","'));
+				get_http('http://store.steampowered.com/search/?list_of_subs=' + searchID, function (subtxt) {
+					var couponAppID = subtxt.substring(subtxt.indexOf('<a href="http://store.steampowered.com/app/') + 43, subtxt.indexOf('/?snr=1_7_7_230_150_1" class="search_result_row even"'));
+					setValue(couponAppID+"c", true);
+					console.log(couponAppID);
+				});				
+			} 
+			
+			setValue("coupondone", "1");
+		});
+	}
+}
 
 // show pricing history
 storage.get(function(settings) {	
@@ -371,7 +413,6 @@ xpath_each("//div[contains(@class,'apphub_AppName')]", function (app) {
 // find the date a game was purchased if owned
 xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
 	if (node.innerHTML.indexOf("You already own") > 0) {
-		console.log ("Game = " + appname);
 		find_purchase_date(appname);
 	}
 });
