@@ -283,7 +283,7 @@ function find_purchase_date(appname) {
 
 
 // Adds a link to options to the global menu (where is Install Steam button)
-document.getElementById("global_action_menu").insertAdjacentHTML("afterbegin", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
+document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
 
 
 // on app page
