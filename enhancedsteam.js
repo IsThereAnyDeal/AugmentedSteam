@@ -281,6 +281,11 @@ function find_purchase_date(appname) {
 	});	
 }
 
+
+// Adds a link to options to the global menu (where is Install Steam button)
+document.getElementById("global_action_menu").insertAdjacentHTML("afterbegin", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
+
+
 // on app page
 var localurl = document.URL;
 if (document.URL.indexOf(document.URL.length - 1, document.URL.length) !== "/") {
@@ -610,7 +615,7 @@ storage.get(function(settings) {
 var supernav_content = document.querySelectorAll("#supernav .supernav_content");
 document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
 	'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
-	'<a class="submenuitem" href="http://forums.steampowered.com/forums/">Forums</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
+	'<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">Forums</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
 );
 
 
