@@ -1,0 +1,98 @@
+v2.8
+-----
++ Added profile links to various web services
++ Added forum link in community drop down
+
+
+v2.7
+-----
+: Fixed a bug when setting the default greenlight banner option
+: Fixed a bug which showed Tages on all games in German store
+: Fixed a bug on some games which have no DRM but were showing DRM banner
+
+v2.6
+-----
++ Added daily deal detection for owned / wishlisted
+
+v2.5
+-----
++ Added support for WSGF (Wide Screen Gaming Forum) certifications
++ Added option to replace Greenlight banner - off by default
+
+v2.4
+-----
+: Fixed a major bug with wishlist cart buttons (sorry!)
+
+v2.3
+-----
+: Fixed a bug in case-sensitive OS platforms
++ Localized price history information, it runs internally now
++ Reduced the number of GET requests overall, should help speed up performance
++ added an "add to cart" button on the wishlist page for each item
+
+v2.2
+-----
+: Fixed a bug with purchase dates displaying on 3rd party drm warnings
+: Fixed a bug where bundle prices weren't working if all games are under $10
+
+v2.1
+-----
++ Added new DLC categorization to DLC pages
++ Added submission process for DLC categorization on EnhancedSteam.com
+
+v2.0
+-----
+: Fixed a bug where international currencies were not correctly displayed
++ Homepage "featured games" now highlight if owned or on wishlist
++ Added an "Empty Cart" button to the shopping cart page
+
+v1.9
+-----
++ Removed www.SteamGameSales.com scripting
+
+v1.8
+-----
++ Added Metacritic User scores to app page
++ First integration with app page services from EnhancedSteam.com
+
+v1.7
+-----
++ Now highlights owned games on wishlist pages (yours, friends, random strangers)
++ Shows purchase date of (some) games (work in progress!)
+: Updated options page logo and links to www.EnhancedSteam.com
+: Updated extension icon to match new logo
+
+v1.6
+-----
++ Altered Community Groups to display events on overview page
+
+v1.5
+-----
++ Added Price History Information from www.SteamGameSales.com
++ Added setting in options to enable / disable price history
+
+v1.4
+-----
++ Added additional DRM detection patterns
++ Added settings (Store) option to toggle DRM warnings
+
+v1.3
+-----
++ Reduced the amount of caching and the number of HTTP GET requests overall
+: Fixed a bug where Steam Wallet purchases were miscalculating total spent
++ Added DRM warning to some product pages
+
+v1.2
+-----
++ Game owned processing happens after wishlist processing now (thanks Motoki!)
+
+v1.1
+-----
++ Added options page
++ Using Google Chrome SyncStorage API to populate settings
+
+v1.0
+-----
++ Highlighting games owned
++ Highlighting wishlist items
++ Show "total spent" in account page
