@@ -215,31 +215,50 @@ if (document.URL.indexOf(document.URL.length - 1, document.URL.length) !== "/") 
 
 var localappid = get_appid(localurl);
 
+var txt = get_divContents('#global_actions');
+var steamID = txt.substring(txt.indexOf('<a href="http://steamcommunity.com/id/') + 38, txt.indexOf('" class="user_avatar friend_status') - 1);
+
 // Get User's Coupons
 if (document.URL.indexOf("://store.steampowered.com/") >= 0) {	
 	var done = getValue("coupondone");	
-	if (done != "1") {
-		// First, find steam id (common name)
-		var txt = get_divContents('#global_actions');
-		var steamID = txt.substring(txt.indexOf('<a href="http://steamcommunity.com/id/') + 38, txt.indexOf('" class="user_avatar friend_status') - 1);
-		
-		// Now, get JSON results
+	if (done != "1") {		
+		// Get JSON results
 		get_http('http://steamcommunity.com/id/' + steamID + '/inventory/json/753/3/', function (txt) {
 			var coupons = txt.split("/?list_of_subs=");
 			for (var i=1;i<coupons.length;i++) {
 				
 				// For each coupon, load search page and return first appID in results (not sure how this works for multi-game coupons?)
-				var searchID = coupons[i].substring(0, coupons[i].indexOf('","'));
+				var searchID = coupons[i].substring(0, coupons[i].indexOf('","'));				
 				get_http('http://store.steampowered.com/search/?list_of_subs=' + searchID, function (subtxt) {
 					var couponAppID = subtxt.substring(subtxt.indexOf('<a href="http://store.steampowered.com/app/') + 43, subtxt.indexOf('/?snr=1_7_7_230_150_1" class="search_result_row even"'));
-					setValue(couponAppID+"c", true);
-					console.log(couponAppID);
-				});				
+					var pageSearchID = subtxt.substring(subtxt.indexOf('<input type="hidden" name="list_of_subs" value="') + 48, subtxt.indexOf('<div class="search_controls" id="default_search_controls">') - 12);
+					setValue(couponAppID+"c", true);					
+					setValue(couponAppID+"csub", pageSearchID);
+					setValue("coupondone", "1");
+				});
 			} 
-			
-			setValue("coupondone", "1");
 		});
 	}
+}
+
+// If app has a coupon, display message
+if (getValue(localappid+"c")) {	
+	// get JSON coupon results
+	get_http('http://steamcommunity.com/id/' + steamID + '/inventory/json/753/3/', function (txt) {
+		var coupons = txt.split('{"appid":"753","classid":"');
+		for (var i=1;i<coupons.length;i++) {
+			if (coupons[i].indexOf(getValue(localappid+"csub")) >= 0 ) {
+				var couponimageurl = coupons[i].substring(coupons[i].indexOf('"icon_url"') + 12, coupons[i].indexOf('","icon_url_large"'));
+				var coupontitle    = coupons[i].substring(coupons[i].indexOf('"name":"')   +  8, coupons[i].indexOf('","market_name":"'));
+				var couponvalid    = coupons[i].substring(coupons[i].indexOf('{"value":"(Valid') + 10, coupons[i].indexOf('","color":"A75124"}'));
+				var coupondisc     = "";
+				if (coupons[i].indexOf("Can't be applied with other discounts.") > 0) { coupondisc = "Can't be applied with other discounts."; }
+				document.getElementById('game_area_purchase').insertAdjacentHTML('beforebegin', '<div class="early_access_header"><div class="heading"><h1 class="inset">You have a coupon available!</h1><h2 class="inset">A coupon in your inventory will be applied automatically at checkout.</h2><p><a href="https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275">Learn more</a> about Steam Coupons</p></div><div class="devnotes"><table border=0><tr><td rowspan=3><img src="http://cdn.steamcommunity.com/economy/image/' + couponimageurl + '"></td><td valign=center><h1>' + coupontitle + '</h1></td></tr><tr><td>' + coupondisc + '</td></tr><tr><td><font style="color:#A75124;">' + couponvalid + '</font></td></tr></table><p></div></div>');										
+			}
+		} 
+	});
+
+	
 }
 
 // show pricing history
