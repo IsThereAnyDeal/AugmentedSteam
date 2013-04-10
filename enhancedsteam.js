@@ -215,8 +215,8 @@ if (document.URL.indexOf(document.URL.length - 1, document.URL.length) !== "/") 
 
 var localappid = get_appid(localurl);
 
-var txt = get_divContents('#global_actions');
-var steamID = txt.substring(txt.indexOf('<a href="http://steamcommunity.com/id/') + 38, txt.indexOf('" class="user_avatar friend_status') - 1);
+var globalactions = get_divContents('#global_actions');
+var steamID = globalactions.substring(globalactions.indexOf('<a href="http://steamcommunity.com/id/') + 38, globalactions.indexOf('" class="user_avatar friend_status') - 1);
 
 // Get User's Coupons
 if (document.URL.indexOf("://store.steampowered.com/") >= 0) {	
