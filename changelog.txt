@@ -3,6 +3,7 @@ v2.8
 + Added profile links to various web services
 + Added forum link in community drop down
 + Added coupon highlighting and app page coupon notifications and pricing
++ Added Enhanced Steam option page link to header
 
 v2.7
 -----

@@ -85,26 +85,22 @@ function get_groupname(t) {
 }
 
 // colors the tile for owned games
-function highlight_owned(node, has_app) {
-	if (has_app) {
-		storage.get(function(settings) {
-			if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
-			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.bgcolor;
-		});
-		owned = true;
-	}
+function highlight_owned(node) {
+	storage.get(function(settings) {
+		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
+		node.style.backgroundImage = "none";
+		node.style.backgroundColor = settings.bgcolor;
+	});
+	owned = true;
 }
 
 // colors the tile for wishlist games
-function highlight_wishlist(node, wl_app) {
-	if (wl_app) {
-		storage.get(function(settings) {
-			if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
-			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.wlcolor;
-		});
-	}
+function highlight_wishlist(node) {
+	storage.get(function(settings) {
+		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
+		node.style.backgroundImage = "none";
+		node.style.backgroundColor = settings.wlcolor;
+	});
 }
 
 // colors the tile for items with coupons
@@ -116,60 +112,54 @@ function highlight_coupon(node) {
 	});
 }
 
-// checks to see if game is already owned
-function add_info(node, appid) {
+// colors the tile for items in inventory
+function highlight_inv(node) {	
+	storage.get(function(settings) {
+		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
+		node.style.backgroundImage = "none";
+		node.style.backgroundColor = settings.icolor;
+	});
+}
 
-	// loads values from cache to reduce response time
-	var v = getValue(appid);	
-	if (v) {
-		highlight_owned(node, v[0]);
-		return;
-	}
-	
-	var w = getValue(appid+"w");
-	if (w) {
-		highlight_wishlist(node, w[0]);
-		return
-	}
+// checks an item panel
+function add_info(node, appid) {
+	// loads values from cache to reduce response time	
+	if (getValue(appid)) { highlight_owned(node); return; }	
+	if (getValue(appid+"c")) { highlight_coupon(node); return }
+	if (getValue(appid+"w")) { highlight_wishlist(node); return }
+	if (getValue(appid+"i")) { highlight_inv(node); return }
 	
 	// sets GET request and returns as text for evaluation
-	get_http('/app/' + appid + '/', function (txt) {
-		var has_app = txt.search(/<div class="game_area_already_owned">/) > 0;
-		var wl_app = txt.search(/<p>Already on <a href/) > 0;
-			
-		if (wl_app) {
-			setValue(appid+"w", [wl_app]);
-			highlight_wishlist(node, wl_app);
-		}
-		
-		if (has_app) {
-			setValue(appid, [has_app]);
-			highlight_owned(node, has_app);
+	get_http('/app/' + appid + '/', function (txt) {		
+		if (txt.search(/<p>Already on <a href/) > 0) {
+			setValue(appid+"w", true);
+			highlight_wishlist(node);
+		}		
+		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
+			setValue(appid, true);
+			highlight_owned(node);
 		}	
 	});
-	
-	var c = getValue(appid+"c");
-	if (c) {
-		highlight_coupon(node);
-		return
-	}
+		
+	/* check to see if it's in inventory
+	get_http('http://steamcommunity.com/my/inventory/json/753/1/', function (txt) {
+		var has_inv = txt.indexOf('[{"name":"View in store","link":"http:\\/\\/store\.steampowered\.com\\/app\\/' + appid);
+		if (has_inv > 0) {
+			setValue(appid+"i", true);
+			highlight_inv(node);
+		}
+	}); */		
 }
 
 function add_info_wishlist(node, appid) {
-	// loads values from cache to reduce response time
-	var v = getValue(appid);	
-	if (v) {
-		highlight_owned(node, v[0]);
-		return;
-	}
+	// loads values from cache to reduce response time	
+	if (getValue(appid)) { highlight_owned(node); return; }
 	
 	// sets GET request and returns as text for evaluation
-	get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
-		var has_app = txt.search(/<div class="game_area_already_owned">/) > 0;
-		
-		if (has_app) {
-			setValue(appid, [has_app]);
-			highlight_owned(node, has_app);
+	get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {		
+		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
+			setValue(appid, true);
+			highlight_owned(node);
 		}	
 	});
 }
