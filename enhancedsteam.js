@@ -202,10 +202,8 @@ function find_purchase_date(appname) {
 	});	
 }
 
-
 // Adds a link to options to the global menu (where is Install Steam button)
 document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
-
 
 // on app page
 var localurl = document.URL;
@@ -215,15 +213,12 @@ if (document.URL.indexOf(document.URL.length - 1, document.URL.length) !== "/") 
 
 var localappid = get_appid(localurl);
 
-var globalactions = get_divContents('#global_actions');
-var steamID = globalactions.substring(globalactions.indexOf('<a href="http://steamcommunity.com/id/') + 38, globalactions.indexOf('" class="user_avatar friend_status') - 1);
-
 // Get User's Coupons
 if (document.URL.indexOf("://store.steampowered.com/") >= 0) {	
 	var done = getValue("coupondone");	
 	if (done != "1") {		
 		// Get JSON results
-		get_http('http://steamcommunity.com/id/' + steamID + '/inventory/json/753/3/', function (txt) {
+		get_http('http://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
 			var coupons = txt.split("/?list_of_subs=");
 			for (var i=1;i<coupons.length;i++) {
 				// For each coupon, load search page and return first appID in results (not sure how this works for multi-game coupons?)
@@ -243,7 +238,7 @@ if (document.URL.indexOf("://store.steampowered.com/") >= 0) {
 // If app has a coupon, display message
 if (getValue(localappid+"c")) {	
 	// get JSON coupon results
-	get_http('http://steamcommunity.com/id/' + steamID + '/inventory/json/753/3/', function (txt) {
+	get_http('http://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
 		var coupons = txt.split('{"appid":"753","classid":"');
 		for (var i=1;i<coupons.length;i++) {
 			if (coupons[i].indexOf(getValue(localappid+"csub")) >= 0 ) {
