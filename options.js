@@ -6,7 +6,6 @@ function save_options() {
 	bgcolor = $("#bgcolor").val();
 	wlcolor = $("#wlcolor").val();
 	ccolor = $("#ccolor").val();
-	icolor = $("#icolor").val();
 	showdrm = $("#showdrm").val();
 	showlowestprice = $("#showlowestprice").val();	
 	showmcus = $("#showmcus").val();
@@ -36,7 +35,6 @@ function save_options() {
 		'bgcolor': bgcolor,
 		'wlcolor': wlcolor,
 		'ccolor': ccolor,
-		'icolor': icolor,
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
 		'profile_steamrep': profile_steamrep,
@@ -147,7 +145,6 @@ function restore_options() {
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	chrome.storage.sync.set({'bgcolor': settings.bgcolor});	}
 		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	chrome.storage.sync.set({'wlcolor': settings.wlcolor}); }
 		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269";	chrome.storage.sync.set({'ccolor': settings.ccolor}); }
-		if (settings.icolor === undefined) { settings.icolor = "#a75124";	chrome.storage.sync.set({'icolor': settings.icolor}); }
 		if (settings.showtotal === undefined) {	settings.showtotal = "Yes";	chrome.storage.sync.set({'showtotal': settings.showtotal}); }		
 		if (settings.showmcus === undefined) { settings.showmcus = "Yes"; chrome.storage.sync.set({'showmcus': settings.showmcus}); }		
 		if (settings.showwsgf === undefined) { settings.showwsgf = "Yes"; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
@@ -166,7 +163,6 @@ function restore_options() {
 		$("#bgcolor").attr('value', settings.bgcolor);
 		$("#wlcolor").attr('value', settings.wlcolor);
 		$("#ccolor").attr('value', settings.ccolor);
-		$("#icolor").attr('value', settings.icolor);
 		$("#showdrm").attr('value', settings.showdrm);
 		$("#showmcus").attr('value', settings.showmcus);
 		$("#showwsgf").attr('value', settings.showwsgf);
@@ -205,12 +201,6 @@ function load_defaultccolor() {
 	ctext.value = "#6b2269";
 }
 
-// Loads the default inventory color
-function load_defaulticolor() {
-	var itext = document.getElementById("icolor");
-	itext.value = "#a75124";
-}
-
 document.addEventListener('DOMContentLoaded', restore_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
@@ -218,7 +208,6 @@ document.querySelector('#save').addEventListener('click', save_options);
 document.querySelector('#bgdefault').addEventListener('click', load_defaultbgcolor);
 document.querySelector('#wldefault').addEventListener('click', load_defaultwlcolor);
 document.querySelector('#cdefault').addEventListener('click', load_defaultccolor);
-document.querySelector('#idefault').addEventListener('click', load_defaulticolor);
 document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);
