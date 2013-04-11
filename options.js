@@ -4,7 +4,8 @@ function save_options() {
 	
 	// Store Options
 	bgcolor = $("#bgcolor").val();
-	wlcolor = $("#wlcolor").val();	
+	wlcolor = $("#wlcolor").val();
+	ccolor = $("#ccolor").val();
 	showdrm = $("#showdrm").val();
 	showlowestprice = $("#showlowestprice").val();	
 	showmcus = $("#showmcus").val();
@@ -33,6 +34,7 @@ function save_options() {
 		'showgreenlightbanner': showgreenlightbanner,
 		'bgcolor': bgcolor,
 		'wlcolor': wlcolor,
+		'ccolor': ccolor,
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
 		'profile_steamrep': profile_steamrep,
@@ -142,6 +144,7 @@ function restore_options() {
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	chrome.storage.sync.set({'bgcolor': settings.bgcolor});	}
 		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	chrome.storage.sync.set({'wlcolor': settings.wlcolor}); }
+		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269";	chrome.storage.sync.set({'ccolor': settings.ccolor}); }
 		if (settings.showtotal === undefined) {	settings.showtotal = "Yes";	chrome.storage.sync.set({'showtotal': settings.showtotal}); }		
 		if (settings.showmcus === undefined) { settings.showmcus = "Yes"; chrome.storage.sync.set({'showmcus': settings.showmcus}); }		
 		if (settings.showwsgf === undefined) { settings.showwsgf = "Yes"; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
@@ -159,6 +162,7 @@ function restore_options() {
 		// Load Store Options
 		$("#bgcolor").attr('value', settings.bgcolor);
 		$("#wlcolor").attr('value', settings.wlcolor);
+		$("#ccolor").attr('value', settings.ccolor);
 		$("#showdrm").attr('value', settings.showdrm);
 		$("#showmcus").attr('value', settings.showmcus);
 		$("#showwsgf").attr('value', settings.showwsgf);
@@ -191,12 +195,19 @@ function load_defaultwlcolor() {
 	wltext.value = "#496e93";
 }
 
+// Loads the default coupon color
+function load_defaultccolor() {
+	var ctext = document.getElementById("ccolor");
+	ctext.value = "#6b2269";
+}
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
 document.querySelector('#save').addEventListener('click', save_options);
 document.querySelector('#bgdefault').addEventListener('click', load_defaultbgcolor);
 document.querySelector('#wldefault').addEventListener('click', load_defaultwlcolor);
+document.querySelector('#cdefault').addEventListener('click', load_defaultccolor);
 document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);

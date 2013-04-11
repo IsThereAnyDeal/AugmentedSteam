@@ -226,17 +226,16 @@ if (document.URL.indexOf("://store.steampowered.com/") >= 0) {
 		get_http('http://steamcommunity.com/id/' + steamID + '/inventory/json/753/3/', function (txt) {
 			var coupons = txt.split("/?list_of_subs=");
 			for (var i=1;i<coupons.length;i++) {
-				
 				// For each coupon, load search page and return first appID in results (not sure how this works for multi-game coupons?)
 				var searchID = coupons[i].substring(0, coupons[i].indexOf('","'));				
 				get_http('http://store.steampowered.com/search/?list_of_subs=' + searchID, function (subtxt) {
 					var couponAppID = subtxt.substring(subtxt.indexOf('<a href="http://store.steampowered.com/app/') + 43, subtxt.indexOf('/?snr=1_7_7_230_150_1" class="search_result_row even"'));
 					var pageSearchID = subtxt.substring(subtxt.indexOf('<input type="hidden" name="list_of_subs" value="') + 48, subtxt.indexOf('<div class="search_controls" id="default_search_controls">') - 12);
-					setValue(couponAppID+"c", true);					
+					setValue(couponAppID+"c", true);
 					setValue(couponAppID+"csub", pageSearchID);
 					setValue("coupondone", "1");
 				});
-			} 
+			}
 		});
 	}
 }
@@ -263,12 +262,10 @@ if (getValue(localappid+"c")) {
 				
 				if (document.body.innerHTML.indexOf('<div class="discount_prices">') != 0) {
 					document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">&#36;' + originalprice + '</div><div class="discount_final_price" itemprop="price">&#36;' + discountprice + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-				}	
+				}
 			}
-		} 
+		}
 	});
-
-	
 }
 
 // show pricing history
