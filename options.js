@@ -6,7 +6,7 @@ function save_options() {
 	bgcolor = $("#bgcolor").val();
 	wlcolor = $("#wlcolor").val();
 	ccolor = $("#ccolor").val();
-	showinstallsteambutton = $("#showinstallsteambutton").val();
+	hideinstallsteambutton = $("#hideinstallsteambutton").val();
 	showdrm = $("#showdrm").val();
 	showlowestprice = $("#showlowestprice").val();	
 	showmcus = $("#showmcus").val();
@@ -29,7 +29,7 @@ function save_options() {
 		'showtotal': showtotal,
 		'showmcus': showmcus,
 		'showwsgf': showwsgf,
-		'showinstallsteambutton': showinstallsteambutton,
+		'hideinstallsteambutton': hideinstallsteambutton,
 		'showdrm': showdrm,
 		'showlowestprice': showlowestprice,
 		'showgroupevents': showgroupevents,
@@ -150,7 +150,7 @@ function restore_options() {
 		if (settings.showtotal === undefined) {	settings.showtotal = "Yes";	chrome.storage.sync.set({'showtotal': settings.showtotal}); }		
 		if (settings.showmcus === undefined) { settings.showmcus = "Yes"; chrome.storage.sync.set({'showmcus': settings.showmcus}); }		
 		if (settings.showwsgf === undefined) { settings.showwsgf = "Yes"; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
-		if (settings.showinstallsteambutton === undefined) { settings.showinstallsteambutton = "Yes"; chrome.storage.sync.set({'showinstallsteambutton': settings.showinstallsteambutton}); }
+		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = "No"; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.showdrm === undefined) { settings.showdrm = "Yes";	chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = "Yes";	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }		
 		if (settings.showgroupevents === undefined) { settings.showgroupevents = "Yes";	chrome.storage.sync.set({'showgroupevents': settings.showgroupevents});	}		
@@ -166,7 +166,7 @@ function restore_options() {
 		$("#bgcolor").attr('value', settings.bgcolor);
 		$("#wlcolor").attr('value', settings.wlcolor);
 		$("#ccolor").attr('value', settings.ccolor);
-		$("#showinstallsteambutton").attr('value', settings.showinstallsteambutton);
+		$("#hideinstallsteambutton").attr('value', settings.hideinstallsteambutton);
 		$("#showdrm").attr('value', settings.showdrm);
 		$("#showmcus").attr('value', settings.showmcus);
 		$("#showwsgf").attr('value', settings.showwsgf);

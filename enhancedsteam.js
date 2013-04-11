@@ -197,8 +197,8 @@ document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<d
 
 // Removes the "Install Steam" button at the top of each page
 storage.get(function(settings) {
-	if (settings.showinstallsteambutton === undefined) { settings.showinstallsteambutton = "Yes"; storage.set({'showinstallsteambutton': settings.showinstallsteambutton}); }
-	if (settings.showinstallsteambutton == "No") {
+	if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = "No"; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
+	if (settings.hideinstallsteambutton == "Yes") {
 		$('div.header_installsteam_btn').replaceWith('');
 	}	
 });
