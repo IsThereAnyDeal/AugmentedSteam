@@ -195,6 +195,14 @@ function find_purchase_date(appname) {
 // Adds a link to options to the global menu (where is Install Steam button)
 document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
 
+// Removes the "Install Steam" button at the top of each page
+storage.get(function(settings) {
+	if (settings.showinstallsteambutton === undefined) { settings.showinstallsteambutton = "Yes"; storage.set({'showinstallsteambutton': settings.showinstallsteambutton}); }
+	if (settings.showinstallsteambutton == "No") {
+		$('div.header_installsteam_btn').replaceWith('');
+	}	
+});
+
 // on app page
 var localurl = document.URL;
 if (document.URL.indexOf(document.URL.length - 1, document.URL.length) !== "/") {

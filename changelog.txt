@@ -4,6 +4,7 @@ v2.8
 + Added forum link in community drop down
 + Added coupon highlighting and app page coupon notifications and pricing
 + Added Enhanced Steam option page link to header
++ Added option to remove "Install Steam" button on each page at the top
 
 v2.7
 -----
