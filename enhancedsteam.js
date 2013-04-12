@@ -73,8 +73,11 @@ function get_groupname(t) {
 function highlight_owned(node) {
 	storage.get(function(settings) {
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
-		node.style.backgroundImage = "none";
-		node.style.backgroundColor = settings.bgcolor;
+		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
+		if (settings.showowned) {
+			node.style.backgroundImage = "none";
+			node.style.backgroundColor = settings.bgcolor;
+		}
 	});
 	owned = true;
 }
@@ -83,8 +86,11 @@ function highlight_owned(node) {
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
 		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
-		node.style.backgroundImage = "none";
-		node.style.backgroundColor = settings.wlcolor;
+		if (settings.showwishlist === undefined) { settings.showwishlist = true; storage.set({'showwishlist': settings.showwishlist}); }
+		if (settings.showwishlist) {
+			node.style.backgroundImage = "none";
+			node.style.backgroundColor = settings.wlcolor;
+		}	
 	});
 }
 
@@ -92,8 +98,11 @@ function highlight_wishlist(node) {
 function highlight_coupon(node) {	
 	storage.get(function(settings) {
 		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269"; storage.set({'ccolor': settings.ccolor}); }
-		node.style.backgroundImage = "none";
-		node.style.backgroundColor = settings.ccolor;
+		if (settings.showcoupon === undefined) { settings.showcoupon = true; storage.set({'showcoupon': settings.showcoupon}); }
+		if (settings.showcoupon) {
+			node.style.backgroundImage = "none";
+			node.style.backgroundColor = settings.ccolor;
+		}
 	});
 }
 
@@ -116,10 +125,12 @@ function add_info(node, appid) {
 	
 	// sets GET request and returns as text for evaluation
 	get_http('/app/' + appid + '/', function (txt) {		
-		if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
-			setValue(appid+"w", true);
-			highlight_wishlist(node);
-		}		
+		if (txt.search(/<a href="http:\/\/steamcommunity.com\/id\/.+\/wishlist">/) > 0) {
+			if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
+				setValue(appid+"w", true);
+				highlight_wishlist(node);
+			}		
+		}
 		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 			setValue(appid, true);
 			highlight_owned(node);
@@ -172,10 +183,10 @@ document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<d
 
 // Removes the "Install Steam" button at the top of each page
 storage.get(function(settings) {
-	if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = "No"; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
-	if (settings.hideinstallsteambutton == "Yes") {
+	if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
+	if (settings.hideinstallsteambutton) {
 		$('div.header_installsteam_btn').replaceWith('');
-	}	
+	}
 });
 
 // on app page
@@ -275,8 +286,8 @@ if (getValue(localappid+"c")) {
 
 // show pricing history
 storage.get(function(settings) {	
-	if (settings.showlowestprice === undefined) { settings.showlowestprice = "Yes"; storage.set({'showlowestprice': settings.showlowestprice}); }	
-	if (settings.showlowestprice == "Yes") {
+	if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }	
+	if (settings.showlowestprice) {
 		if (localappid !== null) {
 			var sgsurl = "http://www.steamgamesales.com/app/" + localappid + "/";
 			lowest_price = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><a href='" + sgsurl + "' target='_blank'>Click here to check pricing history</a>";
@@ -458,8 +469,8 @@ if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {
 
 // Adds red warnings for 3rd party DRM
 storage.get(function(settings) {	
-	if (settings.showdrm === undefined) { settings.showdrm = "Yes"; storage.set({'showdrm': settings.showdrm}); }	
-	if (settings.showdrm == "Yes") {
+	if (settings.showdrm === undefined) { settings.showdrm = true; storage.set({'showdrm': settings.showdrm}); }	
+	if (settings.showdrm) {
 			
 		var gfwl;
 		var uplay;
@@ -572,8 +583,8 @@ if (document.URL.indexOf("steamcommunity.com/groups/") >= 0) {
 	if (groupname.indexOf("#") > 0) { groupname = groupname.substring(0, groupname.indexOf("#")); }
 	
 	storage.get(function(settings) {
-		if (settings.showgroupevents === undefined) { settings.showgroupevents = "Yes"; storage.set({'showgroupevents': settings.showgroupevents}); }		
-		if (settings.showgroupevents == "Yes") {
+		if (settings.showgroupevents === undefined) { settings.showgroupevents = true; storage.set({'showgroupevents': settings.showgroupevents}); }		
+		if (settings.showgroupevents) {
 	
 			$('.group_summary').after('<div class="group_content_rule"></div><div class="group_content"><div class="group_content_header"><div class="group_content_header_viewmore"><a href="http://steamcommunity.com/groups/' + groupname + '/events/">VIEW ALL</a></div>Events</div><div id="enhancedsteam_group_events"></div>');
 			
@@ -651,8 +662,8 @@ if (document.URL.indexOf("steamcommunity.com/sharedfiles/") >= 0) {
 	// insert the "top bar" found on all other Steam games
 	
 	storage.get(function(settings) {
-		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = "No"; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }		
-		if (settings.showgreenlightbanner == "Yes") {	
+		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }		
+		if (settings.showgreenlightbanner) {	
 			var banner = document.getElementById('ig_top_workshop');
 			var html;
 			html = '<link href="' + chrome.extension.getURL("enhancedsteam.css") + '" rel="stylesheet" type="text/css">';
@@ -685,8 +696,8 @@ if (document.URL.indexOf("store.steampowered.com/cart/") >= 0) {
 
 // adds metacritic user reviews
 storage.get(function(settings) {
-	if (settings.showmcus === undefined) { settings.showmcus = "Yes"; storage.set({'showmcus': settings.showmcus}); }	
-	if (settings.showmcus == "Yes") {
+	if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }	
+	if (settings.showmcus) {
 		var metahtml = document.getElementById("game_area_metascore");
 		var metauserscore = 0;
 		if (metahtml) {
@@ -706,10 +717,10 @@ storage.get(function(settings) {
 
 // adds widescreen certification icons
 storage.get(function(settings) {	
-	if (settings.showwsgf === undefined) { settings.showwsgf = "Yes"; storage.set({'showwsgf': settings.showwsgf}); }	
+	if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }	
 	if (document.URL.indexOf("store.steampowered.com/app/") >= 0) {	
 		if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) { 
-			if (settings.showwsgf == "Yes") {
+			if (settings.showwsgf) {
 				// check to see if game data exists
 				get_http("http://www.enhancedsteam.com/gamedata/wsgf.php?appid=" + localappid, function (txt) {
 					found = 0;
@@ -750,8 +761,8 @@ for (var i = 0; i < allElements.snapshotLength; i++) {
 
 // adds a "total spent on Steam" to the account details page
 storage.get(function(settings) {	
-	if (settings.showtotal === undefined) { settings.showtotal = "Yes";	storage.set({'showtotal': settings.showtotal}); }	
-	if (settings.showtotal == "Yes") {
+	if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }	
+	if (settings.showtotal) {
 		if ($('.transactionRow').length != 0) {						
 			totaler = function (p, i) {				
 				if (p.innerHTML.indexOf("class=\"transactionRowEvent\">Wallet Credit</div>") < 0) {
