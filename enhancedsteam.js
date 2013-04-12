@@ -131,7 +131,7 @@ function add_info(node, appid) {
 	
 	// sets GET request and returns as text for evaluation
 	get_http('/app/' + appid + '/', function (txt) {		
-		if (txt.search(/<p>Already on <a href/) > 0) {
+		if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
 			setValue(appid+"w", true);
 			highlight_wishlist(node);
 		}		
