@@ -1,6 +1,6 @@
 {
   "name": "Enhanced Steam",
-  "version": "2.9",
+  "version": "3.0",
   "description": "Enhances the Steam Experience",
   "icons": { "128": "img/enhancedsteam.png" },
   "manifest_version": 2,

@@ -1,4 +1,4 @@
-﻿// version 2.9
+﻿// version 3.0
 
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
@@ -11,21 +11,6 @@ function getValue(key) {
 }
 
 var storage = chrome.storage.sync;
-
-// Attempts to extend the expiration of the 'birthtime' cookie
-function modify_cookie(diff) {
-	var dt = new Date();
-	dt.setDate(dt.getDate() + diff);
-	var cookies = document.cookie.split('; ');
-	for (var i = 0; i < cookies.length; ++i) {
-		var pair = cookies[i].split('=');
-		switch (pair[0]) {
-			case 'birthtime':
-				document.cookie = cookies[i] + '; expires=' + dt.toUTCString() + '; path=/';
-		}
-	}
-}
-modify_cookie(+30);
 
 function startWith(str, prefix) {
 	return str.lastIndexOf(prefix, 0) === 0;
@@ -164,26 +149,16 @@ function add_info_wishlist(node, appid) {
 	});
 }
 
-function find_purchase_date(appname) {
-	var appdate;
-	
+function find_purchase_date(appname) {	
 	get_http('https://store.steampowered.com/account/', function (txt) {
 		var apphtml = txt.substring(txt.indexOf('<div class="transactionRowTitle">' + appname), txt.indexOf('<div class="transactionRowTitle">' + appname) - 300);
-		appdate = apphtml.substring(apphtml.indexOf('<div class="transactionRowDate">') + 32, 57);
-		if (appdate.substring(appdate.length - 1,appdate.length) == ">") { appdate = appdate.substring(0,appdate.length - 1); }
-		if (appdate.substring(appdate.length - 1,appdate.length) == "v") { appdate = appdate.substring(0,appdate.length - 1); }
-		if (appdate.substring(appdate.length - 1,appdate.length) == "i") { appdate = appdate.substring(0,appdate.length - 1); }
-		if (appdate.substring(appdate.length - 1,appdate.length) == "d") { appdate = appdate.substring(0,appdate.length - 1); }
-		if (appdate.substring(appdate.length - 1,appdate.length) == "/") { appdate = appdate.substring(0,appdate.length - 1); }
-		if (appdate.substring(appdate.length - 1,appdate.length) == "<") { appdate = appdate.substring(0,appdate.length - 1); }
-
-		var found = 0;
-		
+		var appdate = apphtml.match(/<div class="transactionRowDate">(.+)<\/div>/);
+		var found = 0;		
 		xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
 			if (found == 0) {
 				if (appdate != undefined) {
 					if (appdate !== "") {
-						node.innerHTML = node.innerHTML + "(Purchased " + appdate + ")";
+						node.innerHTML = node.innerHTML + "(Purchased " + appdate[1] + ")";
 						found = 1;
 					}	
 				}
@@ -648,23 +623,12 @@ if (document.URL.indexOf("://steamcommunity.com/id/") >= 0 || document.URL.index
 		xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
 			var appid = node.href;
 			var appid2 = get_appid(appid + "/");
-			var htmlstring;
 			
 			// get page, find cart string
 			get_http(appid + '/', function (txt) {
-				htmlstring = txt.substring(txt.indexOf('<div  class="game_area_purchase_game">') + 40, txt.indexOf('<input type="hidden" name="subid" value="') + 64);
-				if (htmlstring.length > 500) { htmlstring=""; }
-				if (htmlstring.indexOf("4.01 Transitional//EN") > 0) { htmlstring=""; }
-				if (htmlstring.substring(htmlstring.length - 1,htmlstring.length) == "<") { htmlstring = htmlstring.substring(0,htmlstring.length - 1); }
-				if (htmlstring.substring(htmlstring.length - 2,htmlstring.length) == "<d") { htmlstring = htmlstring.substring(0,htmlstring.length - 2); }
-				var subid = htmlstring.substring(htmlstring.indexOf('name="subid" value="') + 20, htmlstring.length - 18);
-				if (subid.substring(subid.length - 1,subid.length) == "\"") { subid = subid.substring(0,subid.length - 1); }
-				if (subid.substring(subid.length - 2,subid.length) == "\">") { subid = subid.substring(0,subid.length - 2); }
-				if (subid.substring(subid.length - 3,subid.length) == "\"> ") { subid = subid.substring(0,subid.length - 3); }
-				
-				if (subid == "Transitional/") { subid=0; }
-				
-				node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
+				var subid = txt.match(/<input type="hidden" name="subid" value="([0-9]+)">/);
+				var htmlstring = $(txt).find('form');			
+				node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring[1].outerHTML + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid[1] + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
 			});
 		});
 	}
