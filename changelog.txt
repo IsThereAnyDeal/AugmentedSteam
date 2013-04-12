@@ -1,3 +1,7 @@
+v3.0
+-----
+: Fixed wishlist detection for non-English users
+
 v2.9
 -----
 : Fixed a bug with coupon values calculating wrong for non-US currencies
