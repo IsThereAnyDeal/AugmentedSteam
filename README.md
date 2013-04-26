@@ -1,4 +1,4 @@
-Enhanced_Steam
+Enhanced Steam
 ==============
 
 Enhanced Steam is a Google Chrome browser extension.  This is the open-source development repository.
