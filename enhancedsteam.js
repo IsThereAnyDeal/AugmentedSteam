@@ -13,16 +13,6 @@ function getValue(key) {
 	return JSON.parse(v);
 }
 
-function loadApps() {
-	var _apps = sessionStorage.getItem("apps");
-	apps = _apps ? _apps.split(",") : [];
-}
-
-function saveApps() {
-	sessionStorage.setItem("apps", apps);
-	loadApps();
-}
-
 // Helper prototypes
 
 String.prototype.startsWith = function(prefix) {
@@ -102,7 +92,6 @@ function highlight_owned(node) {
 		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
 		if (settings.showowned) {
 			node.style.backgroundImage = "none";
-			// node.style.backgroundColor = settings.bgcolor;
 			node.style.borderLeftWidth = "5px";
 			node.style.borderLeftStyle = "solid";
 			node.style.borderLeftColor = settings.bgcolor;
@@ -119,7 +108,9 @@ function highlight_wishlist(node) {
 		if (settings.showwishlist === undefined) { settings.showwishlist = true; storage.set({'showwishlist': settings.showwishlist}); }
 		if (settings.showwishlist) {
 			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.wlcolor;
+			node.style.borderLeftWidth = "5px";
+			node.style.borderLeftStyle = "solid";
+			node.style.borderLeftColor = settings.wlcolor;
 		}
 	});
 }
@@ -131,7 +122,9 @@ function highlight_coupon(node) {
 		if (settings.showcoupon === undefined) { settings.showcoupon = true; storage.set({'showcoupon': settings.showcoupon}); }
 		if (settings.showcoupon) {
 			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.ccolor;
+			node.style.borderLeftWidth = "5px";
+			node.style.borderLeftStyle = "solid";
+			node.style.borderLeftColor = settings.ccolor;
 		}
 	});
 }
@@ -141,21 +134,28 @@ function highlight_inv(node) {
 	storage.get(function(settings) {
 		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
 		node.style.backgroundImage = "none";
-		node.style.backgroundColor = settings.icolor;
+		node.style.borderLeftWidth = "5px";
+		node.style.borderLeftStyle = "solid";
+		node.style.borderLeftColor = settings.icolor;
 	});
 }
 
-function load_appids_in_inventory() {
+function load_inventory() {
+	// Merge coupon stuff here too; waiting on all of Valve to give me a coupon to play with.
+
 	var deferred = new $.Deferred();
 	get_http('http://steamcommunity.com/my/inventory/json/753/1/', function (txt) {
 		// TODO: Seperate method and cache, or one call per load at worst.
 
+		// Load apps.
 		var data = JSON.parse(txt);
-		for (var i = 0; i < data.rgDescriptions.length; i++) {
-			var appid = data.rgDescriptions[i].appid;
-			if (apps.indexOf(appid) === -1) apps.push(appid);
-			setValue(appid + "inventory", true);
-		}
+		$.each(data.rgDescriptions, function(i, obj) {
+			if (obj.actions) {
+				var appid = get_appid(obj.actions[0].link);
+				setValue(appid + "inventory", true);
+				add_info(appid);  // Load rest of info for this app.
+			}
+		});
 		deferred.resolve();
 	});
 	return deferred.promise();
@@ -165,9 +165,10 @@ function load_appids_in_inventory() {
 function add_info(appid) {
 	var deferred = new $.Deferred();
 	// loads values from cache to reduce response time
-	if (apps.indexOf(appid) === -1) {
+	if (appid == "234710") debugger;
+	if (!getValue(appid)) {
 		get_http('/app/' + appid + '/', function (txt) {
-			if (apps.indexOf(appid) === -1) apps.push(appid);
+			setValue(appid, true); // Set appid to true to indicate we have data on it.
 			if (txt.search(/<a href="http:\/\/steamcommunity.com\/id\/.+\/wishlist">/) > 0) {
 				if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
 					setValue(appid + "wishlisted", true);
@@ -176,7 +177,7 @@ function add_info(appid) {
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 					setValue(appid + "owned", true);
 			}
-			saveApps();
+			// Temp - rejig to somewhere else later.
 			deferred.resolve();
 		});
 	}
@@ -218,11 +219,9 @@ function find_purchase_date(appname) {
 		var found = 0;
 		xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
 			if (found === 0) {
-				if (appdate !== undefined) {
-					if (appdate !== "") {
-						node.innerHTML = node.innerHTML + "(Purchased " + appdate[1] + ")";
-						found = 1;
-					}
+				if (appdate) {
+					node.innerHTML = node.innerHTML + "(Purchased " + appdate[1] + ")";
+					found = 1;
 				}
 			}
 		});
@@ -613,25 +612,27 @@ function add_metracritic_userscore() {
 		}
 	});
 }
+
 function add_widescreen_certification() {
+	//FIXME: Constantly returns nothing?
+
 	// adds widescreen certification icons
+	var appid = get_appid(window.location.host + window.location.pathname);
 	storage.get(function(settings) {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
-		if (document.URL.indexOf("store.steampowered.com/app/") >= 0) {
-			if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) {
-				if (settings.showwsgf) {
-					// check to see if game data exists
-					get_http("http://www.enhancedsteam.com/gamedata/wsgf.php?appid=" + localappid, function (txt) {
-						found = 0;
+		if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) {
+			if (settings.showwsgf) {
+				// check to see if game data exists
+				get_http("http://www.enhancedsteam.com/gamedata/wsgf.php?appid=" + appid, function (txt) {
+					found = 0;
 
-						xpath_each("//div[contains(@class,'game_details')]", function (node) {
-							if (found === 0) {
-								node.insertAdjacentHTML('afterend', txt);
-								found = 1;
-							}
-						});
+					xpath_each("//div[contains(@class,'game_details')]", function (node) {
+						if (found === 0) {
+							node.insertAdjacentHTML('afterend', txt);
+							found = 1;
+						}
 					});
-				}
+				});
 			}
 		}
 	});
@@ -684,7 +685,6 @@ function account_total_spent() {
 }
 
 function subscription_savings_check() {
-
 	var owned_games_prices = 0,
 		appid_info_deferreds = [],
 		sub_apps = [],
@@ -732,7 +732,7 @@ function subscription_savings_check() {
 	// When we have all the app info
 	$.when(appid_info_deferreds).done(function() {
 		for (var i = 0; i < sub_apps.length; i++) {
-			if (getValue(sub_apps[i] + "owned")) owned_games_prices =+ sub_app_prices[sub_apps[i]];
+			if (getValue(sub_apps[i] + "owned")) owned_games_prices += sub_app_prices[sub_apps[i]];
 		}
 		var $bundle_price = $(".discount_final_price");
 		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
@@ -772,9 +772,14 @@ function i_dont_know_what_this_code_does() {
 }
 
 function load_app_info(node) {
-	var appid = get_appid(node.href);
+	var appid = get_appid(node.href || node.querySelector("a").href);
 	if (appid) {
-		add_info(appid);
+		add_info(appid).done(function(){
+			// Order here is important; bottom-most renders last.
+			if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+			if (getValue(appid + "owned")) highlight_owned(node);
+			if (getValue(appid + "inventory")) highlight_inv(node);
+		});
 	}
 }
 
@@ -809,59 +814,62 @@ function check_if_purchased() {
 	}
 }
 
-(function(){
+$(document).ready(function(){
 	// On window load...
-	loadApps();
 	add_enhanced_steam_options_link();
 	remove_install_steam_button();
 	i_dont_know_what_this_code_does();
 
 	switch (window.location.host) {
 		case "store.steampowered.com":
-			// Load inv before doing anythin
-			switch (true) {
-				case /^\/cart\/.*/.test(window.location.pathname):
-					// add_empty_cart_button();
-					break;
+			// Load appids from inv before anything else.
+			load_inventory().done(function() {
+				switch (true) {
+					case /^\/cart\/.*/.test(window.location.pathname):
+						add_empty_cart_button();
+						break;
 
-				case /^\/app\/.*/.test(window.location.pathname):
-					// var appid = get_appid(localurl);
-					// if (getValue(appid+"c")) display_coupon_message(appid);
-					// show_pricing_history(appid);
-					// drm_warnings();
-					// add_metracritic_userscore();
-					// add_widescreen_certification();
-					// check_if_purchased();
-					break;
+					case /^\/app\/.*/.test(window.location.pathname):
+						// var appid = get_appid(window.location.host + window.location.pathname);
+						// if (getValue(appid+"c")) display_coupon_message(appid);
+						show_pricing_history(appid);
+						drm_warnings();
+						add_metracritic_userscore();
+						add_widescreen_certification();  // Doesn't work?
+						check_if_purchased();
+						break;
 
-				case /^\/sub\/.*/.test(window.location.pathname):
-					// drm_warnings();
-					// add_metracritic_userscore();
-					// add_widescreen_certification();
+					case /^\/sub\/.*/.test(window.location.pathname):
+						drm_warnings();
+						subscription_savings_check();
 
-					load_appids_in_inventory().done(subscription_savings_check2);
+						break;
 
-					break;
+					case /^\/account\/.*/.test(window.location.pathname):
+						account_total_spent();
+						break;
+				}
+				load_user_coupons(); // Calling on every page load?
 
-				case /^\/account\/.*/.test(window.location.pathname):
-					// account_total_spent();
-					break;
-			}
-			// load_user_coupons(); // Calling on every page load?
-			// DLC on App Page
-			// xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
+				/* Highlights & data fetching */
+				// Storefront rows
+				xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
 
-			// search result
-			// xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
+				// DLC on App Page
+				xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
 
-			// highlights featured homepage items
-			// xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
+				// search result
+				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 
-			// hightlight daily deal
-			// xpath_each("//div[contains(@class,'dailydeal')]", highlight_daily_deal);
+				// highlights featured homepage items
+				xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
 
-			// wishlist owned
-			// xpath_each("//div[contains(@class,'wishlistRow')]", load_wishlish_app_info);
+				// hightlight daily deal
+				xpath_each("//div[contains(@class,'dailydeal')]", highlight_daily_deal);
+
+				// wishlist owned
+				xpath_each("//div[contains(@class,'wishlistRow')]", load_wishlish_app_info);
+			});
 
 			break;
 
@@ -869,26 +877,26 @@ function check_if_purchased() {
 
 			switch (true) {
 				case /^\/groups\/.*/.test(window.location.pathname):
-					// add_group_events();
+					add_group_events();
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-					// add_cart_on_wishlist();
-					// fix_wishlist_image_not_found();
+					add_cart_on_wishlist();
+					fix_wishlist_image_not_found();
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
-					// add_return_to_profile_tab();
+					add_return_to_profile_tab();
 					break;
 
 				case /^\/(?:id|profiles)\/[^\/]+$/.test(window.location.pathname):
-					// add_community_profile_links();
+					add_community_profile_links();
 					break;
 
 				case /^\/sharedfiles\/.*/.test(window.location.pathname):
-					// hide_greenlight_banner()
+					hide_greenlight_banner()
 					break;
 			}
 			break;
 	}
-}());
+});
