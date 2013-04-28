@@ -1,7 +1,8 @@
 ﻿// version 3.0
 var storage = chrome.storage.sync;
+var apps;
 
-// Chrome storage functions.
+//Chrome storage functions.
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
 }
@@ -10,6 +11,16 @@ function getValue(key) {
 	var v = sessionStorage.getItem(key);
 	if (v === undefined) return v;
 	return JSON.parse(v);
+}
+
+function loadApps() {
+	var _apps = sessionStorage.getItem("apps");
+	apps = _apps ? _apps.split(",") : [];
+}
+
+function saveApps() {
+	sessionStorage.setItem("apps", apps);
+	loadApps();
 }
 
 // Helper prototypes
@@ -91,7 +102,11 @@ function highlight_owned(node) {
 		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
 		if (settings.showowned) {
 			node.style.backgroundImage = "none";
-			node.style.backgroundColor = settings.bgcolor;
+			// node.style.backgroundColor = settings.bgcolor;
+			node.style.borderLeftWidth = "5px";
+			node.style.borderLeftStyle = "solid";
+			node.style.borderLeftColor = settings.bgcolor;
+
 		}
 	});
 	owned = true;
@@ -130,50 +145,71 @@ function highlight_inv(node) {
 	});
 }
 
-// checks an item panel
-function add_info(node, appid) {
-	// loads values from cache to reduce response time
-	if (getValue(appid)) { highlight_owned(node); return; }
-	if (getValue(appid+"c")) { highlight_coupon(node); return; }
-	if (getValue(appid+"w")) { highlight_wishlist(node); return; }
-	if (getValue(appid+"i")) { highlight_inv(node); return; }
-
-	// sets GET request and returns as text for evaluation
-	get_http('/app/' + appid + '/', function (txt) {
-		if (txt.search(/<a href="http:\/\/steamcommunity.com\/id\/.+\/wishlist">/) > 0) {
-			if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
-				setValue(appid+"w", true);
-				highlight_wishlist(node);
-			}
-		}
-		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-			setValue(appid, true);
-			highlight_owned(node);
-		}
-	});
-
-	/* check to see if it's in inventory
+function load_appids_in_inventory() {
+	var deferred = new $.Deferred();
 	get_http('http://steamcommunity.com/my/inventory/json/753/1/', function (txt) {
-		var has_inv = txt.indexOf('[{"name":"View in store","link":"http:\\/\\/store\.steampowered\.com\\/app\\/' + appid);
-		if (has_inv > 0) {
-			setValue(appid+"i", true);
-			highlight_inv(node);
-		}
-	}); */
-}
+		// TODO: Seperate method and cache, or one call per load at worst.
 
-function add_info_wishlist(node, appid) {
-	// loads values from cache to reduce response time
-	if (getValue(appid)) { highlight_owned(node); return; }
-
-	// sets GET request and returns as text for evaluation
-	get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
-		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-			setValue(appid, true);
-			highlight_owned(node);
+		var data = JSON.parse(txt);
+		for (var i = 0; i < data.rgDescriptions.length; i++) {
+			var appid = data.rgDescriptions[i].appid;
+			if (apps.indexOf(appid) === -1) apps.push(appid);
+			setValue(appid + "inventory", true);
 		}
+		deferred.resolve();
 	});
+	return deferred.promise();
 }
+
+// checks an item panel
+function add_info(appid) {
+	var deferred = new $.Deferred();
+	// loads values from cache to reduce response time
+	if (apps.indexOf(appid) === -1) {
+		get_http('/app/' + appid + '/', function (txt) {
+			if (apps.indexOf(appid) === -1) apps.push(appid);
+			if (txt.search(/<a href="http:\/\/steamcommunity.com\/id\/.+\/wishlist">/) > 0) {
+				if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
+					setValue(appid + "wishlisted", true);
+				}
+			}
+			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
+					setValue(appid + "owned", true);
+			}
+			saveApps();
+			deferred.resolve();
+		});
+	}
+	else {
+		deferred.resolve();
+	}
+
+	return deferred.promise();
+
+
+		// TODO:
+		// - lastUpdated param & caching
+		// - move highlighting to another method
+
+		// We have info on app
+		// if (apps[appid].owned) highlight_owned(node);
+		// if (apps[appid].wishlisted) highlight_wishlist(node);
+		// if (apps[appid].inventory) highlight_inv(node);
+
+}
+
+//function add_info_wishlist(node, appid) {
+//	// loads values from cache to reduce response time
+//	if (getValue(appid)) { highlight_owned(node); return; }
+
+//	// sets GET request and returns as text for evaluation
+//	get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
+//		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
+//			setValue(appid, true);
+//			highlight_owned(node);
+//		}
+//	});
+//}
 
 function find_purchase_date(appname) {
 	get_http('https://store.steampowered.com/account/', function (txt) {
@@ -249,47 +285,52 @@ function display_coupon_message(appid) {
 		for (var i=1;i<coupons.length;i++) {
 			if (coupons[i].indexOf(getValue(appid+"csub")) >= 0 ) {
 				var couponimageurl = coupons[i].substring(coupons[i].indexOf('"icon_url"') + 12, coupons[i].indexOf('","icon_url_large"'));
-				var coupontitle    = coupons[i].substring(coupons[i].indexOf('"name":"')   +  8, coupons[i].indexOf('","market_name":"'));
-				var couponvalid    = coupons[i].substring(coupons[i].indexOf('{"value":"(Valid') + 10, coupons[i].indexOf('","color":"A75124"}'));
-				var coupondisc     = "";
-				var discamount     = coupons[i].match(/[1-9][0-9]%/);
+				var coupontitle	= coupons[i].substring(coupons[i].indexOf('"name":"')   +  8, coupons[i].indexOf('","market_name":"'));
+				var couponvalid	= coupons[i].substring(coupons[i].indexOf('{"value":"(Valid') + 10, coupons[i].indexOf('","color":"A75124"}'));
+				var coupondisc	 = "";
+				var discamount	 = coupons[i].match(/[1-9][0-9]%/);
 				if (coupons[i].indexOf("Can't be applied with other discounts.") > 0) { coupondisc = "Can't be applied with other discounts."; }
 				document.getElementById('game_area_purchase').insertAdjacentHTML('beforebegin', '<div class="early_access_header"><div class="heading"><h1 class="inset">You have a coupon available!</h1><h2 class="inset">A coupon in your inventory will be applied automatically at checkout.</h2><p><a href="https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275">Learn more</a> about Steam Coupons</p></div><div class="devnotes"><table border=0><tr><td rowspan=3><img src="http://cdn.steamcommunity.com/economy/image/' + couponimageurl + '"></td><td valign=center><h1>' + coupontitle + '</h1></td></tr><tr><td>' + coupondisc + '</td></tr><tr><td><font style="color:#A75124;">' + couponvalid + '</font></td></tr></table><p></div></div>');
 
 				// Get the original price, discounted price, and AddToCartID, and currency symbol
-				var pricediv = document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML;
+				var pricediv = document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML,
+					originalprice,
+					addToCartID,
+					discountprice,
+					newdiscount,
+					newdiscount2;
 				if (pricediv.indexOf(".") > 0) {
-					var originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 110);
-					var addToCartID    = document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					var discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol     = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65);
+					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 110);
+					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
+					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
+					currencysymbol	 = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65);
 					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
 						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + currencysymbol + originalprice + '</div><div class="discount_final_price" itemprop="price">' + currencysymbol + discountprice + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
 					}
 					else {
 						if (coupondisc != "Can't be applied with other discounts.") {
-							var newdiscount = originalprice.match(/<div class="discount_final_price" itemprop="price">(.+)<\/div>/);
-							var newdiscount2 = (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))).toFixed(2);
+							newdiscount = originalprice.match(/<div class="discount_final_price" itemprop="price">(.+)<\/div>/);
+							newdiscount2 = (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))).toFixed(2);
 							currencysymbol = pricediv.substring(pricediv.indexOf('<div class="discount_original_price">') + 37, pricediv.indexOf('<div class="discount_original_price">') + 38);
 							document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + newdiscount[1] + '</div><div class="discount_final_price" itemprop="price">' + currencysymbol + newdiscount2 + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
 						}
 					}
 				}
 				if (pricediv.indexOf("USD") > 0) {
-					var originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 114);
-					var addToCartID    = document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					var discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol     = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65);
+					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 114);
+					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
+					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
+					currencysymbol	 = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65);
 					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
 						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + currencysymbol + originalprice + ' USD</div><div class="discount_final_price" itemprop="price">' + currencysymbol + discountprice + ' USD</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
 					}
 				}
 				if (pricediv.indexOf(",") > 0) {
-					var originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 113);
+					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 113);
 					originalprice = originalprice.replace(",",".");
-					var addToCartID    = document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					var discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol     = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 69, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 70);
+					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
+					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
+					currencysymbol	 = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 69, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 70);
 					originalprice = originalprice.replace(".",",");
 					discountprice = discountprice.replace(".",",");
 					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
@@ -297,8 +338,8 @@ function display_coupon_message(appid) {
 					}
 					else {
 						if (coupondisc != "Can't be applied with other discounts.") {
-							var newdiscount = originalprice.match(/<div class="discount_final_price" itemprop="price">(.+)<\/div>/);
-							var newdiscount2 = (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))).toFixed(0);
+							newdiscount = originalprice.match(/<div class="discount_final_price" itemprop="price">(.+)<\/div>/);
+							newdiscount2 = (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))).toFixed(0);
 							console.log ((Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))));
 							currencysymbol = pricediv.substring(pricediv.indexOf('<div class="discount_original_price">') + 42, pricediv.indexOf('<div class="discount_original_price">') + 43);
 							console.log (currencysymbol);
@@ -307,10 +348,10 @@ function display_coupon_message(appid) {
 					}
 				}
 				if (pricediv.indexOf("pуб.") > 0) {
-					var originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 121);
-					var addToCartID    = document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					var discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol     = "pуб.";
+					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 121);
+					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
+					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
+					currencysymbol	 = "pуб.";
 					discountprice = discountprice.replace(".",",");
 					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
 						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + originalprice + " " + currencysymbol + '</div><div class="discount_final_price" itemprop="price">' + discountprice + " " + currencysymbol + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
@@ -642,159 +683,71 @@ function account_total_spent() {
 	});
 }
 
-// Messy stuff below this line
-// ===========================
+function subscription_savings_check() {
 
-var curcomma;
-var currencysymbol;
+	var owned_games_prices = 0,
+		appid_info_deferreds = [],
+		sub_apps = [],
+		sub_app_prices = {},
+		comma,
+		currency_symbol;
 
-//sale or sub
-var not_have = 0;
-var sub = location.pathname.startsWith('/sub/');
-var checked = false;
-var price = 0;
-xpath_each("//div[contains(@class,'tab_row') or contains(@class,'sale_page_purchase_item')]", function (node) {
-	if (node.checked) return;
-	node.checked = checked = true;
-	owned = false;
-	var itemPrice;
-	if (sub) {
-		var e = getelem(node, 'div', 'tab_price').lastChild;
+	// For each app, load its info.
+	$.each($(".tab_row"), function (i, node) {
+		var appid = get_appid(node.querySelector("a").href),
+			price_elem = getelem(node, 'div', 'tab_price').lastChild,
+			m;
 
-		if (e.nodeValue.indexOf(",") > 0) {
-			var m = e.nodeValue.match(/[0-9]+.[0-9]+./);
+		appid_info_deferreds.push(add_info(appid));
+
+
+		if (price_elem.nodeValue.indexOf(",") > 0) {
+			m = price_elem.nodeValue.match(/[0-9]+.[0-9]+./);
 			itemPrice = m ? parseFloat(m[0].replace(/[^0-9-.]/g, '')) : 0;
 			curcomma = true;
 
-			currencysymbol = e.nodeValue.replace(/\s+/g, ' ');
-			if (currencysymbol.indexOf(" ") !== 0) { currencysymbol = " " + currencysymbol; }
+			currency_symbol = price_elem.nodeValue.replace(/\s+/g, ' ');
+			if (currency_symbol.indexOf(" ") !== 0) { currency_symbol = " " + currency_symbol; }
 
-			currencysymbol = currencysymbol.match(/. $/);
-			if (currencysymbol !== null) {
-				currencysymbol = currencysymbol[0];
-			}
+			currency_symbol = currency_symbol.match(/. $/);
+			if (currency_symbol) currency_symbol = currency_symbol[0];
 		}
 
-		if (e.nodeValue.indexOf(".") > 0) {
-			var m = e.nodeValue.match(/[0-9\.]+/);
+		if (price_elem.nodeValue.indexOf(".") > 0) {
+			m = price_elem.nodeValue.match(/[0-9\.]+/);
 			itemPrice = m ? parseFloat(m[0]) : 0;
 
-			currencysymbol = e.nodeValue.replace(/\s+/g, ' ');
-			if (currencysymbol.indexOf(" ") !== 0) { currencysymbol = " " + currencysymbol; }
+			currency_symbol = price_elem.nodeValue.replace(/\s+/g, ' ');
+			if (currency_symbol.indexOf(" ") !== 0) { currency_symbol = " " + currency_symbol; }
 
-			currencysymbol = currencysymbol.match(/^ ./);
-			if (currencysymbol !== null) {
-				currencysymbol = currencysymbol[0];
-			}
+			currency_symbol = currency_symbol.match(/^ ./);
+			if (currency_symbol) currency_symbol = currency_symbol[0];
 		}
 
-		if (e.nodeValue.indexOf("p") > 0) {
-			currencysymbol = "py6. ";
+		sub_apps.push(appid);
+		sub_app_prices[appid] = itemPrice;
+
+	});
+
+	// When we have all the app info
+	$.when(appid_info_deferreds).done(function() {
+		for (var i = 0; i < sub_apps.length; i++) {
+			if (getValue(sub_apps[i] + "owned")) owned_games_prices =+ sub_app_prices[sub_apps[i]];
 		}
+		var $bundle_price = $(".discount_final_price");
+		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
 
-	}
+		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));
 
-	var ret = node.getElementsByTagName('a');
-	var appid;
-	if (appid = get_appid(ret[0].href)) {
-		add_info(node, appid);
-		if (owned == false) {
-			price = price + itemPrice;
-		}
-	}
+		var corrected_price = owned_games_prices - bundle_price;
 
-});
+		var $message = $('<div class="savings">' + (comma ? corrected_price / 100 : corrected_price).formatMoney(2, currency_symbol, ",", comma ? "," : ".") + '</div>');
+		if (corrected_price < 0) $message[0].style.color = "red";
 
-// calculates the savings of a pack or bundle and your savings based on games owned.
-if (sub && checked) {
+		$('.savings').replaceWith($message);
 
-	var bundle_price = get_divContents('.discount_final_price');
-	if (bundle_price === undefined) { bundle_price = get_divContents('.game_purchase_price'); }
-	var bundle_price2 = Number(bundle_price.replace(/[^0-9\.]+/g,""));
-	price = price - bundle_price2;
-	var message;
-
-	if (price > 0) {
-		message = '<div class="savings">' + price.formatMoney(2,currencysymbol,",",".") + '</div>';
-		if (curcomma) {
-			price = (price / 100);
-			message = '<div class="savings">' + price.formatMoney(2,currencysymbol,",",",") + '</div>';
-		}
-
-	}
-	else {
-		message = '<div class="savings"><font color=red>' + price.formatMoney(2,currencysymbol,",",".") + '</font></div>';
-		if (curcomma) {
-			price = (price / 100);
-			message = '<div class="savings"><font color=red>' + price.formatMoney(2,currencysymbol,",",",") + '</font></div>';
-		}
-	}
-
-	xpath_each("//div[@class='package_totals_row']", function (node) {
-		$('.savings').replaceWith(message);
 	});
 }
-
-// DLC on App Page
-xpath_each("//a[contains(@class,'game_area_dlc_row')]", function (node) {
-	var appid;
-	if (appid = get_appid(node.href)) {
-		add_info(node, appid);
-	}
-});
-
-// search result
-xpath_each("//a[contains(@class,'search_result_row')]", function (node) {
-	var appid;
-	if (appid = get_appid(node.href)) {
-		add_info(node, appid);
-	}
-});
-
-// highlights featured homepage items
-xpath_each("//a[contains(@class,'small_cap')]", function (node) {
-	var appid;
-	if (appid = get_appid(node.href)) {
-		add_info(node, appid);
-	}
-});
-
-// hightlight daily deal
-xpath_each("//div[contains(@class,'dailydeal')]", function (node) {
-
-	var appid;
-
-	var dd_start = node.innerHTML.indexOf('<a href="http://store.steampowered.com/app/');
-	var dd_end = node.innerHTML.indexOf('<img src=');
-
-	var dailydeal = node.innerHTML.substring(dd_start + 9, dd_end - 8);
-
-	appid = get_appid(dailydeal);
-	add_info(node, appid);
-
-});
-
-// wishlist owned
-xpath_each("//div[contains(@class,'wishlistRow')]", function (node) {
-	var appid;
-
-	if (appid = get_appid_wishlist(node.id)) {
-		add_info_wishlist(node, appid);
-	}
-});
-
-var appname;
-
-xpath_each("//div[contains(@class,'apphub_AppName')]", function (app) {
-	appname = app.innerHTML;
-});
-
-// find the date a game was purchased if owned
-xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
-	if (node.innerHTML.indexOf("You already own") > 0) {
-		find_purchase_date(appname);
-	}
-});
 
 // pull DLC gamedata from enhancedsteam.com
 if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {
@@ -806,51 +759,109 @@ if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {
 	});
 }
 
-// removes "onclick" events which Steam uses to add javascript to it's search functions
-var allElements, thisElement;
-allElements = document.evaluate("//a[contains(@onclick, 'SearchLinkClick( this ); return false;')]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-for (var i = 0; i < allElements.snapshotLength; i++) {
-	thisElement = allElements.snapshotItem(i);
-	if (thisElement.nodeName.toUpperCase() == 'A') {
-		thisElement.removeAttribute('onclick');
+function i_dont_know_what_this_code_does() {
+	// removes "onclick" events which Steam uses to add javascript to it's search functions
+	var allElements, thisElement;
+	allElements = document.evaluate("//a[contains(@onclick, 'SearchLinkClick( this ); return false;')]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+	for (var i = 0; i < allElements.snapshotLength; i++) {
+		thisElement = allElements.snapshotItem(i);
+		if (thisElement.nodeName.toUpperCase() == 'A') {
+			thisElement.removeAttribute('onclick');
+		}
 	}
 }
 
+function load_app_info(node) {
+	var appid = get_appid(node.href);
+	if (appid) {
+		add_info(appid);
+	}
+}
 
+function highlight_daily_deal(node) {
+
+	var appid;
+
+	var dd_start = node.innerHTML.indexOf('<a href="http://store.steampowered.com/app/');
+	var dd_end = node.innerHTML.indexOf('<img src=');
+
+	var dailydeal = node.innerHTML.substring(dd_start + 9, dd_end - 8);
+
+	appid = get_appid(dailydeal);
+	add_info(appid);
+
+}
+
+function load_wishlish_app_info(node) {
+	var appid = get_appid_wishlist(node.id);
+	if (appid) {
+		add_info_wishlist(node, appid);
+	}
+}
+
+function check_if_purchased() {
+	// find the date a game was purchased if owned
+	var ownedNode = $(".game_area_already_owned");
+
+	if (ownedNode.length > 0) {
+		var appname = $(".apphub_AppName")[0].innerText;
+		find_purchase_date(appname);
+	}
+}
 
 (function(){
 	// On window load...
+	loadApps();
 	add_enhanced_steam_options_link();
 	remove_install_steam_button();
+	i_dont_know_what_this_code_does();
 
 	switch (window.location.host) {
 		case "store.steampowered.com":
-			load_user_coupons(); // Calling on every page load?
-
+			// Load inv before doing anythin
 			switch (true) {
 				case /^\/cart\/.*/.test(window.location.pathname):
-					add_empty_cart_button();
+					// add_empty_cart_button();
 					break;
 
 				case /^\/app\/.*/.test(window.location.pathname):
-					var appid = get_appid(localurl);
-					if (getValue(appid+"c")) display_coupon_message(appid);
-					show_pricing_history(appid);
-					drm_warnings();
-					add_metracritic_userscore();
-					add_widescreen_certification();
+					// var appid = get_appid(localurl);
+					// if (getValue(appid+"c")) display_coupon_message(appid);
+					// show_pricing_history(appid);
+					// drm_warnings();
+					// add_metracritic_userscore();
+					// add_widescreen_certification();
+					// check_if_purchased();
 					break;
 
 				case /^\/sub\/.*/.test(window.location.pathname):
-					drm_warnings();
-					add_metracritic_userscore();
-					add_widescreen_certification();
+					// drm_warnings();
+					// add_metracritic_userscore();
+					// add_widescreen_certification();
+
+					load_appids_in_inventory().done(subscription_savings_check2);
+
 					break;
 
 				case /^\/account\/.*/.test(window.location.pathname):
-					account_total_spent();
+					// account_total_spent();
 					break;
 			}
+			// load_user_coupons(); // Calling on every page load?
+			// DLC on App Page
+			// xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
+
+			// search result
+			// xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
+
+			// highlights featured homepage items
+			// xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
+
+			// hightlight daily deal
+			// xpath_each("//div[contains(@class,'dailydeal')]", highlight_daily_deal);
+
+			// wishlist owned
+			// xpath_each("//div[contains(@class,'wishlistRow')]", load_wishlish_app_info);
 
 			break;
 
@@ -858,24 +869,24 @@ for (var i = 0; i < allElements.snapshotLength; i++) {
 
 			switch (true) {
 				case /^\/groups\/.*/.test(window.location.pathname):
-					add_group_events();
+					// add_group_events();
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-					add_cart_on_wishlist();
-					fix_wishlist_image_not_found();
+					// add_cart_on_wishlist();
+					// fix_wishlist_image_not_found();
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
-					add_return_to_profile_tab();
+					// add_return_to_profile_tab();
 					break;
 
 				case /^\/(?:id|profiles)\/[^\/]+$/.test(window.location.pathname):
-					add_community_profile_links();
+					// add_community_profile_links();
 					break;
 
 				case /^\/sharedfiles\/.*/.test(window.location.pathname):
-					hide_greenlight_banner()
+					// hide_greenlight_banner()
 					break;
 			}
 			break;
