@@ -1,4 +1,4 @@
-﻿// version 3.0
+﻿// version 3.1
 
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
