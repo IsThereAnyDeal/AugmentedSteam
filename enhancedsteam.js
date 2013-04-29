@@ -240,13 +240,13 @@ function add_info(appid) {
 	var deferred = new $.Deferred();
 	// loads values from cache to reduce response time
 	if (!getValue(appid)) {
-		get_http('store.steampowered.com/app/' + appid + '/', function (txt) {
+		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
 			setValue(appid, true); // Set appid to true to indicate we have data on it.d
-			if (txt.search("<div class=\"game_area_wishlist_btn disabled\">") < 0) {
+			if (txt.search("<div class=\"game_area_wishlist_btn disabled\">") > 0) {
 				setValue(appid + "wishlisted", true);
 			}
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-					setValue(appid + "owned", true);
+				setValue(appid + "owned", true);
 			}
 			deferred.resolve();
 		});
