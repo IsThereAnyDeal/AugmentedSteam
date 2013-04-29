@@ -232,6 +232,37 @@ function load_inventory() {
 	return deferred.promise();
 }
 
+function add_empty_wishlist_button() {
+	var empty_button = $("<a>Empty wishlist</a>");
+	empty_button.click(empty_wishlist);
+	$("#wishlist_sort_options").before(empty_button);
+}
+
+function empty_wishlist() {
+	var deferreds = [];
+	$.each($(".wishlistRow"), function(i, $obj) {
+		var deferred = new $.Deferred();
+		var appid = get_appid_wishlist($obj.id),
+			http = new XMLHttpRequest(),
+			profile = $(".returnLink a")[0].href.replace("http://steamcommunity.com/", "");
+
+		http.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				deferred.resolve();
+			}
+		};
+		http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.send("action=remove&appid=" + encodeURIComponent(appid));
+		// Send only, we dont care about response.
+		deferreds.push(deferred.promise());
+	});
+
+	$.when(deferreds).done(function(){
+		location.reload();
+	});
+}
+
 // checks an item panel
 function add_info(appid) {
 	// TODO:
@@ -241,8 +272,9 @@ function add_info(appid) {
 	// loads values from cache to reduce response time
 	if (!getValue(appid)) {
 		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
-			setValue(appid, true); // Set appid to true to indicate we have data on it.d
-			if (txt.search("<div class=\"game_area_wishlist_btn disabled\">") > 0) {
+			setValue(appid, true); // Set appid to true to indicate we have data on it.
+			// Bad string to search for, but wishlist buttons on storefront seem broke atm - I can't test.
+			if ($(txt).find(".demo_area_button > .game_area_wishlist_btn.disabled").length > 0) {
 				setValue(appid + "wishlisted", true);
 			}
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
@@ -259,7 +291,7 @@ function add_info(appid) {
 }
 
 function find_purchase_date(appname) {
-	get_http('https://store.steampowered.com/account/', function (txt) {
+	get_http('http://store.steampowered.com/account/', function (txt) {
 		var apphtml = txt.substring(txt.indexOf('<div class="transactionRowTitle">' + appname), txt.indexOf('<div class="transactionRowTitle">' + appname) - 300);
 		var appdate = apphtml.match(/<div class="transactionRowDate">(.+)<\/div>/);
 		var found = 0;
@@ -304,12 +336,12 @@ function load_user_coupons(){
 		var done = getValue("coupondone");
 		if (done != "1") {
 			// Get JSON results
-			get_http('http://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
+			get_http('https://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
 				var coupons = txt.split("/?list_of_subs=");
 				for (var i=1;i<coupons.length;i++) {
 					// For each coupon, load search page and return first appID in results (not sure how this works for multi-game coupons?)
 					var searchID = coupons[i].substring(0, coupons[i].indexOf('","'));
-					get_http('http://store.steampowered.com/search/?list_of_subs=' + searchID, function (subtxt) {
+					get_http('//store.steampowered.com/search/?list_of_subs=' + searchID, function (subtxt) {
 						var couponAppID = subtxt.substring(subtxt.indexOf('<a href="http://store.steampowered.com/app/') + 43, subtxt.indexOf('/?snr=1_7_7_230_150_1" class="search_result_row even"'));
 						var pageSearchID = subtxt.substring(subtxt.indexOf('<input type="hidden" name="list_of_subs" value="') + 48, subtxt.indexOf('<div class="search_controls" id="default_search_controls">') - 12);
 						setValue(couponAppID+"c", true);
@@ -325,7 +357,7 @@ function load_user_coupons(){
 // If app has a coupon, display message
 function display_coupon_message(appid) {
 	// get JSON coupon results
-	get_http('http://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
+	get_http('https://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
 		var coupons = txt.split('{"appid":"753","classid":"');
 		for (var i=1;i<coupons.length;i++) {
 			if (coupons[i].indexOf(getValue(appid+"csub")) >= 0 ) {
@@ -542,7 +574,7 @@ function add_group_events() {
 
 			$('.group_summary').after('<div class="group_content_rule"></div><div class="group_content"><div class="group_content_header"><div class="group_content_header_viewmore"><a href="http://steamcommunity.com/groups/' + groupname + '/events/">VIEW ALL</a></div>Events</div><div id="enhancedsteam_group_events"></div>');
 
-			get_http("http://steamcommunity.com/groups/" + groupname + "/events/", function (txt) {
+			get_http("//steamcommunity.com/groups/" + groupname + "/events/", function (txt) {
 
 				var events_start = txt.indexOf('<!-- events section -->');
 				var events_end = txt.indexOf('<!-- /events section -->');
@@ -863,7 +895,7 @@ $(document).ready(function(){
 						// if (getValue(appid+"c")) display_coupon_message(appid);
 						var appid = get_appid(window.location.host + window.location.pathname);
 						show_pricing_history(appid);
-						dlc_data_from_site(appid)
+						dlc_data_from_site(appid);
 
 						drm_warnings();
 						add_metracritic_userscore();
@@ -915,6 +947,7 @@ $(document).ready(function(){
 					fix_wishlist_image_not_found();
 
 					load_inventory().done(function() {
+						add_empty_wishlist_button();
 						// wishlist owned  Highlights & data fetching
 						xpath_each("//div[contains(@class,'wishlistRow')]", load_app_info);
 					});
