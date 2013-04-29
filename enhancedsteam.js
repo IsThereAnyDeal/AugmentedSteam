@@ -69,7 +69,7 @@ function get_divContents(selector) {
 }
 
 function get_appid(t) {
-	if (t && t.match(/^http:\/\/store\.steampowered\.com\/app\/(\d+)\/?/)) return RegExp.$1;
+	if (t && t.match(/store\.steampowered\.com\/app\/(\d+)\/?/)) return RegExp.$1;
 	else return null;
 }
 
@@ -79,11 +79,9 @@ function get_appid_wishlist(t) {
 }
 
 function get_groupname(t) {
-	if (t && t.match(/^http:\/\/steamcommunity\.com\/groups\/(\S+)/)) return RegExp.$1;
+	if (t && t.match(/steamcommunity\.com\/groups\/(\S+)/)) return RegExp.$1;
 	else return null;
 }
-
-var owned; // This is super messy.
 
 // colors the tile for owned games
 function highlight_owned(node) {
@@ -91,14 +89,10 @@ function highlight_owned(node) {
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
 		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
 		if (settings.showowned) {
-			node.style.backgroundImage = "none";
-			node.style.borderLeftWidth = "5px";
-			node.style.borderLeftStyle = "solid";
-			node.style.borderLeftColor = settings.bgcolor;
+			add_tag(node, "Owned", settings.bgcolor);
 
 		}
 	});
-	owned = true;
 }
 
 // colors the tile for wishlist games
@@ -107,10 +101,7 @@ function highlight_wishlist(node) {
 		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
 		if (settings.showwishlist === undefined) { settings.showwishlist = true; storage.set({'showwishlist': settings.showwishlist}); }
 		if (settings.showwishlist) {
-			node.style.backgroundImage = "none";
-			node.style.borderLeftWidth = "5px";
-			node.style.borderLeftStyle = "solid";
-			node.style.borderLeftColor = settings.wlcolor;
+			add_tag(node, "Wishlist", settings.wlcolor);
 		}
 	});
 }
@@ -121,10 +112,7 @@ function highlight_coupon(node) {
 		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269"; storage.set({'ccolor': settings.ccolor}); }
 		if (settings.showcoupon === undefined) { settings.showcoupon = true; storage.set({'showcoupon': settings.showcoupon}); }
 		if (settings.showcoupon) {
-			node.style.backgroundImage = "none";
-			node.style.borderLeftWidth = "5px";
-			node.style.borderLeftStyle = "solid";
-			node.style.borderLeftColor = settings.ccolor;
+			add_tag(node, "Coupon", settings.ccolor);
 		}
 	});
 }
@@ -133,15 +121,98 @@ function highlight_coupon(node) {
 function highlight_inv(node) {
 	storage.get(function(settings) {
 		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
-		node.style.backgroundImage = "none";
-		node.style.borderLeftWidth = "5px";
-		node.style.borderLeftStyle = "solid";
-		node.style.borderLeftColor = settings.icolor;
+		add_tag(node, "Inventory", settings.icolor);
 	});
+}
+
+function add_tag (node, string, color) {
+	/* To add coloured tags to the end of app names instead of colour
+	highlighting; this allows an to be "highlighted" multiple times; e.g.
+	inventory and owned. */
+	node.tags = node.tags || [];
+	var tagItem = [string, color];
+	var already_tagged = false;
+
+	// Check its not already tagged.
+	for (var i = 0; i < node.tags.length; i++) {
+		if (node.tags[i][0] === tagItem[0]) already_tagged = true;
+	}
+	if (!already_tagged) {
+		node.tags.push(tagItem);
+		display_tags(node);
+	}
+}
+
+function display_tags(node) {
+	var remove_existing_tags = function remove_existing_tags(tag_root) {
+		if (tag_root.find(".tags").length > 0) {
+			tag_root.find(".tags").remove();
+		}
+	};
+	if (node.tags) {
+
+		// Make tags.
+		$tags = $("<div class=\"tags\"></div>");
+		for (var i = 0; i < node.tags.length; i++) {
+			var tag = node.tags[i];
+			var $tag = $("<span>" + tag[0] + "</span>");
+			$tag.css("backgroundColor", tag[1]);
+			$tag.css("color", "white");
+			$tag.css("float", "right");
+			$tag.css("padding", "2px");
+			$tag.css("margin-right", "4px");
+			$tags.append($tag);
+		}
+
+		// Gotta apply tags differently per type of node.
+		var $tag_root;
+		if (node.classList.contains("tab_row")) {
+			$tag_root = $(node).find(".tab_desc");
+			remove_existing_tags($tag_root);
+
+			$tag_root.find("h4").after($tags);
+		}
+		else if (node.classList.contains("search_result_row")) {
+			$tag_root = $(node).find(".search_name");
+			remove_existing_tags($tag_root);
+
+			$tag_root.find("h4").after($tags);
+		}
+		else if (node.classList.contains("dailydeal")) {
+			$tag_root = $(node).parent();
+			remove_existing_tags($tag_root);
+
+			$tag_root.find(".game_purchase_action").before($tags);
+			$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+		}
+		else if (node.classList.contains("small_cap")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("width", "100px");
+			$tags.css("float", "right");
+			$tag_root.find("h4").before($tags);
+		}
+		else if (node.classList.contains("game_area_dlc_row")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("margin-right", "60px");
+			$tag_root.find(".game_area_dlc_price").before($tags);
+		}
+		else if (node.classList.contains("wishlistRow")) {
+			$tag_root = $(node).find(".wishlistRowItem");
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+			$tag_root.find(".bottom_controls").append($tags);
+		}
+	}
 }
 
 function load_inventory() {
 	// Merge coupon stuff here too; waiting on all of Valve to give me a coupon to play with.
+	// TODO: Differentiate between gifts and guest passes.
 
 	var deferred = new $.Deferred();
 	get_http('http://steamcommunity.com/my/inventory/json/753/1/', function (txt) {
@@ -163,21 +234,20 @@ function load_inventory() {
 
 // checks an item panel
 function add_info(appid) {
+	// TODO:
+	// - lastUpdated param & caching
+
 	var deferred = new $.Deferred();
 	// loads values from cache to reduce response time
-	if (appid == "234710") debugger;
 	if (!getValue(appid)) {
-		get_http('/app/' + appid + '/', function (txt) {
-			setValue(appid, true); // Set appid to true to indicate we have data on it.
-			if (txt.search(/<a href="http:\/\/steamcommunity.com\/id\/.+\/wishlist">/) > 0) {
-				if (txt.search(/<div id="add_to_wishlist_area_fail" style="display: none;">/) < 0) {
-					setValue(appid + "wishlisted", true);
-				}
+		get_http('store.steampowered.com/app/' + appid + '/', function (txt) {
+			setValue(appid, true); // Set appid to true to indicate we have data on it.d
+			if (txt.search("<div class=\"game_area_wishlist_btn disabled\">") < 0) {
+				setValue(appid + "wishlisted", true);
 			}
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 					setValue(appid + "owned", true);
 			}
-			// Temp - rejig to somewhere else later.
 			deferred.resolve();
 		});
 	}
@@ -186,31 +256,7 @@ function add_info(appid) {
 	}
 
 	return deferred.promise();
-
-
-		// TODO:
-		// - lastUpdated param & caching
-		// - move highlighting to another method
-
-		// We have info on app
-		// if (apps[appid].owned) highlight_owned(node);
-		// if (apps[appid].wishlisted) highlight_wishlist(node);
-		// if (apps[appid].inventory) highlight_inv(node);
-
 }
-
-//function add_info_wishlist(node, appid) {
-//	// loads values from cache to reduce response time
-//	if (getValue(appid)) { highlight_owned(node); return; }
-
-//	// sets GET request and returns as text for evaluation
-//	get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
-//		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-//			setValue(appid, true);
-//			highlight_owned(node);
-//		}
-//	});
-//}
 
 function find_purchase_date(appname) {
 	get_http('https://store.steampowered.com/account/', function (txt) {
@@ -365,11 +411,9 @@ function show_pricing_history(appid) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice) {
-			if (localappid !== null) {
-				var sgsurl = "http://www.steamgamesales.com/app/" + appid + "/";
-				lowest_price = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><a href='" + sgsurl + "' target='_blank'>Click here to check pricing history</a>";
-				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', lowest_price);
-			}
+			var sgsurl = "http://www.steamgamesales.com/app/" + appid + "/";
+			lowest_price = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><a href='" + sgsurl + "' target='_blank'>Click here to check pricing history</a>";
+			document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', lowest_price);
 		}
 	});
 }
@@ -749,14 +793,16 @@ function subscription_savings_check() {
 	});
 }
 
-// pull DLC gamedata from enhancedsteam.com
-if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {
-	get_http("http://www.enhancedsteam.com/gamedata/gamedata.php?appid=" + localappid + "&appname=" + appname , function (txt) {
-		var block = "<div class='block'><div class='block_header'><h4>Downloadable Content Details</h4></div><div class='block_content'><div class='block_content_inner'>" + txt + "</div></div></div>";
+function dlc_data_from_site(appid) {
+	// pull DLC gamedata from enhancedsteam.com
+	if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {
+		get_http("http://www.enhancedsteam.com/gamedata/gamedata.php?appid=" + appid, function (txt) {
+			var block = "<div class='block'><div class='block_header'><h4>Downloadable Content Details</h4></div><div class='block_content'><div class='block_content_inner'>" + txt + "</div></div></div>";
 
-		var dlc_categories = document.getElementById('demo_block');
-		dlc_categories.insertAdjacentHTML('afterend', block);
-	});
+			var dlc_categories = document.getElementById('demo_block');
+			dlc_categories.insertAdjacentHTML('afterend', block);
+		});
+	}
 }
 
 function i_dont_know_what_this_code_does() {
@@ -772,7 +818,7 @@ function i_dont_know_what_this_code_does() {
 }
 
 function load_app_info(node) {
-	var appid = get_appid(node.href || node.querySelector("a").href);
+	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 	if (appid) {
 		add_info(appid).done(function(){
 			// Order here is important; bottom-most renders last.
@@ -780,27 +826,6 @@ function load_app_info(node) {
 			if (getValue(appid + "owned")) highlight_owned(node);
 			if (getValue(appid + "inventory")) highlight_inv(node);
 		});
-	}
-}
-
-function highlight_daily_deal(node) {
-
-	var appid;
-
-	var dd_start = node.innerHTML.indexOf('<a href="http://store.steampowered.com/app/');
-	var dd_end = node.innerHTML.indexOf('<img src=');
-
-	var dailydeal = node.innerHTML.substring(dd_start + 9, dd_end - 8);
-
-	appid = get_appid(dailydeal);
-	add_info(appid);
-
-}
-
-function load_wishlish_app_info(node) {
-	var appid = get_appid_wishlist(node.id);
-	if (appid) {
-		add_info_wishlist(node, appid);
 	}
 }
 
@@ -820,6 +845,11 @@ $(document).ready(function(){
 	remove_install_steam_button();
 	i_dont_know_what_this_code_does();
 
+/* To test:
+	Coupons
+	dlc_data_from_site();
+	add_widescreen_certification();
+*/
 	switch (window.location.host) {
 		case "store.steampowered.com":
 			// Load appids from inv before anything else.
@@ -830,13 +860,16 @@ $(document).ready(function(){
 						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
-						// var appid = get_appid(window.location.host + window.location.pathname);
 						// if (getValue(appid+"c")) display_coupon_message(appid);
+						var appid = get_appid(window.location.host + window.location.pathname);
 						show_pricing_history(appid);
+						dlc_data_from_site(appid)
+
 						drm_warnings();
 						add_metracritic_userscore();
-						add_widescreen_certification();  // Doesn't work?
 						check_if_purchased();
+
+						add_widescreen_certification();  // Doesn't work?
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
@@ -849,26 +882,23 @@ $(document).ready(function(){
 						account_total_spent();
 						break;
 				}
-				load_user_coupons(); // Calling on every page load?
+				// load_user_coupons(); // Calling on every page load?
 
 				/* Highlights & data fetching */
-				// Storefront rows
+					// Storefront rows
 				xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
 
-				// DLC on App Page
+					// DLC on App Page
 				xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
 
-				// search result
+					// search result
 				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 
-				// highlights featured homepage items
+					// highlights featured homepage items
 				xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
 
-				// hightlight daily deal
-				xpath_each("//div[contains(@class,'dailydeal')]", highlight_daily_deal);
-
-				// wishlist owned
-				xpath_each("//div[contains(@class,'wishlistRow')]", load_wishlish_app_info);
+					// hightlight daily deal
+				xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
 			});
 
 			break;
@@ -883,6 +913,11 @@ $(document).ready(function(){
 				case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 					add_cart_on_wishlist();
 					fix_wishlist_image_not_found();
+
+					load_inventory().done(function() {
+						// wishlist owned  Highlights & data fetching
+						xpath_each("//div[contains(@class,'wishlistRow')]", load_app_info);
+					});
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
