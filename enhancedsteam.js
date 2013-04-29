@@ -215,7 +215,8 @@ function load_inventory() {
 	// TODO: Differentiate between gifts and guest passes.
 
 	var deferred = new $.Deferred();
-	get_http('http://steamcommunity.com/my/inventory/json/753/1/', function (txt) {
+
+	get_http($(".user_avatar")[0].href + 'inventory/json/753/1/', function (txt) {
 		// TODO: Seperate method and cache, or one call per load at worst.
 
 		// Load apps.
@@ -270,7 +271,9 @@ function add_info(appid) {
 
 	var deferred = new $.Deferred();
 	// loads values from cache to reduce response time
-	if (!getValue(appid)) {
+
+	// always get fresh data while dev;
+	if (!getValue(appid) || getValue(appid)) {
 		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
 			setValue(appid, true); // Set appid to true to indicate we have data on it.
 			// Bad string to search for, but wishlist buttons on storefront seem broke atm - I can't test.
@@ -761,7 +764,7 @@ function account_total_spent() {
 }
 
 function subscription_savings_check() {
-	var owned_games_prices = 0,
+	var not_owned_games_prices = 0,
 		appid_info_deferreds = [],
 		sub_apps = [],
 		sub_app_prices = {},
@@ -808,14 +811,14 @@ function subscription_savings_check() {
 	// When we have all the app info
 	$.when(appid_info_deferreds).done(function() {
 		for (var i = 0; i < sub_apps.length; i++) {
-			if (getValue(sub_apps[i] + "owned")) owned_games_prices += sub_app_prices[sub_apps[i]];
+			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];
 		}
 		var $bundle_price = $(".discount_final_price");
 		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
 
 		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));
 
-		var corrected_price = owned_games_prices - bundle_price;
+		var corrected_price = not_owned_games_prices - bundle_price;
 
 		var $message = $('<div class="savings">' + (comma ? corrected_price / 100 : corrected_price).formatMoney(2, currency_symbol, ",", comma ? "," : ".") + '</div>');
 		if (corrected_price < 0) $message[0].style.color = "red";
@@ -885,6 +888,7 @@ $(document).ready(function(){
 	switch (window.location.host) {
 		case "store.steampowered.com":
 			// Load appids from inv before anything else.
+
 			load_inventory().done(function() {
 				switch (true) {
 					case /^\/cart\/.*/.test(window.location.pathname):
