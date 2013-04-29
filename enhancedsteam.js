@@ -215,8 +215,9 @@ function load_inventory() {
 	// TODO: Differentiate between gifts and guest passes.
 
 	var deferred = new $.Deferred();
+	var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href;
 
-	get_http($(".user_avatar")[0].href + 'inventory/json/753/1/', function (txt) {
+	get_http(profileurl + '/inventory/json/753/1/', function (txt) {
 		// TODO: Seperate method and cache, or one call per load at worst.
 
 		// Load apps.
@@ -240,8 +241,7 @@ function add_empty_wishlist_button() {
 }
 
 function empty_wishlist() {
-	var deferreds = [];
-	$.each($(".wishlistRow"), function(i, $obj) {
+	var deferreds = $(".wishlistRow").map(function(i, $obj) {
 		var deferred = new $.Deferred();
 		var appid = get_appid_wishlist($obj.id),
 			http = new XMLHttpRequest(),
@@ -256,10 +256,10 @@ function empty_wishlist() {
 		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		http.send("action=remove&appid=" + encodeURIComponent(appid));
 		// Send only, we dont care about response.
-		deferreds.push(deferred.promise());
+		return deferred.promise();
 	});
 
-	$.when(deferreds).done(function(){
+	$.when.apply(null, deferreds).done(function(){
 		location.reload();
 	});
 }
@@ -622,7 +622,7 @@ function add_cart_on_wishlist() {
 		var appid2 = get_appid(appid + "/");
 
 		// get page, find cart string
-		get_http(appid + '/', function (txt) {
+		get_http("http://store.steampowered.com/app/" + appid + '/', function (txt) {
 			var subid = txt.match(/<input type="hidden" name="subid" value="([0-9]+)">/);
 			var htmlstring = $(txt).find('form');
 			node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring[1].outerHTML + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid[1] + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
