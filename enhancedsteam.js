@@ -339,10 +339,12 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_button() {
-	// TODO: Detect if own wishlist.
-	var empty_button = $("<a>Empty wishlist</a>");
-	empty_button.click(empty_wishlist);
-	$("#wishlist_sort_options").before(empty_button);
+	var profile = $(".returnLink a")[0].href.replace("http://steamcommunity.com", "");
+	if (window.location.pathname.startsWith(profile)) {
+		var empty_button = $("<a>Empty wishlist</a>");
+		empty_button.click(empty_wishlist);
+		$("#wishlist_sort_options").before(empty_button);
+	}
 }
 
 function empty_wishlist() {
@@ -719,11 +721,10 @@ function add_community_profile_links() {
 // Changes user's wishlist
 function add_cart_on_wishlist() {
 	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
-		var appid = node.href;
-		var appid2 = get_appid(appid + "/");
+		var app = node.href;
 
 		// get page, find cart string
-		get_http("http://store.steampowered.com/app/" + appid + '/', function (txt) {
+		get_http(app, function (txt) {
 			var subid = txt.match(/<input type="hidden" name="subid" value="([0-9]+)">/);
 			var htmlstring = $(txt).find('form');
 			node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring[1].outerHTML + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid[1] + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
