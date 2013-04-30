@@ -769,16 +769,6 @@ if (items) {
 	}
 }
 
-// removes "onclick" events which Steam uses to add javascript to it's search functions 
-var allElements, thisElement;
-allElements = document.evaluate("//a[contains(@onclick, 'SearchLinkClick( this ); return false;')]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-for (var i = 0; i < allElements.snapshotLength; i++) {
-	thisElement = allElements.snapshotItem(i);
-	if (thisElement.nodeName.toUpperCase() == 'A') {
-		thisElement.removeAttribute('onclick');
-	}
-}
-
 // adds a "total spent on Steam" to the account details page
 storage.get(function(settings) {	
 	if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }	
@@ -825,3 +815,13 @@ var observer = new WebKitMutationObserver(function(mutations) {
 	});
 });
 observer.observe(document, { subtree: true, childList: true });
+
+// checks for content loaded via AJAX on the search pages
+$("#search_results").bind("DOMSubtreeModified", function() {
+    xpath_each("//a[contains(@class,'search_result_row')]", function (node) {
+		var appid;
+		if (appid = get_appid(node.href)) {
+			add_info(node, appid);
+		}
+	});
+});
