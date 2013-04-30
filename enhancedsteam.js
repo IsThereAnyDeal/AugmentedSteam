@@ -20,6 +20,8 @@ String.prototype.startsWith = function(prefix) {
 };
 
 Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
+	//FIXME: Puts symbol on wrong end for rubles and euros.
+
 	places = !isNaN(places = Math.abs(places)) ? places : 2;
 	symbol = symbol !== undefined ? symbol : "$";
 	thousand = thousand || ",";
@@ -370,7 +372,6 @@ function add_info(appid) {
 	if (!getValue(appid) || getValue(appid)) {
 		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
 			setValue(appid, true); // Set appid to true to indicate we have data on it.
-			// Bad string to search for, but wishlist buttons on storefront seem broke atm - I can't test.
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 				setValue(appid + "owned", true);
 			}
@@ -392,7 +393,6 @@ function add_info(appid) {
 	else {
 		deferred.resolve();
 	}
-
 	return deferred.promise();
 }
 
@@ -864,35 +864,13 @@ function subscription_savings_check() {
 	// For each app, load its info.
 	$.each($(".tab_row"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
-			price_elem = getelem(node, 'div', 'tab_price').lastChild,
-			m;
+			price_container = $(node).find(".tab_price")[0].innerText,
+			itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", ".") || 0);
+
+		currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
+		comma = (price_container.indexOf(",") > -1);
 
 		appid_info_deferreds.push(add_info(appid));
-
-		//FIXME:  Will fail on rubles.
-
-		if (price_elem.nodeValue.indexOf(",") > 0) {
-			m = price_elem.nodeValue.match(/[0-9]+.[0-9]+./);
-			itemPrice = m ? parseFloat(m[0].replace(/[^0-9-.]/g, '')) : 0;
-			curcomma = true;
-
-			currency_symbol = price_elem.nodeValue.replace(/\s+/g, ' ');
-			if (currency_symbol.indexOf(" ") !== 0) { currency_symbol = " " + currency_symbol; }
-
-			currency_symbol = currency_symbol.match(/. $/);
-			if (currency_symbol) currency_symbol = currency_symbol[0];
-		}
-
-		if (price_elem.nodeValue.indexOf(".") > 0) {
-			m = price_elem.nodeValue.match(/[0-9\.]+/);
-			itemPrice = m ? parseFloat(m[0]) : 0;
-
-			currency_symbol = price_elem.nodeValue.replace(/\s+/g, ' ');
-			if (currency_symbol.indexOf(" ") !== 0) { currency_symbol = " " + currency_symbol; }
-
-			currency_symbol = currency_symbol.match(/^ ./);
-			if (currency_symbol) currency_symbol = currency_symbol[0];
-		}
 
 		sub_apps.push(appid);
 		sub_app_prices[appid] = itemPrice;
@@ -900,7 +878,7 @@ function subscription_savings_check() {
 	});
 
 	// When we have all the app info
-	$.when(appid_info_deferreds).done(function() {
+	$.when.apply(null, appid_info_deferreds).done(function() {
 		for (var i = 0; i < sub_apps.length; i++) {
 			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];
 		}
