@@ -345,7 +345,6 @@ function load_inventory() {
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
 	if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
-		console.log("MMM I like me some fresh inventory.");
 		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
 
 		// Context ID 1 is gifts and guest passes
@@ -356,7 +355,6 @@ function load_inventory() {
 	}
 	else {
 		// No need to load anything, its all in sessionStorage.
-		console.log("Aw yis free cache.");
 		handle_inv_ctx1(localStorage.getItem("inventory_1"));
 		handle_inv_ctx3(localStorage.getItem("inventory_3"));
 
@@ -983,9 +981,10 @@ function load_app_info(node) {
 				// TODO: Make option
 
 				// Don't highlight "Omg you're on my wishlist!" on users wishlist.
-				if (!node.classList.contains("wishlistRow")) {
+				if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
 					if (getValue(appid + "wishlisted")) highlight_wishlist(node);
 				}
+				
 				if (getValue(appid + "owned")) highlight_owned(node);
 				if (getValue(appid + "gift")) highlight_inv_gift(node);
 				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
