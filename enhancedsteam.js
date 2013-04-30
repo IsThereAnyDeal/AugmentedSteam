@@ -1,4 +1,4 @@
-﻿// version 3.0
+﻿// version 3.1
 var storage = chrome.storage.sync;
 var apps;
 
@@ -603,6 +603,7 @@ function add_community_profile_links() {
 		if (settings.profile_wastedonsteam === undefined) { settings.profile_wastedonsteam = true; chrome.storage.sync.set({'profile_wastedonsteam': settings.profile_wastedonsteam}); }
 		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 
 		if (settings.profile_steamgifts === true) {	htmlstr += '<div class="actionItemIcon"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamgifts.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank">SteamGifts</a></div>'; }
 		if (settings.profile_steamtrades === true) { htmlstr += '<div class="actionItemIcon"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamtrades.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank">SteamTrades</a></div>'; }
@@ -610,6 +611,7 @@ function add_community_profile_links() {
 		if (settings.profile_wastedonsteam === true) { htmlstr += '<div class="actionItemIcon"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/wastedonsteam.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://wastedonsteam.com/id/' + steamID + '" target="_blank">Wasted On Steam</a></div>'; }
 		if (settings.profile_sapi === true) { htmlstr += '<div class="actionItemIcon"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/sapi.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank">sAPI</a></div>'; }
 		if (settings.profile_backpacktf === true) { htmlstr += '<div class="actionItemIcon"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/backpacktf.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '" target="_blank">backpack.tf</a></div>'; }
+		if (settings.profile_astats === true) { htmlstr += '<div class="actionItemIcon"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/achievementstats.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank">Achievement Stats</a></div>'; }
 
 		if (htmlstr != '<hr>') { document.getElementById("rightActionBlock").insertAdjacentHTML('beforeend', htmlstr); }
 	});
@@ -839,19 +841,6 @@ function dlc_data_from_site(appid) {
 		});
 	}
 }
-
-function i_dont_know_what_this_code_does() {
-	// removes "onclick" events which Steam uses to add javascript to it's search functions
-	var allElements, thisElement;
-	allElements = document.evaluate("//a[contains(@onclick, 'SearchLinkClick( this ); return false;')]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-	for (var i = 0; i < allElements.snapshotLength; i++) {
-		thisElement = allElements.snapshotItem(i);
-		if (thisElement.nodeName.toUpperCase() == 'A') {
-			thisElement.removeAttribute('onclick');
-		}
-	}
-}
-
 function load_app_info(node) {
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 	if (appid) {
@@ -872,6 +861,28 @@ function check_if_purchased() {
 		var appname = $(".apphub_AppName")[0].innerText;
 		find_purchase_date(appname);
 	}
+}
+
+
+
+function bind_ajax_content_highlighting() {
+	// checks content loaded via AJAX
+	var observer = new WebKitMutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			for (var i = 0; i < mutation.addedNodes.length; i++) {
+				var node = mutation.addedNodes[i];
+				if (node) {
+					if (node.innerHTML) {
+						var appid = node.innerHTML.match(/<a href="http:\/\/store.steampowered.com\/app\/(.+)\//);
+						if (appid) {
+							add_info(node, appid[1]);
+						}
+					}
+				}
+			}
+		});
+	});
+	observer.observe(document, { subtree: true, childList: true });
 }
 
 $(document).ready(function(){
@@ -935,6 +946,26 @@ $(document).ready(function(){
 
 					// hightlight daily deal
 				xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
+
+					// checks for content loaded via AJAX on the search pages
+				$("#search_results").bind("DOMSubtreeModified", function() {
+				    xpath_each("//a[contains(@class,'search_result_row')]", function (node) {
+						var appid;
+						if (appid = get_appid(node.href)) {
+							add_info(node, appid);
+						}
+					});
+				});
+
+					// checks for search suggestions
+				$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
+				    xpath_each("//a[contains(@class,'match')]", function (node) {
+						var appid;
+						if (appid = get_appid(node.href)) {
+							add_info(node, appid);
+						}
+					});
+				});
 			});
 
 			break;
@@ -966,7 +997,7 @@ $(document).ready(function(){
 					break;
 
 				case /^\/sharedfiles\/.*/.test(window.location.pathname):
-					hide_greenlight_banner()
+					hide_greenlight_banner();
 					break;
 			}
 			break;

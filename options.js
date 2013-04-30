@@ -26,7 +26,8 @@ function save_options() {
 	profile_steamrep = $("#profile_steamrep").prop('checked');	
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
 	profile_sapi = $("#profile_sapi").prop('checked');
-	profile_backpacktf = $("#profile_backpacktf").prop('checked');	
+	profile_backpacktf = $("#profile_backpacktf").prop('checked');
+	profile_astats = $("#profile_astats").prop('checked');
 		
 	chrome.storage.sync.set({
 		'showtotal': showtotal,
@@ -48,7 +49,8 @@ function save_options() {
 		'profile_steamrep': profile_steamrep,
 		'profile_wastedonsteam': profile_wastedonsteam,
 		'profile_sapi': profile_sapi,
-		'profile_backpacktf': profile_backpacktf		
+		'profile_backpacktf': profile_backpacktf,
+		'profile_astats': profile_astats
 	}, function() {
 		// Notify that we saved.
 		var status = document.getElementById("save_space");
@@ -170,6 +172,7 @@ function restore_options() {
 		if (settings.profile_wastedonsteam === undefined) { settings.profile_wastedonsteam = true; chrome.storage.sync.set({'profile_wastedonsteam': settings.profile_wastedonsteam}); }
 		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 		
 		// Load Store Options
 		$("#bgcolor").attr('value', settings.bgcolor);
@@ -195,7 +198,8 @@ function restore_options() {
 		$("#profile_steamrep").attr('checked', settings.profile_steamrep);
 		$("#profile_wastedonsteam").attr('checked', settings.profile_wastedonsteam);
 		$("#profile_sapi").attr('checked', settings.profile_sapi);
-		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);	
+		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);
+		$("#profile_astats").attr('checked', settings.profile_astats);
 	});
 }
 

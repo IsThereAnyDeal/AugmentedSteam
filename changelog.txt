@@ -1,6 +1,14 @@
+v3.1
+-----
+
+
 v3.0
 -----
 : Fixed wishlist detection for non-English users
++ Coupon discounts now stack where applicable (most currencies)
++ Options page changed from dropdown boxes to check boxes
++ Added a link for AchievementStats.com
++ Some AJAX loaded content now correctly highlights (still not in search yet)
 
 v2.9
 -----
