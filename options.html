@@ -10,9 +10,29 @@
 	<div id="heading">
 		<a href="#" id="nav_store">Store</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_community">Community</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_news">News</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_about">About</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_donate">Donate</a>
 	</div>
-	
+
 	<div id="maincontent_store">
 		<table>
+			<tr>
+				<td>
+					<input type="checkbox" id="highlight_bg">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Highlight via background-colour</font>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="highlight_tag">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Highlight via tags</font>
+				</td>
+			</tr>
+
+			<tr><td>&nbsp;</td></tr>
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showowned">
@@ -37,12 +57,12 @@
 				</td>
 				<td>
 					<input type="color" id="wlcolor" class="colorbutton">
-				</td>	
-				<td>	
+				</td>
+				<td>
 					<button id="wldefault" class="btn">Default</button>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showcoupon">
@@ -52,12 +72,14 @@
 				</td>
 				<td>
 					<input type="color" id="ccolor" class="colorbutton">
-				</td>	
-				<td>	
+				</td>
+				<td>
 					<button id="cdefault" class="btn">Default</button>
 				</td>
 			</tr>
-			
+
+			<tr><td>&nbsp;</td></tr>
+
 			<tr>
 				<td>
 					<input type="checkbox" id="hideinstallsteambutton">
@@ -66,7 +88,7 @@
 					<font color="8bc53f">Hide "Install Steam" button in header</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showdrm">
@@ -75,7 +97,7 @@
 					<font color="8bc53f">Show 3rd Party DRM Warnings</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showlowestprice">
@@ -84,7 +106,7 @@
 					<font color="8bc53f">Show Price History Information</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showmcus">
@@ -93,7 +115,7 @@
 					<font color="8bc53f">Show Metacritic User Scores</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showwsgf">
@@ -102,9 +124,26 @@
 					<font color="8bc53f">Show WSGF (Widescreen) Info</font>
 				</td>
 			</tr>
+
+			<tr><td>&nbsp;</td></tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="show_friends_want">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Tag games your friends have wishlisted.</font>
+				</td>
+				<td>
+					<input type="color" id="show_friends_want_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="show_friends_want_color_default" class="btn">Default</button>
+				</td>
+			</tr>
 		</table>
 	</div>
-	
+
 	<div id="maincontent_community" style="display: none">
 		<table>
 			<tr>
@@ -115,7 +154,7 @@
 					<font color="8bc53f">Show "Total Spent" on Account Page</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showgroupevents">
@@ -124,7 +163,7 @@
 					<font color="8bc53f">Show Events on Group Overview</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showgreenlightbanner">
@@ -133,7 +172,7 @@
 					<font color="8bc53f">Replace Steam Greenlight Banner</font>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td></td>
 				<table border=0>
@@ -143,7 +182,7 @@
 							<td valign=center><input type="checkbox" id="profile_steamtrades"><td><img src="img/ico/steamtrades.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamTrades
 							<td valign=center><input type="checkbox" id="profile_steamrep"><td><img src="img/ico/steamrep.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamRep
 						</tr>
-						<tr>							
+						<tr>
 							<td valign=center><input type="checkbox" id="profile_wastedonsteam"><td><img src="img/ico/wastedonsteam.ico" width="16" height="16" border="0" /><td><font color="8bc53f">Wasted On Steam
 							<td valign=center><input type="checkbox" id="profile_sapi"><td><img src="img/ico/sapi.ico" width="16" height="16" border="0" /><td><font color="8bc53f">sAPI
 							<td valign=center><input type="checkbox" id="profile_backpacktf"><td><img src="img/ico/backpacktf.ico" width="16" height="16" border="0" /><td><font color="8bc53f">backpack.tf
@@ -152,17 +191,17 @@
 							<td valign=center><input type="checkbox" id="profile_astats"><td><img src="img/ico/achievementstats.ico" width="16" height="16" border="0" /><td><font color="8bc53f">Achievement Stats
 							<td valign=center>
 							<td valign=center>
-						</tr>	
-					</table>		
+						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
 	</div>
-	
+
 	<div id="maincontent_news" style="display: none">
 		Changelog:
 	</div>
-	
+
 	<div id="maincontent_about" style="display: none">
 		About <a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam</a>:<p>
 		Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>
@@ -179,7 +218,7 @@
 		<p>
 		If you find this Extension useful, please consider donating.
 	</div>
-	
+
 	<div id="maincontent_donate" style="display: none">
 		Donate:<p>
 		You can donate via Paypal here:
@@ -196,9 +235,9 @@
 		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">www.EnhancedSteam.com</a>
 	</div>
 
-	<div id="save_space"><button class="btn" id="save">Save</button></div>	
-	
-	<div id="footer">		
+	<div id="save_space"><button class="btn" id="save">Save</button></div>
+
+	<div id="footer">
 		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a> by jshackles
 	</div>
 </div>
