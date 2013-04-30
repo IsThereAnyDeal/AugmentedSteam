@@ -344,8 +344,7 @@ function load_inventory() {
 	//TODO: Expire delay in options.
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
-	// debugger;
-	if (last_updated < expire_time) {
+	if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
 		console.log("MMM I like me some fresh inventory.");
 		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
 
@@ -968,22 +967,31 @@ function dlc_data_from_site(appid) {
 	}
 }
 
+// Global scoping this, not sure how else do to it :((
+var loading_inventory;
+
 function load_app_info(node) {
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 	if (appid) {
-		add_info(appid).done(function(){
-			// Order here is important; bottom-most renders last.
-			// TODO: Make option
 
-			// Don't highlight "Omg you're on my wishlist!" on users wishlist.
-			if (!node.classList.contains("wishlistRow")) {
-				if (getValue(appid + "wishlisted")) highlight_wishlist(node);
-			}
-			if (getValue(appid + "owned")) highlight_owned(node);
-			if (getValue(appid + "gift")) highlight_inv_gift(node);
-			if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-			if (getValue(appid + "coupon")) highlight_coupon(node);
-			if (getValue(appid + "friendswant")) add_friends_want_tag(node, appid);
+		// Using loading_inventory to prevent 50,000 requests because asynchonisity + caching.
+		// Instead just add new event listeners
+		if (!loading_inventory) loading_inventory = load_inventory();
+		loading_inventory.done(function() {
+			add_info(appid).done(function(){
+				// Order here is important; bottom-most renders last.
+				// TODO: Make option
+
+				// Don't highlight "Omg you're on my wishlist!" on users wishlist.
+				if (!node.classList.contains("wishlistRow")) {
+					if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+				}
+				if (getValue(appid + "owned")) highlight_owned(node);
+				if (getValue(appid + "gift")) highlight_inv_gift(node);
+				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+				if (getValue(appid + "coupon")) highlight_coupon(node);
+				if (getValue(appid + "friendswant")) add_friends_want_tag(node, appid);
+			});
 		});
 	}
 }
@@ -1032,64 +1040,64 @@ $(document).ready(function(){
 	switch (window.location.host) {
 		case "store.steampowered.com":
 			// Load data from inv before anything else.
-			load_inventory().done(function() {
-				switch (true) {
-					case /^\/cart\/.*/.test(window.location.pathname):
-						add_empty_cart_button();
-						break;
+			switch (true) {
+				case /^\/cart\/.*/.test(window.location.pathname):
+					add_empty_cart_button();
+					break;
 
-					case /^\/app\/.*/.test(window.location.pathname):
+				case /^\/app\/.*/.test(window.location.pathname):
+					load_inventory().done(function() {
 						var appid = get_appid(window.location.host + window.location.pathname);
 						if (getValue(appid+"coupon")) display_coupon_message(appid);
-						show_pricing_history(appid);
-						dlc_data_from_site(appid);
+					});
+					show_pricing_history(appid);
+					dlc_data_from_site(appid);
 
-						drm_warnings();
-						add_metracritic_userscore();
-						check_if_purchased();
+					drm_warnings();
+					add_metracritic_userscore();
+					check_if_purchased();
 
-						add_widescreen_certification();  // Doesn't work?
-						break;
+					add_widescreen_certification();  // Doesn't work?
+					break;
 
-					case /^\/sub\/.*/.test(window.location.pathname):
-						drm_warnings();
-						subscription_savings_check();
+				case /^\/sub\/.*/.test(window.location.pathname):
+					drm_warnings();
+					subscription_savings_check();
 
-						break;
+					break;
 
-					case /^\/account\/.*/.test(window.location.pathname):
-						account_total_spent();
-						break;
-				}
+				case /^\/account\/.*/.test(window.location.pathname):
+					account_total_spent();
+					break;
+			}
 
-				/* Highlights & data fetching */
+			/* Highlights & data fetching */
 
-					// Storefront homepage tabs.
-				bind_ajax_content_highlighting();
+				// Storefront homepage tabs.
+			bind_ajax_content_highlighting();
 
-					// Storefront rows
-				xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
+				// Storefront rows
+			xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
 
-					// DLC on App Page
-				xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
+				// DLC on App Page
+			xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
 
-					// highlights featured homepage items
-				xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
+				// highlights featured homepage items
+			xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
 
-					// hightlight daily deal
-				xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
+				// hightlight daily deal
+			xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
 
-					// checks for content loaded via AJAX on the search pages
-					// TODO: Does this need to be ran twice?
+				// checks for content loaded via AJAX on the search pages
+				// TODO: Does this need to be ran twice?
+			xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
+			$("#search_results").bind("DOMSubtreeModified", function() {
 				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
-				$("#search_results").bind("DOMSubtreeModified", function() {
-					xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
-				});
+			});
 
-					// checks for search suggestions
-				$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
-					xpath_each("//a[contains(@class,'match')]", load_app_info);
-				});
+				// checks for search suggestions
+			$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
+				xpath_each("//a[contains(@class,'match')]", load_app_info);
 			});
 
 			break;
@@ -1105,11 +1113,9 @@ $(document).ready(function(){
 					add_cart_on_wishlist();
 					fix_wishlist_image_not_found();
 
-					load_inventory().done(function() {
-						add_empty_wishlist_button();
-						// wishlist owned  Highlights & data fetching
-						xpath_each("//div[contains(@class,'wishlistRow')]", load_app_info);
-					});
+					add_empty_wishlist_button();
+					// wishlist owned  Highlights & data fetching
+					xpath_each("//div[contains(@class,'wishlistRow')]", load_app_info);
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
