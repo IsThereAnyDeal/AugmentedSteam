@@ -89,6 +89,7 @@ function highlight_owned(node) {
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
 		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
 		if (settings.showowned) {
+			highlight_node(node, settings.bgcolor);
 			add_tag(node, "Owned", settings.bgcolor);
 
 		}
@@ -101,6 +102,7 @@ function highlight_wishlist(node) {
 		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
 		if (settings.showwishlist === undefined) { settings.showwishlist = true; storage.set({'showwishlist': settings.showwishlist}); }
 		if (settings.showwishlist) {
+			highlight_node(node, settings.wlcolor);
 			add_tag(node, "Wishlist", settings.wlcolor);
 		}
 	});
@@ -112,6 +114,7 @@ function highlight_coupon(node) {
 		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269"; storage.set({'ccolor': settings.ccolor}); }
 		if (settings.showcoupon === undefined) { settings.showcoupon = true; storage.set({'showcoupon': settings.showcoupon}); }
 		if (settings.showcoupon) {
+			highlight_node(node, settings.ccolor);
 			add_tag(node, "Coupon", settings.ccolor);
 		}
 	});
@@ -121,7 +124,15 @@ function highlight_coupon(node) {
 function highlight_inv(node) {
 	storage.get(function(settings) {
 		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
-		add_tag(node, "Inventory", settings.icolor);
+			highlight_node(node, settings.icolor);
+			add_tag(node, "Inventory", settings.icolor);
+	});
+}
+
+function highlight_node(node, color) {
+	storage.get(function(settings) {
+		if (settings.highlight_bg === undefined) { settings.highlight_bg = true; storage.set({'highlight_bg': settings.highlight_bg});}
+		if (settings.highlight_bg) node.style.backgroundColor = color;
 	});
 }
 
@@ -129,18 +140,23 @@ function add_tag (node, string, color) {
 	/* To add coloured tags to the end of app names instead of colour
 	highlighting; this allows an to be "highlighted" multiple times; e.g.
 	inventory and owned. */
-	node.tags = node.tags || [];
-	var tagItem = [string, color];
-	var already_tagged = false;
+	storage.get(function(settings) {
+		if (settings.highlight_tag === undefined) { settings.highlight_tag = true; storage.set({'highlight_tag': settings.highlight_tag});}
+		if (settings.highlight_tag) {
+			node.tags = node.tags || [];
+			var tagItem = [string, color];
+			var already_tagged = false;
 
-	// Check its not already tagged.
-	for (var i = 0; i < node.tags.length; i++) {
-		if (node.tags[i][0] === tagItem[0]) already_tagged = true;
-	}
-	if (!already_tagged) {
-		node.tags.push(tagItem);
-		display_tags(node);
-	}
+			// Check its not already tagged.
+			for (var i = 0; i < node.tags.length; i++) {
+				if (node.tags[i][0] === tagItem[0]) already_tagged = true;
+			}
+			if (!already_tagged) {
+				node.tags.push(tagItem);
+				display_tags(node);
+			}
+		}
+	});
 }
 
 function display_tags(node) {
