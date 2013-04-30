@@ -153,7 +153,7 @@ function highlight_node(node, color) {
 function add_friends_want_tag(node, appid) {
 	storage.get(function(settings) {
 		if (settings.show_friends_want === undefined) { settings.show_friends_want = true; storage.set({'show_friends_want': settings.show_friends_want});}
-		if (settings.show_friends_want_color === undefined) { settings.show_friends_want_color = "#7E4060"; storage.set({'show_friends_want_color': show_friends_want_color.show_friends_want});}
+		if (settings.show_friends_want_color === undefined) { settings.show_friends_want_color = "#7E4060"; storage.set({'show_friends_want_color': settings.show_friends_want_color});}
 		if (settings.show_friends_want) {
 			add_tag(node, "<a href=\"http://steamcommunity.com/my/friendsthatplay/" + appid + "\">" + getValue(appid + "friendswant") + " wish for</a>", settings.show_friends_want_color);
 		}
