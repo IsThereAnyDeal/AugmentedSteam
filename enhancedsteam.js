@@ -279,7 +279,7 @@ function load_inventory() {
 				if (obj.actions) {
 					var appid = get_appid(obj.actions[0].link);
 					setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
-					add_info(appid);
+					// add_info(appid);
 				}
 			});
 		}
@@ -298,32 +298,41 @@ function load_inventory() {
 							//obj.actions[j]
 							var link = obj.actions[j].link;
 							var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
-							packageids.push(packageid);
+
+							// If sub+packageid is in SessionStorage then we don't need to get this info reloaded.
+							// This sick optimization saves 268ms per page load! Woo!
+							if (!getValue("sub" + packageid)) packageids.push(packageid);
 						}
-						get_http("//store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
-							var package_data = JSON.parse(txt);
-							$.each(package_data, function(package_id, _package) {
-								if (_package.success) {
-									$.each(_package.data.apps, function(i, app) {
-										setValue(app.id + "coupon", true);
-										setValue(app.id + "coupon_sub", package_id);
-										setValue(app.id + "coupon_imageurl", obj.icon_url);
-										setValue(app.id + "coupon_title", obj.name);
-										setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
-										for (var i = 0; i < obj.descriptions.length; i++) {
-											if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
-												setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
-												setValue(app.id + "coupon_discount_doesnt_stack", true);
-											}
-											else if (obj.descriptions[i].value.startsWith("(Valid")) {
-												setValue(app.id + "coupon_valid", obj.descriptions[i].value);
-											}
-										};
-									});
-								}
+						if (packageids.length > 0){
+							get_http("//store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
+								var package_data = JSON.parse(txt);
+								$.each(package_data, function(package_id, _package) {
+									if (_package.success) {
+										setValue("sub" + package_id, true);
+										$.each(_package.data.apps, function(i, app) {
+											setValue(app.id + "coupon", true);
+											setValue(app.id + "coupon_sub", package_id);
+											setValue(app.id + "coupon_imageurl", obj.icon_url);
+											setValue(app.id + "coupon_title", obj.name);
+											setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
+											for (var i = 0; i < obj.descriptions.length; i++) {
+												if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
+													setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
+													setValue(app.id + "coupon_discount_doesnt_stack", true);
+												}
+												else if (obj.descriptions[i].value.startsWith("(Valid")) {
+													setValue(app.id + "coupon_valid", obj.descriptions[i].value);
+												}
+											};
+										});
+									}
+								});
+								coupon_deferred.resolve();
 							});
+						}
+						else {
 							coupon_deferred.resolve();
-						});
+						}
 					}
 				}
 			});
@@ -347,6 +356,7 @@ function load_inventory() {
 		get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);
 	}
 	else {
+		// No need to load anything, its all in sessionStorage.
 		console.log("Aw yis free cache.");
 		handle_inv_ctx1(localStorage.getItem("inventory_1"));
 		handle_inv_ctx3(localStorage.getItem("inventory_3"));
