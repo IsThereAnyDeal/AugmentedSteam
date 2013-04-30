@@ -1031,9 +1031,7 @@ $(document).ready(function(){
 /* To test:
 	Coupon behavour with already discounted game.
 
-	dlc_data_from_site();
-	add_widescreen_certification();
-
+TODO:
 	Highlgihts on http://store.steampowered.com/recommended/
 
 */
@@ -1046,8 +1044,8 @@ $(document).ready(function(){
 					break;
 
 				case /^\/app\/.*/.test(window.location.pathname):
+					var appid = get_appid(window.location.host + window.location.pathname);
 					load_inventory().done(function() {
-						var appid = get_appid(window.location.host + window.location.pathname);
 						if (getValue(appid+"coupon")) display_coupon_message(appid);
 					});
 					show_pricing_history(appid);
@@ -1057,7 +1055,7 @@ $(document).ready(function(){
 					add_metracritic_userscore();
 					check_if_purchased();
 
-					add_widescreen_certification();  // Doesn't work?
+					add_widescreen_certification();
 					break;
 
 				case /^\/sub\/.*/.test(window.location.pathname):
