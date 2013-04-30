@@ -177,6 +177,8 @@ function display_tags(node) {
 			$tag.css("float", "right");
 			$tag.css("padding", "2px");
 			$tag.css("margin-right", "4px");
+			$tag.css("margin-bottom", "4px");
+			$tag.css("border", "1px solid #262627");
 			$tags.append($tag);
 		}
 
@@ -223,6 +225,15 @@ function display_tags(node) {
 			$tags.css("float", "left");
 			$tag_root.find(".bottom_controls").append($tags);
 		}
+		else if (node.classList.contains("match")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "right");
+			$tags.css("width", "130px");
+			$tags.css("margin-top", "4px");
+			$tag_root.find(".match_price").after($tags);
+		}
 	}
 }
 
@@ -251,6 +262,7 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_button() {
+	// TODO: Detect if own wishlist.
 	var empty_button = $("<a>Empty wishlist</a>");
 	empty_button.click(empty_wishlist);
 	$("#wishlist_sort_options").before(empty_button);
@@ -295,6 +307,9 @@ function add_info(appid) {
 			// Bad string to search for, but wishlist buttons on storefront seem broke atm - I can't test.
 			if ($(txt).find(".demo_area_button > .game_area_wishlist_btn.disabled").length > 0) {
 				setValue(appid + "wishlisted", true);
+			}
+			else {
+				setValue(appid + "wishlisted", false);
 			}
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 				setValue(appid + "owned", true);
@@ -447,7 +462,7 @@ function display_coupon_message(appid) {
 					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 121);
 					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
 					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol	 = "pуб.";
+					currencysymbol = "pуб.";
 					discountprice = discountprice.replace(".",",");
 					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
 						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + originalprice + " " + currencysymbol + '</div><div class="discount_final_price" itemprop="price">' + discountprice + " " + currencysymbol + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
@@ -862,6 +877,7 @@ function load_app_info(node) {
 	if (appid) {
 		add_info(appid).done(function(){
 			// Order here is important; bottom-most renders last.
+			// TODO: Make option
 			if (getValue(appid + "wishlisted")) highlight_wishlist(node);
 			if (getValue(appid + "owned")) highlight_owned(node);
 			if (getValue(appid + "inventory")) highlight_inv(node);
@@ -879,22 +895,15 @@ function check_if_purchased() {
 	}
 }
 
-
-
 function bind_ajax_content_highlighting() {
 	// checks content loaded via AJAX
 	var observer = new WebKitMutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
-				if (node) {
-					if (node.innerHTML) {
-						var appid = node.innerHTML.match(/<a href="http:\/\/store.steampowered.com\/app\/(.+)\//);
-						if (appid) {
-							add_info(node, appid[1]);
-						}
-					}
-				}
+
+				// Check the node is what we want, and not some unrelated DOM change.
+				if (node.classList && node.classList.contains("tab_row")) load_app_info(node);
 			}
 		});
 	});
@@ -905,12 +914,14 @@ $(document).ready(function(){
 	// On window load...
 	add_enhanced_steam_options_link();
 	remove_install_steam_button();
-	i_dont_know_what_this_code_does();
 
 /* To test:
 	Coupons
 	dlc_data_from_site();
 	add_widescreen_certification();
+
+	Highlgihts on http://store.steampowered.com/recommended/
+
 */
 	switch (window.location.host) {
 		case "store.steampowered.com":
@@ -948,14 +959,15 @@ $(document).ready(function(){
 				// load_user_coupons(); // Calling on every page load?
 
 				/* Highlights & data fetching */
+
+					// Storefront homepage tabs.
+				bind_ajax_content_highlighting();
+
 					// Storefront rows
 				xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
 
 					// DLC on App Page
 				xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
-
-					// search result
-				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 
 					// highlights featured homepage items
 				xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
@@ -964,23 +976,15 @@ $(document).ready(function(){
 				xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
 
 					// checks for content loaded via AJAX on the search pages
+					// TODO: Does this need to be ran twice?
+				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 				$("#search_results").bind("DOMSubtreeModified", function() {
-				    xpath_each("//a[contains(@class,'search_result_row')]", function (node) {
-						var appid;
-						if (appid = get_appid(node.href)) {
-							add_info(node, appid);
-						}
-					});
+				    xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 				});
 
 					// checks for search suggestions
 				$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
-				    xpath_each("//a[contains(@class,'match')]", function (node) {
-						var appid;
-						if (appid = get_appid(node.href)) {
-							add_info(node, appid);
-						}
-					});
+				    xpath_each("//a[contains(@class,'match')]", load_app_info);
 				});
 			});
 
