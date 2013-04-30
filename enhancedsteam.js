@@ -262,9 +262,6 @@ function display_tags(node) {
 }
 
 function load_inventory() {
-	// Merge coupon stuff here too; waiting on all of Valve to give me a coupon to play with.
-	// TODO: Differentiate between gifts and guest passes.
-
 	var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href;
 	var gift_deferred = new $.Deferred();
 	var coupon_deferred = new $.Deferred();
@@ -323,8 +320,6 @@ function load_inventory() {
 							});
 							coupon_deferred.resolve();
 						});
-						// appid = get_appid(obj.actions[0].link);
-						// setValue(appid + "coupon", true);
 					}
 				}
 			});
@@ -339,7 +334,7 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_button() {
-	var profile = $(".returnLink a")[0].href.replace("http://steamcommunity.com", "");
+	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");
 	if (window.location.pathname.startsWith(profile)) {
 		var empty_button = $("<a>Empty wishlist</a>");
 		empty_button.click(empty_wishlist);
@@ -362,7 +357,7 @@ function empty_wishlist() {
 		http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
 		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		http.send("action=remove&appid=" + encodeURIComponent(appid));
-		// Send only, we dont care about response.
+
 		return deferred.promise();
 	});
 
@@ -377,8 +372,8 @@ function add_info(appid) {
 	// - lastUpdated param & caching
 
 	var deferred = new $.Deferred();
-	// loads values from cache to reduce response time
 
+	// loads values from cache to reduce response time
 	// always get fresh data while dev;
 	if (!getValue(appid) || getValue(appid)) {
 		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
@@ -726,8 +721,11 @@ function add_cart_on_wishlist() {
 		// get page, find cart string
 		get_http(app, function (txt) {
 			var subid = txt.match(/<input type="hidden" name="subid" value="([0-9]+)">/);
-			var htmlstring = $(txt).find('form');
-			node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring[1].outerHTML + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid[1] + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
+			if (subid) {
+				// subid is undefined for games not yet available for purchase.
+				var htmlstring = $(txt).find('form[name="add_to_cart_' + subid[1] + '"]')[0];
+				node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring.outerHTML + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid[1] + '\'].submit();" class="btn_visit_store">Add to Cart</a>  ');
+			}
 		});
 	});
 }
