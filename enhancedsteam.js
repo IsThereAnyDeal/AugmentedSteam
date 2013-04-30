@@ -121,11 +121,20 @@ function highlight_coupon(node) {
 }
 
 // colors the tile for items in inventory
-function highlight_inv(node) {
+function highlight_inv_gift(node) {
 	storage.get(function(settings) {
 		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
 			highlight_node(node, settings.icolor);
-			add_tag(node, "Inventory", settings.icolor);
+			add_tag(node, "Gift", settings.icolor);
+	});
+}
+
+// colors the tile for items in inventory
+function highlight_inv_guestpass(node) {
+	storage.get(function(settings) {
+		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
+			highlight_node(node, settings.icolor);
+			add_tag(node, "Guest Pass", settings.icolor);
 	});
 }
 
@@ -244,21 +253,75 @@ function load_inventory() {
 	// Merge coupon stuff here too; waiting on all of Valve to give me a coupon to play with.
 	// TODO: Differentiate between gifts and guest passes.
 
-	var deferred = new $.Deferred();
 	var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href;
+	var gift_deferred = new $.Deferred();
+	var coupon_deferred = new $.Deferred();
 
+	// Context ID 1 is gifts and guest passes
 	get_http(profileurl + '/inventory/json/753/1/', function (txt) {
-		// TODO: Seperate method and cache, or one call per load at worst.
-
-		// Load apps.
 		var data = JSON.parse(txt);
-		$.each(data.rgDescriptions, function(i, obj) {
-			if (obj.actions) {
-				var appid = get_appid(obj.actions[0].link);
-				setValue(appid + "inventory", true);
-				add_info(appid);  // Load rest of info for this app.
-			}
-		});
+		if (data.success) {
+			$.each(data.rgDescriptions, function(i, obj) {
+				if (obj.actions) {
+					var appid = get_appid(obj.actions[0].link);
+					setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+					add_info(appid);
+				}
+			});
+		}
+		gift_deferred.resolve();
+	});
+
+	// Context ID 3 is coupons
+	get_http(profileurl + '/inventory/json/753/3/', function (txt) {
+		var data = JSON.parse(txt);
+		if (data.success) {
+			$.each(data.rgDescriptions, function(i, obj) {
+				var appid;
+				if (obj.type === "Coupon") {
+					if (obj.actions) {
+						//"http://store.steampowered.com/api/packagedetails/?packageids=19098"
+						var packageids = [];
+						for (var j = 0; j < obj.actions.length; j++) {
+							//obj.actions[j]
+							var link = obj.actions[j].link;
+							var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
+							packageids.push(packageid);
+						}
+						get_http("http://store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
+							var package_data = JSON.parse(txt);
+							$.each(package_data, function(package_id, _package) {
+								if (_package.success) {
+									$.each(_package.data.apps, function(i, app) {
+										setValue(app.id + "coupon", true);
+										setValue(app.id + "coupon_sub", package_id);
+										setValue(app.id + "coupon_imageurl", obj.icon_url);
+										setValue(app.id + "coupon_title", obj.name);
+										setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
+										for (var i = 0; i < obj.descriptions.length; i++) {
+											if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
+												setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
+												setValue(app.id + "coupon_discount_doesnt_stack", true);
+											}
+											else if (obj.descriptions[i].value.startsWith("(Valid")) {
+												setValue(app.id + "coupon_valid", obj.descriptions[i].value);
+											}
+										};
+									});
+								}
+							});
+							coupon_deferred.resolve();
+						});
+						// appid = get_appid(obj.actions[0].link);
+						// setValue(appid + "coupon", true);
+					}
+				}
+			});
+		}
+	});
+
+	var deferred = new $.Deferred();
+	$.when.apply(null, [gift_deferred.promise(), coupon_deferred.promise()]).done(function (){
 		deferred.resolve();
 	});
 	return deferred.promise();
@@ -373,113 +436,98 @@ function add_spuf_link() {
 	);
 }
 
-function load_user_coupons(){
-	// Get User's Coupons
-	if (document.URL.indexOf("://store.steampowered.com/") >= 0) {
-		var done = getValue("coupondone");
-		if (done != "1") {
-			// Get JSON results
-			get_http('https://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
-				var coupons = txt.split("/?list_of_subs=");
-				for (var i=1;i<coupons.length;i++) {
-					// For each coupon, load search page and return first appID in results (not sure how this works for multi-game coupons?)
-					var searchID = coupons[i].substring(0, coupons[i].indexOf('","'));
-					get_http('//store.steampowered.com/search/?list_of_subs=' + searchID, function (subtxt) {
-						var couponAppID = subtxt.substring(subtxt.indexOf('<a href="http://store.steampowered.com/app/') + 43, subtxt.indexOf('/?snr=1_7_7_230_150_1" class="search_result_row even"'));
-						var pageSearchID = subtxt.substring(subtxt.indexOf('<input type="hidden" name="list_of_subs" value="') + 48, subtxt.indexOf('<div class="search_controls" id="default_search_controls">') - 12);
-						setValue(couponAppID+"c", true);
-						setValue(couponAppID+"csub", pageSearchID);
-						setValue("coupondone", "1");
-					});
-				}
-			});
-		}
-	}
-}
-
 // If app has a coupon, display message
 function display_coupon_message(appid) {
 	// get JSON coupon results
-	get_http('https://steamcommunity.com/my/inventory/json/753/3/', function (txt) {
-		var coupons = txt.split('{"appid":"753","classid":"');
-		for (var i=1;i<coupons.length;i++) {
-			if (coupons[i].indexOf(getValue(appid+"csub")) >= 0 ) {
-				var couponimageurl = coupons[i].substring(coupons[i].indexOf('"icon_url"') + 12, coupons[i].indexOf('","icon_url_large"'));
-				var coupontitle	= coupons[i].substring(coupons[i].indexOf('"name":"')   +  8, coupons[i].indexOf('","market_name":"'));
-				var couponvalid	= coupons[i].substring(coupons[i].indexOf('{"value":"(Valid') + 10, coupons[i].indexOf('","color":"A75124"}'));
-				var coupondisc	 = "";
-				var discamount	 = coupons[i].match(/[1-9][0-9]%/);
-				if (coupons[i].indexOf("Can't be applied with other discounts.") > 0) { coupondisc = "Can't be applied with other discounts."; }
-				document.getElementById('game_area_purchase').insertAdjacentHTML('beforebegin', '<div class="early_access_header"><div class="heading"><h1 class="inset">You have a coupon available!</h1><h2 class="inset">A coupon in your inventory will be applied automatically at checkout.</h2><p><a href="https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275">Learn more</a> about Steam Coupons</p></div><div class="devnotes"><table border=0><tr><td rowspan=3><img src="http://cdn.steamcommunity.com/economy/image/' + couponimageurl + '"></td><td valign=center><h1>' + coupontitle + '</h1></td></tr><tr><td>' + coupondisc + '</td></tr><tr><td><font style="color:#A75124;">' + couponvalid + '</font></td></tr></table><p></div></div>');
+	// debugger;
+	$('#game_area_purchase').before($(""+
+	"<div class=\"early_access_header\">" +
+	"    <div class=\"heading\">" +
+	"        <h1 class=\"inset\">You have a coupon available!</h1>" +
+	"        <h2 class=\"inset\">A coupon in your inventory will be applied automatically at checkout.</h2>" +
+	"        <p><a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Learn more</a> about Steam Coupons</p>" +
+	"    </div>" +
+	"    <div class=\"devnotes\">" +
+	"        <table border=0>" +
+	"            <tr>" +
+	"                <td rowspan=3>" +
+	"                    <img src=\"http://cdn.steamcommunity.com/economy/image/" + getValue(appid + "coupon_imageurl") + "\"/>" +
+	"                </td>" +
+	"                <td valign=center>" +
+	"                    <h1>" + getValue(appid + "coupon_title") + "</h1>" +
+	"                </td>" +
+	"            </tr>" +
+	"            <tr>" +
+	"                <td>" + getValue(appid + "coupon_discount_note") + "</td>" +
+	"            </tr>" +
+	"            <tr>" +
+	"                <td>" +
+	"                    <font style=\"color:#A75124;\">" + getValue(appid + "coupon_valid") + "</font>" +
+	"                </td>" +
+	"            </tr>" +
+	"        </table>" +
+	"    </div>" +
+	"</div>"));
 
-				// Get the original price, discounted price, and AddToCartID, and currency symbol
-				var pricediv = document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML,
-					originalprice,
-					addToCartID,
-					discountprice,
-					newdiscount,
-					newdiscount2;
-				if (pricediv.indexOf(".") > 0) {
-					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 110);
-					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol	 = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65);
-					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
-						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + currencysymbol + originalprice + '</div><div class="discount_final_price" itemprop="price">' + currencysymbol + discountprice + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-					}
-					else {
-						if (coupondisc != "Can't be applied with other discounts.") {
-							newdiscount = originalprice.match(/<div class="discount_final_price" itemprop="price">(.+)<\/div>/);
-							newdiscount2 = (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))).toFixed(2);
-							currencysymbol = pricediv.substring(pricediv.indexOf('<div class="discount_original_price">') + 37, pricediv.indexOf('<div class="discount_original_price">') + 38);
-							document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + newdiscount[1] + '</div><div class="discount_final_price" itemprop="price">' + currencysymbol + newdiscount2 + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-						}
-					}
-				}
-				if (pricediv.indexOf("USD") > 0) {
-					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 114);
-					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol	 = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 65);
-					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
-						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + currencysymbol + originalprice + ' USD</div><div class="discount_final_price" itemprop="price">' + currencysymbol + discountprice + ' USD</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-					}
-				}
-				if (pricediv.indexOf(",") > 0) {
-					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 113);
-					originalprice = originalprice.replace(",",".");
-					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol	 = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 69, pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 70);
-					originalprice = originalprice.replace(".",",");
-					discountprice = discountprice.replace(".",",");
-					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
-						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + originalprice + currencysymbol + '</div><div class="discount_final_price" itemprop="price">' + discountprice + currencysymbol + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-					}
-					else {
-						if (coupondisc != "Can't be applied with other discounts.") {
-							newdiscount = originalprice.match(/<div class="discount_final_price" itemprop="price">(.+)<\/div>/);
-							newdiscount2 = (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))).toFixed(0);
-							console.log ((Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) - (Number(newdiscount[1].replace(/[^0-9\.]+/g,"")) * ((discamount[0].substring(0,2)) / 100))));
-							currencysymbol = pricediv.substring(pricediv.indexOf('<div class="discount_original_price">') + 42, pricediv.indexOf('<div class="discount_original_price">') + 43);
-							console.log (currencysymbol);
-							document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + newdiscount[1] + '</div><div class="discount_final_price" itemprop="price">' + newdiscount2 + currencysymbol + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-						}
-					}
-				}
-				if (pricediv.indexOf("pуб.") > 0) {
-					originalprice  = pricediv.substring(pricediv.indexOf('<div class="game_purchase_price price" itemprop="price">') + 64, pricediv.indexOf('<a class="btn_addtocart_content" href="javascript:addToCart(') - 121);
-					addToCartID	= document.body.innerHTML.substring(document.body.innerHTML.indexOf('<input type="hidden" name="subid" value="') + 41, document.body.innerHTML.indexOf('<div class="game_area_purchase_platform">') - 17);
-					discountprice  = (originalprice - ((originalprice * discamount[0].substring(0,2)) / 100).toFixed(2)).toFixed(2);
-					currencysymbol = "pуб.";
-					discountprice = discountprice.replace(".",",");
-					if (document.body.innerHTML.indexOf('<div class="discount_block game_purchase_discount">') <= 0) {
-						document.querySelector('[itemtype="http://schema.org/Offer"]').innerHTML = '<div class="game_purchase_action_bg"><div class="discount_block game_purchase_discount"><div class="discount_pct">-' + discamount + '</div><div class="discount_prices"><div class="discount_original_price">' + originalprice + " " + currencysymbol + '</div><div class="discount_final_price" itemprop="price">' + discountprice + " " + currencysymbol + '</div></div></div><div class="btn_addtocart"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:addToCart( ' + addToCartID + ');">Add to Cart</a><div class="btn_addtocart_right"></div></div></div>';
-					}
-				}
-			}
+	var $price_div = $("[itemtype=\"http://schema.org/Offer\"]"),
+		cart_id = $price_div.find("[name=\"subid\"]"),
+		actual_price_container = $price_div.find("[itemprop=\"price\"]")[0].innerText,
+		original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", ".")),
+		currency_symbol = actual_price_container.match(/(?:R\$|\$|€|£|pуб)/)[0], // Lazy but effective
+		comma = (actual_price_container.indexOf(",") > -1);
+
+	var discounted_price = (original_price - (original_price * getValue(appid + "coupon_discount") / 100).toFixed(2)).toFixed(2);
+
+	if (!($price_div.find(".game_purchase_discount").length > 0 && getValue(appid + "coupon_discount_doesnt_stack"))) {
+		// If not (existing discounts and coupon does not stack)
+		// debugger;
+
+		if (comma) {
+			currency_symbol = currency_symbol.replace(".", ",");
+			discounted_price = discounted_price.replace(".", ",");
 		}
-	});
+
+		var original_price_with_symbol,
+			discounted_price_with_symbol;
+
+		// Super simple way to put currency symbol on correct end.
+
+		switch (currency_symbol) {
+			case "€":
+				original_price_with_symbol = original_price + currency_symbol;
+				discounted_price_with_symbol = discounted_price + currency_symbol;
+				break;
+
+			case "pуб":
+				original_price_with_symbol = parseFloat(original_price).toFixed(0) + " " + currency_symbol;
+				discounted_price_with_symbol = parseFloat(discounted_price).toFixed(0) + " " + currency_symbol;
+				break;
+
+			default:
+			original_price_with_symbol = currency_symbol + original_price;
+			discounted_price_with_symbol = currency_symbol + discounted_price;
+		}
+
+
+		$price_div[0].innerHTML = ""+
+			"<div class=\"game_purchase_action_bg\">" +
+			"    <div class=\"discount_block game_purchase_discount\">" +
+			"        <div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
+			"        <div class=\"discount_prices\">" +
+			"            <div class=\"discount_original_price\">" + original_price_with_symbol + "</div>" +
+			"            <div class=\"discount_final_price\" itemprop=\"price\">" + discounted_price_with_symbol + "</div>" +
+			"        </div>" +
+			"    </div>" +
+			"<div class=\"btn_addtocart\">" +
+			"    <div class=\"btn_addtocart_left\"></div>" +
+			"        <a class=\"btn_addtocart_content\" href=\"javascript:addToCart( " + cart_id + ");\">Add to Cart</a>" +
+			"        <div class=\"btn_addtocart_right\"></div>" +
+			"    </div>" +
+			"</div>";
+
+	}
+
+
 }
 
 function show_pricing_history(appid) {
@@ -821,6 +869,7 @@ function subscription_savings_check() {
 
 		appid_info_deferreds.push(add_info(appid));
 
+		//FIXME:  Will fail on rubles.
 
 		if (price_elem.nodeValue.indexOf(",") > 0) {
 			m = price_elem.nodeValue.match(/[0-9]+.[0-9]+./);
@@ -889,7 +938,9 @@ function load_app_info(node) {
 			// TODO: Make option
 			if (getValue(appid + "wishlisted")) highlight_wishlist(node);
 			if (getValue(appid + "owned")) highlight_owned(node);
-			if (getValue(appid + "inventory")) highlight_inv(node);
+			if (getValue(appid + "gift")) highlight_inv_gift(node);
+			if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+			if (getValue(appid + "coupon")) highlight_coupon(node);
 		});
 	}
 }
@@ -925,7 +976,8 @@ $(document).ready(function(){
 	remove_install_steam_button();
 
 /* To test:
-	Coupons
+	Coupon behavour with already discounted game.
+
 	dlc_data_from_site();
 	add_widescreen_certification();
 
@@ -943,8 +995,8 @@ $(document).ready(function(){
 						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
-						// if (getValue(appid+"c")) display_coupon_message(appid);
 						var appid = get_appid(window.location.host + window.location.pathname);
+						if (getValue(appid+"coupon")) display_coupon_message(appid);
 						show_pricing_history(appid);
 						dlc_data_from_site(appid);
 
@@ -965,7 +1017,6 @@ $(document).ready(function(){
 						account_total_spent();
 						break;
 				}
-				// load_user_coupons(); // Calling on every page load?
 
 				/* Highlights & data fetching */
 
@@ -988,12 +1039,12 @@ $(document).ready(function(){
 					// TODO: Does this need to be ran twice?
 				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 				$("#search_results").bind("DOMSubtreeModified", function() {
-				    xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
+					xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 				});
 
 					// checks for search suggestions
 				$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
-				    xpath_each("//a[contains(@class,'match')]", load_app_info);
+					xpath_each("//a[contains(@class,'match')]", load_app_info);
 				});
 			});
 
