@@ -825,3 +825,13 @@ $("#search_results").bind("DOMSubtreeModified", function() {
 		}
 	});
 });
+
+// checks for search suggestions
+$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
+    xpath_each("//a[contains(@class,'match')]", function (node) {
+		var appid;
+		if (appid = get_appid(node.href)) {
+			add_info(node, appid);
+		}
+	});
+});
