@@ -18,6 +18,9 @@ function save_options() {
 	showmcus = $("#showmcus").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 
+	show_friends_want = $("#show_friends_want").prop('checked');
+	show_friends_want_color = $("#show_friends_want_color").val();
+
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
 	showgroupevents = $("#showgroupevents").prop('checked');
@@ -47,6 +50,9 @@ function save_options() {
 		'showlowestprice': showlowestprice,
 		'showmcus': showmcus,
 		'showwsgf': showwsgf,
+
+		'show_friends_want': show_friends_want,
+		'show_friends_want_color': show_friends_want_color,
 
 		'showtotal': showtotal,
 		'showgroupevents': showgroupevents,
@@ -171,6 +177,8 @@ function restore_options() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
+		if (settings.show_friends_want === undefined) { settings.show_friends_want = true; chrome.storage.sync.set({'show_friends_want': settings.show_friends_want}); }
+		if (settings.show_friends_want_color === undefined) { settings.show_friends_want_color = "#7E4060"; chrome.storage.sync.set({'show_friends_want_color': settings.show_friends_want_color}); }
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
@@ -198,6 +206,8 @@ function restore_options() {
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showwsgf").attr('checked', settings.showwsgf);
+		$("#show_friends_want").attr('checked', settings.show_friends_want);
+		$("#show_friends_want_color").attr('value', settings.show_friends_want_color);
 		$("#showlowestprice").attr('checked', settings.showlowestprice);
 
 		// Load Community Options
@@ -234,6 +244,11 @@ function load_defaultccolor() {
 	ctext.value = "#6b2269";
 }
 
+function load_default_show_friends_want_color() {
+	var ctext = document.getElementById("show_friends_want_color");
+	ctext.value = "#7E4060";
+}
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
@@ -241,6 +256,7 @@ document.querySelector('#save').addEventListener('click', save_options);
 document.querySelector('#bgdefault').addEventListener('click', load_defaultbgcolor);
 document.querySelector('#wldefault').addEventListener('click', load_defaultwlcolor);
 document.querySelector('#cdefault').addEventListener('click', load_defaultccolor);
+document.querySelector('#show_friends_want_color_default').addEventListener('click', load_default_show_friends_want_color);
 document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);

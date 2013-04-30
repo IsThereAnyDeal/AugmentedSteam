@@ -150,6 +150,16 @@ function highlight_node(node, color) {
 	});
 }
 
+function add_friends_want_tag(node, appid) {
+	storage.get(function(settings) {
+		if (settings.show_friends_want === undefined) { settings.show_friends_want = true; storage.set({'show_friends_want': settings.show_friends_want});}
+		if (settings.show_friends_want_color === undefined) { settings.show_friends_want_color = "#7E4060"; storage.set({'show_friends_want_color': show_friends_want_color.show_friends_want});}
+		if (settings.show_friends_want) {
+			add_tag(node, "<a href=\"http://steamcommunity.com/my/friendsthatplay/" + appid + "\">" + getValue(appid + "friendswant") + " wish for</a>", settings.show_friends_want_color);
+		}
+	});
+}
+
 function add_tag (node, string, color) {
 	/* To add coloured tags to the end of app names instead of colour
 	highlighting; this allows an to be "highlighted" multiple times; e.g.
@@ -282,7 +292,6 @@ function load_inventory() {
 				var appid;
 				if (obj.type === "Coupon") {
 					if (obj.actions) {
-						//"http://store.steampowered.com/api/packagedetails/?packageids=19098"
 						var packageids = [];
 						for (var j = 0; j < obj.actions.length; j++) {
 							//obj.actions[j]
@@ -290,7 +299,7 @@ function load_inventory() {
 							var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
 							packageids.push(packageid);
 						}
-						get_http("http://store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
+						get_http("//store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
 							var package_data = JSON.parse(txt);
 							$.each(package_data, function(package_id, _package) {
 								if (_package.success) {
@@ -380,11 +389,13 @@ function add_info(appid) {
 			// for this method to state whether or not an app is owned, so it
 			// may be able to replace the direct storefront call later; thus
 			// allowing batch-requests and huge bandwidth savings for users.
-			get_http('http://store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
+			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
 				var app_data = JSON.parse(data)[appid];
 				if (app_data.success) {
 					setValue(appid + "wishlisted",
 					app_data.data.added_to_wishlist);
+
+					if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
 				}
 				deferred.resolve();
 			});
@@ -908,6 +919,7 @@ function dlc_data_from_site(appid) {
 		});
 	}
 }
+
 function load_app_info(node) {
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 	if (appid) {
@@ -919,6 +931,8 @@ function load_app_info(node) {
 			if (getValue(appid + "gift")) highlight_inv_gift(node);
 			if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 			if (getValue(appid + "coupon")) highlight_coupon(node);
+
+			if (getValue(appid + "friendswant")) add_friends_want_tag(node, appid);
 		});
 	}
 }
@@ -949,6 +963,8 @@ function bind_ajax_content_highlighting() {
 }
 
 $(document).ready(function(){
+	// Don't interfere with Storefront API requests
+	if (window.location.pathname.startsWith("/api")) return;
 	// On window load...
 	add_enhanced_steam_options_link();
 	remove_install_steam_button();
@@ -964,8 +980,7 @@ $(document).ready(function(){
 */
 	switch (window.location.host) {
 		case "store.steampowered.com":
-			// Load appids from inv before anything else.
-
+			// Load data from inv before anything else.
 			load_inventory().done(function() {
 				switch (true) {
 					case /^\/cart\/.*/.test(window.location.pathname):
