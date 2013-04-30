@@ -241,6 +241,11 @@ function display_tags(node) {
 
 			$tags.css("margin-right", "60px");
 			$tag_root.find(".game_area_dlc_price").before($tags);
+
+			// Remove margin-bottom on DLC lists, else horrible pyramidding.
+			$.each($tag_root.find(".tags span"), function (i, obj) {
+				$(obj).css("margin-bottom", "0");
+			});
 		}
 		else if (node.classList.contains("wishlistRow")) {
 			$tag_root = $(node).find(".wishlistRowItem");
@@ -392,8 +397,6 @@ function empty_wishlist() {
 
 // checks an item panel
 function add_info(appid) {
-	// TODO:
-	// - lastUpdated param & caching
 	var handle_app_page = function (txt) {
 		setValue(appid, true); // Set appid to true to indicate we have data on it.
 		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
@@ -416,6 +419,8 @@ function add_info(appid) {
 		});
 	};
 
+	// Caching.
+	// TODO: Move expire_time into options.
 	var deferred = new $.Deferred();
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
@@ -959,12 +964,15 @@ function load_app_info(node) {
 		add_info(appid).done(function(){
 			// Order here is important; bottom-most renders last.
 			// TODO: Make option
-			if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+
+			// Don't highlight "Omg you're on my wishlist!" on users wishlist.
+			if (!node.classList.contains("wishlistRow")) {
+				if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+			}
 			if (getValue(appid + "owned")) highlight_owned(node);
 			if (getValue(appid + "gift")) highlight_inv_gift(node);
 			if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 			if (getValue(appid + "coupon")) highlight_coupon(node);
-
 			if (getValue(appid + "friendswant")) add_friends_want_tag(node, appid);
 		});
 	}
