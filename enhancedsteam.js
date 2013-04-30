@@ -1064,7 +1064,7 @@ $(document).ready(function(){
 					add_return_to_profile_tab();
 					break;
 
-				case /^\/(?:id|profiles)\/[^\/]+$/.test(window.location.pathname):
+				case /^\/(?:id|profiles)\/[^\/]+\/$/.test(window.location.pathname):
 					add_community_profile_links();
 					break;
 
