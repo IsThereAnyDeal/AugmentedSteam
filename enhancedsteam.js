@@ -314,7 +314,19 @@ function add_info(appid) {
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 				setValue(appid + "owned", true);
 			}
-			deferred.resolve();
+
+			// Use storefront API to check if wishlisted; I've put in a request
+			// for this method to state whether or not an app is owned, so it
+			// may be able to replace the direct storefront call later; thus
+			// allowing batch-requests and huge bandwidth savings for users.
+			get_http('http://store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
+				var app_data = JSON.parse(data)[appid];
+				if (app_data.success) {
+					setValue(appid + "wishlisted",
+					app_data.data.added_to_wishlist);
+				}
+				deferred.resolve();
+			});
 		});
 	}
 	else {
