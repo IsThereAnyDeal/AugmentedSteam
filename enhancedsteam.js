@@ -132,7 +132,10 @@ function highlight_inv(node) {
 function highlight_node(node, color) {
 	storage.get(function(settings) {
 		if (settings.highlight_bg === undefined) { settings.highlight_bg = true; storage.set({'highlight_bg': settings.highlight_bg});}
-		if (settings.highlight_bg) node.style.backgroundColor = color;
+		if (settings.highlight_bg) {
+			node.style.backgroundImage = "none";
+			node.style.backgroundColor = color;
+		}
 	});
 }
 
@@ -305,12 +308,6 @@ function add_info(appid) {
 		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
 			setValue(appid, true); // Set appid to true to indicate we have data on it.
 			// Bad string to search for, but wishlist buttons on storefront seem broke atm - I can't test.
-			if ($(txt).find(".demo_area_button > .game_area_wishlist_btn.disabled").length > 0) {
-				setValue(appid + "wishlisted", true);
-			}
-			else {
-				setValue(appid + "wishlisted", false);
-			}
 			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 				setValue(appid + "owned", true);
 			}
