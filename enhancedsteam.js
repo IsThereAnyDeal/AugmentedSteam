@@ -266,8 +266,8 @@ function load_inventory() {
 	var gift_deferred = new $.Deferred();
 	var coupon_deferred = new $.Deferred();
 
-	// Context ID 1 is gifts and guest passes
-	get_http(profileurl + '/inventory/json/753/1/', function (txt) {
+	var handle_inv_ctx1 = function (txt) {
+		localStorage.setItem("inventory_1", txt);
 		var data = JSON.parse(txt);
 		if (data.success) {
 			$.each(data.rgDescriptions, function(i, obj) {
@@ -279,10 +279,9 @@ function load_inventory() {
 			});
 		}
 		gift_deferred.resolve();
-	});
-
-	// Context ID 3 is coupons
-	get_http(profileurl + '/inventory/json/753/3/', function (txt) {
+	};
+	var handle_inv_ctx3 = function (txt) {
+		localStorage.setItem("inventory_3", txt);
 		var data = JSON.parse(txt);
 		if (data.success) {
 			$.each(data.rgDescriptions, function(i, obj) {
@@ -324,7 +323,32 @@ function load_inventory() {
 				}
 			});
 		}
-	});
+	}
+
+	// Yes caching!
+
+	//TODO: Expire delay in options.
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
+	// debugger;
+	if (last_updated < expire_time) {
+		console.log("MMM I like me some fresh inventory.");
+		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
+
+		// Context ID 1 is gifts and guest passes
+		get_http(profileurl + '/inventory/json/753/1/', handle_inv_ctx1);
+
+		// Context ID 3 is coupons
+		get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);
+	}
+	else {
+		console.log("Aw yis free cache.");
+		handle_inv_ctx1(localStorage.getItem("inventory_1"));
+		handle_inv_ctx3(localStorage.getItem("inventory_3"));
+
+		gift_deferred.resolve();
+		coupon_deferred.resolve();
+	}
 
 	var deferred = new $.Deferred();
 	$.when.apply(null, [gift_deferred.promise(), coupon_deferred.promise()]).done(function (){
@@ -370,35 +394,39 @@ function empty_wishlist() {
 function add_info(appid) {
 	// TODO:
 	// - lastUpdated param & caching
+	var handle_app_page = function (txt) {
+		setValue(appid, true); // Set appid to true to indicate we have data on it.
+		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
+			setValue(appid + "owned", true);
+		}
+
+		// Use storefront API to check if wishlisted; I've put in a request
+		// for this method to state whether or not an app is owned, so it
+		// may be able to replace the direct storefront call later; thus
+		// allowing batch-requests and huge bandwidth savings for users.
+		get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
+			var app_data = JSON.parse(data)[appid];
+			if (app_data.success) {
+				setValue(appid + "wishlisted",
+				app_data.data.added_to_wishlist);
+
+				if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
+			}
+			deferred.resolve();
+		});
+	};
 
 	var deferred = new $.Deferred();
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
 
 	// loads values from cache to reduce response time
 	// always get fresh data while dev;
-	if (!getValue(appid) || getValue(appid)) {
-		get_http('http://store.steampowered.com/app/' + appid + '/', function (txt) {
-			setValue(appid, true); // Set appid to true to indicate we have data on it.
-			if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-				setValue(appid + "owned", true);
-			}
-
-			// Use storefront API to check if wishlisted; I've put in a request
-			// for this method to state whether or not an app is owned, so it
-			// may be able to replace the direct storefront call later; thus
-			// allowing batch-requests and huge bandwidth savings for users.
-			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
-				var app_data = JSON.parse(data)[appid];
-				if (app_data.success) {
-					setValue(appid + "wishlisted",
-					app_data.data.added_to_wishlist);
-
-					if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
-				}
-				deferred.resolve();
-			});
-		});
+	if (last_updated < expire_time) {
+		get_http('http://store.steampowered.com/app/' + appid + '/', handle_app_page);
 	}
 	else {
+		// Data already in sessionStorage, just resolve.
 		deferred.resolve();
 	}
 	return deferred.promise();
@@ -874,11 +902,17 @@ function subscription_savings_check() {
 	// For each app, load its info.
 	$.each($(".tab_row"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
-			price_container = $(node).find(".tab_price")[0].innerText,
-			itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", ".") || 0);
+			price_container = $(node).find(".tab_price")[0].innerText;
 
-		currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
-		comma = (price_container.indexOf(",") > -1);
+		if (price_container !== "N/A")
+		{
+			itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
+			if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
+			if (!comma) comma = (price_container.indexOf(",") > -1);
+		}
+		else {
+			itemPrice = 0;
+		}
 
 		appid_info_deferreds.push(add_info(appid));
 
