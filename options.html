@@ -14,31 +14,16 @@
 	<div id="maincontent_store">
 		<table>
 			<tr>
-				<td>
-					<input type="checkbox" id="highlight_bg">
-				</td>
-				<td height=30>
-					<font color="8bc53f">Highlight via background-colour</font>
+				<td colspan=3>
+					<font color="8bc53f"><b>Highlight</b>
 				</td>
 			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_tag">
-				</td>
-				<td height=30>
-					<font color="8bc53f">Highlight via tags</font>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-
 			<tr>
 				<td>
 					<input type="checkbox" id="showowned">
 				</td>
 				<td height=30>
-					<font color="8bc53f">Highlight Games You Own</font>
+					<font color="8bc53f">Items You Own</font>
 				</td>
 				<td>
 					<input type="color" id="bgcolor" class="colorbutton">
@@ -53,7 +38,7 @@
 					<input type="checkbox" id="showwishlist">
 				</td>
 				<td height=30>
-					<font color="8bc53f">Highlight Games On Your Wishlist</font>
+					<font color="8bc53f">Items On Your Wishlist</font>
 				</td>
 				<td>
 					<input type="color" id="wlcolor" class="colorbutton">
@@ -68,7 +53,7 @@
 					<input type="checkbox" id="showcoupon">
 				</td>
 				<td height=30>
-					<font color="8bc53f">Highlight Games With Coupons</font>
+					<font color="8bc53f">Items With Coupons</font>
 				</td>
 				<td>
 					<input type="color" id="ccolor" class="colorbutton">
@@ -78,6 +63,50 @@
 				</td>
 			</tr>
 
+			<tr><td>&nbsp;</td></tr>
+
+			<tr>
+				<td colspan=3>
+					<font color="8bc53f"><b>Tag</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="checkbox" id="highlight_tag">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Highlight via tags</font>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_owned">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items You Own</font>
+				</td>
+				<td>
+					<input type="color" id="tag_owned_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_owned_color_default" class="btn">Default</button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="checkbox" id="show_friends_want">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items Your Friends Have Wishlisted</font>
+				</td>
+				<td>
+					<input type="color" id="show_friends_want_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="show_friends_want_color_default" class="btn">Default</button>
+				</td>
+			</tr>
+			
 			<tr><td>&nbsp;</td></tr>
 
 			<tr>
@@ -122,23 +151,6 @@
 				</td>
 				<td height=30>
 					<font color="8bc53f">Show WSGF (Widescreen) Info</font>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="show_friends_want">
-				</td>
-				<td height=30>
-					<font color="8bc53f">Tag games your friends have wishlisted.</font>
-				</td>
-				<td>
-					<input type="color" id="show_friends_want_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="show_friends_want_color_default" class="btn">Default</button>
 				</td>
 			</tr>
 		</table>

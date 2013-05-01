@@ -89,12 +89,11 @@ function get_groupname(t) {
 function highlight_owned(node) {
 	storage.get(function(settings) {
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
+		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
 		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
-		if (settings.showowned) {
-			highlight_node(node, settings.bgcolor);
-			add_tag(node, "Owned", settings.bgcolor);
-
-		}
+		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
+		if (settings.showowned) { highlight_node(node, settings.bgcolor); }
+		if (settings.tag_owned)  { add_tag(node, "Owned", settings.tag_owned_color); }
 	});
 }
 
@@ -142,11 +141,8 @@ function highlight_inv_guestpass(node) {
 
 function highlight_node(node, color) {
 	storage.get(function(settings) {
-		if (settings.highlight_bg === undefined) { settings.highlight_bg = true; storage.set({'highlight_bg': settings.highlight_bg});}
-		if (settings.highlight_bg) {
-			node.style.backgroundImage = "none";
-			node.style.backgroundColor = color;
-		}
+		node.style.backgroundImage = "none";
+		node.style.backgroundColor = color;
 	});
 }
 

@@ -3,7 +3,6 @@
 function save_options() {
 
 	// Store Options
-	highlight_bg = $("#highlight_bg").prop('checked');
 	highlight_tag = $("#highlight_tag").prop('checked');
 	bgcolor = $("#bgcolor").val();
 	wlcolor = $("#wlcolor").val();
@@ -18,9 +17,13 @@ function save_options() {
 	showmcus = $("#showmcus").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 
+	// Tagging Options
+	tag_owned = $("#tag_owned").prop('checked');
 	show_friends_want = $("#show_friends_want").prop('checked');
+		
+	tag_owned_color = $("#tag_owned_color").val();
 	show_friends_want_color = $("#show_friends_want_color").val();
-
+	
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
 	showgroupevents = $("#showgroupevents").prop('checked');
@@ -36,7 +39,6 @@ function save_options() {
 	profile_astats = $("#profile_astats").prop('checked');
 
 	chrome.storage.sync.set({
-		'highlight_bg': highlight_bg,
 		'highlight_tag': highlight_tag,
 		'bgcolor': bgcolor,
 		'wlcolor': wlcolor,
@@ -51,7 +53,10 @@ function save_options() {
 		'showmcus': showmcus,
 		'showwsgf': showwsgf,
 
+		'tag_owned': tag_owned,
 		'show_friends_want': show_friends_want,
+		
+		'tag_owned_color': tag_owned_color,
 		'show_friends_want_color': show_friends_want_color,
 
 		'showtotal': showtotal,
@@ -166,7 +171,6 @@ function restore_options() {
 	chrome.storage.sync.get(function(settings) {
 
 		// Load default values for settings if they do not exist (and sync them to Google)
-		if (settings.highlight_bg === undefined) { settings.highlight_bg = true;	chrome.storage.sync.set({'highlight_bg': settings.highlight_bg});}
 		if (settings.highlight_tag === undefined) { settings.highlight_tag = true;	chrome.storage.sync.set({'highlight_tag': settings.highlight_tag});}
 		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	chrome.storage.sync.set({'bgcolor': settings.bgcolor});	}
 		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	chrome.storage.sync.set({'wlcolor': settings.wlcolor}); }
@@ -177,7 +181,9 @@ function restore_options() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
+		if (settings.tag_owned === undefined) { settings.tag_owned = false; chrome.storage.sync.set({'tag_owned': settings.tag_owned}); }
 		if (settings.show_friends_want === undefined) { settings.show_friends_want = true; chrome.storage.sync.set({'show_friends_want': settings.show_friends_want}); }
+		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	chrome.storage.sync.set({'tag_owned_color': settings.tag_owned_color});	}
 		if (settings.show_friends_want_color === undefined) { settings.show_friends_want_color = "#7E4060"; chrome.storage.sync.set({'show_friends_want_color': settings.show_friends_want_color}); }
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
@@ -193,7 +199,6 @@ function restore_options() {
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 
 		// Load Store Options
-		$("#highlight_bg").attr('checked', settings.highlight_bg);
 		$("#highlight_tag").attr('checked', settings.highlight_tag);
 		$("#bgcolor").attr('value', settings.bgcolor);
 		$("#wlcolor").attr('value', settings.wlcolor);
@@ -206,9 +211,13 @@ function restore_options() {
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showwsgf").attr('checked', settings.showwsgf);
-		$("#show_friends_want").attr('checked', settings.show_friends_want);
-		$("#show_friends_want_color").attr('value', settings.show_friends_want_color);
 		$("#showlowestprice").attr('checked', settings.showlowestprice);
+		
+		$("#tag_owned").attr('checked', settings.tag_owned);
+		$("#show_friends_want").attr('checked', settings.show_friends_want);
+		
+		$("#tag_owned_color").attr('value', settings.tag_owned_color);
+		$("#show_friends_want_color").attr('value', settings.show_friends_want_color);		
 
 		// Load Community Options
 		$("#showtotal").attr('checked', settings.showtotal);
@@ -244,6 +253,12 @@ function load_defaultccolor() {
 	ctext.value = "#6b2269";
 }
 
+// Loads the default owned tag color
+function load_default_tag_owned_color() {
+	var tag_owned_color = document.getElementById("tag_owned_color");
+	tag_owned_color.value = "#5c7836";
+}
+
 function load_default_show_friends_want_color() {
 	var ctext = document.getElementById("show_friends_want_color");
 	ctext.value = "#7E4060";
@@ -253,10 +268,13 @@ document.addEventListener('DOMContentLoaded', restore_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
 document.querySelector('#save').addEventListener('click', save_options);
+
 document.querySelector('#bgdefault').addEventListener('click', load_defaultbgcolor);
 document.querySelector('#wldefault').addEventListener('click', load_defaultwlcolor);
 document.querySelector('#cdefault').addEventListener('click', load_defaultccolor);
+document.querySelector('#tag_owned_color_default').addEventListener('click', load_default_tag_owned_color);
 document.querySelector('#show_friends_want_color_default').addEventListener('click', load_default_show_friends_want_color);
+
 document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);
