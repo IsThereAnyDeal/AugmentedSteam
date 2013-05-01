@@ -1026,6 +1026,7 @@ $(document).ready(function(){
 	// On window load...
 	add_enhanced_steam_options_link();
 	remove_install_steam_button();
+	add_spuf_link();
 
 /* To test:
 	Coupon behavour with already discounted game.
@@ -1070,29 +1071,28 @@ TODO:
 
 			/* Highlights & data fetching */
 
-				// Storefront homepage tabs.
+			// Storefront homepage tabs.
 			bind_ajax_content_highlighting();
 
-				// Storefront rows
+			// Storefront rows
 			xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
 
-				// DLC on App Page
+			// DLC on App Page
 			xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
 
-				// highlights featured homepage items
+			// highlights featured homepage items
 			xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
 
-				// hightlight daily deal
+			// hightlight daily deal
 			xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
 
-				// checks for content loaded via AJAX on the search pages
-				// TODO: Does this need to be ran twice?
+			// checks for content loaded via AJAX on the search pages
 			xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 			$("#search_results").bind("DOMSubtreeModified", function() {
 				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
 			});
 
-				// checks for search suggestions
+			// checks for search suggestions
 			$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
 				xpath_each("//a[contains(@class,'match')]", load_app_info);
 			});
