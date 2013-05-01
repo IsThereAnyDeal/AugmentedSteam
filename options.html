@@ -20,46 +20,91 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="checkbox" id="showowned">
+					<input type="checkbox" id="highlight_owned">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Items You Own</font>
 				</td>
 				<td>
-					<input type="color" id="bgcolor" class="colorbutton">
+					<input type="color" id="highlight_owned_color" class="colorbutton">
 				</td>
 				<td>
-					<button id="bgdefault" class="btn">Default</button>
+					<button id="highlight_owned_default" class="btn">Default</button>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
-					<input type="checkbox" id="showwishlist">
+					<input type="checkbox" id="highlight_wishlist">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Items On Your Wishlist</font>
 				</td>
 				<td>
-					<input type="color" id="wlcolor" class="colorbutton">
+					<input type="color" id="highlight_wishlist_color" class="colorbutton">
 				</td>
 				<td>
-					<button id="wldefault" class="btn">Default</button>
+					<button id="highlight_wishlist_default" class="btn">Default</button>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
-					<input type="checkbox" id="showcoupon">
+					<input type="checkbox" id="highlight_coupon">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Items With Coupons</font>
 				</td>
 				<td>
-					<input type="color" id="ccolor" class="colorbutton">
+					<input type="color" id="highlight_coupon_color" class="colorbutton">
 				</td>
 				<td>
-					<button id="cdefault" class="btn">Default</button>
+					<button id="highlight_coupon_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="highlight_inv_gift">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items Stored As Gift</font>
+				</td>
+				<td>
+					<input type="color" id="highlight_inv_gift_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_inv_gift_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="highlight_inv_guestpass">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items You Have A Guest Pass For</font>
+				</td>
+				<td>
+					<input type="color" id="highlight_inv_guestpass_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_inv_guestpass_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="highlight_friends_want">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items Your Friends Have Wishlisted</font>
+				</td>
+				<td>
+					<input type="color" id="highlight_friends_want_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_friends_want_color_default" class="btn">Default</button>
 				</td>
 			</tr>
 
@@ -70,14 +115,7 @@
 					<font color="8bc53f"><b>Tag</b>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_tag">
-				</td>
-				<td height=30>
-					<font color="8bc53f">Highlight via tags</font>
-				</td>
-			</tr>
+
 			<tr>
 				<td>
 					<input type="checkbox" id="tag_owned">
@@ -92,21 +130,82 @@
 					<button id="tag_owned_color_default" class="btn">Default</button>
 				</td>
 			</tr>
+
 			<tr>
 				<td>
-					<input type="checkbox" id="show_friends_want">
+					<input type="checkbox" id="tag_wishlist">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items On Your Wishlist</font>
+				</td>
+				<td>
+					<input type="color" id="tag_wishlist_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_wishlist_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_coupon">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items With Coupons</font>
+				</td>
+				<td>
+					<input type="color" id="tag_coupon_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_coupon_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_inv_gift">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items Stored As Gift</font>
+				</td>
+				<td>
+					<input type="color" id="tag_inv_gift_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_inv_gift_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_inv_guestpass">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Items You Have A Guest Pass For</font>
+				</td>
+				<td>
+					<input type="color" id="tag_inv_guestpass_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_inv_guestpass_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_friends_want">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Items Your Friends Have Wishlisted</font>
 				</td>
 				<td>
-					<input type="color" id="show_friends_want_color" class="colorbutton">
+					<input type="color" id="tag_friends_want_color" class="colorbutton">
 				</td>
 				<td>
-					<button id="show_friends_want_color_default" class="btn">Default</button>
+					<button id="tag_friends_want_color_default" class="btn">Default</button>
 				</td>
 			</tr>
-			
+
 			<tr><td>&nbsp;</td></tr>
 
 			<tr>
