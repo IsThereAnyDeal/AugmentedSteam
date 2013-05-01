@@ -980,7 +980,7 @@ function load_app_info(node) {
 				if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
 					if (getValue(appid + "wishlisted")) highlight_wishlist(node);
 				}
-				
+
 				if (getValue(appid + "owned")) highlight_owned(node);
 				if (getValue(appid + "gift")) highlight_inv_gift(node);
 				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
@@ -1020,33 +1020,49 @@ function add_carousel_descriptions() {
 	storage.get(function(settings) {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_carousel_descriptions) {
-			// Change prices to always be on top of desc styling.
-			$(".main_cap_price").css("z-index", "100");
-
 			// Map appids for batched API lookup
 			var capsule_appids = $.map($(".cluster_capsule"), function(obj){return get_appid(obj.href);});
 
 			get_http("//store.steampowered.com/api/appdetails/?appids=" + capsule_appids.join(","), function(txt) {
+				// Add description_height_to_add px to the container for carousel items to display adequately.
+				var description_height_to_add = 62;  // 60 is good for 4 lines; most strings are 2 or 3 lines than this.
+				$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
+
 				var data = JSON.parse(txt);
 
 				$.each($(".cluster_capsule"), function(i, _obj) {
 					var appid = get_appid(_obj.href),
 						$desc = $(_obj).find(".main_cap_content"),
-						$desc_content = $("<div class=\"desc_overlay\"><p></p></div>"),
-						$p = $desc_content.find("p");
+						$desc_content = $("<p></p>");
 
 						if (data[appid].success) {
-							$desc_content.css("position", "absolute");
-							$desc_content.css("left", "0");
-							$desc_content.css("bottom", "0");
+							// Add description_height_to_add px to each description to display it adequately.
+							$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
+							$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
 
-							// about_the_game is a little long for this, but it's the
-							// only field we have right now.
-							// I've put in a request for the small description to be exposed through the API.
-							$p.html(data[appid].data.about_the_game);
-							$p.css("padding", "10px 60px 10px 10px");
+							var raw_string = $(data[appid].data.about_the_game).text();  // jQuery into DOM then get only text; no html pls.
 
-							$desc.before($desc_content);
+							// Split the string into sentences (we only want the first two).
+							// Replace delimiters with themselves and a unique string to split upon, because we want to include the delimiter once split.
+							raw_string = raw_string.replace(/([\.\!\?])/g, "$1 Wow_so_unique");
+							var string_sentences = raw_string.split("Wow_so_unique"),
+								display_string;
+
+							if (string_sentences.length >= 2) {
+								display_string = string_sentences[0] + string_sentences[1];
+							}
+							else {
+								// If theres not two sentences, just use the whole thing.
+								display_string = raw_string;
+							}
+
+							// We're cropping about_the_game to 2 sentences for
+							// now; I've asked for game_description_snippet to
+							// be added to appdetails API so this may not be
+							// necessary in the future.
+							$desc_content.html(display_string);
+
+							$desc.append($desc_content);
 						}
 				});
 			});
