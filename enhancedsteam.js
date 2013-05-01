@@ -465,8 +465,43 @@ function find_purchase_date(appname) {
 }
 
 // Adds a link to options to the global menu (where is Install Steam button)
-function add_enhanced_steam_options_link() {
-	document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
+function add_enhanced_steam_options() {
+	$dropdown = $("<span class=\"pulldown\" id=\"account_pulldown\">Enhanced Steam</span>");
+	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\"></div></div>");
+	$dropdown_options = $dropdown_options_container.find(".popup_body");
+	$dropdown_options.css("display", "none");
+
+	$dropdown.click(function(){
+		if ($dropdown_options.css("display") === "none") {
+			$dropdown_options.css("display", "");
+		}
+		else {
+			$dropdown_options.css("display", "none");
+		}
+	});
+
+	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"" + chrome.extension.getURL("options.html") + "\">Options</a>");
+	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">Website</a>");
+	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">Contribute (GitHub)</a>");
+
+	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">Clear cached data</a>");
+	$clear_cache_link.click(function(){
+		localStorage.clear();
+		sessionStorage.clear();
+		location.reload();
+	});
+
+	$spacer = $("<div class=\"hr\"></div>");
+
+	$dropdown_options.append($options_link);
+	$dropdown_options.append($clear_cache_link);
+	$dropdown_options.append($spacer);
+	$dropdown_options.append($website_link);
+	$dropdown_options.append($contribute_link);
+
+	$("#global_action_menu")
+		.before($dropdown)
+		.before($dropdown_options_container);
 }
 
 // Removes the "Install Steam" button at the top of each page
@@ -1028,7 +1063,7 @@ $(document).ready(function(){
 	// Don't interfere with Storefront API requests
 	if (window.location.pathname.startsWith("/api")) return;
 	// On window load...
-	add_enhanced_steam_options_link();
+	add_enhanced_steam_options();
 	remove_install_steam_button();
 	add_spuf_link();
 
