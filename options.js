@@ -235,34 +235,11 @@ function restore_options() {
 	});
 }
 
-// Loads the default owned game color
-function load_defaultbgcolor() {
-	var bgtext = document.getElementById("bgcolor");
-	bgtext.value = "#5c7836";
-}
-
-// Loads the default wishlist color
-function load_defaultwlcolor() {
-	var wltext = document.getElementById("wlcolor");
-	wltext.value = "#496e93";
-}
-
-// Loads the default coupon color
-function load_defaultccolor() {
-	var ctext = document.getElementById("ccolor");
-	ctext.value = "#6b2269";
-}
-
-// Loads the default owned tag color
-function load_default_tag_owned_color() {
-	var tag_owned_color = document.getElementById("tag_owned_color");
-	tag_owned_color.value = "#5c7836";
-}
-
-function load_default_show_friends_want_color() {
-	var ctext = document.getElementById("show_friends_want_color");
-	ctext.value = "#7E4060";
-}
+function load_defaultbgcolor() { document.getElementById("bgcolor").value = "#5c7836"; }
+function load_defaultwlcolor() { document.getElementById("wlcolor").value = "#496e93"; }
+function load_defaultccolor() { document.getElementById("ccolor").value = "#6b2269"; }
+function load_default_tag_owned_color() { document.getElementById("tag_owned_color").value = "#5c7836"; }
+function load_default_show_friends_want_color() { document.getElementById("show_friends_want_color").value = "#7E4060"; }
 
 document.addEventListener('DOMContentLoaded', restore_options);
 document.addEventListener('DOMContentLoaded', function () {
