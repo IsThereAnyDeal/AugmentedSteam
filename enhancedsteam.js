@@ -408,7 +408,6 @@ function empty_wishlist() {
 // checks an item panel
 function add_info(appid) {
 	var handle_app_page = function (txt) {
-		setValue(appid, true); // Set appid to true to indicate we have data on it.
 		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
 			setValue(appid + "owned", true);
 		}
@@ -425,6 +424,8 @@ function add_info(appid) {
 
 				if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
 			}
+			// Time updated, for caching.
+			setValue(appid, parseInt(Date.now() / 1000, 10));
 			deferred.resolve();
 		});
 	};
