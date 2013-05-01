@@ -1,6 +1,6 @@
 v3.1
 -----
-
++ Added new feature - storefront carousel app descriptions.
 
 v3.0
 -----

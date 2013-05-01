@@ -1016,6 +1016,44 @@ function bind_ajax_content_highlighting() {
 	observer.observe(document, { subtree: true, childList: true });
 }
 
+function add_carousel_descriptions() {
+	storage.get(function(settings) {
+		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
+		if (settings.show_carousel_descriptions) {
+			// Change prices to always be on top of desc styling.
+			$(".main_cap_price").css("z-index", "100");
+
+			// Map appids for batched API lookup
+			var capsule_appids = $.map($(".cluster_capsule"), function(obj){return get_appid(obj.href);});
+
+			get_http("//store.steampowered.com/api/appdetails/?appids=" + capsule_appids.join(","), function(txt) {
+				var data = JSON.parse(txt);
+
+				$.each($(".cluster_capsule"), function(i, _obj) {
+					var appid = get_appid(_obj.href),
+						$desc = $(_obj).find(".main_cap_content"),
+						$desc_content = $("<div class=\"desc_overlay\"><p></p></div>"),
+						$p = $desc_content.find("p");
+
+						if (data[appid].success) {
+							$desc_content.css("position", "absolute");
+							$desc_content.css("left", "0");
+							$desc_content.css("bottom", "0");
+
+							// about_the_game is a little long for this, but it's the
+							// only field we have right now.
+							// I've put in a request for the small description to be exposed through the API.
+							$p.html(data[appid].data.about_the_game);
+							$p.css("padding", "10px 60px 10px 10px");
+
+							$desc.before($desc_content);
+						}
+				});
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 	// Don't interfere with Storefront API requests
 	if (window.location.pathname.startsWith("/api")) return;
@@ -1062,6 +1100,11 @@ TODO:
 
 				case /^\/account\/.*/.test(window.location.pathname):
 					account_total_spent();
+					break;
+
+				// Storefront-front only
+				case /^\//.test(window.location.pathname):
+					add_carousel_descriptions();
 					break;
 			}
 
