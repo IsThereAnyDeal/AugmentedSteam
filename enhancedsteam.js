@@ -476,7 +476,7 @@ function add_enhanced_steam_options() {
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 
-	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">Clear cached data</a>");
+	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings[language].clear_cache + "</a>");
 	$clear_cache_link.click(function(){
 		localStorage.clear();
 		sessionStorage.clear();
@@ -1226,7 +1226,7 @@ $(document).ready(function(){
 
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
-						add_carousel_descriptions();
+						// add_carousel_descriptions();
 						break;
 				}
 
