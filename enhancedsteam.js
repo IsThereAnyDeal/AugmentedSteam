@@ -211,28 +211,44 @@ function display_tags(node) {
 		if (tag_root.find(".tags").length > 0) {
 			tag_root.find(".tags").remove();
 		}
+	},
+	new_display_tag = function new_display_tag(text, color) {
+		var $tag = $("<span>" + tag[0] + "</span>");
+		$tag.css("backgroundColor", tag[1]);
+		$tag.css("color", "white");
+		$tag.css("float", "right");
+		$tag.css("padding", "2px");
+		$tag.css("margin-right", "4px");
+		$tag.css("margin-bottom", "4px");
+		$tag.css("border", "1px solid #262627");
+		return $tag;
 	};
+
+	// Check for discount percentage; if exists convert into tag.
+	var discount_pct =  $(node).find(".discount_pct");
+	var discount_as_int;
+
+	if (discount_pct.length > 0) {
+		discount_as_int = parseInt(discount_pct.text().match(/(\-[1-9][0-9])%/)[1], 10);
+		discount_pct.remove();
+
+		node.tags.splice(0, 0, [discount_as_int + "%", "#4C6B22"]);
+	}
+
 	if (node.tags) {
 
 		// Make tags.
 		$tags = $("<div class=\"tags\"></div>");
 		for (var i = 0; i < node.tags.length; i++) {
 			var tag = node.tags[i];
-			var $tag = $("<span>" + tag[0] + "</span>");
-			$tag.css("backgroundColor", tag[1]);
-			$tag.css("color", "white");
-			$tag.css("float", "right");
-			$tag.css("padding", "2px");
-			$tag.css("margin-right", "4px");
-			$tag.css("margin-bottom", "4px");
-			$tag.css("border", "1px solid #262627");
+			var $tag = new_display_tag(tag[0], tag[1]);
 			$tags.append($tag);
 		}
 
 		// Gotta apply tags differently per type of node.
 		var $tag_root;
 		if (node.classList.contains("tab_row")) {
-			$tag_root = $(node).find(".tab_desc");
+			$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
 			remove_existing_tags($tag_root);
 
 			$tag_root.find("h4").after($tags);
@@ -476,7 +492,7 @@ function add_enhanced_steam_options() {
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 	$donation_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//enhancedsteam.com/donate.php\">" + localized_strings[language].donate + "</a>");
-	
+
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings[language].clear_cache + "</a>");
 	$clear_cache_link.click(function(){
 		localStorage.clear();
