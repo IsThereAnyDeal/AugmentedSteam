@@ -6,6 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <head><title>Enhanced Steam Options</title></head>
 <body>
+
+<div id="header">
+	<div id="header_logo"><img src="img/logo.png"></div>
+</div>
+
 <div id="heading">
 	<a href="#" id="nav_store"><div id="header_store">Store</div></a>
 	<a href="#" id="nav_community"><div id="header_community">Community</div></a>
@@ -14,9 +19,8 @@
 	<a href="#" id="nav_donate"><div id="header_donate">Donate</div></a>
 </div>
 
-<div id="contentwrapper" style="height:800px;width:800px;">
-	<img src="img/logo.png">
-	<div id="maincontent_store">
+<div id="contentwrapper">	
+	<div id="maincontent_store" class="content">
 		<table border=0>
 			<tr>
 				<td colspan=4>
@@ -312,7 +316,7 @@
 		<div id="save_store"><button class="btn" id="save_store">Save</button></div>
 	</div>
 
-	<div id="maincontent_community" style="display: none">
+	<div id="maincontent_community" class="content" style="display: none">
 		<table>
 			<tr>
 				<td>
@@ -368,11 +372,11 @@
 		<div id="save_community"><button class="btn" id="save_community">Save</button></div>
 	</div>
 
-	<div id="maincontent_news" style="display: none">
+	<div id="maincontent_news" class="content" style="display: none">
 		Changelog:
 	</div>
 
-	<div id="maincontent_about" style="display: none">
+	<div id="maincontent_about" class="content" style="display: none">
 		About <a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam</a>:<p>
 		Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>
 		Features include:
@@ -389,7 +393,7 @@
 		If you find this Extension useful, please consider donating.
 	</div>
 
-	<div id="maincontent_donate" style="display: none">
+	<div id="maincontent_donate" class="content" style="display: none">
 		Donate:<p>
 		You can donate via Paypal here:
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
