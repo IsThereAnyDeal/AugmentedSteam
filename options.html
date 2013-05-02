@@ -1,6 +1,7 @@
 <html>
 <head><title>Enhanced Steam Options</title></head>
 <script src="jQuery.min.js"></script>
+<script src="localization.js"></script>
 <script src="options.js"></script>
 <link href="options.css" rel="stylesheet" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -8,16 +9,23 @@
 <center>
 <div id="contentwrapper" style="height:800px;width:800px;">
 	<div id="heading">
-		<a href="#" id="nav_store">Store</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_community">Community</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_news">News</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_about">About</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_donate">Donate</a>
+		<a href="#" id="nav_store"><div id="header_store">Store</div></a>
+		<a href="#" id="nav_community"><div id="header_community">Community</div></a>
+		<a href="#" id="nav_news"><div id="header_news">News</div></a>
+		<a href="#" id="nav_about"><div id="header_about">About</div></a>
+		<a href="#" id="nav_donate"><div id="header_donate">Donate</div></a>
 	</div>
 
 	<div id="maincontent_store">
-		<table>
+		<table border=0>
 			<tr>
-				<td>
+				<td colspan=4>
 					<font color="8bc53f"><b>Language</b>
 				</td>
-				<td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan=3>
 					<select id="language">
 						<option value="en">English</option>
 						<option value="ar">العربية</option>
@@ -48,8 +56,10 @@
 				</td>
 			</tr>
 
+			<tr><td>&nbsp;</td></tr>
+			
 			<tr>
-				<td colspan=3>
+				<td colspan=4>
 					<font color="8bc53f"><b>Highlight</b>
 				</td>
 			</tr>
@@ -147,7 +157,7 @@
 			<tr><td>&nbsp;</td></tr>
 
 			<tr>
-				<td colspan=3>
+				<td colspan=4>
 					<font color="8bc53f"><b>Tag</b>
 				</td>
 			</tr>

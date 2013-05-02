@@ -202,11 +202,11 @@ jQuery.get('changelog.txt', function(data) {
 });
 
 // Restores select box state to saved value from SyncStorage.
-function restore_options() {
+function load_options() {
 	chrome.storage.sync.get(function(settings) {
 
 		// Load default values for settings if they do not exist (and sync them to Google)
-		if (settings.language === undefined) { settings.language = "en";	chrome.storage.sync.set({'language': settings.language});	}
+		if (settings.language === undefined) { settings.language = "en"; chrome.storage.sync.set({'language': settings.language}); }
 
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
@@ -306,6 +306,15 @@ function restore_options() {
 		$("#profile_sapi").attr('checked', settings.profile_sapi);
 		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);
 		$("#profile_astats").attr('checked', settings.profile_astats);
+		
+		// Load translation
+		localization_promise.done(function(){
+			$("#header_store").text(localized_strings[settings.language].store);
+			$("#header_community").text(localized_strings[settings.language].community);
+			$("#header_news").text(localized_strings[settings.language].news);
+			$("#header_about").text(localized_strings[settings.language].about);
+			$("#header_donate").text(localized_strings[settings.language].donate);
+		});	
 	});
 }
 
@@ -323,7 +332,7 @@ function load_default_tag_inv_gift_color() { document.getElementById("tag_inv_gi
 function load_default_tag_inv_guestpass_color() { document.getElementById("tag_inv_guestpass_color").value = "#a75124"; }
 function load_default_tag_friends_want_color() { document.getElementById("tag_friends_want_color").value = "#7E4060"; }
 
-document.addEventListener('DOMContentLoaded', restore_options);
+document.addEventListener('DOMContentLoaded', load_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
 document.querySelector('#save').addEventListener('click', save_options);
