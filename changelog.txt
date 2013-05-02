@@ -5,7 +5,7 @@ v3.1
 + Added highlighting for gift in inventory, guest pass in inventory, friends have in wishlist.
 + Added tags feature, works on same nodes as highlighting but all of their states (owned, wishlisted, coupons, gift, guest pass, friends-want).
 + Added "Empty Wishlist" button (has to indivual POST requests for each app and wait for the responses, so it may be slow on large wishlists).
-
++ Added new feature - storefront carousel app descriptions.
 
 v3.0
 -----

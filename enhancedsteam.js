@@ -1060,6 +1060,60 @@ function bind_ajax_content_highlighting() {
 	observer.observe(document, { subtree: true, childList: true });
 }
 
+function add_carousel_descriptions() {
+	storage.get(function(settings) {
+		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
+		if (settings.show_carousel_descriptions) {
+			// Map appids for batched API lookup
+			var capsule_appids = $.map($(".cluster_capsule"), function(obj){return get_appid(obj.href);});
+
+			get_http("//store.steampowered.com/api/appdetails/?appids=" + capsule_appids.join(","), function(txt) {
+				// Add description_height_to_add px to the container for carousel items to display adequately.
+				var description_height_to_add = 62;  // 60 is good for 4 lines; most strings are 2 or 3 lines than this.
+				$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
+
+				var data = JSON.parse(txt);
+
+				$.each($(".cluster_capsule"), function(i, _obj) {
+					var appid = get_appid(_obj.href),
+						$desc = $(_obj).find(".main_cap_content"),
+						$desc_content = $("<p></p>");
+
+						if (data[appid].success) {
+							// Add description_height_to_add px to each description to display it adequately.
+							$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
+							$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
+
+							var raw_string = $(data[appid].data.about_the_game).text();  // jQuery into DOM then get only text; no html pls.
+
+							// Split the string into sentences (we only want the first two).
+							// Replace delimiters with themselves and a unique string to split upon, because we want to include the delimiter once split.
+							raw_string = raw_string.replace(/([\.\!\?])/g, "$1 Wow_so_unique");
+							var string_sentences = raw_string.split("Wow_so_unique"),
+								display_string;
+
+							if (string_sentences.length >= 2) {
+								display_string = string_sentences[0] + string_sentences[1];
+							}
+							else {
+								// If theres not two sentences, just use the whole thing.
+								display_string = raw_string;
+							}
+
+							// We're cropping about_the_game to 2 sentences for
+							// now; I've asked for game_description_snippet to
+							// be added to appdetails API so this may not be
+							// necessary in the future.
+							$desc_content.html(display_string);
+
+							$desc.append($desc_content);
+						}
+				});
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 	// Don't interfere with Storefront API requests
 	if (window.location.pathname.startsWith("/api")) return;
@@ -1106,6 +1160,11 @@ TODO:
 
 				case /^\/account\/.*/.test(window.location.pathname):
 					account_total_spent();
+					break;
+
+				// Storefront-front only
+				case /^\//.test(window.location.pathname):
+					add_carousel_descriptions();
 					break;
 			}
 

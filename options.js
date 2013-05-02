@@ -37,9 +37,9 @@ function save_options() {
 	showlowestprice = $("#showlowestprice").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
+	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 
 	// Tagging Options
-
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
@@ -83,13 +83,14 @@ function save_options() {
 		'tag_coupon': tag_coupon,
 		'tag_inv_gift': tag_inv_gift,
 		'tag_inv_guestpass': tag_inv_guestpass,
-		'hideinstallsteambutton': hideinstallsteambutton,
 		'tag_friends_want': tag_friends_want,
 
 		'showdrm': showdrm,
 		'showlowestprice': showlowestprice,
 		'showmcus': showmcus,
 		'showwsgf': showwsgf,
+		'show_carousel_descriptions': show_carousel_descriptions,
+
 		'showtotal': showtotal,
 		'showgroupevents': showgroupevents,
 		'showgreenlightbanner': showgreenlightbanner,
@@ -233,6 +234,8 @@ function restore_options() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
+		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
+
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
@@ -280,9 +283,8 @@ function restore_options() {
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showwsgf").attr('checked', settings.showwsgf);
+		$("#show_carousel_descriptions").attr('checked', settings.show_carousel_descriptions);
 		$("#showlowestprice").attr('checked', settings.showlowestprice);
-
-
 
 		// Load Community Options
 		$("#showtotal").attr('checked', settings.showtotal);
