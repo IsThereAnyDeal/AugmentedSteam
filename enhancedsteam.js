@@ -2,6 +2,12 @@
 var storage = chrome.storage.sync;
 var apps;
 
+
+// Global scope promise storage; to prevent unecessary API requests.
+var loading_inventory;
+var appid_promises = {};
+
+
 //Chrome storage functions.
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
@@ -35,21 +41,13 @@ Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
 
 // DOM helpers
 function xpath_each(xpath, callback) {
+	//TODO: Replace instances with jQuery selectors.
 	var res = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 	var node;
 	for (var i = 0; i < res.snapshotLength; ++i) {
 		node = res.snapshotItem(i);
 		callback(node);
 	}
-}
-
-function getelem(node, tag, className) {
-	var ary = node.getElementsByTagName(tag);
-	for (var i = 0, length = ary.length; i < length; i++) {
-		var e = ary[i];
-		if (e.className == className) return e;
-	}
-	return null;
 }
 
 function get_http(url, callback) {
@@ -61,13 +59,6 @@ function get_http(url, callback) {
 	};
 	http.open('GET', url, true);
 	http.send(null);
-}
-
-function get_divContents(selector) {
-	var nodeList = document.querySelectorAll(selector);
-	for (var i = 0, length = nodeList.length; i < length; i++) {
-		return nodeList[i].innerHTML;
-	}
 }
 
 function get_appid(t) {
@@ -85,74 +76,107 @@ function get_groupname(t) {
 	else return null;
 }
 
+function get_storefront_appuserdetails(appids, callback) {
+	if (appids == "") debugger; // Empty string :()
+	if (!appids instanceof Array) appids = [appids];
+	get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), callback);
+}
+
+function ensure_appid_deferred(appid) {
+	if (!appid_promises[appid]) {
+		var deferred = new $.Deferred();
+		appid_promises[appid] = {
+			"resolve": deferred.resolve,
+			"promise": deferred.promise()
+		};
+	};
+}
+
 // colors the tile for owned games
 function highlight_owned(node) {
 	storage.get(function(settings) {
-		if (settings.bgcolor === undefined) { settings.bgcolor = "#5c7836";	storage.set({'bgcolor': settings.bgcolor}); }
-		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
-		if (settings.showowned === undefined) { settings.showowned = true; storage.set({'showowned': settings.showowned}); }
+		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
+
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
-		if (settings.showowned) { highlight_node(node, settings.bgcolor); }
-		if (settings.tag_owned)  { add_tag(node, "Owned", settings.tag_owned_color); }
+		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
+		if (settings.tag_owned) add_tag(node, "Owned", settings.tag_owned_color);
 	});
 }
 
 // colors the tile for wishlist games
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
-		if (settings.wlcolor === undefined) { settings.wlcolor = "#496e93";	storage.set({'wlcolor': settings.wlcolor}); }
-		if (settings.showwishlist === undefined) { settings.showwishlist = true; storage.set({'showwishlist': settings.showwishlist}); }
-		if (settings.showwishlist) {
-			highlight_node(node, settings.wlcolor);
-			add_tag(node, "Wishlist", settings.wlcolor);
-		}
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
+
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#496e93";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = true; storage.set({'tag_wishlist': settings.tag_wishlist}); }
+		if (settings.tag_wishlist) add_tag(node, "Wishlist", settings.highlight_wishlist_color);
 	});
 }
 
 // colors the tile for items with coupons
 function highlight_coupon(node) {
 	storage.get(function(settings) {
-		if (settings.ccolor === undefined) { settings.ccolor = "#6b2269"; storage.set({'ccolor': settings.ccolor}); }
-		if (settings.showcoupon === undefined) { settings.showcoupon = true; storage.set({'showcoupon': settings.showcoupon}); }
-		if (settings.showcoupon) {
-			highlight_node(node, settings.ccolor);
-			add_tag(node, "Coupon", settings.ccolor);
-		}
+		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
+		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = true; storage.set({'highlight_coupon': settings.highlight_coupon}); }
+		if (settings.highlight_coupon) highlight_node(node, settings.highlight_coupon_color);
+
+		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
+		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; storage.set({'tag_coupon': settings.tag_coupon}); }
+		if (settings.tag_coupon) add_tag(node, "Coupon", settings.highlight_coupon_color);
 	});
 }
 
 // colors the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
-		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
-			highlight_node(node, settings.icolor);
-			add_tag(node, "Gift", settings.icolor);
+		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
+		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = true; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
+		if (settings.highlight_inv_gift) highlight_node(node, settings.highlight_inv_gift_color);
+
+		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
+		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = true; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
+		if (settings.tag_inv_gift) add_tag(node, "Gift", settings.highlight_inv_gift_color);
 	});
 }
-
 // colors the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
-		if (settings.icolor === undefined) { settings.icolor = "#a75124"; storage.set({'icolor': settings.icolor}); }
-			highlight_node(node, settings.icolor);
-			add_tag(node, "Guest Pass", settings.icolor);
+		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124"; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
+		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = true; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
+		if (settings.highlight_inv_guestpass) highlight_node(node, settings.highlight_inv_guestpass_color);
+
+		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
+		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
+		if (settings.tag_inv_guestpass) add_tag(node, "Guest Pass", settings.highlight_inv_guestpass_color);
+	});
+}
+
+function highlight_friends_want(node, appid) {
+	storage.get(function(settings) {
+		if (settings.highlight_friends_want === undefined) { settings.highlight_friends_want = false; storage.set({'highlight_friends_want': settings.highlight_friends_want});}
+		if (settings.highlight_friends_want_color === undefined) { settings.highlight_friends_want_color = "#7E4060"; storage.set({'highlight_friends_want_color': settings.highlight_friends_want_color});}
+		if (settings.highlight_friends_want) highlight_node(node, settings.highlight_friends_want_color);
+
+		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; storage.set({'tag_friends_want': settings.tag_friends_want});}
+		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; storage.set({'tag_friends_want_color': settings.tag_friends_want_color});}
+		if (settings.tag_friends_want) add_tag(node, "<a href=\"http://steamcommunity.com/my/friendsthatplay/" + appid + "\">" + getValue(appid + "friendswant") + " wish for</a>", settings.tag_friends_want_color);
 	});
 }
 
 function highlight_node(node, color) {
 	storage.get(function(settings) {
-		node.style.backgroundImage = "none";
-		node.style.backgroundColor = color;
-	});
-}
-
-function add_friends_want_tag(node, appid) {
-	storage.get(function(settings) {
-		if (settings.show_friends_want === undefined) { settings.show_friends_want = true; storage.set({'show_friends_want': settings.show_friends_want});}
-		if (settings.show_friends_want_color === undefined) { settings.show_friends_want_color = "#7E4060"; storage.set({'show_friends_want_color': settings.show_friends_want_color});}
-		if (settings.show_friends_want) {
-			add_tag(node, "<a href=\"http://steamcommunity.com/my/friendsthatplay/" + appid + "\">" + getValue(appid + "friendswant") + " wish for</a>", settings.show_friends_want_color);
+		var $node = $(node);
+		// Carousel item
+		if (node.classList.contains("cluster_capsule")) {
+			$node = $(node).find(".main_cap_content");
 		}
+		$node.css("backgroundImage", "none");
+		$node.css("backgroundColor", color);
 	});
 }
 
@@ -160,23 +184,18 @@ function add_tag (node, string, color) {
 	/* To add coloured tags to the end of app names instead of colour
 	highlighting; this allows an to be "highlighted" multiple times; e.g.
 	inventory and owned. */
-	storage.get(function(settings) {
-		if (settings.highlight_tag === undefined) { settings.highlight_tag = true; storage.set({'highlight_tag': settings.highlight_tag});}
-		if (settings.highlight_tag) {
-			node.tags = node.tags || [];
-			var tagItem = [string, color];
-			var already_tagged = false;
+	node.tags = node.tags || [];
+	var tagItem = [string, color];
+	var already_tagged = false;
 
-			// Check its not already tagged.
-			for (var i = 0; i < node.tags.length; i++) {
-				if (node.tags[i][0] === tagItem[0]) already_tagged = true;
-			}
-			if (!already_tagged) {
-				node.tags.push(tagItem);
-				display_tags(node);
-			}
-		}
-	});
+	// Check its not already tagged.
+	for (var i = 0; i < node.tags.length; i++) {
+		if (node.tags[i][0] === tagItem[0]) already_tagged = true;
+	}
+	if (!already_tagged) {
+		node.tags.push(tagItem);
+		display_tags(node);
+	}
 }
 
 function display_tags(node) {
@@ -259,6 +278,22 @@ function display_tags(node) {
 			$tags.css("margin-top", "4px");
 			$tag_root.find(".match_price").after($tags);
 		}
+		else if (node.classList.contains("cluster_capsule")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("display", "inline-block");
+			$tags.css("vertical-align", "middle");
+			$tags.css("font-size", "small");
+			$tag_root.find(".main_cap_platform_area").append($tags);
+
+			// Remove margin-bottom, border, and tweak padding on carousel lists.
+			$.each($tag_root.find(".tags span"), function (i, obj) {
+				$(obj).css("margin-bottom", "0");
+				$(obj).css("border", "0");
+				$(obj).css("padding", "3px");
+			});
+		}
 	}
 }
 
@@ -275,7 +310,6 @@ function load_inventory() {
 				if (obj.actions) {
 					var appid = get_appid(obj.actions[0].link);
 					setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
-					// add_info(appid);
 				}
 			});
 		}
@@ -398,48 +432,6 @@ function empty_wishlist() {
 	});
 }
 
-// checks an item panel
-function add_info(appid) {
-	var handle_app_page = function (txt) {
-		setValue(appid, true); // Set appid to true to indicate we have data on it.
-		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-			setValue(appid + "owned", true);
-		}
-
-		// Use storefront API to check if wishlisted; I've put in a request
-		// for this method to state whether or not an app is owned, so it
-		// may be able to replace the direct storefront call later; thus
-		// allowing batch-requests and huge bandwidth savings for users.
-		get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
-			var app_data = JSON.parse(data)[appid];
-			if (app_data.success) {
-				setValue(appid + "wishlisted",
-				app_data.data.added_to_wishlist);
-
-				if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
-			}
-			deferred.resolve();
-		});
-	};
-
-	// Caching.
-	// TODO: Move expire_time into options.
-	var deferred = new $.Deferred();
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
-
-	// loads values from cache to reduce response time
-	// always get fresh data while dev;
-	if (last_updated < expire_time) {
-		get_http('http://store.steampowered.com/app/' + appid + '/', handle_app_page);
-	}
-	else {
-		// Data already in sessionStorage, just resolve.
-		deferred.resolve();
-	}
-	return deferred.promise();
-}
-
 function find_purchase_date(appname) {
 	get_http('http://store.steampowered.com/account/', function (txt) {
 		var apphtml = txt.substring(txt.indexOf('<div class="transactionRowTitle">' + appname), txt.indexOf('<div class="transactionRowTitle">' + appname) - 300);
@@ -457,8 +449,43 @@ function find_purchase_date(appname) {
 }
 
 // Adds a link to options to the global menu (where is Install Steam button)
-function add_enhanced_steam_options_link() {
-	document.getElementById("global_action_menu").insertAdjacentHTML("afterend", '<div style="float: left; margin-right: 5px;"><a href="' + chrome.extension.getURL("options.html") + '" target="_blank" class="global_action_link">Enhanced Steam</a></div>');
+function add_enhanced_steam_options() {
+	$dropdown = $("<span class=\"pulldown\" id=\"account_pulldown\">Enhanced Steam</span>");
+	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\"></div></div>");
+	$dropdown_options = $dropdown_options_container.find(".popup_body");
+	$dropdown_options.css("display", "none");
+
+	$dropdown.click(function(){
+		if ($dropdown_options.css("display") === "none") {
+			$dropdown_options.css("display", "");
+		}
+		else {
+			$dropdown_options.css("display", "none");
+		}
+	});
+
+	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"" + chrome.extension.getURL("options.html") + "\">Options</a>");
+	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">Website</a>");
+	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">Contribute (GitHub)</a>");
+
+	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">Clear cached data</a>");
+	$clear_cache_link.click(function(){
+		localStorage.clear();
+		sessionStorage.clear();
+		location.reload();
+	});
+
+	$spacer = $("<div class=\"hr\"></div>");
+
+	$dropdown_options.append($options_link);
+	$dropdown_options.append($clear_cache_link);
+	$dropdown_options.append($spacer);
+	$dropdown_options.append($website_link);
+	$dropdown_options.append($contribute_link);
+
+	$("#global_action_menu")
+		.before($dropdown)
+		.before($dropdown_options_container);
 }
 
 // Removes the "Install Steam" button at the top of each page
@@ -910,7 +937,8 @@ function subscription_savings_check() {
 	// For each app, load its info.
 	$.each($(".tab_row"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
-			price_container = $(node).find(".tab_price")[0].innerText;
+			// Remove children, leaving only text (price or only discounted price, if there are discounts)
+			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
 
 		if (price_container !== "N/A")
 		{
@@ -922,7 +950,10 @@ function subscription_savings_check() {
 			itemPrice = 0;
 		}
 
-		appid_info_deferreds.push(add_info(appid));
+		// Batch app ids, checking for existing promises, then do this.
+		ensure_appid_deferred(appid);
+
+		appid_info_deferreds.push(appid_promises[appid].promise);
 
 		sub_apps.push(appid);
 		sub_app_prices[appid] = itemPrice;
@@ -961,36 +992,6 @@ function dlc_data_from_site(appid) {
 	}
 }
 
-// Global scoping this, not sure how else do to it :((
-var loading_inventory;
-
-function load_app_info(node) {
-	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-	if (appid) {
-
-		// Using loading_inventory to prevent 50,000 requests because asynchonisity + caching.
-		// Instead just add new event listeners
-		if (!loading_inventory) loading_inventory = load_inventory();
-		loading_inventory.done(function() {
-			add_info(appid).done(function(){
-				// Order here is important; bottom-most renders last.
-				// TODO: Make option
-
-				// Don't highlight "Omg you're on my wishlist!" on users wishlist.
-				if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
-					if (getValue(appid + "wishlisted")) highlight_wishlist(node);
-				}
-
-				if (getValue(appid + "owned")) highlight_owned(node);
-				if (getValue(appid + "gift")) highlight_inv_gift(node);
-				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-				if (getValue(appid + "coupon")) highlight_coupon(node);
-				if (getValue(appid + "friendswant")) add_friends_want_tag(node, appid);
-			});
-		});
-	}
-}
-
 function check_if_purchased() {
 	// find the date a game was purchased if owned
 	var ownedNode = $(".game_area_already_owned");
@@ -1009,11 +1010,107 @@ function bind_ajax_content_highlighting() {
 				var node = mutation.addedNodes[i];
 
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.classList && node.classList.contains("tab_row")) load_app_info(node);
+				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
+
+	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
+	$("#search_suggestion_contents").bind("DOMSubtreeModified", start_highlights_and_tags);
+}
+
+
+function start_highlights_and_tags(){
+	/* Batches all the document.ready appid lookups into one storefront call. */
+
+	var selectors = [
+			"div.tab_row",			// Storefront rows
+			"a.game_area_dlc_row",	// DLC on app pages
+			"a.small_cap",			// Featured storefront items
+			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
+			"a.search_result_row",	// Search result row.
+			"a.match",				// Search suggestions row.
+			"a.cluster_capsule"		// Carousel items.
+		],
+		appid_to_node = {},
+		appids = [];
+
+	// Get all appids and nodes from selectors.
+	$.each(selectors, function (i, selector) {
+		$.each($(selector), function(j, node){
+			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+			if (appid) {
+				if (!appid_to_node[appid]) {
+					appid_to_node[appid] = [];
+				}
+				appid_to_node[appid].push(node);
+
+				ensure_appid_deferred(appid);
+
+				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+				var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+
+				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+				if (last_updated < expire_time) {
+					appids.push(appid);
+				}
+				else {
+					appid_promises[appid].resolve();
+				}
+
+				// Bind highlighting.
+				appid_promises[appid].promise.done(function(){
+					highlight_app(appid, node);
+				});
+			}
+		});
+	});
+
+	if (appids.length > 0) get_app_details(appids);
+}
+
+
+function get_app_details(appids) {
+	// Make sure we have inventory loaded beforehand.
+	if (!loading_inventory) loading_inventory = load_inventory();
+	loading_inventory.done(function() {
+
+		// Batch request for appids - all untracked or cache-expired apps.
+		// Handle new data highlighting as it loads.
+		get_storefront_appuserdetails(appids, function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data){
+				if (app_data.success) {
+					setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
+					setValue(appid + "owned", (app_data.data.is_owned === true));
+
+					if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
+				}
+				// Time updated, for caching.
+				setValue(appid, parseInt(Date.now() / 1000, 10));
+
+				// Resolve promise, to run any functions waiting for this apps info.
+				appid_promises[appid].resolve();
+			});
+		});
+	});
+}
+
+function highlight_app(appid, node) {
+	// Order here is important; bottom-most renders last.
+	// TODO: Make option
+
+	// Don't highlight "Omg you're on my wishlist!" on users wishlist.
+	if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
+		if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+	}
+
+	if (getValue(appid + "owned")) highlight_owned(node);
+	if (getValue(appid + "gift")) highlight_inv_gift(node);
+	if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+	if (getValue(appid + "coupon")) highlight_coupon(node);
+	if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
 }
 
 function add_carousel_descriptions() {
@@ -1074,7 +1171,7 @@ $(document).ready(function(){
 	// Don't interfere with Storefront API requests
 	if (window.location.pathname.startsWith("/api")) return;
 	// On window load...
-	add_enhanced_steam_options_link();
+	add_enhanced_steam_options();
 	remove_install_steam_button();
 	add_spuf_link();
 
@@ -1125,33 +1222,10 @@ TODO:
 			}
 
 			/* Highlights & data fetching */
+			start_highlights_and_tags();
 
 			// Storefront homepage tabs.
 			bind_ajax_content_highlighting();
-
-			// Storefront rows
-			xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
-
-			// DLC on App Page
-			xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
-
-			// highlights featured homepage items
-			xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
-
-			// hightlight daily deal
-			xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
-
-			// checks for content loaded via AJAX on the search pages
-			xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
-			$("#search_results").bind("DOMSubtreeModified", function() {
-				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
-			});
-
-			// checks for search suggestions
-			$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
-				xpath_each("//a[contains(@class,'match')]", load_app_info);
-			});
-
 			break;
 
 		case "steamcommunity.com":
@@ -1164,10 +1238,10 @@ TODO:
 				case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 					add_cart_on_wishlist();
 					fix_wishlist_image_not_found();
-
 					add_empty_wishlist_button();
-					// wishlist owned  Highlights & data fetching
-					xpath_each("//div[contains(@class,'wishlistRow')]", load_app_info);
+
+					// wishlist highlights
+					start_highlights_and_tags();
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
