@@ -18,7 +18,10 @@
   "content_scripts": [
     {
       "matches": ["http://store.steampowered.com/*", "https://store.steampowered.com/*", "http://steamcommunity.com/*"],
-      "js": ["jQuery.min.js", "enhancedsteam.js"],
+      "js": [
+        "jQuery.min.js",
+        "localization.js",
+        "enhancedsteam.js"],
       "css": ["enhancedsteam.css"]
     }
   ]
