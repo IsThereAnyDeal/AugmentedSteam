@@ -105,102 +105,50 @@ function save_options() {
 		'profile_astats': profile_astats
 	}, function() {
 		// Notify that we saved.
-		document.getElementById("save_store").innerHTML = "<button class='btn' id='save'>Saved.</button>";
-		document.getElementById("save_community").innerHTML = "<button class='btn' id='save'>Saved.</button>";
-		
-		setTimeout(function() {
-			document.getElementById("save_store").innerHTML = "<button class='btn' id='save'>Save</button>";
-			document.getElementById("save_community").innerHTML = "<button class='btn' id='save'>Save</button>";
-		}, 750);
+		localization_promise.done(function(){
+			$("#save_store").text(localized_strings[language].saved + ".");
+			$("#save_community").text(localized_strings[language].saved + ".");
+			
+			setTimeout(function() {
+				$("#save_store").text(localized_strings[language].save);
+				$("#save_community").text(localized_strings[language].save);
+			}, 750);
+		});
 	});
 }
 
 // toggles pages
 function load_store_tab() {
-	var store = document.getElementById("maincontent_store");
-	var community = document.getElementById("maincontent_community");
-	var news = document.getElementById("maincontent_news");
-	var about = document.getElementById("maincontent_about");
-	var donate = document.getElementById("maincontent_donate");
-
-	console.log("switching tabs to store");
-
-	store.style.display = "block";
-	community.style.display = "none";
-	news.style.display = "none";
-	about.style.display = "none";
-	donate.style.display = "none";
+	document.getElementById("maincontent_store").style.display = "block";
+	document.getElementById("maincontent_community").style.display = "none";
+	document.getElementById("maincontent_news").style.display = "none";
+	document.getElementById("maincontent_about").style.display = "none";
 }
 
 function load_community_tab() {
-	var store = document.getElementById("maincontent_store");
-	var community = document.getElementById("maincontent_community");
-	var news = document.getElementById("maincontent_news");
-	var about = document.getElementById("maincontent_about");
-	var donate = document.getElementById("maincontent_donate");
-
-	console.log("switching tabs to community");
-
-	store.style.display = "none";
-	community.style.display = "block";
-	news.style.display = "none";
-	about.style.display = "none";
-	donate.style.display = "none";
+	document.getElementById("maincontent_store").style.display = "none";
+	document.getElementById("maincontent_community").style.display = "block";
+	document.getElementById("maincontent_news").style.display = "none";
+	document.getElementById("maincontent_about").style.display = "none";
 }
 
 function load_news_tab() {
-	var store = document.getElementById("maincontent_store");
-	var community = document.getElementById("maincontent_community");
-	var news = document.getElementById("maincontent_news");
-	var about = document.getElementById("maincontent_about");
-	var donate = document.getElementById("maincontent_donate");
-
-	console.log("switching tabs to news");
-
-	store.style.display = "none";
-	community.style.display = "none";
-	news.style.display = "block";
-	about.style.display = "none";
-	donate.style.display = "none";
+	document.getElementById("maincontent_store").style.display = "none";
+	document.getElementById("maincontent_community").style.display = "none";
+	document.getElementById("maincontent_news").style.display = "block";
+	document.getElementById("maincontent_about").style.display = "none";
 }
 
 function load_about_tab() {
-	var store = document.getElementById("maincontent_store");
-	var community = document.getElementById("maincontent_community");
-	var news = document.getElementById("maincontent_news");
-	var about = document.getElementById("maincontent_about");
-	var donate = document.getElementById("maincontent_donate");
-
-	console.log("switching tabs to about");
-
-	store.style.display = "none";
-	community.style.display = "none";
-	news.style.display = "none";
-	about.style.display = "block";
-	donate.style.display = "none";
-}
-
-function load_donate_tab() {
-	var store = document.getElementById("maincontent_store");
-	var community = document.getElementById("maincontent_community");
-	var news = document.getElementById("maincontent_news");
-	var about = document.getElementById("maincontent_about");
-	var donate = document.getElementById("maincontent_donate");
-
-	console.log("switching tabs to donate");
-
-	store.style.display = "none";
-	community.style.display = "none";
-	news.style.display = "none";
-	about.style.display = "none";
-	donate.style.display = "block";
+	document.getElementById("maincontent_store").style.display = "none";
+	document.getElementById("maincontent_community").style.display = "none";
+	document.getElementById("maincontent_news").style.display = "none";
+	document.getElementById("maincontent_about").style.display = "block";
 }
 
 // Loads changelog.txt
 jQuery.get('changelog.txt', function(data) {
-	var changelog = document.getElementById("maincontent_news");
-	changelog.innerHTML = "Changelog:<br><textarea rows=28 cols=84>" + data + "</textarea>";
-    //alert(data);
+	document.getElementById("maincontent_news").innerHTML = "Changelog:<br><textarea rows=28 cols=100>" + data + "</textarea>";
 });
 
 // Restores select box state to saved value from SyncStorage.
@@ -344,6 +292,9 @@ function load_translation() {
 			$("#tag_inv_gift_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
+			
+			$("#save_store").text(localized_strings[settings.language].save);
+			$("#save_community").text(localized_strings[settings.language].save);
 		});	
 	});
 }
@@ -388,5 +339,4 @@ document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);
 document.querySelector('#nav_about').addEventListener('click', load_about_tab);
-document.querySelector('#nav_donate').addEventListener('click', load_donate_tab);
 });

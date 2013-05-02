@@ -16,6 +16,8 @@ localization_promise = (function (){
 		highlight: "Highlight",
 		tag: "Tag",
 		theworddefault: "Default",
+		save: "Save",
+		saved: "Saved",
         clear_cache: "Clear cached data",
         forums: "Forums",
         coupon_available: "You have a coupon available!",
@@ -53,7 +55,9 @@ localization_promise = (function (){
 			language: "Idioma",
 			highlight: "Destacar",
 			tag: "Etiqueta",
-			theworddefault: "Defecto"
+			theworddefault: "Defecto",
+			save: "Guardar",
+			saved: "Guardado"
 		},
         "fi":       {},
         "fr":       {},

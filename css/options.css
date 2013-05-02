@@ -5,7 +5,7 @@ body {
 
 #heading {
 	position: fixed;
-	text-align:left;
+	text-align:center;
 	font-family:"Arial";
 	font-size:18px;
 	margin-top: 90px;
@@ -15,9 +15,9 @@ body {
 	bottom: 0px;
 	border-right: 1px solid #4D4B48;
 }
-#heading a:link { color: #b8b6b4; text-decoration: none }
-#heading a:visited { color: #b8b6b4; text-decoration: none }
-#heading a:hover { color: #efffef; text-decoration: none }
+#heading a:link { color: #b8b6b4; text-decoration: none; }
+#heading a:visited { color: #b8b6b4; text-decoration: none; }
+#heading a:hover { color: #efffef; text-decoration: none; }
 
 #header {
 	position: fixed;
@@ -29,6 +29,16 @@ body {
 
 #header_logo {
 	margin-left: 170px;
+}
+
+.tab_row {
+	position: relative;
+	height: 25px;
+	border: 1px solid #4D4B48;
+}
+
+.tab_row:hover {
+	border: 1px solid #8bb9e0;
 }
 
 .content {
