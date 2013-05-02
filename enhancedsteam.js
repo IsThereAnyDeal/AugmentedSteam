@@ -170,8 +170,13 @@ function highlight_friends_want(node, appid) {
 
 function highlight_node(node, color) {
 	storage.get(function(settings) {
-		node.style.backgroundImage = "none";
-		node.style.backgroundColor = color;
+		var $node = $(node);
+		// Carousel item
+		if (node.classList.contains("cluster_capsule")) {
+			$node = $(node).find(".main_cap_content");
+		}
+		$node.css("backgroundImage", "none");
+		$node.css("backgroundColor", color);
 	});
 }
 
@@ -272,6 +277,22 @@ function display_tags(node) {
 			$tags.css("width", "130px");
 			$tags.css("margin-top", "4px");
 			$tag_root.find(".match_price").after($tags);
+		}
+		else if (node.classList.contains("cluster_capsule")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("display", "inline-block");
+			$tags.css("vertical-align", "middle");
+			$tags.css("font-size", "small");
+			$tag_root.find(".main_cap_platform_area").append($tags);
+
+			// Remove margin-bottom, border, and tweak padding on carousel lists.
+			$.each($tag_root.find(".tags span"), function (i, obj) {
+				$(obj).css("margin-bottom", "0");
+				$(obj).css("border", "0");
+				$(obj).css("padding", "3px");
+			});
 		}
 	}
 }
@@ -1009,7 +1030,8 @@ function start_highlights_and_tags(){
 			"a.small_cap",			// Featured storefront items
 			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
 			"a.search_result_row",	// Search result row.
-			"a.match"				// Search suggestions row.
+			"a.match",				// Search suggestions row.
+			"a.cluster_capsule"		// Carousel items.
 		],
 		appid_to_node = {},
 		appids = [];
