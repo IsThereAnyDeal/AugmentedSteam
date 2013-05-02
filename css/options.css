@@ -4,8 +4,6 @@ body {
 }
 
 #contentwrapper {
-	background-repeat: no-repeat;
-	height=800px;
 	text-align:center;
 }
 
@@ -20,14 +18,12 @@ body {
 #heading a:visited { color: #b8b6b4; text-decoration: none }
 #heading a:hover { color: #efffef; text-decoration: none }
 
-
 #maincontent_store{
 	margin-top:20px;
 	margin-left: 120px;
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
-	height: 511px;
 	color: #8bc53f;
 }
 
@@ -37,7 +33,6 @@ body {
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
-	height: 511px;
 	color: #8bc53f;
 }
 
@@ -47,7 +42,6 @@ body {
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
-	height: 511px;
 	color: #8bc53f;
 }
 
@@ -57,7 +51,6 @@ body {
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
-	height: 511px;
 	color: #8bc53f;
 }
 
@@ -67,15 +60,16 @@ body {
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
-	height: 511px;
 	color: #8bc53f;
 }
 
 #footer {
-	margin-top: 70px;
+	position:absolute;
+    bottom: 0;
+	width:99%;
+    height:60px; 
 	text-align: right;
 	color: FFF;
-	margin-right: 35px;
 }
 
 .btn {
@@ -121,9 +115,4 @@ body {
 	padding-bottom: 5px;
 	padding-left: 6px;
 	padding-right: 5px;
-}
-
-#save_space {
-	margin-right: 35px;
-	float: right;
 }

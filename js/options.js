@@ -40,8 +40,6 @@ function save_options() {
 	showwsgf = $("#showwsgf").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 
-	// Tagging Options
-
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
 	showgroupevents = $("#showgroupevents").prop('checked');
@@ -107,9 +105,13 @@ function save_options() {
 		'profile_astats': profile_astats
 	}, function() {
 		// Notify that we saved.
-		var status = document.getElementById("save_space");
-		status.innerHTML = "<button class='btn' id='save'>Saved.</button>";
-		setTimeout(function() {location.reload();}, 750);
+		document.getElementById("save_store").innerHTML = "<button class='btn' id='save'>Saved.</button>";
+		document.getElementById("save_community").innerHTML = "<button class='btn' id='save'>Saved.</button>";
+		
+		setTimeout(function() {
+			document.getElementById("save_store").innerHTML = "<button class='btn' id='save'>Save</button>";
+			document.getElementById("save_community").innerHTML = "<button class='btn' id='save'>Save</button>";
+		}, 750);
 	});
 }
 
@@ -204,10 +206,8 @@ jQuery.get('changelog.txt', function(data) {
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
-
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.language === undefined) { settings.language = "en"; chrome.storage.sync.set({'language': settings.language}); }
-
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
@@ -253,9 +253,7 @@ function load_options() {
 		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
-
-		$("#language").attr('value', settings.language);
-
+		
 		// Load Store Options
 		$("#highlight_owned_color").attr('value', settings.highlight_owned_color);
 		$("#highlight_wishlist_color").attr('value', settings.highlight_wishlist_color);
@@ -307,6 +305,19 @@ function load_options() {
 		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);
 		$("#profile_astats").attr('checked', settings.profile_astats);
 		
+		$("#language").attr('value', settings.language);
+		
+		load_translation()
+	});
+}
+
+function load_translation() {
+	chrome.storage.sync.get(function(settings) {
+				
+		if (settings.language === undefined) { settings.language = "en"; chrome.storage.sync.set({'language': settings.language}); }
+		settings.language = $("#language").val();			
+		$("#language").attr('value', settings.language);
+		
 		// Load translation
 		localization_promise.done(function(){
 			document.title = "Enhanced Steam " + localized_strings[settings.language].options;
@@ -354,7 +365,10 @@ function load_default_tag_friends_want_color() { document.getElementById("tag_fr
 document.addEventListener('DOMContentLoaded', load_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
-document.querySelector('#save').addEventListener('click', save_options);
+document.querySelector('#save_store').addEventListener('click', save_options);
+document.querySelector('#save_community').addEventListener('click', save_options);
+
+document.querySelector('#language').addEventListener('change', load_translation);
 
 document.querySelector('#highlight_owned_default').addEventListener('click', load_default_highlight_owned_color);
 document.querySelector('#highlight_wishlist_default').addEventListener('click', load_default_highlight_wishlist_color);
