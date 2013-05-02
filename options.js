@@ -1,6 +1,7 @@
 
 // Saves options to localStorage.
 function save_options() {
+	language = $("#language").val();
 
 	// Store Options
 	highlight_owned_color = $("#highlight_owned_color").val();
@@ -56,6 +57,8 @@ function save_options() {
 	profile_astats = $("#profile_astats").prop('checked');
 
 	chrome.storage.sync.set({
+		'language': language,
+
 		'highlight_owned_color': highlight_owned_color,
 		'highlight_wishlist_color': highlight_wishlist_color,
 		'highlight_coupon_color': highlight_coupon_color,
@@ -203,6 +206,8 @@ function restore_options() {
 	chrome.storage.sync.get(function(settings) {
 
 		// Load default values for settings if they do not exist (and sync them to Google)
+		if (settings.language === undefined) { settings.language = "en";	chrome.storage.sync.set({'language': settings.language});	}
+
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
@@ -248,6 +253,8 @@ function restore_options() {
 		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
+
+		$("#language").attr('value', settings.language);
 
 		// Load Store Options
 		$("#highlight_owned_color").attr('value', settings.highlight_owned_color);
@@ -302,7 +309,6 @@ function restore_options() {
 	});
 }
 
-// Deal with this shite before you commit
 function load_default_highlight_owned_color() { document.getElementById("highlight_owned_color").value = "#5c7836"; }
 function load_default_highlight_wishlist_color() { document.getElementById("highlight_wishlist_color").value = "#496e93"; }
 function load_default_highlight_coupon_color() { document.getElementById("highlight_coupon_color").value = "#6b2269"; }
