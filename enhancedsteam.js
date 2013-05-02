@@ -1226,7 +1226,7 @@ $(document).ready(function(){
 
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
-						// add_carousel_descriptions();
+						add_carousel_descriptions();
 						break;
 				}
 
