@@ -12,17 +12,17 @@
   "web_accessible_resources": [
     "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png",
     "img/ico/steamgifts.ico", "img/ico/steamtrades.ico", "img/ico/steamrep.ico", "img/ico/wastedonsteam.ico", "img/ico/sapi.ico", "img/ico/backpacktf.ico", "img/ico/achievementstats.ico",
-    "enhancedsteam.css"
+    "css/enhancedsteam.css"
   ],
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [
     {
       "matches": ["http://store.steampowered.com/*", "https://store.steampowered.com/*", "http://steamcommunity.com/*"],
       "js": [
-        "jQuery.min.js",
-        "localization.js",
+        "js/jQuery.min.js",
+        "js/localization.js",
         "enhancedsteam.js"],
-      "css": ["enhancedsteam.css"]
+      "css": ["css/enhancedsteam.css"]
     }
   ]
 }

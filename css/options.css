@@ -1,25 +1,20 @@
-
 body {
 	background: -webkit-linear-gradient(top,  #000000 0%,#0b1821 100%); /* Chrome10+,Safari5.1+ */
 	background: linear-gradient(to bottom,  #000000 0%,#0b1821 100%); /* W3C */
 }
 
-
 #contentwrapper {
-	background-image: url("img/bg-content.png");
 	background-repeat: no-repeat;
 	height=800px;
 	text-align:center;
 }
 
 #heading {
-	height: 60px;
-	padding: 40px 0px 0px 261px;
+	position: fixed;
 	text-align:left;
 	font-family:"Arial";
 	font-size:16px;
-	color:FFF;
-	
+	color:FFF;	
 }
 #heading a:link { color: #b8b6b4; text-decoration: none }
 #heading a:visited { color: #b8b6b4; text-decoration: none }
@@ -27,7 +22,8 @@ body {
 
 
 #maincontent_store{
-	margin-top:80px;
+	margin-top:20px;
+	margin-left: 120px;
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
@@ -36,7 +32,8 @@ body {
 }
 
 #maincontent_community {
-	margin-top:80px;
+	margin-top:20px;
+	margin-left: 120px;
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
@@ -45,7 +42,8 @@ body {
 }
 
 #maincontent_news {
-	margin-top:80px;
+	margin-top:20px;
+	margin-left: 120px;
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
@@ -54,7 +52,8 @@ body {
 }
 
 #maincontent_about {
-	margin-top:80px;
+	margin-top:20px;
+	margin-left: 120px;
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
@@ -63,7 +62,8 @@ body {
 }
 
 #maincontent_donate {
-	margin-top:80px;
+	margin-top:20px;
+	margin-left: 120px;
 	text-align:left;
 	padding-left:51px;
 	padding-right:51px;
@@ -80,7 +80,7 @@ body {
 
 .btn {
 	
-	background-image: url( img/btn_gradient.png );
+	background-image: url( ../img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
 	
@@ -98,7 +98,7 @@ body {
 }
 
 .colorbutton {
-	background-image: url( img/btn_gradient.png );
+	background-image: url( ../img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
 		

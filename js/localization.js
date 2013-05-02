@@ -12,6 +12,10 @@ localization_promise = (function (){
 		news: "News",
 		about: "About",
 		donate: "Donate",
+		language: "Language",
+		highlight: "Highlight",
+		tag: "Tag",
+		theworddefault: "Default",
         clear_cache: "Clear cached data",
         forums: "Forums",
         coupon_available: "You have a coupon available!",
@@ -40,11 +44,16 @@ localization_promise = (function (){
         "de":       {},
         "el":       {},
         "es":       {
+			options: "Opciones",
 			store: "Tienda",
 			community: "Comunidad",
 			news: "Noticias",
 			about: "Sobre",
-			donate: "Donar"
+			donate: "Donar",
+			language: "Idioma",
+			highlight: "Destacar",
+			tag: "Etiqueta",
+			theworddefault: "Defecto"
 		},
         "fi":       {},
         "fr":       {},

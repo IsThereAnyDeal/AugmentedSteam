@@ -309,11 +309,30 @@ function load_options() {
 		
 		// Load translation
 		localization_promise.done(function(){
+			document.title = "Enhanced Steam " + localized_strings[settings.language].options;
+			
 			$("#header_store").text(localized_strings[settings.language].store);
 			$("#header_community").text(localized_strings[settings.language].community);
 			$("#header_news").text(localized_strings[settings.language].news);
 			$("#header_about").text(localized_strings[settings.language].about);
 			$("#header_donate").text(localized_strings[settings.language].donate);
+			
+			$("#language_text").text(localized_strings[settings.language].language);
+			$("#highlight_text").text(localized_strings[settings.language].highlight);
+			$("#tag_text").text(localized_strings[settings.language].tag);
+			
+			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
+			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);
+			$("#highlight_coupon_default").text(localized_strings[settings.language].theworddefault);
+			$("#highlight_inv_gift_default").text(localized_strings[settings.language].theworddefault);
+			$("#highlight_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
+			$("#highlight_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_owned_color_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_wishlist_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_coupon_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_inv_gift_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
 		});	
 	});
 }

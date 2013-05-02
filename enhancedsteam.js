@@ -824,7 +824,7 @@ function hide_greenlight_banner() {
 		if (settings.showgreenlightbanner) {
 			var banner = document.getElementById('ig_top_workshop');
 			var html;
-			html = '<link href="' + chrome.extension.getURL("enhancedsteam.css") + '" rel="stylesheet" type="text/css">';
+			html = '<link href="' + chrome.extension.getURL("css/enhancedsteam.css") + '" rel="stylesheet" type="text/css">';
 			html = html + '<div id="store_nav_area"><div class="store_nav_bg"><div class="store_nav">';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
