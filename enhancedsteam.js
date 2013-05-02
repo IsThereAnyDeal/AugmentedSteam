@@ -954,7 +954,7 @@ function subscription_savings_check() {
 	$.each($(".tab_row"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
 			// Remove children, leaving only text (price or only discounted price, if there are discounts)
-			price_container = $(node).find(".tab_price").children().remove().end().text();
+			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
 
 		if (price_container !== "N/A")
 		{
