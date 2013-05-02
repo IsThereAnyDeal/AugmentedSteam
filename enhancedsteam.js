@@ -2,6 +2,12 @@
 var storage = chrome.storage.sync;
 var apps;
 
+
+// Global scope promise storage; to prevent unecessary API requests.
+var loading_inventory;
+var appid_promises = {};
+
+
 //Chrome storage functions.
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
@@ -35,21 +41,13 @@ Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
 
 // DOM helpers
 function xpath_each(xpath, callback) {
+	//TODO: Replace instances with jQuery selectors.
 	var res = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
 	var node;
 	for (var i = 0; i < res.snapshotLength; ++i) {
 		node = res.snapshotItem(i);
 		callback(node);
 	}
-}
-
-function getelem(node, tag, className) {
-	var ary = node.getElementsByTagName(tag);
-	for (var i = 0, length = ary.length; i < length; i++) {
-		var e = ary[i];
-		if (e.className == className) return e;
-	}
-	return null;
 }
 
 function get_http(url, callback) {
@@ -61,13 +59,6 @@ function get_http(url, callback) {
 	};
 	http.open('GET', url, true);
 	http.send(null);
-}
-
-function get_divContents(selector) {
-	var nodeList = document.querySelectorAll(selector);
-	for (var i = 0, length = nodeList.length; i < length; i++) {
-		return nodeList[i].innerHTML;
-	}
 }
 
 function get_appid(t) {
@@ -83,6 +74,22 @@ function get_appid_wishlist(t) {
 function get_groupname(t) {
 	if (t && t.match(/steamcommunity\.com\/groups\/(\S+)/)) return RegExp.$1;
 	else return null;
+}
+
+function get_storefront_appuserdetails(appids, callback) {
+	if (appids == "") debugger; // Empty string :()
+	if (!appids instanceof Array) appids = [appids];
+	get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), callback);
+}
+
+function ensure_appid_deferred(appid) {
+	if (!appid_promises[appid]) {
+		var deferred = new $.Deferred();
+		appid_promises[appid] = {
+			"resolve": deferred.resolve,
+			"promise": deferred.promise()
+		};
+	};
 }
 
 // colors the tile for owned games
@@ -282,7 +289,6 @@ function load_inventory() {
 				if (obj.actions) {
 					var appid = get_appid(obj.actions[0].link);
 					setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
-					// add_info(appid);
 				}
 			});
 		}
@@ -403,49 +409,6 @@ function empty_wishlist() {
 	$.when.apply(null, deferreds).done(function(){
 		location.reload();
 	});
-}
-
-// checks an item panel
-function add_info(appid) {
-	var handle_app_page = function (txt) {
-		if (txt.search(/<div class="game_area_already_owned">/) > 0) {
-			setValue(appid + "owned", true);
-		}
-
-		// Use storefront API to check if wishlisted; I've put in a request
-		// for this method to state whether or not an app is owned, so it
-		// may be able to replace the direct storefront call later; thus
-		// allowing batch-requests and huge bandwidth savings for users.
-		get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appid, function (data) {
-			var app_data = JSON.parse(data)[appid];
-			if (app_data.success) {
-				setValue(appid + "wishlisted",
-				app_data.data.added_to_wishlist);
-
-				if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
-			}
-			// Time updated, for caching.
-			setValue(appid, parseInt(Date.now() / 1000, 10));
-			deferred.resolve();
-		});
-	};
-
-	// Caching.
-	// TODO: Move expire_time into options.
-	var deferred = new $.Deferred();
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
-
-	// loads values from cache to reduce response time
-	// always get fresh data while dev;
-	if (last_updated < expire_time) {
-		get_http('http://store.steampowered.com/app/' + appid + '/', handle_app_page);
-	}
-	else {
-		// Data already in sessionStorage, just resolve.
-		deferred.resolve();
-	}
-	return deferred.promise();
 }
 
 function find_purchase_date(appname) {
@@ -966,7 +929,10 @@ function subscription_savings_check() {
 			itemPrice = 0;
 		}
 
-		appid_info_deferreds.push(add_info(appid));
+		// Batch app ids, checking for existing promises, then do this.
+		ensure_appid_deferred(appid);
+
+		appid_info_deferreds.push(appid_promises[appid].promise);
 
 		sub_apps.push(appid);
 		sub_app_prices[appid] = itemPrice;
@@ -1005,36 +971,6 @@ function dlc_data_from_site(appid) {
 	}
 }
 
-// Global scoping this, not sure how else do to it :((
-var loading_inventory;
-
-function load_app_info(node) {
-	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-	if (appid) {
-
-		// Using loading_inventory to prevent 50,000 requests because asynchonisity + caching.
-		// Instead just add new event listeners
-		if (!loading_inventory) loading_inventory = load_inventory();
-		loading_inventory.done(function() {
-			add_info(appid).done(function(){
-				// Order here is important; bottom-most renders last.
-				// TODO: Make option
-
-				// Don't highlight "Omg you're on my wishlist!" on users wishlist.
-				if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
-					if (getValue(appid + "wishlisted")) highlight_wishlist(node);
-				}
-
-				if (getValue(appid + "owned")) highlight_owned(node);
-				if (getValue(appid + "gift")) highlight_inv_gift(node);
-				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-				if (getValue(appid + "coupon")) highlight_coupon(node);
-				if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
-			});
-		});
-	}
-}
-
 function check_if_purchased() {
 	// find the date a game was purchased if owned
 	var ownedNode = $(".game_area_already_owned");
@@ -1053,11 +989,106 @@ function bind_ajax_content_highlighting() {
 				var node = mutation.addedNodes[i];
 
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.classList && node.classList.contains("tab_row")) load_app_info(node);
+				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
+
+	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
+	$("#search_suggestion_contents").bind("DOMSubtreeModified", start_highlights_and_tags);
+}
+
+
+function start_highlights_and_tags(){
+	/* Batches all the document.ready appid lookups into one storefront call. */
+
+	var selectors = [
+			"div.tab_row",			// Storefront rows
+			"a.game_area_dlc_row",	// DLC on app pages
+			"a.small_cap",			// Featured storefront items
+			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
+			"a.search_result_row",	// Search result row.
+			"a.match"				// Search suggestions row.
+		],
+		appid_to_node = {},
+		appids = [];
+
+	// Get all appids and nodes from selectors.
+	$.each(selectors, function (i, selector) {
+		$.each($(selector), function(j, node){
+			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+			if (appid) {
+				if (!appid_to_node[appid]) {
+					appid_to_node[appid] = [];
+				}
+				appid_to_node[appid].push(node);
+
+				ensure_appid_deferred(appid);
+
+				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+				var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+
+				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+				if (last_updated < expire_time) {
+					appids.push(appid);
+				}
+				else {
+					appid_promises[appid].resolve();
+				}
+
+				// Bind highlighting.
+				appid_promises[appid].promise.done(function(){
+					highlight_app(appid, node);
+				});
+			}
+		});
+	});
+
+	if (appids.length > 0) get_app_details(appids);
+}
+
+
+function get_app_details(appids) {
+	// Make sure we have inventory loaded beforehand.
+	if (!loading_inventory) loading_inventory = load_inventory();
+	loading_inventory.done(function() {
+
+		// Batch request for appids - all untracked or cache-expired apps.
+		// Handle new data highlighting as it loads.
+		get_storefront_appuserdetails(appids, function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data){
+				if (app_data.success) {
+					setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
+					setValue(appid + "owned", (app_data.data.is_owned === true));
+
+					if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
+				}
+				// Time updated, for caching.
+				setValue(appid, parseInt(Date.now() / 1000, 10));
+
+				// Resolve promise, to run any functions waiting for this apps info.
+				appid_promises[appid].resolve();
+			});
+		});
+	});
+}
+
+function highlight_app(appid, node) {
+	// Order here is important; bottom-most renders last.
+	// TODO: Make option
+
+	// Don't highlight "Omg you're on my wishlist!" on users wishlist.
+	if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
+		if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+	}
+
+	if (getValue(appid + "owned")) highlight_owned(node);
+	if (getValue(appid + "gift")) highlight_inv_gift(node);
+	if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+	if (getValue(appid + "coupon")) highlight_coupon(node);
+	if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
 }
 
 $(document).ready(function(){
@@ -1110,33 +1141,10 @@ TODO:
 			}
 
 			/* Highlights & data fetching */
+			start_highlights_and_tags();
 
 			// Storefront homepage tabs.
 			bind_ajax_content_highlighting();
-
-			// Storefront rows
-			xpath_each("//div[contains(@class,'tab_row')]", load_app_info);
-
-			// DLC on App Page
-			xpath_each("//a[contains(@class,'game_area_dlc_row')]", load_app_info);
-
-			// highlights featured homepage items
-			xpath_each("//a[contains(@class,'small_cap')]", load_app_info);
-
-			// hightlight daily deal
-			xpath_each("//div[contains(@class,'dailydeal')]", load_app_info);
-
-			// checks for content loaded via AJAX on the search pages
-			xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
-			$("#search_results").bind("DOMSubtreeModified", function() {
-				xpath_each("//a[contains(@class,'search_result_row')]", load_app_info);
-			});
-
-			// checks for search suggestions
-			$("#search_suggestion_contents").bind("DOMSubtreeModified", function() {
-				xpath_each("//a[contains(@class,'match')]", load_app_info);
-			});
-
 			break;
 
 		case "steamcommunity.com":
@@ -1149,10 +1157,10 @@ TODO:
 				case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 					add_cart_on_wishlist();
 					fix_wishlist_image_not_found();
-
 					add_empty_wishlist_button();
-					// wishlist owned  Highlights & data fetching
-					xpath_each("//div[contains(@class,'wishlistRow')]", load_app_info);
+
+					// wishlist highlights
+					start_highlights_and_tags();
 					break;
 
 				case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
