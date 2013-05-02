@@ -257,7 +257,24 @@ function display_tags(node) {
 			$tag_root = $(node).find(".search_name");
 			remove_existing_tags($tag_root);
 
-			$tag_root.find("h4").after($tags);
+			$tags.css("display", "inline-block");
+			$tags.css("vertical-align", "middle");
+			$tags.css("font-size", "small");
+
+			var $p = $tag_root.find("p"),
+				$imgs = $p.find("img").remove(),
+				$text = $p.text(),
+				$new_p = $("<p></p>");
+
+			$p.replaceWith($new_p.append($imgs).append($tags).append($text));
+			$new_p.css("color", "lightgrey");
+
+			// Remove margin-bottom, border, and tweak padding on carousel lists.
+			$.each($tag_root.find(".tags span"), function (i, obj) {
+				$(obj).css("margin-bottom", "0");
+				$(obj).css("border", "0");
+				$(obj).css("padding", "3px");
+			});
 		}
 		else if (node.classList.contains("dailydeal")) {
 			$tag_root = $(node).parent();
@@ -270,8 +287,10 @@ function display_tags(node) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
 
-			$tags.css("width", "100px");
-			$tags.css("float", "right");
+			// small_cap will have extra height
+
+			$tags.css("display", "table");
+			$tags.css("margin-top", "4px");
 			$tag_root.find("h4").before($tags);
 		}
 		else if (node.classList.contains("game_area_dlc_row")) {
@@ -1053,7 +1072,7 @@ function start_highlights_and_tags(){
 	var selectors = [
 			"div.tab_row",			// Storefront rows
 			"a.game_area_dlc_row",	// DLC on app pages
-			"a.small_cap",			// Featured storefront items
+			"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
 			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
 			"a.search_result_row",	// Search result row.
 			"a.match",				// Search suggestions row.
@@ -1193,6 +1212,23 @@ function add_carousel_descriptions() {
 	});
 }
 
+function add_small_cap_height() {
+	// Add height for another line for tags;
+	var height_to_add = 20,
+		$small_cap_pager = $(".small_cap_pager"),
+		$small_cap_page = $small_cap_pager.find(".small_cap_page");
+		$small_cap = $(".small_cap");
+
+	if ($small_cap.length > 0) {
+		if (/^\/$/.test(window.location.pathname)) {
+			// If storefront home, add 2 rows worth of moar line.
+			$small_cap_pager.css("height", parseInt($small_cap_pager.css("height").replace("px", ""), 10) + (height_to_add * 2) + "px");
+			$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * 2) + "px");
+		}
+		$small_cap.css("height", parseInt($small_cap.css("height").replace("px", ""), 10) + height_to_add + "px");
+	}
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -1253,6 +1289,9 @@ $(document).ready(function(){
 
 				// Storefront homepage tabs.
 				bind_ajax_content_highlighting();
+
+				add_small_cap_height();
+
 				break;
 
 			case "steamcommunity.com":
