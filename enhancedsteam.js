@@ -81,7 +81,6 @@ function get_groupname(t) {
 }
 
 function get_storefront_appuserdetails(appids, callback) {
-	if (appids == "") debugger; // Empty string :()
 	if (!appids instanceof Array) appids = [appids];
 	get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), callback);
 }
@@ -93,7 +92,7 @@ function ensure_appid_deferred(appid) {
 			"resolve": deferred.resolve,
 			"promise": deferred.promise()
 		};
-	};
+	}
 }
 
 // colors the tile for owned games
@@ -185,6 +184,10 @@ function highlight_node(node, color) {
 		}
 		$node.css("backgroundImage", "none");
 		$node.css("backgroundColor", color);
+
+		// Set text colour to not conflict with highlight.
+		if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
+		if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 	});
 }
 
@@ -267,7 +270,6 @@ function display_tags(node) {
 				$new_p = $("<p></p>");
 
 			$p.replaceWith($new_p.append($imgs).append($tags).append($text));
-			$new_p.css("color", "lightgrey");
 
 			// Remove margin-bottom, border, and tweak padding on carousel lists.
 			$.each($tag_root.find(".tags span"), function (i, obj) {
@@ -303,6 +305,7 @@ function display_tags(node) {
 			// Remove margin-bottom on DLC lists, else horrible pyramidding.
 			$.each($tag_root.find(".tags span"), function (i, obj) {
 				$(obj).css("margin-bottom", "0");
+				$(obj).css("padding", "0 2px");
 			});
 		}
 		else if (node.classList.contains("wishlistRow")) {
@@ -1071,9 +1074,10 @@ function start_highlights_and_tags(){
 
 	var selectors = [
 			"div.tab_row",			// Storefront rows
+			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
+			"div.wishlistRow",		// Wishlist row
 			"a.game_area_dlc_row",	// DLC on app pages
 			"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
-			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
 			"a.search_result_row",	// Search result row.
 			"a.match",				// Search suggestions row.
 			"a.cluster_capsule"		// Carousel items.
