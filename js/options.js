@@ -277,9 +277,35 @@ function load_translation() {
 			$("#header_donate").text(localized_strings[settings.language].donate);
 			
 			$("#language_text").text(localized_strings[settings.language].language);
-			$("#highlight_text").text(localized_strings[settings.language].highlight);
-			$("#tag_text").text(localized_strings[settings.language].tag);
 			
+			$("#highlight_text").text(localized_strings[settings.language].highlight);
+			$("#highlight_owned_text").text(localized_strings[settings.language].options_owned);
+			$("#highlight_wishlist_text").text(localized_strings[settings.language].options_wishlist);
+			$("#highlight_coupon_text").text(localized_strings[settings.language].options_coupon);
+			$("#highlight_gift_text").text(localized_strings[settings.language].options_gift);
+			$("#highlight_guest_text").text(localized_strings[settings.language].options_guest);
+			$("#highlight_friends_wishlist_text").text(localized_strings[settings.language].options_friends_wishlist);
+						
+			$("#tag_text").text(localized_strings[settings.language].tag);
+			$("#tag_owned_text").text(localized_strings[settings.language].options_owned);
+			$("#tag_wishlist_text").text(localized_strings[settings.language].options_wishlist);
+			$("#tag_coupon_text").text(localized_strings[settings.language].options_coupon);
+			$("#tag_gift_text").text(localized_strings[settings.language].options_gift);
+			$("#tag_guest_text").text(localized_strings[settings.language].options_guest);
+			$("#tag_friends_wishlist_text").text(localized_strings[settings.language].options_friends_wishlist);
+			
+			$("#store_hide_install_text").text(localized_strings[settings.language].options_hide_install);
+			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
+			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
+			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
+			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
+			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
+			
+			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
+			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
+			$("#group_events_text").text(localized_strings[settings.language].options_group_events);
+			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
+						
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_coupon_default").text(localized_strings[settings.language].theworddefault);
