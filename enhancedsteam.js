@@ -340,6 +340,31 @@ function display_tags(node) {
 				$(obj).css("padding", "3px");
 			});
 		}
+		else if (node.classList.contains("recommendation_highlight")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+
+			$tag_root.find(".game_purchase_action").before($tags);
+			$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+		}
+		else if (node.classList.contains("recommendation_carousel_item")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+
+			$tag_root.find(".buttons").before($tags);
+		}
+		else if (node.classList.contains("friendplaytime_game")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+
+			$tag_root.find(".friendplaytime_buttons").before($tags);
+		}
 	}
 }
 
@@ -1080,7 +1105,10 @@ function start_highlights_and_tags(){
 			"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
 			"a.search_result_row",	// Search result row.
 			"a.match",				// Search suggestions row.
-			"a.cluster_capsule"		// Carousel items.
+			"a.cluster_capsule",		// Carousel items.
+			"div.recommendation_highlight",	// Recommendation page.
+			"div.recommendation_carousel_item",	// Recommendation page.
+			"div.friendplaytime_game"	// Recommendation page.
 		],
 		appid_to_node = {},
 		appids = [];
