@@ -81,7 +81,7 @@ function get_groupname(t) {
 }
 
 function get_storefront_appuserdetails(appids, callback) {
-	if (!appids instanceof Array) appids = [appids];
+	if (!(appids instanceof Array)) appids = [appids];
 	get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), callback);
 }
 
@@ -390,6 +390,33 @@ function display_tags(node) {
 				}
 			});
 			$tag_root.after($tags);
+		}
+		else if (node.classList.contains("apphub_HeaderStandardTop")) {
+			$tag_root = $(node);
+			$tag_root.css("height", "60px"); // Height to accomodate tags.
+
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+			$tags.css("margin-top", "4px");
+			$tags.css("margin-left", "4px");
+
+			$tag_root.find(".apphub_AppName").after($tags);
+			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
+		}
+		else if (node.classList.contains("apphub_HeaderTop")) {
+			$tag_root = $(node);
+			$tag_root.css("height", "90px"); // Height to accomodate tags.
+			$tag_root.find(".apphub_sectionTabs").css("padding-top", "2px"); // Height to accomodate tags.
+
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+			$tags.css("margin-top", "4px");
+			$tags.css("margin-left", "4px");
+
+			$tag_root.find(".apphub_AppName").after($tags);
+			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
 		}
 	}
 }
@@ -1322,6 +1349,32 @@ function start_friend_activity_highlights() {
 	if (appids.length > 0) get_app_details(appids);
 }
 
+function add_app_page_highlights() {
+	var appid = get_appid(window.location.host + window.location.pathname);
+
+	if (window.location.host == "store.steampowered.com") node = $(".apphub_HeaderStandardTop")[0];
+	if (window.location.host == "steamcommunity.com") node = $(".apphub_HeaderTop")[0];
+
+	ensure_appid_deferred(appid);
+
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+
+	// If we have no data on appid, or the data has expired, fetch new data.
+	if (last_updated < expire_time) {
+		get_app_details(appid);
+	}
+	else {
+		appid_promises[appid].resolve();
+	}
+
+	// Bind highlighting.
+	appid_promises[appid].promise.done(function(){
+		highlight_app(appid, node);
+	});
+}
+
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -1359,6 +1412,7 @@ $(document).ready(function(){
 						check_if_purchased();
 
 						add_widescreen_certification();
+						add_app_page_highlights();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
@@ -1418,6 +1472,10 @@ $(document).ready(function(){
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
+						break;
+
+					case /^\/app\/.*/.test(window.location.pathname):
+						add_app_page_highlights();
 						break;
 				}
 				break;
