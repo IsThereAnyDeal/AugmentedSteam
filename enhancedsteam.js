@@ -365,6 +365,32 @@ function display_tags(node) {
 
 			$tag_root.find(".friendplaytime_buttons").before($tags);
 		}
+		else if (node.classList.contains("inline_tags")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root.parent());
+
+			$tags.css("display", "inline-block");
+			$tags.css("margin-left", "4px");
+
+			$tags.children().remove();
+			// display inline as text only.
+			$.each(node.tags, function (i, obj) {
+				var $obj = $("<span>" + obj[0] + "</span>");
+				// $obj.css("border-bottom", "2px solid " + obj[1]);
+				// $obj.css("background-color", obj[1]);
+				// $obj.css("color", "white");
+
+				if (i === 0) $tags.append(" (");
+				$tags.append($obj);
+				if (i === node.tags.length - 1) {
+					$tags.append(")");
+				}
+				else {
+					$tags.append(", ");
+				}
+			});
+			$tag_root.after($tags);
+		}
 	}
 }
 
@@ -1105,7 +1131,7 @@ function start_highlights_and_tags(){
 			"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
 			"a.search_result_row",	// Search result row.
 			"a.match",				// Search suggestions row.
-			"a.cluster_capsule",		// Carousel items.
+			"a.cluster_capsule",	// Carousel items.
 			"div.recommendation_highlight",	// Recommendation page.
 			"div.recommendation_carousel_item",	// Recommendation page.
 			"div.friendplaytime_game"	// Recommendation page.
@@ -1130,7 +1156,7 @@ function start_highlights_and_tags(){
 
 				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 				if (last_updated < expire_time) {
-					appids.push(appid);
+				if (appids.indexOf(appid) === -1) appids.push(appid);
 				}
 				else {
 					appid_promises[appid].resolve();
@@ -1261,6 +1287,42 @@ function add_small_cap_height() {
 	}
 }
 
+function start_friend_activity_highlights() {
+	var appid_to_node = {},
+		appids = [];
+	$.each($(".blotter_author_block a"), function (i, node) {
+		var appid = get_appid(node.href);
+		if (appid && !node.classList.contains("blotter_userstats_game")) {
+			if (!appid_to_node[appid]) {
+				appid_to_node[appid] = [];
+			}
+			$(node).addClass("inline_tags");
+			appid_to_node[appid].push(node);
+
+			ensure_appid_deferred(appid);
+
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+
+			// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+			if (last_updated < expire_time) {
+				if (appids.indexOf(appid) === -1) appids.push(appid);
+			}
+			else {
+				appid_promises[appid].resolve();
+			}
+
+			// Bind highlighting.
+			appid_promises[appid].promise.done(function(){
+				highlight_app(appid, node);
+			});
+		}
+	});
+
+		debugger;
+	if (appids.length > 0) get_app_details(appids);
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -1340,6 +1402,10 @@ $(document).ready(function(){
 
 						// wishlist highlights
 						start_highlights_and_tags();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
+						start_friend_activity_highlights();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
