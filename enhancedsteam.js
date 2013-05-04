@@ -1107,7 +1107,6 @@ function bind_ajax_content_highlighting() {
 		mutations.forEach(function(mutation) {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
-
 				// Check the node is what we want, and not some unrelated DOM change.
 				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
 			}
@@ -1117,6 +1116,7 @@ function bind_ajax_content_highlighting() {
 
 	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
 	$("#search_suggestion_contents").bind("DOMSubtreeModified", start_highlights_and_tags);
+	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
 }
 
 
@@ -1405,6 +1405,7 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
 						start_friend_activity_highlights();
+						bind_ajax_content_highlighting();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
