@@ -66,7 +66,7 @@ function get_http(url, callback) {
 }
 
 function get_appid(t) {
-	if (t && t.match(/store\.steampowered\.com\/app\/(\d+)\/?/)) return RegExp.$1;
+	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/)) return RegExp.$1;
 	else return null;
 }
 
