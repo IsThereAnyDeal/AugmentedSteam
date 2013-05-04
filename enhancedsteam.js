@@ -1319,7 +1319,6 @@ function start_friend_activity_highlights() {
 		}
 	});
 
-		debugger;
 	if (appids.length > 0) get_app_details(appids);
 }
 
