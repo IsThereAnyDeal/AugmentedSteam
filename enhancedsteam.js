@@ -672,7 +672,7 @@ function display_coupon_message(appid) {
 	"</div>"));
 
 	var $price_div = $("[itemtype=\"http://schema.org/Offer\"]"),
-		cart_id = $price_div.find("[name=\"subid\"]"),
+		cart_id = $(document).find("[name=\"subid\"]")[0].value,
 		actual_price_container = $price_div.find("[itemprop=\"price\"]")[0].innerText,
 		original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", ".")),
 		currency_symbol = actual_price_container.match(/(?:R\$|\$|€|£|pуб)/)[0], // Lazy but effective
