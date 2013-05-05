@@ -730,10 +730,10 @@ function display_coupon_message(appid) {
 function show_pricing_history(appid) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
-		if (settings.showlowestprice) {
-			var sgsurl = "http://www.steamgamesales.com/app/" + appid + "/";
-			lowest_price = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><a href='" + sgsurl + "' target='_blank'>" + localized_strings[language].check_pricing_history + "</a>";
-			document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', lowest_price);
+		if (settings.showlowestprice) {			
+			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=app/" + appid, function (txt) {
+				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);			
+			});
 		}
 	});
 }
