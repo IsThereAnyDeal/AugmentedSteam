@@ -12,11 +12,11 @@
 </div>
 
 <div id="heading">
-	<div class="tab_row"><a href="#" id="nav_store"><div id="header_store">Store</div></a></div>
-	<div class="tab_row"><a href="#" id="nav_community"><div id="header_community">Community</div></a></div>
-	<div class="tab_row"><a href="#" id="nav_news"><div id="header_news">News</div></a></div>
-	<div class="tab_row"><a href="#" id="nav_about"><div id="header_about">About</div></a></div>
-	<div class="tab_row"><a href="http://www.EnhancedSteam.com/donate.php" id="nav_donate" target="_blank"><div id="header_donate">Donate</div></a></div>
+	<div class="tab_row" id="heading_store"><a href="#" id="nav_store"><div id="header_store">Store</div></a></div>
+	<div class="tab_row" id="heading_community"><a href="#" id="nav_community"><div id="header_community">Community</div></a></div>
+	<div class="tab_row" id="heading_news"><a href="#" id="nav_news"><div id="header_news">News</div></a></div>
+	<div class="tab_row" id="heading_about"><a href="#" id="nav_about"><div id="header_about">About</div></a></div>
+	<div class="tab_row" id="heading_donate"><a href="http://www.EnhancedSteam.com/donate.php" id="nav_donate" target="_blank"><div id="header_donate">Donate</div></a></div>
 </div>
 
 <div id="contentwrapper">	
@@ -260,6 +260,30 @@
 
 			<tr>
 				<td>
+					<input type="checkbox" id="showlowestprice">
+				</td>
+				<td height=30>
+					<div id="store_lowestprice_text" class="text">Show Price History Information</div>
+				</td>				
+				<td>
+					<div id="lowestprice_region_text" class="text">Region:</div> 
+				</td>	
+				<td>
+					<select id="showlowestprice_region" class="dropdown">
+						<option value="us">US</option>
+						<option value="uk">UK</option> 
+						<option value="au">AU</option> 
+						<option value="br">BR</option>
+						<option value="eu1">EU1</option> 
+						<option value="eu2">EU2</option> 
+					</select>
+				</td>
+			</tr>
+			
+			<tr><td>&nbsp;</td></tr>
+			
+			<tr>
+				<td>
 					<input type="checkbox" id="hideinstallsteambutton">
 				</td>
 				<td height=30>
@@ -273,15 +297,6 @@
 				</td>
 				<td height=30>
 					<div id="store_drm_text" class="text">Show 3rd Party DRM Warnings</div>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="showlowestprice">
-				</td>
-				<td height=30>
-					<div id="store_lowestprice_text" class="text">Show Price History Information</div>
 				</td>
 			</tr>
 
@@ -410,7 +425,7 @@
 	</div>
 
 	<div id="footer">
-		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a> by jshackles
+		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a><br>by jshackles
 	</div>
 </div>
 

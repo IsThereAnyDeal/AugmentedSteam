@@ -121,7 +121,7 @@ function highlight_wishlist(node) {
 		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
 
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#496e93";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
-		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = true; storage.set({'tag_wishlist': settings.tag_wishlist}); }
+		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
 		if (settings.tag_wishlist) add_tag(node, localized_strings[language].tag_wishlist, settings.highlight_wishlist_color);
 	});
 }
@@ -130,7 +130,7 @@ function highlight_wishlist(node) {
 function highlight_coupon(node) {
 	storage.get(function(settings) {
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
-		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = true; storage.set({'highlight_coupon': settings.highlight_coupon}); }
+		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_coupon) highlight_node(node, settings.highlight_coupon_color);
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
@@ -143,7 +143,7 @@ function highlight_coupon(node) {
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
-		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = true; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
+		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_gift) highlight_node(node, settings.highlight_inv_gift_color);
 
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
@@ -155,7 +155,7 @@ function highlight_inv_gift(node) {
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124"; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
-		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = true; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
+		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
 		if (settings.highlight_inv_guestpass) highlight_node(node, settings.highlight_inv_guestpass_color);
 
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
@@ -735,8 +735,9 @@ function display_coupon_message(appid) {
 function show_pricing_history(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
 		if (settings.showlowestprice) {			
-			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid, function (txt) {
+			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region, function (txt) {
 				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);			
 			});
 		}
