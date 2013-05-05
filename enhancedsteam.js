@@ -706,8 +706,9 @@ function display_coupon_message(appid) {
 				break;
 
 			default:
-			original_price_with_symbol = currency_symbol + original_price;
-			discounted_price_with_symbol = currency_symbol + discounted_price;
+				original_price_with_symbol = currency_symbol + original_price;
+				discounted_price_with_symbol = currency_symbol + discounted_price;
+				break;
 		}
 
 
@@ -1032,12 +1033,20 @@ function account_total_spent() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showtotal) {
 			if ($('.transactionRow').length !== 0) {
+				var currency_symbol;
 				totaler = function (p, i) {
 					if (p.innerHTML.indexOf("class=\"transactionRowEvent\">Wallet Credit</div>") < 0) {
-						var regex = /(\d+\.\d\d+)/;
-						price = regex.exec($(p).html());
-						if (price !== null) {
-							return parseFloat(price);
+						var priceContainer = $(p).find(".transactionRowPrice");
+						if (priceContainer.length > 0) {
+							var priceText = $(priceContainer).text();
+							var regex = /(\d+\.\d\d+)/,
+								price = regex.exec(priceText);
+							// debugger;
+
+							if (price !== null && price !== "Total") {
+								currency_symbol = priceText.match(/(?:R\$|\$|€|£|pуб)/)[0]; // Lazy but effective
+								return parseFloat(price);
+							}
 						}
 					}
 				};
@@ -1048,11 +1057,26 @@ function account_total_spent() {
 				jQuery.map(prices, function (p, i) {
 					total += p;
 				});
-				total = total.toFixed(2);
 
-				$('.accountInfoBlock .block_content_inner .accountBalance').after('<div class="accountRow accountBalance accountSpent"></div>');
-				$('.accountSpent').append('<div class="accountData price">$' + total + '</div>');
-				$('.accountSpent').append('<div class="accountLabel" style="color: #C00; font-weight: bold; font-size: 100%">Total Spent:</div>');
+				if (currency_symbol) {
+					switch (currency_symbol) {
+						case "€":
+							total_with_symbol = parseFloat(total).toFixed(2) + currency_symbol;
+							break;
+
+						case "pуб":
+							total_with_symbol = parseFloat(total).toFixed(0) + " " + currency_symbol;
+							break;
+
+						default:
+							total_with_symbol = currency_symbol + parseFloat(total).toFixed(2);
+							break;
+					}
+
+					$('.accountInfoBlock .block_content_inner .accountBalance').after('<div class="accountRow accountBalance accountSpent"></div>');
+					$('.accountSpent').append('<div class="accountData price">' + total_with_symbol + '</div>');
+					$('.accountSpent').append('<div class="accountLabel" style="color: #C00; font-weight: bold; font-size: 100%">Total Spent:</div>');
+				}
 			}
 		}
 	});
