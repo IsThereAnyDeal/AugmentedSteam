@@ -1301,15 +1301,25 @@ function add_small_cap_height() {
 	// Add height for another line for tags;
 	var height_to_add = 20,
 		$small_cap_pager = $(".small_cap_pager"),
-		$small_cap_page = $small_cap_pager.find(".small_cap_page");
 		$small_cap = $(".small_cap");
 
 	if ($small_cap.length > 0) {
 		if (/^\/$/.test(window.location.pathname)) {
-			// If storefront home, add 2 rows worth of moar line.
-			$small_cap_pager.css("height", parseInt($small_cap_pager.css("height").replace("px", ""), 10) + (height_to_add * 2) + "px");
-			$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * 2) + "px");
+			// $small_cap_pager and $small_cap_page are exclusive to frontpage, so let's not run them anywhere else.
+			$.each($small_cap_pager, function(i, obj) {
+				// Go though and check if they are one or two row pagers.
+				var $obj = $(obj),
+					rows = obj.classList.contains("onerow") ? 1 : 2,
+					$small_cap_page = $obj.find(".small_cap_page");
+
+				// Don't do anything to the video small_cap
+				if (!obj.classList.contains("onerowvideo")) {
+					$obj.css("height", parseInt($obj.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
+					$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
+				}
+			});
 		}
+
 		$small_cap.css("height", parseInt($small_cap.css("height").replace("px", ""), 10) + height_to_add + "px");
 	}
 }
