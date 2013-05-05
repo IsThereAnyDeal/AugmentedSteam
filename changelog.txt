@@ -1,11 +1,13 @@
 v3.1
 -----
-: General cleanup of code, and refactoring of some methods; less places for bugs to sneak in.
-: Fixed a bug where "Add to Cart" button on wishlists was instead a recommendation form.
-+ Added highlighting for gift in inventory, guest pass in inventory, friends have in wishlist.
-+ Added tags feature, works on same nodes as highlighting but all of their states (owned, wishlisted, coupons, gift, guest pass, friends-want).
-+ Added "Empty Wishlist" button (has to indivual POST requests for each app and wait for the responses, so it may be slow on large wishlists).
+: General code cleanup: less places for bugs to sneak in.
+: Fixed a bug where "Add to Cart" button on wishlists was a recommendation form.
++ Added highlighting for gift in inventory, guest passes, friends have in wishlist.
++ Added tags feature (owned, wishlisted, coupons, gift, guest pass, friends-want).
++ Added "Empty Wishlist" button (May be slow on large wishlists).
 + Added new feature - storefront carousel app descriptions.
++ Re-wrote price tab which now shows current best and historical best deals.  
++ Added price tab to game bundles.
 
 v3.0
 -----

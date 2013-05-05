@@ -70,6 +70,11 @@ function get_appid(t) {
 	else return null;
 }
 
+function get_subid(t) {
+	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/)) return RegExp.$1;
+	else return null;
+}
+
 function get_appid_wishlist(t) {
 	if (t && t.match(/game_(\d+)/)) return RegExp.$1;
 	else return null;
@@ -727,11 +732,11 @@ function display_coupon_message(appid) {
 
 }
 
-function show_pricing_history(appid) {
+function show_pricing_history(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice) {			
-			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=app/" + appid, function (txt) {
+			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid, function (txt) {
 				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);			
 			});
 		}
@@ -1414,7 +1419,7 @@ $(document).ready(function(){
 						load_inventory().done(function() {
 							if (getValue(appid+"coupon")) display_coupon_message(appid);
 						});
-						show_pricing_history(appid);
+						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
 
 						drm_warnings();
@@ -1426,8 +1431,10 @@ $(document).ready(function(){
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
+						var subid = get_subid(window.location.host + window.location.pathname);
 						drm_warnings();
 						subscription_savings_check();
+						show_pricing_history(subid, "sub");
 
 						break;
 
