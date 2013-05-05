@@ -56,7 +56,7 @@ localization_promise = (function (){
 
     localized_strings = {
         "en": localized_strings_default,
-        "ar":       {options: "Bob"},
+        "ar":       {},
         "cs":       {},
         "da":       {},
         "de":       {},

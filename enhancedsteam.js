@@ -66,7 +66,7 @@ function get_http(url, callback) {
 }
 
 function get_appid(t) {
-	if (t && t.match(/store\.steampowered\.com\/app\/(\d+)\/?/)) return RegExp.$1;
+	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/)) return RegExp.$1;
 	else return null;
 }
 
@@ -81,8 +81,7 @@ function get_groupname(t) {
 }
 
 function get_storefront_appuserdetails(appids, callback) {
-	if (appids == "") debugger; // Empty string :()
-	if (!appids instanceof Array) appids = [appids];
+	if (!(appids instanceof Array)) appids = [appids];
 	get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), callback);
 }
 
@@ -93,7 +92,7 @@ function ensure_appid_deferred(appid) {
 			"resolve": deferred.resolve,
 			"promise": deferred.promise()
 		};
-	};
+	}
 }
 
 // colors the tile for owned games
@@ -185,6 +184,10 @@ function highlight_node(node, color) {
 		}
 		$node.css("backgroundImage", "none");
 		$node.css("backgroundColor", color);
+
+		// Set text colour to not conflict with highlight.
+		if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
+		if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 	});
 }
 
@@ -211,28 +214,44 @@ function display_tags(node) {
 		if (tag_root.find(".tags").length > 0) {
 			tag_root.find(".tags").remove();
 		}
+	},
+	new_display_tag = function new_display_tag(text, color) {
+		var $tag = $("<span>" + tag[0] + "</span>");
+		$tag.css("backgroundColor", tag[1]);
+		$tag.css("color", "white");
+		$tag.css("float", "right");
+		$tag.css("padding", "2px");
+		$tag.css("margin-right", "4px");
+		$tag.css("margin-bottom", "4px");
+		$tag.css("border", "1px solid #262627");
+		return $tag;
 	};
+
+	// Check for discount percentage; if exists convert into tag.
+	var discount_pct =  $(node).find(".discount_pct");
+	var discount_as_int;
+
+	if (discount_pct.length > 0) {
+		discount_as_int = parseInt(discount_pct.text().match(/(\-[1-9][0-9])%/)[1], 10);
+		discount_pct.remove();
+
+		node.tags.splice(0, 0, [discount_as_int + "%", "#4C6B22"]);
+	}
+
 	if (node.tags) {
 
 		// Make tags.
 		$tags = $("<div class=\"tags\"></div>");
 		for (var i = 0; i < node.tags.length; i++) {
 			var tag = node.tags[i];
-			var $tag = $("<span>" + tag[0] + "</span>");
-			$tag.css("backgroundColor", tag[1]);
-			$tag.css("color", "white");
-			$tag.css("float", "right");
-			$tag.css("padding", "2px");
-			$tag.css("margin-right", "4px");
-			$tag.css("margin-bottom", "4px");
-			$tag.css("border", "1px solid #262627");
+			var $tag = new_display_tag(tag[0], tag[1]);
 			$tags.append($tag);
 		}
 
 		// Gotta apply tags differently per type of node.
 		var $tag_root;
 		if (node.classList.contains("tab_row")) {
-			$tag_root = $(node).find(".tab_desc");
+			$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
 			remove_existing_tags($tag_root);
 
 			$tag_root.find("h4").after($tags);
@@ -241,7 +260,23 @@ function display_tags(node) {
 			$tag_root = $(node).find(".search_name");
 			remove_existing_tags($tag_root);
 
-			$tag_root.find("h4").after($tags);
+			$tags.css("display", "inline-block");
+			$tags.css("vertical-align", "middle");
+			$tags.css("font-size", "small");
+
+			var $p = $tag_root.find("p"),
+				$imgs = $p.find("img").remove(),
+				$text = $p.text(),
+				$new_p = $("<p></p>");
+
+			$p.replaceWith($new_p.append($imgs).append($tags).append($text));
+
+			// Remove margin-bottom, border, and tweak padding on carousel lists.
+			$.each($tag_root.find(".tags span"), function (i, obj) {
+				$(obj).css("margin-bottom", "0");
+				$(obj).css("border", "0");
+				$(obj).css("padding", "3px");
+			});
 		}
 		else if (node.classList.contains("dailydeal")) {
 			$tag_root = $(node).parent();
@@ -254,8 +289,10 @@ function display_tags(node) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
 
-			$tags.css("width", "100px");
-			$tags.css("float", "right");
+			// small_cap will have extra height
+
+			$tags.css("display", "table");
+			$tags.css("margin-top", "4px");
 			$tag_root.find("h4").before($tags);
 		}
 		else if (node.classList.contains("game_area_dlc_row")) {
@@ -268,6 +305,7 @@ function display_tags(node) {
 			// Remove margin-bottom on DLC lists, else horrible pyramidding.
 			$.each($tag_root.find(".tags span"), function (i, obj) {
 				$(obj).css("margin-bottom", "0");
+				$(obj).css("padding", "0 2px");
 			});
 		}
 		else if (node.classList.contains("wishlistRow")) {
@@ -301,6 +339,84 @@ function display_tags(node) {
 				$(obj).css("border", "0");
 				$(obj).css("padding", "3px");
 			});
+		}
+		else if (node.classList.contains("recommendation_highlight")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+
+			$tag_root.find(".game_purchase_action").before($tags);
+			$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+		}
+		else if (node.classList.contains("recommendation_carousel_item")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+
+			$tag_root.find(".buttons").before($tags);
+		}
+		else if (node.classList.contains("friendplaytime_game")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+
+			$tag_root.find(".friendplaytime_buttons").before($tags);
+		}
+		else if (node.classList.contains("inline_tags")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root.parent());
+
+			$tags.css("display", "inline-block");
+			$tags.css("margin-left", "4px");
+
+			$tags.children().remove();
+			// display inline as text only.
+			$.each(node.tags, function (i, obj) {
+				var $obj = $("<span>" + obj[0] + "</span>");
+				// $obj.css("border-bottom", "2px solid " + obj[1]);
+				// $obj.css("background-color", obj[1]);
+				// $obj.css("color", "white");
+
+				if (i === 0) $tags.append(" (");
+				$tags.append($obj);
+				if (i === node.tags.length - 1) {
+					$tags.append(")");
+				}
+				else {
+					$tags.append(", ");
+				}
+			});
+			$tag_root.after($tags);
+		}
+		else if (node.classList.contains("apphub_HeaderStandardTop")) {
+			$tag_root = $(node);
+			$tag_root.css("height", "60px"); // Height to accomodate tags.
+
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+			$tags.css("margin-top", "4px");
+			$tags.css("margin-left", "4px");
+
+			$tag_root.find(".apphub_AppName").after($tags);
+			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
+		}
+		else if (node.classList.contains("apphub_HeaderTop")) {
+			$tag_root = $(node);
+			$tag_root.css("height", "90px"); // Height to accomodate tags.
+			$tag_root.find(".apphub_sectionTabs").css("padding-top", "2px"); // Height to accomodate tags.
+
+			remove_existing_tags($tag_root);
+
+			$tags.css("float", "left");
+			$tags.css("margin-top", "4px");
+			$tags.css("margin-left", "4px");
+
+			$tag_root.find(".apphub_AppName").after($tags);
+			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
 		}
 	}
 }
@@ -476,7 +592,7 @@ function add_enhanced_steam_options() {
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 	$donation_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//enhancedsteam.com/donate.php\">" + localized_strings[language].donate + "</a>");
-	
+
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings[language].clear_cache + "</a>");
 	$clear_cache_link.click(function(){
 		localStorage.clear();
@@ -1018,7 +1134,6 @@ function bind_ajax_content_highlighting() {
 		mutations.forEach(function(mutation) {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
-
 				// Check the node is what we want, and not some unrelated DOM change.
 				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
 			}
@@ -1028,6 +1143,7 @@ function bind_ajax_content_highlighting() {
 
 	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
 	$("#search_suggestion_contents").bind("DOMSubtreeModified", start_highlights_and_tags);
+	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
 }
 
 
@@ -1036,12 +1152,16 @@ function start_highlights_and_tags(){
 
 	var selectors = [
 			"div.tab_row",			// Storefront rows
-			"a.game_area_dlc_row",	// DLC on app pages
-			"a.small_cap",			// Featured storefront items
 			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
+			"div.wishlistRow",		// Wishlist row
+			"a.game_area_dlc_row",	// DLC on app pages
+			"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
 			"a.search_result_row",	// Search result row.
 			"a.match",				// Search suggestions row.
-			"a.cluster_capsule"		// Carousel items.
+			"a.cluster_capsule",	// Carousel items.
+			"div.recommendation_highlight",	// Recommendation page.
+			"div.recommendation_carousel_item",	// Recommendation page.
+			"div.friendplaytime_game"	// Recommendation page.
 		],
 		appid_to_node = {},
 		appids = [];
@@ -1063,7 +1183,7 @@ function start_highlights_and_tags(){
 
 				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 				if (last_updated < expire_time) {
-					appids.push(appid);
+				if (appids.indexOf(appid) === -1) appids.push(appid);
 				}
 				else {
 					appid_promises[appid].resolve();
@@ -1177,6 +1297,84 @@ function add_carousel_descriptions() {
 	});
 }
 
+function add_small_cap_height() {
+	// Add height for another line for tags;
+	var height_to_add = 20,
+		$small_cap_pager = $(".small_cap_pager"),
+		$small_cap_page = $small_cap_pager.find(".small_cap_page");
+		$small_cap = $(".small_cap");
+
+	if ($small_cap.length > 0) {
+		if (/^\/$/.test(window.location.pathname)) {
+			// If storefront home, add 2 rows worth of moar line.
+			$small_cap_pager.css("height", parseInt($small_cap_pager.css("height").replace("px", ""), 10) + (height_to_add * 2) + "px");
+			$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * 2) + "px");
+		}
+		$small_cap.css("height", parseInt($small_cap.css("height").replace("px", ""), 10) + height_to_add + "px");
+	}
+}
+
+function start_friend_activity_highlights() {
+	var appid_to_node = {},
+		appids = [];
+	$.each($(".blotter_author_block a"), function (i, node) {
+		var appid = get_appid(node.href);
+		if (appid && !node.classList.contains("blotter_userstats_game")) {
+			if (!appid_to_node[appid]) {
+				appid_to_node[appid] = [];
+			}
+			$(node).addClass("inline_tags");
+			appid_to_node[appid].push(node);
+
+			ensure_appid_deferred(appid);
+
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+
+			// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+			if (last_updated < expire_time) {
+				if (appids.indexOf(appid) === -1) appids.push(appid);
+			}
+			else {
+				appid_promises[appid].resolve();
+			}
+
+			// Bind highlighting.
+			appid_promises[appid].promise.done(function(){
+				highlight_app(appid, node);
+			});
+		}
+	});
+
+	if (appids.length > 0) get_app_details(appids);
+}
+
+function add_app_page_highlights() {
+	var appid = get_appid(window.location.host + window.location.pathname);
+
+	if (window.location.host == "store.steampowered.com") node = $(".apphub_HeaderStandardTop")[0];
+	if (window.location.host == "steamcommunity.com") node = $(".apphub_HeaderTop")[0];
+
+	ensure_appid_deferred(appid);
+
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+
+	// If we have no data on appid, or the data has expired, fetch new data.
+	if (last_updated < expire_time) {
+		get_app_details(appid);
+	}
+	else {
+		appid_promises[appid].resolve();
+	}
+
+	// Bind highlighting.
+	appid_promises[appid].promise.done(function(){
+		highlight_app(appid, node);
+	});
+}
+
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -1214,6 +1412,7 @@ $(document).ready(function(){
 						check_if_purchased();
 
 						add_widescreen_certification();
+						add_app_page_highlights();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
@@ -1237,6 +1436,9 @@ $(document).ready(function(){
 
 				// Storefront homepage tabs.
 				bind_ajax_content_highlighting();
+
+				add_small_cap_height();
+
 				break;
 
 			case "steamcommunity.com":
@@ -1255,6 +1457,11 @@ $(document).ready(function(){
 						start_highlights_and_tags();
 						break;
 
+					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
+						start_friend_activity_highlights();
+						bind_ajax_content_highlighting();
+						break;
+
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
 						add_return_to_profile_tab();
 						break;
@@ -1265,6 +1472,10 @@ $(document).ready(function(){
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
+						break;
+
+					case /^\/app\/.*/.test(window.location.pathname):
+						add_app_page_highlights();
 						break;
 				}
 				break;
