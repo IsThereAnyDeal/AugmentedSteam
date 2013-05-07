@@ -14,11 +14,11 @@ var appid_promises = {};
 
 //Chrome storage functions.
 function setValue(key, value) {
-	sessionStorage.setItem(key, JSON.stringify(value));
+	localStorage.setItem(key, JSON.stringify(value));
 }
 
 function getValue(key) {
-	var v = sessionStorage.getItem(key);
+	var v = localStorage.getItem(key);
 	if (v === undefined) return v;
 	return JSON.parse(v);
 }
@@ -458,7 +458,7 @@ function load_inventory() {
 							var link = obj.actions[j].link;
 							var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
 
-							// If sub+packageid is in SessionStorage then we don't need to get this info reloaded.
+							// If sub+packageid is in localStorage then we don't need to get this info reloaded.
 							// This sick optimization saves 268ms per page load! Woo!
 							if (!getValue("sub" + packageid)) packageids.push(packageid);
 						}
@@ -513,7 +513,7 @@ function load_inventory() {
 		get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);
 	}
 	else {
-		// No need to load anything, its all in sessionStorage.
+		// No need to load anything, its all in localStorage.
 		handle_inv_ctx1(localStorage.getItem("inventory_1"));
 		handle_inv_ctx3(localStorage.getItem("inventory_3"));
 
@@ -601,7 +601,6 @@ function add_enhanced_steam_options() {
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings[language].clear_cache + "</a>");
 	$clear_cache_link.click(function(){
 		localStorage.clear();
-		sessionStorage.clear();
 		location.reload();
 	});
 
@@ -1209,7 +1208,7 @@ function start_highlights_and_tags(){
 				ensure_appid_deferred(appid);
 
 				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-				var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+				var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
 				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 				if (last_updated < expire_time) {
@@ -1369,7 +1368,7 @@ function start_friend_activity_highlights() {
 			ensure_appid_deferred(appid);
 
 			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+			var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
 			// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 			if (last_updated < expire_time) {
@@ -1398,7 +1397,7 @@ function add_app_page_highlights() {
 	ensure_appid_deferred(appid);
 
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = sessionStorage.getItem(appid) || expire_time - 1;
+	var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
 	// If we have no data on appid, or the data has expired, fetch new data.
 	if (last_updated < expire_time) {
