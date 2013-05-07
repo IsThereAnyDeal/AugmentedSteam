@@ -85,11 +85,6 @@ function get_groupname(t) {
 	else return null;
 }
 
-function get_storefront_appuserdetails(appids, callback) {
-	if (!(appids instanceof Array)) appids = [appids];
-	get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), callback);
-}
-
 function ensure_appid_deferred(appid) {
 	if (!appid_promises[appid]) {
 		var deferred = new $.Deferred();
@@ -1208,13 +1203,15 @@ function start_highlights_and_tags(){
 
 
 function get_app_details(appids) {
-	// Make sure we have inventory loaded beforehand.
+	// Make sure we have inventory loaded beforehand so we have gift/guestpass/coupon info.
 	if (!loading_inventory) loading_inventory = load_inventory();
 	loading_inventory.done(function() {
 
 		// Batch request for appids - all untracked or cache-expired apps.
 		// Handle new data highlighting as it loads.
-		get_storefront_appuserdetails(appids, function (data) {
+
+		if (!(appids instanceof Array)) appids = [appids];
+		get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), function (data) {
 			var storefront_data = JSON.parse(data);
 			$.each(storefront_data, function(appid, app_data){
 				if (app_data.success) {
