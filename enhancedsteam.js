@@ -736,9 +736,9 @@ function show_pricing_history(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
-		if (settings.showlowestprice) {			
+		if (settings.showlowestprice) {
 			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region, function (txt) {
-				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);			
+				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);
 			});
 		}
 	});
@@ -1191,42 +1191,19 @@ function start_highlights_and_tags(){
 			"div.recommendation_highlight",	// Recommendation page.
 			"div.recommendation_carousel_item",	// Recommendation page.
 			"div.friendplaytime_game"	// Recommendation page.
-		],
-		appid_to_node = {},
-		appids = [];
+		];
 
 	// Get all appids and nodes from selectors.
 	$.each(selectors, function (i, selector) {
 		$.each($(selector), function(j, node){
 			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 			if (appid) {
-				if (!appid_to_node[appid]) {
-					appid_to_node[appid] = [];
-				}
-				appid_to_node[appid].push(node);
-
-				ensure_appid_deferred(appid);
-
-				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-				var last_updated = localStorage.getItem(appid) || expire_time - 1;
-
-				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
-				if (last_updated < expire_time) {
-				if (appids.indexOf(appid) === -1) appids.push(appid);
-				}
-				else {
-					appid_promises[appid].resolve();
-				}
-
-				// Bind highlighting.
-				appid_promises[appid].promise.done(function(){
+				on_app_info(appid, function(){
 					highlight_app(appid, node);
 				});
 			}
 		});
 	});
-
-	if (appids.length > 0) get_app_details(appids);
 }
 
 
@@ -1354,38 +1331,16 @@ function add_small_cap_height() {
 }
 
 function start_friend_activity_highlights() {
-	var appid_to_node = {},
-		appids = [];
 	$.each($(".blotter_author_block a"), function (i, node) {
 		var appid = get_appid(node.href);
 		if (appid && !node.classList.contains("blotter_userstats_game")) {
-			if (!appid_to_node[appid]) {
-				appid_to_node[appid] = [];
-			}
 			$(node).addClass("inline_tags");
-			appid_to_node[appid].push(node);
 
-			ensure_appid_deferred(appid);
-
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			var last_updated = localStorage.getItem(appid) || expire_time - 1;
-
-			// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
-			if (last_updated < expire_time) {
-				if (appids.indexOf(appid) === -1) appids.push(appid);
-			}
-			else {
-				appid_promises[appid].resolve();
-			}
-
-			// Bind highlighting.
-			appid_promises[appid].promise.done(function(){
+			on_app_info(appid, function(){
 				highlight_app(appid, node);
 			});
 		}
 	});
-
-	if (appids.length > 0) get_app_details(appids);
 }
 
 function add_app_page_highlights() {
@@ -1394,12 +1349,18 @@ function add_app_page_highlights() {
 	if (window.location.host == "store.steampowered.com") node = $(".apphub_HeaderStandardTop")[0];
 	if (window.location.host == "steamcommunity.com") node = $(".apphub_HeaderTop")[0];
 
+	on_app_info(appid, function(){
+		highlight_app(appid, node);
+	});
+}
+
+function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
-	// If we have no data on appid, or the data has expired, fetch new data.
+	// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 	if (last_updated < expire_time) {
 		get_app_details(appid);
 	}
@@ -1408,9 +1369,7 @@ function add_app_page_highlights() {
 	}
 
 	// Bind highlighting.
-	appid_promises[appid].promise.done(function(){
-		highlight_app(appid, node);
-	});
+	appid_promises[appid].promise.done(cb);
 }
 
 
