@@ -1,10 +1,6 @@
 {
   "name": "Enhanced Steam",
-<<<<<<< HEAD
-  "version": "3.0",
-=======
   "version": "3.1",
->>>>>>> origin/dev
   "description": "Enhances the Steam Experience",
   "icons": { "128": "img/enhancedsteam.png" },
   "manifest_version": 2,
@@ -16,12 +12,8 @@
   "web_accessible_resources": [
     "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png",
     "img/ico/steamgifts.ico", "img/ico/steamtrades.ico", "img/ico/steamrep.ico", "img/ico/wastedonsteam.ico", "img/ico/sapi.ico", "img/ico/backpacktf.ico", "img/ico/achievementstats.ico",
-<<<<<<< HEAD
-    "enhancedsteam.css"
-=======
 	"img/steamdb.png", "img/steamdb_store.png",
     "css/enhancedsteam.css"
->>>>>>> origin/dev
   ],
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [
