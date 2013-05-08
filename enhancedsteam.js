@@ -539,27 +539,30 @@ function add_empty_wishlist_button() {
 }
 
 function empty_wishlist() {
-	var deferreds = $(".wishlistRow").map(function(i, $obj) {
-		var deferred = new $.Deferred();
-		var appid = get_appid_wishlist($obj.id),
-			http = new XMLHttpRequest(),
-			profile = $(".returnLink a")[0].href.replace("http://steamcommunity.com/", "");
+	var conf = confirm("Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!");
+	if (conf) {
+		var deferreds = $(".wishlistRow").map(function(i, $obj) {
+			var deferred = new $.Deferred();
+			var appid = get_appid_wishlist($obj.id),
+				http = new XMLHttpRequest(),
+				profile = $(".returnLink a")[0].href.replace("http://steamcommunity.com/", "");
 
-		http.onreadystatechange = function () {
-			if (this.readyState == 4 && this.status == 200) {
-				deferred.resolve();
-			}
-		};
-		http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
-		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		http.send("action=remove&appid=" + encodeURIComponent(appid));
+			http.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					deferred.resolve();
+				}
+			};
+			http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
+			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			http.send("action=remove&appid=" + encodeURIComponent(appid));
 
-		return deferred.promise();
-	});
+			return deferred.promise();
+		});
 
-	$.when.apply(null, deferreds).done(function(){
-		location.reload();
-	});
+		$.when.apply(null, deferreds).done(function(){
+			location.reload();
+		});
+	}
 }
 
 function find_purchase_date(appname) {

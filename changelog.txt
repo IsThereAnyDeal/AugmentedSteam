@@ -9,6 +9,7 @@ v3.1
 + Re-wrote price tab which now shows current best and historical best deals.  
 + Added price tab to game bundles.
 + Added links to SteamDB on store pages, app hubs, and official groups.
+: Changed from page scraping to Valve Storefront API (faster!)
 
 v3.0
 -----
