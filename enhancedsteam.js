@@ -182,6 +182,12 @@ function highlight_node(node, color) {
 		if (node.classList.contains("cluster_capsule")) {
 			$node = $(node).find(".main_cap_content");
 		}
+		
+		// Genre Carousel items
+		if (node.classList.contains("large_cap")) {
+			$node = $(node).find(".large_cap_content");
+		}
+		
 		$node.css("backgroundImage", "none");
 		$node.css("backgroundColor", color);
 
