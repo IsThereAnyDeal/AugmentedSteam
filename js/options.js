@@ -38,6 +38,7 @@ function save_options() {
 	showlowestprice = $("#showlowestprice").prop('checked');
 	showlowestprice_region = $("#showlowestprice_region").val();
 	showmcus = $("#showmcus").prop('checked');
+	showsteamdb = $("#showsteamdb").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 
@@ -91,6 +92,7 @@ function save_options() {
 		'showlowestprice': showlowestprice,
 		'showlowestprice_region': showlowestprice_region,
 		'showmcus': showmcus,
+		'showsteamdb': showsteamdb,
 		'showwsgf': showwsgf,
 		'show_carousel_descriptions': show_carousel_descriptions,
 
@@ -188,6 +190,7 @@ function load_options() {
 
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
+		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 
@@ -238,6 +241,7 @@ function load_options() {
 		$("#hideinstallsteambutton").attr('checked', settings.hideinstallsteambutton);
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
+		$("#showsteamdb").attr('checked', settings.showsteamdb);
 		$("#showwsgf").attr('checked', settings.showwsgf);
 		$("#show_carousel_descriptions").attr('checked', settings.show_carousel_descriptions);
 		$("#showlowestprice").attr('checked', settings.showlowestprice);
@@ -302,6 +306,7 @@ function load_translation() {
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
+			$("#store_steamdb_text").text(localized_strings[settings.language].options_steamdb);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
 			

@@ -1207,6 +1207,27 @@ function start_highlights_and_tags(){
 	});
 }
 
+function add_steamdb_links(appid, type) {
+	storage.get(function(settings) {
+		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; storage.set({'showsteamdb': settings.showsteamdb}); }
+		if (settings.showsteamdb) {
+			switch (type) {
+				case "gamehub":
+					$(".apphub_OtherSiteInfo").append('<a href="http://steamdb.info/app/' + appid + '/" class="btn_darkblue_white_innerfade btn_medium" target="_blank"><span>Steam Database</span>');
+					break;
+				case "gamegroup":
+					$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="http://steamdb.info/static/userjs/group.png" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + appid + '/">View in Steam Database</a>');
+					break;
+				case "app":
+					$('#demo_block').find('.block_content_inner').find('.share').before('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="background-image:url(http://steamdb.info/static/userjs/store.png)">View in Steam Database</a></div>');
+					break;
+				case "sub":	
+					$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + appid + '/" style="background-image:url(http://steamdb.info/static/userjs/store.png)">View in Steam Database</a>');
+					break;
+			}
+		}
+	});
+}
 
 function get_app_details(appids) {
 	// Make sure we have inventory loaded beforehand so we have gift/guestpass/coupon info.
@@ -1414,6 +1435,7 @@ $(document).ready(function(){
 
 						add_widescreen_certification();
 						add_app_page_highlights();
+						add_steamdb_links(appid, "app");
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
@@ -1421,7 +1443,7 @@ $(document).ready(function(){
 						drm_warnings();
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");
-
+						add_steamdb_links(subid, "sub");
 						break;
 
 					case /^\/account\/.*/.test(window.location.pathname):
@@ -1478,7 +1500,21 @@ $(document).ready(function(){
 						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
+						var appid = get_appid(window.location.host + window.location.pathname);
 						add_app_page_highlights();
+						add_steamdb_links(appid, "gamehub");
+						break;
+						
+					case /^\/\/app\/.*/.test(window.location.pathname):
+						var appid = get_appid(window.location.host + window.location.pathname);
+						add_app_page_highlights();
+						add_steamdb_links(appid, "gamehub");
+						break;
+						
+					case /^\/games\/.*/.test(window.location.pathname):
+						var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
+						appid = appid.href.match( /(\d)+/g );
+						add_steamdb_links(appid, "gamegroup");
 						break;
 				}
 				break;

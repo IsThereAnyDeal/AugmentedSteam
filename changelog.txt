@@ -8,6 +8,7 @@ v3.1
 + Added new feature - storefront carousel app descriptions.
 + Re-wrote price tab which now shows current best and historical best deals.  
 + Added price tab to game bundles.
++ Added links to SteamDB on store pages, app hubs, and official groups.
 
 v3.0
 -----
