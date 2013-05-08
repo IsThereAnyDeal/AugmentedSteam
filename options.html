@@ -1,144 +1,471 @@
 <html>
+<script src="js/jQuery.min.js"></script>
+<script src="js/localization.js"></script>
+<script src="js/options.js"></script>
+<link href="css/options.css" rel="stylesheet" type="text/css">
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <head><title>Enhanced Steam Options</title></head>
-<script src="jQuery.min.js"></script>
-<script src="options.js"></script>
-<link href="options.css" rel="stylesheet" type="text/css" />
-
 <body>
-<center>
-<div id="contentwrapper" style="height:800px;width:800px;">
-	<div id="heading">
-		<a href="#" id="nav_store">Store</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_community">Community</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_news">News</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_about">About</a>&nbsp;&nbsp;&nbsp;<a href="#" id="nav_donate">Donate</a>
-	</div>
-	
-	<div id="maincontent_store">
-		<table>
+
+<div id="header">
+	<div id="header_logo"><img src="img/logo.png"></div>
+</div>
+
+<div id="heading">
+	<div class="tab_row" id="heading_store"><a href="#" id="nav_store"><div id="header_store">Store</div></a></div>
+	<div class="tab_row" id="heading_community"><a href="#" id="nav_community"><div id="header_community">Community</div></a></div>
+	<div class="tab_row" id="heading_news"><a href="#" id="nav_news"><div id="header_news">News</div></a></div>
+	<div class="tab_row" id="heading_about"><a href="#" id="nav_about"><div id="header_about">About</div></a></div>
+	<div class="tab_row" id="heading_donate"><a href="http://www.EnhancedSteam.com/donate.php" id="nav_donate" target="_blank"><div id="header_donate">Donate</div></a></div>
+</div>
+
+<div id="contentwrapper">	
+	<div id="maincontent_store" class="content">
+		<table border=0>
+			<tr>
+				<td colspan=4>
+					<font color="8bc53f"><b><div id="language_text">Language</div></b>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan=3>
+					<select id="language">
+						<option value="en">English</option>
+						<option value="ar">العربية</option>
+						<option value="cs">Česky</option>
+						<option value="da">Dansk</option>
+						<option value="de">Deutsch</option>
+						<option value="el">Ελληνικά</option>
+						<option value="es">Español</option>
+						<option value="fi">Suomi</option>
+						<option value="fr">Français</option>
+						<option value="hu">Magyar</option>
+						<option value="it">Italiano</option>
+						<option value="ja">日本語</option>
+						<option value="ko">한국어</option>
+						<option value="nl">Nederlands</option>
+						<option value="no">Norsk (bokmål)</option>
+						<option value="pl">Polski</option>
+						<option value="pt">Português</option>
+						<option value="pt-br">Português do Brasil</option>
+						<option value="ro">Română</option>
+						<option value="ru">Русский</option>
+						<option value="sv">Svenska</option>
+						<option value="th">ภาษาไทย</option>
+						<option value="tr">Türkçe</option>
+						<option value="zh-hans">中文(简体)‬</option>
+						<option value="zh-hant">中文(繁體)</option>
+					</select>
+				</td>
+			</tr>
+
+			<tr><td>&nbsp;</td></tr>
+			
+			<tr>
+				<td colspan=4>
+					<b><div id="highlight_text" class="text">Highlight</div></b>
+				</td>
+			</tr>
+
 			<tr>
 				<td>
+<<<<<<< HEAD
 					<input type="checkbox" id="showowned">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Highlight Games You Own</font>
+=======
+					<input type="checkbox" id="highlight_owned">
+				</td>
+				<td height=30>
+					<div id="highlight_owned_text" class="text">Items You Own</div>
+>>>>>>> origin/dev
 				</td>
 				<td>
-					<input type="color" id="bgcolor" class="colorbutton">
+					<input type="color" id="highlight_owned_color" class="colorbutton">
 				</td>
 				<td>
-					<button id="bgdefault" class="btn">Default</button>
+					<button id="highlight_owned_default" class="btn">Default</button>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
+<<<<<<< HEAD
 					<input type="checkbox" id="showwishlist">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Highlight Games On Your Wishlist</font>
+=======
+					<input type="checkbox" id="highlight_wishlist">
+				</td>
+				<td height=30>
+					<div id="highlight_wishlist_text" class="text">Items On Your Wishlist</div>
+>>>>>>> origin/dev
 				</td>
 				<td>
-					<input type="color" id="wlcolor" class="colorbutton">
-				</td>	
-				<td>	
-					<button id="wldefault" class="btn">Default</button>
+					<input type="color" id="highlight_wishlist_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_wishlist_default" class="btn">Default</button>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
+<<<<<<< HEAD
 					<input type="checkbox" id="showcoupon">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Highlight Games With Coupons</font>
+=======
+					<input type="checkbox" id="highlight_coupon">
+				</td>
+				<td height=30>
+					<div id="highlight_coupon_text" class="text">Items With Coupons</div>
+>>>>>>> origin/dev
 				</td>
 				<td>
-					<input type="color" id="ccolor" class="colorbutton">
-				</td>	
-				<td>	
-					<button id="cdefault" class="btn">Default</button>
+					<input type="color" id="highlight_coupon_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_coupon_default" class="btn">Default</button>
 				</td>
 			</tr>
-			
+
 			<tr>
+<<<<<<< HEAD
 				<td>
 					<input type="checkbox" id="hideinstallsteambutton">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Hide "Install Steam" button in header</font>
+=======
+				<td>
+					<input type="checkbox" id="highlight_inv_gift">
+				</td>
+				<td height=30>
+					<div id="highlight_gift_text" class="text">Items Stored As Gift</div>
+				</td>
+				<td>
+					<input type="color" id="highlight_inv_gift_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_inv_gift_default" class="btn">Default</button>
+>>>>>>> origin/dev
 				</td>
 			</tr>
-			
+
 			<tr>
+<<<<<<< HEAD
 				<td>
 					<input type="checkbox" id="showdrm">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Show 3rd Party DRM Warnings</font>
+=======
+				<td>
+					<input type="checkbox" id="highlight_inv_guestpass">
+				</td>
+				<td height=30>
+					<div id="highlight_guest_text" class="text">Items You Have A Guest Pass For</div>
+				</td>
+				<td>
+					<input type="color" id="highlight_inv_guestpass_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_inv_guestpass_default" class="btn">Default</button>
+>>>>>>> origin/dev
 				</td>
 			</tr>
-			
+
 			<tr>
+<<<<<<< HEAD
 				<td>
 					<input type="checkbox" id="showlowestprice">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Show Price History Information</font>
+=======
+				<td>
+					<input type="checkbox" id="highlight_friends_want">
+				</td>
+				<td height=30>
+					<div id="highlight_friends_wishlist_text" class="text">Items Your Friends Have Wishlisted</div>
+				</td>
+				<td>
+					<input type="color" id="highlight_friends_want_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="highlight_friends_want_color_default" class="btn">Default</button>
+>>>>>>> origin/dev
 				</td>
 			</tr>
-			
+
+			<tr><td>&nbsp;</td></tr>
+
 			<tr>
+<<<<<<< HEAD
 				<td>
 					<input type="checkbox" id="showmcus">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Show Metacritic User Scores</font>
+=======
+				<td colspan=4>
+					<b><div id="tag_text" class="text">Tag</div></b>
 				</td>
 			</tr>
-			
+
 			<tr>
+				<td>
+					<input type="checkbox" id="tag_owned">
+				</td>
+				<td height=30>
+					<div id="tag_owned_text" class="text">Items You Own</div>
+				</td>
+				<td>
+					<input type="color" id="tag_owned_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_owned_color_default" class="btn">Default</button>
+>>>>>>> origin/dev
+				</td>
+			</tr>
+
+			<tr>
+<<<<<<< HEAD
 				<td>
 					<input type="checkbox" id="showwsgf">
 				</td>
 				<td height=30>
 					<font color="8bc53f">Show WSGF (Widescreen) Info</font>
+=======
+				<td>
+					<input type="checkbox" id="tag_wishlist">
+				</td>
+				<td height=30>
+					<div id="tag_wishlist_text" class="text">Items On Your Wishlist</div>
+				</td>
+				<td>
+					<input type="color" id="tag_wishlist_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_wishlist_default" class="btn">Default</button>
+>>>>>>> origin/dev
+				</td>
+			</tr>
+
+			<tr>
+<<<<<<< HEAD
+				<td>
+					<input type="checkbox" id="showtotal">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Show "Total Spent" on Account Page</font>
+=======
+				<td>
+					<input type="checkbox" id="tag_coupon">
+				</td>
+				<td height=30>
+					<div id="tag_coupon_text" class="text">Items With Coupons</div>
+				</td>
+				<td>
+					<input type="color" id="tag_coupon_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_coupon_default" class="btn">Default</button>
+>>>>>>> origin/dev
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_inv_gift">
+				</td>
+				<td height=30>
+					<div id="tag_gift_text" class="text">Items Stored As Gift</div>
+				</td>
+				<td>
+					<input type="color" id="tag_inv_gift_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_inv_gift_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="tag_inv_guestpass">
+				</td>
+				<td height=30>
+					<div id="tag_guest_text" class="text">Items You Have A Guest Pass For</div>
+				</td>
+				<td>
+					<input type="color" id="tag_inv_guestpass_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_inv_guestpass_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr>
+<<<<<<< HEAD
+				<td>
+					<input type="checkbox" id="showgroupevents">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Show Events on Group Overview</font>
+=======
+				<td>
+					<input type="checkbox" id="tag_friends_want">
+				</td>
+				<td height=30>
+					<div id="tag_friends_wishlist_text" class="text">Items Your Friends Have Wishlisted</div>
+				</td>
+				<td>
+					<input type="color" id="tag_friends_want_color" class="colorbutton">
+				</td>
+				<td>
+					<button id="tag_friends_want_color_default" class="btn">Default</button>
+				</td>
+			</tr>
+
+			<tr><td>&nbsp;</td></tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="showlowestprice">
+				</td>
+				<td height=30>
+					<div id="store_lowestprice_text" class="text">Show Price History Information</div>
+				</td>				
+				<td>
+					<div id="lowestprice_region_text" class="text">Region:</div> 
+				</td>	
+				<td>
+					<select id="showlowestprice_region" class="dropdown">
+						<option value="us">US</option>
+						<option value="uk">UK</option> 
+						<option value="au">AU</option> 
+						<option value="br">BR</option>
+						<option value="eu1">EU1</option> 
+						<option value="eu2">EU2</option> 
+					</select>
+>>>>>>> origin/dev
+				</td>
+			</tr>
+			
+			<tr><td>&nbsp;</td></tr>
+			
+			<tr>
+<<<<<<< HEAD
+				<td>
+					<input type="checkbox" id="showgreenlightbanner">
+				</td>
+				<td height=30>
+					<font color="8bc53f">Replace Steam Greenlight Banner</font>
+=======
+				<td>
+					<input type="checkbox" id="hideinstallsteambutton">
+				</td>
+				<td height=30>
+					<div id="store_hide_install_text" class="text">Hide "Install Steam" button in header</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="showdrm">
+				</td>
+				<td height=30>
+					<div id="store_drm_text" class="text">Show 3rd Party DRM Warnings</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="showmcus">
+				</td>
+				<td height=30>
+					<div id="store_metacritic_text" class="text">Show Metacritic User Scores</div>
+>>>>>>> origin/dev
+				</td>
+			</tr>
+			
+			<tr>
+<<<<<<< HEAD
+				<td></td>
+				<table border=0>
+					<tr>
+						<td rowspan=3 valign=top><font color="8bc53f">Show profile links to:</font></td>
+=======
+				<td>
+					<input type="checkbox" id="showsteamdb">
+				</td>
+				<td height=30>
+					<div id="store_steamdb_text" class="text">Show SteamDB Links</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="showwsgf">
+				</td>
+				<td height=30>
+					<div id="store_wsgf_text" class="text">Show WSGF (Widescreen) Info</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<input type="checkbox" id="show_carousel_descriptions">
+				</td>
+				<td height=30>
+					<div id="store_carousel_descriptions_text" class="text">Show App Descriptions On Storefront Carousel</div>
 				</td>
 			</tr>
 		</table>
+		
+		<button class="btn" id="save_store">Save</button>
 	</div>
-	
-	<div id="maincontent_community" style="display: none">
+
+	<div id="maincontent_community" class="content" style="display: none">
 		<table>
 			<tr>
 				<td>
 					<input type="checkbox" id="showtotal">
 				</td>
 				<td height=30>
-					<font color="8bc53f">Show "Total Spent" on Account Page</font>
+					<div id="total_spent_text" class="text">Show "Total Spent" on Account Page</div>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showgroupevents">
 				</td>
 				<td height=30>
-					<font color="8bc53f">Show Events on Group Overview</font>
+					<div id="group_events_text" class="text">Show Events on Group Overview</div>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td>
 					<input type="checkbox" id="showgreenlightbanner">
 				</td>
 				<td height=30>
-					<font color="8bc53f">Replace Steam Greenlight Banner</font>
+					<div id="greenlight_banner_text" class="text">Replace Steam Greenlight Banner</div>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<td></td>
 				<table border=0>
 					<tr>
-						<td rowspan=3 valign=top><font color="8bc53f">Show profile links to:</font></td>
+						<td rowspan=3 valign=top><div id="profile_link_text" class="text">Show profile links to:</div></td>
+>>>>>>> origin/dev
 							<td valign=center><input type="checkbox" id="profile_steamgifts"><td><img src="img/ico/steamgifts.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamGifts
 							<td valign=center><input type="checkbox" id="profile_steamtrades"><td><img src="img/ico/steamtrades.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamTrades
 							<td valign=center><input type="checkbox" id="profile_steamrep"><td><img src="img/ico/steamrep.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamRep
@@ -152,18 +479,25 @@
 							<td valign=center><input type="checkbox" id="profile_astats"><td><img src="img/ico/achievementstats.ico" width="16" height="16" border="0" /><td><font color="8bc53f">Achievement Stats
 							<td valign=center>
 							<td valign=center>
+<<<<<<< HEAD
 						</tr>	
 					</table>		
+=======
+						</tr>
+					</table>
+>>>>>>> origin/dev
 				</td>
 			</tr>
 		</table>
+		
+		<button class="btn" id="save_community">Save</button>
 	</div>
-	
-	<div id="maincontent_news" style="display: none">
+
+	<div id="maincontent_news" class="content" style="display: none">
 		Changelog:
 	</div>
-	
-	<div id="maincontent_about" style="display: none">
+
+	<div id="maincontent_about" class="content" style="display: none">
 		About <a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam</a>:<p>
 		Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>
 		Features include:
@@ -179,8 +513,8 @@
 		<p>
 		If you find this Extension useful, please consider donating.
 	</div>
-	
-	<div id="maincontent_donate" style="display: none">
+
+	<div id="maincontent_donate" class="content" style="display: none">
 		Donate:<p>
 		You can donate via Paypal here:
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
@@ -196,10 +530,8 @@
 		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">www.EnhancedSteam.com</a>
 	</div>
 
-	<div id="save_space"><button class="btn" id="save">Save</button></div>	
-	
-	<div id="footer">		
-		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a> by jshackles
+	<div id="footer">
+		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a><br>by jshackles
 	</div>
 </div>
 
