@@ -1216,13 +1216,13 @@ function add_steamdb_links(appid, type) {
 					$(".apphub_OtherSiteInfo").append('<a href="http://steamdb.info/app/' + appid + '/" class="btn_darkblue_white_innerfade btn_medium" target="_blank"><span>Steam Database</span>');
 					break;
 				case "gamegroup":
-					$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="http://steamdb.info/static/userjs/group.png" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + appid + '/">View in Steam Database</a>');
+					$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="' + chrome.extension.getURL("img/steamdb.png") + '" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + appid + '/">View in Steam Database</a>');
 					break;
 				case "app":
-					$('#demo_block').find('.block_content_inner').find('.share').before('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="background-image:url(http://steamdb.info/static/userjs/store.png)">View in Steam Database</a></div>');
+					$('#demo_block').find('.block_content_inner').find('.share').before('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="background-image:url(' + chrome.extension.getURL("img/steamdb_store.png") + ')">View in Steam Database</a></div>');
 					break;
 				case "sub":	
-					$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + appid + '/" style="background-image:url(http://steamdb.info/static/userjs/store.png)">View in Steam Database</a>');
+					$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + appid + '/" style="background-image:url(' + chrome.extension.getURL("img/steamdb_store.png") + ')">View in Steam Database</a>');
 					break;
 			}
 		}
@@ -1271,6 +1271,14 @@ function highlight_app(appid, node) {
 	if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 	if (getValue(appid + "coupon")) highlight_coupon(node);
 	if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
+}
+
+function fix_community_hub_links() {
+	element = document.querySelector( '.apphub_OtherSiteInfo a' );
+			
+	if( element && element.href.charAt( 26 ) === '/' ) {
+		element.href = element.href.replace( /\/\/app\//, '/app/' ) + '/';
+	}
 }
 
 function add_carousel_descriptions() {
@@ -1433,6 +1441,7 @@ $(document).ready(function(){
 						add_metracritic_userscore();
 						check_if_purchased();
 
+						fix_community_hub_links();
 						add_widescreen_certification();
 						add_app_page_highlights();
 						add_steamdb_links(appid, "app");
@@ -1500,12 +1509,6 @@ $(document).ready(function(){
 						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
-						var appid = get_appid(window.location.host + window.location.pathname);
-						add_app_page_highlights();
-						add_steamdb_links(appid, "gamehub");
-						break;
-						
-					case /^\/\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
 						add_app_page_highlights();
 						add_steamdb_links(appid, "gamehub");
