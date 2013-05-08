@@ -1,3 +1,7 @@
+v3.2
+-----
+
+
 v3.1
 -----
 : General code cleanup: less places for bugs to sneak in.
