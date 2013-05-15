@@ -127,6 +127,7 @@ function load_store_tab() {
 	document.getElementById("maincontent_community").style.display = "none";
 	document.getElementById("maincontent_news").style.display = "none";
 	document.getElementById("maincontent_about").style.display = "none";
+	document.getElementById("maincontent_credits").style.display = "none";
 }
 
 function load_community_tab() {
@@ -134,6 +135,7 @@ function load_community_tab() {
 	document.getElementById("maincontent_community").style.display = "block";
 	document.getElementById("maincontent_news").style.display = "none";
 	document.getElementById("maincontent_about").style.display = "none";
+	document.getElementById("maincontent_credits").style.display = "none";
 }
 
 function load_news_tab() {
@@ -141,6 +143,7 @@ function load_news_tab() {
 	document.getElementById("maincontent_community").style.display = "none";
 	document.getElementById("maincontent_news").style.display = "block";
 	document.getElementById("maincontent_about").style.display = "none";
+	document.getElementById("maincontent_credits").style.display = "none";
 }
 
 function load_about_tab() {
@@ -148,6 +151,15 @@ function load_about_tab() {
 	document.getElementById("maincontent_community").style.display = "none";
 	document.getElementById("maincontent_news").style.display = "none";
 	document.getElementById("maincontent_about").style.display = "block";
+	document.getElementById("maincontent_credits").style.display = "none";
+}
+
+function load_credits_tab() {
+	document.getElementById("maincontent_store").style.display = "none";
+	document.getElementById("maincontent_community").style.display = "none";
+	document.getElementById("maincontent_news").style.display = "none";
+	document.getElementById("maincontent_about").style.display = "none";
+	document.getElementById("maincontent_credits").style.display = "block";
 }
 
 // Loads changelog.txt
@@ -374,4 +386,5 @@ document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);
 document.querySelector('#nav_about').addEventListener('click', load_about_tab);
+document.querySelector('#nav_credits').addEventListener('click', load_credits_tab);
 });
