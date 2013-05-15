@@ -1,6 +1,10 @@
 v3.2
 -----
-
++ Added ability to filter price history to user selected stores
++ Added "Credits" section to the options page, giving credit to contributors
++ Added "Reset all options to Default Settings" on "About" page in options
+: Profile links now work correctly with the new Steam profile beta
++ Added German translation, courtesy of Timmaeh Elbert
 
 v3.1.1
 -----
