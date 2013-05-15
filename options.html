@@ -25,7 +25,7 @@
 		<table border=0>
 			<tr>
 				<td colspan=4>
-					<font color="8bc53f"><b><div id="language_text">Language</div></b>
+					<b><div id="language_text" class="text">Language</div></b>
 				</td>
 			</tr>
 			<tr>
@@ -265,24 +265,124 @@
 				</td>
 				<td height=30>
 					<div id="store_lowestprice_text" class="text">Show Price History Information</div>
-				</td>				
-				<td>
-					<div id="lowestprice_region_text" class="text">Region:</div> 
-				</td>	
-				<td>
-					<select id="showlowestprice_region" class="dropdown">
-						<option value="us">US</option>
-						<option value="uk">UK</option> 
-						<option value="au">AU</option> 
-						<option value="br">BR</option>
-						<option value="eu1">EU1</option> 
-						<option value="eu2">EU2</option> 
-					</select>
 				</td>
 			</tr>
-			
-			<tr><td>&nbsp;</td></tr>
-			
+			<tr>
+				<td>&nbsp;</td>
+				<td colspan=3>
+					<table border=0>
+						<tr>
+							<td>
+								<div id="lowestprice_region_text" class="text">Region:</div>
+							</td>
+							<td>
+								<select id="showlowestprice_region" class="dropdown">
+									<option value="us">US</option>
+									<option value="uk">UK</option> 
+									<option value="au">AU</option> 
+									<option value="br">BR</option>
+									<option value="eu1">EU1</option> 
+									<option value="eu2">EU2</option> 
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div id="lowestprice_stores_text" class="text">Stores:</div>
+							</td>
+							<td>
+								<input type="checkbox" id="stores_all">All
+							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>
+								<table id="store_stores" style="display: none" border=0>
+									<tr>
+										<td>
+											<input type="checkbox" id="steam">Steam
+										</td>
+										<td>
+											<input type="checkbox" id="amazonus">Amazon US
+										</td>
+										<td>
+											<input type="checkbox" id="impulse">GameStop PC
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id="gamersgate">GamersGate
+										</td>
+										<td>
+											<input type="checkbox" id="greenmangaming">GreenMan Gaming
+										</td>
+										<td>
+											<input type="checkbox" id="gamefly">GameFly PC
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id="origin">Origin PC
+										</td>
+										<td>
+											<input type="checkbox" id="uplay">Uplay PC
+										</td>
+										<td>
+											<input type="checkbox" id="indiegalastore">IndieGala Store
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id="gametap">GamesTap
+										</td>
+										<td>
+											<input type="checkbox" id="gamesplanet">GamesPlanet
+										</td>
+										<td>
+											<input type="checkbox" id="getgames">GetGames
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id="desura">Desura
+										</td>
+										<td>
+											<input type="checkbox" id="gog">GOG
+										</td>
+										<td>
+											<input type="checkbox" id="dotemu">DotEmu
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id="beamdog">Beamdog
+										</td>
+										<td>
+											<input type="checkbox" id="adventureshop">Adventure Shop
+										</td>
+										<td>
+											<input type="checkbox" id="nuuvem">Nuuvem
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="checkbox" id="shinyloot">ShinyLoot
+										</td>
+										<td>
+											<input type="checkbox" id="dlgamer">DLGamer
+										</td>
+										<td>
+											&nbsp;
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						
+					</table>
+				</td>				
+			</tr>
+						
 			<tr>
 				<td>
 					<input type="checkbox" id="hideinstallsteambutton">

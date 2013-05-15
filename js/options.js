@@ -41,6 +41,30 @@ function save_options() {
 	showsteamdb = $("#showsteamdb").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
+	
+	showallstores = $("#stores_all").prop('checked');
+	stores = [
+			$("#steam").prop('checked'),
+			$("#amazonus").prop('checked'),
+			$("#impulse").prop('checked'),
+			$("#gamersgate").prop('checked'),
+			$("#greenmangaming").prop('checked'),
+			$("#gamefly").prop('checked'),
+			$("#origin").prop('checked'),
+			$("#uplay").prop('checked'),
+			$("#indiegalastore").prop('checked'),
+			$("#gametap").prop('checked'),
+			$("#gamesplanet").prop('checked'),
+			$("#getgames").prop('checked'),
+			$("#desura").prop('checked'),
+			$("#gog").prop('checked'),
+			$("#dotemu").prop('checked'),
+			$("#beamdog").prop('checked'),
+			$("#adventureshop").prop('checked'),
+			$("#nuuvem").prop('checked'),
+			$("#shinyloot").prop('checked'),
+			$("#dlgamer").prop('checked'),
+	];
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
@@ -95,6 +119,9 @@ function save_options() {
 		'showsteamdb': showsteamdb,
 		'showwsgf': showwsgf,
 		'show_carousel_descriptions': show_carousel_descriptions,
+		
+		'showallstores': showallstores,
+		'stores': stores,
 
 		'showtotal': showtotal,
 		'showgroupevents': showgroupevents,
@@ -162,6 +189,40 @@ function load_credits_tab() {
 	document.getElementById("maincontent_credits").style.display = "block";
 }
 
+function toggle_stores() {
+	var all_stores = $("#stores_all").prop('checked');
+	switch (all_stores) {
+		case true: 
+			document.getElementById("store_stores").style.display = "none";
+			break;
+		case false:
+			document.getElementById("store_stores").style.display = "block";
+			chrome.storage.sync.get(function(settings) {
+				$("#steam").prop('checked', settings.stores[0]);
+				$("#amazonus").prop('checked', settings.stores[1]);
+				$("#impulse").prop('checked', settings.stores[2]);
+				$("#gamersgate").prop('checked', settings.stores[3]);
+				$("#greenmangaming").prop('checked', settings.stores[4]);
+				$("#gamefly").prop('checked', settings.stores[5]);
+				$("#origin").prop('checked', settings.stores[6]);
+				$("#uplay").prop('checked', settings.stores[7]);
+				$("#indiegalastore").prop('checked', settings.stores[8]);
+				$("#gametap").prop('checked', settings.stores[9]);
+				$("#gamesplanet").prop('checked', settings.stores[10]);
+				$("#getgames").prop('checked', settings.stores[11]);
+				$("#desura").prop('checked', settings.stores[12]);
+				$("#gog").prop('checked', settings.stores[13]);
+				$("#dotemu").prop('checked', settings.stores[14]);
+				$("#beamdog").prop('checked', settings.stores[15]);
+				$("#adventureshop").prop('checked', settings.stores[16]);
+				$("#nuuvem").prop('checked', settings.stores[17]);
+				$("#shinyloot").prop('checked', settings.stores[18]);
+				$("#dlgamer").prop('checked', settings.stores[19]);
+			});
+			break;
+	}
+}
+
 // Loads changelog.txt
 jQuery.get('changelog.txt', function(data) {
 	document.getElementById("maincontent_news").innerHTML = "Changelog:<br><textarea rows=28 cols=100>" + data + "</textarea>";
@@ -200,6 +261,9 @@ function load_options() {
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; chrome.storage.sync.set({'tag_friends_want': settings.tag_friends_want}); }
 
+		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
@@ -258,6 +322,10 @@ function load_options() {
 		$("#show_carousel_descriptions").attr('checked', settings.show_carousel_descriptions);
 		$("#showlowestprice").attr('checked', settings.showlowestprice);
 		$("#showlowestprice_region").attr('value', settings.showlowestprice_region);
+		
+		$("#stores_all").attr('checked', settings.showallstores);
+		toggle_stores();
+		
 
 		// Load Community Options
 		$("#showtotal").attr('checked', settings.showtotal);
@@ -387,4 +455,6 @@ document.querySelector('#nav_community').addEventListener('click', load_communit
 document.querySelector('#nav_news').addEventListener('click', load_news_tab);
 document.querySelector('#nav_about').addEventListener('click', load_about_tab);
 document.querySelector('#nav_credits').addEventListener('click', load_credits_tab);
+
+document.querySelector('#stores_all').addEventListener('click', toggle_stores);
 });
