@@ -746,8 +746,35 @@ function show_pricing_history(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
+		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showlowestprice) {
-			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region, function (txt) {
+			var storestring = "";
+			
+			if (settings.stores[0]) { storestring += "steam,"; }
+			if (settings.stores[1]) { storestring += "amazonus,"; }
+			if (settings.stores[2]) { storestring += "impulse,"; }
+			if (settings.stores[3]) { storestring += "gamersgate,"; }
+			if (settings.stores[4]) { storestring += "greenmangaming,"; }
+			if (settings.stores[5]) { storestring += "gamefly,"; }
+			if (settings.stores[6]) { storestring += "origin,"; }
+			if (settings.stores[7]) { storestring += "uplay,"; }
+			if (settings.stores[8]) { storestring += "indiegalastore,"; }
+			if (settings.stores[9]) { storestring += "gametap,"; }
+			if (settings.stores[10]) { storestring += "gamesplanet,"; }
+			if (settings.stores[11]) { storestring += "getgames,"; }
+			if (settings.stores[12]) { storestring += "desura,"; }
+			if (settings.stores[13]) { storestring += "gog,"; }
+			if (settings.stores[14]) { storestring += "dotemu,"; }
+			if (settings.stores[15]) { storestring += "beamdog,"; }
+			if (settings.stores[16]) { storestring += "adventureshop,"; }
+			if (settings.stores[17]) { storestring += "nuuvem,"; }
+			if (settings.stores[18]) { storestring += "shinyloot,"; }
+			if (settings.stores[19]) { storestring += "dlgamer,"; }
+			
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,"; }
+						
+			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring, function (txt) {
 				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);
 			});
 		}
