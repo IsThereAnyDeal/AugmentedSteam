@@ -414,6 +414,12 @@ function load_translation() {
 	});
 }
 
+function clear_settings() {
+	console.log ("clearing settings");
+	chrome.storage.sync.clear();
+	location.reload(true);
+}
+
 function load_default_highlight_owned_color() { document.getElementById("highlight_owned_color").value = "#5c7836"; }
 function load_default_highlight_wishlist_color() { document.getElementById("highlight_wishlist_color").value = "#496e93"; }
 function load_default_highlight_coupon_color() { document.getElementById("highlight_coupon_color").value = "#6b2269"; }
@@ -457,4 +463,5 @@ document.querySelector('#nav_about').addEventListener('click', load_about_tab);
 document.querySelector('#nav_credits').addEventListener('click', load_credits_tab);
 
 document.querySelector('#stores_all').addEventListener('click', toggle_stores);
+document.querySelector('#clear_settings').addEventListener('click', clear_settings);
 });
