@@ -1,3 +1,7 @@
+v3.3
+-----
+
+
 v3.2
 -----
 + Added ability to filter price history to user selected stores

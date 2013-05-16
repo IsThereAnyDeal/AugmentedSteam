@@ -1,4 +1,4 @@
-﻿// version 3.2
+﻿// version 3.3
 var storage = chrome.storage.sync;
 var apps;
 var language;
@@ -749,8 +749,9 @@ function show_pricing_history(appid, type) {
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showlowestprice) {
-			var storestring = "";
 			
+			// Get List of stores we're searching for
+			var storestring = "";			
 			if (settings.stores[0]) { storestring += "steam,"; }
 			if (settings.stores[1]) { storestring += "amazonus,"; }
 			if (settings.stores[2]) { storestring += "impulse,"; }
@@ -770,11 +771,23 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[16]) { storestring += "adventureshop,"; }
 			if (settings.stores[17]) { storestring += "nuuvem,"; }
 			if (settings.stores[18]) { storestring += "shinyloot,"; }
-			if (settings.stores[19]) { storestring += "dlgamer,"; }
-			
+			if (settings.stores[19]) { storestring += "dlgamer,"; }			
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,"; }
+			
+			// Get country code from Steam cookie
+			var cookies = document.cookie;
+			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
+			var cc = "us";
+			if (matched != null && matched.length == 2) {
+				cc = matched[1];
+			} else {
+				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+				if (matched != null && matched.length == 2) {
+					cc = matched[1];
+				}
+			}
 						
-			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring, function (txt) {
+			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring + "&cc=" + cc, function (txt) {
 				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);
 			});
 		}
