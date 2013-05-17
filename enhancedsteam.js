@@ -1466,6 +1466,10 @@ function on_app_info(appid, cb) {
 	appid_promises[appid].promise.done(cb);
 }
 
+function clear_cache() {
+	localStorage.clear();
+	sessionStorage.clear();
+}
 
 $(document).ready(function(){
 	localization_promise.done(function(){
@@ -1475,6 +1479,9 @@ $(document).ready(function(){
 		add_enhanced_steam_options();
 		remove_install_steam_button();
 		add_spuf_link();
+		
+		// attach event to the logout button
+		$('a[href$="http://store.steampowered.com/logout/"]').bind('click', clear_cache);
 
 	/* To test:
 		Coupon behavour with already discounted game.
