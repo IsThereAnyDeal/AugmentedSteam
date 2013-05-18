@@ -1050,11 +1050,7 @@ function add_metracritic_userscore() {
 	});
 }
 
-function add_widescreen_certification() {
-	//FIXME: Constantly returns nothing?
-
-	// adds widescreen certification icons
-	var appid = get_appid(window.location.host + window.location.pathname);
+function add_widescreen_certification(appid) {
 	storage.get(function(settings) {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
 		if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) {
@@ -1437,9 +1433,7 @@ function start_friend_activity_highlights() {
 	});
 }
 
-function add_app_page_highlights() {
-	var appid = get_appid(window.location.host + window.location.pathname);
-
+function add_app_page_highlights(appid) {
 	if (window.location.host == "store.steampowered.com") node = $(".apphub_HeaderStandardTop")[0];
 	if (window.location.host == "steamcommunity.com") node = $(".apphub_HeaderTop")[0];
 
@@ -1511,8 +1505,8 @@ $(document).ready(function(){
 						check_if_purchased();
 
 						fix_community_hub_links();
-						add_widescreen_certification();
-						add_app_page_highlights();
+						add_widescreen_certification(appid);
+						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
 						break;
 
@@ -1579,7 +1573,7 @@ $(document).ready(function(){
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
-						add_app_page_highlights();
+						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "gamehub");
 						break;
 						
