@@ -1361,7 +1361,8 @@ function add_carousel_descriptions() {
 					var appid = get_appid(_obj.href),
 						$desc = $(_obj).find(".main_cap_content"),
 						$desc_content = $("<p></p>");
-
+						
+					if (data[appid] !== undefined) {
 						if (data[appid].success) {
 							// Add description_height_to_add px to each description to display it adequately.
 							$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
@@ -1391,6 +1392,10 @@ function add_carousel_descriptions() {
 
 							$desc.append($desc_content);
 						}
+					} else {
+						$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
+						$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
+					}
 				});
 			});
 		}
