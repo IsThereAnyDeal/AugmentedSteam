@@ -1003,7 +1003,6 @@ function add_return_to_profile_tab() {
 // Changes Steam Greenlight pages
 function hide_greenlight_banner() {
 	// insert the "top bar" found on all other Steam games
-
 	storage.get(function(settings) {
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.showgreenlightbanner) {
@@ -1325,6 +1324,7 @@ function get_app_details(appids) {
 }
 
 function get_sub_details(subid, node) {
+	if (getValue(subid + "owned")) { highlight_owned(node); return; }
 	get_http('//store.steampowered.com/api/packagedetails/?packageids=' + subid, function (data) {
 		var pack_data = JSON.parse(data);
 		$.each(pack_data, function(subid, sub_data) {
@@ -1345,6 +1345,7 @@ function get_sub_details(subid, node) {
 						
 						if (owned.length == app_ids.length) {
 							setValue(subid + "owned", true);
+							setValue(subid, parseInt(Date.now() / 1000, 10));
 							highlight_app(subid, node);
 						}
 					});
