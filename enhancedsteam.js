@@ -1196,8 +1196,14 @@ function subscription_savings_check() {
 
 function dlc_data_from_site(appid) {
 	// pull DLC gamedata from enhancedsteam.com
-	if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {
-		get_http("http://www.enhancedsteam.com/gamedata/gamedata.php?appid=" + appid, function (txt) {
+	if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {		
+		var appname = $(".apphub_AppName").html();
+		appname = appname.replace("&amp;", "and");
+		appname = appname.replace("\"", "");
+		appname = appname.replace("“", "");
+		console.log (appname);
+		
+		get_http("http://www.enhancedsteam.com/gamedata/gamedata.php?appid=" + appid + "&appname=" + appname, function (txt) {
 			var block = "<div class='block'><div class='block_header'><h4>" + localized_strings[language].dlc_data_header + "</h4></div><div class='block_content'><div class='block_content_inner'>" + txt + "</div></div></div>";
 
 			var dlc_categories = document.getElementById('demo_block');
