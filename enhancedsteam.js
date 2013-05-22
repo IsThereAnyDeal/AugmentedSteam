@@ -1243,18 +1243,18 @@ function start_highlights_and_tags(){
 	/* Batches all the document.ready appid lookups into one storefront call. */
 
 	var selectors = [
-			"div.tab_row",			// Storefront rows
-			"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
-			"div.wishlistRow",		// Wishlist row
-			"a.game_area_dlc_row",	// DLC on app pages
-			"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
-			"a.search_result_row",	// Search result row.
-			"a.match",				// Search suggestions row.
-			"a.cluster_capsule",	// Carousel items.
-			"div.recommendation_highlight",	// Recommendation page.
-			"div.recommendation_carousel_item",	// Recommendation page.
-			"div.friendplaytime_game"	// Recommendation page.
-		];
+		"div.tab_row",			// Storefront rows
+		"div.dailydeal",		// Christmas deals; https://www.youtube.com/watch?feature=player_detailpage&v=2gGopKNPqVk#t=52s
+		"div.wishlistRow",		// Wishlist row
+		"a.game_area_dlc_row",	// DLC on app pages
+		"a.small_cap",			// Featured storefront items, and "recommended" section on app pages.
+		"a.search_result_row",	// Search result row.
+		"a.match",				// Search suggestions row.
+		"a.cluster_capsule",	// Carousel items.
+		"div.recommendation_highlight",	// Recommendation page.
+		"div.recommendation_carousel_item",	// Recommendation page.
+		"div.friendplaytime_game"	// Recommendation page.
+	];
 
 	// Get all appids and nodes from selectors.
 	$.each(selectors, function (i, selector) {
@@ -1264,6 +1264,11 @@ function start_highlights_and_tags(){
 				on_app_info(appid, function(){
 					highlight_app(appid, node);
 				});
+			} else {
+				var subid = get_subid(node.href || $(node).find("a")[0].href);
+				if (subid) {
+					get_sub_details (subid, node);
+				}
 			}
 		});
 	});
@@ -1315,6 +1320,36 @@ function get_app_details(appids) {
 				// Resolve promise, to run any functions waiting for this apps info.
 				appid_promises[appid].resolve();
 			});
+		});
+	});
+}
+
+function get_sub_details(subid, node) {
+	get_http('//store.steampowered.com/api/packagedetails/?packageids=' + subid, function (data) {
+		var pack_data = JSON.parse(data);
+		$.each(pack_data, function(subid, sub_data) {
+			if (sub_data.success) {				
+				var app_ids = [];
+				var owned = [];
+				sub_data.data.apps.forEach(function(app) {
+					app_ids.push (app.id);					
+					get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
+						var storefront_data = JSON.parse(data2);						
+						$.each(storefront_data, function(appid, app_data) {
+							if (app_data.success) {
+								if (app_data.data.is_owned === true) {
+									owned.push(appid);
+								}							
+							}
+						});
+						
+						if (owned.length == app_ids.length) {
+							setValue(subid + "owned", true);
+							highlight_app(subid, node);
+						}
+					});
+				});
+			}
 		});
 	});
 }
