@@ -974,16 +974,21 @@ function add_community_profile_links() {
 // Changes user's wishlist
 function add_cart_on_wishlist() {
 	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
-		var app = node.href;
-
-		// get page, find cart string
-		get_http(app, function (txt) {
-			var subid = txt.match(/<input type="hidden" name="subid" value="([0-9]+)">/);
-			if (subid) {
-				// subid is undefined for games not yet available for purchase.
-				var htmlstring = $(txt).find('form[name="add_to_cart_' + subid[1] + '"]')[0];
-				node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring.outerHTML + '<a href="#" onclick="document.forms[\'add_to_cart_' + subid[1] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
-			}
+		var app = get_appid(node.href);
+		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
+			var storefront_data = JSON.parse(data);						
+			$.each(storefront_data, function(appid, app_data) {
+				if (app_data.success) {
+					if (app_data.data.packages[0]) {
+						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
+						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
+						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
+						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
+						htmlstring += '</form>';
+						node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
+					}					
+				}
+			});
 		});
 	});
 }
