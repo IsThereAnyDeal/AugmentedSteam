@@ -1,4 +1,4 @@
-﻿// version 3.3
+﻿// version 3.4
 var storage = chrome.storage.sync;
 var apps;
 var language;

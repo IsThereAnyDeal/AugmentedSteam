@@ -1,3 +1,7 @@
+v3.4
+-----
+
+
 v3.3
 -----
 + "Packs" will now be marked as owned if you own all games in the pack
