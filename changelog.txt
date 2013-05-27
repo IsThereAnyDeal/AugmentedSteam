@@ -1,6 +1,9 @@
 v3.3
 -----
-
++ "Packs" will now be marked as owned if you own all games in the pack
+: Fixed a bug where account total not calculating if purchases made in euro or rubles
+: Fixed a bug where storefront items with no description break carousel
++ Enhanced Steam cache will now clear when logging out of your Steam account
 
 v3.2
 -----
