@@ -1101,13 +1101,14 @@ function account_total_spent() {
 						var priceContainer = $(p).find(".transactionRowPrice");
 						if (priceContainer.length > 0) {
 							var priceText = $(priceContainer).text();
-							var regex = /(\d+\.\d\d+)/,
-								price = regex.exec(priceText);
-							// debugger;
-
-							if (price !== null && price !== "Total") {
+							var regex = /(\d+[.,]\d\d+)/,
+								price = regex.exec(priceText);								
+							
+							if (price !== null && price !== "Total") {	
+								var tempprice = price[0].toString();	
+								tempprice = tempprice.replace(",", ".");
 								currency_symbol = priceText.match(/(?:R\$|\$|€|£|pуб)/)[0]; // Lazy but effective
-								return parseFloat(price);
+								return parseFloat(tempprice);
 							}
 						}
 					}
@@ -1119,15 +1120,19 @@ function account_total_spent() {
 				jQuery.map(prices, function (p, i) {
 					total += p;
 				});
-
+				
 				if (currency_symbol) {
 					switch (currency_symbol) {
 						case "€":
-							total_with_symbol = parseFloat(total).toFixed(2) + currency_symbol;
+							var calc = parseFloat(total).toFixed(2).toString();
+							calc = calc.replace(".", ",");	
+							total_with_symbol = calc + currency_symbol;
 							break;
 
 						case "pуб":
-							total_with_symbol = parseFloat(total).toFixed(0) + " " + currency_symbol;
+							var calc = parseFloat(total).toFixed(2).toString();
+							calc = calc.replace(".", ",");	
+							total_with_symbol = calc + " " + currency_symbol;
 							break;
 
 						default:
