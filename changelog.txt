@@ -1,6 +1,6 @@
 v3.4
 -----
-
++ Added Japanese translation courtesy of planicrand
 
 v3.3
 -----
