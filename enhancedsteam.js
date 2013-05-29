@@ -650,7 +650,15 @@ function add_spuf_link() {
 // If app has a coupon, display message
 function display_coupon_message(appid) {
 	// get JSON coupon results
-	// debugger;
+	
+	var coupon_date = getValue(appid + "coupon_valid");
+	var coupon_date2 = coupon_date.match(/\[date](.+)\[\/date]/);
+	coupon_date2 = Date(coupon_date[1]);
+	coupon_date = coupon_date.replace(/\[date](.+)\[\/date]/, coupon_date2);
+	
+	var coupon_discount_note = getValue(appid + "coupon_discount_note");
+	if (coupon_discount_note === null) { coupon_discount_note = ""; }
+		
 	$('#game_area_purchase').before($(""+
 	"<div class=\"early_access_header\">" +
 	"    <div class=\"heading\">" +
@@ -669,11 +677,11 @@ function display_coupon_message(appid) {
 	"                </td>" +
 	"            </tr>" +
 	"            <tr>" +
-	"                <td>" + getValue(appid + "coupon_discount_note") + "</td>" +
+	"                <td>" + coupon_discount_note + "</td>" +
 	"            </tr>" +
 	"            <tr>" +
 	"                <td>" +
-	"                    <font style=\"color:#A75124;\">" + getValue(appid + "coupon_valid") + "</font>" +
+	"                    <font style=\"color:#A75124;\">" + coupon_date + "</font>" +
 	"                </td>" +
 	"            </tr>" +
 	"        </table>" +

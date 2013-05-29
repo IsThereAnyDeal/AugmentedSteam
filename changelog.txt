@@ -1,6 +1,7 @@
 v3.4
 -----
 + Added Japanese translation courtesy of planicrand
+: Fixed a few bugs with coupon formatting
 
 v3.3
 -----
