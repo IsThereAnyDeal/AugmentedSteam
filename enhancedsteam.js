@@ -431,6 +431,7 @@ function load_inventory() {
 	var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href;
 	var gift_deferred = new $.Deferred();
 	var coupon_deferred = new $.Deferred();
+	var card_deferred = new $.Deferred();
 
 	var handle_inv_ctx1 = function (txt) {
 		if (txt.charAt(0) != "<") {
@@ -448,6 +449,23 @@ function load_inventory() {
 			gift_deferred.resolve();
 		}
 	};
+	
+	var handle_inv_ctx6 = function (txt) {
+		if (txt.charAt(0) != "<") {
+			
+			localStorage.setItem("inventory_6", txt);
+			var data = JSON.parse(txt);
+			if (data.success) {
+				$.each(data.rgDescriptions, function(i, obj) {					
+					if (obj.market_name) {
+						setValue("card:" + obj.market_name, true);
+					}
+				});
+			}
+			card_deferred.resolve();
+		}
+	};
+	
 	var handle_inv_ctx3 = function (txt) {
 		if (txt.charAt(0) != "<") {
 			localStorage.setItem("inventory_3", txt);
@@ -517,18 +535,23 @@ function load_inventory() {
 
 		// Context ID 3 is coupons
 		get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);
+		
+		// Context ID 6 is trading card stuff
+		get_http(profileurl + '/inventory/json/753/6/', handle_inv_ctx6);
 	}
 	else {
 		// No need to load anything, its all in localStorage.
 		handle_inv_ctx1(localStorage.getItem("inventory_1"));
 		handle_inv_ctx3(localStorage.getItem("inventory_3"));
+		handle_inv_ctx6(localStorage.getItem("inventory_6"));
 
 		gift_deferred.resolve();
 		coupon_deferred.resolve();
+		card_deferred.resolve();
 	}
 
 	var deferred = new $.Deferred();
-	$.when.apply(null, [gift_deferred.promise(), coupon_deferred.promise()]).done(function (){
+	$.when.apply(null, [gift_deferred.promise(), card_deferred.promise(), coupon_deferred.promise()]).done(function (){
 		deferred.resolve();
 	});
 	return deferred.promise();
@@ -1496,6 +1519,25 @@ function start_friend_activity_highlights() {
 	});
 }
 
+function highlight_market_items() {
+	$.each($(".market_listing_row"), function (i, node) {		
+		var current_market_name = node.innerHTML.match(/class="market_listing_item_name" style="color: #;">(.+)<\/span>/);
+		if (current_market_name) {
+			var market_name = getValue("card:" + current_market_name[1]);		
+			if (market_name) {
+				storage.get(function(settings) {
+					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+					if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+					if (settings.highlight_owned) {
+						$(node).css("backgroundImage", "none");
+						$(node).css("backgroundColor", settings.highlight_owned_color);				
+					}
+				});
+			}
+		}		
+	});
+}
+
 function add_app_page_highlights(appid) {
 	if (window.location.host == "store.steampowered.com") node = $(".apphub_HeaderStandardTop")[0];
 	if (window.location.host == "steamcommunity.com") node = $(".apphub_HeaderTop")[0];
@@ -1633,6 +1675,12 @@ $(document).ready(function(){
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
 						break;
+						
+					case /^\/market\/.*/.test(window.location.pathname):
+						load_inventory().done(function() {
+							highlight_market_items();
+						});						
+						break;	
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
