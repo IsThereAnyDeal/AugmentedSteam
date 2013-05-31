@@ -1277,6 +1277,7 @@ function bind_ajax_content_highlighting() {
 	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
 	$("#search_suggestion_contents").bind("DOMSubtreeModified", start_highlights_and_tags);
 	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
+	$("#searchResultsRows").bind("DOMNodeInserted", highlight_market_items);
 }
 
 
@@ -1680,6 +1681,7 @@ $(document).ready(function(){
 					case /^\/market\/.*/.test(window.location.pathname):
 						load_inventory().done(function() {
 							highlight_market_items();
+							bind_ajax_content_highlighting();
 						});						
 						break;	
 
