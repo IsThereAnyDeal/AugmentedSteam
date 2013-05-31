@@ -2,6 +2,8 @@
 var storage = chrome.storage.sync;
 var apps;
 var language;
+var info = 0;
+
 storage.get(function (settings) {
 	language = settings.language || "en";
 });
@@ -1181,6 +1183,45 @@ function account_total_spent() {
 	});
 }
 
+function inventory_market_helper() {
+	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class=item_market_actions id=es_item0 height=10></div>"); } 
+	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class=item_market_actions id=es_item1 height=10></div>"); }
+	$('#es_item0').html("");
+	$('#es_item1').html("");
+	switch (info) {
+		case 0:
+			info = 1;
+			var desc = $('#iteminfo0_item_tags_content')[0].innerHTML;
+			if (desc.indexOf("Not Marketable") <= 0) {
+				var item_name = $("#iteminfo0_item_name")[0].innerHTML;	
+				get_http("http://steamcommunity.com/market/listings/753/" + item_name, function (txt) {
+					var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
+					if (item_price) {
+						$("#es_item0").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + item_name + "' target='_blank'>Items for sale</a>");
+					}	
+				});
+			} else {
+				$('#es_item0').remove();
+			}
+			break;
+		case 1:
+			info = 0;
+			var desc = $('#iteminfo1_item_tags_content')[0].innerHTML;
+			if (desc.indexOf("Not Marketable") <= 0) {
+				var item_name = $("#iteminfo1_item_name")[0].innerHTML;	
+				get_http("http://steamcommunity.com/market/listings/753/" + item_name, function (txt) {
+					var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
+					if (item_price) {
+						$("#es_item1").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + item_name + "' target='_blank'>Items for sale</a>");
+					}	
+				});
+			} else {
+				$('#es_item1').remove();
+			}
+			break;
+	}
+}
+
 function subscription_savings_check() {
 	var not_owned_games_prices = 0,
 		appid_info_deferreds = [],
@@ -1279,7 +1320,6 @@ function bind_ajax_content_highlighting() {
 	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
 	$("#searchResultsRows").bind("DOMNodeInserted", highlight_market_items);
 }
-
 
 function start_highlights_and_tags(){
 	/* Batches all the document.ready appid lookups into one storefront call. */
@@ -1646,7 +1686,7 @@ $(document).ready(function(){
 				break;
 
 			case "steamcommunity.com":
-
+			
 				switch (true) {
 					case /^\/groups\/.*/.test(window.location.pathname):
 						add_group_events();
@@ -1684,6 +1724,12 @@ $(document).ready(function(){
 							bind_ajax_content_highlighting();
 						});						
 						break;	
+						
+					case /^\/id\/.+\/inventory\/?$/.test(window.location.pathname):	
+						$(".itemHolder").bind("click", function() {
+							window.setTimeout(inventory_market_helper,100);
+						});	
+						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
