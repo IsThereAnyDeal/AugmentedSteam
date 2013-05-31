@@ -2,6 +2,8 @@ v3.4
 -----
 + Added Japanese translation courtesy of planicrand
 : Fixed a few bugs with coupon formatting
++ Added highlighting for Steam Trading Cards in the market
+: Fixed a bug where DLC categories wouldn't show if the language wasn't English
 
 v3.3
 -----

@@ -451,18 +451,19 @@ function load_inventory() {
 	};
 	
 	var handle_inv_ctx6 = function (txt) {
-		if (txt.charAt(0) != "<") {
-			
-			localStorage.setItem("inventory_6", txt);
-			var data = JSON.parse(txt);
-			if (data.success) {
-				$.each(data.rgDescriptions, function(i, obj) {					
-					if (obj.market_name) {
-						setValue("card:" + obj.market_name, true);
-					}
-				});
+		if (txt) {
+			if (txt.charAt(0) != "<") {				
+				localStorage.setItem("inventory_6", txt);
+				var data = JSON.parse(txt);
+				if (data.success) {
+					$.each(data.rgDescriptions, function(i, obj) {					
+						if (obj.market_name) {
+							setValue("card:" + obj.market_name, true);
+						}
+					});
+				}
+				card_deferred.resolve();
 			}
-			card_deferred.resolve();
 		}
 	};
 	
@@ -1234,9 +1235,9 @@ function subscription_savings_check() {
 	});
 }
 
-function dlc_data_from_site(appid) {
-	// pull DLC gamedata from enhancedsteam.com
-	if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") > 0) {		
+// pull DLC gamedata from enhancedsteam.com
+function dlc_data_from_site(appid) {	
+	if ($("div.game_area_dlc_bubble").length > 0) {		
 		var appname = $(".apphub_AppName").html();
 		appname = appname.replace("&amp;", "and");
 		appname = appname.replace("\"", "");
