@@ -1,10 +1,11 @@
 v3.4
 -----
-+ Added Japanese translation courtesy of planicrand
 : Fixed a few bugs with coupon formatting
 + Added highlighting for Steam Trading Cards in the market
++ Added an experimental feature that shows market prices on inventory page (disabled by default)
 : Fixed a bug where DLC categories wouldn't show if the language wasn't English
 + Added French translation courtesy of Yanuut
++ Added Japanese translation courtesy of planicrand
 - Remove group events as they're hardly used by anyone and code was buggy
 
 v3.3
