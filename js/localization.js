@@ -172,7 +172,7 @@ localization_promise = (function (){
 			empty_wishlist: "Vider la liste de souhaits",
 			purchase_date: "(Acheté le __date__)",
 			options: "Options",
-			website: "Site web"
+			website: "Site web",
 			contribute: "Contribuer (GitHub)",
 			store: "Magasin",
 			community: "Communauté",
@@ -183,10 +183,10 @@ localization_promise = (function (){
 			highlight: "Surlignage",
 			options_owned: "Articles que vous possédez",
 			options_wishlist: "Articles dans votre liste de souhaits",
-			options_coupon: "Articles pour lesquels vous aves des coupons",
+			options_coupon: "Articles pour lesquels vous avez des coupons",
 			options_gift: "Articles stockés en tant que cadeaux",
 			options_guest: "Articles pour lesquels vous avez des invitations",
-			options_friends_wishlist: "Articles que vos amis ont dans leurs listes de souhaits"
+			options_friends_wishlist: "Articles que vos amis ont dans leurs listes de souhaits",
 			options_hide_install: "Cacher le bouton \"Installer Steam\" dans l'en-tête",
 			options_drm: "Afficher les avertissements sur les DRMs de tiers",
 			options_lowestprice: "Afficher l'historique des prix",
@@ -210,7 +210,7 @@ localization_promise = (function (){
 			coupon_learn_more: "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">En savoir plus</a> sur les Coupons Steam",
 			add_to_cart: "Ajouter au panier",
 			drm_third_party: "Attention : ce titre utilise le DRM d'un tiers",
-			empty_cart: "Vider le panier"
+			empty_cart: "Vider le panier",
 			events_view_all: "TOUT AFFICHER",
 			events: "Événements",
 			dlc_data_header: "Détails sur le contenu téléchargeable",

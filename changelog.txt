@@ -4,6 +4,7 @@ v3.4
 : Fixed a few bugs with coupon formatting
 + Added highlighting for Steam Trading Cards in the market
 : Fixed a bug where DLC categories wouldn't show if the language wasn't English
++ Added French translation courtesy of Yanuut
 
 v3.3
 -----
