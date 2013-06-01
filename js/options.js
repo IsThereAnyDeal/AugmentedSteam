@@ -68,6 +68,7 @@ function save_options() {
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
+	showinvmarket = $("#showinvmarket").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 
 	// Profile Link Options
@@ -123,6 +124,7 @@ function save_options() {
 		'stores': stores,
 
 		'showtotal': showtotal,
+		'showinvmarket': showinvmarket,
 		'showgreenlightbanner': showgreenlightbanner,
 
 		'profile_steamgifts': profile_steamgifts,
@@ -271,6 +273,7 @@ function load_options() {
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showinvmarket === undefined) { settings.showinvmarket = false; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; chrome.storage.sync.set({'showlowestprice_region': settings.showlowestprice_region}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
@@ -326,6 +329,7 @@ function load_options() {
 
 		// Load Community Options
 		$("#showtotal").attr('checked', settings.showtotal);
+		$("#showinvmarket").attr('checked', settings.showinvmarket);
 		$("#showgreenlightbanner").attr('checked', settings.showgreenlightbanner);
 
 		// Load Profile Link Options
