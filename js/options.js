@@ -68,7 +68,6 @@ function save_options() {
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
-	showgroupevents = $("#showgroupevents").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 
 	// Profile Link Options
@@ -124,7 +123,6 @@ function save_options() {
 		'stores': stores,
 
 		'showtotal': showtotal,
-		'showgroupevents': showgroupevents,
 		'showgreenlightbanner': showgreenlightbanner,
 
 		'profile_steamgifts': profile_steamgifts,
@@ -274,7 +272,6 @@ function load_options() {
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; chrome.storage.sync.set({'showlowestprice_region': settings.showlowestprice_region}); }
-		if (settings.showgroupevents === undefined) { settings.showgroupevents = true;	chrome.storage.sync.set({'showgroupevents': settings.showgroupevents});	}
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
@@ -329,7 +326,6 @@ function load_options() {
 
 		// Load Community Options
 		$("#showtotal").attr('checked', settings.showtotal);
-		$("#showgroupevents").attr('checked', settings.showgroupevents);
 		$("#showgreenlightbanner").attr('checked', settings.showgreenlightbanner);
 
 		// Load Profile Link Options
@@ -391,8 +387,7 @@ function load_translation() {
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
-			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
-			$("#group_events_text").text(localized_strings[settings.language].options_group_events);
+			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);			
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
 						
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);

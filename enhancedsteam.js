@@ -82,11 +82,6 @@ function get_appid_wishlist(t) {
 	else return null;
 }
 
-function get_groupname(t) {
-	if (t && t.match(/steamcommunity\.com\/groups\/(\S+)/)) return RegExp.$1;
-	else return null;
-}
-
 function ensure_appid_deferred(appid) {
 	if (!appid_promises[appid]) {
 		var deferred = new $.Deferred();
@@ -941,30 +936,6 @@ function add_empty_cart_button() {
 	});
 }
 
-// Changes Steam Community Groups pages
-function add_group_events() {
-	var groupname = get_groupname(document.URL);
-	if (groupname.indexOf("#") > 0) { groupname = groupname.substring(0, groupname.indexOf("#")); }
-
-	storage.get(function(settings) {
-		if (settings.showgroupevents === undefined) { settings.showgroupevents = true; storage.set({'showgroupevents': settings.showgroupevents}); }
-		if (settings.showgroupevents) {
-
-			$('.group_summary').after('<div class="group_content_rule"></div><div class="group_content"><div class="group_content_header"><div class="group_content_header_viewmore"><a href="http://steamcommunity.com/groups/' + groupname + '/events/">' + localized_strings[language].events_view_all + '</a></div>' + localized_strings[language].events + '</div><div id="enhancedsteam_group_events"></div>');
-
-			get_http("//steamcommunity.com/groups/" + groupname + "/events/", function (txt) {
-
-				var events_start = txt.indexOf('<!-- events section -->');
-				var events_end = txt.indexOf('<!-- /events section -->');
-				var events = txt.substring(events_start, events_end);
-
-				// now that we have the information, put it on the page
-				document.getElementById('enhancedsteam_group_events').innerHTML = events;
-			});
-		}
-	});
-}
-
 // User profile pages
 function add_community_profile_links() {
 	// Changes the profile page
@@ -1674,10 +1645,6 @@ $(document).ready(function(){
 			case "steamcommunity.com":
 			
 				switch (true) {
-					case /^\/groups\/.*/.test(window.location.pathname):
-						add_group_events();
-						break;
-
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 						add_cart_on_wishlist();
 						fix_wishlist_image_not_found();

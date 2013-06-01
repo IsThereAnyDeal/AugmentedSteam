@@ -5,6 +5,7 @@ v3.4
 + Added highlighting for Steam Trading Cards in the market
 : Fixed a bug where DLC categories wouldn't show if the language wasn't English
 + Added French translation courtesy of Yanuut
+- Remove group events as they're hardly used by anyone and code was buggy
 
 v3.3
 -----
