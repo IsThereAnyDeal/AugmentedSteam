@@ -822,7 +822,7 @@ function show_pricing_history(appid, type) {
 			}
 						
 			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring + "&cc=" + cc, function (txt) {
-				document.getElementById('game_area_purchase').insertAdjacentHTML('afterbegin', txt);
+				$('#game_area_purchase').before(txt);
 			});
 		}
 	});
@@ -937,7 +937,7 @@ function add_empty_cart_button() {
 	var loc = 0;
 	xpath_each("//div[contains(@class,'checkout_content')]", function (node) {
 		loc = loc + 1;
-		if (loc == 2) { node.insertAdjacentHTML('afterbegin', addtext); }
+		if (loc == 2) { $(node).prepend(addtext); }
 	});
 }
 
@@ -989,7 +989,7 @@ function add_community_profile_links() {
 			if (settings.profile_backpacktf === true) { htmlstr += '<div class="actionItemIcon"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/backpacktf.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '" target="_blank">backpack.tf</a></div>'; }
 			if (settings.profile_astats === true) { htmlstr += '<div class="actionItemIcon"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/achievementstats.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank">Achievement Stats</a></div>'; }
 
-			if (htmlstr != '<hr>') { document.getElementById("rightActionBlock").insertAdjacentHTML('beforeend', htmlstr); }
+			if (htmlstr != '<hr>') { $("#rightActionBlock").append(htmlstr); }
 		} else {
 			var htmlstr = '';
 			if (settings.profile_steamgifts === true) {	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamgifts.ico') + '" width="24" height="24" border="0" /></a></div>'; }
@@ -1019,25 +1019,13 @@ function add_cart_on_wishlist() {
 						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
 						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
 						htmlstring += '</form>';
-						node.insertAdjacentHTML('beforebegin', '</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
+						$(node).before('</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
 					}					
 				}
 			});
 		});
 	});
 }
-
-// Changes user's edit page
-function add_return_to_profile_tab() {
-	htmlstr = '<div class="tab" id="returnTabOff">';
-	htmlstr += '<div class="tabOffL"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpLeftDark.gif" width="2" height="2" border="0"></div>';
-	htmlstr += '<div class="tabOff"><a href="http://steamcommunity.com/my/">Return to profile</a></div>';
-	htmlstr += '<div class="tabOffR"><img src="http://cdn.steamcommunity.com/public/images/skin_1/greyCornerUpRightDark.gif" width="2" height="2" border="0"></div>';
-	htmlstr += '</div>';
-
-	document.getElementById("tabs").insertAdjacentHTML('beforeend', htmlstr);
-}
-
 
 // Changes Steam Greenlight pages
 function hide_greenlight_banner() {
@@ -1056,7 +1044,7 @@ function hide_greenlight_banner() {
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/discussions/?appid=765"><span>Discussions</a>';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/about/?appid=765&section=faq"><span>About Greenlight</a>';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
-			banner.insertAdjacentHTML('beforebegin', html);
+			$("#ig_top_workshop").before(html);
 
 			// now hide the greenlight banner
 			if (banner) { banner.hidden = true;	}
@@ -1080,7 +1068,7 @@ function add_metracritic_userscore() {
 						metauserscore = txt;
 						metauserscore = metauserscore.replace(".","");
 						var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');">' + metauserscore + '</div>';
-						metahtml.insertAdjacentHTML('afterend', newmeta);
+						$("#game_area_metascore").after(newmeta);
 					});
 				}
 			}
@@ -1099,7 +1087,7 @@ function add_widescreen_certification(appid) {
 
 					xpath_each("//div[contains(@class,'game_details')]", function (node) {
 						if (found === 0) {
-							node.insertAdjacentHTML('afterend', txt);
+							$(node).after(txt);
 							found = 1;
 						}
 					});
@@ -1285,9 +1273,7 @@ function dlc_data_from_site(appid) {
 		appname = appname.replace("“", "");		
 		get_http("http://www.enhancedsteam.com/gamedata/gamedata.php?appid=" + appid + "&appname=" + appname, function (txt) {
 			var block = "<div class='block'><div class='block_header'><h4>" + localized_strings[language].dlc_data_header + "</h4></div><div class='block_content'><div class='block_content_inner'>" + txt + "</div></div></div>";
-
-			var dlc_categories = document.getElementById('demo_block');
-			dlc_categories.insertAdjacentHTML('afterend', block);
+			$("#demo_block").after(block);
 		});
 	}
 }
@@ -1706,8 +1692,7 @@ $(document).ready(function(){
 						bind_ajax_content_highlighting();
 						break;
 
-					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
-						add_return_to_profile_tab();
+					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):						
 						break;
 
 					case /^\/(?:id|profiles)\/[^\/]+\/?$/.test(window.location.pathname):
