@@ -8,11 +8,9 @@ storage.get(function (settings) {
 	language = settings.language || "en";
 });
 
-
 // Global scope promise storage; to prevent unecessary API requests.
 var loading_inventory;
 var appid_promises = {};
-
 
 //Chrome storage functions.
 function setValue(key, value) {
@@ -26,7 +24,6 @@ function getValue(key) {
 }
 
 // Helper prototypes
-
 String.prototype.startsWith = function(prefix) {
 	return this.indexOf(prefix) === 0;
 };
@@ -143,6 +140,7 @@ function highlight_inv_gift(node) {
 		if (settings.tag_inv_gift) add_tag(node, localized_strings[language].tag_inv_gift, settings.highlight_inv_gift_color);
 	});
 }
+
 // colors the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
@@ -429,7 +427,7 @@ function load_inventory() {
 	var gift_deferred = new $.Deferred();
 	var coupon_deferred = new $.Deferred();
 	var card_deferred = new $.Deferred();
-
+	
 	var handle_inv_ctx1 = function (txt) {
 		if (txt.charAt(0) != "<") {
 			
@@ -552,7 +550,7 @@ function load_inventory() {
 	$.when.apply(null, [gift_deferred.promise(), card_deferred.promise(), coupon_deferred.promise()]).done(function (){
 		deferred.resolve();
 	});
-	return deferred.promise();
+	return deferred.promise();	
 }
 
 function add_empty_wishlist_button() {
@@ -767,8 +765,6 @@ function display_coupon_message(appid) {
 			"</div>";
 
 	}
-
-
 }
 
 function show_pricing_history(appid, type) {
@@ -1581,13 +1577,6 @@ $(document).ready(function(){
 		// attach event to the logout button
 		$('a[href$="http://store.steampowered.com/logout/"]').bind('click', clear_cache);
 
-	/* To test:
-		Coupon behavour with already discounted game.
-
-	TODO:
-		Highlgihts on http://store.steampowered.com/recommended/
-
-	*/
 		switch (window.location.host) {
 			case "store.steampowered.com":
 				// Load data from inv before anything else.
