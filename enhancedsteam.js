@@ -1232,7 +1232,6 @@ function subscription_savings_check() {
 		if (corrected_price < 0) $message[0].style.color = "red";
 
 		$('.savings').replaceWith($message);
-
 	});
 }
 
@@ -1570,6 +1569,30 @@ function clear_cache() {
 	sessionStorage.clear();
 }
 
+function change_user_background() {
+	var profile_name = window.location.pathname.replace("/id/", "");
+	console.log ($(".profile_page .has_profile_background")[0].style.background);
+	
+	get_http("http://www.enhancedsteam.com/gamedata/profile.php?userid=" + profile_name, function (txt) {		
+		if (txt) {
+			$(".profile_page .has_profile_background")[0].style.backgroundImage = "url(" + txt + ")";
+			$(".profile_background_image_content")[0].style.backgroundImage = "url(" + txt + ")";
+		}
+	});	
+}
+
+function add_es_background_selection() {
+	var profile_name = window.location.pathname.replace("/id/", "");
+	profile_name = profile_name.replace("/edit", "");
+	get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
+		var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
+			html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
+			html += txt;		
+			html += "</form>";
+		$(".customization_edit_area").before(html);
+	});
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -1654,10 +1677,12 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):						
+						add_es_background_selection();
 						break;
 
 					case /^\/(?:id|profiles)\/[^\/]+\/?$/.test(window.location.pathname):
 						add_community_profile_links();
+						change_user_background();
 						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
