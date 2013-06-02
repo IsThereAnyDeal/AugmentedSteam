@@ -1593,7 +1593,7 @@ function add_es_background_selection() {
 			html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
 			html += txt;		
 			html += "</form>";
-		$(".customization_edit_area").before(html);
+		$(".group_content_bodytext").before(html);
 	});
 }
 
