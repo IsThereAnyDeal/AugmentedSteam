@@ -1,6 +1,6 @@
 v3.5
 -----
-
++ Added ability to set custom background for all Enhanced Steam users visiting your profile
 
 v3.4
 -----

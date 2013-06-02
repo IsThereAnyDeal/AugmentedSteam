@@ -1570,7 +1570,8 @@ function clear_cache() {
 }
 
 function change_user_background() {
-	var profile_name = window.location.pathname.replace("/id/", "");	
+	var profile_name = window.location.pathname.replace("/id/", "");
+	profile_name = profile_name.replace("/", "");
 	get_http("http://www.enhancedsteam.com/gamedata/profile.php?userid=" + profile_name, function (txt) {		
 		if (txt) {
 			$(".no_header")[0].style.backgroundImage = "url(" + txt + ")";
@@ -1664,7 +1665,6 @@ $(document).ready(function(){
 				break;
 
 			case "steamcommunity.com":
-			
 				switch (true) {
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 						add_cart_on_wishlist();
