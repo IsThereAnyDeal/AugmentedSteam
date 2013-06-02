@@ -1,6 +1,8 @@
 v3.5
 -----
 + Added ability to set custom background for all Enhanced Steam users visiting your profile
++ Added additional translation fields to the options page
+: Updated Russian and Spanish translations
 
 v3.4
 -----
