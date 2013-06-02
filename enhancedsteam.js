@@ -1587,14 +1587,19 @@ function change_user_background() {
 }
 
 function add_es_background_selection() {
-	var profile_name = window.location.pathname.replace("/id/", "");
-	profile_name = profile_name.replace("/edit", "");
-	get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
-		var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
-			html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
-			html += txt;		
-			html += "</form>";
-		$(".group_content_bodytext").before(html);
+	storage.get(function(settings) {
+		if (settings.showesbg === undefined) { settings.showesbg = true; storage.set({'showesbg': settings.showesbg}); }
+		if (settings.showesbg) {
+			var profile_name = window.location.pathname.replace("/id/", "");
+			profile_name = profile_name.replace("/edit", "");
+			get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
+				var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
+					html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
+					html += txt;		
+					html += "</form>";
+				$(".group_content_bodytext").before(html);
+			});
+		}
 	});
 }
 
