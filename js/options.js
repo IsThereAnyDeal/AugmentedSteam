@@ -366,6 +366,7 @@ function load_translation() {
 			$("#header_community").text(localized_strings[settings.language].community);
 			$("#header_news").text(localized_strings[settings.language].news);
 			$("#header_about").text(localized_strings[settings.language].about);
+			$("#header_credits").text(localized_strings[settings.language].credits);
 			$("#header_donate").text(localized_strings[settings.language].donate);
 			
 			$("#language_text").text(localized_strings[settings.language].language);
@@ -393,9 +394,14 @@ function load_translation() {
 			$("#store_steamdb_text").text(localized_strings[settings.language].options_steamdb);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
+			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
+			$("#lowestprice_region_text").text(localized_strings[settings.language].region);
+			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].all);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
-			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);			
+			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
+			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
+			$("#es_background_text").text(localized_strings[settings.language].options_es_bg);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
 						
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
@@ -410,6 +416,9 @@ function load_translation() {
 			$("#tag_inv_gift_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
+			
+			$("#programming_text").text(localized_strings[settings.language].programming);
+			$("#translation_text").text(localized_strings[settings.language].translation);
 			
 			$("#save_store").text(localized_strings[settings.language].save);
 			$("#save_community").text(localized_strings[settings.language].save);

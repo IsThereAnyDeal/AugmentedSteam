@@ -31,6 +31,7 @@ localization_promise = (function (){
 		options_total_spent: "Show \"Total Spent\" on Account Page",
 		options_group_events: "Show Events on Group Overview",
 		options_greenlight_banner: "Replace Steam Greenlight Banner",
+		options_es_bg: "Set Custom Background on Edit Profile Screen",
 		tag: "Tag",
 		theworddefault: "Default",
 		save: "Save",
@@ -52,7 +53,14 @@ localization_promise = (function (){
         tag_coupon: "Coupon",
         tag_inv_gift: "Gift",
         tag_inv_guestpass: "Guestpass",
-        tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>"
+        tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
+		inventory_market_text: "Show Market Price on Inventory Page (Experimental!)",
+		credits: "Credits",
+		stores: "Stores",
+		region: "Region",
+		all: "All",
+		programming: "Programming",
+		translation: "Translation"
     };
 
     localized_strings = {
@@ -144,6 +152,7 @@ localization_promise = (function (){
 			options_total_spent: "Mostrar total en la cuenta de la pagina",
 			options_group_events: "Mostrar eventos de Revision de grupo",
 			options_greenlight_banner: "Reemplace Bandera de Steam Greenlight",
+			options_es_bg: "Establecer fondo de encargo en la pantalla de edición de perfil",
 			tag: "Etiqueta",
 			theworddefault: "Defecto",
 			save: "Guardar",
@@ -165,7 +174,14 @@ localization_promise = (function (){
 			tag_coupon: "Cupon",
 			tag_inv_gift: "Regalo",
 			tag_inv_guestpass: "Pase Invitado",
-			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ amigos deseen</a>"
+			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ amigos deseen</a>",
+			inventory_market_text: "Show Market Price on Inventory Page (Experimental!)",
+			credits: "Créditos",
+			stores: "Tiendas",
+			region: "Región",
+			all: "Todo",
+			programming: "Programación",
+			translation: "Traducción"
 		},
         "fi":       {},
         "fr":       {
@@ -315,7 +331,7 @@ localization_promise = (function (){
 			store: "Магазин",
 			community: "Сообщество",
 			news: "Новости",
-			about: "О плагине",
+			about: "О расширении",
 			donate: "Пожертвовать",
 			language: "Язык",
 			highlight: "Подсвечивать",
@@ -326,7 +342,7 @@ localization_promise = (function (){
 			options_guest: "Продукты, для которых у вас есть гостевой пропуск",
 			options_friends_wishlist: "Продукты, которые находятся в списке желаемого ваших друзей",
 			options_hide_install: "Спрятать кнопку «Установить Steam» в шапке",
-			options_drm: "Отображать предупреждения о DRM-технологии сторонних поставщиков",
+			options_drm: "Отображать предупреждения о DRM-технологиях сторонних разработчиков (GFWL, Uplay и т.д.)",
 			options_lowestprice: "Отображать информацию о ценовой истории",
 			options_metacritic: "Отображать рейтинг Metacritic от пользователей",
 			options_steamdb: "Отображать ссылки SteamDB",
@@ -336,7 +352,8 @@ localization_promise = (function (){
 			options_total_spent: "Отображать «Всего потрачено» на странице аккаунта",
 			options_group_events: "Отображать события в просмотре групп",
 			options_greenlight_banner: "Заменить баннер Steam Greenlight",
-			tag: "Тег",
+			options_es_bg: "Выбрать фон профиля или редактировать экран профиля",
+			tag: "Отмечать",
 			theworddefault: "умолчанию",
 			save: "Сохранить",
 			saved: "Сохранено",
@@ -357,7 +374,14 @@ localization_promise = (function (){
 			tag_coupon: "Купон",
 			tag_inv_gift: "Подарок",
 			tag_inv_guestpass: "Гостевой пропуск",
-			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ хотят это</a>"
+			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">Ваши друзья __friendcount__ хотят это</a>",
+			inventory_market_text: "Отображать цену Торговой площадки на странице инвентаря (Экспериментальное!)",
+			credits: "Авторы",
+			stores: "Магазины",
+			region: "Регион",
+			all: "Все",
+			programming: "Программирование",
+			translation: "Перевод"
 		},
         "sv":       {},
         "th":       {},
