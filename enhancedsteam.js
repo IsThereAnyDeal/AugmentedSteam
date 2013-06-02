@@ -1570,13 +1570,17 @@ function clear_cache() {
 }
 
 function change_user_background() {
-	var profile_name = window.location.pathname.replace("/id/", "");
-	console.log ($(".profile_page .has_profile_background")[0].style.background);
-	
+	var profile_name = window.location.pathname.replace("/id/", "");	
 	get_http("http://www.enhancedsteam.com/gamedata/profile.php?userid=" + profile_name, function (txt) {		
 		if (txt) {
-			$(".profile_page .has_profile_background")[0].style.backgroundImage = "url(" + txt + ")";
-			$(".profile_background_image_content")[0].style.backgroundImage = "url(" + txt + ")";
+			$(".no_header")[0].style.backgroundImage = "url(" + txt + ")";
+			if ($(".profile_background_image_content").length > 0) {
+				$(".profile_background_image_content")[0].style.backgroundImage = "url(" + txt + ")";
+			} else {				
+				$(".no_header").addClass("has_profile_background");
+				$(".profile_content").addClass("has_profile_background");
+				$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + txt + ');"></div></div></div>');
+			}
 		}
 	});	
 }
