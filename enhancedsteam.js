@@ -556,7 +556,7 @@ function load_inventory() {
 function add_empty_wishlist_button() {
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save' style='border-color:red'><a>" + localized_strings[language].empty_wishlist + "</a></div>");
+		var empty_button = $("<div class='btn_save' style='border-color:red; width: auto;'>&nbsp;&nbsp;<a>" + localized_strings[language].empty_wishlist + "</a>&nbsp;&nbsp;</div>");
 		empty_button.click(empty_wishlist);
 		$("#games_list_container").after(empty_button);
 	}
