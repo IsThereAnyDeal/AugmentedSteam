@@ -1,6 +1,9 @@
 v3.6
 -----
-
+: Fixed a bug where custom profile backgrounds weren't saving properly
+: Updated Japanese and Russian translations
+: Fixed a bug causing custom profile backgrounds not to show if not logged in
+: Fixed a bug causing javascript errors when not logged in
 
 v3.5
 -----

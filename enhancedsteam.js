@@ -423,7 +423,7 @@ function display_tags(node) {
 }
 
 function load_inventory() {
-	var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href;
+	if ($(".user_avatar").length > 0) { var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href; }
 	var gift_deferred = new $.Deferred();
 	var coupon_deferred = new $.Deferred();
 	var card_deferred = new $.Deferred();
@@ -935,7 +935,7 @@ function add_empty_cart_button() {
 // User profile pages
 function add_community_profile_links() {
 	// Changes the profile page
-	var steamID = document.getElementsByName("abuseID")[0].value;
+	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
 
 	storage.get(function(settings) {
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
@@ -1571,7 +1571,7 @@ function clear_cache() {
 
 function change_user_background() {
 	var profile_name = window.location.pathname.replace("/id/", "");
-	profile_name = profile_name.replace("/", "");
+	profile_name = profile_name.replace("/", "");	
 	get_http("http://www.enhancedsteam.com/gamedata/profile.php?userid=" + profile_name, function (txt) {		
 		if (txt) {
 			$(".no_header")[0].style.backgroundImage = "url(" + txt + ")";
@@ -1592,6 +1592,9 @@ function add_es_background_selection() {
 		if (settings.showesbg) {
 			var profile_name = window.location.pathname.replace("/id/", "");
 			profile_name = profile_name.replace("/edit", "");
+			profile_name = profile_name.replace("/settings", "");
+			profile_name = profile_name.replace("/profiles", "");
+			profile_name = profile_name.replace("/", "");
 			get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
 				var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
 					html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";

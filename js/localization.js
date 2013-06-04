@@ -290,7 +290,7 @@ localization_promise = (function (){
 			tag_coupon: "クーポン",
 			tag_inv_gift: "ギフト",
 			tag_inv_guestpass: "ゲストパス",
-			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人が欲しがっています</a>"
+			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人が欲しがっています</a>",
 			inventory_market_text: "インベントリ上でマーケットの価格を表示 (実験的!)",
 			credits: "クレジット",
 			stores: "ストア",
