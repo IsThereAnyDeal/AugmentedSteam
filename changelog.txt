@@ -1,10 +1,10 @@
 v3.6
 -----
-: Fixed a bug where custom profile backgrounds weren't saving properly
-: Updated Japanese and Russian translations
+: Fixed a bug where custom profile backgrounds weren't saving properly in some instances
 : Fixed a bug causing custom profile backgrounds not to show if not logged in
 : Fixed a bug causing javascript errors when not logged in
 : Fixed a bug where the "Empty Wishlist" button wasn't displaying properly for some languages
+: Updated Japanese and Russian translations
 
 v3.5
 -----
