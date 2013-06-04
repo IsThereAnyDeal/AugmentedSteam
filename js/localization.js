@@ -291,6 +291,13 @@ localization_promise = (function (){
 			tag_inv_gift: "ギフト",
 			tag_inv_guestpass: "ゲストパス",
 			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人が欲しがっています</a>"
+			inventory_market_text: "インベントリ上でマーケットの価格を表示 (実験的!)",
+			credits: "クレジット",
+			stores: "ストア",
+			region: "地域",
+			all: "全て",
+			programming: "プログラミング",
+			translation: "翻訳"
 					},
         "ko":       {},
         "nl":       {
@@ -374,7 +381,7 @@ localization_promise = (function (){
 			tag_coupon: "Купон",
 			tag_inv_gift: "Подарок",
 			tag_inv_guestpass: "Гостевой пропуск",
-			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">Ваши друзья __friendcount__ хотят это</a>",
+			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">Ваши друзья (__friendcount__) хотят это</a>",
 			inventory_market_text: "Отображать цену Торговой площадки на странице инвентаря (Экспериментальное!)",
 			credits: "Авторы",
 			stores: "Магазины",
