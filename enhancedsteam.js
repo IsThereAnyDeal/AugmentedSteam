@@ -660,10 +660,37 @@ function remove_install_steam_button() {
 // Adds a link to SPUF to the top menu
 function add_spuf_link() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
-	document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
-		'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
-		'<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
-	);
+	if ($("#supernav").length > 0) {
+		document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
+			'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
+			'<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
+		);
+	}
+}
+
+// Adds a "Library" menu to the main menu of Steam
+function add_library_menu() {
+	$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>Library</a>");
+	$("#es_library").bind("click", function() {
+		library_click();
+	});	
+}
+
+function library_click() {
+	$("#store_header").remove();
+	$("#main").remove();	
+	$("#footer").remove();
+	$("#game_background_holder").remove();
+	
+	// Get Steam Long ID
+	var profileID = "";
+	profileID = "76561198040672342";  // using my own as temp
+	
+	// Call Storefront API
+	get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + profileID + '&include_appinfo=1&include_played_free_games=1&format=json', function (txt) {
+		console.log (txt);
+	});
+	$("#global_header").after("<div id='es_library_list' class='es_library_list'>Test</div>");
 }
 
 // If app has a coupon, display message
@@ -1616,6 +1643,7 @@ $(document).ready(function(){
 		add_enhanced_steam_options();
 		remove_install_steam_button();
 		add_spuf_link();
+		add_library_menu();
 		
 		// attach event to the logout button
 		$('a[href$="http://store.steampowered.com/logout/"]').bind('click', clear_cache);
@@ -1657,7 +1685,7 @@ $(document).ready(function(){
 					case /^\/account\/.*/.test(window.location.pathname):
 						account_total_spent();
 						break;
-
+					
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
 						add_carousel_descriptions();

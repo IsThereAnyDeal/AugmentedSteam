@@ -130,3 +130,8 @@
 .searchbox input.default {
 	font-style: italic;
 }
+
+.es_library_list {
+	border: 1px solid grey;
+	width: 25%;	
+}

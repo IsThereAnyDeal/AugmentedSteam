@@ -7,7 +7,8 @@
   "options_page": "options.html",
   "permissions": [
     "storage",
-    "http://www.enhancedsteam.com/"
+    "http://www.enhancedsteam.com/",
+	"http://api.steampowered.com/"
   ],
   "web_accessible_resources": [
     "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png",
