@@ -1,5 +1,7 @@
 v3.7
 -----
+: Changed "Total Spent" text to regular color (not red)
+: Fixed a bug where background selection was showing on profile security page
 
 
 v3.6

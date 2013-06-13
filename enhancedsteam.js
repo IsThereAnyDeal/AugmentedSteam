@@ -1051,7 +1051,6 @@ function add_widescreen_certification(appid) {
 				// check to see if game data exists
 				get_http("http://www.enhancedsteam.com/gamedata/wsgf.php?appid=" + appid, function (txt) {
 					found = 0;
-
 					xpath_each("//div[contains(@class,'game_details')]", function (node) {
 						if (found === 0) {
 							$(node).after(txt);
@@ -1131,7 +1130,7 @@ function account_total_spent() {
 
 					$('.accountInfoBlock .block_content_inner .accountBalance').after('<div class="accountRow accountBalance accountSpent"></div>');
 					$('.accountSpent').append('<div class="accountData price">' + total_with_symbol + '</div>');
-					$('.accountSpent').append('<div class="accountLabel" style="color: #C00; font-weight: bold; font-size: 100%">Total Spent:</div>');
+					$('.accountSpent').append('<div class="accountLabel">Total Spent:</div>');
 				}
 			}
 		}
