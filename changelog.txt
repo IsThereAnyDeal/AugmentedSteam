@@ -2,7 +2,8 @@ v3.7
 -----
 : Changed "Total Spent" text to regular color (not red)
 : Fixed a bug where background selection was showing on profile security page
-
++ Added "help" question mark next to options that links to the feature on enhancedsteam.com
+: Changed changelog textarea to be readonly
 
 v3.6
 -----
