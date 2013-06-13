@@ -227,7 +227,7 @@ function toggle_stores() {
 
 // Loads changelog.txt
 jQuery.get('changelog.txt', function(data) {
-	document.getElementById("maincontent_news").innerHTML = "Changelog:<br><textarea rows=28 cols=100>" + data + "</textarea>";
+	document.getElementById("maincontent_news").innerHTML = "Changelog:<br><textarea rows=28 cols=100 readonly>" + data + "</textarea>";
 });
 
 // Restores select box state to saved value from SyncStorage.

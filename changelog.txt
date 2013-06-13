@@ -1,6 +1,7 @@
 v3.7
 -----
-
++ Added "help" question mark next to options that links to the feature on enhancedsteam.com
+: Changed changelog textarea to be readonly
 
 v3.6
 -----
