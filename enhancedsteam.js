@@ -679,20 +679,27 @@ function add_library_menu() {
 function library_item_click (appid) {
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
 		var data = JSON.parse(txt);
-		var screenshotID = Math.floor(Math.random() * data[appid].data.screenshots.length - 1) + 1;
-		$('#es_library_right').css({'background-image': 'url(' + data[appid].data.screenshots[screenshotID].path_full + ')', 'background-repeat': 'no-repeat', 'background-color': 'rgba(0,0,0,0.5)'});
-	});
-	
+		
+		// fill background div with screenshot
+		var screenshotID = Math.floor(Math.random() * data[appid].data.screenshots.length - 1) + 1;	
+		$('#es_library_background').css('background', 'url(' + data[appid].data.screenshots[screenshotID].path_full + ') 0 0 no-repeat');
+		$('#es_library_background').css('background-size', 'cover');		
+	});	
 }
 
 function library_header_click() {
 	$("#es_library_list").remove();
+	$("#es_library_right").remove();
+	$("#es_library_background_filter").remove();
+	$("#es_library_background").remove();
 	$("#store_header").remove();
 	$("#main").remove();	
 	$("#footer").remove();
 	$("#game_background_holder").remove();
 	
-	// Create Library sidebar	
+	// Create Library divs	
+	$("#global_header").after("<div id='es_library_background' class='es_library_background'></div>");
+	$("#global_header").after("<div id='es_library_background_filter' class='es_library_background_filter'></div>");
 	$("#global_header").after("<div id='es_library_right' class='es_library_right'></div>");
 	$("#global_header").after("<div id='es_library_list' class='es_library_list'></div>");
 	
@@ -705,7 +712,13 @@ function library_header_click() {
 		var data = JSON.parse(txt);		
 		if (data.response) {
 			var games = data.response.games;
-			games.sort(function(a,b) { return a.name - b.name; });
+			
+			//sort entries
+			games.sort(function(a,b) {
+				if ( a.name == b.name ) return 0;
+				return a.name < b.name ? -1 : 1;
+			});
+			
 			$.each(games, function(i, obj) {
 				if (obj.name) {
 					if (obj.name.length > 34) {

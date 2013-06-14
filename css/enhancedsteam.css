@@ -142,14 +142,27 @@
 	position: absolute;
 	top: 105px;
 	bottom: 0px;
+	z-index: 3;
 }
 
-.es_library_right {
-	margin-left: 300px;
+.es_library_background {
+	margin-left: 150px;
 	position: absolute;
 	top: 105px;
 	bottom: 0px;
 	width: 70%;
+	z-index:1;	
+	opacity:.50;
+}
+
+.es_library_background_filter {
+	margin-left: 150px;
+	position: absolute;
+	top: 105px;
+	bottom: 0px;
+	width: 70%;
+	z-index:2;
+	background: -webkit-radial-gradient(center center, circle, rgba(52, 52, 52, 0) 0%, rgba(0, 0, 0, 1) 80%);
 }
 
 .es_library_list::-webkit-scrollbar {
