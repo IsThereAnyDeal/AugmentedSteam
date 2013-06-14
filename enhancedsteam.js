@@ -676,18 +676,37 @@ function add_library_menu() {
 	});	
 }
 
-function library_item_click (appid) {
+function library_item_click (appid, icon, minutes) {
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
 		var data = JSON.parse(txt);
 		
 		// fill background div with screenshot
 		var screenshotID = Math.floor(Math.random() * data[appid].data.screenshots.length - 1) + 1;	
 		$('#es_library_background').css('background', 'url(' + data[appid].data.screenshots[screenshotID].path_full + ') 0 0 no-repeat');
-		$('#es_library_background').css('background-size', 'cover');		
+		$('#es_library_background').css('background-size', 'cover');
+		
+		// fill title div with icon and title
+		$('#es_library_title').html("<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + appid + "/" + icon + ".jpg' height=32>&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 32px; color: #d1d0cc;'>" + data[appid].data.name + "</font>");
+		
+		console.log (data[appid].data);
+		
+		// fill "playnow" div
+		$('#es_library_playnow').html("<a href='steam://run/" + appid + "'>Play Now</a>");
+		if (minutes) { 
+			if (minutes < 60) {
+				$('#es_library_playnow').append("<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + minutes + " minutes played</font>"); 
+			} else {
+				$('#es_library_playnow').append("<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + Math.floor(minutes/60) + " hours played</font>"); 
+			}			
+		}
 	});	
 }
 
 function library_header_click() {
+	// change page title
+	document.title = 'Steam Library';
+	
+	// Remove content divs
 	$("#es_library_list").remove();
 	$("#es_library_right").remove();
 	$("#es_library_background_filter").remove();
@@ -700,7 +719,7 @@ function library_header_click() {
 	// Create Library divs	
 	$("#global_header").after("<div id='es_library_background' class='es_library_background'></div>");
 	$("#global_header").after("<div id='es_library_background_filter' class='es_library_background_filter'></div>");
-	$("#global_header").after("<div id='es_library_right' class='es_library_right'></div>");
+	$("#global_header").after("<div id='es_library_right' class='es_library_right'><div id='es_library_title'></div><div id='es_library_playnow'></div></div>");
 	$("#global_header").after("<div id='es_library_list' class='es_library_list'></div>");
 	
 	// Get Steam Long ID
@@ -719,6 +738,8 @@ function library_header_click() {
 				return a.name < b.name ? -1 : 1;
 			});
 			
+			console.log (games);
+			
 			$.each(games, function(i, obj) {
 				if (obj.name) {
 					if (obj.name.length > 34) {
@@ -730,7 +751,7 @@ function library_header_click() {
 						$("#es_library_list").append("<img src='" + chrome.extension.getURL('img/ico/steamtrades.ico') + "' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
 					}
 					$(".es_library_link_" + obj.appid).bind("click", function() {
-						library_item_click(obj.appid);
+						library_item_click(obj.appid, obj.img_icon_url, obj.playtime_forever);
 					});	
 				}
 			});
