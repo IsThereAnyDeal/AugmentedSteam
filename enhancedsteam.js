@@ -672,15 +672,29 @@ function add_spuf_link() {
 function add_library_menu() {
 	$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>Library</a>");
 	$("#es_library").bind("click", function() {
-		library_click();
+		library_header_click();
 	});	
 }
 
-function library_click() {
+function library_item_click (appid) {
+	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
+		var data = JSON.parse(txt);
+		var screenshotID = Math.floor(Math.random() * data[appid].data.screenshots.length - 1) + 1;
+		$('#es_library_right').css({'background-image': 'url(' + data[appid].data.screenshots[screenshotID].path_full + ')', 'background-repeat': 'no-repeat', 'background-color': 'rgba(0,0,0,0.5)'});
+	});
+	
+}
+
+function library_header_click() {
+	$("#es_library_list").remove();
 	$("#store_header").remove();
 	$("#main").remove();	
 	$("#footer").remove();
 	$("#game_background_holder").remove();
+	
+	// Create Library sidebar	
+	$("#global_header").after("<div id='es_library_right' class='es_library_right'></div>");
+	$("#global_header").after("<div id='es_library_list' class='es_library_list'></div>");
 	
 	// Get Steam Long ID
 	var profileID = "";
@@ -688,9 +702,27 @@ function library_click() {
 	
 	// Call Storefront API
 	get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + profileID + '&include_appinfo=1&include_played_free_games=1&format=json', function (txt) {
-		console.log (txt);
-	});
-	$("#global_header").after("<div id='es_library_list' class='es_library_list'>Test</div>");
+		var data = JSON.parse(txt);		
+		if (data.response) {
+			var games = data.response.games;
+			games.sort(function(a,b) { return a.name - b.name; });
+			$.each(games, function(i, obj) {
+				if (obj.name) {
+					if (obj.name.length > 34) {
+						obj.name = obj.name.substring(0,34) + "...";
+					}
+					if (obj.img_icon_url.length != 0) {
+						$("#es_library_list").append("<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + obj.appid + "/" + obj.img_icon_url + ".jpg' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
+					} else {
+						$("#es_library_list").append("<img src='" + chrome.extension.getURL('img/ico/steamtrades.ico') + "' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
+					}
+					$(".es_library_link_" + obj.appid).bind("click", function() {
+						library_item_click(obj.appid);
+					});	
+				}
+			});
+		}
+	});	
 }
 
 // If app has a coupon, display message
