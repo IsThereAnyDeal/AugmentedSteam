@@ -661,10 +661,7 @@ function remove_install_steam_button() {
 function add_spuf_link() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
 	if ($("#supernav").length > 0) {
-		document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
-			'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
-			'<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
-		);
+		$("a[href='http://steamcommunity.com/workshop/']").after('<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a>');		
 	}
 }
 
@@ -687,16 +684,17 @@ function library_item_click (appid, icon, minutes) {
 		
 		// fill title div with icon and title
 		$('#es_library_title').html("<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + appid + "/" + icon + ".jpg' height=32>&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 32px; color: #d1d0cc;'>" + data[appid].data.name + "</font>");
-		
-		console.log (data[appid].data);
-		
+				
 		// fill "playnow" div
-		$('#es_library_playnow').html("<a href='steam://run/" + appid + "'>Play Now</a>");
+		$('#es_library_playnow').html("<a href='steam://run/" + appid + "'><img id='play_button' name='play_button' src='" + chrome.extension.getURL("img/play_off.png") + "'></a>");
+		$("#play_button").hover(
+			function () { $(this).attr('src', chrome.extension.getURL("img/play_on.png")); }, function () { $(this).attr('src', chrome.extension.getURL("img/play_off.png")); }
+		);
 		if (minutes) { 
 			if (minutes < 60) {
-				$('#es_library_playnow').append("<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + minutes + " minutes played</font>"); 
+				$('#es_library_playnow').append("&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + minutes + " MINUTES PLAYED</font>"); 
 			} else {
-				$('#es_library_playnow').append("<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + Math.floor(minutes/60) + " hours played</font>"); 
+				$('#es_library_playnow').append("&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + Math.floor(minutes/60) + " HOURS PLAYED</font>"); 
 			}			
 		}
 	});	
@@ -724,39 +722,43 @@ function library_header_click() {
 	
 	// Get Steam Long ID
 	var profileID = "";
-	profileID = "76561198040672342";  // using my own as temp
-	
-	// Call Storefront API
-	get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + profileID + '&include_appinfo=1&include_played_free_games=1&format=json', function (txt) {
-		var data = JSON.parse(txt);		
-		if (data.response) {
-			var games = data.response.games;
-			
-			//sort entries
-			games.sort(function(a,b) {
-				if ( a.name == b.name ) return 0;
-				return a.name < b.name ? -1 : 1;
-			});
-			
-			console.log (games);
-			
-			$.each(games, function(i, obj) {
-				if (obj.name) {
-					if (obj.name.length > 34) {
-						obj.name = obj.name.substring(0,34) + "...";
+	var profileurl = $(".user_avatar")[0].href;
+	get_http(profileurl, function (txt) {		
+		profileID = txt.match(/name="abuseID" value="(.+)">/);
+		profileID = profileID[1];
+		
+		// Call Storefront API
+		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + profileID + '&include_appinfo=1&include_played_free_games=1&format=json', function (txt) {
+			var data = JSON.parse(txt);		
+			if (data.response) {
+				var games = data.response.games;
+				
+				//sort entries
+				games.sort(function(a,b) {
+					if ( a.name == b.name ) return 0;
+					return a.name < b.name ? -1 : 1;
+				});				
+				
+				$.each(games, function(i, obj) {
+					if (obj.name) {
+						if (obj.name.length > 34) {
+							obj.name = obj.name.substring(0,34) + "...";
+						}
+						if (obj.img_icon_url.length != 0) {
+							$("#es_library_list").append("<div id='" + obj.appid + "' width=275 height=16><img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + obj.appid + "/" + obj.img_icon_url + ".jpg' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a></div>");
+						} else {
+							$("#es_library_list").append("<img src='" + chrome.extension.getURL('img/ico/steamtrades.ico') + "' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
+						}
+						$(".es_library_link_" + obj.appid).bind("click", function() {
+							$("div").removeClass('es_library_selected');
+							$("#"+obj.appid).addClass('es_library_selected');
+							library_item_click(obj.appid, obj.img_icon_url, obj.playtime_forever);
+						});	
 					}
-					if (obj.img_icon_url.length != 0) {
-						$("#es_library_list").append("<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + obj.appid + "/" + obj.img_icon_url + ".jpg' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
-					} else {
-						$("#es_library_list").append("<img src='" + chrome.extension.getURL('img/ico/steamtrades.ico') + "' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
-					}
-					$(".es_library_link_" + obj.appid).bind("click", function() {
-						library_item_click(obj.appid, obj.img_icon_url, obj.playtime_forever);
-					});	
-				}
-			});
-		}
-	});	
+				});
+			}
+		});	
+	});
 }
 
 // If app has a coupon, display message
