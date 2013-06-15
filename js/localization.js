@@ -214,6 +214,7 @@ localization_promise = (function (){
 			options_total_spent: "Afficher \"Total dépensé\" dans la page du compte",
 			options_group_events: "Afficher les événements dans l'aperçu des groupes",
 			options_greenlight_banner: "Remplacer la bannière Steam Greenlight",
+			options_es_bg: "Définir un arrière-plan personnalisé sur la page de modification du profil",
 			tag: "Tag",
 			theworddefault: "Défaut",
 			save: "Enregistrer",
@@ -235,7 +236,14 @@ localization_promise = (function (){
 			tag_coupon: "Coupon",
 			tag_inv_gift: "Cadeau",
 			tag_inv_guestpass: "Invitation",
-			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ souhait(s)</a>"
+			tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ souhait(s)</a>",
+			inventory_market_text: "Afficher le prix du marché sur la page d'inventaire (expérimental !)",
+			credits: "Crédits",
+			stores: "Magasins",
+			region: "Région",
+			all: "Tous",
+			programming: "Programmation",
+			translation: "Traduction"
         },
         "hu":       {},
         "it":       {},
