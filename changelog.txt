@@ -4,6 +4,7 @@ v3.7
 : Fixed a bug where background selection was showing on profile security page
 + Added "help" question mark next to options that links to the feature on enhancedsteam.com
 : Changed changelog textarea to be readonly
+: Changed "Enhanced Steam" dropdown to disappear if user clicks somewhere
 
 v3.6
 -----
