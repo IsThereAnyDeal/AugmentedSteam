@@ -607,10 +607,19 @@ function find_purchase_date(appname) {
 
 // Adds a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
-	$dropdown = $("<span class=\"pulldown\" id=\"account_pulldown\">Enhanced Steam</span>");
+	$dropdown = $("<span class=\"pulldown\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
 	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
 	$dropdown_options.css("display", "none");
+
+	// remove menu if click anywhere but on "Enhanced Steam". Commented out bit is for clicking on menu won't make it disappear either.
+	$('body').bind('click', function(e) {
+		if(/*$(e.target).closest(".popup_body").length == 0 && */$(e.target).closest("#enhanced_pulldown").length == 0) {
+			if ($dropdown_options.css("display") == "block" || $dropdown_options.css("display") == "") {
+				$dropdown_options.css("display", "none");
+			}
+		}
+	});
 
 	$dropdown.click(function(){
 		if ($dropdown_options.css("display") === "none") {
