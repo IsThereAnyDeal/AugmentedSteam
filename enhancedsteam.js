@@ -722,6 +722,7 @@ function library_header_click() {
 	$("#main").remove();	
 	$("#footer").remove();
 	$("#game_background_holder").remove();
+	$("#modalBG").remove();
 	
 	// Create Library divs	
 	$("#global_header").after("<div id='es_library_background' class='es_library_background'></div>");
@@ -732,6 +733,11 @@ function library_header_click() {
 	// Get Steam Long ID
 	var profileID = "";
 	var profileurl = $(".user_avatar")[0].href;
+	if (profileurl === undefined) { 
+		var html = ($(".user_avatar").html());
+		html = html.match(/a href=\"(.+)\"><img/);
+		profileurl = html[1];
+	}
 	get_http(profileurl, function (txt) {		
 		profileID = txt.match(/name="abuseID" value="(.+)">/);
 		profileID = profileID[1];
@@ -1726,7 +1732,6 @@ $(document).ready(function(){
 		add_enhanced_steam_options();
 		remove_install_steam_button();
 		add_spuf_link();
-		add_library_menu();
 		
 		// attach event to the logout button
 		$('a[href$="http://store.steampowered.com/logout/"]').bind('click', clear_cache);
@@ -1734,6 +1739,9 @@ $(document).ready(function(){
 		switch (window.location.host) {
 			case "store.steampowered.com":
 				// Load data from inv before anything else.
+				
+				add_library_menu();
+				
 				switch (true) {
 					case /^\/cart\/.*/.test(window.location.pathname):
 						add_empty_cart_button();

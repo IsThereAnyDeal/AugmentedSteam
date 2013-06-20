@@ -132,6 +132,7 @@
 	top: 105px;
 	bottom: 0px;
 	z-index: 4;
+	text-align: left;
 }
 
 .es_library_background {
