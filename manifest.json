@@ -7,7 +7,6 @@
   "options_page": "options.html",
   "permissions": [
     "storage",
-    "http://www.enhancedsteam.com/",
 	"http://*.steampowered.com/"
   ],
   "web_accessible_resources": [
@@ -19,7 +18,7 @@
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [
     {
-      "matches": ["http://store.steampowered.com/*", "https://store.steampowered.com/*", "http://steamcommunity.com/*"],
+      "matches": ["http://*.steampowered.com/*", "https://*.steampowered.com/*", "http://steamcommunity.com/*"],
       "js": [
         "js/jQuery.min.js",
         "js/localization.js",

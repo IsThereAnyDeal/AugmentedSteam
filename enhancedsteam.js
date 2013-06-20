@@ -666,6 +666,16 @@ function remove_install_steam_button() {
 	});
 }
 
+// Removes the About menu item at the top of each page
+function remove_about_menu() {
+	storage.get(function(settings) {
+		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
+		if (settings.hideaboutmenu) {
+			$('a[href$="http://store.steampowered.com/about/"]').replaceWith('');
+		}
+	});
+}
+
 // Adds a link to SPUF to the top menu
 function add_spuf_link() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
@@ -676,10 +686,15 @@ function add_spuf_link() {
 
 // Adds a "Library" menu to the main menu of Steam
 function add_library_menu() {
-	$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>Library</a>");
-	$("#es_library").bind("click", function() {
-		library_header_click();
-	});	
+	storage.get(function(settings) {
+		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
+		if (settings.showlibrarymenu) {
+			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>Library</a>");
+			$("#es_library").bind("click", function() {
+				library_header_click();
+			});	
+		}
+	});
 }
 
 function library_item_click (appid, icon, minutes) {
@@ -1711,7 +1726,6 @@ function add_es_background_selection() {
 				profile_name = profile_name.replace("/settings", "");
 				profile_name = profile_name.replace("/profiles", "");
 				profile_name = profile_name.replace("/", "");
-				console.log (profile_name);
 				get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
 					var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
 						html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
@@ -1731,6 +1745,7 @@ $(document).ready(function(){
 		// On window load...
 		add_enhanced_steam_options();
 		remove_install_steam_button();
+		remove_about_menu();
 		add_spuf_link();
 		
 		// attach event to the logout button

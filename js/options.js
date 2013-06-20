@@ -33,7 +33,9 @@ function save_options() {
 	tag_inv_guestpass = $("#tag_inv_guestpass").prop('checked');
 	tag_friends_want = $("#tag_friends_want").prop('checked');
 
+	showlibrarymenu = $("#showlibrarymenu").prop('checked');
 	hideinstallsteambutton = $("#hideinstallsteambutton").prop('checked');
+	hideaboutmenu = $("#hideaboutmenu").prop('checked');	
 	showdrm = $("#showdrm").prop('checked');
 	showlowestprice = $("#showlowestprice").prop('checked');
 	showlowestprice_region = $("#showlowestprice_region").val();
@@ -102,8 +104,7 @@ function save_options() {
 		'highlight_wishlist': highlight_wishlist,
 		'highlight_coupon': highlight_coupon,
 		'highlight_inv_gift': highlight_inv_gift,
-		'highlight_inv_guestpass': highlight_inv_guestpass,
-		'hideinstallsteambutton': hideinstallsteambutton,
+		'highlight_inv_guestpass': highlight_inv_guestpass,		
 		'highlight_friends_want': highlight_friends_want,
 
 		'tag_owned': tag_owned,
@@ -113,6 +114,9 @@ function save_options() {
 		'tag_inv_guestpass': tag_inv_guestpass,
 		'tag_friends_want': tag_friends_want,
 
+		'hideinstallsteambutton': hideinstallsteambutton,
+		'hideaboutmenu': hideaboutmenu,
+		'showlibrarymenu': showlibrarymenu,
 		'showdrm': showdrm,
 		'showlowestprice': showlowestprice,
 		'showlowestprice_region': showlowestprice_region,
@@ -272,7 +276,9 @@ function load_options() {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 
+		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; chrome.storage.sync.set({'showlibrarymenu': settings.showlibrarymenu}); }
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
+		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = false; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
@@ -317,7 +323,9 @@ function load_options() {
 		$("#tag_inv_guestpass").attr('checked', settings.tag_inv_guestpass);
 		$("#tag_friends_want").attr('checked', settings.tag_friends_want);
 
+		$("#showlibrarymenu").attr('checked', settings.showlibrarymenu);
 		$("#hideinstallsteambutton").attr('checked', settings.hideinstallsteambutton);
+		$("#hideaboutmenu").attr('checked', settings.hideaboutmenu);
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showsteamdb").attr('checked', settings.showsteamdb);
