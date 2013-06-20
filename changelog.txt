@@ -1,3 +1,15 @@
+v3.7
+-----
+: Changed "Total Spent" text to regular color (not red)
+: Fixed a bug where background selection was showing on profile security page
++ Added "help" question mark next to options that links to the feature on enhancedsteam.com
+: Changed changelog textarea to be readonly
+: Changed "Enhanced Steam" dropdown to disappear if user clicks somewhere
++ Added "Library" support from the web.  This is an early "beta" feature - profile must be public!
++ Added option to remove the "About" link in the site header
++ Added link to trading card page from store pages of games that have trading cards
+: Updated French translation
+
 v3.6
 -----
 : Fixed a bug where custom profile backgrounds weren't saving properly in some instances

@@ -1,4 +1,4 @@
-﻿// version 3.6
+﻿// version 3.7
 var storage = chrome.storage.sync;
 var apps;
 var language;
@@ -607,10 +607,19 @@ function find_purchase_date(appname) {
 
 // Adds a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
-	$dropdown = $("<span class=\"pulldown\" id=\"account_pulldown\">Enhanced Steam</span>");
+	$dropdown = $("<span class=\"pulldown\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
 	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
 	$dropdown_options.css("display", "none");
+
+	// remove menu if click anywhere but on "Enhanced Steam". Commented out bit is for clicking on menu won't make it disappear either.
+	$('body').bind('click', function(e) {
+		if(/*$(e.target).closest(".popup_body").length == 0 && */$(e.target).closest("#enhanced_pulldown").length == 0) {
+			if ($dropdown_options.css("display") == "block" || $dropdown_options.css("display") == "") {
+				$dropdown_options.css("display", "none");
+			}
+		}
+	});
 
 	$dropdown.click(function(){
 		if ($dropdown_options.css("display") === "none") {
@@ -657,13 +666,129 @@ function remove_install_steam_button() {
 	});
 }
 
+// Removes the About menu item at the top of each page
+function remove_about_menu() {
+	storage.get(function(settings) {
+		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
+		if (settings.hideaboutmenu) {
+			$('a[href$="http://store.steampowered.com/about/"]').replaceWith('');
+		}
+	});
+}
+
 // Adds a link to SPUF to the top menu
 function add_spuf_link() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
-	document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML = document.querySelectorAll("#supernav .supernav_content")[supernav_content.length - 2].innerHTML.replace(
-		'<a class="submenuitem" href="http://steamcommunity.com/workshop/">',
-		'<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a><a class="submenuitem" href="http://steamcommunity.com/workshop/">'
-	);
+	if ($("#supernav").length > 0) {
+		$("a[href='http://steamcommunity.com/workshop/']").after('<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a>');		
+	}
+}
+
+// Adds a "Library" menu to the main menu of Steam
+function add_library_menu() {
+	storage.get(function(settings) {
+		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
+		if (settings.showlibrarymenu) {
+			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>Library</a>");
+			$("#es_library").bind("click", function() {
+				library_header_click();
+			});	
+		}
+	});
+}
+
+function library_item_click (appid, icon, minutes) {
+	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
+		var data = JSON.parse(txt);
+		
+		// fill background div with screenshot
+		var screenshotID = Math.floor(Math.random() * data[appid].data.screenshots.length - 1) + 1;	
+		$('#es_library_background').css('background', 'url(' + data[appid].data.screenshots[screenshotID].path_full + ') 0 0 no-repeat');
+		$('#es_library_background').css('background-size', 'cover');
+		
+		// fill title div with icon and title
+		$('#es_library_title').html("<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + appid + "/" + icon + ".jpg' height=32>&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 32px; color: #d1d0cc;'>" + data[appid].data.name + "</font>");
+				
+		// fill "playnow" div
+		$('#es_library_playnow').html("<a href='steam://run/" + appid + "'><img id='play_button' name='play_button' src='" + chrome.extension.getURL("img/play_off.png") + "'></a>");
+		$("#play_button").hover(
+			function () { $(this).attr('src', chrome.extension.getURL("img/play_on.png")); }, function () { $(this).attr('src', chrome.extension.getURL("img/play_off.png")); }
+		);
+		if (minutes) { 
+			if (minutes < 60) {
+				$('#es_library_playnow').append("&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + minutes + " MINUTES PLAYED</font>"); 
+			} else {
+				$('#es_library_playnow').append("&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + Math.floor(minutes/60) + " HOURS PLAYED</font>"); 
+			}			
+		}
+	});	
+}
+
+function library_header_click() {
+	// change page title
+	document.title = 'Steam Library';
+	
+	// Remove content divs
+	$("#es_library_list").remove();
+	$("#es_library_right").remove();
+	$("#es_library_background_filter").remove();
+	$("#es_library_background").remove();
+	$("#store_header").remove();
+	$("#main").remove();	
+	$("#footer").remove();
+	$("#game_background_holder").remove();
+	$("#modalBG").remove();
+	
+	// Create Library divs	
+	$("#global_header").after("<div id='es_library_background' class='es_library_background'></div>");
+	$("#global_header").after("<div id='es_library_background_filter' class='es_library_background_filter'></div>");
+	$("#global_header").after("<div id='es_library_right' class='es_library_right'><div id='es_library_title'></div><div id='es_library_playnow'></div></div>");
+	$("#global_header").after("<div id='es_library_list' class='es_library_list'></div>");
+	
+	// Get Steam Long ID
+	var profileID = "";
+	var profileurl = $(".user_avatar")[0].href;
+	if (profileurl === undefined) { 
+		var html = ($(".user_avatar").html());
+		html = html.match(/a href=\"(.+)\"><img/);
+		profileurl = html[1];
+	}
+	get_http(profileurl, function (txt) {		
+		profileID = txt.match(/name="abuseID" value="(.+)">/);
+		profileID = profileID[1];
+		
+		// Call Storefront API
+		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + profileID + '&include_appinfo=1&include_played_free_games=1&format=json', function (txt) {
+			var data = JSON.parse(txt);		
+			if (data.response) {
+				var games = data.response.games;
+				
+				//sort entries
+				games.sort(function(a,b) {
+					if ( a.name == b.name ) return 0;
+					return a.name < b.name ? -1 : 1;
+				});				
+				
+				$.each(games, function(i, obj) {
+					if (obj.name) {
+						if (obj.name.length > 34) {
+							obj.name = obj.name.substring(0,34) + "...";
+						}
+						if (obj.img_icon_url.length != 0) {
+							$("#es_library_list").append("<div id='" + obj.appid + "' width=275 height=16><img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + obj.appid + "/" + obj.img_icon_url + ".jpg' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a></div>");
+						} else {
+							$("#es_library_list").append("<img src='" + chrome.extension.getURL('img/ico/steamtrades.ico') + "' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
+						}
+						$(".es_library_link_" + obj.appid).bind("click", function() {
+							$("div").removeClass('es_library_selected');
+							$("#"+obj.appid).addClass('es_library_selected');
+							library_item_click(obj.appid, obj.img_icon_url, obj.playtime_forever);
+						});	
+					}
+				});
+			}
+		});	
+	});
 }
 
 // If app has a coupon, display message
@@ -1051,7 +1176,6 @@ function add_widescreen_certification(appid) {
 				// check to see if game data exists
 				get_http("http://www.enhancedsteam.com/gamedata/wsgf.php?appid=" + appid, function (txt) {
 					found = 0;
-
 					xpath_each("//div[contains(@class,'game_details')]", function (node) {
 						if (found === 0) {
 							$(node).after(txt);
@@ -1131,7 +1255,7 @@ function account_total_spent() {
 
 					$('.accountInfoBlock .block_content_inner .accountBalance').after('<div class="accountRow accountBalance accountSpent"></div>');
 					$('.accountSpent').append('<div class="accountData price">' + total_with_symbol + '</div>');
-					$('.accountSpent').append('<div class="accountLabel" style="color: #C00; font-weight: bold; font-size: 100%">Total Spent:</div>');
+					$('.accountSpent').append('<div class="accountLabel">Total Spent:</div>');
 				}
 			}
 		}
@@ -1564,6 +1688,12 @@ function on_app_info(appid, cb) {
 	appid_promises[appid].promise.done(cb);
 }
 
+function add_steamcards_link(appid) {
+	if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {
+		$('.communitylink').find('div[class$="block_content"]').prepend("<div class='block_content_inner'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
+	}
+}
+
 function clear_cache() {
 	localStorage.clear();
 	sessionStorage.clear();
@@ -1590,18 +1720,20 @@ function add_es_background_selection() {
 	storage.get(function(settings) {
 		if (settings.showesbg === undefined) { settings.showesbg = true; storage.set({'showesbg': settings.showesbg}); }
 		if (settings.showesbg) {
-			var profile_name = window.location.pathname.replace("/id/", "");
-			profile_name = profile_name.replace("/edit", "");
-			profile_name = profile_name.replace("/settings", "");
-			profile_name = profile_name.replace("/profiles", "");
-			profile_name = profile_name.replace("/", "");
-			get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
-				var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
-					html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
-					html += txt;		
-					html += "</form>";
-				$(".group_content_bodytext").before(html);
-			});
+			if (window.location.pathname.indexOf("/settings") < 0) {
+				var profile_name = window.location.pathname.replace("/id/", "");
+				profile_name = profile_name.replace("/edit", "");
+				profile_name = profile_name.replace("/settings", "");
+				profile_name = profile_name.replace("/profiles", "");
+				profile_name = profile_name.replace("/", "");
+				get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
+					var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
+						html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
+						html += txt;		
+						html += "</form>";
+					$(".group_content_bodytext").before(html);
+				});
+			}
 		}
 	});
 }
@@ -1613,6 +1745,7 @@ $(document).ready(function(){
 		// On window load...
 		add_enhanced_steam_options();
 		remove_install_steam_button();
+		remove_about_menu();
 		add_spuf_link();
 		
 		// attach event to the logout button
@@ -1621,6 +1754,9 @@ $(document).ready(function(){
 		switch (window.location.host) {
 			case "store.steampowered.com":
 				// Load data from inv before anything else.
+				
+				add_library_menu();
+				
 				switch (true) {
 					case /^\/cart\/.*/.test(window.location.pathname):
 						add_empty_cart_button();
@@ -1642,6 +1778,7 @@ $(document).ready(function(){
 						add_widescreen_certification(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
+						add_steamcards_link(appid);
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
@@ -1655,7 +1792,7 @@ $(document).ready(function(){
 					case /^\/account\/.*/.test(window.location.pathname):
 						account_total_spent();
 						break;
-
+					
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
 						add_carousel_descriptions();
