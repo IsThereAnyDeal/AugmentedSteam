@@ -1667,6 +1667,12 @@ function on_app_info(appid, cb) {
 	appid_promises[appid].promise.done(cb);
 }
 
+function add_steamcards_link(appid) {
+	if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {
+		$('.communitylink').find('div[class$="block_content"]').prepend("<div class='block_content_inner'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
+	}
+}
+
 function clear_cache() {
 	localStorage.clear();
 	sessionStorage.clear();
@@ -1749,6 +1755,7 @@ $(document).ready(function(){
 						add_widescreen_certification(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
+						add_steamcards_link(appid);
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
