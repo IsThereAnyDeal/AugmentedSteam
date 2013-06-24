@@ -738,6 +738,7 @@ function library_header_click() {
 	$("#footer").remove();
 	$("#game_background_holder").remove();
 	$("#modalBG").remove();
+	$("#page_background_holder").remove();
 	
 	// Create Library divs	
 	$("#global_header").after("<div id='es_library_background' class='es_library_background'></div>");
