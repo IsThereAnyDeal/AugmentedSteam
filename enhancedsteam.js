@@ -1072,29 +1072,17 @@ function add_community_profile_links() {
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 
-		if (document.getElementById("rightActionBlock") !== null) {
-			var htmlstr = '<hr>';
-			if (settings.profile_steamgifts === true) {	htmlstr += '<div class="actionItemIcon"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamgifts.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank">SteamGifts</a></div>'; }
-			if (settings.profile_steamtrades === true) { htmlstr += '<div class="actionItemIcon"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamtrades.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank">SteamTrades</a></div>'; }
-			if (settings.profile_steamrep === true) { htmlstr += '<div class="actionItemIcon"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/steamrep.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://steamrep.com/profiles/' + steamID + '" target="_blank">SteamRep</a></div>'; }
-			if (settings.profile_wastedonsteam === true) { htmlstr += '<div class="actionItemIcon"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/wastedonsteam.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://wastedonsteam.com/id/' + steamID + '" target="_blank">Wasted On Steam</a></div>'; }
-			if (settings.profile_sapi === true) { htmlstr += '<div class="actionItemIcon"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/sapi.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank">sAPI</a></div>'; }
-			if (settings.profile_backpacktf === true) { htmlstr += '<div class="actionItemIcon"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/backpacktf.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://backpack.tf/profiles/' + steamID + '" target="_blank">backpack.tf</a></div>'; }
-			if (settings.profile_astats === true) { htmlstr += '<div class="actionItemIcon"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><img src="' + chrome.extension.getURL('img/ico/achievementstats.ico') + '" width="16" height="16" border="0" /></a></div><div class="actionItem"><a class="linkActionMinor" href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank">Achievement Stats</a></div>'; }
+		var htmlstr = '';
+		if (settings.profile_steamgifts === true) {	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamgifts.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (settings.profile_steamtrades === true) { htmlstr += '<div class="profile_count_link"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamTrades</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamtrades.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (settings.profile_steamrep === true) { htmlstr += '<div class="profile_count_link"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">SteamRep</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamrep.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (settings.profile_wastedonsteam === true) { htmlstr += '<div class="profile_count_link"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><span class="count_link_label">Wasted On Steam</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/wastedonsteam.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (settings.profile_sapi === true) { htmlstr += '<div class="profile_count_link"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><span class="count_link_label">sAPI</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/sapi.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (settings.profile_backpacktf === true) { htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><span class="count_link_label">backpack.tf</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/backpacktf.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (settings.profile_astats === true) { htmlstr += '<div class="profile_count_link"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/achievementstats.ico') + '" width="24" height="24" border="0" /></a></div>'; }
 
-			if (htmlstr != '<hr>') { $("#rightActionBlock").append(htmlstr); }
-		} else {
-			var htmlstr = '';
-			if (settings.profile_steamgifts === true) {	htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamgifts.ico') + '" width="24" height="24" border="0" /></a></div>'; }
-			if (settings.profile_steamtrades === true) { htmlstr += '<div class="profile_count_link"><a href="http://www.steamtrades.com/user/id/' + steamID + '" target="_blank"><span class="count_link_label">SteamTrades</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamtrades.ico') + '" width="24" height="24" border="0" /></a></div>'; }
-			if (settings.profile_steamrep === true) { htmlstr += '<div class="profile_count_link"><a href="http://steamrep.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">SteamRep</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/steamrep.ico') + '" width="24" height="24" border="0" /></a></div>'; }
-			if (settings.profile_wastedonsteam === true) { htmlstr += '<div class="profile_count_link"><a href="http://wastedonsteam.com/id/' + steamID + '" target="_blank"><span class="count_link_label">Wasted On Steam</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/wastedonsteam.ico') + '" width="24" height="24" border="0" /></a></div>'; }
-			if (settings.profile_sapi === true) { htmlstr += '<div class="profile_count_link"><a href="http://sapi.techieanalyst.net/?page=profile&id=' + steamID + '" target="_blank"><span class="count_link_label">sAPI</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/sapi.ico') + '" width="24" height="24" border="0" /></a></div>'; }
-			if (settings.profile_backpacktf === true) { htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><span class="count_link_label">backpack.tf</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/backpacktf.ico') + '" width="24" height="24" border="0" /></a></div>'; }
-			if (settings.profile_astats === true) { htmlstr += '<div class="profile_count_link"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/achievementstats.ico') + '" width="24" height="24" border="0" /></a></div>'; }
+		if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
 
-			if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
-		}	
 	});
 }
 
@@ -1890,6 +1878,7 @@ $(document).ready(function(){
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");
+						add_feature_search_links();
 						break;
 
 					case /^\/account\/.*/.test(window.location.pathname):
