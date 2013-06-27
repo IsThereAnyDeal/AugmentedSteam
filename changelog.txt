@@ -1,6 +1,6 @@
 v3.8
 -----
-
+: Fixed a bug where bundle savings weren't calculating correctly in some currencies.  Thanks zr40!
 
 v3.7
 -----

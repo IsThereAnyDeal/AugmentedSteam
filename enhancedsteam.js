@@ -28,18 +28,19 @@ String.prototype.startsWith = function(prefix) {
 	return this.indexOf(prefix) === 0;
 };
 
-Number.prototype.formatMoney = function(places, symbol, thousand, decimal) {
-	//FIXME: Puts symbol on wrong end for rubles and euros.
-
+function formatMoney (number, places, symbol, thousand, decimal, right) {	
 	places = !isNaN(places = Math.abs(places)) ? places : 2;
 	symbol = symbol !== undefined ? symbol : "$";
 	thousand = thousand || ",";
 	decimal = decimal || ".";
-	var number = this,
-		negative = number < 0 ? "-" : "",
+	var negative = number < 0 ? "-" : "",
 		i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
 		j = (j = i.length) > 3 ? j % 3 : 0;
-	return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+	if (right) {
+		return negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) + symbol: "");
+	} else {
+		return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+	}
 };
 
 // DOM helpers
@@ -1301,7 +1302,8 @@ function subscription_savings_check() {
 		sub_apps = [],
 		sub_app_prices = {},
 		comma,
-		currency_symbol;
+		currency_symbol,
+		symbol_right;
 
 	// For each app, load its info.
 	$.each($(".tab_row"), function (i, node) {
@@ -1311,8 +1313,18 @@ function subscription_savings_check() {
 
 		if (price_container !== "N/A")
 		{
-			itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
+			itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));			
 			if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
+			
+			switch (currency_symbol) {
+				case "€":
+					symbol_right = true;
+					break;
+				case "pуб":
+					symbol_right = true;
+					break;					
+			}
+			
 			if (!comma) comma = (price_container.indexOf(",") > -1);
 		}
 		else {
@@ -1338,10 +1350,14 @@ function subscription_savings_check() {
 		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
 
 		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));
-
+		if (comma) { not_owned_games_prices = not_owned_games_prices * 100; }
 		var corrected_price = not_owned_games_prices - bundle_price;
 
-		var $message = $('<div class="savings">' + (comma ? corrected_price / 100 : corrected_price).formatMoney(2, currency_symbol, ",", comma ? "," : ".") + '</div>');
+		if (symbol_right) {
+			var $message = $('<div class="savings">' + formatMoney((comma ? corrected_price / 100 : corrected_price), 2, currency_symbol, ",", comma ? "," : ".", true) + '</div>');
+		} else {
+			var $message = $('<div class="savings">' + formatMoney((comma ? corrected_price / 100 : corrected_price), 2, currency_symbol, ",", comma ? "," : ".") + '</div>');
+		}
 		if (corrected_price < 0) $message[0].style.color = "red";
 
 		$('.savings').replaceWith($message);
