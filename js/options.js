@@ -395,7 +395,9 @@ function load_translation() {
 			$("#tag_guest_text").text(localized_strings[settings.language].options_guest);
 			$("#tag_friends_wishlist_text").text(localized_strings[settings.language].options_friends_wishlist);
 			
+			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
 			$("#store_hide_install_text").text(localized_strings[settings.language].options_hide_install);
+			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
@@ -424,6 +426,8 @@ function load_translation() {
 			$("#tag_inv_gift_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
+			
+			$("#es_about_text").html(localized_strings[settings.language].options_about_text);
 			
 			$("#programming_text").text(localized_strings[settings.language].programming);
 			$("#translation_text").text(localized_strings[settings.language].translation);
