@@ -3,7 +3,7 @@ v3.8
 : Fixed a bug where bundle savings weren't calculating correctly in some currencies.  Thanks zr40!
 : Updated Russian translation
 + Using new api.enhancedsteam.com web calls for external data, which is faster and more secure
-+ Added a "Total size of all games" to your "All Games" tab
++ Added a "Total size of all games" to your "All Games" tab.
 + Added search links to all app page categories which link to other games in the same category
 
 v3.7
