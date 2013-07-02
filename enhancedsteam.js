@@ -1834,20 +1834,32 @@ function add_es_background_selection() {
 				profile_name = profile_name.replace("/profiles", "");
 				profile_name = profile_name.replace("/", "");
 				
-				get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select-firefox.php?userid=" + profile_name, function (txt) {
+				get_http("http://api.enhancedsteam.com/profile-select/?userid=" + profile_name, function (txt) {
 					var data = JSON.parse(txt);
 					var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
 					html += "<input type='hidden' name='url' value='" + window.location.pathname + "'>";
 					html += "<div class='formRow'><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'>";
 					html += "<img id='es_profile_background_current_image' src=''>";
 					html += "</div><div class='profile_background_current_description'><div id='profile_background_current_name'><select name='es_background' id='es_background' class='gray_bevel dynInput' onchange=\"function image(obj){index=obj.selectedIndex; document.getElementById('es_profile_background_current_image').src=obj.options[index].id; } image(this);\"><option value='0' id='http://www.enhancedsteam.com/gamedata/icons/smallblacksquare.jpg'>None Selected / No Change</option>";
-								
-					$.each(data["backgrounds"], function(index, value) {
+
+					var array = [];					
+					for (var key in data["backgrounds"]) {
+						if (data["backgrounds"].hasOwnProperty(key)) {
+						  array.push(data["backgrounds"][key]);
+						}
+					}
+					
+					array.sort(function(a,b) {
+						if ( a.text == b.text ) return 0;
+						return a.text < b.text ? -1 : 1;
+					});
+					
+					$.each(array, function(index, value) {
 						if (value["selected"]) {
-							html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + escapeHTML(index.toString()) + "' SELECTED>" + escapeHTML(value['text'].toString()) + "</option>";
+							html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + value['index'] + "' SELECTED>" + escapeHTML(value['text'].toString()) + "</option>";
 						} else {
-							html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + escapeHTML(index.toString()) + "'>" + escapeHTML(value['text'].toString()) + "</option>";
-						}                
+							html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + value['index'] + "'>" + escapeHTML(value['text'].toString()) + "</option>";
+						}
 					});
 					
 					html += "</select></div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span class='btn_grey_white_innerfade btn_small' onclick=\"document.getElementById('es_profile_bg').submit()\"><span>Save</span></span></div></div><div class='formRowTitle'>Custom Background:<span class='formRowHint' title='All users of Enhanced Steam will see this background on your profile.  Non-Enhanced Steam users will see your regular profile background.'>(?)</span></div></div></div>";
