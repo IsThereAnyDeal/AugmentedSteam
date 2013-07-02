@@ -43,6 +43,10 @@ function formatMoney (number, places, symbol, thousand, decimal, right) {
 	}
 };
 
+function escapeHTML(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
+}
+
 // DOM helpers
 function xpath_each(xpath, callback) {
 	//TODO: Replace instances with jQuery selectors.
@@ -938,10 +942,40 @@ function show_pricing_history(appid, type) {
 					cc = matched[1];
 				}
 			}
-						
-			get_http("http://www.enhancedsteam.com/gamedata/price.php?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring + "&cc=" + cc, function (txt) {
-				$('#game_area_purchase').before(txt);
-			});
+			
+			get_http("http://api.enhancedsteam.com/price/?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring + "&cc=" + cc, function (txt) {
+                var data = JSON.parse(txt);
+                if (data) {
+                    var activates = "";
+                    var line1 = "";
+                    var line2 = "";
+                    var recorded;
+                    
+                    if (data["lowest"]) {
+                        recorded = new Date(data["lowest"]["recorded"]*1000);
+                        line2 = 'Historical Low: $' + escapeHTML(data["lowest"]["price"].toFixed(2).toString()) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
+                    }
+                    
+                    var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
+                                                   
+        			if (data["deal"]) {
+                        if (data["deal"]["drm"]["steam"] == 1) {
+                        	activates = "(<b>Activates on Steam</b>)";
+                    		if (data["deal"]["store"] == "Steam") {
+                    			activates = "";
+                    		}
+                    	}
+                        
+                        line1 = 'Lowest Price: $' + escapeHTML(data["deal"]["price"].toFixed(2).toString()) + ' at <a href="' + escapeHTML(data["deal"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["deal"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)'; 
+                        $("#game_area_purchase").before(html + line1 + "<br>" + line2);
+                    } else {
+                        if (data["lowest"]) {
+                            html = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
+                            $("#game_area_purchase").before(html + line2);
+                        }
+                    }    			
+                }
+        	});
 		}
 	});
 }
@@ -1138,22 +1172,21 @@ function add_metracritic_userscore() {
 	// adds metacritic user reviews
 	storage.get(function(settings) {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
-		if (settings.showmcus) {
-			var metahtml = document.getElementById("game_area_metascore");
-			var metauserscore = 0;
-			if (metahtml) {
-				var metalink = document.getElementById("game_area_metalink");
-				meta = metalink.getElementsByTagName("a");
-				for (var i = 0; i < meta.length; i++) {
-					var meta_real_link = meta[i].href;
-					get_http("http://www.enhancedsteam.com/gamedata/metacritic.php?mcurl=" + meta_real_link, function (txt) {
-						metauserscore = txt;
-						metauserscore = metauserscore.replace(".","");
-						var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');">' + metauserscore + '</div>';
-						$("#game_area_metascore").after(newmeta);
-					});
-				}
-			}
+		if (settings.showmcus) {    
+            var metahtml = document.getElementById("game_area_metascore");
+            var metauserscore = 0;
+            if (metahtml) {
+            	var metalink = document.getElementById("game_area_metalink");
+            	meta = metalink.getElementsByTagName("a");
+            	for (var i = 0; i < meta.length; i++)
+            	var meta_real_link = meta[i].href;
+            	get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + meta_real_link, function (txt) {
+            		metauserscore = escapeHTML(txt);
+            		metauserscore = metauserscore.replace(".","");		
+            		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><div id="metapage">' + escapeHTML(metauserscore) + '</div></div>';
+            		$("#game_area_metascore").after(newmeta);
+            	});
+            }
 		}
 	});
 }
@@ -1164,15 +1197,74 @@ function add_widescreen_certification(appid) {
 		if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) {
 			if (settings.showwsgf) {
 				// check to see if game data exists
-				get_http("http://www.enhancedsteam.com/gamedata/wsgf.php?appid=" + appid, function (txt) {
+				get_http("http://api.enhancedsteam.com/wsgf/?appid=" + appid, function (txt) {
 					found = 0;
 					xpath_each("//div[contains(@class,'game_details')]", function (node) {
-						if (found === 0) {
-							$(node).after(txt);
+						if (found == 0) {						
+							var data = JSON.parse(txt);
+							if (data["node"]) {
+								var path = data["node"]["Path"];
+								var wsg = data["node"]["WideScreenGrade"];
+								var mmg = data["node"]["MultiMonitorGrade"];
+								var wsg_icon = "";
+								var wsg_text = "";
+								var mmg_icon = "";
+								var mmg_text = "";
+								
+								switch (wsg) {
+									case "A":
+										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-gold.png";
+										wsg_text = "This medal is awarded to games which have received perfect scores from the WSGF for their widescreen support, and are Widescreen Certified.";
+										break;
+									case "B":
+										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-silver.png";
+										wsg_text = "This medal is awarded to games that have received a calculated grade of B for their widescreen support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.";
+										break;
+									case "C":
+										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-limited.png";
+										wsg_text = "This score is awarded to games that have received a calculated grade of C for their widescreen support.  All of these games have some level of widescreen support but have significant issues.";
+										break;	
+									case "Incomplete":
+										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-incomplete.png";
+										wsg_text = "The default grade for detailed reports.  Usually something is missing which either needs testing and/or verification to be marked as needing grading.";
+										break;
+									case "Unsupported":
+										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-unsupported.png";
+										wsg_text = "This score is awarded to games that have no widescreen support.  The game may be unplayable in widescreen, or the image is stretched to fit the window.  Correct aspect ratio is not retained.";
+										break;		
+								}
+								
+								switch (mmg) {
+									case "A":
+										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-gold.png";
+										mmg_text = "This medal is awarded to games which have received perfect scores from the WSGF for their multi-monitor support, and are Multi-Monitor Certified.";
+										break;
+									case "B":
+										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-silver.png";
+										mmg_text = "This medal is awarded to games that have received a calculated grade of B for their multi-monitor support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.";
+										break;
+									case "C":
+										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-limited.png";
+										mmg_text = "This score is awarded to games that have received a calculated grade of C for their multi-monitor support.  All of these games have some level of multi-monitor support but have significant issues.";
+										break;
+									case "Incomplete":
+										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-incomplete.png";
+										mmg_text = "Incomplete";
+										break;
+									case "Unsupported":
+										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-unsupported.png";
+										mmg_text = "This score is awarded to games that have no multi-monitor support.  The game may be unplayable on multiple monitors, or the image is stretched to fit the composite screens.  Correct aspect ratio is not retained.";
+										break;	
+								}
+								
+								if (mmg && path && wsg) {
+									$(node).after("<div class='block game_details underlined_links'><div class='block_header'><h4>WSGF Widescreen Certifications</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center><a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) +"' border=0></a><br></center><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top'></div>See rating details <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a></div></div></div></div>");
+								}
+							}
 							found = 1;
 						}
 					});
-				});
+				});		
 			}
 		}
 	});
@@ -1366,16 +1458,26 @@ function subscription_savings_check() {
 
 // pull DLC gamedata from enhancedsteam.com
 function dlc_data_from_site(appid) {	
-	if ($("div.game_area_dlc_bubble").length > 0) {		
-		var appname = $(".apphub_AppName").html();
+    if ($("div.game_area_dlc_bubble").length > 0) {
+        var appname = $(".apphub_AppName").html();
 		appname = appname.replace("&amp;", "and");
 		appname = appname.replace("\"", "");
 		appname = appname.replace("“", "");		
-		get_http("http://www.enhancedsteam.com/gamedata/gamedata.php?appid=" + appid + "&appname=" + appname, function (txt) {
-			var block = "<div class='block'><div class='block_header'><h4>" + localized_strings[language].dlc_data_header + "</h4></div><div class='block_content'><div class='block_content_inner'>" + txt + "</div></div></div>";
-			$("#demo_block").after(block);
-		});
-	}
+		get_http("http://api.enhancedsteam.com/gamedata/?appid=" + appid + "&appname=" + appname, function (txt) {
+    		var data = JSON.parse(txt);
+            var html = "<div class='block'><div class='block_header'><h4>Downloadable Content Details</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'>";
+            
+            if (data) {
+                $.each(data["dlc"], function(index, value) {
+                    html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><div class='name'><span title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</span></div></div>";
+                });
+                
+                html += "</div><a class='linkbar' href='http://www.enhancedsteam.com/gamedata/dlc_category_suggest.php?appid=" + appid + "&appname=" + appname + "' target='_blank'>Suggest a new category</a></div></div></div>";
+                
+                $("#demo_block").after(html);
+            }    
+    	});
+    }
 }
 
 function check_if_purchased() {
@@ -1707,15 +1809,15 @@ function clear_cache() {
 function change_user_background() {
 	var profile_name = window.location.pathname.replace("/id/", "");
 	profile_name = profile_name.replace("/", "");	
-	get_http("http://www.enhancedsteam.com/gamedata/profile.php?userid=" + profile_name, function (txt) {		
+	get_http("http://api.enhancedsteam.com/profile/?userid=" + profile_name, function (txt) {
 		if (txt) {
-			$(".no_header")[0].style.backgroundImage = "url(" + txt + ")";
+			$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
 			if ($(".profile_background_image_content").length > 0) {
-				$(".profile_background_image_content")[0].style.backgroundImage = "url(" + txt + ")";
+				$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
 			} else {				
 				$(".no_header").addClass("has_profile_background");
 				$(".profile_content").addClass("has_profile_background");
-				$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + txt + ');"></div></div></div>');
+				$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
 			}
 		}
 	});	
@@ -1731,11 +1833,26 @@ function add_es_background_selection() {
 				profile_name = profile_name.replace("/settings", "");
 				profile_name = profile_name.replace("/profiles", "");
 				profile_name = profile_name.replace("/", "");
-				get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select.php?userid=" + profile_name, function (txt) {
+				
+				get_http("http://www.enhancedsteam.com/gamedata/profile_bg_select-firefox.php?userid=" + profile_name, function (txt) {
+					var data = JSON.parse(txt);
 					var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
-						html += "	<input type='hidden' name='url' value='" + window.location.pathname + "'>";
-						html += txt;		
-						html += "</form>";
+					html += "<input type='hidden' name='url' value='" + window.location.pathname + "'>";
+					html += "<div class='formRow'><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'>";
+					html += "<img id='es_profile_background_current_image' src=''>";
+					html += "</div><div class='profile_background_current_description'><div id='profile_background_current_name'><select name='es_background' id='es_background' class='gray_bevel dynInput' onchange=\"function image(obj){index=obj.selectedIndex; document.getElementById('es_profile_background_current_image').src=obj.options[index].id; } image(this);\"><option value='0' id='http://www.enhancedsteam.com/gamedata/icons/smallblacksquare.jpg'>None Selected / No Change</option>";
+								
+					$.each(data["backgrounds"], function(index, value) {
+						if (value["selected"]) {
+							html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + escapeHTML(index.toString()) + "' SELECTED>" + escapeHTML(value['text'].toString()) + "</option>";
+						} else {
+							html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + escapeHTML(index.toString()) + "'>" + escapeHTML(value['text'].toString()) + "</option>";
+						}                
+					});
+					
+					html += "</select></div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span class='btn_grey_white_innerfade btn_small' onclick=\"document.getElementById('es_profile_bg').submit()\"><span>Save</span></span></div></div><div class='formRowTitle'>Custom Background:<span class='formRowHint' title='All users of Enhanced Steam will see this background on your profile.  Non-Enhanced Steam users will see your regular profile background.'>(?)</span></div></div></div>";
+					html += "</form>";            
+					
 					$(".group_content_bodytext").before(html);
 				});
 			}
