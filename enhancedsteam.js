@@ -1977,6 +1977,30 @@ function add_feature_search_links () {
 	});	
 }
 
+function totalsize() {
+	var html = $("html").html();
+	var txt = html.match(/var rgGames = (.+);/);
+	var games = JSON.parse(txt[1]);
+	var mbt = 0;
+	var gbt = 0;
+	$.each(games, function(index, value) {
+		if (value["client_summary"]) {
+			if (/MiB/.test(value["client_summary"]["localContentSize"])) {
+				var mb = value["client_summary"]["localContentSize"].match(/(.+) MiB/)
+				mbt += parseFloat(mb[1]);
+			}
+			if (/GiB/.test(value["client_summary"]["localContentSize"])) {
+				var gb = value["client_summary"]["localContentSize"].match(/(.+) GiB/)
+				gbt += parseFloat(gb[1]);
+			}			
+		}
+	});
+	
+	mbt = (mbt / 1024);
+	var total = (gbt + mbt).toFixed(2);
+	$(".clientConnChangingText").before("<p class='clientConnHeaderText'>Total Size:</p><p class='clientConnMachineText'>" +total + " GiB</p>");
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -2102,6 +2126,10 @@ $(document).ready(function(){
 						var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
 						appid = appid.href.match( /(\d)+/g );
 						add_steamdb_links(appid, "gamegroup");
+						break;
+						
+					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+						totalsize();
 						break;
 				}
 				break;
