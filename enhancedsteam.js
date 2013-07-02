@@ -1998,7 +1998,7 @@ function totalsize() {
 	
 	mbt = (mbt / 1024);
 	var total = (gbt + mbt).toFixed(2);
-	$(".clientConnChangingText").before("<p class='clientConnHeaderText'>Total Size:</p><p class='clientConnMachineText'>" +total + " GiB</p>");
+	$(".clientConnChangingText").before("<p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p>");
 }
 
 $(document).ready(function(){
