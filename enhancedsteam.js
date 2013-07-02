@@ -1862,8 +1862,8 @@ function add_es_background_selection() {
 						}
 					});	
 					
-					html += "</select></div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span class='btn_grey_white_innerfade btn_small' onclick=\"document.getElementById('es_profile_bg').submit()\"><span>Save</span></span></div></div><div class='formRowTitle'>Custom Background:<span class='formRowHint' title='All users of Enhanced Steam will see this background on your profile.  Non-Enhanced Steam users will see your regular profile background.'>(?)</span></div></div></div>";
-					html += "</form>";            
+					html += "</select></div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span class='btn_grey_white_innerfade btn_small' onclick=\"document.getElementById('es_profile_bg').submit()\"><span>" + localized_strings[language].save + "</span></span></div></div><div class='formRowTitle'>" + localized_strings[language].custom_background + ":<span class='formRowHint' title='" + localized_strings[language].custom_background_help + "'>(?)</span></div></div></div>";
+					html += "</form>";
 						
 					$(".group_content_bodytext").before(html);
 					

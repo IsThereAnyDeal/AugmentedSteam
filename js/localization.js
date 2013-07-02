@@ -63,7 +63,9 @@ localization_promise = (function (){
 		region: "Region",
 		all: "All",
 		programming: "Programming",
-		translation: "Translation"
+		translation: "Translation",
+		custom_background: "Custom Background",
+		custom_background_help: "All users of Enhanced Steam will see this background on your profile.  Non-Enhanced Steam users will see your regular profile background."
     };
 
     localized_strings = {
@@ -402,7 +404,9 @@ localization_promise = (function (){
 			region: "Регион",
 			all: "Все",
 			programming: "Программирование",
-			translation: "Перевод"
+			translation: "Перевод",
+			custom_background: "Пользовательский фон профиля",
+			custom_background_help: "Все пользователи Enhanced Steam будут видеть выбранный фон в вашем профиле. Пользователи, у которых не установлен Enhanced Steam, будут видеть выбранный вами фон выше."
 		},
         "sv":       {},
         "th":       {},

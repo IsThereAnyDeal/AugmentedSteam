@@ -487,5 +487,4 @@ document.querySelector('#nav_about').addEventListener('click', load_about_tab);
 document.querySelector('#nav_credits').addEventListener('click', load_credits_tab);
 
 document.querySelector('#stores_all').addEventListener('click', toggle_stores);
-document.querySelector('#clear_settings').addEventListener('click', clear_settings);
 });
