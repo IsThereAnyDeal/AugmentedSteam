@@ -972,8 +972,6 @@ function show_pricing_history(appid, type) {
 							currency_symbol = "$";
 					}
 					
-					console.log (currency_symbol);
-					
                     if (data["lowest"]) {
                         recorded = new Date(data["lowest"]["recorded"]*1000);
                         line2 = 'Historical Low: ' + formatMoney(escapeHTML(data["lowest"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';

@@ -1,3 +1,7 @@
+v3.9
+-----
+
+
 v3.8.1
 -----
 : Fixed a bug in pricing history currency localization - thanks directhex!
