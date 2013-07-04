@@ -949,11 +949,34 @@ function show_pricing_history(appid, type) {
                     var activates = "";
                     var line1 = "";
                     var line2 = "";
-                    var recorded;
+                    var recorded,
+						currency_symbol,
+						comma = false,
+						at_end = false;
                     
+					switch (settings.showlowestprice_region) {						
+						case "uk":
+							currency_symbol = "£";
+							break;						
+						case "eu1":
+							currency_symbol = "€";
+							comma = true;
+							at_end = true;
+							break;
+						case "eu1":
+							currency_symbol = "€";
+							comma = true;
+							at_end = true;
+							break;
+						default:
+							currency_symbol = "$";
+					}
+					
+					console.log (currency_symbol);
+					
                     if (data["lowest"]) {
                         recorded = new Date(data["lowest"]["recorded"]*1000);
-                        line2 = 'Historical Low: $' + escapeHTML(data["lowest"]["price"].toFixed(2).toString()) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
+                        line2 = 'Historical Low: ' + formatMoney(escapeHTML(data["lowest"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
                     }
                     
                     var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
@@ -966,7 +989,7 @@ function show_pricing_history(appid, type) {
                     		}
                     	}
                         
-                        line1 = 'Lowest Price: $' + escapeHTML(data["deal"]["price"].toFixed(2).toString()) + ' at <a href="' + escapeHTML(data["deal"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["deal"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)'; 
+                        line1 = 'Lowest Price: ' + formatMoney(escapeHTML(data["deal"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["deal"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["deal"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)'; 
                         $("#game_area_purchase").before(html + line1 + "<br>" + line2);
                     } else {
                         if (data["lowest"]) {
