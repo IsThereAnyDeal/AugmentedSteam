@@ -66,7 +66,8 @@ localization_promise = (function (){
 		translation: "Translation",
 		custom_background: "Custom Background",
 		custom_background_help: "All users of Enhanced Steam will see this background on your profile.  Non-Enhanced Steam users will see your regular profile background.",
-		total_size: "Total Size"
+		total_size: "Total Size",
+		hide: "Hide"
     };
 
     localized_strings = {

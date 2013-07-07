@@ -1,6 +1,6 @@
 v3.9
 -----
-
++ Added ability to hide games you already own
 
 v3.8.1
 -----

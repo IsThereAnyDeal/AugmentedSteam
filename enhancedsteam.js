@@ -99,8 +99,11 @@ function highlight_owned(node) {
 	storage.get(function(settings) {
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		
 		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
-
+		if (settings.hide_owned) hide_node(node);
+		
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
 		if (settings.tag_owned) add_tag(node, localized_strings[language].tag_owned, settings.tag_owned_color);
@@ -195,6 +198,12 @@ function highlight_node(node, color) {
 		if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
 		if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 	});
+}
+
+function hide_node(node) {
+	if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row")) {
+		$(node).css("display", "none");
+	}
 }
 
 function add_tag (node, string, color) {
