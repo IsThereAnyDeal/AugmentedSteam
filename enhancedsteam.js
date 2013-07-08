@@ -619,9 +619,15 @@ function find_purchase_date(appname) {
 	});
 }
 
+function add_wallet_balance_to_header() {
+	$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
+	$("#es_wallet").load('http://store.steampowered.com #header_wallet_ctn');
+	
+}
+
 // Adds a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
-	$dropdown = $("<span class=\"pulldown\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
+	$dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
 	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
 	$dropdown_options.css("display", "none");
@@ -2108,6 +2114,9 @@ $(document).ready(function(){
 				break;
 
 			case "steamcommunity.com":
+			
+				add_wallet_balance_to_header();
+				
 				switch (true) {
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 						add_cart_on_wishlist();
