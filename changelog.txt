@@ -1,6 +1,8 @@
 v3.9
 -----
 + Added ability to hide games you already own
++ Added wallet balance in the header of community pages to match store pages UI
++ Seperated total spent into store, game, and market transactions
 
 v3.8.1
 -----
