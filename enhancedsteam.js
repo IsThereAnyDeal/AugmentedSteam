@@ -1383,7 +1383,7 @@ function account_total_spent() {
 							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ".", false)
 							break;
 					}
-										
+															
 					var html = '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + game_total + '</div>';
 					html += '<div class="accountLabel">Store Transactions:</div></div>';
