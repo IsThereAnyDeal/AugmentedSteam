@@ -605,13 +605,14 @@ function empty_wishlist() {
 
 function find_purchase_date(appname) {
 	get_http('http://store.steampowered.com/account/', function (txt) {
-		var apphtml = txt.substring(txt.indexOf('<div class="transactionRowTitle">' + appname), txt.indexOf('<div class="transactionRowTitle">' + appname) - 300);
-		var appdate = apphtml.match(/<div class="transactionRowDate">(.+)<\/div>/);
+		var earliestPurchase = $(txt).find("#store_transactions .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
+			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
+
 		var found = 0;
 		xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
 			if (found === 0) {
-				if (appdate) {
-					node.innerHTML = node.innerHTML + localized_strings[language].purchase_date.replace("__date__", appdate[1]);
+				if (purchaseDate) {
+					node.innerHTML = node.innerHTML + localized_strings[language].purchase_date.replace("__date__", purchaseDate);
 					found = 1;
 				}
 			}
