@@ -1,3 +1,7 @@
+v4.0
+-----
+
+
 v3.9.1
 -----
 : Fixed a bug with EU2 prices showing incorrectly
