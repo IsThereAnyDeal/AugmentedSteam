@@ -1,4 +1,4 @@
-﻿// version 4.0
+﻿// version 3.9.1
 var storage = chrome.storage.sync;
 var apps;
 var language;
@@ -979,7 +979,7 @@ function show_pricing_history(appid, type) {
 							comma = true;
 							at_end = true;
 							break;
-						case "eu1":
+						case "eu2":
 							currency_symbol = "€";
 							comma = true;
 							at_end = true;
