@@ -82,7 +82,7 @@ localization_promise = (function (){
 		store: "Obchod",
 		community: "Komunita",
 		news: "Novinky",
-		about: "O doplňku",
+		about: "O rozšíření",
 		donate: "Přispět",
 		language: "Jazyk",
 		highlight: "Zvýraznění",
