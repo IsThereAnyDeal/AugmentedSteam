@@ -1,6 +1,6 @@
-v4.0
+v3.9.2
 -----
-
+: Fixed a bug where total spent wasn't showing if wallet balance was 0
 
 v3.9.1
 -----

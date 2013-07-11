@@ -1,4 +1,4 @@
-﻿// version 4.0
+﻿// version 3.9.2
 var storage = chrome.storage.sync;
 var apps;
 var language;
@@ -1327,7 +1327,7 @@ function account_total_spent() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showtotal) {
 			if ($('.transactionRow').length !== 0) {
-				var currency_symbol = $("#header_wallet_ctn").html();
+				var currency_symbol = $(".accountBalance").html();
 				currency_symbol = currency_symbol.match(/(?:R\$|\$|€|£|pуб)/)[0];
 
 				totaler = function (p, i) {
