@@ -98,7 +98,7 @@ localization_promise = (function (){
 		options_metacritic: "Ukázat uživatelská hodnocení Metacritic",
 		options_steamdb: "Ukázat odkazy na SteamDB",
 		options_wsgf: "Ukázat WSGF (širokoúhlé) informace",
-		options_carousel_description: "Ukázat popis aplikace na Storefront Carousel",
+		options_carousel_description: "Ukázat popis aplikace na slideshow na stránce Obchod",
 		options_profile_links: "Ukázat odkazy na profil na:",
 		options_total_spent: "Ukázat \"Celkem utraceno\" na stránce Účet",
 		options_group_events: "Ukázat události na Přehledu skupiny",
