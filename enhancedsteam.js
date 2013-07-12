@@ -1,4 +1,4 @@
-﻿// version 3.9.2
+﻿// version 3.9.3
 var storage = chrome.storage.sync;
 var apps;
 var language;
@@ -242,15 +242,17 @@ function display_tags(node) {
 		return $tag;
 	};
 
-	// Check for discount percentage; if exists convert into tag.
-	var discount_pct =  $(node).find(".discount_pct");
-	var discount_as_int;
+	//Check for discount percentage; if exists convert into tag.
+	if (!node.classList.contains("summersale_dailydeal")) {
+		var discount_pct =  $(node).find(".discount_pct");
+		var discount_as_int;
 
-	if (discount_pct.length > 0) {
-		discount_as_int = parseInt(discount_pct.text().match(/(\-[1-9][0-9])%/)[1], 10);
-		discount_pct.remove();
+		if (discount_pct.length > 0) {
+			discount_as_int = parseInt(discount_pct.text().match(/(\-[1-9][0-9])%/)[1], 10);
+			discount_pct.remove();
 
-		node.tags.splice(0, 0, [discount_as_int + "%", "#4C6B22"]);
+			node.tags.splice(0, 0, [discount_as_int + "%", "#4C6B22"]);
+		}
 	}
 
 	if (node.tags) {
@@ -1563,16 +1565,11 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
+				if (node.classList) start_highlights_and_tags();
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
-
-	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
-	$("#search_suggestion_contents").bind("DOMSubtreeModified", start_highlights_and_tags);
-	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
-	$("#searchResultsRows").bind("DOMNodeInserted", highlight_market_items);
 }
 
 function start_highlights_and_tags(){
@@ -1589,7 +1586,8 @@ function start_highlights_and_tags(){
 		"a.cluster_capsule",	// Carousel items.
 		"div.recommendation_highlight",	// Recommendation page.
 		"div.recommendation_carousel_item",	// Recommendation page.
-		"div.friendplaytime_game"	// Recommendation page.
+		"div.friendplaytime_game",	// Recommendation page.
+		"a.summersale_dailydeal" // Summer sale 2013
 	];
 
 	// Get all appids and nodes from selectors.

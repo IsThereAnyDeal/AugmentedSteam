@@ -1,3 +1,8 @@
+v3.9.3
+-----
++ Added highlighting (but not tagging) to Summer Sale 2013 homepage
++ More optimized DOM change notifications in AJAX calls
+
 v3.9.2
 -----
 : Fixed a bug where total spent wasn't showing if wallet balance was 0
