@@ -1,3 +1,8 @@
+v3.9.4
+-----
+: Updated Spanish translation
++ Added Czech translation
+
 v3.9.3
 -----
 + Added highlighting (but not tagging) to Summer Sale 2013 homepage
