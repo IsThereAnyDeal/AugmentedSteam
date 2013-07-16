@@ -1,6 +1,6 @@
 v3.9.6
 -----
-
+: More profile updates.  This expands to includes users without custom urls
 
 v3.9.5
 -----
