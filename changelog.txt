@@ -1,3 +1,7 @@
+v3.9.6
+-----
+
+
 v3.9.5
 -----
 : Updated www.Enhancedsteam.com API to authenticate database updates via Steam OpenID
