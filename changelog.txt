@@ -1,3 +1,7 @@
+v3.9.5
+-----
+
+
 v3.9.4
 -----
 : Updated Spanish translation
