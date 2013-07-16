@@ -1135,7 +1135,6 @@ function add_empty_cart_button() {
 
 // User profile pages
 function add_community_profile_links() {
-	// Changes the profile page
 	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
 
 	storage.get(function(settings) {
@@ -1898,8 +1897,12 @@ function add_es_background_selection() {
 				profile_name = profile_name.replace("/settings", "");
 				profile_name = profile_name.replace("/profiles", "");
 				profile_name = profile_name.replace("/", "");
+								
+				var steam64 = $(document.body).html();
+				steam64 = steam64.match(/g_steamID = \"(.+)\";/)[1];				
 				var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
-				html += "<input type='hidden' name='url' value='" + window.location.pathname + "'>";
+				html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
+				html += "<input type='hidden' name='userid' value='" + profile_name + "'>";
 				html += "<div class='formRow'><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'>";
 				html += "<img id='es_profile_background_current_image' src=''>";
 				html += "</div><div class='profile_background_current_description'><div id='profile_background_current_name'><select name='es_background' id='es_background' class='gray_bevel dynInput' onchange=\"function image(obj){index=obj.selectedIndex; document.getElementById('es_profile_background_current_image').src=obj.options[index].id; } image(this);\"><option value='0' id='http://www.enhancedsteam.com/gamedata/icons/smallblacksquare.jpg'>None Selected / No Change</option>";
