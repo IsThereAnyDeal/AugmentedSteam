@@ -1470,19 +1470,21 @@ function subscription_savings_check() {
 
 		if (price_container !== "N/A")
 		{
-			itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
-			if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
+			if (price_container) {
+				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
+				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
 
-			switch (currency_symbol) {
-				case "€":
-					symbol_right = true;
-					break;
-				case "pуб":
-					symbol_right = true;
-					break;
+				switch (currency_symbol) {
+					case "€":
+						symbol_right = true;
+						break;
+					case "pуб":
+						symbol_right = true;
+						break;
+				}
+
+				if (!comma) comma = (price_container.indexOf(",") > -1);
 			}
-
-			if (!comma) comma = (price_container.indexOf(",") > -1);
 		}
 		else {
 			itemPrice = 0;
