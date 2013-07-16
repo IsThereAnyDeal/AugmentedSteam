@@ -2,6 +2,7 @@ v3.9.4
 -----
 : Updated Spanish translation
 + Added Czech translation
+: Fixed a bug in the German store where all games showed Tages DRM
 
 v3.9.3
 -----
