@@ -1,3 +1,7 @@
+v3.9.8
+-----
+
+
 v3.9.7
 -----
 : Fixes bug with market page not highlighting beyond the first
