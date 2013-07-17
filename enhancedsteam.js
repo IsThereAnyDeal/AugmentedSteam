@@ -1468,7 +1468,7 @@ function subscription_savings_check() {
 			// Remove children, leaving only text (price or only discounted price, if there are discounts)
 			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
 
-		if (price_container !== "N/A")
+		if (price_container !== "N/A" || price_container !== "Free")
 		{
 			if (price_container) {
 				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
@@ -1484,9 +1484,10 @@ function subscription_savings_check() {
 				}
 
 				if (!comma) comma = (price_container.indexOf(",") > -1);
+			} else {
+				itemPrice = 0;
 			}
-		}
-		else {
+		} else {
 			itemPrice = 0;
 		}
 
@@ -1511,7 +1512,7 @@ function subscription_savings_check() {
 		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));
 		if (comma) { not_owned_games_prices = not_owned_games_prices * 100; }
 		var corrected_price = not_owned_games_prices - bundle_price;
-
+		
 		if (symbol_right) {
 			var $message = $('<div class="savings">' + formatMoney((comma ? corrected_price / 100 : corrected_price), 2, currency_symbol, ",", comma ? "," : ".", true) + '</div>');
 		} else {
@@ -1567,7 +1568,8 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.classList) start_highlights_and_tags();
+				if (node.classList) { start_highlights_and_tags(); }
+				if (node.classList && node.classList.contains("market_listing_row_link")) {	highlight_market_items(); }
 			}
 		});
 	});
