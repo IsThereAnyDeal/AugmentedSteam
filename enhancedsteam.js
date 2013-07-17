@@ -1468,11 +1468,12 @@ function subscription_savings_check() {
 			// Remove children, leaving only text (price or only discounted price, if there are discounts)
 			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
 
-		if (price_container !== "N/A" || price_container !== "Free")
-		{
+		if (price_container !== "N/A") {
 			if (price_container) {
-				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
-				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
+				if (price_container !== "Free") {
+					itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
+					if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
+				}	
 
 				switch (currency_symbol) {
 					case "€":

@@ -1,3 +1,8 @@
+v3.9.7
+-----
+: Fixes bug with market page not highlighting beyond the first
+: Fixes bug with bundle pages not highlighting if game price is "Free" or blank
+
 v3.9.6
 -----
 : More profile updates.  This expands to includes users without custom urls
