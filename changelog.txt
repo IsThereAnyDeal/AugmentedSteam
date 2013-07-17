@@ -2,6 +2,10 @@ v3.9.7
 -----
 : Fixes bug with market page not highlighting beyond the first
 : Fixes bug with bundle pages not highlighting if game price is "Free" or blank
+: Fixes a bug where tags were overlapping prices in some instances
+: Fixes a bug where discount percentages were not displaying correctly on wishlists
++ Adds a link to a games dedicated DLC page from that game's app page
++ Adds highlighting to a game's DLC page
 
 v3.9.6
 -----

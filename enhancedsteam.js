@@ -242,19 +242,6 @@ function display_tags(node) {
 		return $tag;
 	};
 
-	//Check for discount percentage; if exists convert into tag.
-	if (!node.classList.contains("summersale_dailydeal")) {
-		var discount_pct =  $(node).find(".discount_pct");
-		var discount_as_int;
-
-		if (discount_pct.length > 0) {
-			discount_as_int = parseInt(discount_pct.text().match(/(\-[1-9][0-9])%/)[1], 10);
-			discount_pct.remove();
-
-			node.tags.splice(0, 0, [discount_as_int + "%", "#4C6B22"]);
-		}
-	}
-
 	if (node.tags) {
 
 		// Make tags.
@@ -271,6 +258,7 @@ function display_tags(node) {
 			$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
 			remove_existing_tags($tag_root);
 
+			$tags.css("margin-right", "76px");
 			$tag_root.find("h4").after($tags);
 		}
 		else if (node.classList.contains("search_result_row")) {
@@ -316,8 +304,9 @@ function display_tags(node) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
 
-			$tags.css("margin-right", "60px");
-			$tag_root.find(".game_area_dlc_price").before($tags);
+			var width = $(".game_area_dlc_price").width();
+			$tags.css("margin-right", width + 3);
+			$tag_root.find(".game_area_dlc_name").before($tags);
 
 			// Remove margin-bottom on DLC lists, else horrible pyramidding.
 			$.each($tag_root.find(".tags span"), function (i, obj) {
@@ -1309,6 +1298,14 @@ function add_widescreen_certification(appid) {
 	});
 }
 
+function add_dlc_page_link(appid) {	
+	if ($(".game_area_dlc_section").length > 0) {
+		var html = $(".game_area_dlc_section").html();
+		title = html.match(/<h2 class=\"gradientbg">(.+)<\/h2>/)[1];
+		html = html.replace(title, "<a href='http://store.steampowered.com/dlc/" + appid + "'>" + title + "</a>");		
+		$(".game_area_dlc_section").html(html);
+	}
+}
 
 function fix_wishlist_image_not_found() {
 	// fixes "Image not found" in wishlist
@@ -1592,7 +1589,8 @@ function start_highlights_and_tags(){
 		"div.recommendation_highlight",	// Recommendation page.
 		"div.recommendation_carousel_item",	// Recommendation page.
 		"div.friendplaytime_game",	// Recommendation page.
-		"a.summersale_dailydeal" // Summer sale 2013
+		"a.summersale_dailydeal", // Summer sale 2013
+		"div.dlc_page_purchase_dlc" // DLC page rows
 	];
 
 	// Get all appids and nodes from selectors.
@@ -2109,6 +2107,7 @@ $(document).ready(function(){
 						add_steamdb_links(appid, "app");
 						add_steamcards_link(appid);
 						add_feature_search_links();
+						add_dlc_page_link(appid);
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
