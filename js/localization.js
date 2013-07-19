@@ -296,6 +296,9 @@ localization_promise = (function (){
 		options_group_events: "Afficher les événements dans l'aperçu des groupes",
 		options_greenlight_banner: "Remplacer la bannière Steam Greenlight",
 		options_es_bg: "Définir un arrière-plan personnalisé sur la page de modification du profil",
+		options_library: "Afficher le bouton Bibliothèque dans l'entête (BETA)",
+		options_hide_about: "Cacher le lien À propos dans l'entête",
+		options_about_text: "À propos d'<a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a> :<p>Enhanced Steam est une extension pour Google Chrome qui ajoute de nombreuses nouvelles fonctionnalités pour le site de Steam.<p>Caractéristiques incluses :<ul><li>Le surlignage des jeux que vous possédez déjà</li><li>Le surlignage des jeux dans votre liste de souhaits</li><li>Le calcul correct des remises de pack basé sur les jeux que vous possédez déjà</li><li>L'Affichage de l'argent que vous avez dépensé sur Steam pour la durée de vie de votre compte</li><li>Le surlignage des DLCs que vous possédez sur la page du jeu</li><li>La correction du \"No Image Available\" des icones de jeu dans votre liste de souhaits pour n'importe quel jeu ou DLC</li><li>Montre les titres avec des DRMs de tiers</li></ul><p>Si vous trouvez cette extension utile, veuillez envisager de faire don.",
 		tag: "Tag",
 		theworddefault: "Défaut",
 		save: "Enregistrer",
@@ -324,7 +327,11 @@ localization_promise = (function (){
 		region: "Région",
 		all: "Tous",
 		programming: "Programmation",
-		translation: "Traduction"
+		translation: "Traduction",
+		custom_background: "Arrière-plan personnalisé",
+		custom_background_help: "Tous les utilisateurs d'Enhanced Steam verront cet arrière-plan sur votre profil.  Les autres utilisateurs verront votre arrière-plan de profil standard.",
+		total_size: "Taille totale",
+		hide: "Cacher"
       		},
         "hu":   {},
         "it":   {},
