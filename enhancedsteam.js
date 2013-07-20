@@ -1052,6 +1052,7 @@ function drm_warnings() {
 			if (document.body.innerHTML.indexOf("Angebote des Tages") > 0) { tages = false; }
 			if (document.body.innerHTML.indexOf("Tagesangebote") > 0) { tages = false; }
 			if (document.body.innerHTML.indexOf("TAGES") > 0) { tages = true; }
+			if (document.body.innerHTML.indexOf("ANGEBOT DES TAGES") > 0) { tages = false; }
 			if (document.body.innerHTML.indexOf("SOLIDSHIELD") > 0) { tages = true; }
 			if (document.body.innerHTML.indexOf("Solidshield Tages") > 0) { tages = true; }
 			if (document.body.innerHTML.indexOf("Tages Solidshield") > 0) { tages = true; }
