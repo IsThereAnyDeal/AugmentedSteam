@@ -1,6 +1,7 @@
 v3.9.8
 -----
 : Updated French translation
++ Added Italian translation
 
 v3.9.7
 -----
