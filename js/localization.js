@@ -67,7 +67,13 @@ localization_promise = (function (){
 		custom_background: "Custom Background",
 		custom_background_help: "All users of Enhanced Steam will see this background on your profile.  Non-Enhanced Steam users will see your regular profile background.",
 		total_size: "Total Size",
-		hide: "Hide"
+		hide: "Hide",
+		store_transactions: "Store Transactions",
+		game_transactions: "Game Transactions",
+		market_transactions: "Market Transactions",
+		total_spent: "Total Spent",
+		historical_low: "Historical Low",
+		lowest_price: "Lowest Price"
     		};
 
     localized_strings = {
@@ -335,11 +341,11 @@ localization_promise = (function (){
       		},
         "hu":   {},
         "it":   {
-      		empty_wishlist: "Lista dei desideri vuota",
+      		empty_wishlist: "Svuota lista",
     		purchase_date: "(Acquistato il __date__)",
         	options: "Opzioni",
         	website: "Sito web",
-        	contribute: "Contribuisci (GitHub)",
+        	contribute: "Contributi (GitHub)",
 		store: "Negozio",
 		community: "Comunità",
 		news: "Notizie",
@@ -389,7 +395,7 @@ localization_promise = (function (){
         	tag_coupon: "Coupon",
         	tag_inv_gift: "Gift",
         	tag_inv_guestpass: "Pass ospite",
-        	tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
+        	tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ amici lo vogliono</a>",
 		inventory_market_text: "Mostra prezzo del Mercato nell'inventario (Experimental!)",
 		credits: "Crediti",
 		stores: "Negozi",
@@ -400,7 +406,13 @@ localization_promise = (function (){
 		custom_background: "Sfondo personalizzato",
 		custom_background_help: "Tutti gli utenti di Enhanced Steam vedranno questo sfondo sul tuo profilo. Gli altri vedranno il tuo sfondo normale.",
 		total_size: "Dimensione totale",
-		hide: "Nascondi"
+		hide: "Nascondi",
+		store_transactions: "Transazioni sullo store",
+		game_transactions: "Transazioni in-game",
+		market_transactions: "Transazioni sul Mercato",
+		total_spent: "Totale spese",
+		historical_low: "Più basso in assoluto",
+		lowest_price: "Prezzo più basso"
         },
         "ja":   {
 		empty_wishlist: "ウィッシュリストを空にする",
