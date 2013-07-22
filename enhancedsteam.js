@@ -1567,12 +1567,17 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.classList) { start_highlights_and_tags(); }
+				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
+				if (node.classList && node.classList.contains("match")) start_highlights_and_tags();
 				if (node.classList && node.classList.contains("market_listing_row_link")) {	highlight_market_items(); }
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
+	
+	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
+	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
+	$("#searchResultsRows").bind("DOMNodeInserted", highlight_market_items);
 }
 
 function start_highlights_and_tags(){
@@ -1590,7 +1595,6 @@ function start_highlights_and_tags(){
 		"div.recommendation_highlight",	// Recommendation page.
 		"div.recommendation_carousel_item",	// Recommendation page.
 		"div.friendplaytime_game",	// Recommendation page.
-		"a.summersale_dailydeal", // Summer sale 2013
 		"div.dlc_page_purchase_dlc" // DLC page rows
 	];
 
@@ -1670,25 +1674,27 @@ function get_sub_details(subid, node) {
 			if (sub_data.success) {
 				var app_ids = [];
 				var owned = [];
-				sub_data.data.apps.forEach(function(app) {
-					app_ids.push (app.id);
-					get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
-						var storefront_data = JSON.parse(data2);
-						$.each(storefront_data, function(appid, app_data) {
-							if (app_data.success) {
-								if (app_data.data.is_owned === true) {
-									owned.push(appid);
+				if (sub_data.data.apps) {
+					sub_data.data.apps.forEach(function(app) {
+						app_ids.push (app.id);
+						get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
+							var storefront_data = JSON.parse(data2);
+							$.each(storefront_data, function(appid, app_data) {
+								if (app_data.success) {
+									if (app_data.data.is_owned === true) {
+										owned.push(appid);
+									}
 								}
+							});
+
+							if (owned.length == app_ids.length) {
+								setValue(subid + "owned", true);
+								setValue(subid, parseInt(Date.now() / 1000, 10));
+								highlight_app(subid, node);
 							}
 						});
-
-						if (owned.length == app_ids.length) {
-							setValue(subid + "owned", true);
-							setValue(subid, parseInt(Date.now() / 1000, 10));
-							highlight_app(subid, node);
-						}
 					});
-				});
+				}
 			}
 		});
 	});
