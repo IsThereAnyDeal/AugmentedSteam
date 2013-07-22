@@ -981,7 +981,7 @@ function show_pricing_history(appid, type) {
 
                     if (data["lowest"]) {
                         recorded = new Date(data["lowest"]["recorded"]*1000);
-                        line2 = 'Historical Low: ' + formatMoney(escapeHTML(data["lowest"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
+                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
                     }
 
                     var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
@@ -994,7 +994,7 @@ function show_pricing_history(appid, type) {
                     		}
                     	}
 
-                        line1 = 'Lowest Price: ' + formatMoney(escapeHTML(data["deal"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["deal"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["deal"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)';
+                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["deal"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["deal"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["deal"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)';
                         $("#game_area_purchase").before(html + line1 + "<br>" + line2);
                     } else {
                         if (data["lowest"]) {
@@ -1387,17 +1387,17 @@ function account_total_spent() {
 
 					var html = '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + game_total + '</div>';
-					html += '<div class="accountLabel">Store Transactions:</div></div>';
+					html += '<div class="accountLabel">' + localized_strings[language].store_transactions + ':</div></div>';
 					html += '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + ingame_total + '</div>';
-					html += '<div class="accountLabel">Game Transactions:</div></div>';
+					html += '<div class="accountLabel">' + localized_strings[language].game_transactions + ':</div></div>';
 					html += '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + market_total + '</div>';
-					html += '<div class="accountLabel">Market Transactions:</div></div>';
+					html += '<div class="accountLabel">' + localized_strings[language].market_transactions + ':</div></div>';
 					html += '<div class="inner_rule"></div>';
 					html += '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + total_total + '</div>';
-					html += '<div class="accountLabel">Total Spent:</div></div>';
+					html += '<div class="accountLabel">' + localized_strings[language].total_spent + ':</div></div>';
 					html += '<div class="inner_rule"></div>';
 
 					$('.accountInfoBlock .block_content_inner .accountBalance').before(html);
