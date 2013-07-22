@@ -337,7 +337,13 @@ localization_promise = (function (){
 		custom_background: "Arrière-plan personnalisé",
 		custom_background_help: "Tous les utilisateurs d'Enhanced Steam verront cet arrière-plan sur votre profil.  Les autres utilisateurs verront votre arrière-plan de profil standard.",
 		total_size: "Taille totale",
-		hide: "Cacher"
+		hide: "Cacher",
+		store_transactions: "Transactions dans le magasin",
+		game_transactions: "Transactions dans les jeux",
+		market_transactions: "Transactions dans le marché",
+		total_spent: "Total dépensé",
+		historical_low: "Creux historique",
+		lowest_price: "Prix le plus bas"
       		},
         "hu":   {},
         "it":   {
