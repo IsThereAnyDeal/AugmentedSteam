@@ -2,6 +2,9 @@ v3.9.8
 -----
 : Updated French translation
 + Added Italian translation
++ Added Portuguese translation
+: Fixed bugs associated with Summer Sale ending
+: Fix another bug where German store showing Tages DRM incorrectly
 
 v3.9.7
 -----
