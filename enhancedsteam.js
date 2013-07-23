@@ -1555,6 +1555,31 @@ function dlc_data_from_site(appid) {
     }
 }
 
+function dlc_data_for_dlc_page() {
+	// Get all appids and nodes from selectors.
+	$.each($("div.dlc_page_purchase_dlc"), function(j, node){
+		var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+		get_http("http://api.enhancedsteam.com/gamedata/?appid=" + appid, function (txt) {
+    		var data;
+			if (txt != "{\"dlc\":}}") {
+				data = JSON.parse(txt);
+			}
+            var html = "<div style='width: 250px; margin-left: 310px;'>";
+
+            if (data) {
+                $.each(data["dlc"], function(index, value) {
+                    html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><div class='name'><span title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</span></div></div>";
+                });
+			}
+
+			html += "</div>";
+			
+			$(node).css("height", "144px");
+			$(node).append(html);
+    	});
+	});
+}
+
 function check_if_purchased() {
 	// find the date a game was purchased if owned
 	var ownedNode = $(".game_area_already_owned");
@@ -2154,6 +2179,10 @@ $(document).ready(function(){
 						
 					case /^\/agecheck\/.*/.test(window.location.pathname):
 						send_age_verification();
+						break;
+						
+					case /^\/dlc\/.*/.test(window.location.pathname):
+						dlc_data_for_dlc_page();
 						break;
 
 					case /^\/account\/.*/.test(window.location.pathname):

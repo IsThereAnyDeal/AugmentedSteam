@@ -2,6 +2,7 @@ v4.0
 -----
 + Adds automatic age verification to Steam store
 + Adds SteamCardExchange links to badge and badge progress pages
++ Adds DLC categorization to a game's DLC page
 
 v3.9.8
 -----
