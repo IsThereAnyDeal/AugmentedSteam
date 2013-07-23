@@ -611,6 +611,11 @@ function find_purchase_date(appname) {
 	});
 }
 
+function send_age_verification() {
+	document.getElementsByName("ageYear")[0].value="1955";
+	document.getElementsByClassName("btn_checkout_green")[0].click();
+}
+
 function add_wallet_balance_to_header() {
 	$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
 	$("#es_wallet").load('http://store.steampowered.com #header_wallet_ctn');
@@ -2145,6 +2150,10 @@ $(document).ready(function(){
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");
 						add_feature_search_links();
+						break;
+						
+					case /^\/agecheck\/.*/.test(window.location.pathname):
+						send_age_verification();
 						break;
 
 					case /^\/account\/.*/.test(window.location.pathname):

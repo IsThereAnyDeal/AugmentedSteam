@@ -1,6 +1,7 @@
 v4.0
 -----
-
++ Adds automatic age verification to Steam store
++ Adds SteamCardExchange links to badge and badge progress pages
 
 v3.9.8
 -----
