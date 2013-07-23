@@ -84,6 +84,8 @@ function save_options() {
 	profile_sapi = $("#profile_sapi").prop('checked');
 	profile_backpacktf = $("#profile_backpacktf").prop('checked');
 	profile_astats = $("#profile_astats").prop('checked');
+	
+	steamcardexchange = $("#steamcardexchange").prop('checked');
 
 	chrome.storage.sync.set({
 		'language': language,
@@ -143,7 +145,9 @@ function save_options() {
 		'profile_wastedonsteam': profile_wastedonsteam,
 		'profile_sapi': profile_sapi,
 		'profile_backpacktf': profile_backpacktf,
-		'profile_astats': profile_astats
+		'profile_astats': profile_astats,
+		
+		'steamcardexchange': steamcardexchange
 	}, function() {
 		// Notify that we saved.
 		localization_promise.done(function(){
@@ -298,6 +302,7 @@ function load_options() {
 		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
+		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
 		
 		// Load Store Options
 		$("#highlight_owned_color").attr('value', settings.highlight_owned_color);
@@ -360,6 +365,7 @@ function load_options() {
 		$("#profile_sapi").attr('checked', settings.profile_sapi);
 		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);
 		$("#profile_astats").attr('checked', settings.profile_astats);
+		$("#steamcardexchange").attr('checked', settings.steamcardexchange);
 		
 		$("#language").attr('value', settings.language);
 		
@@ -424,6 +430,7 @@ function load_translation() {
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
 			$("#es_background_text").text(localized_strings[settings.language].options_es_bg);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
+			$("#steamcardexchange_text").text(localized_strings[settings.language].options_steamcardexchange);
 						
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);

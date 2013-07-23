@@ -31,6 +31,7 @@ localization_promise = (function (){
 		options_total_spent: "Show \"Total Spent\" on Account Page",
 		options_group_events: "Show Events on Group Overview",
 		options_greenlight_banner: "Replace Steam Greenlight Banner",
+		options_steamcardexchange: "Show SteamCardExchange links on badges",
 		options_es_bg: "Set Custom Background on Edit Profile Screen",
 		options_library: "Show Library button in header (BETA)",
 		options_hide_about: "Hide About link in header",
