@@ -327,7 +327,7 @@ function display_tags(node) {
 
 			$tags.css("float", "right");
 			$tags.css("width", "130px");
-			$tags.css("margin-top", "4px");
+			$tags.css("margin-top", "30px");
 			$tag_root.find(".match_price").after($tags);
 		}
 		else if (node.classList.contains("cluster_capsule")) {
