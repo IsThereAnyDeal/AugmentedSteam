@@ -567,14 +567,20 @@ localization_promise = (function (){
         	inventory_market_text: "Mostrar Preço de Mercado no Inventário (Experimental!)",
 		credits: "Créditos",
 		stores: "Lojas",
-		region: "Regiões",
+		region: "Região",
 		all: "Todas",
 		programming: "Desenvolvimento",
 		translation: "Tradução",
 		custom_background: "Papel de Parede Personalizado",
 		custom_background_help: "Todos os usuários do Enhanced Steam verão este papel de parede no seu perfil. Outros usuários verão papel de parede normal do perfil.",
 		total_size: "Tamanho Total",
-		hide: "Ocultar"             	
+		hide: "Ocultar",
+		store_transactions: "Transações da Loja",
+		game_transactions: "Transações de Jogos",
+		market_transactions: "Transações no Mercado",
+		total_spent: "Total Gasto",
+		historical_low: "Menor Registrado",
+		lowest_price: "Menor Preço"		
         },
         "ro":   {},
         "ru":   {
