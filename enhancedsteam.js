@@ -706,7 +706,7 @@ function add_library_menu() {
 	storage.get(function(settings) {
 		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
 		if (settings.showlibrarymenu) {
-			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>Library</a>");
+			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>" + localized_strings[language].library + "</a>");
 			$("#es_library").bind("click", function() {
 				library_header_click();
 			});
