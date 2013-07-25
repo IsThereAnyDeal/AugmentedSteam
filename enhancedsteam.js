@@ -1,4 +1,4 @@
-﻿// version 3.9.9
+﻿// version 4.0
 var storage = chrome.storage.sync;
 var apps;
 var language;
