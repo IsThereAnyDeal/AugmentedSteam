@@ -1,4 +1,4 @@
-﻿// version 4.0
+﻿// version 3.9.9
 var storage = chrome.storage.sync;
 var apps;
 var language;
@@ -1424,12 +1424,14 @@ function inventory_market_helper() {
 				case 0:
 					info = 1;
 					var desc = $('#iteminfo0_item_tags_content')[0].innerHTML;
+					var appid = $('#iteminfo0_item_owner_actions')[0].innerHTML;
+					appid = appid.match(/steamcommunity.com\/my\/gamecards\/(.+)\/">/)[1];
 					if (desc.indexOf("Not Marketable") <= 0) {
 						var item_name = $("#iteminfo0_item_name")[0].innerHTML;
-						get_http("http://steamcommunity.com/market/listings/753/" + item_name, function (txt) {
+						get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
 							var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
 							if (item_price) {
-								$("#es_item0").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + item_name + "' target='_blank'>Items for sale</a>");
+								$("#es_item0").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>Items for sale</a>");
 							}
 						});
 					} else {
@@ -1439,12 +1441,14 @@ function inventory_market_helper() {
 				case 1:
 					info = 0;
 					var desc = $('#iteminfo1_item_tags_content')[0].innerHTML;
+					var appid = $('#iteminfo1_item_owner_actions')[0].innerHTML;
+					appid = appid.match(/steamcommunity.com\/my\/gamecards\/(.+)\/">/)[1];
 					if (desc.indexOf("Not Marketable") <= 0) {
 						var item_name = $("#iteminfo1_item_name")[0].innerHTML;
-						get_http("http://steamcommunity.com/market/listings/753/" + item_name, function (txt) {
+						get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
 							var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
 							if (item_price) {
-								$("#es_item1").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + item_name + "' target='_blank'>Items for sale</a>");
+								$("#es_item1").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>Items for sale</a>");
 							}
 						});
 					} else {
