@@ -75,7 +75,8 @@ localization_promise = (function (){
 		market_transactions: "Market Transactions",
 		total_spent: "Total Spent",
 		historical_low: "Historical Low",
-		lowest_price: "Lowest Price"
+		lowest_price: "Lowest Price",
+		card_drops_remaining: "__drops__ card drops remaining."
     		};
 
     localized_strings = {
@@ -147,7 +148,8 @@ localization_promise = (function (){
 		custom_background: "Vlastní pozadí",
 		custom_background_help: "Všichni uživatelé Enhanced Steam uvidí toto pozadí na vašem profilu.  Uživatelé bez Enhanced Steam uvidí vaše normální pozadí profilu.",
 		total_size: "Celková velikost",
-		hide: "Schovat"
+		hide: "Schovat",
+		card_drops_remaining: "Zbývá __drops__ přídělů karet."
      		},
         "da":   {},
         "de":   {

@@ -2156,6 +2156,19 @@ function add_cardexchange_links(game) {
 	});
 }
 
+function add_total_drops_count() {
+	var drops_count = 0;
+	$(".progress_info_bold").each(function(i, obj) {
+		var obj_count = obj.innerHTML.match(/\d+/);
+		if (obj_count) {
+			drops_count += parseInt(obj_count[0]);
+		}
+	});
+	if (drops_count > 0) {
+		$(".profile_badges_sortoptions span").prepend(localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + " ");
+	}
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
@@ -2301,6 +2314,7 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+						add_total_drops_count();
 						add_cardexchange_links();
 						break;
 
