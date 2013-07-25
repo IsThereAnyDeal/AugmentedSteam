@@ -940,7 +940,8 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[17]) { storestring += "nuuvem,"; }
 			if (settings.stores[18]) { storestring += "shinyloot,"; }
 			if (settings.stores[19]) { storestring += "dlgamer,"; }
-			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,"; }
+			if (settings.stores[20]) { storestring += "humblestore,"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,humblestore"; }
 
 			// Get country code from Steam cookie
 			var cookies = document.cookie;
@@ -955,7 +956,7 @@ function show_pricing_history(appid, type) {
 				}
 			}
 
-			get_http("http://api.enhancedsteam.com/price/?search=" + type + "/" + appid + "&region=" + settings.showlowestprice_region + "&stores=" + storestring + "&cc=" + cc, function (txt) {
+			get_http("http://api.enhancedsteam.com/pricev2/?search=" + type + "/" + appid + "&stores=" + storestring + "&cc=" + cc, function (txt) {
                 var data = JSON.parse(txt);
                 if (data) {
                     var activates = "";
@@ -965,45 +966,40 @@ function show_pricing_history(appid, type) {
 						currency_symbol,
 						comma = false,
 						at_end = false;
-
-					switch (settings.showlowestprice_region) {
-						case "uk":
+						
+					switch (data[".meta"]["currency"]) {
+						case "GBP":
 							currency_symbol = "£";
 							break;
-						case "eu1":
+						case "EUR":
 							currency_symbol = "€";
 							comma = true;
 							at_end = true;
-							break;
-						case "eu2":
-							currency_symbol = "€";
-							comma = true;
-							at_end = true;
-							break;
+							break;						
 						default:
 							currency_symbol = "$";
 					}
-
+					
                     if (data["lowest"]) {
                         recorded = new Date(data["lowest"]["recorded"]*1000);
-                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
+                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
                     }
 
-                    var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
+                    var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
 
-        			if (data["deal"]) {
-                        if (data["deal"]["drm"]["steam"] == 1) {
+        			if (data["price"]) {
+                        if (data["price"]["drm"] == "steam") {
                         	activates = "(<b>Activates on Steam</b>)";
-                    		if (data["deal"]["store"] == "Steam") {
+                    		if (data["price"]["store"] == "Steam") {
                     			activates = "";
                     		}
                     	}
 
-                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["deal"]["price"].toFixed(2).toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["deal"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["deal"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)';
+                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">Info</a>)';
                         $("#game_area_purchase").before(html + line1 + "<br>" + line2);
                     } else {
                         if (data["lowest"]) {
-                            html = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='http://www.enhancedsteam.com/firefox/line_chart.png'></div>";
+                            html = "<div class='game_purchase_area_friends_want' style='padding-top: 15px; height: 30px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
                             $("#game_area_purchase").before(html + line2);
                         }
                     }
