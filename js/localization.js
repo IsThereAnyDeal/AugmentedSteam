@@ -8,7 +8,7 @@ localization_promise = (function (){
         	website: "Website",
         	contribute: "Contribute (GitHub)",
 		store: "Store",
-		library: "Library",
+		library_menu: "Library",
 		community: "Community",
 		news: "News",
 		about: "About",
@@ -76,8 +76,11 @@ localization_promise = (function (){
 		total_spent: "Total Spent",
 		historical_low: "Historical Low",
 		lowest_price: "Lowest Price",
-		card_drops_remaining: "__drops__ card drops remaining."
-    		};
+		card_drops_remaining: "__drops__ card drops remaining.",
+		library: {
+			private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
+		}
+    };
 
     localized_strings = {
         "en": 	localized_strings_default,
@@ -149,7 +152,10 @@ localization_promise = (function (){
 		custom_background_help: "Všichni uživatelé Enhanced Steam uvidí toto pozadí na vašem profilu.  Uživatelé bez Enhanced Steam uvidí vaše normální pozadí profilu.",
 		total_size: "Celková velikost",
 		hide: "Schovat",
-		card_drops_remaining: "Zbývá __drops__ přídělů karet."
+		card_drops_remaining: "Zbývá __drops__ přídělů karet.",
+		library: {
+			private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
+		}
      		},
         "da":   {},
         "de":   {
@@ -519,7 +525,7 @@ localization_promise = (function (){
         	website: "Página Web",
         	contribute: "Contribua (GitHub)",
         	store: "Loja",
-        	library: "Biblioteca",
+        	library_menu: "Biblioteca",
         	community: "Comunidade",
         	news: "News",
         	about: "Sobre",

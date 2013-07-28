@@ -36,6 +36,8 @@ function save_options() {
 	hide_owned = $("#hide_owned").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
+	showlibraryf2p = $("#showlibraryf2p").prop('checked');
+
 	hideinstallsteambutton = $("#hideinstallsteambutton").prop('checked');
 	hideaboutmenu = $("#hideaboutmenu").prop('checked');	
 	showdrm = $("#showdrm").prop('checked');
@@ -123,6 +125,7 @@ function save_options() {
 		'hideinstallsteambutton': hideinstallsteambutton,
 		'hideaboutmenu': hideaboutmenu,
 		'showlibrarymenu': showlibrarymenu,
+		'showlibraryf2p': showlibraryf2p,
 		'showdrm': showdrm,
 		'showlowestprice': showlowestprice,
 		'showlowestprice_region': showlowestprice_region,
@@ -287,6 +290,8 @@ function load_options() {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 
 		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; chrome.storage.sync.set({'showlibrarymenu': settings.showlibrarymenu}); }
+		if (settings.showlibraryf2p === undefined) { settings.showlibraryf2p = true; chrome.storage.sync.set({'showlibraryf2p': settings.showlibraryf2p}); }
+		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
@@ -337,6 +342,8 @@ function load_options() {
 		$("#hide_owned").attr('checked', settings.hide_owned);
 
 		$("#showlibrarymenu").attr('checked', settings.showlibrarymenu);
+		$("#showlibraryf2p").attr('checked', settings.showlibraryf2p);
+
 		$("#hideinstallsteambutton").attr('checked', settings.hideinstallsteambutton);
 		$("#hideaboutmenu").attr('checked', settings.hideaboutmenu);
 		$("#showdrm").attr('checked', settings.showdrm);
@@ -413,6 +420,8 @@ function load_translation() {
 			$("#hide_owned_text").text(localized_strings[settings.language].options_owned);
 			
 			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
+			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options_library_f2p);
+
 			$("#store_hide_install_text").text(localized_strings[settings.language].options_hide_install);
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
