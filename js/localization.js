@@ -8,7 +8,7 @@ localization_promise = (function (){
         	website: "Website",
         	contribute: "Contribute (GitHub)",
 		store: "Store",
-		library: "Library",
+		library_menu: "Library",
 		community: "Community",
 		news: "News",
 		about: "About",
@@ -35,6 +35,7 @@ localization_promise = (function (){
 		options_steamcardexchange: "Show SteamCardExchange links on badges",
 		options_es_bg: "Set Custom Background on Edit Profile Screen",
 		options_library: "Show Library button in header (BETA)",
+		options_library_f2p: "Show played free to play games and demos in library",
 		options_hide_about: "Hide About link in header",
 		options_about_text: "About <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>Features include:<ul><li>Highlighting games you already own</li><li>Highlighting games on your wishlist</li><li>Correctly calculating bundle discounts based on games you already own</li><li>Showing you how much money you've spent on Steam for the lifetime of your account</li><li>Highlighting DLC you own on a game page</li><li>Fixing \"No Image Available\" game icons on your wishlist for any game or DLC</li><li>Pointing out titles with 3rd party DRM</li></ul><p>If you find this Extension useful, please consider donating.",
 		tag: "Tag",
@@ -75,8 +76,12 @@ localization_promise = (function (){
 		market_transactions: "Market Transactions",
 		total_spent: "Total Spent",
 		historical_low: "Historical Low",
-		lowest_price: "Lowest Price"
-    		};
+		lowest_price: "Lowest Price",
+		card_drops_remaining: "__drops__ card drops remaining.",
+		library: {
+			private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
+		}
+    };
 
     localized_strings = {
         "en": 	localized_strings_default,
@@ -113,6 +118,7 @@ localization_promise = (function (){
 		options_greenlight_banner: "Nahradit Steam Greenlight banner",
 		options_es_bg: "Možnost nastavit Vlastní pozadí na stránce Upravit profil",
 		options_library: "Ukázat tlačítko Knihovna v hlavičce (BETA)",
+		options_library_f2p: "Ukázat hrané free to play hry a dema v knihovně",
 		options_hide_about: "Schovat odkaz O Steamu v hlavičce",
 		options_about_text: "O <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam je rozšíření pro Google Chrome, které přidává mnoho nových funkcí na webovou stránku Steamu.<p>Mezi funkce patří:<ul><li>Zvýraznění již vlastněných her</li><li>Zvýraznění her na Vašem Seznamu přání</li><li>Přesné spočítaní slev u balíčků založené na hrách, které již vlastníte</li><li>Ukázání, kolik jste na Steamu utratili od založení Vašeho účtu</li><li>Zvýraznění DLC, které již vlastníte, na stránce hry</li><li>Spravení \"No Image Available\" ikon her na vašem Seznamu přání pro každou hru i DLC</li><li>Upozornění na hry s DRM třetí strany</li></ul><p>Pokud vám toto rozšíření přijde užitečné, prosím popřemýšlejte o příspěvku.",
 		tag: "Popisek",
@@ -146,7 +152,11 @@ localization_promise = (function (){
 		custom_background: "Vlastní pozadí",
 		custom_background_help: "Všichni uživatelé Enhanced Steam uvidí toto pozadí na vašem profilu.  Uživatelé bez Enhanced Steam uvidí vaše normální pozadí profilu.",
 		total_size: "Celková velikost",
-		hide: "Schovat"
+		hide: "Schovat",
+		card_drops_remaining: "Zbývá __drops__ přídělů karet.",
+		library: {
+			private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
+		}
      		},
         "da":   {},
         "de":   {
@@ -278,7 +288,7 @@ localization_promise = (function (){
 		website: "Site web",
 		contribute: "Contribuer (GitHub)",
 		store: "Magasin",
-		library: "Bibliothèque",
+		library_menu: "Bibliothèque",
 		community: "Communauté",
 		news: "Actualités",
 		about: "À propos",
@@ -355,7 +365,7 @@ localization_promise = (function (){
         	website: "Sito web",
         	contribute: "Contributi (GitHub)",
 		store: "Negozio",
-		library: "Libreria",
+		library_menu: "Libreria",
 		community: "Comunità",
 		news: "Notizie",
 		about: "Informazioni",
@@ -518,7 +528,7 @@ localization_promise = (function (){
         	website: "Página Web",
         	contribute: "Contribua (GitHub)",
         	store: "Loja",
-        	library: "Biblioteca",
+        	library_menu: "Biblioteca",
         	community: "Comunidade",
         	news: "News",
         	about: "Sobre",

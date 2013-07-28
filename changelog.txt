@@ -7,6 +7,8 @@ v3.9.9
 + Adds automatic age verification to Steam store
 + Adds SteamCardExchange links to badge and badge progress pages
 + Adds DLC categorization to a game's DLC page
++ Adds remaining card drops count
+: Library updates
 + Adds an "Add all unowned DLC to cart" button on game's DLC page
 : Updated Portuguese translation
 : Updated Italian translation

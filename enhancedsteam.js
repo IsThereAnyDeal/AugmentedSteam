@@ -1,8 +1,10 @@
-﻿// version 4.0
+// version 4.0
 var storage = chrome.storage.sync;
 var apps;
 var language;
 var info = 0;
+var isSignedIn = false;
+var signedInChecked = false;
 
 storage.get(function (settings) {
 	language = settings.language || "en";
@@ -11,6 +13,8 @@ storage.get(function (settings) {
 // Global scope promise storage; to prevent unecessary API requests.
 var loading_inventory;
 var appid_promises = {};
+
+var library_all_games = [];
 
 //Chrome storage functions.
 function setValue(key, value) {
@@ -92,6 +96,21 @@ function ensure_appid_deferred(appid) {
 			"promise": deferred.promise()
 		};
 	}
+}
+
+// check if the user is signed in
+function is_signed_in() {
+	if (!signedInChecked) {
+		var cookies = document.cookie.split("; ");
+		for (var cookie in cookies) {
+			cookie = cookies[cookie].split("=");
+			if (cookie[0] == "steamLogin") {
+				isSignedIn = cookie[1].replace(/%.*/, "");
+			}
+		}
+		signedInChecked = true;
+	}
+	return isSignedIn;
 }
 
 // colors the tile for owned games
@@ -706,42 +725,60 @@ function add_library_menu() {
 	storage.get(function(settings) {
 		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
 		if (settings.showlibrarymenu) {
-			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#' id='es_library'>" + localized_strings[language].library + "</a>");
-			$("#es_library").bind("click", function() {
-				library_header_click();
+			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#library' id='es_library'>" + localized_strings[language].library_menu + "</a>");
+
+			var showAppInLibrary = function() {
+				var appid = window.location.hash.match(/\d+/);
+				if (appid && ! isNaN(parseInt(appid[0]))) {
+					settings.librarylastappid = appid[0];
+					storage.set({'librarylastappid': appid[0]});
+
+					var selectAppInList = function() {
+						$(".es_library_app[data-appid='" + $("#es_library_list").data("appid-selected") + "']").removeClass('es_library_selected');
+						$(".es_library_app[data-appid='" + settings.librarylastappid + "']").addClass('es_library_selected');
+						$("#es_library_list").data("appid-selected", settings.librarylastappid);
+						// scroll if found in the app list
+						if ($(".es_library_app[data-appid='" + settings.librarylastappid + "']").length != 0) {
+							$(".es_library_app[data-appid='" + settings.librarylastappid + "']")[0].scrollIntoView();
+						}
+					}
+
+					if ($("#es_library_content").length == 0) {
+						show_library().then(function() { selectAppInList(); library_show_app(appid[0]) });
+					}
+					else {
+						selectAppInList();
+						library_show_app(appid[0]);
+					}
+				}
+			};
+
+			if (window.location.hash == "#library") {
+				show_library();
+			}
+			else if (window.location.hash.startsWith("#library/app/")) {
+				showAppInLibrary();
+			}
+
+			$(".es_library_app").bind("click", function() {
+				showAppInLibrary();
+			});
+
+			$(window).bind("hashchange", function() {
+				if (window.location.hash == "#library") {
+					show_library();
+				}
+				else if (window.location.hash.startsWith("#library/app/")) {
+					showAppInLibrary();
+				}
 			});
 		}
 	});
 }
 
-function library_item_click (appid, icon, minutes) {
-	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
-		var data = JSON.parse(txt);
+function show_library() {
+	var deferred = $.Deferred();
 
-		// fill background div with screenshot
-		var screenshotID = Math.floor(Math.random() * data[appid].data.screenshots.length - 1) + 1;
-		$('#es_library_background').css('background', 'url(' + data[appid].data.screenshots[screenshotID].path_full + ') 0 0 no-repeat');
-		$('#es_library_background').css('background-size', 'cover');
-
-		// fill title div with icon and title
-		$('#es_library_title').html("<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + appid + "/" + icon + ".jpg' height=32>&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 32px; color: #d1d0cc;'>" + data[appid].data.name + "</font>");
-
-		// fill "playnow" div
-		$('#es_library_playnow').html("<a href='steam://run/" + appid + "'><img id='play_button' name='play_button' src='" + chrome.extension.getURL("img/play_off.png") + "'></a>");
-		$("#play_button").hover(
-			function () { $(this).attr('src', chrome.extension.getURL("img/play_on.png")); }, function () { $(this).attr('src', chrome.extension.getURL("img/play_off.png")); }
-		);
-		if (minutes) {
-			if (minutes < 60) {
-				$('#es_library_playnow').append("&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + minutes + " MINUTES PLAYED</font>");
-			} else {
-				$('#es_library_playnow').append("&nbsp;&nbsp;<font style='font-family: tahoma; font-size: 14px; color: #FFF;'>" + Math.floor(minutes/60) + " HOURS PLAYED</font>");
-			}
-		}
-	});
-}
-
-function library_header_click() {
 	// change page title
 	document.title = 'Steam Library';
 
@@ -758,54 +795,279 @@ function library_header_click() {
 	$("#page_background_holder").remove();
 
 	// Create Library divs
-	$("#global_header").after("<div id='es_library_background' class='es_library_background'></div>");
-	$("#global_header").after("<div id='es_library_background_filter' class='es_library_background_filter'></div>");
-	$("#global_header").after("<div id='es_library_right' class='es_library_right'><div id='es_library_title'></div><div id='es_library_playnow'></div></div>");
-	$("#global_header").after("<div id='es_library_list' class='es_library_list'></div>");
+	var es_library = $("<div id='es_library_content'></div>");
+	$("#global_header").after(es_library);
+	es_library.append("<div id='es_library_background'></div>");
+	es_library.append("<div id='es_library_background_filter'></div>");
+	es_library.append("<div id='es_library_right'></div>");
+	es_library.append("<div id='es_library_search' style='display: none;'></div>");
+	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>Loading...</div></div>");
 
-	// Get Steam Long ID
-	var profileID = "";
-	var profileurl = $(".user_avatar")[0].href;
-	if (profileurl === undefined) {
-		var html = ($(".user_avatar").html());
-		html = html.match(/a href=\"(.+)\"><img/);
-		profileurl = html[1];
-	}
-	get_http(profileurl, function (txt) {
-		profileID = txt.match(/name="abuseID" value="(.+)">/);
-		profileID = profileID[1];
+
+	storage.get(function(settings) {
+		if (settings.showlibraryf2p === undefined) { settings.showlibraryf2p = true; storage.set({'showlibraryf2p': settings.showlibraryf2p}); }
+		
+		var showlibraryf2p = 1;
+		showlibraryf2p = (settings.showlibraryf2p) ? 1 : 0;
 
 		// Call Storefront API
-		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + profileID + '&include_appinfo=1&include_played_free_games=1&format=json', function (txt) {
+		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + is_signed_in() + '&include_appinfo=1&include_played_free_games=' + showlibraryf2p + '&format=json', function (txt) {
 			var data = JSON.parse(txt);
-			if (data.response) {
-				var games = data.response.games;
+			if (data.response && Object.keys(data.response).length > 0) {
+				library_all_games = data.response.games;
 
 				//sort entries
-				games.sort(function(a,b) {
+				library_all_games.sort(function(a,b) {
 					if ( a.name == b.name ) return 0;
-					return a.name < b.name ? -1 : 1;
+					return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
 				});
 
-				$.each(games, function(i, obj) {
-					if (obj.name) {
-						if (obj.name.length > 34) {
-							obj.name = obj.name.substring(0,34) + "...";
+				var refresh_games_list = function(filter_name) {
+					$("#es_library_list").html("");
+
+					var last_app_id_in_games = false;
+					var filtered_games = [];
+
+					$.each(library_all_games, function(i, obj) {
+						if (obj.name && (filter_name === undefined || new RegExp(filter_name, "i").test(obj.name))) {
+							if (obj.name.length > 34) {
+								obj.name = obj.name.substring(0,34) + "...";
+							}
+							var app_html = "<a href='#library/app/" + obj.appid + "' data-appid='" + obj.appid + "' data-playtime-forever='" + obj.playtime_forever + "' class='es_library_app'>";
+							if (obj.img_icon_url.length != 0) {
+								app_html += "<img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + obj.appid + "/" + obj.img_icon_url + ".jpg' height=16 style='vertical-align: middle;'>&nbsp;";
+							}
+							$("#es_library_list").append(app_html + obj.name + "</a>");
+
+							if (settings.librarylastappid == obj.appid) {
+								last_app_id_in_games = true;
+							}
+
+							filtered_games.push(obj);
 						}
-						if (obj.img_icon_url.length != 0) {
-							$("#es_library_list").append("<div id='" + obj.appid + "' width=275 height=16><img src='http://media.steampowered.com/steamcommunity/public/images/apps/" + obj.appid + "/" + obj.img_icon_url + ".jpg' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a></div>");
-						} else {
-							$("#es_library_list").append("<img src='" + chrome.extension.getURL('img/ico/steamtrades.ico') + "' height=16>&nbsp;<a class='es_library_link_" + obj.appid + "'>" + obj.name + "</a><br>");
+					});
+
+					if (! last_app_id_in_games && filtered_games.length > 0) {
+						settings.librarylastappid = filtered_games[0].appid;
+						storage.set({'librarylastappid': settings.librarylastappid});
+					}
+
+					$(".es_library_app[data-appid='" + settings.librarylastappid + "']").addClass('es_library_selected');
+					$("#es_library_list").data("appid-selected", settings.librarylastappid);
+					window.location.hash = "library/app/" + settings.librarylastappid;
+				};
+
+				refresh_games_list();
+
+				$("#es_library_search").append("<input type='text' id='es_library_search_input' placeholder='Search'>");
+				$("#es_library_search").show();
+
+				$("#es_library_search_input").keyup(function(e) {
+					if (e.which != 13) {
+						if (! $(this).val()) {
+							refresh_games_list();
 						}
-						$(".es_library_link_" + obj.appid).bind("click", function() {
-							$("div").removeClass('es_library_selected');
-							$("#"+obj.appid).addClass('es_library_selected');
-							library_item_click(obj.appid, obj.img_icon_url, obj.playtime_forever);
+						else {
+							refresh_games_list($(this).val());
+						}
+					}
+				});
+
+				$("#es_library_list_loading").remove();
+
+				deferred.resolve();
+			}
+			else {
+				$("#es_library_list_loading").remove();
+				es_library.html("<div id='es_library_private_profile'>" + localized_strings[language].library.private_profile + "</div>");
+				deferred.reject();
+			}
+		});
+	});
+
+	return deferred.promise();
+}
+
+function library_show_app(appid) {
+	$("#es_library_background").removeAttr("style");
+	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>Loading...</div>");
+
+	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
+		var app_data = JSON.parse(txt);
+
+		if (app_data[appid].success) {
+
+			// fill background div with screenshot
+			var screenshotID = Math.floor(Math.random() * app_data[appid].data.screenshots.length - 1) + 1;
+			$('#es_library_background').css('background', 'url(' + app_data[appid].data.screenshots[screenshotID].path_full + ') 0 0 no-repeat');
+			$('#es_library_background').css('background-size', 'cover');
+
+			// fill title div with icon and title
+			var el_title = $("<div id='es_library_title'></div>");
+			$("#es_library_right").append(el_title);
+			el_title.append("<img src='" + $(".es_library_app[data-appid='" + appid + "']").children("img").attr("src") + "' height=32>&nbsp;&nbsp;<span style='font-size: 32px; color: #d1d0cc;'>" + app_data[appid].data.name + "</span>");
+			
+			if (app_data[appid].data.genres && app_data[appid].data.genres.length > 0) {
+				var genres = [];
+				for (var i = 0; i < app_data[appid].data.genres.length; i++) {
+					genres.push(app_data[appid].data.genres[i].description);
+				}
+				el_title.append("<br><span style='color: grey;'>Genres: " + genres.join(" / ") + "</span>");
+			}
+
+			if (app_data[appid].data.categories && app_data[appid].data.categories.length > 0) {
+				var categories = [];
+				for (var i = 0; i < app_data[appid].data.categories.length; i++) {
+					categories.push(app_data[appid].data.categories[i].description);
+				}
+				el_title.append("<br><span style='color: grey;'>Categories: " + categories.join(" / ") + "</span>");
+			}
+
+			// fill "playnow" div
+			$("#es_library_right").append("<br><div id='es_library_app_playnow'></div>");
+			var el_playnow = $("#es_library_app_playnow");
+
+			el_playnow.append("<a href='steam://run/" + appid + "'><img id='play_button' name='play_button' src='" + chrome.extension.getURL("img/play_off.png") + "'></a>");
+			$("#play_button").hover(
+				function () { $(this).attr('src', chrome.extension.getURL("img/play_on.png")); }, function () { $(this).attr('src', chrome.extension.getURL("img/play_off.png")); }
+			);
+			var playtime_forever = $(".es_library_app[data-appid='" + appid + "']").data("playtime-forever");
+			if (playtime_forever != "undefined") {
+				playtime_forever = parseInt(playtime_forever);
+				el_playnow.append("&nbsp;&nbsp;<span style='font-size: 14px; color: #FFF;'>");
+				if (playtime_forever < 60) {
+					el_playnow.append(playtime_forever + " MINUTES PLAYED");
+				} else {
+					el_playnow.append(Math.floor(playtime_forever / 60) + " HOURS PLAYED");
+				}
+				el_playnow.append("</span>");
+			}
+
+			var el_hub_link = $("<div id='es_library_hub_link' class='btn_darkblue_white_innerfade'></div>");
+			$("#es_library_right").append(el_hub_link);
+			el_hub_link.append("<a href='http://steamcommunity.com/app/" + appid + "/'>COMMUNITY HUB</a>");
+
+			$("#es_library_right").append("<br><div id='es_library_app_left'></div><div id='es_library_app_right'></div>");
+
+			// achievements etc. can be loaded later
+			$("#es_library_list_loading").remove();
+
+			// fill achievements div
+
+			if (app_data[appid].data.achievements && app_data[appid].data.achievements.total > 0) {
+				$("#es_library_app_left").append($("<div class='es_library_app_container' id='es_library_app_achievements_container' style='display: none;'><div id='es_library_app_achievements'></div></div>"));
+
+				// TODO: spam Valve so we can do just 1 request for achievements
+				get_http("http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=" + is_signed_in() + "&appid=" + appid, function(txt) {
+					var player_achievements = JSON.parse(txt);
+
+					if (player_achievements.playerstats.achievements) {
+						get_http("http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v0002/?key=A6509A49A35166921243F4BCC928E812&steamid=" + is_signed_in() + "&appid=" + appid + "&l=english", function(txt) {
+							var achievements_schema = JSON.parse(txt).game.availableGameStats.achievements;
+							player_achievements = player_achievements.playerstats.achievements;
+
+							el_achievements_cont = $("#es_library_app_achievements");
+							el_achievements_cont.append("<h2>Achievements</h2>");
+
+							var achievements = {};
+							var locked_achievements_count = 0;
+
+							for (var i = 0; i < player_achievements.length; i++) {
+								achievements[player_achievements[i].apiname] = { achieved: player_achievements[i].achieved };
+								if (player_achievements[i].achieved == 0) {
+									locked_achievements_count++;
+								}
+							}
+
+							for (var i = 0; i < achievements_schema.length; i++) {
+								$.extend(achievements[achievements_schema[i].name], achievements_schema[i]);
+							}
+
+							el_achievements_cont.append("<div style='margin-bottom: 10px;'>You have unlocked " + (player_achievements.length - locked_achievements_count) + "/" + player_achievements.length + " (" + (Math.ceil((player_achievements.length - locked_achievements_count) / player_achievements.length * 100)) + "%)</div>");
+
+							if (locked_achievements_count > 0) {
+								el_achievements_cont.append("<div style='margin-bottom: 10px;'>Locked achievements:</div>");
+
+								var shown_locked_achievements_count = 0;
+
+								$.each(achievements, function(key, achievement) {
+									if (achievement.achieved == 0) {
+										var displayName = (achievement.displayName) ? achievement.displayName.replace(/'/g, "&#39;") + "\n" : "";
+										var description = (achievement.description) ? achievement.description.replace(/'/g, "&#39;") : "";
+										el_achievements_cont.append("<img src='" + achievement.icongray + "' title='" + displayName + description + "' alt='" + displayName + description + "' class='btn_grey_white_innerfade' style='padding: 4px; margin-right: 10px; width: 32px; height: 32px; cursor: default;'>");
+										shown_locked_achievements_count++;
+									}
+
+									if (shown_locked_achievements_count == 10) {
+										if (locked_achievements_count > shown_locked_achievements_count) {
+											el_achievements_cont.append("<a href='http://steamcommunity.com/my/stats/appid/" + appid + "/achievements' class='btn_grey_white_innerfade' style='width: 32px; height: 32px; line-height: 32px; padding: 4px; display: inline-block; vertical-align: top; text-align: center;'>+" + (locked_achievements_count - shown_locked_achievements_count) + "</a>");
+										}
+										return false;
+									}
+								});
+							}
+							else {
+								el_achievements_cont.append("You've unlocked every single achievement. Congratulations!");
+							}
+
+							el_achievements_cont.append("<div><a href='http://steamcommunity.com/my/stats/appid/" + appid + "/achievements' class='btn_grey_white_innerfade' style='padding: 4px; margin-top: 10px;'>VIEW ALL ACHIEVEMENTS</a></div>");
+
+							$("#es_library_app_achievements_container").show();
 						});
 					}
 				});
 			}
-		});
+			
+			// fill news div
+
+			get_http("http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=" + appid + "&maxlength=500&count=3", function(txt) {
+				var data = JSON.parse(txt);
+
+				if (data.appnews.newsitems && data.appnews.newsitems.length > 0) {
+					$("#es_library_app_left").append($("<div class='es_library_app_container' id='es_library_app_news_container' style='display: none;'><div id='es_library_app_news'></div></div>"));
+					el_news_cont = $("#es_library_app_news");
+					el_news_cont.append("<h2>News</h2>");
+
+					var news = data.appnews.newsitems;
+
+					for (var i = 0; i < news.length; i++) {
+						el_news_cont.append("<div class='es_library_app_news_post'>");
+						el_news_cont.append("<h3><a href='" + news[i].url + "'>" + news[i].title  + "</a></h3>");
+						el_news_cont.append("<span style='color: grey;'>" + new Date(news[i].date * 1000) + " - " + news[i].feedlabel + "</span>")
+						el_news_cont.append("<br>" + news[i].contents);
+						el_news_cont.append("<br><a href='" + news[i].url + "' style='text-decoration: underline;'>Read More</a></h3>");
+						el_news_cont.append("</div>");
+					}
+
+					el_news_cont.append("<div><a href='http://store.steampowered.com/news/?appids=" + appid + "' class='btn_grey_white_innerfade' style='padding: 4px; margin-top: 10px;'>VIEW ALL NEWS</a></div>");
+
+					$("#es_library_app_news_container").show();
+				}
+			});
+			
+			// Links in the right sidebar
+
+			$("#es_library_app_right").append($("<div class='es_library_app_container'><div id='es_library_app_links'></div></div>"));
+			$("#es_library_app_links").append("<h2>LINKS</h2><ul></ul>");
+			if (app_data[appid].data.achievements && app_data[appid].data.achievements.total > 0) {
+				$("#es_library_app_links ul").append("<li><a href='http://steamcommunity.com/my/stats/appid/" + appid + "/achievements'>Achievements</a></li>");
+			}
+			$("#es_library_app_links ul").append("<li><a href='http://store.steampowered.com/app/" + appid + "/'>Store Page</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://store.steampowered.com/news/?appids=" + appid + "'>News</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://steamcommunity.com/app/" + appid + "/'>Community Hub</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://steamcommunity.com/app/" + appid + "/discussions'>Forums</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://steamcommunity.com/app/" + appid + "/guides'>Community Guides</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://steamcommunity.com/app/" + appid + "/images'>Artwork</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://steamcommunity.com/actions/Search?T=ClanAccount&K=" + encodeURIComponent(app_data[appid].data.name) + "'>Related Groups</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='http://store.steampowered.com/recommended/recommendgame/" + appid + "'>Recommend</a></li>");
+			$("#es_library_app_links ul").append("<li><a href='https://support.steampowered.com/kb_article.php?appid=" + appid + "'>Support</a></li>");
+			if (app_data[appid].data.website) {
+				$("#es_library_app_links ul").append("<li><a href='" + app_data[appid].data.website + "'>Website</a></li>");
+			}
+		}
+		else {
+			$("#es_library_list_loading").html("App ID " + appid + " wasn't found.");
+		}
 	});
 }
 
@@ -2156,7 +2418,22 @@ function add_cardexchange_links(game) {
 	});
 }
 
+function add_total_drops_count() {
+	var drops_count = 0;
+	$(".progress_info_bold").each(function(i, obj) {
+		var obj_count = obj.innerHTML.match(/\d+/);
+		if (obj_count) {
+			drops_count += parseInt(obj_count[0]);
+		}
+	});
+	if (drops_count > 0) {
+		$(".profile_badges_sortoptions span").prepend(localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + " ");
+	}
+}
+
 $(document).ready(function(){
+	is_signed_in();
+
 	localization_promise.done(function(){
 		// Don't interfere with Storefront API requests
 		if (window.location.pathname.startsWith("/api")) return;
@@ -2171,9 +2448,9 @@ $(document).ready(function(){
 
 		switch (window.location.host) {
 			case "store.steampowered.com":
-				// Load data from inv before anything else.
-
-				add_library_menu();
+				if (is_signed_in()) {
+					add_library_menu();
+				}
 
 				switch (true) {
 					case /^\/cart\/.*/.test(window.location.pathname):
@@ -2301,6 +2578,7 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+						add_total_drops_count();
 						add_cardexchange_links();
 						break;
 
