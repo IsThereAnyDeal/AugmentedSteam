@@ -1,6 +1,7 @@
 v4.0
 -----
-
++ Add "Total drops remaining" to Badges page
++ Added search, filtering, achievements, news, and links to Library page
 
 v3.9.9
 -----
