@@ -725,7 +725,8 @@ function add_library_menu() {
 	storage.get(function(settings) {
 		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
 		if (settings.showlibrarymenu) {
-			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='#library' id='es_library'>" + localized_strings[language].library_menu + "</a>");
+			var library_url = (window.location.host == "store.steampowered.com") ? "#library" : "http://store.steampowered.com/#library";
+			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='" + library_url + "' id='es_library'>" + localized_strings[language].library_menu + "</a>");
 
 			var showAppInLibrary = function() {
 				var appid = window.location.hash.match(/\d+/);
@@ -2442,15 +2443,15 @@ $(document).ready(function(){
 		remove_install_steam_button();
 		remove_about_menu();
 		add_spuf_link();
+		if (is_signed_in()) {
+			add_library_menu();
+		}
 
 		// attach event to the logout button
 		$('a[href$="http://store.steampowered.com/logout/"]').bind('click', clear_cache);
 
 		switch (window.location.host) {
 			case "store.steampowered.com":
-				if (is_signed_in()) {
-					add_library_menu();
-				}
 
 				switch (true) {
 					case /^\/cart\/.*/.test(window.location.pathname):
