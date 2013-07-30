@@ -7,6 +7,7 @@ v4.0
 + Added "Library" link to SteamCommunity pages
 : Fixed "Total Spent" to work in all languages (Thanks johnc!)
 : Library feature now enabled by default
++ Adds marketplace links to badge progress pages
 
 v3.9.9
 -----
