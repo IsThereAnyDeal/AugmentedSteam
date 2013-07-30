@@ -723,7 +723,7 @@ function add_spuf_link() {
 // Adds a "Library" menu to the main menu of Steam
 function add_library_menu() {
 	storage.get(function(settings) {
-		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = false; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
+		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = true; storage.set({'showlibrarymenu': settings.showlibrarymenu}); }
 		if (settings.showlibrarymenu) {
 			var library_url = (window.location.host == "store.steampowered.com") ? "#library" : "http://store.steampowered.com/#library";
 			$(".menuitem[href='http://steamcommunity.com/']").before("<a class='menuitem' href='" + library_url + "' id='es_library'>" + localized_strings[language].library_menu + "</a>");

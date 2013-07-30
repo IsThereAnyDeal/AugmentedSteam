@@ -2,6 +2,11 @@ v4.0
 -----
 + Add "Total drops remaining" to Badges page
 + Added search, filtering, achievements, news, and links to Library page
+: Moving to new price history API
+: Updated multiple translations
++ Added "Library" link to SteamCommunity pages
+: Fixed "Total Spent" to work in all languages (Thanks johnc!)
+: Library feature now enabled by default
 
 v3.9.9
 -----
