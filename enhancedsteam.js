@@ -1595,7 +1595,7 @@ function account_total_spent() {
 				currency_symbol = currency_symbol.match(/(?:R\$|\$|€|£|pуб)/)[0];
 
 				totaler = function (p, i) {
-					if (p.innerHTML.indexOf("class=\"transactionRowEvent\">Wallet Credit</div>") < 0) {
+					if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") < 0) {
 						var priceContainer = $(p).find(".transactionRowPrice");
 						if (priceContainer.length > 0) {
 							var priceText = $(priceContainer).text();
