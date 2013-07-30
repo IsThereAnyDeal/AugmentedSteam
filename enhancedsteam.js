@@ -2419,6 +2419,30 @@ function add_cardexchange_links(game) {
 	});
 }
 
+function add_gamecard_market_links(game) {
+	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
+		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
+		if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
+		
+		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + cardname;
+		var node = $(this);
+		
+		// Test market link to see if valid.  Some cards have "(Trading Card)" on the end of their name
+		get_http("http://steamcommunity.com/market/listings/753/" + game + "-" + cardname, function (txt) {
+			if (/<div id=\"largeiteminfo\">/.test(txt) == false) {
+				marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + cardname + " (Trading Card)";		
+			}
+			
+			var html = $(node).children("div:contains('" + cardname + "')").html();
+			html = "<div class='badge_card_set_text'>" + html;
+			html = html.replace(cardname, "<a href='" + marketlink + "' target='_blank'>" + cardname + "</a>");
+			html = html + "</div>";
+			
+			$(node).children("div:contains('" + cardname + "')").replaceWith(html);
+		});
+	});
+}
+
 function add_total_drops_count() {
 	var drops_count = 0;
 	$(".progress_info_bold").each(function(i, obj) {
@@ -2556,7 +2580,7 @@ $(document).ready(function(){
 						});
 						break;
 
-					case /^\/id\/.+\/inventory\/?$/.test(window.location.pathname):
+					case /^\/id\/.+\/inventory\/.*/.test(window.location.pathname):
 						$(".itemHolder").bind("click", function() {
 							window.setTimeout(inventory_market_helper,100);
 						});
@@ -2584,7 +2608,9 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
-						add_cardexchange_links(get_gamecard(window.location.pathname));
+						var gamecard = get_gamecard(window.location.pathname);
+						add_cardexchange_links(gamecard);
+						add_gamecard_market_links(gamecard);
 						break;
 				}
 				break;
