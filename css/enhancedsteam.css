@@ -122,8 +122,7 @@
 	font-style: italic;
 }
 
-.es_library_list {	
-	width: 280px;	
+#es_library_list, #es_library_search {
 	padding-left: 10px;
 	overflow: scroll;
 	overflow-y: scroll;
@@ -135,7 +134,32 @@
 	text-align: left;
 }
 
-.es_library_background {
+#es_library_search {
+	top: 110px;
+	background: url('http://cdn3.store.steampowered.com/public/images/v5/store_header_search.png?v=2') no-repeat;
+	color: #a6a5a2;
+	width: 253px;
+	height: 35px;
+	margin-left: 20px;
+	overflow: hidden;
+}
+
+#es_library_search_input {
+	width: 100%;
+	border: none;
+	background-color: #82807c;
+	color: #cdcac1;
+	margin-top: 5px;
+	outline: none;
+	width: 206px;
+}
+
+#es_library_list {
+	top: 145px;
+	width: 280px;
+}
+
+#es_library_background {
 	margin-left: 150px;
 	position: absolute;
 	top: 105px;
@@ -145,7 +169,7 @@
 	opacity:.70;
 }
 
-.es_library_background_filter {
+#es_library_background_filter {
 	margin-left: 150px;
 	position: absolute;
 	top: 105px;
@@ -155,7 +179,7 @@
 	background: -webkit-radial-gradient(center center, circle, rgba(52, 52, 52, 0) 0%, rgba(0, 0, 0, 1) 80%);
 }
 
-.es_library_right {
+#es_library_right {
 	margin-left: 280px;
 	position: absolute;
 	width: 60%;
@@ -164,54 +188,165 @@
 }
 
 #es_library_title {
+	display: inline-block;
 	margin-left: 40px;
-	position: absolute;
+	position: relative;
 	top: 40px;
-	padding: 8px 8px 8px 8px;
+	padding: 8px 10px;
 	z-index: 3;
 	font-family: Tahoma, Geneva, sans-serif;
 	background-color: rgba(0,0,0,0.6);
 }
 
-#es_library_playnow {
+#es_library_app_playnow {
+	display: inline-block;
 	margin-left: 40px;
-	position: absolute;
-	top: 95px;
-	padding: 8px 8px 8px 8px;
+	position: relative;
+	top: 55px;
+	padding: 8px 10px;
 	z-index: 3;
 	font-family: Tahoma, Geneva, sans-serif;
 	background-color: rgba(0,0,0,0.4);
 }
 
-#es_library_playnow a:hover {
+#es_library_app_playnow a:hover {
 	cursor:default;
+}
+
+#es_library_app_playnow #play_button {
+	vertical-align: middle;
+}
+
+#es_library_hub_link {
+    display: inline-block;
+    position: relative;
+    top: 55px;
+    left: 422px;
+    z-index: 3;
+    padding: 4px;
+}
+
+#es_library_hub_link a {
+	text-decoration: none;
+}
+
+.es_library_app {
+	display: block;
+	width: 275px;
+	height: 18px;
+	padding: 2px 0;
 }
 
 .es_library_selected {
 	background-color: rgba(49,65,89,1);
 }
 
-.es_library_list::-webkit-scrollbar {
+#es_library_list_loading {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	z-index: 99;
+	font-size: 20px;
+}
+
+#es_library_list_loading img {
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+#es_library_list::-webkit-scrollbar {
 	width: 12px;
 }
 
-.es_library_list::-webkit-scrollbar-track {
+#es_library_list::-webkit-scrollbar-track {
 	background: none;
 }
 
-.es_library_list::-webkit-scrollbar-thumb {
+#es_library_list::-webkit-scrollbar-thumb {
 	background: -webkit-linear-gradient(left, #547c90, #002640);
 	border: 1px solid #333333;
 	box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.4);
 }
 
-.es_library_list a:hover {
+#es_library_list a:hover {
 	color: white;
 	text-decoration: none;
 	cursor:default;
 }
 
-.es_library_list a {
+#es_library_list a {
 	color: #d1cfcd;
 	text-decoration: none;
+}
+
+#es_library_private_profile {
+	font-size: 20px;
+	margin-left: 50px;
+	margin-top: 50px;
+}
+
+#es_library_private_profile a {
+	color: #b8b6b4;
+	text-decoration: none;
+}
+
+#es_library_app_left {
+	display: inline-block;
+	width: 740px;
+	position: relative;
+	left: 40px;
+	top: 80px;
+	z-index: 3;
+}
+
+#es_library_app_right {
+	display: inline-block;
+	width: 250px;
+	position: relative;
+	left: 40px;
+	top: 80px;
+	z-index: 3;
+	vertical-align: top;
+}
+
+.es_library_app_container {
+	position: relative;
+	margin-bottom: 10px;
+	background-color: rgba(0,0,0,0.6);
+	padding: 20px 20px;
+	opacity: 0.7;
+}
+
+#es_library_app_left .es_library_app_container {
+	width: 700px;
+}
+
+#es_library_app_right .es_library_app_container {
+	width: 200px;
+	margin-left: 10px;
+}
+
+.es_library_app_container h2 {
+	color: #5986B3;
+	text-transform: uppercase;
+	font-size: 16px;
+	padding-bottom: 5px;
+}
+
+#es_library_app_news h3 a {
+	font-size: 14px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+#es_library_app_news .es_library_app_news_post {
+	margin-bottom: 10px;
+}
+
+#es_library_app_links ul {
+	list-style-type: none;
+}
+
+#es_library_app_links li {
+	padding: 2px 0;
 }

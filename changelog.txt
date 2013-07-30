@@ -1,12 +1,25 @@
-v4.0
+v4.1
 -----
 
+
+v4.0
+-----
++ Add "Total drops remaining" to Badges page
++ Added search, filtering, achievements, news, and links to Library page
+: Moving to new price history API
+: Updated multiple translations
++ Added "Library" link to SteamCommunity pages
+: Fixed "Total Spent" to work in all languages (Thanks johnc!)
+: Library feature now enabled by default
++ Adds marketplace links to badge progress pages
 
 v3.9.9
 -----
 + Adds automatic age verification to Steam store
 + Adds SteamCardExchange links to badge and badge progress pages
 + Adds DLC categorization to a game's DLC page
++ Adds remaining card drops count
+: Library updates
 + Adds an "Add all unowned DLC to cart" button on game's DLC page
 : Updated Portuguese translation
 : Updated Italian translation

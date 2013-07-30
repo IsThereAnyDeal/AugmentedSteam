@@ -8,7 +8,7 @@ localization_promise = (function (){
         	website: "Website",
         	contribute: "Contribute (GitHub)",
 		store: "Store",
-		library: "Library",
+		library_menu: "Library",
 		community: "Community",
 		news: "News",
 		about: "About",
@@ -35,6 +35,7 @@ localization_promise = (function (){
 		options_steamcardexchange: "Show SteamCardExchange links on badges",
 		options_es_bg: "Set Custom Background on Edit Profile Screen",
 		options_library: "Show Library button in header (BETA)",
+		options_library_f2p: "Show played free to play games and demos in library",
 		options_hide_about: "Hide About link in header",
 		options_about_text: "About <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>Features include:<ul><li>Highlighting games you already own</li><li>Highlighting games on your wishlist</li><li>Correctly calculating bundle discounts based on games you already own</li><li>Showing you how much money you've spent on Steam for the lifetime of your account</li><li>Highlighting DLC you own on a game page</li><li>Fixing \"No Image Available\" game icons on your wishlist for any game or DLC</li><li>Pointing out titles with 3rd party DRM</li></ul><p>If you find this Extension useful, please consider donating.",
 		tag: "Tag",
@@ -75,8 +76,12 @@ localization_promise = (function (){
 		market_transactions: "Market Transactions",
 		total_spent: "Total Spent",
 		historical_low: "Historical Low",
-		lowest_price: "Lowest Price"
-    		};
+		lowest_price: "Lowest Price",
+		card_drops_remaining: "__drops__ card drops remaining.",
+		library: {
+			private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
+		}
+    };
 
     localized_strings = {
         "en": 	localized_strings_default,
@@ -113,6 +118,7 @@ localization_promise = (function (){
 		options_greenlight_banner: "Nahradit Steam Greenlight banner",
 		options_es_bg: "Možnost nastavit Vlastní pozadí na stránce Upravit profil",
 		options_library: "Ukázat tlačítko Knihovna v hlavičce (BETA)",
+		options_library_f2p: "Ukázat hrané free to play hry a dema v knihovně",
 		options_hide_about: "Schovat odkaz O Steamu v hlavičce",
 		options_about_text: "O <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam je rozšíření pro Google Chrome, které přidává mnoho nových funkcí na webovou stránku Steamu.<p>Mezi funkce patří:<ul><li>Zvýraznění již vlastněných her</li><li>Zvýraznění her na Vašem Seznamu přání</li><li>Přesné spočítaní slev u balíčků založené na hrách, které již vlastníte</li><li>Ukázání, kolik jste na Steamu utratili od založení Vašeho účtu</li><li>Zvýraznění DLC, které již vlastníte, na stránce hry</li><li>Spravení \"No Image Available\" ikon her na vašem Seznamu přání pro každou hru i DLC</li><li>Upozornění na hry s DRM třetí strany</li></ul><p>Pokud vám toto rozšíření přijde užitečné, prosím popřemýšlejte o příspěvku.",
 		tag: "Popisek",
@@ -146,7 +152,11 @@ localization_promise = (function (){
 		custom_background: "Vlastní pozadí",
 		custom_background_help: "Všichni uživatelé Enhanced Steam uvidí toto pozadí na vašem profilu.  Uživatelé bez Enhanced Steam uvidí vaše normální pozadí profilu.",
 		total_size: "Celková velikost",
-		hide: "Schovat"
+		hide: "Schovat",
+		card_drops_remaining: "Zbývá __drops__ přídělů karet.",
+		library: {
+			private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
+		}
      		},
         "da":   {},
         "de":   {
@@ -278,6 +288,7 @@ localization_promise = (function (){
 		website: "Site web",
 		contribute: "Contribuer (GitHub)",
 		store: "Magasin",
+		library_menu: "Bibliothèque",
 		community: "Communauté",
 		news: "Actualités",
 		about: "À propos",
@@ -301,10 +312,11 @@ localization_promise = (function (){
 		options_total_spent: "Afficher \"Total dépensé\" dans la page du compte",
 		options_group_events: "Afficher les événements dans l'aperçu des groupes",
 		options_greenlight_banner: "Remplacer la bannière Steam Greenlight",
+		options_steamcardexchange: "Afficher le lien SteamCardExchange sur les badges",
 		options_es_bg: "Définir un arrière-plan personnalisé sur la page de modification du profil",
-		options_library: "Afficher le bouton Bibliothèque dans l'entête (BETA)",
-		options_hide_about: "Cacher le lien À propos dans l'entête",
-		options_about_text: "À propos d'<a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a> :<p>Enhanced Steam est une extension pour Google Chrome qui ajoute de nombreuses nouvelles fonctionnalités pour le site de Steam.<p>Caractéristiques incluses :<ul><li>Le surlignage des jeux que vous possédez déjà</li><li>Le surlignage des jeux dans votre liste de souhaits</li><li>Le calcul correct des remises de pack basé sur les jeux que vous possédez déjà</li><li>L'Affichage de l'argent que vous avez dépensé sur Steam pour la durée de vie de votre compte</li><li>Le surlignage des DLCs que vous possédez sur la page du jeu</li><li>La correction du \"No Image Available\" des icones de jeu dans votre liste de souhaits pour n'importe quel jeu ou DLC</li><li>Montre les titres avec des DRMs de tiers</li></ul><p>Si vous trouvez cette extension utile, veuillez envisager de faire don.",
+		options_library: "Afficher le bouton Bibliothèque dans l'en-tête (BETA)",
+		options_hide_about: "Cacher le lien À propos dans l'en-tête",
+		options_about_text: "À propos d'<a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a> :<p>Enhanced Steam est une extension pour Google Chrome qui ajoute de nombreuses nouvelles fonctionnalités pour le site de Steam.<p>Caractéristiques incluses :<ul><li>Le surlignage des jeux que vous possédez déjà</li><li>Le surlignage des jeux dans votre liste de souhaits</li><li>Le calcul correct des remises de pack basé sur les jeux que vous possédez déjà</li><li>L'affichage de l'argent que vous avez dépensé sur Steam pour la durée de vie de votre compte</li><li>Le surlignage des DLCs que vous possédez sur la page du jeu</li><li>La correction du \"No Image Available\" des icones de jeu dans votre liste de souhaits pour n'importe quel jeu ou DLC</li><li>L'affichage des titres avec des DRMs de tiers</li></ul><p>Si vous trouvez cette extension utile, veuillez envisager de faire don.",
 		tag: "Tag",
 		theworddefault: "Défaut",
 		save: "Enregistrer",
@@ -316,6 +328,7 @@ localization_promise = (function (){
 		coupon_application_note: "Un coupon de votre inventaire sera utilisé automatiquement dans le panier.",
 		coupon_learn_more: "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">En savoir plus</a> sur les Coupons Steam",
 		add_to_cart: "Ajouter au panier",
+		add_unowned_dlc_to_cart: "Ajouter les DLCs non-possédés au panier",
 		drm_third_party: "Attention : ce titre utilise le DRM d'un tiers",
 		empty_cart: "Vider le panier",
 		events_view_all: "TOUT AFFICHER",
@@ -352,7 +365,7 @@ localization_promise = (function (){
         	website: "Sito web",
         	contribute: "Contributi (GitHub)",
 		store: "Negozio",
-		library: "Libreria",
+		library_menu: "Libreria",
 		community: "Comunità",
 		news: "Notizie",
 		about: "Informazioni",
@@ -515,7 +528,7 @@ localization_promise = (function (){
         	website: "Página Web",
         	contribute: "Contribua (GitHub)",
         	store: "Loja",
-        	library: "Biblioteca",
+        	library_menu: "Biblioteca",
         	community: "Comunidade",
         	news: "News",
         	about: "Sobre",
@@ -555,6 +568,7 @@ localization_promise = (function (){
         	coupon_application_note: "Um cupom em seu inventário será aplicado automaticamente no momento de pagar.",
         	coupon_learn_more: "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Aprenda mais</a> sobre Cupons Steam",
         	add_to_cart: "Adicionar ao Carrinho",
+			add_unowned_dlc_to_cart: "Adicionar DLC não adquiridos ao Carrinho",
         	drm_third_party: "Aviso: Este jogo possui DRM de terceiros",
         	empty_cart: "Limpar Carrinho",
         	events_view_all: "VER TODOS",
