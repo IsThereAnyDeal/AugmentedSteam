@@ -555,6 +555,7 @@ localization_promise = (function (){
 		options_steamcardexchange: "Mostrar links do SteamCardExchange nas insígnias",
 		options_es_bg: "Selecionar Papel de Parede Personalizável no Editar perfil",
 		options_library: "Mostrar botão Biblioteca no topo (BETA)",
+		options_library_f2p: "Mostrar jogos gratuitos para jogar (free to play) e demos jogadas na biblioteca",
 		options_hide_about: "Ocultar botão Sobre no topo",
 		options_about_text: "Sobre <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam é uma extensão para Google Chrome que adiciona novos recursos na página do Steam.<p>Recursos incluem:<ul><li>Realce para jogos já comprados</li><li>Realce para jogos na Lista de Desejos</li><li>Cálculo correto de desconto em pacotes baseado em jogos já comprados</li><li>Mostrar quanto foi total gasto no Steam na vida de sua conta</li><li>Realça DLC já comprados na página do jogo</li><li>Corrige \"No Image Available\" em icones de jogos na Lista de Desejos de qualquer jogo ou DLC</li><li>Apresenta jogos com DRM de terceiros</li></ul><p>Se achou esta extensão útil, por favor considere uma doação.",
 		tag: "Marca",
@@ -595,7 +596,11 @@ localization_promise = (function (){
 		market_transactions: "Transações no Mercado",
 		total_spent: "Total Gasto",
 		historical_low: "Menor Registrado",
-		lowest_price: "Menor Preço"		
+		lowest_price: "Menor Preço",
+		card_drops_remaining: "__drops__ queda de cartas restante.",
+		library: {
+			private_profile: "Mude seu status de perfil para público <a href='http://steamcommunity.com/my/edit/settings'>nas configurações</a> para usar este recurso."
+		}
         },
         "ro":   {},
         "ru":   {
