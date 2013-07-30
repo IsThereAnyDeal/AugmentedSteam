@@ -568,6 +568,7 @@ localization_promise = (function (){
         	coupon_application_note: "Um cupom em seu inventário será aplicado automaticamente no momento de pagar.",
         	coupon_learn_more: "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Aprenda mais</a> sobre Cupons Steam",
         	add_to_cart: "Adicionar ao Carrinho",
+			add_unowned_dlc_to_cart: "Adicionar DLC não adquiridos ao Carrinho",
         	drm_third_party: "Aviso: Este jogo possui DRM de terceiros",
         	empty_cart: "Limpar Carrinho",
         	events_view_all: "VER TODOS",
