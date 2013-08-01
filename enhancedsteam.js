@@ -1921,7 +1921,8 @@ function start_highlights_and_tags(){
 		"div.recommendation_highlight",	// Recommendation page.
 		"div.recommendation_carousel_item",	// Recommendation page.
 		"div.friendplaytime_game",	// Recommendation page.
-		"div.dlc_page_purchase_dlc" // DLC page rows
+		"div.dlc_page_purchase_dlc", // DLC page rows
+		"div.sale_page_purchase_item" // Sale pages
 	];
 
 	// Get all appids and nodes from selectors.

@@ -1,6 +1,6 @@
 v4.1
 -----
-
++ Adds highlighting to sales pages
 
 v4.0
 -----
