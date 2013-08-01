@@ -392,6 +392,7 @@ localization_promise = (function (){
 		options_steamcardexchange: "Mostra link di SteamCardExchange in Medaglie",
 		options_es_bg: "Imposta sfondo personalizzato in Modifica profilo",
 		options_library: "Mostra pulsante \"Libreria\" (BETA)",
+		options_library_f2p: "Mostra demo e free-to-play giocati nella Libreria",
 		options_hide_about: "Nascondi pulsante \"Informazioni\"",
 		options_about_text: "Informazioni su <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam è un'estensione per Google Chrome che aggiunge molte nuove funzioni al sito web di Steam.<p>Caratteristiche:<ul><li>Evidenzia i giochi che possiedi</li><li>Evidenzia i giochi che desideri</li><li>Calcola gli sconti sui bundle in base ai giochi che già possiedi</li><li>Mostra i soldi spesi in totale sul tuo account di Steam</li><li>Evidenzia i DLC posseduti nella pagina del gioco</li><li>Corregge bug dell'icona \"No Image Available\" nella Lista desideri per giochi e DLC</li><li>Mostra avvisi quando sono presenti DRM di terze parti</li></ul><p>Se trovi utile questa estensione, considera di fare una donazione.",
 		tag: "Tag",
@@ -432,7 +433,11 @@ localization_promise = (function (){
 		market_transactions: "Transazioni sul Mercato",
 		total_spent: "Totale spese",
 		historical_low: "Più basso in assoluto",
-		lowest_price: "Prezzo più basso"
+		lowest_price: "Prezzo più basso",
+		card_drops_remaining: "__drops__ carte ancora da trovare.",
+		library: {
+			private_profile: "Imposta lo stato del profilo su Pubblico in <a href='http://steamcommunity.com/my/edit/settings'>Modifica Profilo</a> per utilizzare questa funzione."
+		}
         },
         "ja":   {
 		empty_wishlist: "ウィッシュリストを空にする",
