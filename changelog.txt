@@ -1,6 +1,7 @@
-v4.1
+v4.0.1
 -----
 + Adds highlighting to sales pages
++ Updated Italian and Portuguese translations
 
 v4.0
 -----
