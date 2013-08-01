@@ -1585,6 +1585,192 @@ function fix_wishlist_image_not_found() {
 	}
 }
 
+function add_market_total() {
+	// Add market transaction button
+	$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">Market Transactions</h2><div class="market_search_game_button_group" id="es_market_summary">Loading...</div></div></div>');
+	
+	// Get market transactions
+	get_http("https://store.steampowered.com/account/", function (txt) {
+		var currency_symbol = $(txt).find(".accountBalance").html();
+		currency_symbol = currency_symbol.match(/(?:R\$|\$|€|£|pуб)/)[0];
+		
+		var market = $(txt).find("#market_transactions").html();
+		
+		totaler = function (p, i) {
+			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") < 0) {
+				var priceContainer = $(p).find(".transactionRowPrice");
+				if (priceContainer.length > 0) {
+					var priceText = $(priceContainer).text();
+					var regex = /(\d+[.,]\d\d+)/,
+						price = regex.exec(priceText);
+
+					if (price !== null && price !== "Total") {
+						var tempprice = price[0].toString();
+						tempprice = tempprice.replace(",", ".");
+						return parseFloat(tempprice);
+					}
+				}
+			}
+		};
+		
+		usd_totaler = function (p, i) {
+			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") > 0) {
+				var priceContainer = $(p).find(".transactionRowPrice");
+				if (priceContainer.length > 0) {
+					var priceText = $(priceContainer).text();
+					var regex = /(\d+[.,]\d\d+)/,
+						price = regex.exec(priceText);
+
+					if (price !== null && price !== "Total") {
+						if (priceText.match(/^\$/)) {
+							var tempprice = price[0].toString();
+							tempprice = tempprice.replace(",", ".");
+							return parseFloat(tempprice);
+						}
+					}
+				}
+			}
+		};
+		
+		gbp_totaler = function (p, i) {
+			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") > 0) {
+				var priceContainer = $(p).find(".transactionRowPrice");
+				if (priceContainer.length > 0) {
+					var priceText = $(priceContainer).text();
+					var regex = /(\d+[.,]\d\d+)/,
+						price = regex.exec(priceText);
+
+					if (price !== null && price !== "Total") {
+						if (priceText.match(/^\£/)) {
+							var tempprice = price[0].toString();
+							tempprice = tempprice.replace(",", ".");
+							return parseFloat(tempprice);
+						}
+					}
+				}
+			}
+		};
+		
+		eur_totaler = function (p, i) {
+			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") > 0) {
+				var priceContainer = $(p).find(".transactionRowPrice");
+				if (priceContainer.length > 0) {
+					var priceText = $(priceContainer).text();
+					var regex = /(\d+[.,]\d\d+)/,
+						price = regex.exec(priceText);
+
+					if (price !== null && price !== "Total") {
+						if (priceText.match(/€/)) {
+							var tempprice = price[0].toString();
+							tempprice = tempprice.replace(",", ".");
+							return parseFloat(tempprice);
+						}
+					}
+				}
+			}
+		};
+		
+		rub_totaler = function (p, i) {
+			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") > 0) {
+				var priceContainer = $(p).find(".transactionRowPrice");
+				if (priceContainer.length > 0) {
+					var priceText = $(priceContainer).text();
+					var regex = /(\d+[.,]\d\d+)/,
+						price = regex.exec(priceText);
+
+					if (price !== null && price !== "Total") {
+						if (priceText.match(/pуб./)) {
+							var tempprice = price[0].toString();
+							tempprice = tempprice.replace(",", ".");
+							return parseFloat(tempprice);
+						}
+					}
+				}
+			}
+		};
+		
+		brl_totaler = function (p, i) {
+			if (p.innerHTML.indexOf("class=\"transactionRowEvent walletcredit\">") > 0) {
+				var priceContainer = $(p).find(".transactionRowPrice");
+				if (priceContainer.length > 0) {
+					var priceText = $(priceContainer).text();
+					var regex = /(\d+[.,]\d\d+)/,
+						price = regex.exec(priceText);
+
+					if (price !== null && price !== "Total") {
+						if (priceText.match(/^R\$/)) {
+							var tempprice = price[0].toString();
+							tempprice = tempprice.replace(",", ".");
+							return parseFloat(tempprice);
+						}
+					}
+				}
+			}
+		};
+		
+		pur_prices = jQuery.map($(market).find(".transactionRow"), totaler);
+		usd_prices = jQuery.map($(market).find(".transactionRow"), usd_totaler);
+		gbp_prices = jQuery.map($(market).find(".transactionRow"), gbp_totaler);
+		eur_prices = jQuery.map($(market).find(".transactionRow"), eur_totaler);
+		rub_prices = jQuery.map($(market).find(".transactionRow"), rub_totaler);
+		brl_prices = jQuery.map($(market).find(".transactionRow"), brl_totaler);
+		
+		var pur_total = 0.0;
+		var usd_total = 0.0;
+		var gbp_total = 0.0;
+		var eur_total = 0.0;
+		var rub_total = 0.0;
+		var brl_total = 0.0;		
+		
+		jQuery.map(pur_prices, function (p, i) { pur_total += p; });
+		jQuery.map(usd_prices, function (p, i) { usd_total += p; });
+		jQuery.map(gbp_prices, function (p, i) { gbp_total += p; });
+		jQuery.map(eur_prices, function (p, i) { eur_total += p; });
+		jQuery.map(rub_prices, function (p, i) { rub_total += p; });
+		jQuery.map(brl_prices, function (p, i) { brl_total += p; });
+		
+		if (currency_symbol) {
+			switch (currency_symbol) {
+				case "€":
+					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=eur", function (txt) {
+						console.log (txt);
+					});
+					break;
+
+				case "pуб":
+					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=rub", function (txt) {
+						console.log (txt);
+					});
+					break;
+
+				case "£":
+					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=gbp", function (txt) {
+						console.log (txt);
+					});
+					break;				
+
+				case "R$":
+					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=brl", function (txt) {
+						console.log (txt);
+					});
+					break;
+					
+				default:
+					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=usd", function (txt) {
+						var net = txt - pur_total;
+						
+						var html = "Purchase total: " + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "<br>";
+						html += "Sales total: " + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "<br>";
+						html += "Net profit or loss: " + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false);
+						
+						$("#es_market_summary").html(html);
+					});
+					break;
+			}
+		}
+	});
+}
+
 function account_total_spent() {
 	// adds a "total spent on Steam" to the account details page
 	storage.get(function(settings) {
@@ -1614,14 +1800,16 @@ function account_total_spent() {
 				game_prices = jQuery.map($('#store_transactions .transactionRow'), totaler);
 				ingame_prices = jQuery.map($('#ingame_transactions .transactionRow'), totaler);
 				market_prices = jQuery.map($('#market_transactions .transactionRow'), totaler);
-
+				
+				
 				var game_total = 0.0;
 				var ingame_total = 0.0;
 				var market_total = 0.0;
+				
 				jQuery.map(game_prices, function (p, i) { game_total += p; });
 				jQuery.map(ingame_prices, function (p, i) { ingame_total += p; });
 				jQuery.map(market_prices, function (p, i) { market_total += p; });
-
+				
 				total_total = game_total + ingame_total + market_total;
 
 				if (currency_symbol) {
@@ -2579,6 +2767,7 @@ $(document).ready(function(){
 							highlight_market_items();
 							bind_ajax_content_highlighting();
 						});
+						add_market_total();
 						break;
 
 					case /^\/id\/.+\/inventory\/.*/.test(window.location.pathname):
