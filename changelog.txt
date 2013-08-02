@@ -1,3 +1,8 @@
+v4.1
+-----
++ Adds automatic language settings detection
++ Adds marketplace transaction summary to market homepage
+
 v4.0.1
 -----
 + Adds highlighting to sales pages
