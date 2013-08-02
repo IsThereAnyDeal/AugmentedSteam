@@ -74,6 +74,7 @@ function save_options() {
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
+	showmarkettotal = $("#showmarkettotal").prop('checked');
 	showinvmarket = $("#showinvmarket").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
@@ -137,6 +138,7 @@ function save_options() {
 		'stores': stores,
 
 		'showtotal': showtotal,
+		'showmarkettotal': showmarkettotal,
 		'showinvmarket': showinvmarket,
 		'showesbg': showesbg,
 		'showgreenlightbanner': showgreenlightbanner,
@@ -284,6 +286,7 @@ function load_options() {
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
+		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
@@ -358,6 +361,7 @@ function load_options() {
 
 		// Load Community Options
 		$("#showtotal").attr('checked', settings.showtotal);
+		$("#showmarkettotal").attr('checked', settings.showmarkettotal);
 		$("#showinvmarket").attr('checked', settings.showinvmarket);
 		$("#showesbg").attr('checked', settings.showesbg);
 		$("#showgreenlightbanner").attr('checked', settings.showgreenlightbanner);
@@ -433,6 +437,7 @@ function load_translation() {
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
 			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
+			$("#market_total_text").text(localized_strings[settings.language].options_market_total);
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
 			$("#es_background_text").text(localized_strings[settings.language].options_es_bg);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
