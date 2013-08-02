@@ -1,19 +1,20 @@
 // version 4.0.1
 var storage = chrome.storage.sync;
 var apps;
-var language;
 var info = 0;
 var isSignedIn = false;
 var signedInChecked = false;
 
-storage.get(function (settings) {
-	language = settings.language || "en";
-});
+var cookie = document.cookie;
+var language = cookie.match(/language=([a-z]{2})/i)[1];
+if (localized_strings[language] === undefined) { language = "en"; }
+
+// set language for options page
+chrome.storage.sync.set({'language': language});
 
 // Global scope promise storage; to prevent unecessary API requests.
 var loading_inventory;
 var appid_promises = {};
-
 var library_all_games = [];
 
 //Chrome storage functions.
@@ -1590,7 +1591,7 @@ function add_market_total() {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmarkettotal) {
 			// Add market transaction button
-			$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">Market Transactions</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px">Loading...</div></div></div>');
+			$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">Market Transactions</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">Loading...</div></div></div>');
 			
 			// Get market transactions
 			get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=99999999999999999", function (txt) {
@@ -2809,7 +2810,7 @@ $(document).ready(function(){
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
 						break;
-
+						
 					case /^\/market\/.*/.test(window.location.pathname):
 						load_inventory().done(function() {
 							highlight_market_items();

@@ -90,7 +90,6 @@ localization_promise = (function (){
 
     localized_strings = {
         "en": 	localized_strings_default,
-        "ar":   {},
         "cs":   {
         	empty_wishlist: "Vyprázdnit Seznam přání",
         	purchase_date: "(Zakoupeno __date__)",
@@ -164,7 +163,6 @@ localization_promise = (function (){
 			private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
 		}
      		},
-        "da":   {},
         "de":   {
 		empty_wishlist: "Wunschliste leeren",
 		purchase_date: "(Auf __date__ gekauft)",
@@ -218,8 +216,7 @@ localization_promise = (function (){
 		tag_inv_guestpass: "Besucherpass",
 		tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ mal gewünscht</a>"
 		},
-        "el":   {},
-        "es":   {
+        "sp":   {
 			empty_wishlist: "Vacíar Lista de Deseos",
 			purchase_date: "(Comprado el __date__)",
 			options: "Opciones",
@@ -286,7 +283,6 @@ localization_promise = (function (){
 			total_size: "Tamaño Total",
 			hide: "Ocultar"
 		},
-        "fi":   {},
         "fr":   {
 		empty_wishlist: "Vider la liste de souhaits",
 		purchase_date: "(Acheté le __date__)",
@@ -363,7 +359,6 @@ localization_promise = (function (){
 		historical_low: "Creux historique",
 		lowest_price: "Prix le plus bas"
       		},
-        "hu":   {},
         "it":   {
       		empty_wishlist: "Svuota lista",
     		purchase_date: "(Acquistato il __date__)",
@@ -504,7 +499,6 @@ localization_promise = (function (){
 		programming: "プログラミング",
 		translation: "翻訳"
 		},
-        "ko":   {},
         "nl":   {
            	empty_wishlist: "Verlanglijst leegmaken",
             	purchase_date: "(Gekocht op __date__)",
@@ -529,9 +523,6 @@ localization_promise = (function (){
             	tag_inv_guestpass: "Gastenpas",
             	tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ willen dit</a>"
         	},
-        "no":   {},
-        "pl":   {},
-        "pt":   {},
         "pt-br":{
 		empty_wishlist: "Limpar Lista de Desejos",
     		purchase_date: "(Comprado __date__)",
@@ -613,7 +604,6 @@ localization_promise = (function (){
 			private_profile: "Mude seu status de perfil para público <a href='http://steamcommunity.com/my/edit/settings'>nas configurações</a> para usar este recurso."
 		}
         },
-        "ro":   {},
         "ru":   {
 		empty_wishlist: "Очистить список желаемого",
 		purchase_date: "(Куплено __date__)",
@@ -678,12 +668,7 @@ localization_promise = (function (){
 		translation: "Перевод",
 		custom_background: "Пользовательский фон профиля",
 		custom_background_help: "Все пользователи Enhanced Steam будут видеть выбранный фон в вашем профиле. Пользователи, у которых не установлен Enhanced Steam, будут видеть выбранный вами фон выше."
-		},
-        "sv":   {},
-        "th":   {},
-        "tr":   {},
-      "zh-hans":{},
-      "zh-hant":{}
+		}
     };
 
     // Set english defaults.
