@@ -105,7 +105,7 @@ localization_promise = (function (){
 		options_gift: "Položky vlastněné jako dárek",
 		options_guest: "Položky, na které máte Guest Pass",
 		options_friends_wishlist: "Položky, které mají vaši přátelé na svém Seznamu přání",
-		options_hide_install: "Schhovat tlačítko \"Nainstalovat Steam\" v hlavičce",
+		options_hide_install: "Schovat tlačítko \"Nainstalovat Steam\" v hlavičce",
 		options_drm: "Ukázat upozornění na DRM třetí strany",
 		options_lowestprice: "Ukázat informace o historii ceny",
 		options_metacritic: "Ukázat uživatelská hodnocení Metacritic",
