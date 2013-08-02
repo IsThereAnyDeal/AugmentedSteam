@@ -116,6 +116,7 @@ localization_promise = (function (){
 		options_total_spent: "Ukázat \"Celkem utraceno\" na stránce Účet",
 		options_group_events: "Ukázat události na Přehledu skupiny",
 		options_greenlight_banner: "Nahradit Steam Greenlight banner",
+		options_steamcardexchange: "Ukázat odkazy na SteamCardExchange u odznaků",
 		options_es_bg: "Možnost nastavit Vlastní pozadí na stránce Upravit profil",
 		options_library: "Ukázat tlačítko Knihovna v hlavičce (BETA)",
 		options_library_f2p: "Ukázat hrané free to play hry a dema v knihovně",
