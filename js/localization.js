@@ -78,6 +78,10 @@ localization_promise = (function (){
 		historical_low: "Historical Low",
 		lowest_price: "Lowest Price",
 		card_drops_remaining: "__drops__ card drops remaining.",
+		sales_total: "Sales total",
+		purchase_total: "Purchase total",
+		net_gain: "Net gain",
+		net_spent: "Net spent",
 		library: {
 			private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
 		}
