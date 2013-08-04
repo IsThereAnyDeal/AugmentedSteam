@@ -363,7 +363,7 @@ localization_promise = (function (){
 			card_drops_remaining: "__drops__ carte(s) restante(s).",
 			sales_total: "Ventes totales",
 			purchase_total: "Achats totaux",
-			net_gain: "Bénéfice net,
+			net_gain: "Bénéfice net",
 			net_spent: "Dépense nette",
 			library: {
 				private_profile: "Changez le statut de votre profil pour public <a href='http://steamcommunity.com/my/edit/settings'>dans vos paramètres</a> pour utiliser cette fonctionnalité."
