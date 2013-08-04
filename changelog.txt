@@ -2,6 +2,7 @@ v4.1
 -----
 + Adds automatic language settings detection
 + Adds marketplace transaction summary to market homepage
+: Fixes a bug where coupons were showing incorrect expiration dates
 
 v4.0.1
 -----

@@ -1079,9 +1079,8 @@ function display_coupon_message(appid) {
 
 	var coupon_date = getValue(appid + "coupon_valid");
 	var coupon_date2 = coupon_date.match(/\[date](.+)\[\/date]/);
-	coupon_date2 = Date(coupon_date[1]);
-	coupon_date = coupon_date.replace(/\[date](.+)\[\/date]/, coupon_date2);
-
+	coupon_date = new Date(coupon_date2[1] * 1000);
+	
 	var coupon_discount_note = getValue(appid + "coupon_discount_note");
 	if (coupon_discount_note === null) { coupon_discount_note = ""; }
 
