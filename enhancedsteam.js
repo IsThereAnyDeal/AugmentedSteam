@@ -2130,17 +2130,17 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.classList && node.classList.contains("tab_row")) start_highlights_and_tags();
-				if (node.classList && node.classList.contains("match")) start_highlights_and_tags();
-				if (node.classList && node.classList.contains("market_listing_row_link")) {	highlight_market_items(); }
+				if (node.classList && node.classList.contains("tab_row")) start_highlighting_node(node);
+				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
+				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
 	
-	$("#search_results").bind("DOMSubtreeModified", start_highlights_and_tags);
-	$("#blotter_content").bind("DOMNodeInserted", start_friend_activity_highlights);
-	$("#searchResultsRows").bind("DOMNodeInserted", highlight_market_items);
+	$("#search_results").on("DOMSubtreeModified", start_highlights_and_tags);
+	$("#blotter_content").on("DOMNodeInserted", start_friend_activity_highlights);
+	$("#searchResultsRows").on("DOMNodeInserted", highlight_market_items);
 }
 
 function start_highlights_and_tags(){
@@ -2178,6 +2178,20 @@ function start_highlights_and_tags(){
 			}
 		});
 	});
+}
+
+function start_highlighting_node(node) {
+	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+	if (appid) {
+		on_app_info(appid, function(){
+			highlight_app(appid, node);
+		});
+	} else {
+		var subid = get_subid(node.href || $(node).find("a")[0].href);
+		if (subid) {
+			get_sub_details (subid, node);
+		}
+	}
 }
 
 function add_steamdb_links(appid, type) {
