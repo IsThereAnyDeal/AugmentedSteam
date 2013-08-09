@@ -43,6 +43,7 @@ localization_promise = (function (){
 		theworddefault: "Default",
 		save: "Save",
 		saved: "Saved",
+		remove: "Remove",
 		view_in: "View in",
   		clear_cache: "Clear cached data",
         	forums: "Forums",

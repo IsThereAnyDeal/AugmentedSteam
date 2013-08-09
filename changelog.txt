@@ -4,6 +4,7 @@ v4.1
 + Adds marketplace transaction summary to market homepage
 : Fixes a bug where coupons were showing incorrect expiration dates
 : Optimized some code for faster loading
++ Adds a "Remove from wishlist" button the app page of wishlisted items
 
 v4.0.1
 -----

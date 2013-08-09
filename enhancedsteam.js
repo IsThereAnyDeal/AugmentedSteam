@@ -587,6 +587,11 @@ function add_empty_wishlist_button() {
 	}
 }
 
+function add_remove_from_wishlist_button(appid) {
+	$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");		
+	$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });	
+}
+
 function empty_wishlist() {
 	var conf = confirm("Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!");
 	if (conf) {
@@ -612,6 +617,21 @@ function empty_wishlist() {
 			location.reload();
 		});
 	}
+}
+
+function remove_from_wishlist(appid) {
+	var http = new XMLHttpRequest(),
+		profile = $(".user_avatar")[0].href.replace("http://steamcommunity.com/", "");
+
+	http.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			location.reload();
+		}
+	};
+	
+	http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
+	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	http.send("action=remove&appid=" + encodeURIComponent(appid));
 }
 
 function find_purchase_date(appname) {
@@ -2753,6 +2773,7 @@ $(document).ready(function(){
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
+						add_remove_from_wishlist_button(appid);
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
