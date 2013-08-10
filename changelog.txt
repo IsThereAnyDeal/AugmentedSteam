@@ -1,6 +1,6 @@
 v4.2
 -----
-
+: Fix bug in international currency formatting
 
 v4.1
 -----

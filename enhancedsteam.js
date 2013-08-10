@@ -1759,12 +1759,12 @@ function add_market_total() {
 						get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=eur", function (txt) {
 							var net = txt - pur_total;
 							
-							var html = localized_strings[language].purchase_total + ":<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ",", true) + "</span><br>";
-							html += localized_strings[language].sales_total + ":<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ",", true) + "</span><br>";
+							var html = localized_strings[language].purchase_total + ":<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
+							html += localized_strings[language].sales_total + ":<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
 							if (net > 0) {
-								html += localized_strings[language].net_gain + ":<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ",", true) + "</span>";
+								html += localized_strings[language].net_gain + ":<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
 							} else {
-								html += localized_strings[language].net_spent + ":<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ",", true) + "</span>";
+								html += localized_strings[language].net_spent + ":<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
 							}
 							
 							$("#es_market_summary").html(html);
@@ -1775,12 +1775,12 @@ function add_market_total() {
 						get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=rub", function (txt) {
 							var net = txt - pur_total;
 							
-							var html = localized_strings[language].purchase_total + ":<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ",", true) + "</span><br>";
-							html += localized_strings[language].sales_total + ":<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ",", true) + "</span><br>";
+							var html = localized_strings[language].purchase_total + ":<span style='float: right;'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
+							html += localized_strings[language].sales_total + ":<span style='float: right;'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
 							if (net > 0) {
-								html += localized_strings[language].net_gain + ":<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ",", true) + "</span>";
+								html += localized_strings[language].net_gain + ":<span style='float: right; color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
 							} else {
-								html += localized_strings[language].net_spent + ":<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ",", true) + "</span>";
+								html += localized_strings[language].net_spent + ":<span style='float: right; color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
 							}
 							
 							$("#es_market_summary").html(html);
@@ -1884,18 +1884,18 @@ function account_total_spent() {
 				if (currency_symbol) {
 					switch (currency_symbol) {
 						case "€":
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ",", true)
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ",", true)
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ",", true)
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ",", true)
+							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true)
+							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true)
+							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true)
+							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true)
 							break;
 
 						case "pуб":
 							currency_symbol = " " + currency_symbol;
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ",", true)
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ",", true)
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ",", true)
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ",", true)
+							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true)
+							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true)
+							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true)
+							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true)
 							break;
 
 						default:
