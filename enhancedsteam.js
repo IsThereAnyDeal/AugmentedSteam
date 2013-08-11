@@ -2432,6 +2432,7 @@ function highlight_market_items() {
 					if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 					if (settings.highlight_owned) {
 						$(node).css("backgroundImage", "none");
+						$(node).css("color", "white");
 						$(node).css("backgroundColor", settings.highlight_owned_color);
 					}
 				});
