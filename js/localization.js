@@ -84,6 +84,7 @@ localization_promise = (function (){
 		purchase_total: "Purchase total",
 		net_gain: "Net gain",
 		net_spent: "Net spent",
+		loading: "Loading...",
 		library: {
 			private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
 		}
@@ -403,6 +404,7 @@ localization_promise = (function (){
 		options_greenlight_banner: "Sostituisci banner di Greenlight",
 		options_steamcardexchange: "Mostra link di SteamCardExchange in Medaglie",
 		options_es_bg: "Imposta sfondo personalizzato in Modifica profilo",
+		options_market_total: "Mostra riepilogo delle transazioni sul Mercato",
 		options_library: "Mostra pulsante \"Libreria\" (BETA)",
 		options_library_f2p: "Mostra demo e free-to-play giocati nella Libreria",
 		options_hide_about: "Nascondi pulsante \"Informazioni\"",
@@ -411,6 +413,7 @@ localization_promise = (function (){
 		theworddefault: "Default",
 		save: "Salva",
 		saved: "Salvato",
+		remove: "Rimuovi",
 		view_in: "Mostra in",
   		clear_cache: "Elimina cache",
         	forums: "Forums",
@@ -433,7 +436,7 @@ localization_promise = (function (){
 		inventory_market_text: "Mostra prezzo del Mercato nell'inventario (Experimental!)",
 		credits: "Crediti",
 		stores: "Negozi",
-		all: "All",
+		all: "Tutti",
 		programming: "Programmazione",
 		translation: "Traduzione",
 		custom_background: "Sfondo personalizzato",
@@ -442,11 +445,16 @@ localization_promise = (function (){
 		hide: "Nascondi",
 		store_transactions: "Transazioni sullo store",
 		game_transactions: "Transazioni in-game",
-		market_transactions: "Transazioni sul Mercato",
+		market_transactions: "Transazioni Mercato",
 		total_spent: "Totale spese",
 		historical_low: "Più basso in assoluto",
 		lowest_price: "Prezzo più basso",
 		card_drops_remaining: "__drops__ carte ancora da trovare.",
+		sales_total: "Vendite totali",
+		purchase_total: "Acquisti totali",
+		net_gain: "Utili netti",
+		net_spent: "Spese nette",
+		loading: "Caricamento...",
 		library: {
 			private_profile: "Imposta lo stato del profilo su Pubblico in <a href='http://steamcommunity.com/my/edit/settings'>Modifica Profilo</a> per utilizzare questa funzione."
 		}
