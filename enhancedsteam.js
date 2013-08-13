@@ -823,7 +823,7 @@ function show_library() {
 	es_library.append("<div id='es_library_background_filter'></div>");
 	es_library.append("<div id='es_library_right'></div>");
 	es_library.append("<div id='es_library_search' style='display: none;'></div>");
-	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>Loading...</div></div>");
+	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div></div>");
 
 
 	storage.get(function(settings) {
@@ -912,7 +912,7 @@ function show_library() {
 
 function library_show_app(appid) {
 	$("#es_library_background").removeAttr("style");
-	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>Loading...</div>");
+	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div>");
 
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
 		var app_data = JSON.parse(txt);
@@ -1610,7 +1610,7 @@ function add_market_total() {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmarkettotal) {
 			// Add market transaction button
-			$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">Market Transactions</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">Loading...</div></div></div>');
+			$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings[language].market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">'+ localized_strings[language].loading +'</div></div></div>');
 			
 			// Get market transactions
 			get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=99999999999999999", function (txt) {
