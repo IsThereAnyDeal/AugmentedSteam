@@ -2644,6 +2644,10 @@ function add_feature_search_links () {
 			var original  = $(this)[0].innerHTML;
 			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=29&advanced=0'>"));
 		}
+		if (value.innerHTML.match(/ico_workshop/)) {
+			var original  = $(this)[0].innerHTML;
+			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=30&advanced=0'>"));
+		}
 	});
 }
 
