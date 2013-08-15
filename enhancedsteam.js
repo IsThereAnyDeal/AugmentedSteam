@@ -1504,6 +1504,24 @@ function add_metracritic_userscore() {
 	});
 }
 
+function add_hltb_info(appid) {
+	storage.get(function(settings) {
+		if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
+		if (settings.showhltb) {
+			get_http("http://api.enhancedsteam.com/hltb/?appid=" + appid, function (txt) {
+				if (txt.length > 0) {
+					var data = JSON.parse(txt);
+					if (data["hltb"]) {
+						xpath_each("//div[contains(@class,'game_details')]", function (node) {					
+								$(node).after("<div class='block game_details underlined_links'><div class='block_header'><h4>How Long to Beat (<a href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>Info</a>)</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><b>Main Story:</b> " + escapeHTML(data['hltb']['main_story']) + "<br><b>Main+Extras:</b> " + escapeHTML(data['hltb']['main_extras']) + "<br><b>Completionist:</b> " + escapeHTML(data['hltb']['comp']) + "<br></div></div></div></div>");
+						});
+					}
+				}
+			});	
+		}
+	});	
+}
+
 function add_widescreen_certification(appid) {
 	storage.get(function(settings) {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
@@ -2773,12 +2791,13 @@ $(document).ready(function(){
 
 						fix_community_hub_links();
 						add_widescreen_certification(appid);
+						add_hltb_info(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
-						add_remove_from_wishlist_button(appid);
+						add_remove_from_wishlist_button(appid);					
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
