@@ -1519,7 +1519,9 @@ function add_hltb_info(appid) {
 													+ "<b>Main Story:</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>"
 													+ "<b>Main+Extras:</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>"
 													+ "<b>Completionist:</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
-													+ "</div></div></div></div>");
+													+ "</div>"
+													+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top' /></div>Submit Your Time <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+													+ "</div></div></div>");
 						});
 					}
 				}
