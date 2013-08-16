@@ -78,6 +78,7 @@ function save_options() {
 	showmarkettotal = $("#showmarkettotal").prop('checked');
 	showinvmarket = $("#showinvmarket").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
+	showallachievements = $("#showallachievements").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 
 	// Profile Link Options
@@ -143,6 +144,7 @@ function save_options() {
 		'showmarkettotal': showmarkettotal,
 		'showinvmarket': showinvmarket,
 		'showesbg': showesbg,
+		'showallachievements': showallachievements,
 		'showgreenlightbanner': showgreenlightbanner,
 
 		'profile_steamgifts': profile_steamgifts,
@@ -304,6 +306,7 @@ function load_options() {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = false; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
+		if (settings.showallachievements === undefined) { settings.showallachievements = true; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
@@ -368,6 +371,7 @@ function load_options() {
 		$("#showmarkettotal").attr('checked', settings.showmarkettotal);
 		$("#showinvmarket").attr('checked', settings.showinvmarket);
 		$("#showesbg").attr('checked', settings.showesbg);
+		$("#showallachievements").attr('checked', settings.showallachievements);
 		$("#showgreenlightbanner").attr('checked', settings.showgreenlightbanner);
 
 		// Load Profile Link Options
@@ -445,6 +449,7 @@ function load_translation() {
 			$("#market_total_text").text(localized_strings[settings.language].options_market_total);
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
 			$("#es_background_text").text(localized_strings[settings.language].options_es_bg);
+			$("#allachievements_text").text(localized_strings[settings.language].options_showallachievements);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
 			$("#steamcardexchange_text").text(localized_strings[settings.language].options_steamcardexchange);
 						

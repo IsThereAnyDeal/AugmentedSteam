@@ -35,6 +35,7 @@ localization_promise = (function (){
 		options_greenlight_banner: "Replace Steam Greenlight Banner",
 		options_steamcardexchange: "Show SteamCardExchange links on badges",
 		options_es_bg: "Set Custom Background on Edit Profile Screen",
+		options_showallachievements: "Show achievement stats on \"All Games\" page",
 		options_market_total: "Show Transaction Summary on Market",
 		options_library: "Show Library button in header (BETA)",
 		options_library_f2p: "Show played free to play games and demos in library",
