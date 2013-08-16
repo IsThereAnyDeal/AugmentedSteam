@@ -25,6 +25,7 @@ localization_promise = (function (){
 		options_drm: "Show 3rd Party DRM Warnings",
 		options_lowestprice: "Show Price History Information",
 		options_metacritic: "Show Metacritic User Scores",
+		options_hltb: "Show HowLongToBeat.com Information",
 		options_steamdb: "Show SteamDB Links",
 		options_wsgf: "Show WSGF (Widescreen) Info",
 		options_carousel_description: "Show App Descriptions On Storefront Carousel",

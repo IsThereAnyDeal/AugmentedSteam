@@ -1513,7 +1513,13 @@ function add_hltb_info(appid) {
 					var data = JSON.parse(txt);
 					if (data["hltb"]) {
 						xpath_each("//div[contains(@class,'game_details')]", function (node) {					
-								$(node).after("<div class='block game_details underlined_links'><div class='block_header'><h4>How Long to Beat (<a href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>Info</a>)</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><b>Main Story:</b> " + escapeHTML(data['hltb']['main_story']) + "<br><b>Main+Extras:</b> " + escapeHTML(data['hltb']['main_extras']) + "<br><b>Completionist:</b> " + escapeHTML(data['hltb']['comp']) + "<br></div></div></div></div>");
+								$(node).after("<div class='block game_details underlined_links'>"
+												+ "<div class='block_header'><h4>How Long to Beat (<a href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>Info</a>)</h4></div>"
+												+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>"
+													+ "<b>Main Story:</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>"
+													+ "<b>Main+Extras:</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>"
+													+ "<b>Completionist:</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
+													+ "</div></div></div></div>");
 						});
 					}
 				}
