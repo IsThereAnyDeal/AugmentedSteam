@@ -413,6 +413,7 @@ localization_promise = (function (){
 		options_drm: "Mostra avvisi per i DRM di terze parti",
 		options_lowestprice: "Mostra lo storico dei prezzi",
 		options_metacritic: "Mostra i voti degli utenti Metacritic",
+		options_hltb: "Mostra informazioni da HowLongToBeat.com",
 		options_steamdb: "Mostra link a SteamDB",
 		options_wsgf: "Mostra informazioni WSGF (Widescreen)",
 		options_carousel_description: "Mostra descrizioni nello slider della homepage",
