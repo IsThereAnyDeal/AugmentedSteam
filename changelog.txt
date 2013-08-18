@@ -1,3 +1,11 @@
+v4.2
+-----
+: Fix bug in international currency formatting
++ Adds support for Steam Workshop icon on app page linking to search page
+: Updated Italian, Russian, French, and Spanish translations
++ Adds HowLongToBeat information on the app page
++ Adds achievement stats to the "All games" list
+
 v4.1
 -----
 + Adds automatic language settings detection
