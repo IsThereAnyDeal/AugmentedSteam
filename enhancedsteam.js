@@ -2781,7 +2781,11 @@ function add_badge_filter() {
 		$('.is_link').each(function () {
 			if ($(this).html().match(/progress_info_bold">\D/)) {
 				$(this).css('display', 'none');
-			}	
+			} else {
+				if ($(this).html().match(/badge_info_unlocked/)) {
+					$(this).css('display', 'none');
+				}
+			}
 		});
 	});	
 }
