@@ -2766,28 +2766,34 @@ function add_cardexchange_links(game) {
 }
 
 function add_badge_filter() {
-    var html  = "<div style='text-align: right;'><span>" + localized_strings[language].show + ": </span>";
-		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings[language].badges_all + "</span></label>";
-		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings[language].badges_drops + "</span></label>";
-		html += "</div>";
+    // Get the logged in user's name and the name of the user who's list you're browsing
+	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com/id/", "");			
+	var username = $(".profile_small_header_name").text();			
+	// Only display on your own game list
+	if (profile == username) {
+		var html  = "<div style='text-align: right;'><span>" + localized_strings[language].show + ": </span>";
+			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings[language].badges_all + "</span></label>";
+			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings[language].badges_drops + "</span></label>";
+			html += "</div>";
 
-    $('.profile_badges_header').append(html);
-	
-	$('#es_badge_all').on('click', function() {
-		$('.is_link').css('display', 'block');
-	});
-	
-	$('#es_badge_drops').on('click', function() {
-		$('.is_link').each(function () {
-			if ($(this).html().match(/progress_info_bold">\D/)) {
-				$(this).css('display', 'none');
-			} else {
-				if ($(this).html().match(/badge_info_unlocked/)) {
-					$(this).css('display', 'none');
-				}
-			}
+		$('.profile_badges_header').append(html);
+		
+		$('#es_badge_all').on('click', function() {
+			$('.is_link').css('display', 'block');
 		});
-	});	
+		
+		$('#es_badge_drops').on('click', function() {
+			$('.is_link').each(function () {
+				if ($(this).html().match(/progress_info_bold">\D/)) {
+					$(this).css('display', 'none');
+				} else {
+					if ($(this).html().match(/badge_info_unlocked/)) {
+						$(this).css('display', 'none');
+					}
+				}
+			});
+		});
+	}	
 }
 
 function add_gamecard_market_links(game) {
