@@ -350,3 +350,15 @@
 #es_library_app_links li {
 	padding: 2px 0;
 }
+
+.es_badges { 
+	cursor: pointer; 
+}
+
+.es_badges > input { 
+	display: none; 
+}
+
+.es_badges > input:checked + span { 
+	text-decoration: underline !important; 
+}

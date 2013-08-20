@@ -2765,6 +2765,27 @@ function add_cardexchange_links(game) {
 	});
 }
 
+function add_badge_filter() {
+    var html  = "<div style='text-align: right;'><span>" + localized_strings[language].show + ": </span>";
+		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings[language].badges_all + "</span></label>";
+		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings[language].badges_drops + "</span></label>";
+		html += "</div>";
+
+    $('.profile_badges_header').append(html);
+	
+	$('#es_badge_all').on('click', function() {
+		$('.is_link').css('display', 'block');
+	});
+	
+	$('#es_badge_drops').on('click', function() {
+		$('.is_link').each(function () {
+			if ($(this).html().match(/progress_info_bold">\D/)) {
+				$(this).css('display', 'none');
+			}	
+		});
+	});	
+}
+
 function add_gamecard_market_links(game) {
 	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
@@ -2798,7 +2819,7 @@ function add_total_drops_count() {
 		}
 	});
 	if (drops_count > 0) {
-		$(".profile_badges_sortoptions span").prepend(localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + " ");
+		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "</span>");
 	}
 }
 
@@ -2954,6 +2975,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
 						add_total_drops_count();
 						add_cardexchange_links();
+						add_badge_filter();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
