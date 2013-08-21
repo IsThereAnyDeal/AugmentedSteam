@@ -2708,11 +2708,7 @@ function add_gamelist_achievements() {
 	storage.get(function(settings) {
 		if (settings.showallachievements === undefined) { settings.showallachievements = true; storage.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showallachievements) {
-			// Get the logged in user's name and the name of the user who's list you're browsing
-			var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com/id/", "");			
-			var username = $(".profile_small_header_name").text();			
-			// Only display on your own game list
-			if (profile == username) {			
+			if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
 				// Only show stats on the "All Games" tab
 				if (window.location.href.match(/\/games\?tab=all/)) {
 					$(".gameListRow").each(function(index, value) {
@@ -2766,11 +2762,7 @@ function add_cardexchange_links(game) {
 }
 
 function add_badge_filter() {
-    // Get the logged in user's name and the name of the user who's list you're browsing
-	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com/id/", "");			
-	var username = $(".profile_small_header_name").text();			
-	// Only display on your own game list
-	if (profile == username) {
+	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
 		var html  = "<div style='text-align: right;'><span>" + localized_strings[language].show + ": </span>";
 			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings[language].badges_all + "</span></label>";
 			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings[language].badges_drops + "</span></label>";
