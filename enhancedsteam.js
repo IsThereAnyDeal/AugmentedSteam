@@ -2706,36 +2706,35 @@ function totalsize() {
 
 function add_gamelist_achievements() {
 	storage.get(function(settings) {
-		if (settings.showallachievements === undefined) { settings.showallachievements = true; storage.set({'showallachievements': settings.showallachievements}); }
+		if (settings.showallachievements === undefined) { settings.showallachievements = false; storage.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showallachievements) {
-			if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
-				// Only show stats on the "All Games" tab
-				if (window.location.href.match(/\/games\?tab=all/)) {
-					$(".gameListRow").each(function(index, value) {
-						var appid = get_appid_wishlist(value.id);
-						$(value).find(".bottom_controls").find("img").each(function () {			
-							// Get only items with achievements
-							if ($(this).attr("src").indexOf("http://cdn.steamcommunity.com/public/images/skin_1/ico_stats.gif") == 0) {				
-								// Get only items with play time
-								if (!($(value).html().match(/<h5><\/h5>/))) {
-									// Copy achievement stats to row
-									$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + appid + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>"); 
-									$("#es_app_" + appid).load('http://steamcommunity.com/id/' + username + '/stats/' + appid + ' #topSummaryAchievements', function(response, status, xhr) {						
-										var BarFull = $("#es_app_" + appid).html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" height="12"/)[1];
-										var BarEmpty = $("#es_app_" + appid).html().match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" height="12"/)[1];
-										BarFull = BarFull * .58;
-										BarEmpty = BarEmpty * .58;
-										var html = $("#es_app_" + appid).html();
-										html = html.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BarFull.toString() + "\"");
-										html = html.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BarEmpty.toString() + "\"");
-										html = html.replace("::", ":");
-										$("#es_app_" + appid).html(html);
-									});	
-								}
+			// Only show stats on the "All Games" tab
+			if (window.location.href.match(/\/games\?tab=all/)) {
+				$(".gameListRow").each(function(index, value) {
+					var appid = get_appid_wishlist(value.id);
+					$(value).find(".bottom_controls").find("img").each(function () {			
+						// Get only items with achievements
+						if ($(this).attr("src").indexOf("http://cdn.steamcommunity.com/public/images/skin_1/ico_stats.gif") == 0) {				
+							// Get only items with play time
+							if (!($(value).html().match(/<h5><\/h5>/))) {
+								// Copy achievement stats to row
+								$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + appid + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>"); 
+								$("#es_app_" + appid).html("Loading achievements...");
+								$("#es_app_" + appid).load($(".profile_small_header_texture a")[0].href + '/stats/' + appid + ' #topSummaryAchievements', function(response, status, xhr) {						
+									var BarFull = $("#es_app_" + appid).html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" height="12"/)[1];
+									var BarEmpty = $("#es_app_" + appid).html().match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" height="12"/)[1];
+									BarFull = BarFull * .58;
+									BarEmpty = BarEmpty * .58;
+									var html = $("#es_app_" + appid).html();
+									html = html.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BarFull.toString() + "\"");
+									html = html.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BarEmpty.toString() + "\"");
+									html = html.replace("::", ":");
+									$("#es_app_" + appid).html(html);
+								});
 							}
-						});
+						}
 					});
-				}
+				});
 			}
 		}
 	});
