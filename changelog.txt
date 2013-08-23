@@ -1,7 +1,10 @@
 v4.3
 -----
-: Fixed a bug where market transaction processing was happening on every market page
 + Adds option on badge page to hide games with no drops remaining
++ Adds game bundle purchase support to applicable app pages
+: Fixed a bug where market transaction processing was happening on every market page
+: Fix a bug on the options page if language is Spanish
+
 
 v4.2
 -----
