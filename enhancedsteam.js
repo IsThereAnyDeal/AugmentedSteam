@@ -1288,30 +1288,33 @@ function show_pricing_history(appid, type) {
                         }
                     }
 					
-					if (data["bundles"]["active"]) {
-						var purchase = $("#game_area_purchase").html();
-						var enddate = new Date(data["bundles"]["active"]["0"]["expiry"]*1000);
-						var currentdate = new Date().getTime();
-						if (currentdate < enddate) {
-							purchase = '<h2 class="gradientbg">Bundles that include this game</h2><div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>Buy ' + data["bundles"]["active"]["0"]["page"] + " " + data["bundles"]["active"]["0"]["title"] + '</h1>';
-							purchase += '<p class="game_purchase_discount_countdown">Offer ends ' + enddate + '</p>';							
-							purchase += '<p class="package_contents"><b>Includes ' + data["bundles"]["active"]["0"]["games"].length + ' items:</b> '
-							data["bundles"]["active"]["0"]["games"].forEach(function(entry) {
-								purchase += entry + ", ";
-							});
-							purchase = purchase.replace(/, $/, "");
-							purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"]["0"]["details"] + '" target="_blank">Bundle Info</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
-							if (data["bundles"]["active"]["0"]["pwyw"] == 0) { if (data["bundles"]["active"]["0"]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"]["0"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
-							purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
-							purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"]["0"]["url"] + '" target="_blank">';
-							if (data["bundles"]["active"]["0"]["pwyw"] == 1) {
-								purchase += 'Pay What You Want';
-							} else {
-								purchase += 'Buy';
-							}	
-							purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';						
-							$("#game_area_purchase").after(purchase);
+					if (data["bundles"]["active"].length > 0) {
+						var length = data["bundles"]["active"].length;
+						for (var i = 0; i < length; i++) {
+							var enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
+							var currentdate = new Date().getTime();
+							if (currentdate < enddate) {
+								purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>Buy ' + data["bundles"]["active"][i]["page"] + " " + data["bundles"]["active"][i]["title"] + '</h1>';
+								purchase += '<p class="game_purchase_discount_countdown">Offer ends ' + enddate + '</p>';							
+								purchase += '<p class="package_contents"><b>Includes ' + data["bundles"]["active"][i]["games"].length + ' items:</b> '
+								data["bundles"]["active"][i]["games"].forEach(function(entry) {
+									purchase += entry + ", ";
+								});
+								purchase = purchase.replace(/, $/, "");
+								purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["details"] + '" target="_blank">Bundle Info</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
+								if (data["bundles"]["active"][i]["pwyw"] == 0) { if (data["bundles"]["active"][i]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
+								purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
+								purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
+								if (data["bundles"]["active"][i]["pwyw"] == 1) {
+									purchase += 'Pay What You Want';
+								} else {
+									purchase += 'Buy';
+								}	
+								purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';						
+								$("#game_area_purchase").after(purchase);
+							}
 						}
+						$("#game_area_purchase").after("<h2 class='gradientbg'>Bundles that include this game <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
 					}	
                 }
         	});
