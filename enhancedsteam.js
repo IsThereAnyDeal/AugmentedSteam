@@ -1301,7 +1301,7 @@ function show_pricing_history(appid, type) {
 							});
 							purchase = purchase.replace(/, $/, "");
 							purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"]["0"]["details"] + '" target="_blank">Bundle Info</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
-							if (data["bundles"]["active"]["0"]["pwyw"] == 0) { if (data["bundles"]["active"]["0"]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + data["bundles"]["active"]["0"]["price"] + '</div>'; } }
+							if (data["bundles"]["active"]["0"]["pwyw"] == 0) { if (data["bundles"]["active"]["0"]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"]["0"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
 							purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
 							purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"]["0"]["url"] + '" target="_blank">';
 							if (data["bundles"]["active"]["0"]["pwyw"] == 1) {
