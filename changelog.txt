@@ -1,3 +1,11 @@
+v4.3
+-----
++ Adds option on badge page to hide games with no drops remaining
++ Adds game bundle purchase support to applicable app pages
+: Fixed a bug where market transaction processing was happening on every market page
+: Fixed a bug on the options page if language is Spanish
+: Fixed a bug where HLTB info was displaying twice on apps with WSGF certification
+
 v4.2
 -----
 : Fix bug in international currency formatting
