@@ -76,6 +76,7 @@ localization_promise = (function (){
 		total_size: "Total Size",
 		hide: "Hide",
 		show: "Show",
+		buy: "Buy",
 		store_transactions: "Store Transactions",
 		game_transactions: "Game Transactions",
 		market_transactions: "Market Transactions",
@@ -92,6 +93,13 @@ localization_promise = (function (){
 		loading: "Loading...",
 		library: {
 			private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
+		},
+		bundle: {
+			info: "Bundle Info",
+			offer_ends: "Offer ends",
+			pwyw: "Pay What You Want",
+			includes: "Includes (__num__) items",
+			header: "Bundles that include this game"
 		}
     };
 

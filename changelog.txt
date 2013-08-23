@@ -5,7 +5,6 @@ v4.3
 : Fixed a bug where market transaction processing was happening on every market page
 : Fix a bug on the options page if language is Spanish
 
-
 v4.2
 -----
 : Fix bug in international currency formatting
