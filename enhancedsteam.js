@@ -1245,6 +1245,7 @@ function show_pricing_history(appid, type) {
                     var activates = "";
                     var line1 = "";
                     var line2 = "";
+					var html = "";
                     var recorded,
 						currency_symbol,
 						comma = false,
@@ -1267,9 +1268,9 @@ function show_pricing_history(appid, type) {
                         recorded = new Date(data["lowest"]["recorded"]*1000);
                         line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">Info</a>)';
                     }
-
-                    var html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
-
+					
+					html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
+					
         			if (data["price"]) {
                         if (data["price"]["drm"] == "steam") {
                         	activates = "(<b>Activates on Steam</b>)";
@@ -1286,6 +1287,32 @@ function show_pricing_history(appid, type) {
                             $("#game_area_purchase").before(html + line2);
                         }
                     }
+					
+					if (data["bundles"]["active"]) {
+						var purchase = $("#game_area_purchase").html();
+						var enddate = new Date(data["bundles"]["active"]["0"]["expiry"]*1000);
+						var currentdate = new Date().getTime();
+						if (currentdate < enddate) {
+							purchase = '<h2 class="gradientbg">Bundles that include this game</h2><div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>Buy ' + data["bundles"]["active"]["0"]["page"] + " " + data["bundles"]["active"]["0"]["title"] + '</h1>';
+							purchase += '<p class="game_purchase_discount_countdown">Offer ends ' + enddate + '</p>';							
+							purchase += '<p class="package_contents"><b>Includes ' + data["bundles"]["active"]["0"]["games"].length + ' items:</b> '
+							data["bundles"]["active"]["0"]["games"].forEach(function(entry) {
+								purchase += entry + ", ";
+							});
+							purchase = purchase.replace(/, $/, "");
+							purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"]["0"]["details"] + '" target="_blank">Bundle Info</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
+							if (data["bundles"]["active"]["0"]["pwyw"] == 0) { if (data["bundles"]["active"]["0"]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + data["bundles"]["active"]["0"]["price"] + '</div>'; } }
+							purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
+							purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"]["0"]["url"] + '" target="_blank">';
+							if (data["bundles"]["active"]["0"]["pwyw"] == 1) {
+								purchase += 'Pay What You Want';
+							} else {
+								purchase += 'Buy';
+							}	
+							purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';						
+							$("#game_area_purchase").after(purchase);
+						}
+					}	
                 }
         	});
 		}
