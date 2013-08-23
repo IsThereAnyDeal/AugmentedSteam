@@ -1,3 +1,7 @@
+v4.4
+-----
+
+
 v4.3
 -----
 + Adds option on badge page to hide games with no drops remaining
