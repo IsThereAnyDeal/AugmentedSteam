@@ -2811,6 +2811,10 @@ function add_badge_filter() {
 					if ($(this).html().match(/badge_info_unlocked/)) {
 						$(this).css('display', 'none');
 					}
+					// Hide foil badges too
+					if (!($(this).html().match(/progress_info_bold/))) {
+						$(this).css('display', 'none');
+					}
 				}
 			});
 		});
