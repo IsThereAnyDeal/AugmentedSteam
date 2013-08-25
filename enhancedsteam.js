@@ -2821,6 +2821,12 @@ function add_badge_filter() {
 	}	
 }
 
+function add_gamecard_foil_link() {
+	if ($(".progress_info_bold").length > 0) {
+		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location + "?border=1'><span>View Foil Badge Progress</span></a>");
+	}	
+}
+
 function add_gamecard_market_links(game) {	
 	var foil = $(".progress_info_bold").length - 1;
 	
@@ -3030,6 +3036,7 @@ $(document).ready(function(){
 						var gamecard = get_gamecard(window.location.pathname);
 						add_cardexchange_links(gamecard);
 						add_gamecard_market_links(gamecard);
+						add_gamecard_foil_link();
 						break;
 				}
 				break;

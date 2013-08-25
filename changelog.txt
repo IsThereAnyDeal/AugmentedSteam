@@ -1,6 +1,8 @@
 v4.4
 -----
 + Adds "X games with drops remaining" to badge page
++ Adds foil badge progress link to non-foil badge progress page
+: Fixes a bug where foil badges were linking to non-foil market pages
 
 v4.3
 -----
