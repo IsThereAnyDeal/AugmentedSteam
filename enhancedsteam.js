@@ -2821,18 +2821,29 @@ function add_badge_filter() {
 	}	
 }
 
-function add_gamecard_market_links(game) {
+function add_gamecard_market_links(game) {	
+	var foil = $(".progress_info_bold").length - 1;
+	
 	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
 		if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
 		
-		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + cardname;
+		var newcardname = cardname.replace(/'/g, "%27");
+			newcardname = newcardname.replace(/\?/g, "%3F");
+			
+		if (foil) { newcardname = newcardname + " (Foil)"; }
+		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname;
 		var node = $(this);
 		
 		// Test market link to see if valid.  Some cards have "(Trading Card)" on the end of their name
-		get_http("http://steamcommunity.com/market/listings/753/" + game + "-" + cardname, function (txt) {
+		get_http(marketlink, function (txt) {
 			if (/<div id=\"largeiteminfo\">/.test(txt) == false) {
-				marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + cardname + " (Trading Card)";		
+				if (foil) {
+					newcardname = newcardname.replace(/\)$/, "");
+					marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname + " Trading Card)";
+				} else {	
+					marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname + " (Trading Card)";
+				}
 			}
 			
 			var html = $(node).children("div:contains('" + cardname + "')").html();
