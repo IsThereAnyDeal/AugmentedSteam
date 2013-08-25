@@ -2847,14 +2847,16 @@ function add_gamecard_market_links(game) {
 
 function add_total_drops_count() {
 	var drops_count = 0;
+	var drops_games = 0;
 	$(".progress_info_bold").each(function(i, obj) {
 		var obj_count = obj.innerHTML.match(/\d+/);
 		if (obj_count) {
 			drops_count += parseInt(obj_count[0]);
+			drops_games = drops_games + 1;
 		}
 	});
 	if (drops_count > 0) {
-		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "</span>");
+		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "<br>" + drops_games + " games with drops remaining</span>");
 	}
 }
 

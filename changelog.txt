@@ -1,6 +1,6 @@
 v4.4
 -----
-
++ Adds "X games with drops remaining" to badge page
 
 v4.3
 -----
