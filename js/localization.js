@@ -400,6 +400,8 @@ var localized_strings,
                 custom_background_help: "Tous les utilisateurs d'Enhanced Steam verront cet arrière-plan sur votre profil.  Les autres utilisateurs verront votre arrière-plan de profil standard.",
                 total_size: "Taille totale",
                 hide: "Cacher",
+				show: "Afficher",
+				buy: "Acheter",
                 store_transactions: "Transactions dans le magasin",
                 game_transactions: "Transactions dans les jeux",
                 market_transactions: "Transactions dans le marché",
@@ -407,6 +409,8 @@ var localized_strings,
                 historical_low: "Creux historique",
                 lowest_price: "Prix le plus bas",
                 card_drops_remaining: "__drops__ carte(s) restante(s)",
+				badges_all: "Tous les badges",
+				badges_drops: "Badges avec des cartes restantes",
                 sales_total: "Ventes totales",
                 purchase_total: "Achats totaux",
                 net_gain: "Bénéfice net",
@@ -414,7 +418,14 @@ var localized_strings,
                 loading: "Chargement...",
                 library: {
                     private_profile: "Changez le statut de votre profil pour public <a href='http://steamcommunity.com/my/edit/settings'>dans vos paramètres</a> pour utiliser cette fonctionnalité."
-                }
+                },
+				bundle: {
+					info: "Infos sur le pack",
+					offer_ends: " L'offre prend fin",
+					pwyw: "Payez ce que vous voulez",
+					includes: "Contient (__num__) articles",
+					header: "Pack incluant ce jeu"
+				}
             },
             "it": {
                 empty_wishlist: "Svuota lista",
