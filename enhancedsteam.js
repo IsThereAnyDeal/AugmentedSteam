@@ -1338,28 +1338,19 @@ function drm_warnings() {
 			var otherdrm;
 
 			// Games for Windows Live detection
-			if (document.body.innerHTML.indexOf("Games for Windows LIVE") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games for Windows Live") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games for Windows - Live") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games For Windows - Live") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games for Windows - LIVE") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games For Windows - LIVE") > 0) { gfwl = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
 
 			// Ubisoft Uplay detection
-			if (document.body.innerHTML.indexOf("Uplay Account") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("UPLAY ACCOUNT") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("UPlay account") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("HIGH SPEED INTERNET CONNECTION AND CREATION OF A UBISOFT ACCOUNT ARE REQUIRED") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("HIGH SPEED INTERNET ACCESS AND CREATION OF A UBISOFT ACCOUNT ARE REQUIRED") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("UPLAY") > 0) { uplay = true; }
 
 			// Securom detection
-			if (document.body.innerHTML.indexOf("SecuROM") > 0) { securom = true; }
-			if (document.body.innerHTML.indexOf("SECUROM") > 0) { securom = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }			
 
 			// Tages detection
 			if (document.body.innerHTML.indexOf("Tages") > 0) { tages = true; }
