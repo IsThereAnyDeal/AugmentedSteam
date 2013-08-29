@@ -2229,7 +2229,9 @@ function start_highlights_and_tags(){
 		"div.recommendation_carousel_item",	// Recommendation page.
 		"div.friendplaytime_game",	// Recommendation page.
 		"div.dlc_page_purchase_dlc", // DLC page rows
-		"div.sale_page_purchase_item" // Sale pages
+		"div.sale_page_purchase_item", // Sale pages
+		"div.item",				// Sale page / featured page
+		"div.home_area_spotlight"	// midweek and weekend deals
 	];
 
 	// Get all appids and nodes from selectors.
@@ -2237,6 +2239,10 @@ function start_highlights_and_tags(){
 		$.each($(selector), function(j, node){
 			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 			if (appid) {
+			
+				if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+				if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
+			
 				on_app_info(appid, function(){
 					highlight_app(appid, node);
 				});
