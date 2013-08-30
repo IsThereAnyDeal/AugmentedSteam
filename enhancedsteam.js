@@ -2870,7 +2870,7 @@ function add_total_drops_count() {
 		}
 	});
 	if (drops_count > 0) {
-		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "<br>" + drops_games + " games with drops remaining</span>");
+		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings[language].games_with_drops.replace("__dropsgames__", drops_games) + "</span>");
 	}
 }
 
