@@ -651,6 +651,28 @@ function find_purchase_date(appname) {
 	});
 }
 
+function pack_split(node, ways) {
+	var price_text = $(node).find(".discount_final_price").html();
+	if (price_text == null) { price_text = $(node).find(".game_purchase_price").html(); }
+	var currency_symbol = price_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
+	var comma = (price_text.indexOf(",") > -1);
+	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / 4;
+	price = (Math.ceil(price * 100) / 100);
+	price_text = formatMoney(price, 2, currency_symbol, ",", comma ? "," : ".");			
+	$(node).find(".btn_addtocart").before("<div class='discount_block game_purchase_discount' style='width: 60px;'><div class='discount_prices'><div class='discount_original_price' style='text-decoration: none; left: 8px;'>Each</div><div class='discount_final_price' style='padding-left: 8px;'>" + price_text + "</div></div></div>");
+}
+
+function add_4pack_breakdown() {
+	$(".game_area_purchase_game_wrapper").each(function() {		
+		if ($(this).is(":contains('4-pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('4-Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('4 Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('3-Pack')")) { pack_split(this, 3); }
+		if ($(this).is(":contains('Four Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('Four-Pack')")) { pack_split(this, 4); }
+	});
+}
+
 function send_age_verification() {
 	document.getElementsByName("ageYear")[0].value="1955";
 	document.getElementsByClassName("btn_checkout_green")[0].click();
@@ -2920,7 +2942,8 @@ $(document).ready(function(){
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
-						add_remove_from_wishlist_button(appid);					
+						add_remove_from_wishlist_button(appid);
+						add_4pack_breakdown();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
