@@ -1,4 +1,4 @@
-// version 4.4
+// version 4.5
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
