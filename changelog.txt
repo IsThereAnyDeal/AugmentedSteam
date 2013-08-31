@@ -5,6 +5,7 @@ v4.4
 : Fixes a bug where foil badges were linking to non-foil market pages
 : Better uPlay and GFWL DRM detection on app pages
 + Adds highlighting to more sales pages, midweek and weekend deals
++ Adds price per game to multi-pack purchase options
 
 v4.3
 -----
