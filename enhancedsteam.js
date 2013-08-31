@@ -1,4 +1,4 @@
-// version 4.3
+// version 4.4
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
@@ -648,6 +648,28 @@ function find_purchase_date(appname) {
 				}
 			}
 		});
+	});
+}
+
+function pack_split(node, ways) {
+	var price_text = $(node).find(".discount_final_price").html();
+	if (price_text == null) { price_text = $(node).find(".game_purchase_price").html(); }
+	var currency_symbol = price_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
+	var comma = (price_text.indexOf(",") > -1);
+	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / 4;
+	price = (Math.ceil(price * 100) / 100);
+	price_text = formatMoney(price, 2, currency_symbol, ",", comma ? "," : ".");			
+	$(node).find(".btn_addtocart").before("<div class='discount_block game_purchase_discount' style='width: 60px;'><div class='discount_prices'><div class='discount_original_price' style='text-decoration: none; left: 8px;'>Each</div><div class='discount_final_price' style='padding-left: 8px;'>" + price_text + "</div></div></div>");
+}
+
+function add_4pack_breakdown() {
+	$(".game_area_purchase_game_wrapper").each(function() {		
+		if ($(this).is(":contains('4-pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('4-Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('4 Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('3-Pack')")) { pack_split(this, 3); }
+		if ($(this).is(":contains('Four Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('Four-Pack')")) { pack_split(this, 4); }
 	});
 }
 
@@ -1338,28 +1360,19 @@ function drm_warnings() {
 			var otherdrm;
 
 			// Games for Windows Live detection
-			if (document.body.innerHTML.indexOf("Games for Windows LIVE") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games for Windows Live") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games for Windows - Live") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games For Windows - Live") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games for Windows - LIVE") > 0) { gfwl = true; }
-			if (document.body.innerHTML.indexOf("Games For Windows - LIVE") > 0) { gfwl = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
 			if (document.body.innerHTML.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
 
 			// Ubisoft Uplay detection
-			if (document.body.innerHTML.indexOf("Uplay Account") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("UPLAY ACCOUNT") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("UPlay account") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("HIGH SPEED INTERNET CONNECTION AND CREATION OF A UBISOFT ACCOUNT ARE REQUIRED") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("HIGH SPEED INTERNET ACCESS AND CREATION OF A UBISOFT ACCOUNT ARE REQUIRED") > 0) { uplay = true; }
-			if (document.body.innerHTML.indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("UPLAY") > 0) { uplay = true; }
 
 			// Securom detection
-			if (document.body.innerHTML.indexOf("SecuROM") > 0) { securom = true; }
-			if (document.body.innerHTML.indexOf("SECUROM") > 0) { securom = true; }
+			if (document.body.innerHTML.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }			
 
 			// Tages detection
 			if (document.body.innerHTML.indexOf("Tages") > 0) { tages = true; }
@@ -2238,7 +2251,9 @@ function start_highlights_and_tags(){
 		"div.recommendation_carousel_item",	// Recommendation page.
 		"div.friendplaytime_game",	// Recommendation page.
 		"div.dlc_page_purchase_dlc", // DLC page rows
-		"div.sale_page_purchase_item" // Sale pages
+		"div.sale_page_purchase_item", // Sale pages
+		"div.item",				// Sale page / featured page
+		"div.home_area_spotlight"	// midweek and weekend deals
 	];
 
 	// Get all appids and nodes from selectors.
@@ -2246,6 +2261,10 @@ function start_highlights_and_tags(){
 		$.each($(selector), function(j, node){
 			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 			if (appid) {
+			
+				if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+				if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
+			
 				on_app_info(appid, function(){
 					highlight_app(appid, node);
 				});
@@ -2811,24 +2830,45 @@ function add_badge_filter() {
 					if ($(this).html().match(/badge_info_unlocked/)) {
 						$(this).css('display', 'none');
 					}
+					// Hide foil badges too
+					if (!($(this).html().match(/progress_info_bold/))) {
+						$(this).css('display', 'none');
+					}
 				}
 			});
 		});
 	}	
 }
 
-function add_gamecard_market_links(game) {
+function add_gamecard_foil_link() {
+	if ($(".progress_info_bold").length > 0) {
+		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location + "?border=1'><span>View Foil Badge Progress</span></a>");
+	}	
+}
+
+function add_gamecard_market_links(game) {	
+	var foil = $(".progress_info_bold").length - 1;
+	
 	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
 		if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
 		
-		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + cardname;
+		var newcardname = cardname.replace(/'/g, "%27");
+			newcardname = newcardname.replace(/\?/g, "%3F");
+			
+		if (foil) { newcardname = newcardname + " (Foil)"; }
+		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname;
 		var node = $(this);
 		
 		// Test market link to see if valid.  Some cards have "(Trading Card)" on the end of their name
-		get_http("http://steamcommunity.com/market/listings/753/" + game + "-" + cardname, function (txt) {
+		get_http(marketlink, function (txt) {
 			if (/<div id=\"largeiteminfo\">/.test(txt) == false) {
-				marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + cardname + " (Trading Card)";		
+				if (foil) {
+					newcardname = newcardname.replace(/\)$/, "");
+					marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname + " Trading Card)";
+				} else {	
+					marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname + " (Trading Card)";
+				}
 			}
 			
 			var html = $(node).children("div:contains('" + cardname + "')").html();
@@ -2843,14 +2883,16 @@ function add_gamecard_market_links(game) {
 
 function add_total_drops_count() {
 	var drops_count = 0;
+	var drops_games = 0;
 	$(".progress_info_bold").each(function(i, obj) {
 		var obj_count = obj.innerHTML.match(/\d+/);
 		if (obj_count) {
 			drops_count += parseInt(obj_count[0]);
+			drops_games = drops_games + 1;
 		}
 	});
 	if (drops_count > 0) {
-		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "</span>");
+		$(".profile_xp_block_right").html("<span class='profile_xp_block_xp'>" + localized_strings[language].card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings[language].games_with_drops.replace("__dropsgames__", drops_games) + "</span>");
 	}
 }
 
@@ -2900,7 +2942,8 @@ $(document).ready(function(){
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
-						add_remove_from_wishlist_button(appid);					
+						add_remove_from_wishlist_button(appid);
+						add_4pack_breakdown();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
@@ -3013,6 +3056,7 @@ $(document).ready(function(){
 						var gamecard = get_gamecard(window.location.pathname);
 						add_cardexchange_links(gamecard);
 						add_gamecard_market_links(gamecard);
+						add_gamecard_foil_link();
 						break;
 				}
 				break;
