@@ -654,11 +654,15 @@ function find_purchase_date(appname) {
 function pack_split(node, ways) {
 	var price_text = $(node).find(".discount_final_price").html();
 	if (price_text == null) { price_text = $(node).find(".game_purchase_price").html(); }
+	if (price_text.match(",")) {
+		var at_end = true;
+		var comma = true;
+		price_text = price_text.replace(",", ".");
+	}
 	var currency_symbol = price_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
-	var comma = (price_text.indexOf(",") > -1);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
-	price_text = formatMoney(price, 2, currency_symbol, ",", comma ? "," : ".");			
+	price_text = formatMoney(price, 2, currency_symbol, ",", comma ? "," : ".", at_end);
 	$(node).find(".btn_addtocart").before("<div class='discount_block game_purchase_discount' style='width: 60px;'><div class='discount_prices'><div class='discount_original_price' style='text-decoration: none; left: 8px;'>Each</div><div class='discount_final_price' style='padding-left: 8px;'>" + price_text + "</div></div></div>");
 }
 
