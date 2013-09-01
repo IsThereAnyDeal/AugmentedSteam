@@ -656,7 +656,7 @@ function pack_split(node, ways) {
 	if (price_text == null) { price_text = $(node).find(".game_purchase_price").html(); }
 	var currency_symbol = price_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
 	var comma = (price_text.indexOf(",") > -1);
-	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / 4;
+	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
 	price_text = formatMoney(price, 2, currency_symbol, ",", comma ? "," : ".");			
 	$(node).find(".btn_addtocart").before("<div class='discount_block game_purchase_discount' style='width: 60px;'><div class='discount_prices'><div class='discount_original_price' style='text-decoration: none; left: 8px;'>Each</div><div class='discount_final_price' style='padding-left: 8px;'>" + price_text + "</div></div></div>");
@@ -668,8 +668,12 @@ function add_4pack_breakdown() {
 		if ($(this).is(":contains('4-Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('4 Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('3-Pack')")) { pack_split(this, 3); }
+		if ($(this).is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).is(":contains('Four Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Four-Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('Clan Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('Two Pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('Two-pack')")) { pack_split(this, 2); }
 	});
 }
 
