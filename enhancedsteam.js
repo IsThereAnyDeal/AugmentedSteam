@@ -755,6 +755,15 @@ function remove_about_menu() {
 	});
 }
 
+function remove_community_new() {
+	storage.get(function(settings) {
+		if (settings.hidecommunitynew === undefined) { settings.hidecommunitynew = true; storage.set({'hidecommunitynew': settings.hidecommunitynew}); }
+		if (settings.hidecommunitynew) {
+			$('.menuitem_new').replaceWith('');
+		}
+	});
+}
+
 // Adds a link to SPUF to the top menu
 function add_spuf_link() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
@@ -2906,6 +2915,7 @@ $(document).ready(function(){
 		add_enhanced_steam_options();
 		remove_install_steam_button();
 		remove_about_menu();
+		remove_community_new();
 		add_spuf_link();
 		if (is_signed_in()) {
 			add_library_menu();

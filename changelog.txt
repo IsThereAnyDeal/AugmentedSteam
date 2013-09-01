@@ -1,6 +1,6 @@
 v4.5
 -----
-
++ Adds option to remove "NEW" from the Steam header above your username
 
 v4.4
 -----
