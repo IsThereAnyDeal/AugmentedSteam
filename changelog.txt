@@ -2,6 +2,7 @@ v4.5
 -----
 + Adds option to remove "NEW" from the Steam header above your username
 : Fixes a bug where multipacks weren't calculating correctly in some currencies
++ Replaces "No image found" on profile page with correct game image
 
 v4.4
 -----

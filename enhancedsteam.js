@@ -1692,6 +1692,20 @@ function fix_wishlist_image_not_found() {
 	}
 }
 
+function fix_profile_image_not_found() {
+	var items = $(".recent_game");
+	if (items) {
+		imgs = $(items).find("img");
+		for (var i = 0; i < imgs.length; i++)
+		if (imgs[i].src == "http://media.steampowered.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
+			var gameurl = imgs[i].parentNode.href;
+			imgs[i].src = "http://cdn.steampowered.com/v/gfx/apps/" + gameurl.substring(gameurl.lastIndexOf("/") + 1) + "/header.jpg";
+			imgs[i].width = 184;
+			imgs[i].height = 69;
+		}
+	}	
+}
+
 function add_market_total() {
 	storage.get(function(settings) {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
@@ -3027,6 +3041,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/[^\/]+\/?$/.test(window.location.pathname):
 						add_community_profile_links();
 						change_user_background();
+						fix_profile_image_not_found();
 						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
