@@ -1522,7 +1522,7 @@ function hide_greenlight_banner() {
 	storage.get(function(settings) {
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.showgreenlightbanner) {
-			var banner = document.getElementById('ig_top_workshop');
+			var banner = document.querySelector("#ig_top_workshop.blue");
 			var html;
 			html = '<link href="' + chrome.extension.getURL("css/enhancedsteam.css") + '" rel="stylesheet" type="text/css">';
 			html = html + '<div id="store_nav_area"><div class="store_nav_bg"><div class="store_nav">';
