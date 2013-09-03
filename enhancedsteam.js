@@ -2534,7 +2534,7 @@ function highlight_market_items() {
 	$.each($(".market_listing_row"), function (i, node) {
 		var current_market_name = node.innerHTML.match(/class="market_listing_item_name" style="color: #;">(.+)<\/span>/);
 		if (current_market_name) {
-			var market_name = getValue("card:" + current_market_name[1]);
+			var market_name = getValue("card:" + current_market_name[1].replace("&amp;", "&"));
 			if (market_name) {
 				storage.get(function(settings) {
 					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
@@ -2883,9 +2883,10 @@ function add_gamecard_market_links(game) {
 	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
 		if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
+
+		cardname = cardname.replace("&amp;", "&");
 		
-		var newcardname = cardname.replace(/'/g, "%27");
-			newcardname = newcardname.replace(/\?/g, "%3F");
+		var newcardname = cardname.replace(/'/g, "%27").replace(/\?/g, "%3F").replace(/&/g, "%26");
 			
 		if (foil) { newcardname = newcardname + " (Foil)"; }
 		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname;
@@ -2902,10 +2903,8 @@ function add_gamecard_market_links(game) {
 				}
 			}
 			
-			var html = $(node).children("div:contains('" + cardname + "')").html();
-			html = "<div class='badge_card_set_text'>" + html;
+			var html = $(node).children("div:contains('" + cardname + "')").html().replace("&amp;", "&");
 			html = html.replace(cardname, "<a href='" + marketlink + "' target='_blank'>" + cardname + "</a>");
-			html = html + "</div>";
 			
 			$(node).children("div:contains('" + cardname + "')").replaceWith(html);
 		});
