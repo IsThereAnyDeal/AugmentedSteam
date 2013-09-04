@@ -117,6 +117,8 @@ function is_signed_in() {
 // colors the tile for owned games
 function highlight_owned(node) {
 	storage.get(function(settings) {
+		node.classList.add("es_highlight_owned");
+
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
@@ -133,6 +135,8 @@ function highlight_owned(node) {
 // colors the tile for wishlist games
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
+		node.classList.add("es_highlight_wishlist");
+
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
@@ -145,6 +149,8 @@ function highlight_wishlist(node) {
 
 // colors the tile for items with coupons
 function highlight_coupon(node) {
+		node.classList.add("es_highlight_coupon");
+
 	storage.get(function(settings) {
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
@@ -159,6 +165,8 @@ function highlight_coupon(node) {
 // colors the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
+		node.classList.add("es_highlight_inv_gift");
+
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_gift) highlight_node(node, settings.highlight_inv_gift_color);
@@ -172,6 +180,8 @@ function highlight_inv_gift(node) {
 // colors the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
+		node.classList.add("es_highlight_inv_guestpass");
+
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124"; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
 		if (settings.highlight_inv_guestpass) highlight_node(node, settings.highlight_inv_guestpass_color);
@@ -184,6 +194,8 @@ function highlight_inv_guestpass(node) {
 
 function highlight_friends_want(node, appid) {
 	storage.get(function(settings) {
+		node.classList.add("es_highlight_friends_want");
+
 		if (settings.highlight_friends_want === undefined) { settings.highlight_friends_want = false; storage.set({'highlight_friends_want': settings.highlight_friends_want});}
 		if (settings.highlight_friends_want_color === undefined) { settings.highlight_friends_want_color = "#7E4060"; storage.set({'highlight_friends_want_color': settings.highlight_friends_want_color});}
 		if (settings.highlight_friends_want) highlight_node(node, settings.highlight_friends_want_color);
@@ -581,8 +593,18 @@ function load_inventory() {
 function add_empty_wishlist_button() {
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save' style='border-color:red; width: auto;'>&nbsp;&nbsp;<a>" + localized_strings[language].empty_wishlist + "</a>&nbsp;&nbsp;</div>");
-		empty_button.click(empty_wishlist);
+		var empty_button = $("<div class='btn_save es_empty_wishlist' style='border-color:red; width: auto;'>&nbsp;&nbsp;<a>" + localized_strings[language].empty_wishlist + "</a>&nbsp;&nbsp;</div>");
+		empty_button.on('click', null, { empty_owned_only: false }, empty_wishlist);
+		$("#games_list_container").after(empty_button);
+	}
+}
+
+function add_empty_owned_wishlist_button() {
+	// TODO Trigger a new event after everything is highlighted and then add the button
+	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
+	if (window.location.pathname.startsWith(profile)) {
+		var empty_button = $("<div class='btn_save es_empty_owned_wishlist' style='border-color:red; width: auto; margin-right: 10px;'>&nbsp;&nbsp;<a>Remove All Owned From Wishlist</a>&nbsp;&nbsp;</div>");
+		$("#mainContents").on("click", ".es_empty_owned_wishlist", { empty_owned_only: true }, empty_wishlist);
 		$("#games_list_container").after(empty_button);
 	}
 }
@@ -592,10 +614,12 @@ function add_remove_from_wishlist_button(appid) {
 	$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });	
 }
 
-function empty_wishlist() {
-	var conf = confirm("Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!");
+function empty_wishlist(e) {
+	var conf_text = (e.data.empty_owned_only) ? "Are you sure you want to remove games you own from your wishlist?\n\nThis action cannot be undone!" : "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!"
+	var conf = confirm(conf_text);
 	if (conf) {
-		var deferreds = $(".wishlistRow").map(function(i, $obj) {
+		var wishlist_class = (e.data.empty_owned_only) ? ".wishlistRow.es_highlight_owned" : ".wishlistRow"
+		var deferreds = $(wishlist_class).map(function(i, $obj) {
 			var deferred = new $.Deferred();
 			var appid = get_appid_wishlist($obj.id),
 				http = new XMLHttpRequest(),
@@ -1502,7 +1526,7 @@ function add_cart_on_wishlist() {
 			var storefront_data = JSON.parse(data);
 			$.each(storefront_data, function(appid, app_data) {
 				if (app_data.success) {
-					if (app_data.data.packages[0]) {
+					if (app_data.data.packages && app_data.data.packages[0]) {
 						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
 						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
 						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
@@ -3023,6 +3047,7 @@ $(document).ready(function(){
 						add_cart_on_wishlist();
 						fix_wishlist_image_not_found();
 						add_empty_wishlist_button();
+						add_empty_owned_wishlist_button();
 
 						// wishlist highlights
 						start_highlights_and_tags();
