@@ -707,6 +707,23 @@ function add_4pack_breakdown() {
 	});
 }
 
+function add_package_info_button() {
+	storage.get(function(settings) {
+		if (settings.show_package_info === undefined) { settings.show_package_info = false; storage.set({'show_package_info': settings.show_package_info}); }
+		if (settings.show_package_info) {
+			$(".game_area_purchase_game_wrapper").each(function() {
+				if ($(this).find(".btn_packageinfo").length == 0) {
+					var htmlstr = '<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div>';
+					var subid = $(this).find("input[name=subid]").val();
+					htmlstr += '<a class="btn_addtocart_content" href="http://store.steampowered.com/sub/' + subid + '/">Package info</a>';
+					htmlstr += '<div class="btn_addtocart_right"></div></div></div>';
+					$(this).find(".game_purchase_action").prepend(htmlstr);
+				}
+			});
+		}
+	});
+}
+
 function send_age_verification() {
 	document.getElementsByName("ageYear")[0].value="1955";
 	document.getElementsByClassName("btn_checkout_green")[0].click();
@@ -3029,6 +3046,7 @@ $(document).ready(function(){
 						add_dlc_page_link(appid);
 						add_remove_from_wishlist_button(appid);
 						add_4pack_breakdown();
+						add_package_info_button();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
