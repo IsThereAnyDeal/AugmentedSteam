@@ -54,6 +54,10 @@ function escapeHTML(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
 }
 
+function getCookie(name) {
+	return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+}
+
 // DOM helpers
 function xpath_each(xpath, callback) {
 	//TODO: Replace instances with jQuery selectors.
@@ -104,13 +108,8 @@ function ensure_appid_deferred(appid) {
 // check if the user is signed in
 function is_signed_in() {
 	if (!signedInChecked) {
-		var cookies = document.cookie.split("; ");
-		for (var cookie in cookies) {
-			cookie = cookies[cookie].split("=");
-			if (cookie[0] == "steamLogin") {
-				isSignedIn = cookie[1].replace(/%.*/, "");
-			}
-		}
+		var steamLogin = getCookie("steamLogin");
+		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "");
 		signedInChecked = true;
 	}
 	return isSignedIn;
@@ -784,6 +783,20 @@ function add_enhanced_steam_options() {
 	$("#global_action_menu")
 		.before($dropdown)
 		.before($dropdown_options_container);
+}
+
+function add_fake_country_code_warning() {
+	var LKGBillingCountry = getCookie("LKGBillingCountry");
+	var fakeCC = getCookie("fakeCC");
+
+	if (fakeCC && LKGBillingCountry != fakeCC) {
+		$("#global_actions").prepend("<span>You are using the Steam store for the " + fakeCC + " region. <a href='' id='reset_fake_country_code'>Click here to go back to the " + LKGBillingCountry + " store.</a></span>");
+		$("#reset_fake_country_code").click(function(e) {
+			e.preventDefault();
+			document.cookie = 'fakeCC=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;';
+			window.location.replace(window.location.href.replace(/[?&]cc=.{2}/, ""));
+		})
+	}
 }
 
 // Removes the "Install Steam" button at the top of each page
@@ -3006,6 +3019,7 @@ $(document).ready(function(){
 		if (window.location.pathname.startsWith("/api")) return;
 		// On window load...
 		add_enhanced_steam_options();
+		add_fake_country_code_warning();
 		remove_install_steam_button();
 		remove_about_menu();
 		remove_community_new();
