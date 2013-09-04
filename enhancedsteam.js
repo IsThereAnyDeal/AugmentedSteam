@@ -17,6 +17,8 @@ var loading_inventory;
 var appid_promises = {};
 var library_all_games = [];
 
+MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
 //Chrome storage functions.
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
@@ -1540,6 +1542,33 @@ function add_cart_on_wishlist() {
 	});
 }
 
+function add_cart_to_search() {
+	$("#search_header").prepend('<div class="col search_released">Actions</div>');
+
+	$(".search_result_row").each(function() {
+		var result_row = this;
+
+		$(this).prepend('<div class="col search_released es_search_add_to_cart"></div>');
+
+		var app = get_appid($(this).attr('href'));
+		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data) {
+				if (app_data.success) {
+					if (app_data.data.packages && app_data.data.packages[0]) {
+						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
+						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
+						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
+						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
+						htmlstring += '</form>';
+						$(result_row).children(".es_search_add_to_cart").html(htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store" style="padding: 20px 10px;">' + localized_strings[language].add_to_cart + '</a>');
+					}
+				}
+			});
+		});
+	});
+}
+
 // Changes Steam Greenlight pages
 function hide_greenlight_banner() {
 	// insert the "top bar" found on all other Steam games
@@ -2272,11 +2301,12 @@ function check_if_purchased() {
 
 function bind_ajax_content_highlighting() {
 	// checks content loaded via AJAX
-	var observer = new WebKitMutationObserver(function(mutations) {
+	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
+				if (node.id == "search_result_container") add_cart_to_search();
 				if (node.classList && node.classList.contains("tab_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
@@ -3020,6 +3050,10 @@ $(document).ready(function(){
 
 					case /^\/account\/.*/.test(window.location.pathname):
 						account_total_spent();
+						break;
+
+					case /^\/search\/.*/.test(window.location.pathname):
+						add_cart_to_search();
 						break;
 
 					// Storefront-front only
