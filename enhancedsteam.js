@@ -2650,7 +2650,8 @@ function on_app_info(appid, cb) {
 
 function add_steamcards_link(appid) {
 	if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {
-		$('.communitylink').find('div[class$="block_content"]').prepend("<div class='block_content_inner'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
+		//$('.communitylink').find('div[class$="block_content"]').prepend("<div class='block_content_inner'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
+		$('.communitylink .block_content_inner:first').append("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
 	}
 }
 
