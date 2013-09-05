@@ -786,17 +786,23 @@ function add_enhanced_steam_options() {
 }
 
 function add_fake_country_code_warning() {
-	var LKGBillingCountry = getCookie("LKGBillingCountry");
-	var fakeCC = getCookie("fakeCC");
+	storage.get(function(settings) {
+		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; storage.set({'showfakeccwarning': settings.showfakeccwarning}); }
+		if (settings.showfakeccwarning) {
+			var LKGBillingCountry = getCookie("LKGBillingCountry");
+			var fakeCC = getCookie("fakeCC");
 
-	if (fakeCC && LKGBillingCountry != fakeCC) {
-		$("#global_actions").prepend("<span>You are using the Steam store for the " + fakeCC + " region. <a href='' id='reset_fake_country_code'>Click here to go back to the " + LKGBillingCountry + " store.</a></span>");
-		$("#reset_fake_country_code").click(function(e) {
-			e.preventDefault();
-			document.cookie = 'fakeCC=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;';
-			window.location.replace(window.location.href.replace(/[?&]cc=.{2}/, ""));
-		})
-	}
+			if (fakeCC && LKGBillingCountry != fakeCC) {
+				$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_store.replace("__current__", fakeCC) + '  <a href="" id="reset_fake_country_code">' + localized_strings[language].using_store_return.replace("__base__", LKGBillingCountry) + '</a></div>');
+				$("#page_background_holder").css("top", "135px");
+				$("#reset_fake_country_code").click(function(e) {
+					e.preventDefault();
+					document.cookie = 'fakeCC=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;';
+					window.location.replace(window.location.href.replace(/[?&]cc=.{2}/, ""));
+				})
+			}
+		}
+	});
 }
 
 // Removes the "Install Steam" button at the top of each page
