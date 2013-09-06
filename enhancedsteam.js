@@ -2749,6 +2749,12 @@ function add_es_background_selection() {
 	});
 }
 
+function fix_broken_sub_image() {
+	var header = $(".package_header").attr("src");
+	var img = $(".tab_item_img").find("img").attr("src").match(/(.+)\//)[0] + "header.jpg";
+	$.ajax(header).error(function() { $(".package_header").attr("src", img); });
+}
+
 function add_feature_search_links () {
 	var game_details = ($('.game_area_details_specs').filter(function(){ return !$(this).parents('div').hasClass('icon'); }));
 	$.each(game_details, function(index, value) {
@@ -3080,6 +3086,7 @@ $(document).ready(function(){
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");
 						add_feature_search_links();
+						fix_broken_sub_image();
 						break;
 						
 					case /^\/agecheck\/.*/.test(window.location.pathname):
