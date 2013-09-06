@@ -2959,7 +2959,9 @@ function add_badge_filter() {
 					$(this).css('display', 'none');
 				} else {
 					if ($(this).html().match(/badge_info_unlocked/)) {
-						$(this).css('display', 'none');
+						if (!($(this).html().match(/badge_current/))) {
+							$(this).css('display', 'none');
+						}	
 					}
 					// Hide foil badges too
 					if (!($(this).html().match(/progress_info_bold/))) {
