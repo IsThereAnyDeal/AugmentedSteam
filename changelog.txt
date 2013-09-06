@@ -3,6 +3,11 @@ v4.5
 + Adds option to remove "NEW" from the Steam header above your username
 : Fixes a bug where multipacks weren't calculating correctly in some currencies
 + Replaces "No image found" on profile page with correct game image
++ Adds a "Remove all owned from wishlist" button
++ Adds option to display "package" info on all apps
++ Adds warning when browsing Steam in your non-account region
+: Fixes a bug where items with "&" in their name weren't highlighting on market
+: Fixed SteamDB links to work with new Valve code changes near "Share" and "Embed" buttons
 
 v4.4
 -----
