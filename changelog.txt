@@ -4,11 +4,12 @@ v4.5
 : Fixes a bug where multipacks weren't calculating correctly in some currencies
 + Replaces "No image found" on profile page with correct game image
 + Adds a "Remove all owned from wishlist" button
++ Adds an "Add to cart" button to search results
 + Adds option to display "package" info on all apps
 + Adds warning when browsing Steam in your non-account region
 : Fixes a bug where items with "&" in their name weren't highlighting on market
 : Fixed SteamDB links to work with new Valve code changes near "Share" and "Embed" buttons
-: Fixes broken or "no image found" images on subscription pages and profile page
+: Fixes broken images on unpublished subscription pages
 
 v4.4
 -----

@@ -2345,7 +2345,7 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.id == "search_result_container") add_cart_to_search();
+				if (node.id == "search_result_container") add_cart_to_search();				
 				if (node.classList && node.classList.contains("tab_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
