@@ -2595,8 +2595,10 @@ function add_affordable_button() {
 				switch (currency_symbol) {
 					case "€":
 						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "<span class='currency'>" + currency_symbol + "</span></h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
+						break;
 					case "pуб":
 						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
+						break;
 					default:
 						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'><span class='currency'>" + currency_symbol + "</span>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
 				}		
