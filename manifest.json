@@ -19,6 +19,11 @@
   "content_scripts": [
     {
       "matches": ["http://*.steampowered.com/*", "https://*.steampowered.com/*", "http://steamcommunity.com/*"],
+      "exclude_matches": [
+        "https://store.steampowered.com/checkout/*",
+        "https://store.steampowered.com/login/*",
+        "https://steamcommunity.com/login/*"
+      ],
       "js": [
         "js/jQuery.min.js",
         "js/localization.js",
