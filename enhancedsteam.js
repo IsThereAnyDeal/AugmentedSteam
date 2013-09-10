@@ -2587,6 +2587,7 @@ function add_affordable_button() {
 	var balance_text = $("#header_wallet_ctn").text().trim();
 	var currency_symbol = balance_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
 	var balance = balance_text.replace(currency_symbol, "");
+	if(currency_symbol == "$") balance = balance.replace(" USD", "");
 	balance = balance.replace(",", ".");
 	if (balance > 0) {
 		var link = "http://store.steampowered.com/search/?sort_by=Price&sort_order=DESC&price=0%2C" + balance;
