@@ -1,6 +1,9 @@
 v4.6
 -----
-
++ Enhanced Steam no longer executes on pages where you enter your account details
+: Homepage carousel descriptions now pull the embed snippet from the app page
+: Fixed a bug where homepage button was incorrectly showing 3 times in some regions
+: Fixed a bug where market highlighting could be incorrect if item names were equal
 
 v4.5
 -----

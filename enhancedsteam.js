@@ -490,8 +490,8 @@ function load_inventory() {
 				var data = JSON.parse(txt);
 				if (data.success) {
 					$.each(data.rgDescriptions, function(i, obj) {
-						if (obj.market_name) {
-							setValue("card:" + obj.market_name, true);
+						if (obj.market_hash_name) {
+							setValue("card:" + obj.market_hash_name, true);
 						}
 					});
 				}
@@ -2621,16 +2621,29 @@ function start_friend_activity_highlights() {
 	});
 }
 
+function rewrite_string(string) {
+	string = string.replace(/%20/g, " ");
+	string = string.replace(/%28/g, "(");
+	string = string.replace(/%29/g, ")");
+	string = string.replace(/%3A/g, ":");
+	string = string.replace(/%27/g, "'");
+	string = string.replace(/%26/g, "&");
+	return string;
+}
+
 function highlight_market_items() {
-	$.each($(".market_listing_row"), function (i, node) {
-		var current_market_name = node.innerHTML.match(/class="market_listing_item_name" style="color: #;">(.+)<\/span>/);
+	$.each($(".market_listing_row_link"), function (i, node) {
+		var current_market_name = node.href.match(/steamcommunity.com\/market\/listings\/753\/(.+)\?/);
+		if (!current_market_name) { current_market_name = node.href.match(/steamcommunity.com\/market\/listings\/753\/(.+)/); }
 		if (current_market_name) {
-			var market_name = getValue("card:" + current_market_name[1].replace("&amp;", "&"));
+			var item_name = rewrite_string(current_market_name[1]);
+			var market_name = getValue("card:" + item_name);
 			if (market_name) {
 				storage.get(function(settings) {
 					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 					if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 					if (settings.highlight_owned) {
+						node = $(node).find("div");
 						$(node).css("backgroundImage", "none");
 						$(node).css("color", "white");
 						$(node).css("backgroundColor", settings.highlight_owned_color);
