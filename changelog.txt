@@ -5,6 +5,7 @@ v4.6
 : Homepage carousel descriptions now pull the embed snippet from the app page
 : Fixed a bug where homepage button was incorrectly showing 3 times in some regions
 : Fixed a bug where market highlighting could be incorrect if item names were equal
+: Fixes a bug where profile link information was not correct while not logged in
 
 v4.5
 -----
