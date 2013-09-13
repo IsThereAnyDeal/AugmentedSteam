@@ -2038,6 +2038,19 @@ function add_market_total() {
 	});
 }
 
+function minimize_active_listings() {
+	storage.get(function(settings) {
+		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
+		if (settings.hideactivelistings) {
+			if (window.location.pathname.match(/^\/market\/$/)) {
+				$("#tabContentsMyListings").css("display", "none");
+				$("#tabMyListings").removeClass("market_tab_well_tab_active");
+				$("#tabMyListings").addClass("market_tab_well_tab_inactive");
+			}
+		}
+	});
+}
+
 function account_total_spent() {
 	// adds a "total spent on Steam" to the account details page
 	storage.get(function(settings) {
@@ -3187,6 +3200,7 @@ $(document).ready(function(){
 							bind_ajax_content_highlighting();
 						});
 						add_market_total();
+						minimize_active_listings();
 						break;
 						
 					case /^\/id\/.+\/inventory\/.*/.test(window.location.pathname):

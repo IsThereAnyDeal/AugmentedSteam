@@ -83,6 +83,7 @@ function save_options() {
 	showesbg = $("#showesbg").prop('checked');
 	showallachievements = $("#showallachievements").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
+	hideactivelistings = $("#hideactivelistings").prop('checked');
 
 	// Profile Link Options
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
@@ -152,6 +153,7 @@ function save_options() {
 		'showesbg': showesbg,
 		'showallachievements': showallachievements,
 		'showgreenlightbanner': showgreenlightbanner,
+		'hideactivelistings': hideactivelistings,
 
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
@@ -317,6 +319,7 @@ function load_options() {
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
+		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
@@ -385,6 +388,7 @@ function load_options() {
 		$("#showesbg").attr('checked', settings.showesbg);
 		$("#showallachievements").attr('checked', settings.showallachievements);
 		$("#showgreenlightbanner").attr('checked', settings.showgreenlightbanner);
+		$("#hideactivelistings").attr('checked', settings.hideactivelistings);
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").attr('checked', settings.profile_steamgifts);
@@ -466,6 +470,7 @@ function load_translation() {
 			$("#es_background_text").text(localized_strings[settings.language].options_es_bg);
 			$("#allachievements_text").text(localized_strings[settings.language].options_showallachievements);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
+			$("#hideactivelistings_text").text(localized_strings[settings.language].options_hideactivelistings);
 			$("#steamcardexchange_text").text(localized_strings[settings.language].options_steamcardexchange);
 						
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
