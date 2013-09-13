@@ -766,6 +766,7 @@ function add_enhanced_steam_options() {
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 	$donation_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//enhancedsteam.com/donate.php\">" + localized_strings[language].donate + "</a>");
+	$group_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//" + localized_strings[language].official_group_url + "\">" + localized_strings[language].official_group + "</a>");
 
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings[language].clear_cache + "</a>");
 	$clear_cache_link.click(function(){
@@ -781,6 +782,7 @@ function add_enhanced_steam_options() {
 	$dropdown_options.append($spacer);
 	$dropdown_options.append($website_link);
 	$dropdown_options.append($contribute_link);
+	$dropdown_options.append($group_link);
 	$dropdown_options.append($donation_link);
 
 	$("#global_action_menu")
