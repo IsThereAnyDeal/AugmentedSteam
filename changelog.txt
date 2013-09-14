@@ -5,6 +5,7 @@ v4.6
 + Added link to Enhanced Steam menu for the official Steam group
 + Added option to hide all active listings on market homepage by default
 + Added option to enable/disable automatic age verification
++ Added wishlist filters to show only games on sale (Thanks Marcelloz!)
 : Homepage carousel descriptions now pull the embed snippet from the app page
 : Fixed a bug where homepage button was incorrectly showing 3 times in some regions
 : Fixed a bug where market highlighting could be incorrect if item names were equal

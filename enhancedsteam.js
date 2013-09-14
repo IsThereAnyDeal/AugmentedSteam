@@ -610,6 +610,27 @@ function add_empty_owned_wishlist_button() {
 	}
 }
 
+function add_wishlist_filter() {
+	var html  = "<span>" + localized_strings[language].show + ": </span>";
+		html += "<label class='es_wl_sort' id='es_wl_all'><input type='radio' name='es_wl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
+		html += "<label class='es_wl_sort' id='es_wl_sale'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_discount + "</a></span></label>";
+		html += "</div>";
+
+	$('#wishlist_sort_options').append("<p>" + html);
+	
+	$('#es_wl_all').on('click', function() {
+		$('.wishlistRow').css('display', 'block');
+	});
+	
+	$('#es_wl_sale').on('click', function() {
+		$('.wishlistRow').each(function () {
+			if (!$(this).html().match(/discount_block_inline/)) {
+				$(this).css('display', 'none');
+			}
+		});
+	});
+}
+
 function add_remove_from_wishlist_button(appid) {
 	$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");		
 	$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });	
@@ -3175,6 +3196,7 @@ $(document).ready(function(){
 						fix_wishlist_image_not_found();
 						add_empty_wishlist_button();
 						add_empty_owned_wishlist_button();
+						add_wishlist_filter();
 
 						// wishlist highlights
 						start_highlights_and_tags();
