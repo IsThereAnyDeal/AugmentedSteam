@@ -42,6 +42,7 @@ function save_options() {
 	hideaboutmenu = $("#hideaboutmenu").prop('checked');
 	hidecommunitynew = $("#hidecommunitynew").prop('checked');
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
+	send_age_info = $("#send_age_info").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
 	showlowestprice = $("#showlowestprice").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
@@ -135,6 +136,7 @@ function save_options() {
 		'showfakeccwarning': showfakeccwarning,
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
+		'send_age_info': send_age_info,
 		'showdrm': showdrm,
 		'showlowestprice': showlowestprice,
 		'showmcus': showmcus,
@@ -313,6 +315,7 @@ function load_options() {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.hidecommunitynew === undefined) { settings.hidecommunitynew = true; chrome.storage.sync.set({'hidecommunitynew': settings.hidecommunitynew}); }
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
+		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }		
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = false; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
@@ -368,6 +371,7 @@ function load_options() {
 		$("#hideaboutmenu").attr('checked', settings.hideaboutmenu);
 		$("#hidecommunitynew").attr('checked', settings.hidecommunitynew);
 		$("#showfakeccwarning").attr('checked', settings.showfakeccwarning);
+		$("#send_age_info").attr('checked', settings.send_age_info);
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showhltb").attr('checked', settings.showhltb);
@@ -452,6 +456,7 @@ function load_translation() {
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
 			$("#store_hide_new_heading").text(localized_strings[settings.language].options_hide_new_heading);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options_show_regionwarning);
+			$("#send_age_info").text(localized_strings[settings.language].options_send_age_info);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);

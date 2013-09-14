@@ -727,8 +727,13 @@ function add_package_info_button() {
 }
 
 function send_age_verification() {
-	document.getElementsByName("ageYear")[0].value="1955";
-	document.getElementsByClassName("btn_checkout_green")[0].click();
+	storage.get(function(settings) {
+		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
+		if (settings.send_age_info) {
+			document.getElementsByName("ageYear")[0].value="1955";
+			document.getElementsByClassName("btn_checkout_green")[0].click();
+		}
+	});
 }
 
 function add_wallet_balance_to_header() {
