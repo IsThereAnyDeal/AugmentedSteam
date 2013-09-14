@@ -1,3 +1,7 @@
+v4.7
+-----
+
+
 v4.6
 -----
 + Enhanced Steam no longer executes on pages where you enter your account details
