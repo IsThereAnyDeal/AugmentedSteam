@@ -1,6 +1,6 @@
 v4.7
 -----
-
++ Adds new sorting option to wishlist that lets you sort by discount percentage
 
 v4.6
 -----

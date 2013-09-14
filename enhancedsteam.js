@@ -631,6 +631,43 @@ function add_wishlist_filter() {
 	});
 }
 
+function add_wishlist_discount_sort() {
+	if ($("#wishlist_sort_options").find("a[href$='price']").length > 0) {
+		$("#wishlist_sort_options").find("a[href$='price']").after("&nbsp;&nbsp;<label id='es_wl_sort_discount'><a>Discount</a></label>");
+	} else {
+		$("#wishlist_sort_options").find("span[class='selected_sort']").after("&nbsp;&nbsp;<label id='es_wl_sort_discount'><a>Discount</a></label>");
+	}
+	
+	$("#es_wl_sort_discount").on("click", function() {
+		var wishlistRows = [];
+		$('.wishlistRow').each(function () {
+			var push = new Array();
+			if ($(this).html().match(/discount_block_inline/)) {				
+				push[0] = this.outerHTML;
+				push[1] = $(this).find("div[class='discount_pct']").html();				
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = "0";
+			}
+			wishlistRows.push(push);
+			this.parentNode.removeChild(this);
+		});
+		
+		wishlistRows.sort(function(a,b) { return parseInt(a[1],10) - parseInt(b[1],10);	});
+		
+		$('.wishlistRow').each(function () { $(this).css("display", "none"); });
+		
+		$(wishlistRows).each(function() {
+			$("#wishlist_items").append(this[0]);
+		});
+		
+		$(this).html("<span style='color: #B0AEAC;'>Discount</span>");
+		var html = $("#wishlist_sort_options").find("span[class='selected_sort']").html();
+		html = "<a onclick='location.reload()'>" + html + "</a>";
+		$("#wishlist_sort_options").find("span[class='selected_sort']").html(html);
+	});
+}
+
 function add_remove_from_wishlist_button(appid) {
 	$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");		
 	$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });	
@@ -3205,6 +3242,7 @@ $(document).ready(function(){
 						add_empty_wishlist_button();
 						add_empty_owned_wishlist_button();
 						add_wishlist_filter();
+						add_wishlist_discount_sort();
 
 						// wishlist highlights
 						start_highlights_and_tags();
