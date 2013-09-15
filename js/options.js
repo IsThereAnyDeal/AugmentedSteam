@@ -34,6 +34,7 @@ function save_options() {
 	tag_friends_want = $("#tag_friends_want").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
+	hide_early_access = $("#hide_early_access").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
 	showlibraryf2p = $("#showlibraryf2p").prop('checked');
@@ -129,6 +130,7 @@ function save_options() {
 		'tag_friends_want': tag_friends_want,
 		
 		'hide_owned': hide_owned,
+		'hide_early_access': hide_early_access,
 
 		'hideinstallsteambutton': hideinstallsteambutton,
 		'hideaboutmenu': hideaboutmenu,
@@ -295,6 +297,7 @@ function load_options() {
 		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; chrome.storage.sync.set({'tag_friends_want': settings.tag_friends_want}); }
 		
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
 
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
@@ -363,6 +366,7 @@ function load_options() {
 		$("#tag_friends_want").attr('checked', settings.tag_friends_want);
 		
 		$("#hide_owned").attr('checked', settings.hide_owned);
+		$("#hide_early_access").attr('checked', settings.hide_early_access);
 
 		$("#showlibrarymenu").attr('checked', settings.showlibrarymenu);
 		$("#showlibraryf2p").attr('checked', settings.showlibraryf2p);
@@ -448,6 +452,7 @@ function load_translation() {
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options_owned);
+			$("#hide_early_access_text").text(localized_strings[settings.language].options_hide_early_access);
 			
 			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
 			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options_library_f2p);

@@ -1,4 +1,4 @@
-// version 4.7
+﻿// version 4.7
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
@@ -2425,7 +2425,10 @@ function bind_ajax_content_highlighting() {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
 				if (node.id == "search_result_container") add_cart_to_search();				
-				if (node.classList && node.classList.contains("tab_row")) start_highlighting_node(node);
+				if (node.classList && node.classList.contains("tab_row")) {
+					hide_early_access();
+					start_highlighting_node(node);
+				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
 			}
@@ -2620,9 +2623,9 @@ function add_carousel_descriptions() {
 				$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
 				
 				get_http('http://store.steampowered.com/app/' + appid, function(txt) {
-					var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/)[1];
+					var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
 					if (desc) {
-						$desc.append(desc);
+						$desc.append(desc[1]);
 					}
 				});
 			});
@@ -2656,6 +2659,26 @@ function add_affordable_button() {
 					$("#es_results").text(results);
 				});	
 			}	
+		});
+	}
+}
+
+function hide_early_access() {
+	if ($("#tab_1_content").is(":visible") || $("#tab_filtered_dlc_content").is(":visible")) {
+		storage.get(function(settings) {
+			if (settings.hide_early_access === undefined) { settings.hide_early_access = false; storage.set({'hide_early_access': settings.hide_early_access}); }
+			
+			if (settings.hide_early_access) {
+				// find the localized category name for Early Access
+				var early_access_text = $("#genre_flyout a[href*=Early]").text().trim();
+				
+				$("#tab_NewReleases_items .tab_row, #tab_NewReleasesFilteredDLC_items .tab_row").each(function(i, item) {
+					item = $(item);
+					if (item.find(".genre_release").text().indexOf(early_access_text) != -1) {
+						item.hide();
+					}
+				});
+			}
 		});
 	}
 }
@@ -3218,6 +3241,7 @@ $(document).ready(function(){
 					case /^\/$/.test(window.location.pathname):
 						add_carousel_descriptions();
 						add_affordable_button();
+						hide_early_access();
 						break;
 				}
 

@@ -1,4 +1,4 @@
-var localized_strings,
+﻿var localized_strings,
     localization_promise = (function () {
         var deferred = new $.Deferred();
         localized_strings_default = {
@@ -23,6 +23,7 @@ var localized_strings,
             options_gift: "Items Stored As Gift",
             options_guest: "Items You Have A Guest Pass For",
             options_friends_wishlist: "Items Your Friends Have Wishlisted",
+			options_hide_early_access: "Early Access Items in New Releases",
             options_hide_install: "Hide \"Install Steam\" button",
 			options_send_age_info: "Automatically send age verification when requested",
             options_drm: "Show 3rd Party DRM Warnings",
