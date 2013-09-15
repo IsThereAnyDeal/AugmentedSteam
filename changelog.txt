@@ -1,6 +1,8 @@
 v4.7
 -----
 + Adds new sorting option to wishlist that lets you sort by discount percentage
++ Adds ability to hide Early Access games from the New Releases list on homepage
++ Adds new tag: "friends own" which tags each game with the number of your friends that own it
 
 v4.6
 -----
