@@ -57,6 +57,7 @@
             view_in: "View in",
             clear_cache: "Clear cached data",
             forums: "Forums",
+			games: "Games",
             coupon_available: "You have a coupon available!",
             coupon_application_note: "A coupon in your inventory will be applied automatically at checkout.",
             coupon_learn_more: "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Learn more</a> about Steam Coupons",

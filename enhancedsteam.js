@@ -921,10 +921,11 @@ function remove_community_new() {
 }
 
 // Adds a link to SPUF to the top menu
-function add_spuf_link() {
+function add_header_links() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
 	if ($("#supernav").length > 0) {
 		$("a[href='http://steamcommunity.com/workshop/']").after('<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a>');
+		$("a[href$='/friends/']").after('<a class="submenuitem" href="http://steamcommunity.com/my/games/">' + localized_strings[language].games + '</a>');
 	}
 }
 
@@ -3190,7 +3191,7 @@ $(document).ready(function(){
 		remove_install_steam_button();
 		remove_about_menu();
 		remove_community_new();
-		add_spuf_link();
+		add_header_links();
 		if (is_signed_in()) {
 			add_library_menu();
 		}
