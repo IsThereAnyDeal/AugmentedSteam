@@ -345,6 +345,8 @@
                 options: "Options",
                 website: "Site web",
                 contribute: "Contribuer (GitHub)",
+				official_group: "Groupe officiel",
+				official_group_url: "steamcommunity.com/groups/enhancedsteam",
                 store: "Magasin",
                 library_menu: "Bibliothèque",
                 community: "Communauté",
@@ -360,6 +362,7 @@
                 options_guest: "Articles pour lesquels vous avez des invitations",
                 options_friends_wishlist: "Articles que vos amis ont dans leurs listes de souhaits",
                 options_hide_install: "Cacher le bouton \"Installer Steam\"",
+				options_send_age_info: "Activer la vérification de l'âge automatique",
                 options_drm: "Afficher les avertissements sur les DRMs de tiers",
                 options_lowestprice: "Afficher l'historique des prix",
                 options_metacritic: "Afficher les scores des utilisateurs de Metacritic",
@@ -371,6 +374,7 @@
                 options_total_spent: "Afficher \"Total dépensé\" dans la page du compte",
                 options_group_events: "Afficher les événements dans l'aperçu des groupes",
                 options_greenlight_banner: "Remplacer la bannière Steam Greenlight",
+				options_hideactivelistings: "Cacher toutes les offres actives sur la page d'accueil du Marché par défaut",
                 options_steamcardexchange: "Afficher le lien SteamCardExchange sur les badges",
                 options_es_bg: "Définir un arrière-plan personnalisé sur la page de modification du profil",
                 options_showallachievements: "Afficher les stats des succès sur la page \"Tous les jeux\"",
@@ -425,7 +429,10 @@
                 lowest_price: "Prix le plus bas",
                 card_drops_remaining: "__drops__ carte(s) restante(s)",
 				games_with_drops: "__dropsgames__ jeu(x) avec des cartes restantes",
+				games_with_booster: "__boostergames__ jeu(x) éligibles pour des booster packs",
 				badges_all: "Tous les badges",
+				games_all: "Tous les jeux",
+				games_discount: "Jeux avec des remises",
 				badges_drops: "Badges avec des cartes restantes",
                 sales_total: "Ventes totales",
                 purchase_total: "Achats totaux",
@@ -442,7 +449,7 @@
 					offer_ends: " L'offre prend fin",
 					pwyw: "Payez ce que vous voulez",
 					includes: "Contient (__num__) articles",
-					header: "Pack incluant ce jeu"
+					header: "Packs incluant ce jeu"
 				}
             },
             "it": {
