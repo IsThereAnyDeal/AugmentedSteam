@@ -559,7 +559,7 @@ document.querySelector('#tag_coupon_default').addEventListener('click', load_def
 document.querySelector('#tag_inv_gift_default').addEventListener('click', load_default_tag_inv_gift_color);
 document.querySelector('#tag_inv_guestpass_default').addEventListener('click', load_default_tag_inv_guestpass_color);
 document.querySelector('#tag_friends_want_color_default').addEventListener('click', load_default_tag_friends_want_color);
-document.querySelector('#tag_friends_own_color_default').addEventListener('click', load_default_tag_friends_want_color);
+document.querySelector('#tag_friends_own_color_default').addEventListener('click', load_default_tag_friends_own_color);
 
 document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
