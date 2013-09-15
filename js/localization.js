@@ -362,7 +362,7 @@
                 options_guest: "Articles pour lesquels vous avez des invitations",
                 options_friends_wishlist: "Articles que vos amis ont dans leurs listes de souhaits",
                 options_hide_install: "Cacher le bouton \"Installer Steam\"",
-				options_send_age_info: "Activer la vérification de l'âge automatique",
+				options_send_age_info: "Activer la vérification automatique de l'âge",
                 options_drm: "Afficher les avertissements sur les DRMs de tiers",
                 options_lowestprice: "Afficher l'historique des prix",
                 options_metacritic: "Afficher les scores des utilisateurs de Metacritic",
