@@ -285,7 +285,7 @@ function load_options() {
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124";	chrome.storage.sync.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; chrome.storage.sync.set({'tag_friends_want_color': settings.tag_friends_want_color}); }
-		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#999900"; chrome.storage.sync.set({'tag_friends_own_color': settings.tag_friends_own_color}); }
+		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; chrome.storage.sync.set({'tag_friends_own_color': settings.tag_friends_own_color}); }
 
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
@@ -536,7 +536,7 @@ function load_default_tag_coupon_color() { document.getElementById("tag_coupon_c
 function load_default_tag_inv_gift_color() { document.getElementById("tag_inv_gift_color").value = "#a75124"; }
 function load_default_tag_inv_guestpass_color() { document.getElementById("tag_inv_guestpass_color").value = "#a75124"; }
 function load_default_tag_friends_want_color() { document.getElementById("tag_friends_want_color").value = "#7E4060"; }
-function load_default_tag_friends_own_color() { document.getElementById("tag_friends_own_color").value = "#999900"; }
+function load_default_tag_friends_own_color() { document.getElementById("tag_friends_own_color").value = "#5b9504"; }
 
 document.addEventListener('DOMContentLoaded', load_options);
 document.addEventListener('DOMContentLoaded', function () {

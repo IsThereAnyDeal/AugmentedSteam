@@ -216,11 +216,11 @@ function highlight_friends_own(node, appid) {
 		node.classList.add("es_highlight_friends_own");
 
 		if (settings.highlight_friends_own === undefined) { settings.highlight_friends_own = false; storage.set({'highlight_friends_own': settings.highlight_friends_own});}
-		if (settings.highlight_friends_own_color === undefined) { settings.highlight_friends_own_color = "#999900"; storage.set({'highlight_friends_own_color': settings.highlight_friends_own_color});}
+		if (settings.highlight_friends_own_color === undefined) { settings.highlight_friends_own_color = "#5b9504"; storage.set({'highlight_friends_own_color': settings.highlight_friends_own_color});}
 		if (settings.highlight_friends_own) highlight_node(node, settings.highlight_friends_own_color);
 
 		if (settings.tag_friends_own === undefined) { settings.tag_friends_own = true; storage.set({'tag_friends_own': settings.tag_friends_own});}
-		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#999900"; storage.set({'tag_friends_own_color': settings.tag_friends_own_color});}
+		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; storage.set({'tag_friends_own_color': settings.tag_friends_own_color});}
 		if (settings.tag_friends_own) add_tag(			
 			node,
 			localized_strings[language].tag_friends_own.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsown")),
