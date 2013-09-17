@@ -2450,13 +2450,13 @@ function bind_ajax_content_highlighting() {
 				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
+				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) start_friend_activity_highlights();
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
 	
 	$("#search_results").on("DOMSubtreeModified", start_highlights_and_tags);
-	$("#blotter_content").on("DOMNodeInserted", start_friend_activity_highlights);
 	$("#searchResultsRows").on("DOMNodeInserted", highlight_market_items);
 }
 
@@ -2745,7 +2745,7 @@ function start_friend_activity_highlights() {
 				if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
 
 				on_app_info(appid, function(){
-					highlight_app(appid, node);
+					highlight_app(appid, node);					
 				});
 			}
 		});	
