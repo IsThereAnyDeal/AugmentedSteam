@@ -5,6 +5,8 @@ v4.7
 + Adds new tag: "friends own" which tags each game with the number of your friends that own it
 + Adds "Games" link to username header
 + Adds "Binder View" to badge progress page 
++ Adds "(Compare)" link to activity page for achievements your friends unlock on games you own
+: Significantly increased processing time on the community activity page
 
 v4.6
 -----
