@@ -118,7 +118,8 @@
                 offer_ends: "Offer ends",
                 pwyw: "Pay What You Want",
                 includes: "Includes (__num__) items",
-                header: "Bundles that include this game"
+                header: "Bundles that include this game",
+				bundle_count: "Number of times this game has been in a bundle"
             }
         };
 
