@@ -241,6 +241,11 @@ function highlight_node(node, color) {
 		if (node.classList.contains("large_cap")) {
 			$node = $(node).find(".large_cap_content");
 		}
+		
+		if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line")) {
+			$node.css("color", color);
+			return;
+		}
 
 		$node.css("backgroundImage", "none");
 		$node.css("backgroundColor", color);
@@ -2603,9 +2608,6 @@ function get_sub_details(subid, node) {
 }
 
 function highlight_app(appid, node) {
-	// Order here is important; bottom-most renders last.
-	// TODO: Make option
-
 	// Don't highlight "Omg you're on my wishlist!" on users wishlist.
 	if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
 		if (getValue(appid + "wishlisted")) highlight_wishlist(node);
