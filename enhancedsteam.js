@@ -2743,13 +2743,32 @@ function start_friend_activity_highlights() {
 			var appid = get_appid(node.href);
 			if (appid && !node.classList.contains("blotter_userstats_game")) {
 				if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
-
+				if (selector == ".blotter_daily_rollup_line a") { 
+					if ($(node).parent().html().match(/achieved/)) {
+						add_achievement_comparison_link($(node).parent().parent()); 
+					}
+				}	
+				
 				on_app_info(appid, function(){
 					highlight_app(appid, node);					
 				});
 			}
 		});	
 	});
+}
+
+function add_achievement_comparison_link(node) {
+	if (!($(node).html().match(/es_achievement_compare/))) {
+		var links = $(node).find("a");
+		var appid = get_appid(links[2].href);
+		get_http(links[0].href + "/stats/" + appid, function(txt) {
+			var html = txt.match(/<a href="(.+)compare">/);
+			if (html) {
+				$(node).find("span").css("margin-top", "0px");
+				$(node).find("span").append("<br><a href='http://www.steamcommunity.com" + html[1] + "compare' id='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(Compare)</a>");
+			}
+		});
+	}
 }
 
 function rewrite_string(string) {
