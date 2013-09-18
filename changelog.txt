@@ -7,7 +7,7 @@ v4.7
 + Adds "Binder View" to badge progress page 
 + Adds "(Compare)" link to activity page for achievements your friends unlock on games you own
 + Adds count of the number of times a game has been bundled in the price history section
-: Significantly increased processing time on the community activity page
+: Significantly increased processing time on the community activity page and search results page
 
 v4.6
 -----

@@ -925,7 +925,6 @@ function remove_community_new() {
 	});
 }
 
-// Adds a link to SPUF to the top menu
 function add_header_links() {
 	var supernav_content = document.querySelectorAll("#supernav .supernav_content");
 	if ($("#supernav").length > 0) {
@@ -2453,13 +2452,11 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) start_friend_activity_highlights();
+				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}
 		});
 	});
 	observer.observe(document, { subtree: true, childList: true });
-	
-	$("#search_results").on("DOMSubtreeModified", start_highlights_and_tags);
-	$("#searchResultsRows").on("DOMNodeInserted", highlight_market_items);
 }
 
 function start_highlights_and_tags(){
@@ -2831,8 +2828,7 @@ function on_app_info(appid, cb) {
 }
 
 function add_steamcards_link(appid) {
-	if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {
-		//$('.communitylink').find('div[class$="block_content"]').prepend("<div class='block_content_inner'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
+	if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {		
 		$('.communitylink .block_content_inner:first').append("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>Steam Trading Cards</a>");
 	}
 }
