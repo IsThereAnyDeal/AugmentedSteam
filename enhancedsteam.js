@@ -783,6 +783,7 @@ function add_4pack_breakdown() {
 		if ($(this).is(":contains('3-Pack')")) { pack_split(this, 3); }
 		if ($(this).is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).is(":contains('Four Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('Four pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Four-Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Clan Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Two Pack')")) { pack_split(this, 2); }
