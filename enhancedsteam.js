@@ -884,7 +884,7 @@ function add_fake_country_code_warning() {
 			var LKGBillingCountry = getCookie("LKGBillingCountry");
 			var fakeCC = getCookie("fakeCC");
 
-			if (fakeCC && LKGBillingCountry != fakeCC) {
+			if (fakeCC && LKGBillingCountry && LKGBillingCountry != fakeCC) {
 				$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_store.replace("__current__", fakeCC) + '  <a href="" id="reset_fake_country_code">' + localized_strings[language].using_store_return.replace("__base__", LKGBillingCountry) + '</a></div>');
 				$("#page_background_holder").css("top", "135px");
 				$("#reset_fake_country_code").click(function(e) {
@@ -2654,32 +2654,34 @@ function add_carousel_descriptions() {
 }
 
 function add_affordable_button() {
-	var balance_text = $("#header_wallet_ctn").text().trim();
-	var currency_symbol = balance_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
-	var balance = balance_text.replace(currency_symbol, "");
-	if(currency_symbol == "$") balance = balance.replace(" USD", "");
-	balance = balance.replace(",", ".");
-	if (balance > 0) {
-		var link = "http://store.steampowered.com/search/?sort_by=Price&sort_order=DESC&price=0%2C" + balance;
-		$(".btn_browse").each(function(index) {
-			if (index == 1) {
-				switch (currency_symbol) {
-					case "€":
-						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "<span class='currency'>" + currency_symbol + "</span></h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
-						break;
-					case "pуб":
-						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
-						break;
-					default:
-						$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'><span class='currency'>" + currency_symbol + "</span>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
-				}		
-				get_http(link, function(txt) {
-					var results = txt.match(/search_pagination_left(.+)\r\n(.+)/)[2];
-					results = results.match(/(\d+)(?!.*\d)/)[0];
-					$("#es_results").text(results);
-				});	
-			}	
-		});
+	if (is_signed_in()) {
+		var balance_text = $("#header_wallet_ctn").text().trim();
+		var currency_symbol = balance_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
+		var balance = balance_text.replace(currency_symbol, "");
+		if(currency_symbol == "$") balance = balance.replace(" USD", "");
+		balance = balance.replace(",", ".");
+		if (balance > 0) {
+			var link = "http://store.steampowered.com/search/?sort_by=Price&sort_order=DESC&price=0%2C" + balance;
+			$(".btn_browse").each(function(index) {
+				if (index == 1) {
+					switch (currency_symbol) {
+						case "€":
+							$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "<span class='currency'>" + currency_symbol + "</span></h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
+							break;
+						case "pуб":
+							$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
+							break;
+						default:
+							$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'><span class='currency'>" + currency_symbol + "</span>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
+					}		
+					get_http(link, function(txt) {
+						var results = txt.match(/search_pagination_left(.+)\r\n(.+)/)[2];
+						results = results.match(/(\d+)(?!.*\d)/)[0];
+						$("#es_results").text(results);
+					});	
+				}	
+			});
+		}
 	}
 }
 
