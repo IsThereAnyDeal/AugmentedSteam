@@ -1475,7 +1475,9 @@ function show_pricing_history(appid, type) {
 						html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 50px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -4px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
 					}
 					
-					$("#game_area_purchase").before(html + line1 + "<br>" + line2 + line3);
+					if (line1 && line2) {
+						$("#game_area_purchase").before(html + line1 + "<br>" + line2 + line3);
+					}
 					
 					if (data["bundles"]["active"].length > 0) {
 						var length = data["bundles"]["active"].length;
