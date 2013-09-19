@@ -1434,7 +1434,7 @@ function show_pricing_history(appid, type) {
 			get_http("http://api.enhancedsteam.com/pricev2/?search=" + type + "/" + appid + "&stores=" + storestring + "&cc=" + cc, function (txt) {
                 var data = JSON.parse(txt);
                 if (data) {
-                    var activates, line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
+                    var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
 					
 					switch (data[".meta"]["currency"]) {
 						case "GBP":
