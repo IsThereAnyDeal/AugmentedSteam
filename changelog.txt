@@ -2,6 +2,11 @@ v4.8
 -----
 
 
+v4.7.1
+-----
+: Fixed several issues with new price history code which should now work correctly
+: Fixed an issue with new wording of "Four pack" being used and not showing a split price
+
 v4.7
 -----
 + Adds new sorting option to wishlist that lets you sort by discount percentage
