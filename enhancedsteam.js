@@ -781,6 +781,9 @@ function add_4pack_breakdown() {
 		if ($(this).is(":contains('4-Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('4 Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('3-Pack')")) { pack_split(this, 3); }
+		if ($(this).is(":contains('3 pack')")) { pack_split(this, 3); }
+		if ($(this).is(":contains('Team Pack')")) { pack_split(this, 3); }
+		if ($(this).is(":contains('Friend Pack')")) { pack_split(this, 2); }
 		if ($(this).is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).is(":contains('Four Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Four pack')")) { pack_split(this, 4); }
