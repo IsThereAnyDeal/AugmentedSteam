@@ -368,6 +368,8 @@
                 options_gift: "Articles stockés en tant que cadeaux",
                 options_guest: "Articles pour lesquels vous avez des invitations",
                 options_friends_wishlist: "Articles que vos amis ont dans leurs listes de souhaits",
+				options_friends_own: "Articles que vos amis possèdent",
+				options_hide_early_access: "Articles en accès anticipé dans les nouveautés",
                 options_hide_install: "Cacher le bouton \"Installer Steam\"",
 				options_send_age_info: "Activer la vérification automatique de l'âge",
                 options_drm: "Afficher les avertissements sur les DRMs de tiers",
@@ -400,6 +402,8 @@
                 view_in: "Voir sur",
                 clear_cache: "Vider le cache de données",
                 forums: "Forums",
+				games: "Jeux",
+				compare: "Comparer",
                 coupon_available: "Vous avez un coupon disponible !",
                 coupon_application_note: "Un coupon de votre inventaire sera utilisé automatiquement dans le panier.",
                 coupon_learn_more: "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">En savoir plus</a> sur les Coupons Steam",
@@ -416,6 +420,7 @@
                 tag_inv_gift: "Cadeau",
                 tag_inv_guestpass: "Invitation",
                 tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ souhait(s)</a>",
+				tag_friends_own: "__friendcount__ propriétaire(s)",
                 inventory_market_text: "Afficher le prix du marché sur la page d'inventaire (expérimental !)",
                 credits: "Crédits",
                 stores: "Magasins",
@@ -427,6 +432,7 @@
                 total_size: "Taille totale",
                 hide: "Cacher",
 				show: "Afficher",
+				view: "Vue",
 				buy: "Acheter",
                 store_transactions: "Transactions dans le magasin",
                 game_transactions: "Transactions dans les jeux",
@@ -441,6 +447,7 @@
 				games_all: "Tous les jeux",
 				games_discount: "Jeux avec des remises",
 				badges_drops: "Badges avec des cartes restantes",
+				binder_view: "Vue Binder",
                 sales_total: "Ventes totales",
                 purchase_total: "Achats totaux",
                 net_gain: "Bénéfice net",
@@ -456,7 +463,8 @@
 					offer_ends: " L'offre prend fin",
 					pwyw: "Payez ce que vous voulez",
 					includes: "Contient (__num__) articles",
-					header: "Packs incluant ce jeu"
+					header: "Packs incluant ce jeu",
+					bundle_count: "Nombre de fois que ce jeu a été dans un pack"
 				}
             },
             "it": {
