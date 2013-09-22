@@ -791,6 +791,7 @@ function add_4pack_breakdown() {
 		if ($(this).is(":contains('Clan Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Two Pack')")) { pack_split(this, 2); }
 		if ($(this).is(":contains('Two-pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('6-pack')")) { pack_split(this, 6); }
 	});
 }
 
