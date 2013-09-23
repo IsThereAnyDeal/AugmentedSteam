@@ -618,19 +618,25 @@ function load_inventory() {
 function add_empty_wishlist_button() {
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save es_empty_wishlist' style='border-color:red; width: auto;'>&nbsp;&nbsp;<a>" + localized_strings[language].empty_wishlist + "</a>&nbsp;&nbsp;</div>");
+		var empty_button = $("<div class='btn_save es_empty_wishlist' style='color: white; border-color: red; width: auto; padding: 1px 10px;'>" + localized_strings[language].empty_wishlist + "</div>");
 		empty_button.on('click', null, { empty_owned_only: false }, empty_wishlist);
-		$("#games_list_container").after(empty_button);
+
+		$(".save_actions_enabled").after(empty_button.clone(true));
 	}
 }
 
 function add_empty_owned_wishlist_button() {
-	// TODO Trigger a new event after everything is highlighted and then add the button
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save es_empty_owned_wishlist' style='border-color:red; width: auto; margin-right: 10px;'>&nbsp;&nbsp;<a>Remove All Owned From Wishlist</a>&nbsp;&nbsp;</div>");
-		$("#mainContents").on("click", ".es_empty_owned_wishlist", { empty_owned_only: true }, empty_wishlist);
-		$("#games_list_container").after(empty_button);
+		var empty_button = $("<div class='btn_save disabled es_empty_owned_wishlist' style='width: auto; padding: 1px 10px; margin-left: 10px;'>Remove All Owned From Wishlist (" + localized_strings[language].loading + ")</div>");
+		
+		$(".save_actions_enabled").after(empty_button.clone(true));
+
+		$.when.apply($, $.map(appid_promises, function(app_prom) { return app_prom.promise })).done(function() {
+			$(".es_empty_owned_wishlist").text("Remove All Owned From Wishlist").removeClass("disabled").css({ "color": "white", "border-color": "red" });
+
+			$("#mainContents").on("click", ".es_empty_owned_wishlist", { empty_owned_only: true }, empty_wishlist);
+		});
 	}
 }
 
@@ -720,8 +726,11 @@ function empty_wishlist(e) {
 			return deferred.promise();
 		});
 
-		$.when.apply(null, deferreds).done(function(){
-			location.reload();
+		$.when.apply(null, deferreds).done(function() {
+			alert(deferreds.length + " items removed from your wishlist.");
+			if (deferreds.length > 0) {
+				location.reload();
+			}
 		});
 	}
 }
@@ -3382,13 +3391,16 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 						add_cart_on_wishlist();
 						fix_wishlist_image_not_found();
-						add_empty_wishlist_button();
-						add_empty_owned_wishlist_button();
 						add_wishlist_filter();
 						add_wishlist_discount_sort();
 
 						// wishlist highlights
 						start_highlights_and_tags();
+
+						get_app_user_details();
+
+						add_empty_owned_wishlist_button();
+						add_empty_wishlist_button();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
