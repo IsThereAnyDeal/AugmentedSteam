@@ -23,6 +23,7 @@
             options_gift: "Items Stored As Gift",
             options_guest: "Items You Have A Guest Pass For",
             options_friends_wishlist: "Items Your Friends Have Wishlisted",
+			options_excludef2p: "Exclude Free To Play Games From Highlighting",
 			options_friends_own: "Items Your Friends Own",
 			options_hide_early_access: "Early Access Items in New Releases",
             options_hide_install: "Hide \"Install Steam\" button",
