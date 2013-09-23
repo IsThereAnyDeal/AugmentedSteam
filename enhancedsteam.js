@@ -15,6 +15,7 @@ chrome.storage.sync.set({'language': language});
 // Global scope promise storage; to prevent unecessary API requests.
 var loading_inventory;
 var appid_promises = {};
+var already_loading_app_user_details = [];
 var library_all_games = [];
 
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -2462,6 +2463,8 @@ function bind_ajax_content_highlighting() {
 				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}
 		});
+
+		get_app_user_details();
 	});
 	observer.observe(document, { subtree: true, childList: true });
 }
@@ -2545,32 +2548,41 @@ function add_steamdb_links(appid, type) {
 	});
 }
 
-function get_app_details(appids) {
+function get_app_user_details() {
 	// Make sure we have inventory loaded beforehand so we have gift/guestpass/coupon info.
 	if (!loading_inventory) loading_inventory = load_inventory();
 	loading_inventory.done(function() {
+		var appids = [];
+
+		for (var appid in appid_promises) {
+			if (appid_promises[appid].promise.state() != "resolved" && already_loading_app_user_details.indexOf(appid) == -1) {
+				appids.push(appid);
+				already_loading_app_user_details.push(appid);
+			}
+		}
 
 		// Batch request for appids - all untracked or cache-expired apps.
 		// Handle new data highlighting as it loads.
 
-		if (!(appids instanceof Array)) appids = [appids];
-		get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), function (data) {
-			var storefront_data = JSON.parse(data);
-			$.each(storefront_data, function(appid, app_data){
-				if (app_data.success) {
-					setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
-					setValue(appid + "owned", (app_data.data.is_owned === true));
+		if (appids.length > 0) {
+			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), function (data) {
+				var storefront_data = JSON.parse(data);
+				$.each(storefront_data, function(appid, app_data) {
+					if (app_data.success) {
+						setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
+						setValue(appid + "owned", (app_data.data.is_owned === true));
 
-					if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
-					if (app_data.data.friendsown) setValue(appid + "friendsown", app_data.data.friendsown.length);
-				}
-				// Time updated, for caching.
-				setValue(appid, parseInt(Date.now() / 1000, 10));
+						if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
+						if (app_data.data.friendsown) setValue(appid + "friendsown", app_data.data.friendsown.length);
+					}
+					// Time updated, for caching.
+					setValue(appid, parseInt(Date.now() / 1000, 10));
 
-				// Resolve promise, to run any functions waiting for this apps info.
-				appid_promises[appid].resolve();
+					// Resolve promise, to run any functions waiting for this apps info.
+					appid_promises[appid].resolve();
+				});
 			});
-		});
+		}
 	});
 }
 
@@ -2585,15 +2597,12 @@ function get_sub_details(subid, node) {
 				if (sub_data.data.apps) {
 					sub_data.data.apps.forEach(function(app) {
 						app_ids.push (app.id);
-						get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
-							var storefront_data = JSON.parse(data2);
-							$.each(storefront_data, function(appid, app_data) {
-								if (app_data.success) {
-									if (app_data.data.is_owned === true) {
-										owned.push(appid);
-									}
-								}
-							});
+						ensure_appid_deferred(app.id);
+
+						on_app_info(app.id, function () {
+							if (getValue(app.id + "owned")) {
+								owned.push(app.id);
+							}
 
 							if (owned.length == app_ids.length) {
 								setValue(subid + "owned", true);
@@ -2835,11 +2844,8 @@ function on_app_info(appid, cb) {
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
-	// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
-	if (last_updated < expire_time) {
-		get_app_details(appid);
-	}
-	else {
+	// If we have data on appid and it's newer than expiry time; get results from localStorage.
+	if (last_updated >= expire_time) {
 		appid_promises[appid].resolve();
 	}
 
@@ -3452,5 +3458,7 @@ $(document).ready(function(){
 				}
 				break;
 		}
+
+		get_app_user_details();
 	});
 });
