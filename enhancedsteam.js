@@ -888,8 +888,8 @@ function add_fake_country_code_warning() {
 			var LKGBillingCountry = getCookie("LKGBillingCountry");
 			var fakeCC = getCookie("fakeCC");
 
-			if (fakeCC && LKGBillingCountry && LKGBillingCountry != fakeCC) {
-				$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_store.replace("__current__", fakeCC) + '  <a href="" id="reset_fake_country_code">' + localized_strings[language].using_store_return.replace("__base__", LKGBillingCountry) + '</a></div>');
+			if (fakeCC && LKGBillingCountry && LKGBillingCountry.length == 2 && LKGBillingCountry != fakeCC) {
+				$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_store.replace("__current__", fakeCC) + '  <a href="#" id="reset_fake_country_code">' + localized_strings[language].using_store_return.replace("__base__", LKGBillingCountry) + '</a></div>');
 				$("#page_background_holder").css("top", "135px");
 				$("#reset_fake_country_code").click(function(e) {
 					e.preventDefault();
