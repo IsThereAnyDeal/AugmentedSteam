@@ -1,5 +1,6 @@
 v4.8
 -----
++ Added option to exclude Free To Play games from being highlighted
 : Fixed a bug where "Compare" links were only showing if your language was English
 
 v4.7.1
