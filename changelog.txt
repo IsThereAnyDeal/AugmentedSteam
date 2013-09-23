@@ -1,6 +1,6 @@
 v4.8
 -----
-
+: Fixed a bug where "Compare" links were only showing if your language was English
 
 v4.7.1
 -----
