@@ -493,7 +493,7 @@ function load_inventory() {
 	var handle_inv_ctx1 = function (txt) {
 		if (txt.charAt(0) != "<") {
 
-			localStorage.setItem("inventory_1", txt);
+			setValue("inventory_1", txt);
 			var data = JSON.parse(txt);
 			if (data.success) {
 				$.each(data.rgDescriptions, function(i, obj) {
@@ -510,7 +510,7 @@ function load_inventory() {
 	var handle_inv_ctx6 = function (txt) {
 		if (txt) {
 			if (txt.charAt(0) != "<") {
-				localStorage.setItem("inventory_6", txt);
+				setValue("inventory_6", txt);
 				var data = JSON.parse(txt);
 				if (data.success) {
 					$.each(data.rgDescriptions, function(i, obj) {
@@ -526,7 +526,7 @@ function load_inventory() {
 
 	var handle_inv_ctx3 = function (txt) {
 		if (txt.charAt(0) != "<") {
-			localStorage.setItem("inventory_3", txt);
+			setValue("inventory_3", txt);
 			var data = JSON.parse(txt);
 			if (data.success) {
 				$.each(data.rgDescriptions, function(i, obj) {
@@ -539,7 +539,7 @@ function load_inventory() {
 								var link = obj.actions[j].link;
 								var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
 
-								// If sub+packageid is in localStorage then we don't need to get this info reloaded.
+								// If sub+packageid is in sessionStorage then we don't need to get this info reloaded.
 								// This sick optimization saves 268ms per page load! Woo!
 								if (!getValue("sub" + packageid)) packageids.push(packageid);
 							}
@@ -584,9 +584,9 @@ function load_inventory() {
 
 	//TODO: Expire delay in options.
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
-	if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
-		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
+	var last_updated = getValue("inventory_time") || expire_time - 1;
+	if (last_updated < expire_time || !getValue("inventory_1") || !getValue("inventory_3") || !getValue("inventory_6")) {
+		setValue("inventory_time", parseInt(Date.now() / 1000, 10))
 
 		// Context ID 1 is gifts and guest passes
 		get_http(profileurl + '/inventory/json/753/1/', handle_inv_ctx1);
@@ -598,10 +598,10 @@ function load_inventory() {
 		get_http(profileurl + '/inventory/json/753/6/', handle_inv_ctx6);
 	}
 	else {
-		// No need to load anything, its all in localStorage.
-		handle_inv_ctx1(localStorage.getItem("inventory_1"));
-		handle_inv_ctx3(localStorage.getItem("inventory_3"));
-		handle_inv_ctx6(localStorage.getItem("inventory_6"));
+		// No need to load anything, its all in sessionStorage.
+		handle_inv_ctx1(getValue("inventory_1"));
+		handle_inv_ctx3(getValue("inventory_3"));
+		handle_inv_ctx6(getValue("inventory_6"));
 
 		gift_deferred.resolve();
 		coupon_deferred.resolve();
@@ -2885,9 +2885,9 @@ function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = localStorage.getItem(appid) || expire_time - 1;
+	var last_updated = getValue(appid) || expire_time - 1;
 
-	// If we have data on appid and it's newer than expiry time; get results from localStorage.
+	// If we have data on appid and it's newer than expiry time; get results from sessionStorage.
 	if (last_updated >= expire_time) {
 		appid_promises[appid].resolve();
 	}
