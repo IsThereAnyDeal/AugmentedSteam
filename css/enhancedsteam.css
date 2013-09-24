@@ -1,3 +1,10 @@
+.popup_menu .hr {
+	height: 1px;
+	background-color: #82807c;
+	width: 90%;
+	margin: auto;
+}
+
 #es_library_list, #es_library_search {
 	padding-left: 10px;
 	overflow: scroll;
