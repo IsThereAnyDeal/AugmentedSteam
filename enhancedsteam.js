@@ -948,6 +948,15 @@ function add_header_links() {
 	}
 }
 
+function replace_account_name() {
+	storage.get(function(settings) {
+		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; storage.set({'replaceaccountname': settings.replaceaccountname}); }
+		if (settings.replaceaccountname) {
+			$("#account_pulldown").text($("#global_header .username").text().trim());
+		}
+	});
+}
+
 // Adds a "Library" menu to the main menu of Steam
 function add_library_menu() {
 	storage.get(function(settings) {
@@ -3325,6 +3334,7 @@ $(document).ready(function(){
 		remove_community_new();
 		add_header_links();
 		if (is_signed_in()) {
+			replace_account_name();
 			add_library_menu();
 		}
 

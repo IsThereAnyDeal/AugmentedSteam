@@ -48,6 +48,7 @@
             options_library_f2p: "Show played free to play games and demos in library",
             options_hide_about: "Hide About link",
 			options_hide_new_heading: "Hide \"NEW\" over username",
+            options_replace_account_name: "Replace account name with community name",
 			options_show_regionwarning: "Show warning if browsing in non-account region",
             options_about_text: "About <a href='http://www.enhancedsteam.com' style='color:#8bc53f;'>Enhanced Steam</a>:<p>Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>Features include:<ul><li>Highlighting games you already own</li><li>Highlighting games on your wishlist</li><li>Correctly calculating bundle discounts based on games you already own</li><li>Showing you how much money you've spent on Steam for the lifetime of your account</li><li>Highlighting DLC you own on a game page</li><li>Fixing \"No Image Available\" game icons on your wishlist for any game or DLC</li><li>Pointing out titles with 3rd party DRM</li></ul><p>If you find this Extension useful, please consider donating.",
             tag: "Tag",
