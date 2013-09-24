@@ -2845,7 +2845,7 @@ function on_app_info(appid, cb) {
 	var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
 	// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
-	if (last_updated >= expire_time) {
+	if (last_updated < expire_time) {
 		get_app_details(appid);
 	}
 	else {
