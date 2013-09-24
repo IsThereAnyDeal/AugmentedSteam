@@ -1728,8 +1728,8 @@ function hide_greenlight_banner() {
 		if (settings.showgreenlightbanner) {
 			var banner = document.querySelector("#ig_top_workshop.blue");
 			var html;
-			html = '<link href="' + chrome.extension.getURL("css/enhancedsteam.css") + '" rel="stylesheet" type="text/css">';
-			html = html + '<div id="store_nav_area"><div class="store_nav_bg"><div class="store_nav">';
+			html = '<link href="http://cdn3.store.steampowered.com/public/css/styles_storev5.css" rel="stylesheet" type="text/css">';
+			html = html + '<div id="store_nav_area" style="position: inherit;"><div class="store_nav_bg"><div class="store_nav">';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
 			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=concepts"><span>Concepts</a>';
