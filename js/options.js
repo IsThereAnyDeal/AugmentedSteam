@@ -19,6 +19,7 @@ function save_options() {
 	tag_inv_guestpass_color = $("#tag_inv_guestpass_color").val();
 	tag_friends_want_color = $("#tag_friends_want_color").val();
 	tag_friends_own_color = $("#tag_friends_own_color").val();
+	tag_friends_rec_color = $("#tag_friends_rec_color").val();
 
 	highlight_owned = $("#highlight_owned").prop('checked');
 	highlight_wishlist = $("#highlight_wishlist").prop('checked');
@@ -35,6 +36,7 @@ function save_options() {
 	tag_inv_guestpass = $("#tag_inv_guestpass").prop('checked');
 	tag_friends_want = $("#tag_friends_want").prop('checked');
 	tag_friends_own = $("#tag_friends_own").prop('checked');
+	tag_friends_rec = $("#tag_friends_rec").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
 	hide_early_access = $("#hide_early_access").prop('checked');
@@ -120,6 +122,7 @@ function save_options() {
 		'tag_inv_guestpass_color': tag_inv_guestpass_color,
 		'tag_friends_want_color': tag_friends_want_color,
 		'tag_friends_own_color': tag_friends_own_color,
+		'tag_friends_rec_color': tag_friends_rec_color,
 
 		'highlight_owned': highlight_owned,
 		'highlight_wishlist': highlight_wishlist,
@@ -135,6 +138,7 @@ function save_options() {
 		'tag_inv_guestpass': tag_inv_guestpass,
 		'tag_friends_want': tag_friends_want,
 		'tag_friends_own': tag_friends_own,
+		'tag_friends_rec': tag_friends_rec,
 		
 		'hide_owned': hide_owned,
 		'hide_early_access': hide_early_access,
@@ -290,6 +294,7 @@ function load_options() {
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; chrome.storage.sync.set({'tag_friends_want_color': settings.tag_friends_want_color}); }
 		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; chrome.storage.sync.set({'tag_friends_own_color': settings.tag_friends_own_color}); }
+		if (settings.tag_friends_rec_color === undefined) { settings.tag_friends_rec_color = "#2e3d54"; chrome.storage.sync.set({'tag_friends_rec_color': settings.tag_friends_rec_color}); }
 
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
@@ -306,6 +311,7 @@ function load_options() {
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; chrome.storage.sync.set({'tag_friends_want': settings.tag_friends_want}); }
 		if (settings.tag_friends_own === undefined) { settings.tag_friends_own = true; chrome.storage.sync.set({'tag_friends_own': settings.tag_friends_own}); }
+		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = true; chrome.storage.sync.set({'tag_friends_rec': settings.tag_friends_rec}); }
 		
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
@@ -363,6 +369,7 @@ function load_options() {
 		$("#tag_inv_guestpass_color").attr('value', settings.tag_inv_guestpass_color);
 		$("#tag_friends_want_color").attr('value', settings.tag_friends_want_color);
 		$("#tag_friends_own_color").attr('value', settings.tag_friends_own_color);
+		$("#tag_friends_rec_color").attr('value', settings.tag_friends_rec_color);
 
 		$("#highlight_owned").attr('checked', settings.highlight_owned);
 		$("#highlight_wishlist").attr('checked', settings.highlight_wishlist);
@@ -379,6 +386,7 @@ function load_options() {
 		$("#tag_inv_guestpass").attr('checked', settings.tag_inv_guestpass);
 		$("#tag_friends_want").attr('checked', settings.tag_friends_want);
 		$("#tag_friends_own").attr('checked', settings.tag_friends_own);
+		$("#tag_friends_rec").attr('checked', settings.tag_friends_rec);
 		
 		$("#hide_owned").attr('checked', settings.hide_owned);
 		$("#hide_early_access").attr('checked', settings.hide_early_access);
@@ -467,6 +475,7 @@ function load_translation() {
 			$("#tag_guest_text").text(localized_strings[settings.language].options_guest);
 			$("#tag_friends_wishlist_text").text(localized_strings[settings.language].options_friends_wishlist);
 			$("#tag_friends_own_text").text(localized_strings[settings.language].options_friends_own);
+			$("#tag_friends_rec_text").text(localized_strings[settings.language].options_friends_rec);
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options_owned);
@@ -547,6 +556,7 @@ function load_default_tag_inv_gift_color() { document.getElementById("tag_inv_gi
 function load_default_tag_inv_guestpass_color() { document.getElementById("tag_inv_guestpass_color").value = "#a75124"; }
 function load_default_tag_friends_want_color() { document.getElementById("tag_friends_want_color").value = "#7E4060"; }
 function load_default_tag_friends_own_color() { document.getElementById("tag_friends_own_color").value = "#5b9504"; }
+function load_default_tag_friends_rec_color() { document.getElementById("tag_friends_rec_color").value = "#2e3d54"; }
 
 document.addEventListener('DOMContentLoaded', load_options);
 document.addEventListener('DOMContentLoaded', function () {
@@ -570,6 +580,7 @@ document.querySelector('#tag_inv_gift_default').addEventListener('click', load_d
 document.querySelector('#tag_inv_guestpass_default').addEventListener('click', load_default_tag_inv_guestpass_color);
 document.querySelector('#tag_friends_want_color_default').addEventListener('click', load_default_tag_friends_want_color);
 document.querySelector('#tag_friends_own_color_default').addEventListener('click', load_default_tag_friends_own_color);
+document.querySelector('#tag_friends_rec_color_default').addEventListener('click', load_default_tag_friends_rec_color);
 
 document.querySelector('#nav_store').addEventListener('click', load_store_tab);
 document.querySelector('#nav_community').addEventListener('click', load_community_tab);
