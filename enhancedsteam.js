@@ -15,7 +15,6 @@ chrome.storage.sync.set({'language': language});
 // Global scope promise storage; to prevent unecessary API requests.
 var loading_inventory;
 var appid_promises = {};
-var already_loading_app_user_details = [];
 var library_all_games = [];
 
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
@@ -493,7 +492,7 @@ function load_inventory() {
 	var handle_inv_ctx1 = function (txt) {
 		if (txt.charAt(0) != "<") {
 
-			setValue("inventory_1", txt);
+			localStorage.setItem("inventory_1", txt);
 			var data = JSON.parse(txt);
 			if (data.success) {
 				$.each(data.rgDescriptions, function(i, obj) {
@@ -510,7 +509,7 @@ function load_inventory() {
 	var handle_inv_ctx6 = function (txt) {
 		if (txt) {
 			if (txt.charAt(0) != "<") {
-				setValue("inventory_6", txt);
+				localStorage.setItem("inventory_6", txt);
 				var data = JSON.parse(txt);
 				if (data.success) {
 					$.each(data.rgDescriptions, function(i, obj) {
@@ -526,7 +525,7 @@ function load_inventory() {
 
 	var handle_inv_ctx3 = function (txt) {
 		if (txt.charAt(0) != "<") {
-			setValue("inventory_3", txt);
+			localStorage.setItem("inventory_3", txt);
 			var data = JSON.parse(txt);
 			if (data.success) {
 				$.each(data.rgDescriptions, function(i, obj) {
@@ -539,7 +538,7 @@ function load_inventory() {
 								var link = obj.actions[j].link;
 								var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
 
-								// If sub+packageid is in sessionStorage then we don't need to get this info reloaded.
+								// If sub+packageid is in localStorage then we don't need to get this info reloaded.
 								// This sick optimization saves 268ms per page load! Woo!
 								if (!getValue("sub" + packageid)) packageids.push(packageid);
 							}
@@ -584,9 +583,9 @@ function load_inventory() {
 
 	//TODO: Expire delay in options.
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = getValue("inventory_time") || expire_time - 1;
-	if (last_updated < expire_time || !getValue("inventory_1") || !getValue("inventory_3") || !getValue("inventory_6")) {
-		setValue("inventory_time", parseInt(Date.now() / 1000, 10))
+	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
+	if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
+		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
 
 		// Context ID 1 is gifts and guest passes
 		get_http(profileurl + '/inventory/json/753/1/', handle_inv_ctx1);
@@ -598,10 +597,10 @@ function load_inventory() {
 		get_http(profileurl + '/inventory/json/753/6/', handle_inv_ctx6);
 	}
 	else {
-		// No need to load anything, its all in sessionStorage.
-		handle_inv_ctx1(getValue("inventory_1"));
-		handle_inv_ctx3(getValue("inventory_3"));
-		handle_inv_ctx6(getValue("inventory_6"));
+		// No need to load anything, its all in localStorage.
+		handle_inv_ctx1(localStorage.getItem("inventory_1"));
+		handle_inv_ctx3(localStorage.getItem("inventory_3"));
+		handle_inv_ctx6(localStorage.getItem("inventory_6"));
 
 		gift_deferred.resolve();
 		coupon_deferred.resolve();
@@ -618,25 +617,19 @@ function load_inventory() {
 function add_empty_wishlist_button() {
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save es_empty_wishlist' style='color: white; border-color: red; width: auto; padding: 1px 10px;'>" + localized_strings[language].empty_wishlist + "</div>");
+		var empty_button = $("<div class='btn_save es_empty_wishlist' style='border-color:red; width: auto;'>&nbsp;&nbsp;<a>" + localized_strings[language].empty_wishlist + "</a>&nbsp;&nbsp;</div>");
 		empty_button.on('click', null, { empty_owned_only: false }, empty_wishlist);
-
-		$(".save_actions_enabled").after(empty_button.clone(true));
+		$("#games_list_container").after(empty_button);
 	}
 }
 
 function add_empty_owned_wishlist_button() {
+	// TODO Trigger a new event after everything is highlighted and then add the button
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save disabled es_empty_owned_wishlist' style='width: auto; padding: 1px 10px; margin-left: 10px;'>Remove All Owned From Wishlist (" + localized_strings[language].loading + ")</div>");
-		
-		$(".save_actions_enabled").after(empty_button.clone(true));
-
-		$.when.apply($, $.map(appid_promises, function(app_prom) { return app_prom.promise })).done(function() {
-			$(".es_empty_owned_wishlist").text("Remove All Owned From Wishlist").removeClass("disabled").css({ "color": "white", "border-color": "red" });
-
-			$("#mainContents").on("click", ".es_empty_owned_wishlist", { empty_owned_only: true }, empty_wishlist);
-		});
+		var empty_button = $("<div class='btn_save es_empty_owned_wishlist' style='border-color:red; width: auto; margin-right: 10px;'>&nbsp;&nbsp;<a>Remove All Owned From Wishlist</a>&nbsp;&nbsp;</div>");
+		$("#mainContents").on("click", ".es_empty_owned_wishlist", { empty_owned_only: true }, empty_wishlist);
+		$("#games_list_container").after(empty_button);
 	}
 }
 
@@ -726,11 +719,8 @@ function empty_wishlist(e) {
 			return deferred.promise();
 		});
 
-		$.when.apply(null, deferreds).done(function() {
-			alert(deferreds.length + " items removed from your wishlist.");
-			if (deferreds.length > 0) {
-				location.reload();
-			}
+		$.when.apply(null, deferreds).done(function(){
+			location.reload();
 		});
 	}
 }
@@ -1673,21 +1663,22 @@ function add_community_profile_links() {
 
 // Places an "Add to Cart" button on wishlist items
 function add_cart_on_wishlist() {
-	var appids = $.map(document.querySelectorAll(".btn_visit_store"), function(store_link) { return get_appid(store_link.href); });
-
-	get_http('//store.steampowered.com/api/appdetails/?appids=' + appids.join(','), function (data) {
-		var storefront_data = JSON.parse(data);
-		$.each(storefront_data, function(appid, app_data) {
-			if (app_data.success) {
-				if (app_data.data.packages && app_data.data.packages[0]) {
-					var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
-					htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-					htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-					htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
-					htmlstring += '</form>';
-					$("#game_" + appid + " .storepage_btn_ctn").prepend(htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
+	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
+		var app = get_appid(node.href);
+		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data) {
+				if (app_data.success) {
+					if (app_data.data.packages && app_data.data.packages[0]) {
+						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
+						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
+						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
+						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
+						htmlstring += '</form>';
+						$(node).before('</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
+					}
 				}
-			}
+			});
 		});
 	});
 }
@@ -1695,31 +1686,27 @@ function add_cart_on_wishlist() {
 function add_cart_to_search() {
 	$("#search_header").prepend('<div class="col search_released">Actions</div>');
 
-	var search_result_row = $(".search_result_row");
+	$(".search_result_row").each(function() {
+		var result_row = this;
 
-	var appids = {};
+		$(this).prepend('<div class="col search_released es_search_add_to_cart"></div>');
 
-	$.each(search_result_row, function(i, search_row) {
-		appids[get_appid(search_row.href)] = i;
-		$(search_row).prepend('<div class="col search_released es_search_add_to_cart"></div>');
-	});
-
-	get_http('//store.steampowered.com/api/appdetails/?appids=' + Object.keys(appids).join(','), function (data) {
-		var storefront_data = JSON.parse(data);
-		for (var appid in storefront_data) {
-			var app_data = storefront_data[appid];
-			var result_row = $(search_result_row[appids[appid]]);
-			if (app_data.success) {
-				if (app_data.data.packages && app_data.data.packages[0]) {
-					var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
-					htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-					htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-					htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
-					htmlstring += '</form>';
-					result_row.children(".es_search_add_to_cart").html(htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store" style="padding: 20px 10px;">' + localized_strings[language].add_to_cart + '</a>');
+		var app = get_appid($(this).attr('href'));
+		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data) {
+				if (app_data.success) {
+					if (app_data.data.packages && app_data.data.packages[0]) {
+						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
+						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
+						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
+						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
+						htmlstring += '</form>';
+						$(result_row).children(".es_search_add_to_cart").html(htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store" style="padding: 20px 10px;">' + localized_strings[language].add_to_cart + '</a>');
+					}
 				}
-			}
-		}
+			});
+		});
 	});
 }
 
@@ -1884,25 +1871,6 @@ function add_dlc_page_link(appid) {
 		html = html.replace(title, "<a href='http://store.steampowered.com/dlc/" + appid + "'>" + title + "</a>");		
 		$(".game_area_dlc_section").html(html);
 	}
-}
-
-function add_all_unowned_dlc_to_cart_button() {
-	$.when.apply($, $.map(appid_promises, function(app_prom) { return app_prom.promise })).done(function() {
-		var totalunowned = 0;
-		var addunowned = '<form name="add_all_unowned_dlc_to_cart" action="http://store.steampowered.com/cart/" method="POST"><input type="hidden" name="action" value="add_to_cart">';
-
-		$(".game_area_dlc_row").each(function(i, row) {
-			var appid = this.id.replace("dlc_row_", "");
-			if (!getValue(appid + "owned")) {
-				addunowned += '<input type="hidden" name="subid[]" value="' + $(row).find("[name='subid[]']").val() + '">';
-				totalunowned++;
-			}
-		});
-
-		if (totalunowned > 0) {
-			$("#dlc_purchase_action").prepend(addunowned + '</form><div class="btn_addtocart" style="margin-right: 3px;"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:document.forms[\'add_all_unowned_dlc_to_cart\'].submit();">' + localized_strings[language].add_unowned_dlc_to_cart + '</a><div class="btn_addtocart_right"></div></div>');
-		}
-	});
 }
 
 function fix_wishlist_image_not_found() {
@@ -2419,16 +2387,12 @@ function dlc_data_from_site(appid) {
 
 function dlc_data_for_dlc_page() {
 	
-	var appids = {};
+	var appid_deferred = [];
 	var totalunowned = 0;
-	var addunowned = '<form name="add_all_unowned_dlc_to_cart" action="http://store.steampowered.com/cart/" method="POST"><input type="hidden" name="action" value="add_to_cart">';
+	var addunowned = "<form name=\"add_all_unowned_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\"><input type=\"hidden\" name=\"action\" value=\"add_to_cart\">";
 	
-	$.each($("div.dlc_page_purchase_dlc"), function(j, node) {
+	$.each($("div.dlc_page_purchase_dlc"), function(j, node){
 		var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-
-		var deferred = new $.Deferred();
-		appids[appid] = deferred;
-
 		get_http("http://api.enhancedsteam.com/gamedata/?appid=" + appid, function (txt) {
     		var data;
 			if (txt != "{\"dlc\":}}") {
@@ -2449,23 +2413,26 @@ function dlc_data_for_dlc_page() {
     	});
 		
 		if (appid) {
-			on_app_info(appid, function() {
-				if (!getValue(appid + "owned")) {
-					var $subid = $(node).find("[name=subid]");
-					if ($subid) {
-						addunowned += '<input type="hidden" name="subid[]" value="' + $subid.val() + '">';
-						totalunowned = totalunowned + 1;
-					}
-				}
-
-				appids[appid].resolve();
-			});
+			if (!getValue(appid + "owned")) {
+				get_http('//store.steampowered.com/api/appdetails/?appids=' + appid, function (data) {					
+					var storefront_data = JSON.parse(data);					
+					$.each(storefront_data, function(application, app_data) {
+						if (app_data.success) {
+							if (app_data.data.packages[0]) {
+								addunowned += "<input type=\"hidden\" name=\"subid[]\" value=\"" + app_data.data.packages[0] + "\">";
+								totalunowned = totalunowned + 1;
+							}
+						}
+					});
+				});
+			}
 		}
+		
+		ensure_appid_deferred(appid);
+		appid_deferred.push(appid_promises[appid].promise);		
 	});
-
-	var appid_deferreds = Object.keys(appids).map(function(appid) { return appids[appid]; });
 	
-	$.when.apply($, appid_deferreds).done(function() {
+	$.when.apply(null, appid_deferred).done(function() {
 		addunowned += "</form>";
 		
 		if (totalunowned > 0) {
@@ -2504,10 +2471,6 @@ function bind_ajax_content_highlighting() {
 				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}
 		});
-
-		if (is_signed_in()) {
-			get_app_user_details();
-		}
 	});
 	observer.observe(document, { subtree: true, childList: true });
 }
@@ -2591,41 +2554,32 @@ function add_steamdb_links(appid, type) {
 	});
 }
 
-function get_app_user_details() {
+function get_app_details(appids) {
 	// Make sure we have inventory loaded beforehand so we have gift/guestpass/coupon info.
 	if (!loading_inventory) loading_inventory = load_inventory();
 	loading_inventory.done(function() {
-		var appids = [];
-
-		for (var appid in appid_promises) {
-			if (appid_promises[appid].promise.state() != "resolved" && already_loading_app_user_details.indexOf(appid) == -1) {
-				appids.push(appid);
-				already_loading_app_user_details.push(appid);
-			}
-		}
 
 		// Batch request for appids - all untracked or cache-expired apps.
 		// Handle new data highlighting as it loads.
 
-		if (appids.length > 0) {
-			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), function (data) {
-				var storefront_data = JSON.parse(data);
-				$.each(storefront_data, function(appid, app_data) {
-					if (app_data.success) {
-						setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
-						setValue(appid + "owned", (app_data.data.is_owned === true));
+		if (!(appids instanceof Array)) appids = [appids];
+		get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), function (data) {
+			var storefront_data = JSON.parse(data);
+			$.each(storefront_data, function(appid, app_data){
+				if (app_data.success) {
+					setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
+					setValue(appid + "owned", (app_data.data.is_owned === true));
 
-						if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
-						if (app_data.data.friendsown) setValue(appid + "friendsown", app_data.data.friendsown.length);
-					}
-					// Time updated, for caching.
-					setValue(appid, parseInt(Date.now() / 1000, 10));
+					if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
+					if (app_data.data.friendsown) setValue(appid + "friendsown", app_data.data.friendsown.length);
+				}
+				// Time updated, for caching.
+				setValue(appid, parseInt(Date.now() / 1000, 10));
 
-					// Resolve promise, to run any functions waiting for this apps info.
-					appid_promises[appid].resolve();
-				});
+				// Resolve promise, to run any functions waiting for this apps info.
+				appid_promises[appid].resolve();
 			});
-		}
+		});
 	});
 }
 
@@ -2640,12 +2594,15 @@ function get_sub_details(subid, node) {
 				if (sub_data.data.apps) {
 					sub_data.data.apps.forEach(function(app) {
 						app_ids.push (app.id);
-						ensure_appid_deferred(app.id);
-
-						on_app_info(app.id, function () {
-							if (getValue(app.id + "owned")) {
-								owned.push(app.id);
-							}
+						get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
+							var storefront_data = JSON.parse(data2);
+							$.each(storefront_data, function(appid, app_data) {
+								if (app_data.success) {
+									if (app_data.data.is_owned === true) {
+										owned.push(appid);
+									}
+								}
+							});
 
 							if (owned.length == app_ids.length) {
 								setValue(subid + "owned", true);
@@ -2885,10 +2842,13 @@ function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = getValue(appid) || expire_time - 1;
+	var last_updated = localStorage.getItem(appid) || expire_time - 1;
 
-	// If we have data on appid and it's newer than expiry time; get results from sessionStorage.
+	// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 	if (last_updated >= expire_time) {
+		get_app_details(appid);
+	}
+	else {
 		appid_promises[appid].resolve();
 	}
 
@@ -3351,12 +3311,9 @@ $(document).ready(function(){
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
-
-						if (is_signed_in()) {
-							load_inventory().done(function() {
-								if (getValue(appid+"coupon")) display_coupon_message(appid);
-							});
-						}
+						load_inventory().done(function() {
+							if (getValue(appid+"coupon")) display_coupon_message(appid);
+						});
 						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
 
@@ -3367,17 +3324,12 @@ $(document).ready(function(){
 						fix_community_hub_links();
 						add_widescreen_certification(appid);
 						add_hltb_info(appid);
-						if (is_signed_in()) {
-							add_app_page_highlights(appid);
-						}
+						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
-						if (is_signed_in()) {
-							add_all_unowned_dlc_to_cart_button();
-							add_remove_from_wishlist_button(appid);
-						}
+						add_remove_from_wishlist_button(appid);
 						add_4pack_breakdown();
 						add_package_info_button();
 						break;
@@ -3385,9 +3337,7 @@ $(document).ready(function(){
 					case /^\/sub\/.*/.test(window.location.pathname):
 						var subid = get_subid(window.location.host + window.location.pathname);
 						drm_warnings();
-						if (is_signed_in()) {
-							subscription_savings_check();
-						}
+						subscription_savings_check();
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");
 						add_feature_search_links();
@@ -3418,13 +3368,11 @@ $(document).ready(function(){
 						break;
 				}
 
-				if (is_signed_in()) {
-					/* Highlights & data fetching */
-					start_highlights_and_tags();
+				/* Highlights & data fetching */
+				start_highlights_and_tags();
 
-					// Storefront homepage tabs.
-					bind_ajax_content_highlighting();
-				}
+				// Storefront homepage tabs.
+				bind_ajax_content_highlighting();
 
 				add_small_cap_height();
 
@@ -3432,26 +3380,19 @@ $(document).ready(function(){
 
 			case "steamcommunity.com":
 			
-				if (is_signed_in()) {
-					add_wallet_balance_to_header();
-				}
+				add_wallet_balance_to_header();
 				
 				switch (true) {
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 						add_cart_on_wishlist();
 						fix_wishlist_image_not_found();
+						add_empty_wishlist_button();
+						add_empty_owned_wishlist_button();
 						add_wishlist_filter();
 						add_wishlist_discount_sort();
 
-						if (is_signed_in()) {
-							// wishlist highlights
-							start_highlights_and_tags();
-
-							get_app_user_details();
-
-							add_empty_owned_wishlist_button();
-							add_empty_wishlist_button();
-						}
+						// wishlist highlights
+						start_highlights_and_tags();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
@@ -3474,14 +3415,11 @@ $(document).ready(function(){
 						break;
 						
 					case /^\/market\/.*/.test(window.location.pathname):
-						if (is_signed_in()) {
-							load_inventory().done(function() {
-								highlight_market_items();
-								bind_ajax_content_highlighting();
-							});
-							add_market_total();
-						}
-
+						load_inventory().done(function() {
+							highlight_market_items();
+							bind_ajax_content_highlighting();
+						});
+						add_market_total();
 						minimize_active_listings();
 						break;
 						
@@ -3493,9 +3431,7 @@ $(document).ready(function(){
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
-						if (is_signed_in()) {
-							add_app_page_highlights(appid);
-						}
+						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "gamehub");
 						break;
 
@@ -3511,9 +3447,7 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
-						if (is_signed_in()) {
-							add_total_drops_count();
-						}
+						add_total_drops_count();
 						add_cardexchange_links();
 						add_badge_filter();
 						add_badge_view_options();
@@ -3527,10 +3461,6 @@ $(document).ready(function(){
 						break;
 				}
 				break;
-		}
-
-		if (is_signed_in()) {
-			get_app_user_details();
 		}
 	});
 });
