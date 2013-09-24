@@ -2781,10 +2781,10 @@ function start_friend_activity_highlights() {
 			if (appid && !node.classList.contains("blotter_userstats_game")) {
 				if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
 				if (selector == ".blotter_daily_rollup_line a") {
-					if ($(node).parent().parent().html().match(/<img/)) {
+					if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {						
 						add_achievement_comparison_link($(node).parent().parent()); 
 					}
-				}	
+				}
 				
 				on_app_info(appid, function(){
 					highlight_app(appid, node);					
