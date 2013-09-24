@@ -1877,6 +1877,25 @@ function add_dlc_page_link(appid) {
 	}
 }
 
+function add_all_unowned_dlc_to_cart_button() {
+	$.when.apply($, $.map(appid_promises, function(app_prom) { return app_prom.promise })).done(function() {
+		var totalunowned = 0;
+		var addunowned = '<form name="add_all_unowned_dlc_to_cart" action="http://store.steampowered.com/cart/" method="POST"><input type="hidden" name="action" value="add_to_cart">';
+
+		$(".game_area_dlc_row").each(function(i, row) {
+			var appid = this.id.replace("dlc_row_", "");
+			if (!getValue(appid + "owned")) {
+				addunowned += '<input type="hidden" name="subid[]" value="' + $(row).find("[name='subid[]']").val() + '">';
+				totalunowned++;
+			}
+		});
+
+		if (totalunowned > 0) {
+			$("#dlc_purchase_action").prepend(addunowned + '</form><div class="btn_addtocart" style="margin-right: 3px;"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="javascript:document.forms[\'add_all_unowned_dlc_to_cart\'].submit();">' + localized_strings[language].add_unowned_dlc_to_cart + '</a><div class="btn_addtocart_right"></div></div>');
+		}
+	});
+}
+
 function fix_wishlist_image_not_found() {
 	// fixes "Image not found" in wishlist
 	var items = document.getElementById("wishlist_items");
@@ -2391,12 +2410,16 @@ function dlc_data_from_site(appid) {
 
 function dlc_data_for_dlc_page() {
 	
-	var appid_deferred = [];
+	var appids = {};
 	var totalunowned = 0;
-	var addunowned = "<form name=\"add_all_unowned_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\"><input type=\"hidden\" name=\"action\" value=\"add_to_cart\">";
+	var addunowned = '<form name="add_all_unowned_dlc_to_cart" action="http://store.steampowered.com/cart/" method="POST"><input type="hidden" name="action" value="add_to_cart">';
 	
-	$.each($("div.dlc_page_purchase_dlc"), function(j, node){
+	$.each($("div.dlc_page_purchase_dlc"), function(j, node) {
 		var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+
+		var deferred = new $.Deferred();
+		appids[appid] = deferred;
+
 		get_http("http://api.enhancedsteam.com/gamedata/?appid=" + appid, function (txt) {
     		var data;
 			if (txt != "{\"dlc\":}}") {
@@ -2417,26 +2440,23 @@ function dlc_data_for_dlc_page() {
     	});
 		
 		if (appid) {
-			if (!getValue(appid + "owned")) {
-				get_http('//store.steampowered.com/api/appdetails/?appids=' + appid, function (data) {					
-					var storefront_data = JSON.parse(data);					
-					$.each(storefront_data, function(application, app_data) {
-						if (app_data.success) {
-							if (app_data.data.packages[0]) {
-								addunowned += "<input type=\"hidden\" name=\"subid[]\" value=\"" + app_data.data.packages[0] + "\">";
-								totalunowned = totalunowned + 1;
-							}
-						}
-					});
-				});
-			}
+			on_app_info(appid, function() {
+				if (!getValue(appid + "owned")) {
+					var $subid = $(node).find("[name=subid]");
+					if ($subid) {
+						addunowned += '<input type="hidden" name="subid[]" value="' + $subid.val() + '">';
+						totalunowned = totalunowned + 1;
+					}
+				}
+
+				appids[appid].resolve();
+			});
 		}
-		
-		ensure_appid_deferred(appid);
-		appid_deferred.push(appid_promises[appid].promise);		
 	});
+
+	var appid_deferreds = Object.keys(appids).map(function(appid) { return appids[appid]; });
 	
-	$.when.apply(null, appid_deferred).done(function() {
+	$.when.apply($, appid_deferreds).done(function() {
 		addunowned += "</form>";
 		
 		if (totalunowned > 0) {
@@ -3337,6 +3357,7 @@ $(document).ready(function(){
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
+						add_all_unowned_dlc_to_cart_button();
 						add_remove_from_wishlist_button(appid);
 						add_4pack_breakdown();
 						add_package_info_button();
