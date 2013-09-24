@@ -2496,7 +2496,9 @@ function bind_ajax_content_highlighting() {
 			}
 		});
 
-		get_app_user_details();
+		if (is_signed_in()) {
+			get_app_user_details();
+		}
 	});
 	observer.observe(document, { subtree: true, childList: true });
 }
@@ -3339,9 +3341,12 @@ $(document).ready(function(){
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
-						load_inventory().done(function() {
-							if (getValue(appid+"coupon")) display_coupon_message(appid);
-						});
+
+						if (is_signed_in()) {
+							load_inventory().done(function() {
+								if (getValue(appid+"coupon")) display_coupon_message(appid);
+							});
+						}
 						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
 
@@ -3352,13 +3357,17 @@ $(document).ready(function(){
 						fix_community_hub_links();
 						add_widescreen_certification(appid);
 						add_hltb_info(appid);
-						add_app_page_highlights(appid);
+						if (is_signed_in()) {
+							add_app_page_highlights(appid);
+						}
 						add_steamdb_links(appid, "app");
 						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
-						add_all_unowned_dlc_to_cart_button();
-						add_remove_from_wishlist_button(appid);
+						if (is_signed_in()) {
+							add_all_unowned_dlc_to_cart_button();
+							add_remove_from_wishlist_button(appid);
+						}
 						add_4pack_breakdown();
 						add_package_info_button();
 						break;
@@ -3366,7 +3375,9 @@ $(document).ready(function(){
 					case /^\/sub\/.*/.test(window.location.pathname):
 						var subid = get_subid(window.location.host + window.location.pathname);
 						drm_warnings();
-						subscription_savings_check();
+						if (is_signed_in()) {
+							subscription_savings_check();
+						}
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");
 						add_feature_search_links();
@@ -3397,11 +3408,13 @@ $(document).ready(function(){
 						break;
 				}
 
-				/* Highlights & data fetching */
-				start_highlights_and_tags();
+				if (is_signed_in()) {
+					/* Highlights & data fetching */
+					start_highlights_and_tags();
 
-				// Storefront homepage tabs.
-				bind_ajax_content_highlighting();
+					// Storefront homepage tabs.
+					bind_ajax_content_highlighting();
+				}
 
 				add_small_cap_height();
 
@@ -3409,7 +3422,9 @@ $(document).ready(function(){
 
 			case "steamcommunity.com":
 			
-				add_wallet_balance_to_header();
+				if (is_signed_in()) {
+					add_wallet_balance_to_header();
+				}
 				
 				switch (true) {
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
@@ -3418,13 +3433,15 @@ $(document).ready(function(){
 						add_wishlist_filter();
 						add_wishlist_discount_sort();
 
-						// wishlist highlights
-						start_highlights_and_tags();
+						if (is_signed_in()) {
+							// wishlist highlights
+							start_highlights_and_tags();
 
-						get_app_user_details();
+							get_app_user_details();
 
-						add_empty_owned_wishlist_button();
-						add_empty_wishlist_button();
+							add_empty_owned_wishlist_button();
+							add_empty_wishlist_button();
+						}
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
@@ -3447,11 +3464,14 @@ $(document).ready(function(){
 						break;
 						
 					case /^\/market\/.*/.test(window.location.pathname):
-						load_inventory().done(function() {
-							highlight_market_items();
-							bind_ajax_content_highlighting();
-						});
-						add_market_total();
+						if (is_signed_in()) {
+							load_inventory().done(function() {
+								highlight_market_items();
+								bind_ajax_content_highlighting();
+							});
+							add_market_total();
+						}
+
 						minimize_active_listings();
 						break;
 						
@@ -3463,7 +3483,9 @@ $(document).ready(function(){
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
-						add_app_page_highlights(appid);
+						if (is_signed_in()) {
+							add_app_page_highlights(appid);
+						}
 						add_steamdb_links(appid, "gamehub");
 						break;
 
@@ -3479,7 +3501,9 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
-						add_total_drops_count();
+						if (is_signed_in()) {
+							add_total_drops_count();
+						}
 						add_cardexchange_links();
 						add_badge_filter();
 						add_badge_view_options();
@@ -3495,6 +3519,8 @@ $(document).ready(function(){
 				break;
 		}
 
-		get_app_user_details();
+		if (is_signed_in()) {
+			get_app_user_details();
+		}
 	});
 });
