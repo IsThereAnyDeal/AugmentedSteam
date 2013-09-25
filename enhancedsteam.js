@@ -1730,10 +1730,8 @@ function endless_scrolling() {
 			if (!processing) {
 				processing = true;
 				get_http('http://store.steampowered.com/search/results' + window.location.search + '&page=' + search_page + '&snr=es', function (txt) {
-					var html = $.parseHTML(txt);
-					console.log (html);
 					$(".search_result_row").last().after(txt);
-					search_threshhold = search_threshhold + 1500;
+					search_threshhold = search_threshhold + 1600;
 					search_page = search_page + 1;
 					processing = false;
 				});
