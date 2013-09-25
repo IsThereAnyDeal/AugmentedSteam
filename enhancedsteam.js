@@ -1720,6 +1720,28 @@ function add_cart_to_search() {
 	});
 }
 
+function endless_scrolling() {
+	var processing = false;
+	var search_threshhold = 1300;
+	var search_page = 2;
+	
+	$(window).scroll(function() {
+		if ($(window).scrollTop() > search_threshhold) {
+			if (!processing) {
+				processing = true;
+				get_http('http://store.steampowered.com/search/results' + window.location.search + '&page=' + search_page + '&snr=es', function (txt) {
+					var html = $.parseHTML(txt);
+					console.log (html);
+					$(".search_result_row").last().after(txt);
+					search_threshhold = search_threshhold + 1500;
+					search_page = search_page + 1;
+					processing = false;
+				});
+			}	
+		}
+	});
+}
+
 // Changes Steam Greenlight pages
 function hide_greenlight_banner() {
 	// insert the "top bar" found on all other Steam games
@@ -2470,7 +2492,7 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
-				if (node.id == "search_result_container") add_cart_to_search();				
+				//if (node.id == "search_result_container") add_cart_to_search();
 				if (node.classList && node.classList.contains("tab_row")) {
 					hide_early_access();
 					start_highlighting_node(node);
@@ -3370,7 +3392,8 @@ $(document).ready(function(){
 						break;
 
 					case /^\/search\/.*/.test(window.location.pathname):
-						add_cart_to_search();
+						//add_cart_to_search();
+						endless_scrolling();
 						break;
 
 					// Storefront-front only
