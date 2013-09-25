@@ -3191,6 +3191,7 @@ function add_badge_view_options() {
 			$(this).find("div[class$='badge_title_stats']").css("display", "none");
 			$(this).find("span[class$='badge_view_details']").remove();				
 			$(this).find("div[class$='badge_info_unlocked']").remove();
+			$(this).find("div[class$='badge_progress_tasks']").remove();
 			$(this).find("div[class$='badge_progress_info']").text($(this).find("div[class$='badge_progress_info']").text().replace(/of/, "/"));
 			$(this).find("div[class$='badge_progress_info']").text($(this).find("div[class$='badge_progress_info']").text().replace(/ cards collected/, ""));
 			$(this).find("div[class$='badge_progress_info']").text($(this).find("div[class$='badge_progress_info']").text().replace(/ for next level/, ""));
