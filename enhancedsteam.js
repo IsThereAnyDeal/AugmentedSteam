@@ -1722,16 +1722,21 @@ function add_cart_to_search() {
 
 function endless_scrolling() {
 	var processing = false;
-	var search_threshhold = 1300;
+	var search_threshhold = $(window).height() - 80;
 	var search_page = 2;
 	
 	$(window).scroll(function() {
 		if ($(window).scrollTop() > search_threshhold) {
 			if (!processing) {
 				processing = true;
-				get_http('http://store.steampowered.com/search/results' + window.location.search + '&page=' + search_page + '&snr=es', function (txt) {
-					$(".search_result_row").last().after(txt);
-					search_threshhold = search_threshhold + 1600;
+				var search = document.URL.match(/(.+)\/(.+)/)[2];
+				search = search.replace(/\&page=./, "");
+				search = search.replace(/\#/, "&");
+				get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
+					var html = $.parseHTML(txt);
+					html = $(html).find("a.search_result_row");
+					$(".search_result_row").last().after(html);
+					search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
 					search_page = search_page + 1;
 					processing = false;
 				});
@@ -2495,7 +2500,12 @@ function bind_ajax_content_highlighting() {
 					hide_early_access();
 					start_highlighting_node(node);
 				}
+				if (node.id == "search_result_container") {
+					endless_scrolling();
+					start_highlights_and_tags();
+				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
+				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) start_friend_activity_highlights();
 				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
