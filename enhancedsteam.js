@@ -1725,13 +1725,15 @@ function endless_scrolling() {
 	var search_threshhold = $(window).height() - 80;
 	var search_page = 2;
 	
+	$(".search_pagination_right").css("display", "none");
+		
 	$(window).scroll(function() {
 		if ($(window).scrollTop() > search_threshhold) {
 			if (!processing) {
 				processing = true;
 				var search = document.URL.match(/(.+)\/(.+)/)[2];
 				search = search.replace(/\&page=./, "");
-				search = search.replace(/\#/, "&");
+				search = search.replace(/\#/g, "&");
 				get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
 					var html = $.parseHTML(txt);
 					html = $(html).find("a.search_result_row");
