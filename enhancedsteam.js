@@ -1720,29 +1720,33 @@ function add_cart_to_search() {
 	});
 }
 
+// Adds continuous scrolling of search results on Steam
 function endless_scrolling() {
-	var processing = false;
-	var search_threshhold = $(window).height() - 80;
-	var search_page = 2;
-	
-	$(".search_pagination_right").css("display", "none");
-		
-	$(window).scroll(function() {
-		if ($(window).scrollTop() > search_threshhold) {
-			if (!processing) {
-				processing = true;
-				var search = document.URL.match(/(.+)\/(.+)/)[2];
-				search = search.replace(/\&page=./, "");
-				search = search.replace(/\#/g, "&");
-				get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
-					var html = $.parseHTML(txt);
-					html = $(html).find("a.search_result_row");
-					$(".search_result_row").last().after(html);
-					search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
-					search_page = search_page + 1;
-					processing = false;
-				});
-			}	
+	storage.get(function(settings) {
+		if (settings.contscroll === undefined) { settings.contscroll = false; storage.set({'contscroll': settings.contscroll}); }
+		if (settings.contscroll) {
+			var processing = false;
+			var search_threshhold = $(window).height() - 80;
+			var search_page = 2;
+			
+			$(".search_pagination_right").css("display", "none");
+				
+			$(window).scroll(function() {
+				if ($(window).scrollTop() > search_threshhold) {
+					if (!processing) {
+						processing = true;
+						var search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
+						get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
+							var html = $.parseHTML(txt);
+							html = $(html).find("a.search_result_row");
+							$(".search_result_row").last().after(html);
+							search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
+							search_page = search_page + 1;
+							processing = false;
+						});
+					}	
+				}
+			});
 		}
 	});
 }

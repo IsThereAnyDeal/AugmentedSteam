@@ -29,6 +29,7 @@
 			options_hide_early_access: "Early Access Items in New Releases",
             options_hide_install: "Hide \"Install Steam\" button",
 			options_send_age_info: "Automatically send age verification when requested",
+			options_contscroll: "Enable Continuous Scrolling of Search Results",
             options_drm: "Show 3rd Party DRM Warnings",
             options_lowestprice: "Show Price History Information",
             options_metacritic: "Show Metacritic User Scores",

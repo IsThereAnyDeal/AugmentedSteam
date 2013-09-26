@@ -50,6 +50,7 @@ function save_options() {
 	replaceaccountname = $("#replaceaccountname").prop('checked');
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
 	send_age_info = $("#send_age_info").prop('checked');
+	contscroll = $("#contscroll").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
 	showlowestprice = $("#showlowestprice").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
@@ -151,6 +152,7 @@ function save_options() {
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
+		'contscroll': contscroll,
 		'showdrm': showdrm,
 		'showlowestprice': showlowestprice,
 		'showmcus': showmcus,
@@ -337,6 +339,7 @@ function load_options() {
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; chrome.storage.sync.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }		
+		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = false; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
@@ -400,6 +403,7 @@ function load_options() {
 		$("#replaceaccountname").attr('checked', settings.replaceaccountname);
 		$("#showfakeccwarning").attr('checked', settings.showfakeccwarning);
 		$("#send_age_info").attr('checked', settings.send_age_info);
+		$("#contscroll").attr('checked', settings.contscroll);
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showhltb").attr('checked', settings.showhltb);
@@ -490,6 +494,7 @@ function load_translation() {
 			$("#store_replace_account_name").text(localized_strings[settings.language].options_replace_account_name);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options_show_regionwarning);
 			$("#send_age_info").text(localized_strings[settings.language].options_send_age_info);
+			$("#contscroll").text(localized_strings[settings.language].options_contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
