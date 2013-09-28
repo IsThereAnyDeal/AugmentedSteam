@@ -702,8 +702,10 @@ function add_wishlist_discount_sort() {
 }
 
 function add_remove_from_wishlist_button(appid) {
-	$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");		
-	$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });	
+	if (is_signed_in()) {
+		$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");		
+		$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });
+	}
 }
 
 function empty_wishlist(e) {
