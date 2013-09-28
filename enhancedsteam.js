@@ -2837,8 +2837,8 @@ function add_achievement_comparison_link(node) {
 		get_http(links[0].href + "/stats/" + appid, function(txt) {
 			var html = txt.match(/<a href="(.+)compare">/);
 			if (html) {
-				$(node).find("span").css("margin-top", "0px");
-				$(node).find("span").append("<br><a href='http://www.steamcommunity.com" + html[1] + "compare' id='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings[language].compare + ")</a>");
+				$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
+				$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='http://www.steamcommunity.com" + html[1] + "compare' id='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings[language].compare + ")</a>");
 			}
 		});
 	}
