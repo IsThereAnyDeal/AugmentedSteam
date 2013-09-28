@@ -4,6 +4,7 @@ var apps;
 var info = 0;
 var isSignedIn = false;
 var signedInChecked = false;
+var search_threshhold = $(window).height() - 80;
 
 var cookie = document.cookie;
 var language = cookie.match(/language=([a-z]{2})/i)[1];
@@ -269,6 +270,7 @@ function highlight_node(node, color) {
 function hide_node(node) {
 	if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row")) {
 		$(node).css("display", "none");
+		search_threshhold = search_threshhold - 58;
 	}
 }
 
@@ -1728,7 +1730,6 @@ function endless_scrolling() {
 		if (settings.contscroll === undefined) { settings.contscroll = false; storage.set({'contscroll': settings.contscroll}); }
 		if (settings.contscroll) {
 			var processing = false;
-			var search_threshhold = $(window).height() - 80;
 			var search_page = 2;
 			
 			$(".search_pagination_right").css("display", "none");
