@@ -1,3 +1,7 @@
+v4.9
+-----
+
+
 v4.8
 -----
 + Added option to exclude Free To Play games from being highlighted
