@@ -313,7 +313,7 @@ function load_options() {
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; chrome.storage.sync.set({'tag_friends_want': settings.tag_friends_want}); }
 		if (settings.tag_friends_own === undefined) { settings.tag_friends_own = true; chrome.storage.sync.set({'tag_friends_own': settings.tag_friends_own}); }
-		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = true; chrome.storage.sync.set({'tag_friends_rec': settings.tag_friends_rec}); }
+		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = false; chrome.storage.sync.set({'tag_friends_rec': settings.tag_friends_rec}); }
 		
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }

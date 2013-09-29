@@ -230,7 +230,7 @@ function tag_friends_rec(node, appid) {
 	storage.get(function(settings) {
 		node.classList.add("es_tag_friends_rec");
 
-		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = true; storage.set({'tag_friends_rec': settings.tag_friends_rec});}
+		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = false; storage.set({'tag_friends_rec': settings.tag_friends_rec});}
 		if (settings.tag_friends_rec_color === undefined) { settings.tag_friends_rec_color = "#2e3d54"; storage.set({'tag_friends_rec_color': settings.tag_friends_rec_color});}
 		if (settings.tag_friends_rec) add_tag(
 			node,
