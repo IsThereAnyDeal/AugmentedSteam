@@ -493,8 +493,8 @@ function load_translation() {
 			$("#store_hide_new_heading").text(localized_strings[settings.language].options_hide_new_heading);
 			$("#store_replace_account_name").text(localized_strings[settings.language].options_replace_account_name);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options_show_regionwarning);
-			$("#send_age_info").text(localized_strings[settings.language].options_send_age_info);
-			$("#contscroll").text(localized_strings[settings.language].options_contscroll);
+			$("#send_age_info_text").text(localized_strings[settings.language].options_send_age_info);
+			$("#contscroll_text").text(localized_strings[settings.language].options_contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
@@ -529,6 +529,7 @@ function load_translation() {
 			$("#tag_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_own_color_default").text(localized_strings[settings.language].theworddefault);
+			$("#tag_friends_rec_color_default").text(localized_strings[settings.language].theworddefault);
 			
 			$("#es_about_text").html(localized_strings[settings.language].options_about_text);
 			

@@ -1733,7 +1733,8 @@ function endless_scrolling() {
 			var search_page = 2;
 			
 			$(".search_pagination_right").css("display", "none");
-				
+			$(".search_pagination_left").text($(".search_pagination_left").text().trim().match(/(\d+)$/)[0] + " Results");
+							
 			$(window).scroll(function() {
 				if ($(window).scrollTop() > search_threshhold) {
 					if (!processing) {

@@ -2,6 +2,8 @@ v4.8
 -----
 + Added option to exclude Free To Play games from being highlighted
 + Added new tag: "friends recommend" which links to the recommendation page
++ Added "Endless Scrolling" mode for search results pages
++ Added Simplified Chinese translation by Bin Dong
 : Fixed a bug where "Compare" links were only showing if your language was English
 : Fixed a bug where friends with nicknames would incorrectly show 3 "Compare" links
 
