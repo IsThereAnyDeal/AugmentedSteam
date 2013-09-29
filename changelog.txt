@@ -4,6 +4,7 @@ v4.8
 + Added new tag: "friends recommend" which links to the recommendation page
 + Added "Endless Scrolling" mode for search results pages
 + Added Simplified Chinese translation by Bin Dong
++ Added option to replace account name in header with community name
 : Fixed a bug where "Compare" links were only showing if your language was English
 : Fixed a bug where friends with nicknames would incorrectly show 3 "Compare" links
 
