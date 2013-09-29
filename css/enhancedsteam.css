@@ -5,6 +5,20 @@
 	margin: auto;
 }
 
+.es_highlight_owned {
+	border-color: rgb(92, 120, 54);
+	border-width: 0 0.2em 0 0.2em;
+	border-style: solid;
+	border-radius: 0.5em;
+}
+
+.es_highlight_wishlist {
+	border-color: rgb(73, 110, 147);
+	border-width: 0 0.2em 0 0.2em;
+	border-style: solid;
+	border-radius: 0.5em;
+}
+
 #es_library_list, #es_library_search {
 	padding-left: 10px;
 	overflow: scroll;
@@ -262,4 +276,8 @@
 
 .es_wl_sort > input:checked + span > a:hover  {
 	color: #B0AEAC;
+}
+
+.tags span {
+	border-radius: 0.5em;
 }
