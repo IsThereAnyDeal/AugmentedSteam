@@ -1,22 +1,22 @@
-.popup_menu .hr {
-	height: 1px;
-	background-color: #82807c;
-	width: 90%;
-	margin: auto;
-}
-
-.es_highlight_owned {
+.blotter_author_block .es_highlight_owned {
 	border-color: rgb(92, 120, 54);
 	border-width: 0 0.2em 0 0.2em;
 	border-style: solid;
 	border-radius: 0.5em;
 }
 
-.es_highlight_wishlist {
+.blotter_author_block .es_highlight_wishlist {
 	border-color: rgb(73, 110, 147);
 	border-width: 0 0.2em 0 0.2em;
 	border-style: solid;
 	border-radius: 0.5em;
+}
+
+.popup_menu .hr {
+	height: 1px;
+	background-color: #82807c;
+	width: 90%;
+	margin: auto;
 }
 
 #es_library_list, #es_library_search {
