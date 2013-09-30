@@ -1,3 +1,17 @@
+.blotter_author_block .es_highlight_owned {
+	border-color: rgb(92, 120, 54);
+	border-width: 0 0.2em 0 0.2em;
+	border-style: solid;
+	border-radius: 0.5em;
+}
+
+.blotter_author_block .es_highlight_wishlist {
+	border-color: rgb(73, 110, 147);
+	border-width: 0 0.2em 0 0.2em;
+	border-style: solid;
+	border-radius: 0.5em;
+}
+
 .popup_menu .hr {
 	height: 1px;
 	background-color: #82807c;
@@ -262,4 +276,8 @@
 
 .es_wl_sort > input:checked + span > a:hover  {
 	color: #B0AEAC;
+}
+
+.tags span {
+	border-radius: 0.5em;
 }
