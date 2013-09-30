@@ -1,12 +1,4 @@
-.blotter_author_block .es_highlight_owned {
-	border-color: rgb(92, 120, 54);
-	border-width: 0 0.2em 0 0.2em;
-	border-style: solid;
-	border-radius: 0.5em;
-}
-
-.blotter_author_block .es_highlight_wishlist {
-	border-color: rgb(73, 110, 147);
+.blotter_author_block :any(.es_highlight_owned, .es_highlight_wishlist) {
 	border-width: 0 0.2em 0 0.2em;
 	border-style: solid;
 	border-radius: 0.5em;
