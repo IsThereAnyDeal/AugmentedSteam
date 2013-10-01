@@ -273,3 +273,7 @@
 .tags span {
 	border-radius: 0.5em;
 }
+
+.blotter_single_item_detail .blotter_control_container, .blotter_single_item_detail .hr {
+	display: block !important;
+}

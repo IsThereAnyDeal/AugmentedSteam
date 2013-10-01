@@ -3459,6 +3459,16 @@ $(document).ready(function(){
 						bind_ajax_content_highlighting();
 						break;
 
+					case /^\/(?:id|profiles)\/.+\/myactivity/.test(window.location.pathname):
+						start_friend_activity_highlights();
+						bind_ajax_content_highlighting();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/status/.test(window.location.pathname):
+						start_friend_activity_highlights();
+						bind_ajax_content_highlighting();
+						break;
+
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
 						add_es_background_selection();
 						break;
