@@ -260,7 +260,6 @@ function highlight_node(node, color) {
 		
 		if ($node.parent().parent()[0].classList.contains("blotter_author_block")) {
 			$node.css("borderColor", color);
-			return;
 		}
 
 		$node.css("backgroundImage", "none");
