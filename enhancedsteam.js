@@ -1476,7 +1476,11 @@ function show_pricing_history(appid, type) {
 							currency_symbol = "€";
 							comma = true;
 							at_end = true;
-							break;						
+							break;
+						case "BRL":
+							currency_symbol = "R$ ";
+							comma = true;
+							break;
 						default:
 							currency_symbol = "$";
 					}
