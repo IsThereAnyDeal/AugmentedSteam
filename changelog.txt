@@ -1,6 +1,7 @@
 v4.9
 -----
-
++ Non-sale games are now hidden from the "Specials" search
+: The formatting of tags has changed from square to rounded
 
 v4.8
 -----

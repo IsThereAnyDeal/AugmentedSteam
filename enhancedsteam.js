@@ -1751,10 +1751,21 @@ function endless_scrolling() {
 							search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
 							search_page = search_page + 1;
 							processing = false;
+							if (window.location.search.match(/^\?specials/)) {
+								remove_non_specials();
+							}	
 						});
 					}	
 				}
 			});
+		}
+	});
+}
+
+function remove_non_specials() {
+	$(".search_result_row").each(function(index) {		
+		if (!($(this).html().match(/<strike>/))) {
+			hide_node($(this)[0]);
 		}
 	});
 }
@@ -3416,6 +3427,9 @@ $(document).ready(function(){
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
 						endless_scrolling();
+						if (window.location.search.match(/^\?specials/)) {
+							remove_non_specials();
+						}
 						break;
 
 					// Storefront-front only
