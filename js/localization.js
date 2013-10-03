@@ -668,7 +668,7 @@
                 tag_inv_guestpass: "ゲストパス",
                 tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人が欲しがっています</a>",
 					tag_friends_own: "__friendcount__ 人所有",
-					tag_friends_rec: "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__
+					tag_friends_rec: "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\"__friendcount__ recommend</a>",
                 inventory_market_text: "インベントリ上でマーケットの価格を表示 (実験的!)",
                 credits: "クレジット",
                 stores: "ストア",
