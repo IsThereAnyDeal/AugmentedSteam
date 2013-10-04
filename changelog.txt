@@ -2,6 +2,7 @@ v4.9
 -----
 + Non-sale games are now hidden from the "Specials" search
 + Added pricing history and formatting support for BRL (thanks drizzle!)
++ Added Polish translation by mrmahon
 : The formatting of tags has changed from square to rounded
 
 v4.8
