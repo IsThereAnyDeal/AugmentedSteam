@@ -3163,6 +3163,55 @@ function totalsize() {
 	$(".clientConnChangingText").before("<p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p>");
 }
 
+function add_gamelist_sort() {
+	if ($(".clientConnChangingText").length > 0) {
+		$("#gameslist_sort_options").append("&nbsp;&nbsp;<label id='es_gl_sort_size'><a>Size</a></label>");
+		
+		$("#es_gl_sort_size").on("click", function() {
+			var gameRowsGB = [];
+			var gameRowsMB = [];
+			
+			$(".clientConnItemBlock").find(".clientConnItemText:last").each(function (index, value) {
+				var push = new Array();
+				var size = ($(value).text());
+				var row = ($(this).parent().parent().parent().parent());
+				
+				if (size) {
+				
+					push[0] = row[0].outerHTML;
+					push[1] = size.replace(" GiB", "").replace(" MiB", "").replace(",", "");
+					
+					if (size.match(/GiB/)) {
+						gameRowsGB.push(push);
+					}
+					
+					if (size.match(/MiB/)) {
+						gameRowsMB.push(push);
+					}
+					
+					$(row).remove();
+				}
+			});
+			
+			gameRowsGB.sort(function(a,b) { return parseInt(a[1],10) - parseInt(b[1],10); });
+			gameRowsMB.sort(function(a,b) { return parseInt(a[1],10) - parseInt(b[1],10); });
+			
+			$(gameRowsMB).each(function() {
+				$("#games_list_rows").prepend(this[0]);
+			});
+			
+			$(gameRowsGB).each(function() {
+				$("#games_list_rows").prepend(this[0]);
+			});
+			
+			$(this).html("<span style='color: #B0AEAC;'>Size</span>");
+			var html = $("#gameslist_sort_options").find("span[class='selected_sort']").html();
+			html = "<a onclick='location.reload()'>" + html + "</a>";
+			$("#gameslist_sort_options").find("span[class='selected_sort']").html(html);
+		});
+	}
+}
+
 function add_gamelist_achievements() {
 	storage.get(function(settings) {
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; storage.set({'showallachievements': settings.showallachievements}); }
@@ -3553,6 +3602,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
 						totalsize();
 						add_gamelist_achievements();
+						add_gamelist_sort();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):

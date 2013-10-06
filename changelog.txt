@@ -2,6 +2,7 @@ v4.9
 -----
 + Non-sale games are now hidden from the "Specials" search
 + Added option to display PCGamingWiki links on store pages
++ Added ability to sort "All Games" list by install size if logged in
 + Added pricing history and formatting support for BRL (thanks drizzle!)
 + Added Polish translation by mrmahon
 + Profile links now display on private profiles
