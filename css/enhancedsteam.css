@@ -252,21 +252,21 @@
 	text-decoration: underline !important; 
 }
 
-.es_wl_sort { 
+.es_sort { 
 	cursor: pointer;
 	padding-right: 5px;
 }
 
-.es_wl_sort > input { 
+.es_sort > input { 
 	display: none; 
 }
 
-.es_wl_sort > input:checked + span > a  {
+.es_sort > input:checked + span > a  {
 	cursor: text;
 	text-decoration: none; 
 }
 
-.es_wl_sort > input:checked + span > a:hover  {
+.es_sort > input:checked + span > a:hover  {
 	color: #B0AEAC;
 }
 

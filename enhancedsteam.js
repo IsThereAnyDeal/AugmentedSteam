@@ -651,8 +651,8 @@ function add_empty_owned_wishlist_button() {
 
 function add_wishlist_filter() {
 	var html  = "<span>" + localized_strings[language].show + ": </span>";
-		html += "<label class='es_wl_sort' id='es_wl_all'><input type='radio' name='es_wl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
-		html += "<label class='es_wl_sort' id='es_wl_sale'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_discount + "</a></span></label>";
+		html += "<label class='es_sort' id='es_wl_all'><input type='radio' name='es_wl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
+		html += "<label class='es_sort' id='es_wl_sale'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_discount + "</a></span></label>";
 		html += "</div>";
 
 	$('#wishlist_sort_options').append("<p>" + html);
@@ -3212,6 +3212,25 @@ function add_gamelist_sort() {
 	}
 }
 
+function add_gamelist_filter() {
+	if ($(".clientConnChangingText").length > 0) {
+		var html  = "<span>" + localized_strings[language].show + ": </span>";
+		html += "<label class='es_sort' id='es_gl_all'><input type='radio' name='es_gl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
+		html += "<label class='es_sort' id='es_gl_installed'><input type='radio' name='es_gl_sort'><span><a>" + localized_strings[language].games_installed + "</a></span></label>";
+		html += "</div>";
+		
+		$('#gameslist_sort_options').append("<br>" + html);
+		
+		$('#es_gl_all').on('click', function() {
+			$('.gameListRow').css('display', 'block');
+		});
+		
+		$('#es_gl_installed').on('click', function() {
+			$('.gameListRowItem').not(".gameListItemInstalled").parent().css("display", "none");	
+		});		
+	}
+}
+
 function add_gamelist_achievements() {
 	storage.get(function(settings) {
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; storage.set({'showallachievements': settings.showallachievements}); }
@@ -3603,6 +3622,7 @@ $(document).ready(function(){
 						totalsize();
 						add_gamelist_achievements();
 						add_gamelist_sort();
+						add_gamelist_filter();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
