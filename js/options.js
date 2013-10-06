@@ -184,17 +184,6 @@ function save_options() {
 		'profile_astats': profile_astats,
 		
 		'steamcardexchange': steamcardexchange
-	}, function() {
-		// Notify that we saved.
-		localization_promise.done(function(){
-			$("#save_store").text(localized_strings[language].saved + ".");
-			$("#save_community").text(localized_strings[language].saved + ".");
-			
-			setTimeout(function() {
-				$("#save_store").text(localized_strings[language].save);
-				$("#save_community").text(localized_strings[language].save);
-			}, 750);
-		});
 	});
 }
 
@@ -572,9 +561,6 @@ function load_default_tag_friends_rec_color() { document.getElementById("tag_fri
 document.addEventListener('DOMContentLoaded', load_options);
 document.addEventListener('DOMContentLoaded', function () {
 // Wait until page has loaded to add events to DOM nodes
-document.querySelector('#save_store').addEventListener('click', save_options);
-document.querySelector('#save_community').addEventListener('click', save_options);
-
 document.querySelector('#language').addEventListener('change', load_translation);
 
 document.querySelector('#highlight_owned_default').addEventListener('click', load_default_highlight_owned_color);
@@ -600,4 +586,8 @@ document.querySelector('#nav_about').addEventListener('click', load_about_tab);
 document.querySelector('#nav_credits').addEventListener('click', load_credits_tab);
 
 document.querySelector('#stores_all').addEventListener('click', toggle_stores);
+
+$("input").on("click", save_options);
+$("button").on("click", save_options);
+$(".colorbutton").change(save_options);
 });
