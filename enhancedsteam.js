@@ -2722,6 +2722,16 @@ function highlight_app(appid, node) {
 			if ($(node).html().match(/<h5>(Free to Play|Play for Free!)<\/h5>/i)) {
 				return;
 			}
+			if ($(node).html().match(/genre_release/)) {
+				if ($(node).find(".genre_release").html().match(/Free to Play/i)) {
+					return;
+				}	
+			}
+			if (node.classList.contains("search_result_row")) {
+				if ($(node).html().match(/Free to Play/i)) {
+					return;
+				}
+			}
 		}
 		
 		if (getValue(appid + "owned")) highlight_owned(node);
