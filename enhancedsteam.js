@@ -1679,7 +1679,12 @@ function add_community_profile_links() {
 		if (settings.profile_astats === true) { htmlstr += '<div class="profile_count_link"><a href="http://www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<img src="' + chrome.extension.getURL('img/ico/achievementstats.ico') + '" width="24" height="24" border="0" /></a></div>'; }
 
 		if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
-
+		
+		if ($(".profile_item_links").length == 0) {
+			htmlstr = "<div class='profile_item_links'>" + htmlstr + "</div>";
+			$(".profile_rightcol").append(htmlstr);
+			$(".profile_rightcol").after("<div style='clear: both'></div>");
+		}
 	});
 }
 
