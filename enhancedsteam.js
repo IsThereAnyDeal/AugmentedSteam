@@ -3251,9 +3251,6 @@ function add_badge_view_options() {
 			$(this).find("span[class$='badge_view_details']").remove();				
 			$(this).find("div[class$='badge_info_unlocked']").remove();
 			$(this).find("div[class$='badge_progress_tasks']").remove();
-			$(this).find("div[class$='badge_progress_info']").text($(this).find("div[class$='badge_progress_info']").text().replace(/of/, "/"));
-			$(this).find("div[class$='badge_progress_info']").text($(this).find("div[class$='badge_progress_info']").text().replace(/ cards collected/, ""));
-			$(this).find("div[class$='badge_progress_info']").text($(this).find("div[class$='badge_progress_info']").text().replace(/ for next level/, ""));
 			$(this).find("div[class$='badge_progress_info']").css("padding", "0");
 			$(this).find("div[class$='badge_progress_info']").css("float", "none");
 			$(this).find("div[class$='badge_progress_info']").css("margin", "0");
@@ -3280,6 +3277,10 @@ function add_badge_view_options() {
 					$(this).find("div[class$='badge_content']").first().append("<span class='es_game_stats' style='color: #5491cf; font-size: 12px; white-space: nowrap;'>" + stats + "</span>");
 				}
 			}
+			if ($(this).find("div[class$='badge_progress_info']").text()) {
+				var card = $(this).find("div[class$='badge_progress_info']").text().trim().match(/^(\d+)\D*(\d+)/)[1] + " / " + $(this).find("div[class$='badge_progress_info']").text().trim().match(/^(\d+)\D*(\d+)/)[2];
+				$(this).find("div[class$='badge_progress_info']").text(card);
+			}	
 		});
 
 		$(".es_steamcardexchange_link").remove();
