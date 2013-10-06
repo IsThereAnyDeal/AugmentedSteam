@@ -1854,6 +1854,22 @@ function add_hltb_info(appid) {
 	});	
 }
 
+function add_pcgamingwiki_link(appid) {
+	storage.get(function(settings) {
+		if (settings.showpcgw === undefined) { settings.showpcgw = true; storage.set({'showpcgw': settings.showpcgw}); }
+		if (settings.showpcgw) {
+			get_http("http://api.enhancedsteam.com/pcgw/?appid=" + appid, function (txt) {
+				if (txt.length > 0) {
+					var gamename = txt.match(/results":{"(.+)":{/)[1];
+					var data = JSON.parse(txt);
+					var url = (data["results"][gamename]["fullurl"]);
+					$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url(' + chrome.extension.getURL("img/pcgw.png") + ')">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
+				}
+			});
+		}
+	});
+}
+
 function add_widescreen_certification(appid) {
 	storage.get(function(settings) {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
@@ -3402,6 +3418,7 @@ $(document).ready(function(){
 						fix_community_hub_links();
 						add_widescreen_certification(appid);
 						add_hltb_info(appid);
+						add_pcgamingwiki_link(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
 						add_steamcards_link(appid);

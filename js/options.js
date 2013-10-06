@@ -55,6 +55,7 @@ function save_options() {
 	showlowestprice = $("#showlowestprice").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
+	showpcgw = $("#showpcgw").prop('checked');
 	showsteamdb = $("#showsteamdb").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 	show_package_info = $("#show_package_info").prop('checked');
@@ -157,6 +158,7 @@ function save_options() {
 		'showlowestprice': showlowestprice,
 		'showmcus': showmcus,
 		'showhltb': showhltb,
+		'showpcgw': showpcgw,
 		'showsteamdb': showsteamdb,
 		'showwsgf': showwsgf,
 		'show_package_info': show_package_info,
@@ -325,6 +327,7 @@ function load_options() {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showhltb === undefined) { settings.showhltb = true; chrome.storage.sync.set({'showhltb': settings.showhltb}); }
+		if (settings.showpcgw === undefined) { settings.showpcgw = true; chrome.storage.sync.set({'showpcgw': settings.showpcgw}); }
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; chrome.storage.sync.set({'show_package_info': settings.show_package_info}); }
@@ -407,6 +410,7 @@ function load_options() {
 		$("#showdrm").attr('checked', settings.showdrm);
 		$("#showmcus").attr('checked', settings.showmcus);
 		$("#showhltb").attr('checked', settings.showhltb);
+		$("#showpcgw").attr('checked', settings.showpcgw);
 		$("#showsteamdb").attr('checked', settings.showsteamdb);
 		$("#showwsgf").attr('checked', settings.showwsgf);
 		$("#show_package_info").attr('checked', settings.show_package_info);
@@ -499,6 +503,7 @@ function load_translation() {
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
 			$("#store_hltb_text").text(localized_strings[settings.language].options_hltb);
+			$("#store_pcgw_text").text(localized_strings[settings.language].options_pcgw);
 			$("#store_steamdb_text").text(localized_strings[settings.language].options_steamdb);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
 			$("#store_show_package_info_text").text(localized_strings[settings.language].options_show_package_info);
