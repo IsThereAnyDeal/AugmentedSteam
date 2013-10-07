@@ -9,6 +9,7 @@ v4.9
 + Profile links now display on private profiles
 : The formatting of tags has changed from square to rounded
 : Options now save automatically without the need to click the save button
+: Enhanced F2P detection on homepage, genre page, and search results
 
 v4.8
 -----
