@@ -1,3 +1,7 @@
+v5.0
+-----
+
+
 v4.9.1
 -----
 : Fixed a bug where long app names and tags were breaking layout on some pages
