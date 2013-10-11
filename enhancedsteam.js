@@ -341,12 +341,7 @@ function display_tags(node) {
 			$tags.css("vertical-align", "middle");
 			$tags.css("font-size", "small");
 
-			var $p = $tag_root.find("p"),
-				$imgs = $p.find("img").remove(),
-				$text = $p.text(),
-				$new_p = $("<p></p>");
-
-			$p.replaceWith($new_p.append($imgs).append($tags).append($text));
+			$tag_root.find("p").prepend($tags);
 
 			// Remove margin-bottom, border, and tweak padding on carousel lists.
 			$.each($tag_root.find(".tags span"), function (i, obj) {
