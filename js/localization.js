@@ -148,8 +148,8 @@ var localized_strings,
         };
 
         localized_strings = {
-            "en": localized_strings_default,
-            "cs": {
+            "eng": localized_strings_default,
+            "cze": {
                 empty_wishlist: "Vyprázdnit Seznam přání",
                 purchase_date: "(Zakoupeno __date__)",
                 options: "Nastavení",
@@ -222,7 +222,7 @@ var localized_strings,
                     private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
                 }
             },
-            "de": {
+            "ger": {
                 empty_wishlist: "Wunschliste leeren",
                 purchase_date: "(Auf __date__ gekauft)",
                 options: "Optionen",
@@ -275,7 +275,7 @@ var localized_strings,
                 tag_inv_guestpass: "Besucherpass",
                 tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ mal gewünscht</a>"
             },
-            "sp": {
+            "spa": {
                 empty_wishlist: "Vacíar la lista de deseados",
                 purchase_date: "(Comprado el __date__)",
                 options: "Opciones",
@@ -370,7 +370,7 @@ var localized_strings,
                     header: "Bundles que incluyen este juego"
 				}
             },
-            "fr": {
+            "fre": {
                 empty_wishlist: "Vider la liste de souhaits",
 				remove_owned_wishlist: "Retirer toutes les possessions de la liste de souhaits",
                 purchase_date: "(Acheté le __date__)",
@@ -515,7 +515,7 @@ var localized_strings,
 					bundle_count: "Nombre de fois que ce jeu a été dans un pack"
 				}
             },
-            "it": {
+            "ita": {
                 empty_wishlist: "Svuota lista",
                 purchase_date: "(Acquistato il __date__)",
                 options: "Opzioni",
@@ -637,7 +637,7 @@ var localized_strings,
                     bundle_count: "Numero di volte che questo gioco è stato in un bundle"
                 }
             },
-            "ja": {
+            "jap": {
                 empty_wishlist: "ウィッシュリストを空にする",
                 purchase_date: "(購入日 __date__)",
                 options: "オプション",
@@ -761,7 +761,7 @@ var localized_strings,
 						bundle_count: "このゲームがバンドル入りした回数"
                 }
             },
-            "nl": {
+            "dut": {
                 empty_wishlist: "Verlanglijst leegmaken",
                 purchase_date: "(Gekocht op __date__)",
                 options: "Opties",
@@ -785,7 +785,7 @@ var localized_strings,
                 tag_inv_guestpass: "Gastenpas",
                 tag_friends_want: "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ willen dit</a>"
             },
-	   "po": {
+			"pol": {
 				empty_wishlist: "Opróżnij listę życzeń",
 				purchase_date: "(Zakupiono __date__)",
 				options: "Opcje",
@@ -911,7 +911,7 @@ var localized_strings,
 					bundle_count: "Ile razy gra ukazała się w bundlu"
 				}
 			},
-            "pt-br": {
+            "bra": {
                 empty_wishlist: "Limpar Lista de Desejos",
                 purchase_date: "(Comprado __date__)",
                 options: "Opções",
@@ -1012,7 +1012,7 @@ var localized_strings,
                     header: "Pacotes que incluem este jogo"
                 }                   
             },
-            "ru": {
+            "rus": {
                 empty_wishlist: "Очистить список желаемого",
                 purchase_date: "(Куплено __date__)",
                 options: "Опции",
@@ -1101,7 +1101,7 @@ var localized_strings,
                     private_profile: "<a href='http://steamcommunity.com/my/edit/settings'>Чтобы использовать эту функцию, вы должны сделать свой профиль открытым для всех</a>."
                 }
 			},	
-			"sc":  {
+			"sch":  {
 				empty_wishlist: "清空愿望单",
 				purchase_date: "(于__date__购买)",
 				options: "选项",
@@ -1230,7 +1230,7 @@ var localized_strings,
         // Set english defaults.
         $.each(localized_strings, function (lang, strings) {
             $.each(localized_strings_default, function (key, val) {
-                if (!strings[key]) strings[key] = val;
+				if (!strings[key]) strings[key] = val;
             });
         });
         setTimeout(deferred.resolve, 250); // Delay ever so slightly to make sure all loc is loaded.

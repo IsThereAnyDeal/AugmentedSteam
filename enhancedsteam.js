@@ -7,8 +7,8 @@ var signedInChecked = false;
 var search_threshhold = $(window).height() - 80;
 
 var cookie = document.cookie;
-var language = cookie.match(/language=([a-z]{2})/i)[1];
-if (localized_strings[language] === undefined) { language = "en"; }
+var language = cookie.match(/language=([a-z]{3})/i)[1];
+if (localized_strings[language] === undefined) { language = "eng"; }
 
 // set language for options page
 chrome.storage.sync.set({'language': language});
