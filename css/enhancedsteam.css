@@ -11,6 +11,35 @@
 	margin: auto;
 }
 
+span.platform_img {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	background-repeat: no-repeat;
+}
+
+span.platform_img.steamplay {
+	width: 72px;
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_steamplay_only.png' );
+}
+
+span.platform_img.win {
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_win.png' );
+}
+
+span.platform_img.mac {
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_mac.png' );
+}
+
+span.platform_img.linux {
+	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_linux.png' );
+}
+
+img.platform_small, .platform_img {
+	vertical-align: middle;
+	margin-right: 1px;
+}
+
 #es_library_list, #es_library_search {
 	padding-left: 10px;
 	overflow: scroll;

@@ -1,6 +1,6 @@
 v5.0
 -----
-
++ Added platform icons to items on the wishlist page
 
 v4.9.1
 -----
