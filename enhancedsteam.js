@@ -521,14 +521,21 @@ function load_inventory() {
 			if (data.success) {
 				$.each(data.rgDescriptions, function(i, obj) {
 					var is_package = false;
+					var appids;
 
-					if (obj.descriptions && obj.descriptions[0] && obj.descriptions[0].value) {
-						var appids = get_appids(obj.descriptions[0].value);
-						if (appids) {
-							// gift package with multiple apps
-							is_package = true;
-							for (var j = 0; j < appids.length; j++) {
-								setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+					if (obj.descriptions) {
+						for (var d = 0; d < obj.descriptions.length; d++) {
+							if (obj.descriptions[d].type == "html") {
+								appids = get_appids(obj.descriptions[d].value);
+								if (appids) {
+									// gift package with multiple apps
+									is_package = true;
+									for (var j = 0; j < appids.length; j++) {
+										setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+									}
+
+									break;
+								}
 							}
 						}
 					}
