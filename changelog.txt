@@ -1,6 +1,7 @@
 v5.0
 -----
 + Added platform icons to items on the wishlist page
++ Added active listing total to marketplace homepage
 
 v4.9.1
 -----

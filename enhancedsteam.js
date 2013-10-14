@@ -2266,6 +2266,31 @@ function add_market_total() {
 	});
 }
 
+function add_active_total() {
+	if (window.location.pathname.match(/^\/market\/$/)) {
+		if ($(".market_listing_table_message").length == 0) {
+			var total = 0;
+			
+			$(".market_listing_row").find(".market_listing_my_price").each(function() {
+				total += Number($(this).find(".market_listing_price").text().trim().replace(/[^0-9\.]+/g,""));
+				currency_symbol = $(this).find(".market_listing_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			});
+			
+			switch (currency_symbol) {
+				case "pуб":
+				case "€":
+					total = formatMoney(parseFloat(total), 2, currency_symbol, ".", ",", true);
+					break;
+				default:
+					total = formatMoney(parseFloat(total), 2, currency_symbol, ",", ".", false);
+					break;
+			}
+			
+			$(".my_listing_section").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons'></div><div class='market_listing_right_cell market_listing_my_price'><span><span class='market_listing_price'><b>" + total + "</b></span><br><span class='market_listing_item_name'>" + localized_strings[language].sales_total + "</span></span></div></div>");
+		}
+	}
+}
+
 function minimize_active_listings() {
 	storage.get(function(settings) {
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
@@ -3651,6 +3676,7 @@ $(document).ready(function(){
 							bind_ajax_content_highlighting();
 						});
 						add_market_total();
+						add_active_total();
 						minimize_active_listings();
 						break;
 						
