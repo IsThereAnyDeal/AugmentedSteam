@@ -438,7 +438,7 @@ function load_options() {
 function load_translation() {
 	chrome.storage.sync.get(function(settings) {
 				
-		if (settings.language === undefined) { settings.language = "en"; chrome.storage.sync.set({'language': settings.language}); }
+		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		settings.language = $("#language").val();			
 		$("#language").attr('value', settings.language);
 		
