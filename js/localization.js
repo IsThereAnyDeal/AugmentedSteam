@@ -646,7 +646,7 @@ var localized_strings,
                 net_gain: "Net kazanç",
                 net_spent: "Net harcanan",
                 loading: "Yükleniyor...",
-			    using_store: "Steam mağazasını __current__ bölgesinde kullanmıyorsunuz.",
+			    using_store: "Steam mağazasını __current__ bölgesinde kullanıyorsunuz.",
 			    using_store_return: "Buraya tıklayarak __base__ mağazasına geri dönün.",
                 library: {
                 private_profile: "Bu özelliği kullanabilmek için <a href='http://steamcommunity.com/my/edit/settings'>ayarlardan</a> profilinizi herkese açık olarak değiştirin."
