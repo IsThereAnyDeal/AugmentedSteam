@@ -2974,6 +2974,7 @@ function rewrite_string(string) {
 	string = string.replace(/%3A/g, ":");
 	string = string.replace(/%27/g, "'");
 	string = string.replace(/%26/g, "&");
+	string = string.replace(/%21/g, "!");
 	return string;
 }
 
