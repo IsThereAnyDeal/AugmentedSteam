@@ -1170,7 +1170,7 @@ function library_show_app(appid) {
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
 		var app_data = JSON.parse(txt);
 
-		if (app_data[appid].success) {
+		if (app_data[appid].success && appid == $('.es_library_selected').data('appid')) {
 
 			// fill background div with screenshot
 			var screenshotID = Math.floor(Math.random() * app_data[appid].data.screenshots.length - 1) + 1;
@@ -1340,7 +1340,7 @@ function library_show_app(appid) {
 				$("#es_library_app_links ul").append("<li><a href='" + app_data[appid].data.website + "'>Website</a></li>");
 			}
 		}
-		else {
+		else if(appid == $('.es_library_selected').data('appid')) {
 			$("#es_library_list_loading").html("App ID " + appid + " wasn't found.");
 		}
 	});
