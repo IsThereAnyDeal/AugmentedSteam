@@ -3417,6 +3417,7 @@ function add_badge_view_options() {
 			var stats = $(this).find("span[class$='progress_info_bold']").html();
 			$(this).find("div[class$='badge_cards']").remove();
 			$(this).find("div[class$='badge_title_stats']").css("display", "none");
+			$(this).find("div[class$='badge_description']").css("display", "none");
 			$(this).find("span[class$='badge_view_details']").remove();				
 			$(this).find("div[class$='badge_info_unlocked']").remove();
 			$(this).find("div[class$='badge_progress_tasks']").remove();
@@ -3505,6 +3506,11 @@ function add_total_drops_count() {
 	var drops_games = 0;
 	var booster_games = 0;
 	$(".progress_info_bold").each(function(i, obj) {
+		var parent = ($(obj).parent().parent().html().trim());		
+		if (!(parent.match(/^<div class="badge_title_stats">/))) {
+			return false;
+		}
+		
 		var obj_count = obj.innerHTML.match(/\d+/);
 		if (obj_count) {
 			drops_count += parseInt(obj_count[0]);
