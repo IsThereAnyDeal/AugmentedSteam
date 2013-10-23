@@ -22,6 +22,7 @@
       "exclude_matches": [
         "https://store.steampowered.com/checkout/*",
         "https://store.steampowered.com/login/*",
+		"https://store.steampowered.com/join/*",
         "https://steamcommunity.com/login/*"
       ],
       "js": [
