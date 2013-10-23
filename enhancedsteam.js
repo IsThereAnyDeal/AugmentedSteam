@@ -1929,60 +1929,112 @@ function add_widescreen_certification(appid) {
 								var path = data["node"]["Path"];
 								var wsg = data["node"]["WideScreenGrade"];
 								var mmg = data["node"]["MultiMonitorGrade"];
-								var wsg_icon = "";
-								var wsg_text = "";
-								var mmg_icon = "";
-								var mmg_text = "";
+								var fkg = data["node"]["FourKGrade"];
+								var uws = data["node"]["UltraWideScreenGrade"];
+								var wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
+								var fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
 
 								switch (wsg) {
 									case "A":
 										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-gold.png";
-										wsg_text = "This medal is awarded to games which have received perfect scores from the WSGF for their widescreen support, and are Widescreen Certified.";
+										wsg_text = localized_strings[language].wsgf.gold.replace(/__type__/g, "Widescreen");
 										break;
 									case "B":
 										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-silver.png";
-										wsg_text = "This medal is awarded to games that have received a calculated grade of B for their widescreen support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.";
+										wsg_text = localized_strings[language].wsgf.silver.replace(/__type__/g, "Widescreen");
 										break;
 									case "C":
 										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-limited.png";
-										wsg_text = "This score is awarded to games that have received a calculated grade of C for their widescreen support.  All of these games have some level of widescreen support but have significant issues.";
+										wsg_text = localized_strings[language].wsgf.limited.replace(/__type__/g, "Widescreen");
 										break;
 									case "Incomplete":
 										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-incomplete.png";
-										wsg_text = "The default grade for detailed reports.  Usually something is missing which either needs testing and/or verification to be marked as needing grading.";
+										wsg_text = localized_strings[language].wsgf.incomplete;
 										break;
 									case "Unsupported":
 										wsg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_ws-unsupported.png";
-										wsg_text = "This score is awarded to games that have no widescreen support.  The game may be unplayable in widescreen, or the image is stretched to fit the window.  Correct aspect ratio is not retained.";
+										wsg_text = localized_strings[language].wsgf.unsupported.replace(/__type__/g, "Widescreen");
 										break;
 								}
 
 								switch (mmg) {
 									case "A":
 										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-gold.png";
-										mmg_text = "This medal is awarded to games which have received perfect scores from the WSGF for their multi-monitor support, and are Multi-Monitor Certified.";
+										mmg_text = localized_strings[language].wsgf.gold.replace(/__type__/g, "Multi-Monitor"); 
 										break;
 									case "B":
 										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-silver.png";
-										mmg_text = "This medal is awarded to games that have received a calculated grade of B for their multi-monitor support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.";
+										mmg_text = localized_strings[language].wsgf.silver.replace(/__type__/g, "Multi-Monitor");
 										break;
 									case "C":
 										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-limited.png";
-										mmg_text = "This score is awarded to games that have received a calculated grade of C for their multi-monitor support.  All of these games have some level of multi-monitor support but have significant issues.";
+										mmg_text = localized_strings[language].wsgf.limited.replace(/__type__/g, "Multi-Monitor");
 										break;
 									case "Incomplete":
 										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-incomplete.png";
-										mmg_text = "Incomplete";
+										mmg_text = localized_strings[language].wsgf.incomplete;
 										break;
 									case "Unsupported":
 										mmg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_mm-unsupported.png";
-										mmg_text = "This score is awarded to games that have no multi-monitor support.  The game may be unplayable on multiple monitors, or the image is stretched to fit the composite screens.  Correct aspect ratio is not retained.";
+										mmg_text = localized_strings[language].wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
 										break;
 								}
-
-								if (mmg && path && wsg) {
-									$(node).after("<div class='block underlined_links'><div class='block_header'><h4>WSGF Widescreen Certifications</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center><a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) +"' border=0></a><br></center><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top'></div>" + localized_strings[language].rating_details + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a></div></div></div></div>");
+								
+								switch (uws) {
+									case "A":
+										uws_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_uw-gold.png";
+										uws_text = localized_strings[language].wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
+										break;
+									case "B":
+										uws_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_uw-silver.png";
+										uws_text = localized_strings[language].wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
+										break;
+									case "C":
+										uws_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_uw-limited.png";
+										uws_text = localized_strings[language].wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
+										break;
+									case "Incomplete":
+										uws_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_uw-incomplete.png";
+										uws_text = localized_strings[language].wsgf.incomplete;
+										break;
+									case "Unsupported":
+										uws_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_uw-unsupported.png";
+										uws_text = localized_strings[language].wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
+										break;
 								}
+								
+								switch (fkg) {
+									case "A":
+										fkg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_4k-gold.png";
+										fkg_text = localized_strings[language].wsgf.gold.replace(/__type__/g, "4k UHD");
+										break;
+									case "B":
+										fkg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_4k-silver.png";
+										fkg_text = localized_strings[language].wsgf.silver.replace(/__type__/g, "4k UHD");
+										break;
+									case "C":
+										fkg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_4k-limited.png";
+										fkg_text = localized_strings[language].wsgf.limited.replace(/__type__/g, "4k UHD");
+										break;
+									case "Incomplete":
+										fkg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_4k-incomplete.png";
+										fkg_text = localized_strings[language].wsgf.incomplete;
+										break;
+									case "Unsupported":
+										fkg_icon = "http://www.enhancedsteam.com/gamedata/icons/wsgf_4k-unsupported.png";
+										fkg_text = localized_strings[language].wsgf.unsupported.replace(/__type__/g, "4k UHD");
+										break;
+								}
+								
+								var html = "<div class='block underlined_links'><div class='block_header'><h4>WSGF Widescreen Certifications</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
+								
+								if (wsg) { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+								if (mmg) { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+								if (uws != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(uws_icon) + "' height='120' title='" + escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+								if (fkg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(fkg_icon) + "' height='120' title='" + escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+								if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top'></div>" + localized_strings[language].rating_details + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
+								html += "</div></div></div></div>";
+								$(node).after(html);
 							}
 							found = 1;
 						}

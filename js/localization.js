@@ -144,7 +144,14 @@ var localized_strings,
                 includes: "Includes (__num__) items",
                 header: "Bundles that include this game",
 				bundle_count: "Number of times this game has been in a bundle"
-            }
+            },
+			wsgf: {
+				gold: "This medal is awarded to games which have received perfect scores from the WSGF for their __type__ support, and are __type__ Certified.",
+				silver: "This medal is awarded to games that have received a calculated grade of B for their __type__ support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.",
+				limited: "This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues.",
+				incomplete: "Incomplete",
+				unsupported: "This score is awarded to games that have no __type__ support.  The game may be unplayable in __type__, or the image is stretched to fit the window.  Correct aspect ratio is not retained."
+			}	
         };
 
         localized_strings = {
