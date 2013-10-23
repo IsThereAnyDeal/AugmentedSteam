@@ -2,6 +2,7 @@ v5.0
 -----
 + Added platform icons to items on the wishlist page
 + Added active listing total to marketplace homepage
++ Added WSGF certifications for 21:9 (Ultra-Widescreen) and 4K UHD certified games
 : Fixed bug where card drops were calculating incorrectly for some users
 
 v4.9.1

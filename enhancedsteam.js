@@ -3027,6 +3027,7 @@ function rewrite_string(string) {
 	string = string.replace(/%27/g, "'");
 	string = string.replace(/%26/g, "&");
 	string = string.replace(/%21/g, "!");
+	string = string.replace(/%2C/g, ",");
 	return string;
 }
 
