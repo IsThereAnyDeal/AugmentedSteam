@@ -413,7 +413,7 @@ var localized_strings,
                 options_hltb: "Afficher les informations de HowLongToBeat.com",
 				options_pcgw: "Afficher les liens PCGagmingWiki",
                 options_steamdb: "Afficher les liens SteamDB",
-                options_wsgf: "Afficher les informations WSGF (écran large)",
+                options_wsgf: "Afficher les informations du WSGF (écran large)",
 				options_show_package_info:"Afficher les infos sur les packages pour toutes les apps",
                 options_carousel_description: "Afficher les descriptions des apps dans le carrousel du magasin",
                 options_profile_links: "Afficher les liens de profil de ",
@@ -520,6 +520,13 @@ var localized_strings,
 					includes: "Contient (__num__) articles",
 					header: "Packs incluant ce jeu",
 					bundle_count: "Nombre de fois que ce jeu a été dans un pack"
+				},
+				wsgf: {
+					gold: "Cette médaille est accordée aux jeux qui ont reçu des scores du WSGF pour leur support du __type__, et sont certifiés pour le __type__.",
+					silver: "Cette médaille est accordée aux jeux qui ont reçu un rang calculé de B pour leur support du __type__. Tous ces jeux n'ont pas de défaut majeur, mais ils ont au moins un qui les empêche d'avoir un score parfait.",
+					limited: "Ce score est accordé aux jeux qui ont reçu un rang calculé de C pour leur support du __type__. Tous ces jeux ont un certain niveau de support du __type__ mais ont des problèmes importants.",
+					incomplete: "Incomplet",
+					unsupported: "Ce score est accordé aux jeux qui ne supportent pas le __type__. Le jeu peut être injouable en __type__, ou l'image est étirée pour s'adapter à la fenêtre. Le format de l'image n'est pas respecté."
 				}
             },
             "tur": {
