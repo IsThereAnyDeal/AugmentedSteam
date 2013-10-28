@@ -1787,9 +1787,7 @@ function endless_scrolling() {
 							search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
 							search_page = search_page + 1;
 							processing = false;
-							if (window.location.search.match(/specials=1/)) {
-								remove_non_specials();
-							}	
+							remove_non_specials();
 						});
 					}	
 				}
@@ -1799,11 +1797,13 @@ function endless_scrolling() {
 }
 
 function remove_non_specials() {
-	$(".search_result_row").each(function(index) {		
-		if (!($(this).html().match(/<strike>/))) {
-			hide_node($(this)[0]);
-		}
-	});
+	if (window.location.search.match(/specials=1/)) {
+		$(".search_result_row").each(function(index) {		
+			if (!($(this).html().match(/<strike>/))) {
+				hide_node($(this)[0]);
+			}
+		});
+	}
 }
 
 // Changes Steam Greenlight pages
@@ -3656,9 +3656,7 @@ $(document).ready(function(){
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
 						endless_scrolling();
-						if (window.location.search.match(/specials=1/)) {
-							remove_non_specials();
-						}
+						remove_non_specials();						
 						break;
 
 					// Storefront-front only
