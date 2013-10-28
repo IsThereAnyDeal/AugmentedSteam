@@ -787,23 +787,6 @@ function remove_from_wishlist(appid) {
 	http.send("action=remove&appid=" + encodeURIComponent(appid));
 }
 
-function find_purchase_date(appname) {
-	get_http('http://store.steampowered.com/account/', function (txt) {
-		var earliestPurchase = $(txt).find("#store_transactions .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
-			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
-
-		var found = 0;
-		xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
-			if (found === 0) {
-				if (purchaseDate) {
-					node.innerHTML = node.innerHTML + localized_strings[language].purchase_date.replace("__date__", purchaseDate);
-					found = 1;
-				}
-			}
-		});
-	});
-}
-
 function pack_split(node, ways) {
 	var price_text = $(node).find(".discount_final_price").html();
 	var at_end, comma, places = 2;
@@ -2028,8 +2011,8 @@ function add_widescreen_certification(appid) {
 								
 								var html = "<div class='block underlined_links'><div class='block_header'><h4>WSGF Widescreen Certifications</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
 								
-								if (wsg) { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-								if (mmg) { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+								if (wsg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+								if (mmg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 								if (uws != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(uws_icon) + "' height='120' title='" + escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 								if (fkg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(fkg_icon) + "' height='120' title='" + escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 								if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top'></div>" + localized_strings[language].rating_details + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
@@ -2649,14 +2632,25 @@ function dlc_data_for_dlc_page() {
 	});
 }
 
-function check_if_purchased() {
-	// find the date a game was purchased if owned
-	var ownedNode = $(".game_area_already_owned");
+function display_purchase_date() {
+    if ($(".game_area_already_owned").length > 0) {
+        var appname = $(".apphub_AppName").text();
 
-	if (ownedNode.length > 0) {
-		var appname = $(".apphub_AppName")[0].innerText;
-		find_purchase_date(appname);
-	}
+        get_http('https://store.steampowered.com/account/', function (txt) {
+    		var earliestPurchase = $(txt).find("#store_transactions .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
+    			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
+    
+    		var found = 0;
+    		xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
+    			if (found === 0) {
+    				if (purchaseDate) {
+    					node.innerHTML = node.innerHTML + localized_strings[language].purchase_date.replace("__date__", purchaseDate);
+    					found = 1;
+    				}
+    			}
+    		});
+    	});
+	}    
 }
 
 function bind_ajax_content_highlighting() {
@@ -3620,7 +3614,7 @@ $(document).ready(function(){
 
 						drm_warnings();
 						add_metracritic_userscore();
-						check_if_purchased();
+						display_purchase_date()
 
 						fix_community_hub_links();
 						add_widescreen_certification(appid);
