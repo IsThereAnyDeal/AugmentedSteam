@@ -2429,48 +2429,41 @@ function account_total_spent() {
 
 function inventory_market_helper() {
 	storage.get(function(settings) {
-		if (settings.showinvmarket === undefined) { settings.showinvmarket = false; storage.set({'showinvmarket': settings.showinvmarket}); }
+		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; storage.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showinvmarket) {
+
 			if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class=item_market_actions id=es_item0 height=10></div>"); }
 			if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class=item_market_actions id=es_item1 height=10></div>"); }
 			$('#es_item0').html("");
 			$('#es_item1').html("");
-			switch (info) {
+			
+			var desc, appid, item, item_name;
+						
+			if($('#iteminfo0').css("display") == "block") {	desc = $('#iteminfo0_item_tags_content').html(); item = 0; } 
+			else { desc = $('#iteminfo1_item_tags_content').html();	item = 1; }
+						
+			if (desc.match(/Not Marketable/)) {	$('#es_item0').remove(); $('#es_item1').remove(); return; }
+			
+			switch (item) {
 				case 0:
-					info = 1;
-					var desc = $('#iteminfo0_item_tags_content')[0].innerHTML;
-					var appid = $('#iteminfo0_item_owner_actions')[0].innerHTML;
-					appid = appid.match(/steamcommunity.com\/my\/gamecards\/(.+)\/">/)[1];
-					if (desc.indexOf("Not Marketable") <= 0) {
-						var item_name = $("#iteminfo0_item_name")[0].innerHTML;
-						get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
-							var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-							if (item_price) {
-								$("#es_item0").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>Items for sale</a>");
-							}
-						});
-					} else {
-						$('#es_item0').remove();
-					}
+					if ($('#iteminfo0_item_owner_actions').html() != "") { appid = $('#iteminfo0_item_owner_actions').html().match(/steamcommunity.com\/my\/gamecards\/(.+)\/("|\?)/)[1]; }
+					else { $('#es_item0').remove();	return; }
+					item_name = $("#iteminfo0_item_name").html();
 					break;
 				case 1:
-					info = 0;
-					var desc = $('#iteminfo1_item_tags_content')[0].innerHTML;
-					var appid = $('#iteminfo1_item_owner_actions')[0].innerHTML;
-					appid = appid.match(/steamcommunity.com\/my\/gamecards\/(.+)\/">/)[1];
-					if (desc.indexOf("Not Marketable") <= 0) {
-						var item_name = $("#iteminfo1_item_name")[0].innerHTML;
-						get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
-							var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-							if (item_price) {
-								$("#es_item1").html("Lowest sale price: " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>Items for sale</a>");
-							}
-						});
-					} else {
-						$('#es_item1').remove();
-					}
+					if ($('#iteminfo1_item_owner_actions').html() != "") { appid = $('#iteminfo1_item_owner_actions').html().match(/steamcommunity.com\/my\/gamecards\/(.+)\/("|\?)/)[1]; }
+					else { $('#es_item1').remove();	return; }
+					item_name = $("#iteminfo1_item_name").html();
 					break;
 			}
+			
+			get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
+				var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);					
+				if (item_price) {
+					if (item == 0) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>" + localized_strings[language].view_marketplace + "</a>"); }
+					if (item == 1) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>" + localized_strings[language].view_marketplace + "</a>"); }
+				}
+			});	
 		}
 	});
 }
@@ -2661,6 +2654,7 @@ function bind_ajax_content_highlighting() {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
 				//if (node.id == "search_result_container") add_cart_to_search();
+				
 				if (node.classList && node.classList.contains("tab_row")) {
 					hide_early_access();
 					start_highlighting_node(node);
@@ -3735,7 +3729,7 @@ $(document).ready(function(){
 						
 					case /^\/id\/.+\/inventory\/.*/.test(window.location.pathname):
 						$(".itemHolder").bind("click", function() {
-							window.setTimeout(inventory_market_helper,100);
+							window.setTimeout(inventory_market_helper,500);
 						});
 						break;
 
