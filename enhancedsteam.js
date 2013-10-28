@@ -1787,7 +1787,7 @@ function endless_scrolling() {
 							search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
 							search_page = search_page + 1;
 							processing = false;
-							if (window.location.search.match(/^\?specials/)) {
+							if (window.location.search.match(/specials=1/)) {
 								remove_non_specials();
 							}	
 						});
@@ -2668,6 +2668,7 @@ function bind_ajax_content_highlighting() {
 				if (node.id == "search_result_container") {
 					endless_scrolling();
 					start_highlights_and_tags();
+					remove_non_specials();
 				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
@@ -3655,7 +3656,7 @@ $(document).ready(function(){
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
 						endless_scrolling();
-						if (window.location.search.match(/^\?specials/)) {
+						if (window.location.search.match(/specials=1/)) {
 							remove_non_specials();
 						}
 						break;
