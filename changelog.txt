@@ -4,6 +4,7 @@ v5.0
 + Added active listing total to marketplace homepage
 + Added WSGF certifications for 21:9 (Ultra-Widescreen) and 4K UHD certified games
 : Fixed bug where card drops were calculating incorrectly for some users
+: Fixed a bug where sales on packs were not correctly highlighting
 
 v4.9.1
 -----

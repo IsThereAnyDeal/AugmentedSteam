@@ -2710,6 +2710,10 @@ function start_highlights_and_tags(){
 				});
 			} else {
 				var subid = get_subid(node.href || $(node).find("a")[0].href);
+				
+				if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+				if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
+			
 				if (subid) {
 					get_sub_details (subid, node);
 				}
