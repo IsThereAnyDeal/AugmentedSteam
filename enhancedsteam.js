@@ -2446,12 +2446,12 @@ function inventory_market_helper() {
 			
 			switch (item) {
 				case 0:
-					if ($('#iteminfo0_item_owner_actions').html() != "") { appid = $('#iteminfo0_item_owner_actions').html().match(/steamcommunity.com\/my\/gamecards\/(.+)\/("|\?)/)[1]; }
+					if ($('#iteminfo0_item_owner_actions').html() != "") { appid = $('#iteminfo0_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2]; }
 					else { $('#es_item0').remove();	return; }
 					item_name = $("#iteminfo0_item_name").html();
 					break;
 				case 1:
-					if ($('#iteminfo1_item_owner_actions').html() != "") { appid = $('#iteminfo1_item_owner_actions').html().match(/steamcommunity.com\/my\/gamecards\/(.+)\/("|\?)/)[1]; }
+					if ($('#iteminfo1_item_owner_actions').html() != "") { appid = $('#iteminfo1_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2]; }
 					else { $('#es_item1').remove();	return; }
 					item_name = $("#iteminfo1_item_name").html();
 					break;
