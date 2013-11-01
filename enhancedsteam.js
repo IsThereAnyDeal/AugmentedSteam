@@ -284,7 +284,9 @@ function highlight_node(node, color) {
 }
 
 function hide_node(node) {
-	if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row")) {
+	if ($(node).hasClass("info")) { node = $(node).parent()[0]; }
+	
+	if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item")) {
 		$(node).css("display", "none");
 		search_threshhold = search_threshhold - 58;
 	}
@@ -3020,6 +3022,7 @@ function rewrite_string(string) {
 	string = string.replace(/%27/g, "'");
 	string = string.replace(/%26/g, "&");
 	string = string.replace(/%21/g, "!");
+	string = string.replace(/%3F/g, "?");
 	string = string.replace(/%2C/g, ",");
 	return string;
 }
