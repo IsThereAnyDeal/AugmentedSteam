@@ -10,7 +10,6 @@ body {
 	font-family:"Arial";
 	font-size:18px;
 	margin-top: 90px;
-	color:FFF;
 	width: 170px;
 	top: 0px;
 	bottom: 0px;
@@ -35,7 +34,32 @@ body {
 .tab_row {
 	position: relative;
 	height: 25px;
-	border: 1px solid #4D4B48;
+	width: 95%;
+	margin-left: 5%;
+	border: 1px solid black;
+	background-color: #4d4b49;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.selected {
+	width: 100%;
+	margin-left: 0%;
+	border: 1px solid #8bb9e0;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.selected::after {    
+    content: '';
+	width: 0; 
+	height: 0;
+	display: block;
+	border-top: 14px solid transparent;
+	border-bottom: 14px solid transparent;	
+	border-right:14px solid black;
+	margin-left: 157px;
+	margin-top: -24px;
 }
 
 .tab_row:hover {

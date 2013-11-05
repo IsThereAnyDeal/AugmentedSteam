@@ -1228,7 +1228,7 @@ var localized_strings,
                     offer_ends: "Oferta finaliza",
                     pwyw: "Paque quanto você quiser",
                     includes: "Incluem (__num__) itens",
-                    header: "Pacotes que incluem este jogo"
+                    header: "Pacotes que incluem este jogo",
                     bundle_count: "Número de vezes que este jogos esteve em um pacote"
                 }                
             },

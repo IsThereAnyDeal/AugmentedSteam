@@ -189,43 +189,38 @@ function save_options() {
 
 // toggles pages
 function load_store_tab() {
-	document.getElementById("maincontent_store").style.display = "block";
-	document.getElementById("maincontent_community").style.display = "none";
-	document.getElementById("maincontent_news").style.display = "none";
-	document.getElementById("maincontent_about").style.display = "none";
-	document.getElementById("maincontent_credits").style.display = "none";
+	$(".content").css("display", "none");
+	$("#maincontent_store").css("display", "block");	
+	$(".selected").removeClass("selected");
+	$("#heading_store").addClass("selected");
 }
 
 function load_community_tab() {
-	document.getElementById("maincontent_store").style.display = "none";
-	document.getElementById("maincontent_community").style.display = "block";
-	document.getElementById("maincontent_news").style.display = "none";
-	document.getElementById("maincontent_about").style.display = "none";
-	document.getElementById("maincontent_credits").style.display = "none";
+	$(".content").css("display", "none");
+	$("#maincontent_community").css("display", "block");
+	$(".selected").removeClass("selected");
+	$("#heading_community").addClass("selected");
 }
 
 function load_news_tab() {
-	document.getElementById("maincontent_store").style.display = "none";
-	document.getElementById("maincontent_community").style.display = "none";
-	document.getElementById("maincontent_news").style.display = "block";
-	document.getElementById("maincontent_about").style.display = "none";
-	document.getElementById("maincontent_credits").style.display = "none";
+	$(".content").css("display", "none");	
+	$("#maincontent_news").css("display", "block");
+	$(".selected").removeClass("selected");
+	$("#heading_news").addClass("selected");
 }
 
 function load_about_tab() {
-	document.getElementById("maincontent_store").style.display = "none";
-	document.getElementById("maincontent_community").style.display = "none";
-	document.getElementById("maincontent_news").style.display = "none";
-	document.getElementById("maincontent_about").style.display = "block";
-	document.getElementById("maincontent_credits").style.display = "none";
+	$(".content").css("display", "none");
+	$("#maincontent_about").css("display", "block");
+	$(".selected").removeClass("selected");
+	$("#heading_about").addClass("selected");
 }
 
 function load_credits_tab() {
-	document.getElementById("maincontent_store").style.display = "none";
-	document.getElementById("maincontent_community").style.display = "none";
-	document.getElementById("maincontent_news").style.display = "none";
-	document.getElementById("maincontent_about").style.display = "none";
-	document.getElementById("maincontent_credits").style.display = "block";
+	$(".content").css("display", "none");	
+	$("#maincontent_credits").css("display", "block");
+	$(".selected").removeClass("selected");
+	$("#heading_credits").addClass("selected");
 }
 
 function toggle_stores() {
