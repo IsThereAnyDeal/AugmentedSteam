@@ -3721,6 +3721,12 @@ $(document).ready(function(){
 						change_user_background();
 						fix_profile_image_not_found();
 						break;
+						
+					case /^\/(?:id|profiles)\/.+\/profile/.test(window.location.pathname):
+						add_community_profile_links();
+						change_user_background();
+						fix_profile_image_not_found();
+						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
