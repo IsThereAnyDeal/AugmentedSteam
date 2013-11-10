@@ -109,8 +109,8 @@ function ensure_appid_deferred(appid) {
 // check if the user is signed in
 function is_signed_in() {
 	if (!signedInChecked) {
-		var steamLogin = getCookie("steamLogin");
-		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "");
+		var steamRememberLogin = getCookie("steamRememberLogin");
+		if (steamRememberLogin) isSignedIn = steamRememberLogin;
 		signedInChecked = true;
 	}
 	return isSignedIn;
@@ -3278,6 +3278,17 @@ function add_gamelist_achievements() {
 	});
 }
 
+function add_gamelist_notincommon() {
+	if($("label").attr("for")=="show_common_games") {
+		controls = $("#gameslist_controls").html();
+		controls_length = $("#gameslist_controls").html().length;
+		controls_notincommon=controls.slice(0,controls_length-60);
+		controls_notincommon+="<input type=\"checkbox\" id=\"show_notincommon_games\" onchange=\"ShowGamesInUnCommon( this );\"><label for=\"show_notincommon_games\">"+localized_strings[language].notincommon_label+"</label>";
+		controls_notincommon+="<br><div style=\"clear: right;\"></div>";
+		$("#gameslist_controls").html(controls_notincommon);
+	}
+}
+
 function get_gamecard(t) {
 	if (t && t.match(/(?:id|profiles)\/.+\/gamecards\/(\d+)/)) return RegExp.$1;
 	else return null;
@@ -3634,6 +3645,7 @@ $(document).ready(function(){
 						add_gamelist_achievements();
 						add_gamelist_sort();
 						add_gamelist_filter();
+						add_gamelist_notincommon();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
