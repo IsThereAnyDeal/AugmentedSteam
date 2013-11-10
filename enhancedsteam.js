@@ -3500,13 +3500,13 @@ function add_badge_view_options() {
 			$(this).css("float", "left");
 			$(this).css("margin-right", "15px");
 			$(this).css("margin-bottom", "15px");
-			if (stats && stats.match(/^\d+/)) {
+			if (stats && stats.match(/\d+/)) {
 				if (!($(this).find("span[class$='es_game_stats']").length > 0)) {
 					$(this).find("div[class$='badge_content']").first().append("<span class='es_game_stats' style='color: #5491cf; font-size: 12px; white-space: nowrap;'>" + stats + "</span>");
 				}
 			}
 			if ($(this).find("div[class$='badge_progress_info']").text()) {
-				var card = $(this).find("div[class$='badge_progress_info']").text().trim().match(/^(\d+)\D*(\d+)/)[1] + " / " + $(this).find("div[class$='badge_progress_info']").text().trim().match(/^(\d+)\D*(\d+)/)[2];
+				var card = $(this).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/)[1] + " / " + $(this).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/)[2];
 				$(this).find("div[class$='badge_progress_info']").text(card);
 			}	
 		});
