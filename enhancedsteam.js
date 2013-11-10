@@ -685,6 +685,7 @@ function add_wishlist_filter() {
 	var html  = "<span>" + localized_strings[language].show + ": </span>";
 		html += "<label class='es_sort' id='es_wl_all'><input type='radio' name='es_wl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
 		html += "<label class='es_sort' id='es_wl_sale'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_discount + "</a></span></label>";
+		html += "<label class='es_sort' id='es_wl_coupon'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_coupon + "</a></span></label>";
 		html += "</div>";
 
 	$('#wishlist_sort_options').append("<p>" + html);
@@ -696,6 +697,14 @@ function add_wishlist_filter() {
 	$('#es_wl_sale').on('click', function() {
 		$('.wishlistRow').each(function () {
 			if (!$(this).html().match(/discount_block_inline/)) {
+				$(this).css('display', 'none');
+			}
+		});
+	});
+	
+	$('#es_wl_coupon').on('click', function() {
+		$('.wishlistRow').each(function () {
+			if (!$(this)[0].outerHTML.match(/es_highlight_coupon/)) {
 				$(this).css('display', 'none');
 			}
 		});
