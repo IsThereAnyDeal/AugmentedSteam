@@ -2464,8 +2464,8 @@ function inventory_market_helper() {
 			get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
 				var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);					
 				if (item_price) {
-					if (item == 0) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>" + localized_strings[language].view_marketplace + "</a>"); }
-					if (item == 1) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank'>" + localized_strings[language].view_marketplace + "</a>"); }
+					if (item == 0) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>"); }
+					if (item == 1) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>"); }
 				}
 			});	
 		}
@@ -2658,6 +2658,12 @@ function bind_ajax_content_highlighting() {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
 				//if (node.id == "search_result_container") add_cart_to_search();
+				
+				if (node.classList && node.classList.contains("inventory_page")) {
+					$(".itemHolder").bind("click", function() {
+						window.setTimeout(inventory_market_helper,500);
+					});	
+				}
 				
 				if (node.classList && node.classList.contains("tab_row")) {
 					hide_early_access();
@@ -3744,6 +3750,7 @@ $(document).ready(function(){
 						break;
 						
 					case /^\/id\/.+\/inventory\/.*/.test(window.location.pathname):
+						bind_ajax_content_highlighting();
 						$(".itemHolder").bind("click", function() {
 							window.setTimeout(inventory_market_helper,500);
 						});

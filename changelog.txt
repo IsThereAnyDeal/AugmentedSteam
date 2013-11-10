@@ -5,9 +5,11 @@ v5.0
 + Added WSGF certifications for 21:9 (Ultra-Widescreen) and 4K UHD certified games
 + Added support for IndieGameStand price histories
 + Redesigned the navigation on the options page
++ Added support for showing booster pack market prices in your inventory
 : Fixed bug where card drops were calculating incorrectly for some users
 : Fixed a bug where sales on packs were not correctly highlighting
 : Made a ton of behind-the-scenes bugfixes and code updates
+: Fixed a bug that caused inventory links to become stale after selling an item
 
 v4.9.1
 -----
