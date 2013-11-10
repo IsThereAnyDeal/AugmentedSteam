@@ -83,7 +83,8 @@ function save_options() {
 			$("#nuuvem").prop('checked'),
 			$("#shinyloot").prop('checked'),
 			$("#dlgamer").prop('checked'),			
-			$("#humblestore").prop('checked')
+			$("#humblestore").prop('checked'),
+			$("#indiegamestand").prop('checked')
 	];
 
 	// Community Options
@@ -253,6 +254,7 @@ function toggle_stores() {
 				$("#shinyloot").prop('checked', settings.stores[18]);
 				$("#dlgamer").prop('checked', settings.stores[19]);
 				$("#humblestore").prop('checked', settings.stores[20]);
+				$("#indiegamestand").prop('checked', settings.stores[21]);
 			});
 			break;
 	}
@@ -305,7 +307,7 @@ function load_options() {
 		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
 
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
