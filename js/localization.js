@@ -134,7 +134,7 @@ var localized_strings,
             loading: "Loading...",
 			using_store: "You are using the Steam store for the __current__ region.",
 			using_store_return: "Click here to go back to the __base__ store.",
-            notincommon_label: "Filter to games you do not own",
+            notincommon_label: "Filter to games that you do not own",
             library: {
                 private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
             },
