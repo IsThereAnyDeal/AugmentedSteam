@@ -3307,7 +3307,22 @@ function totalsize() {
 
 	mbt = (mbt / 1024);
 	var total = (gbt + mbt).toFixed(2);
-	$(".clientConnChangingText").before("<p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p>");
+	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p></div.");
+}
+
+function totaltime() {
+	var html = $("html").html();
+	var txt = html.match(/var rgGames = (.+);/);
+	var games = JSON.parse(txt[1]);
+	var time = 0;
+	$.each(games, function(index, value) {
+		if (value["hours_forever"]) {
+			time_str=value["hours_forever"].replace(",","");
+			time+=parseFloat(time_str);
+		}
+	});
+	var total = time.toFixed(1);
+	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings[language].total_time + ":</p><p class='clientConnMachineText'>" +total + " Hours</p></div>");
 }
 
 function add_gamelist_sort() {
@@ -3412,6 +3427,28 @@ function add_gamelist_achievements() {
 			}
 		}
 	});
+}
+
+function add_gamelist_notincommon() {
+	if($("label").attr("for")=="show_common_games") {
+		controls = $("#gameslist_controls").html();
+		controls_length = $("#gameslist_controls").html().length;
+		controls_notincommon=controls.slice(0,controls_length-60);
+		controls_notincommon+="<input type=\"checkbox\" id=\"es_gl_show_notincommon_games\"><label for=\"es_gl_show_notincommon_games\">"+localized_strings[language].notincommon_label+"</label>";
+		controls_notincommon+="<br><div style=\"clear: right;\"></div>";
+		$("#gameslist_controls").html(controls_notincommon);
+		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + is_signed_in() + '&include_played_free_games=1&format=json', function (txt) {
+			var data = JSON.parse(txt);
+			$("#es_gl_show_notincommon_games").on("change", function() {
+				if (data.response && Object.keys(data.response).length > 0) {
+				library_all_games = data.response.games;
+				$.each(library_all_games, function(i,obj){
+					$("#game_"+obj.appid).toggle();
+				});
+			}
+			});
+		});
+	}
 }
 
 function get_gamecard(t) {
@@ -3778,10 +3815,12 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+						totaltime();
 						totalsize();
 						add_gamelist_achievements();
 						add_gamelist_sort();
 						add_gamelist_filter();
+						add_gamelist_notincommon();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
