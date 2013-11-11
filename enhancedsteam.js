@@ -3438,9 +3438,9 @@ function add_gamelist_notincommon() {
 		controls_notincommon=controls.slice(0,controls_length-60);
 		controls_notincommon+="<input type=\"checkbox\" id=\"es_gl_show_notincommon_games\"><label for=\"es_gl_show_notincommon_games\">"+localized_strings[language].notincommon_label+"</label>";
 		controls_notincommon+="<br><div style=\"clear: right;\"></div>";
-		$("#gameslist_controls").html(controls_notincommon);
 		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + is_signed_in() + '&include_played_free_games=1&format=json', function (txt) {
 			var data = JSON.parse(txt);
+			$("#gameslist_controls").html(controls_notincommon);
 			$("#es_gl_show_notincommon_games").on("change", function() {
 				if (data.response && Object.keys(data.response).length > 0) {
 				library_all_games = data.response.games;
