@@ -109,8 +109,8 @@ function ensure_appid_deferred(appid) {
 // check if the user is signed in
 function is_signed_in() {
 	if (!signedInChecked) {
-		var steamRememberLogin = getCookie("steamRememberLogin");
-		if (steamRememberLogin) isSignedIn = steamRememberLogin;
+		var steamLogin = getCookie("steamLogin");
+		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "");
 		signedInChecked = true;
 	}
 	return isSignedIn;
