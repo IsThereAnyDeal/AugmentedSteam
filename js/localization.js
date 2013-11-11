@@ -39,6 +39,7 @@ var localized_strings,
             options_steamdb: "Show SteamDB Links",
             options_wsgf: "Show WSGF (Widescreen) Info",
 			options_show_package_info:"Show Package Info For All Apps",
+			options_show_steamchart_info: "Show SteamCharts.com Info",
             options_carousel_description: "Show App Descriptions On Storefront Carousel",
             options_profile_links: "Show profile links to",
             options_total_spent: "Show \"Total Spent\" on Account Page",
@@ -155,7 +156,13 @@ var localized_strings,
 				limited: "This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues.",
 				incomplete: "Incomplete",
 				unsupported: "This score is awarded to games that have no __type__ support.  The game may be unplayable in __type__, or the image is stretched to fit the window.  Correct aspect ratio is not retained."
-			}	
+			},
+			charts: {
+				current: "Current Players",
+				playing_now: "playing now",
+				peaktoday: "today's peak",
+				peakall: "all-time peak"
+			}
         };
 
         localized_strings = {

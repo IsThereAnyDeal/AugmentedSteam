@@ -306,3 +306,38 @@ img.platform_small, .platform_img {
 .blotter_single_item_detail .blotter_control_container, .blotter_single_item_detail .hr {
 	display: block !important;
 }
+
+#chart-heading img {
+	vertical-align: middle;
+}
+
+#chart-image {
+	float: left;
+	padding: 12px 0;
+}
+
+.chart-stat {
+	float: left;
+	text-align: center;
+	width: 120px;
+	margin-top: 25px;
+	padding-left: 15px;
+}
+.chart-stat span {
+	font-size: 2em;
+	font-weight: 300;
+}
+
+.chart-content {
+	background-color: #1a1a1a;
+	width: 592px;	
+	padding: 2px 12px;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.chart-footer {
+	font-size: 11px;
+	float: right;
+	padding-top: 5px;
+}
