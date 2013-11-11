@@ -1,3 +1,7 @@
+v5.1
+-----
+
+
 v5.0
 -----
 + Redesigned the navigation on the options page
