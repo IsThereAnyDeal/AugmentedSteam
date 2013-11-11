@@ -695,6 +695,7 @@ function add_wishlist_filter() {
 	});
 	
 	$('#es_wl_sale').on('click', function() {
+		$('.wishlistRow').css('display', 'block');
 		$('.wishlistRow').each(function () {
 			if (!$(this).html().match(/discount_block_inline/)) {
 				$(this).css('display', 'none');
@@ -703,6 +704,7 @@ function add_wishlist_filter() {
 	});
 	
 	$('#es_wl_coupon').on('click', function() {
+		$('.wishlistRow').css('display', 'block');
 		$('.wishlistRow').each(function () {
 			if (!$(this)[0].outerHTML.match(/es_highlight_coupon/)) {
 				$(this).css('display', 'none');
