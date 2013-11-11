@@ -3171,7 +3171,22 @@ function totalsize() {
 
 	mbt = (mbt / 1024);
 	var total = (gbt + mbt).toFixed(2);
-	$(".clientConnChangingText").before("<p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p>");
+	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p></div.");
+}
+
+function totaltime() {
+	var html = $("html").html();
+	var txt = html.match(/var rgGames = (.+);/);
+	var games = JSON.parse(txt[1]);
+	var time = 0;
+	$.each(games, function(index, value) {
+		if (value["hours_forever"]) {
+			time_str=value["hours_forever"].replace(",","");
+			time+=parseFloat(time_str);
+		}
+	});
+	var total = time.toFixed(1);
+	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings[language].total_time + ":</p><p class='clientConnMachineText'>" +total + " Hours</p></div>");
 }
 
 function add_gamelist_sort() {
@@ -3652,6 +3667,7 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+						totaltime();
 						totalsize();
 						add_gamelist_achievements();
 						add_gamelist_sort();
