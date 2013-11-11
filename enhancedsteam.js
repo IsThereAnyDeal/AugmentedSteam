@@ -1,4 +1,4 @@
-﻿// version 5.0
+﻿// version 5.1
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
@@ -854,6 +854,30 @@ function add_package_info_button() {
 			});
 		}
 	});
+}
+
+function add_steamchart_info(appid) {
+	if ($(".game_area_dlc_bubble").length == 0) {
+		storage.get(function(settings) {
+			if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; storage.set({'show_steamchart_info': settings.show_steamchart_info}); }
+			if (settings.show_steamchart_info) {
+				get_http("http://api.enhancedsteam.com/charts/?appid=" + appid, function (txt) {
+					if (txt.length > 0) {
+						var data = JSON.parse(txt);
+						if (data["chart"]) {
+							var html = '<div id="steam-charts" class="game_area_description"><h2>' + localized_strings[language].charts.current + '</h2>';
+							html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="http://cdn4.steampowered.com/v/gfx/apps/' + appid + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
+							html += '<span class="num">' + escapeHTML(data["chart"]["current"]) + '</span><br>' + localized_strings[language].charts.playing_now + '</div><div class="chart-stat">';
+							html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + localized_strings[language].charts.peaktoday + '</div><div class="chart-stat">';
+							html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + localized_strings[language].charts.peakall + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span></div></div>';
+							
+							$("#game_area_sys_req").before(html);
+						}
+					}
+				});
+			}
+		});
+	}
 }
 
 function send_age_verification() {
@@ -3687,6 +3711,7 @@ $(document).ready(function(){
 						add_remove_from_wishlist_button(appid);
 						add_4pack_breakdown();
 						add_package_info_button();
+						add_steamchart_info(appid);
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
