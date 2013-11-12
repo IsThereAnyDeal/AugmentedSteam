@@ -5,7 +5,7 @@ body {
 	font-family:"Arial" sans-serif;
 }
 
-#heading {
+#side_bar {
 	position: fixed;
 	text-align:center;
 	font-family:"Arial";
@@ -16,8 +16,8 @@ body {
 	bottom: 0px;
 	border-right: 1px solid #4D4B48;
 }
-#heading a { color: #b8b6b4; text-decoration: none; }
-#heading a:hover { color: #efffef; text-decoration: none; }
+#side_bar a { color: #b8b6b4; text-decoration: none; }
+#side_bar a:hover { color: #efffef; text-decoration: none; }
 
 #header {
 	position: fixed;
@@ -40,6 +40,7 @@ body {
 	background-color: #4d4b49;
 	border-top-left-radius: 6px;
 	border-bottom-left-radius: 6px;
+	display:block;
 }
 
 .selected {
@@ -51,7 +52,7 @@ body {
 }
 
 .selected::after {    
-    content: '';
+	content: '';
 	width: 0; 
 	height: 0;
 	display: block;
@@ -75,7 +76,7 @@ body {
 }
 #footer {
 	position:fixed;
-    bottom: 0;
+	bottom: 0;
 	width:99%;
 	text-align: right;
 	color: FFF;
@@ -92,8 +93,7 @@ body {
 	
 	width: 78px;
 	height: 21px;
-	
-	line-height: 18px;
+	margin-left:3px;
 	font-size: 11px;
 	text-align: center;
 	
@@ -104,7 +104,7 @@ body {
 	background-image: url( ../img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
-		
+
 	border: 1px solid #8bc53f;
 	color: #8bc53f;
 	
@@ -114,20 +114,12 @@ body {
 	cursor: pointer;
 }
 
-.dropdown {
+select {
 	background-color: #262626;
 	color: #B8B6B4;
-	
 	border: 1px solid #8bc53f;
-	
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: 6px;
-	padding-right: 5px;
-}
-
-.help {
-	padding-left: 5px;
+	padding: 5px;
+	margin-left:10px;
 }
 ul {
 	list-style:none;
@@ -139,7 +131,8 @@ li {
 }
 .header {
 	font-weight: bold;
-	margin-bottom:5px;
+	margin-bottom:2px;
+	margin-top:5px;
 	padding:0;
 }
 .translator,.language {
@@ -147,4 +140,50 @@ li {
 }
 .language {
 	width:90px;
+}
+.settings_color, .settings_check {
+	display:inline-block;
+}
+.settings_check {
+	width:365px;
+}
+.help {
+	height:18px;
+	width:18px;
+	display:inline-block;
+	background:url('../img/questionmark.png') no-repeat center;
+	background-size:18px 18px;
+	margin-left:4px;
+	vertical-align:text-bottom;
+}
+#store_stores {
+	padding:3px 10px 3px 0;
+	border:1px solid #8BC53F;
+	display:inline-block;
+	margin-left:25px;
+}
+#profile_link_text {
+	margin-left:13px;
+	display:inline-block;
+}
+#profile_links {
+	margin-left:15px;
+	margin-top:10px;
+}
+textarea {
+	background-color: #262626;
+	color: #B8B6B4;
+	border: 1px solid #8bc53f;
+	padding: 5px;
+	margin-left:10px;
+	font-family:"Arial" sans-serif;
+}
+a {
+	cursor:pointer;
+}
+.site_icon {
+	width:16px;
+	height:16px;
+	margin:0 4px 0 0;
+	vertical-align: text-bottom;
 }

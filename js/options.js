@@ -64,28 +64,28 @@ function save_options() {
 	
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
-			$("#steam").prop('checked'),
-			$("#amazonus").prop('checked'),
-			$("#impulse").prop('checked'),
-			$("#gamersgate").prop('checked'),
-			$("#greenmangaming").prop('checked'),
-			$("#gamefly").prop('checked'),
-			$("#origin").prop('checked'),
-			$("#uplay").prop('checked'),
-			$("#indiegalastore").prop('checked'),
-			$("#gametap").prop('checked'),
-			$("#gamesplanet").prop('checked'),
-			$("#getgames").prop('checked'),
-			$("#desura").prop('checked'),
-			$("#gog").prop('checked'),
-			$("#dotemu").prop('checked'),
-			$("#beamdog").prop('checked'),
-			$("#adventureshop").prop('checked'),
-			$("#nuuvem").prop('checked'),
-			$("#shinyloot").prop('checked'),
-			$("#dlgamer").prop('checked'),			
-			$("#humblestore").prop('checked'),
-			$("#indiegamestand").prop('checked')
+	$("#steam").prop('checked'),
+	$("#amazonus").prop('checked'),
+	$("#impulse").prop('checked'),
+	$("#gamersgate").prop('checked'),
+	$("#greenmangaming").prop('checked'),
+	$("#gamefly").prop('checked'),
+	$("#origin").prop('checked'),
+	$("#uplay").prop('checked'),
+	$("#indiegalastore").prop('checked'),
+	$("#gametap").prop('checked'),
+	$("#gamesplanet").prop('checked'),
+	$("#getgames").prop('checked'),
+	$("#desura").prop('checked'),
+	$("#gog").prop('checked'),
+	$("#dotemu").prop('checked'),
+	$("#beamdog").prop('checked'),
+	$("#adventureshop").prop('checked'),
+	$("#nuuvem").prop('checked'),
+	$("#shinyloot").prop('checked'),
+	$("#dlgamer").prop('checked'),			
+	$("#humblestore").prop('checked'),
+	$("#indiegamestand").prop('checked')
 	];
 
 	// Community Options
@@ -192,80 +192,75 @@ function save_options() {
 
 // toggles pages
 function load_store_tab() {
-	$(".content").css("display", "none");
-	$("#maincontent_store").css("display", "block");	
+	$(".content").hide();
+	$("#maincontent_store").show();	
 	$(".selected").removeClass("selected");
-	$("#heading_store").addClass("selected");
+	$("#nav_store").addClass("selected");
 }
 
 function load_community_tab() {
-	$(".content").css("display", "none");
-	$("#maincontent_community").css("display", "block");
+	$(".content").hide();
+	$("#maincontent_community").show();
 	$(".selected").removeClass("selected");
-	$("#heading_community").addClass("selected");
+	$("#nav_community").addClass("selected");
 }
 
 function load_news_tab() {
-	$(".content").css("display", "none");	
-	$("#maincontent_news").css("display", "block");
+	$(".content").hide();	
+	$("#maincontent_news").show();
 	$(".selected").removeClass("selected");
-	$("#heading_news").addClass("selected");
+	$("#nav_news").addClass("selected");
 }
 
 function load_about_tab() {
-	$(".content").css("display", "none");
-	$("#maincontent_about").css("display", "block");
+	$(".content").hide();
+	$("#maincontent_about").show();
 	$(".selected").removeClass("selected");
-	$("#heading_about").addClass("selected");
+	$("#nav_about").addClass("selected");
 }
 
 function load_credits_tab() {
-	$(".content").css("display", "none");	
-	$("#maincontent_credits").css("display", "block");
+	$(".content").hide();	
+	$("#maincontent_credits").show();
 	$(".selected").removeClass("selected");
-	$("#heading_credits").addClass("selected");
+	$("#nav_credits").addClass("selected");
 }
 
 function toggle_stores() {
 	var all_stores = $("#stores_all").prop('checked');
 	switch (all_stores) {
 		case true: 
-			document.getElementById("store_stores").style.display = "none";
-			break;
+		$("#store_stores").hide();
+		break;
 		case false:
-			document.getElementById("store_stores").style.display = "block";
-			chrome.storage.sync.get(function(settings) {
-				$("#steam").prop('checked', settings.stores[0]);
-				$("#amazonus").prop('checked', settings.stores[1]);
-				$("#impulse").prop('checked', settings.stores[2]);
-				$("#gamersgate").prop('checked', settings.stores[3]);
-				$("#greenmangaming").prop('checked', settings.stores[4]);
-				$("#gamefly").prop('checked', settings.stores[5]);
-				$("#origin").prop('checked', settings.stores[6]);
-				$("#uplay").prop('checked', settings.stores[7]);
-				$("#indiegalastore").prop('checked', settings.stores[8]);
-				$("#gametap").prop('checked', settings.stores[9]);
-				$("#gamesplanet").prop('checked', settings.stores[10]);
-				$("#getgames").prop('checked', settings.stores[11]);
-				$("#desura").prop('checked', settings.stores[12]);
-				$("#gog").prop('checked', settings.stores[13]);
-				$("#dotemu").prop('checked', settings.stores[14]);
-				$("#beamdog").prop('checked', settings.stores[15]);
-				$("#adventureshop").prop('checked', settings.stores[16]);
-				$("#nuuvem").prop('checked', settings.stores[17]);
-				$("#shinyloot").prop('checked', settings.stores[18]);
-				$("#dlgamer").prop('checked', settings.stores[19]);
-				$("#humblestore").prop('checked', settings.stores[20]);
-				$("#indiegamestand").prop('checked', settings.stores[21]);
-			});
-			break;
-	}
+		$("#store_stores").show();
+		chrome.storage.sync.get(function(settings) {
+			$("#steam").prop('checked', settings.stores[0]);
+			$("#amazonus").prop('checked', settings.stores[1]);
+			$("#impulse").prop('checked', settings.stores[2]);
+			$("#gamersgate").prop('checked', settings.stores[3]);
+			$("#greenmangaming").prop('checked', settings.stores[4]);
+			$("#gamefly").prop('checked', settings.stores[5]);
+			$("#origin").prop('checked', settings.stores[6]);
+			$("#uplay").prop('checked', settings.stores[7]);
+			$("#indiegalastore").prop('checked', settings.stores[8]);
+			$("#gametap").prop('checked', settings.stores[9]);
+			$("#gamesplanet").prop('checked', settings.stores[10]);
+			$("#getgames").prop('checked', settings.stores[11]);
+			$("#desura").prop('checked', settings.stores[12]);
+			$("#gog").prop('checked', settings.stores[13]);
+			$("#dotemu").prop('checked', settings.stores[14]);
+			$("#beamdog").prop('checked', settings.stores[15]);
+			$("#adventureshop").prop('checked', settings.stores[16]);
+			$("#nuuvem").prop('checked', settings.stores[17]);
+			$("#shinyloot").prop('checked', settings.stores[18]);
+			$("#dlgamer").prop('checked', settings.stores[19]);
+			$("#humblestore").prop('checked', settings.stores[20]);
+			$("#indiegamestand").prop('checked', settings.stores[21]);
+		});
+break;
 }
-
-// Loads changelog.txt
-jQuery.get('changelog.txt', function(data) {
-	document.getElementById("maincontent_news").innerHTML = "Changelog:<br><textarea rows=28 cols=100 readonly>" + data + "</textarea>";
-});
+}
 
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
@@ -432,13 +427,17 @@ function load_options() {
 		
 		$("#language").attr('value', settings.language);
 		
+		jQuery.get('changelog.txt', function(data) {
+			$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
+		});
+
 		load_translation()
 	});
 }
 
 function load_translation() {
 	chrome.storage.sync.get(function(settings) {
-				
+
 		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		settings.language = $("#language").val();			
 		$("#language").attr('value', settings.language);
@@ -447,12 +446,12 @@ function load_translation() {
 		localization_promise.done(function(){
 			document.title = "Enhanced Steam " + localized_strings[settings.language].options;
 			
-			$("#header_store").text(localized_strings[settings.language].store);
-			$("#header_community").text(localized_strings[settings.language].community);
-			$("#header_news").text(localized_strings[settings.language].news);
-			$("#header_about").text(localized_strings[settings.language].about);
-			$("#header_credits").text(localized_strings[settings.language].credits);
-			$("#header_donate").text(localized_strings[settings.language].donate);
+			$("#nav_store").text(localized_strings[settings.language].store);
+			$("#nav_community").text(localized_strings[settings.language].community);
+			$("#nav_news").text(localized_strings[settings.language].news);
+			$("#nav_about").text(localized_strings[settings.language].about);
+			$("#nav_credits").text(localized_strings[settings.language].credits);
+			$("#nav_donate").text(localized_strings[settings.language].donate);
 			
 			$("#language_text").text(localized_strings[settings.language].language);
 			
@@ -464,7 +463,7 @@ function load_translation() {
 			$("#highlight_guest_text").text(localized_strings[settings.language].options_guest);
 			$("#highlight_friends_wishlist_text").text(localized_strings[settings.language].options_friends_wishlist);
 			$("#highlight_excludef2p_text").text(localized_strings[settings.language].options_excludef2p);
-						
+
 			$("#tag_text").text(localized_strings[settings.language].tag);
 			$("#tag_owned_text").text(localized_strings[settings.language].options_owned);
 			$("#tag_wishlist_text").text(localized_strings[settings.language].options_wishlist);
@@ -479,6 +478,7 @@ function load_translation() {
 			$("#hide_owned_text").text(localized_strings[settings.language].options_owned);
 			$("#hide_early_access_text").text(localized_strings[settings.language].options_hide_early_access);
 			
+			$("#library_text").text(localized_strings[settings.language].options_library_header);
 			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
 			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options_library_f2p);
 
@@ -486,11 +486,13 @@ function load_translation() {
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
 			$("#store_hide_new_heading").text(localized_strings[settings.language].options_hide_new_heading);
 			$("#store_replace_account_name").text(localized_strings[settings.language].options_replace_account_name);
+			$("#store_general").text(localized_strings[settings.language].options_general);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options_show_regionwarning);
 			$("#send_age_info_text").text(localized_strings[settings.language].options_send_age_info);
 			$("#contscroll_text").text(localized_strings[settings.language].options_contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
+			$("#store_lowestprice_header").text(localized_strings[settings.language].options_lowestprice_header);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
 			$("#store_hltb_text").text(localized_strings[settings.language].options_hltb);
 			$("#store_pcgw_text").text(localized_strings[settings.language].options_pcgw);
@@ -500,7 +502,7 @@ function load_translation() {
 			$("#store_show_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
-			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].all);
+			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
 			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
@@ -511,7 +513,7 @@ function load_translation() {
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
 			$("#hideactivelistings_text").text(localized_strings[settings.language].options_hideactivelistings);
 			$("#steamcardexchange_text").text(localized_strings[settings.language].options_steamcardexchange);
-						
+
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_coupon_default").text(localized_strings[settings.language].theworddefault);
@@ -528,6 +530,7 @@ function load_translation() {
 			$("#tag_friends_rec_color_default").text(localized_strings[settings.language].theworddefault);
 			
 			$("#es_about_text").html(localized_strings[settings.language].options_about_text);
+			$("#changelog_text").text(localized_strings[settings.language].options_changelog);
 			
 			$("#programming_text").text(localized_strings[settings.language].programming);
 			$("#translation_text").text(localized_strings[settings.language].translation);
@@ -535,7 +538,7 @@ function load_translation() {
 			$("#save_store").text(localized_strings[settings.language].save);
 			$("#save_community").text(localized_strings[settings.language].save);
 		});	
-	});
+});
 }
 
 function clear_settings() {
