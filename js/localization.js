@@ -699,6 +699,7 @@ var localized_strings,
                 includes: "(__num__) öğe içerir",
                 header: "Bu oyunu içeren bundlelar",
 				bundle_count: "Bu oyunun bir bundle içerisinde bulunma sayısı"
+                },
 			wsgf: {
 				gold: "Bu madalya; söz konusu oyunun __type__ desteği ve __type__ onaylı olması nedeniyle aldığı yüksek puanlamalardan dolayı, WSGF tarafından verilmiştir.",
 				silver: "Bu madalya; söz konusu oyunun 2. sınıf __type__ desteği nedeniyle verilmiştir. Bütün bu oyunların büyük kusurları olmamasıyla beraber sadece ufak hatalardan dolayı tam puanlık bir ödüle layık görülememişlerdir.",
