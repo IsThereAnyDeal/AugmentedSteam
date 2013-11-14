@@ -7,923 +7,429 @@
 <head><title>Enhanced Steam Options</title></head>
 <body>
 
-<div id="header">
-	<div id="header_logo"><img src="img/logo.png"></div>
-</div>
-
-<div id="heading">
-	<div class="tab_row selected" id="heading_store"><a href="#" id="nav_store"><div id="header_store">Store</div></a></div>
-	<div class="tab_row" id="heading_community"><a href="#" id="nav_community"><div id="header_community">Community</div></a></div>
-	<div class="tab_row" id="heading_news"><a href="#" id="nav_news"><div id="header_news">News</div></a></div>
-	<div class="tab_row" id="heading_about"><a href="#" id="nav_about"><div id="header_about">About</div></a></div>
-	<div class="tab_row" id="heading_credits"><a href="#" id="nav_credits"><div id="header_credits">Credits</div></a></div>
-	<div class="tab_row" id="heading_donate"><a href="http://www.EnhancedSteam.com/donate.php" id="nav_donate" target="_blank"><div id="header_donate">Donate</div></a></div>
-</div>
-
-<div id="contentwrapper">	
-	<div id="maincontent_store" class="content">
-		<table border=0>
-			<tr>
-				<td colspan=4>
-					<b><div id="language_text" class="text">Language</div></b>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan=3>
-					<select id="language">
-						<option value="eng">English</option>
-						<option value="cze">čeština</option>
-						<option value="ger">Deutsch</option>
-						<option value="spa">Español</option>
-						<option value="fre">Français</option>
-						<option value="ita">Italiano</option>
-						<option value="jap">日本語</option>
-						<option value="dut">Nederlands</option>
-						<option value="pol">Polski</option>
-						<option value="bra">Português do Brasil</option>
-						<option value="rus">Русский</option>
-						<option value="sch">中文(简体)‬</option>
-						<option value="tur">Türkçe</option>
-					</select>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-			
-			<tr>
-				<td colspan=5>
-					<b><div id="highlight_text" class="text">Highlight</div></b>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_owned">
-				</td>
-				<td height=30>
-					<div id="highlight_owned_text" class="text">Items You Own</div>
-				</td>
-				<td>
-					<input type="color" id="highlight_owned_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="highlight_owned_default" class="btn">Default</button>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=1" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_wishlist">
-				</td>
-				<td height=30>
-					<div id="highlight_wishlist_text" class="text">Items On Your Wishlist</div>
-				</td>
-				<td>
-					<input type="color" id="highlight_wishlist_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="highlight_wishlist_default" class="btn">Default</button>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=2" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>				
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_coupon">
-				</td>
-				<td height=30>
-					<div id="highlight_coupon_text" class="text">Items With Coupons</div>
-				</td>
-				<td>
-					<input type="color" id="highlight_coupon_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="highlight_coupon_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_inv_gift">
-				</td>
-				<td height=30>
-					<div id="highlight_gift_text" class="text">Items Stored As Gift</div>
-				</td>
-				<td>
-					<input type="color" id="highlight_inv_gift_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="highlight_inv_gift_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_inv_guestpass">
-				</td>
-				<td height=30>
-					<div id="highlight_guest_text" class="text">Items You Have A Guest Pass For</div>
-				</td>
-				<td>
-					<input type="color" id="highlight_inv_guestpass_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="highlight_inv_guestpass_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_friends_want">
-				</td>
-				<td height=30>
-					<div id="highlight_friends_wishlist_text" class="text">Items Your Friends Have Wishlisted</div>
-				</td>
-				<td>
-					<input type="color" id="highlight_friends_want_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="highlight_friends_want_color_default" class="btn">Default</button>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="highlight_excludef2p">
-				</td>
-				<td height=30>
-					<div id="highlight_excludef2p_text" class="text">Exclude Free To Play Games From Highlighting</div>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-
-			<tr>
-				<td colspan=4>
-					<b><div id="tag_text" class="text">Tag</div></b>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_owned">
-				</td>
-				<td height=30>
-					<div id="tag_owned_text" class="text">Items You Own</div>
-				</td>
-				<td>
-					<input type="color" id="tag_owned_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_owned_color_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_wishlist">
-				</td>
-				<td height=30>
-					<div id="tag_wishlist_text" class="text">Items On Your Wishlist</div>
-				</td>
-				<td>
-					<input type="color" id="tag_wishlist_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_wishlist_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_coupon">
-				</td>
-				<td height=30>
-					<div id="tag_coupon_text" class="text">Items With Coupons</div>
-				</td>
-				<td>
-					<input type="color" id="tag_coupon_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_coupon_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_inv_gift">
-				</td>
-				<td height=30>
-					<div id="tag_gift_text" class="text">Items Stored As Gift</div>
-				</td>
-				<td>
-					<input type="color" id="tag_inv_gift_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_inv_gift_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_inv_guestpass">
-				</td>
-				<td height=30>
-					<div id="tag_guest_text" class="text">Items You Have A Guest Pass For</div>
-				</td>
-				<td>
-					<input type="color" id="tag_inv_guestpass_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_inv_guestpass_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_friends_want">
-				</td>
-				<td height=30>
-					<div id="tag_friends_wishlist_text" class="text">Items Your Friends Have Wishlisted</div>
-				</td>
-				<td>
-					<input type="color" id="tag_friends_want_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_friends_want_color_default" class="btn">Default</button>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_friends_own">
-				</td>
-				<td height=30>
-					<div id="tag_friends_own_text" class="text">Items Your Friends Own</div>
-				</td>
-				<td>
-					<input type="color" id="tag_friends_own_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_friends_own_color_default" class="btn">Default</button>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="tag_friends_rec">
-				</td>
-				<td height=30>
-					<div id="tag_friends_rec_text" class="text">Items Your Friends Recommend</div>
-				</td>
-				<td>
-					<input type="color" id="tag_friends_rec_color" class="colorbutton">
-				</td>
-				<td>
-					<button id="tag_friends_rec_color_default" class="btn">Default</button>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-			
-			<tr>
-				<td colspan=5>
-					<b><div id="hide_text" class="text">Hide</div></b>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="hide_owned">
-				</td>
-				<td height=30>
-					<div id="hide_owned_text" class="text">Items You Own</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="hide_early_access">
-				</td>
-				<td height=30>
-					<div id="hide_early_access_text" class="text">Early Access Items in New Releases</div>
-				</td>
-			</tr>
-			
-			<tr><td>&nbsp;</td></tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="showlowestprice">
-				</td>
-				<td height=30>
-					<div id="store_lowestprice_text" class="text">Show Price History Information</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=5" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>				
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td colspan=3>
-					<table border=0>
-						<tr>
-							<td>
-								<div id="lowestprice_stores_text" class="text">Stores</div>
-							</td>
-							<td>
-								<input type="checkbox" id="stores_all"><span id="lowestprice_stores_all_text">All</span>
-							</td>
-						</tr>
-						<tr>
-							<td>&nbsp;</td>
-							<td>
-								<table id="store_stores" style="display: none" border=0>
-									<tr>
-										<td>
-											<input type="checkbox" id="steam">Steam
-										</td>
-										<td>
-											<input type="checkbox" id="amazonus">Amazon US
-										</td>
-										<td>
-											<input type="checkbox" id="impulse">GameStop PC
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="gamersgate">GamersGate
-										</td>
-										<td>
-											<input type="checkbox" id="greenmangaming">GreenMan Gaming
-										</td>
-										<td>
-											<input type="checkbox" id="gamefly">GameFly PC
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="origin">Origin PC
-										</td>
-										<td>
-											<input type="checkbox" id="uplay">Uplay PC
-										</td>
-										<td>
-											<input type="checkbox" id="indiegalastore">IndieGala Store
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="desura">Desura
-										</td>
-										<td>
-											<input type="checkbox" id="gog">GOG
-										</td>
-										<td>
-											<input type="checkbox" id="humblestore">Humble Store
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="gametap">GamesTap
-										</td>
-										<td>
-											<input type="checkbox" id="gamesplanet">GamesPlanet
-										</td>
-										<td>
-											<input type="checkbox" id="getgames">GetGames
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="beamdog">Beamdog
-										</td>
-										<td>
-											<input type="checkbox" id="adventureshop">Adventure Shop
-										</td>
-										<td>
-											<input type="checkbox" id="nuuvem">Nuuvem
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="shinyloot">ShinyLoot
-										</td>
-										<td>
-											<input type="checkbox" id="dlgamer">DLGamer
-										</td>
-										<td>
-											<input type="checkbox" id="dotemu">DotEmu
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="checkbox" id="indiegamestand">IndieGameStand
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						
-					</table>
-				</td>				
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-			
-			<tr>
-				<td colspan=5>
-					<b><div id="library_text" class="text">Library (BETA)</div></b>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showlibrarymenu">
-				</td>
-				<td height=30>
-					<div id="store_show_library_text" class="text">Show Library button in header</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showlibraryf2p">
-				</td>
-				<td height=30>
-					<div id="store_show_library_f2p_text" class="text">Show played free to play games and demos in library</div>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-						
-			<tr>
-				<td colspan=5>
-					<b><div id="options_header_text" class="text">Header</div></b>
-				</td>
-			</tr>
-						
-			<tr>
-				<td>
-					<input type="checkbox" id="hideinstallsteambutton">
-				</td>
-				<td height=30>
-					<div id="store_hide_install_text" class="text">Hide "Install Steam" button</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="hideaboutmenu">
-				</td>
-				<td height=30>
-					<div id="store_hide_about_menu" class="text">Hide About link</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="hidecommunitynew">
-				</td>
-				<td height=30>
-					<div id="store_hide_new_heading" class="text">Hide "NEW" over username</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="replaceaccountname">
-				</td>
-				<td height=30>
-					<div id="store_replace_account_name" class="text">Replace account name with community name</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showfakeccwarning">
-				</td>
-				<td height=30>
-					<div id="header_showfakeccwarning_text" class="text">Show warning if browsing in non-account region</div>
-				</td>
-			</tr>
-
-			<tr><td>&nbsp;</td></tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="send_age_info">
-				</td>
-				<td height=30>
-					<div id="send_age_info_text" class="text">Automatically send age verification when requested</div>
-				</td>								
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="contscroll">
-				</td>
-				<td height=30>
-					<div id="contscroll_text" class="text">Enable Continuous Scrolling of Search Results</div>
-				</td>								
-			</tr>
-			
-			<tr><td>&nbsp;</td></tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showdrm">
-				</td>
-				<td height=30>
-					<div id="store_drm_text" class="text">Show 3rd Party DRM Warnings</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=3" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>				
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="showmcus">
-				</td>
-				<td height=30>
-					<div id="store_metacritic_text" class="text">Show Metacritic User Scores</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=10" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>						
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showhltb">
-				</td>
-				<td height=30>
-					<div id="store_hltb_text" class="text">Show HowLongToBeat.com Information</div>
-				</td>						
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showsteamdb">
-				</td>
-				<td height=30>
-					<div id="store_steamdb_text" class="text">Show SteamDB Links</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showpcgw">
-				</td>
-				<td height=30>
-					<div id="store_pcgw_text" class="text">Show PCGamingWiki Links</div>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="showwsgf">
-				</td>
-				<td height=30>
-					<div id="store_wsgf_text" class="text">Show WSGF (Widescreen) Info</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=15" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>								
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="show_steamchart_info">
-				</td>
-				<td height=30>
-					<div id="store_steamchart_info_text" class="text">Show SteamCharts.com Info</div>
-				</td>
-				</td>								
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="show_package_info">
-				</td>
-				<td height=30>
-					<div id="store_package_info_text" class="text">Show Package Info For All Apps</div>
-				</td>
-				</td>								
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="show_carousel_descriptions">
-				</td>
-				<td height=30>
-					<div id="store_carousel_descriptions_text" class="text">Show App Descriptions On Storefront Carousel</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=26" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
-		</table>
-		
+	<div id="header">
+		<div id="header_logo"><img src="img/logo.png"></div>
 	</div>
 
-	<div id="maincontent_community" class="content" style="display: none">
-		<table>
-			<tr>
-				<td>
-					<input type="checkbox" id="showtotal">
-				</td>
-				<td height=30>
-					<div id="total_spent_text" class="text">Show "Total Spent" on Account Page</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=6" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>					
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showmarkettotal">
-				</td>
-				<td height=30>
-					<div id="market_total_text" class="text">Show Transaction Summary on Market</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=16" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showinvmarket">
-				</td>
-				<td height=30>
-					<div id="inventory_market_text" class="text">Show Market Price on Inventory Page (Experimental!)</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=20" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showesbg">
-				</td>
-				<td height=30>
-					<div id="es_background_text" class="text">Set Custom Background on Edit Profile Screen</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=17" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="showallachievements">
-				</td>
-				<td height=30>
-					<div id="allachievements_text" class="text">Show achievement stats on "All Games" page</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=18" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
+	<div id="side_bar">
+		<a class="tab_row selected" id="nav_store">Store</a>
+		<a class="tab_row" id="nav_community">Community</a>
+		<a class="tab_row" id="nav_news">News</a>
+		<a class="tab_row" id="nav_about">About</a>
+		<a class="tab_row" id="nav_credits">Credits</a>
+		<a class="tab_row" id="nav_donate" href="http://www.EnhancedSteam.com/donate.php" target="_blank">Donate</a>
+	</div>
 
-			<tr>
-				<td>
-					<input type="checkbox" id="showgreenlightbanner">
-				</td>
-				<td height=30>
-					<div id="greenlight_banner_text" class="text">Replace Steam Greenlight Banner</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=14" target="_blank"><img src="img/questionmark.png" height="16px" /></a>
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="checkbox" id="hideactivelistings">
-				</td>
-				<td height=30>
-					<div id="hideactivelistings_text" class="text">Hide all active listings on market homepage by default</div>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<input type="checkbox" id="steamcardexchange">
-				</td>
-				<td height=30>
-					<div id="steamcardexchange_text" class="text">Show SteamCardExchange links on badges</div>
-				</td>
-				<td class="help">
-					<a href="http://enhancedsteam.com/featuredetail.php?id=19" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
-				</td>
-			</tr>
-
-			<tr>
-				<td></td>
-				<table border=0>
+	<div id="contentwrapper">	
+		<div id="maincontent_store" class="content">
+			<ul>
+				<li class="header" id="language_text">Language</li>
+				<select id="language">
+					<option value="eng">English</option>
+					<option value="cze">čeština</option>
+					<option value="ger">Deutsch</option>
+					<option value="spa">Español</option>
+					<option value="fre">Français</option>
+					<option value="ita">Italiano</option>
+					<option value="jap">日本語</option>
+					<option value="dut">Nederlands</option>
+					<option value="pol">Polski</option>
+					<option value="bra">Português do Brasil</option>
+					<option value="rus">Русский</option>
+					<option value="sch">中文(简体)‬</option>
+					<option value="tur">Türkçe</option>
+				</select>
+				<li class="header" id="highlight_text">Highlight</li>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_owned">
+						<label for="highlight_owned" id="highlight_owned_text">Items You Own</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=1" target="_blank" class="help"></a>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="highlight_owned_color" class="colorbutton">
+						<button id="highlight_owned_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_wishlist">
+						<label for="highlight_wishlist" id="highlight_wishlist_text">Items On Your Wishlist</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=2" target="_blank" class="help"></a>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="highlight_wishlist_color" class="colorbutton">
+						<button id="highlight_wishlist_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_coupon">
+						<label for="highlight_coupon" id="highlight_coupon_text">Items With Coupons</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="highlight_coupon_color" class="colorbutton">
+						<button id="highlight_coupon_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_inv_gift">
+						<label for="highlight_inv_gift" id="highlight_gift_text">Items Stored As Gift</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="highlight_inv_gift_color" class="colorbutton">
+						<button id="highlight_inv_gift_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_inv_guestpass">
+						<label for="highlight_inv_guestpass" id="highlight_guest_text">Items You Have A Guest Pass For</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="highlight_inv_guestpass_color" class="colorbutton">
+						<button id="highlight_inv_guestpass_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_friends_want">
+						<label for="highlight_friends_want" id="highlight_friends_wishlist_text">Items Your Friends Have Wishlisted</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="highlight_friends_want_color" class="colorbutton">
+						<button id="highlight_friends_want_color_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="highlight_excludef2p">
+						<label for="highlight_excludef2p_text" id="highlight_friends_wishlist_text">Exclude Free To Play Games From Highlighting</label>
+					</li>
+				</div>
+				<li class="header" id="tag_text">Tag</li>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_owned">
+						<label for="tag_owned" id="tag_owned_text">Items You Own</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_owned_color" class="colorbutton">
+						<button id="tag_owned_color_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_wishlist">
+						<label for="tag_wishlist" id="tag_wishlist_text">Items On Your Wishlist</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_wishlist_color" class="colorbutton">
+						<button id="tag_wishlist_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_coupon">
+						<label for="tag_coupon" id="tag_coupon_text">Items With Coupons</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_coupon_color" class="colorbutton">
+						<button id="tag_coupon_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_inv_gift">
+						<label for="tag_inv_gift" id="tag_gift_text">Items Stored As Gift</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_inv_gift_color" class="colorbutton">
+						<button id="tag_inv_gift_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_inv_guestpass">
+						<label for="tag_inv_guestpass" id="tag_guest_text">Items You Have A Guest Pass For</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_inv_guestpass_color" class="colorbutton">
+						<button id="tag_inv_guestpass_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_friends_want">
+						<label for="tag_friends_want" id="tag_friends_wishlist_text">Items Your Friends Have Wishlisted</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_friends_want_color" class="colorbutton">
+						<button id="tag_friends_want_color_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_friends_own">
+						<label for="tag_friends_own" id="tag_friends_own_text">Items Your Friends Own</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_friends_own_color" class="colorbutton">
+						<button id="tag_friends_own_color_default" class="btn">Default</button>
+					</li>
+				</div>
+				<div>
+					<li class="settings_check">
+						<input type="checkbox" id="tag_friends_rec">
+						<label for="tag_friends_rec" id="tag_friends_rec_text">Items Your Friends Recommend</label>
+					</li>
+					<li class="settings_color">
+						<input type="color" id="tag_friends_rec_color" class="colorbutton">
+						<button id="tag_friends_rec_color_default" class="btn">Default</button>
+					</li>
+				</div>
+				<li class="header" id="hide_text">Hide</li>
+				<li>
+					<input type="checkbox" id="hide_owned">
+					<label for="hide_owned" id="hide_owned_text">Items You Own</label>
+				</li>
+				<li>
+					<input type="checkbox" id="hide_early_access">
+					<label for="hide_early_access" id="hide_early_access_text">Early Access Items in New Releases</label>
+				</li>
+				<li class="header" id="store_lowestprice_header">Price History Information</li>
+				<li>
+					<input type="checkbox" id="showlowestprice">
+					<label for="showlowestprice" id="store_lowestprice_text">Show</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=5" target="_blank" class="help"></a>
+				</li>
+				<li><input type="checkbox" id="stores_all"><label for="stores_all" id="lowestprice_stores_all_text">Compare All Stores</label></li>
+				<table id="store_stores" style="display: none" border=0>
 					<tr>
-						<td rowspan=3 valign=top><div id="profile_link_text" class="text">Show profile links to:</div>
-							<a href="http://enhancedsteam.com/featuredetail.php?id=21" target="_blank"><img height="16px" src="img/questionmark.png" /></a>
+						<td>
+							<input type="checkbox" id="steam"><label for="steam">Steam</label>
 						</td>
-						<td valign=center><input type="checkbox" id="profile_steamgifts"><td><img src="img/ico/steamgifts.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamGifts
-						<td valign=center><input type="checkbox" id="profile_steamtrades"><td><img src="img/ico/steamtrades.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamTrades
-						<td valign=center><input type="checkbox" id="profile_steamrep"><td><img src="img/ico/steamrep.ico" width="16" height="16" border="0" /><td><font color="8bc53f">SteamRep
+						<td>
+							<input type="checkbox" id="amazonus"><label for="amazonus">Amazon US</label>
+						</td>
+						<td>
+							<input type="checkbox" id="impulse"><label for="impulse">GameStop PC</label>
+						</td>
 					</tr>
 					<tr>
-						<td valign=center><input type="checkbox" id="profile_wastedonsteam"><td><img src="img/ico/wastedonsteam.ico" width="16" height="16" border="0" /><td><font color="8bc53f">Wasted On Steam
-						<td valign=center><input type="checkbox" id="profile_sapi"><td><img src="img/ico/sapi.ico" width="16" height="16" border="0" /><td><font color="8bc53f">sAPI
-						<td valign=center><input type="checkbox" id="profile_backpacktf"><td><img src="img/ico/backpacktf.ico" width="16" height="16" border="0" /><td><font color="8bc53f">backpack.tf
+						<td>
+							<input type="checkbox" id="gamersgate"><label for="gamersgate">GamersGate</label>
+						</td>
+						<td>
+							<input type="checkbox" id="greenmangaming"><label for="greenmangaming">GreenMan Gaming</label>
+						</td>
+						<td>
+							<input type="checkbox" id="gamefly"><label for="gamefly">GameFly PC</label>
+						</td>
 					</tr>
 					<tr>
-						<td valign=center><input type="checkbox" id="profile_astats"><td><img src="img/ico/achievementstats.ico" width="16" height="16" border="0" /><td><font color="8bc53f">Achievement Stats
-						<td valign=center>
-						<td valign=center>
+						<td>
+							<input type="checkbox" id="origin"><label for="origin">Origin PC</label>
+						</td>
+						<td>
+							<input type="checkbox" id="uplay"><label for="uplay">Uplay PC</label>
+						</td>
+						<td>
+							<input type="checkbox" id="indiegalastore"><label for="indiegalastore">IndieGala Store</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="checkbox" id="desura"><label for="desura">Desura</label>
+						</td>
+						<td>
+							<input type="checkbox" id="gog"><label for="gog">GOG</label>
+						</td>
+						<td>
+							<input type="checkbox" id="humblestore"><label for="humblestore">Humble Store</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="checkbox" id="gametap"><label for="gametap">GamesTap</label>
+						</td>
+						<td>
+							<input type="checkbox" id="gamesplanet"><label for="gamesplanet">GamesPlanet</label>
+						</td>
+						<td>
+							<input type="checkbox" id="getgames"><label for="getgames">GetGames</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="checkbox" id="beamdog"><label for="beamdog">Beamdog</label>
+						</td>
+						<td>
+							<input type="checkbox" id="adventureshop"><label for="adventureshop">Adventure Shop</label>
+						</td>
+						<td>
+							<input type="checkbox" id="nuuvem"><label for="nuuvem">Nuuvem</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="checkbox" id="shinyloot"><label for="shinyloot">ShinyLoot</label>
+						</td>
+						<td>
+							<input type="checkbox" id="dlgamer"><label for="dlgamer">DLGamer</label>
+						</td>
+						<td>
+							<input type="checkbox" id="dotemu"><label for="dotemu">DotEmu</label>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="checkbox" id="indiegamestand"><label for="indiegamestand">IndieGameStand</label>
+						</td>
 					</tr>
 				</table>
-				</td>
-			</tr>
-		</table>
-		
-	</div>
+				<li class="header" id="library_text">Library (BETA)</li>
+				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
+				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
+				<li class="header" id="options_header_text">Header</li>
+				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
+				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide About link</label></li>
+				<li><input type="checkbox" id="hidecommunitynew"><label for="hidecommunitynew"id="store_hide_new_heading">Hide "NEW" over username</label></li>
+				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
+				<li class="header" id="store_general">General</li>
+				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
+				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
+				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable Continuous Scrolling of Search Results</label></li>
+				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd Party DRM Warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" target="_blank" class="help"></a></li>
+				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic User Scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" target="_blank" class="help"></a></li>
+				<li><input type="checkbox" id="showhltb"><label for="showhltb" id="store_hltb_text">Show HowLongToBeat.com Information</label></li>
+				<li><input type="checkbox" id="showsteamdb"><label for="showsteamdb" id="store_steamdb_text">Show SteamDB Links</label></li>
+				<li><input type="checkbox" id="showpcgw"><label for="showpcgw" id="store_pcgw_text">Show PCGamingWiki Links</label></li>
+				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) Info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" target="_blank" class="help"></a></li>
+				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com Info</label></li>
+				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show Package Info For All Apps</label></li>
+				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show App Descriptions On Storefront Carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" target="_blank" class="help"></a></li>
+			</ul>
+		</div>
 
-	<div id="maincontent_news" class="content" style="display: none">
-		Changelog:
-	</div>
+		<div id="maincontent_community" class="content" style="display: none">
+			<ul>
+				<li class="header" id="store_general">General</li>
+				<li>
+					<input type="checkbox" id="showtotal"><label for="showtotal" id="total_spent_text">Show "Total Spent" on Account Page</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=6" target="_blank" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showmarkettotal"><label for="showmarkettotal" id="market_total_text">Show Transaction Summary on Market</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=16" target="_blank" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showinvmarket"><label for="showinvmarket" id="inventory_market_text">Show Market Price on Inventory Page</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=20" target="_blank" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showesbg"><label for="showesbg" id="es_background_text">Set Custom Background on Edit Profile Screen</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=17" target="_blank" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showallachievements"><label for="showallachievements" id="allachievements_text">Show achievement stats on "All Games" page</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=18" target="_blank" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text">Replace Steam Greenlight Banner</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=14" target="_blank" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on market homepage by default</label>
+				</li>
+				<li>
+					<input type="checkbox" id="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text">Show SteamCardExchange links on badges</label>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=19" target="_blank" class="help"></a>
+				</li>
+				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" target="_blank" class="help"></a>
+				<ul id="profile_links">
+					<li>
+						<input type="checkbox" id="profile_steamgifts">
+						<label for="profile_steamgifts">
+							<img src="img/ico/steamgifts.ico" class="site_icon" />SteamGifts
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_steamtrades">
+						<label for="profile_steamtrades">
+							<img src="img/ico/steamtrades.ico" class="site_icon" />SteamTrades
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_steamrep">
+						<label for="profile_steamrep">
+							<img src="img/ico/steamrep.ico" class="site_icon" />SteamRep
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_wastedonsteam">
+						<label for="profile_wastedonsteam">
+							<img src="img/ico/wastedonsteam.ico" class="site_icon" />Wasted On Steam
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_sapi">
+						<label for="profile_sapi">
+							<img src="img/ico/sapi.ico" class="site_icon" />sAPI
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_backpacktf">
+						<label for="profile_backpacktf">
+							<img src="img/ico/backpacktf.ico" class="site_icon" />backpack.tf
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_astats">
+						<label for="profile_astats">
+							<img src="img/ico/achievementstats.ico" class="site_icon" />Achievement Stats
+						</label>
+					</li>
+				</ul>
+			</ul>
 
-	<div id="maincontent_about" class="content" style="display: none">
-		<div id="es_about_text" class="text"></div>
-	</div>
-	
-	<div id="maincontent_credits" class="content" style="display: none">
-		<table>
-			<tr>
-				<td colspan=4>
-					<b><div id="programming_text" class="text">Programming</div></b>
-				</td>
-			</tr>
+		</div>
 
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30 colspan=3>
-					<div class="text">Jason Shackles (jshackles)</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30 colspan=3>
-					<div class="text">rjacksonm1</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30 colspan=3>
-					<div class="text">Tomas Duda</div>
-				</td>
-			</tr>		
-			
-			<tr><td>&nbsp;</td></tr>
-			
-			<tr>
-				<td colspan=4>
-					<b><div id="translation_text" class="text">Translation</div></b>
-				</td>
-			</tr>
+		<div id="maincontent_news" class="content" style="display: none">
+			<div id="changelog_text" class="header">Changelog:</div>
+		</div>
 
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Spanish:</div>
-				</td>
-				<td>
-					<div class="text">sharkiller</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Russian:</div>
-				</td>
-				<td>
-					<div class="text">Vyacheslav Konchits</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">German:</div>
-				</td>
-				<td>
-					<div class="text">Timmaeh Elbert</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Japanese:</div>
-				</td>
-				<td>
-					<div class="text">planicrand</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">French:</div>
-				</td>
-				<td>
-					<div class="text">Yanuut</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Czech:</div>
-				</td>
-				<td>
-					<div class="text">Daniel Peukert</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Italian:</div>
-				</td>
-				<td>
-					<div class="text">Andrea Brandi</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Portuguese:</div>
-				</td>
-				<td>
-					<div class="text">Johnywalves</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Chinese</div>
-				</td>
-				<td>
-					<div class="text">Bin Dong</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					&nbsp;&nbsp;
-				</td>
-				<td height=30>
-					<div class="text">Polish</div>
-				</td>
-				<td>
-					<div class="text">mrmahon</div>
-				</td>
-			</tr>
-		
-		</table>	
-	</div>
+		<div id="maincontent_about" class="content" style="display: none">
+			<div id="es_about_text"></div>
+		</div>
 
-	<div id="footer">
-		<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a><br>by jshackles
+		<div id="maincontent_credits" class="content" style="display: none">
+			<ul class="credits">
+				<li class="header" id="programming_text">Programming</li>
+				<li>Jason Shackles (jshackles)</li>
+				<li>rjacksonm1</li>
+				<li>Tomas Duda</li>
+			</ul>
+			<ul class="credits">
+				<li class="header" id="translation_text">Translation</li>
+				<div><li class="language">Spanish:</li><li class="translator">sharkiller</li></div>
+				<div><li class="language">Russian:</li><li class="translator">Vyacheslav Konchits</li></div>
+				<div><li class="language">German:</li><li class="translator">Timmaeh Elbert</li></div>
+				<div><li class="language">Japanese:</li><li class="translator">planicrand</li></div>
+				<div><li class="language">French:</li><li class="translator">Yanuut</li></div>
+				<div><li class="language">Czech:</li><li class="translator">Daniel Peukert</li></div>
+				<div><li class="language">Italian:</li><li class="translator">Andrea Brandi</li></div>
+				<div><li class="language">Portuguese:</li><li class="translator">Johnywalves</li></div>
+				<div><li class="language">Chinese:</li><li class="translator">Bin Dong</li></div>
+				<div><li class="language">Polish:</li><li class="translator">mrmahon</li></div>
+			</ul>
+		</div>
+
+		<div id="footer">
+			<a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a><br>by jshackles
+		</div>
 	</div>
-</div>
 
 </body>
 </html>

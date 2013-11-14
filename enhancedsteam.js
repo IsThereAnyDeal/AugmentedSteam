@@ -1,4 +1,4 @@
-﻿// version 5.1
+// version 5.1
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
@@ -3455,23 +3455,52 @@ function add_gamelist_achievements() {
 	});
 }
 
-function add_gamelist_notincommon() {
+function add_gamelist_common() {
 	if($("label").attr("for")=="show_common_games") {
-		controls = $("#gameslist_controls").html();
-		controls_length = $("#gameslist_controls").html().length;
-		controls_notincommon=controls.slice(0,controls_length-60);
-		controls_notincommon+="<input type=\"checkbox\" id=\"es_gl_show_notincommon_games\"><label for=\"es_gl_show_notincommon_games\">"+localized_strings[language].notincommon_label+"</label>";
-		controls_notincommon+="<br><div style=\"clear: right;\"></div>";
 		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + is_signed_in() + '&include_played_free_games=1&format=json', function (txt) {
 			var data = JSON.parse(txt);
-			$("#gameslist_controls").html(controls_notincommon);
-			$("#es_gl_show_notincommon_games").on("change", function() {
-				if (data.response && Object.keys(data.response).length > 0) {
+			$("#gameFilter").after("<span id=\"es_gl_comparison_mode\" style=\"margin-left:5px;\">"+localized_strings[language].comparison_mode+"</span>");
+			$("#gameFilter").after("<input type=\"checkbox\" id=\"es_gl_show_notcommon_games\"><label for=\"es_gl_show_notcommon_games\" id=\"es_gl_show_notcommon_games_label\">"+localized_strings[language].notcommon_label+"</label>");
+			$("#gameFilter").after("<input type=\"checkbox\" id=\"es_gl_show_common_games\"><label for=\"es_gl_show_common_games\" id=\"es_gl_show_common_games_label\">"+localized_strings[language].common_label+"</label>");
+			$("#es_gl_show_common_games, #es_gl_show_notcommon_games, #es_gl_show_notcommon_games_label, #es_gl_show_common_games_label").hide();
+			$("#show_common_games").next().hide();
+			$("#show_common_games").hide();
+			if (data.response && Object.keys(data.response).length > 0) {
 				library_all_games = data.response.games;
+			}
+			function game_id_toggle(show_toggle) {
 				$.each(library_all_games, function(i,obj){
 					$("#game_"+obj.appid).toggle();
 				});
 			}
+			function es_gl_show_checks(){
+				$("#es_gl_show_common_games, #es_gl_show_notcommon_games, #es_gl_show_notcommon_games_label, #es_gl_show_common_games_label").show();
+				$("#es_gl_comparison_mode").hide();
+			}
+			$("#es_gl_show_notcommon_games").on("change", function() {
+				game_id_toggle();
+			});
+			$("#es_gl_show_common_games").on("change", function() {
+				$(".gameListRow").toggle();
+				game_id_toggle();
+			});
+			$("#es_gl_show_common_games, #es_gl_show_notcommon_games").on("change", function() {
+				var num = $("#games_list_rows > .gameListRow:visible").length;
+				var scroll_info = $(".scroll_info").first().text().split(" ");
+				if(scroll_info[2]==scroll_info[4]) scroll_info[2]=num;
+				scroll_info[4]=num;
+				$(".scroll_info").text(scroll_info.join(" "));
+			});
+			if($("#all_pp").hasClass("active")) {
+				es_gl_show_checks();
+			}
+			$("#10_pp, #25_pp, #50_pp").on("click", function() {
+				$("#es_gl_show_common_games, #es_gl_show_notcommon_games, #es_gl_show_notcommon_games_label, #es_gl_show_common_games_label").hide();
+				$(".gameListRow, #es_gl_comparison_mode").show();
+				$("#es_gl_show_common_games, #es_gl_show_notcommon_games").prop("checked",false);
+			});
+			$("#all_pp").on("click", function(){
+				es_gl_show_checks();
 			});
 		});
 	}
@@ -3847,7 +3876,7 @@ $(document).ready(function(){
 						add_gamelist_achievements();
 						add_gamelist_sort();
 						add_gamelist_filter();
-						add_gamelist_notincommon();
+						add_gamelist_common();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
