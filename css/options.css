@@ -114,12 +114,13 @@ body {
 	cursor: pointer;
 }
 
-select {
+select, textarea {
 	background-color: #262626;
 	color: #B8B6B4;
 	border: 1px solid #8bc53f;
 	padding: 5px;
 	margin-left:10px;
+	font-family:"Arial" sans-serif;
 }
 ul {
 	list-style:none;
@@ -169,14 +170,6 @@ li {
 #profile_links {
 	margin-left:15px;
 	margin-top:10px;
-}
-textarea {
-	background-color: #262626;
-	color: #B8B6B4;
-	border: 1px solid #8bc53f;
-	padding: 5px;
-	margin-left:10px;
-	font-family:"Arial" sans-serif;
 }
 a {
 	cursor:pointer;
