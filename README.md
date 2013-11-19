@@ -6,7 +6,7 @@ Enhanced Steam is a Google Chrome browser extension.  This is the open-source de
 Installation
 ------------
 
-You can install this yourself by putting Google Chrome into "developer mode" on the Extensions tab.
+You can install this yourself by putting Google Chrome into "developer mode" on the [Extension page](chrome://extensions/).
 
 License
 -------
