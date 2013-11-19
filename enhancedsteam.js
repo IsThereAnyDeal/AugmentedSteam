@@ -913,15 +913,9 @@ function add_enhanced_steam_options() {
 	});
 
 	$dropdown.click(function(){
-		if ($dropdown_options.css("display") === "none") {
-			$dropdown_options.css("display", "");
-		}
-		else {
-			$dropdown_options.css("display", "none");
-		}
+		$dropdown_options.toggle();
 	});
 
-	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"" + chrome.extension.getURL("options.html") + "\">" + localized_strings[language].options + "</a>");
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 	$bug_feature_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam/issues\">" + localized_strings[language].bug_feature + "</a>");
@@ -937,12 +931,12 @@ function add_enhanced_steam_options() {
 
 	$spacer = $("<div class=\"hr\"></div>");
 
-	$dropdown_options.append($options_link);
 	$dropdown_options.append($clear_cache_link);
 	$dropdown_options.append($spacer);
-	$dropdown_options.append($website_link);
 	$dropdown_options.append($contribute_link);
 	$dropdown_options.append($bug_feature_link);
+	$dropdown_options.append($spacer);
+	$dropdown_options.append($website_link);
 	$dropdown_options.append($group_link);
 	$dropdown_options.append($donation_link);
 
