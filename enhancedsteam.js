@@ -932,10 +932,10 @@ function add_enhanced_steam_options() {
 	$spacer = $("<div class=\"hr\"></div>");
 
 	$dropdown_options.append($clear_cache_link);
-	$dropdown_options.append($spacer);
+	$dropdown_options.append($spacer.clone());
 	$dropdown_options.append($contribute_link);
 	$dropdown_options.append($bug_feature_link);
-	$dropdown_options.append($spacer);
+	$dropdown_options.append($spacer.clone());
 	$dropdown_options.append($website_link);
 	$dropdown_options.append($group_link);
 	$dropdown_options.append($donation_link);
