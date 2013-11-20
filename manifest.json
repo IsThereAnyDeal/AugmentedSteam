@@ -13,7 +13,7 @@
     "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png",
     "img/ico/steamgifts.ico", "img/ico/steamtrades.ico", "img/ico/steamrep.ico", "img/ico/wastedonsteam.ico", "img/ico/sapi.ico", "img/ico/backpacktf.ico", "img/ico/achievementstats.ico", "img/ico/steamcardexchange.png",
 	"img/steamdb.png", "img/steamdb_store.png", "img/play_off.png", "img/play_on.png", "img/ico_cards.gif", "img/red_banner.png", "img/es_btn_browse.png", "img/pcgw.png",
-    "css/enhancedsteam.css"
+    "css/enhancedsteam.css", "options.html"
   ],
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [

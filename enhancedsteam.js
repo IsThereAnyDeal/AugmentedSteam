@@ -893,7 +893,6 @@ function send_age_verification() {
 function add_wallet_balance_to_header() {
 	$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
 	$("#es_wallet").load('http://store.steampowered.com #header_wallet_ctn');
-
 }
 
 // Adds a link to options to the global menu (where is Install Steam button)
@@ -916,6 +915,7 @@ function add_enhanced_steam_options() {
 		$dropdown_options.toggle();
 	});
 
+	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\""+chrome.extension.getURL("options.html")+"\">"+localized_strings[language].options+"</a>")
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 	$bug_feature_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam/issues\">" + localized_strings[language].bug_feature + "</a>");
@@ -931,6 +931,7 @@ function add_enhanced_steam_options() {
 
 	$spacer = $("<div class=\"hr\"></div>");
 
+	$dropdown_options.append($options_link);
 	$dropdown_options.append($clear_cache_link);
 	$dropdown_options.append($spacer.clone());
 	$dropdown_options.append($contribute_link);
@@ -1006,7 +1007,12 @@ function replace_account_name() {
 	storage.get(function(settings) {
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; storage.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.replaceaccountname) {
-			$("#account_pulldown").text($("#global_header .username").text().trim());
+			var new_account_name = $("#global_header .username").text().trim()+"'s account";
+			$("#account_pulldown").text(new_account_name);
+			if ($(".page_title").children(".blockbg").text().trim()==document.title) {
+				$(".page_title").children(".blockbg").text(new_account_name);
+				document.title=new_account_name;
+			}
 		}
 	});
 }
@@ -3785,6 +3791,7 @@ $(document).ready(function(){
 
 					case /^\/account\/.*/.test(window.location.pathname):
 						account_total_spent();
+						replace_account_name();
 						break;
 
 					case /^\/search\/.*/.test(window.location.pathname):

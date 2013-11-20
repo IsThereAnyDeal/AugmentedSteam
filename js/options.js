@@ -266,7 +266,7 @@ break;
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
 		// Load default values for settings if they do not exist (and sync them to Google)
-		if (settings.language === undefined) { settings.language = "en"; chrome.storage.sync.set({'language': settings.language}); }
+		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
@@ -344,88 +344,88 @@ function load_options() {
 		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
 		
 		// Load Store Options
-		$("#highlight_owned_color").attr('value', settings.highlight_owned_color);
-		$("#highlight_wishlist_color").attr('value', settings.highlight_wishlist_color);
-		$("#highlight_coupon_color").attr('value', settings.highlight_coupon_color);
-		$("#highlight_inv_gift_color").attr('value', settings.highlight_inv_gift_color);
-		$("#highlight_inv_guestpass_color").attr('value', settings.highlight_inv_guestpass_color);
-		$("#highlight_friends_want_color").attr('value', settings.highlight_friends_want_color);
+		$("#highlight_owned_color").val(settings.highlight_owned_color);
+		$("#highlight_wishlist_color").val(settings.highlight_wishlist_color);
+		$("#highlight_coupon_color").val(settings.highlight_coupon_color);
+		$("#highlight_inv_gift_color").val(settings.highlight_inv_gift_color);
+		$("#highlight_inv_guestpass_color").val(settings.highlight_inv_guestpass_color);
+		$("#highlight_friends_want_color").val(settings.highlight_friends_want_color);
 
-		$("#tag_owned_color").attr('value', settings.tag_owned_color);
-		$("#tag_owned_color").attr('value', settings.tag_owned_color);
-		$("#tag_wishlist_color").attr('value', settings.tag_wishlist_color);
-		$("#tag_coupon_color").attr('value', settings.tag_coupon_color);
-		$("#tag_inv_gift_color").attr('value', settings.tag_inv_gift_color);
-		$("#tag_inv_guestpass_color").attr('value', settings.tag_inv_guestpass_color);
-		$("#tag_friends_want_color").attr('value', settings.tag_friends_want_color);
-		$("#tag_friends_own_color").attr('value', settings.tag_friends_own_color);
-		$("#tag_friends_rec_color").attr('value', settings.tag_friends_rec_color);
+		$("#tag_owned_color").val(settings.tag_owned_color);
+		$("#tag_owned_color").val(settings.tag_owned_color);
+		$("#tag_wishlist_color").val(settings.tag_wishlist_color);
+		$("#tag_coupon_color").val(settings.tag_coupon_color);
+		$("#tag_inv_gift_color").val(settings.tag_inv_gift_color);
+		$("#tag_inv_guestpass_color").val(settings.tag_inv_guestpass_color);
+		$("#tag_friends_want_color").val(settings.tag_friends_want_color);
+		$("#tag_friends_own_color").val(settings.tag_friends_own_color);
+		$("#tag_friends_rec_color").val(settings.tag_friends_rec_color);
 
-		$("#highlight_owned").attr('checked', settings.highlight_owned);
-		$("#highlight_wishlist").attr('checked', settings.highlight_wishlist);
-		$("#highlight_coupon").attr('checked', settings.highlight_coupon);
-		$("#highlight_inv_gift").attr('checked', settings.highlight_inv_gift);
-		$("#highlight_inv_guestpass").attr('checked', settings.highlight_inv_guestpass);
-		$("#highlight_friends_want").attr('checked', settings.highlight_friends_want);
-		$("#highlight_excludef2p").attr('checked', settings.highlight_excludef2p);
+		$("#highlight_owned").prop('checked', settings.highlight_owned);
+		$("#highlight_wishlist").prop('checked', settings.highlight_wishlist);
+		$("#highlight_coupon").prop('checked', settings.highlight_coupon);
+		$("#highlight_inv_gift").prop('checked', settings.highlight_inv_gift);
+		$("#highlight_inv_guestpass").prop('checked', settings.highlight_inv_guestpass);
+		$("#highlight_friends_want").prop('checked', settings.highlight_friends_want);
+		$("#highlight_excludef2p").prop('checked', settings.highlight_excludef2p);
 
-		$("#tag_owned").attr('checked', settings.tag_owned);
-		$("#tag_wishlist").attr('checked', settings.tag_wishlist);
-		$("#tag_coupon").attr('checked', settings.tag_coupon);
-		$("#tag_inv_gift").attr('checked', settings.tag_inv_gift);
-		$("#tag_inv_guestpass").attr('checked', settings.tag_inv_guestpass);
-		$("#tag_friends_want").attr('checked', settings.tag_friends_want);
-		$("#tag_friends_own").attr('checked', settings.tag_friends_own);
-		$("#tag_friends_rec").attr('checked', settings.tag_friends_rec);
+		$("#tag_owned").prop('checked', settings.tag_owned);
+		$("#tag_wishlist").prop('checked', settings.tag_wishlist);
+		$("#tag_coupon").prop('checked', settings.tag_coupon);
+		$("#tag_inv_gift").prop('checked', settings.tag_inv_gift);
+		$("#tag_inv_guestpass").prop('checked', settings.tag_inv_guestpass);
+		$("#tag_friends_want").prop('checked', settings.tag_friends_want);
+		$("#tag_friends_own").prop('checked', settings.tag_friends_own);
+		$("#tag_friends_rec").prop('checked', settings.tag_friends_rec);
 		
-		$("#hide_owned").attr('checked', settings.hide_owned);
-		$("#hide_early_access").attr('checked', settings.hide_early_access);
+		$("#hide_owned").prop('checked', settings.hide_owned);
+		$("#hide_early_access").prop('checked', settings.hide_early_access);
 
-		$("#showlibrarymenu").attr('checked', settings.showlibrarymenu);
-		$("#showlibraryf2p").attr('checked', settings.showlibraryf2p);
+		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
+		$("#showlibraryf2p").prop('checked', settings.showlibraryf2p);
 
-		$("#hideinstallsteambutton").attr('checked', settings.hideinstallsteambutton);
-		$("#hideaboutmenu").attr('checked', settings.hideaboutmenu);
-		$("#hidecommunitynew").attr('checked', settings.hidecommunitynew);replaceaccountname
-		$("#replaceaccountname").attr('checked', settings.replaceaccountname);
-		$("#showfakeccwarning").attr('checked', settings.showfakeccwarning);
-		$("#send_age_info").attr('checked', settings.send_age_info);
-		$("#contscroll").attr('checked', settings.contscroll);
-		$("#showdrm").attr('checked', settings.showdrm);
-		$("#showmcus").attr('checked', settings.showmcus);
-		$("#showhltb").attr('checked', settings.showhltb);
-		$("#showpcgw").attr('checked', settings.showpcgw);
-		$("#showsteamdb").attr('checked', settings.showsteamdb);
-		$("#showwsgf").attr('checked', settings.showwsgf);
-		$("#show_package_info").attr('checked', settings.show_package_info);
-		$("#show_steamchart_info").attr('checked', settings.show_steamchart_info);
-		$("#show_carousel_descriptions").attr('checked', settings.show_carousel_descriptions);
-		$("#showlowestprice").attr('checked', settings.showlowestprice);		
+		$("#hideinstallsteambutton").prop('checked', settings.hideinstallsteambutton);
+		$("#hideaboutmenu").prop('checked', settings.hideaboutmenu);
+		$("#hidecommunitynew").prop('checked', settings.hidecommunitynew);replaceaccountname
+		$("#replaceaccountname").prop('checked', settings.replaceaccountname);
+		$("#showfakeccwarning").prop('checked', settings.showfakeccwarning);
+		$("#send_age_info").prop('checked', settings.send_age_info);
+		$("#contscroll").prop('checked', settings.contscroll);
+		$("#showdrm").prop('checked', settings.showdrm);
+		$("#showmcus").prop('checked', settings.showmcus);
+		$("#showhltb").prop('checked', settings.showhltb);
+		$("#showpcgw").prop('checked', settings.showpcgw);
+		$("#showsteamdb").prop('checked', settings.showsteamdb);
+		$("#showwsgf").prop('checked', settings.showwsgf);
+		$("#show_package_info").prop('checked', settings.show_package_info);
+		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
+		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
+		$("#showlowestprice").prop('checked', settings.showlowestprice);		
 		
-		$("#stores_all").attr('checked', settings.showallstores);
+		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
 		
 
 		// Load Community Options
-		$("#showtotal").attr('checked', settings.showtotal);
-		$("#showmarkettotal").attr('checked', settings.showmarkettotal);
-		$("#showinvmarket").attr('checked', settings.showinvmarket);
-		$("#showesbg").attr('checked', settings.showesbg);
-		$("#showallachievements").attr('checked', settings.showallachievements);
-		$("#showgreenlightbanner").attr('checked', settings.showgreenlightbanner);
-		$("#hideactivelistings").attr('checked', settings.hideactivelistings);
+		$("#showtotal").prop('checked', settings.showtotal);
+		$("#showmarkettotal").prop('checked', settings.showmarkettotal);
+		$("#showinvmarket").prop('checked', settings.showinvmarket);
+		$("#showesbg").prop('checked', settings.showesbg);
+		$("#showallachievements").prop('checked', settings.showallachievements);
+		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
+		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 
 		// Load Profile Link Options
-		$("#profile_steamgifts").attr('checked', settings.profile_steamgifts);
-		$("#profile_steamtrades").attr('checked', settings.profile_steamtrades);
-		$("#profile_steamrep").attr('checked', settings.profile_steamrep);
-		$("#profile_wastedonsteam").attr('checked', settings.profile_wastedonsteam);
-		$("#profile_sapi").attr('checked', settings.profile_sapi);
-		$("#profile_backpacktf").attr('checked', settings.profile_backpacktf);
-		$("#profile_astats").attr('checked', settings.profile_astats);
-		$("#steamcardexchange").attr('checked', settings.steamcardexchange);
+		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
+		$("#profile_steamtrades").prop('checked', settings.profile_steamtrades);
+		$("#profile_steamrep").prop('checked', settings.profile_steamrep);
+		$("#profile_wastedonsteam").prop('checked', settings.profile_wastedonsteam);
+		$("#profile_sapi").prop('checked', settings.profile_sapi);
+		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
+		$("#profile_astats").prop('checked', settings.profile_astats);
+		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
-		$("#language").attr('value', settings.language);
+		$("#language").val(settings.language);
 		
 		jQuery.get('changelog.txt', function(data) {
 			$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
@@ -437,10 +437,8 @@ function load_options() {
 
 function load_translation() {
 	chrome.storage.sync.get(function(settings) {
-
-		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
-		settings.language = $("#language").val();			
-		$("#language").attr('value', settings.language);
+		settings.language = $("#language").val();
+		$("#language").val(settings.language);
 		
 		// Load translation
 		localization_promise.done(function(){
@@ -537,62 +535,62 @@ function load_translation() {
 			
 			$("#save_store").text(localized_strings[settings.language].save);
 			$("#save_community").text(localized_strings[settings.language].save);
+
+			$("#reset").text(localized_strings[settings.language].reset_options);
 		});	
 });
 }
 
 function clear_settings() {
-	console.log ("clearing settings");
 	chrome.storage.sync.clear();
-	location.reload(true);
+	load_options();
 }
 
-function load_default_highlight_owned_color() { document.getElementById("highlight_owned_color").value = "#5c7836"; }
-function load_default_highlight_wishlist_color() { document.getElementById("highlight_wishlist_color").value = "#496e93"; }
-function load_default_highlight_coupon_color() { document.getElementById("highlight_coupon_color").value = "#6b2269"; }
-function load_default_highlight_inv_gift_color() { document.getElementById("highlight_inv_gift_color").value = "#a75124"; }
-function load_default_highlight_inv_guestpass_color() { document.getElementById("highlight_inv_guestpass_color").value = "#a75124"; }
-function load_default_highlight_friends_want_color() { document.getElementById("highlight_friends_want_color").value = "#7E4060"; }
+function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
+function load_default_highlight_wishlist_color() { $("highlight_wishlist_color").val("#496e93"); }
+function load_default_highlight_coupon_color() { $("highlight_coupon_color").val("#6b2269"); }
+function load_default_highlight_inv_gift_color() { $("highlight_inv_gift_color").val("#a75124"); }
+function load_default_highlight_inv_guestpass_color() { $("highlight_inv_guestpass_color").val("#a75124"); }
+function load_default_highlight_friends_want_color() { $("highlight_friends_want_color").val("#7E4060"); }
 
-function load_default_tag_owned_color() { document.getElementById("tag_owned_color").value = "#5c7836"; }
-function load_default_tag_wishlist_color() { document.getElementById("tag_wishlist_color").value = "#496e93"; }
-function load_default_tag_coupon_color() { document.getElementById("tag_coupon_color").value = "#6b2269"; }
-function load_default_tag_inv_gift_color() { document.getElementById("tag_inv_gift_color").value = "#a75124"; }
-function load_default_tag_inv_guestpass_color() { document.getElementById("tag_inv_guestpass_color").value = "#a75124"; }
-function load_default_tag_friends_want_color() { document.getElementById("tag_friends_want_color").value = "#7E4060"; }
-function load_default_tag_friends_own_color() { document.getElementById("tag_friends_own_color").value = "#5b9504"; }
-function load_default_tag_friends_rec_color() { document.getElementById("tag_friends_rec_color").value = "#2e3d54"; }
+function load_default_tag_owned_color() { $("tag_owned_color").val("#5c7836"); }
+function load_default_tag_wishlist_color() { $("tag_wishlist_color").val("#496e93"); }
+function load_default_tag_coupon_color() { $("tag_coupon_color").val("#6b2269"); }
+function load_default_tag_inv_gift_color() { $("tag_inv_gift_color").val("#a75124"); }
+function load_default_tag_inv_guestpass_color() { $("tag_inv_guestpass_color").val("#a75124"); }
+function load_default_tag_friends_want_color() { $("tag_friends_want_color").val("#7E4060"); }
+function load_default_tag_friends_own_color() { $("tag_friends_own_color").val("#5b9504"); }
+function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("#2e3d54"); }
+$(document).ready(function(){
+	load_options();
+	$("#language").change(load_translation);
+	$("#highlight_owned_default").click(load_default_highlight_owned_color);
+	$("#highlight_wishlist_default").click(load_default_highlight_wishlist_color);
+	$("#highlight_coupon_default").click(load_default_highlight_coupon_color);
+	$("#highlight_inv_gift_default").click(load_default_highlight_inv_gift_color);
+	$("#highlight_inv_guestpass_default").click(load_default_highlight_inv_guestpass_color);
+	$("#highlight_friends_want_color_default").click(load_default_highlight_friends_want_color);
 
-document.addEventListener('DOMContentLoaded', load_options);
-document.addEventListener('DOMContentLoaded', function () {
-// Wait until page has loaded to add events to DOM nodes
-document.querySelector('#language').addEventListener('change', load_translation);
+	$("#tag_owned_color_default").click(load_default_tag_owned_color);
+	$("#tag_wishlist_default").click(load_default_tag_wishlist_color);
+	$("#tag_coupon_default").click(load_default_tag_coupon_color);
+	$("#tag_inv_gift_default").click(load_default_tag_inv_gift_color);
+	$("#tag_inv_guestpass_default").click(load_default_tag_inv_guestpass_color);
+	$("#tag_friends_want_color_default").click(load_default_tag_friends_want_color);
+	$("#tag_friends_own_color_default").click(load_default_tag_friends_own_color);
+	$("#tag_friends_rec_color_default").click(load_default_tag_friends_rec_color);
 
-document.querySelector('#highlight_owned_default').addEventListener('click', load_default_highlight_owned_color);
-document.querySelector('#highlight_wishlist_default').addEventListener('click', load_default_highlight_wishlist_color);
-document.querySelector('#highlight_coupon_default').addEventListener('click', load_default_highlight_coupon_color);
-document.querySelector('#highlight_inv_gift_default').addEventListener('click', load_default_highlight_inv_gift_color);
-document.querySelector('#highlight_inv_guestpass_default').addEventListener('click', load_default_highlight_inv_guestpass_color);
-document.querySelector('#highlight_friends_want_color_default').addEventListener('click', load_default_highlight_friends_want_color);
+	$('#nav_store').click(load_store_tab);
+	$('#nav_community').click(load_community_tab);
+	$('#nav_news').click(load_news_tab);
+	$('#nav_about').click(load_about_tab);
+	$('#nav_credits').click(load_credits_tab);
 
-document.querySelector('#tag_owned_color_default').addEventListener('click', load_default_tag_owned_color);
-document.querySelector('#tag_wishlist_default').addEventListener('click', load_default_tag_wishlist_color);
-document.querySelector('#tag_coupon_default').addEventListener('click', load_default_tag_coupon_color);
-document.querySelector('#tag_inv_gift_default').addEventListener('click', load_default_tag_inv_gift_color);
-document.querySelector('#tag_inv_guestpass_default').addEventListener('click', load_default_tag_inv_guestpass_color);
-document.querySelector('#tag_friends_want_color_default').addEventListener('click', load_default_tag_friends_want_color);
-document.querySelector('#tag_friends_own_color_default').addEventListener('click', load_default_tag_friends_own_color);
-document.querySelector('#tag_friends_rec_color_default').addEventListener('click', load_default_tag_friends_rec_color);
+	$('#stores_all').click(toggle_stores);
 
-document.querySelector('#nav_store').addEventListener('click', load_store_tab);
-document.querySelector('#nav_community').addEventListener('click', load_community_tab);
-document.querySelector('#nav_news').addEventListener('click', load_news_tab);
-document.querySelector('#nav_about').addEventListener('click', load_about_tab);
-document.querySelector('#nav_credits').addEventListener('click', load_credits_tab);
-
-document.querySelector('#stores_all').addEventListener('click', toggle_stores);
-
-$("input").on("click", save_options);
-$("button").on("click", save_options);
-$(".colorbutton").change(save_options);
+	$("input").click(save_options);
+	$("button:not(#reset)").click(save_options);
+	$("#reset").click(clear_settings);
+	$(".colorbutton").change(save_options);
+	$("#language").change(save_options);
 });
