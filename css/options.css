@@ -83,7 +83,6 @@ body {
 }
 
 .btn {
-	
 	background-image: url( ../img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
@@ -179,4 +178,8 @@ a {
 	height:16px;
 	margin:0 4px 0 0;
 	vertical-align: text-bottom;
+}
+#reset {
+	margin-top:5px;
+	width:auto;
 }
