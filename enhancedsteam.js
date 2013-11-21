@@ -3909,16 +3909,11 @@ $(document).ready(function(){
 						add_es_background_selection();
 						break;
 
-					case /^\/(?:id|profiles)\/[^\/]+\/?$/.test(window.location.pathname):
+					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 						add_community_profile_links();
 						change_user_background();
 						fix_profile_image_not_found();
-						break;
-						
-					case /^\/(?:id|profiles)\/.+\/profile/.test(window.location.pathname):
-						add_community_profile_links();
-						change_user_background();
-						fix_profile_image_not_found();
+						hide_spam_comments();
 						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
