@@ -1856,7 +1856,7 @@ function hide_greenlight_banner() {
 			var banner = $("#ig_top_workshop");
 			var breadcrumbs = $(".breadcrumbs");
 
-			var greenlight_info = '<div class="apphub_HeaderTop workshop"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
+			var greenlight_info = '<div class="apphub_HeaderTop es_greenlight"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
 			greenlight_info += '<div class="apphub_sectionTabs">';
 			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
 			greenlight_info += '<a class="apphub_sectionTab" id="software_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
@@ -1865,7 +1865,7 @@ function hide_greenlight_banner() {
 			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/discussions/?appid=765"><span>Discussions</a>';
 			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/about/?appid=765&section=faq"><span>About Greenlight</a>';
 			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
-			greenlight_info += '</div><div style="clear: both"><div class="apphub_sectionTabsHR"><img src="http://cdn.steamcommunity.com/public/images/trans.gif"></div></div>';
+			greenlight_info += '</div><div style="top: 28px;position: relative;"><div class="apphub_sectionTabsHR"><img src="http://cdn.steamcommunity.com/public/images/trans.gif"></div></div>';
 			if(breadcrumbs.find("a:first").text().trim()=="Greenlight"){
 				banner.before(greenlight_info);
 				var collection_header = $("#ig_collection_header");
@@ -1873,6 +1873,13 @@ function hide_greenlight_banner() {
 				collection_header.find("img").hide();
 				if(banner.hasClass("blue")) {
 					banner.hide();
+				}
+				else if(banner.hasClass("green")) {
+					$(".es_greenlight").toggleClass("es_greenlit");
+					banner.css("background-image","url("+chrome.extension.getURL("img/gl_banner.jpg")+")")
+				}else if(banner.hasClass("greenFlash")) {
+					$(".es_greenlight").toggleClass("es_released");
+					banner.css("background-image","url("+chrome.extension.getURL("img/gl_banner.jpg")+")")
 				}
 				var second_breadcrumb = breadcrumbs.find("a:nth-child(2)").text().trim();
 				switch (second_breadcrumb) {
@@ -1886,6 +1893,7 @@ function hide_greenlight_banner() {
 						$("#concepts_apphub_sectionTab").toggleClass("active");
 						break;
 					case "Collections":
+						breadcrumbs.before(greenlight_info);
 						$("#collections_apphub_sectionTab").toggleClass("active");
 						break;
 				}
