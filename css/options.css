@@ -82,7 +82,7 @@ body {
 	color: FFF;
 }
 
-.btn {
+.btn,.colorbutton,.textbox {
 	background-image: url( ../img/btn_gradient.png );
 	background-repeat: repeat-x;
 	background-color: #262626;
@@ -100,17 +100,15 @@ body {
 }
 
 .colorbutton {
-	background-image: url( ../img/btn_gradient.png );
-	background-repeat: repeat-x;
-	background-color: #262626;
-
-	border: 1px solid #8bc53f;
-	color: #8bc53f;
-	
 	width: 50px;
 	height: 21px;
 	
 	cursor: pointer;
+}
+.textbox {
+	cursor:auto;
+	width:auto;
+	text-align:left;
 }
 
 select, textarea {
@@ -172,6 +170,7 @@ li {
 }
 a {
 	cursor:pointer;
+	text-decoration:underline;
 }
 .site_icon {
 	width:16px;
@@ -182,4 +181,12 @@ a {
 #reset {
 	margin-top:5px;
 	width:auto;
+}
+#show_spamcommentregex {
+	margin-left:5px;
+}
+#spamcommentregex_list {
+	margin-left:10px;
+	margin-bottom:5px;
+	display:none;
 }

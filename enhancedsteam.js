@@ -1894,6 +1894,31 @@ function hide_greenlight_banner() {
 	});
 }
 
+function hide_spam_comments() {
+	storage.get(function(settings) {
+		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; storage.set({'hideblockcomment': settings.hidespamcomments}); }
+		if(settings.hidespamcomments) {
+			if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u27BF]"; storage.set({'hideblockcomment': settings.spamcommentregex}); }
+			var spam_regex = new RegExp(settings.spamcommentregex);
+			function check_hide_comments() {
+				var comment_array = $(".commentthread_comment").toArray();
+				$.each(comment_array, function(index,value){
+					var comment_text = $(value).find(".commentthread_comment_text").text().trim();
+					if(spam_regex.test(comment_text)) {
+						bad_comment=$(value).attr("id");
+						$("#"+bad_comment).hide();
+					}
+				});
+			}
+			var observer = new WebKitMutationObserver(function(mutations) {
+				check_hide_comments();
+			});
+				check_hide_comments();
+				observer.observe($(".commentthread_comments")[0], {childList:true, subtree:true});
+		}
+	});
+}
+
 function add_metracritic_userscore() {
 	// adds metacritic user reviews
 	storage.get(function(settings) {
@@ -3890,6 +3915,7 @@ $(document).ready(function(){
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
+						hide_spam_comments();
 						break;
 						
 					case /^\/market\/.*/.test(window.location.pathname):

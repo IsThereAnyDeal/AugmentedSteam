@@ -96,6 +96,8 @@ function save_options() {
 	showallachievements = $("#showallachievements").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
+	hidespamcomments = $("#hidespamcomments").prop('checked');
+	spamcommentregex = $("#spamcommentregex").val().trim();
 
 	// Profile Link Options
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
@@ -177,6 +179,8 @@ function save_options() {
 		'showallachievements': showallachievements,
 		'showgreenlightbanner': showgreenlightbanner,
 		'hideactivelistings': hideactivelistings,
+		'hidespamcomments': hidespamcomments,
+		'spamcommentregex': spamcommentregex,
 
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
@@ -334,6 +338,8 @@ function load_options() {
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
+		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
+		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = false; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
@@ -414,6 +420,8 @@ function load_options() {
 		$("#showallachievements").prop('checked', settings.showallachievements);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
+		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
+		$("#spamcommentregex").val(settings.spamcommentregex);
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
@@ -510,6 +518,9 @@ function load_translation() {
 			$("#allachievements_text").text(localized_strings[settings.language].options_showallachievements);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
 			$("#hideactivelistings_text").text(localized_strings[settings.language].options_hideactivelistings);
+			$("#hidespamcomments_text").text(localized_strings[settings.language].options_hidespamcomments);
+			$("#spamcommentregex_text").text(localized_strings[settings.language].options_spamcommentregex);
+			$("#show_spamcommentregex").text(localized_strings[settings.language].options_customizespamcommentregex);
 			$("#steamcardexchange_text").text(localized_strings[settings.language].options_steamcardexchange);
 
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
@@ -561,6 +572,10 @@ function load_default_tag_inv_guestpass_color() { $("tag_inv_guestpass_color").v
 function load_default_tag_friends_want_color() { $("tag_friends_want_color").val("#7E4060"); }
 function load_default_tag_friends_own_color() { $("tag_friends_own_color").val("#5b9504"); }
 function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("#2e3d54"); }
+
+function toggle_regex() {$("#spamcommentregex_list").toggle()}
+function load_default_spamcommentregex(){$("#spamcommentregex").val("[\\u2500-\\u27BF]")}
+
 $(document).ready(function(){
 	load_options();
 	$("#language").change(load_translation);
@@ -580,17 +595,21 @@ $(document).ready(function(){
 	$("#tag_friends_own_color_default").click(load_default_tag_friends_own_color);
 	$("#tag_friends_rec_color_default").click(load_default_tag_friends_rec_color);
 
+	$("#spamcommentregex_default").click(load_default_spamcommentregex)
+
 	$('#nav_store').click(load_store_tab);
 	$('#nav_community').click(load_community_tab);
 	$('#nav_news').click(load_news_tab);
 	$('#nav_about').click(load_about_tab);
 	$('#nav_credits').click(load_credits_tab);
 
+	$("#show_spamcommentregex").click(toggle_regex);
 	$('#stores_all').click(toggle_stores);
 
 	$("input").click(save_options);
 	$("button:not(#reset)").click(save_options);
 	$("#reset").click(clear_settings);
 	$(".colorbutton").change(save_options);
+	$(".textbox").change(save_options);
 	$("#language").change(save_options);
 });
