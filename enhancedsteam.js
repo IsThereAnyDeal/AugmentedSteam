@@ -1009,7 +1009,7 @@ function replace_account_name() {
 		if (settings.replaceaccountname) {
 			var new_account_name = $("#global_header .username").text().trim()+"'s account";
 			$("#account_pulldown").text(new_account_name);
-			if ($(".page_title").children(".blockbg").text().trim()==document.title) {
+			if ($(".page_title").children(".blockbg").text().trim()==document.title&&document.title!="") {
 				$(".page_title").children(".blockbg").text(new_account_name);
 				document.title=new_account_name;
 			}
@@ -1853,21 +1853,43 @@ function hide_greenlight_banner() {
 	storage.get(function(settings) {
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.showgreenlightbanner) {
-			var banner = document.querySelector("#ig_top_workshop.blue");
-			var html;
-			html = '<link href="http://cdn3.store.steampowered.com/public/css/styles_storev5.css" rel="stylesheet" type="text/css">';
-			html = html + '<div id="store_nav_area" style="position: inherit;"><div class="store_nav_bg"><div class="store_nav">';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=concepts"><span>Concepts</a>';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/browse/?appid=765&section=collections"><span>Collections</a>';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/discussions/?appid=765"><span>Discussions</a>';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/about/?appid=765&section=faq"><span>About Greenlight</a>';
-			html = html + '<a class="tab " href="http://steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
-			$("#ig_top_workshop").before(html);
+			var banner = $("#ig_top_workshop");
+			var breadcrumbs = $(".breadcrumbs");
 
-			// now hide the greenlight banner
-			if (banner) { banner.hidden = true;	}
+			var greenlight_info = '<div class="apphub_HeaderTop workshop"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
+			greenlight_info += '<div class="apphub_sectionTabs">';
+			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="software_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="concepts_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=concepts"><span>Concepts</a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="collections_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=collections"><span>Collections</a>';
+			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/discussions/?appid=765"><span>Discussions</a>';
+			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/about/?appid=765&section=faq"><span>About Greenlight</a>';
+			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
+			greenlight_info += '</div><div style="clear: both"><div class="apphub_sectionTabsHR"><img src="http://cdn.steamcommunity.com/public/images/trans.gif"></div></div>';
+			if(breadcrumbs.find("a:first").text().trim()=="Greenlight"){
+				breadcrumbs.before(greenlight_info);
+				var collection_header = $("#ig_collection_header");
+				collection_header.css("height","auto");
+				collection_header.find("img").hide();
+				if(banner.hasClass("blue")) {
+					banner.hide();
+				}
+				var second_breadcrumb = breadcrumbs.find("a:nth-child(2)").text().trim();
+				switch (second_breadcrumb) {
+					case "Games":
+						$("#games_apphub_sectionTab").toggleClass("active");
+						break;
+					case "Software":
+						$("#software_apphub_sectionTab").toggleClass("active");
+						break;
+					case "Concepts":
+						$("#concepts_apphub_sectionTab").toggleClass("active");
+						break;
+					case "Collections":
+						$("#collections_apphub_sectionTab").toggleClass("active");
+						break;
+				}
+			}
 		}
 	});
 }
