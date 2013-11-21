@@ -1,8 +1,8 @@
 v5.1
 -----
 + Added spam comment hiding from Woskhop submissions and profiles
-+ Added a "game you do own" filter ot friend's all games page
-+ Added Report Bug / Suggest Feature to Enhanced Steam menu
++ Added a "game you do own" filter to friend's all games page
++ Added "Report Bug / Suggest Feature" to Enhanced Steam menu
 + Added reset options button to options page, instantly resetting all options to default
 : Restyle options page
 : Restyle greenlight banner and add to software, concept and collection items.
