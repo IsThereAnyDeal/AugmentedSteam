@@ -262,8 +262,8 @@ function toggle_stores() {
 			$("#humblestore").prop('checked', settings.stores[20]);
 			$("#indiegamestand").prop('checked', settings.stores[21]);
 		});
-break;
-}
+		break;
+	}
 }
 
 // Restores select box state to saved value from SyncStorage.
@@ -549,7 +549,31 @@ function load_translation() {
 
 			$("#reset").text(localized_strings[settings.language].reset_options);
 		});	
-});
+	});
+}
+
+function get_http(url, callback) {
+	var http = new XMLHttpRequest();
+	http.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			callback(this.responseText);
+		}
+	};
+	http.open('GET', url, true);
+	http.send(null);
+}
+
+function steam_credits() {
+	var credit_array = ["76561198040672342","76561197989222171","76561198020275445","76561198000198761"];
+	get_http('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=A6509A49A35166921243F4BCC928E812&steamids=' + credit_array.join(",") + 'format=json', function (txt) {
+		var data = JSON.parse(txt).response.players;
+		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
+		console.log(data);
+		$("#jshackles_steam").text(data[3]["personaname"]);
+		$("#rjackson_steam").text(data[0]["personaname"]);
+		$("#tomas_steam").text(data[2]["personaname"]);
+		$("#smashman_steam").text(data[1]["personaname"]);
+	});
 }
 
 function clear_settings() {
@@ -612,4 +636,6 @@ $(document).ready(function(){
 	$(".colorbutton").change(save_options);
 	$(".textbox").change(save_options);
 	$("#language").change(save_options);
+
+	steam_credits();
 });

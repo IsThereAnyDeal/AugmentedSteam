@@ -171,6 +171,10 @@ li {
 a {
 	cursor:pointer;
 	text-decoration:underline;
+	color:#8BC53F;
+}
+a:hover {
+	color:#ade269;
 }
 .site_icon {
 	width:16px;
@@ -184,6 +188,7 @@ a {
 }
 #show_spamcommentregex {
 	margin-left:5px;
+	color:#EFFFEF;
 }
 #spamcommentregex_list {
 	margin-left:10px;

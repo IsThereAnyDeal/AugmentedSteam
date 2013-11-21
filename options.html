@@ -4,7 +4,10 @@
 <script src="js/options.js"></script>
 <link href="css/options.css" rel="stylesheet" type="text/css">
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<head><title>Enhanced Steam Options</title></head>
+<head>
+	<title>Enhanced Steam Options</title>
+	<base  target="_blank">
+</head>
 <body>
 
 	<div id="header">
@@ -17,7 +20,7 @@
 		<a class="tab_row" id="nav_news">News</a>
 		<a class="tab_row" id="nav_about">About</a>
 		<a class="tab_row" id="nav_credits">Credits</a>
-		<a class="tab_row" id="nav_donate" href="http://www.EnhancedSteam.com/donate.php" target="_blank">Donate</a>
+		<a class="tab_row" id="nav_donate" href="http://www.EnhancedSteam.com/donate.php">Donate</a>
 	</div>
 
 	<div id="contentwrapper">	
@@ -44,7 +47,7 @@
 					<li class="settings_check">
 						<input type="checkbox" id="highlight_owned">
 						<label for="highlight_owned" id="highlight_owned_text">Items You Own</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=1" target="_blank" class="help"></a>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=1" class="help"></a>
 					</li>
 					<li class="settings_color">
 						<input type="color" id="highlight_owned_color" class="colorbutton">
@@ -55,7 +58,7 @@
 					<li class="settings_check">
 						<input type="checkbox" id="highlight_wishlist">
 						<label for="highlight_wishlist" id="highlight_wishlist_text">Items On Your Wishlist</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=2" target="_blank" class="help"></a>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=2" class="help"></a>
 					</li>
 					<li class="settings_color">
 						<input type="color" id="highlight_wishlist_color" class="colorbutton">
@@ -202,7 +205,7 @@
 				<li>
 					<input type="checkbox" id="showlowestprice">
 					<label for="showlowestprice" id="store_lowestprice_text">Show</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=5" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=5" class="help"></a>
 				</li>
 				<li><input type="checkbox" id="stores_all"><label for="stores_all" id="lowestprice_stores_all_text">Compare All Stores</label></li>
 				<table id="store_stores" style="display: none" border=0>
@@ -301,15 +304,15 @@
 				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
 				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
 				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable Continuous Scrolling of Search Results</label></li>
-				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd Party DRM Warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" target="_blank" class="help"></a></li>
-				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic User Scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" target="_blank" class="help"></a></li>
+				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd Party DRM Warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" class="help"></a></li>
+				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic User Scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" class="help"></a></li>
 				<li><input type="checkbox" id="showhltb"><label for="showhltb" id="store_hltb_text">Show HowLongToBeat.com Information</label></li>
 				<li><input type="checkbox" id="showsteamdb"><label for="showsteamdb" id="store_steamdb_text">Show SteamDB Links</label></li>
 				<li><input type="checkbox" id="showpcgw"><label for="showpcgw" id="store_pcgw_text">Show PCGamingWiki Links</label></li>
-				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) Info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" target="_blank" class="help"></a></li>
+				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) Info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
 				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com Info</label></li>
 				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show Package Info For All Apps</label></li>
-				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show App Descriptions On Storefront Carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" target="_blank" class="help"></a></li>
+				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show App Descriptions On Storefront Carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" class="help"></a></li>
 			</ul>
 		</div>
 
@@ -318,27 +321,27 @@
 				<li class="header" id="store_general">General</li>
 				<li>
 					<input type="checkbox" id="showtotal"><label for="showtotal" id="total_spent_text">Show "Total Spent" on Account Page</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=6" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=6" class="help"></a>
 				</li>
 				<li>
 					<input type="checkbox" id="showmarkettotal"><label for="showmarkettotal" id="market_total_text">Show Transaction Summary on Market</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=16" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=16" class="help"></a>
 				</li>
 				<li>
 					<input type="checkbox" id="showinvmarket"><label for="showinvmarket" id="inventory_market_text">Show Market Price on Inventory Page</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=20" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=20" class="help"></a>
 				</li>
 				<li>
 					<input type="checkbox" id="showesbg"><label for="showesbg" id="es_background_text">Set Custom Background on Edit Profile Screen</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=17" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=17" class="help"></a>
 				</li>
 				<li>
 					<input type="checkbox" id="showallachievements"><label for="showallachievements" id="allachievements_text">Show achievement stats on "All Games" page</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=18" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=18" class="help"></a>
 				</li>
 				<li>
 					<input type="checkbox" id="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text">Replace Steam Greenlight Banner</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=14" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=14" class="help"></a>
 				</li>
 				<li>
 					<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on market homepage by default</label>
@@ -351,9 +354,9 @@
 				</li>
 				<li>
 					<input type="checkbox" id="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text">Show SteamCardExchange links on badges</label>
-					<a href="http://enhancedsteam.com/featuredetail.php?id=19" target="_blank" class="help"></a>
+					<a href="http://enhancedsteam.com/featuredetail.php?id=19" class="help"></a>
 				</li>
-				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" target="_blank" class="help"></a>
+				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" class="help"></a>
 				<ul id="profile_links">
 					<li>
 						<input type="checkbox" id="profile_steamgifts">
@@ -413,10 +416,10 @@
 		<div id="maincontent_credits" class="content" style="display: none">
 			<ul class="credits">
 				<li class="header" id="programming_text">Programming</li>
-				<li>Jason 'jshackles' Shackles</li>
-				<li>Rob 'rjacksonm1' Jackson</li>
-				<li>Tomas Duda</li>
-				<li>Ben 'Smashman' Williams</li>
+				<li>Jason '<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>' Shackles</li>
+				<li>Rob '<a href="http://steamcommunity.com/profiles/76561197989222171" id="rjackson_steam">rjacksonm1</a>' Jackson</li>
+				<li>Tomáš '<a href="http://steamcommunity.com/profiles/76561198020275445" id="tomas_steam">Timmy</a>' Duda</li>
+				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">Smashman</a>' Williams</li>
 			</ul>
 			<ul class="credits">
 				<li class="header" id="translation_text">Translation</li>
@@ -434,7 +437,7 @@
 		</div>
 
 		<div id="footer">
-			<span><a href="http://www.enhancedsteam.com" style="color:#8bc53f;">Enhanced Steam Extension</a><br>by jshackles</span>
+			<span><a href="http://www.enhancedsteam.com">Enhanced Steam Extension</a><br>by jshackles</span>
 			<div><button id="reset" class="btn">Reset options</button></div>
 		</div>
 
