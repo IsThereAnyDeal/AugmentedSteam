@@ -1918,11 +1918,35 @@ function hide_spam_comments() {
 					}
 				});
 			}
+			function frame_check_hide_comments() {
+				for (var i=0; i<frames.length; i++) {
+					var frame = frames[i].document;
+					var comment_array = $(frame).find(".commentthread_comment").toArray();
+					$.each(comment_array, function(index,value){
+						var comment_text = $(value).find(".commentthread_comment_text").text().trim();
+						if(spam_regex.test(comment_text)) {
+							bad_comment=$(value).attr("id");
+							$(frame).find("#"+bad_comment).hide();
+						}
+					});
+				}
+			}
 			var observer = new WebKitMutationObserver(function(mutations) {
 				check_hide_comments();
 			});
+			if($("#AppHubContent").html()) {
+				var modal_content_observer = new WebKitMutationObserver(function(mutations) {
+					var wait_content_observer = new WebKitMutationObserver(function(mutations) {
+						frame_check_hide_comments();
+					});
+					wait_content_observer.observe($("#modalContentWait")[0], {attributes:true});
+				});
+				modal_content_observer.observe($("#modalContentFrameContainer")[0], {childList:true, subtree:true});
+			}
+			else {
 				check_hide_comments();
 				observer.observe($(".commentthread_comments")[0], {childList:true, subtree:true});
+			}
 		}
 	});
 }
@@ -3876,6 +3900,7 @@ $(document).ready(function(){
 			case "steamcommunity.com":
 			
 				add_wallet_balance_to_header();
+				hide_spam_comments();
 				
 				switch (true) {
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
@@ -3913,12 +3938,10 @@ $(document).ready(function(){
 						add_community_profile_links();
 						change_user_background();
 						fix_profile_image_not_found();
-						hide_spam_comments();
 						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
-						hide_spam_comments();
 						break;
 						
 					case /^\/market\/.*/.test(window.location.pathname):
