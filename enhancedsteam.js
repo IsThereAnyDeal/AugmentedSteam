@@ -1936,10 +1936,16 @@ function hide_spam_comments() {
 			});
 			if($("#AppHubContent").html()) {
 				var modal_content_observer = new WebKitMutationObserver(function(mutations) {
-					var wait_content_observer = new WebKitMutationObserver(function(mutations) {
+					var frame_comment_observer = new WebKitMutationObserver(function(mutations) {
 						frame_check_hide_comments();
+						for (var i=0; i<frames.length; i++) {
+							var frame = frames[i].document;
+							if($(frame).find(".commentthread_comments").html()) {
+								frame_comment_observer.observe($(frame).find(".commentthread_comments")[0], {childList:true, subtree:true});
+							}
+						}
 					});
-					wait_content_observer.observe($("#modalContentWait")[0], {attributes:true});
+					frame_comment_observer.observe($("#modalContentWait")[0], {attributes:true});
 				});
 				modal_content_observer.observe($("#modalContentFrameContainer")[0], {childList:true, subtree:true});
 			}
