@@ -1867,7 +1867,7 @@ function hide_greenlight_banner() {
 			greenlight_info += '<a class="apphub_sectionTab" href="http://steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
 			greenlight_info += '</div><div style="clear: both"><div class="apphub_sectionTabsHR"><img src="http://cdn.steamcommunity.com/public/images/trans.gif"></div></div>';
 			if(breadcrumbs.find("a:first").text().trim()=="Greenlight"){
-				breadcrumbs.before(greenlight_info);
+				banner.before(greenlight_info);
 				var collection_header = $("#ig_collection_header");
 				collection_header.css("height","auto");
 				collection_header.find("img").hide();
