@@ -1909,9 +1909,9 @@ function hide_greenlight_banner() {
 
 function hide_spam_comments() {
 	storage.get(function(settings) {
-		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; storage.set({'hideblockcomment': settings.hidespamcomments}); }
+		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; storage.set({'hidespamcomments': settings.hidespamcomments}); }
 		if(settings.hidespamcomments) {
-			if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u27BF]"; storage.set({'hideblockcomment': settings.spamcommentregex}); }
+			if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u27BF]"; storage.set({'spamcommentregex': settings.spamcommentregex}); }
 			var spam_regex = new RegExp(settings.spamcommentregex);
 			function check_hide_comments() {
 				var comment_array = $(".commentthread_comment").toArray();
