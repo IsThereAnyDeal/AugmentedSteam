@@ -454,18 +454,18 @@ var localized_strings,
                     header: "Packs que incluyen este juego",
 					bundle_count: "Veces que este juego ha estado en un pack"
 				},
-			wsgf: {
-				gold: "Esta insignia se otorga a los juegos que han recibido una puntuación perfecta de la WSGF por su soporte __type__ y está certificada por __type__.",
-				silver: "Esta insignia se otorga a los juegos que han recibido un grado B calculado por su soporte __type__. Todos estos juegos carecen de fallos graves, pero tienen algún defecto que impide que su puntuación sea perfecta.",
-				limited: "Esta insignia se otorga a los juegos que han recibido un grado C calculado por su soporte __type__. Todos estos juegos tienen un tipo de soporte __type__, pero cuentan con fallos importantes.",
-				incomplete: "Incompleto",
-				unsupported: "Esta puntuación se otorga a los juegos que no tienen soporte __type__.  El juego puede ser incompatible en __type__, o su imagen se reproduce de forma incorrecta en el monitor.  No guarda relación con el aspecto que da."
+				wsgf: {
+					gold: "Esta insignia se otorga a los juegos que han recibido una puntuación perfecta de la WSGF por su soporte __type__ y está certificada por __type__.",
+					silver: "Esta insignia se otorga a los juegos que han recibido un grado B calculado por su soporte __type__. Todos estos juegos carecen de fallos graves, pero tienen algún defecto que impide que su puntuación sea perfecta.",
+					limited: "Esta insignia se otorga a los juegos que han recibido un grado C calculado por su soporte __type__. Todos estos juegos tienen un tipo de soporte __type__, pero cuentan con fallos importantes.",
+					incomplete: "Incompleto",
+					unsupported: "Esta puntuación se otorga a los juegos que no tienen soporte __type__.  El juego puede ser incompatible en __type__, o su imagen se reproduce de forma incorrecta en el monitor.  No guarda relación con el aspecto que da."
 				},
-			charts: {
-				current: "Jugadores actuales",
-				playing_now: "jugando ahora",
-				peaktoday: "máximo de hoy",
-				peakall: "máximo total"
+				charts: {
+					current: "Jugadores actuales",
+					playing_now: "jugando ahora",
+					peaktoday: "máximo de hoy",
+					peakall: "máximo total"
 				}
             },
             "fre": {

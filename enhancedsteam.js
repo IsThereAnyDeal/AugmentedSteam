@@ -295,6 +295,9 @@ function hide_node(node) {
 	if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item")) {
 		$(node).css("display", "none");
 		search_threshhold = search_threshhold - 58;
+		if ($(document).height() <= $(window).height()) {
+			load_search_results();
+		}
 	}
 }
 
@@ -1810,32 +1813,36 @@ function add_cart_to_search() {
 	});
 }
 
-// Adds continuous scrolling of search results on Steam
+var processing = false;	
+var search_page = 2;
+
+function load_search_results () {
+	if (!processing) {
+		processing = true;
+		var search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
+		get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
+			var html = $.parseHTML(txt);
+			html = $(html).find("a.search_result_row");
+			$(".search_result_row").last().after(html);
+			search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
+			search_page = search_page + 1;
+			processing = false;
+			remove_non_specials();
+		});
+	}	
+}
+
 function endless_scrolling() {
 	storage.get(function(settings) {
 		if (settings.contscroll === undefined) { settings.contscroll = false; storage.set({'contscroll': settings.contscroll}); }
 		if (settings.contscroll) {
-			var processing = false;
-			var search_page = 2;
 			
 			$(".search_pagination_right").css("display", "none");
 			$(".search_pagination_left").text($(".search_pagination_left").text().trim().match(/(\d+)$/)[0] + " Results");
 							
 			$(window).scroll(function() {
 				if ($(window).scrollTop() > search_threshhold) {
-					if (!processing) {
-						processing = true;
-						var search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
-						get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
-							var html = $.parseHTML(txt);
-							html = $(html).find("a.search_result_row");
-							$(".search_result_row").last().after(html);
-							search_threshhold = search_threshhold + 1450; //each result is 58px height * 25 results per page = 1450
-							search_page = search_page + 1;
-							processing = false;
-							remove_non_specials();
-						});
-					}	
+					load_search_results();
 				}
 			});
 		}
@@ -1847,6 +1854,9 @@ function remove_non_specials() {
 		$(".search_result_row").each(function(index) {		
 			if (!($(this).html().match(/<strike>/))) {
 				hide_node($(this)[0]);
+				if ($(document).height() <= $(window).height()) {
+					load_search_results();
+				}
 			}
 		});
 	}
@@ -1854,7 +1864,6 @@ function remove_non_specials() {
 
 // Changes Steam Greenlight pages
 function hide_greenlight_banner() {
-	// insert the "top bar" found on all other Steam games
 	storage.get(function(settings) {
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.showgreenlightbanner) {

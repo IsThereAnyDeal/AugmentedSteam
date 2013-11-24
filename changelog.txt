@@ -7,6 +7,7 @@ v5.1
 : Restyle options page
 : Restyle greenlight banner and add to software, concept and collection items.
 : Fix bug with options link within Enhanced Steam menu
+: Fixed a bug where continuous scrolling wasn't working under some circumstances
 
 v5.0
 -----
