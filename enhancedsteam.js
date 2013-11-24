@@ -3948,7 +3948,6 @@ $(document).ready(function(){
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
-						delete_spam_comments();
 						break;
 						
 					case /^\/market\/.*/.test(window.location.pathname):
