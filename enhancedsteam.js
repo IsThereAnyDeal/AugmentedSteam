@@ -3920,7 +3920,6 @@ $(document).ready(function(){
 			case "steamcommunity.com":
 			
 				add_wallet_balance_to_header();
-				hide_spam_comments();
 				
 				switch (true) {
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
@@ -3948,10 +3947,12 @@ $(document).ready(function(){
 						add_community_profile_links();
 						change_user_background();
 						fix_profile_image_not_found();
+						hide_spam_comments();
 						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
 						hide_greenlight_banner();
+						hide_spam_comments();
 						break;
 						
 					case /^\/market\/.*/.test(window.location.pathname):
