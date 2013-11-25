@@ -3935,17 +3935,7 @@ $(document).ready(function(){
 						start_highlights_and_tags();
 						break;
 
-					case /^\/(?:id|profiles)\/.+\/home/.test(window.location.pathname):
-						start_friend_activity_highlights();
-						bind_ajax_content_highlighting();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/myactivity/.test(window.location.pathname):
-						start_friend_activity_highlights();
-						bind_ajax_content_highlighting();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/status/.test(window.location.pathname):
+					case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
 						start_friend_activity_highlights();
 						bind_ajax_content_highlighting();
 						break;
