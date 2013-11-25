@@ -4007,6 +4007,7 @@ $(document).ready(function(){
 						var appid = get_appid(window.location.host + window.location.pathname);
 						add_app_page_highlights(appid);
 						add_app_page_wishlist(appid);
+						hide_spam_comments();
 						add_steamdb_links(appid, "gamehub");
 						break;
 
