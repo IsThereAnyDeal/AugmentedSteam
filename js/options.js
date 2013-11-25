@@ -98,6 +98,7 @@ function save_options() {
 	hideactivelistings = $("#hideactivelistings").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
+	wlbuttoncommunityapp = $("#wlbuttoncommunityapp").prop('checked');
 
 	// Profile Link Options
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
@@ -181,6 +182,7 @@ function save_options() {
 		'hideactivelistings': hideactivelistings,
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
+		'wlbuttoncommunityapp': wlbuttoncommunityapp,
 
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
@@ -340,6 +342,7 @@ function load_options() {
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u27BF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
+		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
@@ -422,6 +425,7 @@ function load_options() {
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
+		$("#wlbuttoncommunityapp").prop('checked', settings.wlbuttoncommunityapp);
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
@@ -522,6 +526,7 @@ function load_translation() {
 			$("#spamcommentregex_text").text(localized_strings[settings.language].options_spamcommentregex);
 			$("#show_spamcommentregex").text(localized_strings[settings.language].options_customizespamcommentregex);
 			$("#steamcardexchange_text").text(localized_strings[settings.language].options_steamcardexchange);
+			$("#wlbuttoncommunityapp_text").text(localized_strings[settings.language].options_wlbuttoncommunityapp);
 
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);
@@ -568,7 +573,6 @@ function steam_credits() {
 	get_http('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=A6509A49A35166921243F4BCC928E812&steamids=' + credit_array.join(",") + 'format=json', function (txt) {
 		var data = JSON.parse(txt).response.players;
 		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
-		console.log(data);
 		$("#jshackles_steam").text(data[3]["personaname"]);
 		$("#rjackson_steam").text(data[0]["personaname"]);
 		$("#tomas_steam").text(data[2]["personaname"]);

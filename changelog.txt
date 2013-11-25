@@ -1,5 +1,6 @@
 v5.1
 -----
++ Added an "Add to Wishlist" button on cummunity app hubs
 + Added spam comment hiding from Woskhop submissions and profiles
 + Added a "game you do own" filter to friend's all games page
 + Added "Report Bug / Suggest Feature" to Enhanced Steam menu

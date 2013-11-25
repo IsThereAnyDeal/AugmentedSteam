@@ -3230,6 +3230,36 @@ function add_app_page_highlights(appid) {
 	});
 }
 
+function add_app_page_wishlist(appid) {
+	storage.get(function(settings) {
+		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
+		if (settings.wlbuttoncommunityapp) {
+			if (window.location.host == "steamcommunity.com") {
+				$(".apphub_OtherSiteInfo").append('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
+				$("#es_wishlist").on("click", function() {
+					storage.set({'thrown_appid': appid});
+					window.location = "http://store.steampowered.com/app/220/";
+				});
+			}	
+		
+			if (window.location.host == "store.steampowered.com") {
+				if (settings.thrown_appid) {
+					var http = new XMLHttpRequest();
+					http.onreadystatechange = function () {
+						if (this.readyState == 4 && this.status == 200) {
+							storage.remove("thrown_appid");
+							window.location = "http://steamcommunity.com/app/" + settings.thrown_appid + "/";
+						}
+					};
+					http.open('POST', "http://store.steampowered.com/api/addtowishlist", true);
+					http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+					http.send("appid=" + encodeURIComponent(settings.thrown_appid));
+				}	
+			}
+		}
+	});	
+}
+
 function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
@@ -3843,8 +3873,9 @@ $(document).ready(function(){
 						add_empty_cart_button();
 						break;
 
-					case /^\/app\/.*/.test(window.location.pathname):
+					case /^\/app\/.*/.test(window.location.pathname):						
 						var appid = get_appid(window.location.host + window.location.pathname);
+						add_app_page_wishlist(appid);
 						load_inventory().done(function() {
 							if (getValue(appid+"coupon")) display_coupon_message(appid);
 						});
@@ -3975,6 +4006,7 @@ $(document).ready(function(){
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
 						add_app_page_highlights(appid);
+						add_app_page_wishlist(appid);
 						add_steamdb_links(appid, "gamehub");
 						break;
 
