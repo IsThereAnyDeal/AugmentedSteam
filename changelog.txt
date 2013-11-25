@@ -2,6 +2,7 @@ v5.1
 -----
 + Added an "Add to Wishlist" button on cummunity app hubs
 + Added spam comment hiding from Workshop submissions and profiles
++ Added market link support for TF2, Dota 2, and CS:GO inventory items
 + Added a "game you do own" filter to friend's all games page
 + Added "Report Bug / Suggest Feature" to Enhanced Steam menu
 + Added reset options button to options page, instantly resetting all options to default

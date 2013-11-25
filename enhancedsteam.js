@@ -2567,16 +2567,24 @@ function account_total_spent() {
 	});
 }
 
-function load_inventory_market_prices(appid, item, item_name) {
-	get_http("http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name, function (txt) {
+function load_inventory_market_prices(appid, item, item_name, global_id) {
+	var url;
+	
+	if (global_id == 753) {
+		url = "http://steamcommunity.com/market/listings/" + global_id + "/" + appid + "-" + item_name;
+	} else {
+		url = "http://steamcommunity.com/market/listings/" + global_id + "/" + item_name;
+	}
+	
+	get_http(url, function (txt) {
 		var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);					
 		switch (item) {
 			case 0:
-				if (item_price) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+				if (item_price) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='" + url + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
 				} else { $("#es_item0").html("No results found"); }
 				break;
 			case 1:
-				if (item_price) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='http://steamcommunity.com/market/listings/753/" + appid + "-" + item_name + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+				if (item_price) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='" + url + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
 				} else { $("#es_item1").html("No results found"); }
 				break;
 		}
@@ -2593,43 +2601,67 @@ function inventory_market_helper() {
 			$('#es_item0').html("");
 			$('#es_item1').html("");
 			
-			var desc, appid, item, item_name, game_name;
+			var desc, appid, item, item_name, game_name, global_id;
 						
 			if($('#iteminfo0').css("display") == "block") {	desc = $('#iteminfo0_item_tags_content').html(); item = 0; } 
 			else { desc = $('#iteminfo1_item_tags_content').html();	item = 1; }
 						
 			if (desc.match(/Not Marketable/)) {	$('#es_item0').remove(); $('#es_item1').remove(); return; }
 			
+			global_id = $(".games_list_tab.active")[0].outerHTML.match(/href="\#(\d+)"/)[1];
+			
 			switch (item) {
 				case 0:
 					$("#es_item0").html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading);
 					item_name = $("#iteminfo0_item_name").html();
-					game_name = $("#iteminfo0_item_tags_content").text().split(",")[1];
-					if ($('#iteminfo0_item_owner_actions').html() != "") { 
-						appid = $('#iteminfo0_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];						
-						load_inventory_market_prices(appid, item, item_name);
-					} else {				
-						get_http("http://store.steampowered.com/search/?term=" + game_name, function (txt) {
-							appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
-							load_inventory_market_prices(appid, item, item_name);
-						});
-					}
+					game_name = $("#iteminfo0_item_tags_content").text().split(",")[1];					
+					switch (global_id) {
+						case "753":
+							if ($('#iteminfo0_item_owner_actions').html() != "") { 
+								appid = $('#iteminfo0_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];						
+								load_inventory_market_prices(appid, item, item_name, global_id);
+							} else {				
+								get_http("http://store.steampowered.com/search/?term=" + game_name, function (txt) {
+									appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
+									load_inventory_market_prices(appid, item, item_name, global_id);
+								});
+							}
+							break;
+						case "730":
+							var condition = $("#iteminfo0_item_descriptors .descriptor:contains('Exterior')").text().replace(/Exterior\: /, "");
+							if (condition) item_name += " (" + condition + ")";
+						default:
+							load_inventory_market_prices("0", item, item_name, global_id);
+							break;
+					}	
 					break;
 				case 1:
 					$("#es_item1").html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading);
 					item_name = $("#iteminfo1_item_name").html();
 					game_name = $("#iteminfo1_item_tags_content").text().split(",")[1];
-					if ($('#iteminfo1_item_owner_actions').html() != "") { 
-						appid = $('#iteminfo1_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];						
-						load_inventory_market_prices(appid, item, item_name);
-					} else {
-						get_http("http://store.steampowered.com/search/?term=" + game_name, function (txt) {
-							appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
-							load_inventory_market_prices(appid, item, item_name);
-						});
-					}
+					switch (global_id) {
+						case "753":
+							if ($('#iteminfo1_item_owner_actions').html() != "") { 
+								appid = $('#iteminfo1_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];						
+								load_inventory_market_prices(appid, item, item_name, global_id);
+							} else {
+								get_http("http://store.steampowered.com/search/?term=" + game_name, function (txt) {
+									appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
+									load_inventory_market_prices(appid, item, item_name, global_id);
+								});
+							}
+							break;
+						case "730":
+							var condition = $("#iteminfo1_item_descriptors .descriptor:contains('Exterior')").text().replace(/Exterior\: /, "");
+							if (condition) item_name += " (" + condition + ")";
+						default:
+							load_inventory_market_prices("0", item, item_name, global_id);
+							break;
+					}		
 					break;
 			}
+			
+			
 		}
 	});
 }
