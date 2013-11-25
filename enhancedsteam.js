@@ -4039,6 +4039,10 @@ $(document).ready(function(){
 						add_gamecard_market_links(gamecard);
 						add_gamecard_foil_link();
 						break;
+						
+					case /^\/$/.test(window.location.pathname):
+						hide_spam_comments();
+						break;
 				}
 				break;
 		}
