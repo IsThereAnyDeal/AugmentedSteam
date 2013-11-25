@@ -3973,6 +3973,36 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
 						add_es_background_selection();
 						break;
+						
+					case /^\/(?:id|profiles)\/.+\/inventory\/.*/.test(window.location.pathname):
+						bind_ajax_content_highlighting();
+						$(".itemHolder").bind("click", function() {
+							window.setTimeout(inventory_market_helper,500);
+						});
+						break;
+						
+					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+						totaltime();
+						totalsize();
+						add_gamelist_achievements();
+						add_gamelist_sort();
+						add_gamelist_filter();
+						add_gamelist_common();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+						add_total_drops_count();
+						add_cardexchange_links();
+						add_badge_filter();
+						add_badge_view_options();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
+						var gamecard = get_gamecard(window.location.pathname);
+						add_cardexchange_links(gamecard);
+						add_gamecard_market_links(gamecard);
+						add_gamecard_foil_link();
+						break;
 
 					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 						add_community_profile_links();
@@ -3995,13 +4025,6 @@ $(document).ready(function(){
 						add_active_total();
 						minimize_active_listings();
 						break;
-						
-					case /^\/id\/.+\/inventory\/.*/.test(window.location.pathname):
-						bind_ajax_content_highlighting();
-						$(".itemHolder").bind("click", function() {
-							window.setTimeout(inventory_market_helper,500);
-						});
-						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
 						var appid = get_appid(window.location.host + window.location.pathname);
@@ -4015,29 +4038,6 @@ $(document).ready(function(){
 						var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
 						appid = appid.href.match( /(\d)+/g );
 						add_steamdb_links(appid, "gamegroup");
-						break;
-
-					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-						totaltime();
-						totalsize();
-						add_gamelist_achievements();
-						add_gamelist_sort();
-						add_gamelist_filter();
-						add_gamelist_common();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
-						add_total_drops_count();
-						add_cardexchange_links();
-						add_badge_filter();
-						add_badge_view_options();
-						break;
-
-					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
-						var gamecard = get_gamecard(window.location.pathname);
-						add_cardexchange_links(gamecard);
-						add_gamecard_market_links(gamecard);
-						add_gamecard_foil_link();
 						break;
 						
 					case /^\/$/.test(window.location.pathname):
