@@ -2447,7 +2447,7 @@ function add_active_total() {
 			var total = 0;
 			
 			$(".market_listing_row").find(".market_listing_my_price").each(function() {
-				total += Number($(this).find(".market_listing_price").text().trim().replace(/[^0-9\.]+/g,""));
+				total += Number($(this).find(".market_listing_price").text().trim().replace(/,/, ".").replace(/[^0-9\.]+/g,""));
 				currency_symbol = $(this).find(".market_listing_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 			});
 			

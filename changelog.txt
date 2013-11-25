@@ -8,6 +8,7 @@ v5.1
 : Restyle greenlight banner and add to software, concept and collection items.
 : Fix bug with options link within Enhanced Steam menu
 : Fixed a bug where continuous scrolling wasn't working under some circumstances
+: Fixed a bug where active market listings total wasn't calculating correctly for some users
 
 v5.0
 -----
