@@ -2562,13 +2562,14 @@ function account_total_spent() {
 
 function load_inventory_market_prices(appid, item, item_name, global_id) {
 	var url;
-	
-	if (global_id == 753) {
-		url = "http://steamcommunity.com/market/listings/" + global_id + "/" + appid + "-" + item_name;
-	} else {
-		url = "http://steamcommunity.com/market/listings/" + global_id + "/" + item_name;
+	function html_characters(str){
+		return str.replace(/ /g,"%20").replace(/#/g,"%23").replace(/&/g,"&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 	}
-	
+	if (global_id == 753) {
+		url = "http://steamcommunity.com/market/listings/" + global_id + "/" + appid + "-" + html_characters(item_name);
+	} else {
+		url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(item_name);
+	}
 	get_http(url, function (txt) {
 		var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);					
 		switch (item) {
