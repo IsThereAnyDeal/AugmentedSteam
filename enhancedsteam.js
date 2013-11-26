@@ -2847,7 +2847,7 @@ function bind_ajax_content_highlighting() {
 				//if (node.id == "search_result_container") add_cart_to_search();
 				
 				if (node.classList && node.classList.contains("inventory_page")) {
-					$(".itemHolder").bind("click", function() {
+					$(".itemHolder").off("click").on("click", function() {
 						window.setTimeout(inventory_market_helper,500);
 					});	
 				}
