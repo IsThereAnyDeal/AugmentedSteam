@@ -503,7 +503,8 @@ function display_tags(node) {
 		else if (node.classList.contains("apphub_HeaderTop")) {
 			$tag_root = $(node);
 			$tag_root.css("height", "auto"); // Height to accomodate tags.
-			$tag_root.find(".apphub_AppName").css("max-width", "630px").attr("title", $tag_root.find(".apphub_AppName").text());
+			$tag_root.find(".apphub_AppName").css("max-width", "500px").attr("title", $tag_root.find(".apphub_AppName").text());
+			$tag_root.find(".apphub_AppName").css("overflow", "hidden");
 			$tag_root.find(".apphub_sectionTabs").css("padding-top", "2px"); // Height to accomodate tags.
 
 			remove_existing_tags($tag_root);
@@ -512,7 +513,7 @@ function display_tags(node) {
 			$tags.css("margin-top", "4px");
 			$tags.css("margin-left", "4px");
 
-			$tag_root.find(".apphub_AppName").after($tags);
+			$tag_root.find(".apphub_OtherSiteInfo").append($tags);
 			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
 		}
 	}
