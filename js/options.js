@@ -341,7 +341,7 @@ function load_options() {
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
-		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u27BF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
+		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
@@ -602,7 +602,7 @@ function load_default_tag_friends_own_color() { $("tag_friends_own_color").val("
 function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("#2e3d54"); }
 
 function toggle_regex() {$("#spamcommentregex_list").toggle()}
-function load_default_spamcommentregex(){$("#spamcommentregex").val("[\\u2500-\\u27BF]")}
+function load_default_spamcommentregex(){$("#spamcommentregex").val("[\\u2500-\\u25FF]")}
 
 $(document).ready(function(){
 	load_options();

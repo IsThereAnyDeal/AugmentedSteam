@@ -351,3 +351,13 @@ img.platform_small, .platform_img {
 .apphub_HeaderTop.es_greenlight.es_released {
 	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
 }
+#es_empty_wishlist,#es_empty_owned_wishlist {
+	width:auto;
+	display:inline-block;
+	padding:0 5px 0 5px;
+	border-color:#af1900;
+	color:#af1900;
+}
+#es_empty_owned_wishlist {
+	margin-left:6px;
+}
