@@ -581,11 +581,13 @@ function steam_credits() {
 }
 
 function clear_settings() {
-	var confirm_reset = confirm("Are you sure you wish to reset all options? This cannot be undone.")
-	if(confirm_reset){
-		chrome.storage.sync.clear();
-		load_options();
-	}
+	chrome.storage.sync.get(function(settings) {
+		var confirm_reset = confirm(localized_strings[settings.language].options_clear)
+		if(confirm_reset){
+			chrome.storage.sync.clear();
+			load_options();
+		}
+	});
 }
 
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }

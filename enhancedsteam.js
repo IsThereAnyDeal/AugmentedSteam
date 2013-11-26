@@ -2573,11 +2573,11 @@ function load_inventory_market_prices(appid, item, item_name, global_id) {
 		switch (item) {
 			case 0:
 				if (item_price) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='" + url + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
-				} else { $("#es_item0").html("No results found"); }
+				} else { $("#es_item0").html(localized_strings[language].no_results_found); }
 				break;
 			case 1:
 				if (item_price) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href='" + url + "' target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
-				} else { $("#es_item1").html("No results found"); }
+				} else { $("#es_item1").html(localized_strings[language].no_results_found); }
 				break;
 		}
 	});
