@@ -3237,7 +3237,6 @@ function add_app_page_wishlist(appid) {
 							appid:appid
 						},
 						success: function( msg ) {
-							console.log(msg);
 							$("#es_wishlist").addClass("btn_disabled");
 							$("#es_wishlist").off("click");
 							setValue(appid + "wishlisted",true);
