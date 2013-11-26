@@ -670,22 +670,14 @@ function load_inventory() {
 	return deferred.promise();
 }
 
-function add_empty_wishlist_button() {
-	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
-	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save es_empty_wishlist' style='border-color:red; width: auto;'>&nbsp;&nbsp;<a>" + localized_strings[language].empty_wishlist + "</a>&nbsp;&nbsp;</div>");
-		empty_button.on('click', null, { empty_owned_only: false }, empty_wishlist);
-		$("#games_list_container").after(empty_button);
-	}
-}
-
-function add_empty_owned_wishlist_button() {
+function add_empty_wishlist_buttons() {
 	// TODO Trigger a new event after everything is highlighted and then add the button
 	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");	
 	if (window.location.pathname.startsWith(profile)) {
-		var empty_button = $("<div class='btn_save es_empty_owned_wishlist' style='border-color:red; width: auto; margin-right: 10px;'>&nbsp;&nbsp;<a>" + localized_strings[language].remove_owned_wishlist + "</a>&nbsp;&nbsp;</div>");
-		$("#mainContents").on("click", ".es_empty_owned_wishlist", { empty_owned_only: true }, empty_wishlist);
-		$("#games_list_container").after(empty_button);
+		var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings[language].empty_wishlist + "</div><div class='btn_save' id='es_empty_owned_wishlist'>" + localized_strings[language].remove_owned_wishlist + "</div>");
+		$(".save_actions_enabled").filter(":last").after(empty_buttons);
+		$("#es_empty_wishlist").click({ empty_owned_only: false },empty_wishlist);
+		$("#es_empty_owned_wishlist").click({ empty_owned_only: true },empty_wishlist);
 	}
 }
 
@@ -3266,27 +3258,26 @@ function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
 		if (settings.wlbuttoncommunityapp) {
-			if (window.location.host == "steamcommunity.com") {
-				$(".apphub_OtherSiteInfo").append('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
-				$("#es_wishlist").on("click", function() {
-					storage.set({'thrown_appid': appid});
-					window.location = "http://store.steampowered.com/app/220/";
+			var wishlisted = getValue(appid + "wishlisted");
+			if(!wishlisted){
+				$(".apphub_StoreAppData").append('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
+				$("#es_wishlist").click(function() {
+					$.ajax({
+						type:"POST",
+						url:"http://store.steampowered.com/api/addtowishlist",
+						data:{
+							appid:appid
+						},
+						success: function( msg ) {
+							$("#es_wishlist").addClass("btn_disabled");
+							$("#es_wishlist").off("click");
+							setValue(appid + "wishlisted",true);
+						},
+						error: function(e){
+	        				console.log('Error: '+e);
+    					}
+					});
 				});
-			}	
-		
-			if (window.location.host == "store.steampowered.com") {
-				if (settings.thrown_appid) {
-					var http = new XMLHttpRequest();
-					http.onreadystatechange = function () {
-						if (this.readyState == 4 && this.status == 200) {
-							storage.remove("thrown_appid");
-							window.location = "http://steamcommunity.com/app/" + settings.thrown_appid + "/";
-						}
-					};
-					http.open('POST', "http://store.steampowered.com/api/addtowishlist", true);
-					http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					http.send("appid=" + encodeURIComponent(settings.thrown_appid));
-				}	
 			}
 		}
 	});	
@@ -3988,8 +3979,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
 						appdata_on_wishlist();
 						fix_wishlist_image_not_found();
-						add_empty_wishlist_button();
-						add_empty_owned_wishlist_button();
+						add_empty_wishlist_buttons();
 						add_wishlist_filter();
 						add_wishlist_discount_sort();
 

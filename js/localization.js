@@ -2,8 +2,8 @@ var localized_strings,
     localization_promise = (function () {
         var deferred = new $.Deferred();
         localized_strings_default = {
-            empty_wishlist: "Empty Wishlist",
-			remove_owned_wishlist: "Remove All Owned From Wishlist",
+            empty_wishlist: "Empty wishlist",
+			remove_owned_wishlist: "Remove owned games from wishlist",
 			add_to_wishlist: "Add to Wishlist",
             purchase_date: "(Purchased __date__)",
             options: "Options",
