@@ -1,3 +1,17 @@
+v5.1
+-----
++ Added an "Add to Wishlist" button on community app hubs
++ Added spam comment hiding from Workshop submissions and profiles
++ Added market link support for TF2, Dota 2, and CS:GO inventory items
++ Added a "game you do own" filter to friend's all games page
++ Added "Report Bug / Suggest Feature" to Enhanced Steam menu
++ Added reset options button to options page, instantly resetting all options to default
+: Restyled options page
+: Restyled Greenlight banner and added to software, concept and collection items.
+: Fixed a bug with options link within Enhanced Steam menu
+: Fixed a bug where continuous scrolling wasn't working under some circumstances
+: Fixed a bug where active market listings total wasn't calculating correctly for some users
+
 v5.0
 -----
 + Redesigned the navigation on the options page

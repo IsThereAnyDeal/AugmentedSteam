@@ -341,3 +341,27 @@ img.platform_small, .platform_img {
 	float: right;
 	padding-top: 5px;
 }
+.apphub_HeaderTop.es_greenlight {
+	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_blue.jpg');
+	background-position: left center;
+}
+.apphub_HeaderTop.es_greenlight.es_greenlit {
+	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green.jpg');
+}
+.apphub_HeaderTop.es_greenlight.es_released {
+	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
+}
+#es_empty_wishlist,#es_empty_owned_wishlist {
+	width:auto;
+	display:inline-block;
+	padding:0 5px 0 5px;
+	border-color:#af1900;
+	color:#af1900;
+}
+#es_empty_owned_wishlist {
+	margin-left:6px;
+}
+#es_wishlist > span {
+	padding:0 5px;
+	font-size:12px;
+}
