@@ -3239,7 +3239,7 @@ function add_app_page_wishlist(appid) {
 						success: function( msg ) {
 							console.log(msg);
 							$("#es_wishlist").addClass("btn_disabled");
-							$("#es_wishlist").unbind("click");
+							$("#es_wishlist").off("click");
 							setValue(appid + "wishlisted",true);
 						},
 						error: function(e){
