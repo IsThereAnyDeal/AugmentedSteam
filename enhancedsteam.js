@@ -3261,7 +3261,8 @@ function add_app_page_wishlist(appid) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
 		if (settings.wlbuttoncommunityapp) {
 			var wishlisted = getValue(appid + "wishlisted");
-			if(!wishlisted){
+			var owned = getValue(appid+"owned");
+			if(!wishlisted && !owned){
 				$(".apphub_Stats").prepend('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
 				$("#es_wishlist").click(function() {
 					$.ajax({

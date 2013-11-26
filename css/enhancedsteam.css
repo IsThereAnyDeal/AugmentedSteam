@@ -361,3 +361,7 @@ img.platform_small, .platform_img {
 #es_empty_owned_wishlist {
 	margin-left:6px;
 }
+#es_wishlist > span {
+	padding:0 5px;
+	font-size:12px;
+}
