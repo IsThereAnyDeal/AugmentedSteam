@@ -1,3 +1,7 @@
+v5.2
+-----
+
+
 v5.1
 -----
 + Added an "Add to Wishlist" button on community app hubs
