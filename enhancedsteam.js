@@ -3234,27 +3234,27 @@ function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
 		if (settings.wlbuttoncommunityapp) {
-			if (window.location.host == "steamcommunity.com") {
-				$(".apphub_OtherSiteInfo").append('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
-				$("#es_wishlist").on("click", function() {
-					storage.set({'thrown_appid': appid});
-					window.location = "http://store.steampowered.com/app/220/";
+			var wishlisted = getValue(appid + "wishlisted");
+			if(!wishlisted){
+				$(".apphub_StoreAppData").append('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
+				$("#es_wishlist").click(function() {
+					$.ajax({
+						type:"POST",
+						url:"http://store.steampowered.com/api/addtowishlist",
+						data:{
+							appid:appid
+						},
+						success: function( msg ) {
+							console.log(msg);
+							$("#es_wishlist").addClass("btn_disabled");
+							$("#es_wishlist").unbind("click");
+							setValue(appid + "wishlisted",true);
+						},
+						error: function(e){
+	        				console.log('Error: '+e);
+    					}
+					});
 				});
-			}	
-		
-			if (window.location.host == "store.steampowered.com") {
-				if (settings.thrown_appid) {
-					var http = new XMLHttpRequest();
-					http.onreadystatechange = function () {
-						if (this.readyState == 4 && this.status == 200) {
-							storage.remove("thrown_appid");
-							window.location = "http://steamcommunity.com/app/" + settings.thrown_appid + "/";
-						}
-					};
-					http.open('POST', "http://store.steampowered.com/api/addtowishlist", true);
-					http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					http.send("appid=" + encodeURIComponent(settings.thrown_appid));
-				}	
 			}
 		}
 	});	
