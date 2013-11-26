@@ -3228,7 +3228,7 @@ function add_app_page_wishlist(appid) {
 		if (settings.wlbuttoncommunityapp) {
 			var wishlisted = getValue(appid + "wishlisted");
 			if(!wishlisted){
-				$(".apphub_StoreAppData").append('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
+				$(".apphub_Stats").prepend('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
 				$("#es_wishlist").click(function() {
 					$.ajax({
 						type:"POST",
