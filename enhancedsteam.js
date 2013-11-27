@@ -265,6 +265,10 @@ function highlight_node(node, color) {
 			$node = $(node).find(".large_cap_content");
 		}
 		
+		if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
+			$node = $(node).find(".dailydeal_footer");
+		}
+		
 		if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line")) {
 			$node.css("color", color);
 			return;
@@ -278,7 +282,7 @@ function highlight_node(node, color) {
 		if ($node.parent().parent()[0].classList.contains("blotter_gamepurchase")) {
 			$node.css("color", color);
 			return;
-		}		
+		}
 
 		$node.css("backgroundImage", "none");
 		$node.css("backgroundColor", color);
@@ -2889,7 +2893,8 @@ function start_highlights_and_tags(){
 		"div.dlc_page_purchase_dlc", // DLC page rows
 		"div.sale_page_purchase_item", // Sale pages
 		"div.item",				// Sale page / featured page
-		"div.home_area_spotlight"	// midweek and weekend deals
+		"div.home_area_spotlight",	// midweek and weekend deals
+		"div.insert_season_here_sale_dailydeal_ctn"		// Valve Sthap!
 	];
 
 	// Get all appids and nodes from selectors.
