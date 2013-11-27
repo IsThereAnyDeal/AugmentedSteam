@@ -508,8 +508,8 @@ function load_translation() {
 			$("#store_pcgw_text").text(localized_strings[settings.language].options_pcgw);
 			$("#store_steamdb_text").text(localized_strings[settings.language].options_steamdb);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
-			$("#store_show_package_info_text").text(localized_strings[settings.language].options_show_package_info);
-			$("#store_show_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
+			$("#store_package_info_text").text(localized_strings[settings.language].options_show_package_info);
+			$("#store_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
 			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
