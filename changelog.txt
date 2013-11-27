@@ -2,6 +2,12 @@ v5.2
 -----
 
 
+v5.1.1
+-----
++ Added support for homepage highlighting on the Autumn / Spring sale
+: Fixed a bug where some some strings weren't being translated properly
+: Fixed a bug where one option wasn't able to be checked or unchecked
+
 v5.1
 -----
 + Added an "Add to Wishlist" button on community app hubs
