@@ -77,9 +77,8 @@ body {
 #footer {
 	position:fixed;
 	bottom: 0;
-	width:99%;
-	text-align: right;
-	color: FFF;
+	text-align:right;
+	right:15px;
 }
 
 .btn,.colorbutton,.textbox {
