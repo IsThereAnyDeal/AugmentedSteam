@@ -1974,7 +1974,7 @@ function add_permalink() {
 		},
 		success: function( msg ) {
 			var steamID64 = $(msg).find("steamID64").text();
-			var permalink = "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span><input type=\"text\" id=\"es_permalink\" maxlength=\"63\" size=\"63\" value=\"http://steamcommunity.com/profiles/"+steamID64+"\" readonly></div>";
+			var permalink = "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span>&nbsp;<input type=\"text\" id=\"es_permalink\" value=\"http://steamcommunity.com/profiles/"+steamID64+"\" readonly></div>";
 		$(".profile_item_links").append(permalink);
 		$("#es_permalink").click(function(){
 			$(this).select();

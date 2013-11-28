@@ -367,10 +367,10 @@ img.platform_small, .platform_img {
 }
 #es_permalink_text {
 	color: #EBEBEB;
-}
-#es_permalink_div {
-	margin-top:12px;
+	height:29px;
+	vertical-align:bottom;
 }
 #es_permalink {
-	font-size:10px;
+	margin:9px 0 0 5px;
+	direction:rtl;
 }
