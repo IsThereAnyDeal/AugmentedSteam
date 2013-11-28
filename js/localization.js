@@ -155,6 +155,7 @@ var localized_strings,
             notcommon_label: "Hide games that you own",
             common_label: "Hide games that you do not own",
             comparison_mode: "Enable all game overview to see game comparison",
+            permalink: "Permalink",
             library: {
                 private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
             },
