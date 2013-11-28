@@ -3071,25 +3071,27 @@ function add_carousel_descriptions() {
 	storage.get(function(settings) {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_carousel_descriptions) {
-			var description_height_to_add = 62;
-			$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
-			
-			
-			$.each($(".cluster_capsule"), function(i, _obj) {
-				var appid = get_appid(_obj.href),
-					$desc = $(_obj).find(".main_cap_content"),
-					$desc_content = $("<p></p>");
+			if ($(".main_cluster_content").length > 0) {
+				var description_height_to_add = 62;
+				$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
 				
-				$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
-				$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
 				
-				get_http('http://store.steampowered.com/app/' + appid, function(txt) {
-					var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
-					if (desc) {
-						$desc.append(desc[1]);
-					}
+				$.each($(".cluster_capsule"), function(i, _obj) {
+					var appid = get_appid(_obj.href),
+						$desc = $(_obj).find(".main_cap_content"),
+						$desc_content = $("<p></p>");
+					
+					$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
+					$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
+					
+					get_http('http://store.steampowered.com/app/' + appid, function(txt) {
+						var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
+						if (desc) {
+							$desc.append(desc[1]);
+						}
+					});
 				});
-			});
+			}
 		}
 	});
 }
