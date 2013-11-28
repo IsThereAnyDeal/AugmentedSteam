@@ -365,3 +365,12 @@ img.platform_small, .platform_img {
 	padding:0 5px;
 	font-size:12px;
 }
+#es_permalink_text {
+	color: #EBEBEB;
+}
+#es_permalink_div {
+	margin-top:12px;
+}
+#es_permalink {
+	font-size:10px;
+}

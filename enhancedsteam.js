@@ -1966,7 +1966,24 @@ function hide_spam_comments() {
 	});
 }
 
-function add_metracritic_userscore() {
+function add_permalink() {
+	$.ajax({
+		data:{
+			xml:1,
+			l:"english"
+		},
+		success: function( msg ) {
+			var steamID64 = $(msg).find("steamID64").text();
+			var permalink = "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span><input type=\"text\" id=\"es_permalink\" maxlength=\"63\" size=\"63\" value=\"http://steamcommunity.com/profiles/"+steamID64+"\" readonly></div>";
+		$(".profile_item_links").append(permalink);
+		$("#es_permalink").click(function(){
+			$(this).select();
+		});
+		}
+	});
+}
+
+function add_metacritic_userscore() {
 	// adds metacritic user reviews
 	storage.get(function(settings) {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
@@ -3912,7 +3929,7 @@ $(document).ready(function(){
 						dlc_data_from_site(appid);
 
 						drm_warnings();
-						add_metracritic_userscore();
+						add_metacritic_userscore();
 						display_purchase_date()
 
 						fix_community_hub_links();
@@ -4037,6 +4054,7 @@ $(document).ready(function(){
 						change_user_background();
 						fix_profile_image_not_found();
 						hide_spam_comments();
+						add_permalink();
 						break;
 
 					case /^\/sharedfiles\/.*/.test(window.location.pathname):
