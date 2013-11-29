@@ -1,6 +1,6 @@
 v5.2
 -----
-
++ Added sale information to wishlist entries
 
 v5.1.1
 -----

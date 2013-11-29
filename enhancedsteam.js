@@ -1776,35 +1776,15 @@ function appdata_on_wishlist() {
 				}
 			});
 		});
-	});
-}
-
-
-
-function add_cart_to_search() {
-	$("#search_header").prepend('<div class="col search_released">Actions</div>');
-
-	$(".search_result_row").each(function() {
-		var result_row = this;
-
-		$(this).prepend('<div class="col search_released es_search_add_to_cart"></div>');
-
-		var app = get_appid($(this).attr('href'));
-		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
-			var storefront_data = JSON.parse(data);
-			$.each(storefront_data, function(appid, app_data) {
-				if (app_data.success) {
-					if (app_data.data.packages && app_data.data.packages[0]) {
-						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
-						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
-						htmlstring += '</form>';
-						$(result_row).children(".es_search_add_to_cart").html(htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store" style="padding: 20px 10px;">' + localized_strings[language].add_to_cart + '</a>');
-					}
+		
+		if ($(node).parent().parent().parent().html().match(/discount_block_inline/)) {
+			$(node).before("<div id='es_sale_type_" + app + "' style='margin-top: -10px; margin-bottom: -10px; color: #7cb8e4; display: none;'></div>");
+			$("#es_sale_type_" + app).load("http://store.steampowered.com/app/" + app + " .game_purchase_discount_countdown:first", function() {
+				if ($("#es_sale_type_" + app).html() != "") {
+					$("#es_sale_type_" + app).css("display", "block");
 				}
 			});
-		});
+		};	
 	});
 }
 
