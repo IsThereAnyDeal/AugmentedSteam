@@ -253,44 +253,42 @@ function tag_friends_rec(node, appid) {
 }
 
 function highlight_node(node, color) {
-	storage.get(function(settings) {
-		var $node = $(node);
-		// Carousel item
-		if (node.classList.contains("cluster_capsule")) {
-			$node = $(node).find(".main_cap_content");
-		}
+	var $node = $(node);
+	// Carousel item
+	if (node.classList.contains("cluster_capsule")) {
+		$node = $(node).find(".main_cap_content");
+	}
 
-		// Genre Carousel items
-		if (node.classList.contains("large_cap")) {
-			$node = $(node).find(".large_cap_content");
-		}
+	// Genre Carousel items
+	if (node.classList.contains("large_cap")) {
+		$node = $(node).find(".large_cap_content");
+	}
 
-		if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
-			$node = $(node).find(".dailydeal_footer");
-		}
+	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
+		$node = $(node).find(".dailydeal_footer");
+	}
 
-		if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line")) {
-			$node.css("color", color);
-			return;
-		}
+	if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line")) {
+		$node.css("color", color);
+		return;
+	}
 
-		if ($node.parent().parent()[0].classList.contains("blotter_author_block")) {
-			$node.css("color", color);
-			return;
-		}
+	if ($node.parent().parent()[0].classList.contains("blotter_author_block")) {
+		$node.css("color", color);
+		return;
+	}
 
-		if ($node.parent().parent()[0].classList.contains("blotter_gamepurchase")) {
-			$node.css("color", color);
-			return;
-		}
+	if ($node.parent().parent()[0].classList.contains("blotter_gamepurchase")) {
+		$node.css("color", color);
+		return;
+	}
 
-		$node.css("backgroundImage", "none");
-		$node.css("backgroundColor", color);
+	$node.css("backgroundImage", "none");
+	$node.css("backgroundColor", color);
 
-		// Set text colour to not conflict with highlight.
-		if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
-		if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
-	});
+	// Set text colour to not conflict with highlight.
+	if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
+	if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 }
 
 function hide_node(node) {
