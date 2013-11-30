@@ -539,7 +539,7 @@ var localized_strings,
                 options_about_text: "À propos d'<a href='http://www.enhancedsteam.com'>Enhanced Steam</a> :<p>Enhanced Steam est une extension pour Google Chrome qui ajoute de nombreuses nouvelles fonctionnalités pour le site de Steam.<p>Caractéristiques incluses :<ul><li>Le surlignage des jeux que vous possédez déjà</li><li>Le surlignage des jeux dans votre liste de souhaits</li><li>Le calcul correct des remises de pack basé sur les jeux que vous possédez déjà</li><li>L'affichage de l'argent que vous avez dépensé sur Steam pour la durée de vie de votre compte</li><li>Le surlignage des DLCs que vous possédez sur la page du jeu</li><li>La correction du \"No Image Available\" des icones de jeu dans votre liste de souhaits pour n'importe quel jeu ou DLC</li><li>L'affichage des titres avec des DRMs de tiers</li></ul><p>Si vous trouvez cette extension utile, veuillez envisager de faire don.",
 				options_changelog: "Notes de changement :",
 				options_general: "Général",
-				options_clear: "Êtes-vous sûr de vouloir réinitialiser toutes les options ? Cela ne peut pas être annulée."
+				options_clear: "Êtes-vous sûr de vouloir réinitialiser toutes les options ? Cela ne peut pas être annulée.",
                 tag: "Tag",
                 theworddefault: "Défaut",
                 save: "Enregistrer",
@@ -627,7 +627,7 @@ var localized_strings,
 				notcommon_label: "Afficher les jeux que vous ne possédez pas",
 				common_label: "Afficher les jeux en commun",
 				comparison_mode: "Permettre à tous les aperçus de jeux de voir la comparaison des jeux",
-				permalink: "Permalien"
+				permalink: "Permalien",
                 library: {
                     private_profile: "Changez le statut de votre profil pour public <a href='http://steamcommunity.com/my/edit/settings'>dans vos paramètres</a> pour utiliser cette fonctionnalité."
                 },
