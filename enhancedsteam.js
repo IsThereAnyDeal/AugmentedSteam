@@ -282,6 +282,11 @@ function highlight_node(node, color) {
 		$node.css("color", color);
 		return;
 	}
+	
+	if ($node.parent().parent()[0].classList.contains("blotter_recommendation")) {
+		$node.css("color", color);
+		return;
+	}
 
 	$node.css("backgroundImage", "none");
 	$node.css("backgroundColor", color);
