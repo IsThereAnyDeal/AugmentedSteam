@@ -1785,7 +1785,7 @@ function appdata_on_wishlist() {
 			$(node).before("<div id='es_sale_type_" + app + "' style='margin-top: -10px; margin-bottom: -10px; color: #7cb8e4; display: none;'></div>");
 			$("#es_sale_type_" + app).load("http://store.steampowered.com/app/" + app + " .game_purchase_discount_countdown:first", function() {
 				if ($("#es_sale_type_" + app).html() != "") {
-					$("#es_sale_type_" + app).css("display", "block");
+					$("#es_sale_type_" + app).show();
 				}
 			});
 		};	
@@ -3098,7 +3098,7 @@ function add_carousel_descriptions() {
 }
 
 function add_affordable_button() {
-	if (is_signed_in()) {
+	if (is_signed_in() && $("#header_wallet_ctn").text().trim()) {
 		var balance_text = $("#header_wallet_ctn").text().trim();
 		var currency_symbol = balance_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
 		var balance = balance_text.replace(currency_symbol, "");
