@@ -1956,6 +1956,13 @@ function hide_spam_comments() {
 	});
 }
 
+function hide_activity_spam_comments() {
+	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
+		hide_spam_comments();
+	});
+	blotter_content_observer.observe($("#blotter_content")[0], {childList:true, subtree:true});
+}
+
 function add_permalink() {
 	$.ajax({
 		data:{
@@ -4005,6 +4012,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
 						start_friend_activity_highlights();
 						bind_ajax_content_highlighting();
+						hide_activity_spam_comments();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
