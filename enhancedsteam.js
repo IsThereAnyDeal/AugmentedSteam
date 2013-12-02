@@ -3216,7 +3216,8 @@ function start_friend_activity_highlights() {
 }
 
 function add_achievement_comparison_link(node) {
-	if (!($(node).html().match(/es_achievement_compare/))) {
+	if (!($(node).html().match(/es_achievement_compare/))&&!$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare")) {
+		$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare","true");
 		var links = $(node).find("a");
 		var appid = get_appid(links[2].href);
 		get_http(links[0].href + "/stats/" + appid, function(txt) {
