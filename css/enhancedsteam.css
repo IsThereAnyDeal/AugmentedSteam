@@ -136,12 +136,12 @@ img.platform_small, .platform_img {
 }
 
 #es_library_hub_link {
-    display: inline-block;
-    position: relative;
-    top: 55px;
-    left: 422px;
-    z-index: 3;
-    padding: 4px;
+	display: inline-block;
+	position: relative;
+	top: 55px;
+	left: 422px;
+	z-index: 3;
+	padding: 4px;
 }
 
 #es_library_hub_link a {
@@ -373,4 +373,11 @@ img.platform_small, .platform_img {
 #es_permalink {
 	margin:9px 0 0 5px;
 	direction:rtl;
+}
+.search_result_row .tags a {
+	text-decoration: none;
+	color: #FFF;
+}
+.search_result_row .tags a:hover {
+	text-decoration: underline;
 }

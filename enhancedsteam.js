@@ -509,8 +509,8 @@ function display_tags(node) {
 		}
 		else if (node.classList.contains("apphub_HeaderTop")) {
 			$tag_root = $(node);
-			$tag_root.find(".apphub_AppName").css("max-width", "500px").attr("title", $tag_root.find(".apphub_AppName").text());
-			$tag_root.find(".apphub_AppName").css("overflow", "hidden");
+
+			$tag_root.find(".apphub_AppName").css("width", "0px")
 
 			remove_existing_tags($tag_root);
 
@@ -520,6 +520,12 @@ function display_tags(node) {
 
 			$tag_root.find(".apphub_OtherSiteInfo").append($tags);
 			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
+
+			var max_width = 948-($(".apphub_OtherSiteInfo").width() + 69);
+
+			$tag_root.find(".apphub_AppName").css("max-width", max_width+"px").attr("title", $tag_root.find(".apphub_AppName").text());
+			$tag_root.find(".apphub_AppName").css("width", "auto")
+			$tag_root.find(".apphub_AppName").css("overflow", "hidden");
 		}
 	}
 }
