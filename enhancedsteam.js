@@ -1964,20 +1964,31 @@ function hide_activity_spam_comments() {
 }
 
 function add_permalink() {
-	$.ajax({
-		data:{
-			xml:1,
-			l:"english"
-		},
-		success: function( msg ) {
-			var steamID64 = $(msg).find("steamID64").text();
-			var permalink = "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span>&nbsp;<input type=\"text\" id=\"es_permalink\" value=\"http://steamcommunity.com/profiles/"+steamID64+"\" readonly></div>";
+	var permalink = "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span>&nbsp;<input type=\"text\" id=\"es_permalink\" readonly></div>";
+	var pathname = window.location.pathname.trim();
+	var vanity_id = pathname.substr(4).replace("/","");
+	if(/^\/id\/.+/.test(pathname)) {
+		$.ajax({
+			url:"http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/",
+			data:{
+				key:"A6509A49A35166921243F4BCC928E812",
+				vanityurl:vanity_id
+			},
+			success: function( msg ) {
+				permalink = $(permalink).find("#es_permalink").val("http://steamcommunity.com/profiles/"+msg["response"]["steamid"]).parent();
+				$(".profile_item_links").append(permalink);
+				$("#es_permalink").click(function(){
+					$(this).select();
+				});
+			}
+		});
+	} else {
+		permalink = $(permalink).find("#es_permalink").val(window.location.href).parent();
 		$(".profile_item_links").append(permalink);
 		$("#es_permalink").click(function(){
 			$(this).select();
 		});
-		}
-	});
+	}
 }
 
 function add_metacritic_userscore() {
