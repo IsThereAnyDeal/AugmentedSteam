@@ -1,6 +1,7 @@
 v5.2
 -----
 + Added sale information to wishlist entries
++ Added "ADD UNOWNED DLC TO CART" button on app pages
 
 v5.1.1
 -----
