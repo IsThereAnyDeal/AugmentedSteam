@@ -29,6 +29,16 @@ body {
 
 #header_logo {
 	margin-left: 170px;
+	float:left;
+}
+
+#saved {
+	float:right;
+	font-size: 2em;
+	font-weight: bold;
+	padding:24px;
+	color:#8BC53F;
+	display:none;
 }
 
 .tab_row {
