@@ -263,27 +263,16 @@ function highlight_node(node, color) {
 	if (node.classList.contains("large_cap")) {
 		$node = $(node).find(".large_cap_content");
 	}
-
-	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
-		$node = $(node).find(".dailydeal_footer");
-	}
-
-	if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line")) {
-		$node.css("color", color);
-		return;
-	}
-
-	if ($node.parent().parent()[0].classList.contains("blotter_author_block")) {
-		$node.css("color", color);
-		return;
-	}
-
-	if ($node.parent().parent()[0].classList.contains("blotter_gamepurchase")) {
-		$node.css("color", color);
-		return;
-	}
 	
-	if ($node.parent().parent()[0].classList.contains("blotter_recommendation")) {
+	// App and community hub page headers
+	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
+		$node = $(node).find(".apphub_AppName");
+		$node.css("color", color);
+		return;
+	}
+
+	// Blotter activity
+	if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line") || $node.parent().parent()[0].classList.contains("blotter_author_block") || $node.parent().parent()[0].classList.contains("blotter_gamepurchase") || $node.parent().parent()[0].classList.contains("blotter_recommendation")) {
 		$node.css("color", color);
 		return;
 	}
