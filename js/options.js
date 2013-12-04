@@ -560,6 +560,8 @@ function load_translation() {
 			$("#save_community").text(localized_strings[settings.language].save);
 
 			$("#reset").text(localized_strings[settings.language].reset_options);
+			$("#saved").text(localized_strings[settings.language].options_saved_note);
+			$("#reset_note").text(localized_strings[settings.language].options_reset_note);
 		});	
 	});
 }
