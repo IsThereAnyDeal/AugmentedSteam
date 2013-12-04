@@ -616,6 +616,7 @@ function clear_settings() {
 		if(confirm_reset){
 			chrome.storage.sync.clear();
 			load_options();
+			$("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
 		}
 	});
 }
