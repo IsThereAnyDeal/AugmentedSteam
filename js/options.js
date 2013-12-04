@@ -343,7 +343,7 @@ function load_options() {
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
-		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = 1; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
