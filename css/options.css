@@ -208,3 +208,6 @@ a:hover {
 	background:#EBEBEB;
 	border-radius:4px;
 }
+.site_icon_col {
+	display:none;
+}
