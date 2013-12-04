@@ -12,7 +12,8 @@
 
 	<div id="header">
 		<div id="header_logo"><img src="img/logo.png"></div>
-		<span id="saved">Options saved</span>
+		<span class="notification" id="saved">Options saved</span>
+		<span class="notification" id="reset_note">Options reset</span>
 	</div>
 
 	<div id="side_bar">
@@ -363,48 +364,54 @@
 				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" class="help"></a>
 				<ul id="profile_links">
 					<li>
+						<input type="checkbox" id="profile_steamrep">
+						<label for="profile_steamrep">
+							<img src="img/ico/steamrep.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/steamrep_col.png" class="site_icon profile_link_icon_background site_icon_col" />
+							SteamRep
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_steamdbcalc">
+						<label for="profile_steamdbcalc">
+							<img src="img/ico/steamdb.png" class="site_icon profile_link_icon_background" />
+							SteamDB
+						</label>
+					</li>
+					<li>
 						<input type="checkbox" id="profile_steamgifts">
 						<label for="profile_steamgifts">
-							<img src="img/ico/steamgifts.ico" class="site_icon" />SteamGifts
+							<img src="img/ico/steamgifts.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/steamgifts_col.png" class="site_icon site_icon_col" />
+							SteamGifts
 						</label>
 					</li>
 					<li>
 						<input type="checkbox" id="profile_steamtrades">
 						<label for="profile_steamtrades">
-							<img src="img/ico/steamtrades.ico" class="site_icon" />SteamTrades
+							<img src="img/ico/steamtrades.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/steamtrades_col.png" class="site_icon site_icon_col" />
+							SteamTrades
 						</label>
 					</li>
-					<li>
-						<input type="checkbox" id="profile_steamrep">
-						<label for="profile_steamrep">
-							<img src="img/ico/steamrep.ico" class="site_icon" />SteamRep
-						</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_wastedonsteam">
-						<label for="profile_wastedonsteam">
-							<img src="img/ico/wastedonsteam.ico" class="site_icon" />Wasted On Steam
-						</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_sapi">
-						<label for="profile_sapi">
-							<img src="img/ico/sapi.ico" class="site_icon" />sAPI
-						</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_backpacktf">
-						<label for="profile_backpacktf">
-							<img src="img/ico/backpacktf.ico" class="site_icon" />backpack.tf
-						</label>
-					</li>
+
 					<li>
 						<input type="checkbox" id="profile_astats">
 						<label for="profile_astats">
-							<img src="img/ico/achievementstats.ico" class="site_icon" />Achievement Stats
+							<img src="img/ico/achievementstats.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/achievementstats_col.png" class="site_icon site_icon_col" />
+							Achievement Stats
 						</label>
 					</li>
 				</ul>
+				<li>
+					<label id="show_profile_link_images_text">Profile link images:</label>&nbsp;
+					<select id="profile_link_images_dropdown">
+						<option value="gray" id="profile_link_images_gray">Grayscale</option>
+						<option value="color" id="profile_link_images_color">Colored</option>
+						<option value=false id="profile_link_images_none">None</option>
+					</select>
+				</li>
 			</ul>
 
 		</div>

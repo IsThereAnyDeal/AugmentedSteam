@@ -32,13 +32,20 @@ body {
 	float:left;
 }
 
-#saved {
+.notification {
 	float:right;
 	font-size: 2em;
 	font-weight: bold;
 	padding:24px;
-	color:#8BC53F;
 	display:none;
+}
+
+#saved {
+	color:#8BC53F;
+}
+
+#reset_note {
+	color:#CF6A32;
 }
 
 .tab_row {
@@ -202,5 +209,12 @@ a:hover {
 #spamcommentregex_list {
 	margin-left:10px;
 	margin-bottom:5px;
+	display:none;
+}
+.site_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}
+.site_icon_col {
 	display:none;
 }
