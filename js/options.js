@@ -194,7 +194,7 @@ function save_options() {
 		
 		'steamcardexchange': steamcardexchange
 	});
-	$("#saved").clearQueue().fadeIn().delay(600).fadeOut();
+	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 }
 
 // toggles pages
