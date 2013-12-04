@@ -381,3 +381,11 @@ img.platform_small, .platform_img {
 .search_result_row .tags a:hover {
 	text-decoration: underline;
 }
+.profile_link_icon {
+	width:16px;
+	height:16px;
+}
+.profile_link_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}

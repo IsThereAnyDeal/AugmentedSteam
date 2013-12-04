@@ -204,3 +204,7 @@ a:hover {
 	margin-bottom:5px;
 	display:none;
 }
+.site_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}

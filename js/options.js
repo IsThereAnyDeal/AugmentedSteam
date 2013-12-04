@@ -104,10 +104,10 @@ function save_options() {
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
 	profile_steamtrades = $("#profile_steamtrades").prop('checked');
 	profile_steamrep = $("#profile_steamrep").prop('checked');
+	profile_steamdbcalc = $("#profile_steamdbcalc").prop('checked');
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
-	profile_sapi = $("#profile_sapi").prop('checked');
-	profile_backpacktf = $("#profile_backpacktf").prop('checked');
 	profile_astats = $("#profile_astats").prop('checked');
+	show_profile_link_images = $("#show_profile_link_images").prop('checked');
 	
 	steamcardexchange = $("#steamcardexchange").prop('checked');
 
@@ -187,10 +187,9 @@ function save_options() {
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
 		'profile_steamrep': profile_steamrep,
-		'profile_wastedonsteam': profile_wastedonsteam,
-		'profile_sapi': profile_sapi,
-		'profile_backpacktf': profile_backpacktf,
+		'profile_steamdbcalc': profile_steamdbcalc,
 		'profile_astats': profile_astats,
+		'show_profile_link_images': show_profile_link_images,
 		
 		'steamcardexchange': steamcardexchange
 	});
@@ -344,9 +343,11 @@ function load_options() {
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = false; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
+		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_wastedonsteam === undefined) { settings.profile_wastedonsteam = true; chrome.storage.sync.set({'profile_wastedonsteam': settings.profile_wastedonsteam}); }
 		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
@@ -427,11 +428,13 @@ function load_options() {
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
 		$("#wlbuttoncommunityapp").prop('checked', settings.wlbuttoncommunityapp);
+		$("#show_profile_link_images").prop('checked', settings.show_profile_link_images);
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
 		$("#profile_steamtrades").prop('checked', settings.profile_steamtrades);
 		$("#profile_steamrep").prop('checked', settings.profile_steamrep);
+		$("#profile_steamdbcalc").prop('checked', settings.profile_steamdbcalc);
 		$("#profile_wastedonsteam").prop('checked', settings.profile_wastedonsteam);
 		$("#profile_sapi").prop('checked', settings.profile_sapi);
 		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
@@ -516,6 +519,7 @@ function load_translation() {
 			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
+			$("#show_profile_link_images_text").text(localized_strings[settings.language].options_profile_link_images);
 			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
 			$("#market_total_text").text(localized_strings[settings.language].options_market_total);
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
