@@ -1637,11 +1637,14 @@ function show_pricing_history(appid, type) {
 					if (data["bundles"]["active"].length > 0) {
 						var length = data["bundles"]["active"].length;
 						for (var i = 0; i < length; i++) {
-							var enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
+							var enddate;
+							if (data["bundles"]["active"][i]["expiry"]) {
+								enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
+							}
 							var currentdate = new Date().getTime();
-							if (currentdate < enddate) {
+							if (!enddate || currentdate < enddate) {
 								purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings[language].buy + ' ' + data["bundles"]["active"][i]["page"] + ' ' + data["bundles"]["active"][i]["title"] + '</h1>';
-								purchase += '<p class="game_purchase_discount_countdown">' + localized_strings[language].bundle.offer_ends + ' ' + enddate + '</p>';
+								if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + localized_strings[language].bundle.offer_ends + ' ' + enddate + '</p>';
 								purchase += '<p class="package_contents"><b>' + localized_strings[language].bundle.includes.replace("(__num__)", data["bundles"]["active"][i]["games"].length) + ':</b> '
 								data["bundles"]["active"][i]["games"].forEach(function(entry) {
 									purchase += entry + ", ";
@@ -1658,9 +1661,10 @@ function show_pricing_history(appid, type) {
 								}
 								purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';
 								$("#game_area_purchase").after(purchase);
+								
+								$("#game_area_purchase").after("<h2 class='gradientbg'>" + localized_strings[language].bundle.header + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
 							}
 						}
-						$("#game_area_purchase").after("<h2 class='gradientbg'>" + localized_strings[language].bundle.header + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
 					}
                 }
         	});
