@@ -264,6 +264,11 @@ function highlight_node(node, color) {
 		$node = $(node).find(".large_cap_content");
 	}
 	
+	// Sale items
+	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
+		$node = $(node).find(".dailydeal_footer");
+	}
+	
 	// App and community hub page headers
 	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
 		$node = $(node).find(".apphub_AppName");
