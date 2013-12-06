@@ -754,17 +754,40 @@ function add_wishlist_discount_sort() {
 function add_wishlist_total() {
 	var total = 0;
 	var gamelist = "";
-	var items = $(".wishlistRow").length;
-	$('.wishlistRow').each(function () {
-		var price = 0;
-		if ($(this).find("div[class='price']").length != 0) {
-			price = parseFloat($(this).find("div[class='price']").text().trim().replace(/[^0-9\.]+/g,""));
-			gamelist += $(this).find("h4").text().trim() + ", ";
-		}
-		if ($(this).find("div[class='discount_final_price']").length != 0) price = parseFloat($(this).find("div[class='discount_final_price']").text().trim().replace(/[^0-9\.]+/g,""));
+	var items = 0;
+	var currency_symbol;
+	
+	function calculate_node(node, search) {
+		price = parseFloat($(node).find(search).text().trim().replace(",", ".").replace(/[^0-9\.]+/g,""));
+		currency_symbol = $(node).find(search).text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		gamelist += $(node).find("h4").text().trim() + ", ";
+		items += 1;
 		if (price) total += price;
+	}
+	
+	$('.wishlistRow').each(function () {
+		if ($(this).find("div[class='price']").length != 0 && $(this).find("div[class='price']").text().trim() != "") calculate_node( $(this), "div[class='price']" );	
+		if ($(this).find("div[class='discount_final_price']").length != 0) calculate_node( $(this), "div[class='discount_final_price']" );	
 	});
-	$(".games_list").after("<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>Your Wishlist</h1><p class='package_contents'><b>Includes " + items + " items:</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + formatMoney(total) + "</div><div class='btn_addtocart'><div class='btn_addtocart_left'></div><a class='btn_addtocart_content' href='javascript:addToCart( 34718);'>Add to Cart</a><div class='btn_addtocart_right'></div></div></div></div></div></div>");
+	gamelist = gamelist.replace(/, $/, "");
+	
+	switch (currency_symbol) {
+		case "pуб":
+			if (parseInt(total, 10) == total) {
+				total = total + " pуб.";
+				break;
+			}
+		case "€":
+			total = formatMoney(parseFloat(total), 2, currency_symbol, ".", ",", true);
+			break;
+		case "R$":
+			total = formatMoney(parseFloat(total), 2, "R$ ", ".", ",", false);
+			break;
+		default:
+			total = formatMoney(parseFloat(total), 2, currency_symbol, ",", ".", false);
+			break;
+	}
+	$(".games_list").after("<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].buy_wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div><div class='btn_addtocart'><div class='btn_addtocart_left'></div><a class='btn_addtocart_content' href='javascript:addToCart( 34718);'>" + localized_strings[language].add_to_cart + "</a><div class='btn_addtocart_right'></div></div></div></div></div></div>");
 }
 
 function add_remove_from_wishlist_button(appid) {
