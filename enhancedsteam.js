@@ -678,12 +678,14 @@ function load_inventory() {
 
 function add_empty_wishlist_buttons() {
 	// TODO Trigger a new event after everything is highlighted and then add the button
-	var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");
-	if (window.location.pathname.startsWith(profile)) {
-		var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings[language].empty_wishlist + "</div><div class='btn_save' id='es_empty_owned_wishlist'>" + localized_strings[language].remove_owned_wishlist + "</div>");
-		$(".save_actions_enabled").filter(":last").after(empty_buttons);
-		$("#es_empty_wishlist").click({ empty_owned_only: false },empty_wishlist);
-		$("#es_empty_owned_wishlist").click({ empty_owned_only: true },empty_wishlist);
+	if(is_signed_in) {
+		var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");
+		if (window.location.pathname.startsWith(profile)) {
+			var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings[language].empty_wishlist + "</div><div class='btn_save' id='es_empty_owned_wishlist'>" + localized_strings[language].remove_owned_wishlist + "</div>");
+			$(".save_actions_enabled").filter(":last").after(empty_buttons);
+			$("#es_empty_wishlist").click({ empty_owned_only: false },empty_wishlist);
+			$("#es_empty_owned_wishlist").click({ empty_owned_only: true },empty_wishlist);
+		}
 	}
 }
 
