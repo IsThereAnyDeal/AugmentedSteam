@@ -495,6 +495,7 @@ function load_translation() {
 			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
 			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options_library_f2p);
 
+			$("#options_header_text").text(localized_strings[settings.language].options_header);
 			$("#store_hide_install_text").text(localized_strings[settings.language].options_hide_install);
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
 			$("#store_hide_new_heading").text(localized_strings[settings.language].options_hide_new_heading);
