@@ -2994,6 +2994,87 @@ function dlc_data_for_app_page() {
 	});
 }
 
+function other_currency_prices() {
+	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
+	var appid = get_appid(window.location.href);
+	var currencies = ["us","gb","fr","br","ru"];
+	var es_other_currency = "<div class=\"es_other_currency_box\"></div>";
+	var currency_deferred = [];
+	var all_boxes = $(".game_area_purchase_game").toArray();
+	var subid_info = [];
+	var subid_array = [];
+	var subids_csv;
+	function formatPriceData(sub_info, currency) {
+		console.log(sub_info);
+		if (sub_info["prices"][currency]){
+			var price = sub_info["prices"][currency]["final"]/100;
+			var currency_type = sub_info["prices"][currency]["currency"];
+			switch(currency_type) {
+				case "EUR":
+					var formattedMoney = formatMoney(price,2,"€",".",",",true);
+					break;
+				case "RUB":
+					var formattedMoney = price+"  pуб.";
+					break;
+				case "BRL":
+					var formattedMoney = formatMoney(price, 2, "R$ ", ".", ",", false);
+					break;
+				case "GBP":
+					var formattedMoney = formatMoney(price,2,"£");
+					break;
+				default:
+					var formattedMoney = formatMoney(price);
+					break;
+			}
+			return "<div class=\"es_other_currency\"><img class=\"es_flag\" src=\""+chrome.extension.getURL("img/flags/"+currency+".png")+"\">"+formattedMoney+"</div>";
+		}
+	}
+	$.each(all_boxes,function(index,app_package){
+		var subid = $(app_package).find("input").last().val();
+		subid_info[index]=[];
+		subid_info[index]["subid"]=subid;
+		subid_info[index]["prices"]=[];
+		subid_array.push(subid);
+	});
+	subids_csv=subid_array.join();
+	$.each(currencies,function(index,currency){
+		if (currency !== getCookie("LKGBillingCountry").toLowerCase()){
+			currency_deferred.push($.ajax({
+				url:api_url,
+				data:{
+					packageids:subids_csv,
+					cc:currency
+				}
+				
+			}).done(function(data){
+				$.each(subid_info,function(subid_index,loop_subid){
+					$.each(data,function(data_index,data_subid){
+						if(loop_subid["subid"]===data_index){
+							if(data[data_index]["data"]) {
+								var price = data[data_index]["data"]["price"];
+								subid_info[subid_index]["prices"][currency]=price;
+								es_other_currency=$(es_other_currency).append(price);
+								//currency_deferred[currency].resolve();
+							}
+						}
+					});
+				});
+			}));
+		}
+	});
+	$.when.apply(null,currency_deferred).done(function(){
+		console.log("done");
+		$.each(subid_info,function(index,subid){
+			var es_other_currency_loop = $(es_other_currency).clone();
+			$.each(currencies,function(currency_index,currency){
+				var currency_price = formatPriceData(subid,currency);
+				es_other_currency_loop = $(es_other_currency_loop).append(currency_price);
+			});
+			$(".game_area_purchase_game").eq(index).after(es_other_currency_loop);
+		});
+	});
+}
+
 function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
@@ -4107,6 +4188,8 @@ $(document).ready(function(){
 						add_package_info_button();
 						add_steamchart_info(appid);
 						dlc_data_for_app_page()
+
+						other_currency_prices();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
