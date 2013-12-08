@@ -2995,6 +2995,84 @@ function dlc_data_for_app_page() {
 	});
 }
 
+function show_regional_pricing() {
+	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
+	var appid = get_appid(window.location.href);
+	var countries = ["us","gb","fr","br","ru"];
+	var pricing_div = "<div class=\"es_regional_pricing\"></div>";
+	var currency_deferred = [];
+	var all_game_areas = $(".game_area_purchase_game").toArray();
+	var subid_info = [];
+	var subid_array = [];
+	var subids_csv;
+	function formatPriceData(sub_info, country) {
+		if (sub_info["prices"][country]){
+			var price = sub_info["prices"][country]["final"]/100;
+			var currency = sub_info["prices"][country]["currency"];
+			switch(currency) {
+				case "EUR":
+					var formattedMoney = formatMoney(price,2,"€",".",",",true);
+					break;
+				case "RUB":
+					var formattedMoney = price+"  pуб.";
+					break;
+				case "BRL":
+					var formattedMoney = formatMoney(price, 2, "R$ ", ".", ",", false);
+					break;
+				case "GBP":
+					var formattedMoney = formatMoney(price,2,"£");
+					break;
+				default:
+					var formattedMoney = formatMoney(price);
+					break;
+			}
+			return "<div class=\"es_regional_price\"><img class=\"es_flag\" src=\""+chrome.extension.getURL("img/flags/"+country+".png")+"\">"+formattedMoney+"</div>";
+		}
+	}
+	$.each(all_game_areas,function(index,app_package){
+		var subid = $(app_package).find("input").last().val();
+		subid_info[index]=[];
+		subid_info[index]["subid"]=subid;
+		subid_info[index]["prices"]=[];
+		subid_array.push(subid);
+	});
+	subids_csv=subid_array.join();
+	$.each(countries,function(index,country){
+		if (country !== getCookie("LKGBillingCountry").toLowerCase()){
+			currency_deferred.push($.ajax({
+				url:api_url,
+				data:{
+					packageids:subids_csv,
+					cc:country
+				}
+				
+			}).done(function(data){
+				$.each(subid_info,function(subid_index,package_info){
+					$.each(data,function(data_subid){
+						if(package_info["subid"]===data_subid){
+							if(data[data_subid]["data"]) {
+								var price = data[data_subid]["data"]["price"];
+								subid_info[subid_index]["prices"][country]=price;
+								pricing_div=$(pricing_div).append(price);
+							}
+						}
+					});
+				});
+			}));
+		}
+	});
+	$.when.apply(null,currency_deferred).done(function(){
+		$.each(subid_info,function(index,subid){
+			var app_pricing_div = $(pricing_div).clone();
+			$.each(countries,function(currency_index,currency){
+				var regional_price = formatPriceData(subid,currency);
+				app_pricing_div = $(app_pricing_div).append(regional_price);
+			});
+			$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+		});
+	});
+}
+
 function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
@@ -4108,6 +4186,8 @@ $(document).ready(function(){
 						add_package_info_button();
 						add_steamchart_info(appid);
 						dlc_data_for_app_page()
+
+						show_regional_pricing();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
