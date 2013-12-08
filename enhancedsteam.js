@@ -2994,22 +2994,21 @@ function dlc_data_for_app_page() {
 	});
 }
 
-function other_currency_prices() {
+function show_regional_pricing() {
 	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
 	var appid = get_appid(window.location.href);
-	var currencies = ["us","gb","fr","br","ru"];
-	var es_other_currency = "<div class=\"es_other_currency_box\"></div>";
+	var countries = ["us","gb","fr","br","ru"];
+	var pricing_div = "<div class=\"es_regional_pricing\"></div>";
 	var currency_deferred = [];
-	var all_boxes = $(".game_area_purchase_game").toArray();
+	var all_game_areas = $(".game_area_purchase_game").toArray();
 	var subid_info = [];
 	var subid_array = [];
 	var subids_csv;
-	function formatPriceData(sub_info, currency) {
-		console.log(sub_info);
-		if (sub_info["prices"][currency]){
-			var price = sub_info["prices"][currency]["final"]/100;
-			var currency_type = sub_info["prices"][currency]["currency"];
-			switch(currency_type) {
+	function formatPriceData(sub_info, country) {
+		if (sub_info["prices"][country]){
+			var price = sub_info["prices"][country]["final"]/100;
+			var currency = sub_info["prices"][country]["currency"];
+			switch(currency) {
 				case "EUR":
 					var formattedMoney = formatMoney(price,2,"€",".",",",true);
 					break;
@@ -3026,10 +3025,10 @@ function other_currency_prices() {
 					var formattedMoney = formatMoney(price);
 					break;
 			}
-			return "<div class=\"es_other_currency\"><img class=\"es_flag\" src=\""+chrome.extension.getURL("img/flags/"+currency+".png")+"\">"+formattedMoney+"</div>";
+			return "<div class=\"es_regional_price\"><img class=\"es_flag\" src=\""+chrome.extension.getURL("img/flags/"+country+".png")+"\">"+formattedMoney+"</div>";
 		}
 	}
-	$.each(all_boxes,function(index,app_package){
+	$.each(all_game_areas,function(index,app_package){
 		var subid = $(app_package).find("input").last().val();
 		subid_info[index]=[];
 		subid_info[index]["subid"]=subid;
@@ -3037,24 +3036,23 @@ function other_currency_prices() {
 		subid_array.push(subid);
 	});
 	subids_csv=subid_array.join();
-	$.each(currencies,function(index,currency){
-		if (currency !== getCookie("LKGBillingCountry").toLowerCase()){
+	$.each(countries,function(index,country){
+		if (country !== getCookie("LKGBillingCountry").toLowerCase()){
 			currency_deferred.push($.ajax({
 				url:api_url,
 				data:{
 					packageids:subids_csv,
-					cc:currency
+					cc:country
 				}
 				
 			}).done(function(data){
-				$.each(subid_info,function(subid_index,loop_subid){
-					$.each(data,function(data_index,data_subid){
-						if(loop_subid["subid"]===data_index){
-							if(data[data_index]["data"]) {
-								var price = data[data_index]["data"]["price"];
-								subid_info[subid_index]["prices"][currency]=price;
-								es_other_currency=$(es_other_currency).append(price);
-								//currency_deferred[currency].resolve();
+				$.each(subid_info,function(subid_index,package_info){
+					$.each(data,function(data_subid){
+						if(package_info["subid"]===data_subid){
+							if(data[data_subid]["data"]) {
+								var price = data[data_subid]["data"]["price"];
+								subid_info[subid_index]["prices"][country]=price;
+								pricing_div=$(pricing_div).append(price);
 							}
 						}
 					});
@@ -3063,14 +3061,13 @@ function other_currency_prices() {
 		}
 	});
 	$.when.apply(null,currency_deferred).done(function(){
-		console.log("done");
 		$.each(subid_info,function(index,subid){
-			var es_other_currency_loop = $(es_other_currency).clone();
-			$.each(currencies,function(currency_index,currency){
-				var currency_price = formatPriceData(subid,currency);
-				es_other_currency_loop = $(es_other_currency_loop).append(currency_price);
+			var app_pricing_div = $(pricing_div).clone();
+			$.each(countries,function(currency_index,currency){
+				var regional_price = formatPriceData(subid,currency);
+				app_pricing_div = $(app_pricing_div).append(regional_price);
 			});
-			$(".game_area_purchase_game").eq(index).after(es_other_currency_loop);
+			$(".game_area_purchase_game").eq(index).after(app_pricing_div);
 		});
 	});
 }
@@ -4189,7 +4186,7 @@ $(document).ready(function(){
 						add_steamchart_info(appid);
 						dlc_data_for_app_page()
 
-						other_currency_prices();
+						show_regional_pricing();
 						break;
 
 					case /^\/sub\/.*/.test(window.location.pathname):
