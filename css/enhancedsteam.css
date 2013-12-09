@@ -390,6 +390,12 @@ img.platform_small, .platform_img {
 	background:#EBEBEB;
 	border-radius:4px;
 }
+.es_regional_container {
+	display: none;
+	position: absolute;
+	width: 250px;
+	z-index:99;	
+}
 .es_regional_price {
 	margin-right:8px;
 	display:inline;
