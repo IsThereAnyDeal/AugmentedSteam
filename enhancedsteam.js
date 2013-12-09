@@ -2999,7 +2999,7 @@ function show_regional_pricing() {
 	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
 	var appid = get_appid(window.location.href);
 	var countries = ["us","gb","fr","br","ru"];
-	var pricing_div = "<div class=\"es_regional_pricing\"></div>";
+	var pricing_div = "<div class='miniprofile_top' style='display: none;'></div>";
 	var currency_deferred = [];
 	var all_game_areas = $(".game_area_purchase_game").toArray();
 	var subid_info = [];
@@ -3031,6 +3031,14 @@ function show_regional_pricing() {
 	}
 	$.each(all_game_areas,function(index,app_package){
 		var subid = $(app_package).find("input").last().val();
+		$(app_package).find("div.discount_prices, div.price").last()
+			.mouseover(function() {
+				$("#es_pricing_" + subid).toggle();
+			})
+			.mouseout(function() {
+				$("#es_pricing_" + subid).toggle();
+			})
+			.css("cursor", "pointer");
 		subid_info[index]=[];
 		subid_info[index]["subid"]=subid;
 		subid_info[index]["prices"]=[];
@@ -3064,6 +3072,7 @@ function show_regional_pricing() {
 	$.when.apply(null,currency_deferred).done(function(){
 		$.each(subid_info,function(index,subid){
 			var app_pricing_div = $(pricing_div).clone();
+			$(app_pricing_div).attr("id", "es_pricing_" + subid_info[index]["subid"].toString());			
 			$.each(countries,function(currency_index,currency){
 				var regional_price = formatPriceData(subid,currency);
 				app_pricing_div = $(app_pricing_div).append(regional_price);
