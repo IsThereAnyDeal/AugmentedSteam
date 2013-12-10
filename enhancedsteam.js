@@ -3075,10 +3075,9 @@ function show_regional_pricing() {
 		});
 		$.each(all_game_areas,function(index,app_package){
 		var subid = $(app_package).find("input").last().val();
-		var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
-		console.log(purchase_location);
 		$(app_package).find(".price")
 			.mouseover(function() {
+				var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
 				$("#es_pricing_" + subid).css("top", purchase_location.top - 180 + "px");
 				$("#es_pricing_" + subid).css("right", 346 + $(app_package).find(".game_purchase_action").width() +"px");
 				$("#es_pricing_" + subid).show();
