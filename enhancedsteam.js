@@ -883,7 +883,7 @@ function pack_split(node, ways) {
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
 	price_text = formatMoney(price, places, currency_symbol, ",", comma ? "," : ".", at_end);
-	$(node).find(".btn_addtocart").before("<div class='discount_block game_purchase_discount' style='width: 60px;'><div class='discount_prices'><div class='discount_original_price' style='text-decoration: none; left: 8px;'>Each</div><div class='discount_final_price' style='padding-left: 8px;'>" + price_text + "</div></div></div>");
+	$(node).find(".btn_addtocart").before("<div class='game_purchase_discount' style='width: 60px;background-color:black;'><div class='discount_prices'><div class='discount_original_price' style='text-decoration: none; left:8px;float:left;position:relative;'>"+localized_strings[language].each+"</div><div class='discount_final_price' style='padding-left: 8px;'>" + price_text + "</div></div></div>");
 }
 
 function add_4pack_breakdown() {
@@ -3074,8 +3074,11 @@ function show_regional_pricing() {
 			$(".game_area_purchase_game").eq(index).after(app_pricing_div);
 		});
 		$.each(all_game_areas,function(index,app_package){
-		var subid = $(app_package).find("input").last().val();
-		$(app_package).find(".price")
+			var subid = $(app_package).find("input").last().val();
+			$(app_package).find(".price").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
+			$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
+			$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px"});
+			$(app_package).find(".price, .discount_block")
 			.mouseover(function() {
 				var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
 				$("#es_pricing_" + subid).css("top", purchase_location.top - 180 + "px");
@@ -3084,7 +3087,7 @@ function show_regional_pricing() {
 			})
 			.mouseout(function() {
 				$("#es_pricing_" + subid).hide();
-			}).css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
+			});
 		});
 	});
 }
