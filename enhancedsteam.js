@@ -2999,7 +2999,7 @@ function show_regional_pricing() {
 	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
 	var appid = get_appid(window.location.href);
 	var countries = ["us","gb","fr","br","ru"];
-	var pricing_div = "<div class='miniprofile_top es_regional_container'></div>";
+	var pricing_div = "<div class='miniprofile_top es_regional_container' style='border: 1px solid black;'></div>";
 	var world = chrome.extension.getURL("img/flags/world.png");
 	var currency_deferred = [];
 	var all_game_areas = $(".game_area_purchase_game").toArray();
@@ -3087,7 +3087,9 @@ function show_regional_pricing() {
 			})
 			.mouseout(function() {
 				$("#es_pricing_" + subid).hide();
-			});
+			})
+			.css("cursor", "pointer")
+			;
 		});
 	});
 }
