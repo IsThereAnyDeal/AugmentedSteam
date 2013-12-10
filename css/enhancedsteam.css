@@ -410,12 +410,12 @@ img.platform_small, .platform_img {
 	color: #626366;
 	font-size: 11px;
 	right:14px;
-	top:-2px;
+	top:-3px;
 }
 .es_each_price {
 	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
 	color: #B0AEAC;
 	font-size: 13px;
-	padding-top:5px;
+	padding-top:4px;
 	padding-left:12px;
 }
