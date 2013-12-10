@@ -392,17 +392,11 @@ img.platform_small, .platform_img {
 }
 .es_regional_container {
 	display: none;
-	position: absolute;
-	width: 250px;
 	z-index:99;	
+	position:absolute;
 }
 .es_regional_price {
 	margin-right:8px;
-	display:inline;
-}
-.es_regional_price:after { 
-	content:"\A"; 
-	white-space:pre; 
 }
 .es_flag {
 	margin-right:4px;

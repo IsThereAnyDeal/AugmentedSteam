@@ -16,7 +16,7 @@
      "img/ico/steamcardexchange.png",
 	   "img/steamdb.png", "img/steamdb_store.png", "img/play_off.png", "img/play_on.png", "img/ico_cards.gif", "img/red_banner.png", "img/es_btn_browse.png", "img/pcgw.png", "img/gl_banner.jpg",
       "css/enhancedsteam.css", "options.html",
-      "img/flags/us.png","img/flags/fr.png","img/flags/gb.png","img/flags/br.png","img/flags/ru.png"
+      "img/flags/us.png","img/flags/fr.png","img/flags/gb.png","img/flags/br.png","img/flags/ru.png","img/flags/world.png"
   ],
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [

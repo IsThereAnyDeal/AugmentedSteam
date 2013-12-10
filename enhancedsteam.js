@@ -2999,7 +2999,8 @@ function show_regional_pricing() {
 	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
 	var appid = get_appid(window.location.href);
 	var countries = ["us","gb","fr","br","ru"];
-	var pricing_div = "<div class='miniprofile_top es_regional_container' style='border: 1px solid black;'></div>";
+	var pricing_div = "<div class='miniprofile_top es_regional_container'></div>";
+	var world = chrome.extension.getURL("img/flags/world.png");
 	var currency_deferred = [];
 	var all_game_areas = $(".game_area_purchase_game").toArray();
 	var subid_info = [];
@@ -3031,16 +3032,6 @@ function show_regional_pricing() {
 	}
 	$.each(all_game_areas,function(index,app_package){
 		var subid = $(app_package).find("input").last().val();
-		$(app_package).find("div.discount_prices, div.price")
-			.mouseover(function() {
-				$("#es_pricing_" + subid).toggle();
-				$("#es_pricing_" + subid).css("top", $(app_package).find("div.game_purchase_action_bg").offset().top - 170 + "px");
-				$("#es_pricing_" + subid).css("left", $(app_package).find("div.game_purchase_action_bg").offset().left - 756 + "px");
-			})
-			.mouseout(function() {
-				$("#es_pricing_" + subid).toggle();
-			})
-			.css("cursor", "pointer");
 		subid_info[index]=[];
 		subid_info[index]["subid"]=subid;
 		subid_info[index]["prices"]=[];
@@ -3081,6 +3072,20 @@ function show_regional_pricing() {
 			});
 			$(app_pricing_div).append("<div class='miniprofile_arrow right' style='position: absolute; top: 12px; right: -8px;'></div>");
 			$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+		});
+		$.each(all_game_areas,function(index,app_package){
+		var subid = $(app_package).find("input").last().val();
+		var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
+		console.log(purchase_location);
+		$(app_package).find(".price")
+			.mouseover(function() {
+				$("#es_pricing_" + subid).css("top", purchase_location.top - 180 + "px");
+				$("#es_pricing_" + subid).css("right", 346 + $(app_package).find(".game_purchase_action").width() +"px");
+				$("#es_pricing_" + subid).show();
+			})
+			.mouseout(function() {
+				$("#es_pricing_" + subid).hide();
+			}).css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
 		});
 	});
 }
