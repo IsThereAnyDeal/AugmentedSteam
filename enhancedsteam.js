@@ -3035,7 +3035,7 @@ function show_regional_pricing() {
 			.mouseover(function() {
 				$("#es_pricing_" + subid).toggle();
 				$("#es_pricing_" + subid).css("top", $(app_package).find("div.game_purchase_action_bg").offset().top - 170 + "px");
-				$("#es_pricing_" + subid).css("left", $(app_package).find("div.game_purchase_action_bg").offset().left - 756 + "px");
+				$("#es_pricing_" + subid).css("left", $(app_package).find("div.game_purchase_action_bg").offset().left - $(app_package).offset().left - $("#es_pricing_" + subid).width() - 25 + "px");
 			})
 			.mouseout(function() {
 				$("#es_pricing_" + subid).toggle();
