@@ -394,6 +394,10 @@ img.platform_small, .platform_img {
 	display: none;
 	z-index:99;	
 	position:absolute;
+	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
+	padding: 7px 8px;
+	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
+	border:1px solid black;
 }
 .es_regional_price {
 	margin-right:8px;
@@ -418,4 +422,12 @@ img.platform_small, .platform_img {
 	font-size: 13px;
 	padding-top:4px;
 	padding-left:12px;
+}
+.es_percentage {
+	font-size:12px;
+	color:green;
+	margin-left:3px;
+}
+.es_percentage_negative {
+	color:red;
 }
