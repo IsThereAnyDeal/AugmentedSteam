@@ -608,7 +608,7 @@ function get_http(url, callback) {
 
 function steam_credits() {
 	var credit_array = ["76561198040672342","76561197989222171","76561198020275445","76561198000198761"];
-	get_http('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=A6509A49A35166921243F4BCC928E812&steamids=' + credit_array.join(",") + 'format=json', function (txt) {
+	get_http('http://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + credit_array.join(","), function (txt) {
 		var data = JSON.parse(txt).response.players;
 		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
 		$("#jshackles_steam").text(data[3]["personaname"]);
