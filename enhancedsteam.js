@@ -1793,6 +1793,7 @@ function add_community_profile_links() {
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
+		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.show_profile_link_images!="false"){if(settings.show_profile_link_images=="color"){icon_color="_col";profile_link_icon_background=" profile_link_icon_background"}}
 
@@ -1828,6 +1829,10 @@ function add_community_profile_links() {
 			htmlstr += '</span></a></div>';
 		}
 
+		if (settings.profile_permalink) {
+			htmlstr += "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span>&nbsp;<input type=\"text\" id=\"es_permalink\" value=\"http://steamcommunity.com/profiles/"+steamID+"\" readonly></div>";
+		}	
+		
 		if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
 
 		if ($(".profile_item_links").length == 0) {
@@ -1835,6 +1840,10 @@ function add_community_profile_links() {
 			$(".profile_rightcol").append(htmlstr);
 			$(".profile_rightcol").after("<div style='clear: both'></div>");
 		}
+
+		$("#es_permalink").click(function(){
+			$(this).select();
+		});
 	});
 }
 
@@ -2045,34 +2054,6 @@ function hide_activity_spam_comments() {
 		hide_spam_comments();
 	});
 	blotter_content_observer.observe($("#blotter_content")[0], {childList:true, subtree:true});
-}
-
-function add_permalink() {
-	var permalink = "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings[language].permalink+"</span>&nbsp;<input type=\"text\" id=\"es_permalink\" readonly></div>";
-	var pathname = window.location.pathname.trim();
-	var vanity_id = pathname.substr(4).replace("/","");
-	if(/^\/id\/.+/.test(pathname)) {
-		$.ajax({
-			url:"http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/",
-			data:{
-				key:"A6509A49A35166921243F4BCC928E812",
-				vanityurl:vanity_id
-			},
-			success: function( msg ) {
-				permalink = $(permalink).find("#es_permalink").val("http://steamcommunity.com/profiles/"+msg["response"]["steamid"]).parent();
-				$(".profile_item_links").append(permalink);
-				$("#es_permalink").click(function(){
-					$(this).select();
-				});
-			}
-		});
-	} else {
-		permalink = $(permalink).find("#es_permalink").val(window.location.href).parent();
-		$(".profile_item_links").append(permalink);
-		$("#es_permalink").click(function(){
-			$(this).select();
-		});
-	}
 }
 
 function add_metacritic_userscore() {
@@ -4408,7 +4389,6 @@ $(document).ready(function(){
 						change_user_background();
 						fix_profile_image_not_found();
 						hide_spam_comments();
-						add_permalink();
 						break;
 
 					case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):

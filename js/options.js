@@ -107,6 +107,7 @@ function save_options() {
 	profile_steamdbcalc = $("#profile_steamdbcalc").prop('checked');
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
 	profile_astats = $("#profile_astats").prop('checked');
+	profile_permalink = $("#profile_permalink").prop('checked');
 	show_profile_link_images = $("#profile_link_images_dropdown").val();
 	
 	steamcardexchange = $("#steamcardexchange").prop('checked');
@@ -189,6 +190,7 @@ function save_options() {
 		'profile_steamrep': profile_steamrep,
 		'profile_steamdbcalc': profile_steamdbcalc,
 		'profile_astats': profile_astats,
+		'profile_permalink': profile_permalink,
 		'show_profile_link_images': show_profile_link_images,
 		
 		'steamcardexchange': steamcardexchange
@@ -349,6 +351,7 @@ function load_options() {
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
+		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
 		
 		// Load Store Options
@@ -436,6 +439,7 @@ function load_options() {
 		$("#profile_sapi").prop('checked', settings.profile_sapi);
 		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
 		$("#profile_astats").prop('checked', settings.profile_astats);
+		$("#profile_permalink").prop('checked', settings.profile_permalink);
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
 		$("#language").val(settings.language);
@@ -523,6 +527,7 @@ function load_translation() {
 			$("#profile_link_images_gray").text(localized_strings[settings.language].options_profile_link_images_gray);
 			$("#profile_link_images_color").text(localized_strings[settings.language].options_profile_link_images_color);
 			$("#profile_link_images_none").text(localized_strings[settings.language].options_profile_link_images_none);
+			$("#profile_permalink").text(localized_strings[settings.language].options_profile_permalink);
 			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
 			$("#market_total_text").text(localized_strings[settings.language].options_market_total);
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
