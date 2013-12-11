@@ -2977,7 +2977,7 @@ function dlc_data_for_app_page() {
 }
 
 function show_regional_pricing() {
-	var api_url = "http://store.steampowered.com/api/packagedetails/?key=A6509A49A35166921243F4BCC928E812";
+	var api_url = "http://store.steampowered.com/api/packagedetails/";
 	var appid = get_appid(window.location.href);
 	var countries = ["us","gb","fr","hu","ro","br","ru","au","jp","mx"];
 	var pricing_div = "<div class='es_regional_container'></div>";
