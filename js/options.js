@@ -62,6 +62,7 @@ function save_options() {
 	show_steamchart_info = $("#show_steamchart_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	
+	// Price Options
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
 	$("#steam").prop('checked'),
@@ -87,6 +88,7 @@ function save_options() {
 	$("#humblestore").prop('checked'),
 	$("#indiegamestand").prop('checked')
 	];
+	showregionalprice = $("#regional_price_on").val();
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
@@ -173,6 +175,7 @@ function save_options() {
 		
 		'showallstores': showallstores,
 		'stores': stores,
+		'showregionalprice': showregionalprice,
 
 		'showtotal': showtotal,
 		'showmarkettotal': showmarkettotal,
@@ -204,6 +207,13 @@ function load_store_tab() {
 	$("#maincontent_store").show();	
 	$(".selected").removeClass("selected");
 	$("#nav_store").addClass("selected");
+}
+
+function load_price_tab() {
+	$(".content").hide();
+	$("#maincontent_price").show();	
+	$(".selected").removeClass("selected");
+	$("#nav_price").addClass("selected");
 }
 
 function load_community_tab() {
@@ -313,7 +323,8 @@ function load_options() {
 
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
-		
+		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
+
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
@@ -413,9 +424,10 @@ function load_options() {
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
 		$("#showlowestprice").prop('checked', settings.showlowestprice);		
 		
+		// Load Price Options
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
-		
+		$("#regional_price_on").val(settings.showregionalprice);
 
 		// Load Community Options
 		$("#showtotal").prop('checked', settings.showtotal);
@@ -464,6 +476,7 @@ function load_translation() {
 			document.title = "Enhanced Steam " + localized_strings[settings.language].options;
 			
 			$("#nav_store").text(localized_strings[settings.language].store);
+			$("#nav_price").text(localized_strings[settings.language].price);
 			$("#nav_community").text(localized_strings[settings.language].community);
 			$("#nav_news").text(localized_strings[settings.language].news);
 			$("#nav_about").text(localized_strings[settings.language].about);
@@ -519,8 +532,14 @@ function load_translation() {
 			$("#store_package_info_text").text(localized_strings[settings.language].options_show_package_info);
 			$("#store_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
+			
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
 			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
+			$("#store_regionalprice_header").text(localized_strings[settings.language].regional_price);
+			$("showregionalprice_text").text(localized_strings[settings.language].regional_price_on);
+			$('select option:contains("Always")').text(localized_strings[settings.language].always);
+			$('select option:contains("Never")').text(localized_strings[settings.language].never);
+			$('select option:contains("on Price Mouseover")').text(localized_strings[settings.language].regional_price_mouse);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
 			$("#show_profile_link_images_text").text(localized_strings[settings.language].options_profile_link_images + ":");
@@ -672,6 +691,7 @@ $(document).ready(function(){
 	$("#spamcommentregex_default").click(load_default_spamcommentregex)
 
 	$('#nav_store').click(load_store_tab);
+	$('#nav_price').click(load_price_tab);
 	$('#nav_community').click(load_community_tab);
 	$('#nav_news').click(load_news_tab);
 	$('#nav_about').click(load_about_tab);
