@@ -425,9 +425,28 @@ img.platform_small, .platform_img {
 }
 .es_percentage {
 	font-size:12px;
-	color:green;
 	margin-left:3px;
 }
-.es_percentage_negative {
+.es_percentage_higher {
 	color:red;
+}
+.es_percentage_lower {
+	color:green;
+}
+.es_percentage_equal {
+	color:yellow;
+}
+.es_percentage_indicator {
+	width:7px;
+	height:4px;
+	display:inline-block;
+	margin-bottom:3px;
+	margin-right:2px;
+}
+.es_percentage_higher > .es_percentage_indicator {
+	background-position:0 -4px;
+}
+.es_percentage_equal > .es_percentage_indicator {
+	background-position:0 -8px;
+	margin-bottom:1px;
 }

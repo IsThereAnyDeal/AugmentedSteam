@@ -3002,7 +3002,12 @@ function show_regional_pricing() {
 	var pricing_div = "<div class='es_regional_container'></div>";
 	var world = chrome.extension.getURL("img/flags/world.png");
 	var currency_deferred = [];
-	var local_country = getCookie("LKGBillingCountry").toLowerCase();
+	var local_country;
+	if(getCookie("fakeCC")){
+		local_country = getCookie("fakeCC").toLowerCase();
+	}else {
+		local_country = getCookie("LKGBillingCountry").toLowerCase();
+	}
 	var all_game_areas = $(".game_area_purchase_game").toArray();
 	var subid_info = [];
 	var subid_array = [];
@@ -3011,7 +3016,7 @@ function show_regional_pricing() {
 		if (sub_info["prices"][country]){
 			var price = sub_info["prices"][country]["final"]/100;
 			var local_price = sub_info["prices"][local_country]["final"]/100;
-			converted_price = converted_price/100
+			converted_price = converted_price/100;
 			converted_price = converted_price.toFixed(2);
 			var currency = sub_info["prices"][country]["currency"];
 			var percentage;
@@ -3037,6 +3042,7 @@ function show_regional_pricing() {
 					var formatted_converted_price = formatMoney(converted_price,2,"€",".",",",true);
 					break;
 				case "RUB":
+					converted_price = Math.round(converted_price);
 					var formatted_converted_price = converted_price+"  pуб.";
 					break;
 				case "BRL":
@@ -3050,9 +3056,15 @@ function show_regional_pricing() {
 					break;
 			}
 			percentage = (((converted_price/local_price)*100)-100).toFixed(2);
-			var percentage_span="<span class=\"es_percentage\"></span>";
+			var arrows = chrome.extension.getURL("img/arrows.png");
+			var percentage_span="<span class=\"es_percentage\"><div class=\"es_percentage_indicator\" style='background-image:url("+arrows+")'></div></span>";
 			if (percentage<0) {
-				percentage_span = $(percentage_span).addClass("es_percentage_negative");
+				percentage = Math.abs(percentage);
+				percentage_span = $(percentage_span).addClass("es_percentage_lower");
+			}else if (percentage==0) {
+				percentage_span = $(percentage_span).addClass("es_percentage_equal");
+			}else {
+				percentage_span = $(percentage_span).addClass("es_percentage_higher");
 			}
 			percentage_span = $(percentage_span).append(percentage+"%");
 			var regional_price_div = "<div class=\"es_regional_price\"><img class=\"es_flag\" src=\""+chrome.extension.getURL("img/flags/"+country+".png")+"\">"+formatted_price+"&nbsp;("+formatted_converted_price+")</div>";
@@ -3094,7 +3106,6 @@ function show_regional_pricing() {
 		var format_deferred=[];
 		var formatted_regional_price_array=[];
 		$.when.apply(null,currency_deferred).done(function(){
-			console.log("data obtained, time to process");
 			$.map(subid_info,function(subid,index){
 				var sub_formatted = [];
 				var convert_deferred=[];
@@ -3120,7 +3131,6 @@ function show_regional_pricing() {
 					}
 				});
 				$.when.apply(null,convert_deferred).done(function(){
-					console.log("all conversion done, sticking in array");
 					$(".game_area_purchase_game").eq(index).after(app_pricing_div);
 					formatted_regional_price_array.push(sub_formatted);
 					all_convert_deferred.resolve();
@@ -3128,7 +3138,6 @@ function show_regional_pricing() {
 				format_deferred.push(all_convert_deferred.promise());
 			});
 			$.when.apply(null,format_deferred).done(function(){
-				console.log("all data processed, sorting array and appending, then setting up events");
 				var all_sub_sorted_divs=[];
 				$.each(formatted_regional_price_array,function(formatted_div_index,formatted_div){
 					var sorted_formatted_divs=[];
@@ -3142,7 +3151,6 @@ function show_regional_pricing() {
 					});
 					all_sub_sorted_divs.push(sorted_formatted_divs);
 				});
-				console.log(all_sub_sorted_divs);
 				$.each(all_sub_sorted_divs,function(index,sorted_divs){
 					var subid = subid_array[index];
 					$.each(sorted_divs,function(price_index,regional_div){
