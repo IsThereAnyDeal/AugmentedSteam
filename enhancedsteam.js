@@ -122,7 +122,7 @@ function ensure_appid_deferred(appid) {
 function is_signed_in() {
 	if (!signedInChecked) {
 		var steamLogin = getCookie("steamLogin");
-		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "");
+		if (steamLogin) isSignedIn = steamLogin.replace(/%.*/, "").match(/^\d+/);
 		signedInChecked = true;
 	}
 	return isSignedIn;
@@ -1177,8 +1177,8 @@ function show_library() {
 		var showlibraryf2p = 1;
 		showlibraryf2p = (settings.showlibraryf2p) ? 1 : 0;
 
-		// Call Storefront API
-		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + is_signed_in() + '&include_appinfo=1&include_played_free_games=' + showlibraryf2p + '&format=json', function (txt) {
+		// Call EnhancedSteam API Wrapper
+		get_http('http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=' + is_signed_in() + '&include_played_free_games=' + showlibraryf2p, function (txt) {
 			var data = JSON.parse(txt);
 			if (data.response && Object.keys(data.response).length > 0) {
 				library_all_games = data.response.games;
@@ -3990,7 +3990,7 @@ function add_gamelist_achievements() {
 
 function add_gamelist_common() {
 	if($("label").attr("for")=="show_common_games") {
-		get_http('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=' + is_signed_in() + '&include_played_free_games=1&format=json', function (txt) {
+		get_http('http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=' + is_signed_in() + '&include_played_free_games=1', function (txt) {
 			var data = JSON.parse(txt);
 			$("#gameFilter").after("<span id=\"es_gl_comparison_mode\" style=\"margin-left:5px;\">"+localized_strings[language].comparison_mode+"</span>");
 			$("#gameFilter").after("<input type=\"checkbox\" id=\"es_gl_show_notcommon_games\"><label for=\"es_gl_show_notcommon_games\" id=\"es_gl_show_notcommon_games_label\">"+localized_strings[language].notcommon_label+"</label>");
