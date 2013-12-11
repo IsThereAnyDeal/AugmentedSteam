@@ -3132,6 +3132,7 @@ function show_regional_pricing() {
 				});
 				$.when.apply(null,convert_deferred).done(function(){
 					$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+					sub_formatted["subid"]=subid_info[index]["subid"].toString();
 					formatted_regional_price_array.push(sub_formatted);
 					all_convert_deferred.resolve();
 				});
@@ -3149,12 +3150,13 @@ function show_regional_pricing() {
 							}
 						});
 					});
+					sorted_formatted_divs["subid"]=formatted_div["subid"];
 					all_sub_sorted_divs.push(sorted_formatted_divs);
 				});
 				$.each(all_sub_sorted_divs,function(index,sorted_divs){
 					var subid = subid_array[index];
 					$.each(sorted_divs,function(price_index,regional_div){
-						$("#es_pricing_"+subid).append(regional_div);
+						$("#es_pricing_"+sorted_divs["subid"]).append(regional_div);
 					});
 					$("#es_pricing_"+subid).append("<div class='miniprofile_arrow right' style='position: absolute; top: 12px; right: -8px;'></div>");
 				});
