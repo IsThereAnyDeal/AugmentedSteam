@@ -1325,11 +1325,11 @@ function library_show_app(appid) {
 				$("#es_library_app_left").append($("<div class='es_library_app_container' id='es_library_app_achievements_container' style='display: none;'><div id='es_library_app_achievements'></div></div>"));
 
 				// TODO: spam Valve so we can do just 1 request for achievements
-				get_http("http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?key=A6509A49A35166921243F4BCC928E812&steamid=" + is_signed_in() + "&appid=" + appid, function(txt) {
+				get_http("http://api.enhancedsteam.com/steamapi/GetPlayerAchievements/?steamid=" + is_signed_in() + "&appid=" + appid, function(txt) {
 					var player_achievements = JSON.parse(txt);
 
 					if (player_achievements.playerstats.achievements) {
-						get_http("http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v0002/?key=A6509A49A35166921243F4BCC928E812&steamid=" + is_signed_in() + "&appid=" + appid + "&l=english", function(txt) {
+						get_http("http://api.enhancedsteam.com/steamapi/GetSchemaForGame/?steamid=" + is_signed_in() + "&appid=" + appid + "&language=" + language, function(txt) {
 							var achievements_schema = JSON.parse(txt).game.availableGameStats.achievements;
 							player_achievements = player_achievements.playerstats.achievements;
 
