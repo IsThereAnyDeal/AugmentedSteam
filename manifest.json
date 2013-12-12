@@ -36,7 +36,7 @@
       "css": ["css/enhancedsteam.css"]
     },
     {
-      "matches": ["http://store.steampowered.com/app/*"],
+      "matches": ["http://store.steampowered.com/app/*","http://store.steampowered.com/sub/*"],
       "css": ["css/es_flags.css"]
     }
   ]

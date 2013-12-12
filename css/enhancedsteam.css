@@ -450,3 +450,9 @@ img.platform_small, .platform_img {
 	background-position:0 -8px;
 	margin-bottom:1px;
 }
+.es_regional_always {
+	display:inline-block;
+	position:relative;
+	float:right;
+	margin-bottom:5px;
+}
