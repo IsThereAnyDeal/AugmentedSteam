@@ -2982,7 +2982,7 @@ function show_regional_pricing() {
 		if (settings.showregionalprice != "off") {
 			var api_url = "http://store.steampowered.com/api/packagedetails/";
 			var appid = get_appid(window.location.href);
-			var countries = ["us","gb","fr","hu","ro","br","ru","au","jp","mx"];
+			var countries = ["us","gb","eu1","eu2","ru","br"];
 			var pricing_div = "<div class='es_regional_container'></div>";
 			var world = chrome.extension.getURL("img/flags/world.png");
 			var currency_deferred = [];
@@ -3072,12 +3072,23 @@ function show_regional_pricing() {
 			if(subid_array.length>0){
 				subids_csv=subid_array.join();
 				$.each(countries,function(index,country){
+					switch (country) {
+						case "eu1":
+							cc="fr";
+							break;
+						case "eu2":
+							cc="it";
+							break;
+						default:
+							cc=country;
+							break;
+					}
 					currency_deferred.push(
 						$.ajax({
 							url:api_url,
 							data:{
 								packageids:subids_csv,
-								cc:country
+								cc:cc
 							}
 						}).done(function(data){
 							$.each(subid_info,function(subid_index,package_info){
