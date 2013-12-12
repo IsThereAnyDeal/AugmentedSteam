@@ -3132,7 +3132,14 @@ function show_regional_pricing() {
 							}
 						});
 						$.when.apply(null,convert_deferred).done(function(){
-							$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+							switch(settings.showregionalprice){
+								case "always":
+									$(".game_area_purchase_game").eq(index).find(".game_purchase_action").before(app_pricing_div);
+									break;
+								default:
+									$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+									break;
+							}
 							sub_formatted["subid"]=subid_info[index]["subid"].toString();
 							formatted_regional_price_array.push(sub_formatted);
 							all_convert_deferred.resolve();
@@ -3181,9 +3188,9 @@ function show_regional_pricing() {
 								})
 								.css("cursor","help");
 							} else {
-								$("#es_pricing_" + subid).css("display", "block");
-								$("#es_pricing_" + subid).css("z-index", "-1");
-								$("#es_pricing_" + subid).css("position", "relative");
+								$("#es_pricing_" + subid).addClass("es_regional_always");
+								//$("#es_pricing_" + subid).css({"display":"inline-block","position":"relative","float":"right","margin-top":"16px"});
+								$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
 							}
 						});
 					});
