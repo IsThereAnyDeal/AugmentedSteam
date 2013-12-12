@@ -2981,7 +2981,6 @@ function show_regional_pricing() {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.showregionalprice != "off") {
 			var api_url = "http://store.steampowered.com/api/packagedetails/";
-			var appid = get_appid(window.location.href);
 			var countries = ["us","gb","eu1","eu2","ru","br"];
 			var pricing_div = "<div class='es_regional_container'></div>";
 			var world = chrome.extension.getURL("img/flags/world.png");
@@ -3064,10 +3063,12 @@ function show_regional_pricing() {
 			}
 			$.each(all_game_areas,function(index,app_package){
 				var subid = $(app_package).find("input").last().val();
-				subid_info[index]=[];
-				subid_info[index]["subid"]=subid;
-				subid_info[index]["prices"]=[];
-				subid_array.push(subid);
+				if(subid!=undefined){
+					subid_info[index]=[];
+					subid_info[index]["subid"]=subid;
+					subid_info[index]["prices"]=[];
+					subid_array.push(subid);
+				}
 			});
 			if(subid_array.length>0){
 				subids_csv=subid_array.join();
@@ -4324,6 +4325,8 @@ $(document).ready(function(){
 						add_steamdb_links(subid, "sub");
 						add_feature_search_links();
 						fix_broken_sub_image();
+
+						show_regional_pricing();
 						break;
 
 					case /^\/agecheck\/.*/.test(window.location.pathname):
