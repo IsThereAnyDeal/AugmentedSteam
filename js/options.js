@@ -65,30 +65,47 @@ function save_options() {
 	// Price Options
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
-	$("#steam").prop('checked'),
-	$("#amazonus").prop('checked'),
-	$("#impulse").prop('checked'),
-	$("#gamersgate").prop('checked'),
-	$("#greenmangaming").prop('checked'),
-	$("#gamefly").prop('checked'),
-	$("#origin").prop('checked'),
-	$("#uplay").prop('checked'),
-	$("#indiegalastore").prop('checked'),
-	$("#gametap").prop('checked'),
-	$("#gamesplanet").prop('checked'),
-	$("#getgames").prop('checked'),
-	$("#desura").prop('checked'),
-	$("#gog").prop('checked'),
-	$("#dotemu").prop('checked'),
-	$("#beamdog").prop('checked'),
-	$("#adventureshop").prop('checked'),
-	$("#nuuvem").prop('checked'),
-	$("#shinyloot").prop('checked'),
-	$("#dlgamer").prop('checked'),			
-	$("#humblestore").prop('checked'),
-	$("#indiegamestand").prop('checked')
+		$("#steam").prop('checked'),
+		$("#amazonus").prop('checked'),
+		$("#impulse").prop('checked'),
+		$("#gamersgate").prop('checked'),
+		$("#greenmangaming").prop('checked'),
+		$("#gamefly").prop('checked'),
+		$("#origin").prop('checked'),
+		$("#uplay").prop('checked'),
+		$("#indiegalastore").prop('checked'),
+		$("#gametap").prop('checked'),
+		$("#gamesplanet").prop('checked'),
+		$("#getgames").prop('checked'),
+		$("#desura").prop('checked'),
+		$("#gog").prop('checked'),
+		$("#dotemu").prop('checked'),
+		$("#beamdog").prop('checked'),
+		$("#adventureshop").prop('checked'),
+		$("#nuuvem").prop('checked'),
+		$("#shinyloot").prop('checked'),
+		$("#dlgamer").prop('checked'),			
+		$("#humblestore").prop('checked'),
+		$("#indiegamestand").prop('checked')
 	];
 	showregionalprice = $("#regional_price_on").val();
+	regional_countries = [
+		$("#regional_country_1").val(),
+		$("#regional_country_2").val(),
+		$("#regional_country_3").val(),
+		$("#regional_country_4").val(),
+		$("#regional_country_5").val(),
+		$("#regional_country_6").val(),
+		$("#regional_country_7").val(),
+		$("#regional_country_8").val(),
+		$("#regional_country_9").val()
+	];
+
+	for(var i = regional_countries.length - 1; i >= 0; i--) {
+	    if(regional_countries[i] === "") {
+	       regional_countries.splice(i, 1);
+	    }
+	}
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
@@ -176,6 +193,7 @@ function save_options() {
 		'showallstores': showallstores,
 		'stores': stores,
 		'showregionalprice': showregionalprice,
+		'regional_countries': regional_countries,
 
 		'showtotal': showtotal,
 		'showmarkettotal': showmarkettotal,
@@ -280,9 +298,53 @@ function toggle_stores() {
 	}
 }
 
+function load_countries() {
+	chrome.storage.sync.get(function(settings) {
+		$(".es_flag").css("background-image", "url("+chrome.extension.getURL("img/flags/flags.png")+")");
+		if (settings.regional_countries[0]) {
+			$("#es_flag_1").addClass("es_flag_" + settings.regional_countries[0]);
+			$("#regional_country_1").prop('value', settings.regional_countries[0]);
+		}	
+		if (settings.regional_countries[1]) {
+			$("#es_flag_2").addClass("es_flag_" + settings.regional_countries[1]);
+			$("#regional_country_2").prop('value', settings.regional_countries[1]);
+		}
+		if (settings.regional_countries[2]) {
+			$("#es_flag_3").addClass("es_flag_" + settings.regional_countries[2]);
+			$("#regional_country_3").prop('value', settings.regional_countries[2]);
+		}	
+		if (settings.regional_countries[3]) {
+			$("#es_flag_4").addClass("es_flag_" + settings.regional_countries[3]);
+			$("#regional_country_4").prop('value', settings.regional_countries[3]);
+		}	
+		if (settings.regional_countries[4]) {
+			$("#es_flag_5").addClass("es_flag_" + settings.regional_countries[4]);
+			$("#regional_country_5").prop('value', settings.regional_countries[4]);
+		}	
+		if (settings.regional_countries[5]) {
+			$("#es_flag_6").addClass("es_flag_" + settings.regional_countries[5]);
+			$("#regional_country_6").prop('value', settings.regional_countries[5]);
+		}	
+		if (settings.regional_countries[6]) {
+			$("#es_flag_7").addClass("es_flag_" + settings.regional_countries[6]);
+			$("#regional_country_7").prop('value', settings.regional_countries[6]);
+		}	
+		if (settings.regional_countries[7]) {
+			$("#es_flag_8").addClass("es_flag_" + settings.regional_countries[7]);
+			$("#regional_country_8").prop('value', settings.regional_countries[7]);
+		}	
+		if (settings.regional_countries[8]) {
+			$("#es_flag_8").addClass("es_flag_" + settings.regional_countries[8]);
+			$("#regional_country_9").prop('value', settings.regional_countries[8]);
+		}	
+	});
+}
+
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
+		populate_regional_selects();
+
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
@@ -324,6 +386,7 @@ function load_options() {
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
 
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
@@ -422,12 +485,14 @@ function load_options() {
 		$("#show_package_info").prop('checked', settings.show_package_info);
 		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
-		$("#showlowestprice").prop('checked', settings.showlowestprice);		
-		
+				
 		// Load Price Options
+		$("#showlowestprice").prop('checked', settings.showlowestprice);
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
 		$("#regional_price_on").val(settings.showregionalprice);
+		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
+		load_countries();
 
 		// Load Community Options
 		$("#showtotal").prop('checked', settings.showtotal);
@@ -462,7 +527,6 @@ function load_options() {
 
 		load_translation();
 		load_profile_link_images();
-
 	});
 }
 
@@ -574,6 +638,7 @@ function load_translation() {
 			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_own_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_rec_color_default").text(localized_strings[settings.language].theworddefault);
+			$("#reset_countries").text(localized_strings[settings.language].theworddefault);
 			
 			$("#es_about_text").html(localized_strings[settings.language].options_about_text);
 			$("#changelog_text").text(localized_strings[settings.language].options_changelog);
@@ -614,6 +679,19 @@ function load_profile_link_images() {
 	});
 }
 
+function populate_regional_selects() {
+	$.getJSON(chrome.extension.getURL('cc.json'), function(cc_data) {
+		$.each(cc_data, function (index, value) {
+			$(".regional_country")
+				.append($("<option></option>")
+				.attr("value", index.toLowerCase())
+				.text(value));
+		});
+	});
+}
+
+
+
 function get_http(url, callback) {
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
@@ -648,6 +726,12 @@ function clear_settings() {
 	});
 }
 
+function change_flag(node, selectnode) {
+	console.log(selectnode);
+	$(node).removeClass();
+	$(node).addClass("es_flag_" + $(selectnode).val() +" es_flag");
+}
+
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
 function load_default_highlight_wishlist_color() { $("highlight_wishlist_color").val("#496e93"); }
 function load_default_highlight_coupon_color() { $("highlight_coupon_color").val("#6b2269"); }
@@ -663,6 +747,13 @@ function load_default_tag_inv_guestpass_color() { $("tag_inv_guestpass_color").v
 function load_default_tag_friends_want_color() { $("tag_friends_want_color").val("#7E4060"); }
 function load_default_tag_friends_own_color() { $("tag_friends_own_color").val("#5b9504"); }
 function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("#2e3d54"); }
+
+function load_default_countries() {
+	regional_countries = ["us","gb","eu1","eu2","ru","br" ];
+	chrome.storage.sync.set({'regional_countries': regional_countries});
+	load_countries();
+	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
+}
 
 function toggle_regex() {$("#spamcommentregex_list").toggle()}
 function load_default_spamcommentregex(){$("#spamcommentregex").val("[\\u2500-\\u25FF]")}
@@ -699,9 +790,17 @@ $(document).ready(function(){
 
 	$("#show_spamcommentregex").click(toggle_regex);
 	$('#stores_all').click(toggle_stores);
+	$("#reset_countries").click(load_default_countries);
+	$('.regional_country').change(function() {		
+		change_flag($("#es_flag_" + $(this).attr("id").match(/\d$/)), $(this));
+	});
+
+	$("#regional_price_on").change(function() {
+		if ($(this).val() == "off") { $("#region_selects").hide(); } else { $("#region_selects").show(); }
+	});
 
 	$("input").click(save_options);
-	$("button:not(#reset)").click(save_options);
+	$("button:not(#reset):not(#reset_countries)").click(save_options);
 	$("#reset").click(clear_settings);
 	$(".colorbutton").change(save_options);
 	$("select").change(save_options);

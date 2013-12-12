@@ -2979,9 +2979,10 @@ function dlc_data_for_app_page() {
 function show_regional_pricing() {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br"]; storage.set({'regional_countries': settings.regional_countries}); }
 		if (settings.showregionalprice != "off") {
 			var api_url = "http://store.steampowered.com/api/packagedetails/";
-			var countries = ["us","gb","eu1","eu2","ru","br"];
+			var countries = settings.regional_countries;
 			var pricing_div = "<div class='es_regional_container'></div>";
 			var world = chrome.extension.getURL("img/flags/world.png");
 			var currency_deferred = [];
