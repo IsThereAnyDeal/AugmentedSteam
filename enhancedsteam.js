@@ -2979,7 +2979,7 @@ function dlc_data_for_app_page() {
 function show_regional_pricing() {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
-		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br"]; storage.set({'regional_countries': settings.regional_countries}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au"]; storage.set({'regional_countries': settings.regional_countries}); }
 		if (settings.showregionalprice != "off") {
 			var api_url = "http://store.steampowered.com/api/packagedetails/";
 			var countries = settings.regional_countries;
