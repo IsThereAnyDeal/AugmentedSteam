@@ -2992,17 +2992,21 @@ function show_regional_pricing() {
 			}else {
 				local_country = getCookie("LKGBillingCountry").toLowerCase();
 			}
+			if(countries.indexOf(local_country)===-1){
+				countries.push(local_country);
+			}
 			var all_game_areas = $(".game_area_purchase_game").toArray();
 			var subid_info = [];
 			var subid_array = [];
 			var subids_csv;
-			function formatPriceData(sub_info, country,converted_price,local_currency) {
+			function formatPriceData(sub_info,country,converted_price,local_currency) {
 				if (sub_info["prices"][country]){
 					var price = sub_info["prices"][country]["final"]/100;
 					var local_price = sub_info["prices"][local_country]["final"]/100;
 					converted_price = converted_price/100;
 					converted_price = converted_price.toFixed(2);
 					var currency = sub_info["prices"][country]["currency"];
+					var flag_div = "<div class=\"es_flag\" style='background-image:url("+chrome.extension.getURL("img/flags/flags.png")+")'></div>";
 					var percentage;
 					switch(currency) {
 						case "EUR":
@@ -3051,7 +3055,9 @@ function show_regional_pricing() {
 						percentage_span = $(percentage_span).addClass("es_percentage_higher");
 					}
 					percentage_span = $(percentage_span).append(percentage+"%");
-					var regional_price_div = "<div class=\"es_regional_price\"><img class=\"es_flag\" src=\""+chrome.extension.getURL("img/flags/"+country+".png")+"\">"+formatted_price+"&nbsp;("+formatted_converted_price+")</div>";
+					var regional_price_div = "<div class=\"es_regional_price\">"+formatted_price+"&nbsp;("+formatted_converted_price+")</div>";
+					flag_div = $(flag_div).addClass("es_flag_"+country);
+					regional_price_div = $(regional_price_div).prepend(flag_div);
 					regional_price_div = $(regional_price_div).append(percentage_span);
 					return regional_price_div;
 				}

@@ -16,7 +16,7 @@
      "img/ico/steamcardexchange.png",
 	   "img/steamdb.png", "img/steamdb_store.png", "img/play_off.png", "img/play_on.png", "img/ico_cards.gif", "img/red_banner.png", "img/es_btn_browse.png", "img/pcgw.png", "img/gl_banner.jpg",
       "css/enhancedsteam.css", "options.html",
-      "img/flags/us.png","img/flags/fr.png","img/flags/gb.png","img/flags/br.png","img/flags/ru.png","img/flags/hu.png","img/flags/au.png","img/flags/jp.png","img/flags/mx.png","img/flags/ro.png"
+      "img/flags/flags.png"
       ,"img/flags/world.png","img/arrows.png"
   ],
   "homepage_url": "http://www.EnhancedSteam.com/",
@@ -34,6 +34,10 @@
         "js/localization.js",
         "enhancedsteam.js"],
       "css": ["css/enhancedsteam.css"]
+    },
+    {
+      "matches": ["http://store.steampowered.com/app/*"],
+      "css": ["css/es_flags.css"]
     }
   ]
 }
