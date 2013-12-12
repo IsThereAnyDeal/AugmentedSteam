@@ -3189,7 +3189,6 @@ function show_regional_pricing() {
 								.css("cursor","help");
 							} else {
 								$("#es_pricing_" + subid).addClass("es_regional_always");
-								//$("#es_pricing_" + subid).css({"display":"inline-block","position":"relative","float":"right","margin-top":"16px"});
 								$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
 							}
 						});
