@@ -3,8 +3,8 @@ v5.2
 + Added regional price comparison feature which is fully configurable in options
 + Added sale information to wishlist entries
 + Added "ADD UNOWNED DLC TO CART" button on app pages
-+ Added "Buy Wishlist" package to wishlist pages
-
++ Added "Buy Wishlist" section to wishlist pages
+: Fixed a bug where some inventory market links were not functioning correctly
 
 v5.1.1
 -----
