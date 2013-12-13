@@ -753,8 +753,7 @@ function load_default_countries() {
 	chrome.storage.sync.set({'regional_countries': regional_countries});
 	$("#regional_country_8").val("");
 	$("#regional_country_9").val("");
-	$("#es_flag_8").removeClass().addClass("es_flag");
-	$("#es_flag_9").removeClass().addClass("es_flag");
+	$(".es_flag").removeClass().addClass("es_flag");	
 	load_countries();
 	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 }
