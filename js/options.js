@@ -600,7 +600,7 @@ function load_translation() {
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
 			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
 			$("#store_regionalprice_header").text(localized_strings[settings.language].regional_price);
-			$("showregionalprice_text").text(localized_strings[settings.language].regional_price_on);
+			$("#showregionalprice_text").text(localized_strings[settings.language].regional_price_on);
 			$('select option:contains("Always")').text(localized_strings[settings.language].always);
 			$('select option:contains("Never")').text(localized_strings[settings.language].never);
 			$('select option:contains("on Price Mouseover")').text(localized_strings[settings.language].regional_price_mouse);
