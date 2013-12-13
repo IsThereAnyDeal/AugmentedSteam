@@ -888,20 +888,21 @@ function pack_split(node, ways) {
 
 function add_4pack_breakdown() {
 	$(".game_area_purchase_game_wrapper").each(function() {
-		if ($(this).is(":contains('4-pack')")) { pack_split(this, 4); }
-		if ($(this).is(":contains('4-Pack')")) { pack_split(this, 4); }
-		if ($(this).is(":contains('4 Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('Two Pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('Two-pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('Friend Pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).is(":contains('3-Pack')")) { pack_split(this, 3); }
 		if ($(this).is(":contains('3 pack')")) { pack_split(this, 3); }
 		if ($(this).is(":contains('Team Pack')")) { pack_split(this, 3); }
-		if ($(this).is(":contains('Friend Pack')")) { pack_split(this, 2); }
-		if ($(this).is(":contains('2-Pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('4-pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('4-Pack')")) { pack_split(this, 4); }
+		if ($(this).is(":contains('4 Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Four Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Four pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Four-Pack')")) { pack_split(this, 4); }
 		if ($(this).is(":contains('Clan Pack')")) { pack_split(this, 4); }
-		if ($(this).is(":contains('Two Pack')")) { pack_split(this, 2); }
-		if ($(this).is(":contains('Two-pack')")) { pack_split(this, 2); }
+		if ($(this).is(":contains('5 Pack')")) { pack_split(this, 5); }
 		if ($(this).is(":contains('6-pack')")) { pack_split(this, 6); }
 		if ($(this).is(":contains('6-Pack')")) { pack_split(this, 6); }
 	});
