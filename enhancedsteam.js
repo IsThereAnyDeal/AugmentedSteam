@@ -1885,7 +1885,8 @@ function appdata_on_wishlist() {
 			$(node).before("<div id='es_sale_type_" + app + "' style='margin-top: -10px; margin-bottom: -10px; color: #7cb8e4; display: none;'></div>");
 			$("#es_sale_type_" + app).load("http://store.steampowered.com/app/" + app + " .game_purchase_discount_countdown:first", function() {
 				if ($("#es_sale_type_" + app).html() != "") {
-					$("#es_sale_type_" + app).show();
+					$("#es_sale_type_" + app).html($("#es_sale_type_" + app).html().replace(/\!(.+)/, "!"));
+					$("#es_sale_type_" + app).show();					
 				}
 			});
 		};	
