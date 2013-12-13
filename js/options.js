@@ -334,7 +334,7 @@ function load_countries() {
 			$("#regional_country_8").prop('value', settings.regional_countries[7]);
 		}	
 		if (settings.regional_countries[8]) {
-			$("#es_flag_8").addClass("es_flag_" + settings.regional_countries[8]);
+			$("#es_flag_9").addClass("es_flag_" + settings.regional_countries[8]);
 			$("#regional_country_9").prop('value', settings.regional_countries[8]);
 		}	
 	});
