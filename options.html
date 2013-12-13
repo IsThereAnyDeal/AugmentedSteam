@@ -3,6 +3,7 @@
 <script src="js/localization.js"></script>
 <script src="js/options.js"></script>
 <link href="css/options.css" rel="stylesheet" type="text/css">
+<link href="css/es_flags.css" rel="stylesheet" type="text/css">
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <head>
 	<title>Enhanced Steam Options</title>
@@ -12,10 +13,13 @@
 
 	<div id="header">
 		<div id="header_logo"><img src="img/logo.png"></div>
+		<span class="notification" id="saved">Options saved</span>
+		<span class="notification" id="reset_note">Options reset</span>
 	</div>
 
 	<div id="side_bar">
 		<a class="tab_row selected" id="nav_store">Store</a>
+		<a class="tab_row" id="nav_price">Price</a>
 		<a class="tab_row" id="nav_community">Community</a>
 		<a class="tab_row" id="nav_news">News</a>
 		<a class="tab_row" id="nav_about">About</a>
@@ -201,6 +205,32 @@
 					<input type="checkbox" id="hide_early_access">
 					<label for="hide_early_access" id="hide_early_access_text">Early Access Items in New Releases</label>
 				</li>
+				<li class="header" id="library_text">Library (BETA)</li>
+				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
+				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
+				<li class="header" id="options_header_text">Header</li>
+				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
+				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide About link</label></li>
+				<li><input type="checkbox" id="hidecommunitynew"><label for="hidecommunitynew"id="store_hide_new_heading">Hide "NEW" over username</label></li>
+				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
+				<li class="header" id="store_general">General</li>
+				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
+				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
+				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable Continuous Scrolling of Search Results</label></li>
+				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd Party DRM Warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" class="help"></a></li>
+				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic User Scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" class="help"></a></li>
+				<li><input type="checkbox" id="showhltb"><label for="showhltb" id="store_hltb_text">Show HowLongToBeat.com Information</label></li>
+				<li><input type="checkbox" id="showsteamdb"><label for="showsteamdb" id="store_steamdb_text">Show SteamDB Links</label></li>
+				<li><input type="checkbox" id="showpcgw"><label for="showpcgw" id="store_pcgw_text">Show PCGamingWiki Links</label></li>
+				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) Info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
+				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com Info</label></li>
+				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show Package Info For All Apps</label></li>
+				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show App Descriptions On Storefront Carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" class="help"></a></li>
+			</ul>
+		</div>
+
+		<div id="maincontent_price" class="content" style="display: none">
+			<ul>
 				<li class="header" id="store_lowestprice_header">Price History Information</li>
 				<li>
 					<input type="checkbox" id="showlowestprice">
@@ -292,27 +322,45 @@
 						</td>
 					</tr>
 				</table>
-				<li class="header" id="library_text">Library (BETA)</li>
-				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
-				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
-				<li class="header" id="options_header_text">Header</li>
-				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
-				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide About link</label></li>
-				<li><input type="checkbox" id="hidecommunitynew"><label for="hidecommunitynew"id="store_hide_new_heading">Hide "NEW" over username</label></li>
-				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
-				<li class="header" id="store_general">General</li>
-				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
-				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
-				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable Continuous Scrolling of Search Results</label></li>
-				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd Party DRM Warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" class="help"></a></li>
-				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic User Scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" class="help"></a></li>
-				<li><input type="checkbox" id="showhltb"><label for="showhltb" id="store_hltb_text">Show HowLongToBeat.com Information</label></li>
-				<li><input type="checkbox" id="showsteamdb"><label for="showsteamdb" id="store_steamdb_text">Show SteamDB Links</label></li>
-				<li><input type="checkbox" id="showpcgw"><label for="showpcgw" id="store_pcgw_text">Show PCGamingWiki Links</label></li>
-				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) Info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
-				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com Info</label></li>
-				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show Package Info For All Apps</label></li>
-				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show App Descriptions On Storefront Carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" class="help"></a></li>
+				<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
+				<li>
+					<label for="showregionalprice" id="showregionalprice_text">Show Regional Price Comparison</label>
+					<select id="regional_price_on">
+						<option value="mouse">on Price Mouseover</option>
+						<option value="always">Always</option>
+						<option value="off">Never</option>
+					</select>
+				</li>				
+				<div id='region_selects'>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_1"></span><select id="regional_country_1" class="regional_country"></select>
+					</li>	
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_2"></span><select id="regional_country_2" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_3"></span><select id="regional_country_3" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_4"></span><select id="regional_country_4" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_5"></span><select id="regional_country_5" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_6"></span><select id="regional_country_6" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_7"></span><select id="regional_country_7" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_8"></span><select id="regional_country_8" class="regional_country"></select>
+					</li>
+					<li style='margin-top: 10px;'>
+						<span class="es_flag" id="es_flag_9"></span><select id="regional_country_9" class="regional_country"></select>
+					</li>
+					<div style='margin-top: 15px; margin-left: 32px;'><button id="reset_countries" class="btn">Default</button></div>
+				</div>
 			</ul>
 		</div>
 
@@ -359,51 +407,60 @@
 				<li>
 					<input type="checkbox" id="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text">Show "Add to Wishlist" button on community app hubs</label>
 				</li>
+				<li>
+					<input type="checkbox" id="profile_permalink"><label for="profile_permalink" id="profile_permalink_text">Show Permalink on Profiles</label>
+				</li>
 				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" class="help"></a>
 				<ul id="profile_links">
 					<li>
+						<input type="checkbox" id="profile_steamrep">
+						<label for="profile_steamrep">
+							<img src="img/ico/steamrep.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/steamrep_col.png" class="site_icon profile_link_icon_background site_icon_col" />
+							SteamRep
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_steamdbcalc">
+						<label for="profile_steamdbcalc">
+							<img src="img/ico/steamdb.png" class="site_icon" />
+							SteamDB
+						</label>
+					</li>
+					<li>
 						<input type="checkbox" id="profile_steamgifts">
 						<label for="profile_steamgifts">
-							<img src="img/ico/steamgifts.ico" class="site_icon" />SteamGifts
+							<img src="img/ico/steamgifts.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/steamgifts_col.png" class="site_icon site_icon_col" />
+							SteamGifts
 						</label>
 					</li>
 					<li>
 						<input type="checkbox" id="profile_steamtrades">
 						<label for="profile_steamtrades">
-							<img src="img/ico/steamtrades.ico" class="site_icon" />SteamTrades
+							<img src="img/ico/steamtrades.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/steamtrades_col.png" class="site_icon site_icon_col" />
+							SteamTrades
 						</label>
 					</li>
-					<li>
-						<input type="checkbox" id="profile_steamrep">
-						<label for="profile_steamrep">
-							<img src="img/ico/steamrep.ico" class="site_icon" />SteamRep
-						</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_wastedonsteam">
-						<label for="profile_wastedonsteam">
-							<img src="img/ico/wastedonsteam.ico" class="site_icon" />Wasted On Steam
-						</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_sapi">
-						<label for="profile_sapi">
-							<img src="img/ico/sapi.ico" class="site_icon" />sAPI
-						</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_backpacktf">
-						<label for="profile_backpacktf">
-							<img src="img/ico/backpacktf.ico" class="site_icon" />backpack.tf
-						</label>
-					</li>
+
 					<li>
 						<input type="checkbox" id="profile_astats">
 						<label for="profile_astats">
-							<img src="img/ico/achievementstats.ico" class="site_icon" />Achievement Stats
+							<img src="img/ico/achievementstats.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/achievementstats_col.png" class="site_icon site_icon_col" />
+							Achievement Stats
 						</label>
 					</li>
 				</ul>
+				<li>
+					<label id="show_profile_link_images_text">Profile link images:</label>&nbsp;
+					<select id="profile_link_images_dropdown">
+						<option value="gray" id="profile_link_images_gray">Grayscale</option>
+						<option value="color" id="profile_link_images_color">Colored</option>
+						<option value=false id="profile_link_images_none">None</option>
+					</select>
+				</li>
 			</ul>
 
 		</div>
@@ -420,9 +477,9 @@
 			<ul class="credits">
 				<li class="header" id="programming_text">Programming</li>
 				<li>Jason '<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>' Shackles</li>
-				<li>Rob '<a href="http://steamcommunity.com/profiles/76561197989222171" id="rjackson_steam">rjacksonm1</a>' Jackson</li>
-				<li>Tomáš '<a href="http://steamcommunity.com/profiles/76561198020275445" id="tomas_steam">Timmy</a>' Duda</li>
 				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">Smashman</a>' Williams</li>
+				<li>Rob '<a href="http://steamcommunity.com/profiles/76561197989222171" id="rjackson_steam">rjacksonm1</a>' Jackson</li>
+				<li>Tomáš '<a href="http://steamcommunity.com/profiles/76561198020275445" id="tomas_steam">Timmy</a>' Duda</li>				
 			</ul>
 			<ul class="credits">
 				<li class="header" id="translation_text">Translation</li>

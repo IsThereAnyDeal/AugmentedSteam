@@ -62,31 +62,50 @@ function save_options() {
 	show_steamchart_info = $("#show_steamchart_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	
+	// Price Options
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
-	$("#steam").prop('checked'),
-	$("#amazonus").prop('checked'),
-	$("#impulse").prop('checked'),
-	$("#gamersgate").prop('checked'),
-	$("#greenmangaming").prop('checked'),
-	$("#gamefly").prop('checked'),
-	$("#origin").prop('checked'),
-	$("#uplay").prop('checked'),
-	$("#indiegalastore").prop('checked'),
-	$("#gametap").prop('checked'),
-	$("#gamesplanet").prop('checked'),
-	$("#getgames").prop('checked'),
-	$("#desura").prop('checked'),
-	$("#gog").prop('checked'),
-	$("#dotemu").prop('checked'),
-	$("#beamdog").prop('checked'),
-	$("#adventureshop").prop('checked'),
-	$("#nuuvem").prop('checked'),
-	$("#shinyloot").prop('checked'),
-	$("#dlgamer").prop('checked'),			
-	$("#humblestore").prop('checked'),
-	$("#indiegamestand").prop('checked')
+		$("#steam").prop('checked'),
+		$("#amazonus").prop('checked'),
+		$("#impulse").prop('checked'),
+		$("#gamersgate").prop('checked'),
+		$("#greenmangaming").prop('checked'),
+		$("#gamefly").prop('checked'),
+		$("#origin").prop('checked'),
+		$("#uplay").prop('checked'),
+		$("#indiegalastore").prop('checked'),
+		$("#gametap").prop('checked'),
+		$("#gamesplanet").prop('checked'),
+		$("#getgames").prop('checked'),
+		$("#desura").prop('checked'),
+		$("#gog").prop('checked'),
+		$("#dotemu").prop('checked'),
+		$("#beamdog").prop('checked'),
+		$("#adventureshop").prop('checked'),
+		$("#nuuvem").prop('checked'),
+		$("#shinyloot").prop('checked'),
+		$("#dlgamer").prop('checked'),			
+		$("#humblestore").prop('checked'),
+		$("#indiegamestand").prop('checked')
 	];
+	showregionalprice = $("#regional_price_on").val();
+	regional_countries = [
+		$("#regional_country_1").val(),
+		$("#regional_country_2").val(),
+		$("#regional_country_3").val(),
+		$("#regional_country_4").val(),
+		$("#regional_country_5").val(),
+		$("#regional_country_6").val(),
+		$("#regional_country_7").val(),
+		$("#regional_country_8").val(),
+		$("#regional_country_9").val()
+	];
+
+	for(var i = regional_countries.length - 1; i >= 0; i--) {
+	    if(regional_countries[i] === "") {
+	       regional_countries.splice(i, 1);
+	    }
+	}
 
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
@@ -104,10 +123,11 @@ function save_options() {
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
 	profile_steamtrades = $("#profile_steamtrades").prop('checked');
 	profile_steamrep = $("#profile_steamrep").prop('checked');
+	profile_steamdbcalc = $("#profile_steamdbcalc").prop('checked');
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
-	profile_sapi = $("#profile_sapi").prop('checked');
-	profile_backpacktf = $("#profile_backpacktf").prop('checked');
 	profile_astats = $("#profile_astats").prop('checked');
+	profile_permalink = $("#profile_permalink").prop('checked');
+	show_profile_link_images = $("#profile_link_images_dropdown").val();
 	
 	steamcardexchange = $("#steamcardexchange").prop('checked');
 
@@ -172,6 +192,8 @@ function save_options() {
 		
 		'showallstores': showallstores,
 		'stores': stores,
+		'showregionalprice': showregionalprice,
+		'regional_countries': regional_countries,
 
 		'showtotal': showtotal,
 		'showmarkettotal': showmarkettotal,
@@ -187,13 +209,14 @@ function save_options() {
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
 		'profile_steamrep': profile_steamrep,
-		'profile_wastedonsteam': profile_wastedonsteam,
-		'profile_sapi': profile_sapi,
-		'profile_backpacktf': profile_backpacktf,
+		'profile_steamdbcalc': profile_steamdbcalc,
 		'profile_astats': profile_astats,
+		'profile_permalink': profile_permalink,
+		'show_profile_link_images': show_profile_link_images,
 		
 		'steamcardexchange': steamcardexchange
 	});
+	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 }
 
 // toggles pages
@@ -202,6 +225,13 @@ function load_store_tab() {
 	$("#maincontent_store").show();	
 	$(".selected").removeClass("selected");
 	$("#nav_store").addClass("selected");
+}
+
+function load_price_tab() {
+	$(".content").hide();
+	$("#maincontent_price").show();	
+	$(".selected").removeClass("selected");
+	$("#nav_price").addClass("selected");
 }
 
 function load_community_tab() {
@@ -268,9 +298,53 @@ function toggle_stores() {
 	}
 }
 
+function load_countries() {
+	chrome.storage.sync.get(function(settings) {
+		$(".es_flag").css("background-image", "url("+chrome.extension.getURL("img/flags/flags.png")+")");
+		if (settings.regional_countries[0]) {
+			$("#es_flag_1").addClass("es_flag_" + settings.regional_countries[0]);
+			$("#regional_country_1").prop('value', settings.regional_countries[0]);
+		}	
+		if (settings.regional_countries[1]) {
+			$("#es_flag_2").addClass("es_flag_" + settings.regional_countries[1]);
+			$("#regional_country_2").prop('value', settings.regional_countries[1]);
+		}
+		if (settings.regional_countries[2]) {
+			$("#es_flag_3").addClass("es_flag_" + settings.regional_countries[2]);
+			$("#regional_country_3").prop('value', settings.regional_countries[2]);
+		}	
+		if (settings.regional_countries[3]) {
+			$("#es_flag_4").addClass("es_flag_" + settings.regional_countries[3]);
+			$("#regional_country_4").prop('value', settings.regional_countries[3]);
+		}	
+		if (settings.regional_countries[4]) {
+			$("#es_flag_5").addClass("es_flag_" + settings.regional_countries[4]);
+			$("#regional_country_5").prop('value', settings.regional_countries[4]);
+		}	
+		if (settings.regional_countries[5]) {
+			$("#es_flag_6").addClass("es_flag_" + settings.regional_countries[5]);
+			$("#regional_country_6").prop('value', settings.regional_countries[5]);
+		}	
+		if (settings.regional_countries[6]) {
+			$("#es_flag_7").addClass("es_flag_" + settings.regional_countries[6]);
+			$("#regional_country_7").prop('value', settings.regional_countries[6]);
+		}	
+		if (settings.regional_countries[7]) {
+			$("#es_flag_8").addClass("es_flag_" + settings.regional_countries[7]);
+			$("#regional_country_8").prop('value', settings.regional_countries[7]);
+		}	
+		if (settings.regional_countries[8]) {
+			$("#es_flag_9").addClass("es_flag_" + settings.regional_countries[8]);
+			$("#regional_country_9").prop('value', settings.regional_countries[8]);
+		}	
+	});
+}
+
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
+		populate_regional_selects();
+
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
@@ -311,7 +385,9 @@ function load_options() {
 
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
-		
+		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
+
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
@@ -343,13 +419,13 @@ function load_options() {
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
-		if (settings.profile_wastedonsteam === undefined) { settings.profile_wastedonsteam = true; chrome.storage.sync.set({'profile_wastedonsteam': settings.profile_wastedonsteam}); }
-		if (settings.profile_sapi === undefined) { settings.profile_sapi = true; chrome.storage.sync.set({'profile_sapi': settings.profile_sapi}); }
-		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
+		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
 		
 		// Load Store Options
@@ -409,11 +485,14 @@ function load_options() {
 		$("#show_package_info").prop('checked', settings.show_package_info);
 		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
-		$("#showlowestprice").prop('checked', settings.showlowestprice);		
-		
+				
+		// Load Price Options
+		$("#showlowestprice").prop('checked', settings.showlowestprice);
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
-		
+		$("#regional_price_on").val(settings.showregionalprice);
+		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
+		load_countries();
 
 		// Load Community Options
 		$("#showtotal").prop('checked', settings.showtotal);
@@ -426,15 +505,18 @@ function load_options() {
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
 		$("#wlbuttoncommunityapp").prop('checked', settings.wlbuttoncommunityapp);
+		$("#profile_link_images_dropdown").val(settings.show_profile_link_images);
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
 		$("#profile_steamtrades").prop('checked', settings.profile_steamtrades);
 		$("#profile_steamrep").prop('checked', settings.profile_steamrep);
+		$("#profile_steamdbcalc").prop('checked', settings.profile_steamdbcalc);
 		$("#profile_wastedonsteam").prop('checked', settings.profile_wastedonsteam);
 		$("#profile_sapi").prop('checked', settings.profile_sapi);
 		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
 		$("#profile_astats").prop('checked', settings.profile_astats);
+		$("#profile_permalink").prop('checked', settings.profile_permalink);
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
 		$("#language").val(settings.language);
@@ -443,7 +525,8 @@ function load_options() {
 			$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
 		});
 
-		load_translation()
+		load_translation();
+		load_profile_link_images();
 	});
 }
 
@@ -457,6 +540,7 @@ function load_translation() {
 			document.title = "Enhanced Steam " + localized_strings[settings.language].options;
 			
 			$("#nav_store").text(localized_strings[settings.language].store);
+			$("#nav_price").text(localized_strings[settings.language].price);
 			$("#nav_community").text(localized_strings[settings.language].community);
 			$("#nav_news").text(localized_strings[settings.language].news);
 			$("#nav_about").text(localized_strings[settings.language].about);
@@ -492,6 +576,7 @@ function load_translation() {
 			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
 			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options_library_f2p);
 
+			$("#options_header_text").text(localized_strings[settings.language].options_header);
 			$("#store_hide_install_text").text(localized_strings[settings.language].options_hide_install);
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
 			$("#store_hide_new_heading").text(localized_strings[settings.language].options_hide_new_heading);
@@ -508,13 +593,24 @@ function load_translation() {
 			$("#store_pcgw_text").text(localized_strings[settings.language].options_pcgw);
 			$("#store_steamdb_text").text(localized_strings[settings.language].options_steamdb);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
-			$("#store_show_package_info_text").text(localized_strings[settings.language].options_show_package_info);
-			$("#store_show_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
+			$("#store_package_info_text").text(localized_strings[settings.language].options_show_package_info);
+			$("#store_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
+			
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
 			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
+			$("#store_regionalprice_header").text(localized_strings[settings.language].regional_price);
+			$("#showregionalprice_text").text(localized_strings[settings.language].regional_price_on);
+			$('select option:contains("Always")').text(localized_strings[settings.language].always);
+			$('select option:contains("Never")').text(localized_strings[settings.language].never);
+			$('select option:contains("on Price Mouseover")').text(localized_strings[settings.language].regional_price_mouse);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options_profile_links + ":");
+			$("#show_profile_link_images_text").text(localized_strings[settings.language].options_profile_link_images + ":");
+			$("#profile_link_images_gray").text(localized_strings[settings.language].options_profile_link_images_gray);
+			$("#profile_link_images_color").text(localized_strings[settings.language].options_profile_link_images_color);
+			$("#profile_link_images_none").text(localized_strings[settings.language].options_profile_link_images_none);
+			$("#profile_permalink").text(localized_strings[settings.language].options_profile_permalink);
 			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
 			$("#market_total_text").text(localized_strings[settings.language].options_market_total);
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
@@ -542,6 +638,7 @@ function load_translation() {
 			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_own_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_rec_color_default").text(localized_strings[settings.language].theworddefault);
+			$("#reset_countries").text(localized_strings[settings.language].theworddefault);
 			
 			$("#es_about_text").html(localized_strings[settings.language].options_about_text);
 			$("#changelog_text").text(localized_strings[settings.language].options_changelog);
@@ -553,9 +650,47 @@ function load_translation() {
 			$("#save_community").text(localized_strings[settings.language].save);
 
 			$("#reset").text(localized_strings[settings.language].reset_options);
+			$("#saved").text(localized_strings[settings.language].options_saved_note);
+			$("#reset_note").text(localized_strings[settings.language].options_reset_note);
 		});	
 	});
 }
+
+function load_profile_link_images() {
+	chrome.storage.sync.get(function(settings) {
+		settings.show_profile_link_images = $("#profile_link_images_dropdown").val();
+		$("#profile_link_images_dropdown").val(settings.show_profile_link_images);
+		switch(settings.show_profile_link_images) {
+			case "gray":
+				$(".site_icon").show();
+				$(".site_icon_col").hide();
+				break;
+			case "color":
+				$(".site_icon").show();
+				$(".site_icon_gray").hide();
+				break;
+			case "false":
+				$(".site_icon").hide();
+				break;
+			default:
+				console.log(settings.show_profile_link_images);
+				break;
+		}
+	});
+}
+
+function populate_regional_selects() {
+	$.getJSON(chrome.extension.getURL('cc.json'), function(cc_data) {
+		$.each(cc_data, function (index, value) {
+			$(".regional_country")
+				.append($("<option></option>")
+				.attr("value", index.toLowerCase())
+				.text(value));
+		});
+	});
+}
+
+
 
 function get_http(url, callback) {
 	var http = new XMLHttpRequest();
@@ -570,7 +705,7 @@ function get_http(url, callback) {
 
 function steam_credits() {
 	var credit_array = ["76561198040672342","76561197989222171","76561198020275445","76561198000198761"];
-	get_http('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=A6509A49A35166921243F4BCC928E812&steamids=' + credit_array.join(",") + 'format=json', function (txt) {
+	get_http('http://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + credit_array.join(","), function (txt) {
 		var data = JSON.parse(txt).response.players;
 		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
 		$("#jshackles_steam").text(data[3]["personaname"]);
@@ -586,8 +721,15 @@ function clear_settings() {
 		if(confirm_reset){
 			chrome.storage.sync.clear();
 			load_options();
+			$("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
 		}
 	});
+}
+
+function change_flag(node, selectnode) {
+	console.log(selectnode);
+	$(node).removeClass();
+	$(node).addClass("es_flag_" + $(selectnode).val() +" es_flag");
 }
 
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
@@ -606,12 +748,24 @@ function load_default_tag_friends_want_color() { $("tag_friends_want_color").val
 function load_default_tag_friends_own_color() { $("tag_friends_own_color").val("#5b9504"); }
 function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("#2e3d54"); }
 
+function load_default_countries() {
+	regional_countries = ["us","gb","eu1","eu2","ru","br","au"];
+	chrome.storage.sync.set({'regional_countries': regional_countries});
+	$("#regional_country_8").val("");
+	$("#regional_country_9").val("");
+	$(".es_flag").removeClass().addClass("es_flag");	
+	load_countries();
+	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
+}
+
 function toggle_regex() {$("#spamcommentregex_list").toggle()}
 function load_default_spamcommentregex(){$("#spamcommentregex").val("[\\u2500-\\u25FF]")}
 
 $(document).ready(function(){
 	load_options();
 	$("#language").change(load_translation);
+	load_profile_link_images();
+	$("#profile_link_images_dropdown").change(load_profile_link_images);
 	$("#highlight_owned_default").click(load_default_highlight_owned_color);
 	$("#highlight_wishlist_default").click(load_default_highlight_wishlist_color);
 	$("#highlight_coupon_default").click(load_default_highlight_coupon_color);
@@ -631,6 +785,7 @@ $(document).ready(function(){
 	$("#spamcommentregex_default").click(load_default_spamcommentregex)
 
 	$('#nav_store').click(load_store_tab);
+	$('#nav_price').click(load_price_tab);
 	$('#nav_community').click(load_community_tab);
 	$('#nav_news').click(load_news_tab);
 	$('#nav_about').click(load_about_tab);
@@ -638,13 +793,20 @@ $(document).ready(function(){
 
 	$("#show_spamcommentregex").click(toggle_regex);
 	$('#stores_all').click(toggle_stores);
+	$("#reset_countries").click(load_default_countries);
+	$('.regional_country').change(function() {		
+		change_flag($("#es_flag_" + $(this).attr("id").match(/\d$/)), $(this));
+	});
+
+	$("#regional_price_on").change(function() {
+		if ($(this).val() == "off") { $("#region_selects").hide(); } else { $("#region_selects").show(); }
+	});
 
 	$("input").click(save_options);
-	$("button:not(#reset)").click(save_options);
+	$("button:not(#reset):not(#reset_countries)").click(save_options);
 	$("#reset").click(clear_settings);
 	$(".colorbutton").change(save_options);
-	$(".textbox").change(save_options);
-	$("#language").change(save_options);
+	$("select").change(save_options);
 
 	steam_credits();
 });

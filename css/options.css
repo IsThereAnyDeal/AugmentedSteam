@@ -29,6 +29,23 @@ body {
 
 #header_logo {
 	margin-left: 170px;
+	float:left;
+}
+
+.notification {
+	float:right;
+	font-size: 2em;
+	font-weight: bold;
+	padding:24px;
+	display:none;
+}
+
+#saved {
+	color:#8BC53F;
+}
+
+#reset_note {
+	color:#CF6A32;
 }
 
 .tab_row {
@@ -77,9 +94,8 @@ body {
 #footer {
 	position:fixed;
 	bottom: 0;
-	width:99%;
-	text-align: right;
-	color: FFF;
+	text-align:right;
+	right:15px;
 }
 
 .btn,.colorbutton,.textbox {
@@ -193,5 +209,12 @@ a:hover {
 #spamcommentregex_list {
 	margin-left:10px;
 	margin-bottom:5px;
+	display:none;
+}
+.site_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}
+.site_icon_col {
 	display:none;
 }

@@ -1,3 +1,18 @@
+v5.2
+-----
++ Added regional price comparison feature which is fully configurable in options
++ Added sale information to wishlist entries
++ Added "ADD UNOWNED DLC TO CART" button on app pages
++ Added "Buy Wishlist" section to wishlist pages
+: Fixed a bug where some inventory market links were not functioning correctly
+: Fixed a bug where some non-marketable inventory items were incorrectly trying to find market prices
+
+v5.1.1
+-----
++ Added support for homepage highlighting on the Autumn / Spring sale
+: Fixed a bug where some some strings weren't being translated properly
+: Fixed a bug where one option wasn't able to be checked or unchecked
+
 v5.1
 -----
 + Added an "Add to Wishlist" button on community app hubs

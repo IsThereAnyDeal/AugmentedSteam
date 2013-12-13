@@ -136,12 +136,12 @@ img.platform_small, .platform_img {
 }
 
 #es_library_hub_link {
-    display: inline-block;
-    position: relative;
-    top: 55px;
-    left: 422px;
-    z-index: 3;
-    padding: 4px;
+	display: inline-block;
+	position: relative;
+	top: 55px;
+	left: 422px;
+	z-index: 3;
+	padding: 4px;
 }
 
 #es_library_hub_link a {
@@ -364,4 +364,95 @@ img.platform_small, .platform_img {
 #es_wishlist > span {
 	padding:0 5px;
 	font-size:12px;
+}
+#es_permalink_text {
+	color: #EBEBEB;
+	height:29px;
+	vertical-align:bottom;
+}
+#es_permalink {
+	margin:9px 0 0 5px;
+	direction:rtl;
+}
+.search_result_row .tags a {
+	text-decoration: none;
+	color: #FFF;
+}
+.search_result_row .tags a:hover {
+	text-decoration: underline;
+}
+.profile_link_icon {
+	width:16px;
+	height:16px;
+	vertical-align:middle;
+}
+.profile_link_icon.profile_link_icon_background {
+	background:#EBEBEB;
+	border-radius:4px;
+}
+.es_regional_container {
+	display: none;
+	z-index:99;	
+	position:absolute;
+	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
+	padding: 7px 8px;
+	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
+	border:1px solid black;
+}
+.es_regional_price {
+	margin-right:8px;
+}
+.es_flag {
+	margin-right:4px;
+}
+.es_each {
+	text-decoration: none;
+	left:auto;
+	float:right;
+	position:relative;
+	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	color: #626366;
+	font-size: 11px;
+	right:14px;
+	top:-3px;
+}
+.es_each_price {
+	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	color: #B0AEAC;
+	font-size: 13px;
+	padding-top:4px;
+	padding-left:12px;
+}
+.es_percentage {
+	font-size:12px;
+	margin-left:3px;
+}
+.es_percentage_higher {
+	color:red;
+}
+.es_percentage_lower {
+	color:green;
+}
+.es_percentage_equal {
+	color:yellow;
+}
+.es_percentage_indicator {
+	width:7px;
+	height:4px;
+	display:inline-block;
+	margin-bottom:3px;
+	margin-right:2px;
+}
+.es_percentage_higher > .es_percentage_indicator {
+	background-position:0 -4px;
+}
+.es_percentage_equal > .es_percentage_indicator {
+	background-position:0 -8px;
+	margin-bottom:1px;
+}
+.es_regional_always {
+	display:inline-block;
+	position:relative;
+	float:right;
+	margin-bottom:5px;
 }
