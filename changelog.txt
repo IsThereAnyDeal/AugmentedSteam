@@ -5,6 +5,7 @@ v5.2
 + Added "ADD UNOWNED DLC TO CART" button on app pages
 + Added "Buy Wishlist" section to wishlist pages
 : Fixed a bug where some inventory market links were not functioning correctly
+: Fixed a bug where some non-marketable inventory items were incorrectly trying to find market prices
 
 v5.1.1
 -----

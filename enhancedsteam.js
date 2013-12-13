@@ -2669,10 +2669,9 @@ function inventory_market_helper() {
 			if($('#iteminfo0').css("display") == "block") {	desc = $('#iteminfo0_item_tags_content').html(); item = 0; }
 			else { desc = $('#iteminfo1_item_tags_content').html();	item = 1; }
 
-			if (desc.match(/Not Marketable/)) {	$('#es_item0').remove(); $('#es_item1').remove(); return; }
+			if (desc.match(localized_strings[language].not_marketable)) { $('#es_item0').remove(); $('#es_item1').remove(); return; }
 
 			global_id = $(".games_list_tab.active")[0].outerHTML.match(/href="\#(\d+)"/)[1];
-
 
 			function load_inventory_market_prices(appid, item, item_name, global_id) {
 				var url;
