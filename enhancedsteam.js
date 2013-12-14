@@ -3006,6 +3006,10 @@ function show_regional_pricing() {
 				sale=true;
 				pricing_div = $(pricing_div).addClass("es_regional_sale");
 			}
+			if (/^\/sub\/.*/.test(window.location.pathname)) {
+				sub=true;
+				pricing_div = $(pricing_div).addClass("es_regional_sub");
+			}
 			if(getCookie("fakeCC")){
 				local_country = getCookie("fakeCC").toLowerCase();
 			}else {
@@ -3230,31 +3234,35 @@ function show_regional_pricing() {
 						});
 						$.each(all_game_areas,function(index,app_package){
 							var subid = $(app_package).find("input").last().val();
-							if (settings.showregionalprice == "mouse") {
-								if(!(settings.regional_hideworld)){
-									$(app_package).find(".price").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
-									$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
-									$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px"});
-								}
-								$(app_package).find(".price, .discount_block")
-								.mouseover(function() {
-									var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
-									if(dailydeal) {
-										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width()+18 +"px");
-									} else if(sale) {
-										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
-									} else {
-										$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 35 +"px");
+							if(subid){
+								if (settings.showregionalprice == "mouse") {
+									if(!(settings.regional_hideworld)){
+										$(app_package).find(".price").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
+										$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
+										$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px"});
 									}
-									$("#es_pricing_" + subid).show();
-								})
-								.mouseout(function() {
-									$("#es_pricing_" + subid).hide();
-								})
-								.css("cursor","help");
-							} else {
-								$("#es_pricing_" + subid).addClass("es_regional_always");
-								$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
+									$(app_package).find(".price, .discount_block")
+									.mouseover(function() {
+										var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
+										if(dailydeal) {
+											$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width()+18 +"px");
+										} else if(sale) {
+											$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
+										} else if(sub) {
+											$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 45 +"px");
+										} else {
+											$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 35 +"px");
+										}
+										$("#es_pricing_" + subid).show();
+									})
+									.mouseout(function() {
+										$("#es_pricing_" + subid).hide();
+									})
+									.css("cursor","help");
+								} else {
+									$("#es_pricing_" + subid).addClass("es_regional_always");
+									$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
+								}
 							}
 						});
 					});
