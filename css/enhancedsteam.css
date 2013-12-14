@@ -442,6 +442,7 @@ img.platform_small, .platform_img {
 	position:relative;
 	float:right;
 	margin-bottom:5px;
+	margin-top:auto;
 }
 .es_regional_unavailable {
 	font-size:12px;
