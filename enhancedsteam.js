@@ -691,18 +691,21 @@ function add_empty_wishlist_buttons() {
 
 function add_wishlist_filter() {
 	var html  = "<span>" + localized_strings[language].show + ": </span>";
-		html += "<label class='es_sort' id='es_wl_all'><input type='radio' name='es_wl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
-		html += "<label class='es_sort' id='es_wl_sale'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_discount + "</a></span></label>";
-		html += "<label class='es_sort' id='es_wl_coupon'><input type='radio' name='es_wl_sort'><span><a>" + localized_strings[language].games_coupon + "</a></span></label>";
+		html += "<label class='es_sort' id='es_wl_all'><input type='radio' id='es_wl_all_box' name='es_wl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
+		html += "<label class='es_sort' id='es_wl_sale'><input type='radio' id='es_wl_sale_box' name='es_wl_sort'><span><a>" + localized_strings[language].games_discount + "</a></span></label>";
+		html += "<label class='es_sort' id='es_wl_coupon'><input type='radio' id='es_wl_coupon_box' name='es_wl_sort'><span><a>" + localized_strings[language].games_coupon + "</a></span></label>";
 		html += "</div>";
 
 	$('#wishlist_sort_options').append("<p>" + html);
 
+
 	$('#es_wl_all').on('click', function() {
+		$('#es_wl_all_box').prop('checked', true);
 		$('.wishlistRow').css('display', 'block');
 	});
 
 	$('#es_wl_sale').on('click', function() {
+		$('#es_wl_sale_box').prop('checked', true);
 		$('.wishlistRow').css('display', 'block');
 		$('.wishlistRow').each(function () {
 			if (!$(this).html().match(/discount_block_inline/)) {
@@ -712,6 +715,7 @@ function add_wishlist_filter() {
 	});
 
 	$('#es_wl_coupon').on('click', function() {
+		$('#es_wl_coupon_box').prop('checked', true);
 		$('.wishlistRow').css('display', 'block');
 		$('.wishlistRow').each(function () {
 			if (!$(this)[0].outerHTML.match(/es_highlight_coupon/)) {
