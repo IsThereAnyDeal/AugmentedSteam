@@ -401,27 +401,10 @@ img.platform_small, .platform_img {
 }
 .es_regional_price {
 	margin-right:8px;
+	font-size:14px;
 }
-.es_flag {
-	margin-right:4px;
-}
-.es_each {
-	text-decoration: none;
-	left:auto;
-	float:right;
-	position:relative;
-	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
-	color: #626366;
-	font-size: 11px;
-	right:14px;
-	top:-3px;
-}
-.es_each_price {
-	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
-	color: #B0AEAC;
-	font-size: 13px;
-	padding-top:4px;
-	padding-left:12px;
+.es_regional_converted {
+	font-size:12px;
 }
 .es_percentage {
 	font-size:12px;
@@ -455,4 +438,28 @@ img.platform_small, .platform_img {
 	position:relative;
 	float:right;
 	margin-bottom:5px;
+}
+.es_regional_unavailable {
+	font-size:12px;
+}
+.es_flag {
+	margin-right:4px;
+}
+.es_each {
+	text-decoration: none;
+	left:auto;
+	float:right;
+	position:relative;
+	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	color: #626366;
+	font-size: 11px;
+	right:14px;
+	top:-3px;
+}
+.es_each_price {
+	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	color: #B0AEAC;
+	font-size: 13px;
+	padding-top:4px;
+	padding-left:12px;
 }

@@ -3017,13 +3017,13 @@ function show_regional_pricing() {
 			var subids_csv;
 
 			function formatPriceData(sub_info,country,converted_price,local_currency) {
+				var flag_div = "<div class=\"es_flag\" style='background-image:url("+chrome.extension.getURL("img/flags/flags.png")+")'></div>";
 				if (sub_info["prices"][country]){
 					var price = sub_info["prices"][country]["final"]/100;
 					var local_price = sub_info["prices"][local_country]["final"]/100;
 					converted_price = converted_price/100;
 					converted_price = converted_price.toFixed(2);
 					var currency = sub_info["prices"][country]["currency"];
-					var flag_div = "<div class=\"es_flag\" style='background-image:url("+chrome.extension.getURL("img/flags/flags.png")+")'></div>";
 					var percentage;
 					switch(currency) {
 						case "EUR":
@@ -3072,10 +3072,16 @@ function show_regional_pricing() {
 						percentage_span = $(percentage_span).addClass("es_percentage_higher");
 					}
 					percentage_span = $(percentage_span).append(percentage+"%");
-					var regional_price_div = "<div class=\"es_regional_price\">"+formatted_price+"&nbsp;("+formatted_converted_price+")</div>";
+					var regional_price_div = "<div class=\"es_regional_price\">"+formatted_price+"&nbsp;<span class=\"es_regional_converted\">("+formatted_converted_price+")</span></div>";
 					flag_div = $(flag_div).addClass("es_flag_"+country);
 					regional_price_div = $(regional_price_div).prepend(flag_div);
 					regional_price_div = $(regional_price_div).append(percentage_span);
+					return regional_price_div;
+				}
+				else {
+					var regional_price_div = "<div class=\"es_regional_price\"><span class=\"es_regional_unavailable\">"+localized_strings[language].region_unavailable+"</span></div>";
+					flag_div = $(flag_div).addClass("es_flag_"+country);
+					regional_price_div = $(regional_price_div).prepend(flag_div);
 					return regional_price_div;
 				}
 			}
@@ -3087,13 +3093,6 @@ function show_regional_pricing() {
 					subid_info[index]["subid"]=subid;
 					subid_info[index]["prices"]=[];
 					subid_array.push(subid);
-					var app_pricing_div = $(pricing_div).clone();
-					$(app_pricing_div).attr("id", "es_pricing_" + subid.toString());
-					if(dailydeal){
-						$(app_package).eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
-					} else {
-						$(app_package).eq(index).find(".game_purchase_action").before(app_pricing_div);
-					}
 				}
 			});
 			if(subid_array.length>0){
@@ -3129,7 +3128,8 @@ function show_regional_pricing() {
 									}
 								});
 							});
-						}));
+						})
+					);
 				});
 				var format_deferred=[];
 				var formatted_regional_price_array=[];
@@ -3138,26 +3138,45 @@ function show_regional_pricing() {
 						var sub_formatted = [];
 						var convert_deferred=[];
 						var all_convert_deferred = $.Deferred();
+						var app_pricing_div = $(pricing_div).clone();
 						var local_currency = subid["prices"][local_country]["currency"];
+						$(app_pricing_div).attr("id", "es_pricing_" + subid_info[index]["subid"].toString());
 						$.each(countries,function(country_index,country){
+							var regional_price_array=[];
 							if(country!==local_country){
 								if(subid["prices"][country]){
 									var country_currency = subid["prices"][country]["currency"].toString().toLowerCase();
 									var app_price = subid["prices"][country]["final"];
+									convert_deferred.push($.ajax({
+										url:"http://api.enhancedsteam.com/currency/?"+country_currency+"="+app_price+"&local="+local_currency
+									}).done(function(converted_price){
+										var regional_price = formatPriceData(subid,country,converted_price,local_currency);
+										regional_price_array[0]=country;
+										regional_price_array[1]=regional_price;
+										sub_formatted.push(regional_price_array);
+									}));
 								}
-								convert_deferred.push($.ajax({
-									url:"http://api.enhancedsteam.com/currency/?"+country_currency+"="+app_price+"&local="+local_currency
-								}).done(function(converted_price){
-									var regional_price_array=[];
-									var regional_price = formatPriceData(subid,country,converted_price,local_currency);
+								else {
+									var regional_price = formatPriceData(subid,country);
 									regional_price_array[0]=country;
 									regional_price_array[1]=regional_price;
 									sub_formatted.push(regional_price_array);
-								}));
+								}
 							}
 						});
 						$.when.apply(null,convert_deferred).done(function(){
-							
+							if(!dailydeal){
+								switch(settings.showregionalprice){
+									case "always":
+										$(".game_area_purchase_game").eq(index).find(".game_purchase_action").before(app_pricing_div);
+										break;
+									default:
+										$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+										break;
+								}
+							} else {
+								$(".dailydeal_content").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+							}
 							sub_formatted["subid"]=subid_info[index]["subid"].toString();
 							formatted_regional_price_array.push(sub_formatted);
 							all_convert_deferred.resolve();
@@ -3203,11 +3222,12 @@ function show_regional_pricing() {
 								$(app_package).find(".price, .discount_block")
 								.mouseover(function() {
 									var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
-									var width_offset = $(app_package).find(".game_purchase_action").width() + 25;
 									if(dailydeal) {
-										width_offset = width_offset-7;
+										$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width()+18 +"px");
+									} else {
+										$("#es_pricing_" + subid).css("top", purchase_location.top - 180 + "px");
+										$("#es_pricing_" + subid).css("right", 346 + $(app_package).find(".game_purchase_action").width() +"px");
 									}
-									$("#es_pricing_" + subid).css("right", width_offset +"px");
 									$("#es_pricing_" + subid).show();
 								})
 								.mouseout(function() {
@@ -3223,7 +3243,7 @@ function show_regional_pricing() {
 				});
 			}
 		}
-	});		
+	});
 }
 
 function display_purchase_date() {
