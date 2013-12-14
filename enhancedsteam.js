@@ -2986,6 +2986,7 @@ function show_regional_pricing() {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au"]; storage.set({'regional_countries': settings.regional_countries}); }
+		if (settings.regional_countries<1){settings.showregionalprice="off";}
 		if (settings.showregionalprice != "off") {
 			var api_url = "http://store.steampowered.com/api/packagedetails/";
 			var countries = settings.regional_countries;
@@ -2993,6 +2994,12 @@ function show_regional_pricing() {
 			var world = chrome.extension.getURL("img/flags/world.png");
 			var currency_deferred = [];
 			var local_country;
+			var dailydeal;
+			var region_appended=0;
+			if (/^\/$/.test(window.location.pathname)) {
+				dailydeal = true;
+				pricing_div = $(pricing_div).addClass("es_regional_dailydeal");
+			}
 			if(getCookie("fakeCC")){
 				local_country = getCookie("fakeCC").toLowerCase();
 			}else {
@@ -3002,9 +3009,13 @@ function show_regional_pricing() {
 				countries.push(local_country);
 			}
 			var all_game_areas = $(".game_area_purchase_game").toArray();
+			if (dailydeal) {
+				all_game_areas.push($(".dailydeal_content").toArray());
+			}
 			var subid_info = [];
 			var subid_array = [];
 			var subids_csv;
+
 			function formatPriceData(sub_info,country,converted_price,local_currency) {
 				if (sub_info["prices"][country]){
 					var price = sub_info["prices"][country]["final"]/100;
@@ -3068,6 +3079,7 @@ function show_regional_pricing() {
 					return regional_price_div;
 				}
 			}
+
 			$.each(all_game_areas,function(index,app_package){
 				var subid = $(app_package).find("input").last().val();
 				if(subid!=undefined){
@@ -3075,6 +3087,13 @@ function show_regional_pricing() {
 					subid_info[index]["subid"]=subid;
 					subid_info[index]["prices"]=[];
 					subid_array.push(subid);
+					var app_pricing_div = $(pricing_div).clone();
+					$(app_pricing_div).attr("id", "es_pricing_" + subid.toString());
+					if(dailydeal){
+						$(app_package).eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+					} else {
+						$(app_package).eq(index).find(".game_purchase_action").before(app_pricing_div);
+					}
 				}
 			});
 			if(subid_array.length>0){
@@ -3119,9 +3138,7 @@ function show_regional_pricing() {
 						var sub_formatted = [];
 						var convert_deferred=[];
 						var all_convert_deferred = $.Deferred();
-						var app_pricing_div = $(pricing_div).clone();
 						var local_currency = subid["prices"][local_country]["currency"];
-						$(app_pricing_div).attr("id", "es_pricing_" + subid_info[index]["subid"].toString());
 						$.each(countries,function(country_index,country){
 							if(country!==local_country){
 								if(subid["prices"][country]){
@@ -3140,14 +3157,7 @@ function show_regional_pricing() {
 							}
 						});
 						$.when.apply(null,convert_deferred).done(function(){
-							switch(settings.showregionalprice){
-								case "always":
-									$(".game_area_purchase_game").eq(index).find(".game_purchase_action").before(app_pricing_div);
-									break;
-								default:
-									$(".game_area_purchase_game").eq(index).after(app_pricing_div);
-									break;
-							}
+							
 							sub_formatted["subid"]=subid_info[index]["subid"].toString();
 							formatted_regional_price_array.push(sub_formatted);
 							all_convert_deferred.resolve();
@@ -3173,9 +3183,15 @@ function show_regional_pricing() {
 							var subid = subid_array[index];
 							$.each(sorted_divs,function(price_index,regional_div){
 								$("#es_pricing_"+sorted_divs["subid"]).append(regional_div);
+								if(regional_div!=undefined){
+									region_appended++;
+								}
 							});
 							if (settings.showregionalprice == "mouse") {
 								$("#es_pricing_"+subid).append("<div class='miniprofile_arrow right' style='position: absolute; top: 12px; right: -8px;'></div>");
+								if(region_appended<=1){
+									$("#es_pricing_"+subid).find(".miniprofile_arrow").css("top","6px");
+								}
 							}	
 						});
 						$.each(all_game_areas,function(index,app_package){
@@ -3187,8 +3203,11 @@ function show_regional_pricing() {
 								$(app_package).find(".price, .discount_block")
 								.mouseover(function() {
 									var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
-									$("#es_pricing_" + subid).css("top", purchase_location.top - 180 + "px");
-									$("#es_pricing_" + subid).css("right", 346 + $(app_package).find(".game_purchase_action").width() +"px");
+									var width_offset = $(app_package).find(".game_purchase_action").width() + 25;
+									if(dailydeal) {
+										width_offset = width_offset-7;
+									}
+									$("#es_pricing_" + subid).css("right", width_offset +"px");
 									$("#es_pricing_" + subid).show();
 								})
 								.mouseout(function() {
@@ -4360,6 +4379,7 @@ $(document).ready(function(){
 						add_carousel_descriptions();
 						add_affordable_button();
 						hide_early_access();
+						show_regional_pricing();
 						break;
 				}
 
