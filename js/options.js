@@ -52,7 +52,6 @@ function save_options() {
 	send_age_info = $("#send_age_info").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
-	showlowestprice = $("#showlowestprice").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
 	showpcgw = $("#showpcgw").prop('checked');
@@ -63,6 +62,7 @@ function save_options() {
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	
 	// Price Options
+	showlowestprice = $("#showlowestprice").prop('checked');
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
 		$("#steam").prop('checked'),
@@ -89,6 +89,7 @@ function save_options() {
 		$("#indiegamestand").prop('checked')
 	];
 	showregionalprice = $("#regional_price_on").val();
+	regional_hideworld = $("#regional_hideworld").prop('checked');
 	regional_countries = [
 		$("#regional_country_1").val(),
 		$("#regional_country_2").val(),
@@ -180,7 +181,6 @@ function save_options() {
 		'send_age_info': send_age_info,
 		'contscroll': contscroll,
 		'showdrm': showdrm,
-		'showlowestprice': showlowestprice,
 		'showmcus': showmcus,
 		'showhltb': showhltb,
 		'showpcgw': showpcgw,
@@ -190,9 +190,11 @@ function save_options() {
 		'show_steamchart_info': show_steamchart_info,
 		'show_carousel_descriptions': show_carousel_descriptions,
 		
+		'showlowestprice': showlowestprice,
 		'showallstores': showallstores,
 		'stores': stores,
 		'showregionalprice': showregionalprice,
+		'regional_hideworld': regional_hideworld,
 		'regional_countries': regional_countries,
 
 		'showtotal': showtotal,
@@ -411,6 +413,7 @@ function load_options() {
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
@@ -491,6 +494,7 @@ function load_options() {
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
 		$("#regional_price_on").val(settings.showregionalprice);
+		$("#regional_hideworld").prop('checked', settings.regional_hideworld);
 		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
 		load_countries();
 

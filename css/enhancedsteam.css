@@ -398,6 +398,10 @@ img.platform_small, .platform_img {
 	padding: 7px 8px;
 	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
 	border:1px solid black;
+	margin-top:-25px;
+}
+.es_regional_sale {
+	margin-top:-18px;
 }
 .es_regional_price {
 	margin-right:8px;

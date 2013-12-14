@@ -323,14 +323,15 @@
 					</tr>
 				</table>
 				<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
-				<li>
-					<label for="showregionalprice" id="showregionalprice_text">Show Regional Price Comparison</label>
+				<li id="regional_price_li">
+					<label id="showregionalprice_text">Show Regional Price Comparison</label>
 					<select id="regional_price_on">
 						<option value="mouse">on Price Mouseover</option>
 						<option value="always">Always</option>
 						<option value="off">Never</option>
 					</select>
-				</li>				
+				</li>
+				<li><input type="checkbox" id="regional_hideworld"><label for="regional_hideworld" id="regional_hideworld_text">Hide globe indicator</label></li>			
 				<div id='region_selects'>
 					<li style='margin-top: 10px;'>
 						<span class="es_flag" id="es_flag_1"></span><select id="regional_country_1" class="regional_country"></select>
