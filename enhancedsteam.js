@@ -2997,6 +2997,7 @@ function show_regional_pricing() {
 			var local_country;
 			var dailydeal;
 			var sale;
+			var sub;
 			var region_appended=0;
 			if (/^\/$/.test(window.location.pathname)) {
 				dailydeal = true;
