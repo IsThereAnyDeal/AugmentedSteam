@@ -738,7 +738,6 @@ function clear_settings() {
 }
 
 function change_flag(node, selectnode) {
-	console.log(selectnode);
 	$(node).removeClass();
 	$(node).addClass("es_flag_" + $(selectnode).val() +" es_flag");
 }
@@ -761,12 +760,13 @@ function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("
 
 function load_default_countries() {
 	regional_countries = ["us","gb","eu1","eu2","ru","br","au"];
-	chrome.storage.sync.set({'regional_countries': regional_countries});
-	$("#regional_country_8").val("");
-	$("#regional_country_9").val("");
-	$(".es_flag").removeClass().addClass("es_flag");	
-	load_countries();
-	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
+	chrome.storage.sync.set({'regional_countries': regional_countries}, function() {
+		$("#regional_country_8").val("");
+		$("#regional_country_9").val("");
+		$(".es_flag").removeClass().addClass("es_flag");	
+		load_countries();
+		$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
+	});	
 }
 
 function toggle_regex() {$("#spamcommentregex_list").toggle()}
