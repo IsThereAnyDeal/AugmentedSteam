@@ -2750,7 +2750,7 @@ function inventory_market_helper() {
 								appid = $('#iteminfo1_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];
 								load_inventory_market_prices(appid, item, item_name, global_id);
 							} else {
-								get_http("http://store.steampowered.com/search/?term=" + game_name, function (txt) {
+								get_http("http://store.steampowered.com/search/?term=" + game_name + "&category1=998", function (txt) {
 									appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
 									load_inventory_market_prices(appid, item, item_name, global_id);
 								});
