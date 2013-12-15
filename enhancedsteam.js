@@ -2671,104 +2671,69 @@ function account_total_spent() {
 	});
 }
 
-function inventory_market_helper() {
+function inventory_market_prepare() {
 	storage.get(function(settings) {
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; storage.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showinvmarket) {
+			$("#es_market_helper").remove();
+			var es_market_helper = document.createElement("script");
+			es_market_helper.type = "text/javascript";
+			es_market_helper.id = "es_market_helper";
+			es_market_helper.textContent = 'jQuery(".itemHolder").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name }, "*"); });';
+			document.documentElement.appendChild(es_market_helper);
 
-			if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class=item_market_actions id=es_item0 height=10></div>"); }
-			if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class=item_market_actions id=es_item1 height=10></div>"); }
-			$('#es_item0').html("");
-			$('#es_item1').html("");
+			window.addEventListener("message", function(event) {
+			  if (event.source != window)
+			    return;
 
-			var desc, appid, item, item_name, game_name, global_id;
-
-			if($('#iteminfo0').css("display") == "block") {	desc = $('#iteminfo0_item_tags_content').html(); item = 0; }
-			else { desc = $('#iteminfo1_item_tags_content').html();	item = 1; }
-
-			if (desc.match(localized_strings[language].not_marketable)) { $('#es_item0').remove(); $('#es_item1').remove(); return; }
-
-			global_id = $(".games_list_tab.active")[0].outerHTML.match(/href="\#(\d+)"/)[1];
-
-			function load_inventory_market_prices(appid, item, item_name, global_id) {
-				var url;
-				function html_characters(str){
-					return str.replace(/ /g,"%20").replace(/#/g,"%23").replace(/&/g,"&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-				}
-				if (global_id == 753) {
-					url = "http://steamcommunity.com/market/listings/" + global_id + "/" + appid + "-" + html_characters(item_name);
-				} else {
-					url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(item_name);
-				}
-				get_http(url, function (txt) {
-					var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-					switch (item) {
-						case 0:
-							if (item_price) { $("#es_item0").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
-							} else { $("#es_item0").html(localized_strings[language].no_results_found); }
-							break;
-						case 1:
-							if (item_price) { $("#es_item1").html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
-							} else { $("#es_item1").html(localized_strings[language].no_results_found); }
-							break;
-					}
-				});
-			}
-
-			switch (item) {
-				case 0:
-					$("#es_item0").html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading);
-					item_name = $("#iteminfo0_item_name").html();
-					game_name = $("#iteminfo0_item_tags_content").text().split(",")[1];
-					switch (global_id) {
-						case "753":
-							if ($('#iteminfo0_item_owner_actions').html() != "") {
-								appid = $('#iteminfo0_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];
-								load_inventory_market_prices(appid, item, item_name, global_id);
-							} else {
-								get_http("http://store.steampowered.com/search/?term=" + game_name, function (txt) {
-									appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
-									load_inventory_market_prices(appid, item, item_name, global_id);
-								});
-							}
-							break;
-						case "730":
-							var condition = $("#iteminfo0_item_descriptors .descriptor:contains('Exterior')").text().replace(/Exterior\: /, "");
-							if (condition) item_name += " (" + condition + ")";
-						default:
-							load_inventory_market_prices("0", item, item_name, global_id);
-							break;
-					}
-					break;
-				case 1:
-					$("#es_item1").html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading);
-					item_name = $("#iteminfo1_item_name").html();
-					game_name = $("#iteminfo1_item_tags_content").text().split(",")[1];
-					switch (global_id) {
-						case "753":
-							if ($('#iteminfo1_item_owner_actions').html() != "") {
-								appid = $('#iteminfo1_item_owner_actions').html().match(/(steamcommunity.com\/my\/gamecards\/|OpenBooster\( )(\d+)(, '|\/)/)[2];
-								load_inventory_market_prices(appid, item, item_name, global_id);
-							} else {
-								get_http("http://store.steampowered.com/search/?term=" + game_name + "&category1=998", function (txt) {
-									appid = (get_appid(txt.match(/<a href="(.+)" class="search_result_row/)[1]));
-									load_inventory_market_prices(appid, item, item_name, global_id);
-								});
-							}
-							break;
-						case "730":
-							var condition = $("#iteminfo1_item_descriptors .descriptor:contains('Exterior')").text().replace(/Exterior\: /, "");
-							if (condition) item_name += " (" + condition + ")";
-						default:
-							load_inventory_market_prices("0", item, item_name, global_id);
-							break;
-					}
-					break;
-			}
-
-
+			  if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.text); }
+			}, false);
 		}
 	});
+}
+
+function inventory_market_helper(response) {
+	var desc, appid, item_name, game_name;
+	var item = response.split(":::")[0];
+	var global_id = response.split(":::")[1];
+	var hash_name = response.split(":::")[2];
+
+	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0 height=10></div>"); }
+	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1 height=10></div>"); }
+	$('.es_item_action').html("");			
+	
+	desc = $('#iteminfo' + item + '_item_tags_content').html();
+
+	if (desc.match(localized_strings[language].not_marketable)) { $('#es_item0').remove(); $('#es_item1').remove(); return; }
+
+	function load_inventory_market_prices(item, item_name, global_id) {
+		function html_characters(str){
+			return str.replace(/ /g,"%20").replace(/#/g,"%23").replace(/&/g,"&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+		}
+		switch (global_id) {
+			case "730":
+				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(item_name);
+				break;
+			default:
+				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(hash_name);
+		}
+		get_http(url, function (txt) {
+			var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);					
+			if (item_price) { $("#es_item" + item).html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+			} else { $("#es_item" + item).html(localized_strings[language].no_results_found); }
+		});
+	}
+	
+	$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading);
+	item_name = $("#iteminfo" + item + "_item_name").html();
+	switch (global_id) {
+		case "730":
+			var condition = $("#iteminfo" + item + "_item_descriptors .descriptor:contains('Exterior')").text().replace(/Exterior\: /, "");
+			if (condition) item_name += " (" + condition + ")";
+		default:
+			load_inventory_market_prices(item, item_name, global_id);
+			break;
+	}
 }
 
 function subscription_savings_check() {
@@ -3317,9 +3282,7 @@ function bind_ajax_content_highlighting() {
 				//if (node.id == "search_result_container") add_cart_to_search();
 
 				if (node.classList && node.classList.contains("inventory_page")) {
-					$(".itemHolder").off("click").on("click", function() {
-						window.setTimeout(inventory_market_helper,500);
-					});
+					inventory_market_prepare();
 				}
 
 				if (node.classList && node.classList.contains("tab_row")) {
@@ -4486,9 +4449,7 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/inventory\/.*/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
-						$(".itemHolder").bind("click", function() {
-							window.setTimeout(inventory_market_helper,500);
-						});
+						inventory_market_prepare();
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
