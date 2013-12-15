@@ -128,6 +128,7 @@ function save_options() {
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
 	profile_astats = $("#profile_astats").prop('checked');
 	profile_backpacktf = $("#profile_backpacktf").prop('checked');
+	profile_astatsnl = $("#profile_astatsnl").prop('checked');
 	profile_permalink = $("#profile_permalink").prop('checked');
 	show_profile_link_images = $("#profile_link_images_dropdown").val();
 	
@@ -215,6 +216,7 @@ function save_options() {
 		'profile_steamdbcalc': profile_steamdbcalc,
 		'profile_astats': profile_astats,
 		'profile_backpacktf': profile_backpacktf,
+		'profile_astatsnl': profile_astatsnl,
 		'profile_permalink': profile_permalink,
 		'show_profile_link_images': show_profile_link_images,
 		
@@ -431,6 +433,7 @@ function load_options() {
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
 		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
 		
@@ -521,10 +524,9 @@ function load_options() {
 		$("#profile_steamrep").prop('checked', settings.profile_steamrep);
 		$("#profile_steamdbcalc").prop('checked', settings.profile_steamdbcalc);
 		$("#profile_wastedonsteam").prop('checked', settings.profile_wastedonsteam);
-		$("#profile_sapi").prop('checked', settings.profile_sapi);
-		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
 		$("#profile_astats").prop('checked', settings.profile_astats);
 		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
+		$("#profile_astatsnl").prop('checked', settings.profile_astatsnl);
 		$("#profile_permalink").prop('checked', settings.profile_permalink);
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
