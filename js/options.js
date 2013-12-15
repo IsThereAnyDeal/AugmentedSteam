@@ -496,6 +496,7 @@ function load_options() {
 		$("#regional_price_on").val(settings.showregionalprice);
 		$("#regional_hideworld").prop('checked', settings.regional_hideworld);
 		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
+		if (settings.showregionalprice != "mouse") { $("#regional_price_hideworld").hide(); }
 		load_countries();
 
 		// Load Community Options
@@ -804,6 +805,11 @@ $(document).ready(function(){
 
 	$("#regional_price_on").change(function() {
 		if ($(this).val() == "off") { $("#region_selects").hide(); } else { $("#region_selects").show(); }
+		if ($(this).val() == "mouse") {
+			$("#regional_price_hideworld").show();
+		} else {
+			$("#regional_price_hideworld").hide();
+		}
 	});
 
 	$("input").click(save_options);
