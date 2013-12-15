@@ -406,6 +406,9 @@ img.platform_small, .platform_img {
 .es_regional_sub {
 	margin-top:-55px;
 }
+.es_regional_dailydeal {
+	margin-top:auto;
+}
 .es_regional_price {
 	margin-right:8px;
 	font-size:14px;
