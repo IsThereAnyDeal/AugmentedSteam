@@ -3558,26 +3558,6 @@ function add_affordable_button() {
 	}
 }
 
-function hide_early_access() {
-	if ($("#tab_1_content").is(":visible") || $("#tab_filtered_dlc_content").is(":visible")) {
-		storage.get(function(settings) {
-			if (settings.hide_early_access === undefined) { settings.hide_early_access = false; storage.set({'hide_early_access': settings.hide_early_access}); }
-
-			if (settings.hide_early_access) {
-				// find the localized category name for Early Access
-				var early_access_text = $("#genre_flyout a[href*=Early]").text().trim();
-
-				$("#tab_NewReleases_items .tab_row, #tab_NewReleasesFilteredDLC_items .tab_row").each(function(i, item) {
-					item = $(item);
-					if (item.find(".genre_release").text().indexOf(early_access_text) != -1) {
-						item.hide();
-					}
-				});
-			}
-		});
-	}
-}
-
 function add_small_cap_height() {
 	// Add height for another line for tags;
 	var height_to_add = 20,
@@ -4405,7 +4385,6 @@ $(document).ready(function(){
 					case /^\/$/.test(window.location.pathname):
 						add_carousel_descriptions();
 						add_affordable_button();
-						hide_early_access();
 						show_regional_pricing();
 						break;
 				}
