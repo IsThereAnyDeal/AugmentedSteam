@@ -8,6 +8,7 @@ v5.3
 : Re-added profile link to Backpack.tf
 : Fixed a bug where DRM warnings were displayed if DRM was mentioned in top reviews
 - Removed "Hide Early Access From New Releases" feature as Steam now does this automatically
+- Removed "Hide NEW over username" option as it is no longer required
 
 v5.2.1
 -----

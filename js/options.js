@@ -45,7 +45,6 @@ function save_options() {
 
 	hideinstallsteambutton = $("#hideinstallsteambutton").prop('checked');
 	hideaboutmenu = $("#hideaboutmenu").prop('checked');
-	hidecommunitynew = $("#hidecommunitynew").prop('checked');
 	replaceaccountname = $("#replaceaccountname").prop('checked');
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
 	send_age_info = $("#send_age_info").prop('checked');
@@ -173,7 +172,6 @@ function save_options() {
 
 		'hideinstallsteambutton': hideinstallsteambutton,
 		'hideaboutmenu': hideaboutmenu,
-		'hidecommunitynew': hidecommunitynew,
 		'replaceaccountname': replaceaccountname,
 		'showfakeccwarning': showfakeccwarning,
 		'showlibrarymenu': showlibrarymenu,
@@ -407,7 +405,6 @@ function load_options() {
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
-		if (settings.hidecommunitynew === undefined) { settings.hidecommunitynew = true; chrome.storage.sync.set({'hidecommunitynew': settings.hidecommunitynew}); }
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; chrome.storage.sync.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }		
@@ -476,7 +473,6 @@ function load_options() {
 
 		$("#hideinstallsteambutton").prop('checked', settings.hideinstallsteambutton);
 		$("#hideaboutmenu").prop('checked', settings.hideaboutmenu);
-		$("#hidecommunitynew").prop('checked', settings.hidecommunitynew);replaceaccountname
 		$("#replaceaccountname").prop('checked', settings.replaceaccountname);
 		$("#showfakeccwarning").prop('checked', settings.showfakeccwarning);
 		$("#send_age_info").prop('checked', settings.send_age_info);
@@ -585,7 +581,6 @@ function load_translation() {
 			$("#options_header_text").text(localized_strings[settings.language].options_header);
 			$("#store_hide_install_text").text(localized_strings[settings.language].options_hide_install);
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options_hide_about);
-			$("#store_hide_new_heading").text(localized_strings[settings.language].options_hide_new_heading);
 			$("#store_replace_account_name").text(localized_strings[settings.language].options_replace_account_name);
 			$("#store_general").text(localized_strings[settings.language].options_general);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options_show_regionwarning);
