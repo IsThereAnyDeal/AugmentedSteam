@@ -6,6 +6,8 @@ v5.3
 : Completely rewrote function to get inventory market prices (thanks Sharkiller!)
 : Fixed numerous bugs with regional pricing
 : Re-added profile link to Backpack.tf
+: Fixed a bug where DRM warnings were displayed if DRM was mentioned in top reviews
+- Removed "Hide Early Access From New Releases" feature as Steam now does this automatically
 
 v5.2.1
 -----
