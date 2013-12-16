@@ -2679,7 +2679,7 @@ function inventory_market_prepare() {
 			var es_market_helper = document.createElement("script");
 			es_market_helper.type = "text/javascript";
 			es_market_helper.id = "es_market_helper";
-			es_market_helper.textContent = 'jQuery(".itemHolder").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name }, "*"); });';
+			es_market_helper.textContent = 'jQuery(".itemHolder").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.selectedItem.marketable+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name }, "*"); });';
 			document.documentElement.appendChild(es_market_helper);
 
 			window.addEventListener("message", function(event) {
@@ -2695,16 +2695,15 @@ function inventory_market_prepare() {
 function inventory_market_helper(response) {
 	var desc, appid, item_name, game_name;
 	var item = response.split(":::")[0];
-	var global_id = response.split(":::")[1];
-	var hash_name = response.split(":::")[2];
+	var marketable = response.split(":::")[1];
+	var global_id = response.split(":::")[2];
+	var hash_name = response.split(":::")[3];
 
 	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0 height=10></div>"); }
 	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1 height=10></div>"); }
 	$('.es_item_action').html("");			
 	
-	desc = $('#iteminfo' + item + '_item_tags_content').html();
-
-	if (desc.match(localized_strings[language].not_marketable)) { $('#es_item0').remove(); $('#es_item1').remove(); return; }
+	if (marketable == 0) { $('.es_item_action').remove(); return; }
 
 	function load_inventory_market_prices(item, item_name, global_id) {
 		function html_characters(str){
