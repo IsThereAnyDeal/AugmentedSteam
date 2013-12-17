@@ -3247,6 +3247,41 @@ function show_regional_pricing() {
 	});
 }
 
+function hide_trademark_symbols(community) {
+	var selectors=["title",".apphub_AppName",".breadcrumbs","h1","h4"];
+	if(community){
+		selectors.push(".game_suggestion",".appHubShortcut_Title",".apphub_CardContentNewsTitle",".apphub_CardTextContent",".apphub_CardContentAppName",".apphub_AppName");
+	} else {
+		selectors.push(".game_area_already_owned",".details_block",".game_description_snippet",".game_area_description",".glance_details",".game_area_dlc_bubble game_area_bubble",".package_contents",".game_area_dlc_name",".tab_desc");
+	}
+	function replace_symbols(input){
+		return input.replace(/[\u00AE\u2122\u2122]/g,"");
+	}
+	$.each(selectors, function(index, selector){
+		$(selector).each(function(){
+			$(this).html(replace_symbols($(this).html()));
+		});
+	});
+	var observer = new WebKitMutationObserver(function(mutations) {
+			$.each(mutations,function(mutation_index, mutation){
+				if(mutations[mutation_index]["addedNodes"]){
+					$.each(mutations[mutation_index]["addedNodes"], function(node_index, node){
+						if(node["nodeName"]=="DIV"||node["nodeName"]=="SPAN"||node["nodeName"]=="A"){
+							$(node).html(replace_symbols($(node).html()));
+						}
+					});
+				}
+			})
+	});
+	if(community){
+		observer.observe($("#game_select_suggestions")[0], {childList:true, subtree:true});
+	}
+	else{
+		observer.observe($("#search_suggestion_contents")[0], {childList:true, subtree:true});
+		observer.observe($(".tab_content_ctn")[0], {childList:true, subtree:true});
+	}
+}
+
 function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
@@ -4391,6 +4426,8 @@ $(document).ready(function(){
 
 				add_small_cap_height();
 
+				hide_trademark_symbols();
+
 				break;
 
 			case "steamcommunity.com":
@@ -4486,6 +4523,7 @@ $(document).ready(function(){
 
 					case /^\/$/.test(window.location.pathname):
 						hide_spam_comments();
+						hide_trademark_symbols(true);
 						break;
 				}
 				break;
