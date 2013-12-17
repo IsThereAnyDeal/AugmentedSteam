@@ -3281,8 +3281,7 @@ function bind_ajax_content_highlighting() {
 					inventory_market_prepare();
 				}
 
-				if (node.classList && node.classList.contains("tab_row")) {
-					hide_early_access();
+				if (node.classList && node.classList.contains("tab_row")) {					
 					start_highlighting_node(node);
 				}
 				if (node.id == "search_result_container") {
