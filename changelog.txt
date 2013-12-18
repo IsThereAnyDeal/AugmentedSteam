@@ -3,6 +3,7 @@ v5.3
 + Added regional pricing indicators to sale pages and the daily deal
 + Added profile link to AStats.nl
 + Added option to hide globe icon in regional pricing
++ Added an option to hide trademark symbols in game titles
 : Completely rewrote function to get inventory market prices (thanks Sharkiller!)
 : Fixed numerous bugs with regional pricing
 : Re-added profile link to Backpack.tf
