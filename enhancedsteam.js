@@ -3258,7 +3258,7 @@ function hide_trademark_symbols(community) {
 				selectors.push(".game_area_already_owned",".details_block",".game_description_snippet",".game_area_description",".glance_details",".game_area_dlc_bubble game_area_bubble",".package_contents",".game_area_dlc_name",".tab_desc");
 			}
 			function replace_symbols(input){
-				return input.replace(/[\u00AE\u2122\u2122]/g,"");
+				return input.replace(/[\u00AE\u00A9\u2122]/g,"");
 			}
 			$.each(selectors, function(index, selector){
 				$(selector).each(function(){
