@@ -268,6 +268,10 @@ function highlight_node(node, color) {
 	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
 		$node = $(node).find(".dailydeal_footer");
 	}
+
+	if (node.classList.contains("wintersale_dailydeal_ctn")) {
+		$node = $(node).find(".dailydeal_footer");
+	}
 	
 	// App and community hub page headers
 	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
@@ -3433,7 +3437,8 @@ function start_highlights_and_tags(){
 		"div.sale_page_purchase_item", // Sale pages
 		"div.item",				// Sale page / featured page
 		"div.home_area_spotlight",	// midweek and weekend deals
-		"div.insert_season_here_sale_dailydeal_ctn"		// Valve Sthap!
+		"div.insert_season_here_sale_dailydeal_ctn",		// Valve Sthap!
+		"div.wintersale_dailydeal_ctn"
 	];
 
 	// Get all appids and nodes from selectors.

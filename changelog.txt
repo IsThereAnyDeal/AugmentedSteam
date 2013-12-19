@@ -2,6 +2,12 @@ v5.4
 -----
 
 
+v5.3.1
+-----
++ Added highlighting to homepage of Winter Sale
+: Fixed some localization strings in the options page
+: Fixed a bug where the changelog would be displayed twice when resetting options
+
 v5.3
 -----
 + Added regional pricing indicators to sale pages and the daily deal
