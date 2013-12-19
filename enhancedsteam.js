@@ -4358,7 +4358,7 @@ function add_gamecard_market_links(game) {
 
 		cardname = cardname.replace("&amp;", "&");
 
-		var newcardname = cardname.replace(/'/g, "%27").replace(/\?/g, "%3F").replace(/&/g, "%26");
+		var newcardname = cardname.replace(/'/g, "%27").replace(/\?/g, "%3F").replace(/&/g, "%26").replace(/#/, "%23");
 
 		if (foil) { newcardname = newcardname + " (Foil)"; }
 		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname;
