@@ -2,6 +2,10 @@ v5.4
 -----
 
 
+v5.3.2
+-----
+: Fixed a bug that caused homepage lists not to highlight when scrolled
+
 v5.3.1
 -----
 + Added highlighting to homepage of Winter Sale
