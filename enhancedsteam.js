@@ -900,7 +900,7 @@ function add_4pack_breakdown() {
 		if ($(this).find("h1").is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('3-Pack')")) { pack_split(this, 3); }
 		if ($(this).find("h1").is(":contains('3 pack')")) { pack_split(this, 3); }
-		if ($(this).find("h1").is(":contains('Team Pack')")) { pack_split(this, 3); }
+		if ($(this).find("h1").is(":contains('Team Pack')")&&(window.location.pathname=="/app/214360/")) { pack_split(this, 3); }
 		if ($(this).find("h1").is(":contains('4-pack')")) { pack_split(this, 4); }
 		if ($(this).find("h1").is(":contains('4-Pack')")) { pack_split(this, 4); }
 		if ($(this).find("h1").is(":contains('4 Pack')")) { pack_split(this, 4); }
