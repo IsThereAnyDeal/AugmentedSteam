@@ -2977,9 +2977,12 @@ function show_regional_pricing() {
 			var sub;
 			var region_appended=0;
 			var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
+			var currency_symbol;
 
 			// Get user's Steam currency
-			var currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
+				currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			} else { return; }
 			switch (currency_symbol) {
 				case "$":
 					local_currency = "USD";
