@@ -343,7 +343,7 @@ function load_countries() {
 		}	
 	});
 }
-
+var changelog_loaded;
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
@@ -527,10 +527,13 @@ function load_options() {
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
 		$("#language").val(settings.language);
-		
-		jQuery.get('changelog.txt', function(data) {
-			$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
-		});
+
+		if(!changelog_loaded) {		
+			jQuery.get('changelog.txt', function(data) {
+				$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
+			});
+			changelog_loaded=true;
+		}
 
 		load_translation();
 		load_profile_link_images();
