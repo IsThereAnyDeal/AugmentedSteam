@@ -4350,7 +4350,10 @@ function add_gamecard_foil_link() {
 }
 
 function add_gamecard_market_links(game) {
-	var foil = $(".progress_info_bold").length - 1;
+	var foil;
+	if ($(".badge_info_title:first,.badge_empty_name:first").text() !== "Snow Globe 2013") {
+		foil = $(".progress_info_bold").length - 1;
+	}
 
 	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
