@@ -896,11 +896,11 @@ function add_4pack_breakdown() {
 	$(".game_area_purchase_game_wrapper").each(function() {
 		if ($(this).find("h1").is(":contains('Two Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('Two-pack')")) { pack_split(this, 2); }
-		if ($(this).find("h1").is(":contains('Friend Pack')")) { pack_split(this, 2); }
+		if ($(this).find("h1").is(":contains('Tower Wars Friend Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('3-Pack')")) { pack_split(this, 3); }
 		if ($(this).find("h1").is(":contains('3 pack')")) { pack_split(this, 3); }
-		if ($(this).find("h1").is(":contains('Team Pack')")&&(window.location.pathname=="/app/214360/")) { pack_split(this, 3); }
+		if ($(this).find("h1").is(":contains('Tower Wars Team Pack')")) { pack_split(this, 3); }
 		if ($(this).find("h1").is(":contains('4-pack')")) { pack_split(this, 4); }
 		if ($(this).find("h1").is(":contains('4-Pack')")) { pack_split(this, 4); }
 		if ($(this).find("h1").is(":contains('4 Pack')")) { pack_split(this, 4); }
@@ -1797,7 +1797,7 @@ function add_community_profile_links() {
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
-		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
+		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = false; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
 		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.show_profile_link_images!="false"){if(settings.show_profile_link_images=="color"){icon_color="_col";profile_link_icon_background=" profile_link_icon_background"}}
@@ -2977,9 +2977,12 @@ function show_regional_pricing() {
 			var sub;
 			var region_appended=0;
 			var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
+			var currency_symbol;
 
 			// Get user's Steam currency
-			var currency_symbol = $(".price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
+				currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			} else { return; }
 			switch (currency_symbol) {
 				case "$":
 					local_currency = "USD";
