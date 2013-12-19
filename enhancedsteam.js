@@ -3402,6 +3402,14 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("tab_row")) {					
 					start_highlighting_node(node);
 				}
+
+				// Winter sale 2013
+				if (node.classList && node.classList.contains("wintersale_tabpage")) {
+					$.each($(node).children('.wintersale_dailydeal_ctn'), function() {
+						start_highlighting_node(this);
+					});	
+				}
+
 				if (node.id == "search_result_container") {
 					endless_scrolling();
 					start_highlights_and_tags();
