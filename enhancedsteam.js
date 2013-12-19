@@ -2979,7 +2979,7 @@ function show_regional_pricing() {
 			var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
 
 			// Get user's Steam currency
-			var currency_symbol = $(".price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			var currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 			switch (currency_symbol) {
 				case "$":
 					local_currency = "USD";
