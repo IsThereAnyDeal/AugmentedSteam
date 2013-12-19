@@ -189,7 +189,7 @@
 				<div>
 					<li class="settings_check">
 						<input type="checkbox" id="tag_friends_rec">
-						<label for="tag_friends_rec" id="tag_friends_rec_text">Items Your Friends Recommend</label>
+						<label for="tag_friends_rec" id="tag_friends_rec_text">Items Your Friends Have Reviewed</label>
 					</li>
 					<li class="settings_color">
 						<input type="color" id="tag_friends_rec_color" class="colorbutton">
@@ -197,21 +197,14 @@
 					</li>
 				</div>
 				<li class="header" id="hide_text">Hide</li>
-				<li>
-					<input type="checkbox" id="hide_owned">
-					<label for="hide_owned" id="hide_owned_text">Items You Own</label>
-				</li>
-				<li>
-					<input type="checkbox" id="hide_early_access">
-					<label for="hide_early_access" id="hide_early_access_text">Early Access Items in New Releases</label>
-				</li>
+				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items You Own</label></li>
+				<li><input type="checkbox" id="hidetmsymbols"><label for="hidetmsymbols" id="hidetmsymbols_text">Trademark Symbols in Game Titles</label></li>
 				<li class="header" id="library_text">Library (BETA)</li>
 				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
 				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
 				<li class="header" id="options_header_text">Header</li>
 				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
 				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide About link</label></li>
-				<li><input type="checkbox" id="hidecommunitynew"><label for="hidecommunitynew"id="store_hide_new_heading">Hide "NEW" over username</label></li>
 				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
 				<li class="header" id="store_general">General</li>
 				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
@@ -323,14 +316,15 @@
 					</tr>
 				</table>
 				<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
-				<li>
-					<label for="showregionalprice" id="showregionalprice_text">Show Regional Price Comparison</label>
+				<li id="regional_price_li">
+					<label id="showregionalprice_text">Show Regional Price Comparison</label>
 					<select id="regional_price_on">
 						<option value="mouse">on Price Mouseover</option>
 						<option value="always">Always</option>
 						<option value="off">Never</option>
 					</select>
-				</li>				
+				</li>
+				<li id="regional_price_hideworld"><input type="checkbox" id="regional_hideworld"><label for="regional_hideworld" id="regional_hideworld_text">Hide globe indicator</label></li>			
 				<div id='region_selects'>
 					<li style='margin-top: 10px;'>
 						<span class="es_flag" id="es_flag_1"></span><select id="regional_country_1" class="regional_country"></select>
@@ -450,6 +444,22 @@
 							<img src="img/ico/achievementstats.png" class="site_icon site_icon_gray" />
 							<img src="img/ico/achievementstats_col.png" class="site_icon site_icon_col" />
 							Achievement Stats
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_backpacktf">
+						<label for="profile_backpacktf">
+							<img src="img/ico/backpacktf.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/backpacktf_col.png" class="site_icon site_icon_col" />
+							Backpack.tf
+						</label>
+					</li>
+					<li>
+						<input type="checkbox" id="profile_astatsnl">
+						<label for="profile_astatsnl">
+							<img src="img/ico/astatsnl.png" class="site_icon site_icon_gray" />
+							<img src="img/ico/astatsnl_col.png" class="site_icon site_icon_col" />
+							AStats.nl
 						</label>
 					</li>
 				</ul>

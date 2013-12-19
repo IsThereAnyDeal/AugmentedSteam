@@ -1,3 +1,22 @@
+v5.3
+-----
++ Added regional pricing indicators to sale pages and the daily deal
++ Added profile link to AStats.nl
++ Added option to hide globe icon in regional pricing
++ Added an option to hide trademark symbols in game titles
+: Completely rewrote function to get inventory market prices (thanks Sharkiller!)
+: Fixed numerous bugs with regional pricing
+: Re-added profile link to Backpack.tf
+: Fixed a bug that caused wishlist filtering options not to underline properly
+: Fixed a bug where DRM warnings were displayed if DRM was mentioned in top reviews
+: Fixed a bug causing some games and collections to incorrectly trigger split pack price dialog
+- Removed "Hide Early Access From New Releases" feature as Steam now does this automatically
+- Removed "Hide NEW over username" option as it is no longer required
+
+v5.2.1
+-----
+: Fixed plugin permissions issue causing some users not to upgrade to 5.2
+
 v5.2
 -----
 + Added regional price comparison feature which is fully configurable in options
