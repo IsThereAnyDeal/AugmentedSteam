@@ -896,11 +896,11 @@ function add_4pack_breakdown() {
 	$(".game_area_purchase_game_wrapper").each(function() {
 		if ($(this).find("h1").is(":contains('Two Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('Two-pack')")) { pack_split(this, 2); }
-		if ($(this).find("h1").is(":contains('Friend Pack')")) { pack_split(this, 2); }
+		if ($(this).find("h1").is(":contains('Tower Wars Friend Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('2-Pack')")) { pack_split(this, 2); }
 		if ($(this).find("h1").is(":contains('3-Pack')")) { pack_split(this, 3); }
 		if ($(this).find("h1").is(":contains('3 pack')")) { pack_split(this, 3); }
-		if ($(this).find("h1").is(":contains('Team Pack')")) { pack_split(this, 3); }
+		if ($(this).find("h1").is(":contains('Tower Wars Team Pack')")) { pack_split(this, 3); }
 		if ($(this).find("h1").is(":contains('4-pack')")) { pack_split(this, 4); }
 		if ($(this).find("h1").is(":contains('4-Pack')")) { pack_split(this, 4); }
 		if ($(this).find("h1").is(":contains('4 Pack')")) { pack_split(this, 4); }
