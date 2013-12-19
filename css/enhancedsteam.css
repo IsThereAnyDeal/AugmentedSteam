@@ -458,20 +458,22 @@ img.platform_small, .platform_img {
 	margin-right:4px;
 }
 .es_each {
-	text-decoration: none;
-	left:auto;
-	float:right;
-	position:relative;
-	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
 	color: #626366;
 	font-size: 11px;
-	right:14px;
-	top:-3px;
+	float:right;
+	margin-top:-2px;
 }
 .es_each_price {
-	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
 	color: #B0AEAC;
 	font-size: 13px;
-	padding-top:4px;
-	padding-left:12px;
+}
+.es_each_box {
+	font-family: tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	background-color:black;
+	padding-right:10px;
+	padding-top:3px;
+	padding-left:10px;
+	height:31px;
+	float:left;
+	margin-left:3px;
 }
