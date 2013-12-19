@@ -3359,7 +3359,9 @@ function hide_trademark_symbols(community) {
 			}
 			else{
 				observer.observe($("#search_suggestion_contents")[0], {childList:true, subtree:true});
-				observer.observe($(".tab_content_ctn")[0], {childList:true, subtree:true});
+				if($(".tab_content_ctn").length>0){
+					observer.observe($(".tab_content_ctn")[0], {childList:true, subtree:true});
+				}
 			}
 		}
 	});
