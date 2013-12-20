@@ -2682,7 +2682,7 @@ function inventory_market_prepare() {
 			var es_market_helper = document.createElement("script");
 			es_market_helper.type = "text/javascript";
 			es_market_helper.id = "es_market_helper";
-			es_market_helper.textContent = 'jQuery(".itemHolder").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.selectedItem.marketable+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name }, "*"); });';
+			es_market_helper.textContent = 'jQuery(".itemHolder, .newitem").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.selectedItem.marketable+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name }, "*"); });';
 			document.documentElement.appendChild(es_market_helper);
 
 			window.addEventListener("message", function(event) {
