@@ -268,11 +268,13 @@ function highlight_node(node, color) {
 	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
 		$node = $(node).find(".dailydeal_footer");
 	}
-
 	if (node.classList.contains("wintersale_dailydeal_ctn")) {
 		$node = $(node).find(".dailydeal_footer");
 	}
-	
+	if (node.classList.contains("vote_option")) {
+		$node = $(node).find(".vote_option_info");
+	}
+
 	// App and community hub page headers
 	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
 		$node = $(node).find(".apphub_AppName");
@@ -3448,7 +3450,8 @@ function start_highlights_and_tags(){
 		"div.item",				// Sale page / featured page
 		"div.home_area_spotlight",	// midweek and weekend deals
 		"div.insert_season_here_sale_dailydeal_ctn",		// Valve Sthap!
-		"div.wintersale_dailydeal_ctn"
+		"div.wintersale_dailydeal_ctn",
+		"div.vote_option"
 	];
 
 	// Get all appids and nodes from selectors.
