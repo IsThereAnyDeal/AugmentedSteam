@@ -4559,7 +4559,7 @@ $(document).ready(function(){
 						add_es_background_selection();
 						break;
 
-					case /^\/(?:id|profiles)\/.+\/inventory\/.*/.test(window.location.pathname):
+					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
 						inventory_market_prepare();
 						break;
