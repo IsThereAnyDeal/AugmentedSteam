@@ -2722,9 +2722,11 @@ function inventory_market_helper(response) {
 				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(hash_name);
 		}
 		get_http(url, function (txt) {
-			var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);					
-			if (item_price) { $("#es_item" + item).html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
-			} else { $("#es_item" + item).html(localized_strings[language].no_results_found); }
+			var item_price = $(txt).find('.market_listing_row:has(.market_listing_buy_button a):first .market_listing_price.market_listing_price_with_fee:first').text().trim();
+			if (item_price != "")
+				$("#es_item" + item).html(localized_strings[language].lowest_price + " " + item_name + ": " + item_price + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+			else
+				$("#es_item" + item).html(localized_strings[language].no_results_found);
 		});
 	}
 	
