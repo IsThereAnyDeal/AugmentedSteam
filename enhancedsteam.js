@@ -3766,6 +3766,7 @@ function rewrite_string(string) {
 	string = string.replace(/%3F/g, "?");
 	string = string.replace(/%2C/g, ",");
 	string = string.replace(/%22/g, "\"");
+	string = string.replace(/%23/g, "#");
 	return string;
 }
 
