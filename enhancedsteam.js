@@ -3710,30 +3710,33 @@ function add_affordable_button() {
 }
 
 function add_small_cap_height() {
-	// Add height for another line for tags;
-	var height_to_add = 20,
-		$small_cap_pager = $(".small_cap_pager"),
-		$small_cap = $(".small_cap");
+	storage.get(function(settings) {			
+		if (settings.tag_owned || settings.tag_wishlist || settings.tag_coupon || settings.tag_inv_gift || settings.tag_inv_guestpass || settings.tag_friends_want || settings.tag_friends_own || settings.tag_friends_rec) {	
+			// Add height for another line for tags;
+			var height_to_add = 20,
+				$small_cap_pager = $(".small_cap_pager"),
+				$small_cap = $(".small_cap");
 
-	if ($small_cap.length > 0) {
-		if (/^\/$/.test(window.location.pathname)) {
-			// $small_cap_pager and $small_cap_page are exclusive to frontpage, so let's not run them anywhere else.
-			$.each($small_cap_pager, function(i, obj) {
-				// Go though and check if they are one or two row pagers.
-				var $obj = $(obj),
-					rows = obj.classList.contains("onerow") ? 1 : 2,
-					$small_cap_page = $obj.find(".small_cap_page");
+			if ($small_cap.length > 0) {
+				if (/^\/$/.test(window.location.pathname)) {
+					// $small_cap_pager and $small_cap_page are exclusive to frontpage, so let's not run them anywhere else.
+					$.each($small_cap_pager, function(i, obj) {
+						// Go though and check if they are one or two row pagers.
+						var $obj = $(obj),
+							rows = obj.classList.contains("onerow") ? 1 : 2,
+							$small_cap_page = $obj.find(".small_cap_page");
 
-				// Don't do anything to the video small_cap
-				if (!obj.classList.contains("onerowvideo")) {
-					$obj.css("height", parseInt($obj.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
-					$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
+						// Don't do anything to the video small_cap
+						if (!obj.classList.contains("onerowvideo")) {
+							$obj.css("height", parseInt($obj.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
+							$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
+						}
+					});
 				}
-			});
+				$small_cap.css("height", parseInt($small_cap.css("height").replace("px", ""), 10) + height_to_add + "px");
+			}
 		}
-
-		$small_cap.css("height", parseInt($small_cap.css("height").replace("px", ""), 10) + height_to_add + "px");
-	}
+	});	
 }
 
 function start_friend_activity_highlights() {
