@@ -1719,7 +1719,7 @@ function drm_warnings() {
 			var text = $("#game_area_description").html();
 			text += $("#game_area_sys_req").html();
 			text += $("#game_area_legal").html();
-			text += $(".rightcol").html();
+			text += $(".game_details").html();
 
 			// Games for Windows Live detection
 			if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
