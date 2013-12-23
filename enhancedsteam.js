@@ -744,16 +744,38 @@ function add_wishlist_discount_sort() {
 			var push = new Array();
 			if ($(this).html().match(/discount_block_inline/)) {
 				push[0] = this.outerHTML;
-				push[1] = $(this).find("div[class='discount_pct']").html();
+				push[1] = $(this).find(".discount_pct").html();
+				push[2] = $(this).find(".discount_final_price").html();
 			} else {
 				push[0] = this.outerHTML;
 				push[1] = "0";
+				push[2] = $(this).find(".price").html();
 			}
 			wishlistRows.push(push);
 			this.parentNode.removeChild(this);
 		});
 
-		wishlistRows.sort(function(a,b) { return parseInt(a[1],10) - parseInt(b[1],10);	});
+		wishlistRows.sort(function(a,b) {
+			var discountA = parseInt(a[1],10);
+			var discountB = parseInt(b[1],10);
+
+			if (discountA > discountB) {
+				return 1;
+			} else if (discountA < discountB) {
+				return -1;
+			} else {
+				var priceA = Number(a[2].replace(/[^0-9\.]+/g,""));
+				var priceB = Number(b[2].replace(/[^0-9\.]+/g,""));
+
+				if (priceA > priceB) {
+					return 1;
+				} else if (priceA < priceB) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
 
 		$('.wishlistRow').each(function () { $(this).css("display", "none"); });
 
