@@ -1965,6 +1965,7 @@ function load_search_results () {
 			search_page = search_page + 1;
 			processing = false;
 			remove_non_specials();
+			hide_unowned_game_dlc();
 		});
 	}
 }
@@ -1997,6 +1998,41 @@ function remove_non_specials() {
 			}
 		});
 	}
+}
+
+function hide_unowned_game_dlc() {
+	storage.get(function(settings) {
+		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; storage.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
+		if (settings.hide_dlcunownedgames) {
+			$(".search_result_row").each(function(index) {
+				var node = $(this);
+				if ($(this).html().match(/ico_type_dlc/)) {
+					var appid = get_appid($(this).attr("href"));
+					
+					get_http('//store.steampowered.com/api/appdetails/?appids=' + appid, function (data) {
+						var storefront_data = JSON.parse(data);
+						$.each(storefront_data, function(application, app_data) {
+							if (app_data.success) {						
+								get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app_data.data.fullgame.appid, function (fullgamedata) {
+									var fullgame_data = JSON.parse(fullgamedata);
+									$.each(fullgame_data, function(fullappid, fullapp_data){								
+										if (fullapp_data.success) {
+											if (!(fullapp_data.data.is_owned === true)) {										
+												hide_node(node[0]);
+												if ($(document).height() <= $(window).height()) {
+													load_search_results();
+												}
+											}									
+										}
+									});
+								});	
+							}
+						});	
+					});
+				}	
+			});
+		}
+	});
 }
 
 // Changes Steam Greenlight pages
@@ -3455,6 +3491,7 @@ function bind_ajax_content_highlighting() {
 					endless_scrolling();
 					start_highlights_and_tags();
 					remove_non_specials();
+					hide_unowned_game_dlc();
 				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
@@ -4562,6 +4599,7 @@ $(document).ready(function(){
 						//add_cart_to_search();
 						endless_scrolling();
 						remove_non_specials();
+						hide_unowned_game_dlc();
 						break;
 
 					case /^\/sale\/.*/.test(window.location.pathname):

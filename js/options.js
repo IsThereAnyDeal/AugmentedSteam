@@ -39,6 +39,7 @@ function save_options() {
 	tag_friends_rec = $("#tag_friends_rec").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
+	hide_dlcunownedgames = $("#hide_dlcunownedgames").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
@@ -170,6 +171,7 @@ function save_options() {
 		'tag_friends_rec': tag_friends_rec,
 		
 		'hide_owned': hide_owned,
+		'hide_dlcunownedgames': hide_dlcunownedgames,
 		'hidetmsymbols': hidetmsymbols,
 
 		'hideinstallsteambutton': hideinstallsteambutton,
@@ -385,6 +387,7 @@ function load_options() {
 		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = false; chrome.storage.sync.set({'tag_friends_rec': settings.tag_friends_rec}); }
 		
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
 
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
@@ -470,6 +473,7 @@ function load_options() {
 		$("#tag_friends_rec").prop('checked', settings.tag_friends_rec);
 		
 		$("#hide_owned").prop('checked', settings.hide_owned);
+		$("#hide_dlcunownedgames").prop('checked', settings.hide_dlcunownedgames);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
 
 		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
@@ -580,6 +584,7 @@ function load_translation() {
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options_owned);
+			$("#hide_dlcunownedgames_text").text(localized_strings[settings.language].options_hidedlcunownedgames);
 			$("#hidetmsymbols_text").text(localized_strings[settings.language].options_hidetmsymbols);
 			
 			$("#library_text").text(localized_strings[settings.language].options_library_header);
