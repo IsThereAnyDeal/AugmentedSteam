@@ -1,6 +1,7 @@
 v5.4
 -----
 + Added option to hide DLC for games you do not own
++ Added option to add button on app pages to test your system requirements in Steam (experimental!)
 
 v5.3.3
 -----

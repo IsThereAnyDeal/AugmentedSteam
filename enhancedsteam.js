@@ -991,8 +991,13 @@ function add_steamchart_info(appid) {
 }
 
 function add_system_requirements_check(appid) {
-	var html = "<a class='btn_darkblue_white_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + appid + "'><span>" + localized_strings[language].check_system + "</span></a>";
-	$("#game_area_sys_req").last().after(html);
+	storage.get(function(settings) {
+		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; storage.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
+		if (settings.show_sysreqcheck) {
+			var html = "<a class='btn_darkblue_white_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + appid + "'><span>" + localized_strings[language].check_system + "</span></a>";
+			$("#game_area_sys_req").last().after(html);
+		}
+	});	
 }
 
 function send_age_verification() {
