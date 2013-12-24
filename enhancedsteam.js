@@ -990,6 +990,11 @@ function add_steamchart_info(appid) {
 	}
 }
 
+function add_system_requirements_check(appid) {
+	var html = "<a class='btn_darkblue_white_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + appid + "'><span>" + localized_strings[language].check_system + "</span></a>";
+	$("#game_area_sys_req").last().after(html);
+}
+
 function send_age_verification() {
 	storage.get(function(settings) {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
@@ -4521,7 +4526,8 @@ $(document).ready(function(){
 						add_4pack_breakdown();
 						add_package_info_button();
 						add_steamchart_info(appid);
-						dlc_data_for_app_page()
+						add_system_requirements_check(appid);
+						dlc_data_for_app_page();
 
 						show_regional_pricing();
 						break;
