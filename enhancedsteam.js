@@ -4349,7 +4349,7 @@ function add_badge_view_options() {
 	$("#es_badge_view_binder").on('click', function() {
 		$('.is_link').each(function () {
 			var stats = $(this).find("span[class$='progress_info_bold']").html();
-			$(this).find("div[class$='badge_cards']").remove();
+						$(this).find("div[class$='badge_cards']").remove();
 			$(this).find("div[class$='badge_title_stats']").css("display", "none");
 			$(this).find("div[class$='badge_description']").css("display", "none");
 			$(this).find("span[class$='badge_view_details']").remove();
@@ -4360,6 +4360,8 @@ function add_badge_view_options() {
 			$(this).find("div[class$='badge_progress_info']").css("margin", "0");
 			$(this).find("div[class$='badge_progress_info']").css("width", "auto");
 			$(this).find("div[class$='badge_title']").css("font-size", "12px");
+			$(this).find("div[class$='badge_title']").css("line-height", "26px");
+      			$(this).find("div[class$='badge_title']").html($(this).find("div[class$='badge_title']").html().slice(0,-9));
 			$(this).find("div[class$='badge_title_row']").css("padding-top", "0px");
 			$(this).find("div[class$='badge_title_row']").css("padding-right", "4px");
 			$(this).find("div[class$='badge_title_row']").css("padding-left", "4px");
@@ -4369,7 +4371,7 @@ function add_badge_view_options() {
 			$(this).find("div[class$='badge_empty_circle']").css("float", "center");
 			$(this).find("div[class$='badge_empty_circle']").css("margin-left", "45px");
 			$(this).find("div[class$='badge_info_image']").css("float", "center");
-			$(this).find("div[class$='badge_info_image']").css("margin-right", "0px");
+			$(this).find("div[class$='badge_info_image']").css("margin", "7px auto 0px auto");
 			$(this).find("div[class$='badge_content']").css("padding-top", "0px");
 			$(this).css("width", "160px");
 			$(this).css("height", "195px");
