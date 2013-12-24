@@ -39,6 +39,7 @@ function save_options() {
 	tag_friends_rec = $("#tag_friends_rec").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
+	hide_dlcunownedgames = $("#hide_dlcunownedgames").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
@@ -57,6 +58,7 @@ function save_options() {
 	showsteamdb = $("#showsteamdb").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 	show_package_info = $("#show_package_info").prop('checked');
+	show_sysreqcheck = $("#show_sysreqcheck").prop('checked');
 	show_steamchart_info = $("#show_steamchart_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	
@@ -170,6 +172,7 @@ function save_options() {
 		'tag_friends_rec': tag_friends_rec,
 		
 		'hide_owned': hide_owned,
+		'hide_dlcunownedgames': hide_dlcunownedgames,
 		'hidetmsymbols': hidetmsymbols,
 
 		'hideinstallsteambutton': hideinstallsteambutton,
@@ -187,6 +190,7 @@ function save_options() {
 		'showsteamdb': showsteamdb,
 		'showwsgf': showwsgf,
 		'show_package_info': show_package_info,
+		'show_sysreqcheck': show_sysreqcheck,
 		'show_steamchart_info': show_steamchart_info,
 		'show_carousel_descriptions': show_carousel_descriptions,
 		
@@ -343,7 +347,7 @@ function load_countries() {
 		}	
 	});
 }
-
+var changelog_loaded;
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
@@ -385,6 +389,7 @@ function load_options() {
 		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = false; chrome.storage.sync.set({'tag_friends_rec': settings.tag_friends_rec}); }
 		
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
 
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
@@ -400,6 +405,7 @@ function load_options() {
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; chrome.storage.sync.set({'show_package_info': settings.show_package_info}); }
+		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; chrome.storage.sync.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
 		if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; chrome.storage.sync.set({'show_steamchart_info': settings.show_steamchart_info}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 
@@ -470,6 +476,7 @@ function load_options() {
 		$("#tag_friends_rec").prop('checked', settings.tag_friends_rec);
 		
 		$("#hide_owned").prop('checked', settings.hide_owned);
+		$("#hide_dlcunownedgames").prop('checked', settings.hide_dlcunownedgames);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
 
 		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
@@ -488,6 +495,7 @@ function load_options() {
 		$("#showsteamdb").prop('checked', settings.showsteamdb);
 		$("#showwsgf").prop('checked', settings.showwsgf);
 		$("#show_package_info").prop('checked', settings.show_package_info);
+		$("#show_sysreqcheck").prop('checked', settings.show_sysreqcheck);
 		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
 				
@@ -527,10 +535,13 @@ function load_options() {
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
 		$("#language").val(settings.language);
-		
-		jQuery.get('changelog.txt', function(data) {
-			$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
-		});
+
+		if(!changelog_loaded) {		
+			jQuery.get('changelog.txt', function(data) {
+				$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
+			});
+			changelog_loaded=true;
+		}
 
 		load_translation();
 		load_profile_link_images();
@@ -577,6 +588,7 @@ function load_translation() {
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options_owned);
+			$("#hide_dlcunownedgames_text").text(localized_strings[settings.language].options_hidedlcunownedgames);
 			$("#hidetmsymbols_text").text(localized_strings[settings.language].options_hidetmsymbols);
 			
 			$("#library_text").text(localized_strings[settings.language].options_library_header);
@@ -600,6 +612,7 @@ function load_translation() {
 			$("#store_steamdb_text").text(localized_strings[settings.language].options_steamdb);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options_wsgf);
 			$("#store_package_info_text").text(localized_strings[settings.language].options_show_package_info);
+			$("#store_sysreqcheck_text").text(localized_strings[settings.language].options_show_sysreqcheck);
 			$("#store_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
 			
