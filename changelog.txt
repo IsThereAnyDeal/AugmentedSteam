@@ -2,6 +2,12 @@ v5.4
 -----
 + Added option to hide DLC for games you do not own
 + Added option to add button on app pages to test your system requirements in Steam (experimental!)
++ Sorting wishlist by discount now additionally subsorts by price (lowest -> highest)
+: Fixed inventory market price check displaying "Sold!" when looking up prices
+: Fixed bug where inventory market price check wasn't displaying for some users
+: Fixed bug where Holiday Snow Globes weren't highlighting in the marketplace
+: Fixed bug where DRM warnings weren't displaying under certain conditions
+: Fixed bug where holiday snowglobe background was displaying in Library mode
 
 v5.3.3
 -----
