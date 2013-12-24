@@ -1198,6 +1198,7 @@ function show_library() {
 	$("#game_background_holder").remove();
 	$("#modalBG").remove();
 	$("#page_background_holder").remove();
+	$("#winter_sale_globe_top").remove();
 
 	// Create Library divs
 	var es_library = $("<div id='es_library_content'></div>");
