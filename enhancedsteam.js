@@ -4432,8 +4432,9 @@ function add_badge_view_options() {
 				}
 			}
 			if ($(this).find("div[class$='badge_progress_info']").text()) {
-				var card = $(this).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/)[1] + " / " + $(this).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/)[2];
-				$(this).find("div[class$='badge_progress_info']").text(card);
+				var card = $(this).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/),
+					text = (card) ? card[1] + " / " + card[2] : '';
+				$(this).find("div[class$='badge_progress_info']").text(text);
 			}
 		});
 
