@@ -382,6 +382,9 @@ var localized_strings,
 				comparison_mode: "Povolte přehled všech her pro porovnání her",
 				permalink: "Odkaz",
 				region_unavailable: "Nedostupné v tomto regionu",
+				all_friends_own: "Všichni přátelé, co toto vlastní (__friendcount__)",
+				hours_short: "__hours__ hodin",
+				view_stats: "Zobrazit statistiky",
 				library: {
 				        private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
 				},
