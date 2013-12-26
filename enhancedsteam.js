@@ -4515,6 +4515,50 @@ function add_total_drops_count() {
 	});
 }
 
+function add_friends_that_play() {
+	var appid = window.location.pathname.match(/(?:id|profiles)\/.+\/friendsthatplay\/(\d+)/)[1];
+
+	$.get('//store.steampowered.com/api/appuserdetails/?appids=' + appid).success(function(data) {
+		if (data[appid].success && data[appid].data.friendsown && data[appid].data.friendsown.length > 0) {
+			// Steam Web API is awful, let's do it the easiest way.
+			$.get('//steamcommunity.com/my/friends/').success(function(friends_html) {
+				friends_html = $(friends_html);
+
+				var friendsown = data[appid].data.friendsown;
+
+				var html = '<div class="mainSectionHeader friendListSectionHeader">';
+				html += localized_strings[language].all_friends_own.replace('__friendcount__', friendsown.length);
+				html += ' <span class="underScoreColor">_</span>';
+				html += '</div>';
+
+				html += '<div class="profile_friends" style="height: ' + (48 * friendsown.length / 3) + 'px;">';
+
+				for (var i = 0; i < friendsown.length; i++) {
+					var steamID = friendsown[i].steamid.slice(4) - 1197960265728;
+					var friend_html = $(friends_html.find('.friendBlock[data-miniprofile=' + steamID + ']')[0].outerHTML);
+					var friend_small_text = localized_strings[language].hours_short.replace('__hours__', Math.round(friendsown[i].playtime_twoweeks / 60 * 10) / 10);
+					friend_small_text += ' / ' + localized_strings[language].hours_short.replace('__hours__', Math.round(friendsown[i].playtime_total / 60 * 10) / 10);
+					var compare_url = friend_html.find('.friendBlockLinkOverlay')[0].href + '/stats/' + appid + '/compare';
+					friend_small_text += '<br><a class="whiteLink friendBlockInnerLink" href="' + compare_url + '">' + localized_strings[language].view_stats + '</a>';
+					friend_html.find('.friendSmallText').html(friend_small_text);
+					html += friend_html[0].outerHTML;
+				}
+
+				html += '</div>';
+
+				$('.friends_that_play_content').append(html);
+
+				// Reinitialize miniprofiles by injecting the function call.
+
+				var injectedCode = 'InitMiniprofileHovers();';
+				var script = document.createElement('script');
+				script.appendChild(document.createTextNode('(function() { '+ injectedCode +' })();'));
+				(document.body || document.head || document.documentElement).appendChild(script);
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 	is_signed_in();
 
@@ -4684,6 +4728,10 @@ $(document).ready(function(){
 						add_cardexchange_links(gamecard);
 						add_gamecard_market_links(gamecard);
 						add_gamecard_foil_link();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
+						add_friends_that_play();
 						break;
 
 					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):

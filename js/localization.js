@@ -176,6 +176,9 @@ var localized_strings,
 			comparison_mode: "Enable all game overview to see game comparison",
 			permalink: "Permalink",
 			region_unavailable: "Not available in this region",
+			all_friends_own: "All friends who own this (__friendcount__)",
+			hours_short: "__hours__ hrs",
+			view_stats: "View stats",
 			library: {
 				private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
 			},
