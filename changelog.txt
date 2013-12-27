@@ -1,6 +1,6 @@
 v5.5
 -----
-
+: Fixed bug where badge filter wasn't working with some languages
 
 v5.4
 -----

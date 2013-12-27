@@ -4453,7 +4453,7 @@ function add_badge_filter() {
 
 		$('#es_badge_drops').on('click', function() {
 			$('.is_link').each(function () {
-				if ($(this).html().match(/progress_info_bold">\D/)) {
+				if (!($(this).html().match(/progress_info_bold".+\d/))) {
 					$(this).css('display', 'none');
 				} else {
 					if ($(this).html().match(/badge_info_unlocked/)) {
