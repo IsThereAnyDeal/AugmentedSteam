@@ -485,4 +485,5 @@ img.platform_small, .platform_img {
 .es_overlay {
 	position: absolute;
 	z-index: 0;
+	left: 0px;
 }

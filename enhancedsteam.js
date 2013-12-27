@@ -3051,6 +3051,22 @@ function dlc_data_for_app_page() {
 	});
 }
 
+function check_early_access(node, image_name, image_left) {	
+	var href = $(node).find("a").attr("href");
+	var appid = get_appid(href);
+	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid + '&filters=genres', function (data) {
+		var app_data = JSON.parse(data);							
+		if (app_data[appid].success) {
+			var genres = app_data[appid].data.genres;								
+			$(genres).each(function(index, value) {									
+				if (value.description == "Early Access") {
+					$(node).find("img").after("<img class='es_overlay' style='left: " + image_left + "px' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+				}
+			});	
+		}
+	});
+}
+
 function add_overlay() {
 	switch (window.location.host) {
 		case "store.steampowered.com":
@@ -3063,16 +3079,20 @@ function add_overlay() {
 				case /^\/genre\/.*/.test(window.location.pathname):
 					$(".tab_row").each(function(index, value) {
 						if ($(this).html().match(/genre_release(.+)Early Access/)) {
-							$(this).find("img").after("<img class='es_overlay' style='left: " + $(this).position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_184x69.png") + "'>");
+							$(this).find("img").after("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/ea_184x69.png") + "'>");
 						}
 					});
 					break;
 				case /^\/search\/.*/.test(window.location.pathname):
 					$(".search_result_row").each(function(index, value) {
 						if ($(this).html().match(/Early Access/)) {
-							$(this).find("img:eq(1)").after("<img class='es_overlay' style='left: " + $(this).position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_sm_120.png") + "'>");
+							$(this).find("img:eq(1)").after("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/ea_sm_120.png") + "'>");
 						}
 					});
+					break;
+				case /^\/$/.test(window.location.pathname):
+					$(".wintersale_dailydeal_ctn").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0) });
+					$(".vote_option").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0) });
 					break;
 			}
 	}
@@ -3525,7 +3545,8 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("wintersale_tabpage")) {
 					$.each($(node).children('.wintersale_dailydeal_ctn'), function() {
 						start_highlighting_node(this);
-					});	
+						check_early_access(this, "ea_231x87.png", 0);
+					});					
 				}
 
 				if (node.id == "search_result_container") {
@@ -3535,6 +3556,7 @@ function bind_ajax_content_highlighting() {
 					hide_unowned_game_dlc();
 					add_overlay();
 				}
+
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
