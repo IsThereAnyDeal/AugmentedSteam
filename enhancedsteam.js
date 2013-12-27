@@ -757,10 +757,14 @@ function add_wishlist_discount_sort() {
 				push[0] = this.outerHTML;
 				push[1] = $(this).find(".discount_pct").html();
 				push[2] = $(this).find(".discount_final_price").html();
-			} else {
+			} else if ($(this).html().match(/div class=\"price/)) {
 				push[0] = this.outerHTML;
 				push[1] = "0";
 				push[2] = $(this).find(".price").html();
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = "0";
+				push[2] = "0";
 			}
 			wishlistRows.push(push);
 			this.parentNode.removeChild(this);

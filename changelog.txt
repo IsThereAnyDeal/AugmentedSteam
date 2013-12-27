@@ -3,6 +3,7 @@ v5.5
 + Added "Early Access" image banners to early access games on Steam
 + Added a list of friends that own a game on the "friends that own" page
 : Fixed bug where badge filter wasn't working with some languages
+: Fixed bug in wishlist sorting that would cause it to fail if a game had no price displayed
 
 v5.4
 -----
