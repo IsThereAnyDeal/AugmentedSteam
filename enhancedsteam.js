@@ -3103,6 +3103,9 @@ function add_overlay() {
 						check_early_access($(this), "ea_231x87.png", $(this).position().left);
 					});
 					break;
+				case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
+					$(".game_info_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					$(".showcase_slot").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
 			}
 	}
 }
