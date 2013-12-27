@@ -2796,15 +2796,12 @@ function inventory_market_helper(response) {
 	if (marketable == 0) { $('.es_item_action').remove(); return; }
 
 	function load_inventory_market_prices(item, item_name, global_id) {
-		function html_characters(str){
-			return str.replace(/ /g,"%20").replace(/#/g,"%23").replace(/&/g,"&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-		}
 		switch (global_id) {
 			case "730":
-				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(item_name);
+				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(item_name);
 				break;
 			default:
-				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + html_characters(hash_name);
+				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(hash_name);
 		}
 		get_http(url, function (txt) {
 			var item_price = $(txt).find('.market_listing_row:has(.market_listing_buy_button a):first .market_listing_price.market_listing_price_with_fee:first').text().trim();
