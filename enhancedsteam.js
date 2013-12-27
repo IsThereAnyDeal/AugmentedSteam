@@ -937,23 +937,23 @@ function add_4pack_breakdown() {
 		title = title.toLowerCase().replace('-', ' ');
 		if (!title || !title.contains('pack')) return;
 
-		if (title.contains('2 pack')) { pack_split(this, 2); }
-		else if (title.contains('two pack')) { pack_split(this, 2); }
+		if (title.contains(' 2 pack')) { pack_split(this, 2); }
+		else if (title.contains(' two pack')) { pack_split(this, 2); }
 		else if (title.contains('tower wars friend pack')) { pack_split(this, 2); }
 
-		else if (title.contains('3 pack')) { pack_split(this, 3); }
-		else if (title.contains('three pack')) { pack_split(this, 3); }
+		else if (title.contains(' 3 pack')) { pack_split(this, 3); }
+		else if (title.contains(' three pack')) { pack_split(this, 3); }
 		else if (title.contains('tower wars team pack')) { pack_split(this, 3); }
 
-		else if (title.contains('4 pack')) { pack_split(this, 4); }
-		else if (title.contains('four pack')) { pack_split(this, 4); }
-		else if (title.contains('clan pack')) { pack_split(this, 4); }
+		else if (title.contains(' 4 pack')) { pack_split(this, 4); }
+		else if (title.contains(' four pack')) { pack_split(this, 4); }
+		else if (title.contains(' clan pack')) { pack_split(this, 4); }
 
-		else if (title.contains('5 pack')) { pack_split(this, 5); }
-		else if (title.contains('five pack')) { pack_split(this, 5); }
+		else if (title.contains(' 5 pack')) { pack_split(this, 5); }
+		else if (title.contains(' five pack')) { pack_split(this, 5); }
 
-		else if (title.contains('6 pack')) { pack_split(this, 6); }
-		else if (title.contains('six pack')) { pack_split(this, 6); }
+		else if (title.contains(' 6 pack')) { pack_split(this, 6); }
+		else if (title.contains(' six pack')) { pack_split(this, 6); }
 	});
 }
 
