@@ -3052,7 +3052,7 @@ function dlc_data_for_app_page() {
 }
 
 function check_early_access(node, image_name, image_left) {	
-	var href = $(node).find("a").attr("href");
+	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid + '&filters=genres', function (data) {
 		var app_data = JSON.parse(data);							
@@ -3091,8 +3091,17 @@ function add_overlay() {
 					});
 					break;
 				case /^\/$/.test(window.location.pathname):
-					$(".wintersale_dailydeal_ctn").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0) });
-					$(".vote_option").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0) });
+					$(".wintersale_dailydeal_ctn").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0); });
+					$(".vote_option").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					break;
+			}
+			break;
+		case "steamcommunity.com":
+			switch(true) {
+				case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+					$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
+						check_early_access($(this), "ea_231x87.png", $(this).position().left);
+					});
 					break;
 			}
 	}
@@ -3557,10 +3566,13 @@ function bind_ajax_content_highlighting() {
 					add_overlay();
 				}
 
+				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
+					start_friend_activity_highlights();
+					add_overlay();
+				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
-				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
-				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) start_friend_activity_highlights();
+				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
 				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}
 		});
