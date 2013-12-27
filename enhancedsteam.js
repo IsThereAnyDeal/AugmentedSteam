@@ -1979,6 +1979,7 @@ function load_search_results () {
 			processing = false;
 			remove_non_specials();
 			hide_unowned_game_dlc();
+			add_overlay();
 		});
 	}
 }
@@ -3050,6 +3051,33 @@ function dlc_data_for_app_page() {
 	});
 }
 
+function add_overlay() {
+	switch (window.location.host) {
+		case "store.steampowered.com":
+			switch (true) {
+				case /^\/app\/.*/.test(window.location.pathname):
+					if ($(".early_access_header").length > 0) {
+						$(".game_header_image:first").after("<img class='es_overlay' style='left: " + $(".game_header_image:first").position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
+					}
+					break;
+				case /^\/genre\/.*/.test(window.location.pathname):
+					$(".tab_row").each(function(index, value) {
+						if ($(this).html().match(/genre_release(.+)Early Access/)) {
+							$(this).find("img").after("<img class='es_overlay' style='left: " + $(this).position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_184x69.png") + "'>");
+						}
+					});
+					break;
+				case /^\/search\/.*/.test(window.location.pathname):
+					$(".search_result_row").each(function(index, value) {
+						if ($(this).html().match(/Early Access/)) {
+							$(this).find("img:eq(1)").after("<img class='es_overlay' style='left: " + $(this).position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_sm_120.png") + "'>");
+						}
+					});
+					break;
+			}
+	}
+}
+
 function show_regional_pricing() {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
@@ -3505,6 +3533,7 @@ function bind_ajax_content_highlighting() {
 					start_highlights_and_tags();
 					remove_non_specials();
 					hide_unowned_game_dlc();
+					add_overlay();
 				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
@@ -4580,6 +4609,7 @@ $(document).ready(function(){
 		remove_install_steam_button();
 		remove_about_menu();
 		add_header_links();
+		add_overlay();
 		if (is_signed_in()) {
 			replace_account_name();
 			add_library_menu();
