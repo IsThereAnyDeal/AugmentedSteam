@@ -3051,7 +3051,7 @@ function dlc_data_for_app_page() {
 	});
 }
 
-function check_early_access(node, image_name, image_left) {	
+function check_early_access(node, image_name, image_left, selector_modifier) {	
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid + '&filters=genres', function (data) {
@@ -3060,7 +3060,9 @@ function check_early_access(node, image_name, image_left) {
 			var genres = app_data[appid].data.genres;								
 			$(genres).each(function(index, value) {									
 				if (value.description == "Early Access") {
-					$(node).find("img").after("<img class='es_overlay' style='left: " + image_left + "px' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+					var selector = "img";
+					if (selector_modifier != undefined) selector += selector_modifier;
+					$(node).find(selector.trim()).after("<img class='es_overlay' style='left: " + image_left + "px' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
 				}
 			});	
 		}
@@ -3075,29 +3077,38 @@ function add_overlay() {
 					if ($(".early_access_header").length > 0) {
 						$(".game_header_image:first").after("<img class='es_overlay' style='left: " + $(".game_header_image:first").position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
 					}
+					$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 10); });
 					break;
-				case /^\/genre\/.*/.test(window.location.pathname):
-					$(".tab_row").each(function(index, value) {
-						if ($(this).html().match(/genre_release(.+)Early Access/)) {
-							$(this).find("img").after("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/ea_184x69.png") + "'>");
-						}
-					});
+				case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
+					$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+					$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 					break;
 				case /^\/search\/.*/.test(window.location.pathname):
-					$(".search_result_row").each(function(index, value) {
-						if ($(this).html().match(/Early Access/)) {
-							$(this).find("img:eq(1)").after("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/ea_sm_120.png") + "'>");
-						}
-					});
+					$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0, ":eq(1)"); });					
+					break;
+				case /^\/recommended/.test(window.location.pathname):
+					$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+					$(".header_image").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+					$(".appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+					$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
+					$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
+					$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
 					break;
 				case /^\/$/.test(window.location.pathname):
 					$(".wintersale_dailydeal_ctn").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0); });
 					$(".vote_option").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 					break;
 			}
-			break;
 		case "steamcommunity.com":
 			switch(true) {
+				case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
+					$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					break;
+				case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+					$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					break;
 				case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
 					$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
 						check_early_access($(this), "ea_231x87.png", $(this).position().left);
@@ -3106,6 +3117,11 @@ function add_overlay() {
 				case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 					$(".game_info_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
 					$(".showcase_slot").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					break;
+				case /^\/app\/.*/.test(window.location.pathname):
+					if ($(".apphub_EarlyAccess_Title").length > 0) {
+						$(".apphub_StoreAppLogo:first").after("<img class='es_overlay' style='left: " + $(".apphub_StoreAppLogo:first").position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
+					}
 			}
 	}
 }
