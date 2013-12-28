@@ -815,10 +815,10 @@ function add_wishlist_total() {
 	
 	function calculate_node(node, search) {
 		price = parseFloat($(node).find(search).text().trim().replace(",", ".").replace(/[^0-9\.]+/g,""));
-		currency_symbol = $(node).find(search).text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
-		gamelist += $(node).find("h4").text().trim() + ", ";
-		items += 1;
 		if (price) {
+			currency_symbol = $(node).find(search).text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			gamelist += $(node).find("h4").text().trim() + ", ";
+			items += 1;
 			total += price;
 			apps += get_appid($(node).find("a[class='btn_visit_store']")[0].href) + ",";
 		}
