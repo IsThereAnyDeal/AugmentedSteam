@@ -2802,10 +2802,10 @@ function inventory_market_helper(response) {
 	function load_inventory_market_prices(item, item_name, global_id) {
 		switch (global_id) {
 			case "730":
-				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(item_name);
+				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(item_name, true);
 				break;
 			default:
-				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(hash_name);
+				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(hash_name, true);
 		}
 		get_http(url, function (txt) {
 			var item_price = $(txt).find('.market_listing_row:has(.market_listing_buy_button a):first .market_listing_price.market_listing_price_with_fee:first').text().trim();
@@ -3926,18 +3926,35 @@ function add_achievement_comparison_link(node) {
 	}
 }
 
-function rewrite_string(string) {
-	string = string.replace(/%20/g, " ");
-	string = string.replace(/%28/g, "(");
-	string = string.replace(/%29/g, ")");
-	string = string.replace(/%3A/g, ":");
-	string = string.replace(/%27/g, "'");
-	string = string.replace(/%26/g, "&");
-	string = string.replace(/%21/g, "!");
-	string = string.replace(/%3F/g, "?");
-	string = string.replace(/%2C/g, ",");
-	string = string.replace(/%22/g, "\"");
-	string = string.replace(/%23/g, "#");
+function rewrite_string(string, websafe) {
+	if (websafe) {
+		string = string.replace(/#/, "%23");
+		string = string.replace(/ /g, "%20");
+		string = string.replace(/\(/g, "%28");
+		string = string.replace(/\)/g, "%29");
+		string = string.replace(/:/g, "%3A");
+		string = string.replace(/'/g, "%27");
+		string = string.replace(/&/g,"&amp;");
+		string = string.replace(/!/g, "%21");
+		string = string.replace(/\?/g, "%3F");
+		string = string.replace(/,/g, "%2C");
+		string = string.replace(/\"/g, "%22");
+		string = string.replace(/"/g, "&quot;");
+		string = string.replace(/>/g, "&gt;");
+		string = string.replace(/</g, "&lt;");
+	} else {
+		string = string.replace(/%23/g, "#");
+		string = string.replace(/%20/g, " ");
+		string = string.replace(/%28/g, "(");
+		string = string.replace(/%29/g, ")");
+		string = string.replace(/%3A/g, ":");
+		string = string.replace(/%27/g, "'");
+		string = string.replace(/%26/g, "&");
+		string = string.replace(/%21/g, "!");
+		string = string.replace(/%3F/g, "?");
+		string = string.replace(/%2C/g, ",");
+		string = string.replace(/%22/g, "\"");
+	}
 	return string;
 }
 
