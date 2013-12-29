@@ -3052,6 +3052,28 @@ function dlc_data_for_app_page() {
 	});
 }
 
+function add_app_badge_progress(appid) {
+	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
+		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div style='clear: left;'></div></div>");
+		$(".es_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/ .badge_current", function(responseText) {
+			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {				
+				$(".communitylink .block_content:last").append("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
+				$(".communitylink .block_content:last").append("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a></div>");
+			} else {
+				$(".es_badge_progress").remove();
+				$(".communitylink .rule:last").remove();
+			}
+		});
+	}
+}
+
+function fix_achievement_icon_size() {
+	if ($(".rightblock").find("img[src$='ico_achievements.png']").length > 0) {
+		$(".rightblock").find("img[src$='ico_achievements.png']").attr("height", "24");
+		$(".rightblock").find("img[src$='ico_achievements.png']").css("margin-top", "-5px");
+	}
+}
+
 function check_early_access(node, image_name, image_left, selector_modifier) {	
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
@@ -4038,12 +4060,6 @@ function on_app_info(appid, cb) {
 	appid_promises[appid].promise.done(cb);
 }
 
-function add_steamcards_link(appid) {
-	if ($(".icon").find('img[src$="/ico_cards.gif"]').length > 0) {
-		$('.communitylink .block_content_inner:first').append("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico_cards.gif") + "' width='16' height='16' border='0' align='top' /></div>" + localized_strings[language].trading_cards + "</a>");
-	}
-}
-
 function clear_cache() {
 	localStorage.clear();
 	sessionStorage.clear();
@@ -4716,7 +4732,6 @@ $(document).ready(function(){
 						add_pcgamingwiki_link(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
-						add_steamcards_link(appid);
 						add_feature_search_links();
 						add_dlc_page_link(appid);
 						add_remove_from_wishlist_button(appid);
@@ -4725,6 +4740,8 @@ $(document).ready(function(){
 						add_steamchart_info(appid);
 						add_system_requirements_check(appid);
 						dlc_data_for_app_page();
+						add_app_badge_progress(appid);
+						fix_achievement_icon_size();
 
 						show_regional_pricing();
 						break;
