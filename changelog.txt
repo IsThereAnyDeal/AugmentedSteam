@@ -1,6 +1,6 @@
 v5.6
 -----
-
++ Added sort option to badge page to sort by number of card drops remaining
 
 v5.5
 -----

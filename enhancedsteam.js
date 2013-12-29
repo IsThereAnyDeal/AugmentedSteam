@@ -4587,6 +4587,61 @@ function add_badge_filter() {
 	}
 }
 
+function add_badge_sort() {
+	if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
+		$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings[language].most_drops + "</a>");
+	}
+
+	var resetLazyLoader = function() { runInPageContext(function() { 
+			// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+			CScrollOffsetWatcher.sm_rgWatchers = [];
+			
+			// Recreate registered image lazy loader watchers
+			$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+				// LoadImageGroupOnScroll is found in shared_global.js
+				LoadImageGroupOnScroll(e.id, e.id.substr(19));
+			});
+		});
+	};
+
+	$("#es_badge_sort_drops").on("click", function() {
+		var badgeRows = [];
+		$('.badge_row').each(function () {
+			var push = new Array();
+			if ($(this).html().match(/progress_info_bold".+\d/)) {
+				push[0] = this.outerHTML;
+				push[1] = $(this).find(".progress_info_bold").html().match(/\d+/)[0];
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = "0";
+			}
+			badgeRows.push(push);
+			this.parentNode.removeChild(this);
+		});
+
+		badgeRows.sort(function(a,b) {
+			var dropsA = parseInt(a[1],10);
+			var dropsB = parseInt(b[1],10);
+
+			if (dropsA < dropsB) {
+				return 1;
+			} else {
+				return -1;
+			}	
+		});
+
+		$('.badge_row').each(function () { $(this).css("display", "none"); });
+
+		$(badgeRows).each(function() {
+			$(".badges_sheet:first").append(this[0]);
+		});
+
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+		resetLazyLoader();
+	});	
+}
+
 function add_badge_view_options() {
 	var html  = "<div style='text-align: right;'><span>" + localized_strings[language].view + ": </span>";
 		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_view_default'><input type='radio' name='es_badge_view' checked><span>" + localized_strings[language].theworddefault + "</span></label>";
@@ -4929,6 +4984,7 @@ $(document).ready(function(){
 						add_total_drops_count();
 						add_cardexchange_links();
 						add_badge_filter();
+						add_badge_sort();
 						add_badge_view_options();
 						break;
 
