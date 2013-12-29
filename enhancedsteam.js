@@ -2830,6 +2830,10 @@ function inventory_market_helper(response) {
 
 function add_inventory_gotopage(){
 	$("#es_gotopage").remove();
+	$("#es_pagenumber").remove();
+	$("#gotopage_btn").remove();
+	$("#pagebtn_first").remove();
+	$("#pagebtn_last").remove();
 	var es_gotopage = document.createElement("script");
 	es_gotopage.type = "text/javascript";
 	es_gotopage.id = "es_gotopage";
@@ -3667,6 +3671,7 @@ function bind_ajax_content_highlighting() {
 
 				if (node.classList && node.classList.contains("inventory_page")) {
 					inventory_market_prepare();
+					add_inventory_gotopage();
 				}
 
 				if (node.classList && node.classList.contains("tab_row")) {					
