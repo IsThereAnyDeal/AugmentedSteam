@@ -3676,6 +3676,7 @@ function bind_ajax_content_highlighting() {
 
 				if (node.classList && node.classList.contains("tab_row")) {					
 					start_highlighting_node(node);
+					check_early_access(node, "ea_184x69.png", 0);
 				}
 
 				// Winter sale 2013
