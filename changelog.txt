@@ -1,10 +1,11 @@
 v5.5
 -----
-+ Added "Early Access" image banners to early access games on Steam
++ Added "Early Access" image banners to Early Access games on Steam
 + Added a list of friends that own a game on the "friends that own" page
++ Added badge progress and remaining card drops to app pages
 : Fixed bug where badge filter wasn't working with some languages
 : Fixed bug in wishlist sorting that would cause it to fail if a game had no price displayed
-: Fixed bug that caused wishlist not to highlight if a game on it is "Free to Play"
+: Fixed bug that caused wishlist not to highlight under certain circumstances
 
 v5.4
 -----

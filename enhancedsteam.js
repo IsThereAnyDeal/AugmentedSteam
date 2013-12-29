@@ -3056,7 +3056,7 @@ function add_app_badge_progress(appid) {
 	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
 		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div style='clear: left;'></div></div>");
 		$(".es_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/ .badge_current", function(responseText) {
-			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {				
+			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
 				$(".communitylink .block_content:last").append("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
 				$(".communitylink .block_content:last").append("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a></div>");
 			} else {
