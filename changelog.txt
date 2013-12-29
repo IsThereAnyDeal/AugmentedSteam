@@ -1,3 +1,7 @@
+v5.6
+-----
+
+
 v5.5
 -----
 + Added "Early Access" image banners to Early Access games on Steam
