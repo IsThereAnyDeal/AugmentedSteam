@@ -664,6 +664,7 @@ function load_translation() {
 			
 			$("#programming_text").text(localized_strings[settings.language].programming);
 			$("#translation_text").text(localized_strings[settings.language].translation);
+			$("#graphics_text").text(localized_strings[settings.language].graphics);
 			
 			$("#save_store").text(localized_strings[settings.language].save);
 			$("#save_community").text(localized_strings[settings.language].save);
