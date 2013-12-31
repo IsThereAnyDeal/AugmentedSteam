@@ -3155,6 +3155,9 @@ function add_app_badge_progress(appid) {
 				$(".es_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a></div>");
 				$(".es_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
 				$(".es_badge_progress").after("<div style='clear: left;'></div>");
+				$(".es_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+				$(".es_badge_progress .badge_empty_right div:last-child").remove();
+				$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">Locked</div>").append("<div style=\"clear: both\"></div>");
 			} else {
 				$(".es_badge_progress").remove();
 				$(".communitylink .rule:last").remove();
@@ -3163,8 +3166,10 @@ function add_app_badge_progress(appid) {
 		$(".es_foil_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/?border=1 .badge_current", function(responseText) {
 			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
 				$(".es_foil_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/?border=1'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_foil_progress + "</a></div>");
-				$(".es_foil_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
 				$(".es_foil_badge_progress").after("<div style='clear: left;'></div>");
+				$(".es_foil_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+				$(".es_foil_badge_progress .badge_empty_right div:last-child").remove()
+				$(".es_foil_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">Locked</div>").append("<div style=\"clear: both\"></div>");
 			} else {
 				$(".es_foil_badge_progress").remove();
 				$(".communitylink .rule:last").remove();
@@ -4756,9 +4761,14 @@ function add_gamecard_foil_link() {
 		}
 	}
 	else {
-		url_parameters_array.push("border=1");
-		var url_parameters_out = url_parameters_array.join("&");
-		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings[language].view_foil_badge+"</span></a>");
+		if(url_parameters_array.length>0){
+			url_parameters_array.push("border=1");
+			var url_parameters_out = url_parameters_array.join("&");
+			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings[language].view_foil_badge+"</span></a>");
+		}
+		else {
+			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?border=1'><span>"+localized_strings[language].view_foil_badge+"</span></a>");
+		}
 	}
 }
 
