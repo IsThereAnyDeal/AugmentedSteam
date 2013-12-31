@@ -2808,11 +2808,12 @@ function inventory_market_helper(response) {
 				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(hash_name, true);
 		}
 		get_http(url, function (txt) {
-			var item_price = $(txt).find('.market_listing_row:has(.market_listing_buy_button a):first .market_listing_price.market_listing_price_with_fee:first').text().trim();
-			if (item_price != "")
-				$("#es_item" + item).html(localized_strings[language].lowest_price + " " + item_name + ": " + item_price + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
-			else
-				$("#es_item" + item).html(localized_strings[language].no_results_found);
+			var item_price = txt.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
+			if (item_price) { 
+				$("#es_item" + item).html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_price[1].trim() + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+			} else { 
+				$("#es_item" + item).html(localized_strings[language].no_results_found); 
+			}
 		});
 	}
 	
@@ -4719,8 +4720,6 @@ function add_gamecard_foil_link() {
 	var url_search = window.location.search;
 	var url_parameters_array = url_search.replace("?","").split("&");
 
-	console.log(url_parameters_array.length);
-
 	$.each(url_parameters_array,function(index,url_parameter){
 		if(url_parameter=="border=1"){
 			foil=true;
@@ -4729,7 +4728,6 @@ function add_gamecard_foil_link() {
 	});
 	if (foil) {
 		if(url_parameters_array.length>1){
-			console.log(url_parameters_array.length);
 			url_parameters_array.splice(foil_index,1);
 			var url_parameters_out = url_parameters_array.join("&");
 			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings[language].view_normal_badge+"</span></a>");
