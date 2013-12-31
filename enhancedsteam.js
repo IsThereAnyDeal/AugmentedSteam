@@ -4756,7 +4756,7 @@ function add_gamecard_market_links(game) {
 		}
 	});
 
-	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
+	$(".badge_card_set_card").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
 		if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
 
