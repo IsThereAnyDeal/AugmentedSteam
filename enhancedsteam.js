@@ -2895,6 +2895,8 @@ function add_inventory_gotopage(){
 	pagenumber.placeholder = "page #";
 	pagenumber.id = "es_pagenumber";
 	pagenumber.style.width = "50px";
+	pagenumber.min = 1;
+	pagenumber.max = $("#pagecontrol_max").text();
 	$("#inventory_pagecontrols").before(pagenumber);
 
 	var goto_btn = document.createElement("a");
@@ -2910,7 +2912,6 @@ function add_inventory_gotopage(){
 
 	//TODO: Maybe use &laquo; or &#8810; for first/last button text?
 	//TODO: Disable buttons when already on first/last page?
-	//TODO: set .min and .max on pagenumber input?
 }
 
 function subscription_savings_check() {
@@ -4713,16 +4714,47 @@ function add_badge_view_options() {
 }
 
 function add_gamecard_foil_link() {
-	if ($(".progress_info_bold").length > 0) {
-		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location + "?border=1'><span>View Foil Badge Progress</span></a>");
+	var foil;
+	var foil_index;
+	var url_search = window.location.search;
+	var url_parameters_array = url_search.replace("?","").split("&");
+
+	console.log(url_parameters_array.length);
+
+	$.each(url_parameters_array,function(index,url_parameter){
+		if(url_parameter=="border=1"){
+			foil=true;
+			foil_index=index;
+		}
+	});
+	if (foil) {
+		if(url_parameters_array.length>1){
+			console.log(url_parameters_array.length);
+			url_parameters_array.splice(foil_index,1);
+			var url_parameters_out = url_parameters_array.join("&");
+			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings[language].view_normal_badge+"</span></a>");
+		}
+		else {
+			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "'><span>"+localized_strings[language].view_normal_badge+"</span></a>");
+		}
+	}
+	else {
+		url_parameters_array.push("border=1");
+		var url_parameters_out = url_parameters_array.join("&");
+		$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings[language].view_foil_badge+"</span></a>");
 	}
 }
 
 function add_gamecard_market_links(game) {
 	var foil;
-	if ($(".badge_info_title:first,.badge_empty_name:first").text() !== "Snow Globe 2013") {
-		foil = $(".progress_info_bold").length - 1;
-	}
+	var url_search = window.location.search;
+	var url_parameters_array = url_search.replace("?","").split("&");
+
+	$.each(url_parameters_array,function(index,url_parameter){
+		if(url_parameter=="border=1"){
+			foil=true;
+		}
+	});
 
 	$(".badge_card_set_card, .badge_card_to_collect_info").each(function() {
 		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
@@ -4747,10 +4779,9 @@ function add_gamecard_market_links(game) {
 				}
 			}
 
-			var html = $(node).children("div:contains('" + cardname + "')").html().replace("&amp;", "&");
-			html = html.replace(cardname, "<a href='" + marketlink + "' target='_blank'>" + cardname + "</a>");
+			var html = "<a class=\"es_card_search\" href=\""+marketlink+"\">"+localized_strings[language].search_market+"</a>";
 
-			$(node).children("div:contains('" + cardname + "')").replaceWith(html);
+			$(node).children("div:contains('" + cardname + "')").parent().append(html);
 		});
 	});
 }
