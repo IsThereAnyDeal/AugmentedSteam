@@ -299,10 +299,10 @@ var localized_strings,
 				save: "Uložit",
 				saved: "Uloženo",
 				remove: "Odstranit",
-				view_in: "Ukázat v",          
-				view_marketplace: "Zobrazit Tržiště",                        
+				view_in: "Ukázat v",		  
+				view_marketplace: "Zobrazit Tržiště",						
 				no_results_found: "Žádné výsledky nenalezeny",
-				wiki_article: "Ukázat článek __pcgw__",                     
+				wiki_article: "Ukázat článek __pcgw__",					 
 				clear_cache: "Vyčistit data uložená v mezipaměti",
 				reset_options: "Resetovat nastavení",
 				options_saved_note: "Nastavení uložena",
@@ -395,28 +395,28 @@ var localized_strings,
 				hours_short: "__hours__ hodin",
 				view_stats: "Zobrazit statistiky",
 				library: {
-				        private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
+					private_profile: "Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http://steamcommunity.com/my/edit/settings'>ve vašem nastavení</a>."
 				},
 				bundle: {
-				        info: "Informace o balíčku",
-				        offer_ends: "Nabídka končí",
-				        pwyw: "Zaplaťte, kolik chcete",
-				        includes: "Obsahuje (__num__) položek",
-				        header: "Balíčky obsahující tuto hru",
-				        bundle_count: "Kolikrát byla tato hra v balíčku"
+					info: "Informace o balíčku",
+					offer_ends: "Nabídka končí",
+					pwyw: "Zaplaťte, kolik chcete",
+					includes: "Obsahuje (__num__) položek",
+					header: "Balíčky obsahující tuto hru",
+					bundle_count: "Kolikrát byla tato hra v balíčku"
 				},
 				wsgf: {
-				        gold: "Tato medaile je udělována hrám, které mají perfektní skóre od WSGF za podporu __type__, and jsou certifikovány __type__.",
-				        silver: "Tato medaile je udělována hrám, které obdržely známku B za podporu __type__.  Všechny tyto hry jsou bez výraznějších problémů, ale mají minimálně jeden problém, který zabraňuje perfektnímu skóre",
-				        limited: "Toto skóre je udělováno hrám, které obdržely známku C za podporu __type__.  Všechny tyto hry do nějaké úrovně podporují __type__, ale mají výraznější problémy.",
-				        incomplete: "Nekompletní",
-				        unsupported: "Toto skóre je udělováno hrám, které nemají podporu __type__.  Tato hra může být nehratelná v __type__, nebo může být obrázek roztažen na šířku okna.  Správný poměr stran není zachován."
+					gold: "Tato medaile je udělována hrám, které mají perfektní skóre od WSGF za podporu __type__, and jsou certifikovány __type__.",
+					silver: "Tato medaile je udělována hrám, které obdržely známku B za podporu __type__.  Všechny tyto hry jsou bez výraznějších problémů, ale mají minimálně jeden problém, který zabraňuje perfektnímu skóre",
+					limited: "Toto skóre je udělováno hrám, které obdržely známku C za podporu __type__.  Všechny tyto hry do nějaké úrovně podporují __type__, ale mají výraznější problémy.",
+					incomplete: "Nekompletní",
+					unsupported: "Toto skóre je udělováno hrám, které nemají podporu __type__.  Tato hra může být nehratelná v __type__, nebo může být obrázek roztažen na šířku okna.  Správný poměr stran není zachován."
 				},
 				charts: {
-				        current: "Aktuální hráči",
-				        playing_now: "právě hraje",
-				        peaktoday: "dnešní rekord",
-				        peakall: "rekord"
+					current: "Aktuální hráči",
+					playing_now: "právě hraje",
+					peaktoday: "dnešní rekord",
+					peakall: "rekord"
 				}
 			},
 			"ger": {
