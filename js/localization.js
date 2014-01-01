@@ -213,6 +213,10 @@ var localized_strings,
 				playing_now: "playing now",
 				peaktoday: "today's peak",
 				peakall: "all-time peak"
+			},
+			wallet: {
+				custom_amount: "Add custom amount",
+				custom_amount_text: "Add any amount over __minamount__"
 			}
 		};
 
