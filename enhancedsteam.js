@@ -1160,8 +1160,9 @@ function add_library_menu() {
 						$(".es_library_app[data-appid='" + settings.librarylastappid + "']").addClass('es_library_selected');
 						$("#es_library_list").data("appid-selected", settings.librarylastappid);
 						// scroll if found in the app list
-						if ($(".es_library_app[data-appid='" + settings.librarylastappid + "']").length != 0) {
-							$(".es_library_app[data-appid='" + settings.librarylastappid + "']")[0].scrollIntoView();
+						var selected = $(".es_library_app[data-appid='" + settings.librarylastappid + "']");
+						if (selected.length != 0) {
+							selected[0].scrollIntoViewIfNeeded();
 						}
 					}
 
@@ -1181,10 +1182,6 @@ function add_library_menu() {
 			else if (window.location.hash.startsWith("#library/app/")) {
 				showAppInLibrary();
 			}
-
-			$(".es_library_app").bind("click", function() {
-				showAppInLibrary();
-			});
 
 			$(window).bind("hashchange", function() {
 				if (window.location.hash == "#library") {
