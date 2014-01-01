@@ -3149,15 +3149,14 @@ function dlc_data_for_app_page() {
 
 function add_app_badge_progress(appid) {
 	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
-		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div>");
+		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div><div style=\"clear: both\"></div>");
 		$(".es_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/ .badge_current", function(responseText) {
 			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
-				$(".es_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a></div>");
-				$(".es_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
-				$(".es_badge_progress").after("<div style='clear: left;'></div>");
-				$(".es_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+				$(".communitylink .block_content:last").append("<div class='block_content_inner' style='padding-top: 10px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
+         		$(".communitylink .block_content:last").append("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a></div>");
+         		$(".es_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
 				$(".es_badge_progress .badge_empty_right div:last-child").remove();
-				$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">Locked</div>").append("<div style=\"clear: both\"></div>");
+				$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>").append("<div style=\"clear: both\"></div>");
 			} else {
 				$(".es_badge_progress").remove();
 				$(".communitylink .rule:last").remove();
@@ -3165,14 +3164,15 @@ function add_app_badge_progress(appid) {
 		});
 		$(".es_foil_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/?border=1 .badge_current", function(responseText) {
 			if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
-				$(".es_foil_badge_progress").after("<div class='block_content_inner' style='padding-top: 2px; padding-bottom: 2px;'><a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/?border=1'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_foil_progress + "</a></div>");
-				$(".es_foil_badge_progress").after("<div style='clear: left;'></div>");
-				$(".es_foil_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
-				$(".es_foil_badge_progress .badge_empty_right div:last-child").remove()
-				$(".es_foil_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">Locked</div>").append("<div style=\"clear: both\"></div>");
+				if ($(responseText).find(".badge_empty_circle").length != 1) {					
+					$(".es_foil_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+					$(".es_foil_badge_progress .badge_empty_right div:last-child").remove()
+					$(".es_foil_badge_progress .badge_empty_right").append("<div style=\"clear: both\"></div>");
+				} else {
+					$(".es_foil_badge_progress").remove();
+				}
 			} else {
 				$(".es_foil_badge_progress").remove();
-				$(".communitylink .rule:last").remove();
 			}
 		});
 	}
