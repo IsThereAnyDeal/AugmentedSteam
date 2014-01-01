@@ -3167,7 +3167,7 @@ function add_app_badge_progress(appid) {
 					$(".es_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a>");
 				}
 				if(show_card_num){
-					$(".es_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + card_num_owned + " of " + card_num_total + " cards owned</div>");
+					$(".es_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
 				}
 				$(".es_badge_progress").after("<div style='padding-top: 10px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
 				$(".es_badge_progress").after("<div style=\"clear: both\"></div>");
@@ -3197,6 +3197,8 @@ function add_app_badge_progress(appid) {
 				if ($(responseText).find(".badge_empty_circle").length != 1||card_num_owned>0) {
 					$(".es_foil_badge_progress .badge_info_description").css({"width":"275px"});
 					$(".es_foil_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
+					$(".es_foil_badge_progress .badge_empty_right div:last-child").remove();
+					$(".es_foil_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>")
 					if (badge_completed){
 						$(".es_foil_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].view_badge_foil + "</a>");
 					}
@@ -3204,7 +3206,7 @@ function add_app_badge_progress(appid) {
 						$(".es_foil_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_foil_progress + "</a>");
 					}
 					if(show_card_num){
-						$(".es_foil_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + card_num_owned + " of " + card_num_total + " cards owned</div>");
+						$(".es_foil_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
 					}
 					$(".es_foil_badge_progress").after("<div style=\"clear: both\"></div>");
 				} else {
