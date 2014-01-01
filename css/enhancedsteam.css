@@ -493,3 +493,10 @@ img.platform_small, .platform_img {
 	display:block;
 	width:220px;
 }
+.es_text_input {
+	background-color: #4d4b49;
+	border: 1px solid #82807c;
+	color: #ffffff;
+	height: 18px;
+	padding: 2px 4px 3px 4px;
+}

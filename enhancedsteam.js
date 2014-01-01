@@ -1141,6 +1141,30 @@ function replace_account_name() {
 	});
 }
 
+function add_custom_wallet_amount() {
+	var addfunds = $(".addfunds_area_purchase_game:first").clone();
+	$(addfunds).addClass("es_custom_funds");
+	$(addfunds).find(".btn_addtocart_content").addClass("es_custom_button");
+	$(addfunds).find("h1").text("Add custom amount");
+	$(addfunds).find("p").text("Add any amount between the minimum and maximum amount");
+	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|£|pуб)/);
+	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|£|pуб)/, "");
+	switch (currency_symbol) {
+		case "€":
+		case "pуб":
+			$(addfunds).find(".price").html("<input id='es_custom_funds_amount' class='es_text_input' style='margin-top: -3px;' size=4 value='" + minimum +"'> " + currency_symbol);
+			break;
+		default:
+			$(addfunds).find(".price").html(currency_symbol + " <input id='es_custom_funds_amount' class='es_text_input' style='margin-top: -3px;' size=4 value='" + minimum +"'>");
+			break;
+	}
+	$("#game_area_purchase .addfunds_area_purchase_game:first").after(addfunds);
+	$("#es_custom_funds_amount").change(function() {
+		// TODO: Validate input - make sure the value entered is higher than the minimum - make sure it's not got multiple decimal places/commas/etc
+		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + $("#es_custom_funds_amount").val().replace(/-/g, "0").replace(/[^A-Za-z0-9]/g, '') + " );")
+	});
+}
+
 // Adds a "Library" menu to the main menu of Steam
 function add_library_menu() {
 	storage.get(function(settings) {
@@ -5016,6 +5040,10 @@ $(document).ready(function(){
 					case /^\/account\/.*/.test(window.location.pathname):
 						account_total_spent();
 						replace_account_name();
+						break;
+
+					case /^\/steamaccount\/addfunds/.test(window.location.pathname):
+						add_custom_wallet_amount();
 						break;
 
 					case /^\/search\/.*/.test(window.location.pathname):
