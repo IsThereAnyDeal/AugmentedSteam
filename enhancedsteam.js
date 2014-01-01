@@ -3230,6 +3230,11 @@ function add_overlay() {
 				case /^\/$/.test(window.location.pathname):
 					$(".wintersale_dailydeal_ctn").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0); });
 					$(".vote_option").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					$(".tab_overlay").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+					$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
 					break;
 			}
 		case "steamcommunity.com":
