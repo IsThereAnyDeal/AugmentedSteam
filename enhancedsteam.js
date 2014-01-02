@@ -3198,7 +3198,7 @@ function add_app_badge_progress(appid) {
 
 function add_dlc_checkboxes() {
 	if ($("#game_area_dlc_expanded").length > 0) {
-		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
+		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
 		$(".game_area_dlc_section").after("<div style='clear: both;'></div>");
 	} else {
 		$(".gameDlcBlocks").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
