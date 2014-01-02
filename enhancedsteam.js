@@ -4759,7 +4759,7 @@ function add_badge_view_options() {
 	$("#es_badge_view_binder").on('click', function() {
 		$('.is_link').each(function () {
 			var stats = $(this).find("span[class$='progress_info_bold']").html();
-						$(this).find("div[class$='badge_cards']").remove();
+			$(this).find("div[class$='badge_cards']").remove();
 			$(this).find("div[class$='badge_title_stats']").css("display", "none");
 			$(this).find("div[class$='badge_description']").css("display", "none");
 			$(this).find("span[class$='badge_view_details']").remove();
@@ -4771,7 +4771,7 @@ function add_badge_view_options() {
 			$(this).find("div[class$='badge_progress_info']").css("width", "auto");
 			$(this).find("div[class$='badge_title']").css("font-size", "12px");
 			$(this).find("div[class$='badge_title']").css("line-height", "26px");
-      			$(this).find("div[class$='badge_title']").html($(this).find("div[class$='badge_title']").html().slice(0,-9));
+      		$(this).find("div[class$='badge_title']").html($(this).find("div[class$='badge_title']").html().slice(0,-9));
 			$(this).find("div[class$='badge_title_row']").css("padding-top", "0px");
 			$(this).find("div[class$='badge_title_row']").css("padding-right", "4px");
 			$(this).find("div[class$='badge_title_row']").css("padding-left", "4px");
@@ -4855,46 +4855,106 @@ function add_gamecard_market_links(game) {
 		}
 	});
 
-	get_http("http://ehsankia.com/steam/api/?appid=" + game, function(txt) {
-		var data = JSON.parse(txt);
-		$(".badge_card_set_card").each(function() {
-			var node = $(this);
-			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();			
-			if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
+	get_http("http://store.steampowered.com/app/220/", function(txt) {
+		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 
-			var newcardname = cardname;
-			if (foil) { newcardname += " (Foil)"; }
+		get_http("http://ehsankia.com/steam/api/?appid=" + game, function(txt) {
+			var data = JSON.parse(txt);
+			$(".badge_card_set_card").each(function() {
+				var node = $(this);
+				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();			
+				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
 
-			for (var i = 0; i < data.length; i++) {
-				if (data[i].name == newcardname) {
-					var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
-					var card_price = formatMoney(data[i].price);
-					if ($(node).hasClass("unowned")) cost += data[i].price;
-				}
-			}
+				var newcardname = cardname;
+				if (foil) { newcardname += " (Foil)"; }
 
-			if (!(marketlink)) { 
-				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
 						var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
-						var card_price = formatMoney(data[i].price);
-						if ($(node).hasClass("unowned")) cost += data[i].price;
+						switch (currency_symbol) {
+							case "R$":
+								var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
+								if ($(node).hasClass("unowned")) cost += data[i].price_brl;
+								break;
+							case "€":
+								var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
+								if ($(node).hasClass("unowned")) cost += data[i].price_eur;
+								break;
+							case "pуб":
+								var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
+								if ($(node).hasClass("unowned")) cost += data[i].price_rub;
+								break;
+							case "£":
+								var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
+								if ($(node).hasClass("unowned")) cost += data[i].price_gbp;
+								break;
+							default:
+								var card_price = formatMoney(data[i].price);						
+								if ($(node).hasClass("unowned")) cost += data[i].price;
+								break;
+						}
 					}
 				}
-			}
 
-			if (marketlink && card_price) {
-				var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings[language].lowest_price + ": " + card_price + "</a>";
-				$(this).children("div:contains('" + cardname + "')").parent().append(html);
-			}	
+				if (!(marketlink)) { 
+					if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
+					for (var i = 0; i < data.length; i++) {
+						if (data[i].name == newcardname) {
+							var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
+							switch (currency_symbol) {
+								case "R$":
+									var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
+									if ($(node).hasClass("unowned")) cost += data[i].price_brl;
+									break;
+								case "€":
+									var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
+									if ($(node).hasClass("unowned")) cost += data[i].price_eur;
+									break;
+								case "pуб":
+									var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
+									if ($(node).hasClass("unowned")) cost += data[i].price_rub;
+									break;
+								case "£":
+									var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
+									if ($(node).hasClass("unowned")) cost += data[i].price_gbp;
+									break;
+								default:
+									var card_price = formatMoney(data[i].price);						
+									if ($(node).hasClass("unowned")) cost += data[i].price;
+									break;
+							}
+						}
+					}
+				}
+
+				if (marketlink && card_price) {
+					var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings[language].lowest_price + ": " + card_price + "</a>";
+					$(this).children("div:contains('" + cardname + "')").parent().append(html);
+				}
+			});
+			if ($(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
+				switch (currency_symbol) {
+					case "R$":
+						cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");
+						break;
+					case "€":
+						cost = formatMoney(cost, 2, currency_symbol, ".", ",", true);
+						break;
+					case "pуб":
+						cost = formatMoney(cost, 2, " " + currency_symbol, ".", ",", true);
+						break;
+					case "£":
+						cost = formatMoney(cost, 2, currency_symbol);
+						break;
+					default:
+						cost = formatMoney(cost);
+						break;
+				}
+				$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_cost+ ": " + cost + "</div>");
+				$(".badge_empty_right").css("margin-top", "7px");
+				$(".gamecard_badge_progress .badge_info").css("width", "296px");
+			}
 		});
-		cost = formatMoney(cost);
-		if ($(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
-			$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_cost+ ": " + cost + "</div>");
-			$(".badge_empty_right").css("margin-top", "7px");
-			$(".gamecard_badge_progress .badge_info").css("width", "296px");
-		}
 	});
 }
 
