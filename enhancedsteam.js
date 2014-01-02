@@ -1149,6 +1149,7 @@ function add_custom_wallet_amount() {
 	$(addfunds).find("p").text(localized_strings[language].wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
 	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|£|pуб)/, "");
+	var formatted_minimum = minimum;
 	switch (currency_symbol) {
 		case "€":
 		case "pуб":
@@ -1160,8 +1161,22 @@ function add_custom_wallet_amount() {
 	}
 	$("#game_area_purchase .addfunds_area_purchase_game:first").after(addfunds);
 	$("#es_custom_funds_amount").change(function() {
-		// TODO: Validate input - make sure the value entered is higher than the minimum - make sure it's not got multiple decimal places/commas/etc
-		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + $("#es_custom_funds_amount").val().replace(/-/g, "0").replace(/[^A-Za-z0-9]/g, '') + " );")
+		// Make sure two numbers are entered after the separator
+		if (!($("#es_custom_funds_amount").val().match(/(\.|\,)\d\d$/))) { $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/\D/g, "")); }
+
+		// Make sure the user entered decimals.  If not, add 00 to the end of the number to make the value correct
+		if (currency_symbol == "€" || currency_symbol == "pуб" || currency_symbol == "R$") {
+			if ($("#es_custom_funds_amount").val().indexOf(",") == -1) $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val() + ",00");
+		} else {
+			if ($("#es_custom_funds_amount").val().indexOf(".") == -1) $("#es_custom_funds_amount").val($("#es_custom_funds_amount").val() + ".00");
+		}
+
+		var calculated_value = $("#es_custom_funds_amount").val().replace(/-/g, "0").replace(/\D/g, "").replace(/[^A-Za-z0-9]/g, '');		
+		minimum = minimum.replace(/-/g, "0").replace(/\D/g, "").replace(/[^A-Za-z0-9]/g, '');
+		
+		if (calculated_value <= minimum) { $("#es_custom_funds_amount").val(formatted_minimum); calculated_value = minimum; }
+		$("#es_custom_funds_amount").val($("#es_custom_funds_amount").val().replace(/[A-Za-z]/g, ''));
+		$(".es_custom_button").attr("href", "javascript:submitAddFunds( " + calculated_value + " );")
 	});
 }
 
