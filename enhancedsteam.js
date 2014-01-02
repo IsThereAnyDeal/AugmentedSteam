@@ -951,6 +951,7 @@ function add_4pack_breakdown() {
 		else if (title.contains('tower wars team pack')) { pack_split(this, 3); }
 
 		else if (title.contains(' 4 pack')) { pack_split(this, 4); }
+		else if (title.contains(' 4-pack')) { pack_split(this, 4); }
 		else if (title.contains(' four pack')) { pack_split(this, 4); }
 		else if (title.contains(' clan pack')) { pack_split(this, 4); }
 
