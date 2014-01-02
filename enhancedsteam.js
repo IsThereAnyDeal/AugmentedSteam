@@ -938,11 +938,10 @@ function pack_split(node, ways) {
 function add_4pack_breakdown() {
 	$(".game_area_purchase_game_wrapper").each(function() {
 		var title = $(this).find("h1").text().trim();
-		title = title.toLowerCase().replace('-', ' ');
+		title = title.toLowerCase().replace(/-/g, ' ');
 		if (!title || !title.contains('pack')) return;
 
 		if (title.contains(' 2 pack')) { pack_split(this, 2); }
-		else if (title.contains(' 2-pack')) { pack_split(this, 2); }
 		else if (title.contains(' two pack')) { pack_split(this, 2); }
 		else if (title.contains('tower wars friend pack')) { pack_split(this, 2); }
 
@@ -951,7 +950,6 @@ function add_4pack_breakdown() {
 		else if (title.contains('tower wars team pack')) { pack_split(this, 3); }
 
 		else if (title.contains(' 4 pack')) { pack_split(this, 4); }
-		else if (title.contains(' 4-pack')) { pack_split(this, 4); }
 		else if (title.contains(' four pack')) { pack_split(this, 4); }
 		else if (title.contains(' clan pack')) { pack_split(this, 4); }
 
