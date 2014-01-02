@@ -3121,73 +3121,6 @@ function dlc_data_for_dlc_page() {
 	});
 }
 
-function dlc_data_for_app_page() {
-
-	var appid_deferred = [];
-	var totalunowned = 0;
-	var totalcost = 0.0;
-	var totaldlc = $(".game_area_dlc_row").size();
-	var currency_symbol;
-	var addunowned = "<form name=\"add_all_unowned_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\"><input type=\"hidden\" name=\"action\" value=\"add_to_cart\">";
-
-	$.each($("a.game_area_dlc_row"), function(j, node){
-		var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);		
-		if (appid) {
-			if (!getValue(appid + "owned")) {
-				get_http('//store.steampowered.com/api/appdetails/?appids=' + appid, function (data) {
-					var storefront_data = JSON.parse(data);
-					$.each(storefront_data, function(application, app_data) {
-						if (app_data.success) {
-							if (app_data.data.packages[0]) {
-								addunowned += "<input type=\"hidden\" name=\"subid[]\" value=\"" + app_data.data.packages[0] + "\">";
-								totalunowned = totalunowned + 1;
-								var price = 0;
-								var html = $(node).html().replace(/,/g, ".");
-								if ($(node).html().match(/discount_pct/)) {
-									price = parseFloat(html.match(/discount_final_price" itemprop="price">(.+)<\/div>/)[1].trim().match(/(\d+[.|,]?\d+)/)[1]);
-								} else { 
-									price = parseFloat(html.match(/game_area_dlc_price">\n(.+)<\/div>/)[1].trim().match(/(\d+[.|,]?\d+)/)[1]); 
-								}
-								totalcost = totalcost + price;
-								if (!currency_symbol) currency_symbol = $(node).html().match(/(?:R\$|\$|€|£|pуб)/)[0];
-							}
-						}
-					});
-				});
-			}
-		}
-
-		ensure_appid_deferred(appid);
-		appid_deferred.push(appid_promises[appid].promise);
-	});
-
-	$.when.apply(null, appid_deferred).done(function() {
-		addunowned += "</form>";
-		
-		if (totalunowned > 0 && totaldlc != totalunowned && totalcost != 0) {
-			switch (currency_symbol) {
-				case "pуб":
-					if (parseInt(totalcost, 10) == totalcost) {
-						totalcost = totalcost + " pуб.";
-						break;
-					}
-				case "€":
-					totalcost = formatMoney(parseFloat(totalcost), 2, currency_symbol, ".", ",", true);
-					break;
-				case "R$":
-					totalcost = formatMoney(parseFloat(totalcost), 2, "R$ ", ".", ",", false);
-					break;
-				default:
-					totalcost = formatMoney(parseFloat(totalcost), 2, currency_symbol, ",", ".", false);
-					break;
-			}
-			$("#dlc_purchase_action").before(addunowned);
-			var buttoncode = "<div style='float: right; padding: 0px 0px 0px 0px;' class='game_purchase_action game_purchase_action_bg' style><div class='game_purchase_price price'>" + totalcost + "</div><div class='btn_addtocart' id='dlc_purchaseAllunOwned'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href=\"javascript:document.forms['add_all_unowned_dlc_to_cart'].submit();\">" + localized_strings[language].add_unowned_dlc_to_cart + "</a></div></div>";
-			$("#dlc_purchase_action").prepend(buttoncode);
-		}
-	});
-}
-
 function add_app_badge_progress(appid) {
 	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
 		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div><div style=\"clear: both\"></div>");
@@ -5104,7 +5037,6 @@ $(document).ready(function(){
 						add_package_info_button();
 						add_steamchart_info(appid);
 						add_system_requirements_check(appid);
-						dlc_data_for_app_page();
 						add_app_badge_progress(appid);
 						fix_achievement_icon_size();
 
