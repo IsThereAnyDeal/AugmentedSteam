@@ -942,6 +942,7 @@ function add_4pack_breakdown() {
 		if (!title || !title.contains('pack')) return;
 
 		if (title.contains(' 2 pack')) { pack_split(this, 2); }
+		else if (title.contains(' 2-pack')) { pack_split(this, 2); }
 		else if (title.contains(' two pack')) { pack_split(this, 2); }
 		else if (title.contains('tower wars friend pack')) { pack_split(this, 2); }
 
