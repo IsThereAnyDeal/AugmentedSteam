@@ -930,7 +930,7 @@ function pack_split(node, ways) {
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
 	price_text = formatMoney(price, places, currency_symbol, ",", comma ? "," : ".", at_end);
-	$(node).find(".btn_addtocart").before(
+	$(node).find(".btn_addtocart").last().before(
 		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>"+localized_strings[language].each+"</div></div>"
 	);
 }
