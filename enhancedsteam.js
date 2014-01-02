@@ -3197,7 +3197,11 @@ function add_app_badge_progress(appid) {
 }
 
 function add_dlc_checkboxes() {
-	$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>Add selected DLC to cart</a></div></div>");
+	if ($("#game_area_dlc_expanded").length > 0) {
+		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
+	} else {
+		$(".gameDlcBlocks").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
+	}
 	$("#es_selected_btn").before("<form name=\"add_selected_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\" id=\"es_selected_cart\">");
 	$(".game_area_dlc_row").each(function() {
 		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' value='" + $(this).find("input").val() + "'>");
@@ -3206,7 +3210,6 @@ function add_dlc_checkboxes() {
 		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\">");
 		$(".es_dlc_selection:checked").each(function() {
 			var input = $("<input>", {type: "hidden", name: "subid[]", value: $(this).val() });
-			console.log (input);
 			$("#es_selected_cart").append(input);
 		});
 		if ($(".es_dlc_selection:checked").length > 0) {
