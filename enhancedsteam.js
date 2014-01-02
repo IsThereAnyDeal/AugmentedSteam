@@ -4847,6 +4847,7 @@ function add_gamecard_market_links(game) {
 	var foil;
 	var url_search = window.location.search;
 	var url_parameters_array = url_search.replace("?","").split("&");
+	var cost = 0;
 
 	$.each(url_parameters_array,function(index,url_parameter){
 		if(url_parameter=="border=1"){
@@ -4857,6 +4858,7 @@ function add_gamecard_market_links(game) {
 	get_http("http://ehsankia.com/steam/api/?appid=" + game, function(txt) {
 		var data = JSON.parse(txt);
 		$(".badge_card_set_card").each(function() {
+			var node = $(this);
 			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();			
 			if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
 
@@ -4867,15 +4869,17 @@ function add_gamecard_market_links(game) {
 				if (data[i].name == newcardname) {
 					var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
 					var card_price = formatMoney(data[i].price);
+					if ($(node).hasClass("unowned")) cost += data[i].price;
 				}
 			}
 
 			if (!(marketlink)) { 
-				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else {	newcardname += " (Trading Card)"; }
+				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
 						var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
 						var card_price = formatMoney(data[i].price);
+						if ($(node).hasClass("unowned")) cost += data[i].price;
 					}
 				}
 			}
@@ -4885,6 +4889,12 @@ function add_gamecard_market_links(game) {
 				$(this).children("div:contains('" + cardname + "')").parent().append(html);
 			}	
 		});
+		cost = formatMoney(cost);
+		if ($(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
+			$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_cost+ ": " + cost + "</div>");
+			$(".badge_empty_right").css("margin-top", "7px");
+			$(".gamecard_badge_progress .badge_info").css("width", "296px");
+		}
 	});
 }
 
