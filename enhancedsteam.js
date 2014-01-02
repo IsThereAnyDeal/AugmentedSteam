@@ -3196,6 +3196,27 @@ function add_app_badge_progress(appid) {
 	}
 }
 
+function add_dlc_checkboxes() {
+	$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>Add selected DLC to cart</a></div></div>");
+	$("#es_selected_btn").before("<form name=\"add_selected_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\" id=\"es_selected_cart\">");
+	$(".game_area_dlc_row").each(function() {
+		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' value='" + $(this).find("input").val() + "'>");
+	});
+	$(".es_dlc_selection").change(function() {
+		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\">");
+		$(".es_dlc_selection:checked").each(function() {
+			var input = $("<input>", {type: "hidden", name: "subid[]", value: $(this).val() });
+			console.log (input);
+			$("#es_selected_cart").append(input);
+		});
+		if ($(".es_dlc_selection:checked").length > 0) {
+			$("#es_selected_btn").show();
+		} else {
+			$("#es_selected_btn").hide();
+		}
+	});
+}
+
 function fix_achievement_icon_size() {
 	if ($(".rightblock").find("img[src$='ico_achievements.png']").length > 0) {
 		$(".rightblock").find("img[src$='ico_achievements.png']").attr("height", "24");
@@ -5038,6 +5059,7 @@ $(document).ready(function(){
 						add_steamchart_info(appid);
 						add_system_requirements_check(appid);
 						add_app_badge_progress(appid);
+						add_dlc_checkboxes();
 						fix_achievement_icon_size();
 
 						show_regional_pricing();
