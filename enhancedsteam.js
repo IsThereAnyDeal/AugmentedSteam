@@ -4854,32 +4854,36 @@ function add_gamecard_market_links(game) {
 		}
 	});
 
-	$(".badge_card_set_card").each(function() {
-		var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();
-		if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
+	get_http("http://ehsankia.com/steam/api/?appid=" + game, function(txt) {
+		var data = JSON.parse(txt);
+		$(".badge_card_set_card").each(function() {
+			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();			
+			if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
 
-		cardname = cardname.replace("&amp;", "&");
+			var newcardname = cardname;
+			if (foil) { newcardname += " (Foil)"; }
 
-		var newcardname = cardname.replace(/'/g, "%27").replace(/\?/g, "%3F").replace(/&/g, "%26").replace(/#/, "%23");
-
-		if (foil) { newcardname = newcardname + " (Foil)"; }
-		var marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname;
-		var node = $(this);
-
-		// Test market link to see if valid.  Some cards have "(Trading Card)" on the end of their name
-		get_http(marketlink, function (txt) {
-			if (/<div id=\"largeiteminfo\">/.test(txt) == false) {
-				if (foil) {
-					newcardname = newcardname.replace(/\)$/, "");
-					marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname + " Trading Card)";
-				} else {
-					marketlink = "http://steamcommunity.com/market/listings/753/" + game + "-" + newcardname + " (Trading Card)";
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].name == newcardname) {
+					var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
+					var card_price = formatMoney(data[i].price);
 				}
 			}
 
-			var html = "<a class=\"es_card_search\" href=\""+marketlink+"\">"+localized_strings[language].search_market+"</a>";
+			if (!(marketlink)) { 
+				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else {	newcardname += " (Trading Card)"; }
+				for (var i = 0; i < data.length; i++) {
+					if (data[i].name == newcardname) {
+						var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
+						var card_price = formatMoney(data[i].price);
+					}
+				}
+			}
 
-			$(node).children("div:contains('" + cardname + "')").parent().append(html);
+			if (marketlink && card_price) {
+				var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings[language].lowest_price + ": " + card_price + "</a>";
+				$(this).children("div:contains('" + cardname + "')").parent().append(html);
+			}	
 		});
 	});
 }

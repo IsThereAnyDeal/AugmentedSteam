@@ -2,6 +2,7 @@ v5.6
 -----
 + Added ability to add a custom amount to your Steam wallet
 + Added sort option to badge page to sort by number of card drops remaining
++ Added card prices to market links on badge pages
 
 v5.5
 -----
