@@ -3204,9 +3204,9 @@ function add_dlc_checkboxes() {
 	}
 	$("#es_selected_btn").before("<form name=\"add_selected_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\" id=\"es_selected_cart\">");
 	$(".game_area_dlc_row").each(function() {
-		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' value='" + $(this).find("input").val() + "'>");
+		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' value='" + $(this).find("input").val() + "'>");
 	});
-	$(".es_dlc_selection").change(function() {
+	$(".es_dlc_selection").bind("change", function() {
 		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\">");
 		$(".es_dlc_selection:checked").each(function() {
 			var input = $("<input>", {type: "hidden", name: "subid[]", value: $(this).val() });
