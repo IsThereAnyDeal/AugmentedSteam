@@ -2859,89 +2859,94 @@ function inventory_market_helper(response) {
 }
 
 function add_inventory_gotopage(){
-	$("#es_gotopage").remove();
-	$("#es_pagenumber").remove();
-	$("#gotopage_btn").remove();
-	$("#pagebtn_first").remove();
-	$("#pagebtn_last").remove();
-	var es_gotopage = document.createElement("script");
-	es_gotopage.type = "text/javascript";
-	es_gotopage.id = "es_gotopage";
-	es_gotopage.textContent =
-		["g_ActiveInventory.GoToPage = function(page){",
-		 "	var iCurPage = this.pageCurrent;",
-		 "	var iNextPage = Math.min(Math.max(0, --page), this.pageTotal-1);",
-		 "	this.pageList[iCurPage].hide();",
-		 "	this.pageList[iNextPage].show();",
-		 "	this.pageCurrent = iNextPage;",
-		 "	this.LoadPageImages(this.pageList[iNextPage]);",
-		 "	this.PreloadPageImages(iNextPage);",
-		 "	this.UpdatePageCounts();",
-		 "}",
-		 "function InventoryLastPage(){",
-		 "	g_ActiveInventory.GoToPage(g_ActiveInventory.pageTotal);",
-		 "}",
-		 "function InventoryFirstPage(){",
-		 "	g_ActiveInventory.GoToPage(1);",
-		 "}",
-		 "function InventoryGoToPage(){",
-		 "	var page = $('es_pagenumber').value;",
-		 "	if (isNaN(page)) return;",
-		 "	g_ActiveInventory.GoToPage(parseInt(page));",
-		 "}"].join('\n');
+	storage.get(function(settings) {
+		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
+		if (settings.showinvnav) {
+			$("#es_gotopage").remove();
+			$("#es_pagenumber").remove();
+			$("#gotopage_btn").remove();
+			$("#pagebtn_first").remove();
+			$("#pagebtn_last").remove();
+			var es_gotopage = document.createElement("script");
+			es_gotopage.type = "text/javascript";
+			es_gotopage.id = "es_gotopage";
+			es_gotopage.textContent =
+				["g_ActiveInventory.GoToPage = function(page){",
+				 "	var iCurPage = this.pageCurrent;",
+				 "	var iNextPage = Math.min(Math.max(0, --page), this.pageTotal-1);",
+				 "	this.pageList[iCurPage].hide();",
+				 "	this.pageList[iNextPage].show();",
+				 "	this.pageCurrent = iNextPage;",
+				 "	this.LoadPageImages(this.pageList[iNextPage]);",
+				 "	this.PreloadPageImages(iNextPage);",
+				 "	this.UpdatePageCounts();",
+				 "}",
+				 "function InventoryLastPage(){",
+				 "	g_ActiveInventory.GoToPage(g_ActiveInventory.pageTotal);",
+				 "}",
+				 "function InventoryFirstPage(){",
+				 "	g_ActiveInventory.GoToPage(1);",
+				 "}",
+				 "function InventoryGoToPage(){",
+				 "	var page = $('es_pagenumber').value;",
+				 "	if (isNaN(page)) return;",
+				 "	g_ActiveInventory.GoToPage(parseInt(page));",
+				 "}"].join('\n');
 
-	document.documentElement.appendChild(es_gotopage);
+			document.documentElement.appendChild(es_gotopage);
 
-	// Go to first page
-	var firstpage = document.createElement("a");
-	firstpage.textContent = "<<";
-	firstpage.id = "pagebtn_first";
-	firstpage.classList.add("pagecontrol_element");
-	firstpage.classList.add("pagebtn");
-	firstpage.href = "javascript:InventoryFirstPage();";
-	$("#pagebtn_previous").after(firstpage);
+			// Go to first page
+			var firstpage = document.createElement("a");
+			firstpage.textContent = "<<";
+			firstpage.id = "pagebtn_first";
+			firstpage.classList.add("pagecontrol_element");
+			firstpage.classList.add("pagebtn");
+			firstpage.href = "javascript:InventoryFirstPage();";
+			$("#pagebtn_previous").after(firstpage);
 
-	// Go to last page
-	var lastpage = document.createElement("a");
-	lastpage.textContent = ">>";
-	lastpage.id = "pagebtn_last";
-	lastpage.classList.add("pagecontrol_element");
-	lastpage.classList.add("pagebtn");
-	lastpage.href = "javascript:InventoryLastPage();";
-	$("#pagebtn_next").before(lastpage);
+			// Go to last page
+			var lastpage = document.createElement("a");
+			lastpage.textContent = ">>";
+			lastpage.id = "pagebtn_last";
+			lastpage.classList.add("pagecontrol_element");
+			lastpage.classList.add("pagebtn");
+			lastpage.href = "javascript:InventoryLastPage();";
+			$("#pagebtn_next").before(lastpage);
 
-	$(".pagebtn").css({
-		"padding": "0",
-		"width": "32px",
-		"margin": "0 3px"
+			$(".pagebtn").css({
+				"padding": "0",
+				"width": "32px",
+				"margin": "0 3px"
+			});
+
+			// Page number box
+			var pagenumber = document.createElement("input");
+			pagenumber.type = "number";
+			pagenumber.value="1";
+			pagenumber.classList.add("filter_search_box"); //Steam's input theme
+			pagenumber.autocomplete = "off";
+			pagenumber.placeholder = "page #";
+			pagenumber.id = "es_pagenumber";
+			pagenumber.style.width = "50px";
+			pagenumber.min = 1;
+			pagenumber.max = $("#pagecontrol_max").text();
+			$("#inventory_pagecontrols").before(pagenumber);
+
+			var goto_btn = document.createElement("a");
+			goto_btn.textContent = "Go";
+			goto_btn.id = "gotopage_btn";
+			goto_btn.classList.add("pagebtn");
+			goto_btn.href = "javascript:InventoryGoToPage();";
+			goto_btn.style.width = "32px";
+			goto_btn.style.padding = "0";
+			goto_btn.style.margin = "0 6px";
+			goto_btn.style.textAlign = "center";
+			$("#inventory_pagecontrols").before(goto_btn);
+
+			//TODO: Maybe use &laquo; or &#8810; for first/last button text?
+			//TODO: Disable buttons when already on first/last page?
+		}
 	});
-
-	// Page number box
-	var pagenumber = document.createElement("input");
-	pagenumber.type = "number";
-	pagenumber.value="1";
-	pagenumber.classList.add("filter_search_box"); //Steam's input theme
-	pagenumber.autocomplete = "off";
-	pagenumber.placeholder = "page #";
-	pagenumber.id = "es_pagenumber";
-	pagenumber.style.width = "50px";
-	pagenumber.min = 1;
-	pagenumber.max = $("#pagecontrol_max").text();
-	$("#inventory_pagecontrols").before(pagenumber);
-
-	var goto_btn = document.createElement("a");
-	goto_btn.textContent = "Go";
-	goto_btn.id = "gotopage_btn";
-	goto_btn.classList.add("pagebtn");
-	goto_btn.href = "javascript:InventoryGoToPage();";
-	goto_btn.style.width = "32px";
-	goto_btn.style.padding = "0";
-	goto_btn.style.margin = "0 6px";
-	goto_btn.style.textAlign = "center";
-	$("#inventory_pagecontrols").before(goto_btn);
-
-	//TODO: Maybe use &laquo; or &#8810; for first/last button text?
-	//TODO: Disable buttons when already on first/last page?
 }
 
 function subscription_savings_check() {
