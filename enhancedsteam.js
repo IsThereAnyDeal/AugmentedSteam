@@ -1,4 +1,4 @@
-// version 5.6
+// version 5.7
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
