@@ -1,10 +1,14 @@
 v5.6
 -----
 + Added ability to add a custom amount to your Steam wallet
++ Added checkboxes to DLC list on app pages, letting you select certain DLC and add to cart easily
 + Added sort option to badge page to sort by number of card drops remaining
 + Added card prices to market links on badge pages
++ Added "cost to complete badge" to unobtained badges
 + Added option to display advanced navigation on inventory pages
-- Removed function to add all ownowned DLC to cart on app pages due to complications
++ Added foil badge and foil badge progress to app pages
+: Updated Early Access banner graphics (thanks SolventSnake!)
+- Removed function to add all ownowned DLC to cart on app pages due to conflicts with new feature
 
 v5.5
 -----
