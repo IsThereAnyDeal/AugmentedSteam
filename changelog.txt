@@ -12,7 +12,7 @@ v5.6
 + Added option to display advanced navigation on inventory pages
 + Added foil badge and foil badge progress to app pages
 : Updated Early Access banner graphics (thanks SolventSnake!)
-- Removed function to add all ownowned DLC to cart on app pages due to conflicts with new feature
+- Removed function to add all unowned DLC to cart on app pages due to conflicts with new feature
 
 v5.5
 -----
