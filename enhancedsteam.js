@@ -3207,7 +3207,7 @@ function add_dlc_checkboxes() {
 	$(".game_area_dlc_row").each(function() {
 		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' value='" + $(this).find("input").val() + "'>");
 	});
-	$(".es_dlc_selection").bind("change", function() {
+	function add_dlc_to_list() {
 		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\">");
 		$(".es_dlc_selection:checked").each(function() {
 			var input = $("<input>", {type: "hidden", name: "subid[]", value: $(this).val() });
@@ -3218,7 +3218,8 @@ function add_dlc_checkboxes() {
 		} else {
 			$("#es_selected_btn").hide();
 		}
-	});
+	}
+	$(document).on( "change", ".es_dlc_selection", add_dlc_to_list );
 }
 
 function fix_achievement_icon_size() {
