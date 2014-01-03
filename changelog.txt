@@ -2,6 +2,10 @@ v5.7
 -----
 
 
+v5.6.1
+-----
+: Fix Early Access overlays on Steam homepage
+
 v5.6
 -----
 + Added ability to add a custom amount to your Steam wallet

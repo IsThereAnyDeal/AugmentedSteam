@@ -279,12 +279,6 @@ function highlight_node(node, color) {
 	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
 		$node = $(node).find(".dailydeal_footer");
 	}
-	if (node.classList.contains("wintersale_dailydeal_ctn")) {
-		$node = $(node).find(".dailydeal_footer");
-	}
-	if (node.classList.contains("vote_option")) {
-		$node = $(node).find(".vote_option_info");
-	}
 
 	// App and community hub page headers
 	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
@@ -1251,7 +1245,6 @@ function show_library() {
 	$("#game_background_holder").remove();
 	$("#modalBG").remove();
 	$("#page_background_holder").remove();
-	$(".winter_sale_globe_top").remove();
 
 	// Create Library divs
 	var es_library = $("<div id='es_library_content'></div>");
@@ -3274,11 +3267,10 @@ function add_overlay() {
 					$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
 					$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
 					break;
-				case /^\/$/.test(window.location.pathname):
-					$(".wintersale_dailydeal_ctn").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0); });
-					$(".vote_option").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-					$(".tab_overlay").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-					$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+				case /^\/$/.test(window.location.pathname):					
+					$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+					$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 10); });
+					$(".cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 					$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 					$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 					$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
@@ -3751,15 +3743,7 @@ function bind_ajax_content_highlighting() {
 
 				if (node.classList && node.classList.contains("tab_row")) {					
 					start_highlighting_node(node);
-					check_early_access(node, "ea_184x69.png", 0);
-				}
-
-				// Winter sale 2013
-				if (node.classList && node.classList.contains("wintersale_tabpage")) {
-					$.each($(node).children('.wintersale_dailydeal_ctn'), function() {
-						start_highlighting_node(this);
-						check_early_access(this, "ea_231x87.png", 0);
-					});					
+					check_early_access(node, "ea_sm_120.png", 0);
 				}
 
 				if (node.id == "search_result_container") {
@@ -3803,9 +3787,7 @@ function start_highlights_and_tags(){
 		"div.sale_page_purchase_item", // Sale pages
 		"div.item",				// Sale page / featured page
 		"div.home_area_spotlight",	// midweek and weekend deals
-		"div.insert_season_here_sale_dailydeal_ctn",		// Valve Sthap!
-		"div.wintersale_dailydeal_ctn",
-		"div.vote_option"
+		"div.insert_season_here_sale_dailydeal_ctn"		// Valve Sthap!
 	];
 
 	// Get all appids and nodes from selectors.
