@@ -500,3 +500,29 @@ img.platform_small, .platform_img {
 	height: 18px;
 	padding: 2px 4px 3px 4px;
 }
+input[type=checkbox].es_dlc_selection {
+	position: absolute; 
+	overflow: hidden; 
+	clip: rect(0 0 0 0); 
+	height:1px; 
+	width:1px; 
+	margin:-1px; 
+	padding:0;
+	border:0;
+}
+
+input[type=checkbox].es_dlc_selection + label {
+	padding-left:20px;
+	height:13px; 
+	display:inline-block;
+	line-height:13px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	vertical-align:middle;
+	cursor:default;
+	z-index: 99;
+}
+
+input[type=checkbox].es_dlc_selection:checked + label {
+	background-position: 0 -13px;
+}
