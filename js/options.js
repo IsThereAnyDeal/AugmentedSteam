@@ -757,20 +757,20 @@ function change_flag(node, selectnode) {
 }
 
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
-function load_default_highlight_wishlist_color() { $("highlight_wishlist_color").val("#496e93"); }
-function load_default_highlight_coupon_color() { $("highlight_coupon_color").val("#6b2269"); }
-function load_default_highlight_inv_gift_color() { $("highlight_inv_gift_color").val("#a75124"); }
-function load_default_highlight_inv_guestpass_color() { $("highlight_inv_guestpass_color").val("#a75124"); }
-function load_default_highlight_friends_want_color() { $("highlight_friends_want_color").val("#7E4060"); }
+function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color").val("#496e93"); }
+function load_default_highlight_coupon_color() { $("#highlight_coupon_color").val("#6b2269"); }
+function load_default_highlight_inv_gift_color() { $("#highlight_inv_gift_color").val("#a75124"); }
+function load_default_highlight_inv_guestpass_color() { $("#highlight_inv_guestpass_color").val("#a75124"); }
+function load_default_highlight_friends_want_color() { $("#highlight_friends_want_color").val("#7E4060"); }
 
-function load_default_tag_owned_color() { $("tag_owned_color").val("#5c7836"); }
-function load_default_tag_wishlist_color() { $("tag_wishlist_color").val("#496e93"); }
-function load_default_tag_coupon_color() { $("tag_coupon_color").val("#6b2269"); }
-function load_default_tag_inv_gift_color() { $("tag_inv_gift_color").val("#a75124"); }
-function load_default_tag_inv_guestpass_color() { $("tag_inv_guestpass_color").val("#a75124"); }
-function load_default_tag_friends_want_color() { $("tag_friends_want_color").val("#7E4060"); }
-function load_default_tag_friends_own_color() { $("tag_friends_own_color").val("#5b9504"); }
-function load_default_tag_friends_rec_color() { $("tag_friends_rec_color").val("#2e3d54"); }
+function load_default_tag_owned_color() { $("#tag_owned_color").val("#5c7836"); }
+function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#496e93"); }
+function load_default_tag_coupon_color() { $("#tag_coupon_color").val("#6b2269"); }
+function load_default_tag_inv_gift_color() { $("#tag_inv_gift_color").val("#a75124"); }
+function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").val("#a75124"); }
+function load_default_tag_friends_want_color() { $("#tag_friends_want_color").val("#7E4060"); }
+function load_default_tag_friends_own_color() { $("#tag_friends_own_color").val("#5b9504"); }
+function load_default_tag_friends_rec_color() { $("#tag_friends_rec_color").val("#2e3d54"); }
 
 function load_default_countries() {
 	regional_countries = ["us","gb","eu1","eu2","ru","br","au"];
