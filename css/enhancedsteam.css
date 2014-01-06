@@ -526,3 +526,13 @@ input[type=checkbox].es_dlc_selection + label {
 input[type=checkbox].es_dlc_selection:checked + label {
 	background-position: 0 -13px;
 }
+
+.es_review_image {
+	vertical-align: middle;
+	border: 0px;
+}
+
+.es_review_text {
+	font-size: 14px;
+	font-weight: bold;
+}
