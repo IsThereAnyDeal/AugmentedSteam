@@ -2090,7 +2090,8 @@ function hide_greenlight_banner() {
 			var banner = $("#ig_top_workshop");
 			var breadcrumbs = $(".breadcrumbs");
 
-			var greenlight_info = '<div class="apphub_HeaderTop es_greenlight"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
+			var greenlight_info = '<link rel="stylesheet" type="text/css" href="http://cdn.steamcommunity.com/public/shared/css/apphub.css">';
+			greenlight_info += '<div class="apphub_HeaderTop es_greenlight"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
 			greenlight_info += '<div class="apphub_sectionTabs">';
 			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
 			greenlight_info += '<a class="apphub_sectionTab" id="software_apphub_sectionTab" href="http://steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
