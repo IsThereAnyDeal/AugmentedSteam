@@ -1,6 +1,7 @@
 v5.7
 -----
 + Adds Steam review percentage of most helpful positive and negative reviews on app pages
+: Price history now shows for all apps on a store page, not just the first
 
 v5.6.1
 -----

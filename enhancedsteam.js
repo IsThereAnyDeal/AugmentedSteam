@@ -1670,92 +1670,101 @@ function show_pricing_history(appid, type) {
 				}
 			}
 
-			get_http("http://api.enhancedsteam.com/pricev2/?search=" + type + "/" + appid + "&stores=" + storestring + "&cc=" + cc, function (txt) {
-                var data = JSON.parse(txt);
-                if (data) {
-                    var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
+			function get_price_data(lookup_type, node, id) {
+				get_http("http://api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc, function (txt) {
+	                var data = JSON.parse(txt);
+	                if (data) {
+	                    var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
 
-					switch (data[".meta"]["currency"]) {
-						case "GBP":
-							currency_symbol = "£";
-							break;
-						case "EUR":
-							currency_symbol = "€";
-							comma = true;
-							at_end = true;
-							break;
-						case "BRL":
-							currency_symbol = "R$ ";
-							comma = true;
-							break;
-						default:
-							currency_symbol = "$";
-					}
+						switch (data[".meta"]["currency"]) {
+							case "GBP":
+								currency_symbol = "£";
+								break;
+							case "EUR":
+								currency_symbol = "€";
+								comma = true;
+								at_end = true;
+								break;
+							case "BRL":
+								currency_symbol = "R$ ";
+								comma = true;
+								break;
+							default:
+								currency_symbol = "$";
+						}
 
-        			// "Lowest Price"
-					if (data["price"]) {
-                        if (data["price"]["drm"] == "steam") {
-                        	activates = "(<b>" + localized_strings[language].activates + "</b>)";
-                    		if (data["price"]["store"] == "Steam") {
-                    			activates = "";
-                    		}
-                    	}
+	        			// "Lowest Price"
+						if (data["price"]) {
+	                        if (data["price"]["drm"] == "steam") {
+	                        	activates = "(<b>" + localized_strings[language].activates + "</b>)";
+	                    		if (data["price"]["store"] == "Steam") {
+	                    			activates = "";
+	                    		}
+	                    	}
 
-                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
-                    }
+	                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    }
 
-					// "Historical Low"
-					if (data["lowest"]) {
-                        recorded = new Date(data["lowest"]["recorded"]*1000);
-                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
-                    }
+						// "Historical Low"
+						if (data["lowest"]) {
+	                        recorded = new Date(data["lowest"]["recorded"]*1000);
+	                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    }
 
-					html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
+						html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 35px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -9px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
 
-					// "Number of times this game has been in a bundle"
-					if (data["bundles"]["count"] > 0) {
-						line3 = "<br>" + localized_strings[language].bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundle_history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
-						html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 50px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -4px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
-					}
+						// "Number of times this game has been in a bundle"
+						if (data["bundles"]["count"] > 0) {
+							line3 = "<br>" + localized_strings[language].bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundle_history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+							html = "<div class='game_purchase_area_friends_want' style='padding-top: 5px; height: 50px; border-top: 1px solid #4d4b49; border-left: 1px solid #4d4b49; border-right: 1px solid #4d4b49;' id='enhancedsteam_lowest_price'><div class='gift_icon' style='margin-top: -4px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
+						}
 
-					if (line1 && line2) {
-						$("#game_area_purchase").before(html + line1 + "<br>" + line2 + line3);
-					}
+						if (line1 && line2) {
+							$(node).before(html + line1 + "<br>" + line2 + line3);
+						}
 
-					if (data["bundles"]["active"].length > 0) {
-						var length = data["bundles"]["active"].length;
-						for (var i = 0; i < length; i++) {
-							var enddate;
-							if (data["bundles"]["active"][i]["expiry"]) {
-								enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
-							}
-							var currentdate = new Date().getTime();
-							if (!enddate || currentdate < enddate) {
-								purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings[language].buy + ' ' + data["bundles"]["active"][i]["page"] + ' ' + data["bundles"]["active"][i]["title"] + '</h1>';
-								if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + localized_strings[language].bundle.offer_ends + ' ' + enddate + '</p>';
-								purchase += '<p class="package_contents"><b>' + localized_strings[language].bundle.includes.replace("(__num__)", data["bundles"]["active"][i]["games"].length) + ':</b> '
-								data["bundles"]["active"][i]["games"].forEach(function(entry) {
-									purchase += entry + ", ";
-								});
-								purchase = purchase.replace(/, $/, "");
-								purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["details"] + '" target="_blank">' + localized_strings[language].bundle.info + '</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
-								if (data["bundles"]["active"][i]["pwyw"] == 0) { if (data["bundles"]["active"][i]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
-								purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
-								purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
-								if (data["bundles"]["active"][i]["pwyw"] == 1) {
-									purchase += localized_strings[language].bundle.pwyw;
-								} else {
-									purchase += localized_strings[language].buy;
+						if (data["bundles"]["active"].length > 0) {
+							var length = data["bundles"]["active"].length;
+							for (var i = 0; i < length; i++) {
+								var enddate;
+								if (data["bundles"]["active"][i]["expiry"]) {
+									enddate = new Date(data["bundles"]["active"][i]["expiry"]*1000);
 								}
-								purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';
-								$("#game_area_purchase").after(purchase);
-								
-								$("#game_area_purchase").after("<h2 class='gradientbg'>" + localized_strings[language].bundle.header + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
+								var currentdate = new Date().getTime();
+								if (!enddate || currentdate < enddate) {
+									purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings[language].buy + ' ' + data["bundles"]["active"][i]["page"] + ' ' + data["bundles"]["active"][i]["title"] + '</h1>';
+									if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + localized_strings[language].bundle.offer_ends + ' ' + enddate + '</p>';
+									purchase += '<p class="package_contents"><b>' + localized_strings[language].bundle.includes.replace("(__num__)", data["bundles"]["active"][i]["games"].length) + ':</b> '
+									data["bundles"]["active"][i]["games"].forEach(function(entry) {
+										purchase += entry + ", ";
+									});
+									purchase = purchase.replace(/, $/, "");
+									purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["details"] + '" target="_blank">' + localized_strings[language].bundle.info + '</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
+									if (data["bundles"]["active"][i]["pwyw"] == 0) { if (data["bundles"]["active"][i]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
+									purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
+									purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
+									if (data["bundles"]["active"][i]["pwyw"] == 1) {
+										purchase += localized_strings[language].bundle.pwyw;
+									} else {
+										purchase += localized_strings[language].buy;
+									}
+									purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';
+									$("#game_area_purchase").after(purchase);
+									
+									$("#game_area_purchase").after("<h2 class='gradientbg'>" + localized_strings[language].bundle.header + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
+								}
 							}
 						}
-					}
-                }
-        	});
+	                }
+	        	});
+			}
+
+			get_price_data(type, $(".game_area_purchase_game_wrapper:first"), appid);
+
+			$(".game_area_purchase_game_wrapper").not(".game_area_purchase_game_wrapper:first").each(function() {				
+				var subid = $(this).find("input[name=subid]").val();
+				get_price_data("sub", $(this), subid);
+			});
 		}
 	});
 }
