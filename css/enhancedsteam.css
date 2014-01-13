@@ -400,15 +400,6 @@ img.platform_small, .platform_img {
 	border:1px solid black;
 	margin-top:-25px;
 }
-.es_regional_sale {
-	margin-top:-18px;
-}
-.es_regional_sub {
-	margin-top:-55px;
-}
-.es_regional_dailydeal {
-	margin-top:auto;
-}
 .es_regional_price {
 	margin-right:8px;
 	font-size:14px;
@@ -450,7 +441,12 @@ img.platform_small, .platform_img {
 	margin-bottom:5px;
 	margin-top:auto;
 }
-
+.es_regional_sale {
+	margin-bottom:55px;
+}
+.es_regional_dailydeal {
+	margin-top:auto;
+}
 .es_regional_unavailable {
 	font-size:12px;
 }

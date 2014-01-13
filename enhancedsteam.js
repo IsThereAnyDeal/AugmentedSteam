@@ -3627,7 +3627,14 @@ function show_regional_pricing() {
 										$(".dailydeal_content").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
 									}
 									else if (sale){
-										$(".sale_page_purchase_app").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+										switch(settings.showregionalprice){
+											case "always":
+												$(".sale_page_purchase_app").eq(index).css({"height":"auto", "min-height":"136px"}).prepend(app_pricing_div);
+												break;
+											default:
+												$(".sale_page_purchase_app").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+												break;
+										}
 									} else {
 										switch(settings.showregionalprice){
 											case "always":
@@ -3704,7 +3711,9 @@ function show_regional_pricing() {
 										.css("cursor","help");
 									} else {
 										$("#es_pricing_" + subid).addClass("es_regional_always");
-										$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
+										if (!sale){
+											$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
+										}
 									}
 								}
 							});
