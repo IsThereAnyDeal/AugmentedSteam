@@ -147,9 +147,11 @@ function highlight_owned(node) {
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 
 		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
 		if (settings.hide_owned) hide_node(node);
+		if (settings.hide_owned_homepage) hide_node(node);
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
@@ -302,15 +304,28 @@ function highlight_node(node, color) {
 }
 
 function hide_node(node) {
-	if ($(node).hasClass("info")) { node = $(node).parent()[0]; }
+	storage.get(function(settings) {
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 
-	if (node.classList.contains("search_result_row") || node.classList.contains("tab_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item")) {
-		$(node).css("display", "none");
-		search_threshhold = search_threshhold - 58;
-		if ($(document).height() <= $(window).height()) {
-			load_search_results();
+		if ($(node).hasClass("info") || $(node).hasClass("dailydeal") || $(node).hasClass("spotlight_content")) { node = $(node).parent()[0]; }
+
+		if (settings.hide_owned) {
+			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
+				$(node).css("display", "none");
+				search_threshhold = search_threshhold - 58;
+				if ($(document).height() <= $(window).height()) {
+					load_search_results();
+				}
+			}
 		}
-	}
+
+		if (settings.hide_owned_homepage) {
+			if (node.classList.contains("tab_row") || node.classList.contains("small_cap") || node.classList.contains("nopad") || $(node).hasClass("home_area_spotlight")) {
+				$(node).css("visibility", "hidden");
+			}
+		}
+	});
 }
 
 function add_tag (node, string, color) {
@@ -2101,8 +2116,7 @@ function hide_unowned_game_dlc() {
 									$.each(fullgame_data, function(fullappid, fullapp_data){
 										if (fullapp_data.success) {
 											if (!(fullapp_data.data.is_owned === true)) {
-												$(node[0]).css("opacity", "0");
-												$(node[0]).attr("onmouseover", "");											
+												hide_node(node[0]);
 											}
 										}
 									});
