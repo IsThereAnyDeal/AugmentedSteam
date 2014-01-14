@@ -2088,6 +2088,30 @@ function hide_unowned_game_dlc() {
 					});
 				}	
 			});
+			$("#tab_NewReleases_items").find(".tab_row").each(function(index) {
+				var node = $(this);
+				var appid = get_appid($(this).find("a").attr("href"));
+				get_http('//store.steampowered.com/api/appdetails/?appids=' + appid, function (data) {
+					var storefront_data = JSON.parse(data);
+					$.each(storefront_data, function(application, app_data) {
+						if (app_data.success) {	
+							if (app_data.data.fullgame) {
+								get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app_data.data.fullgame.appid, function (fullgamedata) {
+									var fullgame_data = JSON.parse(fullgamedata);
+									$.each(fullgame_data, function(fullappid, fullapp_data){
+										if (fullapp_data.success) {
+											if (!(fullapp_data.data.is_owned === true)) {
+												$(node[0]).css("opacity", "0");
+												$(node[0]).attr("onmouseover", "");											
+											}
+										}
+									});
+								});
+							}
+						}
+					});
+				});
+			});
 		}
 	});
 }
@@ -3812,6 +3836,7 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("tab_row")) {					
 					start_highlighting_node(node);
 					check_early_access(node, "ea_sm_120.png", 0);
+					hide_unowned_game_dlc();
 				}
 
 				if (node.id == "search_result_container") {
@@ -5165,6 +5190,7 @@ $(document).ready(function(){
 						add_carousel_descriptions();
 						add_affordable_button();
 						show_regional_pricing();
+						hide_unowned_game_dlc();
 						break;
 				}
 

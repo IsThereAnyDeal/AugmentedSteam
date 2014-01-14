@@ -1,6 +1,7 @@
 v5.7
 -----
 + Adds Steam review percentage of most helpful positive and negative reviews on app pages
++ "Hide -> DLC for games you do not own" now works with the new releases section on the homepage
 : Price history now shows for all apps on a store page, not just the first
 
 v5.6.1
