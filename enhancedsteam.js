@@ -365,7 +365,6 @@ function display_tags(node) {
 			$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
 			remove_existing_tags($tag_root);
 
-			$tags.css("margin-right", "76px");
 			$tag_root.find("h4").after($tags);
 		}
 		else if (node.classList.contains("search_result_row")) {
@@ -3468,7 +3467,7 @@ function show_regional_pricing() {
 				if (dailydeal) {
 					all_game_areas = $(".dailydeal_content").toArray();
 				} else if(sale) {
-					all_game_areas = $(".sale_page_purchase_app").toArray();
+					all_game_areas = $(".sale_page_purchase_item").toArray();
 				}
 				var subid_info = [];
 				var subid_array = [];
@@ -3629,10 +3628,10 @@ function show_regional_pricing() {
 									else if (sale){
 										switch(settings.showregionalprice){
 											case "always":
-												$(".sale_page_purchase_app").eq(index).css({"height":"auto", "min-height":"136px"}).prepend(app_pricing_div);
+												$(".sale_page_purchase_item").eq(index).css({"height":"auto", "min-height":"136px"}).prepend(app_pricing_div);
 												break;
 											default:
-												$(".sale_page_purchase_app").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
+												$(".sale_page_purchase_item").eq(index).find(".game_purchase_action_bg").before(app_pricing_div);
 												break;
 										}
 									} else {
@@ -4854,7 +4853,6 @@ function add_gamecard_foil_link() {
 	}
 	else {
 		if(url_parameters_array[0]!=""){
-			console.log(url_parameters_array);
 			url_parameters_array.push("border=1");
 			var url_parameters_out = url_parameters_array.join("&");
 			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings[language].view_foil_badge+"</span></a>");
