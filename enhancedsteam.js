@@ -2533,9 +2533,10 @@ function add_market_total() {
 				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings[language].market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">'+ localized_strings[language].loading +'</div></div></div>');
 
 				// Get market transactions
-				get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=99999999999999999", function (txt) {
+				get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=1000", function (txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
+					var total_count = data["total_count"];
 					var currency_symbol = "";
 
 					totaler = function (p, i) {
