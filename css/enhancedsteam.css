@@ -531,3 +531,32 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-size: 14px;
 	font-weight: bold;
 }
+
+#es_dlc_option_button {
+	float: right;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+#es_dlc_option_button:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#es_dlc_option_panel {
+    background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);    
+    border-bottom: 1px solid black;
+}
+
+.es_dlc_option {
+	display: inline-block;
+	margin-right: 10px;
+	margin-top: 5px;
+	font-size: 11px;
+	color: #ffffff;
+}
+
+.es_dlc_option:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}

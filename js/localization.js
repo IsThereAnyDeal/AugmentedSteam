@@ -222,6 +222,11 @@ var localized_strings,
 			wallet: {
 				custom_amount: "Add custom amount",
 				custom_amount_text: "Add any amount over __minamount__"
+			},
+			select: {
+				unowned_dlc: "Select Unowned DLC",
+				wishlisted_dlc: "Select Wishlisted DLC",
+				none: "Select None"
 			}
 		};
 

@@ -1,5 +1,6 @@
 v5.8
 -----
++ Added extended options for DLC checkboxes that are accessible by clicking "Options ▾".
 
 
 v5.7
