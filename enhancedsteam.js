@@ -5001,7 +5001,7 @@ function add_gamecard_market_links(game) {
 					$(this).children("div:contains('" + cardname + "')").parent().append(html);
 				}
 			});
-			if ($(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
+			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
 				switch (currency_symbol) {
 					case "R$":
 						cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");

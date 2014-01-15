@@ -6,7 +6,8 @@ v5.7
 + Added Square Enix and Bundle Stars sites to price history information
 : Price history now shows for all apps on a store page, not just the first
 : Fixed a bug that caused early access banners on the "featured" section to not position correctly
-: Fixed a bug that caused regional pricing on sale pages to sometimes display incorrectly 
+: Fixed a bug that caused regional pricing on sale pages to sometimes display incorrectly
+: Fixed a bug that broke formatting on badge page when crafting badges in certain situations
 
 v5.6.1
 -----
