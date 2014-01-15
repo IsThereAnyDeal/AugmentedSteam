@@ -3,6 +3,7 @@ v5.7
 + Adds Steam review percentage of most helpful positive and negative reviews on app pages
 + "Hide -> DLC for games you do not own" now works with the new releases section on the homepage
 + Added new option to hide owned games on the homepage
++ Added Square Enix and Bundle Stars sites to price history information
 : Price history now shows for all apps on a store page, not just the first
 : Fixed a bug that caused early access banners on the "featured" section to not position correctly
 : Fixed a bug that caused regional pricing on sale pages to sometimes display incorrectly 

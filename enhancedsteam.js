@@ -1644,7 +1644,7 @@ function show_pricing_history(appid, type) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showlowestprice) {
 
 			// Get List of stores we're searching for
@@ -1671,7 +1671,9 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[19]) { storestring += "dlgamer,"; }
 			if (settings.stores[20]) { storestring += "humblestore,"; }
 			if (settings.stores[21]) { storestring += "indiegamestand,"; }
-			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,humblestore"; }
+			if (settings.stores[22]) { storestring += "squenix,"; }
+			if (settings.stores[23]) { storestring += "bundlestars,"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars"; }
 
 			// Get country code from Steam cookie
 			var cookies = document.cookie;
