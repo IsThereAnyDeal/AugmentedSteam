@@ -560,3 +560,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+#es_price_range {
+	-webkit-appearance:none; 
+	-moz-apperance:none; 
+	width:100%; 
+	height:4px;
+	margin-top: 10px;
+}
+
+.es_price_range_slider::-webkit-slider-thumb{
+	-webkit-appearance:none; -moz-apperance:none; width:10px; height:18px; 
+	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
