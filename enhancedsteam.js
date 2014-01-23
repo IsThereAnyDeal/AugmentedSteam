@@ -2193,6 +2193,20 @@ function hide_unowned_game_dlc() {
 	});
 }
 
+function add_speech_search() {
+	storage.get(function(settings) {
+		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; storage.set({'showspeechsearch': settings.showspeechsearch}); }
+		if (settings.showspeechsearch) {
+			$("#store_nav_search_term").attr("x-webkit-speech", "search");
+			$("#store_nav_search_term").bind("onwebkitspeechchange", function() {
+				var form = $(this).up("form");
+				if (form.onsubmit()) { form.submit(); }
+				return false;
+			});
+		}
+	});
+}
+
 // Changes Steam Greenlight pages
 function hide_greenlight_banner() {
 	storage.get(function(settings) {
@@ -5319,11 +5333,9 @@ $(document).ready(function(){
 
 				// Storefront homepage tabs.
 				bind_ajax_content_highlighting();
-
 				add_small_cap_height();
-
 				hide_trademark_symbols();
-
+				add_speech_search();
 				break;
 
 			case "steamcommunity.com":

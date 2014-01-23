@@ -51,6 +51,7 @@ function save_options() {
 	replaceaccountname = $("#replaceaccountname").prop('checked');
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
 	send_age_info = $("#send_age_info").prop('checked');
+	showspeechsearch = $("#showspeechsearch").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
@@ -187,6 +188,7 @@ function save_options() {
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
+		'showspeechsearch': showspeechsearch,
 		'contscroll': contscroll,
 		'showdrm': showdrm,
 		'showmcus': showmcus,
@@ -425,7 +427,8 @@ function load_options() {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; chrome.storage.sync.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
-		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }		
+		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
+		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
@@ -498,6 +501,7 @@ function load_options() {
 		$("#replaceaccountname").prop('checked', settings.replaceaccountname);
 		$("#showfakeccwarning").prop('checked', settings.showfakeccwarning);
 		$("#send_age_info").prop('checked', settings.send_age_info);
+		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
 		$("#contscroll").prop('checked', settings.contscroll);
 		$("#showdrm").prop('checked', settings.showdrm);
 		$("#showmcus").prop('checked', settings.showmcus);
@@ -615,6 +619,7 @@ function load_translation() {
 			$("#store_general").text(localized_strings[settings.language].options_general);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options_show_regionwarning);
 			$("#send_age_info_text").text(localized_strings[settings.language].options_send_age_info);
+			$("#showspeechsearch_text").text(localized_strings[settings.language].options_showspeechsearch);
 			$("#contscroll_text").text(localized_strings[settings.language].options_contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
