@@ -573,3 +573,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	-webkit-appearance:none; -moz-apperance:none; width:10px; height:18px; 
 	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
 }
+#store_nav_search_term::-webkit-input-placeholder, #term::-webkit-input-placeholder {
+	font-style: italic;
+}

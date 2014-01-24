@@ -1,4 +1,9 @@
 // version 5.8
+var version = "5.8"
+
+var console_info=["%c Enhanced %cSteam v"+version+" by jshackles %c http://www.enhancedsteam.com ","background: #000000;color: #7EBE45", "background: #000000;color: #ffffff",""];
+console.log.apply(console,console_info);
+
 var storage = chrome.storage.sync;
 var apps;
 var info = 0;
@@ -2040,8 +2045,12 @@ function add_price_slider() {
 			url_parameter = url_parameter.replace("price=", "");
 			if (url_parameter.indexOf("%2C") > -1) url_parameter = url_parameter.split("%2C");
 			if (url_parameter.indexOf(",") > -1) url_parameter = url_parameter.split(",");
-			setprice_low = url_parameter[0];
-			setprice_high = url_parameter[1];
+			if(url_parameter[0]>0){
+				setprice_low = url_parameter[0];
+			}
+			if(url_parameter[1]>0){
+				setprice_high = url_parameter[1];
+			}
 			slider_pos = (setprice_high / 59.99) * 100;
 			display = "block";
 		}
@@ -2193,18 +2202,45 @@ function hide_unowned_game_dlc() {
 	});
 }
 
+function fix_search_placeholder() {
+	var selectors = ["#store_nav_search_term", "#term"];
+	$.each(selectors, function(index, selector){
+		$(selector).each(function(){
+			$(this).off("blur");
+			$(this).attr("onblur","");
+			if(selector!="#term"){
+				var search_string = $(this).val();
+				if (!$(this).attr("placeholder")){
+					$(this).attr("placeholder", search_string);
+				}
+				$(this).removeClass("default");
+				$(this).val("");
+				$(this).blur(function(e) {
+					if($(this).val()==search_string){
+						$(this).val("");
+						$(this).removeClass("default");
+					}
+				});
+			}
+		});
+	});
+}
+
 function add_speech_search() {
 	storage.get(function(settings) {
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; storage.set({'showspeechsearch': settings.showspeechsearch}); }
 		if (settings.showspeechsearch) {
-			$("#store_nav_search_term").attr("x-webkit-speech", "search");			
-			$("#store_nav_search_term").blur(function(e) {
-				$("#store_nav_search_term").val("");				
-			});
-			$("#store_nav_search_term").bind("webkitspeechchange", function(e) {
-				var form = $("#searchform");
-				form.submit();
-				return false;
+			var selectors = [["#store_nav_search_term","#searchform"], ["#term", "#advsearchform"]];
+			$.each(selectors, function(index, selector){
+				$(selector[0]).attr("x-webkit-speech", "search");			
+				$(selector[0]).bind("webkitspeechchange", function(e) {
+					if(selector[0]=="#term"){
+						$("#realterm").val($("#term").val());
+					}
+					var form = $(selector[1]);
+					form.submit();
+					return false;
+				});
 			});
 		}
 	});
@@ -5337,6 +5373,7 @@ $(document).ready(function(){
 				// Storefront homepage tabs.
 				bind_ajax_content_highlighting();
 				add_small_cap_height();
+				fix_search_placeholder();
 				hide_trademark_symbols();
 				add_speech_search();
 				break;
