@@ -2197,10 +2197,13 @@ function add_speech_search() {
 	storage.get(function(settings) {
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; storage.set({'showspeechsearch': settings.showspeechsearch}); }
 		if (settings.showspeechsearch) {
-			$("#store_nav_search_term").attr("x-webkit-speech", "search");
-			$("#store_nav_search_term").bind("onwebkitspeechchange", function() {
-				var form = $(this).up("form");
-				if (form.onsubmit()) { form.submit(); }
+			$("#store_nav_search_term").attr("x-webkit-speech", "search");			
+			$("#store_nav_search_term").blur(function(e) {
+				$("#store_nav_search_term").val("");				
+			});
+			$("#store_nav_search_term").bind("webkitspeechchange", function(e) {
+				var form = $("#searchform");
+				form.submit();
 				return false;
 			});
 		}
