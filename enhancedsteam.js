@@ -2643,11 +2643,16 @@ function add_market_total() {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmarkettotal) {
 			if (window.location.pathname.match(/^\/market\/$/)) {
-				// Add market transaction button
 				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings[language].market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">'+ localized_strings[language].loading +'</div></div></div>');
 
-				// Get market transactions
-				get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=1000", function (txt) {
+				var pur_total = 0.0;
+				var usd_total = 0.0;
+				var gbp_total = 0.0;
+				var eur_total = 0.0;
+				var rub_total = 0.0;
+				var brl_total = 0.0;
+
+				function get_market_data(txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
 					var total_count = data["total_count"];
@@ -2775,20 +2780,15 @@ function add_market_total() {
 					rub_prices = jQuery.map($(market), rub_totaler);
 					brl_prices = jQuery.map($(market), brl_totaler);
 
-					var pur_total = 0.0;
-					var usd_total = 0.0;
-					var gbp_total = 0.0;
-					var eur_total = 0.0;
-					var rub_total = 0.0;
-					var brl_total = 0.0;
-
 					jQuery.map(pur_prices, function (p, i) { pur_total += p; });
 					jQuery.map(usd_prices, function (p, i) { usd_total += p; });
 					jQuery.map(gbp_prices, function (p, i) { gbp_total += p; });
 					jQuery.map(eur_prices, function (p, i) { eur_total += p; });
 					jQuery.map(rub_prices, function (p, i) { rub_total += p; });
 					jQuery.map(brl_prices, function (p, i) { brl_total += p; });
+				}
 
+				function show_results() {
 					switch (currency_symbol) {
 						case "€":
 							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=eur", function (txt) {
@@ -2869,6 +2869,28 @@ function add_market_total() {
 								$("#es_market_summary").html(html);
 							});
 							break;
+					}
+				}
+
+				var start = 0;
+				var count = 1000;
+				var i = 1;
+				get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=1", function (last_transaction) {
+					var data = JSON.parse(last_transaction);
+					var total_count = data["total_count"];
+					var loops = Math.ceil(total_count / count);
+
+					if (loops) {
+						while ((start + count) < (total_count + count)) {
+							get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=" + start + "&count=" + count, function (txt) {
+								get_market_data(txt);
+								if (i == loops) { show_results(); }
+								i++;
+							});
+							start += count;
+						}
+					} else {
+						show_results();
 					}
 				});
 			}
