@@ -581,4 +581,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: auto !important;
 	border: 1px solid #4d4b49;
 	border-bottom: 0;
+	background-image: none;
+	padding-left: 46px;
+	position: relative;
+	font-size: 12px;
+	color: #626366;
+	background-color: #1d252e;
+}
+
+.es_lowest_price a {
+	color: #b0aeac;
+}
+
+.es_lowest_price .gift_icon {
+	left: 17px; 
+	position: absolute;
 }

@@ -1740,7 +1740,7 @@ function show_pricing_history(appid, type) {
 	                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    }
 
-						html = "<div class='game_purchase_area_friends_want es_lowest_price'><div class='gift_icon' style='top: 11px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
+						html = "<div class='es_lowest_price' id='es_price_" + id + "'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
 
 						// "Number of times this game has been in a bundle"
 						if (data["bundles"]["count"] > 0) {
@@ -1749,6 +1749,7 @@ function show_pricing_history(appid, type) {
 
 						if (line1 && line2) {
 							$(node).before(html + line1 + "<br>" + line2 + line3);
+							$("#es_line_chart_" + id).css("top", (($("#es_price_" + id).outerHeight() - 20) / 2) + "px");
 						}
 
 						if (data["bundles"]["active"].length > 0) {
