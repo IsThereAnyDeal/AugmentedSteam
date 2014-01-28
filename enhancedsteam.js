@@ -894,8 +894,11 @@ function add_wishlist_ajaxremove() {
 					appid: appid
 				},
 				success: function( msg ) {
-					$("#game_" + appid).remove();					
+					$("#game_" + appid).remove();
 					setValue(appid + "wishlisted", false);
+					for (var i = 0; i < $('.wishlist_rank').length; i++) {
+						$('.wishlist_rank')[i].value = i + 1;
+					}
 				},
 				error: function(e){
 					console.log('Error: ' + e);
@@ -903,7 +906,6 @@ function add_wishlist_ajaxremove() {
 			});
 		});
 	});
-	
 }
 
 function add_remove_from_wishlist_button(appid) {

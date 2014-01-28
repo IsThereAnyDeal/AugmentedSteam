@@ -4,6 +4,7 @@ v5.8
 + Added price options to search results pages letting you easily filter results by price
 + Added speech input option to search boxes on store pages
 + Incorporated coupon codes into lowest price data
++ The "Remove" links on the wishlist no longer require the page to reload
 : Fixed a bug in market transaction total caused by change in API by Valve
 
 
