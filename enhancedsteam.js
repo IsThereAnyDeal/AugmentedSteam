@@ -1740,7 +1740,7 @@ function show_pricing_history(appid, type) {
 	                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    }
 
-						html = "<div class='game_purchase_area_friends_want es_lowest_price'><div class='gift_icon' style='margin-top: -4px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
+						html = "<div class='game_purchase_area_friends_want es_lowest_price'><div class='gift_icon' style='top: 11px;'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
 
 						// "Number of times this game has been in a bundle"
 						if (data["bundles"]["count"] > 0) {
