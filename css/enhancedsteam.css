@@ -597,3 +597,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	left: 17px; 
 	position: absolute;
 }
+
+.es_wishlist_remove {
+	cursor: pointer;
+	color: #ebebeb;
+}
+
+.es_wishlist_remove:hover {
+	text-decoration: underline;
+}

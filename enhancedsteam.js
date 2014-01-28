@@ -879,6 +879,33 @@ function add_wishlist_total() {
 	});
 }
 
+function add_wishlist_ajaxremove() {
+	$("a[onclick*=wishlist_remove]").each(function() {		
+		var appid = $(this).parent().parent()[0].id.replace("game_", "");
+		$(this).after("<span class='es_wishlist_remove' id='es_wishlist_remove_" + appid + "'>" + $(this).text() + "</span>");
+		$(this).remove();
+
+		$("#es_wishlist_remove_" + appid).on("click", function() {
+			$.ajax({
+				type:"POST",
+				url: window.location,
+				data:{
+					action: "remove",
+					appid: appid
+				},
+				success: function( msg ) {
+					$("#game_" + appid).remove();					
+					setValue(appid + "wishlisted", false);
+				},
+				error: function(e){
+					console.log('Error: ' + e);
+				}
+			});
+		});
+	});
+	
+}
+
 function add_remove_from_wishlist_button(appid) {
 	if (is_signed_in()) {
 		$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");
@@ -5423,6 +5450,7 @@ $(document).ready(function(){
 						add_wishlist_filter();
 						add_wishlist_discount_sort();
 						add_wishlist_total();
+						add_wishlist_ajaxremove();
 
 						// wishlist highlights
 						start_highlights_and_tags();
