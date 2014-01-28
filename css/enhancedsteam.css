@@ -576,3 +576,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #store_nav_search_term::-webkit-input-placeholder, #term::-webkit-input-placeholder {
 	font-style: italic;
 }
+.es_lowest_price {
+	padding: 5px 0 5px 46px;
+	height: auto !important;
+	border: 1px solid #4d4b49;
+	border-bottom: 0;
+}

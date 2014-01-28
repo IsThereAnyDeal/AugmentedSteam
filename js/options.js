@@ -63,6 +63,7 @@ function save_options() {
 	show_sysreqcheck = $("#show_sysreqcheck").prop('checked');
 	show_steamchart_info = $("#show_steamchart_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
+	show_early_access = $("#show_early_access").prop('checked');
 	
 	// Price Options
 	showlowestprice = $("#showlowestprice").prop('checked');
@@ -201,6 +202,7 @@ function save_options() {
 		'show_sysreqcheck': show_sysreqcheck,
 		'show_steamchart_info': show_steamchart_info,
 		'show_carousel_descriptions': show_carousel_descriptions,
+		'show_early_access': show_early_access,
 		
 		'showlowestprice': showlowestprice,
 		'showlowestpricecoupon': showlowestpricecoupon,
@@ -423,6 +425,7 @@ function load_options() {
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; chrome.storage.sync.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
 		if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; chrome.storage.sync.set({'show_steamchart_info': settings.show_steamchart_info}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
+		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
 
 		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = true; chrome.storage.sync.set({'showlibrarymenu': settings.showlibrarymenu}); }
 		if (settings.showlibraryf2p === undefined) { settings.showlibraryf2p = true; chrome.storage.sync.set({'showlibraryf2p': settings.showlibraryf2p}); }
@@ -516,6 +519,7 @@ function load_options() {
 		$("#show_sysreqcheck").prop('checked', settings.show_sysreqcheck);
 		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
+		$("#show_early_access").prop('checked', settings.show_early_access);
 				
 		// Load Price Options
 		$("#showlowestprice").prop('checked', settings.showlowestprice);
@@ -637,6 +641,7 @@ function load_translation() {
 			$("#store_sysreqcheck_text").text(localized_strings[settings.language].options_show_sysreqcheck);
 			$("#store_steamchart_info_text").text(localized_strings[settings.language].options_show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options_carousel_description);
+			$("#show_early_access_text").text(localized_strings[settings.language].show_early_access_text);
 			
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
 			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
