@@ -66,6 +66,7 @@ function save_options() {
 	
 	// Price Options
 	showlowestprice = $("#showlowestprice").prop('checked');
+	showlowestpricecoupon = $("#showlowestpricecoupon").prop('checked');
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
 		$("#steam").prop('checked'),
@@ -202,6 +203,7 @@ function save_options() {
 		'show_carousel_descriptions': show_carousel_descriptions,
 		
 		'showlowestprice': showlowestprice,
+		'showlowestpricecoupon': showlowestpricecoupon,
 		'showallstores': showallstores,
 		'stores': stores,
 		'showregionalprice': showregionalprice,
@@ -403,6 +405,8 @@ function load_options() {
 		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
 
+		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
@@ -430,8 +434,7 @@ function load_options() {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
-		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
-		if (settings.showlowestprice === undefined) { settings.showlowestprice = true;	chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
 		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
@@ -516,6 +519,7 @@ function load_options() {
 				
 		// Load Price Options
 		$("#showlowestprice").prop('checked', settings.showlowestprice);
+		$("#showlowestpricecoupon").prop('checked', settings.showlowestpricecoupon);
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
 		$("#regional_price_on").val(settings.showregionalprice);
@@ -565,11 +569,10 @@ function load_options() {
 }
 
 function load_translation() {
-	chrome.storage.sync.get(function(settings) {
-		settings.language = $("#language").val();
-		$("#language").val(settings.language);
-		
+	chrome.storage.sync.get(function(settings) {		
 		// Load translation
+		if (localized_strings[settings.language] === undefined) { settings.language = "eng"; }
+
 		localization_promise.done(function(){
 			document.title = "Enhanced Steam " + localized_strings[settings.language].options;
 			
@@ -623,6 +626,7 @@ function load_translation() {
 			$("#contscroll_text").text(localized_strings[settings.language].options_contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
+			$("#store_lowestprice_coupon_text").text(localized_strings[settings.language].options_lowestprice_coupon);
 			$("#store_lowestprice_header").text(localized_strings[settings.language].options_lowestprice_header);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options_metacritic);
 			$("#store_hltb_text").text(localized_strings[settings.language].options_hltb);

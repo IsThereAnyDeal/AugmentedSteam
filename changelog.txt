@@ -3,6 +3,7 @@ v5.8
 + Added extended options for DLC checkboxes that are accessible by clicking "Options ▾".
 + Added price options to search results pages letting you easily filter results by price
 + Added speech input option to search boxes on store pages
++ Incorporated coupon codes into lowest price data
 : Fixed a bug in market transaction total caused by change in API by Valve
 
 

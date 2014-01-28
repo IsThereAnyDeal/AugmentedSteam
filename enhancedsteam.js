@@ -1647,6 +1647,7 @@ function display_coupon_message(appid) {
 function show_pricing_history(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
@@ -1694,10 +1695,10 @@ function show_pricing_history(appid, type) {
 			}
 
 			function get_price_data(lookup_type, node, id) {
-				get_http("http://api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc, function (txt) {
-	                var data = JSON.parse(txt);
-	                if (data) {
-	                    var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
+				get_http("http://api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
+					var data = JSON.parse(txt);
+					if (data) {
+						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
 
 						switch (data[".meta"]["currency"]) {
 							case "GBP":
@@ -1726,6 +1727,11 @@ function show_pricing_history(appid, type) {
 	                    	}
 
 	                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    	if (settings.showlowestpricecoupon) {
+	                    		if (data["price"]["price_voucher"]) {
+	                    			line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price_voucher"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings[language].after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    		}
+	                    	}
 	                    }
 
 						// "Historical Low"
