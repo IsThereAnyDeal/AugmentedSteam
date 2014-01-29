@@ -2689,13 +2689,13 @@ function add_market_total() {
 				var eur_total = 0.0;
 				var rub_total = 0.0;
 				var brl_total = 0.0;
+				var currency_symbol = "";
 
 				function get_market_data(txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
 					var total_count = data["total_count"];
-					var currency_symbol = "";
-
+					
 					totaler = function (p, i) {
 						var priceContainer = $(p).find(".market_listing_price");
 						if (priceContainer.length > 0) {
