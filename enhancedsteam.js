@@ -3556,7 +3556,7 @@ function check_early_access(node, image_name, image_left, selector_modifier) {
 
 function add_overlay() {
 	storage.get(function(settings) {
-		if (settings.show_early_access === undefined) { settings.show_early_access = false; storage.set({'show_early_access': settings.show_early_access}); }
+		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
 			switch (window.location.host) {
 				case "store.steampowered.com":
