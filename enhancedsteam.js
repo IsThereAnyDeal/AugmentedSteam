@@ -894,10 +894,13 @@ function add_wishlist_ajaxremove() {
 					appid: appid
 				},
 				success: function( msg ) {
+					var currentRank = parseFloat($("#game_" + appid + " .wishlist_rank")[0].value);
 					$("#game_" + appid).remove();
 					setValue(appid + "wishlisted", false);
-					for (var i = 0; i < $('.wishlist_rank').length; i++) {
-						$('.wishlist_rank')[i].value = i + 1;
+					for (var i = 0; i < $('.wishlistRow').length; i++) {
+						if ($('.wishlist_rank')[i].value > currentRank) {
+							$('.wishlist_rank')[i].value = $('.wishlist_rank')[i].value - 1;	
+						}
 					}
 				},
 				error: function(e){
