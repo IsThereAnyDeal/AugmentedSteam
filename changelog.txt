@@ -5,8 +5,9 @@ v5.8
 + Added speech input option to search boxes on store pages
 + Incorporated coupon codes into lowest price data
 + The "Remove" links on the wishlist no longer require the page to reload
++ Added an option to disable Early Access image overlays
 : Fixed a bug in market transaction total caused by change in API by Valve
-
+- Removed language selection dropdown in options page to reduce confusion
 
 v5.7
 -----
