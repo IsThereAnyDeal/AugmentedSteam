@@ -3595,10 +3595,10 @@ function add_overlay() {
 				case "steamcommunity.com":
 					switch(true) {
 						case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-							$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+							$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
 							break;
 						case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-							$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+							$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
 							break;
 						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
 							$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
@@ -3611,7 +3611,8 @@ function add_overlay() {
 							break;
 						case /^\/app\/.*/.test(window.location.pathname):
 							if ($(".apphub_EarlyAccess_Title").length > 0) {
-								$(".apphub_StoreAppLogo:first").after("<img class='es_overlay' style='left: " + $(".apphub_StoreAppLogo:first").position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
+								$(".apphub_StoreInfoHeader").css({"position":"relative"})
+								$(".apphub_StoreAppLogo:first").after("<img class='es_overlay ea_app_overlay' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
 							}
 					}
 			}
