@@ -4811,18 +4811,21 @@ function add_gamelist_sort() {
 function add_gamelist_filter() {
 	if ($(".clientConnChangingText").length > 0) {
 		var html  = "<span>" + localized_strings[language].show + ": </span>";
-		html += "<label class='es_sort' id='es_gl_all'><input type='radio' name='es_gl_sort' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
-		html += "<label class='es_sort' id='es_gl_installed'><input type='radio' name='es_gl_sort'><span><a>" + localized_strings[language].games_installed + "</a></span></label>";
+		html += "<label class='es_sort' id='es_gl_all'><input type='radio' name='es_gl_sort' id='es_gl_all_input' checked><span><a>" + localized_strings[language].games_all + "</a></span></label>";
+		html += "<label class='es_sort' id='es_gl_installed'><input type='radio' name='es_gl_sort' id='es_gl_installed_input'><span><a>" + localized_strings[language].games_installed + "</a></span></label>";
 		html += "</div>";
 
 		$('#gameslist_sort_options').append("<br>" + html);
 
 		$('#es_gl_all').on('click', function() {
 			$('.gameListRow').css('display', 'block');
+			$("#es_gl_all_input").prop("checked", true);
 		});
 
 		$('#es_gl_installed').on('click', function() {
-			$('.gameListRowItem').not(".gameListItemInstalled").parent().css("display", "none");
+			$('.gameListRowItem').find(".color_uninstalled").parent().parent().css("display", "none");
+			$('.gameListRowItem').find(".color_disabled").parent().parent().css("display", "none");
+			$("#es_gl_installed_input").prop("checked", true);
 		});
 	}
 }
