@@ -1,5 +1,6 @@
 v5.9
 -----
++ Added a link on user profiles to their wishlist
 : Fixed a bug that caused hiding DLC for unowned games not to work under certain circumstances
 
 

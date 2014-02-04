@@ -2033,6 +2033,21 @@ function add_community_profile_links() {
 	});
 }
 
+function add_wishlist_profile_link() {
+	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+	if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+
+	$(".profile_item_links").find(".profile_count_link:first").after("<div class='profile_count_link' id='es_wishlist_link'><a href='http://steamcommunity.com/profiles/" + steamID + "/wishlist'><span class='count_link_label'>Wishlist</span>&nbsp;<span class='profile_count_link_total' id='es_wishlist_count'></span></a></div>");
+
+	// Get count of wishlisted items
+	get_http("http://steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
+		var html = $.parseHTML(txt);
+		var count = ($(html).find(".wishlistRow").length);
+
+		if (count) { $("#es_wishlist_count").text(count); } else { $('#es_wishlist_link').remove(); }
+	});	
+}
+
 function appdata_on_wishlist() {
 	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
 		var app = get_appid(node.href);
@@ -5524,6 +5539,7 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 						add_community_profile_links();
+						add_wishlist_profile_link();
 						change_user_background();
 						fix_profile_image_not_found();
 						hide_spam_comments();
