@@ -1,5 +1,6 @@
 v5.9
 -----
+: Fixed a bug that caused hiding DLC for unowned games not to work under certain circumstances
 
 
 v5.8

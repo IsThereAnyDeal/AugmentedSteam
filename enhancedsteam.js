@@ -312,12 +312,13 @@ function hide_node(node) {
 	storage.get(function(settings) {
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
+		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 
 		if ($(node).hasClass("info") || $(node).hasClass("dailydeal") || $(node).hasClass("spotlight_content")) { node = $(node).parent()[0]; }
 
 		if (settings.hide_owned) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
-				$(node).css("display", "none");
+				hide_the_node(node);
 				search_threshhold = search_threshhold - 58;
 				if ($(document).height() <= $(window).height()) {
 					load_search_results();
@@ -330,7 +331,17 @@ function hide_node(node) {
 				$(node).css("visibility", "hidden");
 			}
 		}
+
+		if (settings.hide_dlcunownedgames) {
+			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
+				hide_the_node(node);
+			}
+		}
 	});
+}
+
+function hide_the_node(node) {
+	$(node).css("display", "none");
 }
 
 function add_tag (node, string, color) {
@@ -2174,7 +2185,7 @@ function remove_non_specials() {
 	if (window.location.search.match(/specials=1/)) {
 		$(".search_result_row").each(function(index) {
 			if (!($(this).html().match(/<strike>/))) {
-				hide_node($(this)[0]);
+				hide_the_node($(this)[0]);
 				if ($(document).height() <= $(window).height()) {
 					load_search_results();
 				}
@@ -2202,6 +2213,7 @@ function hide_unowned_game_dlc() {
 										if (fullapp_data.success) {
 											if (!(fullapp_data.data.is_owned === true)) {										
 												hide_node(node[0]);
+												search_threshhold = search_threshhold - 58;
 												if ($(document).height() <= $(window).height()) {
 													load_search_results();
 												}
