@@ -53,6 +53,7 @@ function save_options() {
 	send_age_info = $("#send_age_info").prop('checked');
 	showspeechsearch = $("#showspeechsearch").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
+	showachievements = $("#showachievements").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
@@ -192,6 +193,7 @@ function save_options() {
 		'send_age_info': send_age_info,
 		'showspeechsearch': showspeechsearch,
 		'contscroll': contscroll,
+		'showachievements': showachievements,
 		'showdrm': showdrm,
 		'showmcus': showmcus,
 		'showhltb': showhltb,
@@ -437,6 +439,7 @@ function load_options() {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
+		if (settings.showachievements === undefined) { settings.showachievements = true; chrome.storage.sync.set({'showachievements': settings.showachievements}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
 		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
@@ -509,6 +512,7 @@ function load_options() {
 		$("#send_age_info").prop('checked', settings.send_age_info);
 		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
 		$("#contscroll").prop('checked', settings.contscroll);
+		$("#showachievements").prop('checked', settings.showachievements);
 		$("#showdrm").prop('checked', settings.showdrm);
 		$("#showmcus").prop('checked', settings.showmcus);
 		$("#showhltb").prop('checked', settings.showhltb);
@@ -628,6 +632,7 @@ function load_translation() {
 			$("#send_age_info_text").text(localized_strings[settings.language].options_send_age_info);
 			$("#showspeechsearch_text").text(localized_strings[settings.language].options_showspeechsearch);
 			$("#contscroll_text").text(localized_strings[settings.language].options_contscroll);
+			$("#showachievements_text").text(localized_strings[settings.language].achievements.option);
 			$("#store_drm_text").text(localized_strings[settings.language].options_drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options_lowestprice);
 			$("#store_lowestprice_coupon_text").text(localized_strings[settings.language].options_lowestprice_coupon);

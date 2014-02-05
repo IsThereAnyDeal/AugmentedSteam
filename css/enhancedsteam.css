@@ -610,3 +610,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	top:15px;
 	left:22px;
 }
+
+.es_communitylink_achievement_images {
+	background-color: #1a1a1a;
+	padding: 4px 0px 4px 4px;
+	overflow: hidden;
+	margin-bottom: 5px;
+	width: 268px;
+}
+
+.es_communitylink_achievement {
+	float: left;
+	width: 64px;
+	height: 64px;
+	margin-right: 3px;
+}

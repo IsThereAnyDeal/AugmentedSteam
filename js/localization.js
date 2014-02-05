@@ -233,6 +233,12 @@ var localized_strings,
 				unowned_dlc: "Select Unowned DLC",
 				wishlisted_dlc: "Select Wishlisted DLC",
 				none: "Select None"
+			},
+			achievements: {
+				achievements: "Achievements",
+				includes: "Includes __num__ Steam Achievements",
+				view_all: "View All Achievements",
+				option: "Show achievements on store pages"
 			}
 		};
 
