@@ -4442,13 +4442,12 @@ function add_small_cap_height() {
 					$.each($small_cap_pager, function(i, obj) {
 						// Go though and check if they are one or two row pagers.
 						var $obj = $(obj),
-							rows = obj.classList.contains("onerow") ? 1 : 2,
 							$small_cap_page = $obj.find(".small_cap_page");
 
 						// Don't do anything to the video small_cap
 						if (!obj.classList.contains("onerowvideo")) {
-							$obj.css("height", parseInt($obj.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
-							$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add * rows) + "px");
+							$obj.css("height", parseInt($obj.css("height").replace("px", ""), 10) + (height_to_add) + "px");
+							$small_cap_page.css("height", parseInt($small_cap_page.css("height").replace("px", ""), 10) + (height_to_add) + "px");
 						}
 					});
 				}
