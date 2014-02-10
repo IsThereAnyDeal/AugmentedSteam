@@ -2,6 +2,7 @@ v5.9
 -----
 + Added a link on user profiles to their wishlist
 + Added back the achievement section to app pages that Valve mysteriously removed
++ Added option to automatically check "Steam Subscriber Agreement" checkboxes upon Market listings
 : Fixed a bug that caused hiding DLC for unowned games not to work under certain circumstances
 
 

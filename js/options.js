@@ -125,6 +125,7 @@ function save_options() {
 	showallachievements = $("#showallachievements").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
+	autocheckssa = $("#autocheckssa").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
 	wlbuttoncommunityapp = $("#wlbuttoncommunityapp").prop('checked');
@@ -222,6 +223,7 @@ function save_options() {
 		'showallachievements': showallachievements,
 		'showgreenlightbanner': showgreenlightbanner,
 		'hideactivelistings': hideactivelistings,
+		'autocheckssa': autocheckssa,
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
 		'wlbuttoncommunityapp': wlbuttoncommunityapp,
@@ -448,6 +450,7 @@ function load_options() {
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
+		if (settings.autocheckssa === undefined) { settings.autocheckssa = false; chrome.storage.sync.set({'autocheckssa': settings.autocheckssa}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
@@ -545,6 +548,7 @@ function load_options() {
 		$("#showallachievements").prop('checked', settings.showallachievements);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
+		$("#autocheckssa").prop('checked', settings.autocheckssa);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
 		$("#wlbuttoncommunityapp").prop('checked', settings.wlbuttoncommunityapp);
@@ -670,6 +674,7 @@ function load_translation() {
 			$("#allachievements_text").text(localized_strings[settings.language].options_showallachievements);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options_greenlight_banner);
 			$("#hideactivelistings_text").text(localized_strings[settings.language].options_hideactivelistings);
+			$("#autocheckssa_text").text(localized_strings[settings.language].options_autocheckssa);
 			$("#hidespamcomments_text").text(localized_strings[settings.language].options_hidespamcomments);
 			$("#spamcommentregex_text").text(localized_strings[settings.language].options_spamcommentregex);
 			$("#show_spamcommentregex").text(localized_strings[settings.language].options_customizespamcommentregex);

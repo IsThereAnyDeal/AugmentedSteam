@@ -3002,6 +3002,15 @@ function minimize_active_listings() {
 	});
 }
 
+function auto_check_ssa() {
+	storage.get(function(settings) {
+		if (settings.autocheckssa === undefined) { settings.autocheckssa = false; storage.set({'autocheckssa': settings.autocheckssa}); }
+		if (settings.autocheckssa) {
+			$("#market_buynow_dialog_accept_ssa").prop("checked", true);
+		}
+	});
+}
+
 function account_total_spent() {
 	// adds a "total spent on Steam" to the account details page
 	storage.get(function(settings) {
@@ -5598,6 +5607,9 @@ $(document).ready(function(){
 						hide_greenlight_banner();
 						hide_spam_comments();
 						break;
+
+					case /^\/market\/listings\/.*/.test(window.location.pathname):
+						auto_check_ssa();
 
 					case /^\/market\/.*/.test(window.location.pathname):
 						load_inventory().done(function() {
