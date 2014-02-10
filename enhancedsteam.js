@@ -5227,7 +5227,7 @@ function add_gamecard_market_links(game) {
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 
-		get_http("http://ehsankia.com/steam/api/?appid=" + game, function(txt) {
+		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 			var data = JSON.parse(txt);
 			$(".badge_card_set_card").each(function() {
 				var node = $(this);
