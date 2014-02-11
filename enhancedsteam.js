@@ -5121,13 +5121,9 @@ function add_badge_sort() {
 }
 
 function add_achievement_sort() {
-	if ($("#personalAchieve").length > 0) {
-		if ($("#topSummaryBox").length > 0) {
-			$("#topSummaryBox").after("<div id='achievement_sort_options' class='sort_options'>" + localized_strings[language].sort_by + "<span id='achievement_sort_default'>" + localized_strings[language].theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + localized_strings[language].date_unlocked + "</span></div>");
-		} else {
-			$("#topSummaryBoxContent").after("<div id='achievement_sort_options' class='sort_options'>" + localized_strings[language].sort_by + "<span id='achievement_sort_default'>" + localized_strings[language].theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + localized_strings[language].date_unlocked + "</span></div>");		
-		}
-		$("#personalAchieve").clone().insertAfter("#personalAchieve").attr("id", "personalAchieveSorted").css("padding-left", "16px").hide();	
+	if ($("#personalAchieve").length > 0 || $("#achievementsSelector").length > 0) {
+		$("#tabs").before("<div id='achievement_sort_options' class='sort_options'>" + localized_strings[language].sort_by + "<span id='achievement_sort_default'>" + localized_strings[language].theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + localized_strings[language].date_unlocked + "</span></div>");
+		$("#personalAchieve, #achievementsSelector").clone().insertAfter("#personalAchieve, #achievementsSelector").attr("id", "personalAchieveSorted").css("padding-left", "16px").hide();	
 
 		var achRows = [];
 		$("#personalAchieveSorted").find(".achieveUnlockTime").each(function() {
@@ -5147,22 +5143,28 @@ function add_achievement_sort() {
 		achRows.sort();
 
 		$(achRows).each(function() {		
-			$("#personalAchieveSorted").prepend("<br clear='left'><img src='http://cdn.steamcommunity.com/public/images/trans.gif' width='1' height='11' border='0'><br>");
-			$("#personalAchieveSorted").prepend(this[1]);
-			$("#personalAchieveSorted").prepend(this[0]);		
+			if ($(".smallForm").length > 0) {
+				$("#personalAchieveSorted").find("form").next().after("<br clear='left'><img src='http://cdn.steamcommunity.com/public/images/trans.gif' width='1' height='11' border='0'><br>");
+				$("#personalAchieveSorted").find("form").next().after(this[1]);
+				$("#personalAchieveSorted").find("form").next().after(this[0]);
+			} else {
+				$("#personalAchieveSorted").prepend("<br clear='left'><img src='http://cdn.steamcommunity.com/public/images/trans.gif' width='1' height='11' border='0'><br>");
+				$("#personalAchieveSorted").prepend(this[1]);
+				$("#personalAchieveSorted").prepend(this[0]);
+			}
 		});
 
 		$("#achievement_sort_default").on("click", function() {
 			$(this).removeClass('es_achievement_sort_link');
 			$("#achievement_sort_date").addClass("es_achievement_sort_link");
-			$("#personalAchieve").show();
+			$("#personalAchieve, #achievementsSelector").show();
 			$("#personalAchieveSorted").hide();
 		});
 
 		$("#achievement_sort_date").on("click", function() {
 			$(this).removeClass('es_achievement_sort_link');
 			$("#achievement_sort_default").addClass("es_achievement_sort_link");
-			$("#personalAchieve").hide();
+			$("#personalAchieve, #achievementsSelector").hide();
 			$("#personalAchieveSorted").show();
 		});
 	}
