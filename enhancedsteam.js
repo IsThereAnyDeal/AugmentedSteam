@@ -5120,6 +5120,54 @@ function add_badge_sort() {
 	});	
 }
 
+function add_achievement_sort() {
+	if ($("#personalAchieve").length > 0) {
+		if ($("#topSummaryBox").length > 0) {
+			$("#topSummaryBox").after("<div id='achievement_sort_options' class='sort_options'>" + localized_strings[language].sort_by + "<span id='achievement_sort_default'>" + localized_strings[language].theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>Date Unlocked</span></div>");
+		} else {
+			$("#topSummaryBoxContent").after("<div id='achievement_sort_options' class='sort_options'>" + localized_strings[language].sort_by + "<span id='achievement_sort_default'>" + localized_strings[language].theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>Date Unlocked</span></div>");		
+		}
+		$("#personalAchieve").clone().insertAfter("#personalAchieve").attr("id", "personalAchieveSorted").css("padding-left", "16px").hide();	
+
+		var achRows = [];
+		$("#personalAchieveSorted").find(".achieveUnlockTime").each(function() {
+			var push = new Array();
+			push[0] = $(this).parent().parent().prev();
+			$(this).parent().parent().next().remove();
+			$(this).parent().parent().next().remove();
+			$(this).parent().parent().next().remove();
+			push[1] = $(this).parent().parent();
+			var unlocktime = $(this).text().replace("Unlocked: ", "").replace("Jan", "01").replace("Feb", "02").replace("Mar", "03").replace("Apr", "04").replace("May", "05").replace("Jun", "06").replace("Jul", "07").replace("Aug", "08").replace("Sep", "09").replace("Oct", "10").replace("Nov", "11").replace("Dec", "12");
+			var parts = unlocktime.match(/(\d{2}) (\d+), (\d{4}) (\d+):(\d{2})(am|pm)/);
+			if (parts[6] == "pm") parts[4] = (parseFloat(parts[4]) + 12).toString();		
+			push[2] = Date.UTC(+parts[3], parts[1]-1, +parts[2], +parts[4], +parts[5]) / 1000;
+			achRows.push(push);
+		});
+
+		achRows.sort();
+
+		$(achRows).each(function() {		
+			$("#personalAchieveSorted").prepend("<br clear='left'><img src='http://cdn.steamcommunity.com/public/images/trans.gif' width='1' height='11' border='0'><br>");
+			$("#personalAchieveSorted").prepend(this[1]);
+			$("#personalAchieveSorted").prepend(this[0]);		
+		});
+
+		$("#achievement_sort_default").on("click", function() {
+			$(this).removeClass('es_achievement_sort_link');
+			$("#achievement_sort_date").addClass("es_achievement_sort_link");
+			$("#personalAchieve").show();
+			$("#personalAchieveSorted").hide();
+		});
+
+		$("#achievement_sort_date").on("click", function() {
+			$(this).removeClass('es_achievement_sort_link');
+			$("#achievement_sort_default").addClass("es_achievement_sort_link");
+			$("#personalAchieve").hide();
+			$("#personalAchieveSorted").show();
+		});
+	}
+}
+
 function add_badge_view_options() {
 	var html  = "<div style='text-align: right;'><span>" + localized_strings[language].view + ": </span>";
 		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_view_default'><input type='radio' name='es_badge_view' checked><span>" + localized_strings[language].theworddefault + "</span></label>";
@@ -5579,6 +5627,10 @@ $(document).ready(function(){
 						add_badge_filter();
 						add_badge_sort();
 						add_badge_view_options();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
+						add_achievement_sort();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):

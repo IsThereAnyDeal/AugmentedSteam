@@ -625,3 +625,21 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 64px;
 	margin-right: 3px;
 }
+
+#achievement_sort_options {
+	text-align: right;
+	margin-top: 8px;
+	margin-right: 15px;
+	font-size: 14px;
+	color: #939393;
+}
+
+#achievement_sort_options span {
+	margin-left: 8px;
+	color: #B0AEAC;
+}
+
+.es_achievement_sort_link {
+	text-decoration: underline;
+	cursor: pointer;
+}
