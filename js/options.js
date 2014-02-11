@@ -138,6 +138,9 @@ function save_options() {
 	profile_astats = $("#profile_astats").prop('checked');
 	profile_backpacktf = $("#profile_backpacktf").prop('checked');
 	profile_astatsnl = $("#profile_astatsnl").prop('checked');
+	profile_api_info = $("#profile_api_info").prop('checked');
+	api_key = $("#api_key").val();
+	console.log($("#api_key").val())
 	profile_permalink = $("#profile_permalink").prop('checked');
 	show_profile_link_images = $("#profile_link_images_dropdown").val();
 	
@@ -233,6 +236,8 @@ function save_options() {
 		'profile_astats': profile_astats,
 		'profile_backpacktf': profile_backpacktf,
 		'profile_astatsnl': profile_astatsnl,
+		'profile_api_info': profile_api_info,
+		'api_key': api_key,
 		'profile_permalink': profile_permalink,
 		'show_profile_link_images': show_profile_link_images,
 		
@@ -459,6 +464,8 @@ function load_options() {
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = false; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
+		if (settings.profile_api_info === undefined) { settings.profile_api_info = false; chrome.storage.sync.set({'profile_api_info': settings.profile_api_info}); }
+		if (settings.api_key == false||settings.api_key==""||settings.api_key===undefined){ settings.profile_api_info = false; chrome.storage.sync.set({'profile_api_info': settings.profile_api_info});}
 		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
 		
@@ -559,6 +566,9 @@ function load_options() {
 		$("#profile_astats").prop('checked', settings.profile_astats);
 		$("#profile_backpacktf").prop('checked', settings.profile_backpacktf);
 		$("#profile_astatsnl").prop('checked', settings.profile_astatsnl);
+		$("#profile_api_info").prop('checked', settings.profile_api_info);
+		if(!settings.profile_api_info){$("#api_key_block").hide()}
+		$("#api_key").val(settings.api_key)
 		$("#profile_permalink").prop('checked', settings.profile_permalink);
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
@@ -661,7 +671,7 @@ function load_translation() {
 			$("#profile_link_images_gray").text(localized_strings[settings.language].options_profile_link_images_gray);
 			$("#profile_link_images_color").text(localized_strings[settings.language].options_profile_link_images_color);
 			$("#profile_link_images_none").text(localized_strings[settings.language].options_profile_link_images_none);
-			$("#profile_permalink").text(localized_strings[settings.language].options_profile_permalink);
+			$("#profile_permalink_text").text(localized_strings[settings.language].options_profile_permalink);
 			$("#total_spent_text").text(localized_strings[settings.language].options_total_spent);
 			$("#market_total_text").text(localized_strings[settings.language].options_market_total);
 			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
@@ -860,7 +870,13 @@ $(document).ready(function(){
 		}
 	});
 
-	$("input").click(save_options);
+	$("#profile_api_info").change(function(){
+		if($(this).prop("checked")) {$("#api_key_block").show()}
+		else{$("#api_key_block").hide()}
+	})
+
+	$("input[type=checkbox]").click(save_options);
+	$("input[type=text]").blur(save_options);
 	$("button:not(#reset):not(#reset_countries)").click(save_options);
 	$("#reset").click(clear_settings);
 	$(".colorbutton").change(save_options);
