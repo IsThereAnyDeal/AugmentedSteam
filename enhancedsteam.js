@@ -4730,6 +4730,13 @@ function add_es_background_selection() {
 	});
 }
 
+function add_profile_store_links() {
+	$(".game_name").find(".whiteLink").each(function() {
+		var href = this.href.replace("http://steamcommunity.com", "http://store.steampowered.com");		
+		$(this).after("<br><a class='whiteLink' style='font-size: 10px;' href=" + href + ">" + localized_strings[language].visit_store + "</a>");
+	});
+}
+
 function fix_broken_sub_image() {
 	var header = $(".package_header").attr("src");
 	var img = $(".tab_item_img").find("img").attr("src").match(/(.+)\//)[0] + "header.jpg";
@@ -5690,6 +5697,7 @@ $(document).ready(function(){
 						add_community_profile_links();
 						add_wishlist_profile_link();
 						change_user_background();
+						add_profile_store_links();
 						fix_profile_image_not_found();
 						hide_spam_comments();
 						break;
