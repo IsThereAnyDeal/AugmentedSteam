@@ -4203,13 +4203,13 @@ function bind_ajax_content_highlighting() {
 					start_highlights_and_tags();
 					remove_non_specials();
 					hide_unowned_game_dlc();
-					add_overlay();
+					process_early_access();
 					add_price_slider();
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
 					start_friend_activity_highlights();
-					add_overlay();
+					process_early_access();
 				}
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
