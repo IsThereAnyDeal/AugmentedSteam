@@ -344,6 +344,65 @@ function hide_the_node(node) {
 	$(node).css("display", "none");
 }
 
+function hide_early_access_node(node) {
+	storage.get(function(settings) {
+		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
+
+		if (settings.hide_early_access) {
+			var href = ($(node).find("a").attr("href") || $(node).attr("href"));
+			var appid = get_appid(href);
+			get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid + '&filters=genres', function (data) {
+				var app_data = JSON.parse(data);
+				if (app_data[appid].success) {
+					var genres = app_data[appid].data.genres;
+					$(genres).each(function(index, value) {
+						if (value.description == "Early Access") {
+							$(node).css("visibility", "hidden");
+						}
+					});
+				}
+			});
+		}
+	});
+}
+
+function hide_early_access() {
+	storage.get(function(settings) {
+		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
+
+		if (settings.hide_early_access) {
+			switch (window.location.host) {
+				case "store.steampowered.com":
+					switch (true) {
+						case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
+							$(".tab_row").each(function(index, value) { hide_early_access_node(this); });
+							$(".special_tiny_cap").each(function(index, value) { hide_early_access_node(this); });
+							$(".cluster_capsule").each(function(index, value) { hide_early_access_node(this); });
+							$(".game_capsule").each(function(index, value) { hide_early_access_node(this); });
+							break;
+						case /^\/search\/.*/.test(window.location.pathname):
+							$(".search_result_row").each(function(index, value) { hide_early_access_node(this); });
+							break;
+						case /^\/$/.test(window.location.pathname):
+							$(".tab_row").each(function(index, value) { hide_early_access_node(this); });
+							$(".small_cap").each(function(index, value) { hide_early_access_node(this); });
+							$(".cap").each(function(index, value) { hide_early_access_node(this); });
+							$(".special_tiny_cap").each(function(index, value) { hide_early_access_node(this); });
+							$(".game_capsule").each(function(index, value) { hide_early_access_node(this); });
+							$(".cluster_capsule").each(function(index, value) { hide_early_access_node(this); });
+							break;
+					}
+			}
+			$(".store_nav .popup_menu_item").each(function(index, value) {
+				if(value.innerHTML.trim() == 'Early Access') {
+					$(this).hide();
+				}
+			});
+
+		}
+	});
+}
+
 function add_tag (node, string, color) {
 	/* To add coloured tags to the end of app names instead of colour
 	highlighting; this allows an to be "highlighted" multiple times; e.g.
@@ -4152,7 +4211,7 @@ function bind_ajax_content_highlighting() {
 					add_inventory_gotopage();
 				}
 
-				if (node.classList && node.classList.contains("tab_row")) {					
+				if (node.classList && node.classList.contains("tab_row")) {
 					start_highlighting_node(node);
 					check_early_access(node, "ea_sm_120.png", 0);
 					hide_unowned_game_dlc();
@@ -5467,6 +5526,7 @@ $(document).ready(function(){
 		remove_about_menu();
 		add_header_links();
 		add_overlay();
+		hide_early_access();
 		if (is_signed_in()) {
 			replace_account_name();
 			add_library_menu();

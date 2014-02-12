@@ -42,6 +42,7 @@ function save_options() {
 	hide_owned_homepage = $("#hide_owned_homepage").prop('checked');
 	hide_dlcunownedgames = $("#hide_dlcunownedgames").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
+	hide_early_access = $("#hide_early_access").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
 	showlibraryf2p = $("#showlibraryf2p").prop('checked');
@@ -186,6 +187,7 @@ function save_options() {
 		'hide_owned_homepage': hide_owned_homepage,
 		'hide_dlcunownedgames': hide_dlcunownedgames,
 		'hidetmsymbols': hidetmsymbols,
+		'hide_early_access': hide_early_access,
 
 		'hideinstallsteambutton': hideinstallsteambutton,
 		'hideaboutmenu': hideaboutmenu,
@@ -413,6 +415,7 @@ function load_options() {
 		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
+		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
 
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
@@ -508,6 +511,7 @@ function load_options() {
 		$("#hide_owned_homepage").prop('checked', settings.hide_owned_homepage);
 		$("#hide_dlcunownedgames").prop('checked', settings.hide_dlcunownedgames);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
+		$("#hide_early_access").prop('checked', settings.hide_early_access);
 
 		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
 		$("#showlibraryf2p").prop('checked', settings.showlibraryf2p);
@@ -628,6 +632,7 @@ function load_translation() {
 			$("#hide_owned_homepage_text").text(localized_strings[settings.language].options_hide_owned_homepage);
 			$("#hide_dlcunownedgames_text").text(localized_strings[settings.language].options_hidedlcunownedgames);
 			$("#hidetmsymbols_text").text(localized_strings[settings.language].options_hidetmsymbols);
+			$("#hide_early_access_text").text(localized_strings[settings.language].options_hide_early_access);
 			
 			$("#library_text").text(localized_strings[settings.language].options_library_header);
 			$("#store_show_library_text").text(localized_strings[settings.language].options_library);
