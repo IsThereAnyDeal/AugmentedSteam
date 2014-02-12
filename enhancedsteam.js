@@ -2180,7 +2180,7 @@ function load_search_results () {
 			processing = false;
 			remove_non_specials();
 			hide_unowned_game_dlc();
-			add_overlay();
+			process_early_access();
 		});
 	}
 }
