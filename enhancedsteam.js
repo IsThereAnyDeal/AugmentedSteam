@@ -5346,23 +5346,23 @@ function add_gamecard_market_links(game) {
 						switch (currency_symbol) {
 							case "R$":
 								var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
-								if ($(node).hasClass("unowned")) cost += data[i].price_brl;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
 								break;
 							case "€":
 								var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
-								if ($(node).hasClass("unowned")) cost += data[i].price_eur;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
 								break;
 							case "pуб":
 								var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
-								if ($(node).hasClass("unowned")) cost += data[i].price_rub;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
 								break;
 							case "£":
 								var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
-								if ($(node).hasClass("unowned")) cost += data[i].price_gbp;
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 								break;
 							default:
-								var card_price = formatMoney(data[i].price);						
-								if ($(node).hasClass("unowned")) cost += data[i].price;
+								var card_price = formatMoney(data[i].price);
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
 								break;
 						}
 					}
@@ -5376,23 +5376,23 @@ function add_gamecard_market_links(game) {
 							switch (currency_symbol) {
 								case "R$":
 									var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
-									if ($(node).hasClass("unowned")) cost += data[i].price_brl;
+									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
 									break;
 								case "€":
 									var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
-									if ($(node).hasClass("unowned")) cost += data[i].price_eur;
+									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
 									break;
 								case "pуб":
 									var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
-									if ($(node).hasClass("unowned")) cost += data[i].price_rub;
+									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
 									break;
 								case "£":
 									var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
-									if ($(node).hasClass("unowned")) cost += data[i].price_gbp;
+									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 									break;
 								default:
 									var card_price = formatMoney(data[i].price);						
-									if ($(node).hasClass("unowned")) cost += data[i].price;
+									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
 									break;
 							}
 						}
