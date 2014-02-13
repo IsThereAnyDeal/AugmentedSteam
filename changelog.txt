@@ -4,6 +4,7 @@ v5.9
 + Added back the achievement section to app pages that Valve mysteriously removed
 + Added sorting options to achievement pages, and the ability to sort by date unlocked
 + Added option to hide all Early Access games on the homepage and search results
++ Added badge completion and value of card drops to badges page based on avg card price
 : Fixed a bug that caused hiding DLC for unowned games not to work under certain circumstances
 
 

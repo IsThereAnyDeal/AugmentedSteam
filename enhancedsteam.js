@@ -5430,6 +5430,85 @@ function add_gamecard_market_links(game) {
 	});
 }
 
+function add_badge_completion_cost() {
+	get_http("http://store.steampowered.com/app/220/", function(txt) {
+		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		var cur, total_worth = 0, count = 0;
+		$(".badge_row").each(function() {
+			var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//);
+			var foil = $(this).find("a:last").attr("href").match(/\?border=1/);
+			var node = $(this);
+			switch (currency_symbol) {
+				case "R$":
+					cur = "brl";
+					break;
+				case "€":
+					cur = "eur";
+					break;
+				case "pуб":
+					cur = "rub";
+					break;
+				case "£":
+					cur = "gbp";
+					break;
+				default:
+					cur = "usd";
+					break;
+			}
+			if (game) {
+				var url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + game[1] + "&cur=" + cur;
+				if (foil) { url = url + "&foil=true"; }
+				get_http(url, function(txt) {
+					if ($(node).find("div[class$='badge_progress_info']").text()) {
+						var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
+						var need = card[2] - card[1];
+					}
+
+					var cost = (need * parseFloat(txt)).toFixed(2);
+
+					if ($(node).find(".progress_info_bold").text()) {
+						var drops = $(node).find(".progress_info_bold").text().match(/\d+/);
+						if (drops) { var worth = (drops[0] * parseFloat(txt)).toFixed(2); }
+					}
+
+					switch (currency_symbol) {
+						case "R$":
+							cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");
+							card = formatMoney(worth, 2, currency_symbol + " ", ".", ",");
+							break;
+						case "€":
+							cost = formatMoney(cost, 2, currency_symbol, ".", ",", true);
+							card = formatMoney(worth, 2, currency_symbol, ".", ",", true);
+							break;
+						case "pуб":
+							cost = formatMoney(cost, 2, " " + currency_symbol, ".", ",", true);
+							card = formatMoney(worth, 2, " " + currency_symbol, ".", ",", true);
+							break;
+						case "£":
+							cost = formatMoney(cost, 2, currency_symbol);
+							card = formatMoney(worth, 2, currency_symbol);
+							break;
+						default:
+							cost = formatMoney(cost);
+							card = formatMoney(worth);
+							break;
+					}
+
+					$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_avg + ": " + cost + "</div>");
+					$(node).find(".badge_empty_right").css("margin-top", "7px");
+					$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
+
+					if (worth > 0) {
+						$(node).find(".how_to_get_card_drops").after(localized_strings[language].drops_worth_avg + " " + card)
+						$(node).find(".how_to_get_card_drops").remove();
+						total_worth = total_worth + parseFloat(worth);
+					}
+				});
+			}
+		});
+	});
+}
+
 function add_total_drops_count() {
 	var drops_count = 0;
 	var drops_games = 0;
@@ -5671,6 +5750,7 @@ $(document).ready(function(){
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+						add_badge_completion_cost();
 						add_total_drops_count();
 						add_cardexchange_links();
 						add_badge_filter();
