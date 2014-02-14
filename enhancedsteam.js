@@ -3636,7 +3636,7 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 							var selector = "img";
 							if (selector_modifier != undefined) selector += selector_modifier;
 							overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
-							if(node.hasClass("small_cap")) {
+							if($(node).hasClass("small_cap")) {
 								$(overlay_img).css({"left":"-"+node.width()+"px", "position":"relative"});
 							}
 							else {
