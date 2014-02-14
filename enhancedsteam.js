@@ -5138,7 +5138,7 @@ function add_badge_filter() {
 
 function add_badge_sort() {
 	if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
-		$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings[language].most_drops + "</a>");
+		$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings[language].most_drops + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + localized_strings[language].drops_value + "</a>");
 	}
 
 	var resetLazyLoader = function() { runInPageContext(function() { 
@@ -5177,6 +5177,43 @@ function add_badge_sort() {
 			} else {
 				return -1;
 			}	
+		});
+
+		$('.badge_row').each(function () { $(this).css("display", "none"); });
+
+		$(badgeRows).each(function() {
+			$(".badges_sheet:first").append(this[0]);
+		});
+
+		$(".active").removeClass("active");
+		$(this).addClass("active");
+		resetLazyLoader();
+	});
+
+	$("#es_badge_sort_value").on("click", function() {
+		var badgeRows = [];
+		$('.badge_row').each(function () {
+			var push = new Array();
+			if ($(this).find(".es_card_drop_worth").length > 0) {
+				push[0] = this.outerHTML;
+				push[1] = $(this).find(".es_card_drop_worth").html();
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = localized_strings[language].drops_worth_avg;
+			}
+			badgeRows.push(push);
+			$(this).remove();
+		});
+
+		badgeRows.sort(function(a, b) {
+			var worthA = a[1];
+			var worthB = b[1];
+
+			if (worthA < worthB) {
+				return 1;
+			} else {
+				return -1;
+			}
 		});
 
 		$('.badge_row').each(function () { $(this).css("display", "none"); });
@@ -5529,7 +5566,7 @@ function add_badge_completion_cost() {
 					}
 
 					if (worth > 0) {
-						$(node).find(".how_to_get_card_drops").after(localized_strings[language].drops_worth_avg + " " + card)
+						$(node).find(".how_to_get_card_drops").after("<span class='es_card_drop_worth'>" + localized_strings[language].drops_worth_avg + " " + card + "</span>")
 						$(node).find(".how_to_get_card_drops").remove();
 					}
 
