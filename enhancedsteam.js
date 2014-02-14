@@ -5455,6 +5455,7 @@ function add_gamecard_market_links(game) {
 }
 
 function add_badge_completion_cost() {
+	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 		var cur, total_worth = 0, count = 0;
@@ -5495,38 +5496,48 @@ function add_badge_completion_cost() {
 						if (drops) { var worth = (drops[0] * parseFloat(txt)).toFixed(2); }
 					}
 
+					if (worth > 0) {
+						total_worth = total_worth + parseFloat(worth);
+					}
+
 					switch (currency_symbol) {
 						case "R$":
 							cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");
 							card = formatMoney(worth, 2, currency_symbol + " ", ".", ",");
+							worth_formatted = formatMoney(total_worth, 2, currency_symbol + " ", ".", ",");
 							break;
 						case "€":
 							cost = formatMoney(cost, 2, currency_symbol, ".", ",", true);
 							card = formatMoney(worth, 2, currency_symbol, ".", ",", true);
+							worth_formatted = formatMoney(total_worth, 2, currency_symbol, ".", ",", true);
 							break;
 						case "pуб":
 							cost = formatMoney(cost, 2, " " + currency_symbol, ".", ",", true);
 							card = formatMoney(worth, 2, " " + currency_symbol, ".", ",", true);
+							worth_formatted = formatMoney(total_worth, 2, " " + currency_symbol, ".", ",", true);
 							break;
 						case "£":
 							cost = formatMoney(cost, 2, currency_symbol);
 							card = formatMoney(worth, 2, currency_symbol);
+							worth_formatted = formatMoney(total_worth, 2, currency_symbol);
 							break;
 						default:
 							cost = formatMoney(cost);
 							card = formatMoney(worth);
+							worth_formatted = formatMoney(total_worth);
 							break;
+					}
+
+					if (worth > 0) {
+						$(node).find(".how_to_get_card_drops").after(localized_strings[language].drops_worth_avg + " " + card)
+						$(node).find(".how_to_get_card_drops").remove();
 					}
 
 					$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_avg + ": " + cost + "</div>");
 					$(node).find(".badge_empty_right").css("margin-top", "7px");
 					$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
 
-					if (worth > 0) {
-						$(node).find(".how_to_get_card_drops").after(localized_strings[language].drops_worth_avg + " " + card)
-						$(node).find(".how_to_get_card_drops").remove();
-						total_worth = total_worth + parseFloat(worth);
-					}
+					$("#es_cards_worth").text(localized_strings[language].drops_worth_avg + " " + worth_formatted);
 				});
 			}
 		});
