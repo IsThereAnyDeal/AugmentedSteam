@@ -5537,7 +5537,9 @@ function add_badge_completion_cost() {
 					$(node).find(".badge_empty_right").css("margin-top", "7px");
 					$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
 
-					$("#es_cards_worth").text(localized_strings[language].drops_worth_avg + " " + worth_formatted);
+					if (total_worth > 0) {
+						$("#es_cards_worth").text(localized_strings[language].drops_worth_avg + " " + worth_formatted);
+					}
 				});
 			}
 		});
