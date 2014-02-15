@@ -5,9 +5,10 @@ v5.9
 + Added sorting options to achievement pages, and the ability to sort by date unlocked
 + Added option to hide all Early Access games on the homepage and search results
 + Added badge completion and value of card drops to badges page based on avg card price
++ Added badge page sorting option to sort by highest estimated drop value
 + Added Enhanced Steam features to Steam Tag pages
 : Fixed a bug that caused hiding DLC for unowned games not to work under certain circumstances
-
+: Fixed homepage "Featured" section being incorrectly sized due to layout changes
 
 v5.8
 -----
