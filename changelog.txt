@@ -1,3 +1,7 @@
+v6.0
+-----
+
+
 v5.9
 -----
 + Added a link on user profiles to their wishlist
