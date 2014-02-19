@@ -1,5 +1,6 @@
 v6.0
 -----
+: Fixed a bug that caused Early Access overlays to incorrectly show on games with coupons
 
 
 v5.9

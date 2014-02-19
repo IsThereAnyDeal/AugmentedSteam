@@ -3696,10 +3696,9 @@ function process_early_access() {
 					switch (window.location.host) {
 						case "store.steampowered.com":
 							switch (true) {
-								case /^\/app\/.*/.test(window.location.pathname):
-									if ($(".early_access_header").length > 0) {
-										$(".game_header_image:first").after("<img class='es_overlay' style='left: " + $(".game_header_image:first").position().left + "px' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
-									}
+								case /^\/app\/.*/.test(window.location.pathname):									
+									$(".game_header_image").append("<a href='" + window.location.href + "'></a>");
+									$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
 									break;
 								case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
 									$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
