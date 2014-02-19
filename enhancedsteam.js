@@ -490,11 +490,22 @@ function display_tags(node) {
 		else if (node.classList.contains("recommendation_highlight")) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
+			
+			if ($(".game_purchase_action").length > 0) {
+				$tags.css("float", "left");
+				$tag_root.find(".game_purchase_action").before($tags);
+				$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+			} else {
+				$tags.css("float", "right");
+				$tag_root.find(".price").parent().before($tags);
+			}	
+		}
+		else if (node.classList.contains("similar_grid_item")) {
+			$tag_root = $(node);
+			remove_existing_tags($tag_root);
 
-			$tags.css("float", "left");
-
-			$tag_root.find(".game_purchase_action").before($tags);
-			$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+			$tags.css("float", "right");
+			$tag_root.find(".similar_grid_price").find(".price").append($tags);
 		}
 		else if (node.classList.contains("recommendation_carousel_item")) {
 			$tag_root = $(node);
@@ -3711,11 +3722,12 @@ function process_early_access() {
 									break;
 								case /^\/recommended/.test(window.location.pathname):
 									$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-									$(".header_image").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+									$(".header_image").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 									$(".appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
 									$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
 									$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
 									$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
+									$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 									break;
 								case /^\/tag\/.*/.test(window.location.pathname):
 									$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
@@ -4265,7 +4277,8 @@ function start_highlights_and_tags(){
 		"div.item",				// Sale page / featured page
 		"div.home_area_spotlight",	// midweek and weekend deals
 		"div.insert_season_here_sale_dailydeal_ctn",
-		"div.browse_tag_game"	// Tagged game
+		"div.browse_tag_game",	// Tagged game
+		"div.similar_grid_item" // Items on the "Similarly tagged" pages
 	];
 
 	// Get all appids and nodes from selectors.
