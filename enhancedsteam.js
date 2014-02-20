@@ -1831,14 +1831,18 @@ function show_pricing_history(appid, type) {
 									});
 									purchase = purchase.replace(/, $/, "");
 									purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["details"] + '" target="_blank">' + localized_strings[language].bundle.info + '</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
-									if (data["bundles"]["active"][i]["pwyw"] == 0) { if (data["bundles"]["active"][i]["price"] > 0) { purchase += '<div class="game_purchase_price price" itemprop="price">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>'; } }
-									purchase += '<div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
+									if (data["bundles"]["active"][i]["price"] > 0) {										
+										if (data["bundles"]["active"][i]["pwyw"]) {
+											purchase += '<div class="es_each_box" itemprop="price">';
+											purchase += '<div class="es_each">' + localized_strings[language].bundle.at_least + '</div><div class="es_each_price" style="text-align: right;">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>';
+										} else {
+											purchase += '<div class="game_purchase_price price" itemprop="price">';
+											purchase += formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end);
+										}
+									 }
+									purchase += '</div><div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
 									purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
-									if (data["bundles"]["active"][i]["pwyw"] == 1) {
-										purchase += localized_strings[language].bundle.pwyw;
-									} else {
-										purchase += localized_strings[language].buy;
-									}
+									purchase += localized_strings[language].buy;
 									purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';
 									$("#game_area_purchase").after(purchase);
 									

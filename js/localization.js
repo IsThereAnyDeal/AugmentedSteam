@@ -217,7 +217,8 @@ var localized_strings,
 				pwyw: "Pay What You Want",
 				includes: "Includes (__num__) items",
 				header: "Bundles that include this game",
-				bundle_count: "Number of times this game has been in a bundle"
+				bundle_count: "Number of times this game has been in a bundle",
+				at_least: "Pay At Least"
 			},
 			wsgf: {
 				gold: "This medal is awarded to games which have received perfect scores from the WSGF for their __type__ support, and are __type__ Certified.",
