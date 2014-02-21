@@ -1,6 +1,77 @@
+v6.0
+-----
+: Fixed a bug that caused Early Access overlays to incorrectly show on games with coupons
+
+
+v5.9
+-----
++ Added a link on user profiles to their wishlist
++ Added back the achievement section to app pages that Valve mysteriously removed
++ Added sorting options to achievement pages, and the ability to sort by date unlocked
++ Added option to hide all Early Access games on the homepage and search results
++ Added badge completion and value of card drops to badges page based on avg card price
++ Added badge page sorting option to sort by highest estimated drop value
++ Added Enhanced Steam features to Steam Tag pages
+: Fixed a bug that caused hiding DLC for unowned games not to work under certain circumstances
+: Fixed homepage "Featured" section being incorrectly sized due to layout changes
+
+v5.8
+-----
++ Added extended options for DLC checkboxes that are accessible by clicking "Options ▾".
++ Added price options to search results pages letting you easily filter results by price
++ Added speech input option to search boxes on store pages
++ Incorporated coupon codes into lowest price data
++ The "Remove" links on the wishlist no longer require the page to reload
++ Added an option to disable Early Access image overlays
+: Fixed a bug in market transaction total caused by change in API by Valve
+- Removed language selection dropdown in options page to reduce confusion
+
+v5.7
+-----
++ Adds Steam review percentage of most helpful positive and negative reviews on app pages
++ "Hide -> DLC for games you do not own" now works with the new releases section on the homepage
++ Added new option to hide owned games on the homepage
++ Added Square Enix and Bundle Stars sites to price history information
+: Price history now shows for all apps on a store page, not just the first
+: Fixed a bug that caused early access banners on the "featured" section to not position correctly
+: Fixed a bug that caused regional pricing on sale pages to sometimes display incorrectly
+: Fixed a bug that broke formatting on badge page when crafting badges in certain situations 
+
+v5.6.1
+-----
+: Fix Early Access overlays on Steam homepage
+
+v5.6
+-----
++ Added ability to add a custom amount to your Steam wallet
++ Added checkboxes to DLC list on app pages, letting you select certain DLC and add to cart easily
++ Added sort option to badge page to sort by number of card drops remaining
++ Added card prices to market links on badge pages
++ Added "cost to complete badge" to unobtained badges
++ Added option to display advanced navigation on inventory pages
++ Added foil badge and foil badge progress to app pages
+: Updated Early Access banner graphics (thanks SolventSnake!)
+- Removed function to add all unowned DLC to cart on app pages due to conflicts with new feature
+
+v5.5
+-----
++ Added "Early Access" image banners to Early Access games on Steam
++ Added a list of friends that own a game on the "friends that own" page
++ Added badge progress and remaining card drops to app pages
+: Fixed bug where badge filter wasn't working with some languages
+: Fixed bug in wishlist sorting that would cause it to fail if a game had no price displayed
+: Fixed bug that caused wishlist not to highlight under certain circumstances
+
 v5.4
 -----
-
++ Added option to hide DLC for games you do not own
++ Added option to add button on app pages to test your system requirements in Steam (experimental!)
++ Sorting wishlist by discount now additionally subsorts by price (lowest -> highest)
+: Fixed inventory market price check displaying "Sold!" when looking up prices
+: Fixed bug where inventory market price check wasn't displaying for some users
+: Fixed bug where Holiday Snow Globes weren't highlighting in the marketplace
+: Fixed bug where DRM warnings weren't displaying under certain conditions
+: Fixed bug where holiday snowglobe background was displaying in Library mode
 
 v5.3.3
 -----

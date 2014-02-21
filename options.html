@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <head>
 	<title>Enhanced Steam Options</title>
-	<base  target="_blank">
+	<base target="_blank">
 </head>
 <body>
 
@@ -27,25 +27,9 @@
 		<a class="tab_row" id="nav_donate" href="http://www.EnhancedSteam.com/donate.php">Donate</a>
 	</div>
 
-	<div id="contentwrapper">	
+	<div id="contentwrapper">
 		<div id="maincontent_store" class="content">
 			<ul>
-				<li class="header" id="language_text">Language</li>
-				<select id="language">
-					<option value="eng">English</option>
-					<option value="cze">čeština</option>
-					<option value="ger">Deutsch</option>
-					<option value="spa">Español</option>
-					<option value="fre">Français</option>
-					<option value="ita">Italiano</option>
-					<option value="jap">日本語</option>
-					<option value="dut">Nederlands</option>
-					<option value="pol">Polski</option>
-					<option value="bra">Português do Brasil</option>
-					<option value="rus">Русский</option>
-					<option value="sch">中文(简体)‬</option>
-					<option value="tur">Türkçe</option>
-				</select>
 				<li class="header" id="highlight_text">Highlight</li>
 				<div>
 					<li class="settings_check">
@@ -197,8 +181,11 @@
 					</li>
 				</div>
 				<li class="header" id="hide_text">Hide</li>
-				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items you own</label></li>
+				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items you own in search results</label></li>
+				<li><input type="checkbox" id="hide_owned_homepage"><label for="hide_owned_homepage" id="hide_owned_homepage_text">Items you own on the homepage</label></li>
+				<li><input type="checkbox" id="hide_dlcunownedgames"><label for="hide_dlcunownedgames" id="hide_dlcunownedgames_text">DLC for games you do not own</label></li>
 				<li><input type="checkbox" id="hidetmsymbols"><label for="hidetmsymbols" id="hidetmsymbols_text">Trademark and Copyright symbols in game titles</label></li>
+				<li><input type="checkbox" id="hide_early_access"><label for="hide_early_access" id="hide_early_access_text">Hide Early Access games on homepage, browse, and search pages</label></li>
 				<li class="header" id="library_text">Library (BETA)</li>
 				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
 				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
@@ -209,7 +196,9 @@
 				<li class="header" id="store_general">General</li>
 				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
 				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
+				<li><input type="checkbox" id="showspeechsearch"><label for="showspeechsearch" id="showspeechsearch_text">Add speech input to search boxes</label></li>
 				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable continuous scrolling of search results</label></li>
+				<li><input type="checkbox" id="showachievements"><label for="showachievements" id="showachievements_text">Show achievements on store pages</label></li>
 				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd party DRM warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" class="help"></a></li>
 				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic user scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" class="help"></a></li>
 				<li><input type="checkbox" id="showhltb"><label for="showhltb" id="store_hltb_text">Show HowLongToBeat.com information</label></li>
@@ -218,7 +207,9 @@
 				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
 				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com info</label></li>
 				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show package info for all apps</label></li>
+				<li><input type="checkbox" id="show_sysreqcheck"><label for="show_sysreqcheck" id="show_sysreqcheck_text">Show button to check system requirements on app pages (Experimental!)</label></li>
 				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show app descriptions on storefront carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" class="help"></a></li>
+				<li><input type="checkbox" id="show_early_access"><label for="show_early_access" id="show_early_access_text">Show Early Access image banners</label>
 			</ul>
 		</div>
 
@@ -229,6 +220,10 @@
 					<input type="checkbox" id="showlowestprice">
 					<label for="showlowestprice" id="store_lowestprice_text">Show</label>
 					<a href="http://enhancedsteam.com/featuredetail.php?id=5" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showlowestpricecoupon">
+					<label for="showlowestpricecoupon" id="store_lowestprice_coupon_text">Include coupon codes in price comparison</label>
 				</li>
 				<li><input type="checkbox" id="stores_all"><label for="stores_all" id="lowestprice_stores_all_text">Compare all stores</label></li>
 				<table id="store_stores" style="display: none" border=0>
@@ -313,6 +308,12 @@
 						<td>
 							<input type="checkbox" id="indiegamestand"><label for="indiegamestand">IndieGameStand</label>
 						</td>
+						<td>
+							<input type="checkbox" id="squenix"><label for="squenix">Square Enix</label>
+						</td>
+						<td>
+							<input type="checkbox" id="bundlestars"><label for="bundlestars">Bundle Stars</label>
+						</td>
 					</tr>
 				</table>
 				<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
@@ -326,31 +327,31 @@
 				</li>
 				<li id="regional_price_hideworld"><input type="checkbox" id="regional_hideworld"><label for="regional_hideworld" id="regional_hideworld_text">Hide globe indicator</label></li>			
 				<div id='region_selects'>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_1"></span><select id="regional_country_1" class="regional_country"></select>
 					</li>	
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_2"></span><select id="regional_country_2" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_3"></span><select id="regional_country_3" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_4"></span><select id="regional_country_4" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_5"></span><select id="regional_country_5" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_6"></span><select id="regional_country_6" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_7"></span><select id="regional_country_7" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_8"></span><select id="regional_country_8" class="regional_country"></select>
 					</li>
-					<li style='margin-top: 10px;'>
+					<li>
 						<span class="es_flag" id="es_flag_9"></span><select id="regional_country_9" class="regional_country"></select>
 					</li>
 					<div style='margin-top: 15px; margin-left: 32px;'><button id="reset_countries" class="btn">Default</button></div>
@@ -372,6 +373,9 @@
 				<li>
 					<input type="checkbox" id="showinvmarket"><label for="showinvmarket" id="inventory_market_text">Show Market price on inventory page</label>
 					<a href="http://enhancedsteam.com/featuredetail.php?id=20" class="help"></a>
+				</li>
+				<li>
+					<input type="checkbox" id="showinvnav"><label for="showinvnav" id="inventory_nav_text">Show advanced navigation on inventory page</label>
 				</li>
 				<li>
 					<input type="checkbox" id="showesbg"><label for="showesbg" id="es_background_text">Set custom background on "Edit Profile" screen</label>
@@ -404,6 +408,13 @@
 				<li>
 					<input type="checkbox" id="profile_permalink"><label for="profile_permalink" id="profile_permalink_text">Show permalink on profiles</label>
 				</li>
+				<li>
+						<input type="checkbox" id="profile_api_info">
+						<label for="profile_api_info" id="profile_api_info_text">
+							Show user API link on profiles
+						</label>
+						<p id="api_key_block">API Key: <input type="text" class="textbox" size="38" maxlength="32" id="api_key"><a href="http://steamcommunity.com/dev/apikey" target="_blank" class="help"></a></p>
+					</li>
 				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" class="help"></a>
 				<ul id="profile_links">
 					<li>
@@ -492,17 +503,22 @@
 				<li>Tomáš '<a href="http://steamcommunity.com/profiles/76561198020275445" id="tomas_steam">Timmy</a>' Duda</li>				
 			</ul>
 			<ul class="credits">
+				<li class="header" id="graphics_text">Graphics</li>
+				<li>SolventSnake</li>
+			</ul>
+			<ul class="credits">
 				<li class="header" id="translation_text">Translation</li>
-				<div><li class="language">Spanish:</li><li class="translator">sharkiller, Ryo567</li></div>
-				<div><li class="language">Russian:</li><li class="translator">Vyacheslav Konchits</li></div>
-				<div><li class="language">German:</li><li class="translator">Timmaeh Elbert</li></div>
-				<div><li class="language">Japanese:</li><li class="translator">planicrand</li></div>
-				<div><li class="language">French:</li><li class="translator">Yanuut</li></div>
-				<div><li class="language">Czech:</li><li class="translator">Daniel Peukert</li></div>
-				<div><li class="language">Italian:</li><li class="translator">Andrea Brandi</li></div>
-				<div><li class="language">Portuguese:</li><li class="translator">Johnywalves</li></div>
-				<div><li class="language">Chinese:</li><li class="translator">Bin Dong</li></div>
-				<div><li class="language">Polish:</li><li class="translator">mrmahon</li></div>
+				<li><span class="language">Spanish:</span><span class="translator">sharkiller, Ryo567</span></li>
+				<li><span class="language">Russian:</span><span class="translator">Vyacheslav Konchits</span></li>
+				<li><span class="language">German:</span><span class="translator">Timmaeh Elbert</span></li>
+				<li><span class="language">Japanese:</span><span class="translator">planicrand</span></li>
+				<li><span class="language">French:</span><span class="translator">Yanuut</span></li>
+				<li><span class="language">Czech:</span><span class="translator">Daniel Peukert</span></li>
+				<li><span class="language">Italian:</span><span class="translator">Andrea Brandi</span></li>
+				<li><span class="language">Portuguese:</span><span class="translator">Berna Lopes</span></li>
+				<li><span class="language">Chinese:</span><span class="translator">Bin Dong</span></li>
+				<li><span class="language">Polish:</span><span class="translator">mrmahon</span></li>
+				<li><span class="language">Hebrew:</span><span class="translator">David 'Mr.Ne[0]' Yaacov</span></li>
 			</ul>
 		</div>
 
@@ -510,6 +526,6 @@
 			<span><a href="http://www.enhancedsteam.com">Enhanced Steam Extension</a><br>by jshackles</span>
 			<div><button id="reset" class="btn">Reset options</button></div>
 		</div>
-
+	</div>
 </body>
 </html>

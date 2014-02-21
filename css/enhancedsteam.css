@@ -400,15 +400,6 @@ img.platform_small, .platform_img {
 	border:1px solid black;
 	margin-top:-25px;
 }
-.es_regional_sale {
-	margin-top:-18px;
-}
-.es_regional_sub {
-	margin-top:-55px;
-}
-.es_regional_dailydeal {
-	margin-top:auto;
-}
 .es_regional_price {
 	margin-right:8px;
 	font-size:14px;
@@ -450,7 +441,12 @@ img.platform_small, .platform_img {
 	margin-bottom:5px;
 	margin-top:auto;
 }
-
+.es_regional_sale {
+	margin-bottom:55px;
+}
+.es_regional_dailydeal {
+	margin-top:auto;
+}
 .es_regional_unavailable {
 	font-size:12px;
 }
@@ -476,4 +472,198 @@ img.platform_small, .platform_img {
 	height:31px;
 	float:left;
 	margin-left:3px;
+}
+
+.es_btn_systemreqs {
+	margin-bottom: 10px;
+}
+
+.es_overlay {
+	position: absolute;
+	z-index: 0;
+}
+.es_card_search {
+	padding:0px 2px;
+	margin-top: 2px;
+	display:block;
+	width:220px;
+}
+.es_text_input {
+	background-color: #4d4b49;
+	border: 1px solid #82807c;
+	color: #ffffff;
+	height: 18px;
+	padding: 2px 4px 3px 4px;
+}
+input[type=checkbox].es_dlc_selection {
+	position: absolute; 
+	overflow: hidden; 
+	clip: rect(0 0 0 0); 
+	height:1px; 
+	width:1px; 
+	margin:-1px; 
+	padding:0;
+	border:0;
+}
+
+input[type=checkbox].es_dlc_selection + label {
+	padding-left:20px;
+	height:13px; 
+	display:inline-block;
+	line-height:13px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	vertical-align:middle;
+	cursor:default;
+	z-index: 99;
+}
+
+input[type=checkbox].es_dlc_selection:checked + label {
+	background-position: 0 -13px;
+}
+
+.es_review_image {
+	vertical-align: middle;
+	border: 0px;
+}
+
+.es_review_text {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#es_dlc_option_button {
+	float: right;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+#es_dlc_option_button:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#es_dlc_option_panel {
+    background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);    
+    border-bottom: 1px solid black;
+}
+
+.es_dlc_option {
+	display: inline-block;
+	margin-right: 10px;
+	margin-top: 5px;
+	font-size: 11px;
+	color: #ffffff;
+}
+
+.es_dlc_option:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#es_price_range {
+	-webkit-appearance:none; 
+	-moz-apperance:none; 
+	width:100%; 
+	height:4px;
+	margin-top: 10px;
+}
+
+.es_price_range_slider::-webkit-slider-thumb{
+	-webkit-appearance:none; -moz-apperance:none; width:10px; height:18px; 
+	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+#store_nav_search_term::-webkit-input-placeholder, #term::-webkit-input-placeholder {
+	font-style: italic;
+}
+.es_lowest_price {
+	padding: 5px 0 5px 46px;
+	height: auto !important;
+	border: 1px solid #4d4b49;
+	border-bottom: 0;
+	background-image: none;
+	padding-left: 46px;
+	position: relative;
+	font-size: 12px;
+	color: #626366;
+	background-color: #1d252e;
+}
+
+.es_lowest_price a {
+	color: #b0aeac;
+}
+
+.es_lowest_price .gift_icon {
+	left: 17px; 
+	position: absolute;
+}
+
+.es_wishlist_remove {
+	cursor: pointer;
+	color: #ebebeb;
+}
+
+.es_wishlist_remove:hover {
+	text-decoration: underline;
+}
+.ea_app_overlay {
+	top:15px;
+	left:22px;
+}
+
+.es_communitylink_achievement_images {
+	background-color: #1a1a1a;
+	padding: 4px 0px 4px 4px;
+	overflow: hidden;
+	margin-bottom: 5px;
+	width: 268px;
+}
+
+.es_communitylink_achievement {
+	float: left;
+	width: 64px;
+	height: 64px;
+	margin-right: 3px;
+}
+
+#achievement_sort_options {
+	text-align: right;
+	margin-top: 8px;
+	margin-right: 15px;
+	font-size: 14px;
+	color: #939393;
+}
+
+#achievement_sort_options span {
+	margin-left: 8px;
+	color: #B0AEAC;
+}
+
+.es_achievement_sort_link {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.browse_tag_game_cap img {
+	margin-left: 8px;
+}
+
+.browse_tag_game_name {
+	margin-left: 8px;
+}
+
+.browse_tag_game_price {
+	margin-left: 8px;
+}
+
+.browse_tag_game {
+	margin-bottom: 4px;
+}
+
+#es_cards_worth {
+	float: right;
+	width: 280px;
+	text-align: center;
+	margin-right: 38px;
+	color: #fff;
 }
