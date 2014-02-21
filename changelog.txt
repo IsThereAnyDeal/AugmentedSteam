@@ -1,6 +1,7 @@
 v6.0
 -----
 : Fixed a bug that caused Early Access overlays to incorrectly show on games with coupons
+: Fixed header links inserted by Enhanced Steam not displaying due to a change made by Valve
 
 
 v5.9
