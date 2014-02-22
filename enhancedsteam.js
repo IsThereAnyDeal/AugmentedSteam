@@ -1123,7 +1123,7 @@ function add_enhanced_steam_options() {
 		$dropdown_options.toggle();
 	});
 
-	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\""+chrome.extension.getURL("options.html")+"\">"+localized_strings[language].options+"</a>")
+	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\""+chrome.extension.getURL("options.html")+"\">"+localized_strings[language].thewordoptions+"</a>")
 	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings[language].website + "</a>");
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings[language].contribute + "</a>");
 	$bug_feature_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam/issues\">" + localized_strings[language].bug_feature + "</a>");
@@ -3571,14 +3571,14 @@ function add_dlc_checkboxes() {
 		});
 	});
 
-	$(".game_area_dlc_section").find(".gradientbg").append("<div id='es_dlc_option_button'>" + localized_strings[language].options + " ▾</div>");
+	$(".game_area_dlc_section").find(".gradientbg").append("<div id='es_dlc_option_button'>" + localized_strings[language].thewordoptions + " ▾</div>");
 	
 	$("#es_dlc_option_button").on("click", function() {
 		$("#es_dlc_option_panel").toggle();
 		if ($("#es_dlc_option_button").text().match("▾")) {
-			$("#es_dlc_option_button").text(localized_strings[language].options + " ▴");
+			$("#es_dlc_option_button").text(localized_strings[language].thewordoptions + " ▴");
 		} else {
-			$("#es_dlc_option_button").text(localized_strings[language].options + " ▾");
+			$("#es_dlc_option_button").text(localized_strings[language].thewordoptions + " ▾");
 		}
 	});
 
