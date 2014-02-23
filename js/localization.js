@@ -2409,9 +2409,17 @@ var localized_strings,
 
 		// Set english defaults.
 		$.each(localized_strings, function (lang, strings) {
-			$.each(localized_strings_default, function (key, val) {
-				if(!strings[key]) strings[key] = val;
-			});
+			if (lang!="eng"){
+				$.each(localized_strings['eng'], function (key, val) {
+					if (typeof val == "object" && !strings[key]) strings[key] = val;
+					else if(typeof val == "object"){
+						$.each(localized_strings['eng'][key], function (sub_key, sub_val) {
+							if(!strings[key][sub_key]) strings[key][sub_key] = sub_val;
+						});
+					}
+					else if(typeof val == "string" && !strings[key]) strings[key] = val;
+				});
+			}
 		});
 		setTimeout(deferred.resolve, 250); // Delay ever so slightly to make sure all loc is loaded.
 		return deferred.promise();
