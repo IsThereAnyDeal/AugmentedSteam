@@ -4848,111 +4848,6 @@ function fix_broken_sub_image() {
 	$.ajax(header).error(function() { $(".package_header").attr("src", img); });
 }
 
-function add_feature_search_links () {
-	var game_details = ($('.game_area_details_specs').filter(function(){ return !$(this).parents('div').hasClass('icon'); }));
-	$.each(game_details, function(index, value) {
-		// these will only work with English, until Valve either assigns IDs to these fields or has distinguishable icons
-		if (value.innerHTML.match(/MMO/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=20&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/Local Co-op/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=24&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/Cross-Platform Multiplayer/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=27&advanced=0'>"));
-		}
-
-		// these have somewhat unique icons and should work everywhere
-		if (value.innerHTML.match(/ico_multiPlayer/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=1&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_singlePlayer/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=2&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_mod_hl2/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=997&category2=6&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_mod_hl/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=997&category2=7&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_vac/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=8&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_coop/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=9&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_hdr/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=12&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_cc/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=13&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_commentary/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=14&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_stats/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=15&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_sdk/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=16&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_editor/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=17&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_partial_controller/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=18&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_dlc/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=21&category2=21&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_achievements/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=22&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_cloud/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=23&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_leaderboards/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=25&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_guide/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category2=26'>"));
-		}
-		if (value.innerHTML.match(/ico_controller/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=28&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_cards/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=29&advanced=0'>"));
-		}
-		if (value.innerHTML.match(/ico_workshop/)) {
-			var original  = $(this)[0].innerHTML;
-			$(this).html(original.replace("<div class=\"name\">", "<div class='name'><a style='text-decoration: none; color: #7cc53f;' href='http://store.steampowered.com/search/?term=&category1=998&category2=30&advanced=0'>"));
-		}
-	});
-}
-
 function totalsize() {
 	var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
@@ -5784,7 +5679,6 @@ $(document).ready(function(){
 						add_pcgamingwiki_link(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
-						add_feature_search_links();
 						add_dlc_page_link(appid);
 						add_remove_from_wishlist_button(appid);
 						add_4pack_breakdown();
