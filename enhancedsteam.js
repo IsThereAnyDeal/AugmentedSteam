@@ -5699,7 +5699,6 @@ $(document).ready(function(){
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");
-						add_feature_search_links();
 						fix_broken_sub_image();
 
 						show_regional_pricing();
