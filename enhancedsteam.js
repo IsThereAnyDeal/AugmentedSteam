@@ -672,6 +672,9 @@ function load_inventory() {
 										if (_package.success) {
 											setValue("sub" + package_id, true);
 											$.each(_package.data.apps, function(i, app) {
+												if (getValue(app.id + "coupon")) {
+													if (getValue(app.id + "coupon_discount") >= obj.name.match(/([1-9][0-9])%/)[1]) { return; }
+												}
 												setValue(app.id + "coupon", true);
 												setValue(app.id + "coupon_sub", package_id);
 												setValue(app.id + "coupon_imageurl", obj.icon_url);

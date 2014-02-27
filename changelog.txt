@@ -3,6 +3,7 @@ v6.0
 : Fixed a bug that caused Early Access overlays to incorrectly show on games with coupons
 : Fixed header links inserted by Enhanced Steam not displaying due to a change made by Valve
 : Fixed a bug in entering custom amounts into Steam wallet page
+: Enhanced Steam will now display the highest % off coupon you have available on app pages
 
 v5.9
 -----
