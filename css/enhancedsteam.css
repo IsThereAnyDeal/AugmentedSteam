@@ -368,10 +368,9 @@ img.platform_small, .platform_img {
 #es_permalink_text {
 	color: #EBEBEB;
 	height:29px;
-	vertical-align:bottom;
 }
 #es_permalink {
-	margin:9px 0 0 5px;
+	margin: 8px 0px 0px 6px;
 	direction:rtl;
 }
 .search_result_row .tags a {
