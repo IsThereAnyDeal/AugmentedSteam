@@ -617,7 +617,7 @@ function load_translation() {
 			$("#highlight_friends_wishlist_text").text(localized_strings[settings.language].options.friends_wishlist);
 			$("#highlight_excludef2p_text").text(localized_strings[settings.language].options.excludef2p);
 
-			$("#tag_text").text(localized_strings[settings.language].tag);
+			$("#tag_text").text(localized_strings[settings.language].options.tag);
 			$("#tag_owned_text").text(localized_strings[settings.language].options.owned);
 			$("#tag_wishlist_text").text(localized_strings[settings.language].options.wishlist);
 			$("#tag_coupon_text").text(localized_strings[settings.language].options.coupon);

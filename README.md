@@ -8,6 +8,11 @@ Installation
 
 You can install this yourself by putting Google Chrome into "developer mode" on the Extensions tab.
 
+Translators
+-------
+
+Please head over to http://translation.enhancedsteam.com to help out with translation!
+
 License
 -------
 
