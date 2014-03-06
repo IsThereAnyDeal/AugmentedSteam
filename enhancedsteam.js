@@ -3694,8 +3694,12 @@ function add_achievement_section(appid) {
 						if (icon3) html += "<img src='" + icon3 + "' class='es_communitylink_achievement' title='" + titl3 + "&#13;" + desc3 + "'>";
 						if (icon4) html += "<img src='" + icon4 + "' class='es_communitylink_achievement' title='" + titl4 + "&#13;" + desc4 + "'>";
 
-						html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + appid + "'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_achievements.png' width='24' height='16' border='0' align='top'></div>" + localized_strings[language].achievements.view_all + "</a></div>";
-
+						if (getValue(appid + "owned")) {
+							html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + appid + "'/>";
+						} else {							
+							html += "</div><a class='linkbar' href='http://steamcommunity.com/stats/" + appid + "/achievements/'>";
+						}
+						html += "<div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_achievements.png' width='24' height='16' border='0' align='top'></div>" + localized_strings[language].achievements.view_all + "</a></div>";
 						$(".friend_blocks_twoxtwo:last").parent().after(html);
 					}
 				}
