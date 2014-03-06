@@ -3695,7 +3695,7 @@ function add_achievement_section(appid) {
 						if (icon4) html += "<img src='" + icon4 + "' class='es_communitylink_achievement' title='" + titl4 + "&#13;" + desc4 + "'>";
 
 						if (getValue(appid + "owned")) {
-							html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + appid + "'/>";
+							html += "</div><a class='linkbar' href='http://steamcommunity.com/my/stats/" + appid + "/'>";
 						} else {							
 							html += "</div><a class='linkbar' href='http://steamcommunity.com/stats/" + appid + "/achievements/'>";
 						}
