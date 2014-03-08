@@ -17,7 +17,7 @@
 	   "img/steamdb.png", "img/steamdb_store.png", "img/play_off.png", "img/play_on.png", "img/ico_cards.gif", "img/red_banner.png", "img/es_btn_browse.png", "img/pcgw.png", "img/gl_banner.jpg",
       "css/enhancedsteam.css", "options.html", "img/overlay/ea_292x136.png", "img/overlay/ea_184x69.png", "img/overlay/ea_sm_120.png", "img/overlay/ea_231x87.png", "img/overlay/ea_467x181.png",
       "img/flags/flags.png", "img/check_sheet.png"
-      ,"img/flags/world.png","img/arrows.png"
+      ,"img/flags/world.png","img/arrows.png","img/select2.png","img/select2x2.png","img/select2_spinner.gif"
   ],
   "homepage_url": "http://www.EnhancedSteam.com/",
   "content_scripts": [
@@ -32,8 +32,9 @@
       "js": [
         "js/jQuery.min.js",
         "js/localization.js",
+		"js/select2.min.js",
         "enhancedsteam.js"],
-      "css": ["css/enhancedsteam.css"]
+      "css": ["css/enhancedsteam.css","css/select2.css"]
     },
     {
       "matches": ["http://*.steampowered.com/app/*","http://*.steampowered.com/sub/*","http://*.steampowered.com/sale/*","http://*.steampowered.com/"],

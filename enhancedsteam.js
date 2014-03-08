@@ -1347,6 +1347,7 @@ function show_library() {
 	es_library.append("<div id='es_library_background_filter'></div>");
 	es_library.append("<div id='es_library_right'></div>");
 	es_library.append("<div id='es_library_search' style='display: none;'></div>");
+	es_library.append("<div id='es_library_categories' style='display: none;'></div>");
 	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div></div>");
 
 
@@ -1361,7 +1362,30 @@ function show_library() {
 			var data = JSON.parse(txt);
 			if (data.response && Object.keys(data.response).length > 0) {
 				library_all_games = data.response.games;
-
+                var appids = library_all_games.map(function(val,i,arr) {return val.appid}).join(',');
+         		get_http('http://store.steampowered.com/api/appdetails/?appids=' + appids + '&filters=categories', function (categoriestxt) {
+				var appcategories = JSON.parse(categoriestxt);
+				var categories = [];
+				$.each(appcategories, function (appid,cat){
+				 if (cat && cat.data && cat.data.categories)
+					$.each(cat.data.categories, function (id,cat) {
+					  if (!categories.some(function (val) {return val.id == cat.id}))
+					    categories.push({id: cat.id, name: cat.description});
+					});
+				});
+				var catselect_html="<select style='width:250px' id='es_library_category_select' multiple>"
+				$.each(categories, function(i,val) {
+					catselect_html+="<option value='"+val.id+"'>"+val.name+"</option>";
+				});
+				catselect_html+="</select>"
+				
+				// var localcoopapps = categories.filter(function(val,i,arr){
+					                              // return val.data.categories.some(function(el){
+													  // el.id===24
+													  // })
+												// });
+												//.map(function(val,i,arr) {
+												//return val.appid});
 				//sort entries
 				library_all_games.sort(function(a,b) {
 					if ( a.name == b.name ) return 0;
@@ -1373,9 +1397,36 @@ function show_library() {
 
 					var last_app_id_in_games = false;
 					var filtered_games = [];
+					var selected_categories = [];
+					if ($("#es_library_category_select").length > 0)
+					  selected_categories=$("#es_library_category_select")[0].selectedOptions;
+
+
 
 					$.each(library_all_games, function(i, obj) {
-						if (obj.name && (filter_name === undefined || new RegExp(filter_name, "i").test(obj.name))) {
+						var cat=appcategories [obj.appid];
+						//if no category is selected, this is true by default.
+						var is_in_categories=(!selected_categories || selected_categories.length == 0)
+						//check every game category if it's in the selected category
+						if (!is_in_categories && cat && cat.data && cat.data.categories)
+						is_in_categories = $.makeArray(selected_categories).every(function(val,i,array){
+							return cat.data.categories.some(function(catval,cati,catarray){
+								return catval.id == val.value});
+						});
+						
+						/*cat.data.categories.some(function(val,i,arr){
+							var retVal=false;
+							$.each(selected_categories, function (j, catval) { 
+							    if (catval.value == val.id)
+								  retVal=true;
+								  return false;
+								});
+							return retVal;	
+							});
+						*/
+						
+					    //var islocalcoop = (cat && cat.success && cat.data && cat.data.categories && categories[obj.appid].data.categories.some(function(val,i,arr){return val.id == 24}));
+						if (obj.name && (filter_name === undefined || new RegExp(filter_name, "i").test(obj.name)) && is_in_categories) {
 							if (obj.name.length > 34) {
 								obj.name = obj.name.substring(0,34) + "...";
 							}
@@ -1405,8 +1456,14 @@ function show_library() {
 
 				refresh_games_list();
 
-				$("#es_library_search").append("<input type='text' id='es_library_search_input' placeholder='Search'>");
+				$("#es_library_search").append("<input type='text' id='es_library_search_input' placeholder='Search'/>");
 				$("#es_library_search").show();
+				$("#es_library_categories").append(catselect_html);
+				$("#es_library_categories").show();
+				$("#es_library_category_select").select2();
+				$("#es_library_category_select").change(function(e) {
+					refresh_games_list();
+				});
 
 				$("#es_library_search_input").keyup(function(e) {
 					if (e.which != 13) {
@@ -1422,6 +1479,7 @@ function show_library() {
 				$("#es_library_list_loading").remove();
 
 				deferred.resolve();
+         		});
 			}
 			else {
 				$("#es_library_list_loading").remove();
