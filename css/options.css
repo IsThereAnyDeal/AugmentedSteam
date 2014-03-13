@@ -106,13 +106,16 @@ body {
 	border: 1px solid #8bc53f;
 	color: #8bc53f;
 	
-	width: auto;
 	height: 21px;
 	margin-left:3px;
 	font-size: 11px;
 	text-align: center;
 	
 	cursor: pointer;
+}
+
+.btn {
+	padding:1px 22px;
 }
 
 .colorbutton {
