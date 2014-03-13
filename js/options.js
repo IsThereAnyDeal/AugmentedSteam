@@ -1,8 +1,6 @@
 
 // Saves options to localStorage.
 function save_options() {
-	language = $("#language").val();
-
 	// Store Options
 	highlight_owned_color = $("#highlight_owned_color").val();
 	highlight_wishlist_color = $("#highlight_wishlist_color").val();
@@ -51,6 +49,8 @@ function save_options() {
 	hideaboutmenu = $("#hideaboutmenu").prop('checked');
 	replaceaccountname = $("#replaceaccountname").prop('checked');
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
+	showlanguagewarning = $("#showlanguagewarning").prop('checked');
+	showlanguagewarninglanguage = $("#warning_language").val();
 	send_age_info = $("#send_age_info").prop('checked');
 	showspeechsearch = $("#showspeechsearch").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
@@ -148,8 +148,6 @@ function save_options() {
 	steamcardexchange = $("#steamcardexchange").prop('checked');
 
 	chrome.storage.sync.set({
-		'language': language,
-
 		'highlight_owned_color': highlight_owned_color,
 		'highlight_wishlist_color': highlight_wishlist_color,
 		'highlight_coupon_color': highlight_coupon_color,
@@ -193,6 +191,8 @@ function save_options() {
 		'hideaboutmenu': hideaboutmenu,
 		'replaceaccountname': replaceaccountname,
 		'showfakeccwarning': showfakeccwarning,
+		'showlanguagewarning': showlanguagewarning,
+		'showlanguagewarninglanguage': showlanguagewarninglanguage,
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
@@ -444,6 +444,8 @@ function load_options() {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; chrome.storage.sync.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
+		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; chrome.storage.sync.set({'showlanguagewarning': settings.showlanguagewarning}); }
+		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; chrome.storage.sync.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
@@ -520,6 +522,8 @@ function load_options() {
 		$("#hideaboutmenu").prop('checked', settings.hideaboutmenu);
 		$("#replaceaccountname").prop('checked', settings.replaceaccountname);
 		$("#showfakeccwarning").prop('checked', settings.showfakeccwarning);
+		$("#showlanguagewarning").prop('checked', settings.showlanguagewarning);
+		$("#warning_language").val(settings.showlanguagewarninglanguage);
 		$("#send_age_info").prop('checked', settings.send_age_info);
 		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
 		$("#contscroll").prop('checked', settings.contscroll);
@@ -576,8 +580,6 @@ function load_options() {
 		$("#profile_permalink").prop('checked', settings.profile_permalink);
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
-		$("#language").val(settings.language);
-
 		if(!changelog_loaded) {		
 			jQuery.get('changelog.txt', function(data) {
 				$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
@@ -644,6 +646,7 @@ function load_translation() {
 			$("#store_replace_account_name").text(localized_strings[settings.language].options.replace_account_name);
 			$("#store_general").text(localized_strings[settings.language].options.general);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options.show_regionwarning);
+			$("#store_show_languagewarning_text").text(localized_strings[settings.language].options.show_languagewarning);
 			$("#send_age_info_text").text(localized_strings[settings.language].options.send_age_info);
 			$("#showspeechsearch_text").text(localized_strings[settings.language].options.showspeechsearch);
 			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);

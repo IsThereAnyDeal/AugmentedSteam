@@ -1179,6 +1179,33 @@ function add_fake_country_code_warning() {
 	});
 }
 
+function add_language_warning() {
+	storage.get(function(settings) {
+		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
+		if (settings.showlanguagewarning) {
+			var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
+
+			if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = currentLanguage; storage.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
+			var lang = settings.showlanguagewarninglanguage.toLowerCase().slice(0,3);
+
+			if (settings.showlanguagewarninglanguage != currentLanguage) {
+				if (localized_strings[lang] && localized_strings[lang].using_language && localized_strings[lang].using_language_return) {
+					$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[lang].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings[lang].using_language_return.replace("__base__", settings.showlanguagewarninglanguage) + '</a></div>');
+				} else {
+					$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[language].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings[language].using_language_return.replace("__base__", settings.showlanguagewarninglanguage) + '</a></div>');
+				}
+				$("#page_background_holder").css("top", "135px");
+				$("#reset_language_code").click(function(e) {
+					e.preventDefault();
+					document.cookie = 'Steam_Language=' + settings.showlanguagewarninglanguage.toLowerCase() + ';path=/;';
+					window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));
+				});
+			}
+		}
+	});
+}
+
 // Removes the "Install Steam" button at the top of each page
 function remove_install_steam_button() {
 	storage.get(function(settings) {
@@ -5652,6 +5679,7 @@ $(document).ready(function(){
 		// On window load...
 		add_enhanced_steam_options();
 		add_fake_country_code_warning();
+		add_language_warning();
 		remove_install_steam_button();
 		remove_about_menu();
 		add_header_links();
