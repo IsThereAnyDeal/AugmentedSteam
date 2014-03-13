@@ -40,7 +40,7 @@ img.platform_small, .platform_img {
 	margin-right: 1px;
 }
 
-#es_library_list, #es_library_search, #es_library_categories {
+#es_library_list, #es_library_search, #es_library_categories,#es_library_genres {
 	padding-left: 10px;
 	overflow: scroll;
 	overflow-y: scroll;
@@ -76,7 +76,7 @@ img.platform_small, .platform_img {
 	top: 145px;
 	color: #a6a5a2;
 	width: 253px;
-    height: 50px;
+    height: 35px;
 	margin-left: 10px;
 	overflow: hidden;
 }
@@ -90,10 +90,28 @@ img.platform_small, .platform_img {
 	outline: none;
 	width: 206px;
 }
+#es_library_genres {
+	top: 180px;
+	color: #a6a5a2;
+	width: 253px;
+    height: 35px;
+	margin-left: 10px;
+	overflow: hidden;
+}
+
+#es_library_genre_select {
+	width: 250px;
+	border: none;
+	background-color: #82807c;
+	color: #cdcac1;
+	margin-top: 5px;
+	outline: none;
+	width: 206px;
+}
 
 
 #es_library_list {
-	top: 195px;
+	top: 215px;
 	width: 280px;
 }
 
@@ -120,7 +138,7 @@ img.platform_small, .platform_img {
 #es_library_right {
 	margin-left: 280px;
 	position: absolute;
-	width: 60%;
+	width: 80%;
 	top: 105px;
 	bottom: 0px;
 }

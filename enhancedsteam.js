@@ -236,7 +236,7 @@ function highlight_friends_want(node, appid) {
 		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; storage.set({'tag_friends_want_color': settings.tag_friends_want_color});}
 		if (settings.tag_friends_want) add_tag(
 			node,
-			localized_strings[language].tag.friends_want.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendswant")),
+			localized_strings[language].tag_friends_want.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendswant")),
 			settings.tag_friends_want_color
 		);
 	});
@@ -250,7 +250,7 @@ function tag_friends_own(node, appid) {
 		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; storage.set({'tag_friends_own_color': settings.tag_friends_own_color});}
 		if (settings.tag_friends_own) add_tag(
 			node,
-			localized_strings[language].tag.friends_own.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsown")),
+			localized_strings[language].tag_friends_own.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsown")),
 			settings.tag_friends_own_color
 		);
 	});
@@ -264,7 +264,7 @@ function tag_friends_rec(node, appid) {
 		if (settings.tag_friends_rec_color === undefined) { settings.tag_friends_rec_color = "#2e3d54"; storage.set({'tag_friends_rec_color': settings.tag_friends_rec_color});}
 		if (settings.tag_friends_rec) add_tag(
 			node,
-			localized_strings[language].tag.friends_rec.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsrec")),
+			localized_strings[language].tag_friends_rec.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsrec")),
 			settings.tag_friends_rec_color
 		);
 	});
@@ -1348,6 +1348,7 @@ function show_library() {
 	es_library.append("<div id='es_library_right'></div>");
 	es_library.append("<div id='es_library_search' style='display: none;'></div>");
 	es_library.append("<div id='es_library_categories' style='display: none;'></div>");
+	es_library.append("<div id='es_library_genres' style='display: none;'></div>");	
 	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div></div>");
 
 
@@ -1363,21 +1364,40 @@ function show_library() {
 			if (data.response && Object.keys(data.response).length > 0) {
 				library_all_games = data.response.games;
                 var appids = library_all_games.map(function(val,i,arr) {return val.appid}).join(',');
-         		get_http('http://store.steampowered.com/api/appdetails/?appids=' + appids + '&filters=categories', function (categoriestxt) {
-				var appcategories = JSON.parse(categoriestxt);
+         		$.post('http://store.steampowered.com/api/appdetails/', 
+						{ appids: appids, filters: 'categories,genres' },
+						function (appdetailtxt) {
+				var appdetails = appdetailtxt;
 				var categories = [];
-				$.each(appcategories, function (appid,cat){
-				 if (cat && cat.data && cat.data.categories)
-					$.each(cat.data.categories, function (id,cat) {
-					  if (!categories.some(function (val) {return val.id == cat.id}))
-					    categories.push({id: cat.id, name: cat.description});
-					});
+				var genres = [];
+				$.each(appdetails, function (appid,detail){
+				 if (detail && detail.data) {
+					if (detail.data.categories) {	
+						$.each(detail.data.categories, function (id,detail) {
+					  if (!categories.some(function (val) {return val.id == detail.id}))
+					    categories.push({id: detail.id, name: detail.description});
+						});
+					}
+					if (detail.data.genres) {	
+						$.each(detail.data.genres, function (id,genre) {
+					  if (!genres.some(function (val) {return val.id == genre.id}))
+					    genres.push({id: genre.id, name: genre.description});
+						});
+					}
+				}
 				});
-				var catselect_html="<select style='width:250px' id='es_library_category_select' multiple placeholder='Filter categories...'>"
+				var catselect_html="<select style='width:250px' id='es_library_category_select' multiple placeholder='Categories...'>"
 				$.each(categories, function(i,val) {
 					catselect_html+="<option value='"+val.id+"'>"+val.name+"</option>";
 				});
 				catselect_html+="</select>"
+
+				var genselect_html="<select style='width:250px' id='es_library_genre_select' multiple placeholder='Genres...'>"
+				$.each(genres, function(i,val) {
+					genselect_html+="<option value='"+val.id+"'>"+val.name+"</option>";
+				});
+				genselect_html+="</select>"
+
 				
 			//sort entries
 				library_all_games.sort(function(a,b) {
@@ -1393,21 +1413,33 @@ function show_library() {
 					var selected_categories = [];
 					if ($("#es_library_category_select").length > 0)
 					  selected_categories=$("#es_library_category_select")[0].selectedOptions;
+					var selected_genres = [];
+					if ($("#es_library_genre_select").length > 0)
+					  selected_genres = $("#es_library_genre_select")[0].selectedOptions;
 
 
 
 					$.each(library_all_games, function(i, obj) {
-						var cat=appcategories [obj.appid];
+						var detail=appdetails [obj.appid];
 						//if no category is selected, this is true by default.
 						var is_in_categories=(!selected_categories || selected_categories.length == 0)
 						//check every selected category if the game contains it
-						if (!is_in_categories && cat && cat.data && cat.data.categories)
+						if (!is_in_categories && detail && detail.data && detail.data.categories)
 						is_in_categories = $.makeArray(selected_categories).every(function(val,i,array){
-							return cat.data.categories.some(function(catval,cati,catarray){
+							return detail.data.categories.some(function(catval,cati,catarray){
 								return catval.id == val.value});
 						});
+
+						var is_in_genres=(!selected_genres || selected_genres.length == 0 || !is_in_categories)
+						//check every selected category if the game contains it
+						if (!is_in_genres && detail && detail.data && detail.data.genres)
+						is_in_genres = $.makeArray(selected_genres).every(function(val,i,array){
+							return detail.data.genres.some(function(genval){
+								return genval.id == val.value});
+						});
+
 					    
-						if (obj.name && (filter_name === undefined || new RegExp(filter_name, "i").test(obj.name)) && is_in_categories) {
+						if (obj.name && (filter_name === undefined || new RegExp(filter_name, "i").test(obj.name)) && is_in_categories && is_in_genres) {
 							if (obj.name.length > 34) {
 								obj.name = obj.name.substring(0,34) + "...";
 							}
@@ -1441,11 +1473,28 @@ function show_library() {
 				$("#es_library_search").show();
 				$("#es_library_categories").append(catselect_html);
 				$("#es_library_categories").show();
-				$("#es_library_category_select").select2({ maximumSelectionSize: 3 });
+				$("#es_library_category_select").select2({
+				maximumSelectionSize: 3,
+				formatSelection: function (item) { 
+				  return (item.text.length>8)?(item.text.slice(0,6)+'...'):item.text;}  
+				});
 				$("#es_library_category_select").change(function(e) {
 					refresh_games_list();
 				});
 
+				$("#es_library_genres").append(genselect_html);
+				$("#es_library_genres").show();
+				$("#es_library_genre_select").select2({
+				maximumSelectionSize: 3,
+				formatSelection: function (item) { 
+				  return (item.text.length>8)?(item.text.slice(0,6)+'...'):item.text;}  
+				});
+				$("#es_library_genre_select").change(function(e) {
+					refresh_games_list();
+				});
+				
+				
+				
 				$("#es_library_search_input").keyup(function(e) {
 					if (e.which != 13) {
 						if (! $(this).val()) {
