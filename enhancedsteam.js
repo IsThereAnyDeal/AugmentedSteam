@@ -1235,13 +1235,13 @@ function add_header_links() {
 		community = community.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://forums.steampowered.com/forums/" target="_blank">' + localized_strings[language].forums + '</a>' + community.substr(insertAt.index + insertAt[0].length);
 		$("#supernav").find("a[href='http://steamcommunity.com/']").attr("data-tooltip-content", community);
 
-		// add "Games" after "Activity"
-		// add "Reviews" after "Inventory"
-		var user = $("#supernav").find("a[href$='/home/']").attr("data-tooltip-content");
-		var insertAt = user.match(/\/home\/">(.+)<\/a>/);
-		user = user.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://steamcommunity.com/my/games/">' + localized_strings[language].games + '</a>' + user.substr(insertAt.index + insertAt[0].length);
-		user = user + '<a class="submenuitem" href="http://steamcommunity.com/my/recommended/">' + localized_strings[language].reviews + '</a>';
-		$("#supernav").find("a[href$='/home/']").attr("data-tooltip-content", user);
+		if (is_signed_in()) {
+			var user = $("#supernav").find("a[href$='/home/']").attr("data-tooltip-content");
+			var insertAt = user.match(/\/home\/">(.+)<\/a>/);
+			user = user.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="http://steamcommunity.com/my/games/">' + localized_strings[language].games + '</a>' + user.substr(insertAt.index + insertAt[0].length);
+			user = user + '<a class="submenuitem" href="http://steamcommunity.com/my/recommended/">' + localized_strings[language].reviews + '</a>';
+			$("#supernav").find("a[href$='/home/']").attr("data-tooltip-content", user);
+		}
 	}
 }
 
@@ -4749,6 +4749,19 @@ function add_app_page_highlights(appid) {
 	});
 }
 
+function set_html5_video() {
+	storage.get(function(settings) {
+		if (settings.html5video === undefined) { settings.html5video = true; storage.set({'html5video': settings.html5video}); }
+		if (settings.html5video) {
+			var dateExpires = new Date();
+			dateExpires.setTime( dateExpires.getTime() + 1000 * 60 * 60 * 24 * 365 * 10 );
+			document.cookie = 'bShouldUseHTML5=1; expires=' + dateExpires.toGMTString() + ';path=/';
+		} else {
+			document.cookie = 'bShouldUseHTML5=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;';
+		}
+	});
+}
+
 function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
@@ -5793,6 +5806,7 @@ $(document).ready(function(){
 				fix_search_placeholder();
 				hide_trademark_symbols();
 				add_speech_search();
+				set_html5_video();
 				break;
 
 			case "steamcommunity.com":

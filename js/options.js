@@ -53,6 +53,7 @@ function save_options() {
 	showlanguagewarninglanguage = $("#warning_language").val();
 	send_age_info = $("#send_age_info").prop('checked');
 	showspeechsearch = $("#showspeechsearch").prop('checked');
+	html5video = $("#html5video").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
 	showachievements = $("#showachievements").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
@@ -196,6 +197,7 @@ function save_options() {
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
 		'showspeechsearch': showspeechsearch,
+		'html5video': html5video,
 		'contscroll': contscroll,
 		'showachievements': showachievements,
 		'showdrm': showdrm,
@@ -447,6 +449,7 @@ function load_options() {
 		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; chrome.storage.sync.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
+		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
 		if (settings.showachievements === undefined) { settings.showachievements = true; chrome.storage.sync.set({'showachievements': settings.showachievements}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
@@ -525,6 +528,7 @@ function load_options() {
 		$("#warning_language").val(settings.showlanguagewarninglanguage);
 		$("#send_age_info").prop('checked', settings.send_age_info);
 		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
+		$("#html5video").prop('checked', settings.html5video);
 		$("#contscroll").prop('checked', settings.contscroll);
 		$("#showachievements").prop('checked', settings.showachievements);
 		$("#showdrm").prop('checked', settings.showdrm);
@@ -649,6 +653,7 @@ function load_translation() {
 			$("#store_show_languagewarning_text").text(localized_strings[settings.language].options.show_languagewarning);
 			$("#send_age_info_text").text(localized_strings[settings.language].options.send_age_info);
 			$("#showspeechsearch_text").text(localized_strings[settings.language].options.showspeechsearch);
+			$("#html5video_text").text(localized_strings[settings.language].options.html5video);
 			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);
 			$("#showachievements_text").text(localized_strings[settings.language].achievements.option);
 			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
