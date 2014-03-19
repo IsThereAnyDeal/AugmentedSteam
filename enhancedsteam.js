@@ -180,7 +180,7 @@ function highlight_wishlist(node) {
 }
 
 // colors the tile for items with coupons
-function highlight_coupon(node) {
+function highlight_coupon(node, discount) {
 		node.classList.add("es_highlight_coupon");
 
 	storage.get(function(settings) {
@@ -190,7 +190,7 @@ function highlight_coupon(node) {
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; storage.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_coupon) add_tag(node, localized_strings[language].tag.coupon, settings.highlight_coupon_color);
+		if (settings.tag_coupon) add_tag(node, localized_strings[language].tag.coupon + " (" + discount + "%)", settings.highlight_coupon_color);
 	});
 }
 
@@ -4539,7 +4539,7 @@ function highlight_app(appid, node) {
 		if (getValue(appid + "owned")) highlight_owned(node);
 		if (getValue(appid + "gift")) highlight_inv_gift(node);
 		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-		if (getValue(appid + "coupon")) highlight_coupon(node);
+		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 		if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
 		if (getValue(appid + "friendsown")) tag_friends_own(node, appid);
 		if (getValue(appid + "friendsrec")) tag_friends_rec(node, appid);
