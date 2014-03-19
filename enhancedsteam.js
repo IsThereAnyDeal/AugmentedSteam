@@ -5144,6 +5144,8 @@ function add_badge_filter() {
 			$('.is_link').each(function () {
 				if (!($(this).html().match(/progress_info_bold".+\d/))) {
 					$(this).css('display', 'none');
+				} else if (parseFloat($(this).html().match(/progress_info_bold".+?(\d+)/)[1]) == 0) {					
+					$(this).css('display', 'none');				
 				} else {
 					if ($(this).html().match(/badge_info_unlocked/)) {
 						if (!($(this).html().match(/badge_current/))) {
