@@ -3684,6 +3684,23 @@ function add_achievement_section(appid) {
 	storage.get(function(settings) {
 		if (settings.showachievements === undefined) { settings.showachievements = true; storage.set({'showachievements': settings.showachievements}); }
 		if (settings.showachievements) {
+			// Personal Achievements
+			$(".myactivity_block").find(".details_block").after("<div id='es_ach_stats'></div>");
+			$("#es_ach_stats").load("http://steamcommunity.com/my/stats/" + appid + "/ #topSummaryAchievements", function(response, status, xhr) {				
+				if (response.match(/achieveBarFull\.gif/)) {
+					var BarFull = $("#es_ach_stats").html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+					var BarEmpty = $("#es_ach_stats").html().match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+					BarFull = BarFull * .88;
+					BarEmpty = BarEmpty * .88;
+					var html = $("#es_ach_stats").html();
+					html = html.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + escapeHTML(BarFull.toString()) + "\"");
+					html = html.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
+					html = html.replace("::", ":");
+					$("#es_ach_stats").html(html);
+				}
+			});
+
+			// Available Achievements
 			var total_achievements;
 			var icon1, icon2, icon3, icon4;
 			var titl1 = "", titl2 = "", titl3 = "", titl4 = "";

@@ -2,6 +2,8 @@ v6.0
 -----
 + Added warning dialog when browsing Steam in a language other than your preferred language
 + Added option to display store page videos using HTML5 player instead of Flash
++ Added coupon discount percentage to display on coupon tags
++ Added your personal achievement stats back to app pages in the "My Activity" box
 : Fixed a bug that caused Early Access overlays to incorrectly show on games with coupons
 : Fixed header links inserted by Enhanced Steam not displaying due to a change made by Valve
 : Fixed a bug in some languages where badge filtering didn't work properly
