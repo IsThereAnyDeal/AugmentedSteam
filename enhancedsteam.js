@@ -180,7 +180,7 @@ function highlight_wishlist(node) {
 }
 
 // colors the tile for items with coupons
-function highlight_coupon(node) {
+function highlight_coupon(node, discount) {
 		node.classList.add("es_highlight_coupon");
 
 	storage.get(function(settings) {
@@ -190,7 +190,7 @@ function highlight_coupon(node) {
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; storage.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_coupon) add_tag(node, localized_strings[language].tag.coupon, settings.highlight_coupon_color);
+		if (settings.tag_coupon) add_tag(node, localized_strings[language].tag.coupon + " (" + discount + "%)", settings.highlight_coupon_color);
 	});
 }
 
@@ -3684,6 +3684,23 @@ function add_achievement_section(appid) {
 	storage.get(function(settings) {
 		if (settings.showachievements === undefined) { settings.showachievements = true; storage.set({'showachievements': settings.showachievements}); }
 		if (settings.showachievements) {
+			// Personal Achievements
+			$(".myactivity_block").find(".details_block").after("<div id='es_ach_stats'></div>");
+			$("#es_ach_stats").load("http://steamcommunity.com/my/stats/" + appid + "/ #topSummaryAchievements", function(response, status, xhr) {				
+				if (response.match(/achieveBarFull\.gif/)) {
+					var BarFull = $("#es_ach_stats").html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+					var BarEmpty = $("#es_ach_stats").html().match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+					BarFull = BarFull * .88;
+					BarEmpty = BarEmpty * .88;
+					var html = $("#es_ach_stats").html();
+					html = html.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + escapeHTML(BarFull.toString()) + "\"");
+					html = html.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
+					html = html.replace("::", ":");
+					$("#es_ach_stats").html(html);
+				}
+			});
+
+			// Available Achievements
 			var total_achievements;
 			var icon1, icon2, icon3, icon4;
 			var titl1 = "", titl2 = "", titl3 = "", titl4 = "";
@@ -4539,7 +4556,7 @@ function highlight_app(appid, node) {
 		if (getValue(appid + "owned")) highlight_owned(node);
 		if (getValue(appid + "gift")) highlight_inv_gift(node);
 		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-		if (getValue(appid + "coupon")) highlight_coupon(node);
+		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 		if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
 		if (getValue(appid + "friendsown")) tag_friends_own(node, appid);
 		if (getValue(appid + "friendsrec")) tag_friends_rec(node, appid);
@@ -5144,6 +5161,8 @@ function add_badge_filter() {
 			$('.is_link').each(function () {
 				if (!($(this).html().match(/progress_info_bold".+\d/))) {
 					$(this).css('display', 'none');
+				} else if (parseFloat($(this).html().match(/progress_info_bold".+?(\d+)/)[1]) == 0) {					
+					$(this).css('display', 'none');				
 				} else {
 					if ($(this).html().match(/badge_info_unlocked/)) {
 						if (!($(this).html().match(/badge_current/))) {
