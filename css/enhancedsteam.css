@@ -670,3 +670,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top:2px;
 	margin-bottom:2px;
 }
+.dailydeal .timer {
+	background:#222;
+	border-radius:2px;
+	padding: 0 2px;
+}
+.dailydeal {
+	border-radius: 2px;
+}
