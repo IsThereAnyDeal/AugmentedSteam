@@ -70,6 +70,7 @@ function save_options() {
 	
 	// Price Options
 	showlowestprice = $("#showlowestprice").prop('checked');
+	showlowestprice_onwishlist = $("#showlowestprice_onwishlist").prop('checked');
 	showlowestpricecoupon = $("#showlowestpricecoupon").prop('checked');
 	showallstores = $("#stores_all").prop('checked');
 	stores = [
@@ -213,6 +214,7 @@ function save_options() {
 		'show_early_access': show_early_access,
 		
 		'showlowestprice': showlowestprice,
+		'showlowestprice_onwishlist': showlowestprice_onwishlist,
 		'showlowestpricecoupon': showlowestpricecoupon,
 		'showallstores': showallstores,
 		'stores': stores,
@@ -419,6 +421,7 @@ function load_options() {
 		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
 
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; chrome.storage.sync.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
@@ -545,6 +548,7 @@ function load_options() {
 				
 		// Load Price Options
 		$("#showlowestprice").prop('checked', settings.showlowestprice);
+		$("#showlowestprice_onwishlist").prop('checked', settings.showlowestprice_onwishlist);
 		$("#showlowestpricecoupon").prop('checked', settings.showlowestpricecoupon);
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
@@ -658,6 +662,7 @@ function load_translation() {
 			$("#showachievements_text").text(localized_strings[settings.language].achievements.option);
 			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options.lowestprice);
+			$("#store_lowestprice_onwishlist_text").text(localized_strings[settings.language].options.lowestprice_onwishlist);
 			$("#store_lowestprice_coupon_text").text(localized_strings[settings.language].options.lowestprice_coupon);
 			$("#store_lowestprice_header").text(localized_strings[settings.language].options.lowestprice_header);
 			$("#store_metacritic_text").text(localized_strings[settings.language].options.metacritic);
