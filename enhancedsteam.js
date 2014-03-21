@@ -244,7 +244,7 @@ function highlight_friends_want(node, appid) {
 		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; storage.set({'tag_friends_want_color': settings.tag_friends_want_color});}
 		if (settings.tag_friends_want) add_tag(
 			node,
-			localized_strings[language].tag_friends_want.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendswant")),
+			localized_strings[language].tag.friends_want.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendswant")),
 			settings.tag_friends_want_color
 		);
 	});
@@ -258,7 +258,7 @@ function tag_friends_own(node, appid) {
 		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; storage.set({'tag_friends_own_color': settings.tag_friends_own_color});}
 		if (settings.tag_friends_own) add_tag(
 			node,
-			localized_strings[language].tag_friends_own.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsown")),
+			localized_strings[language].tag.friends_own.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsown")),
 			settings.tag_friends_own_color
 		);
 	});
@@ -272,7 +272,7 @@ function tag_friends_rec(node, appid) {
 		if (settings.tag_friends_rec_color === undefined) { settings.tag_friends_rec_color = "#2e3d54"; storage.set({'tag_friends_rec_color': settings.tag_friends_rec_color});}
 		if (settings.tag_friends_rec) add_tag(
 			node,
-			localized_strings[language].tag_friends_rec.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsrec")),
+			localized_strings[language].tag.friends_rec.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsrec")),
 			settings.tag_friends_rec_color
 		);
 	});
@@ -1428,6 +1428,9 @@ function show_library() {
 					}
 				}
 				});
+				var sortByName=function(a,b) {return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));}
+				categories.sort(sortByName);
+				genres.sort(sortByName);
 				var catselect_html="<select style='width:250px' id='es_library_category_select' multiple placeholder='"+localized_strings[language].library.categories+"'>";
 				$.each(categories, function(i,val) {
 					catselect_html+="<option value='"+val.id+"'>"+val.name+"</option>";
