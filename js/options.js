@@ -1,8 +1,6 @@
 
 // Saves options to localStorage.
 function save_options() {
-	language = $("#language").val();
-
 	// Store Options
 	highlight_owned_color = $("#highlight_owned_color").val();
 	highlight_wishlist_color = $("#highlight_wishlist_color").val();
@@ -51,8 +49,11 @@ function save_options() {
 	hideaboutmenu = $("#hideaboutmenu").prop('checked');
 	replaceaccountname = $("#replaceaccountname").prop('checked');
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
+	showlanguagewarning = $("#showlanguagewarning").prop('checked');
+	showlanguagewarninglanguage = $("#warning_language").val();
 	send_age_info = $("#send_age_info").prop('checked');
 	showspeechsearch = $("#showspeechsearch").prop('checked');
+	html5video = $("#html5video").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
 	showachievements = $("#showachievements").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
@@ -141,15 +142,12 @@ function save_options() {
 	profile_astatsnl = $("#profile_astatsnl").prop('checked');
 	profile_api_info = $("#profile_api_info").prop('checked');
 	api_key = $("#api_key").val();
-	console.log($("#api_key").val())
 	profile_permalink = $("#profile_permalink").prop('checked');
 	show_profile_link_images = $("#profile_link_images_dropdown").val();
 	
 	steamcardexchange = $("#steamcardexchange").prop('checked');
 
 	chrome.storage.sync.set({
-		'language': language,
-
 		'highlight_owned_color': highlight_owned_color,
 		'highlight_wishlist_color': highlight_wishlist_color,
 		'highlight_coupon_color': highlight_coupon_color,
@@ -193,10 +191,13 @@ function save_options() {
 		'hideaboutmenu': hideaboutmenu,
 		'replaceaccountname': replaceaccountname,
 		'showfakeccwarning': showfakeccwarning,
+		'showlanguagewarning': showlanguagewarning,
+		'showlanguagewarninglanguage': showlanguagewarninglanguage,
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
 		'showspeechsearch': showspeechsearch,
+		'html5video': html5video,
 		'contscroll': contscroll,
 		'showachievements': showachievements,
 		'showdrm': showdrm,
@@ -444,8 +445,11 @@ function load_options() {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; chrome.storage.sync.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
+		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; chrome.storage.sync.set({'showlanguagewarning': settings.showlanguagewarning}); }
+		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; chrome.storage.sync.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
+		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
 		if (settings.showachievements === undefined) { settings.showachievements = true; chrome.storage.sync.set({'showachievements': settings.showachievements}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
@@ -520,8 +524,11 @@ function load_options() {
 		$("#hideaboutmenu").prop('checked', settings.hideaboutmenu);
 		$("#replaceaccountname").prop('checked', settings.replaceaccountname);
 		$("#showfakeccwarning").prop('checked', settings.showfakeccwarning);
+		$("#showlanguagewarning").prop('checked', settings.showlanguagewarning);
+		$("#warning_language").val(settings.showlanguagewarninglanguage);
 		$("#send_age_info").prop('checked', settings.send_age_info);
 		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
+		$("#html5video").prop('checked', settings.html5video);
 		$("#contscroll").prop('checked', settings.contscroll);
 		$("#showachievements").prop('checked', settings.showachievements);
 		$("#showdrm").prop('checked', settings.showdrm);
@@ -576,8 +583,6 @@ function load_options() {
 		$("#profile_permalink").prop('checked', settings.profile_permalink);
 		$("#steamcardexchange").prop('checked', settings.steamcardexchange);
 		
-		$("#language").val(settings.language);
-
 		if(!changelog_loaded) {		
 			jQuery.get('changelog.txt', function(data) {
 				$("#changelog_text").after("<textarea rows=28 cols=100 readonly>" + data + "</textarea>");
@@ -643,9 +648,12 @@ function load_translation() {
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options.hide_about);
 			$("#store_replace_account_name").text(localized_strings[settings.language].options.replace_account_name);
 			$("#store_general").text(localized_strings[settings.language].options.general);
+			$("#community_general").text(localized_strings[settings.language].options.general);
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options.show_regionwarning);
+			$("#store_show_languagewarning_text").text(localized_strings[settings.language].options.show_languagewarning);
 			$("#send_age_info_text").text(localized_strings[settings.language].options.send_age_info);
 			$("#showspeechsearch_text").text(localized_strings[settings.language].options.showspeechsearch);
+			$("#html5video_text").text(localized_strings[settings.language].options.html5video);
 			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);
 			$("#showachievements_text").text(localized_strings[settings.language].achievements.option);
 			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
@@ -661,15 +669,15 @@ function load_translation() {
 			$("#show_sysreqcheck_text").text(localized_strings[settings.language].options.show_sysreqcheck);
 			$("#store_steamchart_info_text").text(localized_strings[settings.language].options.show_steamchart_info);
 			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options.carousel_description);
-			$("#show_early_access_text").text(localized_strings[settings.language].show_early_access_text);
+			$("#show_early_access_text").text(localized_strings[settings.language].options.show_early_access_text);
 			
 			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
-			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].stores_all);
-			$("#store_regionalprice_header").text(localized_strings[settings.language].regional_price);
-			$("#showregionalprice_text").text(localized_strings[settings.language].regional_price_on);
+			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].options.stores_all);
+			$("#store_regionalprice_header").text(localized_strings[settings.language].options.regional_price);
+			$("#showregionalprice_text").text(localized_strings[settings.language].options.regional_price_on);
 			$('select option:contains("Always")').text(localized_strings[settings.language].always);
 			$('select option:contains("Never")').text(localized_strings[settings.language].never);
-			$('select option:contains("on Price Mouseover")').text(localized_strings[settings.language].regional_price_mouse);
+			$('select option:contains("on Price Mouseover")').text(localized_strings[settings.language].options.regional_price_mouse);
 			
 			$("#profile_link_text").text(localized_strings[settings.language].options.profile_links + ":");
 			$("#show_profile_link_images_text").text(localized_strings[settings.language].options.profile_link_images + ":");
@@ -679,8 +687,8 @@ function load_translation() {
 			$("#profile_permalink_text").text(localized_strings[settings.language].options.profile_permalink);
 			$("#total_spent_text").text(localized_strings[settings.language].options.total_spent);
 			$("#market_total_text").text(localized_strings[settings.language].options.market_total);
-			$("#inventory_market_text").text(localized_strings[settings.language].inventory_market_text);
-			$("#inventory_nav_text").text(localized_strings[settings.language].inventory_nav_text);
+			$("#inventory_market_text").text(localized_strings[settings.language].options.inventory_market_text);
+			$("#inventory_nav_text").text(localized_strings[settings.language].options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings[settings.language].options.es_bg);
 			$("#allachievements_text").text(localized_strings[settings.language].options.showallachievements);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options.greenlight_banner);
@@ -706,6 +714,10 @@ function load_translation() {
 			$("#tag_friends_own_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#tag_friends_rec_color_default").text(localized_strings[settings.language].theworddefault);
 			$("#reset_countries").text(localized_strings[settings.language].theworddefault);
+
+			$("#profile_api_info_text").text(localized_strings[settings.language].options.profile_api_info);
+			$("#api_key_text").text(localized_strings[settings.language].options.api_key);
+			$("#regional_hideworld_text").text(localized_strings[settings.language].options.regional_hideworld);
 			
 			$("#es_about_text").html(localized_strings[settings.language].options.about_text);
 			$("#changelog_text").text(localized_strings[settings.language].options.changelog);
@@ -713,9 +725,6 @@ function load_translation() {
 			$("#programming_text").text(localized_strings[settings.language].programming);
 			$("#translation_text").text(localized_strings[settings.language].translation);
 			$("#graphics_text").text(localized_strings[settings.language].graphics);
-			
-			$("#save_store").text(localized_strings[settings.language].save);
-			$("#save_community").text(localized_strings[settings.language].save);
 
 			$("#reset").text(localized_strings[settings.language].reset_options);
 			$("#saved").text(localized_strings[settings.language].options.saved_note);
@@ -741,7 +750,6 @@ function load_profile_link_images() {
 				$(".site_icon").hide();
 				break;
 			default:
-				console.log(settings.show_profile_link_images);
 				break;
 		}
 	});
