@@ -52,6 +52,14 @@ String.prototype.contains = function(it) {
 	return this.indexOf(it) != -1;
 };
 
+Array.prototype.chunk = function(chunkSize) {
+    var R = [];
+    for (var i=0; i<this.length; i+=chunkSize)
+        R.push(this.slice(i,i+chunkSize));
+    return R;
+}
+
+
 function formatMoney (number, places, symbol, thousand, decimal, right) {
 	places = !isNaN(places = Math.abs(places)) ? places : 2;
 	symbol = symbol !== undefined ? symbol : "$";
@@ -1363,11 +1371,18 @@ function show_library() {
 			var data = JSON.parse(txt);
 			if (data.response && Object.keys(data.response).length > 0) {
 				library_all_games = data.response.games;
-                var appids = library_all_games.map(function(val,i,arr) {return val.appid}).join(',');
-         		$.post('http://store.steampowered.com/api/appdetails/', 
-						{ appids: appids, filters: 'categories,genres' },
-						function (appdetailtxt) {
-				var appdetails = appdetailtxt;
+                var appids = library_all_games.map(function(val,i,arr) {return val.appid});
+				var appdetails = {};
+				var appidchunks = appids.chunk(100).map(function(val) {return val.join(',');});
+				var appdetailcalls = appidchunks.map(function(val,i,arr) {
+						 return $.post('http://store.steampowered.com/api/appdetails/', 
+						{ appids: val, filters: 'categories,genres' },
+						function(appdetailtxt){ 
+						 $.extend(appdetails,appdetailtxt)
+						});
+				});
+				$.when.apply($,appdetailcalls).then(
+				function () {
 				var categories = [];
 				var genres = [];
 				$.each(appdetails, function (appid,detail){
@@ -1386,13 +1401,13 @@ function show_library() {
 					}
 				}
 				});
-				var catselect_html="<select style='width:250px' id='es_library_category_select' multiple placeholder='Categories...'>"
+				var catselect_html="<select style='width:250px' id='es_library_category_select' multiple placeholder='"+localized_strings[language].library.categories+"'>";
 				$.each(categories, function(i,val) {
 					catselect_html+="<option value='"+val.id+"'>"+val.name+"</option>";
 				});
 				catselect_html+="</select>"
 
-				var genselect_html="<select style='width:250px' id='es_library_genre_select' multiple placeholder='Genres...'>"
+				var genselect_html="<select style='width:250px' id='es_library_genre_select' multiple placeholder='"+localized_strings[language].library.genres+"'>";
 				$.each(genres, function(i,val) {
 					genselect_html+="<option value='"+val.id+"'>"+val.name+"</option>";
 				});
@@ -1509,7 +1524,13 @@ function show_library() {
 				$("#es_library_list_loading").remove();
 
 				deferred.resolve();
-         		});
+         		}, function(val) {
+						//one of the ajax calls for appdetails failed
+						$("#es_library_list_loading").remove();
+						es_library.html("<div id='es_library_private_profile'>" + localized_strings[language].library.error_loading_library + "</div>");
+						deferred.reject();
+					}				
+				);
 			}
 			else {
 				$("#es_library_list_loading").remove();

@@ -150,7 +150,10 @@ var localized_strings,
 			view_normal_badge: "View Normal Badge Progress",
 			view_foil_badge: "View Foil Badge Progress",
 			library: {
-				private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
+				private_profile: "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature.",
+				error_loading_library: "Couldn't load your library.",
+				categories: "Categories...",
+				genres: "Genres..."
 			},
 			bundle: {
 				info: "Bundle Info",
