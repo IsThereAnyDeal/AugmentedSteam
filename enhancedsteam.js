@@ -951,6 +951,142 @@ function add_wishlist_ajaxremove() {
 	});
 }
 
+function add_wishlist_pricehistory() {
+	storage.get(function(settings) {
+		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
+		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
+		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.showlowestprice) {
+
+			// Get List of stores we're searching for
+			var storestring = "";
+			if (settings.stores[0]) { storestring += "steam,"; }
+			if (settings.stores[1]) { storestring += "amazonus,"; }
+			if (settings.stores[2]) { storestring += "impulse,"; }
+			if (settings.stores[3]) { storestring += "gamersgate,"; }
+			if (settings.stores[4]) { storestring += "greenmangaming,"; }
+			if (settings.stores[5]) { storestring += "gamefly,"; }
+			if (settings.stores[6]) { storestring += "origin,"; }
+			if (settings.stores[7]) { storestring += "uplay,"; }
+			if (settings.stores[8]) { storestring += "indiegalastore,"; }
+			if (settings.stores[9]) { storestring += "gametap,"; }
+			if (settings.stores[10]) { storestring += "gamesplanet,"; }
+			if (settings.stores[11]) { storestring += "getgames,"; }
+			if (settings.stores[12]) { storestring += "desura,"; }
+			if (settings.stores[13]) { storestring += "gog,"; }
+			if (settings.stores[14]) { storestring += "dotemu,"; }
+			if (settings.stores[15]) { storestring += "beamdog,"; }
+			if (settings.stores[16]) { storestring += "adventureshop,"; }
+			if (settings.stores[17]) { storestring += "nuuvem,"; }
+			if (settings.stores[18]) { storestring += "shinyloot,"; }
+			if (settings.stores[19]) { storestring += "dlgamer,"; }
+			if (settings.stores[20]) { storestring += "humblestore,"; }
+			if (settings.stores[21]) { storestring += "indiegamestand,"; }
+			if (settings.stores[22]) { storestring += "squenix,"; }
+			if (settings.stores[23]) { storestring += "bundlestars,"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars"; }
+
+			// Get country code from Steam cookie
+			var cookies = document.cookie;
+			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
+			var cc = "us";
+			if (matched != null && matched.length == 2) {
+				cc = matched[1];
+			} else {
+				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+				if (matched != null && matched.length == 2) {
+					cc = matched[1];
+				}
+			}
+
+			function get_price_data(lookup_type, node, id) {
+				html = "<div class='es_lowest_price' id='es_price_" + id + "'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings[language].loading + "</span>";
+				$(node).before(html);
+
+				get_http("http://api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
+					var data = JSON.parse(txt);
+					if (data) {
+						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
+
+						switch (data[".meta"]["currency"]) {
+							case "GBP":
+								currency_symbol = "£";
+								break;
+							case "EUR":
+								currency_symbol = "€";
+								comma = true;
+								at_end = true;
+								break;
+							case "BRL":
+								currency_symbol = "R$ ";
+								comma = true;
+								break;
+							default:
+								currency_symbol = "$";
+						}
+
+	        			// "Lowest Price"
+						if (data["price"]) {
+	                        if (data["price"]["drm"] == "steam") {
+	                        	activates = "(<b>" + localized_strings[language].activates + "</b>)";
+	                    		if (data["price"]["store"] == "Steam") {
+	                    			activates = "";
+	                    		}
+	                    	}
+
+	                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    	if (settings.showlowestpricecoupon) {
+	                    		if (data["price"]["price_voucher"]) {
+	                    			line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price_voucher"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings[language].after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    		}
+	                    	}
+	                    }
+
+						// "Historical Low"
+						if (data["lowest"]) {
+	                        recorded = new Date(data["lowest"]["recorded"]*1000);
+	                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    }
+
+						// "Number of times this game has been in a bundle"
+						if (data["bundles"]["count"] > 0) {
+							line3 = "<br>" + localized_strings[language].bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundle_history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+						}
+
+						if (line1 && line2) {
+							$("#es_price_loading_" + id).remove();
+							$("#es_price_" + id).append(line1 + "<br>" + line2 + line3);
+							$("#es_line_chart_" + id).css("top", (($("#es_price_" + id).outerHeight() - 20) / 2) + "px");
+						}
+	                }
+	        	});
+			}
+
+			var timeoutId;
+			$(".wishlistRow").hover(function() {
+				var node = $(this);
+				var appid = node[0].id.replace("game_", "");
+				if (!timeoutId) {
+					timeoutId = window.setTimeout(function() {					
+						timeoutId = null;						
+						if ($("#es_price_" + appid).length == 0) {							
+							get_price_data("app", node, appid);
+						}	
+					}, 1000);
+				}
+			},
+			function() {
+				if (timeoutId) {
+					window.clearTimeout(timeoutId);
+					timeoutId = null;
+				}
+			});
+		}
+	});
+}
+
 function add_remove_from_wishlist_button(appid) {
 	if (is_signed_in()) {
 		$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");
@@ -5953,6 +6089,7 @@ $(document).ready(function(){
 						add_wishlist_discount_sort();
 						add_wishlist_total();
 						add_wishlist_ajaxremove();
+						add_wishlist_pricehistory();
 
 						// wishlist highlights
 						start_highlights_and_tags();
