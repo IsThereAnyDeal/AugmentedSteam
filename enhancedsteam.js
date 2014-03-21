@@ -1059,6 +1059,20 @@ function add_wishlist_pricehistory() {
 							$("#es_price_loading_" + id).remove();
 							$("#es_price_" + id).append(line1 + "<br>" + line2 + line3);
 							$("#es_line_chart_" + id).css("top", (($("#es_price_" + id).outerHeight() - 20) / 2) + "px");
+							return;
+						}
+
+						if (line2) {
+							$("#es_price_loading_" + id).remove();
+							$("#es_price_" + id).append(line2 + line3);
+							$("#es_line_chart_" + id).css("top", (($("#es_price_" + id).outerHeight() - 20) / 2) + "px");
+							return;	
+						}
+
+						if (data["lowest"] === null && data["price"] === null) {					
+							$("#es_price_loading_" + id).remove();
+							$("#es_price_" + id).append(localized_strings[language].no_results_found);
+							return;
 						}
 	                }
 	        	});
