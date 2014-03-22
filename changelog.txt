@@ -1,9 +1,9 @@
 v6.0
 -----
 + Added warning dialog when browsing Steam in a language other than your preferred language
-+ Added library filtering options by genre and by category
 + Added price history information to the wishlist page when hovering over a game
 + Added option to display store page videos using HTML5 player instead of Flash
++ Added library filtering options by genre and by category
 + Added coupon discount percentage to display on coupon tags
 + Added your personal achievement stats back to app pages in the "My Activity" box
 : Fixed a bug that caused Early Access overlays to incorrectly show on games with coupons
