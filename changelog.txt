@@ -1,3 +1,7 @@
+v6.1
+-----
+
+
 v6.0
 -----
 + Added warning dialog when browsing Steam in a language other than your preferred language
