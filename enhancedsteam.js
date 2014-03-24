@@ -2597,6 +2597,116 @@ function hide_unowned_game_dlc() {
 	});
 }
 
+function add_actual_new_release_button() {	
+	$("#tab_filtered_dlc_content").clone().css("display", "none").attr("id", "tab_filtered_dlc_content_enhanced").appendTo(".tab_content_ctn");
+	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_items").attr("id", "tab_NewReleasesFilteredDLC_items_enhanced").empty();
+	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_prev").remove();
+	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_next").remove();
+	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_count_total").text("10");
+	$("#tab_filtered_dlc_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all_filtered' onclick='TabSelectStealth(\"tab_filtered_dlc_content_enhanced\");'>Show all Steam releases</div>");
+	$("#tab_filtered_dlc_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_filtered_enhanced' onclick='TabSelectStealth(\"tab_filtered_dlc_content\");'>Show all Steam releases</div>");
+
+	$("#tab_1_content").clone().css("display", "none").attr("id", "tab_1_content_enhanced").appendTo(".tab_content_ctn");
+	$("#tab_1_content_enhanced").find("#tab_NewReleases_items").attr("id", "tab_NewReleases_items_enhanced").empty();
+	$("#tab_1_content_enhanced").find("#tab_NewReleases_prev").remove();
+	$("#tab_1_content_enhanced").find("#tab_NewReleases_next").remove();
+	$("#tab_1_content_enhanced").find("#tab_NewReleases_count_total").text("10");
+	$("#tab_1_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all' onclick='TabSelectStealth(\"tab_1_content_enhanced\");'>Show all Steam releases</div>");
+	$("#tab_1_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_enhanced' onclick='TabSelectStealth(\"tab_1_content\");'>Show all Steam releases</div>");
+
+	$("#tab_1_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_filtered_dlc_content_enhanced');");
+	$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_1_content_enhanced');");
+
+	// Determine which to show by default
+	storage.get(function(settings) {
+		if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
+		if (settings.new_release_filter == true) {
+			if ($("#tab_1_content").is(":visible")) {
+				$("#tab_1_content").hide();
+				$("#tab_1_content_enhanced").show();				
+			} else if ($("#tab_filtered_dlc_content").is(":visible")) {
+				$("#tab_filtered_dlc_content").hide();
+				$("#tab_filtered_dlc_content_enhanced").show();
+			}
+		}
+
+		$("#new_all_filtered_enhanced, #new_all_enhanced").click(function() {
+			storage.set({'new_release_filter': false});
+		});
+
+		$("#new_all_filtered, #new_all").click(function() {
+			storage.set({'new_release_filter': true});
+		});
+	});
+
+	function fill_box(tabName) {
+		var appids = [];
+		var count = 1;
+
+		var game_items = $("#tab_" + tabName + "_items").children();
+		get_http("http://store.steampowered.com/search/tab?bHoverEnabled=true&style=&navcontext=1_4_4_&tab=" + tabName + "&start=10&count=10", function(txt) {		
+			var parsed = $.parseHTML(txt);
+			$(parsed).each(function(i) {
+				if ($(parsed[i]).find("div").length > 0) {
+					game_items.push($(parsed[i]));
+				}	
+			});
+
+			$(game_items).each(function() {
+				var valueToPush = new Array();
+				valueToPush[0] = get_appid($(this).find("a").attr("href"));
+				valueToPush[1] = $(this).clone();
+				valueToPush[2] = $(this).find(".genre_release").text().match(/\: (.+)/)[1];
+				valueToPush[3] = count;
+				appids.push(valueToPush);
+				count++;
+			});
+			
+			var processItemsDeferred = [];
+			var games = [];
+
+			for(var i = 0; i < appids.length; i++){
+				processItemsDeferred.push(processItem(appids[i]));
+			}
+
+			function processItem(data) {
+				var dfd = $.Deferred();
+
+				get_http("http://store.steampowered.com/app/" + data[0] + "/", function(store_page) {
+					var html = $.parseHTML(store_page);
+					apppage_release_date = $(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)[1];
+					
+					if (data[2] == apppage_release_date) {
+						var valueToPush = new Array();
+						valueToPush[0] = data[0];
+						valueToPush[1] = data[1];
+						valueToPush[2] = data[2];
+						valueToPush[3] = apppage_release_date;
+						valueToPush[4] = data[3];
+						games.push(valueToPush);
+					}
+					dfd.resolve();
+				});
+
+				return dfd.promise();
+			}
+
+			$.when.apply($, processItemsDeferred).done(function() {
+				games.sort(function(a,b) {
+					return parseInt(a[4],10) - parseInt(b[4],10);
+				});
+				$(games).each(function(t) {
+					$("#tab_" + tabName + "_items_enhanced").append(games[t][1]);
+				});
+			});
+
+		});
+	}
+
+	fill_box("NewReleasesFilteredDLC");
+	fill_box("NewReleases");
+}
+
 function fix_search_placeholder() {
 	var selectors = ["#store_nav_search_term", "#term"];
 	$.each(selectors, function(index, selector){
@@ -6071,6 +6181,7 @@ $(document).ready(function(){
 
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
+						add_actual_new_release_button();
 						add_carousel_descriptions();
 						add_affordable_button();
 						show_regional_pricing();
