@@ -2633,23 +2633,30 @@ function add_actual_new_release_button() {
 	// Determine which to show by default
 	storage.get(function(settings) {
 		if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
-		if (settings.new_release_filter == true) {
-			if ($("#tab_1_content").is(":visible")) {
-				$("#tab_1_content").hide();
-				$("#tab_1_content_enhanced").show();
-			} else if ($("#tab_filtered_dlc_content").is(":visible")) {
-				$("#tab_filtered_dlc_content").hide();
-				$("#tab_filtered_dlc_content_enhanced").show();
-			}
-		}
+		if (settings.new_release_dlc_filter === undefined) { settings.new_release_dlc_filter = true; storage.set({'new_release_dlc_filter': settings.new_release_dlc_filter}); }
+		
+		$("#tab_1_content").hide();
+		$("#tab_1_content_enhanced").hide();
+		$("#tab_filtered_dlc_content").hide();
+		$("#tab_filtered_dlc_content_enhanced").hide();
+
+		if (settings.new_release_dlc_filter == true && settings.new_release_filter == true) { $("#tab_1_content").show(); }
+		if (settings.new_release_dlc_filter == true && settings.new_release_filter == false) { $("#tab_1_content_enhanced").show(); }
+		if (settings.new_release_dlc_filter == false && settings.new_release_filter == true) { $("#tab_filtered_dlc_content").show(); }
+		if (settings.new_release_dlc_filter == false && settings.new_release_filter == false) { $("#tab_filtered_dlc_content_enhanced").show(); }
 
 		$("#new_all_filtered_enhanced, #new_all_enhanced").click(function() {
-			storage.set({'new_release_filter': false});
+			storage.set({'new_release_filter': true});
 		});
 
 		$("#new_all_filtered, #new_all").click(function() {
-			storage.set({'new_release_filter': true});
+			storage.set({'new_release_filter': false});
 		});
+
+		$("#tab_1_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
+		$("#tab_1_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
+		$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
+		$("#tab_filtered_dlc_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
 	});
 
 	function fill_box(tabName) {
