@@ -716,3 +716,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .dailydeal {
 	border-radius: 2px;
 }
+.es_newrelease_loading {
+	text-align: center;
+	margin-top: 20px;
+}

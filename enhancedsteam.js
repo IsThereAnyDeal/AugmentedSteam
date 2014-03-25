@@ -2617,13 +2617,26 @@ function add_actual_new_release_button() {
 	$("#tab_1_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_filtered_dlc_content_enhanced');");
 	$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_1_content_enhanced');");
 
+	// Get country code from Steam cookie
+	var cookies = document.cookie;
+	var matched = cookies.match(/fakeCC=([a-z]{2})/i);
+	var cc = "us";
+	if (matched != null && matched.length == 2) {
+		cc = matched[1];
+	} else {
+		matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+		if (matched != null && matched.length == 2) {
+			cc = matched[1];
+		}
+	}
+
 	// Determine which to show by default
 	storage.get(function(settings) {
 		if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
 		if (settings.new_release_filter == true) {
 			if ($("#tab_1_content").is(":visible")) {
 				$("#tab_1_content").hide();
-				$("#tab_1_content_enhanced").show();				
+				$("#tab_1_content_enhanced").show();
 			} else if ($("#tab_filtered_dlc_content").is(":visible")) {
 				$("#tab_filtered_dlc_content").hide();
 				$("#tab_filtered_dlc_content_enhanced").show();
@@ -2640,11 +2653,14 @@ function add_actual_new_release_button() {
 	});
 
 	function fill_box(tabName) {
+
+		$("#tab_" + tabName + "_items_enhanced").append("<div class='es_newrelease_loading' id='es_loading_" + tabName + "'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>" + localized_strings[language].loading + "</div>");
+
 		var appids = [];
 		var count = 1;
 
 		var game_items = $("#tab_" + tabName + "_items").children();
-		get_http("http://store.steampowered.com/search/tab?bHoverEnabled=true&style=&navcontext=1_4_4_&tab=" + tabName + "&start=10&count=10", function(txt) {		
+		get_http("http://store.steampowered.com/search/tab?bHoverEnabled=true&cc=" + cc + "&l=" + language + "&style=&navcontext=1_4_4_&tab=" + tabName + "&start=10&count=10", function(txt) {
 			var parsed = $.parseHTML(txt);
 			$(parsed).each(function(i) {
 				if ($(parsed[i]).find("div").length > 0) {
@@ -2656,7 +2672,7 @@ function add_actual_new_release_button() {
 				var valueToPush = new Array();
 				valueToPush[0] = get_appid($(this).find("a").attr("href"));
 				valueToPush[1] = $(this).clone();
-				valueToPush[2] = $(this).find(".genre_release").text().match(/\: (.+)/)[1];
+				valueToPush[2] = $(this).find(".genre_release").text().match(/\: (.+)/)[1].toLowerCase();
 				valueToPush[3] = count;
 				appids.push(valueToPush);
 				count++;
@@ -2674,16 +2690,17 @@ function add_actual_new_release_button() {
 
 				get_http("http://store.steampowered.com/app/" + data[0] + "/", function(store_page) {
 					var html = $.parseHTML(store_page);
-					apppage_release_date = $(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)[1];
-					
-					if (data[2] == apppage_release_date) {
-						var valueToPush = new Array();
-						valueToPush[0] = data[0];
-						valueToPush[1] = data[1];
-						valueToPush[2] = data[2];
-						valueToPush[3] = apppage_release_date;
-						valueToPush[4] = data[3];
-						games.push(valueToPush);
+					if ($(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)) {
+						apppage_release_date = $(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)[1].toLowerCase();
+						if (data[2] == apppage_release_date) {
+							var valueToPush = new Array();
+							valueToPush[0] = data[0];
+							valueToPush[1] = data[1];
+							valueToPush[2] = data[2];
+							valueToPush[3] = apppage_release_date;
+							valueToPush[4] = data[3];
+							games.push(valueToPush);
+						}						
 					}
 					dfd.resolve();
 				});
@@ -2695,6 +2712,7 @@ function add_actual_new_release_button() {
 				games.sort(function(a,b) {
 					return parseInt(a[4],10) - parseInt(b[4],10);
 				});
+				$("#es_loading_" + tabName).remove();
 				$(games).each(function(t) {
 					$("#tab_" + tabName + "_items_enhanced").append(games[t][1]);
 				});
