@@ -2603,16 +2603,16 @@ function add_actual_new_release_button() {
 	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_prev").remove();
 	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_next").remove();
 	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_count_total").text("10");
-	$("#tab_filtered_dlc_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all_filtered' onclick='TabSelectStealth(\"tab_filtered_dlc_content_enhanced\");'>Show all Steam releases</div>");
-	$("#tab_filtered_dlc_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_filtered_enhanced' onclick='TabSelectStealth(\"tab_filtered_dlc_content\");'>Show all Steam releases</div>");
+	$("#tab_filtered_dlc_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all_filtered' onclick='TabSelectStealth(\"tab_filtered_dlc_content_enhanced\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
+	$("#tab_filtered_dlc_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_filtered_enhanced' onclick='TabSelectStealth(\"tab_filtered_dlc_content\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
 
 	$("#tab_1_content").clone().css("display", "none").attr("id", "tab_1_content_enhanced").appendTo(".tab_content_ctn");
 	$("#tab_1_content_enhanced").find("#tab_NewReleases_items").attr("id", "tab_NewReleases_items_enhanced").empty();
 	$("#tab_1_content_enhanced").find("#tab_NewReleases_prev").remove();
 	$("#tab_1_content_enhanced").find("#tab_NewReleases_next").remove();
 	$("#tab_1_content_enhanced").find("#tab_NewReleases_count_total").text("10");
-	$("#tab_1_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all' onclick='TabSelectStealth(\"tab_1_content_enhanced\");'>Show all Steam releases</div>");
-	$("#tab_1_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_enhanced' onclick='TabSelectStealth(\"tab_1_content\");'>Show all Steam releases</div>");
+	$("#tab_1_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all' onclick='TabSelectStealth(\"tab_1_content_enhanced\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
+	$("#tab_1_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_enhanced' onclick='TabSelectStealth(\"tab_1_content\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
 
 	$("#tab_1_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_filtered_dlc_content_enhanced');");
 	$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_1_content_enhanced');");
