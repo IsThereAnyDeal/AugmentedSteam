@@ -232,6 +232,7 @@ function highlight_inv_guestpass(node) {
 	});
 }
 
+// colors the title for items on friend's wishlists
 function highlight_friends_want(node, appid) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_friends_want");
@@ -333,13 +334,15 @@ function hide_node(node) {
 				}
 			}
 		}
-
+		
+		// hides owned items from the store homepage
 		if (settings.hide_owned_homepage) {
 			if (node.classList.contains("tab_row") || node.classList.contains("small_cap") || node.classList.contains("nopad") || $(node).hasClass("home_area_spotlight")) {
 				$(node).css("visibility", "hidden");
 			}
 		}
-
+		
+		// hides DLC for unowned items
 		if (settings.hide_dlcunownedgames) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
 				hide_the_node(node);
@@ -866,6 +869,7 @@ function add_wishlist_discount_sort() {
 	});
 }
 
+// calculates total cost of all items on wishlist
 function add_wishlist_total() {
 	var total = 0;
 	var gamelist = "";
@@ -1115,6 +1119,7 @@ function add_remove_from_wishlist_button(appid) {
 	}
 }
 
+// removes all owned items from the user's wishlist
 function empty_wishlist(e) {
 	var conf_text = (e.data.empty_owned_only) ? "Are you sure you want to remove games you own from your wishlist?\n\nThis action cannot be undone!" : "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!"
 	var conf = confirm(conf_text);
