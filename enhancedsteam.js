@@ -1360,8 +1360,20 @@ function add_language_warning() {
 			var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
 			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
+			function make_language_pretty(language_string) {
+				switch (language_string) {
+					case "Schinese": return "Simplified Chinese"; break;
+					case "Tchinese": return "Traditional Chinese"; break;
+					case "Koreana":	return "Korean"; break;
+					default: return language_string; break;
+				}
+			}
+
 			if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = currentLanguage; storage.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 			var lang = settings.showlanguagewarninglanguage.toLowerCase().slice(0,3);
+
+			currentLanguage = make_language_pretty(currentLanguage);
+			settings.showlanguagewarninglanguage = make_language_pretty(settings.showlanguagewarninglanguage);
 
 			if (settings.showlanguagewarninglanguage != currentLanguage) {
 				if (localized_strings[lang] && localized_strings[lang].using_language && localized_strings[lang].using_language_return) {
