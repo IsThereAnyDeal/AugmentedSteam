@@ -6106,6 +6106,38 @@ function add_friends_that_play() {
 	});
 }
 
+function add_birthday_celebration() {
+	var profile_id = is_signed_in();
+	var setting_name = profile_id[0]+"birthday";
+	var obj = {};
+	storage.get(function(settings) {
+		if (settings[setting_name] === undefined) {
+			get_http('http://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + profile_id, function (txt) {
+				var data = JSON.parse(txt);
+				var timecreated = data["response"]["players"][0]["timecreated"];
+				obj[setting_name] = timecreated;
+				storage.set(obj);
+			});
+		}
+		else {
+			var username = $("#global_header .username").text().trim();
+			var birth_date_unix = settings[setting_name];
+			var birth_date = new Date(birth_date_unix*1000);
+			var now = new Date();
+			var years=0;
+			if(now.getMonth()==birth_date.getMonth()){
+				if(now.getDate()==birth_date.getDate()){
+					years = now.getFullYear()-birth_date.getFullYear();
+					var message = localized_strings[language]["birthday_message"].replace("__username__", username).replace("__age__", years);
+					$("#logo_holder img").attr({"title":message,"alt":message,"height":60,"src":chrome.extension.getURL("img/birthday_logo.png")});
+					$(".logo").css({"height":"60px","padding-top":"14px"});
+					$("#global_header, #global_header .content").css({"background-image":"url("+chrome.extension.getURL("img/birthday_bg.jpg")+")"});
+				}
+			}
+		}
+	});
+}
+
 $(document).ready(function(){
 	is_signed_in();
 
@@ -6123,6 +6155,7 @@ $(document).ready(function(){
 		if (is_signed_in()) {
 			replace_account_name();
 			add_library_menu();
+			add_birthday_celebration();
 		}
 
 		// attach event to the logout button
