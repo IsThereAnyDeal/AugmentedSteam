@@ -2674,8 +2674,8 @@ function add_actual_new_release_button() {
 
 	// Determine which to show by default
 	storage.get(function(settings) {
-		if (settings.new_release_filter === undefined) { settings.new_release_filter = false; storage.set({'new_release_filter': settings.new_release_filter}); }
-		if (settings.new_release_dlc_filter === undefined) { settings.new_release_dlc_filter = false; storage.set({'new_release_dlc_filter': settings.new_release_dlc_filter}); }
+		if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
+		if (settings.new_release_dlc_filter === undefined) { settings.new_release_dlc_filter = true; storage.set({'new_release_dlc_filter': settings.new_release_dlc_filter}); }
 		
 		$("#tab_1_content").hide();
 		$("#tab_1_content_enhanced").hide();
