@@ -202,7 +202,7 @@ function highlight_coupon(node, discount) {
 	});
 }
 
-// colors the tile for items in inventory
+// Colors the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_inv_gift");
@@ -1210,6 +1210,7 @@ function add_4pack_breakdown() {
 	});
 }
 
+// Adds button to show package info for all games
 function add_package_info_button() {
 	storage.get(function(settings) {
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; storage.set({'show_package_info': settings.show_package_info}); }
@@ -1252,6 +1253,7 @@ function add_steamchart_info(appid) {
 	}
 }
 
+// Adds button to check system requirements on app pages 
 function add_system_requirements_check(appid) {
 	storage.get(function(settings) {
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; storage.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
@@ -1273,6 +1275,7 @@ function send_age_verification() {
 	});
 }
 
+// Displays Steam Wallet funds in header
 function add_wallet_balance_to_header() {
 	$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
 	$("#es_wallet").load('http://store.steampowered.com #header_wallet_ctn');
@@ -1536,7 +1539,7 @@ function add_library_menu() {
 	});
 }
 
-// Displays Steam Library when "Library" button is selected
+// Displays game library when "Library" button is selected
 function show_library() {
 	var deferred = $.Deferred();
 
@@ -1753,6 +1756,7 @@ function show_library() {
 	return deferred.promise();
 }
 
+// Displays loading message when loading game library
 function library_show_app(appid) {
 	$("#es_library_background").removeAttr("style");
 	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div>");
@@ -2972,6 +2976,7 @@ function add_metacritic_userscore() {
 	});
 }
 
+// Adds Steam user review score
 function add_steamreview_userscore(appid) {
 	if ($(".game_area_dlc_bubble").length == 0) {
 		var positive = 0;
@@ -3199,8 +3204,8 @@ function add_dlc_page_link(appid) {
 	}
 }
 
+// Fixes "No image available" in wishlist
 function fix_wishlist_image_not_found() {
-	// fixes "Image not found" in wishlist
 	var items = document.getElementById("wishlist_items");
 	if (items) {
 		imgs = items.getElementsByTagName("img");
@@ -3511,6 +3516,7 @@ function add_active_total() {
 	}
 }
 
+// Hide active listings on Market homepage
 function minimize_active_listings() {
 	storage.get(function(settings) {
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
@@ -4064,6 +4070,7 @@ function add_app_badge_progress(appid) {
 	}
 }
 
+// Adds checkboxes for DLC
 function add_dlc_checkboxes() {
 	if ($("#game_area_dlc_expanded").length > 0) {
 		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
@@ -4767,6 +4774,7 @@ function hide_trademark_symbols(community) {
 	});
 }
 
+// Displays purchase date for owned games
 function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
@@ -5378,6 +5386,7 @@ function fix_broken_sub_image() {
 	$.ajax(header).error(function() { $(".package_header").attr("src", img); });
 }
 
+// Displays total size of all installed games
 function totalsize() {
 	var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
@@ -5402,6 +5411,7 @@ function totalsize() {
 	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p></div.");
 }
 
+// Displays total time played for all games
 function totaltime() {
 	var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
