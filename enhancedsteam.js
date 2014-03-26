@@ -2396,6 +2396,27 @@ function add_wishlist_profile_link() {
 	});	
 }
 
+// Adds supporter badges to supporter's profiles
+function add_supporter_badges() {
+	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+	if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+
+	get_http("http://api.enhancedsteam.com/supporter/?steam_id=" + steamID, function(txt) {
+		var data = JSON.parse(txt);
+
+		if (data["num_badges"] > 0) {
+			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">Enhanced Steam Supporter</span>&nbsp;<span class="profile_count_link_total">' + data["num_badges"] + '</span></a></div>';
+
+			for (i=0; i < data["badges"].length; i++) {
+				html += '<div class="profile_badges_badge "><a href="' + data["badges"][i].link + '" title="' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></a></div>';
+			}
+
+			html += '<div style="clear: left;"></div></div>';
+			$(".profile_badges").after(html);
+		}
+	});
+}
+
 function appdata_on_wishlist() {
 	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
 		var app = get_appid(node.href);
@@ -6365,6 +6386,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 						add_community_profile_links();
 						add_wishlist_profile_link();
+						add_supporter_badges();
 						change_user_background();
 						add_profile_store_links();
 						fix_profile_image_not_found();
