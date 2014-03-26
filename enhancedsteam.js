@@ -202,7 +202,7 @@ function highlight_coupon(node, discount) {
 	});
 }
 
-// colors the tile for items in inventory
+// Colors the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_inv_gift");
@@ -2943,6 +2943,7 @@ function add_metacritic_userscore() {
 	});
 }
 
+// Adds Steam user review score
 function add_steamreview_userscore(appid) {
 	if ($(".game_area_dlc_bubble").length == 0) {
 		var positive = 0;
@@ -3170,8 +3171,8 @@ function add_dlc_page_link(appid) {
 	}
 }
 
+// Fixes "No image available" in wishlist
 function fix_wishlist_image_not_found() {
-	// fixes "Image not found" in wishlist
 	var items = document.getElementById("wishlist_items");
 	if (items) {
 		imgs = items.getElementsByTagName("img");
@@ -3482,6 +3483,7 @@ function add_active_total() {
 	}
 }
 
+// Hide active listings on Market homepage
 function minimize_active_listings() {
 	storage.get(function(settings) {
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
@@ -4035,6 +4037,7 @@ function add_app_badge_progress(appid) {
 	}
 }
 
+// Adds checkboxes for DLC
 function add_dlc_checkboxes() {
 	if ($("#game_area_dlc_expanded").length > 0) {
 		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
@@ -4738,6 +4741,7 @@ function hide_trademark_symbols(community) {
 	});
 }
 
+// Displays purchase date for owned games
 function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
