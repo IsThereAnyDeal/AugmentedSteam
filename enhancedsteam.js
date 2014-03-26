@@ -15,7 +15,7 @@ var cookie = document.cookie;
 var language = cookie.match(/language=([a-z]{3})/i)[1];
 if (localized_strings[language] === undefined) { language = "eng"; }
 
-// set language for options page
+// Set language for options page
 chrome.storage.sync.set({'language': language});
 
 // Global scope promise storage; to prevent unecessary API requests.
@@ -24,6 +24,7 @@ var appid_promises = {};
 var library_all_games = [];
 
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
 // Runs script in the context of the current tab
 function runInPageContext(fun){
     var script  = document.createElement('script');
@@ -32,7 +33,7 @@ function runInPageContext(fun){
 	script.parentNode.removeChild(script);
 }
 
-//Chrome storage functions.
+// Chrome storage functions.
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
 }
@@ -58,7 +59,6 @@ Array.prototype.chunk = function(chunkSize) {
         R.push(this.slice(i,i+chunkSize));
     return R;
 }
-
 
 function formatMoney (number, places, symbol, thousand, decimal, right) {
 	places = !isNaN(places = Math.abs(places)) ? places : 2;
@@ -142,7 +142,7 @@ function ensure_appid_deferred(appid) {
 	}
 }
 
-// check if the user is signed in
+// Checks if the user is signed in
 function is_signed_in() {
 	if (!signedInChecked) {
 		var steamLogin = getCookie("steamLogin");
@@ -152,7 +152,7 @@ function is_signed_in() {
 	return isSignedIn;
 }
 
-// colors the tile for owned games
+// Colors the tile for owned games
 function highlight_owned(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_owned");
@@ -172,7 +172,7 @@ function highlight_owned(node) {
 	});
 }
 
-// colors the tile for wishlist games
+// Colors the tile for wishlist games
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_wishlist");
@@ -187,7 +187,7 @@ function highlight_wishlist(node) {
 	});
 }
 
-// colors the tile for items with coupons
+// Colors the tile for items with coupons
 function highlight_coupon(node, discount) {
 		node.classList.add("es_highlight_coupon");
 
@@ -217,7 +217,7 @@ function highlight_inv_gift(node) {
 	});
 }
 
-// colors the tile for items in inventory
+// Colors the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_inv_guestpass");
@@ -232,6 +232,7 @@ function highlight_inv_guestpass(node) {
 	});
 }
 
+// Colors the title for items on friend's wishlists
 function highlight_friends_want(node, appid) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_friends_want");
@@ -333,13 +334,15 @@ function hide_node(node) {
 				}
 			}
 		}
-
+		
+		// hides owned items from the store homepage
 		if (settings.hide_owned_homepage) {
 			if (node.classList.contains("tab_row") || node.classList.contains("small_cap") || node.classList.contains("nopad") || $(node).hasClass("home_area_spotlight")) {
 				$(node).css("visibility", "hidden");
 			}
 		}
-
+		
+		// hides DLC for unowned items
 		if (settings.hide_dlcunownedgames) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
 				hide_the_node(node);
@@ -866,6 +869,7 @@ function add_wishlist_discount_sort() {
 	});
 }
 
+// Calculates total cost of all items on wishlist
 function add_wishlist_total() {
 	var total = 0;
 	var gamelist = "";
@@ -1115,6 +1119,7 @@ function add_remove_from_wishlist_button(appid) {
 	}
 }
 
+// Removes all owned items from the user's wishlist
 function empty_wishlist(e) {
 	var conf_text = (e.data.empty_owned_only) ? "Are you sure you want to remove games you own from your wishlist?\n\nThis action cannot be undone!" : "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!"
 	var conf = confirm(conf_text);
@@ -1222,6 +1227,7 @@ function add_package_info_button() {
 	});
 }
 
+// Displays information on current players from SteamCharts.com
 function add_steamchart_info(appid) {
 	if ($(".game_area_dlc_bubble").length == 0) {
 		storage.get(function(settings) {
@@ -1256,6 +1262,7 @@ function add_system_requirements_check(appid) {
 	});	
 }
 
+// Automatically sends age verification when requested
 function send_age_verification() {
 	storage.get(function(settings) {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
@@ -1324,6 +1331,7 @@ function add_enhanced_steam_options() {
 		.before($dropdown_options_container);
 }
 
+// Displays warning if browsing in non-account region
 function add_fake_country_code_warning() {
 	storage.get(function(settings) {
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; storage.set({'showfakeccwarning': settings.showfakeccwarning}); }
@@ -1344,6 +1352,7 @@ function add_fake_country_code_warning() {
 	});
 }
 
+// Displays warning if browsing in a different language
 function add_language_warning() {
 	storage.get(function(settings) {
 		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
@@ -1381,7 +1390,7 @@ function remove_install_steam_button() {
 	});
 }
 
-// Removes the About menu item at the top of each page
+// Removes the "About" menu item at the top of each page
 function remove_about_menu() {
 	storage.get(function(settings) {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
@@ -1410,6 +1419,7 @@ function add_header_links() {
 	}
 }
 
+// Replaces account name with community name
 function replace_account_name() {
 	storage.get(function(settings) {
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; storage.set({'replaceaccountname': settings.replaceaccountname}); }
@@ -1514,6 +1524,7 @@ function add_library_menu() {
 	});
 }
 
+// Displays Steam Library when "Library" button is selected
 function show_library() {
 	var deferred = $.Deferred();
 
@@ -2273,6 +2284,7 @@ function drm_warnings() {
 	});
 }
 
+// Removes all items from cart
 function add_empty_cart_button() {
 	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + localized_strings[language].empty_cart + "</a>";
 
@@ -2515,6 +2527,7 @@ function load_search_results () {
 	}
 }
 
+// Enables continuous scrolling of search results
 function endless_scrolling() {
 	storage.get(function(settings) {
 		if (settings.contscroll === undefined) { settings.contscroll = false; storage.set({'contscroll': settings.contscroll}); }
@@ -2545,6 +2558,7 @@ function remove_non_specials() {
 	}
 }
 
+// Hides DLC for unowned games
 function hide_unowned_game_dlc() {
 	storage.get(function(settings) {
 		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; storage.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
@@ -2763,6 +2777,7 @@ function fix_search_placeholder() {
 	});
 }
 
+// Adds speech input to search boxes
 function add_speech_search() {
 	storage.get(function(settings) {
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; storage.set({'showspeechsearch': settings.showspeechsearch}); }
@@ -2900,6 +2915,7 @@ function hide_activity_spam_comments() {
 	blotter_content_observer.observe($("#blotter_content")[0], {childList:true, subtree:true});
 }
 
+// Adds Metacritic user scores to store page
 function add_metacritic_userscore() {
 	// adds metacritic user reviews
 	storage.get(function(settings) {
@@ -2992,6 +3008,7 @@ function add_hltb_info(appid) {
 	});
 }
 
+// Adds link to game pages on pcgamingwiki.com
 function add_pcgamingwiki_link(appid) {
 	storage.get(function(settings) {
 		if (settings.showpcgw === undefined) { settings.showpcgw = true; storage.set({'showpcgw': settings.showpcgw}); }
@@ -3008,6 +3025,7 @@ function add_pcgamingwiki_link(appid) {
 	});
 }
 
+//Displays widescreen support information from wsgf.org
 function add_widescreen_certification(appid) {
 	storage.get(function(settings) {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
@@ -3529,8 +3547,8 @@ function add_market_adv_search() {
 	}
 }
 
+// Adds a "total spent on Steam" to the account details page
 function account_total_spent() {
-	// adds a "total spent on Steam" to the account details page
 	storage.get(function(settings) {
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showtotal) {
@@ -3780,6 +3798,7 @@ function add_inventory_gotopage(){
 	});
 }
 
+// Checks price savings when purchasing game bundles
 function subscription_savings_check() {
 	var not_owned_games_prices = 0,
 		appid_info_deferreds = [],
@@ -3852,7 +3871,7 @@ function subscription_savings_check() {
 	});
 }
 
-// pull DLC gamedata from enhancedsteam.com
+// Pulls DLC gamedata from enhancedsteam.com
 function dlc_data_from_site(appid) {
     if ($("div.game_area_dlc_bubble").length > 0) {
         var appname = $(".apphub_AppName").html();
@@ -4156,6 +4175,7 @@ function add_achievement_section(appid) {
 	});
 }
 
+// Checks for Early Access titles
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
@@ -4188,6 +4208,7 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 	});
 }
 
+// Adds a blue banner to Early Access games
 function process_early_access() {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
@@ -4297,6 +4318,7 @@ function process_early_access() {
 	});
 }
 
+// Displays regional price comparison
 function show_regional_pricing() {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
@@ -4669,6 +4691,7 @@ function show_regional_pricing() {
 	});
 }
 
+// Hides Trademark and Copyright symbols in game titles for Community pages
 function hide_trademark_symbols(community) {
 	storage.get(function(settings) {
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; storage.set({'hidetmsymbols': settings.hidetmsymbols}); }
@@ -4845,6 +4868,7 @@ function start_highlighting_node(node) {
 	}
 }
 
+// Adds a link to an item's page on steamdb.info
 function add_steamdb_links(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; storage.set({'showsteamdb': settings.showsteamdb}); }
@@ -4975,6 +4999,7 @@ function fix_community_hub_links() {
 	}
 }
 
+// Displays app descriptions on storefront carousel
 function add_carousel_descriptions() {
 	storage.get(function(settings) {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
@@ -5004,6 +5029,7 @@ function add_carousel_descriptions() {
 	});
 }
 
+// Adds button for games user can afford with Steam Wallet funds
 function add_affordable_button() {
 	if (is_signed_in() && $("#header_wallet_ctn").text().trim()) {
 		var balance_text = $("#header_wallet_ctn").text().trim();
@@ -5170,6 +5196,7 @@ function add_app_page_highlights(appid) {
 	});
 }
 
+// Shows videos using HTML5 instead of Flash
 function set_html5_video() {
 	storage.get(function(settings) {
 		if (settings.html5video === undefined) { settings.html5video = true; storage.set({'html5video': settings.html5video}); }
@@ -5939,6 +5966,7 @@ function add_gamecard_market_links(game) {
 	});
 }
 
+// Displays cost estimate of crafting a game badge by purchasing unowned trading cards
 function add_badge_completion_cost() {
 	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
