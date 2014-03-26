@@ -15,7 +15,7 @@ var cookie = document.cookie;
 var language = cookie.match(/language=([a-z]{3})/i)[1];
 if (localized_strings[language] === undefined) { language = "eng"; }
 
-// set language for options page
+// Set language for options page
 chrome.storage.sync.set({'language': language});
 
 // Global scope promise storage; to prevent unecessary API requests.
@@ -32,7 +32,7 @@ function runInPageContext(fun){
 	script.parentNode.removeChild(script);
 }
 
-//Chrome storage functions.
+// Chrome storage functions.
 function setValue(key, value) {
 	sessionStorage.setItem(key, JSON.stringify(value));
 }
@@ -4850,6 +4850,7 @@ function start_highlighting_node(node) {
 	}
 }
 
+// Adds a link to an item's Steam Database page
 function add_steamdb_links(appid, type) {
 	storage.get(function(settings) {
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; storage.set({'showsteamdb': settings.showsteamdb}); }
@@ -5009,6 +5010,7 @@ function add_carousel_descriptions() {
 	});
 }
 
+// Adds button to store homepage for games user can afford with available Steam Wallet funds
 function add_affordable_button() {
 	if (is_signed_in() && $("#header_wallet_ctn").text().trim()) {
 		var balance_text = $("#header_wallet_ctn").text().trim();
@@ -5944,6 +5946,7 @@ function add_gamecard_market_links(game) {
 	});
 }
 
+// Displays cost estimate of crafting a game badge by purchasing unowned trading cards
 function add_badge_completion_cost() {
 	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
