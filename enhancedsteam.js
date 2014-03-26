@@ -2405,7 +2405,7 @@ function add_supporter_badges() {
 		var data = JSON.parse(txt);
 
 		if (data["num_badges"] > 0) {
-			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">Enhanced Steam Supporter</span>&nbsp;<span class="profile_count_link_total">' + data["num_badges"] + '</span></a></div>';
+			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">' + localized_strings[language].es_supporter + '</span>&nbsp;<span class="profile_count_link_total">' + data["num_badges"] + '</span></a></div>';
 
 			for (i=0; i < data["badges"].length; i++) {
 				html += '<div class="profile_badges_badge "><a href="' + data["badges"][i].link + '" title="' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></a></div>';
