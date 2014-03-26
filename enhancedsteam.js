@@ -1210,7 +1210,7 @@ function add_4pack_breakdown() {
 	});
 }
 
-// Adds button to show package info on app pages
+// Adds button to show package info for all games
 function add_package_info_button() {
 	storage.get(function(settings) {
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; storage.set({'show_package_info': settings.show_package_info}); }
@@ -1527,7 +1527,7 @@ function add_library_menu() {
 	});
 }
 
-// Displays Steam Library when "Library" button is selected
+// Displays game library when "Library" button is selected
 function show_library() {
 	var deferred = $.Deferred();
 
@@ -1744,6 +1744,7 @@ function show_library() {
 	return deferred.promise();
 }
 
+// Displays loading message when loading game library
 function library_show_app(appid) {
 	$("#es_library_background").removeAttr("style");
 	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div>");
@@ -5348,6 +5349,7 @@ function fix_broken_sub_image() {
 	$.ajax(header).error(function() { $(".package_header").attr("src", img); });
 }
 
+// Displays total size of all installed games
 function totalsize() {
 	var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
@@ -5372,6 +5374,7 @@ function totalsize() {
 	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings[language].total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p></div.");
 }
 
+// Displays total time played for all games
 function totaltime() {
 	var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
