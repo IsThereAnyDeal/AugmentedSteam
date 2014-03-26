@@ -1210,6 +1210,7 @@ function add_4pack_breakdown() {
 	});
 }
 
+// Adds button to show package info on app pages
 function add_package_info_button() {
 	storage.get(function(settings) {
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; storage.set({'show_package_info': settings.show_package_info}); }
@@ -1252,6 +1253,7 @@ function add_steamchart_info(appid) {
 	}
 }
 
+// Adds button to check system requirements on app pages 
 function add_system_requirements_check(appid) {
 	storage.get(function(settings) {
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; storage.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
@@ -1273,6 +1275,7 @@ function send_age_verification() {
 	});
 }
 
+// Displays Steam Wallet funds in header
 function add_wallet_balance_to_header() {
 	$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
 	$("#es_wallet").load('http://store.steampowered.com #header_wallet_ctn');
