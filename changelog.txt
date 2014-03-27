@@ -1,9 +1,13 @@
 v6.1
 -----
-+ Added filter to the new release section that will filter out older games (thanks TotalBiscuit!)
 + Added a secret...
+
+v6.0.1
+-----
++ Added filter to the new release section that will filter out older games (thanks TotalBiscuit!)
 : Fixed a bug on wishlist pages where price history would remain after making changes
 : Fixed a bug on the market page caused by layout changes
+: Fixed a bug on sub pages that caused price history not to display
 
 v6.0
 -----
