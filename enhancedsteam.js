@@ -2189,12 +2189,20 @@ function show_pricing_history(appid, type) {
 	        	});
 			}
 
-			get_price_data(type, $(".game_area_purchase_game_wrapper:first"), appid);
+			switch (type) {
+				case "app":
+					get_price_data(type, $(".game_area_purchase_game_wrapper:first"), appid);
 
-			$(".game_area_purchase_game_wrapper").not(".game_area_purchase_game_wrapper:first").each(function() {				
-				var subid = $(this).find("input[name=subid]").val();
-				get_price_data("sub", $(this), subid);
-			});
+					$(".game_area_purchase_game_wrapper").not(".game_area_purchase_game_wrapper:first").each(function() {
+						var subid = $(this).find("input[name=subid]").val();
+						get_price_data("sub", $(this), subid);
+					});
+					break;
+				case "sub":
+					get_price_data(type, $(".game_area_purchase_game:first"), appid);
+					break;
+			}
+			
 		}
 	});
 }
@@ -5380,12 +5388,6 @@ function add_profile_store_links() {
 	});
 }
 
-function fix_broken_sub_image() {
-	var header = $(".package_header").attr("src");
-	var img = $(".tab_item_img").find("img").attr("src").match(/(.+)\//)[0] + "header.jpg";
-	$.ajax(header).error(function() { $(".package_header").attr("src", img); });
-}
-
 // Displays total size of all installed games
 function totalsize() {
 	var html = $("html").html();
@@ -6279,8 +6281,7 @@ $(document).ready(function(){
 						drm_warnings();
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");
-						add_steamdb_links(subid, "sub");
-						fix_broken_sub_image();
+						add_steamdb_links(subid, "sub");						
 
 						show_regional_pricing();
 						break;
