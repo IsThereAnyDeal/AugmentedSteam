@@ -2427,7 +2427,8 @@ function add_supporter_badges() {
 
 	get_http("http://api.enhancedsteam.com/supporter/?steam_id=" + steamID, function(txt) {
    		var data = JSON.parse(txt);
-                var badge_count = data["badges"].length;
+   		var badge_count = data["badges"].length;
+   		
 		if (badge_count > 0) {
 			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">' + localized_strings[language].es_supporter + '</span>&nbsp;<span class="profile_count_link_total">' + badge_count + '</span></a></div>';
 
