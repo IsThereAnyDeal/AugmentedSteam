@@ -2426,18 +2426,23 @@ function add_supporter_badges() {
 	if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
 
 	get_http("http://api.enhancedsteam.com/supporter/?steam_id=" + steamID, function(txt) {
-   		var data = JSON.parse(txt);
-   		var badge_count = data["badges"].length;
-   		
+		var data = JSON.parse(txt);
+		var badge_count = data["badges"].length;
+
 		if (badge_count > 0) {
-			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">' + localized_strings[language].es_supporter + '</span>&nbsp;<span class="profile_count_link_total">' + badge_count + '</span></a></div>';
+			var html = '<div class="profile_badges" id="es_supporter_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">' + localized_strings[language].es_supporter + '</span>&nbsp;<span class="profile_count_link_total">' + badge_count + '</span></a></div>';
 
 			for (i=0; i < data["badges"].length; i++) {
-				html += '<div class="profile_badges_badge "><a href="' + data["badges"][i].link + '" title="' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></a></div>';
+				if (data["badges"][i].link) {
+					html += '<div class="profile_badges_badge "><a href="' + data["badges"][i].link + '" title="' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></a></div>';
+				} else {
+					html += '<div class="profile_badges_badge "><img src="' + data["badges"][i].img + '" title="' + data["badges"][i].title + '"></div>';
+				}	
 			}
 
 			html += '<div style="clear: left;"></div></div>';
 			$(".profile_badges").after(html);
+			$("#es_supporter_badges .profile_badges_badge:last").addClass("last");
 		}
 	});
 }
