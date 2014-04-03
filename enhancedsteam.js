@@ -2426,10 +2426,11 @@ function add_supporter_badges() {
 	if (steamID === undefined) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
 
 	get_http("http://api.enhancedsteam.com/supporter/?steam_id=" + steamID, function(txt) {
-		var data = JSON.parse(txt);
-
-		if (data["num_badges"] > 0) {
-			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">' + localized_strings[language].es_supporter + '</span>&nbsp;<span class="profile_count_link_total">' + data["num_badges"] + '</span></a></div>';
+   		var data = JSON.parse(txt);
+   		var badge_count = data["badges"].length;
+   		
+		if (badge_count > 0) {
+			var html = '<div class="profile_badges"><div class="profile_count_link"><a href="http://www.EnhancedSteam.com"><span class="count_link_label">' + localized_strings[language].es_supporter + '</span>&nbsp;<span class="profile_count_link_total">' + badge_count + '</span></a></div>';
 
 			for (i=0; i < data["badges"].length; i++) {
 				html += '<div class="profile_badges_badge "><a href="' + data["badges"][i].link + '" title="' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></a></div>';
