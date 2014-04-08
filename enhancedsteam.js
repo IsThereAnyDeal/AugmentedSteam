@@ -2332,6 +2332,7 @@ function add_community_profile_links() {
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_dotabuff === undefined) { settings.profile_dotabuff = true; chrome.storage.sync.set({'profile_dotabuff': settings.profile_dotabuff}); }
 		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
 		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
@@ -2373,6 +2374,12 @@ function add_community_profile_links() {
 		if (settings.profile_backpacktf) {
 			htmlstr += '<div class="profile_count_link"><a href="http://backpack.tf/profiles/' + steamID + '" target="_blank"><span class="count_link_label">Backpack.tf</span>&nbsp;<span class="profile_count_link_total">';
 			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/backpacktf'+icon_color+'.png') + '" class="profile_link_icon">';}
+			else {htmlstr += '&nbsp;'}
+			htmlstr += '</span></a></div>';
+		}
+		if (settings.profile_dotabuff) {
+			htmlstr += '<div class="profile_count_link"><a href="http://dotabuff.com/players/' + steamID + '" target="_blank"><span class="count_link_label">Dotabuff</span>&nbsp;<span class="profile_count_link_total">';
+			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/dotabuff'+icon_color+'.png') + '" class="profile_link_icon">';}
 			else {htmlstr += '&nbsp;'}
 			htmlstr += '</span></a></div>';
 		}
