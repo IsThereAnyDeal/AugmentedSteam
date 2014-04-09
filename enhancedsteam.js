@@ -1184,13 +1184,13 @@ function pack_split(node, ways) {
 	);
 }
 
-function add_4pack_breakdown() {
+function add_pack_breakdown() {
 	$(".game_area_purchase_game_wrapper").each(function() {
 		var title = $(this).find("h1").text().trim();
 		title = title.toLowerCase().replace(/-/g, ' ');
 		if (!title || !title.contains('pack')) return;
 
-		if (title.contains(' 2 pack')) { pack_split(this, 2); }
+		if (title.contains(' 2 pack') && !title.contains('bioshock')) { pack_split(this, 2); }
 		else if (title.contains(' two pack')) { pack_split(this, 2); }
 		else if (title.contains('tower wars friend pack')) { pack_split(this, 2); }
 
@@ -6270,7 +6270,7 @@ $(document).ready(function(){
 						add_steamdb_links(appid, "app");
 						add_dlc_page_link(appid);
 						add_remove_from_wishlist_button(appid);
-						add_4pack_breakdown();
+						add_pack_breakdown();
 						add_package_info_button();
 						add_steamchart_info(appid);
 						add_system_requirements_check(appid);
