@@ -3906,7 +3906,7 @@ function subscription_savings_check() {
 		for (var i = 0; i < sub_apps.length; i++) {
 			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];
 		}
-		var $bundle_price = $(".discount_final_price");
+		var $bundle_price = $(".package_total_area").find(".discount_final_price:last");
 		if ($bundle_price.length === 0) $bundle_price = $(".game_purchase_price");
 
 		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));
