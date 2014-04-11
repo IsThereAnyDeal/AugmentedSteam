@@ -5216,6 +5216,8 @@ function rewrite_string(string, websafe) {
 		string = string.replace(/%3F/g, "?");
 		string = string.replace(/%2C/g, ",");
 		string = string.replace(/%22/g, "\"");
+		string = string.replace(/%3C/g, "<");
+		string = string.replace(/%3E/g, ">");
 	}
 	return string;
 }
