@@ -3725,6 +3725,7 @@ function inventory_market_helper(response) {
 	function load_inventory_market_prices(item, item_name, global_id) {
 		switch (global_id) {
 			case "730":
+			case "238460":
 				var url = "http://steamcommunity.com/market/listings/" + global_id + "/" + rewrite_string(item_name, true);
 				break;
 			default:
