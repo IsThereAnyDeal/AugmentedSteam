@@ -6186,9 +6186,17 @@ function add_birthday_celebration() {
 				if(now.getDate()==birth_date.getDate()){
 					years = now.getFullYear()-birth_date.getFullYear();
 					var message = localized_strings[language]["birthday_message"].replace("__username__", username).replace("__age__", years);
-					$("#logo_holder img").attr({"title":message,"alt":message,"height":60,"src":chrome.extension.getURL("img/birthday_logo.png")});
+					$("#logo_holder img").attr({"title":message,"alt":message,"height":100,"src":chrome.extension.getURL("img/birthday_logo.png")}).css('margin-top', '-14px');
 					$(".logo").css({"height":"60px","padding-top":"14px"});
-					$("#global_header, #global_header .content").css({"background-image":"url("+chrome.extension.getURL("img/birthday_bg.jpg")+")"});
+
+					switch (window.location.host) {
+						case "store.steampowered.com":
+							switch (true) {
+								case /^\/$/.test(window.location.pathname):
+									$("#global_header").append("<div style='background-image: url("+chrome.extension.getURL("img/birthday_bg.png")+");' class='birthday'></div>");					
+									break;
+							}
+					}
 				}
 			}
 		}

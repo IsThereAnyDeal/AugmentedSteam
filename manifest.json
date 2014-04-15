@@ -10,7 +10,7 @@
 	"http://*.steampowered.com/"
   ],
   "web_accessible_resources": [
-    "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png", "img/birthday_logo.png","img/birthday_bg.jpg",
+    "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png", "img/birthday_logo.png","img/birthday_bg.png",
     "img/ico/steamgifts.png", "img/ico/steamtrades.png", "img/ico/steamrep.png", "img/ico/steamdb.png", "img/ico/achievementstats.png",
      "img/ico/steamgifts_col.png", "img/ico/steamtrades_col.png", "img/ico/steamrep_col.png", "img/ico/steamdb_col.png", "img/ico/achievementstats_col.png",
      "img/ico/steamcardexchange.png","img/ico/backpacktf.png","img/ico/backpacktf_col.png","img/ico/astatsnl.png","img/ico/astatsnl_col.png",
