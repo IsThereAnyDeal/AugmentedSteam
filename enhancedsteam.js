@@ -4838,7 +4838,7 @@ function bind_ajax_content_highlighting() {
 					hide_unowned_game_dlc();
 					process_early_access();
 					add_price_slider();
-          search_in_names_only();
+          search_in_names_only(true);
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
@@ -6204,24 +6204,44 @@ function add_birthday_celebration() {
 	});
 }
 
-function search_in_names_only() {
-//storage.get(function(settings) {
-//	if (settings.searchinnamesonly === undefined) { settings.searchinnamesonly = false; storage.set({'searchinnamesonly': settings.searchinnamesonly}); }
-//	if (settings.searchinnamesonly) {
-			var searchterm = $(".search_controls #realterm").val().toLowerCase();
-			var itemtitle;
-			if(searchterm)
-			{      
-				$(".search_result_row .search_name h4").each(function() {
-					itemtitle = $(this).html().toLowerCase();
-					if(!$(this).html().toLowerCase().contains(searchterm))
-					{
-						$(this).parent().parent().hide();
-					}
-				});
-			}
-//	}
-//});
+function search_in_names_only(calledbyajax) {
+	var searchterm = $(".search_controls #realterm").val().toLowerCase();
+	var itemtitle;
+	if(!$("#advanced_search_controls #names_only").length)
+	{
+		$("#advanced_search_controls").append('<div class="store_checkbox_button" style="margin-bottom: 8px;" id="names_only">Search in names only</div>');
+	}
+	$("#advanced_search_controls #names_only").off('click').click(function(){
+		$(this).toggleClass("checked");
+		if($(this).hasClass("checked"))
+		{
+			$(".search_result_row .search_name h4").each(function() {
+				itemtitle = $(this).html().toLowerCase();
+				if(!$(this).html().toLowerCase().contains(searchterm))
+				{
+					$(this).parent().parent().hide();
+				}
+			});
+		}
+		else
+		{
+			$(".search_result_row:hidden").show();
+		}
+	});
+	if(calledbyajax)
+	{      
+		$(".search_result_row:hidden").show();
+		if($("#advanced_search_controls #names_only").hasClass("checked"))
+		{
+			$(".search_result_row .search_name h4").each(function() {
+				itemtitle = $(this).html().toLowerCase();
+				if(!$(this).html().toLowerCase().contains(searchterm))
+				{
+					$(this).parent().parent().hide();
+				}
+			});
+		}    
+	}
 }
 
 $(document).ready(function(){
@@ -6323,7 +6343,7 @@ $(document).ready(function(){
 						endless_scrolling();
 						remove_non_specials();
 						hide_unowned_game_dlc();
-            search_in_names_only();
+            search_in_names_only(false);
 						break;
 
 					case /^\/sale\/.*/.test(window.location.pathname):
