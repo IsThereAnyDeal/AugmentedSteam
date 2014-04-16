@@ -4838,7 +4838,7 @@ function bind_ajax_content_highlighting() {
 					hide_unowned_game_dlc();
 					process_early_access();
 					add_price_slider();
-          search_in_names_only(true);
+					search_in_names_only(true);
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
@@ -6343,7 +6343,7 @@ $(document).ready(function(){
 						endless_scrolling();
 						remove_non_specials();
 						hide_unowned_game_dlc();
-            search_in_names_only(false);
+						search_in_names_only(false);
 						break;
 
 					case /^\/sale\/.*/.test(window.location.pathname):
