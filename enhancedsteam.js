@@ -4838,6 +4838,7 @@ function bind_ajax_content_highlighting() {
 					hide_unowned_game_dlc();
 					process_early_access();
 					add_price_slider();
+          search_in_names_only();
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
@@ -6203,6 +6204,26 @@ function add_birthday_celebration() {
 	});
 }
 
+function search_in_names_only() {
+//storage.get(function(settings) {
+//	if (settings.searchinnamesonly === undefined) { settings.searchinnamesonly = false; storage.set({'searchinnamesonly': settings.searchinnamesonly}); }
+//	if (settings.searchinnamesonly) {
+			var searchterm = $(".search_controls #realterm").val().toLowerCase();
+			var itemtitle;
+			if(searchterm)
+			{      
+				$(".search_result_row .search_name h4").each(function() {
+					itemtitle = $(this).html().toLowerCase();
+					if(!$(this).html().toLowerCase().contains(searchterm))
+					{
+						$(this).parent().parent().hide();
+					}
+				});
+			}
+//	}
+//});
+}
+
 $(document).ready(function(){
 	is_signed_in();
 
@@ -6302,6 +6323,7 @@ $(document).ready(function(){
 						endless_scrolling();
 						remove_non_specials();
 						hide_unowned_game_dlc();
+            search_in_names_only();
 						break;
 
 					case /^\/sale\/.*/.test(window.location.pathname):
