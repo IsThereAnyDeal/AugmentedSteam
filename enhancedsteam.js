@@ -3626,49 +3626,58 @@ function account_total_spent() {
 					}
 				};
 
-				game_prices = jQuery.map($('#store_transactions .transactionRow'), totaler);
+				game_prices = jQuery.map($('#store_transactions .block:first .transactionRow'), totaler);
+				gift_prices = jQuery.map($('#store_transactions .block:last .transactionRow'), totaler);
 				ingame_prices = jQuery.map($('#ingame_transactions .transactionRow'), totaler);
 				market_prices = jQuery.map($('#market_transactions .transactionRow'), totaler);
 
 
 				var game_total = 0.0;
+				var gift_total = 0.0;
 				var ingame_total = 0.0;
 				var market_total = 0.0;
 
 				jQuery.map(game_prices, function (p, i) { game_total += p; });
+				jQuery.map(gift_prices, function (p, i) { gift_total += p; });
 				jQuery.map(ingame_prices, function (p, i) { ingame_total += p; });
 				jQuery.map(market_prices, function (p, i) { market_total += p; });
 
-				total_total = game_total + ingame_total + market_total;
+				total_total = game_total + gift_total + ingame_total + market_total;
 
 				if (currency_symbol) {
 					switch (currency_symbol) {
 						case "€":
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true)
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true)
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true)
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true)
+							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true);
+							gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ".", ",", true);
+							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true);
+							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true);
+							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true);
 							break;
 
 						case "pуб":
 							currency_symbol = " " + currency_symbol;
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true)
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true)
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true)
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true)
+							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true);
+							gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ".", ",", true);
+							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true);
+							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true);
+							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true);
 							break;
 
 						default:
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ".", false)
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ".", false)
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ".", false)
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ".", false)
+							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ".", false);
+							gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ",", ".", false);
+							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ".", false);
+							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ".", false);
+							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ".", false);
 							break;
 					}
 
 					var html = '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + game_total + '</div>';
 					html += '<div class="accountLabel">' + localized_strings[language].store_transactions + ':</div></div>';
+					html += '<div class="accountRow accountBalance accountSpent">';
+					html += '<div class="accountData price">' + gift_total + '</div>';
+					html += '<div class="accountLabel">' + localized_strings[language].gift_transactions + ':</div></div>';
 					html += '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + ingame_total + '</div>';
 					html += '<div class="accountLabel">' + localized_strings[language].game_transactions + ':</div></div>';
