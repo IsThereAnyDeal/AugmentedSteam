@@ -1567,7 +1567,7 @@ function show_library() {
 	es_library.append("<div id='es_library_search' style='display: none;'></div>");
 	es_library.append("<div id='es_library_categories' style='display: none;'></div>");
 	es_library.append("<div id='es_library_genres' style='display: none;'></div>");	
-	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div></div>");
+	es_library.append("<div id='es_library_list' data-appid-selected='undefined'><div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading +"</span></div></div>");
 
 
 	storage.get(function(settings) {
@@ -1759,7 +1759,7 @@ function show_library() {
 // Displays loading message when loading game library
 function library_show_app(appid) {
 	$("#es_library_background").removeAttr("style");
-	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading +"</div>");
+	$("#es_library_right").html("<div id='es_library_list_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading +"</span></div>");
 
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid, function (txt) {
 		var app_data = JSON.parse(txt);
@@ -2733,7 +2733,7 @@ function add_actual_new_release_button() {
 
 	function fill_box(tabName) {
 
-		$("#tab_" + tabName + "_items_enhanced").append("<div class='es_newrelease_loading' id='es_loading_" + tabName + "'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>" + localized_strings[language].loading + "</div>");
+		$("#tab_" + tabName + "_items_enhanced").append("<div class='es_newrelease_loading' id='es_loading_" + tabName + "'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
 
 		var appids = [];
 		var count = 1;
@@ -2995,7 +2995,7 @@ function add_steamreview_userscore(appid) {
 	if ($(".game_area_dlc_bubble").length == 0) {
 		var positive = 0;
 		var negative = 0;
-		$(".game_details").find(".details_block:first").before("<div id='es_review_score'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>" + localized_strings[language].loading + "</div>");
+		$(".game_details").find(".details_block:first").before("<div id='es_review_score'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
 
 		get_http("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=0&p=1&itemspage=10&appHubSubSection=10&browsefilter=toprated", function(p1) {
 			$(p1).find(".thumb").each(function() {
@@ -3250,7 +3250,7 @@ function add_market_total() {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmarkettotal) {
 			if (window.location.pathname.match(/^\/market\/$/)) {
-				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings[language].market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif">'+ localized_strings[language].loading +'</div></div></div>');
+				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings[language].market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif"><span>'+ localized_strings[language].loading +'</span></div></div></div>');
 
 				var pur_total = 0.0;
 				var usd_total = 0.0;
@@ -3758,7 +3758,7 @@ function inventory_market_helper(response) {
 		});
 	}
 	
-	$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>"+ localized_strings[language].loading);
+	$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
 	item_name = $("#iteminfo" + item + "_item_name").html();
 	switch (global_id) {
 		case "730":
