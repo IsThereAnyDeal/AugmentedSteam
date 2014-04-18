@@ -212,7 +212,7 @@ img.platform_small, .platform_img {
 
 #es_library_list_loading span {
 	vertical-align: top;
-  line-height: 32px;
+	line-height: 32px;
 }
 
 #es_library_list::-webkit-scrollbar {
@@ -564,12 +564,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-position: 0 -13px;
 }
 
-.es_review_score span{
-	vertical-align: top;
-  line-height: 32px;
-  margin-left: 5px;
-}
-
 .es_review_image {
 	vertical-align: middle;
 	border: 0px;
@@ -731,11 +725,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	text-align: center;
 	margin-top: 20px;
 }
-.es_newrelease_loading span{
-	vertical-align: top;
-  line-height: 32px;
-  margin-left: 5px;
-}
 .es_active_total {
 	float: right;
 	text-align: center;
@@ -749,13 +738,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	 height: 100%;
 	 background-repeat: repeat-x;
 }
-#es_market_summary span {  
-  vertical-align: top;
-  line-height: 32px;
-  margin-left: 5px;
-}
-#es_item1 span{
-  vertical-align: top;
-  line-height: 32px;
-  margin-left: 5px;
+.es_review_score span, .es_newrelease_loading span, #es_market_summary span, #es_item1 span {  
+	vertical-align: top;
+	line-height: 32px;
+	margin-left: 5px;
 }
