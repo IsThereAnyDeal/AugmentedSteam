@@ -6221,6 +6221,7 @@ function search_in_names_only(calledbyajax) {
 				if(!$(this).html().toLowerCase().contains(searchterm))
 				{
 					$(this).parent().parent().hide();
+					search_threshhold = search_threshhold - 61;
 				}
 			});
 		}    
@@ -6236,6 +6237,7 @@ function search_in_names_only(calledbyajax) {
 					if(!$(this).html().toLowerCase().contains(searchterm))
 					{
 						$(this).parent().parent().hide();
+						search_threshhold = search_threshhold - 61;
 					}
 				});
 			}
