@@ -3705,7 +3705,7 @@ function inventory_market_prepare() {
 			var es_market_helper = document.createElement("script");
 			es_market_helper.type = "text/javascript";
 			es_market_helper.id = "es_market_helper";
-			es_market_helper.textContent = 'jQuery(".itemHolder, .newitem").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.selectedItem.marketable+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name }, "*"); });';
+			es_market_helper.textContent = 'jQuery(".itemHolder, .newitem").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.selectedItem.marketable+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name+":::"+g_ActiveInventory.selectedItem.market_fee_app }, "*"); });';
 			document.documentElement.appendChild(es_market_helper);
 
 			window.addEventListener("message", function(event) {
@@ -3719,15 +3719,19 @@ function inventory_market_prepare() {
 }
 
 function inventory_market_helper(response) {
-	var desc, appid, item_name, game_name;
+	var desc, item_name, game_name;
 	var item = response.split(":::")[0];
 	var marketable = response.split(":::")[1];
 	var global_id = response.split(":::")[2];
 	var hash_name = response.split(":::")[3];
+	var appid = response.split(":::")[4];
 
-	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0 height=10></div>"); }
-	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1 height=10></div>"); }
-	$('.es_item_action').html("");			
+	$("#es_item0_note").css("display", "none");
+	$("#es_item1_note").css("display", "none");
+
+	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0 height=10></div><div class='item_market_actions es_item_action' id=es_item0_note style='display: none;'></div>"); }
+	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1 height=10></div><div class='item_market_actions es_item_action' id=es_item1_note style='display: none;'></div>"); }
+	$('.es_item_action').html("");
 	
 	if (marketable == 0) { $('.es_item_action').remove(); return; }
 
@@ -3750,8 +3754,42 @@ function inventory_market_helper(response) {
 						return false;
 					}
 				});
+
+				var lowest_price = item_to_get[1].trim();
+				$("#es_item" + item).append("<div id='es_convert' style='display: none;'></div>");
+				$("#es_convert").html(lowest_price);
+				lowest_price = $("#es_convert").html();
+				$("#es_convert").remove();
 				
-				$("#es_item" + item).html(localized_strings[language].lowest_price + " for " + item_name + ": " + item_to_get[1].trim() + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+				$("#es_item" + item).html(localized_strings[language].lowest_price + " for " + item_name + ": " + lowest_price + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
+				if (hash_name.match(/Booster Pack/g)) {
+					var currency_symbol = lowest_price.match(/(?:R\$|\$|€|£|pуб)/)[0];
+					var cur, at_end, comma, places = 2;
+
+					switch (currency_symbol) {
+						case "R$":
+							cur = "brl";
+							break;
+						case "€":
+							cur = "eur"; comma = true; at_end = true;
+							break;
+						case "pуб":
+							cur = "rub"; comma = true; at_end = true;
+							break;
+						case "£":
+							cur = "gbp";
+							break;
+						default:
+							cur = "usd";
+							break;
+					}
+					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + cur;
+					get_http(api_url, function(price_data) {
+						var booster_price = parseFloat(price_data,10) * 3;
+						$("#es_item" + item + "_note").html(localized_strings[language].avg_price_3cards + ": " + formatMoney(booster_price, places, currency_symbol, ",", comma ? "," : ".", at_end));
+						$("#es_item" + item + "_note").css("display", "block");
+					});
+				}
 			} else { 
 				$("#es_item" + item).html(localized_strings[language].no_results_found); 
 			}
