@@ -2581,7 +2581,7 @@ function load_search_results () {
 // Enables continuous scrolling of search results
 function endless_scrolling() {
 	storage.get(function(settings) {
-		if (settings.contscroll === undefined) { settings.contscroll = false; storage.set({'contscroll': settings.contscroll}); }
+		if (settings.contscroll === undefined) { settings.contscroll = true; storage.set({'contscroll': settings.contscroll}); }
 		if (settings.contscroll) {
 
 			$(".search_pagination_right").css("display", "none");
