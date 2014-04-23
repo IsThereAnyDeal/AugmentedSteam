@@ -4862,7 +4862,6 @@ function display_purchase_date() {
 
 function bind_ajax_content_highlighting() {
 	// checks content loaded via AJAX
-	var inventory_done = false;
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
@@ -4870,11 +4869,7 @@ function bind_ajax_content_highlighting() {
 				// Check the node is what we want, and not some unrelated DOM change.
 				//if (node.id == "search_result_container") add_cart_to_search();
 				if (node.classList && node.classList.contains("inventory_page")) {
-					if (!inventory_done) {
-						inventory_market_prepare();
-						add_inventory_gotopage();
-						inventory_done=true;
-					}
+					add_inventory_gotopage();
 				}
 
 				if (node.classList && node.classList.contains("tab_row")) {
@@ -6413,6 +6408,7 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
+						inventory_market_prepare();
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
