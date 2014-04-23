@@ -3800,8 +3800,7 @@ function inventory_market_helper(response) {
 	item_name = $("#iteminfo" + item + "_item_name").html();
 	switch (global_id) {
 		case "730":
-			var condition = $("#iteminfo" + item + "_item_descriptors .descriptor:contains('Exterior')").text().replace(/Exterior\: /, "");
-			if (condition) item_name += " (" + condition + ")";
+			item_name = hash_name;
 		default:
 			load_inventory_market_prices(item, item_name, global_id);
 			break;
