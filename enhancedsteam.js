@@ -3705,14 +3705,14 @@ function inventory_market_prepare() {
 			var es_market_helper = document.createElement("script");
 			es_market_helper.type = "text/javascript";
 			es_market_helper.id = "es_market_helper";
-			es_market_helper.textContent = 'jQuery(".itemHolder, .newitem").bind("click", function() { window.postMessage({ type: "es_sendmessage", text: iActiveSelectView+":::"+g_ActiveInventory.selectedItem.marketable+":::"+g_ActiveInventory.appid+":::"+g_ActiveInventory.selectedItem.market_hash_name+":::"+g_ActiveInventory.selectedItem.market_fee_app }, "*"); });';
+			es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app] }, "*"); });';
 			document.documentElement.appendChild(es_market_helper);
 
 			window.addEventListener("message", function(event) {
 			  if (event.source != window)
 			    return;
 
-			  if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.text); }
+			  if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
 			}, false);
 		}
 	});
@@ -3720,11 +3720,11 @@ function inventory_market_prepare() {
 
 function inventory_market_helper(response) {
 	var desc, item_name, game_name;
-	var item = response.split(":::")[0];
-	var marketable = response.split(":::")[1];
-	var global_id = response.split(":::")[2];
-	var hash_name = response.split(":::")[3];
-	var appid = response.split(":::")[4];
+	var item = response[0];
+	var marketable = response[1];
+	var global_id = response[2];
+	var hash_name = response[3];
+	var appid = response[4];
 
 	$("#es_item0_note").css("display", "none");
 	$("#es_item1_note").css("display", "none");
@@ -3813,10 +3813,9 @@ function add_inventory_gotopage(){
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showinvnav) {
 			$("#es_gotopage").remove();
-			$("#es_pagenumber").remove();
-			$("#gotopage_btn").remove();
 			$("#pagebtn_first").remove();
 			$("#pagebtn_last").remove();
+			$("#es_pagego").remove();
 			var es_gotopage = document.createElement("script");
 			es_gotopage.type = "text/javascript";
 			es_gotopage.id = "es_gotopage";
@@ -3868,7 +3867,9 @@ function add_inventory_gotopage(){
 				"width": "32px",
 				"margin": "0 3px"
 			});
-
+			var page_go = document.createElement("div");
+			page_go.id = "es_pagego";
+			$(page_go).css({"float":"left"});
 			// Page number box
 			var pagenumber = document.createElement("input");
 			pagenumber.type = "number";
@@ -3880,7 +3881,7 @@ function add_inventory_gotopage(){
 			pagenumber.style.width = "50px";
 			pagenumber.min = 1;
 			pagenumber.max = $("#pagecontrol_max").text();
-			$("#inventory_pagecontrols").before(pagenumber);
+			$(page_go).append(pagenumber);
 
 			var goto_btn = document.createElement("a");
 			goto_btn.textContent = "Go";
@@ -3891,8 +3892,9 @@ function add_inventory_gotopage(){
 			goto_btn.style.padding = "0";
 			goto_btn.style.margin = "0 6px";
 			goto_btn.style.textAlign = "center";
-			$("#inventory_pagecontrols").before(goto_btn);
+			$(page_go).append(goto_btn);
 
+			$("#inventory_pagecontrols").before(page_go);
 			//TODO: Maybe use &laquo; or &#8810; for first/last button text?
 			//TODO: Disable buttons when already on first/last page?
 		}
@@ -4860,16 +4862,19 @@ function display_purchase_date() {
 
 function bind_ajax_content_highlighting() {
 	// checks content loaded via AJAX
+	var inventory_done = false;
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want, and not some unrelated DOM change.
 				//if (node.id == "search_result_container") add_cart_to_search();
-
 				if (node.classList && node.classList.contains("inventory_page")) {
-					inventory_market_prepare();
-					add_inventory_gotopage();
+					if (!inventory_done) {
+						inventory_market_prepare();
+						add_inventory_gotopage();
+						inventory_done=true;
+					}
 				}
 
 				if (node.classList && node.classList.contains("tab_row")) {
@@ -5237,7 +5242,7 @@ function add_achievement_comparison_link(node) {
 
 function rewrite_string(string, websafe) {
 	if (websafe) {
-		string = encodeURI(string);
+		string = encodeURIComponent(string);
 	} else {		
 		string = decodeURI(string);
 	}
@@ -6408,8 +6413,6 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
-						inventory_market_prepare();
-						add_inventory_gotopage();
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
