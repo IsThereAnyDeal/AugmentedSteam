@@ -1,6 +1,8 @@
 v6.1
 -----
 + Added a secret...
++ Gift transactions are now separated out in total spent section of account page
++ Selecting booster packs in your inventory now shows the average price of three cards for that game
 
 v6.0.1
 -----
