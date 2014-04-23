@@ -6256,7 +6256,7 @@ function search_in_names_only(calledbyajax) {
 	var itemtitle;
 	if(!$("#advanced_search_controls #names_only").length)
 	{
-		$("#advanced_search_controls").append('<div class="store_checkbox_button" style="margin-bottom: 8px;" id="names_only">Search in names only</div>');
+		$("#advanced_search_controls").append('<div class="store_checkbox_button" style="margin-bottom: 8px;" id="names_only">' + localized_strings[language].search_names_only + '</div>');
 	}
 	if(calledbyajax)
 	{      
