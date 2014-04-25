@@ -2805,6 +2805,48 @@ function add_actual_new_release_button() {
 	fill_box("NewReleases");
 }
 
+function add_popular_tab() {
+	$(".tabarea .tabbar").find(".tab:last").after("<div class='tab' id='es_popular'>" + localized_strings[language].popular + "</div>");
+	var tab_html = "<div id='tab_popular_content' style='display: none;'><div class='tab_page' style='height: 780px;'><div id='tab_popular_items' class='v5'><span id='es_loading' style='position: absolute; margin-top: 20px; margin-left: 260px;'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>" + localized_strings[language].loading + "</span></div></div>";
+	tab_html += "<div class='tab_page_link_holder'><div id='tab_popular_prev' class='tab_page_link tab_page_link_prev' style='visibility: hidden;'>";
+	tab_html += "<a href='javascript:tabMax[\"popular\"] = 100; PageTab(\"popular\", -10, 100);'>";
+	tab_html += "<img src='http://store.akamai.steamstatic.com/public/images/v5/ico_navArrow_up.gif'> prev 10</a></div>";
+	tab_html += "<div id='tab_popular_next' class='tab_page_link tab_page_link_next'>";
+	tab_html += "<a href='javascript:tabMax[\"popular\"] = 100; PageTab(\"popular\", 10, 100);'>";
+	tab_html += "next 10 <img src='http://store.akamai.steamstatic.com/public/images/v5/ico_navArrow_down.gif'></a></div>";
+	tab_html += "<div id='tab_popular_count' class='tab_page_count'><span id='tab_popular_count_start'>1</span> - <span id='tab_popular_count_end'>10</span> of <span id='tab_popular_count_total'>100</span></div>";
+	tab_html += "</div>";
+
+	$(".tabarea .tab_content_ctn").append(tab_html);
+
+	$("#es_popular").on("click", function() {
+		$(".tabarea .tabbar").find(".active").removeClass("active");
+		$("#tab1_content, #tab_2_content, #tab_3_content, #tab_discounts_content, #tab_filtered_dlc_content, #tab_filtered_dlc_content_enhanced, #tab_1_content_enhanced").css("display", "none");
+		$("#es_popular").addClass("active");
+		$("#tab_popular_content").css("display", "block");
+
+		if ($("#tab_popular_items").find("div").length == 0) {
+
+			get_http("http://store.steampowered.com/stats", function(txt) {
+				$("#es_loading").remove();
+				var return_text = $.parseHTML(txt);
+				$(return_text).find(".player_count_row").each(function() {
+					var appid = get_appid($(this).find("a").attr("href"));
+					var game_name = $(this).find("a").text();
+					var currently = $(this).find(".currentServers:first").text();
+					var html = "<div class='tab_row' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\"} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
+					html += "<a class='tab_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'></a>";
+					html += "<div class='tab_item_img'><img src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_sm_120.jpg' class='tiny_cap_img'></div>";
+					html += "<div class='tab_desc'><h4>" + game_name + "</h4><div class='genre_release'>" + currently + " " + localized_strings[language].charts.playing_now + "</div><br clear='all'></div>";
+
+					html += "</div>";
+					$("#tab_popular_items").append(html);
+				});	
+			});
+		}
+	});
+}
+
 function fix_search_placeholder() {
 	var selectors = ["#store_nav_search_term", "#term"];
 	$.each(selectors, function(index, selector){
@@ -6405,6 +6447,7 @@ $(document).ready(function(){
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
 						add_actual_new_release_button();
+						add_popular_tab();
 						add_carousel_descriptions();
 						add_affordable_button();
 						show_regional_pricing();
