@@ -731,9 +731,12 @@ function load_translation() {
 			$("#translation_text").text(localized_strings[settings.language].translation);
 			$("#graphics_text").text(localized_strings[settings.language].graphics);
 
-			$("#reset").text(localized_strings[settings.language].reset_options);
+			$("#reset").text(localized_strings[settings.language].options.reset);
 			$("#saved").text(localized_strings[settings.language].options.saved_note);
 			$("#reset_note").text(localized_strings[settings.language].options.reset_note);
+
+			$("#foot_link").text(localized_strings[settings.language].options.foot_link);
+			$("#author_info").text(localized_strings[settings.language].options.author_info);
 		});	
 	});
 }
