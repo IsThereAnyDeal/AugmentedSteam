@@ -4886,7 +4886,7 @@ function display_purchase_date() {
         var appname = $(".apphub_AppName").text();
 
         get_http('https://store.steampowered.com/account/', function (txt) {
-    		var earliestPurchase = $(txt).find("#store_transactions .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
+    		var earliestPurchase = $(txt).find("#store_transactions .block:nth-of-type(1) .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
     			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
 
     		var found = 0;
