@@ -434,7 +434,7 @@ img.platform_small, .platform_img {
 }
 .es_regional_container {
 	display: none;
-	z-index:99;	
+	z-index:999;	
 	position:absolute;
 	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
 	padding: 7px 8px;
