@@ -4101,6 +4101,11 @@ function dlc_data_for_dlc_page() {
 	});
 }
 
+function enhance_game_background() {
+	$("#game_background").before("<div id='es_background_gradient'></div>");
+	$("#game_background").css("display", "block");
+}
+
 function add_app_badge_progress(appid) {
 	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
 		$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div><div style=\"clear: both\"></div>");
@@ -6377,6 +6382,7 @@ $(document).ready(function(){
 						});
 						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
+						enhance_game_background();
 
 						drm_warnings();
 						add_metacritic_userscore();
@@ -6405,6 +6411,7 @@ $(document).ready(function(){
 
 					case /^\/sub\/.*/.test(window.location.pathname):
 						var subid = get_subid(window.location.host + window.location.pathname);
+						enhance_game_background();
 						drm_warnings();
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");

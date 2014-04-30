@@ -1,6 +1,7 @@
 v6.1
 -----
 + Added a "Popular" tab on the homepage to browse the most-played games on Steam
++ Store pages now display a full size background
 + Added a secret...
 + Gift transactions are now separated out in total spent section of account page
 + Selecting booster packs in your inventory now shows the average price of three cards for that game
