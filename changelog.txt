@@ -6,6 +6,10 @@ v6.1
 + Gift transactions are now separated out in total spent section of account page
 + Selecting booster packs in your inventory now shows the average price of three cards for that game
 + Added option to only search within product names
++ Added inventory marketplace support for Battleblock Theater items
+: Fixed a bug that caused price comparison overlays to be partially hidden in some circumstances
+: Fixed a bug that sometimes caused purchase date to be incorrect after buying the game as a gift
+: Fixed a bug which would cause CS:GO items not to get market data in non-English languages
 
 v6.0.1
 -----
