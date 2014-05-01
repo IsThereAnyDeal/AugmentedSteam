@@ -2266,46 +2266,46 @@ function drm_warnings(type) {
 			if (text.indexOf("3rd-party DRM") > 0) { otherdrm = true; }
 			if (text.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
 			
-			var stringtype;
-			if (type == "app") { stringtype = localized_strings[language].drm_third_party; } else { stringtype = localized_strings[language].drm_third_party_sub; }
+			var string_type;
+			if (type == "app") { string_type = localized_strings[language].drm_third_party; } else { string_type = localized_strings[language].drm_third_party_sub; }
 			
 			if (gfwl) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Games for Windows Live)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Games for Windows Live)</div>');
 				otherdrm = false;
 			}
 
 			if (uplay) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Ubisoft Uplay)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Ubisoft Uplay)</div>');
 				otherdrm = false;
 			}
 
 			if (securom) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (SecuROM)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (SecuROM)</div>');
 				otherdrm = false;
 			}
 
 			if (tages) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Tages)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Tages)</div>');
 				otherdrm = false;
 			}
 
 			if (stardock) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Stardock Account Required)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Stardock Account Required)</div>');
 				otherdrm = false;
 			}
 
 			if (rockstar) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Rockstar Social Club)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Rockstar Social Club)</div>');
 				otherdrm = false;
 			}
 
 			if (kalypso) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Kalypso Launcher)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Kalypso Launcher)</div>');
 				otherdrm = false;
 			}
 
 			if (otherdrm) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + '</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + '</div>');
 			}
 		}
 	});
