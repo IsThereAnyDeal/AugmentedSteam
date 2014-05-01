@@ -2208,7 +2208,7 @@ function show_pricing_history(appid, type) {
 }
 
 // Adds red warnings for 3rd party DRM
-function drm_warnings() {
+function drm_warnings(type) {
 	storage.get(function(settings) {
 		if (settings.showdrm === undefined) { settings.showdrm = true; storage.set({'showdrm': settings.showdrm}); }
 		if (settings.showdrm) {
@@ -2265,44 +2265,47 @@ function drm_warnings() {
 			// Detect other DRM
 			if (text.indexOf("3rd-party DRM") > 0) { otherdrm = true; }
 			if (text.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
-
+			
+			var stringtype;
+			if (type == "app") { stringtype = localized_strings[language].drm_third_party; } else { stringtype = localized_strings[language].drm_third_party_sub; }
+			
 			if (gfwl) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (Games for Windows Live)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Games for Windows Live)</div>');
 				otherdrm = false;
 			}
 
 			if (uplay) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (Ubisoft Uplay)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Ubisoft Uplay)</div>');
 				otherdrm = false;
 			}
 
 			if (securom) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (SecuROM)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (SecuROM)</div>');
 				otherdrm = false;
 			}
 
 			if (tages) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (Tages)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Tages)</div>');
 				otherdrm = false;
 			}
 
 			if (stardock) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (Stardock Account Required)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Stardock Account Required)</div>');
 				otherdrm = false;
 			}
 
 			if (rockstar) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (Rockstar Social Club)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Rockstar Social Club)</div>');
 				otherdrm = false;
 			}
 
 			if (kalypso) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + ' (Kalypso Launcher)</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + ' (Kalypso Launcher)</div>');
 				otherdrm = false;
 			}
 
 			if (otherdrm) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + localized_strings[language].drm_third_party + '</div>');
+				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + stringtype + '</div>');
 			}
 		}
 	});
@@ -6389,7 +6392,7 @@ $(document).ready(function(){
 						dlc_data_from_site(appid);
 						enhance_game_background();
 
-						drm_warnings();
+						drm_warnings("app");
 						add_metacritic_userscore();
 						add_steamreview_userscore(appid);
 						display_purchase_date()
@@ -6417,7 +6420,7 @@ $(document).ready(function(){
 					case /^\/sub\/.*/.test(window.location.pathname):
 						var subid = get_subid(window.location.host + window.location.pathname);
 						enhance_game_background();
-						drm_warnings();
+						drm_warnings("sub");
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");
 						add_steamdb_links(subid, "sub");						
