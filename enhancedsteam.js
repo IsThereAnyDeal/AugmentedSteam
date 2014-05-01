@@ -4101,8 +4101,13 @@ function dlc_data_for_dlc_page() {
 	});
 }
 
-function enhance_game_background() {
-	$("#game_background").before("<div id='es_background_gradient'></div>");
+function enhance_game_background(type) {
+	if (type == "sale") {
+		$("#game_background").css("background-size", "initial");		
+	} else {
+		$("#game_background").before("<div id='es_background_gradient'></div>");		
+	}
+
 	$("#game_background").css("display", "block");
 }
 
@@ -6449,6 +6454,7 @@ $(document).ready(function(){
 
 					case /^\/sale\/.*/.test(window.location.pathname):
 						show_regional_pricing();
+						enhance_game_background("sale");
 						break;
 
 					// Storefront-front only
