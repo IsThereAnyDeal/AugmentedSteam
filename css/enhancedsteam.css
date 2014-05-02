@@ -755,6 +755,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,0),rgba(0,0,0,1));
 	z-index: 999;
 }
-#es_background_gradient {
+#es_background {
 	width: 463px;
 }
