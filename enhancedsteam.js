@@ -2207,8 +2207,8 @@ function show_pricing_history(appid, type) {
 	});
 }
 
-// Add red warnings for 3rd party DRM
-function drm_warnings() {
+// Adds red warnings for 3rd party DRM
+function drm_warnings(type) {
 	storage.get(function(settings) {
 		if (settings.showdrm === undefined) { settings.showdrm = true; storage.set({'showdrm': settings.showdrm}); }
 		if (settings.showdrm) {
