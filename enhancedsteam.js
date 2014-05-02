@@ -5500,7 +5500,7 @@ function total_size() {
 }
 
 // Display total time played for all games
-function totaltime() {
+function total_time() {
 	var html = $("html").html();
 	var txt = html.match(/var rgGames = (.+);/);
 	var games = JSON.parse(txt[1]);
