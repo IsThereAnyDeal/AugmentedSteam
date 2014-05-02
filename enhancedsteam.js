@@ -562,7 +562,8 @@ function display_tags(node) {
 		}
 		else if (node.classList.contains("apphub_HeaderStandardTop")) {
 			$tag_root = $(node);
-			$tag_root.css("height", "auto"); // Height to accomodate tags
+			// Height to accomodate tags
+			$tag_root.css("height", "auto");
 
 			remove_existing_tags($tag_root);
 
@@ -2567,7 +2568,8 @@ function load_search_results () {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 			$(".search_result_row").last().after(html);
-			search_threshhold = search_threshhold + 1450; // Each result is 58px height * 25 results per page = 1450
+			// Each result is 58px height * 25 results per page = 1450
+			search_threshhold = search_threshhold + 1450;
 			search_page = search_page + 1;
 			processing = false;
 			remove_non_specials();
@@ -3915,7 +3917,8 @@ function add_inventory_gotopage(){
 			var pagenumber = document.createElement("input");
 			pagenumber.type = "number";
 			pagenumber.value="1";
-			pagenumber.classList.add("filter_search_box"); // Steam's input theme
+			// Steam's input theme
+			pagenumber.classList.add("filter_search_box");
 			pagenumber.autocomplete = "off";
 			pagenumber.placeholder = "page #";
 			pagenumber.id = "es_pagenumber";
@@ -4963,24 +4966,24 @@ function start_highlights_and_tags(){
 	// Batch all the document.ready appid lookups into one storefront call.
 
 	var selectors = [
-		"div.tab_row",			// Storefront rows
-		"div.dailydeal",		// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
-		"div.wishlistRow",		// Wishlist rows
-		"a.game_area_dlc_row",	// DLC on app pages
-		"a.small_cap",			// Featured storefront items and "recommended" section on app pages
-		"a.search_result_row",	// Search result rows
+		"div.tab_row",				// Storefront rows
+		"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
+		"div.wishlistRow",			// Wishlist rows
+		"a.game_area_dlc_row",			// DLC on app pages
+		"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+		"a.search_result_row",			// Search result rows
 		"a.match",				// Search suggestions rows
-		"a.cluster_capsule",	// Carousel items
-		"div.recommendation_highlight",	// Recommendation pages
+		"a.cluster_capsule",			// Carousel items
+		"div.recommendation_highlight",		// Recommendation pages
 		"div.recommendation_carousel_item",	// Recommendation pages
-		"div.friendplaytime_game",	// Recommendation pages
-		"div.dlc_page_purchase_dlc", // DLC page rows
-		"div.sale_page_purchase_item", // Sale pages
+		"div.friendplaytime_game",		// Recommendation pages
+		"div.dlc_page_purchase_dlc",		// DLC page rows
+		"div.sale_page_purchase_item",		// Sale pages
 		"div.item",				// Sale pages / featured pages
-		"div.home_area_spotlight",	// Midweek and weekend deals
+		"div.home_area_spotlight",		// Midweek and weekend deals
 		"div.insert_season_here_sale_dailydeal_ctn",
-		"div.browse_tag_game",	// Tagged games
-		"div.similar_grid_item" // Items on the "Similarly tagged" pages
+		"div.browse_tag_game",			// Tagged games
+		"div.similar_grid_item"			// Items on the "Similarly tagged" pages
 	];
 
 	// Get all appids and nodes from selectors
