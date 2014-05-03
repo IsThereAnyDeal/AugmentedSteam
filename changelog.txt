@@ -1,3 +1,7 @@
+v6.2
+-----
+
+
 v6.1
 -----
 + Added a "Popular" tab on the homepage to browse the most-played games on Steam
