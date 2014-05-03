@@ -2827,7 +2827,7 @@ function add_popular_tab() {
 
 	$("#es_popular").on("click", function() {
 		$(".tabarea .tabbar").find(".active").removeClass("active");
-		$("#tab1_content, #tab_2_content, #tab_3_content, #tab_discounts_content, #tab_filtered_dlc_content, #tab_filtered_dlc_content_enhanced, #tab_1_content_enhanced").css("display", "none");
+		$("#tab_1_content, #tab_2_content, #tab_3_content, #tab_discounts_content, #tab_filtered_dlc_content, #tab_filtered_dlc_content_enhanced, #tab_1_content_enhanced").css("display", "none");
 		$("#es_popular").addClass("active");
 		$("#tab_popular_content").css("display", "block");
 
