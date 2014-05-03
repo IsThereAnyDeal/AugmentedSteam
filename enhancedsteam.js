@@ -969,7 +969,7 @@ function add_wishlist_pricehistory() {
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showlowestprice_onwishlist) {
 
 			// Get List of stores we're searching for
@@ -989,7 +989,7 @@ function add_wishlist_pricehistory() {
 			if (settings.stores[12]) { storestring += "desura,"; }
 			if (settings.stores[13]) { storestring += "gog,"; }
 			if (settings.stores[14]) { storestring += "dotemu,"; }
-			if (settings.stores[15]) { storestring += "beamdog,"; }
+			if (settings.stores[15]) { storestring += "gameolith,"; }
 			if (settings.stores[16]) { storestring += "adventureshop,"; }
 			if (settings.stores[17]) { storestring += "nuuvem,"; }
 			if (settings.stores[18]) { storestring += "shinyloot,"; }
@@ -998,7 +998,8 @@ function add_wishlist_pricehistory() {
 			if (settings.stores[21]) { storestring += "indiegamestand,"; }
 			if (settings.stores[22]) { storestring += "squenix,"; }
 			if (settings.stores[23]) { storestring += "bundlestars,"; }
-			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars"; }
+			if (settings.stores[24]) { storestring += "fireflower,"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower"; }
 
 			// Get country code from Steam cookie
 			var cookies = document.cookie;
@@ -2046,7 +2047,7 @@ function show_pricing_history(appid, type) {
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showlowestprice) {
 
 			// Get list of stores we're searching for
@@ -2066,7 +2067,7 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[12]) { storestring += "desura,"; }
 			if (settings.stores[13]) { storestring += "gog,"; }
 			if (settings.stores[14]) { storestring += "dotemu,"; }
-			if (settings.stores[15]) { storestring += "beamdog,"; }
+			if (settings.stores[15]) { storestring += "gameolith,"; }
 			if (settings.stores[16]) { storestring += "adventureshop,"; }
 			if (settings.stores[17]) { storestring += "nuuvem,"; }
 			if (settings.stores[18]) { storestring += "shinyloot,"; }
@@ -2075,7 +2076,8 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[21]) { storestring += "indiegamestand,"; }
 			if (settings.stores[22]) { storestring += "squenix,"; }
 			if (settings.stores[23]) { storestring += "bundlestars,"; }
-			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,beamdog,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars"; }
+			if (settings.stores[24]) { storestring += "fireflower,"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower"; }
 
 			// Get country code from the Steam cookie
 			var cookies = document.cookie;

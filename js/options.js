@@ -89,7 +89,7 @@ function save_options() {
 		$("#desura").prop('checked'),
 		$("#gog").prop('checked'),
 		$("#dotemu").prop('checked'),
-		$("#beamdog").prop('checked'),
+		$("#gameolith").prop('checked'),
 		$("#adventureshop").prop('checked'),
 		$("#nuuvem").prop('checked'),
 		$("#shinyloot").prop('checked'),
@@ -97,7 +97,8 @@ function save_options() {
 		$("#humblestore").prop('checked'),
 		$("#indiegamestand").prop('checked'),
 		$("#squenix").prop('checked'),
-		$("#bundlestars").prop('checked')
+		$("#bundlestars").prop('checked'),
+		$("#fireflower").prop('checked')
 	];
 	showregionalprice = $("#regional_price_on").val();
 	regional_hideworld = $("#regional_hideworld").prop('checked');
@@ -318,7 +319,7 @@ function toggle_stores() {
 			$("#desura").prop('checked', settings.stores[12]);
 			$("#gog").prop('checked', settings.stores[13]);
 			$("#dotemu").prop('checked', settings.stores[14]);
-			$("#beamdog").prop('checked', settings.stores[15]);
+			$("#gameolith").prop('checked', settings.stores[15]);
 			$("#adventureshop").prop('checked', settings.stores[16]);
 			$("#nuuvem").prop('checked', settings.stores[17]);
 			$("#shinyloot").prop('checked', settings.stores[18]);
@@ -327,6 +328,7 @@ function toggle_stores() {
 			$("#indiegamestand").prop('checked', settings.stores[21]);
 			$("#squenix").prop('checked', settings.stores[22]);
 			$("#bundlestars").prop('checked', settings.stores[23]);
+			$("#fireflower").prop('checked', settings.stores[24]);
 		});
 		break;
 	}
@@ -424,7 +426,7 @@ function load_options() {
 		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; chrome.storage.sync.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
 
