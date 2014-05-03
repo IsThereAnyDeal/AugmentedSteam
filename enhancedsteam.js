@@ -5120,10 +5120,6 @@ function get_sub_details(subid, node) {
 
 function highlight_app(appid, node) {
 	storage.get(function(settings) {
-		if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
-			if (getValue(appid + "wishlisted")) highlight_wishlist(node);
-		}
-
 		if (settings.highlight_excludef2p === undefined) { settings.highlight_excludef2p = false; storage.set({'highlight_excludef2p': settings.highlight_excludef2p}); }
 		if (settings.highlight_excludef2p) {
 			if ($(node).html().match(/<div class="(tab_price|large_cap_price|col search_price|main_cap_price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i)) {
@@ -5144,13 +5140,16 @@ function highlight_app(appid, node) {
 			}
 		}
 
-		if (getValue(appid + "owned")) highlight_owned(node);
-		if (getValue(appid + "gift")) highlight_inv_gift(node);
-		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);		
 		if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
 		if (getValue(appid + "friendsown")) tag_friends_own(node, appid);
 		if (getValue(appid + "friendsrec")) tag_friends_rec(node, appid);
+		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+		if (getValue(appid + "gift")) highlight_inv_gift(node);
+		if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {
+			if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+		}
+		if (getValue(appid + "owned")) highlight_owned(node);
 	});
 }
 
