@@ -758,3 +758,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_background {
 	width: 463px;
 }
+.es_market_summary_item {
+	float: right;
+	line-height: inherit !important;
+}
