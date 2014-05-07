@@ -1,5 +1,6 @@
 v6.2
 -----
+: Fixed a bug with account total not being correct for Russian currencies
 
 
 v6.1

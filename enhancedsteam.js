@@ -3323,7 +3323,7 @@ function add_market_total() {
 
 								currency_symbol = priceText.match(/(?:R\$|\$|€|£|pуб)/)[0];
 
-								var regex = /(\d+[.,]\d\d+)/,
+								var regex = /(\d+[.,]?\d+)/,
 									price = regex.exec(priceText);
 
 								if (price !== null && price !== "Total") {
@@ -3664,7 +3664,7 @@ function account_total_spent() {
 						var priceContainer = $(p).find(".transactionRowPrice");
 						if (priceContainer.length > 0) {
 							var priceText = $(priceContainer).text();
-							var regex = /(\d+[.,]\d\d+)/,
+							var regex = /(\d+[.,]?\d+)/,
 								price = regex.exec(priceText);
 
 							if (price !== null && price !== "Total") {
@@ -3680,7 +3680,6 @@ function account_total_spent() {
 				gift_prices = jQuery.map($('#store_transactions .block:last .transactionRow'), totaler);
 				ingame_prices = jQuery.map($('#ingame_transactions .transactionRow'), totaler);
 				market_prices = jQuery.map($('#market_transactions .transactionRow'), totaler);
-
 
 				var game_total = 0.0;
 				var gift_total = 0.0;
