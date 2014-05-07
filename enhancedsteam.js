@@ -1441,7 +1441,8 @@ function replace_account_name() {
 	storage.get(function(settings) {
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; storage.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.replaceaccountname) {
-			var new_account_name = $("#global_header .username").text().trim()+"'s account";
+			var current_account_name = $("#global_header .username").text().trim();
+			var new_account_name = localized_strings[language].community_name_account_header.replace("__username__", current_account_name);
 			$("#account_pulldown").text(new_account_name);
 			if ($(".page_title").children(".blockbg").text().trim()==document.title&&document.title!="") {
 				$(".page_title").children(".blockbg").text(new_account_name);
