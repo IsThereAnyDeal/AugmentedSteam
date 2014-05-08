@@ -1,10 +1,13 @@
 v6.2
 -----
+
+
+v6.1.1
+-----
 : Fixed a bug with account total not being correct for Russian currencies
 : Fixed a bug on homepage layout due to a change made by Valve
 : Fixed a bug where the "popular" tab wouldn't always show correctly
 : Fixed a bug where the market summary would display incorrectly due to a change made by Valve
-
 
 v6.1
 -----
