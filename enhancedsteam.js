@@ -2677,7 +2677,7 @@ function hide_unowned_game_dlc() {
 	});
 }
 
-function add_actual_new_release_button() {	
+function add_actual_new_release_button() {
 	$("#tab_filtered_dlc_content").clone().css("display", "none").attr("id", "tab_filtered_dlc_content_enhanced").appendTo(".tab_content_ctn");
 	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_items").attr("id", "tab_NewReleasesFilteredDLC_items_enhanced").empty();
 	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_prev").remove();
@@ -2710,106 +2710,107 @@ function add_actual_new_release_button() {
 		}
 	}
 
-	// Determine which to show by default
-	storage.get(function(settings) {
-		if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
-		if (settings.new_release_dlc_filter === undefined) { settings.new_release_dlc_filter = true; storage.set({'new_release_dlc_filter': settings.new_release_dlc_filter}); }
-		
-		$("#tab_1_content").hide();
-		$("#tab_1_content_enhanced").hide();
-		$("#tab_filtered_dlc_content").hide();
-		$("#tab_filtered_dlc_content_enhanced").hide();
+	$(".tabarea .tab_filler").on("click", function() {
+		// Determine which to show by default
+		storage.get(function(settings) {
+			if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
+			if (settings.new_release_dlc_filter === undefined) { settings.new_release_dlc_filter = true; storage.set({'new_release_dlc_filter': settings.new_release_dlc_filter}); }
 
-		if (settings.new_release_dlc_filter == true && settings.new_release_filter == true) { $("#tab_1_content").show(); }
-		if (settings.new_release_dlc_filter == true && settings.new_release_filter == false) { $("#tab_1_content_enhanced").show(); }
-		if (settings.new_release_dlc_filter == false && settings.new_release_filter == true) { $("#tab_filtered_dlc_content").show(); }
-		if (settings.new_release_dlc_filter == false && settings.new_release_filter == false) { $("#tab_filtered_dlc_content_enhanced").show(); }
+			$("#tab_1_content").hide();
+			$("#tab_1_content_enhanced").hide();
+			$("#tab_filtered_dlc_content").hide();
+			$("#tab_filtered_dlc_content_enhanced").hide();
 
-		$("#new_all_filtered_enhanced, #new_all_enhanced").click(function() {
-			storage.set({'new_release_filter': true});
-		});
+			if (settings.new_release_dlc_filter == true && settings.new_release_filter == true) { $("#tab_1_content").show(); }
+			if (settings.new_release_dlc_filter == true && settings.new_release_filter == false) { $("#tab_1_content_enhanced").show(); }
+			if (settings.new_release_dlc_filter == false && settings.new_release_filter == true) { $("#tab_filtered_dlc_content").show(); }
+			if (settings.new_release_dlc_filter == false && settings.new_release_filter == false) { $("#tab_filtered_dlc_content_enhanced").show(); }
 
-		$("#new_all_filtered, #new_all").click(function() {
-			storage.set({'new_release_filter': false});
-		});
-
-		$("#tab_1_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
-		$("#tab_1_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
-		$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
-		$("#tab_filtered_dlc_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
-	});
-
-	function fill_box(tabName) {
-
-		$("#tab_" + tabName + "_items_enhanced").append("<div class='es_newrelease_loading' id='es_loading_" + tabName + "'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
-
-		var appids = [];
-		var count = 1;
-
-		var game_items = $("#tab_" + tabName + "_items").children();
-		get_http("http://store.steampowered.com/search/tab?bHoverEnabled=true&cc=" + cc + "&l=" + language + "&style=&navcontext=1_4_4_&tab=" + tabName + "&start=10&count=10", function(txt) {
-			var parsed = $.parseHTML(txt);
-			$(parsed).each(function(i) {
-				if ($(parsed[i]).find("div").length > 0) {
-					game_items.push($(parsed[i]));
-				}	
+			$("#new_all_filtered_enhanced, #new_all_enhanced").click(function() {
+				storage.set({'new_release_filter': true});
 			});
 
-			$(game_items).each(function() {
-				var valueToPush = new Array();
-				valueToPush[0] = get_appid($(this).find("a").attr("href"));
-				valueToPush[1] = $(this).clone();
-				valueToPush[2] = $(this).find(".genre_release").text().match(/\: (.+)/)[1].toLowerCase();
-				valueToPush[3] = count;
-				appids.push(valueToPush);
-				count++;
+			$("#new_all_filtered, #new_all").click(function() {
+				storage.set({'new_release_filter': false});
 			});
-			
-			var processItemsDeferred = [];
-			var games = [];
 
-			for(var i = 0; i < appids.length; i++){
-				processItemsDeferred.push(processItem(appids[i]));
-			}
+			$("#tab_1_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
+			$("#tab_1_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
+			$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
+			$("#tab_filtered_dlc_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
+		});
 
-			function processItem(data) {
-				var dfd = $.Deferred();
+		function fill_box(tabName) {
+			$("#tab_" + tabName + "_items_enhanced").append("<div class='es_newrelease_loading' id='es_loading_" + tabName + "'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
 
-				get_http("http://store.steampowered.com/app/" + data[0] + "/", function(store_page) {
-					var html = $.parseHTML(store_page);
-					if ($(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)) {
-						apppage_release_date = $(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)[1].toLowerCase();
-						if (data[2] == apppage_release_date) {
-							var valueToPush = new Array();
-							valueToPush[0] = data[0];
-							valueToPush[1] = data[1];
-							valueToPush[2] = data[2];
-							valueToPush[3] = apppage_release_date;
-							valueToPush[4] = data[3];
-							games.push(valueToPush);
-						}						
+			var appids = [];
+			var count = 1;
+
+			var game_items = $("#tab_" + tabName + "_items").children();
+			get_http("http://store.steampowered.com/search/tab?bHoverEnabled=true&cc=" + cc + "&l=" + language + "&style=&navcontext=1_4_4_&tab=" + tabName + "&start=10&count=15", function(txt) {
+				var parsed = $.parseHTML(txt);
+				$(parsed).each(function(i) {
+					if ($(parsed[i]).find("div").length > 0) {
+						game_items.push($(parsed[i]));
 					}
-					dfd.resolve();
 				});
 
-				return dfd.promise();
-			}
+				$(game_items).each(function() {
+					var valueToPush = new Array();
+					valueToPush[0] = get_appid($(this).find("a").attr("href"));
+					valueToPush[1] = $(this).clone();
+					valueToPush[2] = $(this).find(".genre_release").text().match(/\: (.+)/)[1].toLowerCase();
+					valueToPush[3] = count;
+					appids.push(valueToPush);
+					count++;
+				});
+				
+				var processItemsDeferred = [];
+				var games = [];
 
-			$.when.apply($, processItemsDeferred).done(function() {
-				games.sort(function(a,b) {
-					return parseInt(a[4],10) - parseInt(b[4],10);
+				for(var i = 0; i < appids.length; i++){
+					processItemsDeferred.push(processItem(appids[i]));
+				}
+
+				function processItem(data) {
+					var dfd = $.Deferred();
+
+					get_http("http://store.steampowered.com/app/" + data[0] + "/", function(store_page) {
+						var html = $.parseHTML(store_page);
+						if ($(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)) {
+							apppage_release_date = $(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)[1].toLowerCase();
+							if (data[2] == apppage_release_date) {
+								var valueToPush = new Array();
+								valueToPush[0] = data[0];
+								valueToPush[1] = data[1];
+								valueToPush[2] = data[2];
+								valueToPush[3] = apppage_release_date;
+								valueToPush[4] = data[3];
+								games.push(valueToPush);
+							}						
+						}
+						dfd.resolve();
+					});
+
+					return dfd.promise();
+				}
+
+				$.when.apply($, processItemsDeferred).done(function() {
+					games.sort(function(a,b) {
+						return parseInt(a[4],10) - parseInt(b[4],10);
+					});
+					$("#es_loading_" + tabName).remove();
+					$(games).each(function(t) {
+						$("#tab_" + tabName + "_items_enhanced").append(games[t][1]);
+					});
 				});
-				$("#es_loading_" + tabName).remove();
-				$(games).each(function(t) {
-					$("#tab_" + tabName + "_items_enhanced").append(games[t][1]);
-				});
+
 			});
+		}
 
-		});
-	}
-
-	fill_box("NewReleasesFilteredDLC");
-	fill_box("NewReleases");
+		fill_box("NewReleasesFilteredDLC");
+		fill_box("NewReleases");
+	});
 }
 
 function add_popular_tab() {
