@@ -51,6 +51,7 @@ function save_options() {
 	showfakeccwarning = $("#showfakeccwarning").prop('checked');
 	showlanguagewarning = $("#showlanguagewarning").prop('checked');
 	showlanguagewarninglanguage = $("#warning_language").val();
+	homepage_tab_selection = $("#homepage_tab_selection").val();
 	send_age_info = $("#send_age_info").prop('checked');
 	showspeechsearch = $("#showspeechsearch").prop('checked');
 	html5video = $("#html5video").prop('checked');
@@ -195,6 +196,7 @@ function save_options() {
 		'showfakeccwarning': showfakeccwarning,
 		'showlanguagewarning': showlanguagewarning,
 		'showlanguagewarninglanguage': showlanguagewarninglanguage,
+		'homepage_tab_selection': homepage_tab_selection,
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
@@ -452,6 +454,7 @@ function load_options() {
 		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
 		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; chrome.storage.sync.set({'showlanguagewarning': settings.showlanguagewarning}); }
 		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; chrome.storage.sync.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
+		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; chrome.storage.sync.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
@@ -531,6 +534,7 @@ function load_options() {
 		$("#showfakeccwarning").prop('checked', settings.showfakeccwarning);
 		$("#showlanguagewarning").prop('checked', settings.showlanguagewarning);
 		$("#warning_language").val(settings.showlanguagewarninglanguage);
+		$("#homepage_tab_selection").val(settings.homepage_tab_selection);
 		$("#send_age_info").prop('checked', settings.send_age_info);
 		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
 		$("#html5video").prop('checked', settings.html5video);

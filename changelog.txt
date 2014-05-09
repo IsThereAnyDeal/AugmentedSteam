@@ -1,5 +1,6 @@
 v6.2
 -----
++ Added option to set which homepage tab displays by default
 
 
 v6.1.1

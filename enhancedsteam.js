@@ -2677,6 +2677,44 @@ function hide_unowned_game_dlc() {
 	});
 }
 
+function set_homepage_tab() {
+	storage.get(function(settings) {
+		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; storage.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
+		$(".tabarea .tabbar").find("div").on("click", function(e) {
+			var current_button;
+			var button_id = $(this).attr("id");
+			if (button_id == "es_popular") {
+				current_button = "es_popular";
+			} else {
+				var button = $(this).attr("onclick").match(/TabSelect\( this, '(.+)'/)[1];
+				current_button = button;
+			}
+			storage.set({'homepage_tab_last': current_button});
+		});
+
+		if (settings.homepage_tab_selection == "remember") {
+			settings.homepage_tab_selection = settings.homepage_tab_last;
+		}
+
+		switch (settings.homepage_tab_selection) {
+			case "tab_3_content":
+				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_3_content\' );']").click();
+				break;
+			case "tab_2_content":
+				break;
+			case "tab_1_content":
+				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_1_content\' );']").click();
+				break;
+			case "tab_discounts_content":
+				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_discounts_content\' );']").click();
+				break;	
+			case "es_popular":
+				$("#es_popular").click();
+				break;
+		}
+	});
+}
+
 function add_actual_new_release_button() {
 	$("#tab_filtered_dlc_content").clone().css("display", "none").attr("id", "tab_filtered_dlc_content_enhanced").appendTo(".tab_content_ctn");
 	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_items").attr("id", "tab_NewReleasesFilteredDLC_items_enhanced").empty();
@@ -6474,8 +6512,9 @@ $(document).ready(function(){
 
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
-						add_actual_new_release_button();
 						add_popular_tab();
+						add_actual_new_release_button();
+						set_homepage_tab();
 						add_carousel_descriptions();
 						add_affordable_button();
 						show_regional_pricing();
