@@ -60,20 +60,52 @@ Array.prototype.chunk = function(chunkSize) {
     return R;
 }
 
-function formatMoney (number, places, symbol, thousand, decimal, right) {
-	places = !isNaN(places = Math.abs(places)) ? places : 2;
-	symbol = symbol !== undefined ? symbol : "$";
-	thousand = thousand || ",";
-	decimal = decimal || ".";
+function formatCurrency(number, type) {
+	var places, symbol, thousand, decimal, right;
+
+	switch (type) {
+		case "BRL":
+			places = 2; symbol = "R$ "; thousand = "."; decimal = ","; right = false;
+			break;
+		case "EUR":
+			places = 2; symbol = "€"; thousand = ","; decimal = "."; right = true;
+			break;
+		case "GBP":
+			places = 2; symbol = "£"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "RUB":
+			places = 0; symbol = " pуб."; thousand = "."; decimal = ","; right = true;
+			if (number % 1 != 0) { places = 2; }
+			break;
+		default:
+			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
+			break;
+	}
+
 	var negative = number < 0 ? "-" : "",
 		i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
 		j = (j = i.length) > 3 ? j % 3 : 0;
 	if (right) {
-		return negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) + symbol: "");
+		return negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "") + symbol;
 	} else {
 		return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
 	}
-};
+}
+
+function currency_symbol_to_type (currency_symbol) {
+	switch (currency_symbol) {
+		case "pуб":
+			return "RUB";			
+		case "€":
+			return "EUR";			
+		case "£":
+			return "GBP";			
+		case "R$":
+			return "BRL";			
+		default:
+			return "USD";			
+	}
+}
 
 function escapeHTML(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
@@ -909,23 +941,8 @@ function add_wishlist_total() {
 			}
 		});
 		htmlstring += '</form>';
-	
-		switch (currency_symbol) {
-			case "pуб":
-				if (parseInt(total, 10) == total) {
-					total = total + " pуб.";
-					break;
-				}
-			case "€":
-				total = formatMoney(parseFloat(total), 2, currency_symbol, ".", ",", true);
-				break;
-			case "R$":
-				total = formatMoney(parseFloat(total), 2, "R$ ", ".", ",", false);
-				break;
-			default:
-				total = formatMoney(parseFloat(total), 2, currency_symbol, ",", ".", false);
-				break;
-		}
+		currency_type = currency_symbol_to_type(currency_symbol);
+		total = formatCurrency(parseFloat(total), currency_type);
 		$(".games_list").after(htmlstring + "<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].buy_wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div><div class='btn_addtocart'><div class='btn_addtocart_left'></div><a class='btn_addtocart_content' onclick='document.forms[\"add_to_cart_all\"].submit();' href='#cartall' id='cartall'>" + localized_strings[language].add_to_cart + "</a><div class='btn_addtocart_right'></div></div></div></div></div></div>");
 	});
 }
@@ -1021,24 +1038,8 @@ function add_wishlist_pricehistory() {
 				get_http("http://api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 					var data = JSON.parse(txt);
 					if (data) {
-						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
-
-						switch (data[".meta"]["currency"]) {
-							case "GBP":
-								currency_symbol = "£";
-								break;
-							case "EUR":
-								currency_symbol = "€";
-								comma = true;
-								at_end = true;
-								break;
-							case "BRL":
-								currency_symbol = "R$ ";
-								comma = true;
-								break;
-							default:
-								currency_symbol = "$";
-						}
+						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded;
+						var currency_type = data[".meta"]["currency"];
 
 	        			// "Lowest Price"
 						if (data["price"]) {
@@ -1049,10 +1050,10 @@ function add_wishlist_pricehistory() {
 	                    		}
 	                    	}
 
-	                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                        line1 = localized_strings[language].lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    	if (settings.showlowestpricecoupon) {
 	                    		if (data["price"]["price_voucher"]) {
-	                    			line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price_voucher"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings[language].after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    			line1 = localized_strings[language].lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price_voucher"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings[language].after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    		}
 	                    	}
 	                    }
@@ -1060,7 +1061,7 @@ function add_wishlist_pricehistory() {
 						// "Historical Low"
 						if (data["lowest"]) {
 	                        recorded = new Date(data["lowest"]["recorded"]*1000);
-	                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                        line2 = localized_strings[language].historical_low + ': ' + formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    }
 
 						// "Number of times this game has been in a bundle"
@@ -1176,11 +1177,10 @@ function pack_split(node, ways) {
 		price_text = price_text.replace(",", ".");
 	}
 	var currency_symbol = price_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
-	if (currency_symbol.match(/R\$/)) { at_end = false; }
-	if (currency_symbol.match(/pуб/)) { at_end = true; places = 0}
+	var currency_type = currency_symbol_to_type(currency_symbol);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
-	price_text = formatMoney(price, places, currency_symbol, ",", comma ? "," : ".", at_end);
+	price_text = formatCurrency(price, currency_type);
 	$(node).find(".btn_addtocart").last().before(
 		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>"+localized_strings[language].each+"</div></div>"
 	);
@@ -2097,26 +2097,10 @@ function show_pricing_history(appid, type) {
 				get_http("http://api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 					var data = JSON.parse(txt);
 					if (data) {
-						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, currency_symbol, comma = false, at_end = false;
+						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded;
+						var currency_type = data[".meta"]["currency"];
 
-						switch (data[".meta"]["currency"]) {
-							case "GBP":
-								currency_symbol = "£";
-								break;
-							case "EUR":
-								currency_symbol = "€";
-								comma = true;
-								at_end = true;
-								break;
-							case "BRL":
-								currency_symbol = "R$ ";
-								comma = true;
-								break;
-							default:
-								currency_symbol = "$";
-						}
-
-	        			// "Lowest Price"
+						// "Lowest Price"
 						if (data["price"]) {
 	                        if (data["price"]["drm"] == "steam") {
 	                        	activates = "(<b>" + localized_strings[language].activates + "</b>)";
@@ -2125,10 +2109,10 @@ function show_pricing_history(appid, type) {
 	                    		}
 	                    	}
 
-	                        line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                        line1 = localized_strings[language].lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    	if (settings.showlowestpricecoupon) {
 	                    		if (data["price"]["price_voucher"]) {
-	                    			line1 = localized_strings[language].lowest_price + ': ' + formatMoney(escapeHTML(data["price"]["price_voucher"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings[language].after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                    			line1 = localized_strings[language].lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price_voucher"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings[language].after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    		}
 	                    	}
 	                    }
@@ -2136,7 +2120,7 @@ function show_pricing_history(appid, type) {
 						// "Historical Low"
 						if (data["lowest"]) {
 	                        recorded = new Date(data["lowest"]["recorded"]*1000);
-	                        line2 = localized_strings[language].historical_low + ': ' + formatMoney(escapeHTML(data["lowest"]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
+	                        line2 = localized_strings[language].historical_low + ': ' + formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings[language].info + '</a>)';
 	                    }
 
 						html = "<div class='es_lowest_price' id='es_price_" + id + "'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
@@ -2172,10 +2156,10 @@ function show_pricing_history(appid, type) {
 									if (data["bundles"]["active"][i]["price"] > 0) {										
 										if (data["bundles"]["active"][i]["pwyw"]) {
 											purchase += '<div class="es_each_box" itemprop="price">';
-											purchase += '<div class="es_each">' + localized_strings[language].bundle.at_least + '</div><div class="es_each_price" style="text-align: right;">' + formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end) + '</div>';
+											purchase += '<div class="es_each">' + localized_strings[language].bundle.at_least + '</div><div class="es_each_price" style="text-align: right;">' + formatCurrency(escapeHTML(data["bundles"]["active"][i]["price"].toString()), currency_type) + '</div>';
 										} else {
 											purchase += '<div class="game_purchase_price price" itemprop="price">';
-											purchase += formatMoney(escapeHTML(data["bundles"]["active"][i]["price"].toString()), 2, currency_symbol, ",", comma ? "," : ".", at_end);
+											purchase += formatCurrency(escapeHTML(data["bundles"]["active"][i]["price"].toString()), currency_type);
 										}
 									 }
 									purchase += '</div><div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
@@ -3485,87 +3469,20 @@ function add_market_total() {
 				}
 
 				function show_results() {
-					switch (currency_symbol) {
-						case "€":
-							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=eur", function (txt) {
-								var net = txt - pur_total;
+					var currency_type = currency_symbol_to_type(currency_symbol);
+					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=" + currency_type.toLowerCase(), function (txt) {
+						var net = txt - pur_total;
 
-								var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
-								html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
-								if (net > 0) {
-									html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-								} else {
-									html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-								}
+						var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total), currency_type) + "</span><br>";
+						html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(txt), currency_type) + "</span><br>";
+						if (net > 0) {
+							html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+						} else {
+							html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+						}
 
-								$("#es_market_summary").html(html);
-							});
-							break;
-
-						case "pуб":
-							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=rub", function (txt) {
-								var net = txt - pur_total;
-
-								var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ".", ",", true) + "</span><br>";
-								html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ".", ",", true) + "</span><br>";
-								if (net > 0) {
-									html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-								} else {
-									html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ".", ",", true) + "</span>";
-								}
-
-								$("#es_market_summary").html(html);
-							});
-							break;
-
-						case "£":
-							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=gbp", function (txt) {
-								var net = txt - pur_total;
-
-								var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
-								html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
-								if (net > 0) {
-									html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-								} else {
-									html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-								}
-
-								$("#es_market_summary").html(html);
-							});
-							break;
-
-						case "R$":
-							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=brl", function (txt) {
-								var net = txt - pur_total;
-
-								var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
-								html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
-								if (net > 0) {
-									html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-								} else {
-									html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-								}
-
-								$("#es_market_summary").html(html);
-							});
-							break;
-
-						default:
-							get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=usd", function (txt) {
-								var net = txt - pur_total;
-
-								var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(pur_total), 2, currency_symbol, ",", ".", false) + "</span><br>";
-								html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatMoney(parseFloat(txt), 2, currency_symbol, ",", ".", false) + "</span><br>";
-								if (net > 0) {
-									html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-								} else {
-									html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatMoney(parseFloat(net), 2, currency_symbol, ",", ".", false) + "</span>";
-								}
-
-								$("#es_market_summary").html(html);
-							});
-							break;
-					}
+						$("#es_market_summary").html(html);
+					});
 				}
 
 				var start = 0;
@@ -3604,15 +3521,8 @@ function add_active_total() {
 				currency_symbol = $(this).find(".market_listing_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 			});
 
-			switch (currency_symbol) {
-				case "pуб":
-				case "€":
-					total = formatMoney(parseFloat(total), 2, currency_symbol, ".", ",", true);
-					break;
-				default:
-					total = formatMoney(parseFloat(total), 2, currency_symbol, ",", ".", false);
-					break;
-			}
+			var currency_type = currency_symbol_to_type(currency_symbol);
+			total = formatCurrency(parseFloat(total), currency_type);
 
 			$(".my_listing_section").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons'></div><div class='market_listing_my_price es_active_total'><span class='market_listing_item_name' style='color: white'>" + total + "</span><br><span class='market_listing_game_name'>" + localized_strings[language].sales_total + "</span></div></div>");
 		}
@@ -3733,32 +3643,13 @@ function account_total_spent() {
 				total_total = game_total + gift_total + ingame_total + market_total;
 
 				if (currency_symbol) {
-					switch (currency_symbol) {
-						case "€":
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true);
-							gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ".", ",", true);
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true);
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true);
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true);
-							break;
+					var currency_type = currency_symbol_to_type(currency_symbol);
 
-						case "pуб":
-							currency_symbol = " " + currency_symbol;
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ".", ",", true);
-							gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ".", ",", true);
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ".", ",", true);
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ".", ",", true);
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ".", ",", true);
-							break;
-
-						default:
-							game_total = formatMoney(parseFloat(game_total), 2, currency_symbol, ",", ".", false);
-							gift_total = formatMoney(parseFloat(gift_total), 2, currency_symbol, ",", ".", false);
-							ingame_total = formatMoney(parseFloat(ingame_total), 2, currency_symbol, ",", ".", false);
-							market_total = formatMoney(parseFloat(market_total), 2, currency_symbol, ",", ".", false);
-							total_total = formatMoney(parseFloat(total_total), 2, currency_symbol, ",", ".", false);
-							break;
-					}
+					game_total = formatCurrency(parseFloat(game_total), currency_type);
+					gift_total = formatCurrency(parseFloat(gift_total), currency_type);
+					ingame_total = formatCurrency(parseFloat(ingame_total), currency_type);
+					market_total = formatCurrency(parseFloat(market_total), currency_type);
+					total_total = formatCurrency(parseFloat(total_total), currency_type);
 
 					var html = '<div class="accountRow accountBalance accountSpent">';
 					html += '<div class="accountData price">' + game_total + '</div>';
@@ -3852,29 +3743,12 @@ function inventory_market_helper(response) {
 				$("#es_item" + item).html(localized_strings[language].lowest_price + " for " + item_name + ": " + lowest_price + "<br><a href=\"" + url + "\" target='_blank' class='btn_grey_grey btn_medium'><span>" + localized_strings[language].view_marketplace + "</span></a>");
 				if (hash_name.match(/Booster Pack/g)) {
 					var currency_symbol = lowest_price.match(/(?:R\$|\$|€|£|pуб)/)[0];
-					var cur, at_end, comma, places = 2;
-
-					switch (currency_symbol) {
-						case "R$":
-							cur = "brl";
-							break;
-						case "€":
-							cur = "eur"; comma = true; at_end = true;
-							break;
-						case "pуб":
-							cur = "rub"; comma = true; at_end = true;
-							break;
-						case "£":
-							cur = "gbp";
-							break;
-						default:
-							cur = "usd";
-							break;
-					}
-					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + cur;
+					var currency_type = currency_symbol_to_type(currency_symbol);
+					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
+					
 					get_http(api_url, function(price_data) {
 						var booster_price = parseFloat(price_data,10) * 3;
-						$("#es_item" + item + "_note").html(localized_strings[language].avg_price_3cards + ": " + formatMoney(booster_price, places, currency_symbol, ",", comma ? "," : ".", at_end));
+						$("#es_item" + item + "_note").html(localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency_type));
 						$("#es_item" + item + "_note").css("display", "block");
 					});
 				}
@@ -3995,9 +3869,9 @@ function subscription_savings_check() {
 		appid_info_deferreds = [],
 		sub_apps = [],
 		sub_app_prices = {},
-		comma,
 		currency_symbol,
-		symbol_right;
+		currency_type,
+		comma;
 
 	// Load each apps info
 	$.each($(".tab_row"), function (i, node) {
@@ -4005,22 +3879,10 @@ function subscription_savings_check() {
 			// Remove children, leave only text(price or only discounted price, if there are discounts)
 			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
 
-		if (price_container !== "N/A") {
+		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
-				if (price_container !== "Free") {
-					itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
-					if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
-				}
-
-				switch (currency_symbol) {
-					case "€":
-						symbol_right = true;
-						break;
-					case "pуб":
-						symbol_right = true;
-						break;
-				}
-
+				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
+				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
 				if (!comma) comma = (price_container.indexOf(",") > -1);
 			} else {
 				itemPrice = 0;
@@ -4031,33 +3893,26 @@ function subscription_savings_check() {
 
 		// Batch app ids, checking for existing promises, then do this.
 		ensure_appid_deferred(appid);
-
 		appid_info_deferreds.push(appid_promises[appid].promise);
-
 		sub_apps.push(appid);
 		sub_app_prices[appid] = itemPrice;
-
 	});
 
 	// When we have all the app info
 	$.when.apply(null, appid_info_deferreds).done(function() {
+		currency_type = currency_symbol_to_type(currency_symbol);
 		for (var i = 0; i < sub_apps.length; i++) {
 			if (!getValue(sub_apps[i] + "owned")) not_owned_games_prices += sub_app_prices[sub_apps[i]];
 		}
 		var $bundle_price = $(".game_area_purchase_game").find(".discount_final_price:last");
 		if ($bundle_price.length === 0) $bundle_price = $(".game_area_purchase_game").find(".game_purchase_price");
 
-		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));
-		if (comma) { not_owned_games_prices = not_owned_games_prices * 100; }
+		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));		
+		if (comma) { bundle_price = bundle_price / 100; }		
 		var corrected_price = not_owned_games_prices - bundle_price;
 
-		if (symbol_right) {
-			var $message = $('<div class="savings">' + formatMoney((comma ? corrected_price / 100 : corrected_price), 2, currency_symbol, ",", comma ? "," : ".", true) + '</div>');
-		} else {
-			var $message = $('<div class="savings">' + formatMoney((comma ? corrected_price / 100 : corrected_price), 2, currency_symbol, ",", comma ? "," : ".") + '</div>');
-		}
+		var $message = $('<div class="savings">' + formatCurrency(corrected_price, currency_type) + '</div>');
 		if (corrected_price < 0) $message[0].style.color = "red";
-
 		$('.savings').replaceWith($message);
 	});
 }
@@ -4544,23 +4399,7 @@ function show_regional_pricing() {
 			if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
 				currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 			} else { return; }
-			switch (currency_symbol) {
-				case "$":
-					local_currency = "USD";
-					break;
-				case "£":
-					local_currency = "GBP";
-					break;
-				case "€":
-					local_currency = "EUR";
-					break;
-				case "R$":
-					local_currency = "BRL";
-					break;
-				case "pуб":
-					local_currency = "RUB";
-					break;					
-			}
+			local_currency = currency_symbol_to_type(currency_symbol);
 
 	        function addConversionScript (toCurrency) {
 		        var es_compare = document.createElement("script");
@@ -4649,41 +4488,9 @@ function show_regional_pricing() {
 						converted_price = converted_price.toFixed(2);
 						var currency = sub_info["prices"][country]["currency"];
 						var percentage;
-						switch(currency) {
-							case "EUR":
-								var formatted_price = formatMoney(price,2,"€",".",",",true);
-								break;
-							case "RUB":
-								var formatted_price = price+"  pуб.";
-								break;
-							case "BRL":
-								var formatted_price = formatMoney(price, 2, "R$ ", ".", ",", false);
-								break;
-							case "GBP":
-								var formatted_price = formatMoney(price,2,"£");
-								break;
-							default:
-								var formatted_price = formatMoney(price);
-								break;
-						}
-						switch(local_currency) {
-							case "EUR":
-								var formatted_converted_price = formatMoney(converted_price,2,"€",".",",",true);
-								break;
-							case "RUB":
-								converted_price = Math.round(converted_price);
-								var formatted_converted_price = converted_price+"  pуб.";
-								break;
-							case "BRL":
-								var formatted_converted_price = formatMoney(converted_price, 2, "R$ ", ".", ",", false);
-								break;
-							case "GBP":
-								var formatted_converted_price = formatMoney(converted_price,2,"£");
-								break;
-							default:
-								var formatted_converted_price = formatMoney(converted_price);
-								break;
-						}
+						var formatted_price = formatCurrency(price, currency);
+						var formatted_converted_price = formatCurrency(converted_price, local_currency);
+						
 						percentage = (((converted_price/local_price)*100)-100).toFixed(2);
 						var arrows = chrome.extension.getURL("img/arrows.png");
 						var percentage_span="<span class=\"es_percentage\"><div class=\"es_percentage_indicator\" style='background-image:url("+arrows+")'></div></span>";
@@ -6044,6 +5851,7 @@ function add_gamecard_market_links(game) {
 
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		var currency_type = currency_symbol_to_type(currency_symbol);
 
 		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 			var data = JSON.parse(txt);
@@ -6060,23 +5868,23 @@ function add_gamecard_market_links(game) {
 						var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
 						switch (currency_symbol) {
 							case "R$":
-								var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
+								var card_price = formatCurrency(data[i].price_brl, currency_type);
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
 								break;
 							case "€":
-								var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
+								var card_price = formatCurrency(data[i].price_eur, currency_type); 
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
 								break;
 							case "pуб":
-								var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
+								var card_price = formatCurrency(data[i].price_rub, currency_type); 
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
 								break;
 							case "£":
-								var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
+								var card_price = formatCurrency(data[i].price_gbp, currency_type);
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 								break;
 							default:
-								var card_price = formatMoney(data[i].price);
+								var card_price = formatCurrency(data[i].price, currency_type);
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
 								break;
 						}
@@ -6090,23 +5898,23 @@ function add_gamecard_market_links(game) {
 							var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
 							switch (currency_symbol) {
 								case "R$":
-									var card_price = formatMoney(data[i].price_brl, 2, currency_symbol + " ", ".", ",");
+									var card_price = formatCurrency(data[i].price_brl, currency_type);
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
 									break;
 								case "€":
-									var card_price = formatMoney(data[i].price_eur, 2, currency_symbol, ".", ",", true); 
+									var card_price = formatCurrency(data[i].price_eur, currency_type); 
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
 									break;
 								case "pуб":
-									var card_price = formatMoney(data[i].price_rub, 2, " " + currency_symbol, ".", ",", true); 
+									var card_price = formatCurrency(data[i].price_rub, currency_type); 
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
 									break;
 								case "£":
-									var card_price = formatMoney(data[i].price_gbp, 2, currency_symbol); 
+									var card_price = formatCurrency(data[i].price_gbp, currency_type); 
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 									break;
 								default:
-									var card_price = formatMoney(data[i].price);						
+									var card_price = formatCurrency(data[i].price, currency_type);						
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
 									break;
 							}
@@ -6120,23 +5928,7 @@ function add_gamecard_market_links(game) {
 				}
 			});
 			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
-				switch (currency_symbol) {
-					case "R$":
-						cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");
-						break;
-					case "€":
-						cost = formatMoney(cost, 2, currency_symbol, ".", ",", true);
-						break;
-					case "pуб":
-						cost = formatMoney(cost, 2, " " + currency_symbol, ".", ",", true);
-						break;
-					case "£":
-						cost = formatMoney(cost, 2, currency_symbol);
-						break;
-					default:
-						cost = formatMoney(cost);
-						break;
-				}
+				cost = formatCurrency(cost, currency_type);
 				$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_cost+ ": " + cost + "</div>");
 				$(".badge_empty_right").css("margin-top", "7px");
 				$(".gamecard_badge_progress .badge_info").css("width", "296px");
@@ -6150,30 +5942,14 @@ function add_badge_completion_cost() {
 	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
-		var cur, total_worth = 0, count = 0;
+		var currency_type = currency_symbol_to_type(currency_symbol);		
+		var total_worth = 0, count = 0;
 		$(".badge_row").each(function() {
 			var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//);
 			var foil = $(this).find("a:last").attr("href").match(/\?border=1/);
-			var node = $(this);
-			switch (currency_symbol) {
-				case "R$":
-					cur = "brl";
-					break;
-				case "€":
-					cur = "eur";
-					break;
-				case "pуб":
-					cur = "rub";
-					break;
-				case "£":
-					cur = "gbp";
-					break;
-				default:
-					cur = "usd";
-					break;
-			}
+			var node = $(this);			
 			if (game) {
-				var url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + game[1] + "&cur=" + cur;
+				var url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + game[1] + "&cur=" + currency_type.toLowerCase();
 				if (foil) { url = url + "&foil=true"; }
 				get_http(url, function(txt) {
 					if ($(node).find("div[class$='badge_progress_info']").text()) {
@@ -6192,33 +5968,9 @@ function add_badge_completion_cost() {
 						total_worth = total_worth + parseFloat(worth);
 					}
 
-					switch (currency_symbol) {
-						case "R$":
-							cost = formatMoney(cost, 2, currency_symbol + " ", ".", ",");
-							card = formatMoney(worth, 2, currency_symbol + " ", ".", ",");
-							worth_formatted = formatMoney(total_worth, 2, currency_symbol + " ", ".", ",");
-							break;
-						case "€":
-							cost = formatMoney(cost, 2, currency_symbol, ".", ",", true);
-							card = formatMoney(worth, 2, currency_symbol, ".", ",", true);
-							worth_formatted = formatMoney(total_worth, 2, currency_symbol, ".", ",", true);
-							break;
-						case "pуб":
-							cost = formatMoney(cost, 2, " " + currency_symbol, ".", ",", true);
-							card = formatMoney(worth, 2, " " + currency_symbol, ".", ",", true);
-							worth_formatted = formatMoney(total_worth, 2, " " + currency_symbol, ".", ",", true);
-							break;
-						case "£":
-							cost = formatMoney(cost, 2, currency_symbol);
-							card = formatMoney(worth, 2, currency_symbol);
-							worth_formatted = formatMoney(total_worth, 2, currency_symbol);
-							break;
-						default:
-							cost = formatMoney(cost);
-							card = formatMoney(worth);
-							worth_formatted = formatMoney(total_worth);
-							break;
-					}
+					cost = formatCurrency(cost, currency_type);
+					card = formatCurrency(worth, currency_type);
+					worth_formatted = formatCurrency(total_worth, currency_type);
 
 					if (worth > 0) {
 						$(node).find(".how_to_get_card_drops").after("<span class='es_card_drop_worth'>" + localized_strings[language].drops_worth_avg + " " + card + "</span>")
