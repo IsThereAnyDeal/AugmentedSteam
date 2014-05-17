@@ -1,6 +1,7 @@
 v6.2
 -----
 + Added option to set which homepage tab displays by default
++ Added support for Humble Widgets in price comparisons
 
 
 v6.1.1
