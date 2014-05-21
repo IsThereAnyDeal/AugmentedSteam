@@ -738,7 +738,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	 height: 100%;
 	 background-repeat: repeat-x;
 }
-.es_review_score span, .es_newrelease_loading span, #es_market_summary span, #es_item1 span, .es_loading span {  
+.es_review_score span, .es_newrelease_loading span, #es_market_summary span, .es_loading span {  
 	vertical-align: top;
 	line-height: 32px;
 	margin-left: 5px;
