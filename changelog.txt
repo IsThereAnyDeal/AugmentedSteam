@@ -1,6 +1,7 @@
 v6.2
 -----
 + Added option to set which homepage tab displays by default
++ Rewrote custom profile background selection dialog
 + Added support for Humble Widgets in price comparisons
 - Remove market data on inventory items, as this feature was implemented by Valve
 

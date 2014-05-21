@@ -5180,9 +5180,11 @@ function add_es_background_selection() {
 		if (settings.showesbg) {
 			if (window.location.pathname.indexOf("/settings") < 0) {
 				var steam64 = $(document.body).html();
+				var selected = false;
 				steam64 = steam64.match(/g_steamID = \"(.+)\";/)[1];
 				var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
 				html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
+				html += "<input type='hidden' name='appid' id='appid'>";
 				html += "<div class='formRow'><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading +"</div>";
 				html += "<img id='es_profile_background_current_image' src=''>";
 				html += "</div><div class='profile_background_current_description'><div id='es_profile_background_current_name'>";
@@ -5190,41 +5192,68 @@ function add_es_background_selection() {
 				html += "</form>";
 				$(".group_content_bodytext").before(html);
 
-				get_http("http://api.enhancedsteam.com/profile-select/?steam64=" + steam64, function (txt) {
+				get_http("http://api.enhancedsteam.com/profile-select-v2/?steam64=" + steam64, function (txt) {
 					var data = JSON.parse(txt);
-					var select_html = "<select name='es_background' id='es_background' class='gray_bevel dynInput' onchange=\"function image(obj){index=obj.selectedIndex; document.getElementById('es_profile_background_current_image').src=obj.options[index].id; } image(this);\"><option value='0' id='http://www.enhancedsteam.com/gamedata/icons/smallblacksquare.jpg'>None Selected / No Change</option>";
-
-					var array = [];
-					for (var key in data["backgrounds"]) {
-						if (data["backgrounds"].hasOwnProperty(key)) {
-						  array.push(data["backgrounds"][key]);
-						}
-					}
-
-					array.sort(function(a,b) {
-						if ( a.text == b.text ) return 0;
-						return a.text < b.text ? -1 : 1;
-					});
-
-					$.each(array, function(index, value) {
+					var select_html = "<select name='es_background_gamename' id='es_background_gamename' class='gray_bevel dynInput'><option value='0' id='0'>None Selected / No Change</option>";
+					
+					$.each(data["games"], function(index, value) {
 						if (value["selected"]) {
-							select_html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + escapeHTML(value['index'].toString()) + "' SELECTED>" + escapeHTML(value['text'].toString()) + "</option>";
+							select_html += "<option id='" + escapeHTML(value["appid"].toString()) + "' value='" + escapeHTML(value["appid"].toString()) + "' selected>" + escapeHTML(index.toString()) + "</option>";
+							selected = true;
 						} else {
-							select_html += "<option id='" + escapeHTML(value['id'].toString()) + "' value='" + escapeHTML(value['index'].toString()) + "'>" + escapeHTML(value['text'].toString()) + "</option>";
+							select_html += "<option id='" + escapeHTML(value["appid"].toString()) + "' value='" + escapeHTML(value["appid"].toString()) + "'>" + escapeHTML(index.toString()) + "</option>";
 						}
 					});
-
 					select_html += "</select>";
 					$(".es_loading").remove();
-					$("#es_background_save_btn").removeClass("btn_disabled");
-					$("#es_background_save_btn").click(function(e) {
-						$("#es_profile_bg").submit();
-					});
 					$("#es_profile_background_current_name").html(select_html);
 
 					get_http("http://api.enhancedsteam.com/profile-small/?steam64=" + steam64, function (txt) {
 						$("#es_profile_background_current_image").attr("src", escapeHTML(txt));
 					});
+
+					$("#es_background_gamename").change(function() {						
+						var appid = $("#es_background_gamename option:selected").attr("id");
+						$("#appid").attr("value", appid);
+						$("#es_background_selection").remove();
+						if (appid == 0) {
+							$("#es_profile_background_current_image").attr("src", "");
+						} else {
+							$("#es_profile_background_current_name").after("<div class='es_loading'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading +"</div>");							
+
+							get_http("http://api.enhancedsteam.com/profile-select-v2-game/?appid=" + appid + "&steam64=" + steam64, function (txt) {
+								var bg_data = JSON.parse(txt);
+								$("#es_profile_background_current_name").after("<div id='es_background_selection'></div>");
+								select_html = "<select name='es_background' id='es_background' class='gray_bevel dynInput'>";
+								var i = 0;
+								if (selected) { i = 1; selected = false; }
+								$.each(bg_data["backgrounds"], function(index, value) {
+									if (value["selected"]) {
+										select_html += "<option id='" + escapeHTML(value["id"].toString()) + "' value='" + escapeHTML(value["index"].toString()) + "' selected>" + escapeHTML(value["text"].toString()) + "</option>";
+									} else {
+										if (i == 0) { $("#es_profile_background_current_image").attr("src", value["id"]); i = 1; }
+										select_html += "<option id='" + escapeHTML(value["id"].toString()) + "' value='" + escapeHTML(value["index"].toString()) + "'>" + escapeHTML(value["text"].toString()) + "</option>";
+									}	
+								});
+								select_html += "</select>";
+								$(".es_loading").remove();
+								$("#es_background_selection").html(select_html);
+
+								$("#es_background").change(function() {
+									var img = $("#es_background option:selected").attr("id");
+									$("#es_profile_background_current_image").attr("src", img);
+								});
+							});
+
+							// Enable the "save" button
+							$("#es_background_save_btn").removeClass("btn_disabled");
+							$("#es_background_save_btn").click(function(e) {
+								$("#es_profile_bg").submit();
+							});
+						}
+					});
+
+					if (selected) { $("#es_background_gamename").change(); }
 				});
 			}
 		}
