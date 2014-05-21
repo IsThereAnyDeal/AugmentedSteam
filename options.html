@@ -202,6 +202,17 @@
 						<option value="Ukrainian">Ukrainian</option>
 					</select>
 				</li>
+				<li class="header" id="homepage_text">Homepage</li>
+				<li><label for="homepage_default_tab" id="homepage_default_tab_text">Default homepage tab:</label>
+					<select id="homepage_tab_selection">
+						<option value="remember">Remember Previous</option>
+						<option value="tab_1_content">New Releases</option>
+						<option value="tab_2_content">Top Sellers</option>
+						<option value="tab_3_content">Coming Soon</option>
+						<option value="tab_discounts_content">Specials</option>
+						<option value="es_popular">Popular</option>
+					</select>
+				</li>
 				<li class="header" id="library_text">Library (BETA)</li>
 				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
 				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
@@ -248,92 +259,48 @@
 				</li>
 				<table id="store_stores" style="display: none" border=0>
 					<tr>
-						<td>
-							<input type="checkbox" id="steam"><label for="steam">Steam</label>
-						</td>
-						<td>
-							<input type="checkbox" id="amazonus"><label for="amazonus">Amazon US</label>
-						</td>
-						<td>
-							<input type="checkbox" id="impulse"><label for="impulse">GameStop PC</label>
-						</td>
+						<td><input type="checkbox" id="steam"><label for="steam">Steam</label></td>
+						<td><input type="checkbox" id="amazonus"><label for="amazonus">Amazon US</label></td>
+						<td><input type="checkbox" id="impulse"><label for="impulse">GameStop PC</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="gamersgate"><label for="gamersgate">GamersGate</label>
-						</td>
-						<td>
-							<input type="checkbox" id="greenmangaming"><label for="greenmangaming">GreenMan Gaming</label>
-						</td>
-						<td>
-							<input type="checkbox" id="gamefly"><label for="gamefly">GameFly PC</label>
-						</td>
+						<td><input type="checkbox" id="gamersgate"><label for="gamersgate">GamersGate</label></td>
+						<td><input type="checkbox" id="greenmangaming"><label for="greenmangaming">GreenMan Gaming</label></td>
+						<td><input type="checkbox" id="gamefly"><label for="gamefly">GameFly PC</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="origin"><label for="origin">Origin PC</label>
-						</td>
-						<td>
-							<input type="checkbox" id="uplay"><label for="uplay">Uplay PC</label>
-						</td>
-						<td>
-							<input type="checkbox" id="indiegalastore"><label for="indiegalastore">IndieGala Store</label>
-						</td>
+						<td><input type="checkbox" id="origin"><label for="origin">Origin PC</label></td>
+						<td><input type="checkbox" id="uplay"><label for="uplay">Uplay PC</label></td>
+						<td><input type="checkbox" id="indiegalastore"><label for="indiegalastore">IndieGala Store</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="desura"><label for="desura">Desura</label>
-						</td>
-						<td>
-							<input type="checkbox" id="gog"><label for="gog">GOG</label>
-						</td>
-						<td>
-							<input type="checkbox" id="humblestore"><label for="humblestore">Humble Store</label>
-						</td>
+						<td><input type="checkbox" id="desura"><label for="desura">Desura</label></td>
+						<td><input type="checkbox" id="gog"><label for="gog">GOG</label></td>
+						<td><input type="checkbox" id="humblestore"><label for="humblestore">Humble Store</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="gametap"><label for="gametap">GamesTap</label>
-						</td>
-						<td>
-							<input type="checkbox" id="gamesplanet"><label for="gamesplanet">GamesPlanet</label>
-						</td>
-						<td>
-							<input type="checkbox" id="getgames"><label for="getgames">GetGames</label>
-						</td>
+						<td><input type="checkbox" id="humblewidgets"><label for="humblewidgets">Humble Widgets</label></td>
+						<td><input type="checkbox" id="gamesplanet"><label for="gamesplanet">GamesPlanet</label></td>
+						<td><input type="checkbox" id="getgames"><label for="getgames">GetGames</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="beamdog"><label for="beamdog">Beamdog</label>
-						</td>
-						<td>
-							<input type="checkbox" id="adventureshop"><label for="adventureshop">Adventure Shop</label>
-						</td>
-						<td>
-							<input type="checkbox" id="nuuvem"><label for="nuuvem">Nuuvem</label>
-						</td>
+						<td><input type="checkbox" id="gameolith"><label for="gameolith">Gameolith</label></td>
+						<td><input type="checkbox" id="adventureshop"><label for="adventureshop">Adventure Shop</label></td>
+						<td><input type="checkbox" id="nuuvem"><label for="nuuvem">Nuuvem</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="shinyloot"><label for="shinyloot">ShinyLoot</label>
-						</td>
-						<td>
-							<input type="checkbox" id="dlgamer"><label for="dlgamer">DLGamer</label>
-						</td>
-						<td>
-							<input type="checkbox" id="dotemu"><label for="dotemu">DotEmu</label>
-						</td>
+						<td><input type="checkbox" id="shinyloot"><label for="shinyloot">ShinyLoot</label></td>
+						<td><input type="checkbox" id="dlgamer"><label for="dlgamer">DLGamer</label></td>
+						<td><input type="checkbox" id="dotemu"><label for="dotemu">DotEmu</label></td>
 					</tr>
 					<tr>
-						<td>
-							<input type="checkbox" id="indiegamestand"><label for="indiegamestand">IndieGameStand</label>
-						</td>
-						<td>
-							<input type="checkbox" id="squenix"><label for="squenix">Square Enix</label>
-						</td>
-						<td>
-							<input type="checkbox" id="bundlestars"><label for="bundlestars">Bundle Stars</label>
-						</td>
+						<td><input type="checkbox" id="indiegamestand"><label for="indiegamestand">IndieGameStand</label></td>
+						<td><input type="checkbox" id="squenix"><label for="squenix">Square Enix</label></td>
+						<td><input type="checkbox" id="bundlestars"><label for="bundlestars">Bundle Stars</label></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="fireflower"><label for="fireflower">FireFlower</label></td>
+						<td><input type="checkbox" id="gametap"><label for="gametap">GamesTap</label></td>
 					</tr>
 				</table>
 				<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
@@ -518,7 +485,7 @@
 		</div>
 
 		<div id="footer">
-			<span><a href="http://www.enhancedsteam.com">Enhanced Steam Extension</a><br>by jshackles</span>
+			<div><a href="http://www.enhancedsteam.com" id="foot_link">Enhanced Steam Extension</a></div><span id="author_info">by jshackles</span>
 			<div><button id="reset" class="btn">Reset options</button></div>
 		</div>
 	</div>
