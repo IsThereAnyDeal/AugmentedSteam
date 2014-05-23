@@ -7,7 +7,6 @@ v6.2
 : Fixed a bug where Legend of Grimrock store page could inadvertently show incorrect DRM warnings
 - Removed market data on inventory items, as this feature was implemented by Valve
 - Removed achievement section on app pages, as this was re-implemented by Valve
- 
 
 v6.1.1
 -----
