@@ -56,7 +56,6 @@ function save_options() {
 	showspeechsearch = $("#showspeechsearch").prop('checked');
 	html5video = $("#html5video").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
-	showachievements = $("#showachievements").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
@@ -205,7 +204,6 @@ function save_options() {
 		'showspeechsearch': showspeechsearch,
 		'html5video': html5video,
 		'contscroll': contscroll,
-		'showachievements': showachievements,
 		'showdrm': showdrm,
 		'showmcus': showmcus,
 		'showhltb': showhltb,
@@ -463,8 +461,7 @@ function load_options() {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
-		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }		
-		if (settings.showachievements === undefined) { settings.showachievements = true; chrome.storage.sync.set({'showachievements': settings.showachievements}); }
+		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
 		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
 		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
@@ -544,7 +541,6 @@ function load_options() {
 		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
 		$("#html5video").prop('checked', settings.html5video);
 		$("#contscroll").prop('checked', settings.contscroll);
-		$("#showachievements").prop('checked', settings.showachievements);
 		$("#showdrm").prop('checked', settings.showdrm);
 		$("#showmcus").prop('checked', settings.showmcus);
 		$("#showhltb").prop('checked', settings.showhltb);
@@ -671,7 +667,6 @@ function load_translation() {
 			$("#showspeechsearch_text").text(localized_strings[settings.language].options.showspeechsearch);
 			$("#html5video_text").text(localized_strings[settings.language].options.html5video);
 			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);
-			$("#showachievements_text").text(localized_strings[settings.language].achievements.option);
 			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options.lowestprice);
 			$("#store_lowestprice_onwishlist_text").text(localized_strings[settings.language].options.lowestprice_onwishlist);
