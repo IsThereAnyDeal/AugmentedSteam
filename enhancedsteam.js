@@ -2231,15 +2231,10 @@ function drm_warnings(type) {
 			// Securom detection
 			if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
 
-			// Tages detection
-			if (text.indexOf("Tages") > 0) { tages = true; }
-			if (text.indexOf("Angebote des Tages") > 0) { tages = false; }
-			if (text.indexOf("Tagesangebote") > 0) { tages = false; }
-			if (text.indexOf("TAGES") > 0) { tages = true; }
-			if (text.indexOf("ANGEBOT DES TAGES") > 0) { tages = false; }
-			if (text.indexOf("SOLIDSHIELD") > 0) { tages = true; }
-			if (text.indexOf("Solidshield Tages") > 0) { tages = true; }
-			if (text.indexOf("Tages Solidshield") > 0) { tages = true; }
+			// Tages detection			
+			if (text.match(/\btages\b/i)) { tages = true; }
+			if (text.match(/angebote des tages/i)) { tages = false; }
+			if (text.match("/\bsolidshield\b/i")) { tages = true; }
 
 			// Stardock account detection
 			if (text.indexOf("Stardock account") > 0) { stardock = true; }

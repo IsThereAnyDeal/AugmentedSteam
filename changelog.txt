@@ -4,6 +4,7 @@ v6.2
 + Rewrote custom profile background selection dialog
 + Added a link to a game's AStats page in the achievement section on app pages
 + Added support for Humble Widgets in price comparisons
+: Fixed a bug where Legend of Grimrock store page could inadvertently show incorrect DRM warnings
 - Removed market data on inventory items, as this feature was implemented by Valve
 - Removed achievement section on app pages, as this was re-implemented by Valve
  
