@@ -4076,6 +4076,23 @@ function add_astats_link(appid) {
 	});
 }
 
+function add_achievement_completion_bar(appid) {
+	$(".myactivity_block").find(".details_block").after("<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -10px;'></div>");
+	$("#es_ach_stats").load("http://steamcommunity.com/my/stats/" + appid + "/ #topSummaryAchievements", function(response, status, xhr) {				
+		if (response.match(/achieveBarFull\.gif/)) {
+			var BarFull = $("#es_ach_stats").html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+			var BarEmpty = $("#es_ach_stats").html().match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+			BarFull = BarFull * .88;
+			BarEmpty = BarEmpty * .88;
+			var html = $("#es_ach_stats").html();
+			html = html.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + escapeHTML(BarFull.toString()) + "\"");
+			html = html.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + escapeHTML(BarEmpty.toString()) + "\"");
+			html = html.replace("::", ":");
+			$("#es_ach_stats").html(html);
+		}
+	});
+}
+
 // Check for Early Access titles
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
@@ -6088,6 +6105,7 @@ $(document).ready(function(){
 						add_dlc_checkboxes();
 						fix_achievement_icon_size();
 						add_astats_link(appid);
+						add_achievement_completion_bar(appid);
 
 						show_regional_pricing();
 						break;
