@@ -4067,6 +4067,15 @@ function fix_achievement_icon_size() {
 	}
 }
 
+function add_astats_link(appid) {
+	storage.get(function(settings) {
+		if (settings.showastatslink === undefined) { settings.showastatslink = true; storage.set({'showastatslink': settings.showastatslink}); }
+		if (settings.showastatslink) {
+			$(".communitylink_achievement_inner a:last").after("<a class='linkbar' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico/astatsnl.png") + "' style='margin-right: 11px;'></div>" + localized_strings[language].view_astats + "</a>")
+		}
+	});
+}
+
 // Check for Early Access titles
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
@@ -6078,6 +6087,7 @@ $(document).ready(function(){
 						add_app_badge_progress(appid);
 						add_dlc_checkboxes();
 						fix_achievement_icon_size();
+						add_astats_link(appid);
 
 						show_regional_pricing();
 						break;

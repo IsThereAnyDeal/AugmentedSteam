@@ -62,6 +62,7 @@ function save_options() {
 	showhltb = $("#showhltb").prop('checked');
 	showpcgw = $("#showpcgw").prop('checked');
 	showsteamdb = $("#showsteamdb").prop('checked');
+	showastatslink = $("#showastatslink").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
 	show_package_info = $("#show_package_info").prop('checked');
 	show_sysreqcheck = $("#show_sysreqcheck").prop('checked');
@@ -210,6 +211,7 @@ function save_options() {
 		'showhltb': showhltb,
 		'showpcgw': showpcgw,
 		'showsteamdb': showsteamdb,
+		'showastatslink': showastatslink,
 		'showwsgf': showwsgf,
 		'show_package_info': show_package_info,
 		'show_sysreqcheck': show_sysreqcheck,
@@ -440,6 +442,7 @@ function load_options() {
 		if (settings.showhltb === undefined) { settings.showhltb = true; chrome.storage.sync.set({'showhltb': settings.showhltb}); }
 		if (settings.showpcgw === undefined) { settings.showpcgw = true; chrome.storage.sync.set({'showpcgw': settings.showpcgw}); }
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
+		if (settings.showastatslink === undefined) { settings.showastatslink = true; chrome.storage.sync.set({'showastatslink': settings.showastatslink}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; chrome.storage.sync.set({'show_package_info': settings.show_package_info}); }
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; chrome.storage.sync.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
@@ -547,6 +550,7 @@ function load_options() {
 		$("#showhltb").prop('checked', settings.showhltb);
 		$("#showpcgw").prop('checked', settings.showpcgw);
 		$("#showsteamdb").prop('checked', settings.showsteamdb);
+		$("#showastatslink").prop('checked', settings.showastatslink);
 		$("#showwsgf").prop('checked', settings.showwsgf);
 		$("#show_package_info").prop('checked', settings.show_package_info);
 		$("#show_sysreqcheck").prop('checked', settings.show_sysreqcheck);
@@ -677,6 +681,7 @@ function load_translation() {
 			$("#store_hltb_text").text(localized_strings[settings.language].options.hltb);
 			$("#store_pcgw_text").text(localized_strings[settings.language].options.pcgw);
 			$("#store_steamdb_text").text(localized_strings[settings.language].options.steamdb);
+			$("#store_astatslink_text").text(localized_strings[settings.language].options.show_astatslink);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options.wsgf);
 			$("#store_package_info_text").text(localized_strings[settings.language].options.show_package_info);
 			$("#show_sysreqcheck_text").text(localized_strings[settings.language].options.show_sysreqcheck);

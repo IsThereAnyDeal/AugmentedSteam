@@ -2,6 +2,7 @@ v6.2
 -----
 + Added option to set which homepage tab displays by default
 + Rewrote custom profile background selection dialog
++ Added a link to a game's AStats page in the achievement section on app pages
 + Added support for Humble Widgets in price comparisons
 - Removed market data on inventory items, as this feature was implemented by Valve
 - Removed achievement section on app pages, as this was re-implemented by Valve
