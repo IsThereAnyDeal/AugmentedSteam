@@ -155,12 +155,6 @@ li {
 	margin-top:5px;
 	padding:0;
 }
-.translator,.language {
-	display:inline-block;
-}
-.language {
-	width:180px;
-}
 .settings_color, .settings_check {
 	display:inline-block;
 }
@@ -232,4 +226,10 @@ a:hover {
 }
 #api_key_block {
 	padding-left:35px;
+}
+.translation {
+	margin-left:10px;
+}
+.language {
+	padding-right:8px;
 }
