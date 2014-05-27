@@ -1,5 +1,6 @@
 v6.3
 -----
++ Added inventory market data to other user's inventories
 
 
 v6.2

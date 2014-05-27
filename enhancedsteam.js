@@ -3673,6 +3673,55 @@ function account_total_spent() {
 	});
 }
 
+function inventory_market_prepare() {
+	if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
+		$("#es_market_helper").remove();
+		var es_market_helper = document.createElement("script");
+		es_market_helper.type = "text/javascript";
+		es_market_helper.id = "es_market_helper";
+		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app] }, "*"); });';
+		document.documentElement.appendChild(es_market_helper);
+
+		window.addEventListener("message", function(event) {
+			if (event.source != window)	return;
+			if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
+		}, false);
+	}
+}
+
+function inventory_market_helper(response) {
+	var item = response[0];
+	var marketable = response[1];
+	var global_id = response[2];
+	var hash_name = response[3];
+	var appid = response[4];
+	var html;
+
+	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
+	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
+	$('.es_item_action').html("");
+	
+	if (marketable == 0) { $('.es_item_action').remove(); return; }
+	$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
+	
+	var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
+	get_http(url, function (txt) {
+		data = JSON.parse(txt);
+		$("#es_item" + item).html("");
+		if (data.success) {
+			html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
+			html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
+			if (data.volume) {
+				html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
+			}
+
+			$("#es_item" + item).html(html);
+		} else {
+			$("#es_item" + item).remove();
+		}
+	});
+}
+
 function add_inventory_gotopage(){
 	storage.get(function(settings) {
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
@@ -6203,6 +6252,7 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
+						inventory_market_prepare();
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
