@@ -95,15 +95,15 @@ function formatCurrency(number, type) {
 function currency_symbol_to_type (currency_symbol) {
 	switch (currency_symbol) {
 		case "pуб":
-			return "RUB";			
+			return "RUB";
 		case "€":
-			return "EUR";			
+			return "EUR";
 		case "£":
-			return "GBP";			
+			return "GBP";
 		case "R$":
-			return "BRL";			
+			return "BRL";
 		default:
-			return "USD";			
+			return "USD";
 	}
 }
 
