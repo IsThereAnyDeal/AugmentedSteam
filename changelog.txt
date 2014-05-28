@@ -1,8 +1,11 @@
 v6.3
 -----
+
+
+v6.2.1
+-----
 + Added inventory market data to other user's inventories
 + Added avg price of 3 cards to booster packs in inventory
-
 
 v6.2
 -----
