@@ -3722,7 +3722,7 @@ function inventory_market_helper(response) {
 			}
 		});
 	} else {
-		if (hash_name.match(/Booster Pack/g)) {
+		if (hash_name && hash_name.match(/Booster Pack/g)) {
 			setTimeout(function() {
 				var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|£|pуб)/)[0];
 				var currency_type = currency_symbol_to_type(currency_symbol);
