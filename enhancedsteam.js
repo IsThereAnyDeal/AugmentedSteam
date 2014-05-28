@@ -3674,7 +3674,7 @@ function account_total_spent() {
 }
 
 function inventory_market_prepare() {
-	if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
+	
 		$("#es_market_helper").remove();
 		var es_market_helper = document.createElement("script");
 		es_market_helper.type = "text/javascript";
@@ -3686,7 +3686,7 @@ function inventory_market_prepare() {
 			if (event.source != window)	return;
 			if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
 		}, false);
-	}
+
 }
 
 function inventory_market_helper(response) {
@@ -3697,29 +3697,46 @@ function inventory_market_helper(response) {
 	var appid = response[4];
 	var html;
 
-	if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
-	if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
-	$('.es_item_action').html("");
-	
-	if (marketable == 0) { $('.es_item_action').remove(); return; }
-	$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
-	
-	var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
-	get_http(url, function (txt) {
-		data = JSON.parse(txt);
-		$("#es_item" + item).html("");
-		if (data.success) {
-			html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
-			html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
-			if (data.volume) {
-				html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
-			}
+	if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
+		if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
+		if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
+		$('.es_item_action').html("");
+		
+		if (marketable == 0) { $('.es_item_action').remove(); return; }
+		$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
+		
+		var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
+		get_http(url, function (txt) {
+			data = JSON.parse(txt);
+			$("#es_item" + item).html("");
+			if (data.success) {
+				html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
+				html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
+				if (data.volume) {
+					html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
+				}
 
-			$("#es_item" + item).html(html);
-		} else {
-			$("#es_item" + item).remove();
+				$("#es_item" + item).html(html);
+			} else {
+				$("#es_item" + item).remove();
+			}
+		});
+	} else {
+		if (hash_name.match(/Booster Pack/g)) {
+			setTimeout(function() {
+				var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|£|pуб)/)[0];
+				var currency_type = currency_symbol_to_type(currency_symbol);
+				var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
+
+				get_http(api_url, function(price_data) {				
+					var booster_price = parseFloat(price_data,10) * 3;					
+					html = localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency_type) + "<br>";
+					$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
+					$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
+				});
+			}, 1000);
 		}
-	});
+	}
 }
 
 function add_inventory_gotopage(){
