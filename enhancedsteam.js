@@ -5793,8 +5793,8 @@ function add_gamecard_market_links(game) {
 			var data = JSON.parse(txt);
 			$(".badge_card_set_card").each(function() {
 				var node = $(this);
-				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim();			
-				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim(); }
+				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
+				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&');; }
 
 				var newcardname = cardname;
 				if (foil) { newcardname += " (Foil)"; }

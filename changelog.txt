@@ -2,6 +2,7 @@ v6.3
 -----
 + Added an information dialog to app pages that are excluded from Family Sharing
 : Multiple DRM warnings now display in a single warning banner
+: Fixed a bug where some market links were not showing up on certain badge pages
 
 
 v6.2.1
