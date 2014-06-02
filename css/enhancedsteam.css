@@ -762,3 +762,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_item_action {
 	height: 60px;
 }
+.es_drm_warning {
+	display: table; 
+	width: 100%; 
+	padding: 0px !important;
+}
+.es_drm_warning span {
+	display: table-cell; 
+	vertical-align: middle; 
+	line-height: normal; 
+	padding-left: 15px;
+}

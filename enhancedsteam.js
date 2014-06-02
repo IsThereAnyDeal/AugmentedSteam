@@ -2209,7 +2209,7 @@ function drm_warnings(type) {
 			var stardock;
 			var rockstar;
 			var kalypso;
-			var otherdrm;
+			var drm;
 
 			var text = $("#game_area_description").html();
 			text += $("#game_area_sys_req").html();
@@ -2247,50 +2247,35 @@ function drm_warnings(type) {
 			if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
 
 			// Detect other DRM
-			if (text.indexOf("3rd-party DRM") > 0) { otherdrm = true; }
-			if (text.indexOf("No 3rd Party DRM") > 0) { otherdrm = false; }
+			if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+			if (text.indexOf("No 3rd Party DRM") > 0) { drm = false; }
 			
 			var string_type;
+			var drm_string = "(";
 			if (type == "app") { string_type = localized_strings[language].drm_third_party; } else { string_type = localized_strings[language].drm_third_party_sub; }
 			
-			if (gfwl) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Games for Windows Live)</div>');
-				otherdrm = false;
+			if (gfwl) { drm_string += 'Games for Windows Live, '; drm = true; }
+			if (uplay) { drm_string += 'Ubisoft Uplay, '; drm = true; }
+			if (securom) { drm_string += 'SecuROM, '; drm = true; }
+			if (tages) { drm_string += 'Tages, '; drm = true; }
+			if (stardock) { drm_string += 'Stardock Account Required, '; drm = true; }
+			if (rockstar) { drm_string += 'Rockstar Social Club, '; drm = true; }
+			if (kalypso) { drm_string += "Kalypso Launcher, "; drm = true; }
+
+			if (drm_string == "(") {
+				drm_string = "";
+			} else {
+				drm_string = drm_string.substring(0, drm_string.length - 2);
+				drm_string += ")";
 			}
 
-			if (uplay) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Ubisoft Uplay)</div>');
-				otherdrm = false;
-			}
-
-			if (securom) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (SecuROM)</div>');
-				otherdrm = false;
-			}
-
-			if (tages) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Tages)</div>');
-				otherdrm = false;
-			}
-
-			if (stardock) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Stardock Account Required)</div>');
-				otherdrm = false;
-			}
-
-			if (rockstar) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Rockstar Social Club)</div>');
-				otherdrm = false;
-			}
-
-			if (kalypso) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + ' (Kalypso Launcher)</div>');
-				otherdrm = false;
-			}
-
-			if (otherdrm) {
-				$("#game_area_purchase").before('<div class="game_area_already_owned" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );">' + string_type + '</div>');
-			}
+			if (drm) {
+				if ($("#game_area_purchase").find(".game_area_description_bodylabel").length > 0) {
+					$("#game_area_purchase").find(".game_area_description_bodylabel").after('<div class="game_area_already_owned es_drm_warning" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );"><span>' + string_type + ' ' + drm_string + '</span></div>');
+				} else {
+					$("#game_area_purchase").prepend('<div class="game_area_already_owned es_drm_warning" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );"><span>' + string_type + ' ' + drm_string + '</span></div>');
+				}	
+			}	
 		}
 	});
 }
@@ -4811,6 +4796,15 @@ function add_steamdb_links(appid, type) {
 	});
 }
 
+function add_familysharing_warning(appid) {
+	get_http('http://api.enhancedsteam.com/exfgls/?appid=' + appid, function (txt) {
+		var data = JSON.parse(txt);
+		if (data["exfgls"]["excluded"]) {
+			$("#game_area_purchase").before('<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content"><b>Notice: </b>This game is excluded from Steam\'s Family Sharing service.</div><div class="notice_box_bottom"></div></div>');
+		}
+	});
+}
+
 function get_app_details(appids) {
 	// Make sure we have inventory loaded beforehand so we have gift/guestpass/coupon info
 	if (!loading_inventory) loading_inventory = load_inventory();
@@ -6145,6 +6139,7 @@ $(document).ready(function(){
 						add_pcgamingwiki_link(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
+						add_familysharing_warning(appid);
 						add_dlc_page_link(appid);
 						add_remove_from_wishlist_button(appid);
 						add_pack_breakdown();

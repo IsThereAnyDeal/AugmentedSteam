@@ -1,5 +1,7 @@
 v6.3
 -----
++ Added an information dialog to app pages that are excluded from Family Sharing
+: Multiple DRM warnings now display in a single warning banner
 
 
 v6.2.1
