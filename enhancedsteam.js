@@ -3268,7 +3268,7 @@ function fix_wishlist_image_not_found() {
 	if (items) {
 		imgs = items.getElementsByTagName("img");
 		for (var i = 0; i < imgs.length; i++)
-		if (imgs[i].src == "http://media.steampowered.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
+		if (imgs[i].src == "http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
 			var gameurl = imgs[i].parentNode.href;
 			imgs[i].src = "http://cdn.akamai.steamstatic.com/steam/apps/" + gameurl.substring(gameurl.lastIndexOf("/") + 1) + "/header.jpg";
 		}
