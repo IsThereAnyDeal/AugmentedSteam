@@ -1,8 +1,10 @@
 v6.3
 -----
 + Added an information dialog to app pages that are excluded from Family Sharing
++ Steam user review scores are now loaded more quickly
 : Multiple DRM warnings now display in a single warning banner
 : Fixed a bug where some market links were not showing up on certain badge pages
+: Fixed several bugs caused by Valve's CDN name change
 
 
 v6.2.1
