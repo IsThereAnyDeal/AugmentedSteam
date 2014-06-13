@@ -413,13 +413,17 @@ function display_tags(node) {
 	},
 	new_display_tag = function new_display_tag(text, color) {
 		var $tag = $("<span>" + tag[0] + "</span>");
-		$tag.css("backgroundColor", tag[1]);
-		$tag.css("color", "white");
-		$tag.css("float", "right");
-		$tag.css("padding", "2px");
-		$tag.css("margin-right", "4px");
-		$tag.css("margin-bottom", "4px");
-		$tag.css("border", "1px solid #262627");
+
+		$tag.css({
+			"backgroundColor": tag[1],
+			"color": "white",
+			"float": "right",
+			"padding": "2px",
+			"margin-right": "4px",
+			"margin-bottom": "4px",
+			"border": "1px solid #262627"
+		});
+
 		return $tag;
 	};
 
@@ -447,17 +451,21 @@ function display_tags(node) {
 			$tag_root = $(node).find(".search_name");
 			remove_existing_tags($tag_root);
 
-			$tags.css("display", "inline-block");
-			$tags.css("vertical-align", "middle");
-			$tags.css("font-size", "small");
+			$tags.css({
+				"display": "inline-block",
+				"vertical-align": "middle",
+				"font-size": "small"
+			});
 
 			$tag_root.find("p").prepend($tags);
 
 			// Remove margin-bottom, border, and tweak padding on carousel lists
 			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css("margin-bottom", "0");
-				$(obj).css("border", "0");
-				$(obj).css("padding", "3px");
+				$(obj).css({
+					"margin-bottom": "0",
+					"border": "0",
+					"padding": "3px"
+				});
 			});
 		}
 		else if (node.classList.contains("dailydeal")) {
@@ -472,9 +480,10 @@ function display_tags(node) {
 			remove_existing_tags($tag_root);
 
 			// small_cap will have extra height
-
-			$tags.css("display", "table");
-			$tags.css("margin-top", "4px");
+			$tags.css({
+				"display": "table",
+				"margin-top": "4px"
+			});
 			$tag_root.find("h4").before($tags);
 		}
 		else if (node.classList.contains("browse_tag_game")) {
@@ -509,25 +518,33 @@ function display_tags(node) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
 
-			$tags.css("float", "right");
-			$tags.css("width", "130px");
-			$tags.css("margin-top", "30px");
+			$tags.css({
+				"float": "right",
+				"width": "130px",
+				"margin-top": "30px"
+			});	
+
 			$tag_root.find(".match_price").after($tags);
 		}
 		else if (node.classList.contains("cluster_capsule")) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
 
-			$tags.css("display", "inline-block");
-			$tags.css("vertical-align", "middle");
-			$tags.css("font-size", "small");
+			$tags.css({
+				"display": "inline-block",
+				"vertical-align": "middle",
+				"font-size": "small"
+			});	
+
 			$tag_root.find(".main_cap_platform_area").append($tags);
 
 			// Remove margin-bottom, border, and tweak padding on carousel lists
 			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css("margin-bottom", "0");
-				$(obj).css("border", "0");
-				$(obj).css("padding", "3px");
+				$(obj).css({
+					"margin-bottom": "0",
+					"border": "0",
+					"padding": "3px"		
+				});	
 			});
 		}
 		else if (node.classList.contains("recommendation_highlight")) {
@@ -599,9 +616,11 @@ function display_tags(node) {
 
 			remove_existing_tags($tag_root);
 
-			$tags.css("float", "left");
-			$tags.css("margin-top", "4px");
-			$tags.css("margin-left", "4px");
+			$tags.css({
+				"float": "left",
+				"margin-top": "4px",
+				"margin-left": "4px"
+			});
 
 			$tag_root.find(".apphub_AppName").after($tags);
 			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
@@ -613,9 +632,11 @@ function display_tags(node) {
 
 			remove_existing_tags($tag_root);
 
-			$tags.css("float", "left");
-			$tags.css("margin-top", "4px");
-			$tags.css("margin-left", "4px");
+			$tags.css({
+				"float": "left",
+				"margin-top": "4px",
+				"margin-left": "4px"
+			});
 
 			$tag_root.find(".apphub_OtherSiteInfo").append($tags);
 			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
