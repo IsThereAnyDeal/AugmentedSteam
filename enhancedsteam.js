@@ -4800,7 +4800,7 @@ function add_familysharing_warning(appid) {
 	get_http('http://api.enhancedsteam.com/exfgls/?appid=' + appid, function (txt) {
 		var data = JSON.parse(txt);
 		if (data["exfgls"]["excluded"]) {
-			$("#game_area_purchase").before('<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content"><b>Notice: </b>This game is excluded from Steam\'s Family Sharing service.</div><div class="notice_box_bottom"></div></div>');
+			$("#game_area_purchase").before('<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">' + localized_strings[language].family_sharing_notice + '</div><div class="notice_box_bottom"></div></div>');
 		}
 	});
 }
