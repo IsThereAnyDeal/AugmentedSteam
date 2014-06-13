@@ -3514,62 +3514,6 @@ function minimize_active_listings() {
 	});
 }
 
-function add_market_adv_search() {
-	if (window.location.search.match(/appid%3A753/)) {
-		var html = '<div class="marker_search_sidebar_section_tip" style="margin-top: 6px;">' + localized_strings[language].game_name + ':</div>';
-		html += '<div class="market_serach_box_container es_market_adv_container"><input type="text" id="es_market_adv_game" class="filter_search_box market_search_sidebar_search_box" name="filter-game"/></div>';
-		html += '<div class="marker_search_sidebar_section_tip" style="margin-top: 6px;">' + localized_strings[language].item_type + ':</div>';
-		html += '<div class="market_serach_box_container es_market_adv_container"><select id="es_market_adv_type" style="width: 250px;" name="filter-type">';
-		html += '<option value="">' + localized_strings[language].all + '</option>';
-		html += '<option value="Trading Card">Trading Card</option>';
-		html += '<option value="Foil Trading Card">Foil Trading Card</option>';
-		html += '<option value="Emoticon">Emoticon</option>';
-		html += '<option value="Profile Background">Profile Background</option>';
-		html += '<option value="Booster Pack">Booster Pack</option>';
-		html += '</select></div>';
-		html += '<link rel="stylesheet" type="text/css" href="http://cdn4.store.steampowered.com/public/css/styles_searchv5.css">';
-		html += '<div style="float: right; margin-top: 6px; margin-right: 14px;"><input type="submit" name="submit" value="' + localized_strings[language].search + '" class="search_button" id="es_market_adv_submit" /></div><div style="clear: both;"></div>';  
-		$("#market_search").append(html);
-		$("#findItemsSearchSubmit").hide();
-
-		if (window.location.search.match(/filter-game\=(.+)\&/)) {
-			var filtergame = window.location.search.match(/filter-game\=(.+)\&/)[1].replace(/\+/g, " ");
-			filtergame = rewrite_string(filtergame);
-			$("#es_market_adv_game").val(filtergame);
-			$("#findItemsSearchBox").val($("#findItemsSearchBox").val().replace(filtergame, ""));
-			$("#searchResults").find(".market_section_title").text($("#searchResults").find(".market_section_title").text().replace("Steam", filtergame));
-			$("#searchResults").find(".market_section_title").text($("#searchResults").find(".market_section_title").text().replace(" " + filtergame, ""));
-		}
-
-		if (window.location.search.match(/filter-type\=(.+)$/)) {
-			var filtertype = window.location.search.match(/filter-type\=(.+)$/)[1].replace(/\+/g, " ");
-			$("#es_market_adv_type").val(filtertype);
-			$("#findItemsSearchBox").val($("#findItemsSearchBox").val().replace(filtertype, ""));
-			$("#searchResults").find(".market_section_title").text($("#searchResults").find(".market_section_title").text().replace(" " + filtertype, ""));
-			$("#searchResults").find(".market_section_title").text(filtertype + $("#searchResults").find(".market_section_title").text());
-		}
-		
-		$("#searchResults").find(".market_section_title").text($("#searchResults").find(".market_section_title").text().replace("for \"\"", ""));
-		
-		$("#findItemsSearchBox").val($("#findItemsSearchBox").val().replace("appid:753", ""));
-		$("#findItemsSearchBox").val($("#findItemsSearchBox").val().trim());
-
-		$('#es_market_adv_submit').on("click", function(e){
-			e.preventDefault();
-			$('#market_search_descriptions_checkbox').attr('checked','checked');
-			var searchstring = "appid:753 " + $("#findItemsSearchBox").val() + " ";
-			
-			var game_name_value = $("#es_market_adv_game").val();			
-			var game_type_value = $("#es_market_adv_type").val();
-			if (game_name_value) searchstring += game_name_value + " ";
-			if (game_type_value) searchstring += game_type_value;
-
-			$('#findItemsSearchBox').val(searchstring.trim());
-			$('#findItemsSearchSubmit').click();
-		});
-	}
-}
-
 // Add a "Total spent on Steam" to the account details page
 function account_total_spent() {
 	storage.get(function(settings) {
@@ -6185,7 +6129,7 @@ $(document).ready(function(){
 
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
-						add_price_slider();
+						//add_price_slider();
 						add_advanced_cancel();
 						endless_scrolling();
 						remove_non_specials();
@@ -6204,7 +6148,7 @@ $(document).ready(function(){
 						add_actual_new_release_button();
 						set_homepage_tab();
 						add_carousel_descriptions();
-						add_affordable_button();
+						//add_affordable_button();
 						show_regional_pricing();
 						hide_unowned_game_dlc();
 						break;
@@ -6312,7 +6256,6 @@ $(document).ready(function(){
 						add_market_total();
 						add_active_total();
 						minimize_active_listings();
-						add_market_adv_search();
 						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
