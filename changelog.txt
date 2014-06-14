@@ -1,3 +1,7 @@
+v6.4
+-----
+
+
 v6.3
 -----
 + Added an information dialog to app pages that are excluded from Family Sharing
