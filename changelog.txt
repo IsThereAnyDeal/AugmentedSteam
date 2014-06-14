@@ -6,7 +6,6 @@ v6.3
 : Fixed a bug where some market links were not showing up on certain badge pages
 : Fixed several bugs caused by Valve's CDN name change
 
-
 v6.2.1
 -----
 + Added inventory market data to other user's inventories
