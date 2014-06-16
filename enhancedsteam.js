@@ -497,7 +497,18 @@ function display_tags(node) {
 			$tag_root = $(node);
 			remove_existing_tags($tag_root);
 
-			var width = $(".game_area_dlc_price").width();
+			var clone = $(node).clone();
+			clone.css({
+				visibility:'hidden',
+				width : '',
+				height: '',
+				maxWidth : '',
+				maxHeight: ''
+			});
+			$('body').append(clone);
+			var width = $(clone).find(".game_area_dlc_price").width();
+			clone.remove();
+			
 			$tags.css("margin-right", width + 3);
 			$tag_root.find(".game_area_dlc_name").before($tags);
 
