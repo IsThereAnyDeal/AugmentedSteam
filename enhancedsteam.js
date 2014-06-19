@@ -328,6 +328,10 @@ function highlight_node(node, color) {
 		$node = $(node).find(".dailydeal_footer");
 	}
 
+	if (node.classList.contains("vote_option_game")) {
+		$node = $(node).find(".vote_option_info");
+	}
+
 	// App and community hub page headers
 	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
 		$node = $(node).find(".apphub_AppName");
