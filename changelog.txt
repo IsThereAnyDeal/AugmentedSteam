@@ -1,9 +1,13 @@
 v6.4
 -----
+
+
+v6.3.1
+-----
 + Buy orders will now be totaled on the market homepage
++ Added highlighting to the homepage of the Steam Summer Sale
 : Fixed a bug where tags would sometimes be hidden behind the price on DLC lists
 : Fixed a bug where active marketplace totals were incorrect for some currencies
-
 
 v6.3
 -----
