@@ -1315,7 +1315,7 @@ function send_age_verification() {
 }
 
 function scale_scoreboard() {
-	$(".friend_team_footer").append("<a class='whitelink' id='es_view_to_scale' style='cursor: pointer;'>" + localized_strings[language].view_to_scale + "</a>");
+	$(".friend_team_footer:first").append("<a class='whitelink' id='es_view_to_scale' style='cursor: pointer;'>" + localized_strings[language].view_to_scale + "</a>");
 	$("#es_view_to_scale").css("margin-left", "4px");
 	$("#es_view_to_scale").click(function() {
 		var top = $(".team_standing:first").find(".score_bar").css("width");
