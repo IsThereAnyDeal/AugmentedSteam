@@ -4719,7 +4719,8 @@ function start_highlights_and_tags(){
 		"div.home_area_spotlight",		// Midweek and weekend deals
 		"div.summersale_dailydeal_ctn",
 		"div.browse_tag_game",			// Tagged games
-		"div.similar_grid_item"			// Items on the "Similarly tagged" pages
+		"div.similar_grid_item",			// Items on the "Similarly tagged" pages
+		"a.vote_option_game"
 	];
 
 	// Get all appids and nodes from selectors
