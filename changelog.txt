@@ -1,8 +1,12 @@
 v6.4
 -----
+
+
+v6.3.2
+-----
 + Added Early Access banners to Summer Sale homepage
 + Added ability to sort Summer Sale team rankings to scale
-
+: Fixed a bug where scrolling on the home page would cause items not to highlight correctly
 
 v6.3.1
 -----
