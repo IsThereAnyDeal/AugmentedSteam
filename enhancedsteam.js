@@ -324,7 +324,7 @@ function highlight_node(node, color) {
 	}
 	
 	// Sale items
-	if (node.classList.contains("insert_season_here_sale_dailydeal_ctn")) {
+	if (node.classList.contains("summersale_dailydeal_ctn")) {
 		$node = $(node).find(".dailydeal_footer");
 	}
 
@@ -4717,7 +4717,7 @@ function start_highlights_and_tags(){
 		"div.sale_page_purchase_item",		// Sale pages
 		"div.item",				// Sale pages / featured pages
 		"div.home_area_spotlight",		// Midweek and weekend deals
-		"div.insert_season_here_sale_dailydeal_ctn",
+		"div.summersale_dailydeal_ctn",
 		"div.browse_tag_game",			// Tagged games
 		"div.similar_grid_item"			// Items on the "Similarly tagged" pages
 	];
