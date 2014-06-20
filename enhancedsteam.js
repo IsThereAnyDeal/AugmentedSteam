@@ -4272,8 +4272,9 @@ function process_early_access() {
 									$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 									$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 									$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-									$(".summersale_dailydeal:not('.small')").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+									$(".summersale_dailydeal:not('.small'):not('.tiny')").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 									$(".summersale_dailydeal.small").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0); });
+									$(".summersale_dailydeal.tiny").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
 									break;
 							}
 						case "steamcommunity.com":
