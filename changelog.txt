@@ -2,6 +2,10 @@ v6.4
 -----
 
 
+v6.3.3
+-----
+- Removed a feature that caused many people's wishlist to load slowly
+
 v6.3.2
 -----
 + Added Early Access banners to Summer Sale homepage
