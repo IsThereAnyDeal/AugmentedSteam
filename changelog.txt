@@ -1,7 +1,10 @@
 v6.4
 -----
-+ Rewrote regional price comparision to increase speed and pull data from our own API server
 
+
+v6.3.4
+-----
++ Rewrote regional price comparision to increase speed and pull data from our own API server
 
 v6.3.3
 -----
