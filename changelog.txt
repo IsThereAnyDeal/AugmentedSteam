@@ -1,5 +1,9 @@
 v6.4
 -----
+
+
+v6.3.5
+-----
 + Added platform icons to the summer sale homepage
 : Fixed scoreboard scaling to account for live updates
 
