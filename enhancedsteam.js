@@ -4170,30 +4170,32 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
 	get_http('http://store.steampowered.com/api/appdetails/?appids=' + appid + '&filters=genres', function (data) {
-		var app_data = JSON.parse(data);							
-		if (app_data[appid].success) {
-			var genres = app_data[appid].data.genres;								
-			$(genres).each(function(index, value) {									
-				if (value.description == "Early Access") {
-					switch (action) {
-						case "hide":
-							$(node).css("visibility", "hidden");
-							break;
-						default:
-							var selector = "img";
-							if (selector_modifier != undefined) selector += selector_modifier;
-							overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
-							if($(node).hasClass("small_cap")) {
-								$(overlay_img).css({"left":"-"+node.width()+"px", "position":"relative"});
-							}
-							else {
-								$(overlay_img).css({"left":image_left+"px"});
-							}
-							$(node).find(selector.trim()).after(overlay_img);
-							break;
+		if (data) {
+			var app_data = JSON.parse(data);
+			if (app_data[appid].success) {
+				var genres = app_data[appid].data.genres;
+				$(genres).each(function(index, value) {
+					if (value.description == "Early Access") {
+						switch (action) {
+							case "hide":
+								$(node).css("visibility", "hidden");
+								break;
+							default:
+								var selector = "img";
+								if (selector_modifier != undefined) selector += selector_modifier;
+								overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+								if($(node).hasClass("small_cap")) {
+									$(overlay_img).css({"left":"-"+node.width()+"px", "position":"relative"});
+								}
+								else {
+									$(overlay_img).css({"left":image_left+"px"});
+								}
+								$(node).find(selector.trim()).after(overlay_img);
+								break;
+						}
 					}
-				}
-			});	
+				});	
+			}
 		}
 	});
 }
@@ -4722,7 +4724,8 @@ function bind_ajax_content_highlighting() {
 					$(node).find(".summersale_dailydeal_ctn").each(function() {
 						start_highlighting_node(this);
 						check_early_access(this, "ea_231x87.png", 0);
-					});			
+					});
+					show_win_mac_linux();							
 				}
 
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
@@ -6119,18 +6122,21 @@ function show_win_mac_linux() {
 	if (window.location.host != "store.steampowered.com" || !(/^\/$/.test(window.location.pathname))) return;
 	$(".summersale_dailydeal:not(.tiny)").each(function () {
 		var node = $(this);
+		if (node.find("#es_platform").length > 0) return;
 		var id = get_appid(node.attr("href"));
 		if (!id) return;
 		get_http('http://store.steampowered.com/api/appdetails/?filters=platforms&appids=' + id, function (data) {
-			var storefront_data = JSON.parse(data);
-			var platforms = storefront_data[id]['data']['platforms'];
-			var footer = node.children(".dailydeal_footer").first();
-			var html = '<div style="padding: 2px">';
-			if (platforms['windows']) html += '<span class="platform_img win"></span>';
-			if (platforms['mac']) html += '<span class="platform_img mac"></span>';
-			if (platforms['linux']) html += '<span class="platform_img linux"></span>';
-			html += '</div>';
-			footer.prepend(html);
+			if (data) {
+				var storefront_data = JSON.parse(data);
+				var platforms = storefront_data[id]['data']['platforms'];
+				var footer = node.children(".dailydeal_footer").first();
+				var html = '<div style="padding: 2px" id="es_platform">';
+				if (platforms['windows']) html += '<span class="platform_img win"></span>';
+				if (platforms['mac']) html += '<span class="platform_img mac"></span>';
+				if (platforms['linux']) html += '<span class="platform_img linux"></span>';
+				html += '</div>';
+				footer.prepend(html);
+			}
 		});
 	});
 }
