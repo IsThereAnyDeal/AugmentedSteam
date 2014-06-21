@@ -4327,6 +4327,7 @@ function show_regional_pricing() {
 			var sub;
 			var region_appended=0;
 			var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
+			var conversion_rates = [1, 1, 1, 1, 1];
 			var currency_symbol;
 
 			// Get user's Steam currency
@@ -4335,46 +4336,24 @@ function show_regional_pricing() {
 			} else { return; }
 			local_currency = currency_symbol_to_type(currency_symbol);
 
-	        function addConversionScript (toCurrency) {
-		        var es_compare = document.createElement("script");
-				es_compare.type = "text/javascript";
-				es_compare.id = "es_compare_" + local_currency + "_" + toCurrency;
-				es_compare.src = "http://javascriptexchangerate.appspot.com/?from=" + local_currency + "&to=" + toCurrency;
-				document.documentElement.appendChild(es_compare);
-			}
+			var complete = 0;
 
 			$.each(available_currencies, function(index, currency_type) {
 				if (currency_type != local_currency) {
-					addConversionScript(currency_type);
+					if (getValue(currency_type + "to" + local_currency)) {
+						complete += 1;
+						conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
+						if (complete == 4) process_data(conversion_rates);
+					} else {
+						get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+							complete += 1;
+							conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
+							setValue(currency_type + "to" + local_currency, parseFloat(txt));
+							if (complete == 4) process_data(conversion_rates);
+						});
+					}
 				}
 			});
-
-			function fetch() {
-				var es_helper = document.createElement("script");
-				var text = "[";
-				es_helper.type = "text/javascript";				
-				es_helper.id = "es_helper";				
-				$.each(available_currencies, function(index, currency_type) {
-					if (currency_type != local_currency) {
-						text += local_currency + "to" + currency_type + "(1),";
-					} else {
-						text += "1,"
-					}
-				});
-				text += "]";
-				es_helper.textContent = 'window.postMessage({ type: "es_sendmessage", text: ' + text + ' }, "*");';
-				document.documentElement.appendChild(es_helper);
-
-				window.addEventListener("message", function(event) {
-				  if (event.source != window)
-				    return;
-
-				  if (event.data.type && (event.data.type == "es_sendmessage")) { process_data(event.data.text); }
-				}, false);
-			}
-
-			// This is not ideal, but appears to be the best we can do until I figure out how to chain this event properly.
-			window.setTimeout(fetch, 1500);
 			
 			function process_data(conversion_array) {
 				// Clean up conversion script DOM nodes
