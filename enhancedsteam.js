@@ -1317,7 +1317,7 @@ function send_age_verification() {
 function scale_scoreboard() {
 	$(".friend_team_footer:first").append("<a class='whitelink' id='es_view_to_scale' style='cursor: pointer;'>" + localized_strings[language].view_to_scale + "</a>");
 	$("#es_view_to_scale").css("margin-left", "4px");
-	$("#es_view_to_scale").click(function() {
+	function scale_the_scoreboard() {
 		var top = $(".team_standing:first").find(".score_bar").css("width");
 		var my_team = $(".my_team_callout").text().trim();
 		top = top.replace("px", "");
@@ -1360,8 +1360,12 @@ function scale_scoreboard() {
 		$(".team_pink").find(".score_bar").css("width", pink + "px");
 		$(".team_purple").find(".score_bar").css("width", purple + "px");
 		$(".team_red").find(".score_bar").css("width", red + "px");
-	});
+	}
 
+	$("#es_view_to_scale").click(function() {
+		scale_the_scoreboard();
+		setInterval(scale_the_scoreboard, 1000);
+	});
 }
 
 // Display Steam Wallet funds in header
