@@ -4878,22 +4878,31 @@ function get_sub_details(subid, node) {
 				if (sub_data.data.apps) {
 					sub_data.data.apps.forEach(function(app) {
 						app_ids.push (app.id);
-						get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
-							var storefront_data = JSON.parse(data2);
-							$.each(storefront_data, function(appid, app_data) {
-								if (app_data.success) {
-									if (app_data.data.is_owned === true) {
-										owned.push(appid);
+
+						var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+						var last_updated = getValue(app.id) || expire_time - 1;
+
+						// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+						if (last_updated < expire_time) {
+							get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app.id, function (data2) {
+								var storefront_data = JSON.parse(data2);
+								$.each(storefront_data, function(appid, app_data) {
+									if (app_data.success) {
+										if (app_data.data.is_owned === true) {
+											setValue(app.id + "owned", true);
+											setValue(app.id, parseInt(Date.now() / 1000, 10));
+											owned.push(appid);
+										}
 									}
+								});
+
+								if (owned.length == app_ids.length) {
+									setValue(subid + "owned", true);
+									setValue(subid, parseInt(Date.now() / 1000, 10));
+									highlight_app(subid, node);
 								}
 							});
-
-							if (owned.length == app_ids.length) {
-								setValue(subid + "owned", true);
-								setValue(subid, parseInt(Date.now() / 1000, 10));
-								highlight_app(subid, node);
-							}
-						});
+						}	
 					});
 				}
 			}
@@ -5166,7 +5175,7 @@ function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = localStorage.getItem(appid) || expire_time - 1;
+	var last_updated = getValue(appid) || expire_time - 1;
 
 	// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
 	if (last_updated < expire_time) {
