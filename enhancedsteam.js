@@ -666,158 +666,160 @@ function display_tags(node) {
 }
 
 function load_inventory() {
-	if ($(".user_avatar").length > 0) { var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href; }
-	var gift_deferred = new $.Deferred();
-	var coupon_deferred = new $.Deferred();
-	var card_deferred = new $.Deferred();
+	if (is_signed_in()) {
+		if ($(".user_avatar").length > 0) { var profileurl = $(".user_avatar")[0].href || $(".user_avatar a")[0].href; }
+		var gift_deferred = new $.Deferred();
+		var coupon_deferred = new $.Deferred();
+		var card_deferred = new $.Deferred();
 
-	var handle_inv_ctx1 = function (txt) {
-		if (txt.charAt(0) != "<") {
-
-			localStorage.setItem("inventory_1", txt);
-			var data = JSON.parse(txt);
-			if (data.success) {
-				$.each(data.rgDescriptions, function(i, obj) {
-					var is_package = false;
-					var appids;
-
-					if (obj.descriptions) {
-						for (var d = 0; d < obj.descriptions.length; d++) {
-							if (obj.descriptions[d].type == "html") {
-								appids = get_appids(obj.descriptions[d].value);
-								if (appids) {
-									// Gift package with multiple apps
-									is_package = true;
-									for (var j = 0; j < appids.length; j++) {
-										setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
-									}
-
-									break;
-								}
-							}
-						}
-					}
-
-					if (!is_package && obj.actions) {
-						// Single app
-						var appid = get_appid(obj.actions[0].link);
-						setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
-					}
-				});
-			}
-			gift_deferred.resolve();
-		}
-	};
-
-	var handle_inv_ctx6 = function (txt) {
-		if (txt) {
+		var handle_inv_ctx1 = function (txt) {
 			if (txt.charAt(0) != "<") {
-				localStorage.setItem("inventory_6", txt);
+
+				localStorage.setItem("inventory_1", txt);
 				var data = JSON.parse(txt);
 				if (data.success) {
 					$.each(data.rgDescriptions, function(i, obj) {
-						if (obj.market_hash_name) {
-							setValue("card:" + obj.market_hash_name, true);
+						var is_package = false;
+						var appids;
+
+						if (obj.descriptions) {
+							for (var d = 0; d < obj.descriptions.length; d++) {
+								if (obj.descriptions[d].type == "html") {
+									appids = get_appids(obj.descriptions[d].value);
+									if (appids) {
+										// Gift package with multiple apps
+										is_package = true;
+										for (var j = 0; j < appids.length; j++) {
+											setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+										}
+
+										break;
+									}
+								}
+							}
+						}
+
+						if (!is_package && obj.actions) {
+							// Single app
+							var appid = get_appid(obj.actions[0].link);
+							setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
 						}
 					});
 				}
-				card_deferred.resolve();
+				gift_deferred.resolve();
 			}
-		}
-	};
+		};
 
-	var handle_inv_ctx3 = function (txt) {
-		if (txt.charAt(0) != "<") {
-			localStorage.setItem("inventory_3", txt);
-			var data = JSON.parse(txt);
-			if (data.success) {
-				$.each(data.rgDescriptions, function(i, obj) {
-					var appid;
-					if (obj.type === "Coupon") {
-						if (obj.actions) {
-							var packageids = [];
-							for (var j = 0; j < obj.actions.length; j++) {
-								//obj.actions[j]
-								var link = obj.actions[j].link;
-								var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
-
-								// If sub+packageid is in localStorage then we don't need to get this info reloaded.
-								// This sick optimization saves 268ms per page load! Woo!
-								if (!getValue("sub" + packageid)) packageids.push(packageid);
+		var handle_inv_ctx6 = function (txt) {
+			if (txt) {
+				if (txt.charAt(0) != "<") {
+					localStorage.setItem("inventory_6", txt);
+					var data = JSON.parse(txt);
+					if (data.success) {
+						$.each(data.rgDescriptions, function(i, obj) {
+							if (obj.market_hash_name) {
+								setValue("card:" + obj.market_hash_name, true);
 							}
-							if (packageids.length > 0){
-								get_http("//store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
-									var package_data = JSON.parse(txt);
-									$.each(package_data, function(package_id, _package) {
-										if (_package.success) {
-											setValue("sub" + package_id, true);
-											$.each(_package.data.apps, function(i, app) {
-												if (getValue(app.id + "coupon")) {
-													if (getValue(app.id + "coupon_discount") >= obj.name.match(/([1-9][0-9])%/)[1]) { return; }
-												}
-												setValue(app.id + "coupon", true);
-												setValue(app.id + "coupon_sub", package_id);
-												setValue(app.id + "coupon_imageurl", obj.icon_url);
-												setValue(app.id + "coupon_title", obj.name);
-												setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
-												for (var i = 0; i < obj.descriptions.length; i++) {
-													if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
-														setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
-														setValue(app.id + "coupon_discount_doesnt_stack", true);
+						});
+					}
+					card_deferred.resolve();
+				}
+			}
+		};
+
+		var handle_inv_ctx3 = function (txt) {
+			if (txt.charAt(0) != "<") {
+				localStorage.setItem("inventory_3", txt);
+				var data = JSON.parse(txt);
+				if (data.success) {
+					$.each(data.rgDescriptions, function(i, obj) {
+						var appid;
+						if (obj.type === "Coupon") {
+							if (obj.actions) {
+								var packageids = [];
+								for (var j = 0; j < obj.actions.length; j++) {
+									//obj.actions[j]
+									var link = obj.actions[j].link;
+									var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
+
+									// If sub+packageid is in localStorage then we don't need to get this info reloaded.
+									// This sick optimization saves 268ms per page load! Woo!
+									if (!getValue("sub" + packageid)) packageids.push(packageid);
+								}
+								if (packageids.length > 0){
+									get_http("//store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
+										var package_data = JSON.parse(txt);
+										$.each(package_data, function(package_id, _package) {
+											if (_package.success) {
+												setValue("sub" + package_id, true);
+												$.each(_package.data.apps, function(i, app) {
+													if (getValue(app.id + "coupon")) {
+														if (getValue(app.id + "coupon_discount") >= obj.name.match(/([1-9][0-9])%/)[1]) { return; }
 													}
-													else if (obj.descriptions[i].value.startsWith("(Valid")) {
-														setValue(app.id + "coupon_valid", obj.descriptions[i].value);
-													}
-												};
-											});
-										}
+													setValue(app.id + "coupon", true);
+													setValue(app.id + "coupon_sub", package_id);
+													setValue(app.id + "coupon_imageurl", obj.icon_url);
+													setValue(app.id + "coupon_title", obj.name);
+													setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
+													for (var i = 0; i < obj.descriptions.length; i++) {
+														if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
+															setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
+															setValue(app.id + "coupon_discount_doesnt_stack", true);
+														}
+														else if (obj.descriptions[i].value.startsWith("(Valid")) {
+															setValue(app.id + "coupon_valid", obj.descriptions[i].value);
+														}
+													};
+												});
+											}
+										});
+										coupon_deferred.resolve();
 									});
+								}
+								else {
 									coupon_deferred.resolve();
-								});
-							}
-							else {
-								coupon_deferred.resolve();
+								}
 							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
+
+		// Yes caching!
+
+		//TODO: Expire delay in options.
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
+		if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
+			localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
+
+			// Context ID 1 is gifts and guest passes
+			get_http(profileurl + '/inventory/json/753/1/', handle_inv_ctx1);
+
+			// Context ID 3 is coupons
+			get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);
+
+			// Context ID 6 is trading card stuff
+			get_http(profileurl + '/inventory/json/753/6/', handle_inv_ctx6);
+		}
+		else {
+			// No need to load anything, its all in localStorage.
+			handle_inv_ctx1(localStorage.getItem("inventory_1"));
+			handle_inv_ctx3(localStorage.getItem("inventory_3"));
+			handle_inv_ctx6(localStorage.getItem("inventory_6"));
+
+			gift_deferred.resolve();
+			coupon_deferred.resolve();
+			card_deferred.resolve();
+		}
+
+		var deferred = new $.Deferred();
+		$.when.apply(null, [gift_deferred.promise(), card_deferred.promise(), coupon_deferred.promise()]).done(function (){
+			deferred.resolve();
+		});
+		return deferred.promise();
 	}
-
-	// Yes caching!
-
-	//TODO: Expire delay in options.
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
-	if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
-		localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
-
-		// Context ID 1 is gifts and guest passes
-		get_http(profileurl + '/inventory/json/753/1/', handle_inv_ctx1);
-
-		// Context ID 3 is coupons
-		get_http(profileurl + '/inventory/json/753/3/', handle_inv_ctx3);
-
-		// Context ID 6 is trading card stuff
-		get_http(profileurl + '/inventory/json/753/6/', handle_inv_ctx6);
-	}
-	else {
-		// No need to load anything, its all in localStorage.
-		handle_inv_ctx1(localStorage.getItem("inventory_1"));
-		handle_inv_ctx3(localStorage.getItem("inventory_3"));
-		handle_inv_ctx6(localStorage.getItem("inventory_6"));
-
-		gift_deferred.resolve();
-		coupon_deferred.resolve();
-		card_deferred.resolve();
-	}
-
-	var deferred = new $.Deferred();
-	$.when.apply(null, [gift_deferred.promise(), card_deferred.promise(), coupon_deferred.promise()]).done(function (){
-		deferred.resolve();
-	});
-	return deferred.promise();
 }
 
 function add_empty_wishlist_buttons() {
@@ -6185,7 +6187,7 @@ $(document).ready(function(){
 						drm_warnings("app");
 						add_metacritic_userscore();
 						add_steamreview_userscore(appid);
-						display_purchase_date()
+						display_purchase_date();
 
 						fix_community_hub_links();
 						add_widescreen_certification(appid);
