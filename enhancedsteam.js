@@ -11,6 +11,9 @@ var isSignedIn = false;
 var signedInChecked = false;
 var search_threshhold = $(window).height() - 80;
 
+var total_requests = 0;
+var processed_requests = 0;
+
 var cookie = document.cookie;
 var language = cookie.match(/language=([a-z]{3})/i)[1];
 if (localized_strings[language] === undefined) { language = "eng"; }
@@ -134,10 +137,22 @@ function xpath_each(xpath, callback) {
 }
 
 function get_http(url, callback) {
+	total_requests += 1;
+	if ($("#es_progress").length == 0) $("#global_actions").after("<progress id='es_progress' value='0' max='100'></progress>");
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
+			processed_requests += 1;
+			var complete_percentage = (processed_requests / total_requests) * 100;
+			$("#es_progress").val(complete_percentage);
+			if (complete_percentage == 100) { $("#es_progress").css("width", "14px"); }
 			callback(this.responseText);
+		}
+
+		if (this.readyState == 4 && this.status == 0) {
+			$("#es_progress").val(100);
+			$("#es_progress").css("width", "14px");
+			$("#es_progress").addClass("error");
 		}
 	};
 	http.open('GET', url, true);

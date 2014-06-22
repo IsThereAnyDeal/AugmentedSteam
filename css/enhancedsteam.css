@@ -773,3 +773,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: normal; 
 	padding-left: 15px;
 }
+#es_progress {
+	display: block;
+	float: right;
+	margin-top: 55px;
+	-webkit-appearance: none;
+	border: none;
+}
+#es_progress::-webkit-progress-bar { 
+	background: black; 
+	border-radius: 8px;
+	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+}
+#es_progress::-webkit-progress-value { 
+	background: #5c7836;
+	border-radius: 8px;
+	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+}
+#es_progress.error::-webkit-progress-value { 
+	background: red;
+	border-radius: 8px;
+	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+}
