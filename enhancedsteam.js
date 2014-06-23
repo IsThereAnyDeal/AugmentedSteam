@@ -125,17 +125,6 @@ function matchAll(re, str) {
 	return r;
 }
 
-// DOM helpers
-function xpath_each(xpath, callback) {
-	// TODO: Replace instances with jQuery selectors
-	var res = document.evaluate(xpath, document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-	var node;
-	for (var i = 0; i < res.snapshotLength; ++i) {
-		node = res.snapshotItem(i);
-		callback(node);
-	}
-}
-
 function get_http(url, callback) {
 	total_requests += 1;
 	if ($("#es_progress").length == 0) $("#global_actions").after("<progress id='es_progress' value='0' max='100' title='Enhanced Steam loading data...'></progress>");
@@ -2393,10 +2382,8 @@ function drm_warnings(type) {
 function add_empty_cart_button() {
 	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + localized_strings[language].empty_cart + "</a>";
 
-	var loc = 0;
-	xpath_each("//div[contains(@class,'checkout_content')]", function (node) {
-		loc = loc + 1;
-		if (loc == 2) { $(node).prepend(addtext); }
+	jQuery('.checkout_content').each(function () {
+		$(this).prepend(addtext);
 	});
 }
 
@@ -2529,7 +2516,8 @@ function add_supporter_badges() {
 }
 
 function appdata_on_wishlist() {
-	xpath_each("//a[contains(@class,'btn_visit_store')]", function (node) {
+
+	jQuery('a.btn_visit_store').each(function (index, node) {
 		var app = get_appid(node.href);
 		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
 			var storefront_data = JSON.parse(data);
@@ -3184,7 +3172,7 @@ function add_hltb_info(appid) {
 				if (txt.length > 0) {
 					var data = JSON.parse(txt);
 					if (data["hltb"]) {
-						xpath_each("//div[contains(@class,'game_details')]", function (node) {
+						jQuery("div.game_details", function (index, node) {
 								$(node).after("<div class='block game_details underlined_links'>"
 												+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
 												+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>"
@@ -3229,7 +3217,7 @@ function add_widescreen_certification(appid) {
 				// Check to see if game data exists
 				get_http("http://api.enhancedsteam.com/wsgf/?appid=" + appid, function (txt) {
 					found = 0;
-					xpath_each("//div[contains(@class,'game_details')]", function (node) {
+					jQuery("div.game_details").each(function (index, node) {
 						if (found == 0) {
 							var data = JSON.parse(txt);
 							if (data["node"]) {
@@ -4708,7 +4696,7 @@ function display_purchase_date() {
     			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
 
     		var found = 0;
-    		xpath_each("//div[contains(@class,'game_area_already_owned')]", function (node) {
+    		jQuery("div.game_area_already_owned").each(function (index, node) {
     			if (found === 0) {
     				if (purchaseDate) {
     					node.innerHTML = node.innerHTML + localized_strings[language].purchase_date.replace("__date__", purchaseDate);
@@ -5554,7 +5542,7 @@ function add_cardexchange_links(game) {
 	storage.get(function(settings) {
 		if (settings.steamcardexchange === undefined) { settings.steamcardexchange = true; storage.set({'steamcardexchange': settings.steamcardexchange}); }
 		if (settings.steamcardexchange) {
-			xpath_each("//div[contains(@class,'badge_row')]", function (node) {
+			jQuery("div.badge_row", function (index, node) {
 				var $node = $(node);
 				var gamecard = game || get_gamecard($node.find(".badge_row_overlay").attr('href'));
 				if(!gamecard) return;
