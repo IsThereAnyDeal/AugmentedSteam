@@ -138,21 +138,19 @@ function xpath_each(xpath, callback) {
 
 function get_http(url, callback) {
 	total_requests += 1;
-	if ($("#es_progress").length == 0) $("#global_actions").after("<progress id='es_progress' value='0' max='100'></progress>");
+	if ($("#es_progress").length == 0) $("#global_actions").after("<progress id='es_progress' value='0' max='100' title='Enhanced Steam loading data...'></progress>");
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			processed_requests += 1;
 			var complete_percentage = (processed_requests / total_requests) * 100;
 			$("#es_progress").val(complete_percentage);
-			if (complete_percentage == 100) { $("#es_progress").css("width", "14px"); }
+			if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", "Enhanced Steam ready."); }
 			callback(this.responseText);
 		}
 
-		if (this.readyState == 4 && this.status != 200) {
-			$("#es_progress").val(100);
-			$("#es_progress").css("width", "14px");
-			$("#es_progress").addClass("error");
+		if (this.readyState == 4 && this.status == 0) {
+			$("#es_progress").val(100).addClass("error").attr({"title":"Error loading Enhanced Steam data", "max":1});
 		}
 	};
 	http.open('GET', url, true);
