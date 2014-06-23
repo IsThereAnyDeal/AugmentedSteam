@@ -1,6 +1,7 @@
 v6.4
 -----
 + Added a progress bar to the header that indicates if Enhanced Steam is processing requests
++ Increased Early Access detection speed (thanks henryg!)
 
 
 v6.3.5
