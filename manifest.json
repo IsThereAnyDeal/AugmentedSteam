@@ -1,44 +1,97 @@
 {
-  "name": "Enhanced Steam",
-  "version": "6.4",
-  "description": "Enhances the Steam Experience",
-  "icons": { "128": "img/enhancedsteam.png" },
-  "manifest_version": 2,
-  "options_page": "options.html",
-  "permissions": [
-    "storage",
-	"http://*.steampowered.com/"
-  ],
-  "web_accessible_resources": [
-    "img/game_area_warning.png", "img/line_chart.png", "img/metacritic_bg.png", "img/birthday_logo.png","img/birthday_bg.png",
-    "img/ico/steamgifts.png", "img/ico/steamtrades.png", "img/ico/steamrep.png", "img/ico/steamdb.png", "img/ico/achievementstats.png",
-     "img/ico/steamgifts_col.png", "img/ico/steamtrades_col.png", "img/ico/steamrep_col.png", "img/ico/steamdb_col.png", "img/ico/achievementstats_col.png",
-     "img/ico/steamcardexchange.png","img/ico/backpacktf.png","img/ico/backpacktf_col.png","img/ico/dotabuff_col.png","img/ico/astatsnl.png","img/ico/astatsnl_col.png",
-	   "img/steamdb.png", "img/steamdb_store.png", "img/play_off.png", "img/play_on.png", "img/ico_cards.gif", "img/red_banner.png", "img/es_btn_browse.png", "img/pcgw.png", "img/gl_banner.jpg",
-      "css/enhancedsteam.css", "options.html", "img/overlay/ea_292x136.png", "img/overlay/ea_184x69.png", "img/overlay/ea_sm_120.png", "img/overlay/ea_231x87.png", "img/overlay/ea_467x181.png",
-      "img/flags/flags.png", "img/check_sheet.png"
-      ,"img/flags/world.png","img/arrows.png","img/select2.png","img/select2x2.png","img/select2-spinner.png"
-  ],
-  "homepage_url": "http://www.EnhancedSteam.com/",
-  "content_scripts": [
-    {
-      "matches": ["http://*.steampowered.com/*", "https://*.steampowered.com/*", "http://steamcommunity.com/*"],
-      "exclude_matches": [
-        "https://store.steampowered.com/checkout/*",
-        "https://store.steampowered.com/login/*",
-		"https://store.steampowered.com/join/*",
-        "https://steamcommunity.com/login/*"
-      ],
-      "js": [
-        "js/jQuery.min.js",
-        "js/localization.js",
-		"js/select2.min.js",
-        "enhancedsteam.js"],
-      "css": ["css/enhancedsteam.css","css/select2.css"]
+    "name": "Enhanced Steam",
+    "version": "6.4",
+    "description": "Enhances the Steam Experience",
+    "icons": {
+        "128": "img/enhancedsteam.png"
     },
-    {
-      "matches": ["http://*.steampowered.com/app/*","http://*.steampowered.com/sub/*","http://*.steampowered.com/sale/*","http://*.steampowered.com/"],
-      "css": ["css/es_flags.css"]
-    }
-  ]
+    "manifest_version": 2,
+    "options_page": "options.html",
+    "permissions": [
+        "storage",
+        "http://*.steampowered.com/"
+    ],
+    "web_accessible_resources": [
+        "img/game_area_warning.png",
+        "img/line_chart.png",
+        "img/metacritic_bg.png",
+        "img/birthday_logo.png",
+        "img/birthday_bg.png",
+        "img/ico/steamgifts.png",
+        "img/ico/steamtrades.png",
+        "img/ico/steamrep.png",
+        "img/ico/steamdb.png",
+        "img/ico/achievementstats.png",
+        "img/ico/steamgifts_col.png",
+        "img/ico/steamtrades_col.png",
+        "img/ico/steamrep_col.png",
+        "img/ico/steamdb_col.png",
+        "img/ico/achievementstats_col.png",
+        "img/ico/steamcardexchange.png",
+        "img/ico/backpacktf.png",
+        "img/ico/backpacktf_col.png",
+        "img/ico/dotabuff_col.png",
+        "img/ico/astatsnl.png",
+        "img/ico/astatsnl_col.png",
+        "img/steamdb.png",
+        "img/steamdb_store.png",
+        "img/play_off.png",
+        "img/play_on.png",
+        "img/ico_cards.gif",
+        "img/red_banner.png",
+        "img/es_btn_browse.png",
+        "img/pcgw.png",
+        "img/gl_banner.jpg",
+        "css/enhancedsteam.css",
+        "options.html",
+        "img/overlay/ea_292x136.png",
+        "img/overlay/ea_184x69.png",
+        "img/overlay/ea_sm_120.png",
+        "img/overlay/ea_231x87.png",
+        "img/overlay/ea_467x181.png",
+        "img/flags/flags.png",
+        "img/check_sheet.png",
+        "img/flags/world.png",
+        "img/arrows.png",
+        "img/select2.png",
+        "img/select2x2.png",
+        "img/select2-spinner.png"
+    ],
+    "homepage_url": "http://www.EnhancedSteam.com/",
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*.steampowered.com/*",
+                "https://*.steampowered.com/*",
+                "http://steamcommunity.com/*"
+            ],
+            "exclude_matches": [
+                "https://store.steampowered.com/checkout/*",
+                "https://store.steampowered.com/login/*",
+                "https://store.steampowered.com/join/*",
+                "https://steamcommunity.com/login/*"
+            ],
+            "js": [
+                "js/jQuery.min.js",
+                "js/localization.js",
+                "js/select2.min.js",
+                "enhancedsteam.js"
+            ],
+            "css": [
+                "css/enhancedsteam.css",
+                "css/select2.css"
+            ]
+        },
+        {
+            "matches": [
+                "http://*.steampowered.com/app/*",
+                "http://*.steampowered.com/sub/*",
+                "http://*.steampowered.com/sale/*",
+                "http://*.steampowered.com/"
+            ],
+            "css": [
+                "css/es_flags.css"
+            ]
+        }
+    ]
 }
