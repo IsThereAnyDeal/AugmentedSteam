@@ -39,11 +39,11 @@ function runInPageContext(fun){
 
 // Chrome storage functions
 function setValue(key, value) {
-	sessionStorage.setItem(key, JSON.stringify(value));
+	localStorage.setItem(key, JSON.stringify(value));
 }
 
 function getValue(key) {
-	var v = sessionStorage.getItem(key);
+	var v = localStorage.getItem(key);
 	if (v === undefined) return v;
 	return JSON.parse(v);
 }
@@ -1414,7 +1414,6 @@ function add_enhanced_steam_options() {
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings[language].clear_cache + "</a>");
 	$clear_cache_link.click(function(){
 		localStorage.clear();
-		sessionStorage.clear();
 		location.reload();
 	});
 
@@ -5150,7 +5149,6 @@ function on_app_info(appid, cb) {
 
 function clear_cache() {
 	localStorage.clear();
-	sessionStorage.clear();
 }
 
 function change_user_background() {
