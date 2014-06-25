@@ -124,7 +124,6 @@ function save_options() {
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
 	showmarkettotal = $("#showmarkettotal").prop('checked');
-	showinvmarket = $("#showinvmarket").prop('checked');
 	showinvnav = $("#showinvnav").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
 	showallachievements = $("#showallachievements").prop('checked');
@@ -226,7 +225,6 @@ function save_options() {
 
 		'showtotal': showtotal,
 		'showmarkettotal': showmarkettotal,
-		'showinvmarket': showinvmarket,
 		'showinvnav': showinvnav,
 		'showesbg': showesbg,
 		'showallachievements': showallachievements,
@@ -461,7 +459,6 @@ function load_options() {
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
 		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
-		if (settings.showinvmarket === undefined) { settings.showinvmarket = true; chrome.storage.sync.set({'showinvmarket': settings.showinvmarket}); }
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
@@ -565,7 +562,6 @@ function load_options() {
 		// Load Community Options
 		$("#showtotal").prop('checked', settings.showtotal);
 		$("#showmarkettotal").prop('checked', settings.showmarkettotal);
-		$("#showinvmarket").prop('checked', settings.showinvmarket);
 		$("#showinvnav").prop('checked', settings.showinvnav);
 		$("#showesbg").prop('checked', settings.showesbg);
 		$("#showallachievements").prop('checked', settings.showallachievements);
@@ -695,7 +691,6 @@ function load_translation() {
 			$("#profile_permalink_text").text(localized_strings[settings.language].options.profile_permalink);
 			$("#total_spent_text").text(localized_strings[settings.language].options.total_spent);
 			$("#market_total_text").text(localized_strings[settings.language].options.market_total);
-			$("#inventory_market_text").text(localized_strings[settings.language].options.inventory_market_text);
 			$("#inventory_nav_text").text(localized_strings[settings.language].options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings[settings.language].options.es_bg);
 			$("#allachievements_text").text(localized_strings[settings.language].options.showallachievements);
