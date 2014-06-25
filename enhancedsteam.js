@@ -4704,44 +4704,73 @@ function bind_ajax_content_highlighting() {
 	observer.observe(document, { subtree: true, childList: true });
 }
 
+var owned_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in()) {	
+		var steamID = is_signed_in()[0];
+
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue("owned_games_time") || expire_time - 1;
+
+		if (last_updated < expire_time) {
+			get_http("//api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0", function(txt) {
+				var data = JSON.parse(txt);
+				$.each(data['response']['games'], function(index, value) {
+					setValue(value['appid'] + "owned", true);
+					setValue(value['appid'], parseInt(Date.now() / 1000, 10));
+				});
+				setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
+				deferred.resolve();
+			});
+		} else {
+			deferred.resolve();
+		}
+	} else {
+		deferred.resolve();
+	}
+	
+	return deferred.promise();
+})();
+
 function start_highlights_and_tags(){
 	// Batch all the document.ready appid lookups into one storefront call.
+	owned_promise.done(function(){
+		var selectors = [
+			"div.tab_row",				// Storefront rows
+			"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
+			"div.wishlistRow",			// Wishlist rows
+			"a.game_area_dlc_row",			// DLC on app pages
+			"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+			"a.search_result_row",			// Search result rows
+			"a.match",				// Search suggestions rows
+			"a.cluster_capsule",			// Carousel items
+			"div.recommendation_highlight",		// Recommendation pages
+			"div.recommendation_carousel_item",	// Recommendation pages
+			"div.friendplaytime_game",		// Recommendation pages
+			"div.dlc_page_purchase_dlc",		// DLC page rows
+			"div.sale_page_purchase_item",		// Sale pages
+			"div.item",				// Sale pages / featured pages
+			"div.home_area_spotlight",		// Midweek and weekend deals
+			"div.summersale_dailydeal_ctn",
+			"div.browse_tag_game",			// Tagged games
+			"div.similar_grid_item",			// Items on the "Similarly tagged" pages
+			"a.vote_option_game"
+		];
 
-	var selectors = [
-		"div.tab_row",				// Storefront rows
-		"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
-		"div.wishlistRow",			// Wishlist rows
-		"a.game_area_dlc_row",			// DLC on app pages
-		"a.small_cap",				// Featured storefront items and "recommended" section on app pages
-		"a.search_result_row",			// Search result rows
-		"a.match",				// Search suggestions rows
-		"a.cluster_capsule",			// Carousel items
-		"div.recommendation_highlight",		// Recommendation pages
-		"div.recommendation_carousel_item",	// Recommendation pages
-		"div.friendplaytime_game",		// Recommendation pages
-		"div.dlc_page_purchase_dlc",		// DLC page rows
-		"div.sale_page_purchase_item",		// Sale pages
-		"div.item",				// Sale pages / featured pages
-		"div.home_area_spotlight",		// Midweek and weekend deals
-		"div.summersale_dailydeal_ctn",
-		"div.browse_tag_game",			// Tagged games
-		"div.similar_grid_item",			// Items on the "Similarly tagged" pages
-		"a.vote_option_game"
-	];
+		// Get all appids and nodes from selectors
+		$.each(selectors, function (i, selector) {
+			$.each($(selector), function(j, node){
+				var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+				if (appid) {
 
-	// Get all appids and nodes from selectors
-	$.each(selectors, function (i, selector) {
-		$.each($(selector), function(j, node){
-			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-			if (appid) {
+					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
 
-				if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
-				if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
-
-				on_app_info(appid, function(){
-					highlight_app(appid, node);
-				});
-			}
+					on_app_info(appid, function(){
+						highlight_app(appid, node);
+					});
+				}
+			});
 		});
 	});
 }
@@ -4960,27 +4989,29 @@ function add_small_cap_height() {
 }
 
 function start_friend_activity_highlights() {
-	var selectors = [
-		".blotter_author_block a",
-		".blotter_gamepurchase_details a",
-		".blotter_daily_rollup_line a"
-	];
+	owned_promise.done(function(){
+		var selectors = [
+			".blotter_author_block a",
+			".blotter_gamepurchase_details a",
+			".blotter_daily_rollup_line a"
+		];
 
-	$.each(selectors, function (i, selector) {
-		$.each($(selector), function(j, node){
-			var appid = get_appid(node.href);
-			if (appid && !node.classList.contains("blotter_userstats_game")) {
-				if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
-				if (selector == ".blotter_daily_rollup_line a") {
-					if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
-						add_achievement_comparison_link($(node).parent().parent());
+		$.each(selectors, function (i, selector) {
+			$.each($(selector), function(j, node){
+				var appid = get_appid(node.href);
+				if (appid && !node.classList.contains("blotter_userstats_game")) {
+					if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
+					if (selector == ".blotter_daily_rollup_line a") {
+						if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
+							add_achievement_comparison_link($(node).parent().parent());
+						}
 					}
-				}
 
-				on_app_info(appid, function(){
-					highlight_app(appid, node);
-				});
-			}
+					on_app_info(appid, function(){
+						highlight_app(appid, node);
+					});
+				}
+			});
 		});
 	});
 }
