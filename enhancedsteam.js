@@ -129,6 +129,7 @@ function matchAll(re, str) {
 function get_http(url, callback) {
 	total_requests += 1;
 	if ($("#es_progress").length == 0) $("#global_actions").after("<progress id='es_progress' value='0' max='100' title='Enhanced Steam loading data...'></progress>");
+	$("#es_progress").removeClass("complete");
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
@@ -139,7 +140,7 @@ function get_http(url, callback) {
 			callback(this.responseText);
 		}
 
-		if (this.readyState == 4 && this.status == 0) {
+		if (this.readyState == 4 && this.status != 200) {
 			$("#es_progress").val(100).addClass("error").attr({"title":"Error loading Enhanced Steam data", "max":1});
 		}
 	};
