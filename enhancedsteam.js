@@ -2891,26 +2891,26 @@ function fix_search_placeholder() {
 	var selectors = ["#store_nav_search_term", "#term"];
 	$.each(selectors, function(index, selector){
 		$(selector).each(function(){
-			$(this).off("blur");
-			$(this).attr("onblur","");
+			var $this = $(this);
+			$this.off("blur");
+			$this.attr("onblur","");
 			if(selector!="#term"){
-				var search_string = $(this).val();
-				if (!$(this).attr("placeholder")){
-					$(this).attr("placeholder", search_string);
+				var search_string = $this.val();
+				if (!$this.attr("placeholder")){
+					$this.attr("placeholder", search_string);
 				}
-				$(this).removeClass("default");
-				$(this).val("");
-				$(this).blur(function(e) {
-					if($(this).val()==search_string){
-						$(this).val("");
-						$(this).removeClass("default");
+				$this.removeClass("default");
+				$this.val("");
+				$this.blur(function(e) {
+					if($this.val()==search_string){
+						$this.val("");
+						$this.removeClass("default");
 					}
 				});
 			}
 		});
 	});
 }
-
 // Add speech input to search boxes
 function add_speech_search() {
 	storage.get(function(settings) {
