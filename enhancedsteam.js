@@ -4723,7 +4723,7 @@ var owned_promise = (function () {
 	if (is_signed_in()) {	
 		var steamID = is_signed_in()[0];
 
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
 		var last_updated = getValue("owned_games_time") || expire_time - 1;
 
 		if (last_updated < expire_time) {
@@ -5133,14 +5133,18 @@ function add_app_page_wishlist(appid) {
 function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = getValue(appid) || expire_time - 1;
+	if (getValue(appid + "owned") == false) {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue(appid) || expire_time - 1;
 
-	// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
-	if (last_updated < expire_time) {
-		get_app_details(appid);
-	}
-	else {
+		// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+		if (last_updated < expire_time) {
+			get_app_details(appid);
+		}
+		else {
+			appid_promises[appid].resolve();
+		}
+	} else {
 		appid_promises[appid].resolve();
 	}
 
