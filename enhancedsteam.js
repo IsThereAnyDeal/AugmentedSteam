@@ -5724,7 +5724,7 @@ function add_badge_view_options() {
 			$this.find("div[class$='badge_current']").css("width", "100%");
 			$this.find("div[class$='badge_empty_circle']").css({
 				"float": "center",
-				"margin-left", "45px"
+				"margin-left": "45px"
 			});
 			$this.find("div[class$='badge_info_image']").css({
 				"float": "center",
