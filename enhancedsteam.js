@@ -4727,7 +4727,6 @@ var owned_promise = (function () {
 				var data = JSON.parse(txt);
 				$.each(data['response']['games'], function(index, value) {
 					setValue(value['appid'] + "owned", true);
-					setValue(value['appid'], parseInt(Date.now() / 1000, 10));
 				});
 				setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
 				deferred.resolve();
@@ -4772,7 +4771,6 @@ function start_highlights_and_tags(){
 			$.each($(selector), function(j, node){
 				var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 				if (appid) {
-
 					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
 					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
 
@@ -4847,12 +4845,15 @@ function get_app_details(appids) {
 							setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
 							setValue(appid + "owned", (app_data.data.is_owned === true));
 
+							if (app_data.data.is_owned != true) {
+								// Update time for caching
+								setValue(appid, parseInt(Date.now() / 1000, 10));
+							}
+
 							if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
 							if (app_data.data.friendsown) setValue(appid + "friendsown", app_data.data.friendsown.length);
 							if (app_data.data.recommendations.totalfriends > 0) setValue(appid + "friendsrec", app_data.data.recommendations.totalfriends);
 						}
-						// Update time for caching
-						setValue(appid, parseInt(Date.now() / 1000, 10));
 
 						// Resolve promise to run any functions waiting for this apps info
 						appid_promises[appid].resolve();
@@ -5129,7 +5130,7 @@ function add_app_page_wishlist(appid) {
 function on_app_info(appid, cb) {
 	ensure_appid_deferred(appid);
 
-	if (getValue(appid + "owned") == false) {
+	if (getValue(appid + "owned") != true) {
 		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 		var last_updated = getValue(appid) || expire_time - 1;
 
