@@ -4741,9 +4741,36 @@ var owned_promise = (function () {
 	return deferred.promise();
 })();
 
+var wishlist_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in()) {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
+		var last_updated = getValue("wishlist_games_time") || expire_time - 1;
+
+		if (last_updated < expire_time) {
+			get_http("//steamcommunity.com/my/wishlist", function(txt) {				
+				var html = $.parseHTML(txt);
+				$(html).find(".wishlistRow").each(function() {
+					var appid = $(this).attr("id").replace("game_", "");
+					setValue(appid + "wishlisted", true);
+					setValue(appid, parseInt(Date.now() / 1000, 10));
+				});
+				//setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
+				deferred.resolve();
+			});
+		} else {
+			deferred.resolve();
+		}
+	} else {
+		deferred.resolve();
+	}
+	
+	return deferred.promise();
+})();
+
 function start_highlights_and_tags(){
 	// Batch all the document.ready appid lookups into one storefront call.
-	owned_promise.done(function(){
+	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {	
 		var selectors = [
 			"div.tab_row",				// Storefront rows
 			"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
@@ -4856,7 +4883,6 @@ function get_app_details(appids) {
 					var storefront_data = JSON.parse(data);
 					$.each(storefront_data, function(appid, app_data){
 						if (app_data.success) {
-							setValue(appid + "wishlisted", (app_data.data.added_to_wishlist === true));
 							setValue(appid + "owned", (app_data.data.is_owned === true));
 
 							if (app_data.data.is_owned != true) {
@@ -4888,7 +4914,7 @@ function get_sub_details(subid, node) {
 		if (last_updated < expire_time) {
 			var app_ids = [];
 			var owned = [];
-			
+
 			get_http('//store.steampowered.com/api/packagedetails/?packageids=' + subid, function (data) {
 				var pack_data = JSON.parse(data);
 				$.each(pack_data, function(subid, sub_data) {
