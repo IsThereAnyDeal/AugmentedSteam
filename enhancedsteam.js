@@ -4734,7 +4734,7 @@ var wishlist_promise = (function () {
 					setValue(appid + "wishlisted", true);
 					setValue(appid, parseInt(Date.now() / 1000, 10));
 				});
-				//setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
+				setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
 				deferred.resolve();
 			});
 		} else {
