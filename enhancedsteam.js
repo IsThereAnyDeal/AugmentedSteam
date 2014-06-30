@@ -326,15 +326,6 @@ function highlight_node(node, color) {
 	if (node.classList.contains("large_cap")) {
 		$node = $(node).find(".large_cap_content");
 	}
-	
-	// Sale items
-	if (node.classList.contains("summersale_dailydeal_ctn")) {
-		$node = $(node).find(".dailydeal_footer");
-	}
-
-	if (node.classList.contains("vote_option_game")) {
-		$node = $(node).find(".vote_option_info");
-	}
 
 	// App and community hub page headers
 	if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
@@ -1660,7 +1651,6 @@ function show_library() {
 	$("#game_background_holder").remove();
 	$("#modalBG").remove();
 	$("#page_background_holder").remove();
-	$("body").removeClass("summer_sale");
 
 	// Create Library divs
 	var es_library = $("<div id='es_library_content'></div>");
@@ -4239,9 +4229,6 @@ function process_early_access() {
 										$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 										$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 										$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-										$(".summersale_dailydeal:not('.small'):not('.tiny')").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-										$(".summersale_dailydeal.small").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0); });
-										$(".summersale_dailydeal.tiny").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
 										break;
 								}
 							case "steamcommunity.com":
@@ -4696,14 +4683,6 @@ function bind_ajax_content_highlighting() {
 					process_early_access();
 				}
 
-				if (node.classList && node.classList.contains("summersale_tabpage")) {
-					$(node).find(".summersale_dailydeal_ctn").each(function() {
-						start_highlighting_node(this);
-						check_early_access(this, "ea_231x87.png", 0);
-					});
-					show_win_mac_linux();							
-				}
-
 				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
@@ -4787,10 +4766,8 @@ function start_highlights_and_tags(){
 			"div.sale_page_purchase_item",		// Sale pages
 			"div.item",				// Sale pages / featured pages
 			"div.home_area_spotlight",		// Midweek and weekend deals
-			"div.summersale_dailydeal_ctn",
 			"div.browse_tag_game",			// Tagged games
-			"div.similar_grid_item",			// Items on the "Similarly tagged" pages
-			"a.vote_option_game"
+			"div.similar_grid_item"			// Items on the "Similarly tagged" pages
 		];
 
 		// Get all appids and nodes from selectors
