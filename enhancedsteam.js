@@ -4777,7 +4777,16 @@ function start_highlights_and_tags(){
 					on_app_info(appid, function(){
 						highlight_app(appid, node);
 					});
-				}
+				} else {
+					var subid = get_subid(node.href || $(node).find("a")[0].href);
+
+					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
+					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
+
+					if (subid) {
+						get_sub_details (subid, node);
+					}
+				}	
 			});
 		});
 	});
@@ -4789,6 +4798,11 @@ function start_highlighting_node(node) {
 		on_app_info(appid, function(){
 			highlight_app(appid, node);
 		});
+	} else {
+		var subid = get_subid(node.href || $(node).find("a")[0].href);
+		if (subid) {
+			get_sub_details (subid, node);
+		}
 	}
 }
 
@@ -4861,6 +4875,55 @@ function get_app_details(appids) {
 				});
 			}, 1500 * total_appuserdetails_requests);
 		});
+	}
+}
+
+function get_sub_details(subid, node) {
+	if (is_signed_in()) {
+		if (getValue(subid + "owned")) { highlight_owned(node); return; }
+
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue(subid) || expire_time - 1;
+
+		if (last_updated < expire_time) {
+			var app_ids = [];
+			var owned = [];
+			
+			get_http('//store.steampowered.com/api/packagedetails/?packageids=' + subid, function (data) {
+				var pack_data = JSON.parse(data);
+				$.each(pack_data, function(subid, sub_data) {
+					if (sub_data.success) {
+						if (sub_data.data.apps) {
+							sub_data.data.apps.forEach(function(app) {
+								app_ids.push (app.id.toString());
+							});
+						}
+					}
+				});
+
+				get_http('//store.steampowered.com/api/appuserdetails/?appids=' + app_ids.toString(), function (data2) {
+					var storefront_data = JSON.parse(data2);
+					$.each(storefront_data, function(appid, app_data) {
+						if (app_data.success) {
+							if (app_data.data.is_owned === true) {
+								setValue(appid + "owned", true);
+								owned.push(appid);
+							} else {
+								setValue(appid + "owned", false);
+								setValue(appid, parseInt(Date.now() / 1000, 10));
+							}
+						}
+					});
+					if (owned.length == app_ids.length) {
+						setValue(subid + "owned", true);
+						highlight_app(subid, node);
+					} else {
+						setValue(subid + "owned", false);
+						setValue(subid, parseInt(Date.now() / 1000, 10));
+					}
+				});
+			});
+		}
 	}
 }
 
