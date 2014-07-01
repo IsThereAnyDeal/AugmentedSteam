@@ -268,53 +268,6 @@ function highlight_inv_guestpass(node) {
 	});
 }
 
-// Colors the title for items on friend's wishlists
-function highlight_friends_want(node, appid) {
-	storage.get(function(settings) {
-		node.classList.add("es_highlight_friends_want");
-
-		if (settings.highlight_friends_want === undefined) { settings.highlight_friends_want = false; storage.set({'highlight_friends_want': settings.highlight_friends_want});}
-		if (settings.highlight_friends_want_color === undefined) { settings.highlight_friends_want_color = "#7E4060"; storage.set({'highlight_friends_want_color': settings.highlight_friends_want_color});}
-		if (settings.highlight_friends_want) highlight_node(node, settings.highlight_friends_want_color);
-
-		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; storage.set({'tag_friends_want': settings.tag_friends_want});}
-		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; storage.set({'tag_friends_want_color': settings.tag_friends_want_color});}
-		if (settings.tag_friends_want) add_tag(
-			node,
-			localized_strings[language].tag.friends_want.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendswant")),
-			settings.tag_friends_want_color
-		);
-	});
-}
-
-function tag_friends_own(node, appid) {
-	storage.get(function(settings) {
-		node.classList.add("es_tag_friends_own");
-
-		if (settings.tag_friends_own === undefined) { settings.tag_friends_own = true; storage.set({'tag_friends_own': settings.tag_friends_own});}
-		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; storage.set({'tag_friends_own_color': settings.tag_friends_own_color});}
-		if (settings.tag_friends_own) add_tag(
-			node,
-			localized_strings[language].tag.friends_own.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsown")),
-			settings.tag_friends_own_color
-		);
-	});
-}
-
-function tag_friends_rec(node, appid) {
-	storage.get(function(settings) {
-		node.classList.add("es_tag_friends_rec");
-
-		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = false; storage.set({'tag_friends_rec': settings.tag_friends_rec});}
-		if (settings.tag_friends_rec_color === undefined) { settings.tag_friends_rec_color = "#2e3d54"; storage.set({'tag_friends_rec_color': settings.tag_friends_rec_color});}
-		if (settings.tag_friends_rec) add_tag(
-			node,
-			localized_strings[language].tag.friends_rec.replace("__appid__", appid).replace("__friendcount__", getValue(appid + "friendsrec")),
-			settings.tag_friends_rec_color
-		);
-	});
-}
-
 function highlight_node(node, color) {
 	var $node = $(node);
 	// Carousel item
@@ -4866,10 +4819,6 @@ function get_app_details(appids) {
 								// Update time for caching
 								setValue(appid, parseInt(Date.now() / 1000, 10));
 							}
-
-							if (app_data.data.friendswant) setValue(appid + "friendswant", app_data.data.friendswant.length);
-							if (app_data.data.friendsown) setValue(appid + "friendsown", app_data.data.friendsown.length);
-							if (app_data.data.recommendations.totalfriends > 0) setValue(appid + "friendsrec", app_data.data.recommendations.totalfriends);
 						}
 
 						// Resolve promise to run any functions waiting for this apps info
@@ -4952,10 +4901,7 @@ function highlight_app(appid, node) {
 			}
 		}
 
-		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);		
-		if (getValue(appid + "friendswant")) highlight_friends_want(node, appid);
-		if (getValue(appid + "friendsown")) tag_friends_own(node, appid);
-		if (getValue(appid + "friendsrec")) tag_friends_rec(node, appid);
+		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 		if (getValue(appid + "gift")) highlight_inv_gift(node);
 		if (!(node.classList.contains("wishlistRow") || node.classList.contains("wishlistRowItem"))) {

@@ -7,7 +7,6 @@ function save_options() {
 	highlight_coupon_color = $("#highlight_coupon_color").val();
 	highlight_inv_gift_color = $("#highlight_inv_gift_color").val();
 	highlight_inv_guestpass_color = $("#highlight_inv_guestpass_color").val();
-	highlight_friends_want_color = $("#highlight_friends_want_color").val();
 
 	tag_owned_color = $("#tag_owned_color").val();
 	tag_owned_color = $("#tag_owned_color").val();
@@ -15,16 +14,12 @@ function save_options() {
 	tag_coupon_color = $("#tag_coupon_color").val();
 	tag_inv_gift_color = $("#tag_inv_gift_color").val();
 	tag_inv_guestpass_color = $("#tag_inv_guestpass_color").val();
-	tag_friends_want_color = $("#tag_friends_want_color").val();
-	tag_friends_own_color = $("#tag_friends_own_color").val();
-	tag_friends_rec_color = $("#tag_friends_rec_color").val();
 
 	highlight_owned = $("#highlight_owned").prop('checked');
 	highlight_wishlist = $("#highlight_wishlist").prop('checked');
 	highlight_coupon = $("#highlight_coupon").prop('checked');
 	highlight_inv_gift = $("#highlight_inv_gift").prop('checked');
 	highlight_inv_guestpass = $("#highlight_inv_guestpass").prop('checked');
-	highlight_friends_want = $("#highlight_friends_want").prop('checked');
 	highlight_excludef2p = $("#highlight_excludef2p").prop('checked');
 
 	tag_owned = $("#tag_owned").prop('checked');
@@ -32,9 +27,6 @@ function save_options() {
 	tag_coupon = $("#tag_coupon").prop('checked');
 	tag_inv_gift = $("#tag_inv_gift").prop('checked');
 	tag_inv_guestpass = $("#tag_inv_guestpass").prop('checked');
-	tag_friends_want = $("#tag_friends_want").prop('checked');
-	tag_friends_own = $("#tag_friends_own").prop('checked');
-	tag_friends_rec = $("#tag_friends_rec").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
 	hide_owned_homepage = $("#hide_owned_homepage").prop('checked');
@@ -155,7 +147,6 @@ function save_options() {
 		'highlight_coupon_color': highlight_coupon_color,
 		'highlight_inv_gift_color': highlight_inv_gift_color,
 		'highlight_inv_guestpass_color': highlight_inv_guestpass_color,
-		'highlight_friends_want_color': highlight_friends_want_color,
 		'highlight_excludef2p': highlight_excludef2p,
 
 		'tag_owned_color': tag_owned_color,
@@ -163,25 +154,18 @@ function save_options() {
 		'tag_coupon_color': tag_coupon_color,
 		'tag_inv_gift_color': tag_inv_gift_color,
 		'tag_inv_guestpass_color': tag_inv_guestpass_color,
-		'tag_friends_want_color': tag_friends_want_color,
-		'tag_friends_own_color': tag_friends_own_color,
-		'tag_friends_rec_color': tag_friends_rec_color,
 
 		'highlight_owned': highlight_owned,
 		'highlight_wishlist': highlight_wishlist,
 		'highlight_coupon': highlight_coupon,
 		'highlight_inv_gift': highlight_inv_gift,
-		'highlight_inv_guestpass': highlight_inv_guestpass,		
-		'highlight_friends_want': highlight_friends_want,
+		'highlight_inv_guestpass': highlight_inv_guestpass,
 
 		'tag_owned': tag_owned,
 		'tag_wishlist': tag_wishlist,
 		'tag_coupon': tag_coupon,
 		'tag_inv_gift': tag_inv_gift,
 		'tag_inv_guestpass': tag_inv_guestpass,
-		'tag_friends_want': tag_friends_want,
-		'tag_friends_own': tag_friends_own,
-		'tag_friends_rec': tag_friends_rec,
 		
 		'hide_owned': hide_owned,
 		'hide_owned_homepage': hide_owned_homepage,
@@ -388,23 +372,18 @@ function load_options() {
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
-		if (settings.highlight_friends_want_color === undefined) { settings.highlight_friends_want_color = "#7E4060"; chrome.storage.sync.set({'highlight_friends_want_color': settings.highlight_friends_want_color}); }
 
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	chrome.storage.sync.set({'tag_owned_color': settings.tag_owned_color});	}
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#496e93";	chrome.storage.sync.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269";	chrome.storage.sync.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124";	chrome.storage.sync.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
-		if (settings.tag_friends_want_color === undefined) { settings.tag_friends_want_color = "#7E4060"; chrome.storage.sync.set({'tag_friends_want_color': settings.tag_friends_want_color}); }
-		if (settings.tag_friends_own_color === undefined) { settings.tag_friends_own_color = "#5b9504"; chrome.storage.sync.set({'tag_friends_own_color': settings.tag_friends_own_color}); }
-		if (settings.tag_friends_rec_color === undefined) { settings.tag_friends_rec_color = "#2e3d54"; chrome.storage.sync.set({'tag_friends_rec_color': settings.tag_friends_rec_color}); }
 
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; chrome.storage.sync.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; chrome.storage.sync.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; chrome.storage.sync.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
-		if (settings.highlight_friends_want === undefined) { settings.highlight_friends_want = false; chrome.storage.sync.set({'highlight_friends_want': settings.highlight_friends_want}); }
 		if (settings.highlight_excludef2p === undefined) { settings.highlight_excludef2p = false; chrome.storage.sync.set({'highlight_excludef2p': settings.highlight_excludef2p}); }
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; chrome.storage.sync.set({'tag_owned': settings.tag_owned}); }
@@ -412,10 +391,7 @@ function load_options() {
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; chrome.storage.sync.set({'tag_coupon': settings.tag_coupon}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = true; chrome.storage.sync.set({'tag_inv_gift': settings.tag_inv_gift}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
-		if (settings.tag_friends_want === undefined) { settings.tag_friends_want = true; chrome.storage.sync.set({'tag_friends_want': settings.tag_friends_want}); }
-		if (settings.tag_friends_own === undefined) { settings.tag_friends_own = true; chrome.storage.sync.set({'tag_friends_own': settings.tag_friends_own}); }
-		if (settings.tag_friends_rec === undefined) { settings.tag_friends_rec = false; chrome.storage.sync.set({'tag_friends_rec': settings.tag_friends_rec}); }
-		
+
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
@@ -486,7 +462,6 @@ function load_options() {
 		$("#highlight_coupon_color").val(settings.highlight_coupon_color);
 		$("#highlight_inv_gift_color").val(settings.highlight_inv_gift_color);
 		$("#highlight_inv_guestpass_color").val(settings.highlight_inv_guestpass_color);
-		$("#highlight_friends_want_color").val(settings.highlight_friends_want_color);
 
 		$("#tag_owned_color").val(settings.tag_owned_color);
 		$("#tag_owned_color").val(settings.tag_owned_color);
@@ -494,16 +469,12 @@ function load_options() {
 		$("#tag_coupon_color").val(settings.tag_coupon_color);
 		$("#tag_inv_gift_color").val(settings.tag_inv_gift_color);
 		$("#tag_inv_guestpass_color").val(settings.tag_inv_guestpass_color);
-		$("#tag_friends_want_color").val(settings.tag_friends_want_color);
-		$("#tag_friends_own_color").val(settings.tag_friends_own_color);
-		$("#tag_friends_rec_color").val(settings.tag_friends_rec_color);
 
 		$("#highlight_owned").prop('checked', settings.highlight_owned);
 		$("#highlight_wishlist").prop('checked', settings.highlight_wishlist);
 		$("#highlight_coupon").prop('checked', settings.highlight_coupon);
 		$("#highlight_inv_gift").prop('checked', settings.highlight_inv_gift);
 		$("#highlight_inv_guestpass").prop('checked', settings.highlight_inv_guestpass);
-		$("#highlight_friends_want").prop('checked', settings.highlight_friends_want);
 		$("#highlight_excludef2p").prop('checked', settings.highlight_excludef2p);
 
 		$("#tag_owned").prop('checked', settings.tag_owned);
@@ -511,9 +482,6 @@ function load_options() {
 		$("#tag_coupon").prop('checked', settings.tag_coupon);
 		$("#tag_inv_gift").prop('checked', settings.tag_inv_gift);
 		$("#tag_inv_guestpass").prop('checked', settings.tag_inv_guestpass);
-		$("#tag_friends_want").prop('checked', settings.tag_friends_want);
-		$("#tag_friends_own").prop('checked', settings.tag_friends_own);
-		$("#tag_friends_rec").prop('checked', settings.tag_friends_rec);
 		
 		$("#hide_owned").prop('checked', settings.hide_owned);
 		$("#hide_owned_homepage").prop('checked', settings.hide_owned_homepage);
@@ -623,7 +591,6 @@ function load_translation() {
 			$("#highlight_coupon_text").text(localized_strings[settings.language].options.coupon);
 			$("#highlight_gift_text").text(localized_strings[settings.language].options.gift);
 			$("#highlight_guest_text").text(localized_strings[settings.language].options.guest);
-			$("#highlight_friends_wishlist_text").text(localized_strings[settings.language].options.friends_wishlist);
 			$("#highlight_excludef2p_text").text(localized_strings[settings.language].options.excludef2p);
 
 			$("#tag_text").text(localized_strings[settings.language].options.tag);
@@ -632,9 +599,6 @@ function load_translation() {
 			$("#tag_coupon_text").text(localized_strings[settings.language].options.coupon);
 			$("#tag_gift_text").text(localized_strings[settings.language].options.gift);
 			$("#tag_guest_text").text(localized_strings[settings.language].options.guest);
-			$("#tag_friends_wishlist_text").text(localized_strings[settings.language].options.friends_wishlist);
-			$("#tag_friends_own_text").text(localized_strings[settings.language].options.friends_own);
-			$("#tag_friends_rec_text").text(localized_strings[settings.language].options.friends_rec);
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options.hide_owned);
@@ -818,16 +782,12 @@ function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color"
 function load_default_highlight_coupon_color() { $("#highlight_coupon_color").val("#6b2269"); }
 function load_default_highlight_inv_gift_color() { $("#highlight_inv_gift_color").val("#a75124"); }
 function load_default_highlight_inv_guestpass_color() { $("#highlight_inv_guestpass_color").val("#a75124"); }
-function load_default_highlight_friends_want_color() { $("#highlight_friends_want_color").val("#7E4060"); }
 
 function load_default_tag_owned_color() { $("#tag_owned_color").val("#5c7836"); }
 function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#496e93"); }
 function load_default_tag_coupon_color() { $("#tag_coupon_color").val("#6b2269"); }
 function load_default_tag_inv_gift_color() { $("#tag_inv_gift_color").val("#a75124"); }
 function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").val("#a75124"); }
-function load_default_tag_friends_want_color() { $("#tag_friends_want_color").val("#7E4060"); }
-function load_default_tag_friends_own_color() { $("#tag_friends_own_color").val("#5b9504"); }
-function load_default_tag_friends_rec_color() { $("#tag_friends_rec_color").val("#2e3d54"); }
 
 function load_default_countries() {
 	regional_countries = ["us","gb","eu1","eu2","ru","br","au"];
@@ -853,16 +813,12 @@ $(document).ready(function(){
 	$("#highlight_coupon_default").click(load_default_highlight_coupon_color);
 	$("#highlight_inv_gift_default").click(load_default_highlight_inv_gift_color);
 	$("#highlight_inv_guestpass_default").click(load_default_highlight_inv_guestpass_color);
-	$("#highlight_friends_want_color_default").click(load_default_highlight_friends_want_color);
 
 	$("#tag_owned_color_default").click(load_default_tag_owned_color);
 	$("#tag_wishlist_default").click(load_default_tag_wishlist_color);
 	$("#tag_coupon_default").click(load_default_tag_coupon_color);
 	$("#tag_inv_gift_default").click(load_default_tag_inv_gift_color);
 	$("#tag_inv_guestpass_default").click(load_default_tag_inv_guestpass_color);
-	$("#tag_friends_want_color_default").click(load_default_tag_friends_want_color);
-	$("#tag_friends_own_color_default").click(load_default_tag_friends_own_color);
-	$("#tag_friends_rec_color_default").click(load_default_tag_friends_rec_color);
 
 	$("#spamcommentregex_default").click(load_default_spamcommentregex)
 
