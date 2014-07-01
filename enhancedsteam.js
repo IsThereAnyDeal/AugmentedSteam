@@ -3887,21 +3887,60 @@ function enhance_game_background(type) {
 
 function add_screenshot_lightbox() {
 	$(".highlight_screenshot").find("a").addClass("es_lightbox_image");
+	var current, size;
+
 	$(".es_lightbox_image").click(function(e) {
 		e.preventDefault();
 		var image_href = $(this).attr("href");
-		if ($('#es-lightbox').length > 0) { // #lightbox exists
-			$('#es-lightbox-content').html('<img src="' + image_href + '" />');
-			$('#es-lightbox').show();
-		} else { //#lightbox does not exist
-			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><img src='" + image_href + "' /></div></div>");
-			$("#es-lightbox").on("click", function() {
-				$("#es-lightbox").hide();
-			});	
+		var slideNum = $(".es_lightbox_image").index(this);
+		if ($('#es-lightbox').length > 0) {
+			$('#es-lightbox').fadeIn(300);
+		} else {
+			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><<</a><a href='#es-next' class='es-next slide-nav'>>></a></div></div></div>");
 		}
+
+		$(".es_lightbox_image").each(function() {
+			var $href = $(this).attr("href");
+			$("#es-lightbox-content ul").append("<li><img src='" + $href + "'></li>");
+		});
+
+		size = $("#es-lightbox-content ul > li").length;
+		$("#es-lightbox-content ul > li").hide();
+		$("#es-lightbox-content ul > li:eq(" + slideNum + ")").show();
+		current = slideNum;
 	});
 
-	
+	$("body").on("click", "#es-lightbox", function() { $("#es-lightbox").fadeOut(300); });
+
+	$("body").on({ 
+		mouseenter: function() { $(".es-nav").fadeIn(300);	},
+		mouseleave: function() { $(".es-nav").fadeOut(300); }
+	}, "#es-lightbox-content");
+
+	$("body").on("click", ".slide-nav", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		var $this = $(this);
+		var dest;
+
+		if ($this.hasClass('prev')) {
+			dest = current - 1;
+			if (dest < 0) {
+				dest = size - 1;
+			}
+		} else {
+			dest = current + 1;
+			if (dest > size - 1) {
+				dest = 0;
+			}
+		}
+
+		$('#es-lightbox-content ul > li:eq(' + current + ')').hide();
+		$('#es-lightbox-content ul > li:eq(' + dest + ')').show();
+
+		current = dest;
+	});
 }
 
 function add_app_badge_progress(appid) {

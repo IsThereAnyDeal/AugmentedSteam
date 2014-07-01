@@ -816,7 +816,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	text-align:right; 
 	color: #fff;
 	margin-right: 20px;
-	margin-top: 20px;
+	margin-top: 10px;
 	font-size: 12px;
 	font-weight: bold;
 	cursor: pointer;
@@ -829,3 +829,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	border: 3px solid white;
 	border-radius: 15px;
 }
+.es-nav { display: none; }
+.es-prev, .es-next { position: absolute; top: 50%; background: rgba(100, 100, 100, .5); padding: .25em .5em; color: #fff; text-decoration: none; }
+.es-next { right: 7px; }
+.es-prev { left: 14px; }
