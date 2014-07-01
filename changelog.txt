@@ -1,6 +1,7 @@
 v6.4
 -----
 + Added a progress bar to the header that indicates if Enhanced Steam is processing requests
++ Added a "lightbox" effect to app page screenshots
 + Increased Early Access detection speed (thanks henryg!)
 : Fixed the number of API requests to conform with Valve's throttling limits
 - Removed ability to hide DLC from unowned games, as it is no longer feasible with new API limits

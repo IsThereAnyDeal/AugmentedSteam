@@ -3885,6 +3885,25 @@ function enhance_game_background(type) {
 	$("#game_background").css("display", "block");
 }
 
+function add_screenshot_lightbox() {
+	$(".highlight_screenshot").find("a").addClass("es_lightbox_image");
+	$(".es_lightbox_image").click(function(e) {
+		e.preventDefault();
+		var image_href = $(this).attr("href");
+		if ($('#es-lightbox').length > 0) { // #lightbox exists
+			$('#es-lightbox-content').html('<img src="' + image_href + '" />');
+			$('#es-lightbox').show();
+		} else { //#lightbox does not exist
+			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><img src='" + image_href + "' /></div></div>");
+			$("#es-lightbox").on("click", function() {
+				$("#es-lightbox").hide();
+			});	
+		}
+	});
+
+	
+}
+
 function add_app_badge_progress(appid) {
 	if (is_signed_in()) {
 		if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
@@ -6164,6 +6183,7 @@ $(document).ready(function(){
 						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
 						enhance_game_background();
+						add_screenshot_lightbox();
 
 						drm_warnings("app");
 						add_metacritic_userscore();
