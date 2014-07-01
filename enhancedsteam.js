@@ -3059,19 +3059,19 @@ function add_hltb_info(appid) {
 						how_long_html = "<div class='block game_details underlined_links'>"
 							+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
 							+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
-							if (data["hltb"]["main_story"]){
-								how_long_html += "<b>" + localized_strings[language].hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>";
-							}
-							if (data["hltb"]["main_extras"]){
-								how_long_html += "<b>" + localized_strings[language].hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>";
-							}
-							if (data["hltb"]["comp"]) {
-								how_long_html += "<b>" + localized_strings[language].hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
-							}
-							+ "</div>"
+						if (data["hltb"]["main_story"]){
+							how_long_html += "<b>" + localized_strings[language].hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>";
+						}
+						if (data["hltb"]["main_extras"]){
+							how_long_html += "<b>" + localized_strings[language].hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>";
+						}
+						if (data["hltb"]["comp"]) {
+							how_long_html += "<b>" + localized_strings[language].hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
+						}
+						how_long_html += "</div>"
 							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top' /></div>" + localized_strings[language].more_information + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
 							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'><div class='rightblock'><img src='http://cdn3.store.steampowered.com/public/images/ico/link_news.gif' width='16' height='16' border='0' align='top' /></div>" + localized_strings[language].hltb.submit + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-							+ "</div></div></div>"
+							+ "</div></div></div>";
 						$("div.game_details:first").after(how_long_html);
 					}
 				}
