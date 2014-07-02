@@ -3887,7 +3887,8 @@ function enhance_game_background(type) {
 
 function add_screenshot_lightbox() {
 	$(".highlight_screenshot").find("a").addClass("es_lightbox_image");
-	var current, size;
+	var current, size = 0;
+	var game_name = $(".apphub_AppName:first").text();
 
 	$(".es_lightbox_image").click(function(e) {
 		e.preventDefault();
@@ -3896,18 +3897,21 @@ function add_screenshot_lightbox() {
 		if ($('#es-lightbox').length > 0) {
 			$('#es-lightbox').fadeIn(300);
 		} else {
-			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><<</a><a href='#es-next' class='es-next slide-nav'>>></a></div></div></div>");
+			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><<</a><a href='#es-next' class='es-next slide-nav'>>></a></div><div id='es-lightbox-desc'></div></div></div>");
 		}
 
-		$(".es_lightbox_image").each(function() {
-			var $href = $(this).attr("href");
-			$("#es-lightbox-content ul").append("<li><img src='" + $href + "'></li>");
-		});
+		if (size === 0) {
+			$(".es_lightbox_image").each(function() {
+				var $href = $(this).attr("href");
+				$("#es-lightbox-content ul").append("<li><img src='" + $href + "'></li>");
+			});
+		}
 
 		size = $("#es-lightbox-content ul > li").length;
 		$("#es-lightbox-content ul > li").hide();
 		$("#es-lightbox-content ul > li:eq(" + slideNum + ")").show();
 		current = slideNum;
+		$("#es-lightbox-desc").text(game_name + "  " + (current + 1) + " / " + size);
 	});
 
 	$("body").on("click", "#es-lightbox", function() { $("#es-lightbox").fadeOut(300); });
@@ -3924,7 +3928,7 @@ function add_screenshot_lightbox() {
 		var $this = $(this);
 		var dest;
 
-		if ($this.hasClass('prev')) {
+		if ($this.hasClass('es-prev')) {
 			dest = current - 1;
 			if (dest < 0) {
 				dest = size - 1;
@@ -3940,6 +3944,7 @@ function add_screenshot_lightbox() {
 		$('#es-lightbox-content ul > li:eq(' + dest + ')').show();
 
 		current = dest;
+		$("#es-lightbox-desc").text(game_name + "  " + (current + 1) + " / " + size);
 	});
 }
 
