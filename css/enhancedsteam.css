@@ -835,6 +835,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	right: 0;
 }
 .es-nav { display: none; }
-.es-prev, .es-next { position: absolute; top: 50%; background: rgba(100, 100, 100, .5); padding: .25em .5em; color: #fff; text-decoration: none; }
-.es-next { right: 7px; }
+.es-prev, .es-next { 
+	position: absolute;
+	top: 50%;
+	background: #869791;
+	opacity: 0.5;
+	padding: 5px 10px;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 30px;
+}
+.es-prev:hover, .es-next:hover {
+	opacity: 1;
+	text-decoration: none;
+}
+.es-next { right: 14px; }
 .es-prev { left: 14px; }

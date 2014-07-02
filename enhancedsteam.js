@@ -3897,7 +3897,7 @@ function add_screenshot_lightbox() {
 		if ($('#es-lightbox').length > 0) {
 			$('#es-lightbox').fadeIn(300);
 		} else {
-			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><<</a><a href='#es-next' class='es-next slide-nav'>>></a></div><div id='es-lightbox-desc'></div></div></div>");
+			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><</a><a href='#es-next' class='es-next slide-nav'>></a></div><div id='es-lightbox-desc'></div></div></div>");
 		}
 
 		if (size === 0) {
