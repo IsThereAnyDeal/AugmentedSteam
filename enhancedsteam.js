@@ -3908,6 +3908,7 @@ function add_screenshot_lightbox() {
 		}
 
 		size = $("#es-lightbox-content ul > li").length;
+		if (size === 1) { $(".es-nav").remove(); }
 		$("#es-lightbox-content ul > li").hide();
 		$("#es-lightbox-content ul > li:eq(" + slideNum + ")").show();
 		current = slideNum;
