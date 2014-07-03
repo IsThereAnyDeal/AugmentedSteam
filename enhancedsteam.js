@@ -4793,6 +4793,9 @@ function start_highlights_and_tags(){
 			"div.similar_grid_item"			// Items on the "Similarly tagged" pages
 		];
 
+		var appids = [];
+		var appids_to_process = [];
+
 		// Get all appids and nodes from selectors
 		$.each(selectors, function (i, selector) {
 			$.each($(selector), function(j, node){
@@ -4801,9 +4804,8 @@ function start_highlights_and_tags(){
 					if ($(node).hasClass("item")) { node = $(node).find(".info")[0]; }
 					if ($(node).hasClass("home_area_spotlight")) { node = $(node).find(".spotlight_content")[0]; }
 
-					on_app_info(appid, function(){
-						highlight_app(appid, node);
-					});
+					var pushvar = [appid, node];
+					appids.push(pushvar);
 				} else {
 					var subid = get_subid(node.href || $(node).find("a")[0].href);
 
@@ -4816,6 +4818,54 @@ function start_highlights_and_tags(){
 				}	
 			});
 		});
+
+		$.each(appids, function(index, value) {
+			var appid = value[0];
+			ensure_appid_deferred(appid);
+
+			if (getValue(appid + "owned") != true) {
+				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+				var last_updated = getValue(appid) || expire_time - 1;
+
+				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+				if (last_updated < expire_time) {
+					appids_to_process.push(appid);
+				}
+				else {
+					appid_promises[appid].resolve();
+				}
+			} else {
+				appid_promises[appid].resolve();
+			}
+
+			appid_promises[appid].promise.done(highlight_app(appid, value[1]));
+		});
+
+		if (appids_to_process.length) {
+			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids_to_process.join(), function (data) {
+				var storefront_data = JSON.parse(data);
+				$.each(storefront_data, function(appid, app_data){
+					if (app_data.success) {
+						setValue(appid + "owned", (app_data.data.is_owned === true));
+
+						if (app_data.data.is_owned != true) {
+							// Update time for caching
+							setValue(appid, parseInt(Date.now() / 1000, 10));
+						}
+					}
+
+					// Resolve promise to run any functions waiting for this apps info
+					appid_promises[appid].resolve();
+
+					// find the appropriate node to highlight
+					for (var i = 0; i < appids.length; i++) {
+						if (appids[i][0] === appid) {
+							highlight_app(appid, appids[i][1]);
+						}
+					}
+				});
+			});
+		}
 	});
 }
 

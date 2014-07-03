@@ -5,6 +5,7 @@ v6.4
 + Increased Early Access detection speed (thanks henryg!)
 : Fixed the number of API requests to conform with Valve's throttling limits
 - Removed ability to hide DLC from unowned games, as it is no longer feasible with new API limits
+- Removed the "friends own/want/reviewed" tags, to conform with API throttling limits
 
 
 v6.3.5
