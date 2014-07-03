@@ -132,7 +132,7 @@ function matchAll(re, str) {
 
 function get_http(url, callback) {
 	total_requests += 1;
-	if ($("#es_progress").length == 0) $("#global_actions").after("<progress id='es_progress' value='0' max='100' title='Enhanced Steam loading data...'></progress>");
+	$("#es_progress").attr({"max": 100, "title": localized_strings[language].ready.loading});
 	$("#es_progress").removeClass("complete");
 	var http = new XMLHttpRequest();
 	http.onreadystatechange = function () {
@@ -140,12 +140,12 @@ function get_http(url, callback) {
 			processed_requests += 1;
 			var complete_percentage = (processed_requests / total_requests) * 100;
 			$("#es_progress").val(complete_percentage);
-			if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", "Enhanced Steam ready."); }
+			if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings[language].ready.ready); }
 			callback(this.responseText);
 		}
 
 		if (this.readyState == 4 && this.status != 200) {
-			$("#es_progress").val(100).addClass("error").attr({"title":"Error loading Enhanced Steam data", "max":1});
+			$("#es_progress").val(100).addClass("error").attr({"title":localized_strings[language].ready.errormsg, "max":1});
 		}
 	};
 	http.open('GET', url, true);
@@ -1382,6 +1382,8 @@ function add_enhanced_steam_options() {
 	$("#global_action_menu")
 		.before($dropdown)
 		.before($dropdown_options_container);
+
+	$("#global_actions").after("<progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings[language].ready.ready + "'></progress>");
 }
 
 // Display warning if browsing using non-account region
