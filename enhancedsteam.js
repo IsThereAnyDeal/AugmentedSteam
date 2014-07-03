@@ -48,6 +48,10 @@ function getValue(key) {
 	return JSON.parse(v);
 }
 
+function delValue(key) {
+	localStorage.removeItem(key);
+}
+
 // Helper prototypes
 String.prototype.startsWith = function(prefix) {
 	return this.indexOf(prefix) === 0;
@@ -5048,7 +5052,6 @@ function add_carousel_descriptions() {
 				var description_height_to_add = 62;
 				$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
 				
-				
 				$.each($(".cluster_capsule"), function(i, _obj) {
 					var appid = get_appid(_obj.href),
 						$desc = $(_obj).find(".main_cap_content"),
@@ -5056,14 +5059,40 @@ function add_carousel_descriptions() {
 					
 					$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
 					$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
-					
-					get_http('http://store.steampowered.com/app/' + appid, function(txt) {
-						var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
-						if (desc) {
-							$desc.append(desc[1]);
-						}
-					});
+
+					var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+					var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
+
+					if (last_updated < expire_time) {
+						get_http('http://store.steampowered.com/app/' + appid, function(txt) {
+							var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
+							if (desc) {
+								setValue(appid + "carousel", desc[1]);
+								setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
+								$desc.append(desc[1]);
+							}
+						});
+					}
+					else {
+						var desc = getValue(appid + "carousel");
+						$desc.append(desc);
+					}
 				});
+
+				// purge stale information from localStorage				
+				var i = 0, sKey;
+				for (; sKey = window.localStorage.key(i); i++) {
+					if (sKey.match(/carousel_time/)) {
+						var expire_time = parseInt(Date.now() / 1000, 10) - 8 * 60 * 60; // Eight hours ago
+						var last_updated = window.localStorage.getItem(sKey) || expire_time - 1;
+
+						if (last_updated < expire_time) {
+							var appid = sKey.match(/\d+/)[0];
+							delValue(appid + "carousel");
+							delValue(appid + "carousel_time");
+						}
+					}
+				}
 			}
 		}
 	});
