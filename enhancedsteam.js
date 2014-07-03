@@ -13,7 +13,6 @@ var search_threshhold = $(window).height() - 80;
 
 var total_requests = 0;
 var processed_requests = 0;
-var total_appuserdetails_requests = 0;
 
 var cookie = document.cookie;
 var language = cookie.match(/language=([a-z]{3})/i)[1];
@@ -4969,32 +4968,23 @@ function get_app_details(appids) {
 		// Make sure we have inventory loaded beforehand so we have gift/guestpass/coupon info
 		if (!loading_inventory) loading_inventory = load_inventory();
 		loading_inventory.done(function() {
+			if (!(appids instanceof Array)) appids = [appids];			
+			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(), function (data) {
+				var storefront_data = JSON.parse(data);
+				$.each(storefront_data, function(appid, app_data){
+					if (app_data.success) {
+						setValue(appid + "owned", (app_data.data.is_owned === true));
 
-			// Batch request for appids - all untracked or cache-expired apps
-			// Handle new data highlighting as it loads
-			total_requests += 1;
-			if (!(appids instanceof Array)) appids = [appids];
-			total_appuserdetails_requests += 1;
-			setTimeout(function(){
-				processed_requests += 1;
-				total_appuserdetails_requests = total_appuserdetails_requests - 1;
-				get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids.join(","), function (data) {
-					var storefront_data = JSON.parse(data);
-					$.each(storefront_data, function(appid, app_data){
-						if (app_data.success) {
-							setValue(appid + "owned", (app_data.data.is_owned === true));
-
-							if (app_data.data.is_owned != true) {
-								// Update time for caching
-								setValue(appid, parseInt(Date.now() / 1000, 10));
-							}
+						if (app_data.data.is_owned != true) {
+							// Update time for caching
+							setValue(appid, parseInt(Date.now() / 1000, 10));
 						}
+					}
 
-						// Resolve promise to run any functions waiting for this apps info
-						appid_promises[appid].resolve();
-					});
+					// Resolve promise to run any functions waiting for this apps info
+					appid_promises[appid].resolve();
 				});
-			}, 1500 * total_appuserdetails_requests);
+			});	
 		});
 	}
 }
