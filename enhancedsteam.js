@@ -4132,24 +4132,29 @@ function add_achievement_completion_bar(appid) {
 
 var ea_appids, ea_promise = (function () {
 	var deferred = new $.Deferred();
-	// is the data cached?
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	var last_updated = getValue("ea_appids_time") || expire_time - 1;
-	
-	if (last_updated < expire_time) {
-		// if no cache exists, pull the data from the website
-		get_http("//api.enhancedsteam.com/early_access/", function(txt) {
-			ea_appids = txt;
-			setValue("ea_appids", ea_appids);
-			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
-			deferred.resolve();	
-		});
+	if (window.location.protocol != "https:") {		
+		// is the data cached?
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue("ea_appids_time") || expire_time - 1;
+		
+		if (last_updated < expire_time) {
+			// if no cache exists, pull the data from the website
+			get_http("//api.enhancedsteam.com/early_access/", function(txt) {
+				ea_appids = txt;
+				setValue("ea_appids", ea_appids);
+				setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
+				deferred.resolve();	
+			});
+		} else {
+			ea_appids = getValue("ea_appids");
+			deferred.resolve();
+		}
+		
+		return deferred.promise();
 	} else {
-		ea_appids = getValue("ea_appids");
 		deferred.resolve();
+		return deferred.promise();
 	}
-	
-	return deferred.promise();
 })();
 
 // Check for Early Access titles
@@ -4723,7 +4728,7 @@ function bind_ajax_content_highlighting() {
 
 var owned_promise = (function () {
 	var deferred = new $.Deferred();
-	if (is_signed_in()) {	
+	if (is_signed_in() && window.location.protocol != "https:") {
 		var steamID = is_signed_in()[0];
 
 		var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
@@ -4750,7 +4755,7 @@ var owned_promise = (function () {
 
 var wishlist_promise = (function () {
 	var deferred = new $.Deferred();
-	if (is_signed_in()) {
+	if (is_signed_in() && window.location.protocol != "https:") {
 		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
 		var last_updated = getValue("wishlist_games_time") || expire_time - 1;
 
@@ -6369,6 +6374,7 @@ $(document).ready(function(){
 					case /^\/account\/.*/.test(window.location.pathname):
 						account_total_spent();
 						replace_account_name();
+						return;
 						break;
 
 					case /^\/steamaccount\/addfunds/.test(window.location.pathname):
