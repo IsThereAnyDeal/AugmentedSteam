@@ -5646,7 +5646,7 @@ function add_cardexchange_links(game) {
 	storage.get(function(settings) {
 		if (settings.steamcardexchange === undefined) { settings.steamcardexchange = true; storage.set({'steamcardexchange': settings.steamcardexchange}); }
 		if (settings.steamcardexchange) {
-			jQuery("div.badge_row", function (index, node) {
+			$(".badge_row").each(function (index, node) {
 				var $node = $(node);
 				var gamecard = game || get_gamecard($node.find(".badge_row_overlay").attr('href'));
 				if(!gamecard) return;

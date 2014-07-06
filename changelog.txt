@@ -1,5 +1,6 @@
 v6.5
 -----
+: Fixed a bug where SteamCardExchange links weren't showing properly
 
 
 v6.4
