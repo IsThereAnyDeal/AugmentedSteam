@@ -4756,11 +4756,12 @@ var owned_promise = (function () {
 var wishlist_promise = (function () {
 	var deferred = new $.Deferred();
 	if (is_signed_in() && window.location.protocol != "https:") {
+		var steamID = is_signed_in()[0];
 		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
 		var last_updated = getValue("wishlist_games_time") || expire_time - 1;
 
-		if (last_updated < expire_time) {
-			get_http("//steamcommunity.com/my/wishlist", function(txt) {				
+		if (last_updated < expire_time) {			
+			get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {				
 				var html = $.parseHTML(txt);
 				$(html).find(".wishlistRow").each(function() {
 					var appid = $(this).attr("id").replace("game_", "");

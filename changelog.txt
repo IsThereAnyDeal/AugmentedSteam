@@ -1,6 +1,7 @@
 v6.5
 -----
 : Fixed a bug where SteamCardExchange links weren't showing properly
+: Fixed a bug where sometimes a user's wishlist wouldn't load properly
 
 
 v6.4
