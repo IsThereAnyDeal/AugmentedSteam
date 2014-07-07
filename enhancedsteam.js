@@ -3091,10 +3091,10 @@ function add_pcgamingwiki_link(appid) {
 		if (settings.showpcgw === undefined) { settings.showpcgw = true; storage.set({'showpcgw': settings.showpcgw}); }
 		if (settings.showpcgw) {
 			get_http("http://api.enhancedsteam.com/pcgw/?appid=" + appid, function (txt) {
-				if (txt.length > 0) {
-					var gamename = txt.match(/results":{"(.+)":{/)[1];
+				if (txt) {
 					var data = JSON.parse(txt);
-					var url = (data["results"][gamename]["fullurl"]);
+					for (var game_name in data["results"]) break;
+					var url = data["results"][game_name]["fullurl"];
 					$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url(' + chrome.extension.getURL("img/pcgw.png") + ')">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
 				}
 			});
