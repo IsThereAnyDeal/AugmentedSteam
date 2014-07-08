@@ -2447,63 +2447,6 @@ function appdata_on_wishlist() {
 	});
 }
 
-function add_price_slider() {
-	$("#es_price_search_options").remove();
-	$("#es_price_search_options_text").remove();
-
-	var setprice_low = "0.00";
-	var setprice_high = "59.99";
-	var slider_pos = 100;
-	var display = "none";
-
-	var url_parameters = window.location.href.replace("#", "&");
-	var url_parameters_array = url_parameters.split("&");
-
-	$.each(url_parameters_array,function(index, url_parameter){
-		if (url_parameter.indexOf("price=") > -1) {
-			url_parameter = url_parameter.replace("price=", "");
-			if (url_parameter.indexOf("%2C") > -1) url_parameter = url_parameter.split("%2C");
-			if (url_parameter.indexOf(",") > -1) url_parameter = url_parameter.split(",");
-			if(url_parameter[0]>0){
-				setprice_low = url_parameter[0];
-			}
-			if(url_parameter[1]>0){
-				setprice_high = url_parameter[1];
-			}
-			slider_pos = (setprice_high / 59.99) * 100;
-			display = "block";
-		}
-	});
-
-	$("#advanced_search_toggle").find("a").after("<a id='es_price_search_options_text' style='margin-left: 4px; cursor: pointer;'>" + localized_strings[language].price_options + "</a>");
-	$("#advanced_search_ctn").after("<div id='es_price_search_options' style='display: " + display + ";'><div style='float: left; margin-top: 3px; margin-right: 5px;'>" + localized_strings[language].price + ": </div><div style='float: left;'><input class='es_price_range_slider' id='es_price_range' type='range' value='" + slider_pos + "' /></div><div class='search_controls' style='float: left;'><input type='text' class='text' id='es_price_text_low' style='width: 112px; margin-left: 15px;' value='" + setprice_low + "'></div><div style='float: left; margin-top: 3px; margin-left: 5px;'>to</div><div class='search_controls' style='float: left;'><input type='text' class='text' id='es_price_text_high' style='width: 112px; margin-left: 5px;' value='" + setprice_high + "'></div><div class='search_button' style='float: left; padding-left: 6px;'><input type='button' class='search_button' id='es_price_search' value='Search'></div></div><div style='clear: both'></div>");
-	
-	$("#es_price_search_options_text").click(function() {
-		$("#es_price_search_options").toggle();
-	});
-
-	$("#es_price_text_low").blur(function() {
-		if ($("#es_price_text_low").val() == "") { $("#es_price_text_low").val("0.00"); }
-	});
-
-	$("#es_price_text_high").blur(function() {
-		if ($("#es_price_text_high").val() == "") { $("#es_price_text_high").val("0.00"); }
-	});
-
-	$("#es_price_range").change(function() {
-		var price = (($("#es_price_range").val() * 59.98) / 100) + 0.01;
-		$("#es_price_text_low").val("0.00");
-		$("#es_price_text_high").val(price.toFixed(2));
-	});
-
-	$("#es_price_search").click(function() {
-		var lowprice = $("#es_price_text_low").val();
-		var highprice = $("#es_price_text_high").val();
-		var newurl = window.location.href.replace("#", "&") + "&price=" + lowprice + "," + highprice;
-		window.location = newurl;
-	});
-}
-
 function add_advanced_cancel() {
 	$("#advanced_search_controls").find(".control:first").append("<div id='es_advanced_cancel' style='display: inline-block;'>(<a style='cursor: pointer;'>" + localized_strings[language].cancel + "</a>)</div>");
 	$("#es_advanced_cancel").click(function() {
@@ -4648,7 +4591,6 @@ function bind_ajax_content_highlighting() {
 					start_highlights_and_tags();
 					remove_non_specials();
 					process_early_access();
-					add_price_slider();
 					search_in_names_only(true);
 				}
 
@@ -5083,39 +5025,6 @@ function add_carousel_descriptions() {
 			}
 		}
 	});
-}
-
-// Add button for games user can afford with Steam Wallet funds
-function add_affordable_button() {
-	if (is_signed_in() && $("#header_wallet_ctn").text().trim()) {
-		var balance_text = $("#header_wallet_ctn").text().trim();
-		var currency_symbol = balance_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
-		var balance = balance_text.replace(currency_symbol, "");
-		if(currency_symbol == "$") balance = balance.replace(" USD", "");
-		balance = balance.replace(",", ".");
-		if (balance > 0) {
-			var link = "http://store.steampowered.com/search/?sort_by=Price&sort_order=DESC&price=0%2C" + balance;
-			$(".btn_browse").each(function(index) {
-				if (index == 1) {
-					switch (currency_symbol) {
-						case "€":
-							$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "<span class='currency'>" + currency_symbol + "</span></h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
-							break;
-						case "pуб":
-							$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
-							break;
-						default:
-							$(this).after("<a class='btn_browse' style='width: 308px; background-image: url(" + chrome.extension.getURL("img/es_btn_browse.png") +");' href='" + link + "'><h3 style='width: 120px;'><span class='currency'>" + currency_symbol + "</span>" + balance + "</h3><h5><span id='es_results'></span> games under " + balance_text + "</h5></a>");
-					}
-					get_http(link, function(txt) {
-						var results = txt.match(/search_pagination_left(.+)\r\n(.+)/)[2];
-						results = results.match(/(\d+)(?!.*\d)/)[0];
-						$("#es_results").text(results);
-					});
-				}
-			});
-		}
-	}
 }
 
 function add_small_cap_height() {
@@ -6326,7 +6235,6 @@ $(document).ready(function(){
 
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
-						//add_price_slider();
 						add_advanced_cancel();
 						endless_scrolling();
 						remove_non_specials();
@@ -6344,7 +6252,6 @@ $(document).ready(function(){
 						add_actual_new_release_button();
 						set_homepage_tab();
 						add_carousel_descriptions();
-						//add_affordable_button();
 						show_regional_pricing();
 						break;
 				}
