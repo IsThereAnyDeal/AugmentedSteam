@@ -1271,60 +1271,6 @@ function send_age_verification() {
 	});
 }
 
-function scale_scoreboard() {
-	$(".friend_team_footer:first").append("<a class='whitelink' id='es_view_to_scale' style='cursor: pointer;'>" + localized_strings[language].view_to_scale + "</a>");
-	$("#es_view_to_scale").css("margin-left", "4px");
-	function scale_the_scoreboard() {
-		var top = $(".team_standing:first").find(".score_bar").css("width");
-		var my_team = $(".my_team_callout").text().trim();
-		top = top.replace("px", "");
-		top = parseFloat(top);
-		var green, blue, pink, purple, red;
-		
-		$(".team_standing").each(function() {
-			if ($(this).hasClass("team_green")) {
-				green = $(this).find(".score_bar").text().replace(my_team, "").replace(",", "").trim();
-				green = parseFloat(green);
-			}
-			if ($(this).hasClass("team_blue")) {
-				blue = $(this).find(".score_bar").text().replace(my_team, "").replace(",", "").trim();
-				blue = parseFloat(blue);
-			}
-			if ($(this).hasClass("team_pink")) {
-				pink = $(this).find(".score_bar").text().replace(my_team, "").replace(",", "").trim();
-				pink = parseFloat(pink);
-			}
-			if ($(this).hasClass("team_purple")) {
-				purple = $(this).find(".score_bar").text().replace(my_team, "").replace(",", "").trim();
-				purple = parseFloat(purple);
-			}
-			if ($(this).hasClass("team_red")) {
-				red = $(this).find(".score_bar").text().replace(my_team, "").replace(",", "").trim();
-				red = parseFloat(red);
-			}
-		});
-
-		// Now that we have the data we need:
-		var highest = Math.max(green, blue, pink, purple, red);
-		green = (green / highest) * top;
-		blue = (blue / highest) * top;
-		pink = (pink / highest) * top;
-		purple = (purple / highest) * top;
-		red = (red / highest) * top;
-		
-		$(".team_green").find(".score_bar").css("width", green + "px");
-		$(".team_blue").find(".score_bar").css("width", blue + "px");
-		$(".team_pink").find(".score_bar").css("width", pink + "px");
-		$(".team_purple").find(".score_bar").css("width", purple + "px");
-		$(".team_red").find(".score_bar").css("width", red + "px");
-	}
-
-	$("#es_view_to_scale").click(function() {
-		scale_the_scoreboard();
-		setInterval(scale_the_scoreboard, 1000);
-	});
-}
-
 // Display Steam Wallet funds in header
 function add_wallet_balance_to_header() {
 	$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
@@ -6362,10 +6308,6 @@ $(document).ready(function(){
 
 					case /^\/agecheck\/.*/.test(window.location.pathname):
 						send_age_verification();
-						break;
-
-					case /^\/promotion\/.*/.test(window.location.pathname):
-						scale_scoreboard();
 						break;
 
 					case /^\/dlc\/.*/.test(window.location.pathname):
