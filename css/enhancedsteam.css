@@ -851,3 +851,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es-next { right: 14px; }
 .es-prev { left: 14px; }
+.es_bad_comment_num {
+	cursor: pointer;
+}
