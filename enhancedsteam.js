@@ -2830,27 +2830,48 @@ function hide_spam_comments() {
 		if(settings.hidespamcomments) {
 			if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u27BF]"; storage.set({'spamcommentregex': settings.spamcommentregex}); }
 			var spam_regex = new RegExp(settings.spamcommentregex);
+			var spam_comment_show = "<div class='es_bad_comment_num' title=\"" + localized_strings[language].spam_comment_warn + "\">" + localized_strings[language].spam_comment_show+"</div>"
+			function comment_num(bad_comment_num, frame) {
+				if (frame){
+					$(frame).find(".es_bad_comment_num").remove();
+					if (bad_comment_num>0) {
+						$(frame).find(".commentthread_comments").after(spam_comment_show.replace("__num__", bad_comment_num));
+					}
+				}
+				else {
+					$(".es_bad_comment_num").remove();
+					if (bad_comment_num>0) {
+						$(".commentthread_comments").after(spam_comment_show.replace("__num__", bad_comment_num));
+					}
+				}
+			}
 			function check_hide_comments() {
+				var bad_comment_num = 0;
 				var comment_array = $(".commentthread_comment").toArray();
 				$.each(comment_array, function(index,value){
 					var comment_text = $(value).find(".commentthread_comment_text").text().trim();
 					if(spam_regex.test(comment_text)) {
 						bad_comment=$(value).attr("id");
 						$("#"+bad_comment).hide();
+						bad_comment_num++;
 					}
 				});
+				comment_num(bad_comment_num);
 			}
 			function frame_check_hide_comments() {
 				for (var i=0; i<frames.length; i++) {
 					var frame = frames[i].document;
+					var bad_comment_num = 0;
 					var comment_array = $(frame).find(".commentthread_comment").toArray();
 					$.each(comment_array, function(index,value){
 						var comment_text = $(value).find(".commentthread_comment_text").text().trim();
 						if(spam_regex.test(comment_text)) {
 							bad_comment=$(value).attr("id");
 							$(frame).find("#"+bad_comment).hide();
+							bad_comment_num++;
 						}
 					});
+					comment_num(bad_comment_num, frame);
 				}
 			}
 			var observer = new WebKitMutationObserver(function(mutations) {
@@ -2865,7 +2886,11 @@ function hide_spam_comments() {
 							if($(frame).find(".commentthread_comments").html()) {
 								frame_comment_observer.observe($(frame).find(".commentthread_comments")[0], {childList:true, subtree:true});
 							}
-						}
+							$(frame).on("click", ".es_bad_comment_num", function(){
+								$(this).hide();
+								$(frame).find(".commentthread_comment").show();
+							});
+						}	
 					});
 					frame_comment_observer.observe($("#modalContentWait")[0], {attributes:true});
 				});
@@ -2875,6 +2900,10 @@ function hide_spam_comments() {
 				check_hide_comments();
 				observer.observe($(".commentthread_comments")[0], {childList:true, subtree:true});
 			}
+			$(document).on("click", ".es_bad_comment_num", function(){
+				$(this).hide();
+				$(".commentthread_comment").show();
+			});
 		}
 	});
 }
@@ -5974,6 +6003,29 @@ function add_badge_completion_cost() {
 	});
 }
 
+function add_gamecard_trading_forum() {
+	var forumAdded = false;
+	function get_number(bracketed_number){
+		return parseInt(bracketed_number.trim().substr(1, bracketed_number.length-2));
+	}
+	function addForum(){
+		var pathname = window.location.pathname;
+		var appid = window.location.pathname.split("/")[4];
+		$(".badge_detail_tasks_rule").next().next().after('<div class="gamecards_inventorylink"><a href="http://steamcommunity.com/app/'+appid+'/tradingforum/" class="btn_grey_grey btn_medium"><span>' + localized_strings[language].visit_trade_forum + '</span></a></div>');
+		forumAdded = true;
+	}
+	var all_cards = $(".badge_card_set_card");
+	var all_owned = $(".badge_card_set_card.owned");
+	if (all_cards.length == all_owned.length){
+		$.each(all_owned, function(){
+			var num_owned = get_number($(this).find(".badge_card_set_text_qty").text());
+			if (num_owned>0 && !forumAdded){
+				addForum();
+			}
+		});
+	}
+}
+
 function add_total_drops_count() {
 	var drops_count = 0;
 	var drops_games = 0;
@@ -6329,6 +6381,7 @@ $(document).ready(function(){
 						add_cardexchange_links(gamecard);
 						add_gamecard_market_links(gamecard);
 						add_gamecard_foil_link();
+						add_gamecard_trading_forum();
 						break;
 
 					case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
