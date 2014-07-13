@@ -5697,8 +5697,10 @@ function add_achievement_sort() {
 			$(this).parent().parent().next().remove();
 			push[1] = $(this).parent().parent();
 			var unlocktime = $(this).text().replace("Unlocked: ", "").replace("Jan", "01").replace("Feb", "02").replace("Mar", "03").replace("Apr", "04").replace("May", "05").replace("Jun", "06").replace("Jul", "07").replace("Aug", "08").replace("Sep", "09").replace("Oct", "10").replace("Nov", "11").replace("Dec", "12");
-			var parts = unlocktime.match(/(\d{2}) (\d+), (\d{4}) (\d+):(\d{2})(am|pm)/);
-			if (parts[6] == "pm") parts[4] = (parseFloat(parts[4]) + 12).toString();		
+			var parts = unlocktime.match(/(\d{2}) (\d+)(?:, (\d{4}))? \@ (\d+):(\d{2})(am|pm)/);
+			var year = new Date().getFullYear();
+			if (parts[3] === undefined) parts[3] = year;
+			if (parts[6] == "pm") parts[4] = (parseFloat(parts[4]) + 12).toString();
 			push[2] = Date.UTC(+parts[3], parts[1]-1, +parts[2], +parts[4], +parts[5]) / 1000;
 			achRows.push(push);
 		});
