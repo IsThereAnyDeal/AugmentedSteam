@@ -1190,7 +1190,7 @@ function add_pack_breakdown() {
 		else if (title.contains(' two pack')) { pack_split(this, 2); }
 		else if (title.contains('tower wars friend pack')) { pack_split(this, 2); }
 
-		else if (title.contains(' 3 pack')) { pack_split(this, 3); }
+		else if (title.contains(' 3 pack') && !title.contains('doom 3')) { pack_split(this, 3); }
 		else if (title.contains(' three pack')) { pack_split(this, 3); }
 		else if (title.contains('tower wars team pack')) { pack_split(this, 3); }
 
