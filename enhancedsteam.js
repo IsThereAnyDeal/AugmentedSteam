@@ -3381,17 +3381,21 @@ function add_market_total() {
 
 function add_active_total() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
-		var total = 0;		
+		var total = 0;
+		var total_after = 0;	
 		
-		$(".my_listing_section:first").find(".market_listing_row").find(".market_listing_my_price").each(function() {
-			total += Number($(this).text().trim().replace(",", ".").replace(/[^0-9\.]+/g,""));
+		$(".my_listing_section:first").find(".market_listing_row").find(".market_listing_my_price").each(function() {			
+			var temp = $(this).text().trim().replace(",", ".").replace(/[^0-9(\.]+/g,"").split("(");
+			total += Number(temp[0]);
+			total_after += Number(temp[1]);
 			currency_symbol = $(this).text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
 		});
 		
 		if (total != 0) {
 			var currency_type = currency_symbol_to_type(currency_symbol);
 			total = formatCurrency(parseFloat(total), currency_type);
-			$(".my_listing_section:first").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons'></div><div class='market_listing_my_price es_active_total'><span class='market_listing_item_name' style='color: white'>" + escapeHTML(total) + "</span><br><span class='market_listing_game_name'>" + escapeHTML(localized_strings[language].sales_total) + "</span></div></div>");
+			total_after = formatCurrency(parseFloat(total_after), currency_type);
+			$(".my_listing_section:first").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons'></div><div class='market_listing_my_price es_active_total'><span class='market_table_value><span class='market_listing_price'><span style='color: white'>" + total + "</span><br><span style='color: #AFAFAF'>(" + total_after + ")</span></span></span><br><span>" + escapeHTML(localized_strings[language].sales_total) + "</span></div></div>");
 		}
 
 		var total = 0;
