@@ -778,14 +778,12 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_buttons() {
-	// TODO: Trigger a new event after everything is highlighted and then add the button
 	if(is_signed_in) {
 		var profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com", "");
 		if (window.location.pathname.startsWith(profile)) {
-			var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings[language].empty_wishlist + "</div><div class='btn_save' id='es_empty_owned_wishlist'>" + localized_strings[language].remove_owned_wishlist + "</div>");
+			var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings[language].empty_wishlist + "</div>");
 			$(".save_actions_enabled").filter(":last").after(empty_buttons);
-			$("#es_empty_wishlist").click({ empty_owned_only: false },empty_wishlist);
-			$("#es_empty_owned_wishlist").click({ empty_owned_only: true },empty_wishlist);
+			$("#es_empty_wishlist").click(empty_wishlist);
 		}
 	}
 }
@@ -1116,12 +1114,12 @@ function add_remove_from_wishlist_button(appid) {
 	}
 }
 
-// Removes all owned items from the user's wishlist
-function empty_wishlist(e) {
-	var conf_text = (e.data.empty_owned_only) ? "Are you sure you want to remove games you own from your wishlist?\n\nThis action cannot be undone!" : "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!"
+// Removes all items from the user's wishlist
+function empty_wishlist() {
+	var conf_text = "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!";
 	var conf = confirm(conf_text);
 	if (conf) {
-		var wishlist_class = (e.data.empty_owned_only) ? ".wishlistRow.es_highlight_owned" : ".wishlistRow"
+		var wishlist_class = ".wishlistRow";
 		var deferreds = $(wishlist_class).map(function(i, $obj) {
 			var deferred = new $.Deferred();
 			var appid = get_appid_wishlist($obj.id),
