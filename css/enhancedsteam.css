@@ -855,3 +855,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_bad_comment_num {
 	cursor: pointer;
 }
+.es_wishlist_note {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 455px;
+	height: 13px;
+	font-style: italic;
+	margin-top: -3px;
+}
