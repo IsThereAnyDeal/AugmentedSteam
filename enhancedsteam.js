@@ -4656,13 +4656,19 @@ var owned_promise = (function () {
 		var last_updated = getValue("owned_games_time") || expire_time - 1;
 
 		if (last_updated < expire_time) {
-			get_http("//api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0", function(txt) {
-				var data = JSON.parse(txt);
-				$.each(data['response']['games'], function(index, value) {
-					setValue(value['appid'] + "owned", true);
-				});
-				setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
-				deferred.resolve();
+			$.ajax({
+				url:"http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0",
+				success: function(txt) {
+					var data = JSON.parse(txt);
+					$.each(data['response']['games'], function(index, value) {
+						setValue(value['appid'] + "owned", true);
+					});
+					setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
+				},
+				error: function(e){
+					deferred.resolve();
+				}
 			});
 		} else {
 			deferred.resolve();
@@ -4681,16 +4687,22 @@ var wishlist_promise = (function () {
 		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
 		var last_updated = getValue("wishlist_games_time") || expire_time - 1;
 
-		if (last_updated < expire_time) {			
-			get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {				
-				var html = $.parseHTML(txt);
-				$(html).find(".wishlistRow").each(function() {
-					var appid = $(this).attr("id").replace("game_", "");
-					setValue(appid + "wishlisted", true);
-					setValue(appid, parseInt(Date.now() / 1000, 10));
-				});
-				setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
-				deferred.resolve();
+		if (last_updated < expire_time) {
+			$.ajax({
+				url:"http://steamcommunity.com/profiles/" + steamID + "/wishlist",
+				success: function(txt) {
+					var html = $.parseHTML(txt);
+					$(html).find(".wishlistRow").each(function() {
+						var appid = $(this).attr("id").replace("game_", "");
+						setValue(appid + "wishlisted", true);
+						setValue(appid, parseInt(Date.now() / 1000, 10));
+					});
+					setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
+				},
+				error: function(e){
+					deferred.resolve();
+				}
 			});
 		} else {
 			deferred.resolve();
