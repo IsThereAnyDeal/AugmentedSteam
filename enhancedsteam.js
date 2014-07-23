@@ -4688,6 +4688,15 @@ var wishlist_promise = (function () {
 		var last_updated = getValue("wishlist_games_time") || expire_time - 1;
 
 		if (last_updated < expire_time) {
+			// purge stale information from localStorage
+			var i = 0, sKey;
+			for (; sKey = window.localStorage.key(i); i++) {
+				if (sKey.match(/wishlisted/)) {
+					var appid = sKey.match(/\d+/)[0];
+					delValue(appid + "wishlisted");
+				}
+			}
+
 			$.ajax({
 				url:"http://steamcommunity.com/profiles/" + steamID + "/wishlist",
 				success: function(txt) {
