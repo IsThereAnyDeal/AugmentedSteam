@@ -5763,7 +5763,8 @@ function add_achievement_sort() {
 			var parts = unlocktime.match(/(\d{2}) (\d+)(?:, (\d{4}))? \@ (\d+):(\d{2})(am|pm)/);
 			var year = new Date().getFullYear();
 			if (parts[3] === undefined) parts[3] = year;
-			if (parts[6] == "pm") parts[4] = (parseFloat(parts[4]) + 12).toString();
+			if (parts[6] == "pm" && parts[4] != 12) parts[4] = (parseFloat(parts[4]) + 12).toString();
+			if (parts[6] == "am" && parts[4] == 12) parts[4] = (parseFloat(parts[4]) - 12).toString();
 			push[2] = Date.UTC(+parts[3], parts[1]-1, +parts[2], +parts[4], +parts[5]) / 1000;
 			achRows.push(push);
 		});
