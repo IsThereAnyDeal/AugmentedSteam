@@ -1113,35 +1113,52 @@ function add_wishlist_notes() {
 		if (window.location.pathname.startsWith(profile)) {
 			$(".wishlistRow").each(function() {
 				var appid = $(this).attr("id").replace("game_", "");
+				var node = $(this);
 				$(this).find(".bottom_controls .popup_block2 .popup_body2").append("<a class='popup_menu_item2 tight es_add_wishlist_note' id='es_add_wishlist_note_" + appid + "'><h5>Add a wishlist note</h5></a>");
-				if (getValue(appid + "wishlist_note")) {
-					$(this).find("h4").after("<div class='es_wishlist_note'>" + getValue(appid + "wishlist_note") + "</div").css("padding-top", "6px");
-					$("#es_add_wishlist_note_" + appid).find("h5").text("Update wishlist note");
-					if ($(this).find(".es_wishlist_note")[0].scrollWidth > $(this).find(".es_wishlist_note")[0].clientWidth) { $(this).find(".es_wishlist_note").attr("title", getValue(appid + "wishlist_note")); }
-				}
+				storage.get(function(settings) {
+					var key = appid + "wishlist_note";
+					var array = $.map(settings, function(value, index) {
+						if (index == key) return [value];
+					});
+					var wl_note = array[0];
+					if (wl_note) {
+						$(node).find("h4").after("<div class='es_wishlist_note'>" + wl_note.toString() + "</div").css("padding-top", "6px");
+						$("#es_add_wishlist_note_" + appid).find("h5").text("Update wishlist note");
+						if ($(node).find(".es_wishlist_note")[0].scrollWidth > $(node).find(".es_wishlist_note")[0].clientWidth) { $(node).find(".es_wishlist_note").attr("title", wl_note); }
+					}
+				});
 			});
 
 			$(".es_add_wishlist_note").click(function() {
 				$(".popup_block2").hide();
 				var appid = $(this).attr("id").replace("es_add_wishlist_note_", "");
-				if (getValue(appid + "wishlist_note")) {
-					var note = prompt("Update your wishlist note", getValue(appid + "wishlist_note"));
-				} else {
-					var note = prompt("Enter your wishlist note", "");
-				}
-				switch (note) {
-					case null:
-						break;
-					case "":
-						delValue(appid + "wishlist_note");
-						$("#game_" + appid).find(".es_wishlist_note").remove();
-						break;
-					default:
-						setValue(appid + "wishlist_note", note);
-						$("#game_" + appid).find(".es_wishlist_note").remove();
-						$("#game_" + appid).find("h4").after("<div class='es_wishlist_note'>" + getValue(appid + "wishlist_note") + "</div").css("padding-top", "6px");
-						if ($("#game_" + appid).find(".es_wishlist_note")[0].scrollWidth > $("#game_" + appid).find(".es_wishlist_note")[0].clientWidth) { $("#game_" + appid).find(".es_wishlist_note").attr("title", getValue(appid + "wishlist_note")); }
-				}
+				storage.get(function(settings) {
+					var key = appid + "wishlist_note";
+					var obj = {};
+					var array = $.map(settings, function(value, index) {
+						if (index == key) return [value];	
+					});
+					var wl_note = array[0];
+					if (wl_note) {
+						var note = prompt("Update your wishlist note", wl_note);
+					} else {
+						var note = prompt("Enter your wishlist note", "");
+					}
+					switch (note) {
+						case null:
+							break;
+						case "":
+							storage.remove(appid + "wishlist_note");
+							$("#game_" + appid).find(".es_wishlist_note").remove();
+							break;
+						default:
+							obj[key] = note;
+							storage.set(obj);
+							$("#game_" + appid).find(".es_wishlist_note").remove();
+							$("#game_" + appid).find("h4").after("<div class='es_wishlist_note'>" + note + "</div").css("padding-top", "6px");
+							if ($("#game_" + appid).find(".es_wishlist_note")[0].scrollWidth > $("#game_" + appid).find(".es_wishlist_note")[0].clientWidth) { $("#game_" + appid).find(".es_wishlist_note").attr("title", note); }
+					}
+				});
 			});
 		}
 	}
