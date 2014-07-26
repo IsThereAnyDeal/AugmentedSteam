@@ -1,6 +1,7 @@
 v6.5
 -----
 + Added the ability to add notes to games on your wishlist
++ Added current price data when viewing a Steam gift in inventory
 : Fixed a bug that caused achievement sorting not to work correctly
 : Fixed active market listing total to work with new data format
 : Updated highlighting code to be more robust

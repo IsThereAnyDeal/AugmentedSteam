@@ -3544,19 +3544,17 @@ function account_total_spent() {
 }
 
 function inventory_market_prepare() {
-	
 		$("#es_market_helper").remove();
 		var es_market_helper = document.createElement("script");
 		es_market_helper.type = "text/javascript";
 		es_market_helper.id = "es_market_helper";
-		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app] }, "*"); });';
+		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type] }, "*"); });';
 		document.documentElement.appendChild(es_market_helper);
 
 		window.addEventListener("message", function(event) {
 			if (event.source != window)	return;
 			if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
 		}, false);
-
 }
 
 function inventory_market_helper(response) {
@@ -3565,46 +3563,71 @@ function inventory_market_helper(response) {
 	var global_id = response[2];
 	var hash_name = response[3];
 	var appid = response[4];
+	var gift = false;
+	if (response[5] && response[5].match(/Gift/)) gift = true;
 	var html;
 
-	if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
-		if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
-		if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
-		$('.es_item_action').html("");
-		
-		if (marketable == 0) { $('.es_item_action').remove(); return; }
-		$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
-		
-		var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
-		get_http(url, function (txt) {
-			data = JSON.parse(txt);
-			$("#es_item" + item).html("");
-			if (data.success) {
-				html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
-				html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
-				if (data.volume) {
-					html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
+	if (gift) {
+		$("#es_item" + item).remove();
+		if ($("#iteminfo" + item + "_item_actions").find("a").length > 0) {
+			var gift_appid = get_appid($("#iteminfo" + item + "_item_actions").find("a")[0].href);
+			get_http("http://store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
+				var data = JSON.parse(txt);
+				if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
+					var currency = data[gift_appid]["data"]["price_overview"]["currency"];
+					var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
+					var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
+					
+					$("#iteminfo" + item + "_item_actions").css("height", "50px");
+					if (discount > 0) {
+						var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
+						$("#iteminfo" + item + "_item_actions").append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
+					} else {						
+						$("#iteminfo" + item + "_item_actions").append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
+					}	
 				}
-
-				$("#es_item" + item).html(html);
-			} else {
-				$("#es_item" + item).remove();
-			}
-		});
+			});
+		}
 	} else {
-		if (hash_name && hash_name.match(/Booster Pack/g)) {
-			setTimeout(function() {
-				var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|£|pуб)/)[0];
-				var currency_type = currency_symbol_to_type(currency_symbol);
-				var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
+		if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
+			if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
+			if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
+			$('.es_item_action').html("");
+			
+			if (marketable == 0) { $('.es_item_action').remove(); return; }
+			$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
+			
+			var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
+			get_http(url, function (txt) {
+				data = JSON.parse(txt);
+				$("#es_item" + item).html("");
+				if (data.success) {
+					html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
+					html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
+					if (data.volume) {
+						html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
+					}
 
-				get_http(api_url, function(price_data) {				
-					var booster_price = parseFloat(price_data,10) * 3;					
-					html = localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency_type) + "<br>";
-					$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
-					$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
-				});
-			}, 1000);
+					$("#es_item" + item).html(html);
+				} else {
+					$("#es_item" + item).remove();
+				}
+			});
+		} else {
+			if (hash_name && hash_name.match(/Booster Pack/g)) {
+				setTimeout(function() {
+					var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|£|pуб)/)[0];
+					var currency_type = currency_symbol_to_type(currency_symbol);
+					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
+
+					get_http(api_url, function(price_data) {				
+						var booster_price = parseFloat(price_data,10) * 3;					
+						html = localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency_type) + "<br>";
+						$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
+						$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
+					});
+				}, 1000);
+			}
 		}
 	}
 }
