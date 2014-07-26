@@ -943,12 +943,14 @@ function add_wishlist_ajaxremove() {
 		var appid = $(this).parent().parent()[0].id.replace("game_", "");
 		$(this).after("<span class='es_wishlist_remove' id='es_wishlist_remove_" + appid + "'>" + $(this).text() + "</span>");
 		$(this).remove();
+		var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
 
 		$("#es_wishlist_remove_" + appid).on("click", function() {
 			$.ajax({
 				type:"POST",
 				url: window.location,
 				data:{
+					sessionid: session,
 					action: "remove",
 					appid: appid
 				},
@@ -962,9 +964,6 @@ function add_wishlist_ajaxremove() {
 							$('.wishlist_rank')[i].value = $('.wishlist_rank')[i].value - 1;	
 						}
 					}
-				},
-				error: function(e){
-					console.log('Error: ' + e);
 				}
 			});
 		});
