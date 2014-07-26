@@ -6,7 +6,7 @@ v6.5
 : Fixed active market listing total to work with new data format
 : Fixed a bug that would sometimes cause you not to be able to remove an item from your wishlist
 : Updated highlighting code to be more robust
-- Removed button to deleted owned games from wishlist, as Steam now does this automatically
+- Removed button to delete owned games from wishlist, as Steam now does this automatically
 
 
 v6.4.1
