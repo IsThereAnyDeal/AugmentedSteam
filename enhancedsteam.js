@@ -1163,13 +1163,6 @@ function add_wishlist_notes() {
 	}
 }
 
-function add_remove_from_wishlist_button(appid) {
-	if (is_signed_in()) {
-		$(".demo_area_button").find("p").append(" (<span id='es_remove_from_wishlist' style='text-decoration: underline; cursor: pointer;'>" + localized_strings[language].remove + "</span>)");
-		$("#es_remove_from_wishlist").click(function() { remove_from_wishlist(appid); });
-	}
-}
-
 // Removes all items from the user's wishlist
 function empty_wishlist() {
 	var conf_text = "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!";
@@ -1179,17 +1172,21 @@ function empty_wishlist() {
 		var deferreds = $(wishlist_class).map(function(i, $obj) {
 			var deferred = new $.Deferred();
 			var appid = get_appid_wishlist($obj.id),
-				http = new XMLHttpRequest(),
-				profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com/", "");
+				profile = $(".playerAvatar a")[0].href.replace("http://steamcommunity.com/", ""),
+				session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
 
-			http.onreadystatechange = function () {
-				if (this.readyState == 4 && this.status == 200) {
+			$.ajax({
+				type:"POST",
+				url: "http://steamcommunity.com/" + profile + "/wishlist/",
+				data:{
+					sessionid: session,
+					action: "remove",
+					appid: appid
+				},
+				success: function( msg ) {
 					deferred.resolve();
 				}
-			};
-			http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
-			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			http.send("action=remove&appid=" + encodeURIComponent(appid));
+			});
 
 			return deferred.promise();
 		});
@@ -1198,21 +1195,6 @@ function empty_wishlist() {
 			location.reload();
 		});
 	}
-}
-
-function remove_from_wishlist(appid) {
-	var http = new XMLHttpRequest(),
-		profile = $(".user_avatar")[0].href.replace("http://steamcommunity.com/", "");
-
-	http.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			location.reload();
-		}
-	};
-
-	http.open('POST', "http://steamcommunity.com/" + profile + "/wishlist/", true);
-	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	http.send("action=remove&appid=" + encodeURIComponent(appid));
 }
 
 function pack_split(node, ways) {
@@ -6347,7 +6329,6 @@ $(document).ready(function(){
 						add_steamdb_links(appid, "app");
 						add_familysharing_warning(appid);
 						add_dlc_page_link(appid);
-						add_remove_from_wishlist_button(appid);
 						add_pack_breakdown();
 						add_package_info_button();
 						add_steamchart_info(appid);
