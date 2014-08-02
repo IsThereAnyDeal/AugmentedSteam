@@ -3049,7 +3049,7 @@ function add_pcgamingwiki_link(appid) {
 // Add link to Steam Card Exchange
 function add_steamcardexchange_link(appid){
   storage.get(function(settings) {
-    if (settings.showsteamcardexchange === undefined ){ settings.showsteamcardexchange = true; storage.set({'showsteamcards': settings.showsteamcardexchange}); }
+    if (settings.showsteamcardexchange === undefined ){ settings.showsteamcardexchange = true; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
     if (settings.showsteamcardexchange) {
       $("#demo_block").find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="background-image:url(' + chrome.extension.getURL("img/steamcardexchange.png") + ')">' + localized_strings[language].view_in + ' Steam Card Exchange</a></div>');
     }
