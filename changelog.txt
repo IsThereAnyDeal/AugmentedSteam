@@ -1,5 +1,6 @@
 v6.6
 -----
+: Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 
 
 v6.5

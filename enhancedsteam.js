@@ -4014,6 +4014,7 @@ function add_app_badge_progress(appid) {
 
 // Add checkboxes for DLC
 function add_dlc_checkboxes() {
+	var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
 	if ($("#game_area_dlc_expanded").length > 0) {
 		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
 		$(".game_area_dlc_section").after("<div style='clear: both;'></div>");
@@ -4025,7 +4026,7 @@ function add_dlc_checkboxes() {
 		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + $(this).find("input").val() + "' value='" + $(this).find("input").val() + "'><label for='es_select_dlc_" + $(this).find("input").val() + "' style='background-image: url( " + chrome.extension.getURL("img/check_sheet.png") + ");'></label>");
 	});
 	function add_dlc_to_list() {
-		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\">");
+		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\"><input type=\"hidden\" name=\"sessionid\" value=\"" + session + "\">");
 		$(".es_dlc_selection:checked").each(function() {
 			var input = $("<input>", {type: "hidden", name: "subid[]", value: $(this).val() });
 			$("#es_selected_cart").append(input);
