@@ -1,6 +1,10 @@
 v6.6
 -----
 + Added support for Japanese Yen in regional price comparison feature
++ Added Yen support for wishlist totals
++ Added Yen support for pack split calculations
++ Added Yen support for custom wallet amounts
++ Added Yen support for coupon messages
 : Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 
 

@@ -910,7 +910,7 @@ function add_wishlist_total() {
 	function calculate_node(node, search) {
 		price = parseFloat($(node).find(search).text().trim().replace(",", ".").replace(/[^0-9\.]+/g,""));
 		if (price) {
-			currency_symbol = $(node).find(search).text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			currency_symbol = $(node).find(search).text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 			gamelist += $(node).find("h4").text().trim() + ", ";
 			items += 1;
 			total += price;
@@ -1206,12 +1206,12 @@ function pack_split(node, ways) {
 	var price_text = $(node).find(".discount_final_price").html();
 	var at_end, comma, places = 2;
 	if (price_text == null) { price_text = $(node).find(".game_purchase_price").html(); }
-	if (price_text.match(",")) {
+	if (price_text.match(/,\d\d(?!\d)/)) {
 		at_end = true;
 		comma = true;
 		price_text = price_text.replace(",", ".");
 	}
-	var currency_symbol = price_text.match(/(?:R\$|\$|€|£|pуб)/)[0];
+	var currency_symbol = price_text.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 	var currency_type = currency_symbol_to_type(currency_symbol);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
@@ -1494,8 +1494,8 @@ function add_custom_wallet_amount() {
 	$(addfunds).find(".btn_addtocart_content").addClass("es_custom_button");
 	$(addfunds).find("h1").text(localized_strings[language].wallet.custom_amount);
 	$(addfunds).find("p").text(localized_strings[language].wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
-	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
-	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|£|pуб)/, "");
+	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|¥|£|pуб)/, "");
 	var formatted_minimum = minimum;
 	switch (currency_symbol) {
 		case "€":
@@ -2021,51 +2021,30 @@ function display_coupon_message(appid) {
 
 	var $price_div = $("[itemtype=\"http://schema.org/Offer\"]"),
 		cart_id = $(document).find("[name=\"subid\"]")[0].value,
-		actual_price_container = $price_div.find("[itemprop=\"price\"]")[0].innerText,
-		original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", ".")),
-		currency_symbol = actual_price_container.match(/(?:R\$|\$|€|£|pуб)/)[0], // Lazy but effective
-		comma = (actual_price_container.indexOf(",") > -1);
+		actual_price_container = $price_div.find("[itemprop=\"price\"]")[0].innerText,		
+		currency_symbol = actual_price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0], // Lazy but effective
+		currency_type = currency_symbol_to_type(currency_symbol),
+		comma = actual_price_container.search(/,\d\d(?!\d)/);
 
+	if (comma > -1) {
+		actual_price_container = actual_price_container.replace(",", ".");
+	} else {
+		actual_price_container = actual_price_container.replace(",", "");
+	}
+
+	var original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
 	var discounted_price = (original_price - (original_price * getValue(appid + "coupon_discount") / 100).toFixed(2)).toFixed(2);
 
 	if (!($price_div.find(".game_purchase_discount").length > 0 && getValue(appid + "coupon_discount_doesnt_stack"))) {
 		// If not (existing discounts and coupon does not stack)
-
-		if (comma) {
-			currency_symbol = currency_symbol.replace(".", ",");
-			discounted_price = discounted_price.replace(".", ",");
-		}
-
-		var original_price_with_symbol,
-			discounted_price_with_symbol;
-
-		// Super simple way to put currency symbol on correct end
-
-		switch (currency_symbol) {
-			case "€":
-				original_price_with_symbol = original_price + currency_symbol;
-				discounted_price_with_symbol = discounted_price + currency_symbol;
-				break;
-
-			case "pуб":
-				original_price_with_symbol = parseFloat(original_price).toFixed(0) + " " + currency_symbol;
-				discounted_price_with_symbol = parseFloat(discounted_price).toFixed(0) + " " + currency_symbol;
-				break;
-
-			default:
-				original_price_with_symbol = currency_symbol + original_price;
-				discounted_price_with_symbol = currency_symbol + discounted_price;
-				break;
-		}
-
 
 		$price_div[0].innerHTML = ""+
 			"<div class=\"game_purchase_action_bg\">" +
 			"    <div class=\"discount_block game_purchase_discount\">" +
 			"        <div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
 			"        <div class=\"discount_prices\">" +
-			"            <div class=\"discount_original_price\">" + original_price_with_symbol + "</div>" +
-			"            <div class=\"discount_final_price\" itemprop=\"price\">" + discounted_price_with_symbol + "</div>" +
+			"            <div class=\"discount_original_price\">" + formatCurrency(original_price, currency_type) + "</div>" +
+			"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price, currency_type) + "</div>" +
 			"        </div>" +
 			"    </div>" +
 			"<div class=\"btn_addtocart\">" +
@@ -2074,7 +2053,6 @@ function display_coupon_message(appid) {
 			"        <div class=\"btn_addtocart_right\"></div>" +
 			"    </div>" +
 			"</div>";
-
 	}
 }
 
