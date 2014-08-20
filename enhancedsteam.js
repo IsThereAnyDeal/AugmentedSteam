@@ -4703,9 +4703,11 @@ var owned_promise = (function () {
 				url:"http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0",
 				success: function(txt) {
 					var data = JSON.parse(txt);
-					$.each(data['response']['games'], function(index, value) {
-						setValue(value['appid'] + "owned", true);
-					});
+					if (data["requests"]) {
+						$.each(data['response']['games'], function(index, value) {
+							setValue(value['appid'] + "owned", true);
+						});						
+					}
 					setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
 					deferred.resolve();
 				},
