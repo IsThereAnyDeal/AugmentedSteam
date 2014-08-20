@@ -3597,7 +3597,7 @@ function inventory_market_helper(response) {
 		} else {
 			if (hash_name && hash_name.match(/Booster Pack/g)) {
 				setTimeout(function() {
-					var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|£|pуб)/)[0];
+					var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 					var currency_type = currency_symbol_to_type(currency_symbol);
 					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
 
@@ -3725,9 +3725,9 @@ function subscription_savings_check() {
 
 		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
-				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1].replace(",", "."));
-				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|£|pуб)/)[0];
-				if (!comma) comma = (price_container.indexOf(",") > -1);
+				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
+				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
 				itemPrice = 0;
 			}
@@ -3752,7 +3752,7 @@ function subscription_savings_check() {
 		if ($bundle_price.length === 0) $bundle_price = $(".game_area_purchase_game").find(".game_purchase_price");
 
 		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));		
-		if (comma) { bundle_price = bundle_price / 100; }		
+		if (comma > -1) { bundle_price = bundle_price / 100; }		
 		var corrected_price = not_owned_games_prices - bundle_price;
 
 		var $message = $('<div class="savings">' + formatCurrency(corrected_price, currency_type) + '</div>');
@@ -5934,7 +5934,7 @@ function add_gamecard_market_links(game) {
 	});
 
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 		var currency_type = currency_symbol_to_type(currency_symbol);
 
 		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
@@ -5967,6 +5967,10 @@ function add_gamecard_market_links(game) {
 								var card_price = formatCurrency(data[i].price_gbp, currency_type);
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 								break;
+							case "¥":
+								var card_price = formatCurrency(data[i].price_jpy, currency_type);
+								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_jpy);
+								break;
 							default:
 								var card_price = formatCurrency(data[i].price, currency_type);
 								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
@@ -5997,6 +6001,10 @@ function add_gamecard_market_links(game) {
 									var card_price = formatCurrency(data[i].price_gbp, currency_type); 
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
 									break;
+								case "¥":
+									var card_price = formatCurrency(data[i].price_jpy, currency_type);
+									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_jpy);
+									break;
 								default:
 									var card_price = formatCurrency(data[i].price, currency_type);						
 									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
@@ -6025,7 +6033,7 @@ function add_gamecard_market_links(game) {
 function add_badge_completion_cost() {
 	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 		var currency_type = currency_symbol_to_type(currency_symbol);		
 		var total_worth = 0, count = 0;
 		$(".badge_row").each(function() {

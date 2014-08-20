@@ -5,6 +5,8 @@ v6.6
 + Added Yen support for pack split calculations
 + Added Yen support for custom wallet amounts
 + Added Yen support for coupon messages
++ Added Yen support for calculating your bundle savings based on games you own
++ Added Yen support for badge pages
 : Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 
 
