@@ -790,9 +790,8 @@ function load_default_tag_inv_gift_color() { $("#tag_inv_gift_color").val("#a751
 function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").val("#a75124"); }
 
 function load_default_countries() {
-	regional_countries = ["us","gb","eu1","eu2","ru","br","au"];
+	regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"];
 	chrome.storage.sync.set({'regional_countries': regional_countries}, function() {
-		$("#regional_country_8").val("");
 		$("#regional_country_9").val("");
 		$(".es_flag").removeClass().addClass("es_flag");	
 		load_countries();
