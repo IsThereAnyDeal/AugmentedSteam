@@ -84,6 +84,9 @@ function formatCurrency(number, type) {
 			places = 0; symbol = " pуб."; thousand = "."; decimal = ","; right = true;
 			if (number % 1 != 0) { places = 2; }
 			break;
+		case "JPY":
+			places = 0; symbol = "¥ "; thousand = ","; decimal = "."; right = false;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -109,6 +112,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "GBP";
 		case "R$":
 			return "BRL";
+		case "¥":
+			return "JPY";
 		default:
 			return "USD";
 	}
@@ -4281,7 +4286,7 @@ function process_early_access() {
 function show_regional_pricing() {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
-		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au"]; storage.set({'regional_countries': settings.regional_countries}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; storage.set({'regional_countries': settings.regional_countries}); }
 		if (settings.regional_hideworld === undefined) { settings.regional_hideworld = false; storage.set({'regional_hideworld':settings.regional_hideworld}); }
 		if (settings.regional_countries<1){settings.showregionalprice="off";}
 		if (settings.showregionalprice != "off") {
@@ -4296,13 +4301,13 @@ function show_regional_pricing() {
 			var sale;
 			var sub;
 			var region_appended=0;
-			var available_currencies = ["USD","GBP","EUR","BRL","RUB"];
-			var conversion_rates = [1, 1, 1, 1, 1];
+			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
+			var conversion_rates = [1, 1, 1, 1, 1, 1];
 			var currency_symbol;
 
 			// Get user's Steam currency
-			if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)) {
-				currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|£|pуб)/)[0];
+			if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)) {
+				currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 			} else { return; }
 			local_currency = currency_symbol_to_type(currency_symbol);
 

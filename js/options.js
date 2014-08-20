@@ -403,7 +403,7 @@ function load_options() {
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
-		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
 
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }

@@ -1,5 +1,6 @@
 v6.6
 -----
++ Added support for Japanese Yen in regional price comparison feature
 : Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 
 
