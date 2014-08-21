@@ -9,6 +9,7 @@ v6.6
 + Added Yen support for badge pages
 : Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 : Fixed a bug that caused highlighting to break for users with private profiles
+: Fixed an issue where cached inventory data would persist past its expiration
 
 
 v6.5

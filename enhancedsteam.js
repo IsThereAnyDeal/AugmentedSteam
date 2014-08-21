@@ -743,11 +743,18 @@ function load_inventory() {
 		}
 
 		// Yes caching!
-
-		//TODO: Expire delay in options.
 		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 		var last_updated = localStorage.getItem("inventory_time") || expire_time - 1;
 		if (last_updated < expire_time || !localStorage.getItem("inventory_1") || !localStorage.getItem("inventory_3")) {
+			
+			// purge stale information from localStorage
+			var i = 0, sKey;
+			for (; sKey = window.localStorage.key(i); i++) {
+				if (sKey.match(/coupon/)) { delValue(sKey); }
+				if (sKey.match(/card:/)) { delValue(sKey); }
+				if (sKey.match(/gift/)) { delValue(sKey); }
+				if (sKey.match(/guestpass/)) { delValue(sKey); }
+			}
 			localStorage.setItem("inventory_time", parseInt(Date.now() / 1000, 10))
 
 			// Context ID 1 is gifts and guest passes
