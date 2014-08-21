@@ -11,6 +11,7 @@ v6.6
 : Fixed a bug that caused highlighting to break for users with private profiles
 : Fixed an issue where cached inventory data would persist past its expiration
 : Fixed a bug with market totals for some users with certain currencies
+: Fixed a bug where achievement sorting wouldn't work under certain circumstances
 
 
 v6.5
