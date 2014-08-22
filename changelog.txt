@@ -11,10 +11,9 @@ v6.6
 : Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 : Fixed a bug that caused highlighting to break for users with private profiles
 : Fixed an issue where cached inventory data would persist past its expiration
-: Fixed a bug with market totals for some users with certain currencies
+: Fixed a bug with active market totals for some users with certain currencies
 : Fixed a bug where achievement sorting wouldn't work under certain circumstances
 : Fixed a bug which caused the regional price comparison feature not to work on the daily deal
-
 
 v6.5
 -----
