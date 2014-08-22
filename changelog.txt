@@ -7,6 +7,7 @@ v6.6
 + Added Yen support for coupon messages
 + Added Yen support for calculating your bundle savings based on games you own
 + Added Yen support for badge pages
++ Re-wrote total account spent feature to accommodate purchases in multiple currencies
 : Fixed a bug that caused DLC checkboxes not to work correctly due to a change made by Valve
 : Fixed a bug that caused highlighting to break for users with private profiles
 : Fixed an issue where cached inventory data would persist past its expiration
