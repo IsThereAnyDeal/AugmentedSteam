@@ -4371,12 +4371,6 @@ function show_regional_pricing() {
 			});
 			
 			function process_data(conversion_array) {
-				// Clean up conversion script DOM nodes
-				$.each(available_currencies, function(index, currency_type) {
-					$("#es_compare_" + local_currency + "_" + currency_type).remove();					
-				});
-				$("#es_helper").remove();
-
 				if (/^\/$/.test(window.location.pathname)) {
 					dailydeal = true;
 					pricing_div = $(pricing_div).addClass("es_regional_dailydeal");
@@ -4448,7 +4442,7 @@ function show_regional_pricing() {
 				}
 
 				$.each(all_game_areas,function(index,app_package){
-					var subid = $(app_package).find("input").last().val();
+					var subid = $(app_package).find("input[name='subid']").val();
 					if(subid>0){
 						subid_info[index]=[];
 						subid_info[index]["subid"]=subid;
@@ -4586,7 +4580,7 @@ function show_regional_pricing() {
 								}	
 							});
 							$.each(all_game_areas,function(index,app_package){
-								var subid = $(app_package).find("input").last().val();
+								var subid = $(app_package).find("input[name='subid']").val();
 								if(subid){
 									if (settings.showregionalprice == "mouse") {
 										if(!(settings.regional_hideworld)){

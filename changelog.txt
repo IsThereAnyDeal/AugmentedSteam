@@ -13,6 +13,7 @@ v6.6
 : Fixed an issue where cached inventory data would persist past its expiration
 : Fixed a bug with market totals for some users with certain currencies
 : Fixed a bug where achievement sorting wouldn't work under certain circumstances
+: Fixed a bug which caused the regional price comparison feature not to work on the daily deal
 
 
 v6.5
