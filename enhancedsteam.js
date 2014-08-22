@@ -3482,18 +3482,18 @@ function account_total_spent() {
 									complete += 1;
 									setValue(currency_type + "to" + local_currency, parseFloat(txt));
 									setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
-									if (complete == 5) get_total();
+									if (complete == available_currencies.length - 1) get_total();
 								});
 							} else {
 								complete += 1;
-								if (complete == 5) get_total();
+								if (complete == available_currencies.length - 1) get_total();
 							}
 						} else {
 							get_http("//firefox.enhancedsteam.com/api/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 								complete += 1;
 								setValue(currency_type + "to" + local_currency, parseFloat(txt));
 								setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
-								if (complete == 5) get_total();
+								if (complete == available_currencies.length - 1) get_total();
 							});
 						}
 					}
@@ -4351,12 +4351,12 @@ function show_regional_pricing() {
 								conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
 								setValue(currency_type + "to" + local_currency, parseFloat(txt));
 								setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
-								if (complete == 4) process_data(conversion_rates);
+								if (complete == available_currencies.length - 1) process_data(conversion_rates);
 							});
 						} else {
 							complete += 1;
 							conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
-							if (complete == 4) process_data(conversion_rates);
+							if (complete == available_currencies.length - 1) process_data(conversion_rates);
 						}	
 					} else {
 						get_http("http://api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
@@ -4364,7 +4364,7 @@ function show_regional_pricing() {
 							conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
 							setValue(currency_type + "to" + local_currency, parseFloat(txt));
 							setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
-							if (complete == 4) process_data(conversion_rates);
+							if (complete == available_currencies.length - 1) process_data(conversion_rates);
 						});
 					}
 				}
