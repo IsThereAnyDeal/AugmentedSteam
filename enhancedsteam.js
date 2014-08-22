@@ -3219,163 +3219,62 @@ function add_market_total() {
 				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings[language].market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="http://cdn.steamcommunity.com/public/images/login/throbber.gif"><span>'+ localized_strings[language].loading +'</span></div></div></div>');
 
 				var pur_total = 0.0;
-				var usd_total = 0.0;
-				var gbp_total = 0.0;
-				var eur_total = 0.0;
-				var rub_total = 0.0;
-				var brl_total = 0.0;
+				var sale_total = 0.0;
 				var currency_symbol = "";
 
 				function get_market_data(txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
-					var total_count = data["total_count"];
+					if (!currency_symbol) currency_symbol = $(market).find(".market_listing_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
 					
-					totaler = function (p, i) {
-						var priceContainer = $(p).find(".market_listing_price");
-						if (priceContainer.length > 0) {
+					pur_totaler = function (p, i) {
+						if ($(p).find(".market_listing_price").length > 0) {
 							if (p.innerHTML.match(/\+.+<\/div>/)) {
-								var priceText = $(priceContainer).text().trim();
-
-								currency_symbol = priceText.match(/(?:R\$|\$|€|£|pуб)/)[0];
-
-								var regex = /(\d+[.,]?\d+)/,
-									price = regex.exec(priceText);
-
-								if (price !== null && price !== "Total") {
+								var price = $(p).find(".market_listing_price").text().trim().match(/(\d+[.,]?\d+)/);
+								if (price !== null) {
 									var tempprice = price[0].toString();
-									tempprice = tempprice.replace(",", ".");
+									tempprice = tempprice.replace(/,(\d\d)$/, ".$1");
+									tempprice = tempprice.replace(/,/g, "");
 									return parseFloat(tempprice);
 								}
 							}
 						}
 					};
 
-					usd_totaler = function (p, i) {
-						var priceContainer = $(p).find(".market_listing_price");
-						if (priceContainer.length > 0) {
+					sale_totaler = function (p, i) {
+						if ($(p).find(".market_listing_price").length > 0) {
 							if (p.innerHTML.match(/-.+<\/div>/)) {
-								var priceText = $(priceContainer).text().trim();
-								var regex = /(\d+[.,]\d\d+)/,
-									price = regex.exec(priceText);
-
-								if (priceText.match(/^\$/)) {
-									if (price !== null && price !== "Total") {
-										var tempprice = price[0].toString();
-										tempprice = tempprice.replace(",", ".");
-										return parseFloat(tempprice);
-									}
+								var price = $(p).find(".market_listing_price").text().trim().match(/(\d+[.,]?\d+)/);
+								if (price !== null) {
+									var tempprice = price[0].toString();
+									tempprice = tempprice.replace(/,(\d\d)$/, ".$1");
+									tempprice = tempprice.replace(/,/g, "");
+									return parseFloat(tempprice);
 								}
 							}
 						}
 					};
 
-					gbp_totaler = function (p, i) {
-						var priceContainer = $(p).find(".market_listing_price");
-						if (priceContainer.length > 0) {
-							if (p.innerHTML.match(/-.+<\/div>/)) {
-								var priceText = $(priceContainer).text().trim();
-								var regex = /(\d+[.,]\d\d+)/,
-									price = regex.exec(priceText);
-
-								if (priceText.match(/^£/)) {
-									if (price !== null && price !== "Total") {
-										var tempprice = price[0].toString();
-										tempprice = tempprice.replace(",", ".");
-										return parseFloat(tempprice);
-									}
-								}
-							}
-						}
-					};
-
-					eur_totaler = function (p, i) {
-						var priceContainer = $(p).find(".market_listing_price");
-						if (priceContainer.length > 0) {
-							if (p.innerHTML.match(/-.+<\/div>/)) {
-								var priceText = $(priceContainer).text().trim();
-								var regex = /(\d+[.,]\d\d+)/,
-									price = regex.exec(priceText);
-
-								if (priceText.match(/€/)) {
-									if (price !== null && price !== "Total") {
-										var tempprice = price[0].toString();
-										tempprice = tempprice.replace(",", ".");
-										return parseFloat(tempprice);
-									}
-								}
-							}
-						}
-					};
-
-					rub_totaler = function (p, i) {
-						var priceContainer = $(p).find(".market_listing_price");
-						if (priceContainer.length > 0) {
-							if (p.innerHTML.match(/-.+<\/div>/)) {
-								var priceText = $(priceContainer).text().trim();
-								var regex = /(\d+[.,]\d\d+)/,
-									price = regex.exec(priceText);
-
-								if (priceText.match(/pуб/)) {
-									if (price !== null && price !== "Total") {
-										var tempprice = price[0].toString();
-										tempprice = tempprice.replace(",", ".");
-										return parseFloat(tempprice);
-									}
-								}
-							}
-						}
-					};
-
-					brl_totaler = function (p, i) {
-						var priceContainer = $(p).find(".market_listing_price");
-						if (priceContainer.length > 0) {
-							if (p.innerHTML.match(/-.+<\/div>/)) {
-								var priceText = $(priceContainer).text().trim();
-								var regex = /(\d+[.,]\d\d+)/,
-									price = regex.exec(priceText);
-
-								if (priceText.match(/^R\$/)) {
-									if (price !== null && price !== "Total") {
-										var tempprice = price[0].toString();
-										tempprice = tempprice.replace(",", ".");
-										return parseFloat(tempprice);
-									}
-								}
-							}
-						}
-					};
-
-					pur_prices = jQuery.map($(market), totaler);
-					usd_prices = jQuery.map($(market), usd_totaler);
-					gbp_prices = jQuery.map($(market), gbp_totaler);
-					eur_prices = jQuery.map($(market), eur_totaler);
-					rub_prices = jQuery.map($(market), rub_totaler);
-					brl_prices = jQuery.map($(market), brl_totaler);
+					pur_prices = jQuery.map($(market), pur_totaler);
+					sale_prices = jQuery.map($(market), sale_totaler);
 
 					jQuery.map(pur_prices, function (p, i) { pur_total += p; });
-					jQuery.map(usd_prices, function (p, i) { usd_total += p; });
-					jQuery.map(gbp_prices, function (p, i) { gbp_total += p; });
-					jQuery.map(eur_prices, function (p, i) { eur_total += p; });
-					jQuery.map(rub_prices, function (p, i) { rub_total += p; });
-					jQuery.map(brl_prices, function (p, i) { brl_total += p; });
+					jQuery.map(sale_prices, function (p, i) { sale_total += p; });
 				}
 
 				function show_results() {
 					var currency_type = currency_symbol_to_type(currency_symbol);
-					get_http("http://api.enhancedsteam.com/currency/?usd=" + usd_total + "&gbp=" + gbp_total + "&eur=" + eur_total + "&rub=" + rub_total + "$brl=" + brl_total + "&local=" + currency_type.toLowerCase(), function (txt) {
-						var net = txt - pur_total;
+					var net = sale_total - pur_total;
 
-						var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total), currency_type) + "</span><br>";
-						html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(txt), currency_type) + "</span><br>";
-						if (net > 0) {
-							html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
-						} else {
-							html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
-						}
+					var html = localized_strings[language].purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total), currency_type) + "</span><br>";
+					html += localized_strings[language].sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(sale_total), currency_type) + "</span><br>";
+					if (net > 0) {
+						html += localized_strings[language].net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+					} else {
+						html += localized_strings[language].net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+					}
 
-						$("#es_market_summary").html(html);
-					});
+					$("#es_market_summary").html(html);
 				}
 
 				var start = 0;
