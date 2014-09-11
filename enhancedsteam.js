@@ -15,7 +15,13 @@ var total_requests = 0;
 var processed_requests = 0;
 
 var cookie = document.cookie;
-var language = cookie.match(/language=([a-z]{3})/i)[1];
+
+if (cookie.match(/steam_language=([a-z]{3})/i)) {
+	var language = cookie.match(/steam_language=([a-z]{3})/i)[1];
+} else {
+	var language = "eng";
+}
+
 if (localized_strings[language] === undefined) { language = "eng"; }
 
 // Set language for options page
