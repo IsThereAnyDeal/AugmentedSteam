@@ -1,5 +1,6 @@
 v6.7
 -----
++ Added SteamCardExchange link to applicable app pages
 
 
 v6.6
