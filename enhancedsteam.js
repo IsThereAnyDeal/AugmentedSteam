@@ -132,6 +132,9 @@ function formatCurrency(number, type) {
 		case "AUD":
 			places = 2; symbol = "A$ "; thousand = ","; decimal = "."; right = false;
 			break;
+		case "NZD":
+			places = 2; symbol = "NZ$ "; thousand = ","; decimal = "."; right = false;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -185,6 +188,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "CAD";
 		case "A$":
 			return "AUD";
+		case "NZ$":
+			return "NZD";
 		default:
 			return "USD";
 	}
@@ -192,8 +197,8 @@ function currency_symbol_to_type (currency_symbol) {
 
 function currency_symbol_from_string (string_with_symbol) {
 	var return_string = "";
-	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$)/)) {
-		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$)/)[0];
+	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)[0];
 	}
 	return return_string;
 }
