@@ -4321,8 +4321,8 @@ function show_regional_pricing() {
 			var sale;
 			var sub;
 			var region_appended=0;
-			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
-			var conversion_rates = [1, 1, 1, 1, 1, 1];
+			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
+			var conversion_rates = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 			var currency_symbol;
 
 			// Get user's Steam currency
