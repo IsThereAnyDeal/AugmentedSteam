@@ -102,6 +102,9 @@ function formatCurrency(number, type) {
 		case "IDR":
 			places = 2; symbol = "Rp "; thousand = ""; decimal = "."; right = false;
 			break;
+		case "PHP":
+			places = 2; symbol = "P"; thousand = ","; decimal = "."; right = false;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -135,6 +138,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "IDR";
 		case "RM":
 			return "MYR";
+		case "P":
+			return "PHP";
 		default:
 			return "USD";
 	}
@@ -142,8 +147,8 @@ function currency_symbol_to_type (currency_symbol) {
 
 function currency_symbol_from_string (string_with_symbol) {
 	var return_string = "";
-	if (string_with_symbol.match(/(?:R\$|\$|RM|kr|Rp|€|¥|£|pуб)/)) {
-		return_string = string_with_symbol.match(/(?:R\$|\$|RM|kr|Rp|€|¥|£|pуб)/)[0];
+	if (string_with_symbol.match(/(?:R\$|\$|RM|kr|Rp|€|¥|£|pуб|P)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|\$|RM|kr|Rp|€|¥|£|pуб|P)/)[0];
 	}
 	return return_string;
 }
