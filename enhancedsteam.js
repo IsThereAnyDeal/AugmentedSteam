@@ -120,6 +120,9 @@ function formatCurrency(number, type) {
 		case "TRY":
 			places = 2; symbol = " TL"; thousand = ""; decimal = ","; right = true;
 			break;
+		case "UAH":
+			places = 2; symbol = "₴"; thousand = ""; decimal = ","; right = true;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -165,6 +168,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "KRW";
 		case "TL":
 			return "TRY";
+		case "₴":
+			return "UAH";
 		default:
 			return "USD";
 	}
@@ -172,8 +177,8 @@ function currency_symbol_to_type (currency_symbol) {
 
 function currency_symbol_from_string (string_with_symbol) {
 	var return_string = "";
-	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL)/)) {
-		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL)/)[0];
+	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴)/)[0];
 	}
 	return return_string;
 }
