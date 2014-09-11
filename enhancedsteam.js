@@ -96,6 +96,9 @@ function formatCurrency(number, type) {
 		case "MYR":
 			places = 2; symbol = "RM"; thousand = ","; decimal = "."; right = false;
 			break;
+		case "NOK":
+			places = 2; symbol = " kr"; thousand = "."; decimal = ","; right = true;
+			break;	
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -123,6 +126,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "BRL";
 		case "¥":
 			return "JPY";
+		case "kr":
+			return "NOK";
 		case "RM":
 			return "MYR";
 		default:
@@ -132,8 +137,8 @@ function currency_symbol_to_type (currency_symbol) {
 
 function currency_symbol_from_string (string_with_symbol) {
 	var return_string = "";
-	if (string_with_symbol.match(/(?:R\$|\$|RM|€|¥|£|pуб)/)) {
-		return_string = string_with_symbol.match(/(?:R\$|\$|RM|€|¥|£|pуб)/)[0];
+	if (string_with_symbol.match(/(?:R\$|\$|RM|kr|€|¥|£|pуб)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|\$|RM|kr|€|¥|£|pуб)/)[0];
 	}
 	return return_string;
 }
