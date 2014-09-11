@@ -111,6 +111,9 @@ function formatCurrency(number, type) {
 		case "THB":
 			places = 2; symbol = "฿"; thousand = ","; decimal = "."; right = false;
 			break;
+		case "VND":
+			places = 2; symbol = "₫"; thousand = ","; decimal = "."; right = false;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -150,6 +153,8 @@ function currency_symbol_to_type (currency_symbol) {
 			return "SGD";
 		case "฿":
 			return "THB";
+		case "₫":
+			return "VND";
 		default:
 			return "USD";
 	}
@@ -157,8 +162,8 @@ function currency_symbol_to_type (currency_symbol) {
 
 function currency_symbol_from_string (string_with_symbol) {
 	var return_string = "";
-	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P)/)) {
-		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P)/)[0];
+	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫)/)[0];
 	}
 	return return_string;
 }
