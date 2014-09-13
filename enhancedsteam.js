@@ -1489,7 +1489,10 @@ function add_language_warning() {
 	storage.get(function(settings) {
 		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
 		if (settings.showlanguagewarning) {
-			var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+			var currentLanguage = "English";
+			if (cookie.match(/language=([a-z]+)/i)) {
+				currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+			}
 			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
 			function make_language_pretty(language_string) {
