@@ -1412,7 +1412,7 @@ function add_wallet_balance_to_header() {
 // Add a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
 	$dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
-	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
+	$dropdown_options_container = $("<div class=\"popup_block_new\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
 	$dropdown_options.css("display", "none");
 
@@ -1457,8 +1457,8 @@ function add_enhanced_steam_options() {
 	$dropdown_options.append($donation_link);
 
 	$("#global_action_menu")
-		.before($dropdown)
-		.before($dropdown_options_container);
+		.prepend($dropdown_options_container)
+		.prepend($dropdown);
 
 	$("#global_actions").after("<progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings[language].ready.ready + "'></progress>");
 }
