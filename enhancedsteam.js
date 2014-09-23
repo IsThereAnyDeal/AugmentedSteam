@@ -1345,10 +1345,9 @@ function add_package_info_button() {
 		if (settings.show_package_info) {
 			$(".game_area_purchase_game_wrapper").each(function() {
 				if ($(this).find(".btn_packageinfo").length == 0) {
-					var htmlstr = '<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div>';
+					var htmlstr = '<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">';
 					var subid = $(this).find("input[name=subid]").val();
-					htmlstr += '<a class="btn_addtocart_content" href="http://store.steampowered.com/sub/' + subid + '/">' + localized_strings[language].package_info + '</a>';
-					htmlstr += '<div class="btn_addtocart_right"></div></div></div>';
+					htmlstr += '<a class="btnv6_blue_blue_innerfade btn_medium" href="http://store.steampowered.com/sub/' + subid + '/"><span>' + localized_strings[language].package_info + '</span></a></div></div>';					
 					$(this).find(".game_purchase_action").prepend(htmlstr);
 				}
 			});
