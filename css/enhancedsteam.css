@@ -436,7 +436,7 @@ img.platform_small, .platform_img {
 	display: none;
 	z-index:999;	
 	position:absolute;
-	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
+	background: linear-gradient(to bottom, #33425A 5%,#282F3D 100%);
 	padding: 7px 8px;
 	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
 	border:1px solid black;
@@ -522,7 +522,7 @@ img.platform_small, .platform_img {
 
 .es_overlay {
 	position: absolute;
-	z-index: 999;
+	z-index: 4;
 }
 .es_card_search {
 	padding:0px 2px;

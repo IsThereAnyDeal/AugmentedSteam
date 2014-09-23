@@ -4174,7 +4174,6 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 				if (selector_modifier != undefined) selector += selector_modifier;
 				overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
 				$(overlay_img).css({"left":image_left+"px"});
-				console.log ($(node).find(selector.trim()));
 				$(node).find(selector.trim()).before(overlay_img);
 				break;
 		}
@@ -4527,7 +4526,9 @@ function show_regional_pricing() {
 												$(".game_area_purchase_game").eq(index).find(".game_purchase_action").before(app_pricing_div);
 												break;
 											default:
-												$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+												$(".game_area_purchase_game").eq(index).append(app_pricing_div);
+												$(app_pricing_div).css("top", $(".game_area_purchase_game").eq(index).outerHeight(true));
+												$(".game_area_purchase_game").css("z-index", "auto");
 												break;
 										}
 									}
@@ -4566,7 +4567,7 @@ function show_regional_pricing() {
 									if(region_appended<=1){
 										$("#es_pricing_"+subid).find(".miniprofile_arrow").css("top","6px");
 									}
-								}	
+								}
 							});
 							$.each(all_game_areas,function(index,app_package){
 								var subid = $(app_package).find("input[name='subid']").val();
@@ -4585,9 +4586,9 @@ function show_regional_pricing() {
 											} else if(sale) {
 												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
 											} else if(sub) {
-												$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 45 +"px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 45 + "px");
 											} else {
-												$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 35 +"px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 20 + "px");
 											}
 											$("#es_pricing_" + subid).show();
 										})
