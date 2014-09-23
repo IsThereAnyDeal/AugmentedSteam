@@ -1693,6 +1693,7 @@ function show_library() {
 	$(".home_page_content").remove();
 	$("body").css("background", "black");
 	$(".game").remove();
+	$(".page_background").remove();
 
 	// Create Library divs
 	var es_library = $("<div id='es_library_content'></div>");
@@ -3111,7 +3112,7 @@ function add_pcgamingwiki_link(appid) {
 					var data = JSON.parse(txt);
 					for (var game_name in data["results"]) break;
 					var url = data["results"][game_name]["fullurl"];
-					$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url(' + chrome.extension.getURL("img/pcgw.png") + ')">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
+					$('#demo_block').prepend('<a class="btnv6_blue_hoverfade btn_medium pcgw_btn" target="_blank" href="' + url + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/pcgw.png") + ')"></i>&nbsp;&nbsp; ' + localized_strings[language].wiki_article.replace("__pcgw__","PCGamingWiki") + '</span></a>');
 				}
 			});
 		}
@@ -3124,7 +3125,7 @@ function add_steamcardexchange_link(appid){
     if (settings.showsteamcardexchange === undefined ){ settings.showsteamcardexchange = false; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
     if (settings.showsteamcardexchange) {
     	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
-      		$("#demo_block").find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="background-image:url(' + chrome.extension.getURL("img/steamcardexchange.png") + ')">' + localized_strings[language].view_in + ' Steam Card Exchange</a></div>');
+      		$("#demo_block").prepend('<a class="btnv6_blue_hoverfade btn_medium cardexchange_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/steamcardexchange.png") + ')"></i>&nbsp;&nbsp; ' + localized_strings[language].view_in + ' Steam Card Exchange</span></a>');
       	}
     }
   });
