@@ -368,13 +368,13 @@ function load_options() {
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
-		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#868f9d";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	chrome.storage.sync.set({'tag_owned_color': settings.tag_owned_color});	}
-		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#496e93";	chrome.storage.sync.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#868f9d";	chrome.storage.sync.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269";	chrome.storage.sync.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124";	chrome.storage.sync.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
@@ -778,13 +778,13 @@ function change_flag(node, selectnode) {
 }
 
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
-function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color").val("#496e93"); }
+function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color").val("#868f9d"); }
 function load_default_highlight_coupon_color() { $("#highlight_coupon_color").val("#6b2269"); }
 function load_default_highlight_inv_gift_color() { $("#highlight_inv_gift_color").val("#a75124"); }
 function load_default_highlight_inv_guestpass_color() { $("#highlight_inv_guestpass_color").val("#a75124"); }
 
 function load_default_tag_owned_color() { $("#tag_owned_color").val("#5c7836"); }
-function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#496e93"); }
+function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#868f9d"); }
 function load_default_tag_coupon_color() { $("#tag_coupon_color").val("#6b2269"); }
 function load_default_tag_inv_gift_color() { $("#tag_inv_gift_color").val("#a75124"); }
 function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").val("#a75124"); }
