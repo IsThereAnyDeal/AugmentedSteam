@@ -1689,6 +1689,10 @@ function show_library() {
 	$("#game_background_holder").remove();
 	$("#modalBG").remove();
 	$("#page_background_holder").remove();
+	$(".home_ctn").remove();
+	$(".home_page_content").remove();
+	$("body").css("background", "black");
+	$(".game").remove();
 
 	// Create Library divs
 	var es_library = $("<div id='es_library_content'></div>");
