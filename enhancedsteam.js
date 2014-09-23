@@ -360,6 +360,15 @@ function highlight_inv_guestpass(node) {
 	});
 }
 
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 function highlight_node(node, color) {
 	var $node = $(node);
 	// Carousel item
@@ -385,11 +394,15 @@ function highlight_node(node, color) {
 		return;
 	}
 
+	var rgb = hexToRgb(color);
+
 	$node.css("backgroundImage", "none");
-	$node.css("backgroundColor", color);
+	$node.css("background", "linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.8) 100%)");
+
+	$(node).find(".ds_flag").remove();
 
 	// Set text colour to not conflict with highlight
-	if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
+	if (node.classList.contains("tab_item")) $node.find("div").css("color", "lightgrey");
 	if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 }
 
