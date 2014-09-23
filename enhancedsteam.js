@@ -1585,7 +1585,7 @@ function replace_account_name() {
 function add_custom_wallet_amount() {
 	var addfunds = $(".addfunds_area_purchase_game:first").clone();
 	$(addfunds).addClass("es_custom_funds");
-	$(addfunds).find(".btn_addtocart_content").addClass("es_custom_button");
+	$(addfunds).find(".btnv6_green_white_innerfade").addClass("es_custom_button");
 	$(addfunds).find("h1").text(localized_strings[language].wallet.custom_amount);
 	$(addfunds).find("p").text(localized_strings[language].wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
 	var currency_symbol = currency_symbol_from_string($(addfunds).find(".price").text().trim());
