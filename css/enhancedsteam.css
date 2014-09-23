@@ -350,6 +350,10 @@ img.platform_small, .platform_img {
 	display: block !important;
 }
 
+#chart-heading {
+	background-color: rgba(0,0,0,0);
+}
+
 #chart-heading img {
 	vertical-align: middle;
 }
