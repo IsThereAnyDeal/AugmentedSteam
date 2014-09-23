@@ -2388,10 +2388,13 @@ function drm_warnings(type) {
 
 // Remove all items from cart
 function add_empty_cart_button() {
-	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + localized_strings[language].empty_cart + "</a>";
+	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings[language].empty_cart + "</span></a>";
 
 	jQuery('.checkout_content').each(function () {
 		$(this).prepend(addtext);
+		if ($(".cart_row").length === 0) {
+			$(".es_empty").addClass("btn_disabled");
+		}
 	});
 }
 
