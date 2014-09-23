@@ -3057,31 +3057,17 @@ function add_metacritic_userscore() {
 function add_steamreview_userscore(appid) {
 	if ($(".game_area_dlc_bubble,.noReviewsYetTitle").length === 0) {
 		var positive = 0,
-			negative = 0,
-			getResults = function(data) {
-				$(".thumb",data).each(function() {
-					if ($(this).html().match(/icon_thumbsUp/)) positive++; else negative++;
-				});
-			};
-		$(".game_details").find(".details_block:first").before("<div id='es_review_score'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
+			negative = 0;
 
-		$.when(
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=0&p=1&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=10&p=2&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=20&p=3&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=30&p=4&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=40&p=5&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults)
-		).then(function() {
-			var pos_percent = ((positive / (positive + negative)) * 100).toFixed(0),
-				neg_percent = ((negative / (positive + negative)) * 100).toFixed(0);
-			if (!isNaN(pos_percent) && !isNaN(neg_percent)) {
-				$("#es_review_score").html('<div style="display: inline-block; margin-right: 25px;"><img src="http://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + pos_percent + '%</span></div><div style="display: inline-block;"><img src="http://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + neg_percent + '%</span></div><div style="clear: both;"></div>');
-			} else {
-				$("#es_review_score").remove();
-			}
-		},function() {
-			$("#es_review_score").remove();
-		});
+		positive = parseFloat($("#ReviewsTab_positive").find("span:last").text().replace(/\(|\)|,/g, ""));
+		negative = parseFloat($("#ReviewsTab_negative").find("span:last").text().replace(/\(|\)|,/g, ""));
+
+		var pos_percent = ((positive / (positive + negative)) * 100).toFixed(0),
+			neg_percent = ((negative / (positive + negative)) * 100).toFixed(0);
+
+		if (!isNaN(pos_percent) && !isNaN(neg_percent)) {
+			$(".game_details").find(".details_block:first").before('<div id="es_review_score"><div style="display: inline-block; margin-right: 25px;"><img src="http://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + pos_percent + '%</span></div><div style="display: inline-block;"><img src="http://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + neg_percent + '%</span></div><div style="clear: both;"></div></div>');
+		}
 	}
 }
 
