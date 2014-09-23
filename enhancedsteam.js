@@ -4158,6 +4158,11 @@ var ea_appids, ea_promise = (function () {
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
+	if (appid === null) { 
+		if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
+			appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+		}
+	}
 	var early_access = JSON.parse(ea_appids);
 	if (early_access["ea"].indexOf(appid) >= 0) {
 		switch (action) {
@@ -4168,13 +4173,9 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 				var selector = "img";
 				if (selector_modifier != undefined) selector += selector_modifier;
 				overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
-				if($(node).hasClass("small_cap")) {
-					$(overlay_img).css({"left":"-"+node.width()+"px", "position":"relative"});
-				}
-				else {
-					$(overlay_img).css({"left":image_left+"px"});
-				}
-				$(node).find(selector.trim()).after(overlay_img);
+				$(overlay_img).css({"left":image_left+"px"});
+				console.log ($(node).find(selector.trim()));
+				$(node).find(selector.trim()).before(overlay_img);
 				break;
 		}
 	}
@@ -4228,6 +4229,7 @@ function process_early_access() {
 									case /^\/app\/.*/.test(window.location.pathname):									
 										$(".game_header_image").append("<a href='" + window.location.href + "'></a>");
 										$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+										$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
 										break;
 									case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
 										$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
@@ -4254,11 +4256,15 @@ function process_early_access() {
 										break;
 									case /^\/$/.test(window.location.pathname):					
 										$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-										$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+										$(".home_smallcap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
 										$(".cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 										$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 										$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 										$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+										$(".recommended_spotlight_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+										$(".curated_app_link").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+										$(".tab_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0, ":last"); });
+										$(".dailydeal_cap").find("a").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 										break;
 								}
 							case "steamcommunity.com":

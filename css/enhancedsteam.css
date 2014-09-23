@@ -522,7 +522,7 @@ img.platform_small, .platform_img {
 
 .es_overlay {
 	position: absolute;
-	z-index: 0;
+	z-index: 999;
 }
 .es_card_search {
 	padding:0px 2px;
