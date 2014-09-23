@@ -4514,6 +4514,7 @@ function show_regional_pricing() {
 												$(".game_area_purchase_game").eq(index).append(app_pricing_div);
 												$(app_pricing_div).css("top", $(".game_area_purchase_game").eq(index).outerHeight(true));
 												$(".game_area_purchase_game").css("z-index", "auto");
+												$(".game_purchase_action").css("z-index", "1");
 												break;
 										}
 									}
