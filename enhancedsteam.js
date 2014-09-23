@@ -2322,6 +2322,7 @@ function drm_warnings(type) {
 			text += $("#game_area_sys_req").html();
 			text += $("#game_area_legal").html();
 			text += $(".game_details").html();
+			text += $(".DRM_notice").html();
 
 			// Games for Windows Live detection
 			if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
