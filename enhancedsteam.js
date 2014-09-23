@@ -2677,26 +2677,28 @@ function add_popular_tab() {
 		$("#es_popular").addClass("active");
 		$("#tab_popular_content").show();
 
-		get_http("http://store.steampowered.com/stats", function(txt) {
-			var return_text = $.parseHTML(txt);
-			var i = 0;
-			$(return_text).find(".player_count_row").each(function() {
-				if (i < 10) {
-					var appid = get_appid($(this).find("a").attr("href"));
-					var game_name = $(this).find("a").text();
-					var currently = $(this).find(".currentServers:first").text();
-					var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
-					html += "<a class='tab_item_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='http://store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-					html += "<img class='tab_item_cap' src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
-					html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'>" + currently + " " + localized_strings[language].charts.playing_now + "</div><br clear='all'></div>";
+		if ($("#tab_popular_content").find("div").length == 0) {
+			get_http("http://store.steampowered.com/stats", function(txt) {
+				var return_text = $.parseHTML(txt);
+				var i = 0;
+				$(return_text).find(".player_count_row").each(function() {
+					if (i < 10) {
+						var appid = get_appid($(this).find("a").attr("href"));
+						var game_name = $(this).find("a").text();
+						var currently = $(this).find(".currentServers:first").text();
+						var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
+						html += "<a class='tab_item_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='http://store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
+						html += "<img class='tab_item_cap' src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+						html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'>" + currently + " " + localized_strings[language].charts.playing_now + "</div><br clear='all'></div>";
 
-					html += "</div>";
-					$("#tab_popular_content").append(html);
-					i++;
-				}
+						html += "</div>";
+						$("#tab_popular_content").append(html);
+						i++;
+					}
+				});
+				$("#tab_popular_content").append("<div class='tab_see_more'>See more: <a href='http://store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>Popular Games</span></a></div>");
 			});
-			$("#tab_popular_content").append("<div class='tab_see_more'>See more: <a href='http://store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>Popular Games</span></a></div>");
-		});
+	}
 	});
 }
 
