@@ -2630,15 +2630,8 @@ function remove_non_specials() {
 function set_homepage_tab() {
 	storage.get(function(settings) {
 		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; storage.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
-		$(".tabarea .tabbar").find("div").on("click", function(e) {
-			var current_button;
-			var button_id = $(this).attr("id");
-			if (button_id == "es_popular") {
-				current_button = "es_popular";
-			} else {
-				var button = $(this).attr("onclick").match(/TabSelect\( this, '(.+)'/)[1];
-				current_button = button;
-			}
+		$(".home_tabs_row").find("div").on("click", function(e) {
+			var current_button = $(this).parent().attr("id");			
 			storage.set({'homepage_tab_last': current_button});
 		});
 
@@ -2646,22 +2639,7 @@ function set_homepage_tab() {
 			settings.homepage_tab_selection = settings.homepage_tab_last;
 		}
 
-		switch (settings.homepage_tab_selection) {
-			case "tab_3_content":
-				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_3_content\' );']").click();
-				break;
-			case "tab_2_content":
-				break;
-			case "tab_1_content":
-				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_1_content\' );']").click();
-				break;
-			case "tab_discounts_content":
-				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_discounts_content\' );']").click();
-				break;	
-			case "es_popular":
-				$("#es_popular").click();
-				break;
-		}
+		$("#" + settings.homepage_tab_selection).click();
 	});
 }
 
