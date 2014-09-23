@@ -3874,16 +3874,6 @@ function dlc_data_for_dlc_page() {
 	});
 }
 
-function enhance_game_background(type) {
-	if (type == "sale") {
-		$("#game_background").css("background-size", "initial");		
-	} else {
-		$("#game_background").before("<div id='es_background_gradient'></div>");		
-	}
-
-	$("#game_background").css("display", "block");
-}
-
 function add_screenshot_lightbox() {
 	$(".highlight_screenshot").find("a").addClass("es_lightbox_image");
 	var current, size = 0;
@@ -6350,7 +6340,6 @@ $(document).ready(function(){
 						});
 						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
-						enhance_game_background();
 						add_screenshot_lightbox();
 
 						drm_warnings("app");
