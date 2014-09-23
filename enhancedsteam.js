@@ -3036,20 +3036,14 @@ function add_metacritic_userscore() {
 	storage.get(function(settings) {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
 		if (settings.showmcus) {
-            var metahtml = document.getElementById("game_area_metascore");
-            var metauserscore = 0;
-            if (metahtml) {
-            	var metalink = document.getElementById("game_area_metalink");
-            	meta = metalink.getElementsByTagName("a");
-            	for (var i = 0; i < meta.length; i++)
-            	var meta_real_link = meta[i].href;
-            	get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + meta_real_link, function (txt) {
-            		metauserscore = escapeHTML(txt);
-            		metauserscore = metauserscore*10;
-            		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><div id="metapage">' + metauserscore + '</div></div>';
-            		$("#game_area_metascore").after(newmeta);
-            	});
-            }
+			if ($("#game_area_metascore")) {
+				var metalink = $("#game_area_metalink").find("a").attr("href");
+				get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + metalink, function (txt) {
+					var metauserscore = parseFloat(txt)*10;
+					var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><span>' + metauserscore + '</span><span class="ms_slash">/</span><span class="ms_base">100</span></div>';
+					$("#game_area_metascore").after(newmeta);
+				});
+			}
 		}
 	});
 }
