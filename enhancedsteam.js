@@ -2590,11 +2590,12 @@ function load_search_results () {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 			$(".search_result_row").last().after(html);
-			// Each result is 58px height * 25 results per page = 1450
-			search_threshhold = search_threshhold + 1450;
+			// Each result is 45px height * 25 results per page = 1125
+			search_threshhold = search_threshhold + 1125;
 			search_page = search_page + 1;
 			processing = false;
 			process_early_access();
+			runInPageContext("GDynamicStore.DecorateDynamicItems( $('.search_result_row') )");
 		});
 	}
 }
