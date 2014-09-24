@@ -6092,9 +6092,7 @@ $(document).ready(function(){
 				// Storefront homepage tabs
 				bind_ajax_content_highlighting();
 				add_small_cap_height();
-				fix_search_placeholder();
 				hide_trademark_symbols();
-				add_speech_search();
 				set_html5_video();
 				break;
 
