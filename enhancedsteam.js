@@ -3521,10 +3521,10 @@ function subscription_savings_check() {
 		comma;
 
 	// Load each apps info
-	$.each($(".tab_row"), function (i, node) {
+	$.each($(".tab_item"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
 			// Remove children, leave only text(price or only discounted price, if there are discounts)
-			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
+			price_container = $(node).find(".discount_final_price").text().trim();
 
 		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
@@ -3804,7 +3804,7 @@ function add_astats_link(appid) {
 	storage.get(function(settings) {
 		if (settings.showastatslink === undefined) { settings.showastatslink = true; storage.set({'showastatslink': settings.showastatslink}); }
 		if (settings.showastatslink) {
-			$("#achievement_block").append("<div class='game_area_details_specs'><div class='icon'><img src='" + chrome.extension.getURL("img/ico/astatsnl.png") + "' style='margin-left: 4px'></div><a class='name' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><span>" + localized_strings[language].view_astats + "</span></a>")
+			$("#achievement_block").append("<div class='game_area_details_specs'><div class='icon'><img src='" + chrome.extension.getURL("img/ico/astatsnl.png") + "' style='margin-left: 4px'></div><a class='name' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><span>" + localized_strings[language].view_astats + "</span></a>");
 		}
 	});
 }
