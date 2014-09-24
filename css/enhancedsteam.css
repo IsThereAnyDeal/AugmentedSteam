@@ -581,12 +581,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 #es_dlc_option_button {
 	float: right;
-	font-weight: bold;
-	color: #ffffff;
+	text-decoration: none;
 }
 
 #es_dlc_option_button:hover {
-	text-decoration: underline;
 	cursor: pointer;
 }
 
