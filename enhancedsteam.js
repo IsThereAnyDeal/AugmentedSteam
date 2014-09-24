@@ -4807,7 +4807,8 @@ function add_carousel_descriptions() {
 							if (desc) {
 								setValue(appid + "carousel", desc[1]);
 								setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-								$desc.append(desc[1]);
+								var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>";
+								$desc.append(value_to_add);
 							}
 						});
 					}
