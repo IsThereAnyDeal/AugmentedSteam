@@ -1,5 +1,4 @@
-// Version 6.7
-var version = "6.7"
+var version = "6.8"
 
 var console_info=["%c Enhanced %cSteam v"+version+" by jshackles %c http://www.enhancedsteam.com ","background: #000000;color: #7EBE45", "background: #000000;color: #ffffff",""];
 console.log.apply(console,console_info);

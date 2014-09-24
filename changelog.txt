@@ -1,3 +1,7 @@
+v6.8
+-----
+
+
 v6.7
 -----
 + Lots of stuff, basically it supports the new store
