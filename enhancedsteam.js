@@ -2656,7 +2656,7 @@ function add_popular_tab() {
 				});
 				$("#tab_popular_content").append("<div class='tab_see_more'>See more: <a href='http://store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>Popular Games</span></a></div>");
 			});
-	}
+		}
 	});
 }
 
@@ -3681,7 +3681,6 @@ function add_app_badge_progress(appid) {
 					$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>").append("<div style=\"clear: both\"></div>");
 				} else {
 					$(".es_badge_progress").remove();
-					$(".communitylink .rule:last").remove();
 				}
 			});
 			$(".es_foil_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/?border=1 .badge_current", function(responseText) {
