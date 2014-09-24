@@ -3865,18 +3865,11 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 	}
 	var early_access = JSON.parse(ea_appids);
 	if (early_access["ea"].indexOf(appid) >= 0) {
-		switch (action) {
-			case "hide":
-				$(node).css("visibility", "hidden");
-				break;
-			default:
-				var selector = "img";
-				if (selector_modifier != undefined) selector += selector_modifier;
-				overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
-				$(overlay_img).css({"left":image_left+"px"});
-				$(node).find(selector.trim()).before(overlay_img);
-				break;
-		}
+		var selector = "img";
+		if (selector_modifier != undefined) selector += selector_modifier;
+		overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+		$(overlay_img).css({"left":image_left+"px"});
+		$(node).find(selector.trim()).before(overlay_img);
 	}
 }
 
@@ -3901,7 +3894,7 @@ function process_early_access() {
 								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 								break;
 							case /^\/search\/.*/.test(window.location.pathname):
-								$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0, ":eq(1)"); });					
+								$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 								break;
 							case /^\/recommended/.test(window.location.pathname):
 								$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
