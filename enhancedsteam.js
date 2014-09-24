@@ -2585,6 +2585,7 @@ function load_search_results () {
 			processing = false;
 			process_early_access();
 			runInPageContext("GDynamicStore.DecorateDynamicItems( $('.search_result_row') )");
+			runInPageContext("BindStoreTooltip( $J('.search_result_row [data-store-tooltip]') )");
 		});
 	}
 }
