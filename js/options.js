@@ -377,8 +377,8 @@ function load_options() {
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124";	chrome.storage.sync.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 
-		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
-		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = false; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = false; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; chrome.storage.sync.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; chrome.storage.sync.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; chrome.storage.sync.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
@@ -386,9 +386,9 @@ function load_options() {
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; chrome.storage.sync.set({'tag_owned': settings.tag_owned}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; chrome.storage.sync.set({'tag_wishlist': settings.tag_wishlist}); }
-		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; chrome.storage.sync.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = true; chrome.storage.sync.set({'tag_inv_gift': settings.tag_inv_gift}); }
-		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
+		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; chrome.storage.sync.set({'tag_coupon': settings.tag_coupon}); }
+		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; chrome.storage.sync.set({'tag_inv_gift': settings.tag_inv_gift}); }
+		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
@@ -758,7 +758,7 @@ function steam_credits() {
 
 function clear_settings() {
 	chrome.storage.sync.get(function(settings) {
-		var confirm_reset = confirm(localized_strings[settings.language].options_clear)
+		var confirm_reset = confirm(localized_strings[settings.language].options.clear)
 		if(confirm_reset){
 			chrome.storage.sync.clear();
 			load_options();
