@@ -2917,7 +2917,7 @@ function add_widescreen_certification(appid) {
 							var path = data["node"]["Path"];
 							var wsg = data["node"]["WideScreenGrade"];
 							var mmg = data["node"]["MultiMonitorGrade"];
-							var fkg = data["node"]["FourKGrade"];
+							var fkg = data["node"]["Grade4k"];
 							var uws = data["node"]["UltraWideScreenGrade"];
 							var wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
 							var fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
