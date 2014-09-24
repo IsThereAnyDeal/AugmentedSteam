@@ -1,6 +1,8 @@
 v6.7
 -----
-
++ Lots of stuff, basically it supports the new store
+: Updated almost every existing function to account for the new store
+- A few things that are no longer required due to the new store
 
 v6.6.1
 -----
