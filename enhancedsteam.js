@@ -99,7 +99,7 @@ function formatCurrency(number, type) {
 			places = 2; symbol = " kr"; thousand = "."; decimal = ","; right = true;
 			break;
 		case "IDR":
-			places = 2; symbol = "Rp "; thousand = ""; decimal = "."; right = false;
+			places = 0; symbol = "Rp "; thousand = " "; decimal = "."; right = false;
 			break;
 		case "PHP":
 			places = 2; symbol = "P"; thousand = ","; decimal = "."; right = false;
