@@ -4242,7 +4242,7 @@ function show_regional_pricing() {
 											} else if(sale) {
 												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
 											} else if(sub) {
-												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 45 + "px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 + "px").css("top", "70px");
 											} else {
 												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 20 + "px");
 											}
