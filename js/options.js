@@ -29,7 +29,6 @@ function save_options() {
 	tag_inv_guestpass = $("#tag_inv_guestpass").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
-	hide_owned_homepage = $("#hide_owned_homepage").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
@@ -167,7 +166,6 @@ function save_options() {
 		'tag_inv_guestpass': tag_inv_guestpass,
 		
 		'hide_owned': hide_owned,
-		'hide_owned_homepage': hide_owned_homepage,
 		'hidetmsymbols': hidetmsymbols,
 
 		'hideinstallsteambutton': hideinstallsteambutton,
@@ -391,7 +389,6 @@ function load_options() {
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
 
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
@@ -481,7 +478,6 @@ function load_options() {
 		$("#tag_inv_guestpass").prop('checked', settings.tag_inv_guestpass);
 		
 		$("#hide_owned").prop('checked', settings.hide_owned);
-		$("#hide_owned_homepage").prop('checked', settings.hide_owned_homepage);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
 
 		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
@@ -598,7 +594,6 @@ function load_translation() {
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options.hide_owned);
-			$("#hide_owned_homepage_text").text(localized_strings[settings.language].options.hide_owned_homepage);
 			$("#hidetmsymbols_text").text(localized_strings[settings.language].options.hidetmsymbols);
 			
 			$("#library_text").text(localized_strings[settings.language].options.library_header);
