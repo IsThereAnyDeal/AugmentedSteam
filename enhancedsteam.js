@@ -6041,7 +6041,6 @@ $(document).ready(function(){
 
 					case /^\/sale\/.*/.test(window.location.pathname):
 						show_regional_pricing();
-						enhance_game_background("sale");
 						break;
 
 					// Storefront-front only
