@@ -600,7 +600,6 @@ function load_translation() {
 			$("#store_show_library_text").text(localized_strings[settings.language].options.library);
 			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options.library_f2p);
 
-			$("#options_header_text").text(localized_strings[settings.language].options.header);
 			$("#store_hide_install_text").text(localized_strings[settings.language].options.hide_install);
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options.hide_about);
 			$("#store_replace_account_name").text(localized_strings[settings.language].options.replace_account_name);
