@@ -4371,6 +4371,10 @@ function bind_ajax_content_highlighting() {
 					process_early_access();
 				}
 
+				if (node.classList && node.classList.contains("searchtag")) {
+					search_threshhold = 1125;
+				}
+
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
 					start_friend_activity_highlights();
 					process_early_access();
