@@ -2693,51 +2693,6 @@ function add_popular_tab() {
 	});
 }
 
-function fix_search_placeholder() {
-	var selectors = ["#store_nav_search_term", "#term"];
-	$.each(selectors, function(index, selector){
-		$(selector).each(function(){
-			var $this = $(this);
-			$this.off("blur");
-			$this.attr("onblur","");
-			if(selector!="#term"){
-				var search_string = $this.val();
-				if (!$this.attr("placeholder")){
-					$this.attr("placeholder", search_string);
-				}
-				$this.removeClass("default");
-				$this.val("");
-				$this.blur(function(e) {
-					if($this.val()==search_string){
-						$this.val("");
-						$this.removeClass("default");
-					}
-				});
-			}
-		});
-	});
-}
-// Add speech input to search boxes
-function add_speech_search() {
-	storage.get(function(settings) {
-		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; storage.set({'showspeechsearch': settings.showspeechsearch}); }
-		if (settings.showspeechsearch) {
-			var selectors = [["#store_nav_search_term","#searchform"], ["#term", "#advsearchform"]];
-			$.each(selectors, function(index, selector){
-				$(selector[0]).attr("x-webkit-speech", "search");			
-				$(selector[0]).bind("webkitspeechchange", function(e) {
-					if(selector[0]=="#term"){
-						$("#realterm").val($("#term").val());
-					}
-					var form = $(selector[1]);
-					form.submit();
-					return false;
-				});
-			});
-		}
-	});
-}
-
 // Change Steam Greenlight pages
 function hide_greenlight_banner() {
 	storage.get(function(settings) {
