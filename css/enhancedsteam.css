@@ -715,6 +715,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top:2px;
 	margin-bottom:2px;
 }
+#es_popular {
+	margin-left: 3px;
+}
 .dailydeal .timer {
 	background:#222;
 	border-radius:2px;

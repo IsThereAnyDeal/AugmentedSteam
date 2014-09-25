@@ -2,6 +2,7 @@ v6.8
 -----
 : Fixed a bug that caused coupon discounts to not display properly on app pages
 : Fixed the placement of regional price comparison box on sale pages
+: Fixed the spacing of the "Popular" tab on the home page
 
 v6.7.1
 -----
