@@ -1,3 +1,7 @@
+v6.8
+-----
+
+
 v6.7.1
 -----
 + Added WSGF 4k grading to applicable games
