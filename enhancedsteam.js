@@ -3529,7 +3529,11 @@ function subscription_savings_check() {
 
 		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
-				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
+				if (parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/))) {
+					itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
+				} else {
+					itemPrice = 0;
+				}				
 				if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
 				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
