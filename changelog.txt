@@ -7,6 +7,7 @@ v6.8
 : Fixed a bug that caused some packages not to process savings calculations corectly
 : Fixed a bug where DLC checkboxes would behave incorrectly if the DLC had no subID
 : Fixed a bug that caused incorrect image opacity on items when highlighting was disabled
+: Updated DLC pages to work with the new store layout including the "add all unowned" button
 
 
 v6.7.1
