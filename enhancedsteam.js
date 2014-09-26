@@ -405,6 +405,8 @@ function highlight_node(node, color) {
 		$node.css("backgroundImage", "none");
 		$node.css("background", "linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.8) 100%)");
 
+		$(node).find("img").css("opacity", "1");
+		$(node).find(".search_capsule").css("opacity", "1");
 		$(node).find(".ds_flag").remove();
 
 		// Set text colour to not conflict with highlight

@@ -937,17 +937,3 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-family:tahoma, helvetica, arial, trebuchet ms, sans-serif;
 	color: #d6d7d8;
 }
-
-/* Set proper item opacity for highlighting */
-.home_specials_grid .special .special_img_ctn.ds_flagged:not(.ds_wishlist) img {
-	opacity: 1 !important;
-}
-.tab_item.ds_flagged:not(.ds_wishlist) .tab_item_cap {
-	opacity: 1 !important;
-}
-.home_smallcap.ds_flagged:not(.ds_wishlist) img {
-	opacity: 1 !important;
-}
-.small_cap.ds_flagged:not(.ds_wishlist) img {
-	opacity: 1 !important;
-}
