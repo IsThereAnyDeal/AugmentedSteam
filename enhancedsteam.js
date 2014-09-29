@@ -4574,6 +4574,256 @@ function customize_app_page() {
 	});
 }
 
+function customize_home_page() {
+	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings[language].customize + "</div></div><div style='clear: both;'></div>");
+
+	storage.get(function(settings) {
+		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_show_homepage_carousel': settings.show_homepage_carousel}); }
+		if (settings.show_homepage_spotlight === undefined) { settings.show_homepage_spotlight = true; storage.set({'show_show_homepage_spotlight': settings.show_homepage_spotlight}); }
+		if (settings.show_homepage_newsteam === undefined) { settings.show_homepage_newsteam = true; storage.set({'show_show_homepage_newsteam': settings.show_homepage_newsteam}); }
+		if (settings.show_homepage_updated === undefined) { settings.show_homepage_updated = true; storage.set({'show_show_homepage_updated': settings.show_homepage_updated}); }
+		if (settings.show_homepage_recommended === undefined) { settings.show_homepage_recommended = true; storage.set({'show_show_homepage_recommended': settings.show_homepage_recommended}); }
+		if (settings.show_homepage_explore === undefined) { settings.show_homepage_explore = true; storage.set({'show_show_homepage_explore': settings.show_homepage_explore}); }
+		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_show_homepage_curators': settings.show_homepage_curators}); }
+		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_show_homepage_tabs': settings.show_homepage_tabs}); }
+		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_show_homepage_specials': settings.show_homepage_specials}); }
+
+		var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
+
+		// Carousel
+		if ($("#home_main_cluster").length > 0) {
+			text = "Carousel";
+			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$("#home_main_cluster").parent().hide();
+			}
+		}
+
+		// Spotlight
+		if ($("#spotlight_scroll").length > 0) {
+			text = "Spotlight";
+			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$("#spotlight_scroll").parent().parent().hide();
+			}
+		}
+
+		// New on Steam
+		if ($(".new_on_steam").length > 0) {
+			text = $(".new_on_steam").find("a:first").text();
+			if (settings.show_homepage_newsteam) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".new_on_steam").hide();
+			}
+		}
+
+		// Recently Updated
+		if ($(".recently_updated").length > 0) {
+			text = $(".recently_updated").find("a:first").text();
+			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".recently_updated").hide();
+			}
+		}
+
+		// Recommended For You
+		if ($(".recommended").length > 0) {
+			text = $(".recommended").find("h2:first").text();
+			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".recommended").hide();
+				$("#content_callout").hide();
+				$("#content_loading").hide();
+			}
+		}
+
+		// Explore Your Queue
+		if ($(".discovery_queue_ctn").length > 0) {
+			text = $(".discovery_queue_ctn").find("a:first").text();
+			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".discovery_queue_ctn").hide();
+			}
+		}
+
+		// Steam Curators
+		if ($(".apps_recommended_by_curators_ctn").length > 0) {
+			text = $(".apps_recommended_by_curators_ctn").find("a:first").text();
+			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".apps_recommended_by_curators_ctn").hide();
+			}
+		}
+
+		// Homepage Tabs
+		if ($(".home_tab_col").length > 0) {
+			text = "Homepage Tabs";
+			if (settings.show_homepage_tabs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".home_tab_col").hide();
+			}
+		}
+
+		// Specials
+		if ($(".dailydeal_ctn").length > 0) {
+			text = $(".dailydeal_ctn").parent().find("h2:first").text();
+			if (settings.show_homepage_specials) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".dailydeal_ctn").parent().hide();
+			}
+		}
+
+		$("#es_customize_btn").append(html);
+
+		$("#es_customize_btn").find(".home_customize_btn").click(function() {
+			if ($(this).hasClass("active")) {
+				$(this).removeClass("active");
+			} else {
+				$(this).addClass("active");
+			}
+
+			if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
+				$(this).parent().find(".home_viewsettings_popup").hide();
+			} else {
+				var pos_top = $("#es_customize_btn").offset().top - 84;
+				var pos_left = $("#es_customize_btn").offset().left - 521;
+				$(this).parent().find(".home_viewsettings_popup").css("top", pos_top + "px").css("left", pos_left + "px");
+				$(this).parent().find(".home_viewsettings_popup").show();
+			}
+		});
+
+		$("#show_homepage_carousel").click(function() {
+			if (settings.show_homepage_carousel) {
+				settings.show_homepage_carousel = false;
+				$("#home_main_cluster").parent().hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_carousel = true;
+				$("#home_main_cluster").parent().show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_carousel': settings.show_homepage_carousel});
+		});
+
+		$("#show_homepage_spotlight").click(function() {
+			if (settings.show_homepage_spotlight) {
+				settings.show_homepage_spotlight = false;
+				$("#spotlight_scroll").parent().parent().hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_spotlight = true;
+				$("#spotlight_scroll").parent().parent().show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight});
+		});
+
+		$("#show_homepage_newsteam").click(function() {
+			if (settings.show_homepage_newsteam) {
+				settings.show_homepage_newsteam = false;
+				$(".new_on_steam").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_newsteam = true;
+				$(".new_on_steam").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_newsteam': settings.show_homepage_newsteam});
+		});
+
+		$("#show_homepage_updated").click(function() {
+			if (settings.show_homepage_updated) {
+				settings.show_homepage_updated = false;
+				$(".recently_updated").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_updated = true;
+				$(".recently_updated").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_updated': settings.show_homepage_updated});
+		});
+
+		$("#show_homepage_recommended").click(function() {
+			if (settings.show_homepage_recommended) {
+				settings.show_homepage_recommended = false;
+				$(".recommended").hide();
+				$("#content_callout").hide();
+				$("#content_loading").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_recommended = true;
+				$(".recommended").show();
+				$("#content_callout").show();
+				$("#content_loading").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_recommended': settings.show_homepage_recommended});
+		});
+
+		$("#show_homepage_explore").click(function() {
+			if (settings.show_homepage_explore) {
+				settings.show_homepage_explore = false;
+				$(".discovery_queue_ctn").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_explore = true;
+				$(".discovery_queue_ctn").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_explore': settings.show_homepage_explore});
+		});
+
+		$("#show_homepage_curators").click(function() {
+			if (settings.show_homepage_curators) {
+				settings.show_homepage_curators = false;
+				$(".apps_recommended_by_curators_ctn").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_curators = true;
+				$(".apps_recommended_by_curators_ctn").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_curators': settings.show_homepage_curators});
+		});
+
+		$("#show_homepage_tabs").click(function() {
+			if (settings.show_homepage_tabs) {
+				settings.show_homepage_tabs = false;
+				$(".home_tab_col").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_tabs = true;
+				$(".home_tab_col").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_tabs': settings.show_homepage_tabs});
+		});
+
+		$("#show_homepage_specials").click(function() {
+			if (settings.show_homepage_specials) {
+				settings.show_homepage_specials = false;
+				$(".dailydeal_ctn").parent().hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_specials = true;
+				$(".dailydeal_ctn").parent().show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_specials': settings.show_homepage_specials});
+		});
+	});
+}
+
 // Hide Trademark and Copyright symbols in game titles for Community pages
 function hide_trademark_symbols(community) {
 	storage.get(function(settings) {
@@ -6044,6 +6294,7 @@ $(document).ready(function(){
 						add_allreleases_tab();
 						set_homepage_tab();
 						add_carousel_descriptions();
+						customize_home_page();
 						break;
 				}
 
