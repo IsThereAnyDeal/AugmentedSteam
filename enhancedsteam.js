@@ -2673,6 +2673,52 @@ function add_popular_tab() {
 	});
 }
 
+function add_allreleases_tab() {
+	var button_text = $("#tab_newreleases_content").find(".tab_see_more a:last").text();
+	$(".home_tabs_row").find(".home_tab:first").after("<div class='home_tab' id='es_allreleases'><div class='tab_content'>" + button_text + "</div></div>");
+	var tab_html = "<div id='tab_allreleases_content' class='tab_content' style='display: none;'>";
+
+	$(".home_tabs_content").append(tab_html);
+
+	$("#es_allreleases").on("click", function() {
+		$(".home_tabs_row").find(".active").removeClass("active");
+		$(".home_tabs_content").find(".tab_content").hide();
+		$("#es_allreleases").addClass("active");
+		$("#tab_allreleases_content").show();
+
+		if ($("#tab_allreleases_content").find("div").length == 0) {
+			get_http("http://store.steampowered.com/search/?sort_by=Released_DESC", function(txt) {
+				var return_text = $.parseHTML(txt);
+				$(return_text).find(".search_result_row").each(function(i, item) {
+					var appid = get_appid($(this).attr("href"));
+					var game_name = $(this).find(".title").text();
+					var platform = $(this).find(".search_name p:last").html();
+					var release_date = $(this).find(".search_released").text();
+					var discount_pct = $(this).find(".search_discount span:last").text();
+					var price = $(this).find(".search_price").html();
+					var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
+					html += "<a class='tab_item_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='http://store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
+					html += "<img class='tab_item_cap' src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+					// price info
+					if (discount_pct) {
+						html += "<div class='discount_block tab_item_discount'><div class='discount_pct'>" + discount_pct + "</div><div class='discount_prices'>" + price + "</div></div>";
+					} else {
+						html += "<div class='discount_block tab_item_discount no_discount'><div class='discount_prices no_discount'><div class='discount_final_price'>" + price + "</div></div></div>";
+					}
+
+					html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'> " + platform + "<div class='tab_item_top_tags'><span class='top_tag'>" + release_date + "</span></div></div><br clear='all'></div>";
+
+					html += "</div>";
+					$("#tab_allreleases_content").append(html);
+					return i < 10;
+				});
+				var button = $("#tab_newreleases_content").find(".tab_see_more").clone();
+				$("#tab_allreleases_content").append(button);
+			});
+		}
+	});
+}
+
 // Change Steam Greenlight pages
 function hide_greenlight_banner() {
 	storage.get(function(settings) {
@@ -4344,9 +4390,10 @@ function bind_ajax_content_highlighting() {
 					add_inventory_gotopage();
 				}
 
-				if (node.classList && node.classList.contains("tab_row")) {
+				if (node.classList && node.classList.contains("tab_item")) {
+					runInPageContext("GDynamicStore.DecorateDynamicItems( $('.tab_item') )");
 					start_highlighting_node(node);
-					check_early_access(node, "ea_sm_120.png", 0);
+					check_early_access(node, "ea_184x69.png", 0, ":last");
 				}
 
 				if (node.id == "search_result_container") {
@@ -5731,6 +5778,7 @@ $(document).ready(function(){
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
 						add_popular_tab();
+						add_allreleases_tab();
 						set_homepage_tab();
 						add_carousel_descriptions();
 						break;

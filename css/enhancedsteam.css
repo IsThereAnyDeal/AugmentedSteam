@@ -718,6 +718,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_popular {
 	margin-left: 3px;
 }
+#es_allreleases {
+	margin-left: 3px;
+}
 .dailydeal .timer {
 	background:#222;
 	border-radius:2px;
