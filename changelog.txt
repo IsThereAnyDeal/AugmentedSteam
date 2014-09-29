@@ -1,6 +1,7 @@
 v6.8
 -----
 + Completely re-wrote how Enhanced Steam handles highlighting to be much faster and accurate
++ Added a "Customize" button to app pages that lets you decide which sections to display
 + Added an "All New Releases" tab to Steam home page
 : Fixed a bug that caused coupon discounts to not display properly on app pages
 : Fixed the placement of regional price comparison box on sale pages
