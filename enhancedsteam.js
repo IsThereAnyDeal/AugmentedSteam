@@ -2710,7 +2710,7 @@ function add_allreleases_tab() {
 
 					html += "</div>";
 					$("#tab_allreleases_content").append(html);
-					return i < 10;
+					return i < 9;
 				});
 				var button = $("#tab_newreleases_content").find(".tab_see_more").clone();
 				$("#tab_allreleases_content").append(button);
@@ -4587,12 +4587,13 @@ function customize_home_page() {
 		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_show_homepage_curators': settings.show_homepage_curators}); }
 		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_show_homepage_tabs': settings.show_homepage_tabs}); }
 		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_show_homepage_specials': settings.show_homepage_specials}); }
+		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_show_homepage_sidebar': settings.show_homepage_sidebar}); }
 
 		var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
 
 		// Carousel
 		if ($("#home_main_cluster").length > 0) {
-			text = "Carousel";
+			text = localized_strings[language].homepage_carousel;
 			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -4602,7 +4603,7 @@ function customize_home_page() {
 
 		// Spotlight
 		if ($("#spotlight_scroll").length > 0) {
-			text = "Spotlight";
+			text = localized_strings[language].homepage_spotlight;
 			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -4637,8 +4638,6 @@ function customize_home_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".recommended").hide();
-				$("#content_callout").hide();
-				$("#content_loading").hide();
 			}
 		}
 
@@ -4649,13 +4648,15 @@ function customize_home_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".discovery_queue_ctn").hide();
+				$("#content_callout").hide();
+				$("#content_loading").hide();
 			}
 		}
 
 		// Steam Curators
 		if ($(".apps_recommended_by_curators_ctn").length > 0) {
 			text = $(".apps_recommended_by_curators_ctn").find("a:first").text();
-			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			if (settings.show_homepage_curators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".apps_recommended_by_curators_ctn").hide();
@@ -4664,7 +4665,7 @@ function customize_home_page() {
 
 		// Homepage Tabs
 		if ($(".home_tab_col").length > 0) {
-			text = "Homepage Tabs";
+			text = localized_strings[language].homepage_tabs;
 			if (settings.show_homepage_tabs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -4682,6 +4683,18 @@ function customize_home_page() {
 			}
 		}
 
+		// Sidebar
+		if ($(".home_page_gutter").length > 0) {
+			text = localized_strings[language].homepage_sidebar;
+			if (settings.show_homepage_sidebar) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".home_page_gutter").hide();
+				$(".home_page_body_ctn").css("margin-left", "0px");
+				$(".home_page_content").css("padding-left", "0px");
+			}
+		}
+
 		$("#es_customize_btn").append(html);
 
 		$("#es_customize_btn").find(".home_customize_btn").click(function() {
@@ -4694,9 +4707,7 @@ function customize_home_page() {
 			if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
 				$(this).parent().find(".home_viewsettings_popup").hide();
 			} else {
-				var pos_top = $("#es_customize_btn").offset().top - 84;
-				var pos_left = $("#es_customize_btn").offset().left - 521;
-				$(this).parent().find(".home_viewsettings_popup").css("top", pos_top + "px").css("left", pos_left + "px");
+				$(this).parent().find(".home_viewsettings_popup").css("right", "18px");
 				$(this).parent().find(".home_viewsettings_popup").show();
 			}
 		});
@@ -4757,14 +4768,10 @@ function customize_home_page() {
 			if (settings.show_homepage_recommended) {
 				settings.show_homepage_recommended = false;
 				$(".recommended").hide();
-				$("#content_callout").hide();
-				$("#content_loading").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_recommended = true;
 				$(".recommended").show();
-				$("#content_callout").show();
-				$("#content_loading").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_recommended': settings.show_homepage_recommended});
@@ -4774,10 +4781,14 @@ function customize_home_page() {
 			if (settings.show_homepage_explore) {
 				settings.show_homepage_explore = false;
 				$(".discovery_queue_ctn").hide();
+				$("#content_callout").hide();
+				$("#content_loading").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_explore = true;
 				$(".discovery_queue_ctn").show();
+				$("#content_callout").show();
+				$("#content_loading").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_explore': settings.show_homepage_explore});
@@ -4820,6 +4831,22 @@ function customize_home_page() {
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_specials': settings.show_homepage_specials});
+		});
+
+		$("#show_homepage_sidebar").click(function() {
+			if (settings.show_homepage_sidebar) {
+				settings.show_homepage_sidebar = false;
+				$(".home_page_gutter").hide();
+				$(".home_page_body_ctn").css("margin-left", "0px");
+				$(".home_page_content").css("padding-left", "0px");
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_sidebar = true;
+				$(".home_page_gutter").show();
+				$(".home_page_content").css("padding-left", "204px");
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar});
 		});
 	});
 }
