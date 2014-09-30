@@ -4443,6 +4443,17 @@ function customize_app_page() {
 			}
 		});
 
+		$('body').bind('click', function(e) {
+			if($(e.target).closest("#es_customize_btn").length == 0) {
+				if ($("#es_customize_btn").find(".home_customize_btn").hasClass("active")) {
+					$("#es_customize_btn").find(".home_customize_btn").removeClass("active");
+				}
+				if ($("#es_customize_btn").find(".home_viewsettings_popup").is(":visible")) {
+					$("#es_customize_btn").find(".home_viewsettings_popup").hide();
+				}
+			}
+		});
+
 		$("#show_apppage_recommendedbycurators").click(function() {
 			if (settings.show_apppage_recommendedbycurators) {
 				settings.show_apppage_recommendedbycurators = false;
@@ -4590,7 +4601,7 @@ function customize_home_page() {
 		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_show_homepage_specials': settings.show_homepage_specials}); }
 		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_show_homepage_sidebar': settings.show_homepage_sidebar}); }
 
-		var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
+		var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12; right: 18px;'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
 
 		// Carousel
 		if ($("#home_main_cluster").length > 0) {
@@ -4708,8 +4719,18 @@ function customize_home_page() {
 			if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
 				$(this).parent().find(".home_viewsettings_popup").hide();
 			} else {
-				$(this).parent().find(".home_viewsettings_popup").css("right", "18px");
 				$(this).parent().find(".home_viewsettings_popup").show();
+			}
+		});
+
+		$('body').bind('click', function(e) {
+			if($(e.target).closest("#es_customize_btn").length == 0) {
+				if ($("#es_customize_btn").find(".home_customize_btn").hasClass("active")) {
+					$("#es_customize_btn").find(".home_customize_btn").removeClass("active");
+				}
+				if ($("#es_customize_btn").find(".home_viewsettings_popup").is(":visible")) {
+					$("#es_customize_btn").find(".home_viewsettings_popup").hide();
+				}
 			}
 		});
 
