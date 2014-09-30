@@ -4576,6 +4576,7 @@ function customize_app_page() {
 
 function customize_home_page() {
 	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings[language].customize + "</div></div><div style='clear: both;'></div>");
+	$(".home_page_body_ctn:first").css("min-height", "400px");
 
 	storage.get(function(settings) {
 		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_show_homepage_carousel': settings.show_homepage_carousel}); }
