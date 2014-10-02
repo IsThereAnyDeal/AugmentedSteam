@@ -1,3 +1,28 @@
+v6.7.1
+-----
++ Added WSGF 4k grading to applicable games
++ Added tooltips on review scores to subsequent results on continuous scrolling feature
+: Fixed a bug where homepage carousel items didn't load correctly before being cachced
+: Fixed a bug that caused search results not to display Early Access banners
+: Updated 3rd Party DRM warning to more closely resemble the original design
+: Fixed a bug that caused regional price comparisons on sub pages to be incorrectly positioned
+: Fixed a bug that caused some SteamDB links to point to incorrect URLs
+: Fixed a bug that caused bundle savings to be incorrectly calculated
+: Updated Indonesian currency formatting
+
+v6.7
+-----
++ Lots of stuff, basically it supports the new store
+: Updated almost every existing function to account for the new store
+- A few things that are no longer required due to the new store
+
+v6.6.1
+-----
++ Added SteamCardExchange link to applicable app pages
++ Added basic support for upcomming store currencies
+: Updated SteamDB icon on store page buttons
+: Fixed a bug caused by Steam_Language cookie not being present for all users
+
 v6.6
 -----
 + Added support for Japanese Yen in regional price comparison feature

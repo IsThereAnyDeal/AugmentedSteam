@@ -350,6 +350,10 @@ img.platform_small, .platform_img {
 	display: block !important;
 }
 
+#chart-heading {
+	background-color: rgba(0,0,0,0);
+}
+
 #chart-heading img {
 	vertical-align: middle;
 }
@@ -436,7 +440,7 @@ img.platform_small, .platform_img {
 	display: none;
 	z-index:999;	
 	position:absolute;
-	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
+	background: linear-gradient(to bottom, #33425A 5%,#282F3D 100%);
 	padding: 7px 8px;
 	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
 	border:1px solid black;
@@ -518,11 +522,12 @@ img.platform_small, .platform_img {
 
 .es_btn_systemreqs {
 	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .es_overlay {
 	position: absolute;
-	z-index: 0;
+	z-index: 4;
 }
 .es_card_search {
 	padding:0px 2px;
@@ -576,12 +581,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 #es_dlc_option_button {
 	float: right;
-	font-weight: bold;
-	color: #ffffff;
+	text-decoration: none;
 }
 
 #es_dlc_option_button:hover {
-	text-decoration: underline;
 	cursor: pointer;
 }
 
@@ -621,14 +624,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_lowest_price {
 	padding: 5px 0 5px 46px;
 	height: auto !important;
-	border: 1px solid #4d4b49;
 	border-bottom: 0;
 	background-image: none;
 	padding-left: 46px;
 	position: relative;
 	font-size: 12px;
 	color: #626366;
-	background-color: #1d252e;
+	background-color: rgba( 0, 0, 0, 0.2 );
 }
 
 .es_lowest_price a {
@@ -766,7 +768,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_drm_warning {
 	display: table; 
 	width: 100%; 
-	padding: 0px !important;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	min-height: 38px;
 }
 .es_drm_warning span {
 	display: table-cell; 
@@ -929,4 +933,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_discount_final_price {
 	font-family:tahoma, helvetica, arial, trebuchet ms, sans-serif;
 	color: #d6d7d8;
+}
+
+/* Set proper item opacity for highlighting */
+.home_specials_grid .special .special_img_ctn.ds_flagged:not(.ds_wishlist) img {
+	opacity: 1 !important;
+}
+.tab_item.ds_flagged:not(.ds_wishlist) .tab_item_cap {
+	opacity: 1 !important;
+}
+.home_smallcap.ds_flagged:not(.ds_wishlist) img {
+	opacity: 1 !important;
+}
+.small_cap.ds_flagged:not(.ds_wishlist) img {
+	opacity: 1 !important;
 }

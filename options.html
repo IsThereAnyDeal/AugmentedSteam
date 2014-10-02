@@ -130,10 +130,10 @@
 					</li>
 				</div>
 				<li class="header" id="hide_text">Hide</li>
-				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items you own in search results and tag pages</label></li>
-				<li><input type="checkbox" id="hide_owned_homepage"><label for="hide_owned_homepage" id="hide_owned_homepage_text">Items you own on the homepage</label></li>
+				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items you own in search results</label></li>
 				<li><input type="checkbox" id="hidetmsymbols"><label for="hidetmsymbols" id="hidetmsymbols_text">Trademark and Copyright symbols in game titles</label></li>
-				<li><input type="checkbox" id="hide_early_access"><label for="hide_early_access" id="hide_early_access_text">Hide Early Access games on homepage, browse, and search pages</label></li>
+				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
+				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide "About" link</label></li>
 				<li class="header" id="language_text">Language</li>				
 				<li><input type="checkbox" id="showlanguagewarning"><label for="showlanguagewarning" id="store_show_languagewarning_text">Show warning if browsing in a language other than</label>
 					<select id="warning_language">
@@ -169,24 +169,20 @@
 				<li><label for="homepage_default_tab" id="homepage_default_tab_text">Default homepage tab:</label>
 					<select id="homepage_tab_selection">
 						<option value="remember">Remember Previous</option>
-						<option value="tab_1_content">New Releases</option>
-						<option value="tab_2_content">Top Sellers</option>
-						<option value="tab_3_content">Coming Soon</option>
-						<option value="tab_discounts_content">Specials</option>
+						<option value="tab_newreleases_content_trigger">Popular New Releases</option>
+						<option value="tab_topsellers_content_trigger">Top Sellers</option>
+						<option value="tab_upcoming_content_trigger">Upcoming</option>
+						<option value="tab_specials_content_trigger">Specials</option>
 						<option value="es_popular">Popular</option>
 					</select>
 				</li>
 				<li class="header" id="library_text">Library (BETA)</li>
 				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
 				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
-				<li class="header" id="options_header_text">Header</li>
-				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
-				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide "About" link</label></li>
-				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
 				<li class="header" id="store_general">General</li>
+				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
 				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
 				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
-				<li><input type="checkbox" id="showspeechsearch"><label for="showspeechsearch" id="showspeechsearch_text">Add speech input to search boxes</label></li>
 				<li><input type="checkbox" id="html5video"><label for="html5video" id="html5video_text">Show videos using HTML5 instead of Flash</label></li>
 				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable continuous scrolling of search results</label></li>
 				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd party DRM warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" class="help"></a></li>
@@ -195,6 +191,7 @@
 				<li><input type="checkbox" id="showsteamdb"><label for="showsteamdb" id="store_steamdb_text">Show SteamDB links</label></li>
 				<li><input type="checkbox" id="showastatslink"><label for="showastatslink" id="store_astatslink_text">Show AStats link on app pages</label></li>
 				<li><input type="checkbox" id="showpcgw"><label for="showpcgw" id="store_pcgw_text">Show PCGamingWiki links</label></li>
+				<li><input type="checkbox" id="showsteamcardexchange"><label for="showsteamcardexchange" id="store_steamcards_text">Show SteamCardExchange links on store pages</label></li>
 				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
 				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com info</label></li>
 				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show package info for all apps</label></li>

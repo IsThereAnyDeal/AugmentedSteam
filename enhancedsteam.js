@@ -1,5 +1,4 @@
-// Version 6.6
-var version = "6.6"
+var version = "6.7.1"
 
 var console_info=["%c Enhanced %cSteam v"+version+" by jshackles %c http://www.enhancedsteam.com ","background: #000000;color: #7EBE45", "background: #000000;color: #ffffff",""];
 console.log.apply(console,console_info);
@@ -15,7 +14,13 @@ var total_requests = 0;
 var processed_requests = 0;
 
 var cookie = document.cookie;
-var language = cookie.match(/language=([a-z]{3})/i)[1];
+
+if (cookie.match(/steam_language=([a-z]{3})/i)) {
+	var language = cookie.match(/steam_language=([a-z]{3})/i)[1];
+} else {
+	var language = "eng";
+}
+
 if (localized_strings[language] === undefined) { language = "eng"; }
 
 // Set language for options page
@@ -87,6 +92,48 @@ function formatCurrency(number, type) {
 		case "JPY":
 			places = 0; symbol = "¥ "; thousand = ","; decimal = "."; right = false;
 			break;
+		case "MYR":
+			places = 2; symbol = "RM"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "NOK":
+			places = 2; symbol = " kr"; thousand = "."; decimal = ","; right = true;
+			break;
+		case "IDR":
+			places = 0; symbol = "Rp "; thousand = " "; decimal = "."; right = false;
+			break;
+		case "PHP":
+			places = 2; symbol = "P"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "SGD":
+			places = 2; symbol = "S$"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "THB":
+			places = 2; symbol = "฿"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "VND":
+			places = 2; symbol = "₫"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "KRW":
+			places = 2; symbol = "₩"; thousand = ","; decimal = "."; right = false;
+			break;
+		case "TRY":
+			places = 2; symbol = " TL"; thousand = ""; decimal = ","; right = true;
+			break;
+		case "UAH":
+			places = 2; symbol = "₴"; thousand = ""; decimal = ","; right = true;
+			break;
+		case "MXN":
+			places = 2; symbol = "Mex$ "; thousand = ","; decimal = "."; right = false;
+			break;
+		case "CAD":
+			places = 2; symbol = "C$ "; thousand = ","; decimal = "."; right = false;
+			break;
+		case "AUD":
+			places = 2; symbol = "A$ "; thousand = ","; decimal = "."; right = false;
+			break;
+		case "NZD":
+			places = 2; symbol = "NZ$ "; thousand = ","; decimal = "."; right = false;
+			break;
 		default:
 			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
 			break;
@@ -114,9 +161,45 @@ function currency_symbol_to_type (currency_symbol) {
 			return "BRL";
 		case "¥":
 			return "JPY";
+		case "kr":
+			return "NOK";
+		case "Rp":
+			return "IDR";
+		case "RM":
+			return "MYR";
+		case "P":
+			return "PHP";
+		case "S$":
+			return "SGD";
+		case "฿":
+			return "THB";
+		case "₫":
+			return "VND";
+		case "₩":
+			return "KRW";
+		case "TL":
+			return "TRY";
+		case "₴":
+			return "UAH";
+		case "Mex$":
+			return "MXN";
+		case "C$":
+			return "CAD";
+		case "A$":
+			return "AUD";
+		case "NZ$":
+			return "NZD";
 		default:
 			return "USD";
 	}
+}
+
+function currency_symbol_from_string (string_with_symbol) {
+	var return_string = "";
+	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)) {
+		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)[0];
+	}
+	return return_string;
 }
 
 function escapeHTML(str) {
@@ -202,13 +285,11 @@ function highlight_owned(node) {
 		node.classList.add("es_highlight_owned");
 
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
-		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = false; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 
 		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
 		if (settings.hide_owned) hide_node(node);
-		if (settings.hide_owned_homepage) hide_node(node);
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
@@ -221,11 +302,11 @@ function highlight_wishlist(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_wishlist");
 
-		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
-		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = false; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
 
-		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#496e93";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
 		if (settings.tag_wishlist) add_tag(node, localized_strings[language].tag.wishlist, settings.highlight_wishlist_color);
 	});
@@ -241,7 +322,7 @@ function highlight_coupon(node, discount) {
 		if (settings.highlight_coupon) highlight_node(node, settings.highlight_coupon_color);
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
-		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; storage.set({'tag_coupon': settings.tag_coupon}); }
+		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
 		if (settings.tag_coupon) add_tag(node, localized_strings[language].tag.coupon + " (" + discount + "%)", settings.highlight_coupon_color);
 	});
 }
@@ -256,7 +337,7 @@ function highlight_inv_gift(node) {
 		if (settings.highlight_inv_gift) highlight_node(node, settings.highlight_inv_gift_color);
 
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
-		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = true; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
+		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
 		if (settings.tag_inv_gift) add_tag(node, localized_strings[language].tag.inv_gift, settings.highlight_inv_gift_color);
 	});
 }
@@ -271,9 +352,18 @@ function highlight_inv_guestpass(node) {
 		if (settings.highlight_inv_guestpass) highlight_node(node, settings.highlight_inv_guestpass_color);
 
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
-		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
+		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 		if (settings.tag_inv_guestpass) add_tag(node, localized_strings[language].tag.inv_guestpass, settings.highlight_inv_guestpass_color);
 	});
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }
 
 function highlight_node(node, color) {
@@ -301,18 +391,21 @@ function highlight_node(node, color) {
 		return;
 	}
 
+	var rgb = hexToRgb(color);
+
 	$node.css("backgroundImage", "none");
-	$node.css("backgroundColor", color);
+	$node.css("background", "linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba("+rgb.r+","+rgb.g+","+rgb.b+",0.8) 100%)");
+
+	$(node).find(".ds_flag").remove();
 
 	// Set text colour to not conflict with highlight
-	if (node.classList.contains("tab_row")) $node.find(".tab_desc").css("color", "lightgrey");
+	if (node.classList.contains("tab_item")) $node.find("div").css("color", "lightgrey");
 	if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 }
 
 function hide_node(node) {
 	storage.get(function(settings) {
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 
 		if ($(node).hasClass("info") || $(node).hasClass("dailydeal") || $(node).hasClass("spotlight_content") || $(node).hasClass("browse_tag_game_cap")) { node = $(node).parent()[0]; }
@@ -324,13 +417,6 @@ function hide_node(node) {
 				if ($(document).height() <= $(window).height()) {
 					load_search_results();
 				}
-			}
-		}
-		
-		// Hide owned items from the store homepage
-		if (settings.hide_owned_homepage) {
-			if (node.classList.contains("tab_row") || node.classList.contains("small_cap") || node.classList.contains("nopad") || $(node).hasClass("home_area_spotlight")) {
-				$(node).css("visibility", "hidden");
 			}
 		}
 		
@@ -917,7 +1003,7 @@ function add_wishlist_total() {
 	function calculate_node(node, search) {
 		price = parseFloat($(node).find(search).text().trim().replace(",", ".").replace(/[^0-9\.]+/g,""));
 		if (price) {
-			currency_symbol = $(node).find(search).text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+			currency_symbol = currency_symbol_from_string($(node).find(search).text().trim());
 			gamelist += $(node).find("h4").text().trim() + ", ";
 			items += 1;
 			total += price;
@@ -1218,7 +1304,7 @@ function pack_split(node, ways) {
 		comma = true;
 		price_text = price_text.replace(",", ".");
 	}
-	var currency_symbol = price_text.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+	var currency_symbol = currency_symbol_from_string(price_text);
 	var currency_type = currency_symbol_to_type(currency_symbol);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
@@ -1261,10 +1347,9 @@ function add_package_info_button() {
 		if (settings.show_package_info) {
 			$(".game_area_purchase_game_wrapper").each(function() {
 				if ($(this).find(".btn_packageinfo").length == 0) {
-					var htmlstr = '<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div>';
+					var htmlstr = '<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">';
 					var subid = $(this).find("input[name=subid]").val();
-					htmlstr += '<a class="btn_addtocart_content" href="http://store.steampowered.com/sub/' + subid + '/">' + localized_strings[language].package_info + '</a>';
-					htmlstr += '<div class="btn_addtocart_right"></div></div></div>';
+					htmlstr += '<a class="btnv6_blue_blue_innerfade btn_medium" href="http://store.steampowered.com/sub/' + subid + '/"><span>' + localized_strings[language].package_info + '</span></a></div></div>';					
 					$(this).find(".game_purchase_action").prepend(htmlstr);
 				}
 			});
@@ -1288,7 +1373,7 @@ function add_steamchart_info(appid) {
 							html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + localized_strings[language].charts.peaktoday + '</div><div class="chart-stat">';
 							html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + localized_strings[language].charts.peakall + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span></div></div>';
 
-							$("#game_area_sys_req").before(html);
+							$(".sys_req").parent().before(html);
 						}
 					}
 				});
@@ -1302,8 +1387,8 @@ function add_system_requirements_check(appid) {
 	storage.get(function(settings) {
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; storage.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
 		if (settings.show_sysreqcheck) {
-			var html = "<a class='btn_darkblue_white_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + appid + "'><span>" + localized_strings[language].check_system + "</span></a>";
-			$("#game_area_sys_req").last().after(html);
+			var html = "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + appid + "'><span>" + localized_strings[language].check_system + "</span></a>";
+			$(".sysreq_content").last().after(html);
 		}
 	});	
 }
@@ -1314,7 +1399,7 @@ function send_age_verification() {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
 		if (settings.send_age_info) {
 			document.getElementsByName("ageYear")[0].value="1955";
-			document.getElementsByClassName("btn_checkout_green")[0].click();
+			document.getElementsByClassName("btnv6_blue_hoverfade")[0].click();
 		}
 	});
 }
@@ -1328,7 +1413,7 @@ function add_wallet_balance_to_header() {
 // Add a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
 	$dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
-	$dropdown_options_container = $("<div class=\"popup_block\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
+	$dropdown_options_container = $("<div class=\"popup_block_new\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
 	$dropdown_options.css("display", "none");
 
@@ -1405,7 +1490,10 @@ function add_language_warning() {
 	storage.get(function(settings) {
 		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
 		if (settings.showlanguagewarning) {
-			var currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+			var currentLanguage = "English";
+			if (cookie.match(/language=([a-z]+)/i)) {
+				currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+			}
 			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
 			function make_language_pretty(language_string) {
@@ -1498,10 +1586,10 @@ function replace_account_name() {
 function add_custom_wallet_amount() {
 	var addfunds = $(".addfunds_area_purchase_game:first").clone();
 	$(addfunds).addClass("es_custom_funds");
-	$(addfunds).find(".btn_addtocart_content").addClass("es_custom_button");
+	$(addfunds).find(".btnv6_green_white_innerfade").addClass("es_custom_button");
 	$(addfunds).find("h1").text(localized_strings[language].wallet.custom_amount);
 	$(addfunds).find("p").text(localized_strings[language].wallet.custom_amount_text.replace("__minamount__", $(addfunds).find(".price").text().trim()));
-	var currency_symbol = $(addfunds).find(".price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+	var currency_symbol = currency_symbol_from_string($(addfunds).find(".price").text().trim());
 	var minimum = $(addfunds).find(".price").text().trim().replace(/(?:R\$|\$|€|¥|£|pуб)/, "");
 	var formatted_minimum = minimum;
 	switch (currency_symbol) {
@@ -1603,6 +1691,11 @@ function show_library() {
 	$("#game_background_holder").remove();
 	$("#modalBG").remove();
 	$("#page_background_holder").remove();
+	$(".home_ctn").remove();
+	$(".home_page_content").remove();
+	$("body").css("background", "black");
+	$(".game").remove();
+	$(".page_background").remove();
 
 	// Create Library divs
 	var es_library = $("<div id='es_library_content'></div>");
@@ -2029,7 +2122,7 @@ function display_coupon_message(appid) {
 	var $price_div = $("[itemtype=\"http://schema.org/Offer\"]"),
 		cart_id = $(document).find("[name=\"subid\"]")[0].value,
 		actual_price_container = $price_div.find("[itemprop=\"price\"]")[0].innerText,		
-		currency_symbol = actual_price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0], // Lazy but effective
+		currency_symbol = currency_symbol_from_string(actual_price_container),
 		currency_type = currency_symbol_to_type(currency_symbol),
 		comma = actual_price_container.search(/,\d\d(?!\d)/);
 
@@ -2055,9 +2148,7 @@ function display_coupon_message(appid) {
 			"        </div>" +
 			"    </div>" +
 			"<div class=\"btn_addtocart\">" +
-			"    <div class=\"btn_addtocart_left\"></div>" +
-			"        <a class=\"btn_addtocart_content\" href=\"javascript:addToCart( " + cart_id + ");\">" + localized_strings[language].add_to_cart + "</a>" +
-			"        <div class=\"btn_addtocart_right\"></div>" +
+			"        <a class=\"btnv6_green_white_innerfade btn_medium\" href=\"javascript:addToCart( " + cart_id + ");\"><span>" + localized_strings[language].add_to_cart + "</span></a>" +
 			"    </div>" +
 			"</div>";
 	}
@@ -2235,6 +2326,7 @@ function drm_warnings(type) {
 			text += $("#game_area_sys_req").html();
 			text += $("#game_area_legal").html();
 			text += $(".game_details").html();
+			text += $(".DRM_notice").html();
 
 			// Games for Windows Live detection
 			if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
@@ -2302,10 +2394,13 @@ function drm_warnings(type) {
 
 // Remove all items from cart
 function add_empty_cart_button() {
-	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='btn_checkout_blue' style='float: left; margin-top: 14px;'><div class='leftcap'></div><div class='rightcap'></div>" + localized_strings[language].empty_cart + "</a>";
+	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings[language].empty_cart + "</span></a>";
 
 	jQuery('.checkout_content').each(function () {
 		$(this).prepend(addtext);
+		if ($(".cart_row").length === 0) {
+			$(".es_empty").addClass("btn_disabled");
+		}
 	});
 }
 
@@ -2473,14 +2568,6 @@ function appdata_on_wishlist() {
 	});
 }
 
-function add_advanced_cancel() {
-	$("#advanced_search_controls").find(".control:first").append("<div id='es_advanced_cancel' style='display: inline-block;'>(<a style='cursor: pointer;'>" + localized_strings[language].cancel + "</a>)</div>");
-	$("#es_advanced_cancel").click(function() {
-		$("#advanced_search_ctn").hide();
-		$("#advanced_search_toggle").show();
-	});
-}
-
 var processing = false;
 var search_page = 2;
 
@@ -2492,12 +2579,13 @@ function load_search_results () {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 			$(".search_result_row").last().after(html);
-			// Each result is 58px height * 25 results per page = 1450
-			search_threshhold = search_threshhold + 1450;
+			// Each result is 45px height * 25 results per page = 1125
+			search_threshhold = search_threshhold + 1125;
 			search_page = search_page + 1;
 			processing = false;
-			remove_non_specials();
 			process_early_access();
+			runInPageContext("GDynamicStore.DecorateDynamicItems( $('.search_result_row') )");
+			runInPageContext("BindStoreTooltip( $J('.search_result_row [data-store-tooltip]') )");
 		});
 	}
 }
@@ -2514,38 +2602,17 @@ function endless_scrolling() {
 			$(window).scroll(function() {
 				if ($(window).scrollTop() > search_threshhold) {
 					load_search_results();
-					search_in_names_only(true);
 				}
 			});
 		}
 	});
 }
 
-function remove_non_specials() {
-	if (window.location.search.match(/specials=1/)) {
-		$(".search_result_row").each(function(index) {
-			if (!($(this).html().match(/<strike>/))) {
-				hide_the_node($(this)[0]);
-				if ($(document).height() <= $(window).height()) {
-					load_search_results();
-				}
-			}
-		});
-	}
-}
-
 function set_homepage_tab() {
 	storage.get(function(settings) {
 		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; storage.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
-		$(".tabarea .tabbar").find("div").on("click", function(e) {
-			var current_button;
-			var button_id = $(this).attr("id");
-			if (button_id == "es_popular") {
-				current_button = "es_popular";
-			} else {
-				var button = $(this).attr("onclick").match(/TabSelect\( this, '(.+)'/)[1];
-				current_button = button;
-			}
+		$(".home_tabs_row").find("div").on("click", function(e) {
+			var current_button = $(this).parent().attr("id");			
 			storage.set({'homepage_tab_last': current_button});
 		});
 
@@ -2553,243 +2620,42 @@ function set_homepage_tab() {
 			settings.homepage_tab_selection = settings.homepage_tab_last;
 		}
 
-		switch (settings.homepage_tab_selection) {
-			case "tab_3_content":
-				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_3_content\' );']").click();
-				break;
-			case "tab_2_content":
-				break;
-			case "tab_1_content":
-				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_1_content\' );']").click();
-				break;
-			case "tab_discounts_content":
-				$(".tabarea .tabbar").find("div[onclick='LoadDelayedImages(\'home_tabs\'); TabSelect( this, \'tab_discounts_content\' );']").click();
-				break;	
-			case "es_popular":
-				$("#es_popular").click();
-				break;
-		}
-	});
-}
-
-function add_actual_new_release_button() {
-	$("#tab_filtered_dlc_content").clone().css("display", "none").attr("id", "tab_filtered_dlc_content_enhanced").appendTo(".tab_content_ctn");
-	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_items").attr("id", "tab_NewReleasesFilteredDLC_items_enhanced").empty();
-	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_prev").remove();
-	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_next").remove();
-	$("#tab_filtered_dlc_content_enhanced").find("#tab_NewReleasesFilteredDLC_count_total").text("10");
-	$("#tab_filtered_dlc_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all_filtered' onclick='TabSelectStealth(\"tab_filtered_dlc_content_enhanced\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
-	$("#tab_filtered_dlc_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_filtered_enhanced' onclick='TabSelectStealth(\"tab_filtered_dlc_content\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
-
-	$("#tab_1_content").clone().css("display", "none").attr("id", "tab_1_content_enhanced").appendTo(".tab_content_ctn");
-	$("#tab_1_content_enhanced").find("#tab_NewReleases_items").attr("id", "tab_NewReleases_items_enhanced").empty();
-	$("#tab_1_content_enhanced").find("#tab_NewReleases_prev").remove();
-	$("#tab_1_content_enhanced").find("#tab_NewReleases_next").remove();
-	$("#tab_1_content_enhanced").find("#tab_NewReleases_count_total").text("10");
-	$("#tab_1_content").find(".new_releases_filter_block").append("<div class='store_checkbox_button checked' style='margin-left: 16px;' id='new_all' onclick='TabSelectStealth(\"tab_1_content_enhanced\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
-	$("#tab_1_content_enhanced").find(".new_releases_filter_block").append("<div class='store_checkbox_button' style='margin-left: 16px;' id='new_all_enhanced' onclick='TabSelectStealth(\"tab_1_content\");'>" + localized_strings[language].show_all_steam_releases + "</div>");
-
-	$("#tab_1_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_filtered_dlc_content_enhanced');");
-	$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").attr("onclick", "TabSelectStealth('tab_1_content_enhanced');");
-
-	// Get country code from Steam cookie
-	var cookies = document.cookie;
-	var matched = cookies.match(/fakeCC=([a-z]{2})/i);
-	var cc = "us";
-	if (matched != null && matched.length == 2) {
-		cc = matched[1];
-	} else {
-		matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-		if (matched != null && matched.length == 2) {
-			cc = matched[1];
-		}
-	}
-
-	$(".tabarea .tab_filler").on("click", function() {
-		// Determine which to show by default
-		storage.get(function(settings) {
-			if (settings.new_release_filter === undefined) { settings.new_release_filter = true; storage.set({'new_release_filter': settings.new_release_filter}); }
-			if (settings.new_release_dlc_filter === undefined) { settings.new_release_dlc_filter = true; storage.set({'new_release_dlc_filter': settings.new_release_dlc_filter}); }
-
-			$("#tab_1_content").hide();
-			$("#tab_1_content_enhanced").hide();
-			$("#tab_filtered_dlc_content").hide();
-			$("#tab_filtered_dlc_content_enhanced").hide();
-
-			if (settings.new_release_dlc_filter == true && settings.new_release_filter == true) { $("#tab_1_content").show(); }
-			if (settings.new_release_dlc_filter == true && settings.new_release_filter == false) { $("#tab_1_content_enhanced").show(); }
-			if (settings.new_release_dlc_filter == false && settings.new_release_filter == true) { $("#tab_filtered_dlc_content").show(); }
-			if (settings.new_release_dlc_filter == false && settings.new_release_filter == false) { $("#tab_filtered_dlc_content_enhanced").show(); }
-
-			$("#new_all_filtered_enhanced, #new_all_enhanced").click(function() {
-				storage.set({'new_release_filter': true});
-			});
-
-			$("#new_all_filtered, #new_all").click(function() {
-				storage.set({'new_release_filter': false});
-			});
-
-			$("#tab_1_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
-			$("#tab_1_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': false}); });
-			$("#tab_filtered_dlc_content_enhanced").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
-			$("#tab_filtered_dlc_content").find(".store_checkbox_button:first").click(function() { storage.set({'new_release_dlc_filter': true}); });
-		});
-
-		function fill_box(tabName) {
-			$("#tab_" + tabName + "_items_enhanced").append("<div class='es_newrelease_loading' id='es_loading_" + tabName + "'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
-
-			var appids = [];
-			var count = 1;
-
-			var game_items = $("#tab_" + tabName + "_items").children();
-			get_http("http://store.steampowered.com/search/tab?bHoverEnabled=true&cc=" + cc + "&l=" + language + "&style=&navcontext=1_4_4_&tab=" + tabName + "&start=10&count=15", function(txt) {
-				var parsed = $.parseHTML(txt);
-				$(parsed).each(function(i) {
-					if ($(parsed[i]).find("div").length > 0) {
-						game_items.push($(parsed[i]));
-					}
-				});
-
-				$(game_items).each(function() {
-					var valueToPush = new Array();
-					valueToPush[0] = get_appid($(this).find("a").attr("href"));
-					valueToPush[1] = $(this).clone();
-					valueToPush[2] = $(this).find(".genre_release").text().match(/\: (.+)/)[1].toLowerCase();
-					valueToPush[3] = count;
-					appids.push(valueToPush);
-					count++;
-				});
-				
-				var processItemsDeferred = [];
-				var games = [];
-
-				for(var i = 0; i < appids.length; i++){
-					processItemsDeferred.push(processItem(appids[i]));
-				}
-
-				function processItem(data) {
-					var dfd = $.Deferred();
-
-					get_http("http://store.steampowered.com/app/" + data[0] + "/", function(store_page) {
-						var html = $.parseHTML(store_page);
-						if ($(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)) {
-							apppage_release_date = $(html).find(".glance_ctn").find("div:not([class])").text().trim().match(/\: (.+)/)[1].toLowerCase();
-							if (data[2] == apppage_release_date) {
-								var valueToPush = new Array();
-								valueToPush[0] = data[0];
-								valueToPush[1] = data[1];
-								valueToPush[2] = data[2];
-								valueToPush[3] = apppage_release_date;
-								valueToPush[4] = data[3];
-								games.push(valueToPush);
-							}						
-						}
-						dfd.resolve();
-					});
-
-					return dfd.promise();
-				}
-
-				$.when.apply($, processItemsDeferred).done(function() {
-					games.sort(function(a,b) {
-						return parseInt(a[4],10) - parseInt(b[4],10);
-					});
-					$("#es_loading_" + tabName).remove();
-					$(games).each(function(t) {
-						$("#tab_" + tabName + "_items_enhanced").append(games[t][1]);
-					});
-				});
-
-			});
-		}
-
-		fill_box("NewReleasesFilteredDLC");
-		fill_box("NewReleases");
+		$("#" + settings.homepage_tab_selection).click();
 	});
 }
 
 function add_popular_tab() {
-	$(".tabarea .tabbar").find(".tab:last").after("<div class='tab' id='es_popular'>" + localized_strings[language].popular + "</div>");
-	var tab_html = "<div id='tab_popular_content' style='display: none;'><div class='tab_page' style='height: 780px;'><div id='tab_popular_items' class='v5'><span id='es_loading' style='position: absolute; margin-top: 20px; margin-left: 260px;'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'>" + localized_strings[language].loading + "</span></div></div>";
-	tab_html += "<div class='tab_page_link_holder'><div id='tab_popular_prev' class='tab_page_link tab_page_link_prev' style='visibility: hidden;'>";
-	tab_html += "<a href='javascript:tabMax[\"popular\"] = 100; PageTab(\"popular\", -10, 100);'>";
-	tab_html += "<img src='http://store.akamai.steamstatic.com/public/images/v5/ico_navArrow_up.gif'> prev 10</a></div>";
-	tab_html += "<div id='tab_popular_next' class='tab_page_link tab_page_link_next'>";
-	tab_html += "<a href='javascript:tabMax[\"popular\"] = 100; PageTab(\"popular\", 10, 100);'>";
-	tab_html += "next 10 <img src='http://store.akamai.steamstatic.com/public/images/v5/ico_navArrow_down.gif'></a></div>";
-	tab_html += "<div id='tab_popular_count' class='tab_page_count'><span id='tab_popular_count_start'>1</span> - <span id='tab_popular_count_end'>10</span> of <span id='tab_popular_count_total'>100</span></div>";
-	tab_html += "</div>";
+	$(".home_tabs_row").find(".home_tab:last").after("<div class='home_tab' id='es_popular'><div class='tab_content'>" + localized_strings[language].popular + "</div></div>");
+	var tab_html = "<div id='tab_popular_content' class='tab_content' style='display: none;'>";
 
-	$(".tabarea .tab_content_ctn").append(tab_html);
+	$(".home_tabs_content").append(tab_html);
 
 	$("#es_popular").on("click", function() {
-		$(".tabarea .tabbar").find(".active").removeClass("active");
-		$("#tab_1_content, #tab_2_content, #tab_3_content, #tab_discounts_content, #tab_filtered_dlc_content, #tab_filtered_dlc_content_enhanced, #tab_1_content_enhanced").css("display", "none");
+		$(".home_tabs_row").find(".active").removeClass("active");
+		$(".home_tabs_content").find(".tab_content").hide();
 		$("#es_popular").addClass("active");
-		$("#tab_popular_content").css("display", "block");
+		$("#tab_popular_content").show();
 
-		if ($("#tab_popular_items").find("div").length == 0) {
-
+		if ($("#tab_popular_content").find("div").length == 0) {
 			get_http("http://store.steampowered.com/stats", function(txt) {
-				$("#es_loading").remove();
 				var return_text = $.parseHTML(txt);
+				var i = 0;
 				$(return_text).find(".player_count_row").each(function() {
-					var appid = get_appid($(this).find("a").attr("href"));
-					var game_name = $(this).find("a").text();
-					var currently = $(this).find(".currentServers:first").text();
-					var html = "<div class='tab_row' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\"} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
-					html += "<a class='tab_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'></a>";
-					html += "<div class='tab_item_img'><img src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_sm_120.jpg' class='tiny_cap_img'></div>";
-					html += "<div class='tab_desc'><h4>" + game_name + "</h4><div class='genre_release'>" + currently + " " + localized_strings[language].charts.playing_now + "</div><br clear='all'></div>";
+					if (i < 10) {
+						var appid = get_appid($(this).find("a").attr("href"));
+						var game_name = $(this).find("a").text();
+						var currently = $(this).find(".currentServers:first").text();
+						var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
+						html += "<a class='tab_item_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='http://store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
+						html += "<img class='tab_item_cap' src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+						html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'>" + currently + " " + localized_strings[language].charts.playing_now + "</div><br clear='all'></div>";
 
-					html += "</div>";
-					$("#tab_popular_items").append(html);
-				});	
-			});
-		}
-	});
-}
-
-function fix_search_placeholder() {
-	var selectors = ["#store_nav_search_term", "#term"];
-	$.each(selectors, function(index, selector){
-		$(selector).each(function(){
-			var $this = $(this);
-			$this.off("blur");
-			$this.attr("onblur","");
-			if(selector!="#term"){
-				var search_string = $this.val();
-				if (!$this.attr("placeholder")){
-					$this.attr("placeholder", search_string);
-				}
-				$this.removeClass("default");
-				$this.val("");
-				$this.blur(function(e) {
-					if($this.val()==search_string){
-						$this.val("");
-						$this.removeClass("default");
+						html += "</div>";
+						$("#tab_popular_content").append(html);
+						i++;
 					}
 				});
-			}
-		});
-	});
-}
-// Add speech input to search boxes
-function add_speech_search() {
-	storage.get(function(settings) {
-		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; storage.set({'showspeechsearch': settings.showspeechsearch}); }
-		if (settings.showspeechsearch) {
-			var selectors = [["#store_nav_search_term","#searchform"], ["#term", "#advsearchform"]];
-			$.each(selectors, function(index, selector){
-				$(selector[0]).attr("x-webkit-speech", "search");			
-				$(selector[0]).bind("webkitspeechchange", function(e) {
-					if(selector[0]=="#term"){
-						$("#realterm").val($("#term").val());
-					}
-					var form = $(selector[1]);
-					form.submit();
-					return false;
-				});
+				$("#tab_popular_content").append("<div class='tab_see_more'>See more: <a href='http://store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>Popular Games</span></a></div>");
 			});
 		}
 	});
@@ -2947,20 +2813,14 @@ function add_metacritic_userscore() {
 	storage.get(function(settings) {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
 		if (settings.showmcus) {
-            var metahtml = document.getElementById("game_area_metascore");
-            var metauserscore = 0;
-            if (metahtml) {
-            	var metalink = document.getElementById("game_area_metalink");
-            	meta = metalink.getElementsByTagName("a");
-            	for (var i = 0; i < meta.length; i++)
-            	var meta_real_link = meta[i].href;
-            	get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + meta_real_link, function (txt) {
-            		metauserscore = escapeHTML(txt);
-            		metauserscore = metauserscore*10;
-            		var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><div id="metapage">' + metauserscore + '</div></div>';
-            		$("#game_area_metascore").after(newmeta);
-            	});
-            }
+			if ($("#game_area_metascore")) {
+				var metalink = $("#game_area_metalink").find("a").attr("href");
+				get_http("http://api.enhancedsteam.com/metacritic/?mcurl=" + metalink, function (txt) {
+					var metauserscore = parseFloat(txt)*10;
+					var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><span>' + metauserscore + '</span><span class="ms_slash">/</span><span class="ms_base">100</span></div>';
+					$("#game_area_metascore").after(newmeta);
+				});
+			}
 		}
 	});
 }
@@ -2969,31 +2829,17 @@ function add_metacritic_userscore() {
 function add_steamreview_userscore(appid) {
 	if ($(".game_area_dlc_bubble,.noReviewsYetTitle").length === 0) {
 		var positive = 0,
-			negative = 0,
-			getResults = function(data) {
-				$(".thumb",data).each(function() {
-					if ($(this).html().match(/icon_thumbsUp/)) positive++; else negative++;
-				});
-			};
-		$(".game_details").find(".details_block:first").before("<div id='es_review_score'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
+			negative = 0;
 
-		$.when(
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=0&p=1&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=10&p=2&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=20&p=3&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=30&p=4&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults),
-			$.get("http://steamcommunity.com/app/" + appid + "/homecontent/?userreviewsoffset=40&p=5&itemspage=10&appHubSubSection=10&browsefilter=toprated", getResults)
-		).then(function() {
-			var pos_percent = ((positive / (positive + negative)) * 100).toFixed(0),
-				neg_percent = ((negative / (positive + negative)) * 100).toFixed(0);
-			if (!isNaN(pos_percent) && !isNaN(neg_percent)) {
-				$("#es_review_score").html('<div style="display: inline-block; margin-right: 25px;"><img src="http://cdn.steamcommunity.com/public/shared/images/userreviews/icon_thumbsUp.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + pos_percent + '%</span></div><div style="display: inline-block;"><img src="http://cdn.steamcommunity.com/public/shared/images/userreviews/icon_thumbsDown.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + neg_percent + '%</span></div><div style="clear: both;"></div>');
-			} else {
-				$("#es_review_score").remove();
-			}
-		},function() {
-			$("#es_review_score").remove();
-		});
+		positive = parseFloat($("#ReviewsTab_positive").find("span:last").text().replace(/\(|\)|,/g, ""));
+		negative = parseFloat($("#ReviewsTab_negative").find("span:last").text().replace(/\(|\)|,/g, ""));
+
+		var pos_percent = ((positive / (positive + negative)) * 100).toFixed(0),
+			neg_percent = ((negative / (positive + negative)) * 100).toFixed(0);
+
+		if (!isNaN(pos_percent) && !isNaN(neg_percent)) {
+			$(".game_details").find(".details_block:first").before('<div id="es_review_score"><div style="display: inline-block; margin-right: 25px;"><img src="http://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + pos_percent + '%</span></div><div style="display: inline-block;"><img src="http://store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + neg_percent + '%</span></div><div style="clear: both;"></div></div>');
+		}
 	}
 }
 
@@ -3018,8 +2864,8 @@ function add_hltb_info(appid) {
 							how_long_html += "<b>" + localized_strings[language].hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
 						}
 						how_long_html += "</div>"
-							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top' /></div>" + localized_strings[language].more_information + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'><div class='rightblock'><img src='http://cdn3.store.steampowered.com/public/images/ico/link_news.gif' width='16' height='16' border='0' align='top' /></div>" + localized_strings[language].hltb.submit + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>" + localized_strings[language].more_information + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'>" + localized_strings[language].hltb.submit + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
 							+ "</div></div></div>";
 						$("div.game_details:first").after(how_long_html);
 					}
@@ -3039,11 +2885,23 @@ function add_pcgamingwiki_link(appid) {
 					var data = JSON.parse(txt);
 					for (var game_name in data["results"]) break;
 					var url = data["results"][game_name]["fullurl"];
-					$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="' + url + '" style="background-image:url(' + chrome.extension.getURL("img/pcgw.png") + ')">' + localized_strings[language].wiki_article.replace("__pcgw__","PC Gaming Wiki") + '</a></div>');
+					$('#demo_block').prepend('<a class="btnv6_blue_hoverfade btn_medium pcgw_btn" target="_blank" href="' + url + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/pcgw.png") + ')"></i>&nbsp;&nbsp; ' + localized_strings[language].wiki_article.replace("__pcgw__","PCGamingWiki") + '</span></a>');
 				}
 			});
 		}
 	});
+}
+
+// Add link to Steam Card Exchange
+function add_steamcardexchange_link(appid){
+  storage.get(function(settings) {
+    if (settings.showsteamcardexchange === undefined ){ settings.showsteamcardexchange = false; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
+    if (settings.showsteamcardexchange) {
+    	if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
+      		$("#demo_block").prepend('<a class="btnv6_blue_hoverfade btn_medium cardexchange_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/steamcardexchange.png") + ')"></i>&nbsp;&nbsp; ' + localized_strings[language].view_in + ' Steam Card Exchange</span></a>');
+      	}
+    }
+  });
 }
 
 // Display widescreen support information from wsgf.org
@@ -3060,7 +2918,7 @@ function add_widescreen_certification(appid) {
 							var path = data["node"]["Path"];
 							var wsg = data["node"]["WideScreenGrade"];
 							var mmg = data["node"]["MultiMonitorGrade"];
-							var fkg = data["node"]["FourKGrade"];
+							var fkg = data["node"]["Grade4k"];
 							var uws = data["node"]["UltraWideScreenGrade"];
 							var wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
 							var fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
@@ -3163,7 +3021,7 @@ function add_widescreen_certification(appid) {
 							if (mmg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 							if (uws != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(uws_icon) + "' height='120' title='" + escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 							if (fkg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(fkg_icon) + "' height='120' title='" + escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-							if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'><div class='rightblock'><img src='http://cdn2.store.steampowered.com/public/images/ico/link_web.gif' width='16' height='16' border='0' align='top'></div>" + localized_strings[language].rating_details + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
+							if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'>" + localized_strings[language].rating_details + " <img src='http://cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
 							html += "</div></div></div></div>";
 							$(node).after(html);
 						}
@@ -3225,7 +3083,7 @@ function add_market_total() {
 				function get_market_data(txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
-					if (!currency_symbol) currency_symbol = $(market).find(".market_listing_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+					if (!currency_symbol) currency_symbol = currency_symbol_from_string($(market).find(".market_listing_price").text().trim());
 					
 					pur_totaler = function (p, i) {
 						if ($(p).find(".market_listing_price").length > 0) {
@@ -3313,7 +3171,7 @@ function add_active_total() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
-			currency_symbol = $(this).text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
@@ -3328,7 +3186,7 @@ function add_active_total() {
 		$(".my_listing_section:nth-child(2)").find(".market_listing_row").find(".market_listing_my_price:first").each(function() {
 			var qty = $(this).parent().find(".market_listing_my_price:last").text().trim();
 			total += Number($(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9\.]+/g,"")) * Number(qty);
-			currency_symbol = $(this).text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
@@ -3359,13 +3217,12 @@ function account_total_spent() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showtotal) {
 			if ($('.transactionRow').length !== 0) {
-				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
+				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
 				var currency_symbol;
 
 				// Get user's Steam currency
-				if ($(".accountBalance").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)) {
-					currency_symbol = $(".accountBalance").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
-				} else { return; }
+				currency_symbol = currency_symbol_from_string($(".accountBalance").text().trim());
+				if (currency_symbol == "") { return; }
 				local_currency = currency_symbol_to_type(currency_symbol);
 
 				var complete = 0;
@@ -3403,7 +3260,7 @@ function account_total_spent() {
 						if ($(p).find(".transactionRowPrice")) {
 							var price = $(p).find(".transactionRowPrice").text().match(/(\d+[.,]?\d+)/);
 							if (price !== null) {
-								var currency = currency_symbol_to_type($(p).find(".transactionRowPrice").text().match(/(?:R\$|\$|€|¥|£|pуб)/)[0]);
+								var currency = currency_symbol_to_type(currency_symbol_from_string($(p).find(".transactionRowPrice").text()));
 								var tempprice = price[0].toString();
 								tempprice = tempprice.replace(/,(\d\d)$/, ".$1");
 								tempprice = tempprice.replace(/,/g, "");
@@ -3544,7 +3401,7 @@ function inventory_market_helper(response) {
 		} else {
 			if (hash_name && hash_name.match(/Booster Pack/g)) {
 				setTimeout(function() {
-					var currency_symbol = $("#iteminfo" + item + "_item_market_actions").text().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+					var currency_symbol = currency_symbol_from_string($("#iteminfo" + item + "_item_market_actions").text());
 					var currency_type = currency_symbol_to_type(currency_symbol);
 					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
 
@@ -3665,15 +3522,15 @@ function subscription_savings_check() {
 		comma;
 
 	// Load each apps info
-	$.each($(".tab_row"), function (i, node) {
+	$.each($(".tab_item"), function (i, node) {
 		var appid = get_appid(node.querySelector("a").href),
 			// Remove children, leave only text(price or only discounted price, if there are discounts)
-			price_container = $(node).find(".tab_price").children().remove().end().text().trim();
+			price_container = $(node).find(".discount_final_price").text().trim();
 
 		if (price_container !== "N/A" && price_container !== "Free") {
 			if (price_container) {
 				itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
-				if (!currency_symbol) currency_symbol = price_container.match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+				if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
 				if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
 			} else {
 				itemPrice = 0;
@@ -3722,11 +3579,11 @@ function dlc_data_from_site(appid) {
 
             if (data) {
                 $.each(data["dlc"], function(index, value) {
-                    html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><div class='name'><span title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</span></div></div>";
+                    html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><a class='name' title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</a></div>";
                 });
 			}
 
-			html += "</div><a class='linkbar' href=\"http://www.enhancedsteam.com/gamedata/dlc_category_suggest.php?appid=" + appid + "&appname=" + appname + "\" target='_blank'>" + localized_strings[language].dlc_suggest + "</a></div></div></div>";
+			html += "</div><a class='linkbar' style='margin-top: 10px;' href=\"http://www.enhancedsteam.com/gamedata/dlc_category_suggest.php?appid=" + appid + "&appname=" + appname + "\" target='_blank'>" + localized_strings[language].dlc_suggest + "</a></div></div></div>";
 
 			$("#demo_block").after(html);
     	});
@@ -3791,84 +3648,10 @@ function dlc_data_for_dlc_page() {
 	});
 }
 
-function enhance_game_background(type) {
-	if (type == "sale") {
-		$("#game_background").css("background-size", "initial");		
-	} else {
-		$("#game_background").before("<div id='es_background_gradient'></div>");		
-	}
-
-	$("#game_background").css("display", "block");
-}
-
-function add_screenshot_lightbox() {
-	$(".highlight_screenshot").find("a").addClass("es_lightbox_image");
-	var current, size = 0;
-	var game_name = $(".apphub_AppName:first").text();
-
-	$(".es_lightbox_image").click(function(e) {
-		e.preventDefault();
-		var image_href = $(this).attr("href");
-		var slideNum = $(".es_lightbox_image").index(this);
-		if ($('#es-lightbox').length > 0) {
-			$('#es-lightbox').fadeIn(300);
-		} else {
-			$('body').append("<div id='es-lightbox'><p>X</p><div id='es-lightbox-content'><ul></ul><div class='es-nav'><a href='#es-prev' class='es-prev slide-nav'><</a><a href='#es-next' class='es-next slide-nav'>></a></div><div id='es-lightbox-desc'></div></div></div>");
-		}
-
-		if (size === 0) {
-			$(".es_lightbox_image").each(function() {
-				var $href = $(this).attr("href");
-				$("#es-lightbox-content ul").append("<li><img src='" + $href + "'></li>");
-			});
-		}
-
-		size = $("#es-lightbox-content ul > li").length;
-		if (size === 1) { $(".es-nav").remove(); }
-		$("#es-lightbox-content ul > li").hide();
-		$("#es-lightbox-content ul > li:eq(" + slideNum + ")").show();
-		current = slideNum;
-		$("#es-lightbox-desc").text(game_name + "  " + (current + 1) + " / " + size);
-	});
-
-	$("body").on("click", "#es-lightbox", function() { $("#es-lightbox").fadeOut(300); });
-
-	$("body").on({ 
-		mouseenter: function() { $(".es-nav").fadeIn(300);	},
-		mouseleave: function() { $(".es-nav").fadeOut(300); }
-	}, "#es-lightbox-content");
-
-	$("body").on("click", ".slide-nav", function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		var $this = $(this);
-		var dest;
-
-		if ($this.hasClass('es-prev')) {
-			dest = current - 1;
-			if (dest < 0) {
-				dest = size - 1;
-			}
-		} else {
-			dest = current + 1;
-			if (dest > size - 1) {
-				dest = 0;
-			}
-		}
-
-		$('#es-lightbox-content ul > li:eq(' + current + ')').hide();
-		$('#es-lightbox-content ul > li:eq(' + dest + ')').show();
-
-		current = dest;
-		$("#es-lightbox-desc").text(game_name + "  " + (current + 1) + " / " + size);
-	});
-}
-
 function add_app_badge_progress(appid) {
 	if (is_signed_in()) {
 		if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
-			$(".communitylink .block_content:last").append("<div class='rule'></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div><div style=\"clear: both\"></div>");
+			$("#category_block").after("<div class='block'><div class='block_header'><h4>Badge Progress</h4></div><div class='block_content_inner'><link rel='stylesheet' type='text/css' href='http://cdn.steamcommunity.com/public/css/skin_1/badges.css'><div class='es_badge_progress'></div><div class='es_foil_badge_progress'></div></div>");
 			$(".es_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/ .badge_current", function(responseText) {
 				if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
 					var card_num_owned = $(responseText).find(".badge_detail_tasks .owned").length;
@@ -3884,14 +3667,14 @@ function add_app_badge_progress(appid) {
 						show_card_num=true;
 					}
 					if (badge_completed){
-						$(".es_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].view_badge + "</a>");
+						$(".es_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].view_badge + "</a></div>");
 					} else {
-						$(".es_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_progress + "</a>");
+						$(".es_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].badge_progress + "</a></div>");
 					}
 					if(show_card_num){
-						$(".es_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
+						$(".es_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 10px; margin-left: 44px; color: #67c1f5;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
 					}
-					$(".es_badge_progress").after("<div style='padding-top: 10px; padding-bottom: 2px; color: #5491cf;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
+					$(".es_badge_progress").after("<div style='padding-top: 10px; padding-bottom: 10px; margin-left: 44px; color: #67c1f5;'>" + $(responseText).find(".progress_info_bold").text() + "</div>");
 					$(".es_badge_progress").after("<div style=\"clear: both\"></div>");
 					$(".es_badge_progress .badge_info_description").css({"width":"275px"});
 					$(".es_badge_progress .badge_empty_circle").css({"margin":"0px 46px 14px 8px","border-radius":"46px"});
@@ -3899,7 +3682,6 @@ function add_app_badge_progress(appid) {
 					$(".es_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>").append("<div style=\"clear: both\"></div>");
 				} else {
 					$(".es_badge_progress").remove();
-					$(".communitylink .rule:last").remove();
 				}
 			});
 			$(".es_foil_badge_progress").load("http://steamcommunity.com/my/gamecards/" + appid + "/?border=1 .badge_current", function(responseText) {
@@ -3922,13 +3704,12 @@ function add_app_badge_progress(appid) {
 						$(".es_foil_badge_progress .badge_empty_right div:last-child").remove();
 						$(".es_foil_badge_progress .badge_empty_right").append("<div class=\"badge_empty_name\">" + localized_strings[language].badge_not_unlocked + "</div>")
 						if (badge_completed){
-							$(".es_foil_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/?border=1'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].view_badge_foil + "</a>");
-						}
-						else {
-							$(".es_foil_badge_progress").after("<a class='linkbar' href='http://steamcommunity.com/my/gamecards/" + appid + "/?border=1'><div class='rightblock'><img src='http://cdn4.store.steampowered.com/public/images/ico/ico_cards.png' width=24 height=16 border=0 align=top></div>" + localized_strings[language].badge_foil_progress + "</a>");
+							$(".es_foil_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].view_badge_foil + "</a><div>");
+						} else {
+							$(".es_foil_badge_progress").after("<div class='game_area_details_specs'><div class='icon'><img src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png' width=24 height=16 border=0 align=top></div><a href='http://steamcommunity.com/my/gamecards/" + appid + "/' class='name'>" + localized_strings[language].badge_foil_progress + "</a><div>");
 						}
 						if(show_card_num){
-							$(".es_foil_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 2px; color: #5491cf;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
+							$(".es_foil_badge_progress").after("<div style='padding-top: 2px; padding-bottom: 10px; margin-left: 44px; color: #67c1f5;'>" + localized_strings[language].cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total) + "</div>");
 						}
 						$(".es_foil_badge_progress").after("<div style=\"clear: both\"></div>");
 					} else {
@@ -3946,14 +3727,18 @@ function add_app_badge_progress(appid) {
 function add_dlc_checkboxes() {
 	var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
 	if ($("#game_area_dlc_expanded").length > 0) {
-		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
+		$("#game_area_dlc_expanded").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'><span>" + localized_strings[language].add_selected_dlc_to_cart + "</span></a></div></div>");
 		$(".game_area_dlc_section").after("<div style='clear: both;'></div>");
 	} else {
-		$(".gameDlcBlocks").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><div class='btn_addtocart_left'></div><div class='btn_addtocart_right'></div><a class='btn_addtocart_content' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'>" + localized_strings[language].add_selected_dlc_to_cart + "</a></div></div>");
+		$(".gameDlcBlocks").after("<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium' href='javascript:document.forms[\"add_selected_dlc_to_cart\"].submit();'><span>" + localized_strings[language].add_selected_dlc_to_cart + "</span></a></div></div>");
 	}
 	$("#es_selected_btn").before("<form name=\"add_selected_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\" id=\"es_selected_cart\">");
 	$(".game_area_dlc_row").each(function() {
 		$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + $(this).find("input").val() + "' value='" + $(this).find("input").val() + "'><label for='es_select_dlc_" + $(this).find("input").val() + "' style='background-image: url( " + chrome.extension.getURL("img/check_sheet.png") + ");'></label>");
+	}).hover(function() { 
+		$(this).find(".ds_flag").hide();
+	}, function() { 
+		$(this).find(".ds_flag").show();
 	});
 	function add_dlc_to_list() {
 		$("#es_selected_cart").html("<input type=\"hidden\" name=\"action\" value=\"add_to_cart\"><input type=\"hidden\" name=\"sessionid\" value=\"" + session + "\">");
@@ -3995,7 +3780,7 @@ function add_dlc_checkboxes() {
 		});
 	});
 
-	$(".game_area_dlc_section").find(".gradientbg").append("<div id='es_dlc_option_button'>" + localized_strings[language].thewordoptions + " ▾</div>");
+	$(".game_area_dlc_section").find(".gradientbg").append("<a id='es_dlc_option_button'>" + localized_strings[language].thewordoptions + " ▾</a>");
 	
 	$("#es_dlc_option_button").on("click", function() {
 		$("#es_dlc_option_panel").toggle();
@@ -4020,13 +3805,13 @@ function add_astats_link(appid) {
 	storage.get(function(settings) {
 		if (settings.showastatslink === undefined) { settings.showastatslink = true; storage.set({'showastatslink': settings.showastatslink}); }
 		if (settings.showastatslink) {
-			$(".communitylink_achievement_inner a:last").after("<a class='linkbar' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><div class='rightblock'><img src='" + chrome.extension.getURL("img/ico/astatsnl.png") + "' style='margin-right: 11px;'></div>" + localized_strings[language].view_astats + "</a>")
+			$("#achievement_block").append("<div class='game_area_details_specs'><div class='icon'><img src='" + chrome.extension.getURL("img/ico/astatsnl.png") + "' style='margin-left: 4px'></div><a class='name' href='http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid + "' target='_blank'><span>" + localized_strings[language].view_astats + "</span></a>");
 		}
 	});
 }
 
 function add_achievement_completion_bar(appid) {
-	$(".myactivity_block").find(".details_block").after("<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -10px;'></div>");
+	$(".myactivity_block").find(".details_block").after("<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 	$("#es_ach_stats").load("http://steamcommunity.com/my/stats/" + appid + "/ #topSummaryAchievements", function(response, status, xhr) {				
 		if (response.match(/achieveBarFull\.gif/)) {
 			var BarFull = $("#es_ach_stats").html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
@@ -4073,25 +3858,18 @@ var ea_appids, ea_promise = (function () {
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
 	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 	var appid = get_appid(href);
+	if (appid === null) { 
+		if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
+			appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+		}
+	}
 	var early_access = JSON.parse(ea_appids);
 	if (early_access["ea"].indexOf(appid) >= 0) {
-		switch (action) {
-			case "hide":
-				$(node).css("visibility", "hidden");
-				break;
-			default:
-				var selector = "img";
-				if (selector_modifier != undefined) selector += selector_modifier;
-				overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
-				if($(node).hasClass("small_cap")) {
-					$(overlay_img).css({"left":"-"+node.width()+"px", "position":"relative"});
-				}
-				else {
-					$(overlay_img).css({"left":image_left+"px"});
-				}
-				$(node).find(selector.trim()).after(overlay_img);
-				break;
-		}
+		var selector = "img";
+		if (selector_modifier != undefined) selector += selector_modifier;
+		overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+		$(overlay_img).css({"left":image_left+"px"});
+		$(node).find(selector.trim()).before(overlay_img);
 	}
 }
 
@@ -4099,108 +3877,75 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 function process_early_access() {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
-		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
-		if (settings.show_early_access || settings.hide_early_access) {
+		if (settings.show_early_access) {
 			ea_promise.done(function(){
-				if (settings.hide_early_access) {
-					switch (window.location.host) {
-						case "store.steampowered.com":
-							switch (true) {
-								case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
-									$(".tab_row").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".special_tiny_cap").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".cluster_capsule").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".game_capsule").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									break;
-								case /^\/search\/.*/.test(window.location.pathname):
-									$(".search_result_row").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									break;
-								case /^\/tag\/.*/.test(window.location.pathname):
-									$(".cluster_capsule").each(function(index, value) { check_early_access(this, "", 0, "", "hide"); });
-									$(".tab_row").each(function(index, value) { check_early_access(this, "", 0, "", "hide"); });
-									$(".browse_tag_game_cap").each(function(index, value) { check_early_access(this, "", 0, "", "hide"); });
-									break;
-								case /^\/$/.test(window.location.pathname):
-									$(".tab_row").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".small_cap").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".cap").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".special_tiny_cap").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".game_capsule").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									$(".cluster_capsule").each(function(index, value) { check_early_access(this, "", 0, "", "hide") });
-									break;
-							}
-					}
-					$(".store_nav .popup_menu_item").each(function(index, value) {
-						if(value.innerHTML.trim() == 'Early Access') {
-							$(this).hide();
+				switch (window.location.host) {
+					case "store.steampowered.com":
+						switch (true) {
+							case /^\/app\/.*/.test(window.location.pathname):
+								$(".game_header_image").append("<a href='" + window.location.href + "'></a>");
+								$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+								$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
+								break;
+							case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
+								$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+								$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								break;
+							case /^\/search\/.*/.test(window.location.pathname):
+								$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								break;
+							case /^\/recommended/.test(window.location.pathname):
+								$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+								$(".header_image").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								$(".appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+								$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
+								$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
+								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
+								$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								break;
+							case /^\/tag\/.*/.test(window.location.pathname):
+								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+								$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+								$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+								break;
+							case /^\/$/.test(window.location.pathname):					
+								$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								$(".home_smallcap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
+								$(".cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+								$(".recommended_spotlight_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								$(".curated_app_link").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								$(".tab_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0, ":last"); });
+								$(".dailydeal_cap").find("a").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								break;
 						}
-					});
-				} else {
-					if (settings.show_early_access) {
-						switch (window.location.host) {
-							case "store.steampowered.com":
-								switch (true) {
-									case /^\/app\/.*/.test(window.location.pathname):									
-										$(".game_header_image").append("<a href='" + window.location.href + "'></a>");
-										$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-										break;
-									case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
-										$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-										$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-										$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-										$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-										break;
-									case /^\/search\/.*/.test(window.location.pathname):
-										$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0, ":eq(1)"); });					
-										break;
-									case /^\/recommended/.test(window.location.pathname):
-										$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-										$(".header_image").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-										$(".appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-										$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
-										$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
-										$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
-										$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-										break;
-									case /^\/tag\/.*/.test(window.location.pathname):
-										$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-										$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-										$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-										break;
-									case /^\/$/.test(window.location.pathname):					
-										$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-										$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-										$(".cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-										$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-										$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-										$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-										break;
-								}
-							case "steamcommunity.com":
-								switch(true) {
-									case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-										$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
-										break;
-									case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-										$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
-										break;
-									case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
-										$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
-											check_early_access($(this), "ea_231x87.png", $(this).position().left);
-										});
-										break;
-									case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
-										$(".game_info_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-										$(".showcase_slot").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-										break;
-									case /^\/app\/.*/.test(window.location.pathname):
-										if ($(".apphub_EarlyAccess_Title").length > 0) {
-											$(".apphub_StoreInfoHeader").css({"position":"relative"})
-											$(".apphub_StoreAppLogo:first").after("<img class='es_overlay ea_app_overlay' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
-										}
+					case "steamcommunity.com":
+						switch(true) {
+							case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
+								$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
+								break;
+							case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+								$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
+								break;
+							case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+								$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
+									check_early_access($(this), "ea_231x87.png", $(this).position().left);
+								});
+								break;
+							case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
+								$(".game_info_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+								$(".showcase_slot").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+								break;
+							case /^\/app\/.*/.test(window.location.pathname):
+								if ($(".apphub_EarlyAccess_Title").length > 0) {
+									$(".apphub_StoreInfoHeader").css({"position":"relative"})
+									$(".apphub_StoreAppLogo:first").after("<img class='es_overlay ea_app_overlay' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
 								}
 						}
-					}
 				}
 			});
 		}
@@ -4226,14 +3971,13 @@ function show_regional_pricing() {
 			var sale;
 			var sub;
 			var region_appended=0;
-			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY"];
-			var conversion_rates = [1, 1, 1, 1, 1, 1];
+			var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
+			var conversion_rates = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 			var currency_symbol;
 
 			// Get user's Steam currency
-			if ($(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)) {
-				currency_symbol = $(".price:first, .discount_final_price:first").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
-			} else { return; }
+			currency_symbol = currency_symbol_from_string($(".price:first, .discount_final_price:first").text().trim());
+			if (currency_symbol == "") { return; }
 			local_currency = currency_symbol_to_type(currency_symbol);
 
 			var complete = 0;
@@ -4437,7 +4181,10 @@ function show_regional_pricing() {
 												$(".game_area_purchase_game").eq(index).find(".game_purchase_action").before(app_pricing_div);
 												break;
 											default:
-												$(".game_area_purchase_game").eq(index).after(app_pricing_div);
+												$(".game_area_purchase_game").eq(index).append(app_pricing_div);
+												$(app_pricing_div).css("top", $(".game_area_purchase_game").eq(index).outerHeight(true));
+												$(".game_area_purchase_game").css("z-index", "auto");
+												$(".game_purchase_action").css("z-index", "1");
 												break;
 										}
 									}
@@ -4476,7 +4223,7 @@ function show_regional_pricing() {
 									if(region_appended<=1){
 										$("#es_pricing_"+subid).find(".miniprofile_arrow").css("top","6px");
 									}
-								}	
+								}
 							});
 							$.each(all_game_areas,function(index,app_package){
 								var subid = $(app_package).find("input[name='subid']").val();
@@ -4485,7 +4232,8 @@ function show_regional_pricing() {
 										if(!(settings.regional_hideworld)){
 											$(app_package).find(".price").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
 											$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
-											$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px"});
+											$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px","background-color":"#000000"});
+											$(app_package).find(".discount_prices").css({"background":"none"});
 										}
 										$(app_package).find(".price, .discount_block")
 										.mouseover(function() {
@@ -4495,9 +4243,9 @@ function show_regional_pricing() {
 											} else if(sale) {
 												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px");
 											} else if(sub) {
-												$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 45 +"px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 + "px").css("top", "70px");
 											} else {
-												$("#es_pricing_" + subid).css("right", $(".rightcol").width() + $(app_package).find(".game_purchase_action").width() + 35 +"px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 20 + "px");
 											}
 											$("#es_pricing_" + subid).show();
 										})
@@ -4606,9 +4354,11 @@ function bind_ajax_content_highlighting() {
 				if (node.id == "search_result_container") {
 					endless_scrolling();
 					start_highlights_and_tags();
-					remove_non_specials();
 					process_early_access();
-					search_in_names_only(true);
+				}
+
+				if (node.classList && node.classList.contains("searchtag")) {
+					search_threshhold = 1125;
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
@@ -4714,10 +4464,11 @@ function start_highlights_and_tags(){
 	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {	
 		var selectors = [
 			"div.tab_row",				// Storefront rows
-			"div.dailydeal",			// Christmas deals; http://youtu.be/2gGopKNPqVk?t=52s
+			"div.dailydeal_ctn",
 			"div.wishlistRow",			// Wishlist rows
 			"a.game_area_dlc_row",			// DLC on app pages
 			"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+			"a.home_smallcap",
 			"a.search_result_row",			// Search result rows
 			"a.match",				// Search suggestions rows
 			"a.cluster_capsule",			// Carousel items
@@ -4729,7 +4480,10 @@ function start_highlights_and_tags(){
 			"div.item",				// Sale pages / featured pages
 			"div.home_area_spotlight",		// Midweek and weekend deals
 			"div.browse_tag_game",			// Tagged games
-			"div.similar_grid_item"			// Items on the "Similarly tagged" pages
+			"div.similar_grid_item",			// Items on the "Similarly tagged" pages
+			"div.tab_item",			// Items on new homepage
+			"div.special",			// new homepage specials
+			"div.curated_app_item"	// curated app items!
 		];
 
 		var appids = [];
@@ -4872,18 +4626,26 @@ function add_steamdb_links(appid, type) {
 		if (settings.showsteamdb) {
 			switch (type) {
 				case "gamehub":
-					$(".apphub_OtherSiteInfo").append('<a href="http://steamdb.info/app/' + appid + '/" class="btn_darkblue_white_innerfade btn_medium" target="_blank"><span>Steam Database</span>');
+					$(".apphub_OtherSiteInfo").append('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="http://steamdb.info/app/' + appid + '/"><span><i class="ico16" style="background-image:url('+ chrome.extension.getURL("img/steamdb_store.png") +')"></i>&nbsp; Steam Database</span></a>');
 					break;
 				case "gamegroup":
 					$('#rightActionBlock' ).append('<div class="actionItemIcon"><img src="' + chrome.extension.getURL("img/steamdb.png") + '" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="http://steamdb.info/app/' + appid + '/">' + localized_strings[language].view_in + ' Steam Database</a>');
 					break;
 				case "app":
-					$('#demo_block').find('.block_content_inner').prepend('<div class="demo_area_button"><a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="background-image:url(' + chrome.extension.getURL("img/steamdb_store.png") + ')">' + localized_strings[language].view_in + ' Steam Database</a></div>');
+					$('#demo_block').prepend('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="http://steamdb.info/app/' + appid + '/" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url('+ chrome.extension.getURL("img/steamdb_store.png") +')"></i>&nbsp; &nbsp;' + localized_strings[language].view_in + ' Steam Database</span></a>');
 					break;
 				case "sub":
-					$(".share").before('<a class="game_area_wishlist_btn" target="_blank" href="http://steamdb.info/sub/' + appid + '/" style="background-image:url(' + chrome.extension.getURL("img/steamdb_store.png") + ')">' + localized_strings[language].view_in + ' Steam Database</a>');
+					$(".share").before('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="http://steamdb.info/sub/' + appid + '/" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url('+ chrome.extension.getURL("img/steamdb_store.png") +')"></i>&nbsp; &nbsp;' + localized_strings[language].view_in + ' Steam Database</span></a>');
 					break;
 			}
+
+			$(".steamdb_ico").hover(
+				function() {
+					$(this).find("i").css("background-image", "url("+ chrome.extension.getURL("img/steamdb_store_black.png") +")");
+				}, function() {
+					$(this).find("i").css("background-image", "url("+ chrome.extension.getURL("img/steamdb_store.png") +")");
+				}
+			)
 		}
 	});
 }
@@ -5018,7 +4780,7 @@ function add_carousel_descriptions() {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_carousel_descriptions) {
 			if ($(".main_cluster_content").length > 0) {
-				var description_height_to_add = 62;
+				var description_height_to_add = 56;
 				$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
 				
 				$.each($(".cluster_capsule"), function(i, _obj) {
@@ -5038,13 +4800,15 @@ function add_carousel_descriptions() {
 							if (desc) {
 								setValue(appid + "carousel", desc[1]);
 								setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-								$desc.append(desc[1]);
+								var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>";
+								$desc.append(value_to_add);
 							}
 						});
 					}
 					else {
 						var desc = getValue(appid + "carousel");
-						$desc.append(desc);
+						var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc + "</div>";
+						$desc.append(value_to_add);
 					}
 				});
 
@@ -5173,7 +4937,7 @@ function add_app_page_wishlist(appid) {
 			var wishlisted = getValue(appid + "wishlisted");
 			var owned = getValue(appid+"owned");
 			if(!wishlisted && !owned){
-				$(".apphub_Stats").prepend('<div class="btn_darkblue_white_innerfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
+				$(".apphub_Stats").prepend('<div class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings[language].add_to_wishlist + '</span>');
 				$("#es_wishlist").click(function() {
 					$.ajax({
 						type:"POST",
@@ -5889,7 +5653,7 @@ function add_gamecard_market_links(game) {
 	});
 
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 		var currency_type = currency_symbol_to_type(currency_symbol);
 
 		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
@@ -5988,7 +5752,7 @@ function add_gamecard_market_links(game) {
 function add_badge_completion_cost() {
 	$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = $(txt).find(".price, .discount_final_price").text().trim().match(/(?:R\$|\$|€|¥|£|pуб)/)[0];
+		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 		var currency_type = currency_symbol_to_type(currency_symbol);		
 		var total_worth = 0, count = 0;
 		$(".badge_row").each(function() {
@@ -6175,52 +5939,6 @@ function add_birthday_celebration() {
 	});
 }
 
-// Add a checkbox to Advanced Search Options to search in names of products only
-function search_in_names_only(calledbyajax) {
-	var searchterm = $(".search_controls #realterm").val().toLowerCase();
-	var itemtitle;
-	if(!$("#advanced_search_controls #names_only").length)
-	{
-		$("#advanced_search_controls").append('<div class="store_checkbox_button" style="margin-bottom: 8px;" id="names_only">' + localized_strings[language].search_names_only + '</div>');
-	}
-	if(calledbyajax)
-	{      
-		$(".search_result_row:hidden").show();
-		if($("#advanced_search_controls #names_only").hasClass("checked"))
-		{
-			$(".search_result_row .search_name h4").each(function() {
-				itemtitle = $(this).html().toLowerCase();
-				if(!$(this).html().toLowerCase().contains(searchterm))
-				{
-					$(this).parent().parent().hide();
-					search_threshhold = search_threshhold - 61;
-				}
-			});
-		}    
-	}
-	else
-	{
-		$("#advanced_search_controls #names_only").off('click').click(function(){
-			$(this).toggleClass("checked");
-			if($(this).hasClass("checked"))
-			{
-				$(".search_result_row .search_name h4").each(function() {
-					itemtitle = $(this).html().toLowerCase();
-					if(!$(this).html().toLowerCase().contains(searchterm))
-					{
-						$(this).parent().parent().hide();
-						search_threshhold = search_threshhold - 61;
-					}
-				});
-			}
-			else
-			{
-				$(".search_result_row:hidden").show();
-			}
-		});
-	}
-}
-
 $(document).ready(function(){
 	is_signed_in();
 
@@ -6260,8 +5978,6 @@ $(document).ready(function(){
 						});
 						show_pricing_history(appid, "app");
 						dlc_data_from_site(appid);
-						enhance_game_background();
-						add_screenshot_lightbox();
 
 						drm_warnings("app");
 						add_metacritic_userscore();
@@ -6272,6 +5988,7 @@ $(document).ready(function(){
 						add_widescreen_certification(appid);
 						add_hltb_info(appid);
 						add_pcgamingwiki_link(appid);
+						add_steamcardexchange_link(appid);
 						add_app_page_highlights(appid);
 						add_steamdb_links(appid, "app");
 						add_familysharing_warning(appid);
@@ -6291,7 +6008,6 @@ $(document).ready(function(){
 
 					case /^\/sub\/.*/.test(window.location.pathname):
 						var subid = get_subid(window.location.host + window.location.pathname);
-						enhance_game_background();
 						drm_warnings("sub");
 						subscription_savings_check();
 						show_pricing_history(subid, "sub");
@@ -6320,21 +6036,16 @@ $(document).ready(function(){
 
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
-						add_advanced_cancel();
 						endless_scrolling();
-						remove_non_specials();
-						search_in_names_only(false);
 						break;
 
 					case /^\/sale\/.*/.test(window.location.pathname):
 						show_regional_pricing();
-						enhance_game_background("sale");
 						break;
 
 					// Storefront-front only
 					case /^\/$/.test(window.location.pathname):
 						add_popular_tab();
-						add_actual_new_release_button();
 						set_homepage_tab();
 						add_carousel_descriptions();
 						show_regional_pricing();
@@ -6347,9 +6058,7 @@ $(document).ready(function(){
 				// Storefront homepage tabs
 				bind_ajax_content_highlighting();
 				add_small_cap_height();
-				fix_search_placeholder();
 				hide_trademark_symbols();
-				add_speech_search();
 				set_html5_video();
 				break;
 

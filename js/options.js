@@ -29,9 +29,7 @@ function save_options() {
 	tag_inv_guestpass = $("#tag_inv_guestpass").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
-	hide_owned_homepage = $("#hide_owned_homepage").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
-	hide_early_access = $("#hide_early_access").prop('checked');
 
 	showlibrarymenu = $("#showlibrarymenu").prop('checked');
 	showlibraryf2p = $("#showlibraryf2p").prop('checked');
@@ -44,13 +42,13 @@ function save_options() {
 	showlanguagewarninglanguage = $("#warning_language").val();
 	homepage_tab_selection = $("#homepage_tab_selection").val();
 	send_age_info = $("#send_age_info").prop('checked');
-	showspeechsearch = $("#showspeechsearch").prop('checked');
 	html5video = $("#html5video").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
 	showpcgw = $("#showpcgw").prop('checked');
+	showsteamcardexchange = $("#showsteamcardexchange").prop('checked');
 	showsteamdb = $("#showsteamdb").prop('checked');
 	showastatslink = $("#showastatslink").prop('checked');
 	showwsgf = $("#showwsgf").prop('checked');
@@ -168,9 +166,7 @@ function save_options() {
 		'tag_inv_guestpass': tag_inv_guestpass,
 		
 		'hide_owned': hide_owned,
-		'hide_owned_homepage': hide_owned_homepage,
 		'hidetmsymbols': hidetmsymbols,
-		'hide_early_access': hide_early_access,
 
 		'hideinstallsteambutton': hideinstallsteambutton,
 		'hideaboutmenu': hideaboutmenu,
@@ -182,13 +178,13 @@ function save_options() {
 		'showlibrarymenu': showlibrarymenu,
 		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
-		'showspeechsearch': showspeechsearch,
 		'html5video': html5video,
 		'contscroll': contscroll,
 		'showdrm': showdrm,
 		'showmcus': showmcus,
 		'showhltb': showhltb,
 		'showpcgw': showpcgw,
+		'showsteamcardexchange': showsteamcardexchange,
 		'showsteamdb': showsteamdb,
 		'showastatslink': showastatslink,
 		'showwsgf': showwsgf,
@@ -368,19 +364,19 @@ function load_options() {
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
-		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#496e93";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	chrome.storage.sync.set({'tag_owned_color': settings.tag_owned_color});	}
-		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#496e93";	chrome.storage.sync.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	chrome.storage.sync.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269";	chrome.storage.sync.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124";	chrome.storage.sync.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 
-		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
-		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = false; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = false; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; chrome.storage.sync.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; chrome.storage.sync.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; chrome.storage.sync.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
@@ -388,14 +384,12 @@ function load_options() {
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; chrome.storage.sync.set({'tag_owned': settings.tag_owned}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; chrome.storage.sync.set({'tag_wishlist': settings.tag_wishlist}); }
-		if (settings.tag_coupon === undefined) { settings.tag_coupon = true; chrome.storage.sync.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = true; chrome.storage.sync.set({'tag_inv_gift': settings.tag_inv_gift}); }
-		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = true; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
+		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; chrome.storage.sync.set({'tag_coupon': settings.tag_coupon}); }
+		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; chrome.storage.sync.set({'tag_inv_gift': settings.tag_inv_gift}); }
+		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hide_owned_homepage === undefined) { settings.hide_owned_homepage = false; chrome.storage.sync.set({'hide_owned_homepage': settings.hide_owned_homepage}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
-		if (settings.hide_early_access === undefined) { settings.hide_early_access = false; chrome.storage.sync.set({'hide_early_access': settings.hide_early_access}); }
 
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; chrome.storage.sync.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
@@ -410,6 +404,7 @@ function load_options() {
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showhltb === undefined) { settings.showhltb = true; chrome.storage.sync.set({'showhltb': settings.showhltb}); }
 		if (settings.showpcgw === undefined) { settings.showpcgw = true; chrome.storage.sync.set({'showpcgw': settings.showpcgw}); }
+		if (settings.showsteamcardexchange === undefined) { settings.showsteamcardexchange = false; chrome.storage.sync.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
 		if (settings.showastatslink === undefined) { settings.showastatslink = true; chrome.storage.sync.set({'showastatslink': settings.showastatslink}); }
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
@@ -430,7 +425,6 @@ function load_options() {
 		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; chrome.storage.sync.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; chrome.storage.sync.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
-		if (settings.showspeechsearch === undefined) { settings.showspeechsearch = true; chrome.storage.sync.set({'showspeechsearch': settings.showspeechsearch}); }		
 		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }
 		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
@@ -484,9 +478,7 @@ function load_options() {
 		$("#tag_inv_guestpass").prop('checked', settings.tag_inv_guestpass);
 		
 		$("#hide_owned").prop('checked', settings.hide_owned);
-		$("#hide_owned_homepage").prop('checked', settings.hide_owned_homepage);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
-		$("#hide_early_access").prop('checked', settings.hide_early_access);
 
 		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
 		$("#showlibraryf2p").prop('checked', settings.showlibraryf2p);
@@ -499,13 +491,13 @@ function load_options() {
 		$("#warning_language").val(settings.showlanguagewarninglanguage);
 		$("#homepage_tab_selection").val(settings.homepage_tab_selection);
 		$("#send_age_info").prop('checked', settings.send_age_info);
-		$("#showspeechsearch").prop('checked', settings.showspeechsearch);
 		$("#html5video").prop('checked', settings.html5video);
 		$("#contscroll").prop('checked', settings.contscroll);
 		$("#showdrm").prop('checked', settings.showdrm);
 		$("#showmcus").prop('checked', settings.showmcus);
 		$("#showhltb").prop('checked', settings.showhltb);
 		$("#showpcgw").prop('checked', settings.showpcgw);
+		$("#showsteamcardexchange").prop('checked', settings.showsteamcardexchange);
 		$("#showsteamdb").prop('checked', settings.showsteamdb);
 		$("#showastatslink").prop('checked', settings.showastatslink);
 		$("#showwsgf").prop('checked', settings.showwsgf);
@@ -602,15 +594,12 @@ function load_translation() {
 			
 			$("#hide_text").text(localized_strings[settings.language].hide);
 			$("#hide_owned_text").text(localized_strings[settings.language].options.hide_owned);
-			$("#hide_owned_homepage_text").text(localized_strings[settings.language].options.hide_owned_homepage);
 			$("#hidetmsymbols_text").text(localized_strings[settings.language].options.hidetmsymbols);
-			$("#hide_early_access_text").text(localized_strings[settings.language].options.hide_early_access);
 			
 			$("#library_text").text(localized_strings[settings.language].options.library_header);
 			$("#store_show_library_text").text(localized_strings[settings.language].options.library);
 			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options.library_f2p);
 
-			$("#options_header_text").text(localized_strings[settings.language].options.header);
 			$("#store_hide_install_text").text(localized_strings[settings.language].options.hide_install);
 			$("#store_hide_about_menu").text(localized_strings[settings.language].options.hide_about);
 			$("#store_replace_account_name").text(localized_strings[settings.language].options.replace_account_name);
@@ -619,7 +608,6 @@ function load_translation() {
 			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options.show_regionwarning);
 			$("#store_show_languagewarning_text").text(localized_strings[settings.language].options.show_languagewarning);
 			$("#send_age_info_text").text(localized_strings[settings.language].options.send_age_info);
-			$("#showspeechsearch_text").text(localized_strings[settings.language].options.showspeechsearch);
 			$("#html5video_text").text(localized_strings[settings.language].options.html5video);
 			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
@@ -630,6 +618,7 @@ function load_translation() {
 			$("#store_metacritic_text").text(localized_strings[settings.language].options.metacritic);
 			$("#store_hltb_text").text(localized_strings[settings.language].options.hltb);
 			$("#store_pcgw_text").text(localized_strings[settings.language].options.pcgw);
+			$("#store_steamcards_text").text(localized_strings[settings.language].options.store_steamcards);
 			$("#store_steamdb_text").text(localized_strings[settings.language].options.steamdb);
 			$("#store_astatslink_text").text(localized_strings[settings.language].options.show_astatslink);
 			$("#store_wsgf_text").text(localized_strings[settings.language].options.wsgf);
@@ -763,7 +752,7 @@ function steam_credits() {
 
 function clear_settings() {
 	chrome.storage.sync.get(function(settings) {
-		var confirm_reset = confirm(localized_strings[settings.language].options_clear)
+		var confirm_reset = confirm(localized_strings[settings.language].options.clear)
 		if(confirm_reset){
 			chrome.storage.sync.clear();
 			load_options();
@@ -778,13 +767,13 @@ function change_flag(node, selectnode) {
 }
 
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
-function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color").val("#496e93"); }
+function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color").val("#d3deea"); }
 function load_default_highlight_coupon_color() { $("#highlight_coupon_color").val("#6b2269"); }
 function load_default_highlight_inv_gift_color() { $("#highlight_inv_gift_color").val("#a75124"); }
 function load_default_highlight_inv_guestpass_color() { $("#highlight_inv_guestpass_color").val("#a75124"); }
 
 function load_default_tag_owned_color() { $("#tag_owned_color").val("#5c7836"); }
-function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#496e93"); }
+function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#d3deea"); }
 function load_default_tag_coupon_color() { $("#tag_coupon_color").val("#6b2269"); }
 function load_default_tag_inv_gift_color() { $("#tag_inv_gift_color").val("#a75124"); }
 function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").val("#a75124"); }

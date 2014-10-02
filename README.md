@@ -6,9 +6,7 @@ Enhanced Steam is a Google Chrome browser extension.  This is the open-source de
 
 If you have issues with the Firefox, Safari or standalone version, please submit them to
 
-https://github.com/jshackles/Enhanced_Steam_Firefox,
-
-https://github.com/jshackles/Enhanced_Steam_Safari or
+https://github.com/jshackles/Enhanced_Steam_Firefox or
 
 https://github.com/jshackles/Enhanced_Steam_Standalone, respectively.
 
