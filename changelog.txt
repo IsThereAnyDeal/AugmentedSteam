@@ -1,8 +1,9 @@
 v6.8
 -----
-+ Completely re-wrote how Enhanced Steam handles highlighting to be much faster and accurate
++ Completely re-wrote how Enhanced Steam handles highlighting to be faster and more accurate
 + Added a "Customize" button to app pages that lets you decide which sections to display
 + Added a "Customize" button to the home page that lets you decide which sections to display
++ Added "Rewards from Playfire" to applicable app pages (thanks mouse0270!)
 + Added an "All New Releases" tab to Steam home page
 : Fixed a bug that caused coupon discounts to not display properly on app pages
 : Fixed the placement of regional price comparison box on sale pages

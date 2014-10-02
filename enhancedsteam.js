@@ -6231,6 +6231,34 @@ function add_birthday_celebration() {
 	});
 }
 
+function get_playfire_rewards(appid) {
+	get_http("http://api.enhancedsteam.com/playfire/?appid=" + appid, function(data) {
+		if (data) {
+			var rewards = JSON.parse(data),
+				$rewards = $('<div id="es_playfire" class="game_area_rewards_section" />');
+
+			$rewards.html('<h2>' + localized_strings[language].playfire_heading + '</h2>');
+			$rewards.append('<ul>');
+
+			$.each(rewards, function( index, value ) {
+				var reward = value,
+					$li = $('<li class="reward-detail-item">');
+
+				$li.append('<div class="reward-img"><img src="' + reward.icon + '" class="actual" alt="' + reward.name + '"></div>');
+				$li.append('<div class="left-side"><span class="title tooltip-truncate">' + reward.name + '</span><span class="text">' + reward.description + '</span><span class="validity">' + localized_strings[language].valid + ': ' + reward.starts + ' - ' + reward.ends + '</span></div>');
+				$li.append('<div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="game_purchase_price price">' + reward.prize + '</div></div></div>');
+				
+				$rewards.find('ul').append($li);
+			});
+
+			if (rewards.length > 0) {
+				$rewards.find('ul').after('<span class="chart-footer" style="margin-top: -15px;">Powered by <a href="https://www.playfire.com/" target="_blank">playfire.com</a></span>');
+				$('#game_area_description').closest('.game_page_autocollapse_ctn').before($rewards);
+			}
+		}
+	})
+}
+
 $(document).ready(function(){
 	is_signed_in();
 
@@ -6296,6 +6324,7 @@ $(document).ready(function(){
 						add_achievement_completion_bar(appid);
 
 						show_regional_pricing();
+						get_playfire_rewards(appid);
 
 						customize_app_page();
 						break;
