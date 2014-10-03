@@ -7,7 +7,6 @@ var storage = chrome.storage.sync;
 var info = 0;
 var isSignedIn = false;
 var signedInChecked = false;
-var search_threshhold = $(window).height() - 80;
 
 var total_requests = 0;
 var processed_requests = 0;
@@ -425,7 +424,6 @@ function hide_node(node) {
 		if (settings.hide_owned) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule") || node.classList.contains("browse_tag_game")) {
 				hide_the_node(node);
-				search_threshhold = search_threshhold - 58;
 				if ($(document).height() <= $(window).height()) {
 					load_search_results();
 				}
@@ -2588,7 +2586,7 @@ function load_search_results () {
 		processing = true;
 		var search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
 		get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
-            var html = $.parseHTML(txt);
+			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 
 			var added_date = +new Date();
@@ -2596,16 +2594,14 @@ function load_search_results () {
 			html.attr('data-added-date', added_date)
 
 			$(".search_result_row").last().after(html);
-			// Each result is 45px height * 25 results per page = 1125
-			search_threshhold = search_threshhold + 1125;
 			search_page = search_page + 1;
 			processing = false;
 			process_early_access();
 
 			var ripc = function () {
-			    var added_date = jQuery('#search_result_container').attr('data-last-add-date');
-			    GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + added_date + '"]'));
-			    BindStoreTooltip(jQuery('.search_result_row[data-added-date="' + added_date + '"] [data-store-tooltip]'));
+				var added_date = jQuery('#search_result_container').attr('data-last-add-date');
+				GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + added_date + '"]'));
+				BindStoreTooltip(jQuery('.search_result_row[data-added-date="' + added_date + '"] [data-store-tooltip]'));
 			};
 
 			runInPageContext(ripc);
@@ -2614,13 +2610,13 @@ function load_search_results () {
 }
 
 function is_element_in_viewport($elem) {
-    // only concerned with vertical at this point
-    var elem_offset = $elem.offset(),
-        elem_bottom = elem_offset.top + $elem.height(),
-        viewport_top = jQuery(window).scrollTop(),
-        viewport_bottom = window.innerHeight + viewport_top;
+	// only concerned with vertical at this point
+	var elem_offset = $elem.offset(),
+		elem_bottom = elem_offset.top + $elem.height(),
+		viewport_top = jQuery(window).scrollTop(),
+		viewport_bottom = window.innerHeight + viewport_top;
 
-    return (elem_bottom <= viewport_bottom && elem_offset.top >= viewport_top);
+	return (elem_bottom <= viewport_bottom && elem_offset.top >= viewport_top);
 }
 
 // Enable continuous scrolling of search results
@@ -2629,20 +2625,20 @@ function endless_scrolling() {
 		if (settings.contscroll === undefined) { settings.contscroll = true; storage.set({'contscroll': settings.contscroll}); }
 		if (settings.contscroll) {
 
-		    var result_count;
+			var result_count;
 			$(".search_pagination_right").css("display", "none");
 			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
-			    result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
-			    $(".search_pagination_left").text(result_count + " Results");
+				result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
+				$(".search_pagination_left").text(result_count + " Results");
 			}
 
 			$(window).scroll(function () {
-                // if the pagination element is in the viewport, continue loading
-			    if (is_element_in_viewport($(".search_pagination_left"))) {
-			        if (result_count > $('.search_result_row').length)
-			            load_search_results();
-			        else
-			            $(".search_pagination_left").text('All ' + result_count + ' results displayed');
+				// if the pagination element is in the viewport, continue loading
+				if (is_element_in_viewport($(".search_pagination_left"))) {
+					if (result_count > $('.search_result_row').length)
+						load_search_results();
+					else
+						$(".search_pagination_left").text('All ' + result_count + ' results displayed');
 				}
 			});
 		}
@@ -5039,7 +5035,7 @@ function bind_ajax_content_highlighting() {
 				}
 
 				if (node.classList && node.classList.contains("tab_item")) {
-					runInPageContext("GDynamicStore.DecorateDynamicItems( $('.tab_item') )");
+					runInPageContext("function() { GDynamicStore.DecorateDynamicItems( $('.tab_item') ) }");
 					start_highlighting_node(node);
 					check_early_access(node, "ea_184x69.png", 0, ":last");
 				}
@@ -5048,10 +5044,6 @@ function bind_ajax_content_highlighting() {
 					endless_scrolling();
 					start_highlights_and_tags();
 					process_early_access();
-				}
-
-				if (node.classList && node.classList.contains("searchtag")) {
-					search_threshhold = 1125;
 				}
 
 				if ($(node).children('div')[0] && $(node).children('div')[0].classList.contains("blotter_day")) {
