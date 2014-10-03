@@ -2596,7 +2596,6 @@ function load_search_results () {
 			$(".search_result_row").last().after(html);
 			search_page = search_page + 1;
 			processing = false;
-			process_early_access();
 
 			var ripc = function () {
 				var added_date = jQuery('#search_result_container').attr('data-last-add-date');
@@ -3972,21 +3971,26 @@ var ea_appids, ea_promise = (function () {
 
 // Check for Early Access titles
 function check_early_access(node, image_name, image_left, selector_modifier, action) {
-	var href = ($(node).find("a").attr("href") || $(node).attr("href"));
-	var appid = get_appid(href);
-	if (appid === null) { 
-		if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
-			appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+	storage.get(function(settings) {
+		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
+		if (settings.show_early_access) {
+			var href = ($(node).find("a").attr("href") || $(node).attr("href"));
+			var appid = get_appid(href);
+			if (appid === null) { 
+				if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
+					appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+				}
+			}
+			var early_access = JSON.parse(ea_appids);
+			if (early_access["ea"].indexOf(appid) >= 0) {
+				var selector = "img";
+				if (selector_modifier != undefined) selector += selector_modifier;
+				overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+				$(overlay_img).css({"left":image_left+"px"});
+				$(node).find(selector.trim()).before(overlay_img);
+			}
 		}
-	}
-	var early_access = JSON.parse(ea_appids);
-	if (early_access["ea"].indexOf(appid) >= 0) {
-		var selector = "img";
-		if (selector_modifier != undefined) selector += selector_modifier;
-		overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
-		$(overlay_img).css({"left":image_left+"px"});
-		$(node).find(selector.trim()).before(overlay_img);
-	}
+	});
 }
 
 // Add a blue banner to Early Access games
@@ -5041,6 +5045,7 @@ function bind_ajax_content_highlighting() {
 				}
 
 				if (node.id == "search_result_container") {
+					processing = false;
 					endless_scrolling();
 					start_highlights_and_tags();
 					process_early_access();
@@ -5056,8 +5061,16 @@ function bind_ajax_content_highlighting() {
 					process_early_access();
 				}
 
-				if (node.classList && node.classList.contains("match")) start_highlighting_node(node);
-				if (node.classList && node.classList.contains("search_result_row")) start_highlighting_node(node);
+				if (node.classList && node.classList.contains("match")) { 
+					start_highlighting_node(node);
+					check_early_access(node, "ea_184x69.png", 0);
+				}
+
+				if (node.classList && node.classList.contains("search_result_row")) {
+					start_highlighting_node(node);
+					check_early_access(node, "ea_sm_120.png", 0);
+				}
+
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
 				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}

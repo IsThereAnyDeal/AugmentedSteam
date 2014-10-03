@@ -5,6 +5,7 @@ v6.8
 + Added a "Customize" button to the home page that lets you decide which sections to display
 + Added "Rewards from Playfire" to applicable app pages (thanks mouse0270!)
 + Added an "All New Releases" tab to Steam home page
+: Fixed a memory leak caused by continous scrolling function in some instances
 : Fixed account total spent feature to work with the new account page design
 : Fixed a bug that caused coupon discounts to not display properly on app pages
 : Fixed the placement of regional price comparison box on sale pages
