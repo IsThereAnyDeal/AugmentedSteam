@@ -3327,12 +3327,12 @@ function account_total_spent() {
 				function start_total() {
 					if (window.location.pathname == "/account/") {
 						base_page = true;
-						$(".accountBalance").before("<div class='es_loading' style='text-align: center;'><img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>" + localized_strings[language].loading + "</span></div>");
+						$(".accountBalance").before("<div class='es_loading' style='text-align: center;'><span>" + localized_strings[language].loading + "</span></div>");
 						$(document.body).append("<div id='store_transactions' style='display: none;'><div class='block'></div><div class='block'></div></div><div id='ingame_transactions' style='display: none;'></div><div id='market_transactions' style='display: none;'></div>");
-						$("#store_transactions .block:first").load(window.location.href + "store_transactions #store_transactions .block:first .transactionRow", function() {
-							$("#store_transactions .block:last").load(window.location.href + "store_transactions #store_transactions .block:last .transactionRow", function() {
-								$("#ingame_transactions").load(window.location.href + "ingame_transactions #ingame_transactions .transactionRow", function() {
-									$("#market_transactions").load(window.location.href + "market_transactions #market_transactions .transactionRow", function() {
+						$("#store_transactions .block:first").load("https://store.steampowered.com/account/store_transactions #store_transactions .block:first .transactionRow", function() {
+							$("#store_transactions .block:last").load("https://store.steampowered.com/account/store_transactions #store_transactions .block:last .transactionRow", function() {
+								$("#ingame_transactions").load("https://store.steampowered.com/account/ingame_transactions #ingame_transactions .transactionRow", function() {
+									$("#market_transactions").load("https://store.steampowered.com/account/market_transactions #market_transactions .transactionRow", function() {
 										$(".es_loading").remove();
 										get_total();
 									});
