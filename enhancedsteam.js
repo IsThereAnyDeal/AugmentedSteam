@@ -3641,9 +3641,6 @@ function add_inventory_gotopage(){
 // Check price savings when purchasing game bundles
 function subscription_savings_check() {
 	var not_owned_games_prices = 0,
-		appid_info_deferreds = [],
-		sub_apps = [],
-		sub_app_prices = {},
 		currency_symbol,
 		currency_type,
 		comma;
@@ -3717,46 +3714,48 @@ function dlc_data_for_dlc_page() {
 	var sessionid;
 	var addunowned = "<form name=\"add_all_unowned_dlc_to_cart\" action=\"http://store.steampowered.com/cart/\" method=\"POST\"><input type=\"hidden\" name=\"action\" value=\"add_to_cart\">";
 
-	$.each($("div.dlc_page_purchase_dlc"), function(j, node){
-		var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-		get_http("http://api.enhancedsteam.com/gamedata/?appid=" + appid, function (txt) {
-			var data;
-			if (txt != "{\"dlc\":}}") {
-				data = JSON.parse(txt);
+	window.setTimeout(function() {
+		$.each($("div.dlc_page_purchase_dlc"), function(j, node){
+			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+			get_http("http://api.enhancedsteam.com/gamedata/?appid=" + appid, function (txt) {
+				var data;
+				if (txt != "{\"dlc\":}}") {
+					data = JSON.parse(txt);
+				}
+				var html = "<div style='width: 250px; margin-left: 310px;'>";
+
+				if (data) {
+					$.each(data["dlc"], function(index, value) {
+						html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><a class='name'><span title='" + escapeHTML(value['text']) + "' style='cursor: default;'>" + escapeHTML(index) + "</span></a></div>";
+					});
+				}
+
+				html += "</div>";
+
+				$(node).css("height", "144px");
+				$(node).append(html);
+			});
+
+			if (!sessionid) {
+				sessionid = $(node).find("input[name=sessionid]").attr("value");
+				addunowned += "<input type=\"hidden\" name=\"sessionid\" value=\"" + sessionid + "\">";	
+			} 
+			if (appid) {
+				if ($(node).find(".ds_owned_flag").length == 0) {
+					addunowned += "<input type=\"hidden\" name=\"subid[]\" value=\"" + $(node).find("input[name=subid]").attr("value") + "\">";
+					totalunowned = totalunowned + 1;
+				}
 			}
-			var html = "<div style='width: 250px; margin-left: 310px;'>";
-
-			if (data) {
-				$.each(data["dlc"], function(index, value) {
-					html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><a class='name'><span title='" + escapeHTML(value['text']) + "' style='cursor: default;'>" + escapeHTML(index) + "</span></a></div>";
-				});
-			}
-
-			html += "</div>";
-
-			$(node).css("height", "144px");
-			$(node).append(html);
 		});
 
-		if (!sessionid) {
-			sessionid = $(node).find("input[name=sessionid]").attr("value");
-			addunowned += "<input type=\"hidden\" name=\"sessionid\" value=\"" + sessionid + "\">";	
-		} 
-		if (appid) {
-			if ($(node).find(".ds_owned_flag").length == 0) {
-				addunowned += "<input type=\"hidden\" name=\"subid[]\" value=\"" + $(node).find("input[name=subid]").attr("value") + "\">";
-				totalunowned = totalunowned + 1;
-			}
+		addunowned += "</form>";
+
+		if (totalunowned > 0) {
+			$("#dlc_purchaseAll").before(addunowned);
+			var buttoncode = "<div class='btn_addtocart' style='float: right; margin-right: 15px;' id='dlc_purchaseAllunOwned'><a class='btnv6_green_white_innerfade btn_medium' href=\"javascript:document.forms['add_all_unowned_dlc_to_cart'].submit();\"><span>" + localized_strings[language].add_unowned_dlc_to_cart + "</span></a></div>";
+			$("#dlc_purchaseAll").after(buttoncode);
 		}
-	});
-
-	addunowned += "</form>";
-
-	if (totalunowned > 0) {
-		$("#dlc_purchaseAll").before(addunowned);
-		var buttoncode = "<div class='btn_addtocart' style='float: right; margin-right: 15px;' id='dlc_purchaseAllunOwned'><a class='btnv6_green_white_innerfade btn_medium' href=\"javascript:document.forms['add_all_unowned_dlc_to_cart'].submit();\"><span>" + localized_strings[language].add_unowned_dlc_to_cart + "</span></a></div>";
-		$("#dlc_purchaseAll").after(buttoncode);
-	}
+	}, 500);
 }
 
 function add_app_badge_progress(appid) {
@@ -4676,6 +4675,7 @@ function customize_app_page() {
 function customize_home_page() {
 	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings[language].customize + "</div></div><div style='clear: both;'></div>");
 	$(".home_page_body_ctn:first").css("min-height", "400px");
+	$(".has_takeover").css("min-height", "600px");
 
 	storage.get(function(settings) {
 		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_show_homepage_carousel': settings.show_homepage_carousel}); }
@@ -4734,7 +4734,7 @@ function customize_home_page() {
 		// Recommended For You
 		if ($(".recommended").length > 0) {
 			text = $(".recommended").find("h2:first").text();
-			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			if (settings.show_homepage_recommended) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".recommended").hide();
