@@ -2588,18 +2588,39 @@ function load_search_results () {
 		processing = true;
 		var search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
 		get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
-			var html = $.parseHTML(txt);
+            var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
+
+			var added_date = +new Date();
+			$('#search_result_container').attr('data-last-add-date', added_date);
+			html.attr('data-added-date', added_date)
+
 			$(".search_result_row").last().after(html);
 			// Each result is 45px height * 25 results per page = 1125
 			search_threshhold = search_threshhold + 1125;
 			search_page = search_page + 1;
 			processing = false;
 			process_early_access();
-			runInPageContext("GDynamicStore.DecorateDynamicItems( $('.search_result_row') )");
-			runInPageContext("BindStoreTooltip( $J('.search_result_row [data-store-tooltip]') )");
+
+			var ripc = function () {
+			    var added_date = jQuery('#search_result_container').attr('data-last-add-date');
+			    GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + added_date + '"]'));
+			    BindStoreTooltip(jQuery('.search_result_row[data-added-date="' + added_date + '"] [data-store-tooltip]'));
+			};
+
+			runInPageContext(ripc);
 		});
 	}
+}
+
+function is_element_in_viewport($elem) {
+    // only concerned with vertical at this point
+    var elem_offset = $elem.offset(),
+        elem_bottom = elem_offset.top + $elem.height(),
+        viewport_top = jQuery(window).scrollTop(),
+        viewport_bottom = window.innerHeight + viewport_top;
+
+    return (elem_bottom <= viewport_bottom && elem_offset.top >= viewport_top);
 }
 
 // Enable continuous scrolling of search results
@@ -2608,12 +2629,20 @@ function endless_scrolling() {
 		if (settings.contscroll === undefined) { settings.contscroll = true; storage.set({'contscroll': settings.contscroll}); }
 		if (settings.contscroll) {
 
+		    var result_count;
 			$(".search_pagination_right").css("display", "none");
-			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) $(".search_pagination_left").text($(".search_pagination_left").text().trim().match(/(\d+)$/)[0] + " Results");
+			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
+			    result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
+			    $(".search_pagination_left").text(result_count + " Results");
+			}
 
-			$(window).scroll(function() {
-				if ($(window).scrollTop() > search_threshhold) {
-					load_search_results();
+			$(window).scroll(function () {
+                // if the pagination element is in the viewport, continue loading
+			    if (is_element_in_viewport($(".search_pagination_left"))) {
+			        if (result_count > $('.search_result_row').length)
+			            load_search_results();
+			        else
+			            $(".search_pagination_left").text('All ' + result_count + ' results displayed');
 				}
 			});
 		}
