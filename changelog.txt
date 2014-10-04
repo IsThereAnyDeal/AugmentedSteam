@@ -16,7 +16,6 @@ v6.8
 : Updated DLC pages to work with the new store layout including the "add all unowned" button
 - Removed cart buttons on wishlist page due to changes made by Valve
 
-
 v6.7.1
 -----
 + Added WSGF 4k grading to applicable games
