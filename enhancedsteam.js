@@ -2675,6 +2675,56 @@ function add_allreleases_tab() {
 
 	$(".home_tabs_content").append(tab_html);
 
+	function get_allreleases_results(search) {
+		$("#tab_allreleases_content .tab_item, #tab_allreleases_content .tab_see_more").remove();
+		get_http("http://store.steampowered.com/search/?sort_by=Released_DESC&category1=" + search, function(txt) {
+			var return_text = $.parseHTML(txt);
+			$(return_text).find(".search_result_row").each(function(i, item) {
+				var appid = get_appid($(this).attr("href"));
+				var game_name = $(this).find(".title").text();
+				var platform = $(this).find(".search_name p:last").html();
+				var release_date = $(this).find(".search_released").text();
+				var discount_pct = $(this).find(".search_discount span:last").text();
+				var price = $(this).find(".search_price").html();
+				var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
+				html += "<a class='tab_item_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='http://store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
+				html += "<img class='tab_item_cap' src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+				// price info
+				if (discount_pct) {
+					html += "<div class='discount_block tab_item_discount'><div class='discount_pct'>" + discount_pct + "</div><div class='discount_prices'>" + price + "</div></div>";
+				} else {
+					html += "<div class='discount_block tab_item_discount no_discount'><div class='discount_prices no_discount'><div class='discount_final_price'>" + price + "</div></div></div>";
+				}
+
+				html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'> " + platform + "<div class='tab_item_top_tags'><span class='top_tag'>" + release_date + "</span></div></div><br clear='all'></div>";
+
+				html += "</div>";
+				$("#tab_allreleases_content").append(html);
+				return i < 9;
+			});
+			var button = $("#tab_newreleases_content").find(".tab_see_more").clone();
+			$("#tab_allreleases_content").append(button);
+		});
+	}
+
+	function generate_search_string() {
+		var deferred = $.Deferred();
+		var return_str = "";
+		storage.get(function(settings) {
+			if (settings.show_allreleases_games) { return_str += "998,"; }
+			if (settings.show_allreleases_video) { return_str += "999,"; }
+			if (settings.show_allreleases_demos) { return_str += "10,"; }
+			if (settings.show_allreleases_mods) { return_str += "997,"; }
+			if (settings.show_allreleases_packs) { return_str += "996,"; }
+			if (settings.show_allreleases_dlc) { return_str += "21,"; }
+			if (settings.show_allreleases_guide) { return_str += "995,"; }
+			if (settings.show_allreleases_softw) { return_str += "994,"; }
+			deferred.resolve(return_str);
+		});
+
+		return deferred.promise();
+	}
+
 	$("#es_allreleases").on("click", function() {
 		$(".home_tabs_row").find(".active").removeClass("active");
 		$(".home_tabs_content").find(".tab_content").hide();
@@ -2682,33 +2732,109 @@ function add_allreleases_tab() {
 		$("#tab_allreleases_content").show();
 
 		if ($("#tab_allreleases_content").find("div").length == 0) {
-			get_http("http://store.steampowered.com/search/?sort_by=Released_DESC", function(txt) {
-				var return_text = $.parseHTML(txt);
-				$(return_text).find(".search_result_row").each(function(i, item) {
-					var appid = get_appid($(this).attr("href"));
-					var game_name = $(this).find(".title").text();
-					var platform = $(this).find(".search_name p:last").html();
-					var release_date = $(this).find(".search_released").text();
-					var discount_pct = $(this).find(".search_discount span:last").text();
-					var price = $(this).find(".search_price").html();
-					var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, $(\"global_hover\"), {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, $(\"global_hover\") )' id='tab_row_popular_" + appid + "'>";
-					html += "<a class='tab_item_overlay' href='http://store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='http://store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-					html += "<img class='tab_item_cap' src='http://cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
-					// price info
-					if (discount_pct) {
-						html += "<div class='discount_block tab_item_discount'><div class='discount_pct'>" + discount_pct + "</div><div class='discount_prices'>" + price + "</div></div>";
+			$("#tab_allreleases_content").append("<div id='es_allreleases_btn' class='home_actions_ctn' style='margin-bottom: 4px; display: none;'><div class='home_btn home_customize_btn' style='z-index: 13; position: absolute; right: -2px;'>" + localized_strings[language].customize + "</div></div>");
+			
+			storage.get(function(settings) {
+				if (settings.show_allreleases_games === undefined) { settings.show_allreleases_games = true; storage.set({'show_allreleases_games': settings.show_allreleases_games}); }
+				if (settings.show_allreleases_video === undefined) { settings.show_allreleases_video = true; storage.set({'show_allreleases_video': settings.show_allreleases_video}); }
+				if (settings.show_allreleases_demos === undefined) { settings.show_allreleases_demos = true; storage.set({'show_allreleases_demos': settings.show_allreleases_demos}); }
+				if (settings.show_allreleases_mods === undefined) { settings.show_allreleases_mods = true; storage.set({'show_allreleases_mods': settings.show_allreleases_mods}); }
+				if (settings.show_allreleases_packs === undefined) { settings.show_allreleases_packs = true; storage.set({'show_allreleases_packs': settings.show_allreleases_packs}); }
+				if (settings.show_allreleases_dlc === undefined) { settings.show_allreleases_dlc = true; storage.set({'show_allreleases_dlc': settings.show_allreleases_dlc}); }
+				if (settings.show_allreleases_guide === undefined) { settings.show_allreleases_guide = true; storage.set({'show_allreleases_guide': settings.show_allreleases_guide}); }
+				if (settings.show_allreleases_softw === undefined) { settings.show_allreleases_softw = true; storage.set({'show_allreleases_softw': settings.show_allreleases_softw}); }
+
+				var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12; right: 0px; top: 58px;'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].allreleases_products + "</div>"
+
+				// Games
+				text = localized_strings[language].games;
+				if (settings.show_allreleases_games) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_games'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_games'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+
+				// Videos / Trailers
+				text = localized_strings[language].videos;
+				if (settings.show_allreleases_video) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_video'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_video'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";	}
+
+				// Demos
+				text = localized_strings[language].demos;
+				if (settings.show_allreleases_demos) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_demos'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_demos'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+
+				// Mods
+				text = localized_strings[language].mods;
+				if (settings.show_allreleases_mods) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_mods'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_mods'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+
+				// Packs
+				text = localized_strings[language].packs;
+				if (settings.show_allreleases_packs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_packs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_packs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";	}
+
+				// Downloadable Content
+				text = localized_strings[language].dlc;
+				if (settings.show_allreleases_dlc) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_dlc'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_dlc'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+
+				// Guides
+				text = localized_strings[language].guides;
+				if (settings.show_allreleases_guide) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_guide'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_guide'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+
+				// Software
+				text = localized_strings[language].software;
+				if (settings.show_allreleases_softw) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_softw'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+				else { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_allreleases_softw'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+
+				$("#es_allreleases_btn").append(html);
+
+				var search_string = generate_search_string();
+				search_string.done(function(result){
+					get_allreleases_results(result);
+				});
+
+				$("#tab_allreleases_content").hover(function() {
+					$("#es_allreleases_btn").show();
+				}, function() {
+					$("#es_allreleases_btn").hide();
+					$("#es_allreleases_btn").find(".home_viewsettings_popup").hide();
+					if ($("#es_allreleases_btn").find(".home_customize_btn").hasClass("active")) {
+						$("#es_allreleases_btn").find(".home_customize_btn").removeClass("active");
+					}
+				});
+
+				$("#es_allreleases_btn").find(".home_customize_btn").click(function() {
+					if ($(this).hasClass("active")) {
+						$(this).removeClass("active");
 					} else {
-						html += "<div class='discount_block tab_item_discount no_discount'><div class='discount_prices no_discount'><div class='discount_final_price'>" + price + "</div></div></div>";
+						$(this).addClass("active");
 					}
 
-					html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'> " + platform + "<div class='tab_item_top_tags'><span class='top_tag'>" + release_date + "</span></div></div><br clear='all'></div>";
-
-					html += "</div>";
-					$("#tab_allreleases_content").append(html);
-					return i < 9;
+					if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
+						$(this).parent().find(".home_viewsettings_popup").hide();
+					} else {
+						$(this).parent().find(".home_viewsettings_popup").show();
+					}
 				});
-				var button = $("#tab_newreleases_content").find(".tab_see_more").clone();
-				$("#tab_allreleases_content").append(button);
+
+				$("#es_allreleases_btn").find(".home_viewsettings_checkboxrow").click(function() {
+					var setting_name = $(this).attr("id");
+					if (settings[setting_name]) {
+						settings[setting_name] = false;
+						$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+					} else {
+						settings[setting_name] = true;
+						$(this).find(".home_viewsettings_checkbox").addClass("checked");
+					}
+					var obj = {};
+					obj[setting_name] = settings[setting_name];
+					storage.set(obj);
+
+					var search_string = generate_search_string();
+					search_string.done(function(result){
+						get_allreleases_results(result);
+					});
+				});
 			});
 		}
 	});
@@ -4632,16 +4758,16 @@ function customize_home_page() {
 	$(".has_takeover").css("min-height", "600px");
 
 	storage.get(function(settings) {
-		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_show_homepage_carousel': settings.show_homepage_carousel}); }
-		if (settings.show_homepage_spotlight === undefined) { settings.show_homepage_spotlight = true; storage.set({'show_show_homepage_spotlight': settings.show_homepage_spotlight}); }
-		if (settings.show_homepage_newsteam === undefined) { settings.show_homepage_newsteam = true; storage.set({'show_show_homepage_newsteam': settings.show_homepage_newsteam}); }
-		if (settings.show_homepage_updated === undefined) { settings.show_homepage_updated = true; storage.set({'show_show_homepage_updated': settings.show_homepage_updated}); }
-		if (settings.show_homepage_recommended === undefined) { settings.show_homepage_recommended = true; storage.set({'show_show_homepage_recommended': settings.show_homepage_recommended}); }
-		if (settings.show_homepage_explore === undefined) { settings.show_homepage_explore = true; storage.set({'show_show_homepage_explore': settings.show_homepage_explore}); }
-		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_show_homepage_curators': settings.show_homepage_curators}); }
-		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_show_homepage_tabs': settings.show_homepage_tabs}); }
-		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_show_homepage_specials': settings.show_homepage_specials}); }
-		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_show_homepage_sidebar': settings.show_homepage_sidebar}); }
+		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_homepage_carousel': settings.show_homepage_carousel}); }
+		if (settings.show_homepage_spotlight === undefined) { settings.show_homepage_spotlight = true; storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight}); }
+		if (settings.show_homepage_newsteam === undefined) { settings.show_homepage_newsteam = true; storage.set({'show_homepage_newsteam': settings.show_homepage_newsteam}); }
+		if (settings.show_homepage_updated === undefined) { settings.show_homepage_updated = true; storage.set({'show_homepage_updated': settings.show_homepage_updated}); }
+		if (settings.show_homepage_recommended === undefined) { settings.show_homepage_recommended = true; storage.set({'show_homepage_recommended': settings.show_homepage_recommended}); }
+		if (settings.show_homepage_explore === undefined) { settings.show_homepage_explore = true; storage.set({'show_homepage_explore': settings.show_homepage_explore}); }
+		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_homepage_curators': settings.show_homepage_curators}); }
+		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_homepage_tabs': settings.show_homepage_tabs}); }
+		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_homepage_specials': settings.show_homepage_specials}); }
+		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar}); }
 
 		var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12; right: 18px;'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
 
@@ -4714,6 +4840,7 @@ function customize_home_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".apps_recommended_by_curators_ctn").hide();
+				$(".steam_curators_ctn").hide();
 			}
 		}
 
@@ -4863,10 +4990,12 @@ function customize_home_page() {
 			if (settings.show_homepage_curators) {
 				settings.show_homepage_curators = false;
 				$(".apps_recommended_by_curators_ctn").hide();
+				$(".steam_curators_ctn").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_curators = true;
 				$(".apps_recommended_by_curators_ctn").show();
+				$(".steam_curators_ctn").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_curators': settings.show_homepage_curators});
@@ -6431,7 +6560,7 @@ $(document).ready(function(){
 						add_allreleases_tab();
 						set_homepage_tab();
 						add_carousel_descriptions();
-						customize_home_page();
+						window.setTimeout(function() { customize_home_page(); }, 500);
 						break;
 				}
 

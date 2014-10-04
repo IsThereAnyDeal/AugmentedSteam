@@ -1,8 +1,9 @@
 v6.9
 -----
++ Added a "Customize" button the the "All New Releases" section
 : Fixed a bug with Euro price formatting
 : Fixed a bug that caused some packages not to process savings calculations corectly (again)
-: Fixed the centering of the home page splash screen if present and the sidebar is disabled
+: Fixed several bugs with the home page customization button
 
 
 v6.8
