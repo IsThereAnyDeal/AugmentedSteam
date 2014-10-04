@@ -1,3 +1,7 @@
+v6.9
+-----
+
+
 v6.8
 -----
 + Completely re-wrote how Enhanced Steam handles highlighting to be faster and more accurate
