@@ -70,81 +70,77 @@ Array.prototype.chunk = function(chunkSize) {
     return R;
 }
 
+var currency_format_info = {
+    "BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
+    "EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: ",", decimal: ".", right: true },
+    "GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
+    "RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
+    "JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
+    "MYR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "RM", thousand: ",", decimal: ".", right: false },
+    "NOK": { places: 2, hidePlacesWhenZero: false, symbolFormat: " kr", thousand: ".", decimal: ",", right: true },
+    "IDR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "Rp ", thousand: " ", decimal: ".", right: false },
+    "PHP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "P", thousand: ",", decimal: ".", right: false },
+    "SGD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S$", thousand: ",", decimal: ".", right: false },
+    "THB": { places: 2, hidePlacesWhenZero: false, symbolFormat: "฿", thousand: ",", decimal: ".", right: false },
+    "VND": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₫", thousand: ",", decimal: ".", right: false },
+    "KRW": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₩", thousand: ",", decimal: ".", right: false },
+    "TRY": { places: 2, hidePlacesWhenZero: false, symbolFormat: " TL", thousand: "", decimal: ",", right: true },
+    "UAH": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₴", thousand: "", decimal: ",", right: true },
+    "MXN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "Mex$ ", thousand: ",", decimal: ".", right: false },
+    "CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "C$ ", thousand: ",", decimal: ".", right: false },
+    "AUD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "A$ ", thousand: ",", decimal: ".", right: false },
+    "NZD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "NZ$ ", thousand: ",", decimal: ".", right: false },
+    "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
+};
+
 function formatCurrency(number, type) {
-	var places, symbol, thousand, decimal, right;
 
-	switch (type) {
-		case "BRL":
-			places = 2; symbol = "R$ "; thousand = "."; decimal = ","; right = false;
-			break;
-		case "EUR":
-			places = 2; symbol = "€"; thousand = ","; decimal = "."; right = true;
-			break;
-		case "GBP":
-			places = 2; symbol = "£"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "RUB":
-			places = 0; symbol = " pуб."; thousand = ""; decimal = ","; right = true;
-			if (number % 1 != 0) { places = 2; }
-			break;
-		case "JPY":
-			places = 0; symbol = "¥ "; thousand = ","; decimal = "."; right = false;
-			break;
-		case "MYR":
-			places = 2; symbol = "RM"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "NOK":
-			places = 2; symbol = " kr"; thousand = "."; decimal = ","; right = true;
-			break;
-		case "IDR":
-			places = 0; symbol = "Rp "; thousand = " "; decimal = "."; right = false;
-			break;
-		case "PHP":
-			places = 2; symbol = "P"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "SGD":
-			places = 2; symbol = "S$"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "THB":
-			places = 2; symbol = "฿"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "VND":
-			places = 2; symbol = "₫"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "KRW":
-			places = 2; symbol = "₩"; thousand = ","; decimal = "."; right = false;
-			break;
-		case "TRY":
-			places = 2; symbol = " TL"; thousand = ""; decimal = ","; right = true;
-			break;
-		case "UAH":
-			places = 2; symbol = "₴"; thousand = ""; decimal = ","; right = true;
-			break;
-		case "MXN":
-			places = 2; symbol = "Mex$ "; thousand = ","; decimal = "."; right = false;
-			break;
-		case "CAD":
-			places = 2; symbol = "C$ "; thousand = ","; decimal = "."; right = false;
-			break;
-		case "AUD":
-			places = 2; symbol = "A$ "; thousand = ","; decimal = "."; right = false;
-			break;
-		case "NZD":
-			places = 2; symbol = "NZ$ "; thousand = ","; decimal = "."; right = false;
-			break;
-		default:
-			places = 2; symbol = "$"; thousand = ","; decimal = "."; right = false;
-			break;
+    var info = currency_format_info[type];
+	if (info.hidePlacesWhenZero && (number % 1 === 0))
+	{
+	    info.places = 0;
 	}
-
+    	
 	var negative = number < 0 ? "-" : "",
-		i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
-		j = (j = i.length) > 3 ? j % 3 : 0;
-	if (right) {
-		return negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "") + symbol;
-	} else {
-		return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
-	}
+		i = parseInt(number = Math.abs(+number || 0).toFixed(info.places), 10) + "",
+		j = (j = i.length) > 3 ? j % 3 : 0,
+        formatted;
+
+	formatted = negative +
+                (j ? i.substr(0, j) + info.thousand : "") +
+                i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + info.thousand) +
+                (info.places ? info.decimal + Math.abs(number - i).toFixed(info.places).slice(2) : "");
+
+	if (info.right)
+	    formatted += info.symbolFormat;
+	else
+	    formatted = info.symbolFormat + formatted;
+
+	return formatted;
+
+}
+
+function parse_currency(str) {
+    var currency_symbol = currency_symbol_from_string(str);
+    var currency_type = currency_symbol_to_type(currency_symbol);
+    var info = currency_format_info[currency_type];
+
+    // remove thousand sep, replace decimal with dot, remove non-numeric
+    str = str.replace(info.thousand, '')
+             .replace(info.decimal, '.')
+             .replace(/[^\d\.]/g, '')
+             .trim();
+
+    var value = parseFloat(str);
+
+    if (isNaN(value))
+        return null;
+
+    return {
+        value: value,
+        currency_type: currency_type,
+        currency_symbol: currency_symbol
+    };
 }
 
 function currency_symbol_to_type (currency_symbol) {
@@ -193,11 +189,9 @@ function currency_symbol_to_type (currency_symbol) {
 }
 
 function currency_symbol_from_string (string_with_symbol) {
-	var return_string = "";
-	if (string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)) {
-		return_string = string_with_symbol.match(/(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/)[0];
-	}
-	return return_string;
+    var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/;
+    var match = string_with_symbol.match(re);
+    return match ? match[0] : '';
 }
 
 function escapeHTML(str) {
@@ -1012,20 +1006,26 @@ function add_wishlist_total() {
 	var apps = "";
 	var htmlstring;
 	
-	function calculate_node(node, search) {
-		price = parseFloat($(node).find(search).text().trim().replace(",", ".").replace(/[^0-9\.]+/g,""));
-		if (price) {
-			currency_symbol = currency_symbol_from_string($(node).find(search).text().trim());
-			gamelist += $(node).find("h4").text().trim() + ", ";
-			items += 1;
-			total += price;
-			apps += get_appid($(node).find("a[class='btn_visit_store']")[0].href) + ",";
+	function calculate_node($node, search) {
+	    var parsed = parse_currency($node.find(search).text().trim());
+
+	    if (parsed) {
+	        currency_symbol = parsed.currency_symbol;
+			gamelist += $node.find("h4").text().trim() + ", ";
+			items ++;
+			total += parsed.value;
+			apps += get_appid($node.find("a[class='btn_visit_store']")[0].href) + ",";
 		}
 	}
 	
 	$('.wishlistRow').each(function () {
-		if ($(this).find("div[class='price']").length != 0 && $(this).find("div[class='price']").text().trim() != "") calculate_node( $(this), "div[class='price']" );	
-		if ($(this).find("div[class='discount_final_price']").length != 0) calculate_node( $(this), "div[class='discount_final_price']" );	
+	    var $this = $(this);
+
+	    if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
+	        calculate_node($this, "div[class='price']");
+
+	    if ($this.find("div[class='discount_final_price']").length != 0)
+	        calculate_node($this, "div[class='discount_final_price']");
 	});
 	gamelist = gamelist.replace(/, $/, "");
 	
