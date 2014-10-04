@@ -71,7 +71,7 @@ Array.prototype.chunk = function(chunkSize) {
 
 var currency_format_info = {
 	"BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
-	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: ",", decimal: ".", right: true },
+	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: " ", decimal: ",", right: true },
 	"GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
 	"RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
 	"JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
@@ -3611,47 +3611,30 @@ function add_inventory_gotopage(){
 
 // Check price savings when purchasing game bundles
 function subscription_savings_check() {
-	var not_owned_games_prices = 0,
-		currency_symbol,
-		currency_type,
-		comma;
-
-	var $bundle_price = $(".game_area_purchase_game").find(".discount_final_price:last");
-	if ($bundle_price.length === 0) $bundle_price = $(".game_area_purchase_game").find(".game_purchase_price");
+	var not_owned_games_prices = 0;
+	var $bundle_price = $(".package_totals_area").find(".price:last");	
 
 	setTimeout(function() {
 		$.each($(".tab_item"), function (i, node) {
 			var price_container = $(node).find(".discount_final_price").text().trim();
 
-			if (price_container !== "N/A" && price_container !== "Free") {
-				if (price_container) {
-					if (parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/))) {
-						itemPrice = parseFloat(price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
-					} else {
-						itemPrice = 0;
-					}				
-					if (!currency_symbol) currency_symbol = currency_symbol_from_string(price_container);
-					if (!comma) comma = (price_container.search(/,\d\d(?!\d)/));
-				} else {
-					itemPrice = 0;
-				}
+			if (price_container) {
+				itemPrice = parse_currency(price_container).value;
 			} else {
 				itemPrice = 0;
 			}
-
 			if ($(node).find(".ds_owned_flag").length == 0) {
 				not_owned_games_prices += itemPrice;
 			}
 		});
 
-		currency_type = currency_symbol_to_type(currency_symbol);	
-		var bundle_price = Number(($bundle_price[0].innerText).replace(/[^0-9\.]+/g,""));		
-		if (comma > -1) { bundle_price = bundle_price / 100; }		
-		var corrected_price = not_owned_games_prices - bundle_price;
-
-		var $message = $('<div class="savings">' + formatCurrency(corrected_price, currency_type) + '</div>');
-		if (corrected_price < 0) $message[0].style.color = "red";
-		$('.savings').replaceWith($message);
+		var bundle_price = parse_currency($bundle_price.text());
+		if (bundle_price) {
+			var corrected_price = not_owned_games_prices - bundle_price.value;
+			var $message = $('<div class="savings">' + formatCurrency(corrected_price, bundle_price.currency_type) + '</div>');
+			if (corrected_price < 0) $message[0].style.color = "red";
+			$('.savings').replaceWith($message);
+		}
 	}, 500);
 }
 
