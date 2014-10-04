@@ -70,76 +70,73 @@ Array.prototype.chunk = function(chunkSize) {
 }
 
 var currency_format_info = {
-    "BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
-    "EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: ",", decimal: ".", right: true },
-    "GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
-    "RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
-    "JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
-    "MYR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "RM", thousand: ",", decimal: ".", right: false },
-    "NOK": { places: 2, hidePlacesWhenZero: false, symbolFormat: " kr", thousand: ".", decimal: ",", right: true },
-    "IDR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "Rp ", thousand: " ", decimal: ".", right: false },
-    "PHP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "P", thousand: ",", decimal: ".", right: false },
-    "SGD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S$", thousand: ",", decimal: ".", right: false },
-    "THB": { places: 2, hidePlacesWhenZero: false, symbolFormat: "฿", thousand: ",", decimal: ".", right: false },
-    "VND": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₫", thousand: ",", decimal: ".", right: false },
-    "KRW": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₩", thousand: ",", decimal: ".", right: false },
-    "TRY": { places: 2, hidePlacesWhenZero: false, symbolFormat: " TL", thousand: "", decimal: ",", right: true },
-    "UAH": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₴", thousand: "", decimal: ",", right: true },
-    "MXN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "Mex$ ", thousand: ",", decimal: ".", right: false },
-    "CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "C$ ", thousand: ",", decimal: ".", right: false },
-    "AUD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "A$ ", thousand: ",", decimal: ".", right: false },
-    "NZD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "NZ$ ", thousand: ",", decimal: ".", right: false },
-    "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
+	"BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
+	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: ",", decimal: ".", right: true },
+	"GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
+	"RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
+	"JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
+	"MYR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "RM", thousand: ",", decimal: ".", right: false },
+	"NOK": { places: 2, hidePlacesWhenZero: false, symbolFormat: " kr", thousand: ".", decimal: ",", right: true },
+	"IDR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "Rp ", thousand: " ", decimal: ".", right: false },
+	"PHP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "P", thousand: ",", decimal: ".", right: false },
+	"SGD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S$", thousand: ",", decimal: ".", right: false },
+	"THB": { places: 2, hidePlacesWhenZero: false, symbolFormat: "฿", thousand: ",", decimal: ".", right: false },
+	"VND": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₫", thousand: ",", decimal: ".", right: false },
+	"KRW": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₩", thousand: ",", decimal: ".", right: false },
+	"TRY": { places: 2, hidePlacesWhenZero: false, symbolFormat: " TL", thousand: "", decimal: ",", right: true },
+	"UAH": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₴", thousand: "", decimal: ",", right: true },
+	"MXN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "Mex$ ", thousand: ",", decimal: ".", right: false },
+	"CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "C$ ", thousand: ",", decimal: ".", right: false },
+	"AUD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "A$ ", thousand: ",", decimal: ".", right: false },
+	"NZD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "NZ$ ", thousand: ",", decimal: ".", right: false },
+	"USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
 };
 
 function formatCurrency(number, type) {
-
-    var info = currency_format_info[type];
-	if (info.hidePlacesWhenZero && (number % 1 === 0))
-	{
-	    info.places = 0;
+	var info = currency_format_info[type];
+	if (info.hidePlacesWhenZero && (number % 1 === 0)) {
+		info.places = 0;
 	}
-    	
+
 	var negative = number < 0 ? "-" : "",
 		i = parseInt(number = Math.abs(+number || 0).toFixed(info.places), 10) + "",
 		j = (j = i.length) > 3 ? j % 3 : 0,
-        formatted;
+		formatted;
 
 	formatted = negative +
-                (j ? i.substr(0, j) + info.thousand : "") +
-                i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + info.thousand) +
-                (info.places ? info.decimal + Math.abs(number - i).toFixed(info.places).slice(2) : "");
+				(j ? i.substr(0, j) + info.thousand : "") +
+				i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + info.thousand) +
+				(info.places ? info.decimal + Math.abs(number - i).toFixed(info.places).slice(2) : "");
 
 	if (info.right)
-	    formatted += info.symbolFormat;
+		formatted += info.symbolFormat;
 	else
-	    formatted = info.symbolFormat + formatted;
+		formatted = info.symbolFormat + formatted;
 
 	return formatted;
-
 }
 
 function parse_currency(str) {
-    var currency_symbol = currency_symbol_from_string(str);
-    var currency_type = currency_symbol_to_type(currency_symbol);
-    var info = currency_format_info[currency_type];
+	var currency_symbol = currency_symbol_from_string(str);
+	var currency_type = currency_symbol_to_type(currency_symbol);
+	var info = currency_format_info[currency_type];
 
-    // remove thousand sep, replace decimal with dot, remove non-numeric
-    str = str.replace(info.thousand, '')
-             .replace(info.decimal, '.')
-             .replace(/[^\d\.]/g, '')
-             .trim();
+	// remove thousand sep, replace decimal with dot, remove non-numeric
+	str = str.replace(info.thousand, '')
+			 .replace(info.decimal, '.')
+			 .replace(/[^\d\.]/g, '')
+			 .trim();
 
-    var value = parseFloat(str);
+	var value = parseFloat(str);
 
-    if (isNaN(value))
-        return null;
+	if (isNaN(value))
+		return null;
 
-    return {
-        value: value,
-        currency_type: currency_type,
-        currency_symbol: currency_symbol
-    };
+	return {
+		value: value,
+		currency_type: currency_type,
+		currency_symbol: currency_symbol
+	};
 }
 
 function currency_symbol_to_type (currency_symbol) {
@@ -188,9 +185,9 @@ function currency_symbol_to_type (currency_symbol) {
 }
 
 function currency_symbol_from_string (string_with_symbol) {
-    var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/;
-    var match = string_with_symbol.match(re);
-    return match ? match[0] : '';
+	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/;
+	var match = string_with_symbol.match(re);
+	return match ? match[0] : '';
 }
 
 function escapeHTML(str) {
@@ -1005,10 +1002,10 @@ function add_wishlist_total() {
 	var htmlstring;
 	
 	function calculate_node($node, search) {
-	    var parsed = parse_currency($node.find(search).text().trim());
+		var parsed = parse_currency($node.find(search).text().trim());
 
-	    if (parsed) {
-	        currency_symbol = parsed.currency_symbol;
+		if (parsed) {
+			currency_symbol = parsed.currency_symbol;
 			gamelist += $node.find("h4").text().trim() + ", ";
 			items ++;
 			total += parsed.value;
@@ -1017,13 +1014,13 @@ function add_wishlist_total() {
 	}
 	
 	$('.wishlistRow').each(function () {
-	    var $this = $(this);
+		var $this = $(this);
 
-	    if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
-	        calculate_node($this, "div[class='price']");
+		if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
+			calculate_node($this, "div[class='price']");
 
-	    if ($this.find("div[class='discount_final_price']").length != 0)
-	        calculate_node($this, "div[class='discount_final_price']");
+		if ($this.find("div[class='discount_final_price']").length != 0)
+			calculate_node($this, "div[class='discount_final_price']");
 	});
 	gamelist = gamelist.replace(/, $/, "");
 	
@@ -1033,7 +1030,7 @@ function add_wishlist_total() {
 		htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
 		htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
 		$.each(storefront_data, function(appid, app_data) {
-			if (app_data.success) {					
+			if (app_data.success) {
 				if (app_data.data.packages && app_data.data.packages[0]) {
 					htmlstring += '<input type="hidden" name="subid[]" value="' + app_data.data.packages[0] + '">';
 				}
