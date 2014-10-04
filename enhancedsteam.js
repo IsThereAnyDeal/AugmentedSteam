@@ -999,8 +999,7 @@ function add_wishlist_total() {
 	var items = 0;
 	var currency_symbol;
 	var apps = "";
-	var htmlstring;
-	
+
 	function calculate_node($node, search) {
 		var parsed = parse_currency($node.find(search).text().trim());
 
@@ -1012,7 +1011,7 @@ function add_wishlist_total() {
 			apps += get_appid($node.find("a[class='btn_visit_store']")[0].href) + ",";
 		}
 	}
-	
+
 	$('.wishlistRow').each(function () {
 		var $this = $(this);
 
@@ -1024,23 +1023,9 @@ function add_wishlist_total() {
 	});
 	gamelist = gamelist.replace(/, $/, "");
 	
-	get_http('http://store.steampowered.com/api/appdetails/?appids=' + apps, function (data) {
-		var storefront_data = JSON.parse(data);
-		htmlstring = '<form name="add_to_cart_all" action="http://store.steampowered.com/cart/" method="POST">';
-		htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-		htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-		$.each(storefront_data, function(appid, app_data) {
-			if (app_data.success) {
-				if (app_data.data.packages && app_data.data.packages[0]) {
-					htmlstring += '<input type="hidden" name="subid[]" value="' + app_data.data.packages[0] + '">';
-				}
-			}
-		});
-		htmlstring += '</form>';
-		currency_type = currency_symbol_to_type(currency_symbol);
-		total = formatCurrency(parseFloat(total), currency_type);
-		$(".games_list").after(htmlstring + "<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].buy_wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div><div class='btn_addtocart'><div class='btn_addtocart_left'></div><a class='btn_addtocart_content' onclick='document.forms[\"add_to_cart_all\"].submit();' href='#cartall' id='cartall'>" + localized_strings[language].add_to_cart + "</a><div class='btn_addtocart_right'></div></div></div></div></div></div>");
-	});
+	currency_type = currency_symbol_to_type(currency_symbol);
+	total = formatCurrency(parseFloat(total), currency_type);
+	$(".games_list").after("<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
 }
 
 function add_wishlist_ajaxremove() {
@@ -2540,23 +2525,12 @@ function add_supporter_badges() {
 }
 
 function appdata_on_wishlist() {
-
 	jQuery('a.btn_visit_store').each(function (index, node) {
 		var app = get_appid(node.href);
 		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
 			var storefront_data = JSON.parse(data);
 			$.each(storefront_data, function(appid, app_data) {
 				if (app_data.success) {
-					// Add "Add to Cart" button
-					if (app_data.data.packages && app_data.data.packages[0]) {
-						var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
-						htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-						htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-						htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
-						htmlstring += '</form>';
-						$(node).before('</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btn_visit_store">' + localized_strings[language].add_to_cart + '</a>  ');
-					}
-
 					// Add platform information
 					if (app_data.data.platforms) {
 						var htmlstring = "";
