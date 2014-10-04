@@ -195,7 +195,9 @@ function escapeHTML(str) {
 }
 
 function getCookie(name) {
-	return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(name).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+	var re = new RegExp(name + "=([^;]+)");
+	var value = re.exec(document.cookie);
+	return (value != null) ? unescape(value[1]) : null;
 }
 
 function matchAll(re, str) {
@@ -1100,15 +1102,12 @@ function add_wishlist_pricehistory() {
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets"; }
 
 			// Get country code from Steam cookie
-			var cookies = document.cookie;
-			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
 			var cc = "us";
-			if (matched != null && matched.length == 2) {
-				cc = matched[1];
-			} else {
-				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-				if (matched != null && matched.length == 2) {
-					cc = matched[1];
+			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
+				if (getCookie("fakeCC")){
+					cc = getCookie("fakeCC").toLowerCase();
+				} else {
+					cc = getCookie("LKGBillingCountry").toLowerCase();
 				}
 			}
 
@@ -2186,15 +2185,12 @@ function show_pricing_history(appid, type) {
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets"; }
 
 			// Get country code from the Steam cookie
-			var cookies = document.cookie;
-			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
 			var cc = "us";
-			if (matched != null && matched.length == 2) {
-				cc = matched[1];
-			} else {
-				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-				if (matched != null && matched.length == 2) {
-					cc = matched[1];
+			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
+				if (getCookie("fakeCC")){
+					cc = getCookie("fakeCC").toLowerCase();
+				} else {
+					cc = getCookie("LKGBillingCountry").toLowerCase();
 				}
 			}
 
@@ -5234,7 +5230,7 @@ function start_highlights_and_tags(){
 					highlight_wishlist(node_to_highlight);
 				}
 
-				var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
+				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
 				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 				if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 				if (getValue(appid + "gift")) highlight_inv_gift(node);
