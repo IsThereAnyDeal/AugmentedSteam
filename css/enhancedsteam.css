@@ -752,18 +752,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 32px;
 	margin-left: 5px;
 }
-#game_background {
-	height: 700px !important;
-	background-size: 100%;
-	display: none;
-}
-#es_background_gradient {
-	height: 700px;
-	position: absolute;
-	width: 100%;
-	background: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,0),rgba(0,0,0,1));
-	z-index: 999;
-}
 .es_market_summary_item {
 	float: right;
 	line-height: inherit !important;
