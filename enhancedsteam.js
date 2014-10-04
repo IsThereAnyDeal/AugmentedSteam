@@ -4767,6 +4767,7 @@ function customize_home_page() {
 		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_homepage_curators': settings.show_homepage_curators}); }
 		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_homepage_tabs': settings.show_homepage_tabs}); }
 		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_homepage_specials': settings.show_homepage_specials}); }
+		if (settings.show_homepage_under_ten_eur === undefined) { settings.show_homepage_under_ten_eur = true; storage.set({'show_show_homepage_under_ten_eur': settings.show_homepage_under_ten_eur}); }
 		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar}); }
 
 		var html = "<div class='home_viewsettings_popup' style='display: none; z-index: 12; right: 18px;'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings[language].apppage_sections + "</div>"
@@ -4854,13 +4855,27 @@ function customize_home_page() {
 			}
 		}
 
+		var specials_section_parent = $(".dailydeal_ctn").parent();
+		specials_section_parent.parent().find("h2:first, .dailydeal_ctn, .home_specials_grid:first, .home_block_footer:first, .home_specials_spacer").wrapAll("<div id='es_specials_section' />");
+		specials_section_parent.parent().find("h2:last, .home_specials_grid:last, .home_block_footer:last").wrapAll("<div id='es_under_ten_eur_section' />");
+		
 		// Specials
-		if ($(".dailydeal_ctn").length > 0) {
-			text = $(".dailydeal_ctn").parent().find("h2:first").text();
+		if ($("#es_specials_section").length > 0) {
+			text = $("#es_specials_section h2").text();
 			if (settings.show_homepage_specials) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".dailydeal_ctn").parent().hide();
+				$("#es_specials_section").hide();
+			}
+		}
+    
+		// Under 10€
+		if ($("#es_under_ten_eur_section").length > 0) {
+			text = $("#es_under_ten_eur_section h2").text();
+			if (settings.show_homepage_under_ten_eur) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten_eur'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten_eur'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$("#es_under_ten_eur_section").hide();
 			}
 		}
 
@@ -5017,14 +5032,27 @@ function customize_home_page() {
 		$("#show_homepage_specials").click(function() {
 			if (settings.show_homepage_specials) {
 				settings.show_homepage_specials = false;
-				$(".dailydeal_ctn").parent().hide();
+				$("#es_specials_section").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_specials = true;
-				$(".dailydeal_ctn").parent().show();
+				$("#es_specials_section").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_specials': settings.show_homepage_specials});
+		});
+
+		$("#show_homepage_under_ten_eur").click(function() {
+			if (settings.show_homepage_under_ten_eur) {
+				settings.show_homepage_under_ten_eur = false;
+				$("#es_under_ten_eur_section").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_under_ten_eur = true;
+				$("#es_under_ten_eur_section").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_under_ten_eur': settings.show_homepage_under_ten_eur});
 		});
 
 		$("#show_homepage_sidebar").click(function() {
