@@ -4052,8 +4052,10 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 			var href = ($(node).find("a").attr("href") || $(node).attr("href"));
 			var appid = get_appid(href);
 			if (appid === null) { 
-				if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
-					appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+				if ($(node).find("img").length > 0) {
+					if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
+						appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+					}
 				}
 			}
 			var early_access = JSON.parse(ea_appids);
