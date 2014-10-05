@@ -3738,12 +3738,12 @@ function subscription_savings_check() {
 
 	setTimeout(function() {
 		$.each($(".tab_item"), function (i, node) {
-			var price_container = $(node).find(".discount_final_price").text().trim();
+			var price_container = $(node).find(".discount_final_price").text().trim(),
+				itemPrice = 0;
 
 			if (price_container) {
-				itemPrice = parse_currency(price_container).value;
-			} else {
-				itemPrice = 0;
+				var price = parse_currency(price_container)
+				if (price) itemPrice = price.value;
 			}
 			if ($(node).find(".ds_owned_flag").length == 0) {
 				not_owned_games_prices += itemPrice;
