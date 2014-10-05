@@ -5,8 +5,7 @@ v6.9
 + Added a "remove" button to the custom background selection dialog
 : Fixed a bug with Euro price formatting
 : Fixed a bug that caused some packages not to process savings calculations corectly (again)
-: Fixed several bugs with the home page customization button
-
+: Fixed several bugs with the home page customization options
 
 v6.8
 -----
