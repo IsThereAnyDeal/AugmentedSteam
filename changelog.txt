@@ -2,6 +2,7 @@ v6.9
 -----
 + Added a "Customize" button the the "All New Releases" section
 + Added option to hide "Items under $10" section on home page
++ Added a "remove" button to the custom background selection dialog
 : Fixed a bug with Euro price formatting
 : Fixed a bug that caused some packages not to process savings calculations corectly (again)
 : Fixed several bugs with the home page customization button
