@@ -93,17 +93,9 @@ function save_options() {
 	];
 	showregionalprice = $("#regional_price_on").val();
 	regional_hideworld = $("#regional_hideworld").prop('checked');
-	regional_countries = [
-		$("#regional_country_1").val(),
-		$("#regional_country_2").val(),
-		$("#regional_country_3").val(),
-		$("#regional_country_4").val(),
-		$("#regional_country_5").val(),
-		$("#regional_country_6").val(),
-		$("#regional_country_7").val(),
-		$("#regional_country_8").val(),
-		$("#regional_country_9").val()
-	];
+	regional_countries = $.map($('.regional_country'), function (el, i) {
+		return $(el).val();
+	});
 
 	for(var i = regional_countries.length - 1; i >= 0; i--) {
 	    if(regional_countries[i] === "") {
@@ -316,50 +308,22 @@ function toggle_stores() {
 
 function load_countries() {
 	chrome.storage.sync.get(function(settings) {
-		$(".es_flag").css("background-image", "url("+chrome.extension.getURL("img/flags/flags.png")+")");
-		if (settings.regional_countries[0]) {
-			$("#es_flag_1").addClass("es_flag_" + settings.regional_countries[0]);
-			$("#regional_country_1").prop('value', settings.regional_countries[0]);
-		}	
-		if (settings.regional_countries[1]) {
-			$("#es_flag_2").addClass("es_flag_" + settings.regional_countries[1]);
-			$("#regional_country_2").prop('value', settings.regional_countries[1]);
-		}
-		if (settings.regional_countries[2]) {
-			$("#es_flag_3").addClass("es_flag_" + settings.regional_countries[2]);
-			$("#regional_country_3").prop('value', settings.regional_countries[2]);
-		}	
-		if (settings.regional_countries[3]) {
-			$("#es_flag_4").addClass("es_flag_" + settings.regional_countries[3]);
-			$("#regional_country_4").prop('value', settings.regional_countries[3]);
-		}	
-		if (settings.regional_countries[4]) {
-			$("#es_flag_5").addClass("es_flag_" + settings.regional_countries[4]);
-			$("#regional_country_5").prop('value', settings.regional_countries[4]);
-		}	
-		if (settings.regional_countries[5]) {
-			$("#es_flag_6").addClass("es_flag_" + settings.regional_countries[5]);
-			$("#regional_country_6").prop('value', settings.regional_countries[5]);
-		}	
-		if (settings.regional_countries[6]) {
-			$("#es_flag_7").addClass("es_flag_" + settings.regional_countries[6]);
-			$("#regional_country_7").prop('value', settings.regional_countries[6]);
-		}	
-		if (settings.regional_countries[7]) {
-			$("#es_flag_8").addClass("es_flag_" + settings.regional_countries[7]);
-			$("#regional_country_8").prop('value', settings.regional_countries[7]);
-		}	
-		if (settings.regional_countries[8]) {
-			$("#es_flag_9").addClass("es_flag_" + settings.regional_countries[8]);
-			$("#regional_country_9").prop('value', settings.regional_countries[8]);
-		}	
+		$('.regional_country').each(function (i, el) {
+			$(this).prop('value', settings.regional_countries[i]).siblings('.es_flag').addClass('es_flag_' + settings.regional_countries[i]);
+		});
 	});
 }
-var changelog_loaded;
+
+var changelog_loaded,
+	cc_data;
+
+$.getJSON(chrome.extension.getURL('cc.json'), function (data) {
+	cc_data = data;
+});
+
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
 	chrome.storage.sync.get(function(settings) {
-		populate_regional_selects();
 
 		// Load default values for settings if they do not exist (and sync them to Google)
 		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
@@ -517,7 +481,7 @@ function load_options() {
 		$("#regional_hideworld").prop('checked', settings.regional_hideworld);
 		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
 		if (settings.showregionalprice != "mouse") { $("#regional_price_hideworld").hide(); }
-		load_countries();
+		populate_regional_selects();
 
 		// Load Community Options
 		$("#showtotal").prop('checked', settings.showtotal);
@@ -715,17 +679,44 @@ function load_profile_link_images() {
 }
 
 function populate_regional_selects() {
-	$.getJSON(chrome.extension.getURL('cc.json'), function(cc_data) {
-		$.each(cc_data, function (index, value) {
-			$(".regional_country")
-				.append($("<option></option>")
-				.attr("value", index.toLowerCase())
-				.text(value));
+	var add_another_wrapper = $('#add_another_region').parent(),
+		region_selection = generate_region_select();
+
+	chrome.storage.sync.get(function (settings) {
+		$.each(settings.regional_countries, function () {
+			add_another_wrapper.before(region_selection.clone());
 		});
 	});
+
+	load_countries();
 }
 
+function add_region_selector() {
+	var add_another_wrapper = $('#add_another_region').parent(),
+		region_selection = generate_region_select();
 
+	add_another_wrapper.before(region_selection.clone());
+}
+
+function generate_region_select() {
+	var region_selection = $('<li/>'),
+		options = $();
+
+	$.each(window.cc_data, function (index, value) {
+		options = options.add($('<option/>').attr('value', index.toLowerCase()).text(value));
+	});
+
+	region_selection.append($('<span/>').addClass('es_flag').css("background-image", "url("+chrome.extension.getURL("img/flags/flags.png")+")"));
+	region_selection.append($('<select/>').addClass('regional_country').append(options));
+	region_selection.append($('<a/>').addClass('select2-search-choice-close remove_region'));
+
+	return region_selection;
+}
+
+function remove_region() {
+	$(this).closest('li').remove();
+	save_options();
+}
 
 function get_http(url, callback) {
 	var http = new XMLHttpRequest();
@@ -762,8 +753,8 @@ function clear_settings() {
 }
 
 function change_flag(node, selectnode) {
-	$(node).removeClass();
-	$(node).addClass("es_flag_" + $(selectnode).val() +" es_flag");
+	node.removeClass();
+	node.addClass("es_flag_" + selectnode.val() +" es_flag");
 }
 
 function load_default_highlight_owned_color() { $("#highlight_owned_color").val("#5c7836"); }
@@ -781,9 +772,8 @@ function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").
 function load_default_countries() {
 	regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"];
 	chrome.storage.sync.set({'regional_countries': regional_countries}, function() {
-		$("#regional_country_9").val("");
-		$(".es_flag").removeClass().addClass("es_flag");	
-		load_countries();
+		$('#region_selects').find('li').remove();
+		populate_regional_selects();
 		$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 	});	
 }
@@ -820,9 +810,13 @@ $(document).ready(function(){
 	$("#show_spamcommentregex").click(toggle_regex);
 	$('#stores_all').click(toggle_stores);
 	$("#reset_countries").click(load_default_countries);
-	$('.regional_country').change(function() {		
-		change_flag($("#es_flag_" + $(this).attr("id").match(/\d$/)), $(this));
-	});
+	$('#region_selects').on('change', '.regional_country', function() {
+		var $this = $(this);
+		change_flag($this.siblings('.es_flag'), $this);
+		save_options();
+	}).on('click', '.remove_region', remove_region);
+
+	$('#add_another_region').click(add_region_selector);
 
 	$("#regional_price_on").change(function() {
 		if ($(this).val() == "off") { $("#region_selects").hide(); } else { $("#region_selects").show(); }
@@ -840,7 +834,7 @@ $(document).ready(function(){
 
 	$("input[type=checkbox]").click(save_options);
 	$("input[type=text]").blur(save_options);
-	$("button:not(#reset):not(#reset_countries)").click(save_options);
+	$("button:not(#reset):not(#reset_countries):not(#add_another_region)").click(save_options);
 	$("#reset").click(clear_settings);
 	$(".colorbutton").change(save_options);
 	$("select").change(save_options);
