@@ -1,5 +1,6 @@
 v7.0
 -----
++ Added the ability to set any number of regional price comparisons
 
 
 v6.9
