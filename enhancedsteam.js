@@ -4870,7 +4870,7 @@ function customize_home_page() {
 		// Under 10€
 		if ($("#es_under_ten_section").length > 0) {
 			text = $("#es_under_ten_section h2").text();
-			if (settings.show_homepage_under_ten_eur) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			if (settings.show_homepage_under_ten) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$("#es_under_ten_section").hide();
