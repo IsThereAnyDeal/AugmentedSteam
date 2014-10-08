@@ -1010,7 +1010,7 @@ function add_wishlist_total() {
 			gamelist += $node.find("h4").text().trim() + ", ";
 			items ++;
 			total += parsed.value;
-			apps += get_appid($node.find("a[class='btn_visit_store']")[0].href) + ",";
+			apps += get_appid($node.find(".btnv6_blue_hoverfade").attr("href")) + ",";
 		}
 	}
 
@@ -1027,7 +1027,7 @@ function add_wishlist_total() {
 	
 	currency_type = currency_symbol_to_type(currency_symbol);
 	total = formatCurrency(parseFloat(total), currency_type);
-	$(".games_list").after("<link href='http://cdn4.store.steampowered.com/public/css/styles_gamev5.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
+	$(".games_list").after("<link href='http://store.akamai.steamstatic.com/public/css/v6/game.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings[language].wishlist + "</h1><p class='package_contents'><b>" + localized_strings[language].bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
 }
 
 function add_wishlist_ajaxremove() {
