@@ -1102,12 +1102,15 @@ function add_wishlist_pricehistory() {
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets"; }
 
 			// Get country code from Steam cookie
+			var cookies = document.cookie;
+			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
 			var cc = "us";
-			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
-				if (getCookie("fakeCC")){
-					cc = getCookie("fakeCC").toLowerCase();
-				} else {
-					cc = getCookie("LKGBillingCountry").toLowerCase();
+			if (matched != null && matched.length == 2) {
+				cc = matched[1];
+			} else {
+				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+				if (matched != null && matched.length == 2) {
+					cc = matched[1];
 				}
 			}
 
@@ -2185,12 +2188,15 @@ function show_pricing_history(appid, type) {
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets"; }
 
 			// Get country code from the Steam cookie
+			var cookies = document.cookie;
+			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
 			var cc = "us";
-			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
-				if (getCookie("fakeCC")){
-					cc = getCookie("fakeCC").toLowerCase();
-				} else {
-					cc = getCookie("LKGBillingCountry").toLowerCase();
+			if (matched != null && matched.length == 2) {
+				cc = matched[1];
+			} else {
+				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+				if (matched != null && matched.length == 2) {
+					cc = matched[1];
 				}
 			}
 
