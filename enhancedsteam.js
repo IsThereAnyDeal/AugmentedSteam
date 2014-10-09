@@ -86,7 +86,7 @@ var currency_format_info = {
 	"TRY": { places: 2, hidePlacesWhenZero: false, symbolFormat: " TL", thousand: "", decimal: ",", right: true },
 	"UAH": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₴", thousand: "", decimal: ",", right: true },
 	"MXN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "Mex$ ", thousand: ",", decimal: ".", right: false },
-	"CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "C$ ", thousand: ",", decimal: ".", right: false },
+	"CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "CDN$ ", thousand: ",", decimal: ".", right: false },
 	"AUD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "A$ ", thousand: ",", decimal: ".", right: false },
 	"NZD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "NZ$ ", thousand: ",", decimal: ".", right: false },
 	"USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
@@ -173,7 +173,7 @@ function currency_symbol_to_type (currency_symbol) {
 			return "UAH";
 		case "Mex$":
 			return "MXN";
-		case "C$":
+		case "CDN$":
 			return "CAD";
 		case "A$":
 			return "AUD";
@@ -185,7 +185,7 @@ function currency_symbol_to_type (currency_symbol) {
 }
 
 function currency_symbol_from_string (string_with_symbol) {
-	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|C\$|A\$|NZ\$)/;
+	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|NZ\$)/;
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
