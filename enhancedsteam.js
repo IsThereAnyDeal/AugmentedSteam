@@ -4089,11 +4089,12 @@ function process_early_access() {
 								$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
 								$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
 								break;
-							case /^\/(?:genre|browse)\/.*/.test(window.location.pathname):
+							case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
 								$(".tab_item").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0, ":last"); });
 								$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
 								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								$(".dq_item:not(:first-child)").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
 								break;
 							case /^\/search\/.*/.test(window.location.pathname):
 								$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
