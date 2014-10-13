@@ -3277,7 +3277,7 @@ function add_market_total() {
 					
 					pur_totaler = function (p, i) {
 						if ($(p).find(".market_listing_price").length > 0) {
-							if (p.innerHTML.match(/\+.+<\/div>/)) {
+							if ($(p).find(".market_listing_gainorloss").text().trim() === "+") {
 								var price = $(p).find(".market_listing_price").text().trim().match(/(\d+[.,]?\d+)/);
 								if (price !== null) {
 									var tempprice = price[0].toString();
@@ -3291,7 +3291,7 @@ function add_market_total() {
 
 					sale_totaler = function (p, i) {
 						if ($(p).find(".market_listing_price").length > 0) {
-							if (p.innerHTML.match(/-.+<\/div>/)) {
+							if ($(p).find(".market_listing_gainorloss").text().trim() === "-") {
 								var price = $(p).find(".market_listing_price").text().trim().match(/(\d+[.,]?\d+)/);
 								if (price !== null) {
 									var tempprice = price[0].toString();
