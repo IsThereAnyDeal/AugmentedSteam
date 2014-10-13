@@ -6551,6 +6551,15 @@ function add_friends_that_play() {
 	});
 }
 
+function add_decline_button() {
+	if (window.location.href.match(/tradeoffers\/$/)) {
+		$(".maincontent .profile_leftcol .tradeoffer").each(function(index) {
+			var offerID = $(this).attr("id").replace("tradeofferid_", "");
+			$(this).prepend("<a href='javascript:DeclineTradeOffer(\"" + offerID + "\");' style='background-image: url(" + chrome.extension.getURL("img/decline.png") + ");' class='btn_grey_grey btn_es_decline'>&nbsp;</a>");
+		});
+	}
+}
+
 function add_birthday_celebration() {
 	var profile_id = is_signed_in();
 	var setting_name = profile_id[0]+"birthday";
@@ -6821,6 +6830,10 @@ $(document).ready(function(){
 
 					case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
 						add_friends_that_play();
+						break;
+
+					case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(window.location.pathname):
+						add_decline_button();
 						break;
 
 					case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):

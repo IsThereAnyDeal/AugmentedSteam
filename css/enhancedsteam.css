@@ -1009,3 +1009,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .reward-detail-item .price {
 	color: rgb(137, 138, 140);
 }
+.btn_es_decline {
+	float: right;
+	margin-top: -8px;
+	line-height: 30px;
+	padding-left: 32px !important;
+	background-repeat: no-repeat !important;
+	background-position: 6px 3px !important;
+	margin-left: 4px;
+}
