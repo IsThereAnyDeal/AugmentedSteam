@@ -294,9 +294,8 @@ function highlight_wishlist(node) {
 
 // Color the tile for items with coupons
 function highlight_coupon(node, discount) {
-		node.classList.add("es_highlight_coupon");
-
 	storage.get(function(settings) {
+		node.classList.add("es_highlight_coupon");
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_coupon) highlight_node(node, settings.highlight_coupon_color);
@@ -5251,25 +5250,156 @@ function start_highlights_and_tags(){
 }
 
 function start_friend_activity_highlights() {
-	var selectors = [
-		".blotter_author_block a",
-		".blotter_gamepurchase_details a",
-		".blotter_daily_rollup_line a"
-	];
+	var steamID = is_signed_in()[0];
 
-	var appids = [];
+	var owned_promise = (function () {
+		var deferred = new $.Deferred();
+		if (is_signed_in() && window.location.protocol != "https:") {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 7 * 60 * 60 * 24; // One week ago
+			var last_updated = getValue("owned_games_time") || expire_time - 1;
 
-	// Get all appids and nodes from selectors
-	$.each(selectors, function (i, selector) {
-		$.each($(selector), function(j, node){
-			if (!node.classList.contains("blotter_userstats_game")) {
-				if (selector == ".blotter_daily_rollup_line a") {
-					if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
-						add_achievement_comparison_link($(node).parent().parent());
+			if (last_updated < expire_time) {
+				$.ajax({
+					url:"http://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + steamID + "&include_appinfo=0",
+					success: function(txt) {
+						var data = JSON.parse(txt);
+						if (data["requests"]) {
+							$.each(data['response']['games'], function(index, value) {
+								setValue(value['appid'] + "owned", true);
+							});
+						}
+						setValue("owned_games_time", parseInt(Date.now() / 1000, 10));
+						deferred.resolve();
+					},
+					error: function(e){
+						deferred.resolve();
+					}
+				});
+			} else {
+				deferred.resolve();
+			}
+		} else {
+			deferred.resolve();
+		}
+		
+		return deferred.promise();
+	})();
+
+	var wishlist_promise = (function () {
+		var deferred = new $.Deferred();
+		if (is_signed_in() && window.location.protocol != "https:") {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 ; // One hour ago
+			var last_updated = getValue("wishlist_games_time") || expire_time - 1;
+
+			if (last_updated < expire_time) {
+				// purge stale information from localStorage
+				var i = 0, sKey;
+				for (; sKey = window.localStorage.key(i); i++) {
+					if (sKey.match(/wishlisted/)) {
+						var appid = sKey.match(/\d+/)[0];
+						delValue(appid + "wishlisted");
 					}
 				}
+
+				$.ajax({
+					url:"http://steamcommunity.com/profiles/" + steamID + "/wishlist",
+					success: function(txt) {
+						var html = $.parseHTML(txt);
+						$(html).find(".wishlistRow").each(function() {
+							var appid = $(this).attr("id").replace("game_", "");
+							setValue(appid + "wishlisted", true);
+							setValue(appid, parseInt(Date.now() / 1000, 10));
+						});
+						setValue("wishlist_games_time", parseInt(Date.now() / 1000, 10));
+						deferred.resolve();
+					},
+					error: function(e){
+						deferred.resolve();
+					}
+				});
+			} else {
+				deferred.resolve();
 			}
+		} else {
+			deferred.resolve();
+		}
+		
+		return deferred.promise();
+	})();
+
+	function highlight_the_app(appid, node) {
+		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+		if (getValue(appid + "gift")) highlight_inv_gift(node);
+		if (getValue(appid + "wishlisted")) highlight_wishlist(node);
+		if (getValue(appid + "owned")) highlight_owned(node);
+	}
+
+	$.when.apply($, [owned_promise, wishlist_promise]).done(function() {
+		var selectors = [
+			".blotter_author_block a",
+			".blotter_gamepurchase_details a",
+			".blotter_daily_rollup_line a"
+		];
+
+		var appids = [],
+			appids_to_process = [];
+
+		// Get all appids and nodes from selectors
+		$.each(selectors, function (i, selector) {
+			$.each($(selector), function(j, node){
+				var appid = get_appid(node.href);
+				if (appid && !node.classList.contains("blotter_userstats_game")) {
+					if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
+					if (selector == ".blotter_daily_rollup_line a") {
+						if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
+							add_achievement_comparison_link($(node).parent().parent());
+						}
+					}
+					var pushvar = [appid, node];
+					appids.push(pushvar);
+				}
+			});
 		});
+
+		$.each(appids, function(index, value) {
+			var appid = value[0],
+				node = value[1];
+
+			if (getValue(appid + "owned") != true) {
+				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+				var last_updated = getValue(appid) || expire_time - 1;
+
+				// If we have no data on appid, or the data has expired; add it to appids to fetch new data.
+				if (last_updated < expire_time) {
+					appids_to_process.push(appid);
+				}
+			} 
+			highlight_the_app(appid, node);
+		});
+
+		if (appids_to_process.length) {
+			get_http('//store.steampowered.com/api/appuserdetails/?appids=' + appids_to_process.join(), function (data) {
+				var storefront_data = JSON.parse(data);
+				$.each(storefront_data, function(appid, app_data){
+					if (app_data.success) {
+						setValue(appid + "owned", (app_data.data.is_owned === true));
+
+						if (app_data.data.is_owned != true) {
+							// Update time for caching
+							setValue(appid, parseInt(Date.now() / 1000, 10));
+						}
+					}
+
+					// find the appropriate node to highlight
+					for (var i = 0; i < appids.length; i++) {
+						if (appids[i][0] === appid) {
+							highlight_the_app(appid, appids[i][1]);
+						}
+					}
+				});
+			});
+		}
 	});
 }
 
