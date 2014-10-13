@@ -3738,8 +3738,8 @@ function add_inventory_gotopage(){
 
 // Check price savings when purchasing game bundles
 function subscription_savings_check() {
-	var not_owned_games_prices = 0;
-	var $bundle_price = $(".package_totals_area").find(".price:last");	
+	var not_owned_games_prices = 0,
+		$bundle_price = $(".package_totals_area").find(".price:last");
 
 	setTimeout(function() {
 		$.each($(".tab_item"), function (i, node) {
@@ -3747,10 +3747,10 @@ function subscription_savings_check() {
 				itemPrice = 0;
 
 			if (price_container) {
-				var price = parse_currency(price_container)
+				var price = parse_currency(price_container);
 				if (price) itemPrice = price.value;
 			}
-			if ($(node).find(".ds_owned_flag").length == 0) {
+			if ($(node).find(".ds_owned_flag").length === 0) {
 				not_owned_games_prices += itemPrice;
 			}
 		});
@@ -3759,6 +3759,9 @@ function subscription_savings_check() {
 		if (bundle_price) {
 			var corrected_price = not_owned_games_prices - bundle_price.value;
 			var $message = $('<div class="savings">' + formatCurrency(corrected_price, bundle_price.currency_type) + '</div>');
+			if ($("#package_savings_bar").length === 0) {
+				$(".package_totals_area").append("<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + localized_strings[language].bundle_saving_text + "</div></div>");
+			}
 			if (corrected_price < 0) $message[0].style.color = "red";
 			$('.savings').replaceWith($message);
 		}
