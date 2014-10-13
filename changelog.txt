@@ -3,6 +3,7 @@ v7.0
 + Added the ability to set any number of regional price comparisons
 + Added highlighting and tags back to the Friend Activity page
 : Updated wishlist code to work with the new page layout and design
+: Updated Early Access banners to work with more store sections
 
 
 v6.9
