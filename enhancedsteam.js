@@ -2526,7 +2526,7 @@ function add_supporter_badges() {
 }
 
 function appdata_on_wishlist() {
-	jQuery('a.btn_visit_store').each(function (index, node) {
+	$('a.btnv6_blue_hoverfade').each(function (index, node) {
 		var app = get_appid(node.href);
 		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
 			var storefront_data = JSON.parse(data);
@@ -4116,8 +4116,7 @@ function process_early_access() {
 								$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
 								$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
 								break;
-							case /^\/$/.test(window.location.pathname):					
-								$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+							case /^\/$/.test(window.location.pathname):
 								$(".home_smallcap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
 								$(".cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
 								$(".special").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
