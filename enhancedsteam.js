@@ -2557,7 +2557,12 @@ function load_search_results () {
 	if (!processing) {
 		processing = true;
 		var search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
-		get_http('http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es', function (txt) {
+		if ($(".LoadingWrapper").length === 0) {
+			$(".search_pagination:last").before('<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + localized_strings[language].loading + '</div></div>');
+		}	
+		$.ajax({
+			url: 'http://store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es'
+		}).success(function(txt) {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 
@@ -2565,6 +2570,7 @@ function load_search_results () {
 			$('#search_result_container').attr('data-last-add-date', added_date);
 			html.attr('data-added-date', added_date)
 
+			$(".LoadingWrapper").remove();
 			$(".search_result_row").last().after(html);
 			search_page = search_page + 1;
 			processing = false;
@@ -2576,6 +2582,15 @@ function load_search_results () {
 			};
 
 			runInPageContext(ripc);
+		}).error(function() {
+			$(".LoadingWrapper").remove();
+			$(".search_pagination:last").before("<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + localized_strings[language].search_error + ". <a id='es_retry' style='cursor: pointer;'>" + localized_strings[language].search_error_retry + ".</a></div>");
+
+			$("#es_retry").click(function() {
+				processing = false;
+				$("#es_error_msg").remove();
+				load_search_results();
+			});
 		});
 	}
 }
@@ -2597,6 +2612,7 @@ function endless_scrolling() {
 		if (settings.contscroll) {
 
 			var result_count;
+			$(document.body).append('<link rel="stylesheet" type="text/css" href="http://store.akamai.steamstatic.com/public/css/v6/home.css">');
 			$(".search_pagination_right").css("display", "none");
 			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
 				result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
