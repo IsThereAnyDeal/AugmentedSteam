@@ -6654,7 +6654,7 @@ function add_acrtag_warning() {
 					var subid = $(app_package).find("input[name='subid']").val();
 					if (subid > 0) {
 						if (acrtag["acrtag"].indexOf(subid) >= 0) {
-							$(this).after('<div class="DRM_notice" style="padding-left: 17px; margin-top: 0px; padding-top: 20px; min-height: 28px;"><div class="gift_icon"><img src="http://store.akamai.steamstatic.com/public/images/v5/ico_gift.gif" style="float: left; margin-right: 13px;"></div><div data-store-tooltip="' + localized_strings[language].acrtag_tooltip + '">' + localized_strings[language].acrtag_msg + '.</div></div>');
+							$(this).after('<div class="DRM_notice" style="padding-left: 17px; margin-top: 0px; padding-top: 20px; min-height: 28px;"><div class="gift_icon"><img src="' + chrome.extension.getURL("img/trading.png") + '" style="float: left; margin-right: 13px;"></div><div data-store-tooltip="' + localized_strings[language].acrtag_tooltip + '">' + localized_strings[language].acrtag_msg + '.</div></div>');
 							runInPageContext("function() {BindStoreTooltip(jQuery('.DRM_notice [data-store-tooltip]')) }");
 						}
 					}
