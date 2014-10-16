@@ -1,3 +1,7 @@
+v7.1
+-----
+
+
 v7.0
 -----
 + Added the ability to set any number of regional price comparisons
@@ -7,6 +11,7 @@ v7.0
 + Added UI elements to continuous scrolling feature and the ability to retry when it fails
 + Enhanced Steam will now show bundle savings calculations on bundles with no savings
 : Updated wishlist code to work with the new page layout and design
+: Updated Canadian currency formatting
 : Updated Early Access banners to work with more store sections
 : Fixed a bug in market total calculations
 : Fixed a bug in the home page customization
