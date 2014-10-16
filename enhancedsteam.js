@@ -6615,6 +6615,55 @@ function add_birthday_celebration() {
 	});
 }
 
+function add_acrtag_warning() {
+	storage.get(function(settings) {
+		if (settings.show_acrtag_info === undefined) { settings.show_acrtag_info = false; storage.set({'show_acrtag_info': settings.show_acrtag_info}); }
+		if (settings.show_acrtag_info) {
+			var acrtag_subids, acrtag_promise = (function () {
+				var deferred = new $.Deferred();
+				if (window.location.protocol != "https:") {
+					// is the data cached?
+					var expire_time = parseInt(Date.now() / 1000, 10) - 8 * 60 * 60;
+					var last_updated = getValue("acrtag_subids_time") || expire_time - 1;
+					
+					if (last_updated < expire_time) {
+						// if no cache exists, pull the data from the website
+						get_http("//api.enhancedsteam.com/acrtag/", function(txt) {
+							acrtag_subids = txt;
+							setValue("acrtag_subids", acrtag_subids);
+							setValue("acrtag_subids_time", parseInt(Date.now() / 1000, 10));
+							deferred.resolve();	
+						});
+					} else {
+						acrtag_subids = getValue("acrtag_subids");
+						deferred.resolve();
+					}
+					
+					return deferred.promise();
+				} else {
+					deferred.resolve();
+					return deferred.promise();
+				}
+			})();
+
+			acrtag_promise.done(function(){
+				var all_game_areas = $(".game_area_purchase_game");
+				var acrtag = JSON.parse(getValue("acrtag_subids"));
+
+				$.each(all_game_areas,function(index,app_package){
+					var subid = $(app_package).find("input[name='subid']").val();
+					if (subid > 0) {
+						if (acrtag["acrtag"].indexOf(subid) >= 0) {
+							$(this).after('<div class="DRM_notice" style="padding-left: 17px; margin-top: 0px; padding-top: 20px; min-height: 28px;"><div class="gift_icon"><img src="http://store.akamai.steamstatic.com/public/images/v5/ico_gift.gif" style="float: left; margin-right: 13px;"></div><div data-store-tooltip="' + localized_strings[language].acrtag_tooltip + '">' + localized_strings[language].acrtag_msg + '.</div></div>');
+							runInPageContext("function() {BindStoreTooltip(jQuery('.DRM_notice [data-store-tooltip]')) }");
+						}
+					}
+				});
+			});
+		}
+	});
+}
+
 function get_playfire_rewards(appid) {
 	storage.get(function(settings) {
 		if (settings.show_playfire_info === undefined) { settings.show_playfire_info = true; storage.set({'show_playfire_info': settings.show_playfire_info}); }
@@ -6717,6 +6766,7 @@ $(document).ready(function(){
 						add_achievement_completion_bar(appid);
 
 						show_regional_pricing();
+						add_acrtag_warning();
 						get_playfire_rewards(appid);
 
 						customize_app_page();

@@ -45,6 +45,7 @@ function save_options() {
 	html5video = $("#html5video").prop('checked');
 	contscroll = $("#contscroll").prop('checked');
 	showdrm = $("#showdrm").prop('checked');
+	show_acrtag_info = $("#showacrtag").prop('checked');
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
 	showpcgw = $("#showpcgw").prop('checked');
@@ -173,6 +174,7 @@ function save_options() {
 		'html5video': html5video,
 		'contscroll': contscroll,
 		'showdrm': showdrm,
+		'show_acrtag_info': show_acrtag_info,
 		'showmcus': showmcus,
 		'showhltb': showhltb,
 		'showpcgw': showpcgw,
@@ -391,7 +393,8 @@ function load_options() {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
 		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
 		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }
-		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }		
+		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
+		if (settings.show_acrtag_info === undefined) { settings.show_acrtag_info = false; chrome.storage.sync.set({'show_acrtag_info': settings.show_acrtag_info}); }
 		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
@@ -458,6 +461,7 @@ function load_options() {
 		$("#html5video").prop('checked', settings.html5video);
 		$("#contscroll").prop('checked', settings.contscroll);
 		$("#showdrm").prop('checked', settings.showdrm);
+		$("#showacrtag").prop('checked', settings.show_acrtag_info);
 		$("#showmcus").prop('checked', settings.showmcus);
 		$("#showhltb").prop('checked', settings.showhltb);
 		$("#showpcgw").prop('checked', settings.showpcgw);
@@ -575,6 +579,7 @@ function load_translation() {
 			$("#html5video_text").text(localized_strings[settings.language].options.html5video);
 			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);
 			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
+			$("#store_acrtag_text").text(localized_strings[settings.language].options.acrtag);
 			$("#store_lowestprice_text").text(localized_strings[settings.language].options.lowestprice);
 			$("#store_lowestprice_onwishlist_text").text(localized_strings[settings.language].options.lowestprice_onwishlist);
 			$("#store_lowestprice_coupon_text").text(localized_strings[settings.language].options.lowestprice_coupon);
