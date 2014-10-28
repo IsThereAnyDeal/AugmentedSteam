@@ -119,6 +119,7 @@ function formatCurrency(number, type) {
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
 	var currency_type = currency_symbol_to_type(currency_symbol);
+	var currency_number = currency_symbol_to_number(currency_symbol);
 	var info = currency_format_info[currency_type];
 
 	// remove thousand sep, replace decimal with dot, remove non-numeric
@@ -135,7 +136,8 @@ function parse_currency(str) {
 	return {
 		value: value,
 		currency_type: currency_type,
-		currency_symbol: currency_symbol
+		currency_symbol: currency_symbol,
+		currency_number: currency_number
 	};
 }
 
@@ -181,6 +183,51 @@ function currency_symbol_to_type (currency_symbol) {
 			return "NZD";
 		default:
 			return "USD";
+	}
+}
+
+function currency_symbol_to_number (currency_symbol) {
+	switch (currency_symbol) {
+		case "pуб":
+			return 5;
+		case "€":
+			return 3;
+		case "£":
+			return 2;
+		case "R$":
+			return 7;
+		case "¥":
+			return 8;
+		case "kr":
+			return 9;
+		case "Rp":
+			return 10;
+		case "RM":
+			return 11;
+		case "P":
+			return 12;
+		case "S$":
+			return 13;
+		case "฿":
+			return 14;
+		case "₫":
+			return 15;
+		case "₩":
+			return 16;
+		case "TL":
+			return 17;
+		case "₴":
+			return 18;
+		case "Mex$":
+			return 19;
+		case "CDN$":
+			return 20;
+		case "A$":
+			return 21;
+		case "NZ$":
+			return 22;
+		default:
+			return 1;
 	}
 }
 
@@ -3622,23 +3669,34 @@ function inventory_market_helper(response) {
 			
 			if (marketable == 0) { $('.es_item_action').remove(); return; }
 			$("#es_item" + item).html("<img src='http://cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings[language].loading+"</span>");
-			
-			var url = "http://steamcommunity.com/market/priceoverview/?appid=" + global_id + "&market_hash_name=" + hash_name;
-			get_http(url, function (txt) {
-				data = JSON.parse(txt);
-				$("#es_item" + item).html("");
-				if (data.success) {
-					html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
-					html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
-					if (data.volume) {
-						html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
-					}
 
-					$("#es_item" + item).html(html);
-				} else {
-					$("#es_item" + item).remove();
-				}
-			});
+			function inventory_market_helper_get_price(url) {
+				get_http(url, function (txt) {
+					data = JSON.parse(txt);
+					$("#es_item" + item).html("");
+					if (data.success) {
+						html = "<div><div style='height: 24px;'><a href='http://steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings[language].view_in_market + "</a></div>";
+						html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings[language].starting_at + ": " + data.lowest_price;
+						if (data.volume) {
+							html += "<br>" + localized_strings[language].last_24.replace("__sold__", data.volume);
+						}
+
+						$("#es_item" + item).html(html);
+					} else {
+						$("#es_item" + item).remove();
+					}
+				});
+			}			
+
+			if (getValue("steam_currency_number")) {
+				inventory_market_helper_get_price("http://steamcommunity.com/market/priceoverview/?currency=" + getValue("steam_currency_number") + "&appid=" + global_id + "&market_hash_name=" + hash_name);
+			} else {
+				get_http("http://store.steampowered.com/app/220/", function(txt) {
+					var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
+					setValue("steam_currency_number", currency.currency_number);
+					inventory_market_helper_get_price("http://steamcommunity.com/market/priceoverview/?currency=" + currency.currency_number + "&appid=" + global_id + "&market_hash_name=" + hash_name);					
+				});
+			}
 		} else {
 			if (hash_name && hash_name.match(/Booster Pack/g)) {
 				setTimeout(function() {
