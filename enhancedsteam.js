@@ -781,7 +781,7 @@ function load_inventory() {
 										// Gift package with multiple apps
 										is_package = true;
 										for (var j = 0; j < appids.length; j++) {
-											setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+											if (appids[j]) setValue(appids[j] + (obj.type === "Gift" ? "gift" : "guestpass"), true);
 										}
 
 										break;
@@ -793,7 +793,7 @@ function load_inventory() {
 						if (!is_package && obj.actions) {
 							// Single app
 							var appid = get_appid(obj.actions[0].link);
-							setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
+							if (appid) setValue(appid + (obj.type === "Gift" ? "gift" : "guestpass"), true);
 						}
 					});
 				}
@@ -5324,9 +5324,11 @@ function start_highlights_and_tags(){
 				}
 
 				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
-				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-				if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
-				if (getValue(appid + "gift")) highlight_inv_gift(node);
+				if (appid) {
+					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+					if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+					if (getValue(appid + "gift")) highlight_inv_gift(node);
+				}
 			});
 		});
 	}, 500);

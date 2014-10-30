@@ -1,6 +1,7 @@
 v7.1
 -----
 : Fixed an issue where inventory price info was in USD regardless of the user's currency
+: Fixed a bug that would cause items to be tagged as gifts incorrectly under certain conditions
 
 
 v7.0
