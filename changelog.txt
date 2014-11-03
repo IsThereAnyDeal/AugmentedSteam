@@ -1,5 +1,6 @@
 v7.1
 -----
++ Added a box to search pages that lets you hide games you own, on your wishlist, or in cart
 
 
 v7.0.1

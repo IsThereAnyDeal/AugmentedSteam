@@ -331,11 +331,22 @@ function highlight_wishlist(node) {
 
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = false; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
+
 		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
+		if (settings.hide_wishlist) hide_node(node);
 
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
 		if (settings.tag_wishlist) add_tag(node, localized_strings[language].tag.wishlist, settings.highlight_wishlist_color);
+	});
+}
+
+function highlight_cart(node) {
+	storage.get(function(settings) {
+		node.classList.add("es_highlight_cart");
+		if (settings.hide_cart === undefined) { settings.hide_cart = false; chrome.storage.sync.set({'hide_cart': settings.hide_cart}); }
+		if (settings.hide_cart) hide_node(node);
 	});
 }
 
@@ -2676,6 +2687,64 @@ function endless_scrolling() {
 				}
 			});
 		}
+	});
+}
+
+function add_hide_buttons_to_search() {
+	storage.get(function(settings) {
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
+		if (settings.hide_cart === undefined) { settings.hide_cart = false; chrome.storage.sync.set({'hide_cart': settings.hide_cart}); }
+		
+		$("#advsearchform").find(".rightcol").prepend("<div class='block'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div></div></div>")
+
+		if (settings.hide_owned) {
+			$("#es_owned_games").addClass("checked");
+		}
+
+		if (settings.hide_wishlist) {
+			$("#es_wishlist_games").addClass("checked");
+		}
+
+		if (settings.hide_cart) {
+			$("#es_cart_games").addClass("checked");
+		}
+
+		$("#es_owned_games").click(function() {
+			if ($("#es_owned_games").hasClass("checked")) {
+				$("#es_owned_games").removeClass("checked");
+				$(".ds_owned").css("display", "block");
+				chrome.storage.sync.set({'hide_owned': false });
+			} else {
+				$("#es_owned_games").addClass("checked");
+				$(".ds_owned").css("display", "none");
+				chrome.storage.sync.set({'hide_owned': true });
+			}
+		});
+
+		$("#es_wishlist_games").click(function() {
+			if ($("#es_wishlist_games").hasClass("checked")) {
+				$("#es_wishlist_games").removeClass("checked");
+				$(".ds_wishlist").css("display", "block");
+				chrome.storage.sync.set({'hide_wishlist': false });
+			} else {
+				$("#es_wishlist_games").addClass("checked");
+				$(".ds_wishlist").css("display", "none");
+				chrome.storage.sync.set({'hide_wishlist': true });
+			}
+		});
+
+		$("#es_cart_games").click(function() {
+			if ($("#es_cart_games").hasClass("checked")) {
+				$("#es_cart_games").removeClass("checked");
+				$(".ds_incart").css("display", "block");
+				chrome.storage.sync.set({'hide_cart': false });
+			} else {
+				$("#es_cart_games").addClass("checked");
+				$(".ds_incart").css("display", "none");
+				chrome.storage.sync.set({'hide_cart': true });
+			}
+		});
 	});
 }
 
@@ -5321,6 +5390,10 @@ function start_highlights_and_tags(){
 					highlight_wishlist(node_to_highlight);
 				}
 
+				if ($(node).find(".ds_incart_flag").length > 0) {
+					highlight_cart(node_to_highlight);
+				}
+
 				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
 				if (appid) {
 					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
@@ -5497,6 +5570,10 @@ function start_highlighting_node(node) {
 
 	if ($(node).find(".ds_wishlist_flag").length > 0) {
 		highlight_wishlist(node_to_highlight);
+	}
+
+	if ($(node).find(".ds_incart_flag").length > 0) {
+		highlight_cart(node_to_highlight);
 	}
 
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
@@ -6888,6 +6965,7 @@ $(document).ready(function(){
 					case /^\/search\/.*/.test(window.location.pathname):
 						//add_cart_to_search();
 						endless_scrolling();
+						add_hide_buttons_to_search();
 						break;
 
 					case /^\/sale\/.*/.test(window.location.pathname):
