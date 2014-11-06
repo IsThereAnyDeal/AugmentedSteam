@@ -3449,7 +3449,7 @@ function add_market_total() {
 				}
 
 				var start = 0;
-				var count = 1000;
+				var count = 500;
 				var i = 1;
 				get_http("http://steamcommunity.com/market/myhistory/render/?query=&start=0&count=1", function (last_transaction) {
 					var data = JSON.parse(last_transaction);
