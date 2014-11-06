@@ -62,13 +62,6 @@ String.prototype.contains = function(it) {
 	return this.indexOf(it) != -1;
 };
 
-Array.prototype.chunk = function(chunkSize) {
-    var R = [];
-    for (var i=0; i<this.length; i+=chunkSize)
-        R.push(this.slice(i,i+chunkSize));
-    return R;
-}
-
 var currency_format_info = {
 	"BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
 	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: " ", decimal: ",", right: true },
@@ -1773,12 +1766,10 @@ function show_library() {
 				library_all_games = data.response.games;
                 var appids = library_all_games.map(function(val,i,arr) {return val.appid});
 				var appdetails = {};
-				var appidchunks = appids.chunk(100).map(function(val) {return val.join(',');});
-				var appdetailcalls = appidchunks.map(function(val,i,arr) {
-						 return $.post('http://store.steampowered.com/api/appdetails/', 
-						{ appids: val, filters: 'categories,genres' },
-						function(appdetailtxt){ 
-						 $.extend(appdetails,appdetailtxt)
+				var appdetailcalls = appids.map(function(val,i,arr) {
+						return $.post('http://store.steampowered.com/api/appdetails/?appids=' + val + "&filters=categories,genres",
+						function(appdetailtxt){
+							$.extend(appdetails,appdetailtxt)
 						});
 				});
 				$.when.apply($,appdetailcalls).then(
