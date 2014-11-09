@@ -6138,56 +6138,99 @@ function add_cardexchange_links(game) {
 }
 
 function add_badge_filter() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
-		var html  = "<div style='text-align: right;'><span>" + localized_strings[language].show + ": </span>";
-			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings[language].badges_all + "</span></label>";
-			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings[language].badges_drops + "</span></label>";
-			html += "</div>";
+	if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {
+		var filter_done = false;
 
-		$('.profile_badges_header').append(html);
+		if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
+			var html  = "<div style='text-align: right;'><span>" + localized_strings[language].show + ": </span>";
+				html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings[language].badges_all + "</span></label>";
+				html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings[language].badges_drops + "</span></label>";
+				html += "</div>";
 
-		var resetLazyLoader = function() { runInPageContext(function() { 
-				// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
-				CScrollOffsetWatcher.sm_rgWatchers = [];
-				
-				// Recreate registered image lazy loader watchers
-				$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
-					// LoadImageGroupOnScroll is found in shared_global.js
-					LoadImageGroupOnScroll(e.id, e.id.substr(19));
+			$('.profile_badges_header').append(html);
+
+			var resetLazyLoader = function() { runInPageContext(function() { 
+					// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+					CScrollOffsetWatcher.sm_rgWatchers = [];
+					
+					// Recreate registered image lazy loader watchers
+					$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+						// LoadImageGroupOnScroll is found in shared_global.js
+						LoadImageGroupOnScroll(e.id, e.id.substr(19));
+					});
 				});
+			};
+			
+			$('#es_badge_all').on('click', function() {
+				$('.is_link').css('display', 'block');
+				resetLazyLoader();
 			});
-		};
-		
-		$('#es_badge_all').on('click', function() {
-			$('.is_link').css('display', 'block');			
-			resetLazyLoader();
-		});
 
-		$('#es_badge_drops').on('click', function() {
-			$('.is_link').each(function () {
-				if (!($(this).html().match(/progress_info_bold".+\d/))) {
-					$(this).css('display', 'none');
-				} else if (parseFloat($(this).html().match(/progress_info_bold".+?(\d+)/)[1]) == 0) {					
-					$(this).css('display', 'none');				
+			$('#es_badge_drops').click(function(event) {
+				event.preventDefault();
+				$("#es_badge_drops").find("input").prop("checked", true);
+
+				// Load additinal badge sections if multiple pages are present
+				if ($(".pagebtn").length > 0 && filter_done == false) {
+					var base_url = window.location.origin + window.location.pathname + "?p=",
+						last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
+						deferred = new $.Deferred(),
+						promise = deferred.promise(),
+						pages = [];
+
+					for (page = 2; page <= last_page; page++) {
+						pages.push(page);
+					}
+
+					$.each(pages, function (i, item) {
+						promise = promise.then(function() {
+							return $.ajax(base_url + item).done(function(data) {
+								var html = $.parseHTML(data);
+								$(html).find(".badge_row").each(function(i, obj) {
+									$(".badges_sheet").append(obj);
+								});
+							});
+						});
+					});
+
+					promise.done(function() {
+						$(".profile_paging").css("display", "none");
+						filter_done = true;
+						add_badge_filter_processing();
+					});
+					
+					deferred.resolve();	
 				} else {
-					if ($(this).html().match(/badge_info_unlocked/)) {
-						if (!($(this).html().match(/badge_current/))) {
+					add_badge_filter_processing();
+				}
+
+				function add_badge_filter_processing() {
+					$('.is_link').each(function () {
+						if (!($(this).html().match(/progress_info_bold".+\d/))) {
 							$(this).css('display', 'none');
+						} else if (parseFloat($(this).html().match(/progress_info_bold".+?(\d+)/)[1]) == 0) {
+							$(this).css('display', 'none');
+						} else {
+							if ($(this).html().match(/badge_info_unlocked/)) {
+								if (!($(this).html().match(/badge_current/))) {
+									$(this).css('display', 'none');
+								}
+							}
+							// Hide foil badges too
+							if (!($(this).html().match(/progress_info_bold/))) {
+								$(this).css('display', 'none');
+							}
 						}
-					}
-					// Hide foil badges too
-					if (!($(this).html().match(/progress_info_bold/))) {
-						$(this).css('display', 'none');
-					}
+					});
+					resetLazyLoader();
 				}
 			});
-			resetLazyLoader();
-		});
+		}
 	}
 }
 
 function add_badge_sort() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
+	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href && $(".pagebtn").length == 0) {
 		if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
 			$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings[language].most_drops + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + localized_strings[language].drops_value + "</a>");
 		}
