@@ -154,6 +154,7 @@ li {
 	margin-bottom:2px;
 	margin-top:5px;
 	padding:0;
+	font-size: medium;
 }
 .settings_color, .settings_check {
 	display:inline-block;
@@ -236,4 +237,7 @@ a:hover {
 .select2-search-choice-close {
 	display: inline-block;
 	position: static;
+}
+.credits li {
+	font-size: medium;
 }
