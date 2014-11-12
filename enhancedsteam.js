@@ -5640,14 +5640,6 @@ function add_familysharing_warning(appid) {
 	});
 }
 
-function fix_community_hub_links() {
-	element = document.querySelector( '.apphub_OtherSiteInfo a' );
-
-	if( element && element.href.charAt( 26 ) === '/' ) {
-		element.href = element.href.replace( /\/\/app\//, '/app/' ) + '/';
-	}
-}
-
 // Display app descriptions on storefront carousel
 function add_carousel_descriptions() {
 	storage.get(function(settings) {
@@ -7008,7 +7000,6 @@ $(document).ready(function(){
 						add_steamreview_userscore(appid);
 						display_purchase_date();
 
-						fix_community_hub_links();
 						add_widescreen_certification(appid);
 						add_hltb_info(appid);
 						add_pcgamingwiki_link(appid);
