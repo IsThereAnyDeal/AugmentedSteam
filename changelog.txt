@@ -2,6 +2,7 @@ v7.1
 -----
 + Added a box to search pages that lets you hide games you own, on your wishlist, or in cart
 + Added ACRTAG warning messages to sub pages
++ Added the ability to remove games from your wishlist from the game's app page
 : Fixed drop count calculation to work with new badge page pagination
 : Fixed badge page filtering and sort options to work with pagination
 : Fixed the Library mode to work with the new changes in the Steam web API
