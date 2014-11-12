@@ -6734,7 +6734,7 @@ function add_total_drops_count() {
 
 		if ($(".pagebtn").length > 0) {
 			if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {
-				$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>Click here to calculate drops remaining</span>").css("cursor", "pointer");
+				$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>" + localized_strings[language].drop_calc + "</span>").css("cursor", "pointer");
 
 				$("#es_calculations").click(function() {
 					$(".profile_xp_block_right").css("cursor", "default");
