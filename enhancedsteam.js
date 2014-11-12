@@ -5804,7 +5804,7 @@ function add_app_page_wishlist(appid) {
 
 // Allows the user to intuitively remove an item from their wishlist on the app page
 function add_app_page_wishlist_changes(appid) {
-	if ($("#add_to_wishlist_area").length == 0) {
+	if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
 		$(".demo_area_button").find("a:first").removeAttr("href");
 		$(".demo_area_button").find("a:first").wrap("<div id='add_to_wishlist_area_success' class='queue_control_button'></div>");
 		
