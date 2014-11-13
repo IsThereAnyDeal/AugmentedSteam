@@ -9,7 +9,6 @@ v7.1
 : Fixed the Library mode to work with the new changes in the Steam web API
 : Fixed a bug in market total calculations introduced by a change in the API
 
-
 v7.0.1
 -----
 : Fixed an issue where inventory price info was in USD regardless of the user's currency
