@@ -6978,19 +6978,19 @@ function add_review_toggle_button() {
 	$("#review_create").find("h1").append("<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
 	$("#review_container").find("p, .avatar_block, .content").wrapAll("<div id='es_review_section'></div>");
 
-	if (!getValue("show_review_section")) {
+	if (getValue("show_review_section")) {
 		$("#es_review_toggle").find("span").text("▼");
 		$("#es_review_section").hide();
 	}
 
 	$("#es_review_toggle").on("click", function() {
 		if (getValue("show_review_section") == true) {
-			$("#es_review_toggle").find("span").text("▼");
-			$("#es_review_section").slideUp();
-			setValue("show_review_section", false);
-		} else {
 			$("#es_review_toggle").find("span").text("▲");
 			$("#es_review_section").slideDown();
+			setValue("show_review_section", false);
+		} else {
+			$("#es_review_toggle").find("span").text("▼");
+			$("#es_review_section").slideUp();			
 			setValue("show_review_section", true);
 		}
 	});
