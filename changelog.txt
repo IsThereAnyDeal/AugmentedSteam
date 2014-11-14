@@ -1,6 +1,7 @@
 v7.2
 -----
 : Fixed a bug that caused coupon messages not to display properly
+: Fixed a bug that caused the account total spent feature not to work correctly
 
 
 v7.1

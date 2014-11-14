@@ -26,25 +26,29 @@ chrome.storage.sync.set({'language': language});
 var is_signed_in = false;
 var signed_in_promise = (function () {
 	var deferred = new $.Deferred();
-	if ($("#global_actions").find(".playerAvatar").length > 0) {
-		var user_name = $("#global_actions").find(".playerAvatar")[0].outerHTML.match(/\/id\/(.+?)"/);
-		if (user_name) {			
-			if (getValue("steamID")) {
-				is_signed_in = getValue("steamID");
-				deferred.resolve();
-			} else {
-				get_http("http://steamcommunity.com/id/" + user_name[1], function(txt) {
-					is_signed_in = txt.match(/steamid"\:"(.+)","personaname/)[1];
-					setValue("steamID", is_signed_in);
+	if (window.location.protocol != "https:") {
+		if ($("#global_actions").find(".playerAvatar").length > 0) {
+			var user_name = $("#global_actions").find(".playerAvatar")[0].outerHTML.match(/\/id\/(.+?)"/);
+			if (user_name) {
+				if (getValue("steamID")) {
+					is_signed_in = getValue("steamID");
 					deferred.resolve();
-				});
+				} else {
+					get_http("http://steamcommunity.com/id/" + user_name[1], function(txt) {
+						is_signed_in = txt.match(/steamid"\:"(.+)","personaname/)[1];
+						setValue("steamID", is_signed_in);
+						deferred.resolve();
+					});
+				}
+			} else {
+				deferred.resolve();
 			}
 		} else {
 			deferred.resolve();
 		}
 	} else {
 		deferred.resolve();
-	}	
+	}
 	return deferred.promise();
 })();
 
