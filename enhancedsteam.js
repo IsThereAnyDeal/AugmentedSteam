@@ -6286,7 +6286,7 @@ function add_badge_filter() {
 }
 
 function add_badge_sort() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href && $(".pagebtn").length == 0) {
+	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
 		if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
 			$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings[language].most_drops + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + localized_strings[language].drops_value + "</a>");
 		}
@@ -6303,7 +6303,7 @@ function add_badge_sort() {
 			});
 		};
 
-		$("#es_badge_sort_drops").on("click", function() {
+		function add_badge_sort_drops() {
 			var badgeRows = [];
 			$('.badge_row').each(function () {
 				var push = new Array();
@@ -6326,7 +6326,7 @@ function add_badge_sort() {
 					return 1;
 				} else {
 					return -1;
-				}	
+				}
 			});
 
 			$('.badge_row').each(function () { $(this).css("display", "none"); });
@@ -6336,8 +6336,45 @@ function add_badge_sort() {
 			});
 
 			$(".active").removeClass("active");
-			$(this).addClass("active");
+			$("#es_badge_sort_drops").addClass("active");
 			resetLazyLoader();
+		}
+
+		var sort_drops_done = false;
+
+		$("#es_badge_sort_drops").on("click", function() {
+			if ($(".pagebtn").length > 0 && sort_drops_done == false) {
+				var base_url = window.location.origin + window.location.pathname + "?p=",
+					last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
+					deferred = new $.Deferred(),
+					promise = deferred.promise(),
+					pages = [];
+
+				for (page = 2; page <= last_page; page++) {
+					pages.push(page);
+				}
+
+				$.each(pages, function (i, item) {
+					promise = promise.then(function() {
+						return $.ajax(base_url + item).done(function(data) {
+							var html = $.parseHTML(data);
+							$(html).find(".badge_row").each(function(i, obj) {
+								$(".badges_sheet").append(obj);
+							});
+						});
+					});
+				});
+
+				promise.done(function() {
+					$(".profile_paging").css("display", "none");
+					sort_drops_done = true;
+					add_badge_sort_drops();
+				});
+
+				deferred.resolve();
+			} else {
+				add_badge_sort_drops();
+			}
 		});
 
 		$("#es_badge_sort_value").on("click", function() {
