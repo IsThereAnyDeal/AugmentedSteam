@@ -1,10 +1,13 @@
 v7.2
 -----
+
+
+v7.1.1
+-----
 : Fixed badge page sorting options to work with pagination
 : Fixed a bug that caused coupon messages not to display properly
 : Fixed a bug that caused the account total spent feature not to work correctly
 : Fixed the feature that shows achievements on the "All Games" page
-
 
 v7.1
 -----
