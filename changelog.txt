@@ -1,5 +1,6 @@
 v7.2
 -----
+: Fixed a bug in currency detection for booster pack prices
 
 
 v7.1.1

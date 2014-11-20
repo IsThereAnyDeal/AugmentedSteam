@@ -3782,13 +3782,12 @@ function inventory_market_helper(response) {
 		} else {
 			if (hash_name && hash_name.match(/Booster Pack/g)) {
 				setTimeout(function() {
-					var currency_symbol = currency_symbol_from_string($("#iteminfo" + item + "_item_market_actions").text());
-					var currency_type = currency_symbol_to_type(currency_symbol);
-					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency_type.toLowerCase();
+					var currency = parse_currency($("#iteminfo" + item + "_item_market_actions").text().match(/\:(.+)/)[1]);
+					var api_url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency.currency_type.toLowerCase();
 
 					get_http(api_url, function(price_data) {				
 						var booster_price = parseFloat(price_data,10) * 3;					
-						html = localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency_type) + "<br>";
+						html = localized_strings[language].avg_price_3cards + ": " + formatCurrency(booster_price, currency.currency_type) + "<br>";
 						$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
 						$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
 					});
