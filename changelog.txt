@@ -1,6 +1,7 @@
 v7.2
 -----
 : Fixed a bug in currency detection for booster pack prices
+- Removed library functionality due to API changes made by Valve
 
 
 v7.1.1
