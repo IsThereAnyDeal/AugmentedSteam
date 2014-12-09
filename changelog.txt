@@ -1,6 +1,7 @@
 v7.2
 -----
 + Added Newegg and GamesRepublic to the price history lookups
++ Added SteamRep status to user's profiles
 + Added a feature that hides empty inventory tabs (thanks zillazillaaaa!)
 : Fixed a bug in currency detection for booster pack prices
 - Removed library functionality due to API changes made by Valve
