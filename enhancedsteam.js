@@ -3343,6 +3343,24 @@ function inventory_market_helper(response) {
 	}
 }
 
+function hide_empty_inventory_tabs() {
+	var tab_count = 0;
+	$('div.games_list_tabs > a[id^="inventory_link_"]').each(function() {
+		var separator = $(this).next('div[class^="games_list_tab_"]');
+		$(this).removeClass('first_tab fourth_tab');
+		if (parseInt($(this).children('span.games_list_tab_number').html().replace(/,/g, '').match(/\d+/)[0]) == 0) {
+			$(this).hide();
+			separator.hide();
+		} else {
+			tab_count += 1;
+		}
+
+		tab_count == 1 && $(this).addClass('first_tab');
+		tab_count == 4 && $(this).addClass('fourth_tab');
+		separator.removeClass().addClass(((tab_count > 0) && (tab_count%4 == 0)) ? 'games_list_tab_row_separator' : 'games_list_tab_separator');
+	});
+}
+
 function add_inventory_gotopage(){
 	storage.get(function(settings) {
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
@@ -6791,6 +6809,7 @@ $(document).ready(function(){
 					case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
 						bind_ajax_content_highlighting();
 						inventory_market_prepare();
+						hide_empty_inventory_tabs();
 						break;
 
 					case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
