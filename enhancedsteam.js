@@ -2671,6 +2671,24 @@ function hide_spam_comments() {
 	});
 }
 
+function add_steamrep_api() {
+	storage.get(function(settings) {
+		if (settings.showsteamrepapi === undefined) { settings.showsteamrepapi = true; storage.set({'showsteamrepapi': settings.showsteamrepapi}); }
+		if(settings.showsteamrepapi) {
+			if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+			if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+			get_http("//api.enhancedsteam.com/steamrep/?steam64=" + steamID, function (txt) {
+				if (txt == "") return;
+				if ($(".profile_in_game").length == 0) {
+					$(".profile_rightcol").prepend(txt);
+				} else {
+					$(".profile_rightcol .profile_in_game:first").after(txt);
+				}
+			});
+		}
+	});
+}
+
 function hide_activity_spam_comments() {
 	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
 		hide_spam_comments();
@@ -6858,6 +6876,7 @@ $(document).ready(function(){
 						add_profile_store_links();
 						fix_profile_image_not_found();
 						hide_spam_comments();
+						add_steamrep_api();
 						break;
 
 					case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):

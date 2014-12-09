@@ -109,6 +109,7 @@ function save_options() {
 	// Community Options
 	showtotal = $("#showtotal").prop('checked');
 	showmarkettotal = $("#showmarkettotal").prop('checked');
+	showsteamrepapi = $("#showsteamrepapi").prop('checked');
 	showinvnav = $("#showinvnav").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
 	showallachievements = $("#showallachievements").prop('checked');
@@ -201,6 +202,7 @@ function save_options() {
 
 		'showtotal': showtotal,
 		'showmarkettotal': showmarkettotal,
+		'showsteamrepapi': showsteamrepapi,
 		'showinvnav': showinvnav,
 		'showesbg': showesbg,
 		'showallachievements': showallachievements,
@@ -371,6 +373,7 @@ function load_options() {
 
 		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
+		if (settings.showsteamrepapi === undefined) { settings.showsteamrepapi = true; chrome.storage.sync.set({'showsteamrepapi': settings.showsteamrepapi}); }
 		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
 		if (settings.showhltb === undefined) { settings.showhltb = true; chrome.storage.sync.set({'showhltb': settings.showhltb}); }
 		if (settings.showpcgw === undefined) { settings.showpcgw = true; chrome.storage.sync.set({'showpcgw': settings.showpcgw}); }
@@ -494,6 +497,7 @@ function load_options() {
 		// Load Community Options
 		$("#showtotal").prop('checked', settings.showtotal);
 		$("#showmarkettotal").prop('checked', settings.showmarkettotal);
+		$("#showsteamrepapi").prop('checked', settings.showsteamrepapi);
 		$("#showinvnav").prop('checked', settings.showinvnav);
 		$("#showesbg").prop('checked', settings.showesbg);
 		$("#showallachievements").prop('checked', settings.showallachievements);
@@ -616,6 +620,7 @@ function load_translation() {
 			$("#profile_link_images_none").text(localized_strings[settings.language].options.profile_link_images_none);
 			$("#profile_permalink_text").text(localized_strings[settings.language].options.profile_permalink);
 			$("#total_spent_text").text(localized_strings[settings.language].options.total_spent);
+			$("#steamrep_api_text").text(localized_strings[settings.language].options.steamrepapi);
 			$("#market_total_text").text(localized_strings[settings.language].options.market_total);
 			$("#inventory_nav_text").text(localized_strings[settings.language].options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings[settings.language].options.es_bg);
