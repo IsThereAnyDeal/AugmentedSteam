@@ -405,6 +405,16 @@ function highlight_inv_guestpass(node) {
 	});
 }
 
+function highlight_nondiscounts(node) {
+	storage.get(function(settings) {
+		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; chrome.storage.sync.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
+		
+		if (settings.hide_notdiscounted) {
+			$(node).css("display", "none");
+		}
+	});
+}
+
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -2254,8 +2264,9 @@ function add_hide_buttons_to_search() {
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; chrome.storage.sync.set({'hide_cart': settings.hide_cart}); }
+		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; chrome.storage.sync.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
 		
-		$("#advsearchform").find(".rightcol").prepend("<div class='block'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div></div></div>")
+		$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notdiscounted + "</span></div></div></div>")
 
 		if (settings.hide_owned) {
 			$("#es_owned_games").addClass("checked");
@@ -2269,40 +2280,62 @@ function add_hide_buttons_to_search() {
 			$("#es_cart_games").addClass("checked");
 		}
 
+		if (settings.hide_notdiscounted) {
+			$("#es_notdiscounted").addClass("checked");
+		}
+
+		function add_hide_buttons_to_search_click() {
+			$(".search_result_row").each(function() {
+				$(this).css("display", "block");
+				if ($("#es_owned_games").is(".checked") && $(this).is(".ds_owned")) { $(this).css("display", "none"); }
+				if ($("#es_wishlist_games").is(".checked") && $(this).is(".ds_wishlist")) { $(this).css("display", "none"); }
+				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).css("display", "none"); }
+				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).css("display", "none"); }
+			});
+		}
+
 		$("#es_owned_games").click(function() {
 			if ($("#es_owned_games").hasClass("checked")) {
 				$("#es_owned_games").removeClass("checked");
-				$(".ds_owned").css("display", "block");
 				chrome.storage.sync.set({'hide_owned': false });
 			} else {
 				$("#es_owned_games").addClass("checked");
-				$(".ds_owned").css("display", "none");
 				chrome.storage.sync.set({'hide_owned': true });
 			}
+			add_hide_buttons_to_search_click();
 		});
 
 		$("#es_wishlist_games").click(function() {
 			if ($("#es_wishlist_games").hasClass("checked")) {
 				$("#es_wishlist_games").removeClass("checked");
-				$(".ds_wishlist").css("display", "block");
 				chrome.storage.sync.set({'hide_wishlist': false });
 			} else {
 				$("#es_wishlist_games").addClass("checked");
-				$(".ds_wishlist").css("display", "none");
 				chrome.storage.sync.set({'hide_wishlist': true });
 			}
+			add_hide_buttons_to_search_click();
 		});
 
 		$("#es_cart_games").click(function() {
 			if ($("#es_cart_games").hasClass("checked")) {
 				$("#es_cart_games").removeClass("checked");
-				$(".ds_incart").css("display", "block");
 				chrome.storage.sync.set({'hide_cart': false });
 			} else {
 				$("#es_cart_games").addClass("checked");
-				$(".ds_incart").css("display", "none");
 				chrome.storage.sync.set({'hide_cart': true });
 			}
+			add_hide_buttons_to_search_click();
+		});
+
+		$("#es_notdiscounted").click(function() {
+			if ($("#es_notdiscounted").hasClass("checked")) {
+				$("#es_notdiscounted").removeClass("checked");
+				chrome.storage.sync.set({'hide_notdiscounted': false });
+			} else {
+				$("#es_notdiscounted").addClass("checked");
+				chrome.storage.sync.set({'hide_notdiscounted': true });
+			}
+			add_hide_buttons_to_search_click();
 		});
 	});
 }
@@ -4988,6 +5021,10 @@ function start_highlights_and_tags(){
 					highlight_cart(node_to_highlight);
 				}
 
+				if ($(node).hasClass("search_result_row") && $(node).find(".search_discount").not(":has('span')").length > 0) {
+					highlight_nondiscounts(node_to_highlight);
+				}
+
 				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
 				if (appid) {
 					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
@@ -5168,6 +5205,10 @@ function start_highlighting_node(node) {
 
 	if ($(node).find(".ds_incart_flag").length > 0) {
 		highlight_cart(node_to_highlight);
+	}
+
+	if ($(node).hasClass("search_result_row") && $(node).find(".search_discount").not(":has('span')").length > 0) {
+		highlight_nondiscounts(node_to_highlight);
 	}
 
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
