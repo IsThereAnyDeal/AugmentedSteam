@@ -2,6 +2,7 @@ v7.2
 -----
 + Added Newegg and GamesRepublic to the price history lookups
 + Added SteamRep status to user's profiles
++ Added button to "1-Click" turning inventory items to Gems (be careful!)
 + Added a search filter that hides games without discounts
 + Added a feature that hides empty inventory tabs (thanks zillazillaaaa!)
 : Fixed a bug in currency detection for booster pack prices
