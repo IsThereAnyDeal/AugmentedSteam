@@ -1,3 +1,7 @@
+v7.3
+-----
+
+
 v7.2
 -----
 + Added Newegg and GamesRepublic to the price history lookups
