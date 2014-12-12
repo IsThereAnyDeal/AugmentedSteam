@@ -5,6 +5,7 @@ v7.2
 + Added button to "1-Click" turning inventory items to Gems (be careful!)
 + Added a search filter that hides games without discounts
 + Added a feature that hides empty inventory tabs (thanks zillazillaaaa!)
++ Added an option to show "Compare" links on friend activity page (disabled by default)
 : Fixed a bug in currency detection for booster pack prices
 - Removed library functionality due to API changes made by Valve
 

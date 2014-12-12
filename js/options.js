@@ -113,6 +113,7 @@ function save_options() {
 	showinvnav = $("#showinvnav").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
 	showallachievements = $("#showallachievements").prop('checked');
+	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
@@ -206,6 +207,7 @@ function save_options() {
 		'showinvnav': showinvnav,
 		'showesbg': showesbg,
 		'showallachievements': showallachievements,
+		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
 		'hideactivelistings': hideactivelistings,
 		'hidespamcomments': hidespamcomments,
@@ -406,6 +408,7 @@ function load_options() {
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
+		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
@@ -501,6 +504,7 @@ function load_options() {
 		$("#showinvnav").prop('checked', settings.showinvnav);
 		$("#showesbg").prop('checked', settings.showesbg);
 		$("#showallachievements").prop('checked', settings.showallachievements);
+		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
@@ -625,6 +629,7 @@ function load_translation() {
 			$("#inventory_nav_text").text(localized_strings[settings.language].options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings[settings.language].options.es_bg);
 			$("#allachievements_text").text(localized_strings[settings.language].options.showallachievements);
+			$("#showcomparelinks_text").text(localized_strings[settings.language].options.showcomparelinks);
 			$("#greenlight_banner_text").text(localized_strings[settings.language].options.greenlight_banner);
 			$("#hideactivelistings_text").text(localized_strings[settings.language].options.hideactivelistings);
 			$("#hidespamcomments_text").text(localized_strings[settings.language].options.hidespamcomments);

@@ -5363,18 +5363,23 @@ function add_carousel_descriptions() {
 }
 
 function add_achievement_comparison_link(node) {
-	if (!($(node).html().match(/es_achievement_compare/))&&!$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare")) {
-		$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare","true");
-		var links = $(node).find("a");
-		var appid = get_appid(links[2].href);
-		get_http(links[0].href + "/stats/" + appid, function(txt) {
-			var html = txt.match(/<a href="(.+)compare">/);
-			if (html) {
-				$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
-				$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='http://www.steamcommunity.com" + html[1] + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings[language].compare + ")</a>");
+	storage.get(function(settings) {
+		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; storage.set({'showcomparelinks': settings.showcomparelinks}); }
+		if (settings.showcomparelinks) {
+			if (!($(node).html().match(/es_achievement_compare/))&&!$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare")) {
+				$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare","true");
+				var links = $(node).find("a");
+				var appid = get_appid(links[2].href);
+				get_http(links[0].href + "/stats/" + appid, function(txt) {
+					var html = txt.match(/<a href="(.+)compare">/);
+					if (html) {
+						$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
+						$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='http://www.steamcommunity.com" + html[1] + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings[language].compare + ")</a>");
+					}
+				});
 			}
-		});
-	}
+		}
+	});
 }
 
 function rewrite_string(string, websafe) {
