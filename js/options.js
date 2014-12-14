@@ -119,6 +119,7 @@ function save_options() {
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
 	wlbuttoncommunityapp = $("#wlbuttoncommunityapp").prop('checked');
+	show1clickgoo = $("#show1clickgoo").prop('checked');
 
 	// Profile Link Options
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
@@ -213,6 +214,7 @@ function save_options() {
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
 		'wlbuttoncommunityapp': wlbuttoncommunityapp,
+		'show1clickgoo': show1clickgoo,
 
 		'profile_steamgifts': profile_steamgifts,
 		'profile_steamtrades': profile_steamtrades,
@@ -414,6 +416,7 @@ function load_options() {
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
+		if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; chrome.storage.sync.set({'show1clickgoo': settings.show1clickgoo}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
@@ -510,6 +513,7 @@ function load_options() {
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
 		$("#wlbuttoncommunityapp").prop('checked', settings.wlbuttoncommunityapp);
+		$("#show1clickgoo").prop('checked', settings.show1clickgoo);
 		$("#profile_link_images_dropdown").val(settings.show_profile_link_images);
 
 		// Load Profile Link Options
@@ -637,6 +641,7 @@ function load_translation() {
 			$("#show_spamcommentregex").text(localized_strings[settings.language].options.customizespamcommentregex);
 			$("#steamcardexchange_text").text(localized_strings[settings.language].options.steamcardexchange);
 			$("#wlbuttoncommunityapp_text").text(localized_strings[settings.language].options.wlbuttoncommunityapp);
+			$("#show1clickgoo_text").text(localized_strings[settings.language].options.show1clickgoo);
 
 			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
 			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);

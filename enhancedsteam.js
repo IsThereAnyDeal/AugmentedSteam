@@ -3391,25 +3391,30 @@ function inventory_market_helper(response) {
 					});
 				}, 1000);
 			}
-			$("#es_quickgrind").remove();
-			$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click turn into Gems...</span></div>");
-			$("#es_quickgrind").on("click", function() {
-				runInPageContext("function() { \
-					var rgAJAXParams = {\
-						sessionid: g_sessionID,\
-						appid: " + $(this).attr("appid") + ",\
-						assetid: " + $(this).attr("assetID") + ",\
-						contextid: 6\
-					};\
-					var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';\
-					$J.get( strActionURL, rgAJAXParams ).done( function( data ) {\
-						strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';\
-						rgAJAXParams.goo_value_expected = data.goo_value;\
-						$J.post( strActionURL, rgAJAXParams).done( function( data ) {\
-							ReloadCommunityInventory();\
-						});\
-					});\
-				}");
+			storage.get(function(settings) {
+				if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
+				if (settings.show1clickgoo) {
+					$("#es_quickgrind").remove();
+					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click turn into Gems...</span></div>");
+					$("#es_quickgrind").on("click", function() {
+						runInPageContext("function() { \
+							var rgAJAXParams = {\
+								sessionid: g_sessionID,\
+								appid: " + $(this).attr("appid") + ",\
+								assetid: " + $(this).attr("assetID") + ",\
+								contextid: 6\
+							};\
+							var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';\
+							$J.get( strActionURL, rgAJAXParams ).done( function( data ) {\
+								strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';\
+								rgAJAXParams.goo_value_expected = data.goo_value;\
+								$J.post( strActionURL, rgAJAXParams).done( function( data ) {\
+									ReloadCommunityInventory();\
+								});\
+							});\
+						}");
+					});
+				}
 			});
 		}
 	}

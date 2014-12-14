@@ -1,6 +1,7 @@
 v7.3
 -----
 + Added the number of gems required for each game on the Booster Pack Creator dropdown
++ Added an option to enable or disable the 1-Click turn to gems function
 
 
 v7.2
