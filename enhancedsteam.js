@@ -6736,6 +6736,17 @@ function get_playfire_rewards(appid) {
 	});
 }
 
+function add_booster_prices() {	
+	var gem_word = $(".booster_creator_goostatus:first").find(".goo_display").text().trim().replace(/\d/g, "");
+	runInPageContext("function() { \
+		$J('#booster_game_selector option').each(function(index) {\
+			if ($J(this).val()) {\
+				$J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gem_word + "');\
+			}\
+		});\
+	}");
+}
+
 $(document).ready(function(){
 	signed_in_promise.done(function(){
 	localization_promise.done(function(){
@@ -6972,6 +6983,10 @@ $(document).ready(function(){
 						var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
 						appid = appid.href.match( /(\d)+/g );
 						add_steamdb_links(appid, "gamegroup");
+						break;
+
+					case /^\/tradingcards\/boostercreator/.test(window.location.pathname):
+						add_booster_prices();
 						break;
 
 					case /^\/$/.test(window.location.pathname):

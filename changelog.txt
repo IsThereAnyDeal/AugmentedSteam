@@ -1,5 +1,6 @@
 v7.3
 -----
++ Added the number of gems required for each game on the Booster Pack Creator dropdown
 
 
 v7.2
