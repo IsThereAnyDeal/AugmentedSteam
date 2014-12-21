@@ -5126,7 +5126,7 @@ function start_friend_activity_highlights() {
 		var deferred = new $.Deferred();
 		if (is_signed_in && window.location.protocol != "https:") {
 			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			var last_updated = getValue("dynamiclist_time") || expire_time - 1;
+			var last_updated = getValue("dynamicflist_time") || expire_time - 1;
 
 			if (last_updated < expire_time) {
 				get_http("http://store.steampowered.com/dynamicstore/userdata/", function(txt) {
@@ -5137,7 +5137,7 @@ function start_friend_activity_highlights() {
 					if (data["rgWishlist"]) {
 						setValue("wishlist_apps", data["rgWishlist"].toString());
 					}
-					setValue("dynamiclist_time", parseInt(Date.now() / 1000, 10));
+					setValue("dynamicflist_time", parseInt(Date.now() / 1000, 10));
 					deferred.resolve();
 				});
 			} else {
