@@ -1,5 +1,6 @@
 v7.3
 -----
++ Added an option to hide games in search results you've marked as "Not Interested"
 
 
 v7.2.1

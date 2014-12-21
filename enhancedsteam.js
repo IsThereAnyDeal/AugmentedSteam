@@ -415,6 +415,46 @@ function highlight_nondiscounts(node) {
 	});
 }
 
+function highlight_notinterested(node) {
+	var notinterested_promise = (function () {
+		var deferred = new $.Deferred();
+		if (is_signed_in && window.location.protocol != "https:") {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			var last_updated = getValue("dynamiclist_time") || expire_time - 1;
+
+			if (last_updated < expire_time) {
+				get_http("http://store.steampowered.com/dynamicstore/userdata/", function(txt) {
+					var data = JSON.parse(txt);
+					if (data["rgIgnoredApps"]) {
+						setValue("ignored_apps", data["rgIgnoredApps"].toString());
+					}
+					setValue("dynamiclist_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
+				});
+			} else {
+				deferred.resolve();
+			}
+		} else {
+			deferred.resolve();
+		}
+		return deferred.promise();
+	})();
+
+	$.when.apply($, [notinterested_promise]).done(function() {
+		storage.get(function(settings) {
+			if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; chrome.storage.sync.set({'hide_notinterested': settings.hide_notinterested}); }
+			
+			var notinterested = getValue("ignored_apps").split(",");
+			if ($(node).hasClass("search_result_row")) {
+				var appid = get_appid(node.href);
+				if (settings.hide_notinterested && $.inArray(appid, notinterested) !== -1) {				
+					$(node).css("display", "none");
+				}
+			}
+		});
+	});
+}
+
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -2265,8 +2305,9 @@ function add_hide_buttons_to_search() {
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; chrome.storage.sync.set({'hide_cart': settings.hide_cart}); }
 		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; chrome.storage.sync.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
+		if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; chrome.storage.sync.set({'hide_notinterested': settings.hide_notinterested}); }
 		
-		$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notdiscounted + "</span></div></div></div>")
+		$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings[language].hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notdiscounted + "</span></div><div class='tab_filter_control' id='es_notinterested'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings[language].notinterested + "</span></div></div></div>")
 
 		if (settings.hide_owned) {
 			$("#es_owned_games").addClass("checked");
@@ -2284,6 +2325,10 @@ function add_hide_buttons_to_search() {
 			$("#es_notdiscounted").addClass("checked");
 		}
 
+		if (settings.hide_notinterested) {
+			$("#es_notinterested").addClass("checked");
+		}
+
 		function add_hide_buttons_to_search_click() {
 			$(".search_result_row").each(function() {
 				$(this).css("display", "block");
@@ -2291,6 +2336,7 @@ function add_hide_buttons_to_search() {
 				if ($("#es_wishlist_games").is(".checked") && $(this).is(".ds_wishlist")) { $(this).css("display", "none"); }
 				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).css("display", "none"); }
 				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).css("display", "none"); }
+				if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
 			});
 		}
 
@@ -2334,6 +2380,17 @@ function add_hide_buttons_to_search() {
 			} else {
 				$("#es_notdiscounted").addClass("checked");
 				chrome.storage.sync.set({'hide_notdiscounted': true });
+			}
+			add_hide_buttons_to_search_click();
+		});
+
+		$("#es_notinterested").click(function() {
+			if ($("#es_notinterested").hasClass("checked")) {
+				$("#es_notinterested").removeClass("checked");
+				chrome.storage.sync.set({'hide_notinterested': false });
+			} else {
+				$("#es_notinterested").addClass("checked");
+				chrome.storage.sync.set({'hide_notinterested': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
@@ -5057,6 +5114,7 @@ function start_highlights_and_tags(){
 					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 					if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 					if (getValue(appid + "gift")) highlight_inv_gift(node);
+					highlight_notinterested(node);
 				}
 			});
 		});
@@ -5064,8 +5122,6 @@ function start_highlights_and_tags(){
 }
 
 function start_friend_activity_highlights() {
-	var steamID = is_signed_in;
-
 	var owned_promise = (function () {
 		var deferred = new $.Deferred();
 		if (is_signed_in && window.location.protocol != "https:") {
@@ -5150,6 +5206,7 @@ function start_highlighting_node(node) {
 	if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 	if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 	if (getValue(appid + "gift")) highlight_inv_gift(node);
+	highlight_notinterested(node);
 }
 
 // Add a link to an item's page on steamdb.info
