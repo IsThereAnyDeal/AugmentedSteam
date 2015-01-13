@@ -714,6 +714,10 @@ function display_tags(node) {
 				"font-size": "small"
 			});	
 
+			$tags.each(function() {
+				$(this).children().css("float", "none");
+			});
+
 			$tag_root.find(".main_cap_platform_area").append($tags);
 
 			// Remove margin-bottom, border, and tweak padding on carousel lists
