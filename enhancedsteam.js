@@ -4983,7 +4983,7 @@ function display_purchase_date() {
     if ($(".game_area_already_owned").length > 0) {
         var appname = $(".apphub_AppName").text();
 
-        get_http('https://store.steampowered.com/account/', function (txt) {
+        get_http('https://store.steampowered.com/account/store_transactions', function (txt) {
     		var earliestPurchase = $(txt).find("#store_transactions .block:nth-of-type(1) .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
     			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
 
