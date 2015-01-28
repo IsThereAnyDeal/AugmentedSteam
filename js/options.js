@@ -120,7 +120,6 @@ function save_options() {
 
 	// Profile Link Options
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
-	profile_steamtrades = $("#profile_steamtrades").prop('checked');
 	profile_steamrep = $("#profile_steamrep").prop('checked');
 	profile_steamdbcalc = $("#profile_steamdbcalc").prop('checked');
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
@@ -212,7 +211,6 @@ function save_options() {
 		'show1clickgoo': show1clickgoo,
 
 		'profile_steamgifts': profile_steamgifts,
-		'profile_steamtrades': profile_steamtrades,
 		'profile_steamrep': profile_steamrep,
 		'profile_steamdbcalc': profile_steamdbcalc,
 		'profile_astats': profile_astats,
@@ -411,7 +409,6 @@ function load_options() {
 		if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; chrome.storage.sync.set({'show1clickgoo': settings.show1clickgoo}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
-		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
@@ -507,7 +504,6 @@ function load_options() {
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
-		$("#profile_steamtrades").prop('checked', settings.profile_steamtrades);
 		$("#profile_steamrep").prop('checked', settings.profile_steamrep);
 		$("#profile_steamdbcalc").prop('checked', settings.profile_steamdbcalc);
 		$("#profile_wastedonsteam").prop('checked', settings.profile_wastedonsteam);
@@ -739,13 +735,11 @@ function get_http(url, callback) {
 }
 
 function steam_credits() {
-	var credit_array = ["76561198040672342","76561197989222171","76561198020275445","76561198000198761"];
+	var credit_array = ["76561198040672342","76561198000198761"];
 	get_http('http://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + credit_array.join(","), function (txt) {
 		var data = JSON.parse(txt).response.players;
 		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
 		$("#jshackles_steam").text(data[3]["personaname"]);
-		$("#rjackson_steam").text(data[0]["personaname"]);
-		$("#tomas_steam").text(data[2]["personaname"]);
 		$("#smashman_steam").text(data[1]["personaname"]);
 	});
 }
