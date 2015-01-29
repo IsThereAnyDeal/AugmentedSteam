@@ -5421,43 +5421,45 @@ function add_app_page_wishlist(appid) {
 
 // Allows the user to intuitively remove an item from their wishlist on the app page
 function add_app_page_wishlist_changes(appid) {
-	if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
-		$(".demo_area_button").find("a:first").removeAttr("href");
-		$(".demo_area_button").find("a:first").wrap("<div id='add_to_wishlist_area_success' class='queue_control_button'></div>");
-		
-		// Add wishlist areas
-		$(".demo_area_button").prepend("<div id='add_to_wishlist_area' style='display: none;' class='queue_control_button'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings[language].add_to_wishlist + "</span></a></div><div id='add_to_wishlist_area_fail' style='display: none;'></div>");
+	if (is_signed_in) {
+		if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
+			$(".demo_area_button").find("a:first").removeAttr("href");
+			$(".demo_area_button").find("a:first").wrap("<div id='add_to_wishlist_area_success' class='queue_control_button'></div>");
+			
+			// Add wishlist areas
+			$(".demo_area_button").prepend("<div id='add_to_wishlist_area' style='display: none;' class='queue_control_button'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings[language].add_to_wishlist + "</span></a></div><div id='add_to_wishlist_area_fail' style='display: none;'></div>");
 
-		$("#add_to_wishlist_area_success").hover(
-			function() {
-				$(this).find("img").attr("src", chrome.extension.getURL("img/remove.png"));
-			}, function() {
-				$(this).find("img").attr("src", "http://store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png");
-			}
-		)
+			$("#add_to_wishlist_area_success").hover(
+				function() {
+					$(this).find("img").attr("src", chrome.extension.getURL("img/remove.png"));
+				}, function() {
+					$(this).find("img").attr("src", "http://store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png");
+				}
+			)
 
-		$("#add_to_wishlist_area_success").on("click", function() {
-			// get community session variable (this is different from the store session)
-			get_http("http://steamcommunity.com/my/wishlist", function(txt) {
-				var session = txt.match(/sessionid" value="(.+)"/)[1];
-				var user = $("#account_pulldown").text();
+			$("#add_to_wishlist_area_success").on("click", function() {
+				// get community session variable (this is different from the store session)
+				get_http("http://steamcommunity.com/my/wishlist", function(txt) {
+					var session = txt.match(/sessionid" value="(.+)"/)[1];
+					var user = $("#account_pulldown").text();
 
-				$.ajax({
-					type:"POST",
-					url: "http://steamcommunity.com/id/" + user + "/wishlist",
-					data:{
-						sessionid: session,
-						action: "remove",
-						appid: appid
-					},
-					success: function( msg ) {
-						setValue(appid + "wishlisted", false);
-						$("#add_to_wishlist_area_success").hide();
-						$("#add_to_wishlist_area").show();
-					}
+					$.ajax({
+						type:"POST",
+						url: "http://steamcommunity.com/id/" + user + "/wishlist",
+						data:{
+							sessionid: session,
+							action: "remove",
+							appid: appid
+						},
+						success: function( msg ) {
+							setValue(appid + "wishlisted", false);
+							$("#add_to_wishlist_area_success").hide();
+							$("#add_to_wishlist_area").show();
+						}
+					});
 				});
 			});
-		});
+		}
 	}
 }
 
