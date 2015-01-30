@@ -1690,13 +1690,18 @@ function replace_account_name() {
 	storage.get(function(settings) {
 		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; storage.set({'replaceaccountname': settings.replaceaccountname}); }
 		if (settings.replaceaccountname) {
-			var current_account_name = $("#global_header .username").text().trim();
-			var new_account_name = current_account_name;
-			$("#account_pulldown").text(new_account_name);
-			if ($(".page_title").children(".blockbg").text().trim()==document.title&&document.title!="") {
-				$(".page_title").children(".blockbg").text(new_account_name);
-				document.title=new_account_name;
+			var account_name = $("#account_pulldown").text().trim();
+			var community_name = $("#global_header .username").text().trim();
+			$("#account_pulldown").text(community_name);
+			if ($(".pageheader").length) { // New-style header
+				var pageheader = $(".pageheader").text().trim();
+				if (pageheader.indexOf(account_name) >= 0) $(".pageheader").text(pageheader.replace(account_name, community_name));
 			}
+			if ($(".page_title > .blockbg").length) { // Old-style header
+				var pagetitle = $(".page_title > .blockbg").text().trim();
+				if (pagetitle.indexOf(account_name) >= 0) $(".page_title > .blockbg").text(pagetitle.replace(account_name, community_name));
+			}
+			if (document.title.indexOf(account_name) >= 0) document.title = document.title.replace(account_name, community_name);
 		}
 	});
 }
