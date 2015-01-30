@@ -3190,6 +3190,70 @@ function minimize_active_listings() {
 	});
 }
 
+// Show the lowest market price for items you're selling
+function add_lowest_market_price() {
+	$("#tabContentsMyListings .market_listing_table_header span:first").css("width", "200px");
+	$("#tabContentsMyListings .market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><a class='es_market_lowest_button'>" + localized_strings[language].lowest + "</a></span>");
+	$("#tabContentsMyListings .market_listing_row").each(function() {
+		$(this).find(".market_listing_edit_buttons").css("width", "200px");
+		$(this).find(".market_listing_edit_buttons").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+	});
+
+	function add_lowest_market_price_data() {
+		var cc = "us";
+		var currency = 1;
+		if ($("#marketWalletBalanceAmount").length > 0) { currency = parse_currency($("#marketWalletBalanceAmount").text().trim()).currency_number; }
+
+		// Get country code from Steam cookie
+		var cookies = document.cookie;
+		var matched = cookies.match(/fakeCC=([a-z]{2})/i);
+		if (matched != null && matched.length == 2) {
+			cc = matched[1];
+		} else {
+			matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+			if (matched != null && matched.length == 2) {
+				cc = matched[1];
+			}
+		}
+
+		$("#tabContentsMyListings .market_listing_row").each(function() {
+			var node = $(this);
+			var link = node.find(".market_listing_item_name_link").attr("href");
+			if (link) {
+				var appid = link.match(/\/(\d+)\/.+$/)[1];
+				var market_hash_name = link.match(/\/\d+\/(.+)$/)[1];
+				get_http("http://steamcommunity.com/market/priceoverview/?country=" + cc + "&currency=" + currency + "&appid=" + appid + "&market_hash_name=" + market_hash_name, function(json) {
+					var data = JSON.parse(json);
+					if (data["success"]) {
+						node.find(".market_listing_es_lowest").html(data["lowest_price"]);
+						var my_price = parse_currency($(node).find(".market_listing_price span span:first").text().trim());
+						var low_price = parse_currency(node.find(".market_listing_es_lowest").text());
+
+						// Ours matches the lowest price
+						if (my_price.value <= low_price.value) {
+							node.find(".market_listing_es_lowest").addClass("es_percentage_lower");
+						}
+
+						// Our price is higher than the lowest price
+						if (my_price.value > low_price.value) {
+							node.find(".market_listing_es_lowest").addClass("es_percentage_higher");
+						}
+					}
+				});
+			}
+		});
+	}
+
+	if ($("#tabContentsMyListings .market_listing_row").length < 11 ) {
+		add_lowest_market_price_data();
+	} else {
+		$(".market_listing_es_lowest:first").html("<a class='es_market_lowest_button'><img src=http://store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png height=24 style='margin-top: 13px;'></a>");
+	}
+	$(".es_market_lowest_button").click(function() {
+		add_lowest_market_price_data();
+	});
+}
+
 // Add a "Total spent on Steam" to the account details page
 function account_total_spent() {
 	storage.get(function(settings) {
@@ -6933,6 +6997,7 @@ $(document).ready(function(){
 						add_market_total();
 						add_active_total();
 						minimize_active_listings();
+						add_lowest_market_price();
 						break;
 
 					case /^\/app\/.*/.test(window.location.pathname):
