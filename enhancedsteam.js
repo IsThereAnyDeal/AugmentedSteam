@@ -6073,7 +6073,7 @@ function add_badge_sort() {
 				var push = new Array();
 				if ($(this).find(".es_card_drop_worth").length > 0) {
 					push[0] = this.outerHTML;
-					push[1] = parseFloat($(this).find(".es_card_drop_worth").html().match(/\d+[.,]?\d*/)[0]);
+					push[1] = $(this).find(".es_card_drop_worth").html();
 				} else {
 					push[0] = this.outerHTML;
 					push[1] = localized_strings[language].drops_worth_avg;
