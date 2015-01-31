@@ -7,7 +7,6 @@ v7.3
 : Updated PCGW button to include new link structure and new icon
 - Removed redundant SteamTrades profile link
 
-
 v7.2.1
 -----
 + Added the number of gems required for each game on the Booster Pack Creator dropdown
