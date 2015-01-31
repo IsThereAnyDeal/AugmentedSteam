@@ -3,6 +3,9 @@ v7.3
 + Added an option to hide games in search results you've marked as "Not Interested"
 + Added a column to the market showing the current lowest price of active listings
 : Fixed badge sort by value which was not working correctly for some currencies
+: Fixed a bug in the feature that shows the purchase date on a game's store page
+: Updated 3rd party DRM detection to include more places that publishers hide it
+: Updated PCGW button to include new link structure and new icon
 - Removed redundant SteamTrades profile link
 
 
