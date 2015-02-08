@@ -5510,7 +5510,8 @@ function add_app_page_wishlist_changes(appid) {
 				// get community session variable (this is different from the store session)
 				get_http("http://steamcommunity.com/my/wishlist", function(txt) {
 					var session = txt.match(/sessionid" value="(.+)"/)[1];
-					var user = $("#account_pulldown").text();
+					var user = ($(".user_avatar").attr('href')).split("/");
+					user = user[user.length - 2];
 
 					$.ajax({
 						type:"POST",
