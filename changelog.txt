@@ -1,5 +1,6 @@
 v7.4
 -----
+: Significantly reduced the number of data queries while viewing badge pages
 
 
 v7.3

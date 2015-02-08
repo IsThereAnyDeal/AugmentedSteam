@@ -6404,49 +6404,97 @@ function add_badge_completion_cost() {
 			var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 			var currency_type = currency_symbol_to_type(currency_symbol);
 			var total_worth = 0, count = 0;
+
+			// Gather appid info
+			var appids = [],
+				foil_appids = [],
+				nodes = [],
+				foil_nodes = [];
 			$(".badge_row").each(function() {
-				var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//);
-				var foil = $(this).find("a:last").attr("href").match(/\?border=1/);
-				var node = $(this);
+				var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//),
+					foil = $(this).find("a:last").attr("href").match(/\?border=1/),
+					node = $(this),
+					push = [];
+
 				if (game) {
-					var url = "http://api.enhancedsteam.com/market_data/average_card_price/?appid=" + game[1] + "&cur=" + currency_type.toLowerCase();
-					if (foil) { url = url + "&foil=true"; }
-					get_http(url, function(txt) {
-						if ($(node).find("div[class$='badge_progress_info']").text()) {
-							var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
-							if (card) var need = card[2] - card[1];
-						}
+					push[0] = game[1];
+					push[1] = node[0];
+					if (foil) {
+						foil_appids.push(game[1]);
+						foil_nodes.push(push);
+					} else {
+						appids.push(game[1]);
+						nodes.push(push);
+					}
+				}
+			});
 
-						var cost = (need * parseFloat(txt)).toFixed(2);
+			// Next, get the average card values
+			if (appids.length > 0) {
+				get_http("http://api.enhancedsteam.com/market_data/average_card_prices/?cur=" + currency_type.toLowerCase() + "&appids=" + appids.join(), function(json) {
+					var data = JSON.parse(json);
+					$.each(nodes, function(index, value) {
+						var appid = value[0],
+							node = value[1];
 
-						if ($(node).find(".progress_info_bold").text()) {
-							var drops = $(node).find(".progress_info_bold").text().match(/\d+/);
-							if (drops) { var worth = (drops[0] * parseFloat(txt)).toFixed(2); }
-						}
+						if (appid in data["avg_values"]) {
+							if ($(node).find("div[class$='badge_progress_info']").text()) {
+								var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
+								if (card) var need = card[2] - card[1];
+							}
 
-						if (worth > 0) {
-							total_worth = total_worth + parseFloat(worth);
-						}
+							var cost = (need * parseFloat(data["avg_values"][appid])).toFixed(2);
+							if ($(node).find(".progress_info_bold").text()) {
+								var drops = $(node).find(".progress_info_bold").text().match(/\d+/);
+								if (drops) { var worth = (drops[0] * parseFloat(data["avg_values"][appid])).toFixed(2); }
+							}
 
-						cost = formatCurrency(cost, currency_type);
-						card = formatCurrency(worth, currency_type);
-						worth_formatted = formatCurrency(total_worth, currency_type);
+							if (worth > 0) {
+								total_worth = total_worth + parseFloat(worth);
+							}
 
-						if (worth > 0) {
-							$(node).find(".how_to_get_card_drops").after("<span class='es_card_drop_worth'>" + localized_strings[language].drops_worth_avg + " " + card + "</span>")
-							$(node).find(".how_to_get_card_drops").remove();
-						}
+							cost = formatCurrency(cost, currency_type);
+							card = formatCurrency(worth, currency_type);
+							worth_formatted = formatCurrency(total_worth, currency_type);
 
-						$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_avg + ": " + cost + "</div>");
-						$(node).find(".badge_empty_right").css("margin-top", "7px");
-						$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
+							if (worth > 0) {
+								$(node).find(".how_to_get_card_drops").after("<span class='es_card_drop_worth'>" + localized_strings[language].drops_worth_avg + " " + card + "</span>")
+								$(node).find(".how_to_get_card_drops").remove();
+							}
 
-						if ($(".pagebtn").length < 0 && total_worth > 0) {
+							$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_avg + ": " + cost + "</div>");
+							$(node).find(".badge_empty_right").css("margin-top", "7px");
+							$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
+
 							$("#es_cards_worth").text(localized_strings[language].drops_worth_avg + " " + worth_formatted);
 						}
 					});
-				}
-			});
+				});
+			}
+
+			// Finally, do the foils
+			if (foil_appids.length > 0) {
+				get_http("http://api.enhancedsteam.com/market_data/average_card_prices/?cur=" + currency_type.toLowerCase() + "&foil=true&appids=" + foil_appids.join(), function(json) {
+					var foil_data = JSON.parse(json);
+					$.each(foil_nodes, function(index, value) {
+						var appid = value[0],
+							node = value[1];
+
+						if (appid in foil_data["avg_values"]) {
+							if ($(node).find("div[class$='badge_progress_info']").text()) {
+								var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
+								if (card) var need = card[2] - card[1];
+							}
+
+							var cost = (need * parseFloat(foil_data["avg_values"][appid])).toFixed(2);
+							cost = formatCurrency(cost, currency_type);
+							$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings[language].badge_completion_avg + ": " + cost + "</div>");
+							$(node).find(".badge_empty_right").css("margin-top", "7px");
+							$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
+						}
+					});
+				});
+			}
 		});
 	}
 }
