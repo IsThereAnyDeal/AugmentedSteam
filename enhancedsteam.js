@@ -2781,6 +2781,10 @@ function add_steamrep_api() {
 	});
 }
 
+function add_posthistory_link() {
+	$("#profile_action_dropdown .popup_body .profile_actions_follow").after("<a class='popup_menu_item' href='" + window.location.pathname + "/posthistory'><img src='http://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; " + localized_strings[language].post_history + "</a>");
+}
+
 function hide_activity_spam_comments() {
 	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
 		hide_spam_comments();
@@ -7036,6 +7040,7 @@ $(document).ready(function(){
 						fix_profile_image_not_found();
 						hide_spam_comments();
 						add_steamrep_api();
+						add_posthistory_link();
 						break;
 
 					case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):

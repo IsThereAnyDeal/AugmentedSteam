@@ -1,5 +1,6 @@
 v7.4
 -----
++ Added a "View post history" button to user's profiles in the "More" dropdown box
 : Significantly reduced the number of data queries while viewing badge pages
 
 
