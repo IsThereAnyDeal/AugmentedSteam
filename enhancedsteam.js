@@ -1970,7 +1970,7 @@ function show_pricing_history(appid, type) {
 										purchase += entry + ", ";
 									});
 									purchase = purchase.replace(/, $/, "");
-									purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><div class="btn_addtocart_left"></div><a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["details"] + '" target="_blank">' + localized_strings.bundle.info + '</a><div class="btn_addtocart_right"></div></div></div><div class="game_purchase_action_bg">';
+									purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><a class="btnv6_blue_blue_innerfade btn_medium" href="' + data["bundles"]["active"][i]["details"] + '" target="_blank"><span>' + localized_strings.bundle.info + '</span></a></div></div><div class="game_purchase_action_bg">';
 									if (data["bundles"]["active"][i]["price"] > 0) {										
 										if (data["bundles"]["active"][i]["pwyw"]) {
 											purchase += '<div class="es_each_box" itemprop="price">';
@@ -1980,10 +1980,10 @@ function show_pricing_history(appid, type) {
 											purchase += formatCurrency(escapeHTML(data["bundles"]["active"][i]["price"].toString()), currency_type);
 										}
 									 }
-									purchase += '</div><div class="btn_addtocart"><div class="btn_addtocart_left"></div>';
-									purchase += '<a class="btn_addtocart_content" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
-									purchase += localized_strings.buy;
-									purchase += '</a><div class="btn_addtocart_right"></div></div></div></div></div></div>';
+									purchase += '</div><div class="btn_addtocart">';
+									purchase += '<a class="btnv6_green_white_innerfade btn_medium" href="' + data["bundles"]["active"][i]["url"] + '" target="_blank">';
+									purchase += '<span>' + localized_strings.buy + '</span>';
+									purchase += '</a></div></div></div></div></div>';
 									$("#game_area_purchase").after(purchase);
 									
 									$("#game_area_purchase").after("<h2 class='gradientbg'>" + localized_strings.bundle.header + " <img src='http://cdn3.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>");
