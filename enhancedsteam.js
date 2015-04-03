@@ -21,36 +21,32 @@ chrome.storage.sync.set({'language': language});
 
 var localized_strings = [];
 var localization_promise = (function () {
-	var l_deferred = new $.Deferred(),
-		l_code;
-	switch (language) {
-		case "bulgarian": l_code = "bg"; break;
-		case "czech": l_code = "cs"; break;
-		case "danish": l_code = "da"; break;
-		case "dutch": l_code = "nl"; break;
-		case "finnish": l_code = "fi"; break;
-		case "french": l_code = "fr"; break;
-		case "greek": l_code = "el"; break;
-		case "german": l_code = "de"; break;
-		case "hungarian": l_code = "hu"; break;
-		case "italian": l_code = "it"; break;
-		case "japanese": l_code = "ja"; break;
-		case "koreana": l_code = "ko"; break;
-		case "norwegian": l_code = "no"; break;
-		case "polish": l_code = "pl"; break;
-		case "portuguese": l_code = "pt-PT"; break;
-		case "brazilian": l_code = "pt-BR"; break;
-		case "russian": l_code = "ru"; break;
-		case "romanian": l_code = "ro"; break;
-		case "schinese": l_code = "zh-CN"; break;
-		case "spanish": l_code = "es-ES"; break;
-		case "swedish": l_code = "sv-SE"; break;
-		case "tchinese": l_code = "zh-TW"; break;
-		case "thai": l_code = "th"; break;
-		case "turkish": l_code = "tr"; break;
-		case "ukrainian": l_code = "uk"; break;
-		default: l_code = "en"; break;
-	}
+	var l_deferred = new $.Deferred();
+	var l_code = {"bulgarian": "bg",
+		"czech": "cs",
+		"danish": "da",
+		"dutch": "nl",
+		"finnish": "fi",
+		"french": "fr",
+		"greek": "el",
+		"german": "de",
+		"hungarian": "hu",
+		"italian": "it",
+		"japanese": "ja",
+		"koreana": "ko",
+		"norwegian": "no",
+		"polish": "pl",
+		"portuguese": "pt-PT",
+		"brazilian": "pt-BR",
+		"russian": "ru",
+		"romanian": "ro",
+		"schinese": "zh-CN",
+		"spanish": "es-ES",
+		"swedish": "sv-SE",
+		"tchinese": "zh-TW",
+		"thai": "th",
+		"turkish": "tr",
+		"ukrainian": "uk"}[language] || "en";
 	$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
 		localized_strings = data;
 		l_deferred.resolve();
@@ -199,93 +195,47 @@ function parse_currency(str) {
 }
 
 function currency_symbol_to_type (currency_symbol) {
-	switch (currency_symbol) {
-		case "pуб":
-			return "RUB";
-		case "€":
-			return "EUR";
-		case "£":
-			return "GBP";
-		case "R$":
-			return "BRL";
-		case "¥":
-			return "JPY";
-		case "kr":
-			return "NOK";
-		case "Rp":
-			return "IDR";
-		case "RM":
-			return "MYR";
-		case "P":
-			return "PHP";
-		case "S$":
-			return "SGD";
-		case "฿":
-			return "THB";
-		case "₫":
-			return "VND";
-		case "₩":
-			return "KRW";
-		case "TL":
-			return "TRY";
-		case "₴":
-			return "UAH";
-		case "Mex$":
-			return "MXN";
-		case "CDN$":
-			return "CAD";
-		case "A$":
-			return "AUD";
-		case "NZ$":
-			return "NZD";
-		default:
-			return "USD";
-	}
+return {"pуб": "RUB",
+		"€": "EUR",
+		"£": "GBP",
+		"R$": "BRL",
+		"¥": "JPY",
+		"kr": "NOK",
+		"Rp": "IDR",
+		"RM": "MYR",
+		"P": "PHP",
+		"S$": "SGD",
+		"฿": "THB",
+		"₫": "VND",
+		"₩": "KRW",
+		"TL": "TRY",
+		"₴": "UAH",
+		"Mex$": "MXN",
+		"CDN$": "CAD",
+		"A$": "AUD",
+		"NZ$": "NZD"}[currency_symbol] || "USD";
 }
 
 function currency_symbol_to_number (currency_symbol) {
-	switch (currency_symbol) {
-		case "pуб":
-			return 5;
-		case "€":
-			return 3;
-		case "£":
-			return 2;
-		case "R$":
-			return 7;
-		case "¥":
-			return 8;
-		case "kr":
-			return 9;
-		case "Rp":
-			return 10;
-		case "RM":
-			return 11;
-		case "P":
-			return 12;
-		case "S$":
-			return 13;
-		case "฿":
-			return 14;
-		case "₫":
-			return 15;
-		case "₩":
-			return 16;
-		case "TL":
-			return 17;
-		case "₴":
-			return 18;
-		case "Mex$":
-			return 19;
-		case "CDN$":
-			return 20;
-		case "A$":
-			return 21;
-		case "NZ$":
-			return 22;
-		default:
-			return 1;
-	}
+return {"pуб": 5,
+		"€": 3,
+		"£": 2,
+		"R$": 7,
+		"¥": 8,
+		"kr": 9,
+		"Rp": 10,
+		"RM": 11,
+		"P": 12,
+		"S$": 13,
+		"฿": 14,
+		"₫": 15,
+		"₩": 16,
+		"TL": 17,
+		"₴": 18,
+		"Mex$": 19,
+		"CDN$": 20,
+		"A$": 21,
+		"NZ$": 22}[currency_symbol] || 1;
 }
 
 function currency_symbol_from_string (string_with_symbol) {
@@ -1651,12 +1601,9 @@ function add_language_warning() {
 			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
 			function make_language_pretty(language_string) {
-				switch (language_string) {
-					case "Schinese": return "Simplified Chinese"; break;
-					case "Tchinese": return "Traditional Chinese"; break;
-					case "Koreana":	return "Korean"; break;
-					default: return language_string; break;
-				}
+				return {"Schinese": "Simplified Chinese",
+					"Tchinese": "Traditional Chinese",
+					"Koreana": "Korean"}[language_string] || language_string;
 			}
 
 			if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = currentLanguage; storage.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
@@ -6358,6 +6305,11 @@ function add_gamecard_market_links(game) {
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 		var currency_type = currency_symbol_to_type(currency_symbol);
+		var price_type = {"R$": "price_brl",
+			"€": "price_eur",
+			"pуб": "price_rub",
+			"£": "price_gbp",
+			"¥": "price_jpy"}[currency_symbol] || "price";
 
 		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 			var data = JSON.parse(txt);
@@ -6372,32 +6324,8 @@ function add_gamecard_market_links(game) {
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
 						var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
-						switch (currency_symbol) {
-							case "R$":
-								var card_price = formatCurrency(data[i].price_brl, currency_type);
-								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
-								break;
-							case "€":
-								var card_price = formatCurrency(data[i].price_eur, currency_type); 
-								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
-								break;
-							case "pуб":
-								var card_price = formatCurrency(data[i].price_rub, currency_type); 
-								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
-								break;
-							case "£":
-								var card_price = formatCurrency(data[i].price_gbp, currency_type);
-								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
-								break;
-							case "¥":
-								var card_price = formatCurrency(data[i].price_jpy, currency_type);
-								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_jpy);
-								break;
-							default:
-								var card_price = formatCurrency(data[i].price, currency_type);
-								if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
-								break;
-						}
+						var card_price = formatCurrency(data[i][price_type], currency_type);
+						if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
 					}
 				}
 
@@ -6406,32 +6334,8 @@ function add_gamecard_market_links(game) {
 					for (var i = 0; i < data.length; i++) {
 						if (data[i].name == newcardname) {
 							var marketlink = "http://steamcommunity.com/market/listings/" + data[i].url;
-							switch (currency_symbol) {
-								case "R$":
-									var card_price = formatCurrency(data[i].price_brl, currency_type);
-									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_brl);
-									break;
-								case "€":
-									var card_price = formatCurrency(data[i].price_eur, currency_type); 
-									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_eur);
-									break;
-								case "pуб":
-									var card_price = formatCurrency(data[i].price_rub, currency_type); 
-									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_rub);
-									break;
-								case "£":
-									var card_price = formatCurrency(data[i].price_gbp, currency_type); 
-									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_gbp);
-									break;
-								case "¥":
-									var card_price = formatCurrency(data[i].price_jpy, currency_type);
-									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price_jpy);
-									break;
-								default:
-									var card_price = formatCurrency(data[i].price, currency_type);						
-									if ($(node).hasClass("unowned")) cost += parseFloat(data[i].price);
-									break;
-							}
+							var card_price = formatCurrency(data[i][price_type], currency_type);
+							if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
 						}
 					}
 				}
