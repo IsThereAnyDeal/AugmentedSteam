@@ -195,7 +195,7 @@ function parse_currency(str) {
 }
 
 function currency_symbol_to_type (currency_symbol) {
-return {"pуб": "RUB",
+	return {"pуб": "RUB",
 		"€": "EUR",
 		"£": "GBP",
 		"R$": "BRL",
@@ -217,7 +217,7 @@ return {"pуб": "RUB",
 }
 
 function currency_symbol_to_number (currency_symbol) {
-return {"pуб": 5,
+	return {"pуб": 5,
 		"€": 3,
 		"£": 2,
 		"R$": 7,
@@ -6328,12 +6328,8 @@ function add_gamecard_market_links(game) {
 
 	get_http("http://store.steampowered.com/app/220/", function(txt) {
 		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
-		var currency_type = currency_symbol_to_type(currency_symbol);
-		var price_type = {"R$": "price_brl",
-			"€": "price_eur",
-			"pуб": "price_rub",
-			"£": "price_gbp",
-			"¥": "price_jpy"}[currency_symbol] || "price";
+		var currency_type = currency_symbol_to_type(currency_symbol);		
+		if (currency_type == "USD") { var price_type = "price" } else { var price_type = "price_" + currency_type.toLowerCase(); }
 
 		get_http("http://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 			var data = JSON.parse(txt);

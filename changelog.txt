@@ -2,6 +2,7 @@ v7.4
 -----
 + Added a "View post history" button to user's profiles in the "More" dropdown box
 + Added price tier information to "Bundles that include this game" section
++ Added support for more currencies on badge pages
 : Significantly reduced the number of data queries while viewing badge pages
 : Price history information for multiple items are now done through a single data request
 : Rewrote how translation files are loaded which will reduce the amount of info in memory
