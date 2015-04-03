@@ -4836,6 +4836,7 @@ function customize_home_page() {
 				$(".home_page_gutter").hide();
 				$(".home_page_body_ctn").css("margin-left", "0px");
 				$(".home_page_content").css("padding-left", "0px");
+				$("#global_header .content:first").css("right", "10px");
 				$(".has_takeover").find(".page_background_holder").css("margin-left", "-202px");
 			}
 		}
@@ -5012,6 +5013,7 @@ function customize_home_page() {
 				$(".home_page_gutter").hide();
 				$(".home_page_body_ctn").css("margin-left", "0px");
 				$(".home_page_content").css("padding-left", "0px");
+				$("#global_header .content:first").css("right", "10px");
 				$(".has_takeover").find(".page_background_holder").css("margin-left", "-202px");
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
@@ -5020,6 +5022,7 @@ function customize_home_page() {
 				$(".home_page_content").css("padding-left", "204px");
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 				$(".has_takeover").find(".page_background_holder").css("margin-left", "0px");
+				$("#global_header .content:first").css("right", "-90px");
 			}
 			storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar});
 		});
