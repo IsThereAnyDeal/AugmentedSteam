@@ -10,6 +10,7 @@ v7.4
 : Fixed a bug where cards with quotation marks in their name wouldn't show lowest price info
 : Fixed a bug that could cause trade offer decline buttons not to show up under certain circumstances
 : Fixed a bug that would incorrectly calculate number of games with drops remaining in some languages
+: Fixed a bug that sometimes caused homepage carousel descriptions not to load correctly
 : Fixed header positioning when hiding the sidebar on the home page
 
 
