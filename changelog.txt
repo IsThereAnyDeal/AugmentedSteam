@@ -1,7 +1,12 @@
 v7.4
 -----
 + Added a "View post history" button to user's profiles in the "More" dropdown box
++ Added price tier information to "Bundles that include this game" section
 : Significantly reduced the number of data queries while viewing badge pages
+: Price history information for multiple items are now done through a single data request
+: Rewrote how translation files are loaded which will reduce the amount of info in memory
+: Fixed a bug that could cause the user's invite page not to process correctly
+: Fixed a bug where cards with quotation marks in their name wouldn't show lowest price info
 
 
 v7.3

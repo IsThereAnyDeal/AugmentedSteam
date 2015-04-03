@@ -6364,9 +6364,9 @@ function add_gamecard_market_links(game) {
 			$(".badge_card_set_card").each(function() {
 				var node = $(this);
 				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
-				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&');; }
+				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
 
-				var newcardname = cardname;
+				var newcardname = cardname.replace(/"/g, "&quot;");
 				if (foil) { newcardname += " (Foil)"; }
 
 				for (var i = 0; i < data.length; i++) {
@@ -7065,7 +7065,7 @@ $(document).ready(function(){
 							add_achievement_sort();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/gamecard/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/gamecards/.test(window.location.pathname):
 							var gamecard = get_gamecard(window.location.pathname);
 							add_cardexchange_links(gamecard);
 							add_gamecard_market_links(gamecard);
