@@ -6715,7 +6715,7 @@ function add_friends_that_play() {
 }
 
 function add_decline_button() {
-	if (window.location.href.match(/tradeoffers\/$/)) {
+	if (window.location.href.match(/tradeoffers\/?$/)) {
 		$(".maincontent .profile_leftcol .tradeoffer").each(function(index) {
 			var offerID = $(this).attr("id").replace("tradeofferid_", "");
 			$(this).prepend("<a href='javascript:DeclineTradeOffer(\"" + offerID + "\");' style='background-image: url(" + chrome.extension.getURL("img/decline.png") + ");' class='btn_grey_grey btn_es_decline'>&nbsp;</a>");
