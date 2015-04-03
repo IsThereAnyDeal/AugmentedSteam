@@ -6549,7 +6549,7 @@ function add_total_drops_count() {
 		function add_total_drops_count_calculations(games) {
 			$(games).each(function(i, obj) {
 				var obj_count = obj.find(".progress_info_bold")[0].innerHTML.match(/\d+/);
-				if (obj_count) {
+				if (obj_count && obj_count[0]!='0') {
 					drops_count += parseInt(obj_count[0]);
 					drops_games = drops_games + 1;
 				}
