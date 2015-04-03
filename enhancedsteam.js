@@ -1610,19 +1610,43 @@ function add_language_warning() {
 			var lang = settings.showlanguagewarninglanguage.toLowerCase();
 
 			currentLanguage = make_language_pretty(currentLanguage);
-			settings.showlanguagewarninglanguage = make_language_pretty(settings.showlanguagewarninglanguage);
+			var warning_language = make_language_pretty(settings.showlanguagewarninglanguage);
 
-			if (settings.showlanguagewarninglanguage != currentLanguage) {
-				if (localized_strings[lang] && localized_strings[lang].using_language && localized_strings[lang].using_language_return) {
-					//$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings[lang].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings[lang].using_language_return.replace("__base__", settings.showlanguagewarninglanguage) + '</a></div>');
-				} else {
-					//$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings["eng"].using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings["eng"].using_language_return.replace("__base__", settings.showlanguagewarninglanguage) + '</a></div>');
-				}
-				$("#page_background_holder").css("top", "135px");
-				$("#reset_language_code").click(function(e) {
-					e.preventDefault();
-					document.cookie = 'Steam_Language=' + settings.showlanguagewarninglanguage.toLowerCase() + ';path=/;';
-					window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));
+			if (warning_language != currentLanguage) {
+				var l_code = {"bulgarian": "bg",
+					"czech": "cs",
+					"danish": "da",
+					"dutch": "nl",
+					"finnish": "fi",
+					"french": "fr",
+					"greek": "el",
+					"german": "de",
+					"hungarian": "hu",
+					"italian": "it",
+					"japanese": "ja",
+					"koreana": "ko",
+					"norwegian": "no",
+					"polish": "pl",
+					"portuguese": "pt-PT",
+					"brazilian": "pt-BR",
+					"russian": "ru",
+					"romanian": "ro",
+					"schinese": "zh-CN",
+					"spanish": "es-ES",
+					"swedish": "sv-SE",
+					"tchinese": "zh-TW",
+					"thai": "th",
+					"turkish": "tr",
+					"ukrainian": "uk"}[settings.showlanguagewarninglanguage.toLowerCase()] || "en";
+				$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
+					localized_strings_native = data;
+					$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings_native.using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings_native.using_language_return.replace("__base__", warning_language) + '</a></div>');
+					$("#page_background_holder").css("top", "135px");
+					$("#reset_language_code").click(function(e) {
+						e.preventDefault();
+						document.cookie = 'Steam_Language=' + settings.showlanguagewarninglanguage.toLowerCase() + ';path=/;';
+						window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));
+					});
 				});
 			}
 		}
