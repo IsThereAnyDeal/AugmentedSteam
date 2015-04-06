@@ -111,7 +111,8 @@
             "matches": [
                 "http://*.steampowered.com/*",
                 "https://*.steampowered.com/*",
-                "http://steamcommunity.com/*"
+                "http://steamcommunity.com/*",
+                "https://steamcommunity.com/*"
             ],
             "exclude_matches": [
                 "https://store.steampowered.com/checkout/*",
