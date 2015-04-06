@@ -6813,8 +6813,11 @@ function add_booster_prices() {
 $(document).ready(function(){
 	localization_promise.done(function(){
 		signed_in_promise.done(function(){
+			var path = window.location.pathname;
+			path = path.replace(/\/+/g, "/");
+
 			// Don't interfere with Storefront API requests
-			if (window.location.pathname.startsWith("/api")) return;
+			if (path.startsWith("/api")) return;
 			// On window load
 			add_enhanced_steam_options();
 			add_fake_country_code_warning();
@@ -6835,12 +6838,12 @@ $(document).ready(function(){
 				case "store.steampowered.com":
 
 					switch (true) {
-						case /^\/cart\/.*/.test(window.location.pathname):
+						case /^\/cart\/.*/.test(path):
 							add_empty_cart_button();
 							break;
 
-						case /^\/app\/.*/.test(window.location.pathname):
-							var appid = get_appid(window.location.host + window.location.pathname);
+						case /^\/app\/.*/.test(path):
+							var appid = get_appid(window.location.host + path);
 							add_app_page_wishlist_changes(appid);
 							display_coupon_message(appid);
 							show_pricing_history(appid, "app");
@@ -6877,8 +6880,8 @@ $(document).ready(function(){
 							customize_app_page();
 							break;
 
-						case /^\/sub\/.*/.test(window.location.pathname):
-							var subid = get_subid(window.location.host + window.location.pathname);
+						case /^\/sub\/.*/.test(path):
+							var subid = get_subid(window.location.host + path);
 							drm_warnings("sub");
 							subscription_savings_check();
 							show_pricing_history(subid, "sub");
@@ -6888,36 +6891,36 @@ $(document).ready(function(){
 							show_regional_pricing();
 							break;
 
-						case /^\/agecheck\/.*/.test(window.location.pathname):
+						case /^\/agecheck\/.*/.test(path):
 							send_age_verification();
 							break;
 
-						case /^\/dlc\/.*/.test(window.location.pathname):
+						case /^\/dlc\/.*/.test(path):
 							dlc_data_for_dlc_page();
 							break;
 
-						case /^\/account\/.*/.test(window.location.pathname):
+						case /^\/account\/.*/.test(path):
 							account_total_spent();
 							replace_account_name();
 							return;
 							break;
 
-						case /^\/steamaccount\/addfunds/.test(window.location.pathname):
+						case /^\/steamaccount\/addfunds/.test(path):
 							add_custom_wallet_amount();
 							break;
 
-						case /^\/search\/.*/.test(window.location.pathname):
+						case /^\/search\/.*/.test(path):
 							//add_cart_to_search();
 							endless_scrolling();
 							add_hide_buttons_to_search();
 							break;
 
-						case /^\/sale\/.*/.test(window.location.pathname):
+						case /^\/sale\/.*/.test(path):
 							show_regional_pricing();
 							break;
 
 						// Storefront-front only
-						case /^\/$/.test(window.location.pathname):
+						case /^\/$/.test(path):
 							add_popular_tab();
 							add_allreleases_tab();
 							set_homepage_tab();
@@ -6940,7 +6943,7 @@ $(document).ready(function(){
 					add_wallet_balance_to_header();
 
 					switch (true) {
-						case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
 							appdata_on_wishlist();
 							fix_wishlist_image_not_found();
 							add_empty_wishlist_buttons();
@@ -6955,23 +6958,23 @@ $(document).ready(function(){
 							start_highlights_and_tags();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b\/?$/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b\/?$/.test(path):
 							start_friend_activity_highlights();
 							bind_ajax_content_highlighting();
 							hide_activity_spam_comments();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/edit/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/edit/.test(path):
 							add_es_background_selection();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/inventory/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
 							bind_ajax_content_highlighting();
 							inventory_market_prepare();
 							hide_empty_inventory_tabs();
 							break;
 
-						case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
 							total_time();
 							total_size();
 							add_gamelist_achievements();
@@ -6980,7 +6983,7 @@ $(document).ready(function(){
 							add_gamelist_common();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/badges/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/badges/.test(path):
 							add_badge_completion_cost();
 							add_total_drops_count();
 							add_cardexchange_links();
@@ -6989,27 +6992,27 @@ $(document).ready(function(){
 							add_badge_view_options();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/stats/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/stats/.test(path):
 							add_achievement_sort();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/gamecards/.test(window.location.pathname):
-							var gamecard = get_gamecard(window.location.pathname);
+						case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+							var gamecard = get_gamecard(path);
 							add_cardexchange_links(gamecard);
 							add_gamecard_market_links(gamecard);
 							add_gamecard_foil_link();
 							add_gamecard_trading_forum();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
 							add_friends_that_play();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(path):
 							add_decline_button();
 							break;
 
-						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
+						case /^\/(?:id|profiles)\/.+/.test(path):
 							add_community_profile_links();
 							add_wishlist_profile_link();
 							add_supporter_badges();
@@ -7021,12 +7024,12 @@ $(document).ready(function(){
 							add_posthistory_link();
 							break;
 
-						case /^\/(?:sharedfiles|workshop)\/.*/.test(window.location.pathname):
+						case /^\/(?:sharedfiles|workshop)\/.*/.test(path):
 							hide_greenlight_banner();
 							hide_spam_comments();
 							break;
 
-						case /^\/market\/.*/.test(window.location.pathname):
+						case /^\/market\/.*/.test(path):
 							load_inventory().done(function() {
 								highlight_market_items();
 								bind_ajax_content_highlighting();
@@ -7037,24 +7040,24 @@ $(document).ready(function(){
 							add_lowest_market_price();
 							break;
 
-						case /^\/app\/.*/.test(window.location.pathname):
-							var appid = get_appid(window.location.host + window.location.pathname);
+						case /^\/app\/.*/.test(path):
+							var appid = get_appid(window.location.host + path);
 							add_app_page_wishlist(appid);
 							hide_spam_comments();
 							add_steamdb_links(appid, "gamehub");
 							break;
 
-						case /^\/games\/.*/.test(window.location.pathname):
+						case /^\/games\/.*/.test(path):
 							var appid = document.querySelector( 'a[href*="http://steamcommunity.com/app/"]' );
 							appid = appid.href.match( /(\d)+/g );
 							add_steamdb_links(appid, "gamegroup");
 							break;
 
-						case /^\/tradingcards\/boostercreator/.test(window.location.pathname):
+						case /^\/tradingcards\/boostercreator/.test(path):
 							add_booster_prices();
 							break;
 
-						case /^\/$/.test(window.location.pathname):
+						case /^\/$/.test(path):
 							hide_spam_comments();
 							hide_trademark_symbols(true);
 							break;
