@@ -5242,9 +5242,11 @@ function start_friend_activity_highlights() {
 			".blotter_author_block a",
 			".blotter_gamepurchase_details a",
 			".blotter_daily_rollup_line a"
-		],
-			ownedapps = getValue("owned_apps").split(","),
-			wishlistapps = getValue("wishlist_apps").split(",");
+		];
+		var ownedapps = getValue("owned_apps");
+		if (ownedapps) ownedapps = ownedapps.split(",");
+		var wishlistapps = getValue("wishlist_apps");
+		if (wishlistapps) wishlistapps = wishlistapps.split(",");
 
 		// Get all appids and nodes from selectors
 		$.each(selectors, function (i, selector) {
