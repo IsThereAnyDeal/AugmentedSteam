@@ -3306,7 +3306,7 @@ function account_total_spent() {
 							var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
 
 							if (last_updated < expire_time) {
-								get_http("//firefox.enhancedsteam.com/api/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+								get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 									complete += 1;
 									setValue(currency_type + "to" + local_currency, parseFloat(txt));
 									setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
@@ -3317,7 +3317,7 @@ function account_total_spent() {
 								if (complete == available_currencies.length - 1) start_total();
 							}
 						} else {
-							get_http("//firefox.enhancedsteam.com/api/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+							get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 								complete += 1;
 								setValue(currency_type + "to" + local_currency, parseFloat(txt));
 								setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
