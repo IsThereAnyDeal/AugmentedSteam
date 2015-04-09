@@ -2028,7 +2028,7 @@ function drm_warnings(type) {
 
 			// Ubisoft Uplay detection
 			if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-			if (text.toUpperCase().indexOf("\bUPLAY") > 0) { uplay = true; }
+			if (text.match(/\buplay/i)) { uplay = true; }
 
 			// Securom detection
 			if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
@@ -2036,7 +2036,7 @@ function drm_warnings(type) {
 			// Tages detection			
 			if (text.match(/\btages\b/i)) { tages = true; }
 			if (text.match(/angebote des tages/i)) { tages = false; }
-			if (text.match("/\bsolidshield\b/i")) { tages = true; }
+			if (text.match(/\bsolidshield\b/i)) { tages = true; }
 
 			// Stardock account detection
 			if (text.indexOf("Stardock account") > 0) { stardock = true; }
