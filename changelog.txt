@@ -1,3 +1,7 @@
+v7.5
+-----
+
+
 v7.4
 -----
 + Added a "View post history" button to user's profiles in the "More" dropdown box
