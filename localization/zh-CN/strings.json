@@ -1,5 +1,5 @@
 {
-  "post_history":"View post history",
+  "post_history":"查看发布历史",
   "forums":"论坛",
   "total_size":"占用空间",
   "dlc_details":"可下载内容详情",
@@ -31,7 +31,7 @@
   "clear_cache":"清空缓存数据",
   "events":"事件",
   "translation":"翻译",
-  "lowest":"Lowest",
+  "lowest":"最低",
   "lowest_price":"当前最低价",
   "badge_progress":"查看徽章进度",
   "sales_total":"出售总计",

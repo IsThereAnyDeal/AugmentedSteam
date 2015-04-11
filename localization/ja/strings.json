@@ -1,5 +1,5 @@
 {
-  "post_history":"View post history",
+  "post_history":"記事の履歴を表示",
   "forums":"フォーラム",
   "total_size":"合計サイズ",
   "dlc_details":"ダウンロードコンテンツの詳細",
@@ -31,7 +31,7 @@
   "clear_cache":"キャッシュされたデータをクリア",
   "events":"イベント",
   "translation":"翻訳",
-  "lowest":"Lowest",
+  "lowest":"最低",
   "lowest_price":"現在の最安値",
   "badge_progress":"バッジの進捗状況を表示",
   "sales_total":"販売合計",

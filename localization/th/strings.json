@@ -1,5 +1,5 @@
 {
-  "post_history":"View post history",
+  "post_history":"ดูประวัติการโพสต์",
   "forums":"ฟอรัม",
   "total_size":"ขนาดรวม",
   "dlc_details":"รายละเอียดเนื้อหาที่ดาวน์โหลดได้",
@@ -31,7 +31,7 @@
   "clear_cache":"ล้างข้อมูลแคช",
   "events":"กิจกรรม",
   "translation":"การแปลภาษา",
-  "lowest":"Lowest",
+  "lowest":"ต่ำที่สุด",
   "lowest_price":"ราคาถูกที่สุดในขณะนี้",
   "badge_progress":"ดูความคืบหน้าเหรียญตรา",
   "sales_total":"ยอดการขายรวม",

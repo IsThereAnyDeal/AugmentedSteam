@@ -1,5 +1,5 @@
 {
-  "post_history":"View post history",
+  "post_history":"Gönderi geçmişini görüntüle",
   "forums":"Forumlar",
   "total_size":"Toplam Boyut",
   "dlc_details":"İndirilebilir Öğe Ayrıntıları",
@@ -31,7 +31,7 @@
   "clear_cache":"Önbelleği temizle",
   "events":"Etkinlikler",
   "translation":"Çeviri",
-  "lowest":"Lowest",
+  "lowest":"En düşük\n",
   "lowest_price":"Şu anki en düşük fiyat",
   "badge_progress":"Rozet İlerlemesini Görüntüle",
   "sales_total":"Toplam satılan",
@@ -314,13 +314,13 @@
     "coupon":"Kupon",
     "friends_rec":"<a href=\"http:\/\/store.steampowered.com\/recommended\/byfriends\/__appid__\">__friendcount__ kişi öneriyor",
     "inv_gift":"Hediye",
-    "inv_guestpass":"Guestpass",
+    "inv_guestpass":"Misafir girişi",
     "owned":"Sahipsiniz",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ kişi istiyor<\/a>"
   },
   "wallet":{
     "custom_amount":"Farklı bir miktar ekle",
-    "custom_amount_text":"Add any amount over __minamount__"
+    "custom_amount_text":"__minamount__ üzerine herhangi bir miktar ekle"
   },
   "wsgf":{
     "incomplete":"Tamamlanmamış",
