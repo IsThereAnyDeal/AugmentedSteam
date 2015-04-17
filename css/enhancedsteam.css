@@ -750,3 +750,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-size:85.7%;
 	line-height: 1.25em;
 }
+.spy_details {
+	color: #8f98a0;
+	line-height: 20px;
+}
+
+.spy_details b {
+	color: #61686d;
+	font-weight: normal;
+}

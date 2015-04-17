@@ -53,6 +53,7 @@ function save_options() {
 	show_package_info = $("#show_package_info").prop('checked');
 	show_sysreqcheck = $("#show_sysreqcheck").prop('checked');
 	show_steamchart_info = $("#show_steamchart_info").prop('checked');
+	show_steamspy_info = $("#show_steamspy_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	show_early_access = $("#show_early_access").prop('checked');
 	
@@ -184,6 +185,7 @@ function save_options() {
 		'show_package_info': show_package_info,
 		'show_sysreqcheck': show_sysreqcheck,
 		'show_steamchart_info': show_steamchart_info,
+		'show_steamspy_info': show_steamspy_info,
 		'show_carousel_descriptions': show_carousel_descriptions,
 		'show_early_access': show_early_access,
 		
@@ -381,6 +383,7 @@ function load_options() {
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; chrome.storage.sync.set({'show_package_info': settings.show_package_info}); }
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; chrome.storage.sync.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
 		if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; chrome.storage.sync.set({'show_steamchart_info': settings.show_steamchart_info}); }
+		if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; chrome.storage.sync.set({'show_steamspy_info': settings.show_steamspy_info}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
 		
@@ -471,6 +474,7 @@ function load_options() {
 		$("#show_package_info").prop('checked', settings.show_package_info);
 		$("#show_sysreqcheck").prop('checked', settings.show_sysreqcheck);
 		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
+		$("#show_steamspy_info").prop('checked', settings.show_steamspy_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
 		$("#show_early_access").prop('checked', settings.show_early_access);
 				
@@ -630,6 +634,7 @@ function load_translation() {
 			$("#store_package_info_text").text(localized_strings.options.show_package_info);
 			$("#show_sysreqcheck_text").text(localized_strings.options.show_sysreqcheck);
 			$("#store_steamchart_info_text").text(localized_strings.options.show_steamchart_info);
+			$("#store_steamspy_info_text").text(localized_strings.options.show_steamspy_info);
 			$("#store_carousel_descriptions_text").text(localized_strings.options.carousel_description);
 			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
 			

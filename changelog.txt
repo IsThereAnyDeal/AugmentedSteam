@@ -1,5 +1,6 @@
 v7.5
 -----
++ Added player data from steamspy.com to app pages (thanks galyonkin!)
 : Fixed a bug that caused the achievement sorting function not to work correctly
 
 

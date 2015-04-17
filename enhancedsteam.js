@@ -1476,7 +1476,56 @@ function add_steamchart_info(appid) {
 							html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + localized_strings.charts.peaktoday + '</div><div class="chart-stat">';
 							html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + localized_strings.charts.peakall + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span></div></div>';
 
-							$(".sys_req").parent().before(html);
+							if ($("#steam-spy").length) {
+								$("#steam-spy").before(html);
+							} else {
+								$(".sys_req").parent().before(html);
+							}
+						}
+					}
+				});
+			}
+		});
+	}
+}
+
+function add_steamspy_info(appid) {
+	if ($(".game_area_dlc_bubble").length == 0) {
+		storage.get(function(settings) {
+			if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; storage.set({'show_steamspy_info': settings.show_steamspy_info}); }
+			if (settings.show_steamspy_info) {
+				get_http("//api.enhancedsteam.com/steamspy/?appid=" + appid, function (txt) {
+					if (txt.length > 0) {
+						var data = JSON.parse(txt);
+						if (data["owners"] != 0) {
+							var owners1 = Number(parseInt(data["owners"]) - parseInt(data["owners_variance"])).toLocaleString("en"),
+								owners2 = Number(parseInt(data["owners"]) + parseInt(data["owners_variance"])).toLocaleString("en"),
+								players2weeks1 = Number(parseInt(data["players_2weeks"]) - parseInt(data["players_2weeks_variance"])).toLocaleString("en"),
+								players2weeks2 = Number(parseInt(data["players_2weeks"]) + parseInt(data["players_2weeks_variance"])).toLocaleString("en"),
+								players2weeksp = (parseInt(data["players_2weeks"]) / parseInt(data["owners"]) * 100).toFixed(2),
+								players1 = Number(parseInt(data["players_forever"]) - parseInt(data["players_forever_variance"])).toLocaleString("en"),
+								players2 = Number(parseInt(data["players_forever"]) + parseInt(data["players_forever_variance"])).toLocaleString("en"),
+								playersp = (parseInt(data["players_forever"]) / parseInt(data["owners"]) * 100).toFixed(2)
+								avg_hours = Math.floor(parseInt(data["average_forever"]) / 60),
+								avg_minutes = parseInt(data["average_forever"]) % 60,
+								avg_hours2 = Math.floor(parseInt(data["average_2weeks"]) / 60),
+								avg_minutes2 = parseInt(data["average_2weeks"]) % 60;
+
+							var html = '<div id="steam-spy" class="game_area_description"><h2>' + localized_strings.spy.player_data + '</h2>';
+							html += "<div class='spy_details'>";
+							html += "<b>" + localized_strings.spy.owners + ":</b> " + owners1 + " - " + owners2;
+							html += "<br><b>" + localized_strings.spy.players_total + ":</b> " + players1 + " - " + players2 + " (" + playersp + "%)";
+							html += "<br><b>" + localized_strings.spy.players_2weeks + ":</b> " + players2weeks1 + " - " + players2weeks2 + " (" + players2weeksp + "%)";
+							html += "<br><b>" + localized_strings.spy.average_playtime + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours).replace("__minutes__", avg_minutes);
+							html += "<br><b>" + localized_strings.spy.average_playtime_2weeks + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours2).replace("__minutes__", avg_minutes2);
+							html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
+							html += "</div>";
+
+							if ($("#steam-charts").length) {
+								$("#steam-charts").after(html);
+							} else {
+								$(".sys_req").parent().before(html);	
+							}							
 						}
 					}
 				});
@@ -6869,6 +6918,7 @@ $(document).ready(function(){
 							add_pack_breakdown();
 							add_package_info_button();
 							add_steamchart_info(appid);
+							add_steamspy_info(appid);
 							add_system_requirements_check(appid);
 							add_app_badge_progress(appid);
 							add_dlc_checkboxes();

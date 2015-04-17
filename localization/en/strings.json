@@ -210,6 +210,15 @@
         "genres": "Genres...",
         "private_profile": "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
     },
+    "spy": {
+        "player_data": "Player Data",
+        "owners": "Owners",
+        "players_total": "Players total",
+        "players_2weeks": "Players in the last two weeks",
+        "average_playtime": "Average playtime",
+        "average_playtime_2weeks": "Average playtime in the last two weeks",
+        "formatted_time": "__hours__ hours, __minutes__ minutes"
+    },
     "options": {
         "wsgf": "Show WSGF (Widescreen) info",
         "steamcardexchange": "Show SteamCardExchange links on badges",
@@ -270,6 +279,7 @@
         "show_astatslink": "Show AStats link on app pages",
         "guest": "Items you have a guest pass for",
         "show_steamchart_info": "Show SteamCharts.com info",
+        "show_steamspy_info": "Show steamspy.com info",
         "showallachievements": "Show achievement stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show on Wishlist",
         "steamrepapi": "Show SteamRep status on profile pages",
