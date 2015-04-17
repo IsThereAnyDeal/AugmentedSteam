@@ -1212,15 +1212,10 @@ function add_wishlist_pricehistory() {
 
 			// Get country code from Steam cookie
 			var cookies = document.cookie;
-			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
+			var matched = cookies.match(/steamCountry=([a-z]{2})/i);
 			var cc = "us";
 			if (matched != null && matched.length == 2) {
 				cc = matched[1];
-			} else {
-				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-				if (matched != null && matched.length == 2) {
-					cc = matched[1];
-				}
 			}
 
 			function get_price_data(lookup_type, node, id) {
@@ -1920,15 +1915,10 @@ function show_pricing_history(appid, type) {
 
 			// Get country code from the Steam cookie
 			var cookies = document.cookie;
-			var matched = cookies.match(/fakeCC=([a-z]{2})/i);
+			var matched = cookies.match(/steamCountry=([a-z]{2})/i);
 			var cc = "us";
 			if (matched != null && matched.length == 2) {
 				cc = matched[1];
-			} else {
-				matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-				if (matched != null && matched.length == 2) {
-					cc = matched[1];
-				}
 			}
 
 			// Get all of the subIDs on the page
