@@ -6142,7 +6142,7 @@ function add_badge_sort() {
 
 function add_achievement_sort() {
 	if ($("#personalAchieve").length > 0 || $("#achievementsSelector").length > 0) {
-		if (language == "eng") {
+		if (language == "english") {
 			$("#tabs").before("<div id='achievement_sort_options' class='sort_options'>" + localized_strings.sort_by + "<span id='achievement_sort_default'>" + localized_strings.theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + localized_strings.date_unlocked + "</span></div>");
 			$("#personalAchieve, #achievementsSelector").clone().insertAfter("#personalAchieve, #achievementsSelector").attr("id", "personalAchieveSorted").css("padding-left", "16px").hide();	
 
