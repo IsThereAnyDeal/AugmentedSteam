@@ -1,5 +1,6 @@
 v7.5
 -----
+: Fixed a bug that caused the achievement sorting function not to work correctly
 
 
 v7.4
