@@ -1,6 +1,7 @@
 v7.5
 -----
 + Added player data from steamspy.com to app pages (thanks galyonkin!)
++ Added support for Coinbase.io and Funstock Digital to price comparisons
 : Fixed an issue with price data not being in the correct denomination due to a change made by Valve
 : Fixed a bug that caused the achievement sorting function not to work correctly
 
