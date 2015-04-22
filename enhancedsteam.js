@@ -2855,15 +2855,22 @@ function add_profile_style() {
 	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
 
 	get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steamID, function (txt) {
-		switch (txt) {
-			case "holiday2014":
-				$("head").append("<link rel='stylesheet' type='text/css' href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
-				$(".profile_header_bg_texture").append("<div class='holidayprofile_header_overlay'></div>");
-				$(".profile_page").addClass("holidayprofile");
-				$.getScript("http://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
-					runInPageContext("function() { StartAnimation(); }");
-				});
-				break;
+		if (txt) {
+			switch (txt) {
+				case "holiday2014":
+					$("head").append("<link rel='stylesheet' type='text/css' href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
+					$(".profile_header_bg_texture").append("<div class='holidayprofile_header_overlay'></div>");
+					$(".profile_page").addClass("holidayprofile");
+					$.getScript("http://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
+						runInPageContext("function() { StartAnimation(); }");
+					});
+					break;
+				default:
+					$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
+					$(".profile_header_bg_texture").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/header.jpg") + "')");
+					$(".profile_customization").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/showcase.png") + "')");
+					break;
+			}
 		}
 	});
 }
@@ -5758,7 +5765,12 @@ function add_es_style_selection() {
 		$(".group_content_bodytext").before(html);
 
 		get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steam64, function (txt) {
-			var select_html = "<select name='es_style' id='es_style' class='gray_bevel dynInput'><option value='remove' id='remove'>None Selected / No Change</option>";
+			var select_html = "<select name='es_style' id='es_style' class='gray_bevel dynInput'><option value='remove' id='remove'>None Selected / No Change</option>";			
+			select_html += "<option id='red' value='red'>Red Style</option>";
+			select_html += "<option id='yellow' value='yellow'>Yellow Style</option>";
+			select_html += "<option id='teal' value='teal'>Teal Style</option>";
+			select_html += "<option id='green' value='green'>Green Style</option>";
+			select_html += "<option id='purple' value='purple'>Purple Style</option>";
 			select_html += "<option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>";
 			select_html += "</select>";
 			

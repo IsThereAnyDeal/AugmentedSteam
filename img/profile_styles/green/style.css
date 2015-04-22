@@ -1,0 +1,15 @@
+.btn_profile_action {
+	background: linear-gradient( to bottom, #2A7436 5%, #283D2C 95%) !important;
+}
+.btn_profile_action > span {
+	background: linear-gradient( to bottom, #2A7436 5%, #283D2C 95%) !important;
+}
+.btn_profile_action:hover, .btn_profile_action.focus {
+	background: linear-gradient( to bottom, #259637 5%, #283D2C 95%) !important;
+}
+.btn_profile_action:hover > span, .btn_profile_action.focus > span {
+	background: linear-gradient( to bottom, #259637 5%, #283D2C 95%) !important;
+}
+.profile_customization_header {
+	color: #54CF72 !important;
+}
