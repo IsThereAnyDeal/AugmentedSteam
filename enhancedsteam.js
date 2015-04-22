@@ -2849,6 +2849,25 @@ function add_posthistory_link() {
 	$("#profile_action_dropdown .popup_body .profile_actions_follow").after("<a class='popup_menu_item' href='" + window.location.pathname + "/posthistory'><img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; " + localized_strings.post_history + "</a>");
 }
 
+function add_profile_style() {
+	var steamID;
+	if ($("#reportAbuseModal").length > 0) { steamID = document.getElementsByName("abuseID")[0].value; }
+	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+
+	get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steamID, function (txt) {
+		switch (txt) {
+			case "holiday2014":
+				$("head").append("<link rel='stylesheet' type='text/css' href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
+				$(".profile_header_bg_texture").append("<div class='holidayprofile_header_overlay'></div>");
+				$(".profile_page").addClass("holidayprofile");
+				$.getScript("http://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
+					runInPageContext("function() { StartAnimation(); }");
+				});
+				break;
+		}
+	});
+}
+
 function hide_activity_spam_comments() {
 	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
 		hide_spam_comments();
@@ -5724,6 +5743,44 @@ function add_es_background_selection() {
 	});
 }
 
+function add_es_style_selection() {
+	if (window.location.pathname.indexOf("/settings") < 0) {
+		var steam64 = $(document.body).html().match(/g_steamID = \"(.+)\";/)[1];
+		var html = "<form id='es_profile_style' method='POST' action='http://api.enhancedsteam.com/profile_style/profile_style_save.php'><div class='group_content group_summary'>";
+		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
+		html += "<div class='formRow'><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div id='es_style_loading'><img src='//cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
+		html += "<img id='es_profile_style_current_image' src=''>";
+		html += "</div><div class='profile_style_current_description'><div id='es_profile_style_current_name'>";
+		html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'><span>Remove</span></span>&nbsp;<span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + localized_strings.save + "</span></span></div></div><div class='formRowTitle'>" + localized_strings.custom_style + ":<span class='formRowHint' title='" + localized_strings.custom_style_help + "'>(?)</span></div></div></div>";
+		html += "</form><form id='es_style_remove' method='POST' action='http://api.enhancedsteam.com/profile_style/profile_style_remove.php'>";
+		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
+		html += "</form>";
+		$(".group_content_bodytext").before(html);
+
+		get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steam64, function (txt) {
+			var select_html = "<select name='es_style' id='es_style' class='gray_bevel dynInput'><option value='remove' id='remove'>None Selected / No Change</option>";
+			select_html += "<option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>";
+			select_html += "</select>";
+			
+			$("#es_style_loading").remove();
+			$("#es_profile_style_current_name").html(select_html);
+			if (txt != "") { $("#es_style").val(txt); }
+		
+			$("#es_style").change(function() {
+				// Enable the "save" button
+				$("#es_style_save_btn").removeClass("btn_disabled");
+				$("#es_style_save_btn").click(function(e) {
+					$("#es_profile_style").submit();
+				});
+			});
+		});
+
+		$("#es_style_remove_btn").click(function() {
+			$("#es_style_remove").submit();
+		});
+	}
+}
+
 function add_profile_store_links() {
 	$(".game_name").find(".whiteLink").each(function() {
 		var href = this.href.replace("//steamcommunity.com", "//store.steampowered.com");		
@@ -7014,6 +7071,7 @@ $(document).ready(function(){
 
 						case /^\/(?:id|profiles)\/.+\/edit/.test(path):
 							add_es_background_selection();
+							add_es_style_selection();
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
@@ -7070,6 +7128,7 @@ $(document).ready(function(){
 							hide_spam_comments();
 							add_steamrep_api();
 							add_posthistory_link();
+							add_profile_style();
 							break;
 
 						case /^\/(?:sharedfiles|workshop)\/.*/.test(path):

@@ -111,6 +111,8 @@
     "news": "News",
     "check_system": "Check Your System",
     "custom_background": "Custom Background",
+    "custom_style": "Custom Style",
+    "custom_style_help": "All users of Enhanced Steam will see this style on your profile.  Non-Enhanced Steam users will not see any style changes made here.",
     "most_drops": "Most Drops",
     "badge_foil_progress": "View Foil Badge Progress",
     "net_gain": "Net gain",
