@@ -13,3 +13,7 @@
 .profile_customization_header {
 	color: #54CF72 !important;
 }
+.profile_header_badge {
+	background-color: rgba(22,22,23, 0.6) !important;
+	box-shadow: none !important;
+}
