@@ -2867,6 +2867,7 @@ function add_profile_style() {
 					});
 					break;
 				case "clear":
+					$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
 					$(".profile_header_bg").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/profile_header_bg.png") + "')");
 					$(".profile_header_bg_texture").css("background-image", "none");
 					break;
