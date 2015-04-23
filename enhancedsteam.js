@@ -2855,7 +2855,8 @@ function add_profile_style() {
 	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
 
 	get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steamID, function (txt) {
-		if (txt) {
+		var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow"];
+		if ($.inArray(txt, available_styles) > -1) {
 			switch (txt) {
 				case "holiday2014":
 					$("head").append("<link rel='stylesheet' type='text/css' href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
