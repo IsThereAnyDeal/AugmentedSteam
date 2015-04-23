@@ -9,7 +9,6 @@ v7.5
 : Fixed a bug that caused the achievement sorting function not to work correctly
 : Updated the Enhanced Steam Supporter section on supporter's profile pages to the latest visual style
 
-
 v7.4
 -----
 + Added a "View post history" button to user's profiles in the "More" dropdown box
