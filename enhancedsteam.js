@@ -5782,7 +5782,12 @@ function add_es_style_selection() {
 			}
 		
 			$("#es_style").change(function() {
-				$("#es_profile_style_current_image").attr("src", chrome.extension.getURL("img/profile_styles/" + $("#es_style").val() + "/preview.png"));
+				if ($("#es_style").val() == "remove") {
+					$("#es_profile_style_current_image").hide();
+				} else {
+					$("#es_profile_style_current_image").show();
+					$("#es_profile_style_current_image").attr("src", chrome.extension.getURL("img/profile_styles/" + $("#es_style").val() + "/preview.png"));
+				}
 
 				// Enable the "save" button
 				$("#es_style_save_btn").removeClass("btn_disabled");
