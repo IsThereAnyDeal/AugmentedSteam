@@ -2865,6 +2865,10 @@ function add_profile_style() {
 						runInPageContext("function() { StartAnimation(); }");
 					});
 					break;
+				case "clear":
+					$(".profile_header_bg").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/profile_header_bg.png") + "')");
+					$(".profile_header_bg_texture").css("background-image", "none");
+					break;
 				default:
 					$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
 					$(".profile_header_bg_texture").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/header.jpg") + "')");
@@ -5765,13 +5769,16 @@ function add_es_style_selection() {
 		$(".group_content_bodytext").before(html);
 
 		get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steam64, function (txt) {
-			var select_html = "<select name='es_style' id='es_style' class='gray_bevel dynInput'><option value='remove' id='remove'>None Selected / No Change</option>";			
-			select_html += "<option id='red' value='red'>Red Style</option>";
-			select_html += "<option id='yellow' value='yellow'>Yellow Style</option>";
-			select_html += "<option id='teal' value='teal'>Teal Style</option>";
-			select_html += "<option id='green' value='green'>Green Style</option>";
-			select_html += "<option id='purple' value='purple'>Purple Style</option>";
+			var select_html = "<select name='es_style' id='es_style' class='gray_bevel dynInput'><option value='remove' id='remove'>None Selected / No Change</option>";
+			select_html += "<option id='clear' value='clear'>Clear Theme</option>";
+			select_html += "<option id='green' value='green'>Green Theme</option>";
 			select_html += "<option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>";
+			select_html += "<option id='orange' value='orange'>Orange Theme</option>"
+			select_html += "<option id='pink' value='pink'>Pink Theme</option>"
+			select_html += "<option id='purple' value='purple'>Purple Theme</option>";
+			select_html += "<option id='red' value='red'>Red Theme</option>";
+			select_html += "<option id='teal' value='teal'>Teal Theme</option>";
+			select_html += "<option id='yellow' value='yellow'>Yellow Theme</option>";
 			select_html += "</select>";
 			
 			$("#es_style_loading").remove();
