@@ -111,6 +111,9 @@
   "news":"Новости",
   "check_system":"Проверить систему",
   "custom_background":"Пользовательский фон ",
+  "custom_style":"Пользовательская Тема",
+  "custom_style_help":"Все пользователи Enhanced Steam увидят эту тему в вашем профиле. Пользователи без этого расширения  не увидят каких либо изменений.",
+  "noneselected":"Не выбрано \/ без изменений",
   "most_drops":"Большинство выпадений",
   "badge_foil_progress":"Просмотреть прогресс металлического значка",
   "net_gain":"Чистый доход",
@@ -210,6 +213,15 @@
     "genres":"Жанры…",
     "private_profile":"Чтобы использовать эту функцию, вы должны <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>сделать свой профиль открытым для всех<\/a>."
   },
+  "spy":{
+    "player_data":"Данные об игроках",
+    "owners":"Владельцы",
+    "players_total":"Всего игроков",
+    "players_2weeks":"Игроков за последние две недели",
+    "average_playtime":"Средняя продолжительность",
+    "average_playtime_2weeks":"Средняя продолжительность игры за последние две недели",
+    "formatted_time":"__hours__ часов, __minutes__ минут"
+  },
   "options":{
     "wsgf":"Отображать информацию о поддержке широкоэкранных мониторов (WSGF)",
     "steamcardexchange":"Отображать ссылки сайта SteamCardExchange на значках",
@@ -270,6 +282,7 @@
     "show_astatslink":"Отображать ссылку на AStats на страницах продуктов",
     "guest":"Продукты, для которых у вас есть гостевой пропуск",
     "show_steamchart_info":"Отображать информацию SteamCharts.com",
+    "show_steamspy_info":"Показать информацию от steamspy.com",
     "showallachievements":"Отображать статистику достижений на странице «Все игры»",
     "lowestprice_onwishlist":"Показать в списке желаемого",
     "steamrepapi":"Показать статус SteamRep на страницах профилей",

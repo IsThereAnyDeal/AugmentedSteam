@@ -111,6 +111,9 @@
   "news":"ニュース",
   "check_system":"システムをチェック",
   "custom_background":"カスタム背景",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"最大ドロップ数",
   "badge_foil_progress":"キラバッジの進捗状況を表示",
   "net_gain":"純利益",
@@ -210,6 +213,15 @@
     "genres":"ジャンル...",
     "private_profile":"この機能を有効にするには、<a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>設定で<\/a>プロフィールのステータスを公開にしてください。"
   },
+  "spy":{
+    "player_data":"Player Data",
+    "owners":"Owners",
+    "players_total":"Players total",
+    "players_2weeks":"Players in the last two weeks",
+    "average_playtime":"Average playtime",
+    "average_playtime_2weeks":"Average playtime in the last two weeks",
+    "formatted_time":"__hours__ hours, __minutes__ minutes"
+  },
   "options":{
     "wsgf":"WSGF (ワイドスクリーン) 情報を表示",
     "steamcardexchange":"バッジにSteamCardExchangeへのリンクを表示",
@@ -270,6 +282,7 @@
     "show_astatslink":"アプリページに AStats のリンクを表示",
     "guest":"ゲストパスがあるアイテム",
     "show_steamchart_info":"SteamCharts.comの情報を表示",
+    "show_steamspy_info":"Show steamspy.com info",
     "showallachievements":"「すべてのゲーム」ページで実績統計を表示",
     "lowestprice_onwishlist":"ウィッシュリストで表示",
     "steamrepapi":"プロフィールページにSteamRepステータスを表示する",

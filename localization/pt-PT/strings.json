@@ -111,6 +111,9 @@
   "news":"Notícias",
   "check_system":"Verifica o teu sistema",
   "custom_background":"Fundo Personalizado",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"Mais cartas para obter",
   "badge_foil_progress":"Ver o progresso da Medalha \"Foil\"",
   "net_gain":"Lucro final",
@@ -210,6 +213,15 @@
     "genres":"Gêneros...",
     "private_profile":"Muda o estado do teu perfil para público <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>in your settings<\/a> para usar esta funcionalidade."
   },
+  "spy":{
+    "player_data":"Dados acerca dos jogadores",
+    "owners":"Donos",
+    "players_total":"Total de jogadores",
+    "players_2weeks":"Jogadores nas últimas duas semanas",
+    "average_playtime":"Média de tempo de jogo",
+    "average_playtime_2weeks":"Tempo médio jogado nas últimas duas semanas",
+    "formatted_time":"__hours__ hours, __minutes__ minutes"
+  },
   "options":{
     "wsgf":"Mostrar informação WSGF (ecrã panorâmico)",
     "steamcardexchange":"Mostrar hiperligações SteamCardExchange nas medalhas",
@@ -270,6 +282,7 @@
     "show_astatslink":"Mostrar link para o site AStats em páginas de aplicações",
     "guest":"Itens que tens um passe de convidado",
     "show_steamchart_info":"Mostrar informações do SteamCharts.com",
+    "show_steamspy_info":"Mostrar informação de steamspy.com",
     "showallachievements":"Mostrar estatísticas de proezas na página \"Todos os jogos\"",
     "lowestprice_onwishlist":"Mostrar na Lista de Desejos",
     "steamrepapi":"Mostrar o estado da reputação na página de perfil",

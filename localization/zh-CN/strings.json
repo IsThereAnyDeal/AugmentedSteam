@@ -111,6 +111,9 @@
   "news":"新闻",
   "check_system":"检查系统",
   "custom_background":"自定义背景",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"最多掉落",
   "badge_foil_progress":"查看闪亮徽章进度",
   "net_gain":"净收益",
@@ -210,6 +213,15 @@
     "genres":"类型",
     "private_profile":"在<a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>设置<\/a>中将您的资料状态更改为公开以使用此功能"
   },
+  "spy":{
+    "player_data":"Player Data",
+    "owners":"所有者",
+    "players_total":"Players total",
+    "players_2weeks":"Players in the last two weeks",
+    "average_playtime":"Average playtime",
+    "average_playtime_2weeks":"Average playtime in the last two weeks",
+    "formatted_time":"__hours__ hours, __minutes__ minutes"
+  },
   "options":{
     "wsgf":"显示WSGF（宽屏支持）信息",
     "steamcardexchange":"在徽章页面显示SteamCardExchange链接",
@@ -270,6 +282,7 @@
     "show_astatslink":"在应用页面显示AStats链接",
     "guest":"拥有通行证的项目",
     "show_steamchart_info":"显示SteamCharts.com信息",
+    "show_steamspy_info":"Show steamspy.com info",
     "showallachievements":"在“所有游戏”页面显示成就数据",
     "lowestprice_onwishlist":"在愿望单上显示",
     "steamrepapi":"在个人资料页显示 SteamRep 状态",

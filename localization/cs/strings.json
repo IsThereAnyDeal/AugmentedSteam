@@ -111,6 +111,9 @@
   "news":"Novinky",
   "check_system":"Zkontrolujte váš systém",
   "custom_background":"Vlastní pozadí",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"Nejvíce zbývajících přídělů karet",
   "badge_foil_progress":"Zobrazit postup foil odznaku",
   "net_gain":"Zisk",
@@ -210,6 +213,15 @@
     "genres":"Žánry...",
     "private_profile":"Pro použití této funkce musíte změnit svůj stav profilu na veřejný <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>ve vašem nastavení<\/a>."
   },
+  "spy":{
+    "player_data":"Data hráče",
+    "owners":"Vlastníci",
+    "players_total":"Celkem hráčů",
+    "players_2weeks":"Hráči v posledních dvou týdnech",
+    "average_playtime":"Průměrná délka hraní",
+    "average_playtime_2weeks":"Průmerná délka hraní v posledních dvou týdnech",
+    "formatted_time":"__hours__hodiny,__minutes__minuty"
+  },
   "options":{
     "wsgf":"Ukázat informace z WSGF (širokoúhlé hraní)",
     "steamcardexchange":"Ukázat odkazy na SteamCardExchange u odznaků",
@@ -270,6 +282,7 @@
     "show_astatslink":"Ukázat odkaz na AStats na stránkách aplikací",
     "guest":"Položky, na které máte Guest Pass",
     "show_steamchart_info":"Ukázat informace ze SteamCharts.com",
+    "show_steamspy_info":"Zobrazit steamspy.com info",
     "showallachievements":"Ukázat statistiky achievementů na stránce \"Všechny hry\"",
     "lowestprice_onwishlist":"Ukázat v Seznamu přání",
     "steamrepapi":"Ukázat SteamRep status na profilových stránkách",

@@ -111,6 +111,9 @@
   "news":"新聞",
   "check_system":"檢查你的系統",
   "custom_background":"自訂背景",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"最多掉落",
   "badge_foil_progress":"檢視閃亮徽章進度",
   "net_gain":"淨益額",
@@ -210,6 +213,15 @@
     "genres":"類型...",
     "private_profile":"在<a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>你的設定<\/a>裡將個人檔案狀態改成公開來使用這個功能"
   },
+  "spy":{
+    "player_data":"Player Data",
+    "owners":"Owners",
+    "players_total":"Players total",
+    "players_2weeks":"Players in the last two weeks",
+    "average_playtime":"Average playtime",
+    "average_playtime_2weeks":"Average playtime in the last two weeks",
+    "formatted_time":"__hours__ hours, __minutes__ minutes"
+  },
   "options":{
     "wsgf":"顯示寬螢幕支援資訊",
     "steamcardexchange":"在徽章上顯示SteamCardExchange連結",
@@ -270,6 +282,7 @@
     "show_astatslink":"在軟體頁面中顯示AStats連結",
     "guest":"擁有招待券的項目",
     "show_steamchart_info":"顯示SteamCharts.com的資訊",
+    "show_steamspy_info":"Show steamspy.com info",
     "showallachievements":"在\"所有遊戲\"頁面顯示成就統計資料",
     "lowestprice_onwishlist":"顯示願望清單",
     "steamrepapi":"在個人檔案頁面顯示 SteamRep 狀態",

@@ -111,6 +111,9 @@
   "news":"Новини",
   "check_system":"перевірити систему",
   "custom_background":"свій фон",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"більшість випадінь",
   "badge_foil_progress":"Переглянути прогрес металевого значка",
   "net_gain":"чистий доход",
@@ -210,6 +213,15 @@
     "genres":"Жанри...",
     "private_profile":"Щоб використовувати цю функцію, ви повинні <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'> зробити свій профіль відкритим для всіх <\/a>."
   },
+  "spy":{
+    "player_data":"Данні про гравців",
+    "owners":"Власники",
+    "players_total":"Всього гравців",
+    "players_2weeks":"Гравці в останні два тижні",
+    "average_playtime":"Середня тривалість",
+    "average_playtime_2weeks":"Середня тривалість в останні два тижні",
+    "formatted_time":"__hours__ години, __minutes__ хвилин"
+  },
   "options":{
     "wsgf":"Відображати інформацію про підтримку широкоекранних моніторів (WSGF)",
     "steamcardexchange":"Відображати посилання сайту SteamCardExchange на значках",
@@ -270,6 +282,7 @@
     "show_astatslink":"Відображати посилання на AStats на сторінках продуктів",
     "guest":"Ігри з гостьовими пропусками",
     "show_steamchart_info":"Відображати інформацію SteamCharts.com",
+    "show_steamspy_info":"Показати  інформацію про steamspy.com",
     "showallachievements":"Відображати статистику досягнень на сторінці «Всі ігри»",
     "lowestprice_onwishlist":"Показувати у списку бажаного",
     "steamrepapi":"Показати статус SteamRep в профілі",

@@ -111,6 +111,9 @@
   "news":"Haberler",
   "check_system":"Sisteminize Bakın",
   "custom_background":"Özel Arkaplan",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"En Çok Düşenler",
   "badge_foil_progress":"Parlak Rozet İlerlemesine Bak",
   "net_gain":"Net kazanç",
@@ -210,6 +213,15 @@
     "genres":"Türler",
     "private_profile":"Bu özelliği kullanabilmek için <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>ayarlardan<\/a> profilinizi herkese açık olarak değiştirin."
   },
+  "spy":{
+    "player_data":"Oyuncu veri",
+    "owners":"Sahipleri",
+    "players_total":"Oyuncu toplam",
+    "players_2weeks":"Son iki hafta içinde oyuncular",
+    "average_playtime":"Ortalama kullanım süresi",
+    "average_playtime_2weeks":"Son iki haftada ortalama kullanım süresi",
+    "formatted_time":"__hours__ saat, __minutes__ dakika"
+  },
   "options":{
     "wsgf":"WSGF (Geniş Ekran) bilgisini göster",
     "steamcardexchange":"Rozetlerde SteamCardExchange linklerini göster",
@@ -270,6 +282,7 @@
     "show_astatslink":"AStats linkini uygulama sayfalarında göster",
     "guest":"Guest Pass'e Sahip Olduklarınız",
     "show_steamchart_info":"SteamCharts.com bilgisini göster",
+    "show_steamspy_info":"Steamspy.com bilgi göster",
     "showallachievements":"\"Tüm Oyunlar\" sayfasında başarım istatistiklerini göster",
     "lowestprice_onwishlist":"İstek Listesinde Göster",
     "steamrepapi":"SteamRep durumunu profil sayfalarında göster",

@@ -111,6 +111,9 @@
   "news":"Aktualności",
   "check_system":"Sprawdź swój system",
   "custom_background":"Własne tło",
+  "custom_style":"Custom Theme",
+  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "noneselected":"None Selected \/ No Change",
   "most_drops":"Liczba kart do uzyskania",
   "badge_foil_progress":"Pokaż postęp foliowanej odznaki",
   "net_gain":"Dochód",
@@ -210,6 +213,15 @@
     "genres":"Gatunki...",
     "private_profile":"Zmień status swojego profilu na publiczny <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>w ustawieniach<\/a>, aby skorzystać z tej opcji."
   },
+  "spy":{
+    "player_data":"Informacje o graczach",
+    "owners":"Posiadaczy",
+    "players_total":"Łącznie graczy",
+    "players_2weeks":"Graczy w ciągu ostatnich 2 tygodni",
+    "average_playtime":"Przeciętny czas gry",
+    "average_playtime_2weeks":"Przeciętny czas gry w ciągu ostatnich 2 tygodni",
+    "formatted_time":"__hours__ godz., __minutes__ min"
+  },
   "options":{
     "wsgf":"Pokaż informacje z WSGF (dot. ekranów panoramicznych)",
     "steamcardexchange":"Pokaż linki do SteamCardExchange na odznakach",
@@ -270,6 +282,7 @@
     "show_astatslink":"Pokaż link do AStats na stronach aplikacji",
     "guest":"Tytuły w postaci kluczy tymczasowych",
     "show_steamchart_info":"Pokaż informacje z SteamCharts.com",
+    "show_steamspy_info":"Pokaż informacje ze steamspy.info",
     "showallachievements":"Pokaż statystyki osiągnięć na stronie \"Wszystkie gry\"",
     "lowestprice_onwishlist":"Pokaż na liście życzeń",
     "steamrepapi":"Pokaż status SteamRep na stronach profilowych",
