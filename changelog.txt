@@ -2,11 +2,12 @@ v7.5
 -----
 + Added player data from steamspy.com to app pages (thanks galyonkin!)
 + Added support for Coinbase.io and Funstock Digital to price comparisons
-+ Added support for setting custom profile styles
++ Added support for setting custom profile themes
 + Added Purple, Yellow, Red, Green, Pink, Orange, and Teal profile themes by Teliko
-+ Added "Clear" profile theme
++ Added Clear profile theme
 : Fixed an issue with price data not being in the correct denomination due to a change made by Valve
 : Fixed a bug that caused the achievement sorting function not to work correctly
+: Updated the Enhanced Steam Supporter section on supporter's profile pages to the latest visual style
 
 
 v7.4
