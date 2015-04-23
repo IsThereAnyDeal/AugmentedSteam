@@ -2245,15 +2245,16 @@ function add_supporter_badges() {
 
 			for (i=0; i < data["badges"].length; i++) {
 				if (data["badges"][i].link) {
-					html += '<div class="profile_badges_badge "><a href="' + data["badges"][i].link + '" title="' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></a></div>';
+					html += '<div class="profile_badges_badge" data-community-tooltip="Enhanced Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img src="' + data["badges"][i].img + '"></a></div>';
 				} else {
-					html += '<div class="profile_badges_badge "><img src="' + data["badges"][i].img + '" title="' + data["badges"][i].title + '"></div>';
-				}	
+					html += '<div class="profile_badges_badge" data-community-tooltip="Enhanced Steam<br>' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></div>';
+				}
 			}
 
 			html += '<div style="clear: left;"></div></div>';
 			$(".profile_badges").after(html);
 			$("#es_supporter_badges .profile_badges_badge:last").addClass("last");
+			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
 		}
 	});
 }
