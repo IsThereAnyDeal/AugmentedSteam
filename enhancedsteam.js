@@ -4080,8 +4080,8 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 					}
 				}
 			}
-			if (early_access) {
-				var early_access = JSON.parse(ea_appids);
+			var early_access = JSON.parse(ea_appids);
+			if (early_access) {				
 				if (early_access["ea"].indexOf(appid) >= 0) {
 					var selector = "img";
 					if (selector_modifier != undefined) selector += selector_modifier;

@@ -1,5 +1,6 @@
 v7.6
 -----
+: Fixed a bug that caused Early Access banners not to be displayed
 
 
 v7.5
