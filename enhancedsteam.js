@@ -2856,7 +2856,7 @@ function add_profile_style() {
 	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
 
 	get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steamID, function (txt) {
-		var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow"];
+		var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
 		if ($.inArray(txt, available_styles) > -1) {
 			switch (txt) {
 				case "holiday2014":
@@ -5773,6 +5773,7 @@ function add_es_style_selection() {
 
 		get_http("//api.enhancedsteam.com/profile_style/?steam64=" + steam64, function (txt) {
 			var select_html = "<select name='es_style' id='es_style' class='gray_bevel dynInput'><option value='remove' id='remove'>" + localized_strings.noneselected + "</option>";
+			select_html += "<option id='blue' value='blue'>Blue Theme</option>";
 			select_html += "<option id='clear' value='clear'>Clear Theme</option>";
 			select_html += "<option id='green' value='green'>Green Theme</option>";
 			select_html += "<option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>";
