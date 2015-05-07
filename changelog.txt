@@ -2,6 +2,7 @@ v7.6
 -----
 + Added Blue profile theme by Teliko
 : Fixed a bug that caused Early Access banners not to be displayed
+: Fixed a bug that caused badge completion costs to be in an incorrect currency for some users
 
 
 v7.5

@@ -6520,7 +6520,7 @@ function add_gamecard_market_links(game) {
 function add_badge_completion_cost() {
 	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
 		$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
-		get_http("store.steampowered.com/app/220/", function(txt) {
+		get_http("//store.steampowered.com/app/220/", function(txt) {
 			var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 			var currency_type = currency_symbol_to_type(currency_symbol);
 			var total_worth = 0, count = 0;
