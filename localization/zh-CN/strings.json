@@ -111,9 +111,9 @@
   "news":"新闻",
   "check_system":"检查系统",
   "custom_background":"自定义背景",
-  "custom_style":"Custom Theme",
-  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
-  "noneselected":"None Selected \/ No Change",
+  "custom_style":"自定义主题",
+  "custom_style_help":"所有Enhanced Steam的用户都会在他们的个人资料页面看到这个主题。非Enhanced Steam用户不会因这里的设置更改而看到任何主题的变化。",
+  "noneselected":"未选择\/不做修改",
   "most_drops":"最多掉落",
   "badge_foil_progress":"查看闪亮徽章进度",
   "net_gain":"净收益",
@@ -214,13 +214,13 @@
     "private_profile":"在<a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>设置<\/a>中将您的资料状态更改为公开以使用此功能"
   },
   "spy":{
-    "player_data":"Player Data",
+    "player_data":"玩家数据",
     "owners":"所有者",
-    "players_total":"Players total",
-    "players_2weeks":"Players in the last two weeks",
-    "average_playtime":"Average playtime",
-    "average_playtime_2weeks":"Average playtime in the last two weeks",
-    "formatted_time":"__hours__ hours, __minutes__ minutes"
+    "players_total":"玩家总数",
+    "players_2weeks":"最近两周内玩家数",
+    "average_playtime":"平均游戏时长",
+    "average_playtime_2weeks":"最近两周内平均游戏时长",
+    "formatted_time":"__hours__ 小时，__minutes__ 分钟"
   },
   "options":{
     "wsgf":"显示WSGF（宽屏支持）信息",
@@ -282,7 +282,7 @@
     "show_astatslink":"在应用页面显示AStats链接",
     "guest":"拥有通行证的项目",
     "show_steamchart_info":"显示SteamCharts.com信息",
-    "show_steamspy_info":"Show steamspy.com info",
+    "show_steamspy_info":"显示来自steamspy.com的信息",
     "showallachievements":"在“所有游戏”页面显示成就数据",
     "lowestprice_onwishlist":"在愿望单上显示",
     "steamrepapi":"在个人资料页显示 SteamRep 状态",

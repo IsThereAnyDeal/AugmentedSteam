@@ -111,7 +111,7 @@
   "news":"뉴스",
   "check_system":"당신의 시스템을 체크합니다.",
   "custom_background":"사용자 지정 배경",
-  "custom_style":"Custom Theme",
+  "custom_style":"커스텀 테마",
   "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
   "noneselected":"None Selected \/ No Change",
   "most_drops":"획득 가능한 개수순",
@@ -214,13 +214,13 @@
     "private_profile":"이 기능을 사용하려면 <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'> 프로필 설정 <\/ a> 프로필의 상태를 공개해야합니다."
   },
   "spy":{
-    "player_data":"Player Data",
-    "owners":"Owners",
+    "player_data":"플레이어 데이터",
+    "owners":"소유자",
     "players_total":"Players total",
-    "players_2weeks":"Players in the last two weeks",
-    "average_playtime":"Average playtime",
-    "average_playtime_2weeks":"Average playtime in the last two weeks",
-    "formatted_time":"__hours__ hours, __minutes__ minutes"
+    "players_2weeks":"지난 2주간 플레이어",
+    "average_playtime":"평균 플레이시간",
+    "average_playtime_2weeks":"지난 2주간 평균 플레이타임",
+    "formatted_time":"__hours__시간,__minutes__분"
   },
   "options":{
     "wsgf":"WSGF (와이드 스크린) 정보를 표시",
@@ -282,7 +282,7 @@
     "show_astatslink":"AStats 링크 보기",
     "guest":"손님",
     "show_steamchart_info":"SteamCharts.com의 정보 보기",
-    "show_steamspy_info":"Show steamspy.com info",
+    "show_steamspy_info":"steamspay.com 정보 보이기",
     "showallachievements":"\"모든 게임\" 페이지에서 도전과제 스탯 보기",
     "lowestprice_onwishlist":"찜 목록 보기",
     "steamrepapi":"프로필 페이지에 SteamREP 정보를 표시합니다.",
