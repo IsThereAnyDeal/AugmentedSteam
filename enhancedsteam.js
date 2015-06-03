@@ -5517,7 +5517,7 @@ function add_achievement_comparison_link(node) {
 					var html = txt.match(/<a href="(.+)compare">/);
 					if (html) {
 						$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
-						$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='//www.steamcommunity.com" + html[1] + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings.compare + ")</a>");
+						$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='//steamcommunity.com" + html[1] + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings.compare + ")</a>");
 					}
 				});
 			}
