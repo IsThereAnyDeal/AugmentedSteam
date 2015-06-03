@@ -4778,6 +4778,10 @@ function customize_app_page() {
 	});
 }
 
+function add_help_button(appid) {
+	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/#HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
+}
+
 function customize_home_page() {
 	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 	$(".home_page_body_ctn:first").css("min-height", "400px");
@@ -7016,6 +7020,7 @@ $(document).ready(function(){
 							get_playfire_rewards(appid);
 
 							customize_app_page();
+							add_help_button(appid);
 							break;
 
 						case /^\/sub\/.*/.test(path):

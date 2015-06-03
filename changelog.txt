@@ -1,5 +1,6 @@
 v7.6
 -----
++ Added a "Get Help" button to store pages that links to that game's personal support portal
 
 
 v7.5.1
