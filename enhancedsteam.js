@@ -6478,12 +6478,13 @@ function add_gamecard_market_links(game) {
 
 		get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 			var data = JSON.parse(txt);
+			var converter=$("<div>");
 			$(".badge_card_set_card").each(function() {
 				var node = $(this);
 				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
 				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
 
-				var newcardname = cardname.replace(/"/g, "&quot;");
+				var newcardname = converter.text(cardname).html();
 				if (foil) { newcardname += " (Foil)"; }
 
 				for (var i = 0; i < data.length; i++) {
