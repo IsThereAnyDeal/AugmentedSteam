@@ -1,8 +1,11 @@
 v7.6
 -----
+
+
+v7.5.2
+-----
 + Added a "Get Help" button to store pages that links to that game's personal support portal
 : Updated highlighting for the summer sale home page
-
 
 v7.5.1
 -----
