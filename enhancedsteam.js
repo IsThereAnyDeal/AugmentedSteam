@@ -4114,6 +4114,7 @@ function process_early_access() {
 								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
 								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
 								$(".dq_item:not(:first-child)").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+								$(".discovery_queue:not(:first-child)").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
 								break;
 							case /^\/search\/.*/.test(window.location.pathname):
 								$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
