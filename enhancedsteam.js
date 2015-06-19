@@ -2744,6 +2744,35 @@ function hide_greenlight_banner() {
 	});
 }
 
+function preview_greenlight_votes() {
+	storage.get(function(settings) {
+		if (settings.fadevotedgreenlightitems === undefined) { settings.fadevotedgreenlightitems = false; storage.set({'fadevotedgreenlightitems': settings.fadevotedgreenlightitems}); }
+		if (settings.previewgreenlightvotes === undefined) { settings.previewgreenlightvotes = false; storage.set({'previewgreenlightvotes': settings.previewgreenlightvotes}); }
+		if (settings.fadevotedgreenlightitems || settings.previewgreenlightvotes) {
+			$("a").each(function() {
+				if (this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=")) {
+					var parent = $(this).parent();
+					if (parent.hasClass("gh_checked") || !parent.hasClass("workshopItem")) return;
+					$.ajax({
+						url: this.href,
+						context: parent
+					}).done(function (data) {
+						match = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
+						if (match) {
+							if (settings.fadevotedgreenlightitems) {
+								this.addClass("gh_fade");
+							}
+							if (settings.previewgreenlightvotes) {
+								this.addClass("gh_vote_" + match[1].toLowerCase());
+							}
+						}
+					});
+				}
+			});
+		}
+	});
+}
+
 function hide_spam_comments() {
 	storage.get(function(settings) {
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; storage.set({'hidespamcomments': settings.hidespamcomments}); }
@@ -7172,9 +7201,19 @@ $(document).ready(function(){
 							add_profile_style();
 							break;
 
-						case /^\/(?:sharedfiles|workshop)\/.*/.test(path):
+						case /^\/sharedfiles\/.*/.test(path):
 							hide_greenlight_banner();
 							hide_spam_comments();
+							break;
+
+						case /^\/workshop\/.*/.test(path):
+							hide_greenlight_banner();
+							hide_spam_comments();
+							preview_greenlight_votes();
+							break;
+
+						case /^\/greenlight\/.*/.test(path):
+							preview_greenlight_votes();
 							break;
 
 						case /^\/market\/.*/.test(path):

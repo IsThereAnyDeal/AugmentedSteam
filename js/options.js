@@ -115,6 +115,8 @@ function save_options() {
 	showallachievements = $("#showallachievements").prop('checked');
 	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
+	fadevotedgreenlightitems = $("#fadevotedgreenlightitems").prop('checked');
+	previewgreenlightvotes = $("#previewgreenlightvotes").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
@@ -208,6 +210,8 @@ function save_options() {
 		'showallachievements': showallachievements,
 		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
+		'fadevotedgreenlightitems': fadevotedgreenlightitems,
+		'previewgreenlightvotes': previewgreenlightvotes,
 		'hideactivelistings': hideactivelistings,
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
@@ -409,6 +413,8 @@ function load_options() {
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
+		if (settings.fadevotedgreenlightitems === undefined) { settings.fadevotedgreenlightitems = false; chrome.storage.sync.set({'fadevotedgreenlightitems': settings.fadevotedgreenlightitems}); }
+		if (settings.previewgreenlightvotes === undefined) { settings.previewgreenlightvotes = false; chrome.storage.sync.set({'previewgreenlightvotes': settings.previewgreenlightvotes}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
@@ -503,6 +509,8 @@ function load_options() {
 		$("#showallachievements").prop('checked', settings.showallachievements);
 		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
+		$("#fadevotedgreenlightitems").prop('checked', settings.fadevotedgreenlightitems);
+		$("#previewgreenlightvotes").prop('checked', settings.previewgreenlightvotes);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
