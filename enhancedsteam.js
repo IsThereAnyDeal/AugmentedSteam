@@ -2127,7 +2127,7 @@ function drm_warnings(type) {
 
 // Remove all items from cart
 function add_empty_cart_button() {
-	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/\";location.reload();' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings.empty_cart + "</span></a>";
+	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/; expires=Thu, 01-Jan-1970 00:00:01 GMT;\" location.reload();' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings.empty_cart + "</span></a>";
 
 	jQuery('.checkout_content').each(function () {
 		$(this).prepend(addtext);
