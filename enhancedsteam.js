@@ -472,7 +472,7 @@ function highlight_node(node, color) {
 			
 		// Carousel item
 		if (node.classList.contains("cluster_capsule")) {
-			$node = $(node).find(".main_cap_content");
+			$node = $(node).find(".main_cap_content").parent();
 		}
 
 		// Genre Carousel items
