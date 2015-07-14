@@ -6667,7 +6667,7 @@ function add_total_drops_count() {
 					// First, get the contents of the first page
 					$(".progress_info_bold").each(function(i, obj) {
 						var parent = $(obj).parent().parent();
-						if (parent.html().trim().match(/^<div class="badge_title_stats">/)) {
+						if ($(parent).find(".progress_info_bold")[0]) {
 							game_tiles.push(parent);
 						}
 					});
@@ -6689,7 +6689,7 @@ function add_total_drops_count() {
 								var html = $.parseHTML(data);
 								$(html).find(".progress_info_bold").each(function(i, obj) {
 									var parent = $(obj).parent().parent();
-									if (parent.html().trim().match(/^<div class="badge_title_stats">/)) {
+									if ($(parent).find(".progress_info_bold")[0]) {
 										game_tiles.push(parent);
 									}
 								});
@@ -6707,7 +6707,7 @@ function add_total_drops_count() {
 		} else {
 			$(".progress_info_bold").each(function(i, obj) {
 				var parent = $(obj).parent().parent();
-				if (parent.html().trim().match(/^<div class="badge_title_stats">/)) {
+				if ($(parent).find(".progress_info_bold")[0]) {
 					game_tiles.push(parent);
 				}
 			});

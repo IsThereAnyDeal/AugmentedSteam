@@ -1,5 +1,6 @@
 v7.6
 -----
+: Fixed an issue with remaining card drop calculations on badge pages
 
 
 v7.5.2
