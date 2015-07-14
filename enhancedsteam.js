@@ -6526,7 +6526,7 @@ function add_gamecard_market_links(game) {
 // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
 function add_badge_completion_cost() {
 	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
-		$(".profile_xp_block_right").after("<div id='es_cards_worth'></div>");
+		$(".profile_xp_block_right").html("<div id='es_cards_worth'></div>");
 		get_http("//store.steampowered.com/app/220/", function(txt) {
 			var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
 			var currency_type = currency_symbol_to_type(currency_symbol);
@@ -6657,8 +6657,8 @@ function add_total_drops_count() {
 			game_tiles = [];
 
 		if ($(".pagebtn").length > 0) {
-			if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {
-				$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>" + localized_strings.drop_calc + "</span>").css("cursor", "pointer");
+			if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {				
+				$(".profile_xp_block_right").prepend("<span id='es_calculations' style='color: #fff;'>" + localized_strings.drop_calc + "</span>").css("cursor", "pointer");
 
 				$("#es_calculations").click(function() {
 					$(".profile_xp_block_right").css("cursor", "default");
@@ -6723,7 +6723,7 @@ function add_total_drops_count() {
 				}
 			});
 
-			$(".profile_xp_block_right").html("<span id='es_calculations' style='color: #fff;'>" + localized_strings.card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings.games_with_drops.replace("__dropsgames__", drops_games) + "</span>");
+			$("#es_calculations").html(localized_strings.card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings.games_with_drops.replace("__dropsgames__", drops_games));
 
 			get_http("//steamcommunity.com/my/ajaxgetboostereligibility/", function(txt) {
 				var eligible = $.parseHTML(txt);
