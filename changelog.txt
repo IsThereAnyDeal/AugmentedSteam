@@ -1,5 +1,6 @@
 v7.6
 -----
++ Added an option to use dynamic data while browsing Greenlight pages
 : Fixed an issue with remaining card drop calculations on badge pages
 
 

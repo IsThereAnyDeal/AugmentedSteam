@@ -308,6 +308,7 @@
         "hide_install": "Hide \"Install Steam\" button",
         "lowestprice_coupon": "Include coupon codes in price comparison",
         "greenlight_banner": "Replace Steam Greenlight banner",
+        "dynamicgreenlight": "Use dynamic data while browsing Greenlight",
         "general": "General",
         "show_languagewarning": "Show warning if browsing in a language other than",
         "wishlist": "Items on your wishlist"

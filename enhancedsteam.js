@@ -2746,9 +2746,8 @@ function hide_greenlight_banner() {
 
 function preview_greenlight_votes() {
 	storage.get(function(settings) {
-		if (settings.fadevotedgreenlightitems === undefined) { settings.fadevotedgreenlightitems = false; storage.set({'fadevotedgreenlightitems': settings.fadevotedgreenlightitems}); }
-		if (settings.previewgreenlightvotes === undefined) { settings.previewgreenlightvotes = false; storage.set({'previewgreenlightvotes': settings.previewgreenlightvotes}); }
-		if (settings.fadevotedgreenlightitems || settings.previewgreenlightvotes) {
+		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
+		if (settings.dynamicgreenlight) {
 			$("a").each(function() {
 				if (this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=")) {
 					var parent = $(this).parent();
@@ -2759,12 +2758,8 @@ function preview_greenlight_votes() {
 					}).done(function (data) {
 						match = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
 						if (match) {
-							if (settings.fadevotedgreenlightitems) {
-								this.addClass("gh_fade");
-							}
-							if (settings.previewgreenlightvotes) {
-								this.addClass("gh_vote_" + match[1].toLowerCase());
-							}
+							this.addClass("gh_fade");
+							this.addClass("gh_vote_" + match[1].toLowerCase());
 						}
 					});
 				}
