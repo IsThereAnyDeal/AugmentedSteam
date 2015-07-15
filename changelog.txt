@@ -1,6 +1,7 @@
 v7.6
 -----
 + Added an option to use dynamic data while browsing Greenlight pages
++ Added Twitch integration to Steam profiles that contain a link to the user's Twitch page
 : Fixed an issue with remaining card drop calculations on badge pages
 
 

@@ -318,6 +318,12 @@
         "loading": "Enhanced Steam loading data...",
         "ready": "Enhanced Steam ready"
     },
+    "twitch": {
+        "now_streaming": "__username__ is live streaming on Twitch",
+        "viewers": "Viewers",
+        "followers": "Followers",
+        "views": "Views"
+    },
     "select": {
         "wishlisted_dlc": "Select Wishlisted DLC",
         "none": "Select None",
