@@ -2752,14 +2752,28 @@ function preview_greenlight_votes() {
 				if (this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=")) {
 					var parent = $(this).parent();
 					if (parent.hasClass("gh_checked") || !parent.hasClass("workshopItem")) return;
+					parent.addClass("gh_checked");
 					$.ajax({
 						url: this.href,
 						context: parent
 					}).done(function (data) {
-						match = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
-						if (match) {
+						var match_vote = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
+						if (match_vote) {
 							this.addClass("gh_fade");
-							this.addClass("gh_vote_" + match[1].toLowerCase());
+							this.addClass("gh_vote_" + match_vote[1].toLowerCase());
+						}
+						var match_favorited = data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*[^>]*>([^<]*)</);
+						var match_followed = data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*[^>]*>([^<]*)</);
+						if (match_favorited || match_followed) {
+							console.log($(this));
+							var indicators_right = $("<div class='gh_indicators gh_indicators_right'></div>");
+							if (match_favorited) {
+								indicators_right.append("<div class='gh_indicators gh_favorited' title='"+match_favorited[1]+"'></div>");
+							}
+							if (match_followed) {
+								indicators_right.append("<div class='gh_indicators gh_followed' title='"+match_followed[1]+"'></div>");
+							}
+							$(this).prepend(indicators_right);
 						}
 					});
 				}
