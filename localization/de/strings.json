@@ -307,6 +307,8 @@
     "hide_install":"\"Steam installieren\" Schaltfläche verbergen",
     "lowestprice_coupon":"Gutscheine in den Preisvergleich mit einbeziehen",
     "greenlight_banner":"Greenlight Banner ersetzen",
+    "greenlight_fade_voted":"Abgestimmte Greenlight-Spiele ausblenden",
+    "greenlight_vote_preview":"Vorschau für Greenlight-Stimme",
     "general":"Allgemeines",
     "show_languagewarning":"Warnung anzeigen wenn eine andere Sprache dargestellt wird als",
     "wishlist":"Spiele auf meiner Wunschliste"

@@ -759,3 +759,27 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	color: #61686d;
 	font-weight: normal;
 }
+
+.gh_fade div {
+	opacity: 0.2;
+}
+.gh_vote_up:before, .gh_vote_down:before, .gh_vote_later:before {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	padding: 5px;
+	background: rgba(0, 0, 0, 0.6);
+}
+.gh_fade:before {
+	background: none;
+}
+.gh_vote_up:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
+}
+.gh_vote_down:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
+}
+.gh_vote_later:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
+}
+
