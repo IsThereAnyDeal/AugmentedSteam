@@ -4131,7 +4131,7 @@ var ea_appids, ea_promise = (function () {
 })();
 
 // Check for Early Access titles
-function check_early_access(node, image_name, image_left, selector_modifier, action) {
+function check_early_access(node, image_left, selector_modifier) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
@@ -4145,12 +4145,18 @@ function check_early_access(node, image_name, image_left, selector_modifier, act
 				}
 			}
 			var early_access = JSON.parse(ea_appids);
-			if (early_access) {				
+			if (early_access) {
 				if (early_access["ea"].indexOf(appid) >= 0) {
 					var selector = "img";
 					if (selector_modifier != undefined) selector += selector_modifier;
-					overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL("img/overlay/" + image_name) + "'>");
+					var image_name = "img/overlay/early_access_banner_english.png";
+					if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
+					overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL(image_name) + "'>");
 					$(overlay_img).css({"left":image_left+"px"});
+					var height = $(node).find(selector.trim()).height() / 1.6;
+					if (height > 120) height = 120;
+					$(overlay_img).css({"height":height+"px"});
+					$(overlay_img).css("width", "initial");
 					$(node).find(selector.trim()).before(overlay_img);
 				}
 			}
@@ -4169,73 +4175,74 @@ function process_early_access() {
 						switch (true) {
 							case /^\/app\/.*/.test(window.location.pathname):
 								$(".game_header_image").append("<a href='" + window.location.href + "'></a>");
-								$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-								$(".small_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
+								$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+								$(".small_cap").each(function(index, value) { check_early_access($(this), 15); });
 								break;
 							case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
-								$(".tab_item").each(function(index, value) { check_early_access($(this), "ea_231x87.png", 0, ":last"); });
-								$(".special_tiny_cap").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-								$(".dq_item:not(:first-child)").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-								$(".discovery_queue:not(:first-child)").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
+								$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
+								$(".special_tiny_cap").each(function(index, value) { check_early_access($(this)); });
+								$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
+								$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
+								$(".dq_item:not(:first-child)").each(function(index, value) { check_early_access($(this)); });
+								$(".discovery_queue:not(:first-child)").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/search\/.*/.test(window.location.pathname):
-								$(".search_result_row").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
+								$(".search_result_row").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/recommended/.test(window.location.pathname):
-								$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-								$(".header_image").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-								$(".appheader").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
-								$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
-								$(".game_capsule_area").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left + 8); });
-								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", $(this).position().left); });
-								$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+								$(".header_image").each(function(index, value) { check_early_access($(this)); });
+								$(".appheader").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+								$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
+								$(".game_capsule_area").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
+								$(".game_capsule").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+								$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/tag\/.*/.test(window.location.pathname):
-								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-								$(".tab_row").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-								$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", $(this).position().left); });
+								$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
+								$(".tab_row").each(function(index, value) { check_early_access($(this)); });
+								$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), $(this).position().left); });
 								break;
 							case /^\/$/.test(window.location.pathname):
-								$(".home_smallcap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 15); });
-								$(".cap").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-								$(".special").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-								$(".game_capsule").each(function(index, value) { check_early_access($(this), "ea_sm_120.png", 0); });
-								$(".cluster_capsule").each(function(index, value) { check_early_access($(this), "ea_467x181.png", 0); });
-								$(".recommended_spotlight_ctn").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-								$(".curated_app_link").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
-								$(".tab_item").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0, ":last"); });
-								$(".dailydeal_ctn").find("a").each(function(index, value) { check_early_access($(this), "ea_292x136.png", 0); });
+								$(".home_smallcap").each(function(index, value) { check_early_access($(this), 15); });
+								$(".cap").each(function(index, value) { check_early_access($(this)); });
+								$(".special").each(function(index, value) { check_early_access($(this)); });
+								$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
+								$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
+								$(".recommended_spotlight_ctn").each(function(index, value) { check_early_access($(this)); });
+								$(".curated_app_link").each(function(index, value) { check_early_access($(this)); });
+								$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
+								$(".dailydeal_ctn").find("a").each(function(index, value) { check_early_access($(this)); });
 								break;
 						}
 					case "steamcommunity.com":
 						switch(true) {
 							case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-								$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
+								$(".gameLogo").each(function(index, value) { check_early_access($(this), 4); });
 								break;
 							case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-								$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
+								$(".gameLogo").each(function(index, value) { check_early_access($(this), 4); });
 								break;
 							case /^\/(?:id|profiles)\/(.+)\/followedgames/.test(window.location.pathname):
-								$(".gameLogo").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 4); });
+								$(".gameLogo").each(function(index, value) { check_early_access($(this), 4); });
 								break;
 							case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
 								$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
-									check_early_access($(this), "ea_231x87.png", $(this).position().left);
+									check_early_access($(this), $(this).position().left);
 								});
 								break;
 							case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):
-								$(".leftcol").each(function(index, value) { check_early_access($(this), "ea_184x69.png", $(this).position().left + 8); });
+								$(".leftcol").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
 								break;
 							case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
-								$(".game_info_cap").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
-								$(".showcase_slot").each(function(index, value) { check_early_access($(this), "ea_184x69.png", 0); });
+								$(".game_info_cap").each(function(index, value) { check_early_access($(this)); });
+								$(".showcase_slot").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/app\/.*/.test(window.location.pathname):
 								if ($(".apphub_EarlyAccess_Title").length > 0) {
-									$(".apphub_StoreInfoHeader").css({"position":"relative"})
-									$(".apphub_StoreAppLogo:first").after("<img class='es_overlay ea_app_overlay' src='" + chrome.extension.getURL("img/overlay/ea_292x136.png") + "'>");
+									$(".apphub_StoreAppLogo:first").wrap("<div id='es_ea_apphub'><a href='" + window.location.href + "'></a></div>");
+									check_early_access($("#es_ea_apphub"), $(".apphub_StoreAppLogo:first").position().left + 22);
+									setTimeout(function(){ $("#es_ea_apphub .es_overlay").css("margin-top", "15px"); }, 100);
 								}
 						}
 				}
@@ -5256,7 +5263,7 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("tab_item")) {
 					runInPageContext("function() { GDynamicStore.DecorateDynamicItems( jQuery('.tab_item') ) }");
 					start_highlighting_node(node);
-					check_early_access(node, "ea_231x87.png", 0, ":last");
+					check_early_access(node, 0, ":last");
 				}
 
 				if (node.id == "search_result_container") {
@@ -5278,12 +5285,12 @@ function bind_ajax_content_highlighting() {
 
 				if (node.classList && node.classList.contains("match")) { 
 					start_highlighting_node(node);
-					check_early_access(node, "ea_184x69.png", 0);
+					check_early_access(node);
 				}
 
 				if (node.classList && node.classList.contains("search_result_row")) {
 					start_highlighting_node(node);
-					check_early_access(node, "ea_sm_120.png", 0);
+					check_early_access(node);
 				}
 
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
