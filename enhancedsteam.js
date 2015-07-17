@@ -6857,6 +6857,41 @@ function add_friends_that_play() {
 	});
 }
 
+function add_friends_playtime_sort() {
+	$("#memberList").find(".mainSectionHeader").eq(1).append(" (<span id='es_default_sort' style='text-decoration: underline; cursor: pointer;'>" + localized_strings.sort_by.replace(":", "") + " " + localized_strings.theworddefault + "</span> | <span id='es_playtime_sort' style='cursor: pointer;'>" + localized_strings.sort_by.replace(":", "") + " Playtime</span>)");
+	$("#memberList").children(".profile_friends").eq(1).attr("id", "es_friends_default");
+	var sorted = $("#es_friends_default").clone();
+	$(sorted).attr("id", "es_friends_playtime").hide();
+	$("#es_friends_default").after("<div style='clear: both'></div>").after(sorted);
+
+	$("#es_playtime_sort").click(function() {
+		$("#es_playtime_sort").css("text-decoration", "underline");
+		$("#es_default_sort").css("text-decoration", "none");
+		$("#es_friends_default").hide();
+		$("#es_friends_playtime").show();
+		var friendArray = [];
+		$("#es_friends_default").find(".friendBlock").each(function(index, value) {
+			var push = new Array();
+			push[0] = $(value).clone();
+			push[1] = $(value).find(".friendSmallText").text().match(/(\d+(\.\d+)?)/)[0];
+			friendArray.push(push);
+		});
+		friendArray.sort(function(a,b) { return parseFloat(b[1]) - parseFloat(a[1]); });
+		$("#es_friends_playtime").html("");
+		$(friendArray).each(function(index, value) {
+			console.log(value[0]);
+			$("#es_friends_playtime").append(value[0]);
+		});
+	});
+
+	$("#es_default_sort").click(function() {
+		$("#es_default_sort").css("text-decoration", "underline");
+		$("#es_playtime_sort").css("text-decoration", "none");
+		$("#es_friends_playtime").hide();
+		$("#es_friends_default").show();
+	});
+}
+
 function add_decline_button() {
 	if (window.location.href.match(/tradeoffers\/?$/)) {
 		$(".maincontent .profile_leftcol .tradeoffer").each(function(index) {
@@ -7224,6 +7259,7 @@ $(document).ready(function(){
 
 						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
 							add_friends_that_play();
+							add_friends_playtime_sort();
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(path):
