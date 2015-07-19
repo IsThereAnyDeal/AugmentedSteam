@@ -111,9 +111,9 @@
   "news":"Noutăți",
   "check_system":"Verifică sistemul meu",
   "custom_background":"Imagine de fundal personalizată",
-  "custom_style":"Custom Theme",
-  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
-  "noneselected":"None Selected \/ No Change",
+  "custom_style":"Stil particularizat",
+  "custom_style_help":"Toti ulitizatorii de Enchanced Steam vor vedea tema pe profilul tau. Utilizatorii non Enchanced Steam nu vor vedea nici o modificare.",
+  "noneselected":"Nici o tema",
   "most_drops":"Cele mai multe cărți de schimb obținute",
   "badge_foil_progress":"Vezi progres insignă înfoliată",
   "net_gain":"Câștigat net",
@@ -214,13 +214,13 @@
     "private_profile":"Change your profile status to public <a href='http:\/\/steamcommunity.com\/my\/edit\/settings'>in your settings<\/a> to use this feature."
   },
   "spy":{
-    "player_data":"Player Data",
-    "owners":"Owners",
-    "players_total":"Players total",
-    "players_2weeks":"Players in the last two weeks",
-    "average_playtime":"Average playtime",
-    "average_playtime_2weeks":"Average playtime in the last two weeks",
-    "formatted_time":"__hours__ hours, __minutes__ minutes"
+    "player_data":"Date jucator",
+    "owners":"Detinatori",
+    "players_total":"Jucatori",
+    "players_2weeks":"Jucatori in ultimele doua saptamani",
+    "average_playtime":"Timp acordat jocului in medie",
+    "average_playtime_2weeks":"Timp acordat jocului in medie in ultimele doua saptamani:",
+    "formatted_time":"_hours_ ore, _minutes_ minute"
   },
   "options":{
     "wsgf":"Afișează informații WSGF (Panoramic)",
@@ -282,7 +282,7 @@
     "show_astatslink":"Afișează link AStats pe paginile aplicațiilor",
     "guest":"Produse care le ai ca invitație",
     "show_steamchart_info":"Afișează informații SteamCharts.com",
-    "show_steamspy_info":"Show steamspy.com info",
+    "show_steamspy_info":"Arata informatii de pe steamspy.com",
     "showallachievements":"Arată statisticile realizărilor pe pagina \"Toate jocurile\"",
     "lowestprice_onwishlist":"Afișează în Lista de dorințe",
     "steamrepapi":"Arată status-ul SteamRep pe paginile de profil",

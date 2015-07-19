@@ -220,7 +220,7 @@
     "players_2weeks":"Spelare under de två senaste veckorna",
     "average_playtime":"Genomsnittliga speltid",
     "average_playtime_2weeks":"Genomsnittliga speltid under de senaste två veckorna",
-    "formatted_time":"__hours__ hours, __minutes__ minutes"
+    "formatted_time":"__hours__ timmar, __minutes__ minuter"
   },
   "options":{
     "wsgf":"Visa WSGF (Widescreen) information",

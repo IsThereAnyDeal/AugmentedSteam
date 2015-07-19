@@ -112,7 +112,7 @@
   "check_system":"Verifica o teu sistema",
   "custom_background":"Fundo Personalizado",
   "custom_style":"Tema Personalizado",
-  "custom_style_help":"All users of Enhanced Steam will see this theme on your profile.  Non-Enhanced Steam users will not see any theme changes made here.",
+  "custom_style_help":"Todos os utilizadores do Enhanced Steam irão ver este tema no teu perfil. Utilizadores sem o Enhanced Steam não irão ver nenhuma alteração feita aqui.",
   "noneselected":"Nada Selecionado \/ Sem Mudanças",
   "most_drops":"Mais cartas para obter",
   "badge_foil_progress":"Ver o progresso da Medalha \"Foil\"",
@@ -220,7 +220,7 @@
     "players_2weeks":"Jogadores nas últimas duas semanas",
     "average_playtime":"Média de tempo de jogo",
     "average_playtime_2weeks":"Tempo médio jogado nas últimas duas semanas",
-    "formatted_time":"__hours__ hours, __minutes__ minutes"
+    "formatted_time":"__hours__ horas, __minutes__ minutos"
   },
   "options":{
     "wsgf":"Mostrar informação WSGF (ecrã panorâmico)",
