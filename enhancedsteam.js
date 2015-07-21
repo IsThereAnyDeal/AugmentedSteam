@@ -4153,7 +4153,7 @@ function check_early_access(node, image_left, selector_modifier) {
 					if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
 					overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL(image_name) + "'>");
 					$(overlay_img).css({"left":image_left+"px"});
-					var height = $(node).find(selector.trim()).height() / 1.6;
+					var height = $(node).height() / 1.6;
 					if (height > 120) height = 120;
 					$(overlay_img).css({"height":height+"px"});
 					$(overlay_img).css("width", "initial");
