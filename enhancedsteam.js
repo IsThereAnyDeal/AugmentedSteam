@@ -3881,25 +3881,26 @@ function survey_data_from_site(appid) {
 				html += "<p><b>Framerate</b>: " + Math.round(data["frp"]) + "% responded that the framerate was "
 				switch (data["fr"]) {
 					case "30": html += "<span style='color: #8f0e10;'>fixed at 30fps or lower</span>"; break;
-				 	case "fi": html += "<span style='color: yellow;'>fixed at higher than 30fps</span>"; break;
-				 	case "va": html += "<span style='color: green;'>variable, dependant on hardware</span>"; break;
+				 	case "fi": html += "<span style='color: #e1c48a;'>fixed at higher than 30fps</span>"; break;
+				 	case "va": html += "<span style='color: #8BC53F;'>variable, dependant on hardware</span>"; break;
 				}				
 				html += "<br><b>Resolution</b>: This game appears to support "
 				switch (data["mr"]) {
 					case "less": html += "<span style='color: #8f0e10;'>less than 1920x1080 resolution</span>"; break;
-					case "hd": html += "<span style='color: green;'>up to 1920x1080 (HD) resolution</span>"; break;
-					case "wqhd": html += "<span style='color: green;'>up to 2560x1440 (WQHD) resolution</span>"; break;
-					case "4k": html += "<span style='color: green;'>up to 3840x2160 (4K) resolution</span>"; break;
+					case "hd": html += "<span style='color: #8BC53F;'>up to 1920x1080 (HD) resolution</span>"; break;
+					case "wqhd": html += "<span style='color: #8BC53F;'>up to 2560x1440 (WQHD) resolution</span>"; break;
+					case "4k": html += "<span style='color: #8BC53F;'>up to 3840x2160 (4K) resolution</span>"; break;
 				}
 				html += "<br><b>Graphics Settings</b>: ";
 				if (data["gs"]) {
-					html += "<span style='color: green;'>Has built-in graphic options or a graphics menu</span></p>";
+					html += "<span style='color: #8BC53F;'>Has built-in graphic options or a graphics menu</span></p>";
 				} else {
 					html += "<span style='color: #8f0e10;'>Does not have built-in graphic options or a graphics menu</span></p>";
 				}
 				if (data["nvidia"] || data["amd"] || data["intel"] || data["other"]) {
 					html += "<p><b>Performance Satisfaction by GPU</b>:";
 					html += "<div class='performance-graph'>";
+					data["nvidia"]=91;
 					if (data["nvidia"]) {
 						if (data["nvidia"] > 90) {
 							html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia " + data["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'></div></div>";
