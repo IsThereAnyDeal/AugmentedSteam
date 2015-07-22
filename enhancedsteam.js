@@ -2294,6 +2294,20 @@ function appdata_on_wishlist() {
 				var storefront_data = JSON.parse(data);
 				$.each(storefront_data, function(appid, app_data) {
 					if (app_data.success) {
+						storage.get(function(settings) {
+							if (settings.store_sessionid) {
+								// Add "Add to Cart" button
+								if (app_data.data.packages && app_data.data.packages[0]) {
+									var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
+									htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
+									htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
+									htmlstring += '<input type="hidden" name="sessionid" value="' + settings.store_sessionid + '">';
+									htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
+									htmlstring += '</form>';
+									$(node).before('</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btnv6_green_white_innerfade btn_small"><span>' + localized_strings.add_to_cart + '</span></a>  ');
+								}
+							}
+						});
 						// Add platform information
 						if (app_data.data.platforms) {
 							var htmlstring = "";
@@ -5736,6 +5750,14 @@ function set_html5_video() {
 	});
 }
 
+function get_store_session() {
+	if (is_signed_in) {
+		if (cookie.match(/sessionid+=([^\\s;]*);/)) {
+			storage.set({'store_sessionid': cookie.match(/sessionid+=([^\\s;]*);/)[1] });
+		}	
+	}
+}
+
 function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
@@ -7282,6 +7304,7 @@ $(document).ready(function(){
 					bind_ajax_content_highlighting();
 					hide_trademark_symbols();
 					set_html5_video();
+					get_store_session();
 					break;
 
 				case "steamcommunity.com":
