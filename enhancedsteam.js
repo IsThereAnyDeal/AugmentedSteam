@@ -3875,30 +3875,30 @@ function survey_data_from_site(appid) {
 	if ($("div.game_area_dlc_bubble").length == 0) {
 		get_http("//api.enhancedsteam.com/survey/?appid=" + appid, function(txt) {
 			var data = JSON.parse(txt);
-			var html = "<div id='performance_survey' class='game_area_description'><h2>Performance Survey</h2>";
+			var html = "<div id='performance_survey' class='game_area_description'><h2>" + localized_strings.survey.performance_survey + "</h2>";
 			if (data["success"]) {
-				html += "<p>" + data["responses"] + " users have completed the performance survey for this game.</p>";
-				html += "<p><b>Framerate</b>: " + Math.round(data["frp"]) + "% responded that the framerate was "
+				html += "<p>" + localized_strings.survey.users.replace("__users__", data["responses"]) + ".</p>";
+				html += "<p><b>" + localized_strings.survey.framerate + "</b>: " + Math.round(data["frp"]) + "% " + localized_strings.survey.framerate_response + " "
 				switch (data["fr"]) {
-					case "30": html += "<span style='color: #8f0e10;'>fixed at 30fps or lower</span>"; break;
-				 	case "fi": html += "<span style='color: #e1c48a;'>fixed at higher than 30fps</span>"; break;
-				 	case "va": html += "<span style='color: #8BC53F;'>variable, dependant on hardware</span>"; break;
+					case "30": html += "<span style='color: #8f0e10;'>" + localized_strings.survey.framerate_30 + "</span>"; break;
+				 	case "fi": html += "<span style='color: #e1c48a;'>" + localized_strings.survey.framerate_fi + "</span>"; break;
+				 	case "va": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.framerate_va + "</span>"; break;
 				}
-				html += "<br><b>Resolution</b>: This game appears to support "
+				html += "<br><b>" + localized_strings.survey.resolution + "</b>: " + localized_strings.survey.resolution_support + " "
 				switch (data["mr"]) {
-					case "less": html += "<span style='color: #8f0e10;'>less than 1920x1080 resolution</span>"; break;
-					case "hd": html += "<span style='color: #8BC53F;'>up to 1920x1080 (HD) resolution</span>"; break;
-					case "wqhd": html += "<span style='color: #8BC53F;'>up to 2560x1440 (WQHD) resolution</span>"; break;
-					case "4k": html += "<span style='color: #8BC53F;'>up to 3840x2160 (4K) resolution</span>"; break;
+					case "less": html += "<span style='color: #8f0e10;'>" + localized_strings.survey.resolution_less.replace("__pixels__", "1920x1080") + "</span>"; break;
+					case "hd": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)") + "</span>"; break;
+					case "wqhd": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)") + "</span>"; break;
+					case "4k": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)") + "</span>"; break;
 				}
-				html += "<br><b>Graphics Settings</b>: ";
+				html += "<br><b>" + localized_strings.survey.graphics_settings + "</b>: ";
 				if (data["gs"]) {
-					html += "<span style='color: #8BC53F;'>Has built-in graphic options or a graphics menu</span></p>";
+					html += "<span style='color: #8BC53F;'>" + localized_strings.survey.gs_y + "</span></p>";
 				} else {
-					html += "<span style='color: #8f0e10;'>Does not have built-in graphic options or a graphics menu</span></p>";
+					html += "<span style='color: #8f0e10;'>" + localized_strings.survey.gs_n + "</span></p>";
 				}
 				if (data["nvidia"] || data["amd"] || data["intel"] || data["other"]) {
-					html += "<p><b>Performance Satisfaction by GPU</b>:";
+					html += "<p><b>" + localized_strings.survey.satisfaction + "</b>:";
 					html += "<div class='performance-graph'>";
 					if (data["nvidia"]) {
 						if (data["nvidia"] > 90) {
@@ -3926,14 +3926,14 @@ function survey_data_from_site(appid) {
 							html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other " + data["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'></div></div>";
 						} else {
 							html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div>";
-						}	
-					}	
+						}
+					}
 					html += "</div>";
 				}
 			} else {
-				html += "<p>Nobody has taken a performance survey for this game yet.</p>";
+				html += "<p>" + localized_strings.survey.nobody + ".</p>";
 			}
-			html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>Take The Survey</span></a>";
+			html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + localized_strings.survey.take + "</span></a>";
 			html += "</div>";
 			$(".sys_req").parent().after(html);
 		});
