@@ -9,6 +9,7 @@
   "homepage_spotlight":"Centrum uwagi",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Usuń",
+  "get_help":"Pomoc",
   "add_selected_dlc_to_cart":"Dodaj zaznaczone DLC do koszyka",
   "credits":"Autorzy",
   "store_transactions":"Transakcje w sklepie",
@@ -307,6 +308,7 @@
     "hide_install":"Ukryj przycisk \"Zainstaluj Steam\"",
     "lowestprice_coupon":"Uwzględnij kody rabatowe w porównaniu cen",
     "greenlight_banner":"Zastąp baner Steam Greenlight",
+    "dynamicgreenlight":"Użyj danych dynamicznych podczas przeglądania Greenlight",
     "general":"Ogólne",
     "show_languagewarning":"Pokaż ostrzeżenie, gdy Steam przeglądany jest w innym języku niż",
     "wishlist":"Tytuły na liście życzeń"
@@ -315,6 +317,31 @@
     "errormsg":"Błąd wczytywania danych Enhanced Steam",
     "loading":"Wczytywanie danych Enhanced Steam...",
     "ready":"Enhanced Steam jest gotowy"
+  },
+  "twitch":{
+    "now_streaming":"__username__ streamuje teraz na Twitchu",
+    "viewers":"Widzowie",
+    "followers":"Followerzy",
+    "views":"Wyświetlenia"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Ilość klatek na sekundę",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Weź udział w ankiecie"
   },
   "select":{
     "wishlisted_dlc":"Zaznacz DLC z listy życzeń",

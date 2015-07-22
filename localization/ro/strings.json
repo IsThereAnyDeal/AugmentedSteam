@@ -9,6 +9,7 @@
   "homepage_spotlight":"Articole promovate",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Șterge",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"Adaugă DLC-ul selectat în coșul de cumpărături",
   "credits":"Credite",
   "store_transactions":"Tranzacții Magazin",
@@ -307,6 +308,7 @@
     "hide_install":"Ascunde butonul \"Instalează Steam\"",
     "lowestprice_coupon":"Include coduri promoționale în compararea prețurilor",
     "greenlight_banner":"Înlocuiește banner-ul Undă Verde Steam",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
     "general":"Setări generale",
     "show_languagewarning":"Arată un avertisment dacă navigarea este într-o alta limbă decât",
     "wishlist":"Produse în lista de dorințe"
@@ -315,6 +317,31 @@
     "errormsg":"Eroare la încărcarea datelor Enhanced Steam",
     "loading":"Enhanced Steam se încarcă datele...",
     "ready":"Enhanced Steam pregătit"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"Selectează DLC-uri dorite",

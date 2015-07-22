@@ -9,6 +9,7 @@
   "homepage_spotlight":"Offre spéciale",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Retirer",
+  "get_help":"Obtenir de l'aide",
   "add_selected_dlc_to_cart":"Ajouter les DLC sélectionnés au panier",
   "credits":"Crédits",
   "store_transactions":"Transactions dans le magasin",
@@ -307,6 +308,7 @@
     "hide_install":"Cacher le bouton \"Installer Steam\"",
     "lowestprice_coupon":"Inclure les codes des coupons dans la comparaison des prix",
     "greenlight_banner":"Remplacer la bannière Steam Greenlight",
+    "dynamicgreenlight":"Utiliser des données dynamiques tout en naviguant dans Greenlight",
     "general":"Général",
     "show_languagewarning":"Afficher un avertissement si vous naviguez dans une langue autre que",
     "wishlist":"Articles dans votre liste de souhaits"
@@ -315,6 +317,31 @@
     "errormsg":"Erreur lors du chargement des données d'Enhanced Steam",
     "loading":"Chargement des données d'Enhanced Steam...",
     "ready":"Enhanced Steam prêt"
+  },
+  "twitch":{
+    "now_streaming":"__username__ diffuse en direct sur Twitch",
+    "viewers":"Spectateurs",
+    "followers":"Abonnés",
+    "views":"Vues"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"Sélectionner les DLC de la liste de souhaits",

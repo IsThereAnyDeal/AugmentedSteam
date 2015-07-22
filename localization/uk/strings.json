@@ -9,6 +9,7 @@
   "homepage_spotlight":"Spotlight",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Прибрати",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"Додати виділені доповнення до кошика",
   "credits":"автори",
   "store_transactions":"Операції в магазині",
@@ -307,6 +308,7 @@
     "hide_install":"Сховати кнопку «Встановити Steam»",
     "lowestprice_coupon":"Включати купони в цінові порівняння",
     "greenlight_banner":"Замінити банер Steam Greenlight",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
     "general":"головне",
     "show_languagewarning":"Відображати попередження, якщо сторінка відкрита на іншій мові",
     "wishlist":"Предмети списку побажань"
@@ -315,6 +317,31 @@
     "errormsg":"Помилка завантаження даних Enhanced Steam",
     "loading":"Enhanced Steam завантажує дані...",
     "ready":"Enhanced Steam готовий"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"Вибрати доповнення зі списку бажаного",

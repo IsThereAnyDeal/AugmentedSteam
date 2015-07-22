@@ -9,6 +9,7 @@
   "homepage_spotlight":"スポットライト",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"削除",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"選択したDLCをカートに追加",
   "credits":"クレジット",
   "store_transactions":"ストアでの取引",
@@ -307,6 +308,7 @@
     "hide_install":"ヘッダーの\"Steamをインストール\"ボタンを非表示",
     "lowestprice_coupon":"価格比較にクーポンコードを含める",
     "greenlight_banner":"Steam Greenlightのバナーを置き換える",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
     "general":"全般",
     "show_languagewarning":"別の言語で閲覧している場合警告を表示する",
     "wishlist":"ウィッシュリストにあるアイテム"
@@ -315,6 +317,31 @@
     "errormsg":"Enhanced Steam のデータロードエラー",
     "loading":"Enhanced Steam がデータをロード中……",
     "ready":"Enhanced Steam 準備完了"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"ウィッシュリストに入っているDLCを選択",

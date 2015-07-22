@@ -9,6 +9,7 @@
   "homepage_spotlight":"Προσκήνιο",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Αφαίρεση",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"Προσθέστε τα επιλεγμένα DLC στο καλάθι αγορών",
   "credits":"Συντελεστές",
   "store_transactions":"Συναλλαγές Καταστήματος",
@@ -307,6 +308,7 @@
     "hide_install":"Απόκρυψη κουμπιού «Εγκατάσταση Steam»",
     "lowestprice_coupon":"Να περιλαμβάνονται κωδικοί κουπονιών στη σύγκριση τιμών",
     "greenlight_banner":"Αντικατάσταση του banner Steam Greenlight",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
     "general":"Γενικά",
     "show_languagewarning":"Show warning if browsing in a language other than",
     "wishlist":"αντικείμενα στην λίστα επιθυμιών σας"
@@ -315,6 +317,31 @@
     "errormsg":"Error loading Enhanced Steam data",
     "loading":"Enhanced Steam loading data...",
     "ready":"Enhanced Steam ready"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"Select Wishlisted DLC",

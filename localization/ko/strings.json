@@ -9,6 +9,7 @@
   "homepage_spotlight":"스포트라이트",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"제거",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"선택된 DLC를 장바구니에 추가",
   "credits":"개발진",
   "store_transactions":"상점 거래 금액",
@@ -307,6 +308,7 @@
     "hide_install":"\"Steam 설치\" 버튼을 숨김",
     "lowestprice_coupon":"가격 비교시 쿠폰 적용하기",
     "greenlight_banner":"스팀 그린라이트 배너를 대체합니다.",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
     "general":"일반",
     "show_languagewarning":"다음 언어 이외의 언어로 브라우징시 경고 보기",
     "wishlist":"찜 목록"
@@ -315,6 +317,31 @@
     "errormsg":"Enhanced Steam 데이터 로딩 오류",
     "loading":"Enhanced Steam 데이터 로딩중...",
     "ready":"Enhanced Steam 준비"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"찜한 상품 목록의 DLC를 선택",

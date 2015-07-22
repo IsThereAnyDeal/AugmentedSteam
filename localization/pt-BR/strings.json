@@ -9,6 +9,7 @@
   "homepage_spotlight":"Destaques",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Remover",
+  "get_help":"Obter ajuda",
   "add_selected_dlc_to_cart":"Adicionar selecionados ao carrinho",
   "credits":"Créditos",
   "store_transactions":"Transações na loja",
@@ -307,6 +308,7 @@
     "hide_install":"Ocultar botão \"Instale o Steam\"",
     "lowestprice_coupon":"Incluir cupons na comparação de preços",
     "greenlight_banner":"Substituir banner do Steam Greenlight",
+    "dynamicgreenlight":"Usar dados dinâmicos ao navegar pelo Greenlight",
     "general":"Geral",
     "show_languagewarning":"Exibir aviso caso esteja navegando em um idioma que não seja",
     "wishlist":"Itens na sua lista de desejos"
@@ -315,6 +317,31 @@
     "errormsg":"Erro ao carregar dados do Enhanced Steam",
     "loading":"Enhanced Steam está carregando dados...",
     "ready":"Enhanced Steam pronto"
+  },
+  "twitch":{
+    "now_streaming":"__username__ está transmitindo ao vivo na Twitch",
+    "viewers":"Espectadores",
+    "followers":"Seguidores",
+    "views":"Visualizações"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"Selecionar na lista de desejos",

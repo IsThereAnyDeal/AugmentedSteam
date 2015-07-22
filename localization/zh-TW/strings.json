@@ -9,6 +9,7 @@
   "homepage_spotlight":"焦點",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"移除",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"將選取的DLC加入購物車",
   "credits":"製作群",
   "store_transactions":"商店交易項目",
@@ -307,6 +308,7 @@
     "hide_install":"隱藏\"安裝Steam\"的按鈕",
     "lowestprice_coupon":"在價格比較中加入優惠券",
     "greenlight_banner":"替換Steam Greenlight橫幅",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
     "general":"一般",
     "show_languagewarning":"顯示語言警告除非是",
     "wishlist":"在願望清單上的項目"
@@ -315,6 +317,31 @@
     "errormsg":"Enhanced Steam 資料載入錯誤",
     "loading":"增強的蒸氣加載數據...",
     "ready":"提高蒸汽準備"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"選擇已加入願望清單的DLC",

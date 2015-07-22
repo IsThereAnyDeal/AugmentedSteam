@@ -9,6 +9,7 @@
   "homepage_spotlight":"Spotlight",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Премахни",
+  "get_help":"Get Help",
   "add_selected_dlc_to_cart":"Добави избраното допълните съдържание към количката",
   "credits":"Кредити",
   "store_transactions":"Транзакции в магазина",
@@ -197,15 +198,15 @@
   },
   "charts":{
     "peakall":"all-time peak",
-    "current":"Current Players",
+    "current":"Текущи играчи",
     "playing_now":"играят сега",
-    "peaktoday":"today's peak"
+    "peaktoday":"днешен връх"
   },
   "hltb":{
     "main_e":"Main Story and Extras",
     "compl":"Completionist",
     "submit":"Submit Your Time",
-    "main":"Main Story"
+    "main":"Основна история"
   },
   "library":{
     "error_loading_library":"Couldn't load your library.",
@@ -230,7 +231,7 @@
     "excludef2p":"Изключи безплатните игри от подчертаване",
     "contscroll":"Позволи непрекъснато скролване при търсене",
     "profile_link_images_none":"Липсва",
-    "replace_account_name":"Replace account name with community name",
+    "replace_account_name":"Замени името на акаунт с име на общността",
     "profile_links":"Покажи профилни линкове към",
     "library_header":"Library (BETA)",
     "tag":"Тагове",
@@ -244,7 +245,7 @@
     "show_package_info":"Show package info for all apps",
     "wlbuttoncommunityapp":"Show \"Add to Wishlist\" button on community app hubs",
     "regional_price_on":"Show regional price comparison",
-    "cart":"Items in your cart",
+    "cart":"Елементи във Вашата количка",
     "friends_own":"Предмети, които приятелите ви имат",
     "drm":"Покажи предупреждения за DRM от 3-ти страни",
     "profile_permalink":"Покажи пермалинкове в профили",
@@ -256,7 +257,7 @@
     "hidedlcunownedgames":"DLC-та за игри, които притежавате",
     "hltb":"Покажи инфо от HowLongToBeat.com",
     "hidespamcomments":"Скрий спам коментарите от Workshop и профили",
-    "hide_owned":"Items you own in search results and tag pages",
+    "hide_owned":"Предметите, които притежавате в резултат на търсене",
     "reset":"Reset options",
     "api_key":"API Key",
     "gift":"Предмети, запазени като подаръци",
@@ -269,7 +270,7 @@
     "about_text":"<div class=\"header\">About <a href='http:\/\/www.enhancedsteam.com'>Enhanced Steam<\/a>:<\/div><p>Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>Features include:<ul><li>Highlighting games you already own<\/li><li>Highlighting games on your wishlist<\/li><li>Correctly calculating bundle discounts based on games you already own<\/li><li>Showing you how much money you've spent on Steam for the lifetime of your account<\/li><li>Highlighting DLC you own on a game page<\/li><li>Fixing \"No Image Available\" game icons on your wishlist for any game or DLC<\/li><li>Pointing out titles with 3rd party DRM<\/li><\/ul><p>If you find this Extension useful, please consider donating.",
     "stores_all":"Compare all stores",
     "show_early_access_text":"Show Early Access image banners",
-    "author_info":"by jshackles",
+    "author_info":"от jshackles",
     "profile_link_images_gray":"Grayscale",
     "library_f2p":"Show played free to play games and demos in library",
     "inventory_market_text":"Show Market price on inventory page",
@@ -277,12 +278,12 @@
     "pcgw":"Покажи линкове от PCGamingWiki",
     "spamcommentregex":"Regular Expression string:",
     "hide_owned_homepage":"Items you own on the homepage",
-    "saved_note":"Options saved",
+    "saved_note":"Настройките са запазени",
     "regional_hideworld":"Hide globe indicator",
     "show_astatslink":"Show AStats link on app pages",
     "guest":"Игри, за които имате guest pass",
     "show_steamchart_info":"Покажи инфо от SteamCharts.com",
-    "show_steamspy_info":"Show steamspy.com info",
+    "show_steamspy_info":"Покажи информация от steamspy.com",
     "showallachievements":"Show achievement stats on \"All Games\" page",
     "lowestprice_onwishlist":"Show on Wishlist",
     "steamrepapi":"Show SteamRep status on profile pages",
@@ -307,7 +308,8 @@
     "hide_install":"Скрий \"Инсталирай Steam\"",
     "lowestprice_coupon":"Включи кодове за купони в сравнение на цената",
     "greenlight_banner":"Замени банера на Steam Greenlight",
-    "general":"General",
+    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
+    "general":"Общи",
     "show_languagewarning":"Show warning if browsing in a language other than",
     "wishlist":"Предмети в списъка с желания"
   },
@@ -315,6 +317,31 @@
     "errormsg":"Error loading Enhanced Steam data",
     "loading":"Enhanced Steam loading data...",
     "ready":"Enhanced Steam ready"
+  },
+  "twitch":{
+    "now_streaming":"__username__ is live streaming on Twitch",
+    "viewers":"Viewers",
+    "followers":"Followers",
+    "views":"Views"
+  },
+  "survey":{
+    "performance_survey":"Performance Survey",
+    "users":"__users__ users have completed the performance survey for this game",
+    "framerate":"Framerate",
+    "framerate_response":"responded that the framerate was",
+    "framerate_30":"fixed at 30fps or lower",
+    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_va":"variable, dependant on hardware",
+    "resolution":"Resolution",
+    "resolution_support":"This game appears to support",
+    "resolution_less":"less than __pixels__ resolution",
+    "resolution_up":"up to __pixels__ resolution",
+    "graphics_settings":"Graphics Settings",
+    "satisfaction":"Performance Satisfaction by GPU",
+    "gs_y":"Has built-in graphic options or a graphics menu",
+    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "nobody":"Nobody has taken a performance survey for this game yet",
+    "take":"Take The Survey"
   },
   "select":{
     "wishlisted_dlc":"Select Wishlisted DLC",
@@ -324,19 +351,19 @@
   "tag":{
     "wishlist":"Wishlist",
     "friends_own":"__friendcount__ own",
-    "coupon":"Coupon",
+    "coupon":"Купон",
     "friends_rec":"<a href=\"http:\/\/store.steampowered.com\/recommended\/byfriends\/__appid__\">__friendcount__ friends reviewed",
-    "inv_gift":"Gift",
+    "inv_gift":"Подарък",
     "inv_guestpass":"Guestpass",
-    "owned":"Owned",
-    "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ wish for<\/a>"
+    "owned":"Притежаван",
+    "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ желание за<\/a>"
   },
   "wallet":{
     "custom_amount":"Add custom amount",
     "custom_amount_text":"Add any amount over __minamount__"
   },
   "wsgf":{
-    "incomplete":"Incomplete",
+    "incomplete":"Недовършено",
     "unsupported":"This score is awarded to games that have no __type__ support.  The game may be unplayable in __type__, or the image is stretched to fit the window.  Correct aspect ratio is not retained.",
     "gold":"This medal is awarded to games which have received perfect scores from the WSGF for their __type__ support, and are __type__ Certified.",
     "silver":"This medal is awarded to games that have received a calculated grade of B for their __type__ support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.",
