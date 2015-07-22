@@ -4,6 +4,7 @@ v7.6
 + Added performance survey data and links to applicapble store pages
 + Added Twitch integration to Steam profiles that contain a link to the user's Twitch page
 + Added sorting options to "Friends who play" pages
++ Enhanced Steam will now remember whether you've accepted the SSA when buying and selling items
 : Updated and localized Early Access banner images
 : Fixed an issue with remaining card drop calculations on badge pages
 

@@ -3720,6 +3720,25 @@ function hide_empty_inventory_tabs() {
 	});
 }
 
+function keep_ssa_checked() {
+	storage.get(function(settings) {
+		if (settings.keepssachecked === undefined) { settings.keepssachecked = false; storage.set({'keepssachecked': settings.keepssachecked}); }
+		if (settings.keepssachecked) {
+			$("#market_sell_dialog_accept_ssa").attr("checked", true);
+			$("#market_buynow_dialog_accept_ssa").attr("checked", true);
+		}
+
+		$("#market_sell_dialog_accept_ssa, #market_buynow_dialog_accept_ssa").click(function() {
+			if (settings.keepssachecked) {
+				settings.keepssachecked = false;
+			} else {
+				settings.keepssachecked = true;
+			}
+			storage.set({'keepssachecked': settings.keepssachecked});
+		});
+	});
+}
+
 function add_inventory_gotopage(){
 	storage.get(function(settings) {
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
@@ -7296,6 +7315,7 @@ $(document).ready(function(){
 							bind_ajax_content_highlighting();
 							inventory_market_prepare();
 							hide_empty_inventory_tabs();
+							keep_ssa_checked();
 							break;
 
 						case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
@@ -7375,6 +7395,7 @@ $(document).ready(function(){
 							add_active_total();
 							minimize_active_listings();
 							add_lowest_market_price();
+							keep_ssa_checked();
 							break;
 
 						case /^\/app\/.*/.test(path):
