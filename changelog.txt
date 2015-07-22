@@ -1,7 +1,11 @@
+v7.7
+-----
+
+
 v7.6
 -----
 + Added an option to use dynamic data while browsing Greenlight pages
-+ Added performance survey data and links to applicapble store pages
++ Added performance survey data and links to applicable store pages
 + Added Twitch integration to Steam profiles that contain a link to the user's Twitch page
 + Added "Add to Cart" buttons back to wishlist pages
 + Added sorting options to "Friends who play" pages
