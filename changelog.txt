@@ -7,6 +7,7 @@ v7.6
 + Enhanced Steam will now remember whether you've accepted the SSA when buying and selling items
 : Updated and localized Early Access banner images
 : Fixed an issue with remaining card drop calculations on badge pages
+: Fixed bug that would cause very large wishlists to sometimes crash the browser after loading
 
 
 v7.5.2

@@ -2287,28 +2287,30 @@ function add_twitch_info() {
 }
 
 function appdata_on_wishlist() {
-	$('a.btnv6_blue_hoverfade').each(function (index, node) {
-		var app = get_appid(node.href);
-		get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
-			var storefront_data = JSON.parse(data);
-			$.each(storefront_data, function(appid, app_data) {
-				if (app_data.success) {
-					// Add platform information
-					if (app_data.data.platforms) {
-						var htmlstring = "";
-						var platforms = 0;
-						if (app_data.data.platforms.windows) { htmlstring += "<span class='platform_img win'></span>"; platforms += 1; }
-						if (app_data.data.platforms.mac) { htmlstring += "<span class='platform_img mac'></span>"; platforms += 1; }
-						if (app_data.data.platforms.linux) { htmlstring += "<span class='platform_img linux'></span>"; platforms += 1; }
+	if ($('a.btnv6_blue_hoverfade').length < 200) {
+		$('a.btnv6_blue_hoverfade').each(function (index, node) {
+			var app = get_appid(node.href);
+			get_http('//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
+				var storefront_data = JSON.parse(data);
+				$.each(storefront_data, function(appid, app_data) {
+					if (app_data.success) {
+						// Add platform information
+						if (app_data.data.platforms) {
+							var htmlstring = "";
+							var platforms = 0;
+							if (app_data.data.platforms.windows) { htmlstring += "<span class='platform_img win'></span>"; platforms += 1; }
+							if (app_data.data.platforms.mac) { htmlstring += "<span class='platform_img mac'></span>"; platforms += 1; }
+							if (app_data.data.platforms.linux) { htmlstring += "<span class='platform_img linux'></span>"; platforms += 1; }
 
-						if (platforms > 1) { htmlstring = "<span class='platform_img steamplay'></span>" + htmlstring; }
+							if (platforms > 1) { htmlstring = "<span class='platform_img steamplay'></span>" + htmlstring; }
 
-						$(node).parent().parent().parent().find(".bottom_controls").append(htmlstring);
+							$(node).parent().parent().parent().find(".bottom_controls").append(htmlstring);
+						}
 					}
-				}
+				});
 			});
 		});
-	});
+	}
 }
 
 var processing = false;
