@@ -9,6 +9,7 @@ v7.6
 : Updated and localized Early Access banner images
 : Fixed an issue with remaining card drop calculations on badge pages
 : Fixed bug that would cause very large wishlists to sometimes crash the browser after loading
+: Fixed a bug that caused cart errors when using the "Empty Cart" feature
 
 
 v7.5.2
