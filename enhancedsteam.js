@@ -3878,7 +3878,7 @@ function survey_data_from_site(appid) {
 			var html = "<div id='performance_survey' class='game_area_description'><h2>Performance Survey</h2>";
 			if (data["success"]) {
 				html += "<p>" + data["responses"] + " users have completed the performance survey for this game.</p>";
-				html += "<p><b>Framerate</b>: " + data["frp"] + "% responded that the framerate was "
+				html += "<p><b>Framerate</b>: " + Math.round(data["frp"]) + "% responded that the framerate was "
 				switch (data["fr"]) {
 					case "30": html += "<span style='color: #8f0e10;'>fixed at 30fps or lower</span>"; break;
 				 	case "fi": html += "<span style='color: yellow;'>fixed at higher than 30fps</span>"; break;
