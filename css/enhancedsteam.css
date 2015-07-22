@@ -802,4 +802,45 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .gh_followed {
 	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
 }
-
+.performance-graph {
+    margin-top: -10px;
+    background: linear-gradient(135deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+    width: 98%;
+    border-radius: 6px;
+    border: 1px solid #524f4e;
+    overflow: hidden;
+}
+.performance-graph .row {
+    height: 18px;
+    overflow: hidden;
+}
+.performance-graph .row .nvidia {
+	background: #72b100;
+	color: black;
+}
+.performance-graph .row .amd {
+	 background: #8f0e10;
+}
+.performance-graph .row .intel {
+	 background: #0b5997;
+	 color: #fafaf2;
+}
+.performance-graph .row .other {
+	 background: black;
+}
+.performance-graph .left-bar {
+    height: 100%;
+    text-align: center;
+    float: left;
+    position:relative;
+}
+.performance-graph .right-bar {
+    background: rgba(0,0,0,0.0);
+    min-width:30px;
+    height: 100%;
+    text-align: left;
+    float: left;
+}
+.performance-graph .right-bar span {
+	padding-left: 5px;
+}

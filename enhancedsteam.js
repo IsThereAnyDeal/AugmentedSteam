@@ -3871,6 +3871,48 @@ function dlc_data_from_site(appid) {
     }
 }
 
+function survey_data_from_site(appid) {
+	if ($("div.game_area_dlc_bubble").length == 0) {
+		get_http("//api.enhancedsteam.com/survey/?appid=" + appid, function(txt) {
+			var data = JSON.parse(txt);
+			var html = "<div id='performance_survey' class='game_area_description'><h2>Performance Survey</h2>";
+			if (data["success"]) {
+				html += "<p>" + data["responses"] + " users have completed the performance survey for this game.</p>";
+				html += "<p><b>Framerate</b>: " + data["frp"] + "% responded that the framerate was"
+				switch (data["fr"]) {
+					case "30": html += "<span style='color: red;'>fixed at 30fps or lower</span>"; break;
+				 	case "fi": html += "<span style='color: yellow;'>fixed at higher than 30fps</span>"; break;
+				 	case "va": html += "<span style='color: green;'>variable, dependant on hardware</span>"; break;
+				}				
+				html += "<br><b>Resolution</b>: This game appears to support "
+				switch (data["mr"]) {
+					case "less": html += "<span style='color: red;'>less than 1920x1080 resolution</span>"; break;
+					case "hd": html += "<span style='color: green;'>up to 1920x1080 (HD) resolution</span>"; break;
+					case "wqhd": html += "<span style='color: green;'>up to 2560x1440 (WQHD) resolution</span>"; break;
+					case "4k": html += "<span style='color: green;'>up to 3840x2160 (4K) resolution</span>"; break;
+				}
+				html += "<br><b>Graphics Settings</b>: ";
+				if (data["gs"]) {
+					html += "<span style='color: green;'>Has built-in graphic options or a graphics menu</span></p>";
+				} else {
+					html += "<span style='color: red;'>Does not have built-in graphic options or a graphics menu</span></p>";
+				}
+				html += "<p><b>Performance Satisfaction</b>:";
+				html += "<div class='performance-graph'>";
+				html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
+				html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
+				html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
+				html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div></div>";
+			} else {
+				html += "<p>Nobody has taken a performance survey for this game yet.</p>";
+			}
+			html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>Take The Survey</span></a>";
+			html += "</div>";
+			$(".sys_req").parent().after(html);
+		});
+	}
+}
+
 function dlc_data_for_dlc_page() {
 	var totalunowned = 0;
 	var sessionid;
@@ -7098,6 +7140,8 @@ $(document).ready(function(){
 							display_coupon_message(appid);
 							show_pricing_history(appid, "app");
 							dlc_data_from_site(appid);
+
+							survey_data_from_site(appid);
 
 							drm_warnings("app");
 							add_metacritic_userscore();
