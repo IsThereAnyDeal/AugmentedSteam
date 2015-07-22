@@ -11,7 +11,6 @@ v7.6
 : Fixed bug that would cause very large wishlists to sometimes crash the browser after loading
 : Fixed a bug that caused cart errors when using the "Empty Cart" feature
 
-
 v7.5.2
 -----
 + Added a "Get Help" button to store pages that links to that game's personal support portal
