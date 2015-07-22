@@ -3952,7 +3952,9 @@ function survey_data_from_site(appid) {
 			} else {
 				html += "<p>" + localized_strings.survey.nobody + ".</p>";
 			}
-			html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + localized_strings.survey.take + "</span></a>";
+			if ($(".game_area_already_owned").length > 0 && $(".hours_played").length > 0) {
+				html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + localized_strings.survey.take + "</span></a>";
+			}	
 			html += "</div>";
 			$(".sys_req").parent().after(html);
 		});
