@@ -6946,8 +6946,9 @@ function add_friends_that_play() {
 }
 
 function add_friends_playtime_sort() {
-	$("#memberList").find(".mainSectionHeader").eq(1).append(" (<span id='es_default_sort' style='text-decoration: underline; cursor: pointer;'>" + localized_strings.sort_by.replace(":", "") + " " + localized_strings.theworddefault + "</span> | <span id='es_playtime_sort' style='cursor: pointer;'>" + localized_strings.sort_by.replace(":", "") + " Playtime</span>)");
-	$("#memberList").children(".profile_friends").eq(1).attr("id", "es_friends_default");
+	if ($("#memberList").find(".mainSectionHeader").length == 3) { var section = 1; } else { var section = 2; }
+	$("#memberList").find(".mainSectionHeader").eq(section).append(" (<span id='es_default_sort' style='text-decoration: underline; cursor: pointer;'>" + localized_strings.sort_by.replace(":", "") + " " + localized_strings.theworddefault + "</span> | <span id='es_playtime_sort' style='cursor: pointer;'>" + localized_strings.sort_by.replace(":", "") + " Playtime</span>)");
+	$("#memberList").children(".profile_friends").eq(section).attr("id", "es_friends_default");
 	var sorted = $("#es_friends_default").clone();
 	$(sorted).attr("id", "es_friends_playtime").hide();
 	$("#es_friends_default").after("<div style='clear: both'></div>").after(sorted);
@@ -6967,7 +6968,6 @@ function add_friends_playtime_sort() {
 		friendArray.sort(function(a,b) { return parseFloat(b[1]) - parseFloat(a[1]); });
 		$("#es_friends_playtime").html("");
 		$(friendArray).each(function(index, value) {
-			console.log(value[0]);
 			$("#es_friends_playtime").append(value[0]);
 		});
 	});
