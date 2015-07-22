@@ -2127,13 +2127,16 @@ function drm_warnings(type) {
 
 // Remove all items from cart
 function add_empty_cart_button() {
-	addtext = "<a href='javascript:document.cookie=\"shoppingCartGID=0; path=/; expires=Thu, 01-Jan-1970 00:00:01 GMT;\"; location.reload();' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings.empty_cart + "</span></a>";
+	addtext = "<a href='#' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings.empty_cart + "</span></a>";
 
-	jQuery('.checkout_content').each(function () {
-		$(this).prepend(addtext);
-		if ($(".cart_row").length === 0) {
-			$(".es_empty").addClass("btn_disabled");
-		}
+	$('.checkout_content').prepend(addtext);
+	if ($(".cart_row").length === 0) {
+		$(".es_empty").addClass("btn_disabled");
+	}
+
+	$(".es_empty").click(function() {
+		document.cookie = "shoppingCartGID=0; path=/; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
+		window.location.assign('//store.steampowered.com/cart');
 	});
 }
 
