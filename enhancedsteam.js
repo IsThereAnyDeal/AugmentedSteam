@@ -3878,15 +3878,15 @@ function survey_data_from_site(appid) {
 			var html = "<div id='performance_survey' class='game_area_description'><h2>Performance Survey</h2>";
 			if (data["success"]) {
 				html += "<p>" + data["responses"] + " users have completed the performance survey for this game.</p>";
-				html += "<p><b>Framerate</b>: " + data["frp"] + "% responded that the framerate was"
+				html += "<p><b>Framerate</b>: " + data["frp"] + "% responded that the framerate was "
 				switch (data["fr"]) {
-					case "30": html += "<span style='color: red;'>fixed at 30fps or lower</span>"; break;
+					case "30": html += "<span style='color: #8f0e10;'>fixed at 30fps or lower</span>"; break;
 				 	case "fi": html += "<span style='color: yellow;'>fixed at higher than 30fps</span>"; break;
 				 	case "va": html += "<span style='color: green;'>variable, dependant on hardware</span>"; break;
 				}				
 				html += "<br><b>Resolution</b>: This game appears to support "
 				switch (data["mr"]) {
-					case "less": html += "<span style='color: red;'>less than 1920x1080 resolution</span>"; break;
+					case "less": html += "<span style='color: #8f0e10;'>less than 1920x1080 resolution</span>"; break;
 					case "hd": html += "<span style='color: green;'>up to 1920x1080 (HD) resolution</span>"; break;
 					case "wqhd": html += "<span style='color: green;'>up to 2560x1440 (WQHD) resolution</span>"; break;
 					case "4k": html += "<span style='color: green;'>up to 3840x2160 (4K) resolution</span>"; break;
@@ -3895,14 +3895,17 @@ function survey_data_from_site(appid) {
 				if (data["gs"]) {
 					html += "<span style='color: green;'>Has built-in graphic options or a graphics menu</span></p>";
 				} else {
-					html += "<span style='color: red;'>Does not have built-in graphic options or a graphics menu</span></p>";
+					html += "<span style='color: #8f0e10;'>Does not have built-in graphic options or a graphics menu</span></p>";
 				}
-				html += "<p><b>Performance Satisfaction</b>:";
-				html += "<div class='performance-graph'>";
-				html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
-				html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
-				html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
-				html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div></div>";
+				if (data["nvidia"] || data["amd"] || data["intel"] || data["other"]) {
+					html += "<p><b>Performance Satisfaction by GPU</b>:";
+					html += "<div class='performance-graph'>";
+					if (data["nvidia"]) html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
+					if (data["amd"]) html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
+					if (data["intel"]) html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
+					if (data["other"]) html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div>";
+					html += "</div>";
+				}
 			} else {
 				html += "<p>Nobody has taken a performance survey for this game yet.</p>";
 			}
