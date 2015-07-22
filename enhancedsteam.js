@@ -3900,10 +3900,34 @@ function survey_data_from_site(appid) {
 				if (data["nvidia"] || data["amd"] || data["intel"] || data["other"]) {
 					html += "<p><b>Performance Satisfaction by GPU</b>:";
 					html += "<div class='performance-graph'>";
-					if (data["nvidia"]) html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
-					if (data["amd"]) html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
-					if (data["intel"]) html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
-					if (data["other"]) html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div>";
+					if (data["nvidia"]) {
+						if (data["nvidia"] > 90) {
+							html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia " + data["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'></div></div>";
+						} else {
+							html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
+						}
+					}
+					if (data["amd"]) {
+						if (data["amd"] > 90) {
+							html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD " + data["amd"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'></div></div>";
+						} else {
+							html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
+						}
+					}					
+					if (data["intel"]) {
+						if (data["intel"] > 90) {
+							html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel " + data["intel"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'></div></div>";
+						} else {
+							html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
+						}	
+					}
+					if (data["other"]) {
+						if (data["other"] > 90) {
+							html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other " + data["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'></div></div>";
+						} else {
+							html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div>";
+						}	
+					}	
 					html += "</div>";
 				}
 			} else {
