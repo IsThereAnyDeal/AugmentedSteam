@@ -1,5 +1,6 @@
 v7.7
 -----
+: Fixed a bug where surveys with 0% satisfaction would be hidden
 
 
 v7.6
