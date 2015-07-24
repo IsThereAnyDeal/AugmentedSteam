@@ -2791,6 +2791,7 @@ function hide_greenlight_banner() {
 }
 
 function preview_greenlight_votes() {
+	if (!is_signed_in) return;
 	storage.get(function(settings) {
 		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
 		if (settings.dynamicgreenlight) {
