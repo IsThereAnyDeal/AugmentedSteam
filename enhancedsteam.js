@@ -2289,6 +2289,15 @@ function add_twitch_info() {
 	}
 }
 
+function alternative_linux_icon() {
+	storage.get(function(settings) {
+		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
+		if (settings.show_alternative_linux_icon) {
+			$("span.platform_img.linux").css("background-image","url("+chrome.extension.getURL("img/alternative_linux_icon.png")+")");
+		}
+	});
+}
+
 function appdata_on_wishlist() {
 	if ($('a.btnv6_blue_hoverfade').length < 200) {
 		$('a.btnv6_blue_hoverfade').each(function (index, node) {
@@ -2325,6 +2334,7 @@ function appdata_on_wishlist() {
 						}
 					}
 				});
+				if((index+1) == $('a.btnv6_blue_hoverfade').length) alternative_linux_icon();
 			});
 		});
 	}
@@ -7167,7 +7177,7 @@ function get_playfire_rewards(appid) {
 	});
 }
 
-function add_booster_prices() {	
+function add_booster_prices() {
 	var gem_word = $(".booster_creator_goostatus:first").find(".goo_display").text().trim().replace(/\d/g, "");
 	runInPageContext("function() { \
 		$J('#booster_game_selector option').each(function(index) {\
@@ -7300,6 +7310,9 @@ $(document).ready(function(){
 							window.setTimeout(function() { customize_home_page(); }, 500);
 							break;
 					}
+
+					// Alternative Linux icon
+					alternative_linux_icon();
 
 					// Highlights & data fetching
 					start_highlights_and_tags();

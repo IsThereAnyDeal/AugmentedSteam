@@ -56,6 +56,7 @@ function save_options() {
 	show_steamspy_info = $("#show_steamspy_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	show_early_access = $("#show_early_access").prop('checked');
+	show_alternative_linux_icon = $("#show_alternative_linux_icon").prop('checked');
 	
 	// Price Options
 	showlowestprice = $("#showlowestprice").prop('checked');
@@ -191,6 +192,7 @@ function save_options() {
 		'show_steamspy_info': show_steamspy_info,
 		'show_carousel_descriptions': show_carousel_descriptions,
 		'show_early_access': show_early_access,
+		'show_alternative_linux_icon': show_alternative_linux_icon,
 		
 		'showlowestprice': showlowestprice,
 		'showlowestprice_onwishlist': showlowestprice_onwishlist,
@@ -392,6 +394,7 @@ function load_options() {
 		if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; chrome.storage.sync.set({'show_steamspy_info': settings.show_steamspy_info}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
+		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = true; chrome.storage.sync.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
@@ -484,6 +487,7 @@ function load_options() {
 		$("#show_steamspy_info").prop('checked', settings.show_steamspy_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
 		$("#show_early_access").prop('checked', settings.show_early_access);
+		$("#show_alternative_linux_icon").prop('checked', settings.show_alternative_linux_icon);
 				
 		// Load Price Options
 		$("#showlowestprice").prop('checked', settings.showlowestprice);
@@ -645,6 +649,7 @@ function load_translation() {
 			$("#store_steamspy_info_text").text(localized_strings.options.show_steamspy_info);
 			$("#store_carousel_descriptions_text").text(localized_strings.options.carousel_description);
 			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
+			$("#show_alternative_linux_icon_text").text(localized_strings.options.show_alternative_linux_icon);
 			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
