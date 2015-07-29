@@ -1,6 +1,5 @@
 <html>
 <script src="js/jQuery.min.js"></script>
-<script src="js/localization.js"></script>
 <script src="js/options.js"></script>
 <link href="css/select2.css" rel="stylesheet" type="text/css">
 <link href="css/options.css" rel="stylesheet" type="text/css">
@@ -178,9 +177,6 @@
 						<option value="es_popular">Popular</option>
 					</select>
 				</li>
-				<li class="header" id="library_text">Library (BETA)</li>
-				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
-				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
 				<li class="header" id="store_general">General</li>
 				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
 				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
@@ -197,6 +193,7 @@
 				<li><input type="checkbox" id="showsteamcardexchange"><label for="showsteamcardexchange" id="store_steamcards_text">Show SteamCardExchange links on store pages</label></li>
 				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
 				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com info</label></li>
+				<li><input type="checkbox" id="show_steamspy_info"><label for="show_steamspy_info" id="store_steamspy_info_text">Show steamspy.com info</label></li>
 				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show package info for all apps</label></li>
 				<li><input type="checkbox" id="show_sysreqcheck"><label for="show_sysreqcheck" id="show_sysreqcheck_text">Show button to check system requirements on app pages (Experimental!)</label></li>
 				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show app descriptions on storefront carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" class="help"></a></li>
@@ -268,6 +265,8 @@
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="gamesrepublic"><label for="gamesrepublic">GamesRepublic</label></td>
+							<td><input type="checkbox" id="coinplay"><label for="coinplay">Coinplay.io</label></td>
+							<td><input type="checkbox" id="funstock"><label for="funstock">FunStock Digital</label></td>
 						</tr>
 					</table>
 					<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
@@ -319,6 +318,9 @@
 						<a href="http://enhancedsteam.com/featuredetail.php?id=14" class="help"></a>
 					</li>
 					<li>
+						<input type="checkbox" id="dynamicgreenlight"><label for="dynamicgreenlight" id="dynamicgreenlight_text">Use dynamic data while browsing Greenlight</label>
+					</li>
+					<li>
 						<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on Market homepage by default</label>
 					</li>
 					<li>
@@ -335,14 +337,11 @@
 						<input type="checkbox" id="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text">Show "Add to Wishlist" button on community app hubs</label>
 					</li>
 					<li>
+						<input type="checkbox" id="show1clickgoo"><label for="show1clickgoo" id="show1clickgoo_text">Show "1-Click turn into Gems..." button on applicable inventory items</label>
+					</li>
+					<li>
 						<input type="checkbox" id="profile_permalink"><label for="profile_permalink" id="profile_permalink_text">Show permalink on profiles</label>
 					</li>
-				<!-- commenting out for future development
-				<li>
-						<input type="checkbox" id="profile_api_info"><label for="profile_api_info" id="profile_api_info_text">Show user API link on profiles</label>
-						<p id="api_key_block"><span id="api_key_text">API Key</span>: <input type="text" class="textbox" size="38" maxlength="32" id="api_key"><a href="http://steamcommunity.com/dev/apikey" target="_blank" class="help"></a></p>
-					</li>
-				-->
 				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" class="help"></a>
 				<ul id="profile_links">
 					<li>
@@ -354,10 +353,6 @@
 					<li>
 						<input type="checkbox" id="profile_steamgifts"><label for="profile_steamgifts"><img src="img/ico/steamgifts.png" class="site_icon site_icon_gray" /><img src="img/ico/steamgifts_col.png" class="site_icon site_icon_col" />SteamGifts</label>
 					</li>
-					<li>
-						<input type="checkbox" id="profile_steamtrades"><label for="profile_steamtrades"><img src="img/ico/steamtrades.png" class="site_icon site_icon_gray" /><img src="img/ico/steamtrades_col.png" class="site_icon site_icon_col" />SteamTrades</label>
-					</li>
-
 					<li>
 						<input type="checkbox" id="profile_astats"><label for="profile_astats"><img src="img/ico/achievementstats.png" class="site_icon site_icon_gray" /><img src="img/ico/achievementstats_col.png" class="site_icon site_icon_col" />Achievement Stats</label>
 					</li>
@@ -392,9 +387,9 @@
 			<ul class="credits">
 				<li class="header" id="programming_text">Programming</li>
 				<li>Jason '<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>' Shackles</li>
-				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">Smashman</a>' Williams</li>
-				<li>Rob '<a href="http://steamcommunity.com/profiles/76561197989222171" id="rjackson_steam">rjacksonm1</a>' Jackson</li>
-				<li>Tomáš '<a href="http://steamcommunity.com/profiles/76561198020275445" id="tomas_steam">Timmy</a>' Duda</li>				
+				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">smash.mn</a>' Williams</li>
+				<li></li>
+				<li><div id="view_all"><a href='https://github.com/jshackles/Enhanced_Steam/graphs/contributors'>VIEW ALL</a></div></li>
 			</ul>
 			<div class="header" id="translation_text">Translation</div>
 			<table class="translation">

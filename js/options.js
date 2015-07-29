@@ -31,9 +31,6 @@ function save_options() {
 	hide_owned = $("#hide_owned").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
 
-	showlibrarymenu = $("#showlibrarymenu").prop('checked');
-	showlibraryf2p = $("#showlibraryf2p").prop('checked');
-
 	hideinstallsteambutton = $("#hideinstallsteambutton").prop('checked');
 	hideaboutmenu = $("#hideaboutmenu").prop('checked');
 	replaceaccountname = $("#replaceaccountname").prop('checked');
@@ -56,6 +53,7 @@ function save_options() {
 	show_package_info = $("#show_package_info").prop('checked');
 	show_sysreqcheck = $("#show_sysreqcheck").prop('checked');
 	show_steamchart_info = $("#show_steamchart_info").prop('checked');
+	show_steamspy_info = $("#show_steamspy_info").prop('checked');
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	show_early_access = $("#show_early_access").prop('checked');
 	
@@ -92,7 +90,9 @@ function save_options() {
 		$("#fireflower").prop('checked'),
 		$("#humblewidgets").prop('checked'),
 		$("#newegg").prop('checked'),
-		$("#gamesrepublic").prop('checked')
+		$("#gamesrepublic").prop('checked'),
+		$("#coinplay").prop('checked'),
+		$("#funstock").prop('checked')
 	];
 	showregionalprice = $("#regional_price_on").val();
 	regional_hideworld = $("#regional_hideworld").prop('checked');
@@ -115,14 +115,15 @@ function save_options() {
 	showallachievements = $("#showallachievements").prop('checked');
 	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
+	dynamicgreenlight = $("#dynamicgreenlight").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
 	wlbuttoncommunityapp = $("#wlbuttoncommunityapp").prop('checked');
+	show1clickgoo = $("#show1clickgoo").prop('checked');
 
 	// Profile Link Options
 	profile_steamgifts = $("#profile_steamgifts").prop('checked');
-	profile_steamtrades = $("#profile_steamtrades").prop('checked');
 	profile_steamrep = $("#profile_steamrep").prop('checked');
 	profile_steamdbcalc = $("#profile_steamdbcalc").prop('checked');
 	profile_wastedonsteam = $("#profile_wastedonsteam").prop('checked');
@@ -172,8 +173,6 @@ function save_options() {
 		'showlanguagewarning': showlanguagewarning,
 		'showlanguagewarninglanguage': showlanguagewarninglanguage,
 		'homepage_tab_selection': homepage_tab_selection,
-		'showlibrarymenu': showlibrarymenu,
-		'showlibraryf2p': showlibraryf2p,
 		'send_age_info': send_age_info,
 		'html5video': html5video,
 		'contscroll': contscroll,
@@ -189,6 +188,7 @@ function save_options() {
 		'show_package_info': show_package_info,
 		'show_sysreqcheck': show_sysreqcheck,
 		'show_steamchart_info': show_steamchart_info,
+		'show_steamspy_info': show_steamspy_info,
 		'show_carousel_descriptions': show_carousel_descriptions,
 		'show_early_access': show_early_access,
 		
@@ -209,13 +209,14 @@ function save_options() {
 		'showallachievements': showallachievements,
 		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
+		'dynamicgreenlight': dynamicgreenlight,
 		'hideactivelistings': hideactivelistings,
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
 		'wlbuttoncommunityapp': wlbuttoncommunityapp,
+		'show1clickgoo': show1clickgoo,
 
 		'profile_steamgifts': profile_steamgifts,
-		'profile_steamtrades': profile_steamtrades,
 		'profile_steamrep': profile_steamrep,
 		'profile_steamdbcalc': profile_steamdbcalc,
 		'profile_astats': profile_astats,
@@ -311,6 +312,8 @@ function toggle_stores() {
 			$("#humblewidgets").prop('checked', settings.stores[25]);
 			$("#newegg").prop('checked', settings.stores[26]);
 			$("#gamesrepublic").prop('checked', settings.stores[27]);
+			$("#coinplay").prop('checked', settings.stores[28]);
+			$("#funstock").prop('checked', settings.stores[29]);
 		});
 		break;
 	}
@@ -369,7 +372,7 @@ function load_options() {
 		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; chrome.storage.sync.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
 
@@ -386,11 +389,9 @@ function load_options() {
 		if (settings.show_package_info === undefined) { settings.show_package_info = false; chrome.storage.sync.set({'show_package_info': settings.show_package_info}); }
 		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; chrome.storage.sync.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
 		if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; chrome.storage.sync.set({'show_steamchart_info': settings.show_steamchart_info}); }
+		if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; chrome.storage.sync.set({'show_steamspy_info': settings.show_steamspy_info}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
-
-		if (settings.showlibrarymenu === undefined) { settings.showlibrarymenu = true; chrome.storage.sync.set({'showlibrarymenu': settings.showlibrarymenu}); }
-		if (settings.showlibraryf2p === undefined) { settings.showlibraryf2p = true; chrome.storage.sync.set({'showlibraryf2p': settings.showlibraryf2p}); }
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
@@ -410,13 +411,14 @@ function load_options() {
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
+		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; chrome.storage.sync.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
+		if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; chrome.storage.sync.set({'show1clickgoo': settings.show1clickgoo}); }
 		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
-		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; chrome.storage.sync.set({'profile_steamtrades': settings.profile_steamtrades}); }
 		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
 		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
 		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
@@ -457,9 +459,6 @@ function load_options() {
 		$("#hide_owned").prop('checked', settings.hide_owned);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
 
-		$("#showlibrarymenu").prop('checked', settings.showlibrarymenu);
-		$("#showlibraryf2p").prop('checked', settings.showlibraryf2p);
-
 		$("#hideinstallsteambutton").prop('checked', settings.hideinstallsteambutton);
 		$("#hideaboutmenu").prop('checked', settings.hideaboutmenu);
 		$("#replaceaccountname").prop('checked', settings.replaceaccountname);
@@ -482,6 +481,7 @@ function load_options() {
 		$("#show_package_info").prop('checked', settings.show_package_info);
 		$("#show_sysreqcheck").prop('checked', settings.show_sysreqcheck);
 		$("#show_steamchart_info").prop('checked', settings.show_steamchart_info);
+		$("#show_steamspy_info").prop('checked', settings.show_steamspy_info);
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
 		$("#show_early_access").prop('checked', settings.show_early_access);
 				
@@ -506,15 +506,16 @@ function load_options() {
 		$("#showallachievements").prop('checked', settings.showallachievements);
 		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
+		$("#dynamicgreenlight").prop('checked', settings.dynamicgreenlight);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
 		$("#wlbuttoncommunityapp").prop('checked', settings.wlbuttoncommunityapp);
+		$("#show1clickgoo").prop('checked', settings.show1clickgoo);
 		$("#profile_link_images_dropdown").val(settings.show_profile_link_images);
 
 		// Load Profile Link Options
 		$("#profile_steamgifts").prop('checked', settings.profile_steamgifts);
-		$("#profile_steamtrades").prop('checked', settings.profile_steamtrades);
 		$("#profile_steamrep").prop('checked', settings.profile_steamrep);
 		$("#profile_steamdbcalc").prop('checked', settings.profile_steamdbcalc);
 		$("#profile_wastedonsteam").prop('checked', settings.profile_wastedonsteam);
@@ -542,135 +543,170 @@ function load_options() {
 function load_translation() {
 	chrome.storage.sync.get(function(settings) {		
 		// Load translation
-		if (localized_strings[settings.language] === undefined) { settings.language = "eng"; }
+		if (settings.language === undefined) { settings.language = "english"; }
+
+		var localized_strings = [];
+		var localization_promise = (function () {
+			var l_deferred = new $.Deferred(),
+				l_code;
+			switch (settings.language) {
+				case "bulgarian": l_code = "bg"; break;
+				case "czech": l_code = "cs"; break;
+				case "danish": l_code = "da"; break;
+				case "dutch": l_code = "nl"; break;
+				case "finnish": l_code = "fi"; break;
+				case "french": l_code = "fr"; break;
+				case "greek": l_code = "el"; break;
+				case "german": l_code = "de"; break;
+				case "hungarian": l_code = "hu"; break;
+				case "italian": l_code = "it"; break;
+				case "japanese": l_code = "ja"; break;
+				case "koreana": l_code = "ko"; break;
+				case "norwegian": l_code = "no"; break;
+				case "polish": l_code = "pl"; break;
+				case "portuguese": l_code = "pt-PT"; break;
+				case "brazilian": l_code = "pt-BR"; break;
+				case "russian": l_code = "ru"; break;
+				case "romanian": l_code = "ro"; break;
+				case "schinese": l_code = "zh-CN"; break;
+				case "spanish": l_code = "es-ES"; break;
+				case "swedish": l_code = "sv-SE"; break;
+				case "tchinese": l_code = "zh-TW"; break;
+				case "thai": l_code = "th"; break;
+				case "turkish": l_code = "tr"; break;
+				case "ukrainian": l_code = "uk"; break;
+				default: l_code = "en"; break;
+			}
+			$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
+				localized_strings = data;
+				l_deferred.resolve();
+			});
+			return l_deferred.promise();
+		})();
 
 		localization_promise.done(function(){
-			document.title = "Enhanced Steam " + localized_strings[settings.language].thewordoptions;
+			document.title = "Enhanced Steam " + localized_strings.thewordoptions;
 			
-			$("#nav_store").text(localized_strings[settings.language].store);
-			$("#nav_price").text(localized_strings[settings.language].price);
-			$("#nav_community").text(localized_strings[settings.language].community);
-			$("#nav_news").text(localized_strings[settings.language].news);
-			$("#nav_about").text(localized_strings[settings.language].about);
-			$("#nav_credits").text(localized_strings[settings.language].credits);
-			$("#nav_donate").text(localized_strings[settings.language].donate);
+			$("#nav_store").text(localized_strings.store);
+			$("#nav_price").text(localized_strings.price);
+			$("#nav_community").text(localized_strings.community);
+			$("#nav_news").text(localized_strings.news);
+			$("#nav_about").text(localized_strings.about);
+			$("#nav_credits").text(localized_strings.credits);
+			$("#nav_donate").text(localized_strings.donate);
 			
-			$("#language_text").text(localized_strings[settings.language].language);
+			$("#language_text").text(localized_strings.language);
 			
-			$("#highlight_text").text(localized_strings[settings.language].highlight);
-			$("#highlight_owned_text").text(localized_strings[settings.language].options.owned);
-			$("#highlight_wishlist_text").text(localized_strings[settings.language].options.wishlist);
-			$("#highlight_coupon_text").text(localized_strings[settings.language].options.coupon);
-			$("#highlight_gift_text").text(localized_strings[settings.language].options.gift);
-			$("#highlight_guest_text").text(localized_strings[settings.language].options.guest);
-			$("#highlight_excludef2p_text").text(localized_strings[settings.language].options.excludef2p);
+			$("#highlight_text").text(localized_strings.highlight);
+			$("#highlight_owned_text").text(localized_strings.options.owned);
+			$("#highlight_wishlist_text").text(localized_strings.options.wishlist);
+			$("#highlight_coupon_text").text(localized_strings.options.coupon);
+			$("#highlight_gift_text").text(localized_strings.options.gift);
+			$("#highlight_guest_text").text(localized_strings.options.guest);
+			$("#highlight_excludef2p_text").text(localized_strings.options.excludef2p);
 
-			$("#tag_text").text(localized_strings[settings.language].options.tag);
-			$("#tag_owned_text").text(localized_strings[settings.language].options.owned);
-			$("#tag_wishlist_text").text(localized_strings[settings.language].options.wishlist);
-			$("#tag_coupon_text").text(localized_strings[settings.language].options.coupon);
-			$("#tag_gift_text").text(localized_strings[settings.language].options.gift);
-			$("#tag_guest_text").text(localized_strings[settings.language].options.guest);
+			$("#tag_text").text(localized_strings.options.tag);
+			$("#tag_owned_text").text(localized_strings.options.owned);
+			$("#tag_wishlist_text").text(localized_strings.options.wishlist);
+			$("#tag_coupon_text").text(localized_strings.options.coupon);
+			$("#tag_gift_text").text(localized_strings.options.gift);
+			$("#tag_guest_text").text(localized_strings.options.guest);
 			
-			$("#hide_text").text(localized_strings[settings.language].hide);
-			$("#hide_owned_text").text(localized_strings[settings.language].options.hide_owned);
-			$("#hidetmsymbols_text").text(localized_strings[settings.language].options.hidetmsymbols);
-			
-			$("#library_text").text(localized_strings[settings.language].options.library_header);
-			$("#store_show_library_text").text(localized_strings[settings.language].options.library);
-			$("#store_show_library_f2p_text").text(localized_strings[settings.language].options.library_f2p);
+			$("#hide_text").text(localized_strings.hide);
+			$("#hide_owned_text").text(localized_strings.options.hide_owned);
+			$("#hidetmsymbols_text").text(localized_strings.options.hidetmsymbols);
 
-			$("#store_hide_install_text").text(localized_strings[settings.language].options.hide_install);
-			$("#store_hide_about_menu").text(localized_strings[settings.language].options.hide_about);
-			$("#store_replace_account_name").text(localized_strings[settings.language].options.replace_account_name);
-			$("#store_general").text(localized_strings[settings.language].options.general);
-			$("#community_general").text(localized_strings[settings.language].options.general);
-			$("#header_showfakeccwarning_text").text(localized_strings[settings.language].options.show_regionwarning);
-			$("#store_show_languagewarning_text").text(localized_strings[settings.language].options.show_languagewarning);
-			$("#send_age_info_text").text(localized_strings[settings.language].options.send_age_info);
-			$("#html5video_text").text(localized_strings[settings.language].options.html5video);
-			$("#contscroll_text").text(localized_strings[settings.language].options.contscroll);
-			$("#store_drm_text").text(localized_strings[settings.language].options.drm);
-			$("#store_acrtag_text").text(localized_strings[settings.language].options.acrtag);
-			$("#store_lowestprice_text").text(localized_strings[settings.language].options.lowestprice);
-			$("#store_lowestprice_onwishlist_text").text(localized_strings[settings.language].options.lowestprice_onwishlist);
-			$("#store_lowestprice_coupon_text").text(localized_strings[settings.language].options.lowestprice_coupon);
-			$("#store_lowestprice_header").text(localized_strings[settings.language].options.lowestprice_header);
-			$("#store_metacritic_text").text(localized_strings[settings.language].options.metacritic);
-			$("#store_hltb_text").text(localized_strings[settings.language].options.hltb);
-			$("#store_pcgw_text").text(localized_strings[settings.language].options.pcgw);
-			$("#store_steamcards_text").text(localized_strings[settings.language].options.store_steamcards);
-			$("#store_steamdb_text").text(localized_strings[settings.language].options.steamdb);
-			$("#store_astatslink_text").text(localized_strings[settings.language].options.show_astatslink);
-			$("#store_wsgf_text").text(localized_strings[settings.language].options.wsgf);
-			$("#store_package_info_text").text(localized_strings[settings.language].options.show_package_info);
-			$("#show_sysreqcheck_text").text(localized_strings[settings.language].options.show_sysreqcheck);
-			$("#store_steamchart_info_text").text(localized_strings[settings.language].options.show_steamchart_info);
-			$("#store_carousel_descriptions_text").text(localized_strings[settings.language].options.carousel_description);
-			$("#show_early_access_text").text(localized_strings[settings.language].options.show_early_access_text);
+			$("#store_hide_install_text").text(localized_strings.options.hide_install);
+			$("#store_hide_about_menu").text(localized_strings.options.hide_about);
+			$("#store_replace_account_name").text(localized_strings.options.replace_account_name);
+			$("#store_general").text(localized_strings.options.general);
+			$("#community_general").text(localized_strings.options.general);
+			$("#header_showfakeccwarning_text").text(localized_strings.options.show_regionwarning);
+			$("#store_show_languagewarning_text").text(localized_strings.options.show_languagewarning);
+			$("#send_age_info_text").text(localized_strings.options.send_age_info);
+			$("#html5video_text").text(localized_strings.options.html5video);
+			$("#contscroll_text").text(localized_strings.options.contscroll);
+			$("#store_drm_text").text(localized_strings.options.drm);
+			$("#store_acrtag_text").text(localized_strings.options.acrtag);
+			$("#store_lowestprice_text").text(localized_strings.options.lowestprice);
+			$("#store_lowestprice_onwishlist_text").text(localized_strings.options.lowestprice_onwishlist);
+			$("#store_lowestprice_coupon_text").text(localized_strings.options.lowestprice_coupon);
+			$("#store_lowestprice_header").text(localized_strings.options.lowestprice_header);
+			$("#store_metacritic_text").text(localized_strings.options.metacritic);
+			$("#store_hltb_text").text(localized_strings.options.hltb);
+			$("#store_pcgw_text").text(localized_strings.options.pcgw);
+			$("#store_steamcards_text").text(localized_strings.options.store_steamcards);
+			$("#store_steamdb_text").text(localized_strings.options.steamdb);
+			$("#store_astatslink_text").text(localized_strings.options.show_astatslink);
+			$("#store_wsgf_text").text(localized_strings.options.wsgf);
+			$("#store_package_info_text").text(localized_strings.options.show_package_info);
+			$("#show_sysreqcheck_text").text(localized_strings.options.show_sysreqcheck);
+			$("#store_steamchart_info_text").text(localized_strings.options.show_steamchart_info);
+			$("#store_steamspy_info_text").text(localized_strings.options.show_steamspy_info);
+			$("#store_carousel_descriptions_text").text(localized_strings.options.carousel_description);
+			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
 			
-			$("#lowestprice_stores_text").text(localized_strings[settings.language].stores);
-			$("#lowestprice_stores_all_text").text(localized_strings[settings.language].options.stores_all);
-			$("#store_regionalprice_header").text(localized_strings[settings.language].options.regional_price);
-			$("#showregionalprice_text").text(localized_strings[settings.language].options.regional_price_on);
-			$('select option:contains("Always")').text(localized_strings[settings.language].always);
-			$('select option:contains("Never")').text(localized_strings[settings.language].never);
-			$('select option:contains("on Price Mouseover")').text(localized_strings[settings.language].options.regional_price_mouse);
+			$("#lowestprice_stores_text").text(localized_strings.stores);
+			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
+			$("#store_regionalprice_header").text(localized_strings.options.regional_price);
+			$("#showregionalprice_text").text(localized_strings.options.regional_price_on);
+			$('select option:contains("Always")').text(localized_strings.always);
+			$('select option:contains("Never")').text(localized_strings.never);
+			$('select option:contains("on Price Mouseover")').text(localized_strings.options.regional_price_mouse);
 			
-			$("#profile_link_text").text(localized_strings[settings.language].options.profile_links + ":");
-			$("#show_profile_link_images_text").text(localized_strings[settings.language].options.profile_link_images + ":");
-			$("#profile_link_images_gray").text(localized_strings[settings.language].options.profile_link_images_gray);
-			$("#profile_link_images_color").text(localized_strings[settings.language].options.profile_link_images_color);
-			$("#profile_link_images_none").text(localized_strings[settings.language].options.profile_link_images_none);
-			$("#profile_permalink_text").text(localized_strings[settings.language].options.profile_permalink);
-			$("#total_spent_text").text(localized_strings[settings.language].options.total_spent);
-			$("#steamrep_api_text").text(localized_strings[settings.language].options.steamrepapi);
-			$("#market_total_text").text(localized_strings[settings.language].options.market_total);
-			$("#inventory_nav_text").text(localized_strings[settings.language].options.inventory_nav_text);
-			$("#es_background_text").text(localized_strings[settings.language].options.es_bg);
-			$("#allachievements_text").text(localized_strings[settings.language].options.showallachievements);
-			$("#showcomparelinks_text").text(localized_strings[settings.language].options.showcomparelinks);
-			$("#greenlight_banner_text").text(localized_strings[settings.language].options.greenlight_banner);
-			$("#hideactivelistings_text").text(localized_strings[settings.language].options.hideactivelistings);
-			$("#hidespamcomments_text").text(localized_strings[settings.language].options.hidespamcomments);
-			$("#spamcommentregex_text").text(localized_strings[settings.language].options.spamcommentregex);
-			$("#show_spamcommentregex").text(localized_strings[settings.language].options.customizespamcommentregex);
-			$("#steamcardexchange_text").text(localized_strings[settings.language].options.steamcardexchange);
-			$("#wlbuttoncommunityapp_text").text(localized_strings[settings.language].options.wlbuttoncommunityapp);
+			$("#profile_link_text").text(localized_strings.options.profile_links + ":");
+			$("#show_profile_link_images_text").text(localized_strings.options.profile_link_images + ":");
+			$("#profile_link_images_gray").text(localized_strings.options.profile_link_images_gray);
+			$("#profile_link_images_color").text(localized_strings.options.profile_link_images_color);
+			$("#profile_link_images_none").text(localized_strings.options.profile_link_images_none);
+			$("#profile_permalink_text").text(localized_strings.options.profile_permalink);
+			$("#total_spent_text").text(localized_strings.options.total_spent);
+			$("#steamrep_api_text").text(localized_strings.options.steamrepapi);
+			$("#market_total_text").text(localized_strings.options.market_total);
+			$("#inventory_nav_text").text(localized_strings.options.inventory_nav_text);
+			$("#es_background_text").text(localized_strings.options.es_bg);
+			$("#allachievements_text").text(localized_strings.options.showallachievements);
+			$("#showcomparelinks_text").text(localized_strings.options.showcomparelinks);
+			$("#greenlight_banner_text").text(localized_strings.options.greenlight_banner);
+			$("#dynamicgreenlight_text").text(localized_strings.options.dynamicgreenlight);
+			$("#spamcommentregex_text").text(localized_strings.options.spamcommentregex);
+			$("#show_spamcommentregex").text(localized_strings.options.customizespamcommentregex);
+			$("#steamcardexchange_text").text(localized_strings.options.steamcardexchange);
+			$("#wlbuttoncommunityapp_text").text(localized_strings.options.wlbuttoncommunityapp);
+			$("#show1clickgoo_text").text(localized_strings.options.show1clickgoo);
 
-			$("#highlight_owned_default").text(localized_strings[settings.language].theworddefault);
-			$("#highlight_wishlist_default").text(localized_strings[settings.language].theworddefault);
-			$("#highlight_coupon_default").text(localized_strings[settings.language].theworddefault);
-			$("#highlight_inv_gift_default").text(localized_strings[settings.language].theworddefault);
-			$("#highlight_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
-			$("#highlight_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_owned_color_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_wishlist_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_coupon_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_inv_gift_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_inv_guestpass_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_friends_want_color_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_friends_own_color_default").text(localized_strings[settings.language].theworddefault);
-			$("#tag_friends_rec_color_default").text(localized_strings[settings.language].theworddefault);
-			$("#reset_countries").text(localized_strings[settings.language].theworddefault);
+			$("#highlight_owned_default").text(localized_strings.theworddefault);
+			$("#highlight_wishlist_default").text(localized_strings.theworddefault);
+			$("#highlight_coupon_default").text(localized_strings.theworddefault);
+			$("#highlight_inv_gift_default").text(localized_strings.theworddefault);
+			$("#highlight_inv_guestpass_default").text(localized_strings.theworddefault);
+			$("#highlight_friends_want_color_default").text(localized_strings.theworddefault);
+			$("#tag_owned_color_default").text(localized_strings.theworddefault);
+			$("#tag_wishlist_default").text(localized_strings.theworddefault);
+			$("#tag_coupon_default").text(localized_strings.theworddefault);
+			$("#tag_inv_gift_default").text(localized_strings.theworddefault);
+			$("#tag_inv_guestpass_default").text(localized_strings.theworddefault);
+			$("#tag_friends_want_color_default").text(localized_strings.theworddefault);
+			$("#tag_friends_own_color_default").text(localized_strings.theworddefault);
+			$("#tag_friends_rec_color_default").text(localized_strings.theworddefault);
+			$("#reset_countries").text(localized_strings.theworddefault);
 
-			$("#profile_api_info_text").text(localized_strings[settings.language].options.profile_api_info);
-			$("#api_key_text").text(localized_strings[settings.language].options.api_key);
-			$("#regional_hideworld_text").text(localized_strings[settings.language].options.regional_hideworld);
+			$("#regional_hideworld_text").text(localized_strings.options.regional_hideworld);
 			
-			$("#es_about_text").html(localized_strings[settings.language].options.about_text);
-			$("#changelog_text").text(localized_strings[settings.language].options.changelog);
+			$("#es_about_text").html(localized_strings.options.about_text);
+			$("#changelog_text").text(localized_strings.options.changelog);
 			
-			$("#programming_text").text(localized_strings[settings.language].programming);
-			$("#translation_text").text(localized_strings[settings.language].translation);
-			$("#graphics_text").text(localized_strings[settings.language].graphics);
+			$("#programming_text").text(localized_strings.programming);
+			$("#view_all").html("<a href='https://github.com/jshackles/Enhanced_Steam/graphs/contributors'>" + localized_strings.view_all + "</a>");
+			$("#translation_text").text(localized_strings.translation);
+			$("#graphics_text").text(localized_strings.graphics);
 
-			$("#reset").text(localized_strings[settings.language].options.reset);
-			$("#saved").text(localized_strings[settings.language].options.saved_note);
-			$("#reset_note").text(localized_strings[settings.language].options.reset_note);
+			$("#reset").text(localized_strings.options.reset);
+			$("#saved").text(localized_strings.options.saved_note);
+			$("#reset_note").text(localized_strings.options.reset_note);
 
-			$("#foot_link").text(localized_strings[settings.language].options.foot_link);
-			$("#author_info").text(localized_strings[settings.language].options.author_info);
+			$("#foot_link").text(localized_strings.options.foot_link);
+			$("#author_info").text(localized_strings.options.author_info);
 		});	
 	});
 }
@@ -749,20 +785,18 @@ function get_http(url, callback) {
 }
 
 function steam_credits() {
-	var credit_array = ["76561198040672342","76561197989222171","76561198020275445","76561198000198761"];
+	var credit_array = ["76561198040672342","76561198000198761"];
 	get_http('http://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + credit_array.join(","), function (txt) {
 		var data = JSON.parse(txt).response.players;
 		data.sort(function(a,b){return a["steamid"].localeCompare(b["steamid"])});
-		$("#jshackles_steam").text(data[3]["personaname"]);
-		$("#rjackson_steam").text(data[0]["personaname"]);
-		$("#tomas_steam").text(data[2]["personaname"]);
-		$("#smashman_steam").text(data[1]["personaname"]);
+		$("#jshackles_steam").text(data[1]["personaname"]);
+		$("#smashman_steam").text(data[0]["personaname"]);
 	});
 }
 
 function clear_settings() {
 	chrome.storage.sync.get(function(settings) {
-		var confirm_reset = confirm(localized_strings[settings.language].options.clear)
+		var confirm_reset = confirm(localized_strings.options.clear)
 		if(confirm_reset){
 			chrome.storage.sync.clear();
 			load_options();

@@ -1,3 +1,74 @@
+v7.7
+-----
+: Fixed a bug where surveys with 0% satisfaction would be hidden
+
+
+v7.6
+-----
++ Added an option to use dynamic data while browsing Greenlight pages
++ Added performance survey data and links to applicable store pages
++ Added Twitch integration to Steam profiles that contain a link to the user's Twitch page
++ Added "Add to Cart" buttons back to wishlist pages
++ Added sorting options to "Friends who play" pages
++ Enhanced Steam will now remember whether you've accepted the SSA when buying and selling items
+: Updated and localized Early Access banner images
+: Fixed an issue with remaining card drop calculations on badge pages
+: Fixed bug that would cause very large wishlists to sometimes crash the browser after loading
+: Fixed a bug that caused cart errors when using the "Empty Cart" feature
+
+v7.5.2
+-----
++ Added a "Get Help" button to store pages that links to that game's personal support portal
+: Updated highlighting for the summer sale home page
+
+v7.5.1
+-----
++ Added Blue profile theme by Teliko
+: Fixed a bug that caused Early Access banners not to be displayed
+: Fixed a bug that caused badge completion costs to be in an incorrect currency for some users
+
+v7.5
+-----
++ Added player data from steamspy.com to app pages (thanks galyonkin!)
++ Added support for Coinbase.io and Funstock Digital to price comparisons
++ Added support for setting custom profile themes
++ Added Purple, Yellow, Red, Green, Pink, Orange, and Teal profile themes by Teliko
++ Added Clear profile theme
+: Fixed an issue with price data not being in the correct denomination due to a change made by Valve
+: Fixed a bug that caused the achievement sorting function not to work correctly
+: Updated the Enhanced Steam Supporter section on supporter's profile pages to the latest visual style
+
+v7.4
+-----
++ Added a "View post history" button to user's profiles in the "More" dropdown box
++ Added price tier information to "Bundles that include this game" section
++ Added support for more currencies on badge pages
++ Added basic compatibility for extensions such as HTTPS Everywhere
+: Significantly reduced the number of data queries while viewing badge pages
+: Price history information for multiple items are now done through a single data request
+: Rewrote how translation files are loaded which will reduce the amount of info in memory
+: Fixed a bug that could cause the user's invite page not to process correctly
+: Fixed a bug where cards with quotation marks in their name wouldn't show lowest price info
+: Fixed a bug that could cause trade offer decline buttons not to show up under certain circumstances
+: Fixed a bug that would incorrectly calculate number of games with drops remaining in some languages
+: Fixed a bug that sometimes caused homepage carousel descriptions not to load correctly
+: Fixed header positioning when hiding the sidebar on the home page
+
+v7.3
+-----
++ Added an option to hide games in search results you've marked as "Not Interested"
++ Added a column to the market showing the current lowest price of active listings
+: Fixed a bug in the feature that shows the purchase date on a game's store page
+: Updated 3rd party DRM detection to include more places that publishers hide it
+: Updated PCGW button to include new link structure and new icon
+- Removed redundant SteamTrades profile link
+
+v7.2.1
+-----
++ Added the number of gems required for each game on the Booster Pack Creator dropdown
++ Added an option to enable or disable the 1-Click turn to gems function
+: Fixed numerous small bugs and localization issues
+
 v7.2
 -----
 + Added Newegg and GamesRepublic to the price history lookups

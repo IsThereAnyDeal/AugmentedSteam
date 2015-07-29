@@ -234,7 +234,7 @@ img.platform_small, .platform_img {
 	margin-top:-2px;
 }
 .es_each_price {
-	color: #B0AEAC;
+	color: rgb(137, 138, 140);
 	font-size: 13px;
 }
 .es_each_box {
@@ -433,7 +433,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_cards_worth {
-	float: right;
+	float: none;
 	width: 280px;
 	text-align: center;
 	margin-right: 38px;
@@ -745,4 +745,102 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-repeat: no-repeat !important;
 	background-position: 6px 3px !important;
 	margin-left: 4px;
+}
+.market_listing_es_lowest {
+	font-size:85.7%;
+	line-height: 1.25em;
+}
+.spy_details {
+	color: #8f98a0;
+	line-height: 20px;
+}
+
+.spy_details b {
+	color: #61686d;
+	font-weight: normal;
+}
+
+.gh_fade div:not(.gh_indicators) {
+	opacity: 0.2;
+}
+.gh_vote_up:before, .gh_vote_down:before, .gh_vote_later:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 5px;
+	background: rgba(0, 0, 0, 0.6);
+}
+.gh_indicators_right {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding-left: 5px;
+	background: rgba(0, 0, 0, 0.6);
+}
+.gh_fade:before, .gh_fade .gh_indicators_right {
+	background: none;
+}
+.gh_indicators_right div {
+	display: inline-block;
+	width: 17px;
+	height: 30px;
+	margin-right: 5px;
+	background-position: 0px -60px;
+}
+.gh_vote_up:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
+}
+.gh_vote_down:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
+}
+.gh_vote_later:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
+}
+.gh_favorited {
+	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_fav_tiled.png');
+}
+.gh_followed {
+	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
+}
+.performance-graph {
+    margin-top: -10px;
+    background: linear-gradient(135deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+    width: 98%;
+    border-radius: 6px;
+    border: 1px solid #524f4e;
+    overflow: hidden;
+}
+.performance-graph .row {
+    height: 18px;
+    overflow: hidden;
+}
+.performance-graph .row .nvidia {
+	background: #72b100;
+	color: black;
+}
+.performance-graph .row .amd {
+	 background: #8f0e10;
+}
+.performance-graph .row .intel {
+	 background: #0b5997;
+	 color: #fafaf2;
+}
+.performance-graph .row .other {
+	 background: black;
+}
+.performance-graph .left-bar {
+    height: 100%;
+    text-align: center;
+    float: left;
+    position:relative;
+}
+.performance-graph .right-bar {
+    background: rgba(0,0,0,0.0);
+    min-width:30px;
+    height: 100%;
+    text-align: left;
+    float: left;
+}
+.performance-graph .right-bar span {
+	padding-left: 5px;
 }
