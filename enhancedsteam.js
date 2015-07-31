@@ -4241,7 +4241,7 @@ var ea_appids, ea_promise = (function () {
 })();
 
 // Check for Early Access titles
-function check_early_access(node, image_left, selector_modifier) {
+function check_early_access(node, image_left, selector_modifier, callback) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
@@ -4268,6 +4268,7 @@ function check_early_access(node, image_left, selector_modifier) {
 					$(overlay_img).css({"height":height+"px"});
 					$(overlay_img).css("width", "initial");
 					$(node).find(selector.trim()).before(overlay_img);
+					callback && callback();
 				}
 			}
 		}
@@ -4328,13 +4329,13 @@ function process_early_access() {
 					case "steamcommunity.com":
 						switch(true) {
 							case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-								$(".gameLogo").each(function(index, value) { check_early_access($(this), 4); });
+								$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-								$(".gameLogo").each(function(index, value) { check_early_access($(this), 4); });
+								$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/(?:id|profiles)\/(.+)\/followedgames/.test(window.location.pathname):
-								$(".gameLogo").each(function(index, value) { check_early_access($(this), 4); });
+								$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
 								break;
 							case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
 								$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
@@ -4350,9 +4351,19 @@ function process_early_access() {
 								break;
 							case /^\/app\/.*/.test(window.location.pathname):
 								if ($(".apphub_EarlyAccess_Title").length > 0) {
-									$(".apphub_StoreAppLogo:first").wrap("<div id='es_ea_apphub'><a href='" + window.location.href + "'></a></div>");
-									check_early_access($("#es_ea_apphub"), $(".apphub_StoreAppLogo:first").position().left + 22);
-									setTimeout(function(){ $("#es_ea_apphub .es_overlay").css("margin-top", "15px"); }, 100);
+									var logo = $(".apphub_StoreAppLogo:first").wrap(
+										"<div id='es_ea_apphub'><a href='" + window.location.href + "'></a></div>"
+									);
+
+									var wrapper = $('#es_ea_apphub');
+
+									// Manually set the wrapper's height because
+									// the logo is a floating element :(
+									wrapper.css('height', logo.css('height'));
+
+									check_early_access(wrapper, null, null, function () {
+										wrapper.css('height', '');
+									});
 								}
 						}
 				}
