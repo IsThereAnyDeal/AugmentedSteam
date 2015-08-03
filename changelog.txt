@@ -1,6 +1,7 @@
 v7.7
 -----
 : Fixed a bug where surveys with 0% satisfaction would be hidden
+: Fixed a bug that sometimes caused games not to be able to be removed from your wishlist
 
 
 v7.6

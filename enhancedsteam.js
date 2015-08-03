@@ -1139,7 +1139,7 @@ function add_wishlist_total() {
 
 function add_wishlist_ajaxremove() {
 	$("a[onclick*=wishlist_remove]").each(function() {		
-		var appid = $(this).parent().parent()[0].id.replace("game_", "");
+		var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
 		$(this).after("<span class='es_wishlist_remove' id='es_wishlist_remove_" + appid + "'>" + $(this).text() + "</span>");
 		$(this).remove();
 		var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
