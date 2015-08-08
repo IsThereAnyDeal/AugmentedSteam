@@ -2779,16 +2779,16 @@ function hide_greenlight_banner() {
 				}
 				var second_breadcrumb = breadcrumbs.find("a:nth-child(2)").text().trim();
 				switch (second_breadcrumb) {
-					case "Games":
+					case localized_strings.games:
 						$("#games_apphub_sectionTab").toggleClass("active");
 						break;
-					case "Software":
+					case localized_strings.software:
 						$("#software_apphub_sectionTab").toggleClass("active");
 						break;
-					case "Concepts":
+					case localized_strings.concepts:
 						$("#concepts_apphub_sectionTab").toggleClass("active");
 						break;
-					case "Collections":
+					case localized_strings.collections:
 						breadcrumbs.before(greenlight_info);
 						$("#collections_apphub_sectionTab").toggleClass("active");
 						break;
