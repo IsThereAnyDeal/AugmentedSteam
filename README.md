@@ -11,7 +11,17 @@ https://github.com/jshackles/Enhanced_Steam_Firefox.
 Installation
 ------------
 
-You can install this yourself by putting Google Chrome into "developer mode" on the Extensions tab.
+##### Automatic
+Click [here](http://www.enhancedsteam.com/download-chrome.php) and follow the instructions
+
+_(Not Working? Try [here](https://chrome.google.com/webstore/detail/enhanced-steam/okadibdjfemgnhjiembecghcbfknbfhg))_
+
+##### Manual
+1. Clone this repo to a folder on your computer. You can choose either the [master / stable](https://github.com/jshackles/Enhanced_Steam/tree/master) or [dev / unstable](https://github.com/jshackles/Enhanced_Steam/tree/dev) branch.
+2. Open up the 'Extensions' tab in Chrome's Settings.
+3. Tick 'Developer Mode' in the top right corner of the screen
+4. Click 'Load unpacked extension...' and navigate to where you cloned the repo
+5. Enjoy using Enhanced Steam!
 
 Translators
 -------
