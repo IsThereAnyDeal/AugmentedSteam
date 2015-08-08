@@ -2754,13 +2754,13 @@ function hide_greenlight_banner() {
 			var greenlight_info = '<link rel="stylesheet" type="text/css" href="//cdn.steamcommunity.com/public/shared/css/apphub.css">';
 			greenlight_info += '<div class="apphub_HeaderTop es_greenlight"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
 			greenlight_info += '<div class="apphub_sectionTabs">';
-			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=items"><span>Games</a>';
-			greenlight_info += '<a class="apphub_sectionTab" id="software_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=software"><span>Software</a>';
-			greenlight_info += '<a class="apphub_sectionTab" id="concepts_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=concepts"><span>Concepts</a>';
-			greenlight_info += '<a class="apphub_sectionTab" id="collections_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=collections"><span>Collections</a>';
-			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/discussions/?appid=765"><span>Discussions</a>';
-			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/about/?appid=765&section=faq"><span>About Greenlight</a>';
-			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=items"><span>'+localized_strings.games+'</span></a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="software_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=software"><span>'+localized_strings.software+'</span></a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="concepts_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=concepts"><span>'+localized_strings.concepts+'</span></a>';
+			greenlight_info += '<a class="apphub_sectionTab" id="collections_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=collections"><span>'+localized_strings.collections+'</span></a>';
+			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/discussions/?appid=765"><span>'+localized_strings.discussions+'</span></a>';
+			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/about/?appid=765&section=faq"><span>'+localized_strings.about_greenlight+'</span></a>';
+			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/news/?appid=765"><span>'+localized_strings.news+'</span></a>';
 			greenlight_info += '</div>';
 			if(breadcrumbs.find("a:first").text().trim()=="Greenlight"){
 				banner.before(greenlight_info);

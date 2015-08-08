@@ -182,6 +182,10 @@
     "customize": "Customize",
     "bundle_saving_text": "Here's what you save by buying this bundle",
     "thewordoptions": "Options",
+    "concepts":"Concepts",
+    "collections":"Collections",
+    "discussions":"Discussions",
+    "about_greenlight":"About Greenlight",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
