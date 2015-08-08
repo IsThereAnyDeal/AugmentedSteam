@@ -6603,7 +6603,8 @@ function add_badge_view_options() {
 			});
 			$this.find("div[class$='badge_info_image']").css({
 				"float": "center",
-				"margin": "7px auto 0px auto"
+				"margin": "7px auto 0px auto",
+				"width": "100%"
 			});
 			$this.find("div[class$='badge_content']").css("padding-top", "0px");
 			$this.css({

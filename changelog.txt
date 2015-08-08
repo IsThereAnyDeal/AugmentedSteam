@@ -7,6 +7,7 @@ v7.7
 : Fixed a bug that sometimes caused games not to be able to be removed from your wishlist
 : Dynamic Greenlight data will only be pulled if the user is signed in to Steam
 : Performance surveys will no longer be displayed on streaming video store pages
+: Fixed some layout and formatting issues while browsing the badges page in Binder View
 
 
 v7.6
