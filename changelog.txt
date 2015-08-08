@@ -13,7 +13,6 @@ v7.7
 : Fixed a bug where Metacritic scores would sometimes show NaN/100 if score was not found
 - Removed Rewards from Playfire section on app pages, as the service has been discontinued
 
-
 v7.6
 -----
 + Added an option to use dynamic data while browsing Greenlight pages
