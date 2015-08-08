@@ -489,7 +489,7 @@ function highlight_node(node, color) {
 
 		// Blotter activity
 		if ($node.parent().parent()[0]) {
-			if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line") || $node.parent().parent()[0].classList.contains("blotter_author_block") || $node.parent().parent()[0].classList.contains("blotter_gamepurchase") || $node.parent().parent()[0].classList.contains("blotter_recommendation")) {
+			if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line") || $node.parent().parent()[0].classList.contains("blotter_group_announcement_header") || $node.parent().parent()[0].classList.contains("blotter_author_block") || $node.parent().parent()[0].classList.contains("blotter_gamepurchase") || $node.parent().parent()[0].classList.contains("blotter_recommendation")) {
 				$node.css("color", color);
 				return;
 			}
@@ -5526,7 +5526,8 @@ function start_friend_activity_highlights() {
 		var selectors = [
 			".blotter_author_block a",
 			".blotter_gamepurchase_details a",
-			".blotter_daily_rollup_line a"
+			".blotter_daily_rollup_line a",
+			".blotter_group_announcement_header_text a"
 		];
 		var ownedapps = getValue("owned_apps");
 		if (ownedapps) ownedapps = ownedapps.split(",");
