@@ -11,6 +11,7 @@ v7.7
 : Performance surveys will no longer be displayed on streaming video store pages
 : Fixed some layout and formatting issues while browsing the badges page in Binder View
 : Fixed a bug where Metacritic scores would sometimes show NaN/100 if score was not found
+- Removed Rewards from Playfire section on app pages, as the service has been discontinued
 
 
 v7.6

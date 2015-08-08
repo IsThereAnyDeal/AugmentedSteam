@@ -4732,12 +4732,6 @@ function customize_app_page() {
 			}
 		}
 
-		// Rewards from Playfire
-		if (settings.show_playfire_info) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_playfire'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.playfire_heading + "</div></div>"; }
-		else {
-			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_playfire'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.playfire_heading + "</div></div>";
-		}
-
 		// About this game
 		if ($("#game_area_description").length > 0) {
 			text = $("#game_area_description").find("h2:first").text();
@@ -4867,24 +4861,6 @@ function customize_app_page() {
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_apppage_reviews': settings.show_apppage_reviews});
-		});
-
-		$("#show_apppage_playfire").click(function() {
-			if (settings.show_playfire_info) {
-				settings.show_playfire_info = false;
-				$("#es_playfire").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_playfire_info = true;
-				$("#es_playfire").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_playfire_info': settings.show_playfire_info});
-
-			if (settings.show_playfire_info && $("#es_playfire").length == 0) {
-				var appid = get_appid(window.location.host + window.location.pathname);
-				get_playfire_rewards(appid);
-			}
 		});
 
 		$("#show_apppage_about").click(function() {
@@ -5849,7 +5825,6 @@ function add_app_page_wishlist_changes(appid) {
 							appid: appid
 						},
 						success: function( msg ) {
-							console.log(msg);
 							setValue(appid + "wishlisted", false);
 							$("#add_to_wishlist_area_success").hide();
 							$("#add_to_wishlist_area").show();
@@ -7157,43 +7132,6 @@ function add_review_toggle_button() {
 	});
 }
 
-function get_playfire_rewards(appid) {
-	storage.get(function(settings) {
-		if (settings.show_playfire_info === undefined) { settings.show_playfire_info = true; storage.set({'show_playfire_info': settings.show_playfire_info}); }
-		if (settings.show_playfire_info) {
-			get_http("//api.enhancedsteam.com/playfire/?appid=" + appid, function(data) {
-				if (data) {
-					var rewards = JSON.parse(data),
-						$rewards = $('<div id="es_playfire" class="game_area_rewards_section" />');
-
-					$rewards.html('<h2>' + localized_strings.playfire_heading + '</h2>');
-					$rewards.append('<ul>');
-
-					$.each(rewards, function( index, value ) {
-						var reward = value,
-							$li = $('<li class="reward-detail-item">');
-
-						$li.append('<div class="reward-img"><img src="' + reward.icon + '" class="actual" alt="' + reward.name + '"></div>');
-						$li.append('<div class="left-side"><span class="title tooltip-truncate">' + reward.name + '</span><span class="text">' + reward.description + '</span><span class="validity">' + localized_strings.valid + ': ' + reward.starts + ' - ' + reward.ends + '</span></div>');
-						$li.append('<div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="game_purchase_price price">' + reward.prize + '</div></div></div>');
-						
-						$rewards.find('ul').append($li);
-					});
-
-					if (rewards.length > 0) {
-						$rewards.find('ul').after('<span class="chart-footer" style="margin-top: -15px;">Powered by <a href="https://www.playfire.com/" target="_blank">playfire.com</a></span>');
-						$('#game_area_description').closest('.game_page_autocollapse_ctn').before($rewards);
-					} else {
-						$("#show_apppage_playfire").remove();
-					}
-				} else {
-					$("#show_apppage_playfire").remove();
-				}
-			});
-		}
-	});
-}
-
 function add_booster_prices() {
 	var gem_word = $(".booster_creator_goostatus:first").find(".goo_display").text().trim().replace(/\d/g, "");
 	runInPageContext("function() { \
@@ -7313,7 +7251,6 @@ $(document).ready(function(){
 							show_regional_pricing();
 							add_acrtag_warning();
 							add_review_toggle_button();
-							get_playfire_rewards(appid);
 
 							customize_app_page();
 							add_help_button(appid);
