@@ -2327,9 +2327,7 @@ function appdata_on_wishlist() {
 							if (app_data.data.platforms.windows) { htmlstring += "<span class='platform_img win'></span>"; platforms += 1; }
 							if (app_data.data.platforms.mac) { htmlstring += "<span class='platform_img mac'></span>"; platforms += 1; }
 							if (app_data.data.platforms.linux) { htmlstring += "<span class='platform_img linux'></span>"; platforms += 1; }
-
-							if (platforms > 1) { htmlstring = "<span class='platform_img steamplay'></span>" + htmlstring; }
-
+							if (platforms > 1) { htmlstring = htmlstring + "<span class='platform_img steamplay'></span>"; }
 							$(node).parent().parent().parent().find(".bottom_controls").append(htmlstring);
 						}
 					}
@@ -5422,6 +5420,7 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("search_result_row")) {
 					start_highlighting_node(node);
 					check_early_access(node);
+					alternative_linux_icon();
 				}
 
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				

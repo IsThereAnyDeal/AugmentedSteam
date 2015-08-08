@@ -394,7 +394,7 @@ function load_options() {
 		if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; chrome.storage.sync.set({'show_steamspy_info': settings.show_steamspy_info}); }
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
-		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = true; chrome.storage.sync.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
+		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; chrome.storage.sync.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }

@@ -20,19 +20,19 @@ span.platform_img {
 
 span.platform_img.steamplay {
 	width: 72px;
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_steamplay_only.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_steamplay.png' );
 }
 
 span.platform_img.win {
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_win.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_win.png' );
 }
 
 span.platform_img.mac {
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_mac.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_mac.png' );
 }
 
 span.platform_img.linux {
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_linux.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_linux.png' );
 }
 
 img.platform_small, .platform_img {
