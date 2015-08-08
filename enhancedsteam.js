@@ -2761,7 +2761,7 @@ function hide_greenlight_banner() {
 			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/discussions/?appid=765"><span>Discussions</a>';
 			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/about/?appid=765&section=faq"><span>About Greenlight</a>';
 			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/news/?appid=765"><span>News</a>';
-			greenlight_info += '</div><div style="top: 28px;position: relative;"><div class="apphub_sectionTabsHR"><img src="//cdn.steamcommunity.com/public/images/trans.gif"></div></div>';
+			greenlight_info += '</div>';
 			if(breadcrumbs.find("a:first").text().trim()=="Greenlight"){
 				banner.before(greenlight_info);
 				var collection_header = $("#ig_collection_header");
