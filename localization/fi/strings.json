@@ -9,7 +9,7 @@
   "homepage_spotlight":"Valokeila",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Poista",
-  "get_help":"Get Help",
+  "get_help":"Hae Apua",
   "add_selected_dlc_to_cart":"Lisää valittu lisäsisältö ostoskoriin",
   "credits":"Tekijät",
   "store_transactions":"Kaupan ostotapahtumat",
@@ -308,7 +308,7 @@
     "hide_install":"Piilota \"Asenna Steam\" nappula",
     "lowestprice_coupon":"Ota kupongit huomioon hintavertailussa",
     "greenlight_banner":"Korvaa Steam Greenlight juliste",
-    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
+    "dynamicgreenlight":"Käytä dynaamista dataa selaillessa Greenlightiä",
     "general":"Yleiset asetukset",
     "show_languagewarning":"Näytä varoitus, jos selaat muulla kielellä kuin",
     "wishlist":"Tuotteet toivelistallasi"
@@ -319,20 +319,20 @@
     "ready":"Enhanced Steam on valmis"
   },
   "twitch":{
-    "now_streaming":"__username__ is live streaming on Twitch",
-    "viewers":"Viewers",
-    "followers":"Followers",
-    "views":"Views"
+    "now_streaming":"__username__ on lähettämässä suoraa lähetystä Twitchissä",
+    "viewers":"Katsojat",
+    "followers":"Seuraajat",
+    "views":"Näyttökerrat"
   },
   "survey":{
-    "performance_survey":"Performance Survey",
-    "users":"__users__ users have completed the performance survey for this game",
-    "framerate":"Framerate",
-    "framerate_response":"responded that the framerate was",
+    "performance_survey":"Tehokkuustesti",
+    "users":"__users__ käyttäjää on suorittanut tehokkuustestin tälle pelille",
+    "framerate":"Ruudunpäivitys",
+    "framerate_response":"vastasi että ruudunpäivitys oli",
     "framerate_30":"fixed at 30fps or lower",
     "framerate_fi":"fixed at higher than 30fps",
-    "framerate_va":"variable, dependant on hardware",
-    "resolution":"Resolution",
+    "framerate_va":"vakaa, laitteistosta riippuvainen",
+    "resolution":"Resoluutio",
     "resolution_support":"This game appears to support",
     "resolution_less":"less than __pixels__ resolution",
     "resolution_up":"up to __pixels__ resolution",

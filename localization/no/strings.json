@@ -9,7 +9,7 @@
   "homepage_spotlight":"Søkelys",
   "official_group_url":"steamcommunity.com\/groups\/enhancedsteam",
   "remove":"Fjern",
-  "get_help":"Get Help",
+  "get_help":"Få hjelp",
   "add_selected_dlc_to_cart":"Legg valgte DLC i handlevogn",
   "credits":"Bidragsytere",
   "store_transactions":"Butikktransaksjoner",
@@ -308,7 +308,7 @@
     "hide_install":"Gjem \"Innstaller Steam\"-knapp",
     "lowestprice_coupon":"Inkluder kupongkoder i prissammenligning",
     "greenlight_banner":"Bytte Steam Greenlight-banner",
-    "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
+    "dynamicgreenlight":"Bruk dynamisk data imens du søker i Greenlight",
     "general":"Generelt",
     "show_languagewarning":"Vis advarsel ved surfing på annet språk enn",
     "wishlist":"Gjenstander på ønskelisten din"
@@ -319,29 +319,29 @@
     "ready":"Enhanced Steam klar"
   },
   "twitch":{
-    "now_streaming":"__username__ is live streaming on Twitch",
-    "viewers":"Viewers",
-    "followers":"Followers",
-    "views":"Views"
+    "now_streaming":"__username__ streamer på Twitch",
+    "viewers":"Seere",
+    "followers":"Følgere",
+    "views":"Ganger sett"
   },
   "survey":{
-    "performance_survey":"Performance Survey",
-    "users":"__users__ users have completed the performance survey for this game",
+    "performance_survey":"Ytelses undersøkelse",
+    "users":"__users__ brukere har utført ytelses undersøkelsen for dette spillet",
     "framerate":"Framerate",
-    "framerate_response":"responded that the framerate was",
-    "framerate_30":"fixed at 30fps or lower",
-    "framerate_fi":"fixed at higher than 30fps",
+    "framerate_response":"svarte at frameraten var",
+    "framerate_30":"ligger på 30fps eller lavere",
+    "framerate_fi":"ligger på 30fps eller høyere",
     "framerate_va":"variable, dependant on hardware",
     "resolution":"Resolution",
-    "resolution_support":"This game appears to support",
+    "resolution_support":"Dette spillet vises til support",
     "resolution_less":"less than __pixels__ resolution",
     "resolution_up":"up to __pixels__ resolution",
-    "graphics_settings":"Graphics Settings",
+    "graphics_settings":"Grafiske innstillinger",
     "satisfaction":"Performance Satisfaction by GPU",
     "gs_y":"Has built-in graphic options or a graphics menu",
     "gs_n":"Does not have built-in graphic options or a graphics menu",
-    "nobody":"Nobody has taken a performance survey for this game yet",
-    "take":"Take The Survey"
+    "nobody":"Ingen har gjennomført ytelses undersøkelsen på dette spillet ennå",
+    "take":"Besvar undersøkelsen"
   },
   "select":{
     "wishlisted_dlc":"Velg DLC på ønskelisten",
