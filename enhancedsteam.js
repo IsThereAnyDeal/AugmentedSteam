@@ -5839,13 +5839,14 @@ function add_app_page_wishlist_changes(appid) {
 
 					$.ajax({
 						type:"POST",
-						url: "steamcommunity.com/id/" + user + "/wishlist",
+						url: "//steamcommunity.com/id/" + user + "/wishlist",
 						data:{
 							sessionid: session,
 							action: "remove",
 							appid: appid
 						},
 						success: function( msg ) {
+							console.log(msg);
 							setValue(appid + "wishlisted", false);
 							$("#add_to_wishlist_area_success").hide();
 							$("#add_to_wishlist_area").show();
