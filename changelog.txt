@@ -1,11 +1,12 @@
 v7.7
 -----
 + Added an option to replace SteamOS logo for Linux games on Steam with Tux logo
-: Fixed a bug where surveys with 0% satisfaction would be hidden
+: Fixed a bug where survey results with 0% satisfaction would be hidden
 : Updated platform icons on wishlist pages to match the new store style and layout
 : Fixed a bug that would sometimes cause Early Access banners not to display correctly
 : Fixed a bug that sometimes caused games not to be able to be removed from your wishlist
 : Dynamic Greenlight data will only be pulled if the user is signed in to Steam
+: Performance surveys will no longer be displayed on streaming video store pages
 
 
 v7.6

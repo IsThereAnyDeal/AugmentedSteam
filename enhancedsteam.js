@@ -3919,7 +3919,7 @@ function dlc_data_from_site(appid) {
 }
 
 function survey_data_from_site(appid) {
-	if ($("div.game_area_dlc_bubble").length == 0) {
+	if ($("div.game_area_dlc_bubble").length == 0 && $(".game_area_purchase_game").find(".streamingvideo").length == 0) {
 		get_http("//api.enhancedsteam.com/survey/?appid=" + appid, function(txt) {
 			var data = JSON.parse(txt);
 			var html = "<div id='performance_survey' class='game_area_description'><h2>" + localized_strings.survey.performance_survey + "</h2>";
