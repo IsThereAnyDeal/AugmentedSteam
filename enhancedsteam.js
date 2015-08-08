@@ -7203,6 +7203,45 @@ function add_booster_prices() {
 	}");
 }
 
+function launch_random_button() {
+	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
+
+	$("#es_random_game").on("click", function() {
+		var owned_promise = (function () {
+			var deferred = new $.Deferred();
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			var last_updated = getValue("owned_list_time") || expire_time - 1;
+
+			if (last_updated < expire_time) {
+				get_http("//api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + is_signed_in, function(txt) {
+					setValue("owned_apps", txt);
+					setValue("owned_list_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve();
+				});
+			} else {
+				deferred.resolve();
+			}
+			return deferred.promise();
+		})();
+
+		$.when.apply($, [owned_promise]).done(function() {
+			var owned = getValue("owned_apps");
+			var data = JSON.parse(owned);
+			var games = data.response.games;
+			var rand = games[Math.floor(Math.random() * games.length)];
+			runInPageContext(
+				"function() {\
+					var prompt = ShowConfirmDialog('Play " + rand.name.replace("'", "").trim() + "?', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
+					prompt.done(function(result) {\
+						if (result == 'OK') { window.location.assign('steam://run/" + rand.appid + "'); }\
+						if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand.appid + "'); }\
+					});\
+				 }"
+			);
+		});
+	});
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		signed_in_promise.done(function(){
@@ -7222,7 +7261,8 @@ $(document).ready(function(){
 			if (is_signed_in) {
 				replace_account_name();
 				add_birthday_celebration();
-			}
+				launch_random_button();
+			}			
 
 			// Attach event to the logout button
 			$('a[href$="javascript:Logout();"]').bind('click', clear_cache);

@@ -1,5 +1,6 @@
 v7.7
 -----
++ Added a "Launch Random Game" button to the Enhanced Steam menu to launch a random game from your library
 + Added an option to replace SteamOS logo for Linux games on Steam with Tux logo
 + Added highlighting to activity page when curator recommends a game
 : Fixed a bug where survey results with 0% satisfaction would be hidden
