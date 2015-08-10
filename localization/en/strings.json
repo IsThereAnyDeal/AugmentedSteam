@@ -278,6 +278,7 @@
         "author_info": "by jshackles",
         "profile_link_images_gray": "Grayscale",
         "quickinv": "Show Quick Sale buttons on Steam Community items in inventory",
+        "quickinv_diff": "Quick Sale modifier:",
         "library_f2p": "Show played free to play games and demos in library",
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification when requested",

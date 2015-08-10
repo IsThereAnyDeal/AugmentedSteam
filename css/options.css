@@ -215,6 +215,18 @@ a:hover {
 	margin-bottom:5px;
 	display:none;
 }
+#show_quickinv_diff {
+	margin-left:5px;
+	color:#EFFFEF;
+}
+#quickinv_opt {
+	margin-left:10px;
+	margin-bottom:5px;
+	display:none;
+}
+#quickinv_diff {
+	width: 100px;
+}
 .site_icon.profile_link_icon_background {
 	background:#EBEBEB;
 	border-radius:4px;

@@ -114,6 +114,7 @@ function save_options() {
 	showinvnav = $("#showinvnav").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
 	quickinv = $("#quickinv").prop('checked');
+	quickinv_diff = parseFloat($("#quickinv_diff").val().trim()).toFixed(2);
 	showallachievements = $("#showallachievements").prop('checked');
 	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
@@ -210,6 +211,7 @@ function save_options() {
 		'showinvnav': showinvnav,
 		'showesbg': showesbg,
 		'quickinv': quickinv,
+		'quickinv_diff': quickinv_diff,
 		'showallachievements': showallachievements,
 		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
@@ -414,6 +416,7 @@ function load_options() {
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
 		if (settings.quickinv === undefined) { settings.quickinv = true; chrome.storage.sync.set({'quickinv': settings.quickinv}); }
+		if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; chrome.storage.sync.set({'quickinv_diff': settings.quickinv_diff}); }
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
@@ -511,6 +514,7 @@ function load_options() {
 		$("#showinvnav").prop('checked', settings.showinvnav);
 		$("#showesbg").prop('checked', settings.showesbg);
 		$("#quickinv").prop('checked', settings.quickinv);
+		$("#quickinv_diff").val(settings.quickinv_diff);
 		$("#showallachievements").prop('checked', settings.showallachievements);
 		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
@@ -678,6 +682,7 @@ function load_translation() {
 			$("#inventory_nav_text").text(localized_strings.options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings.options.es_bg);
 			$("#quickinv_text").text(localized_strings.options.quickinv);
+			$("#quickinv_diff_text").text(localized_strings.options.quickinv_diff);
 			$("#allachievements_text").text(localized_strings.options.showallachievements);
 			$("#showcomparelinks_text").text(localized_strings.options.showcomparelinks);
 			$("#greenlight_banner_text").text(localized_strings.options.greenlight_banner);
@@ -864,7 +869,9 @@ $(document).ready(function(){
 	$("#tag_inv_gift_default").click(load_default_tag_inv_gift_color);
 	$("#tag_inv_guestpass_default").click(load_default_tag_inv_guestpass_color);
 
-	$("#spamcommentregex_default").click(load_default_spamcommentregex)
+	$("#spamcommentregex_default").click(load_default_spamcommentregex);
+	$("#quickinv_default").click(function() { $("#quickinv_diff").val("-0.01"); });
+	$("#quickinv_diff").focusout(function() { if (isNaN(parseFloat($("#quickinv_diff").val()))) { $("#quickinv_diff").val("-0.01"); } });
 
 	$('#nav_store').click(load_store_tab);
 	$('#nav_price').click(load_price_tab);
@@ -874,6 +881,7 @@ $(document).ready(function(){
 	$('#nav_credits').click(load_credits_tab);
 
 	$("#show_spamcommentregex").click(toggle_regex);
+	$("#show_quickinv_diff").click(function() { $("#quickinv_opt").toggle() });
 	$('#stores_all').click(toggle_stores);
 	$("#reset_countries").click(load_default_countries);
 	$('#region_selects').on('change', '.regional_country', function() {

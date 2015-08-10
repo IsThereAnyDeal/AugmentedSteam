@@ -3728,6 +3728,7 @@ function inventory_market_helper(response) {
 					});
 				}
 				if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
+				if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
 				if (settings.quickinv) {
 					if (marketable == 0 || contextID != 6 || global_id != 753 || $(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) { return; }
 					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
@@ -3741,14 +3742,14 @@ function inventory_market_helper(response) {
 							var currency = parse_currency(currency_match[0]);
 							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + currency.currency_number + "&item_nameid=" + market_id, function(market_txt) {
 								var market = JSON.parse(market_txt);
-								var price_high = (market.lowest_sell_order / 100) - 0.01;
-								if (price_high < 0.03) price_high = 0.03;
+								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
 								var price_low = market.highest_buy_order / 100;
+								if (price_high < 0.03) price_high = 0.03;
 								price_high = parseFloat(price_high).toFixed(2);
 								price_low = parseFloat(price_low).toFixed(2);
 
 								// Add Quick Sell button
-								if (price_high != price_low) {
+								if (price_high > price_low) {
 									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency.currency_type)) + "</span></a>");
 								}
 
