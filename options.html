@@ -288,57 +288,31 @@
 
 			<div id="maincontent_community" class="content" style="display: none">
 				<ul>
-					<li class="header" id="community_general">General</li>
-					<li>
-						<input type="checkbox" id="showtotal"><label for="showtotal" id="total_spent_text">Show total spent on account page</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=6" class="help"></a>
-					</li>
+					<li class="header" id="community_market">Market</li>
 					<li>
 						<input type="checkbox" id="showmarkettotal"><label for="showmarkettotal" id="market_total_text">Show transaction summary on Market</label>
 						<a href="http://enhancedsteam.com/featuredetail.php?id=16" class="help"></a>
 					</li>
 					<li>
-						<input type="checkbox" id="showsteamrepapi"><label for="showsteamrepapi" id="steamrep_api_text">Show SteamRep status on profile pages</label>						
+						<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on Market homepage by default</label>
+					</li>
+					<li class="header" id="community_inventory">Inventory</li>					
+					<li>
+						<input type="checkbox" id="quickinv"><label for="quickinv" id="quickinv_text">Show Quick Sale buttons on Steam Community items in inventory</label>
+					</li>
+					<li>
+						<input type="checkbox" id="show1clickgoo"><label for="show1clickgoo" id="show1clickgoo_text">Show "1-Click turn into Gems..." button on applicable inventory items</label>
 					</li>
 					<li>
 						<input type="checkbox" id="showinvnav"><label for="showinvnav" id="inventory_nav_text">Show advanced navigation on inventory page</label>
 					</li>
+					<li class="header" id="community_profile">Profile</li>
+					<li>
+						<input type="checkbox" id="showsteamrepapi"><label for="showsteamrepapi" id="steamrep_api_text">Show SteamRep status on profile pages</label>						
+					</li>
 					<li>
 						<input type="checkbox" id="showesbg"><label for="showesbg" id="es_background_text">Set custom background on "Edit Profile" screen</label>
 						<a href="http://enhancedsteam.com/featuredetail.php?id=17" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="showallachievements"><label for="showallachievements" id="allachievements_text">Show achievement stats on "All Games" page</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=18" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="showcomparelinks"><label for="showcomparelinks" id="showcomparelinks_text">Show "Compare" links for achievements on friend activity feed</label>
-					</li>
-					<li>
-						<input type="checkbox" id="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text">Replace Steam Greenlight banner</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=14" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="dynamicgreenlight"><label for="dynamicgreenlight" id="dynamicgreenlight_text">Use dynamic data while browsing Greenlight</label>
-					</li>
-					<li>
-						<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on Market homepage by default</label>
-					</li>
-					<li>
-						<input type="checkbox" id="hidespamcomments"><label for="hidespamcomments" id="hidespamcomments_text">Hide spam comments from Workshop &amp; profiles</label><a id="show_spamcommentregex">(Customize)</a>
-					</li>
-					<li id="spamcommentregex_list">
-						<label for="spamcommentregex" id="spamcommentregex_text">Regular Expression string:</label><input type="text" id="spamcommentregex" class="textbox"><button id="spamcommentregex_default" class="btn">Default</button>
-					</li>
-					<li>
-						<input type="checkbox" id="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text">Show SteamCardExchange links on badges</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=19" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text">Show "Add to Wishlist" button on community app hubs</label>
-					</li>
-					<li>
-						<input type="checkbox" id="show1clickgoo"><label for="show1clickgoo" id="show1clickgoo_text">Show "1-Click turn into Gems..." button on applicable inventory items</label>
 					</li>
 					<li>
 						<input type="checkbox" id="profile_permalink"><label for="profile_permalink" id="profile_permalink_text">Show permalink on profiles</label>
@@ -372,6 +346,39 @@
 						<option value=false id="profile_link_images_none">None</option>
 					</select>
 				</li>
+					<li class="header" id="community_general">General</li>
+					<li>
+						<input type="checkbox" id="showtotal"><label for="showtotal" id="total_spent_text">Show total spent on account page</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=6" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="showallachievements"><label for="showallachievements" id="allachievements_text">Show achievement stats on "All Games" page</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=18" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="showcomparelinks"><label for="showcomparelinks" id="showcomparelinks_text">Show "Compare" links for achievements on friend activity feed</label>
+					</li>
+					<li>
+						<input type="checkbox" id="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text">Replace Steam Greenlight banner</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=14" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="dynamicgreenlight"><label for="dynamicgreenlight" id="dynamicgreenlight_text">Use dynamic data while browsing Greenlight</label>
+					</li>
+					<li>
+						<input type="checkbox" id="hidespamcomments"><label for="hidespamcomments" id="hidespamcomments_text">Hide spam comments from Workshop &amp; profiles</label><a id="show_spamcommentregex">(Customize)</a>
+					</li>
+					<li id="spamcommentregex_list">
+						<label for="spamcommentregex" id="spamcommentregex_text">Regular Expression string:</label><input type="text" id="spamcommentregex" class="textbox"><button id="spamcommentregex_default" class="btn">Default</button>
+					</li>
+					<li>
+						<input type="checkbox" id="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text">Show SteamCardExchange links on badges</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=19" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text">Show "Add to Wishlist" button on community app hubs</label>
+					</li>
+									
 			</ul>
 
 		</div>

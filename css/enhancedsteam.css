@@ -844,3 +844,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .performance-graph .right-bar span {
 	padding-left: 5px;
 }
+.es_market_btn {
+	margin-bottom: 5px;
+}
+.es_market_btn span {
+	min-width: 120px;
+	text-align: center;
+}

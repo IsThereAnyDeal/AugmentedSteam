@@ -113,6 +113,7 @@ function save_options() {
 	showsteamrepapi = $("#showsteamrepapi").prop('checked');
 	showinvnav = $("#showinvnav").prop('checked');
 	showesbg = $("#showesbg").prop('checked');
+	quickinv = $("#quickinv").prop('checked');
 	showallachievements = $("#showallachievements").prop('checked');
 	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
@@ -208,6 +209,7 @@ function save_options() {
 		'showsteamrepapi': showsteamrepapi,
 		'showinvnav': showinvnav,
 		'showesbg': showesbg,
+		'quickinv': quickinv,
 		'showallachievements': showallachievements,
 		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
@@ -411,6 +413,7 @@ function load_options() {
 		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
 		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
+		if (settings.quickinv === undefined) { settings.quickinv = true; chrome.storage.sync.set({'quickinv': settings.quickinv}); }
 		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
@@ -507,6 +510,7 @@ function load_options() {
 		$("#showsteamrepapi").prop('checked', settings.showsteamrepapi);
 		$("#showinvnav").prop('checked', settings.showinvnav);
 		$("#showesbg").prop('checked', settings.showesbg);
+		$("#quickinv").prop('checked', settings.quickinv);
 		$("#showallachievements").prop('checked', settings.showallachievements);
 		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
@@ -624,7 +628,6 @@ function load_translation() {
 			$("#store_hide_about_menu").text(localized_strings.options.hide_about);
 			$("#store_replace_account_name").text(localized_strings.options.replace_account_name);
 			$("#store_general").text(localized_strings.options.general);
-			$("#community_general").text(localized_strings.options.general);
 			$("#header_showfakeccwarning_text").text(localized_strings.options.show_regionwarning);
 			$("#store_show_languagewarning_text").text(localized_strings.options.show_languagewarning);
 			$("#send_age_info_text").text(localized_strings.options.send_age_info);
@@ -659,6 +662,10 @@ function load_translation() {
 			$('select option:contains("Never")').text(localized_strings.never);
 			$('select option:contains("on Price Mouseover")').text(localized_strings.options.regional_price_mouse);
 			
+			$("#community_general").text(localized_strings.options.general);
+			$("#community_market").text(localized_strings.options.market);
+			$("#community_inventory").text(localized_strings.options.inventory);
+			$("#community_profile").text(localized_strings.options.profile);
 			$("#profile_link_text").text(localized_strings.options.profile_links + ":");
 			$("#show_profile_link_images_text").text(localized_strings.options.profile_link_images + ":");
 			$("#profile_link_images_gray").text(localized_strings.options.profile_link_images_gray);
@@ -670,6 +677,7 @@ function load_translation() {
 			$("#market_total_text").text(localized_strings.options.market_total);
 			$("#inventory_nav_text").text(localized_strings.options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings.options.es_bg);
+			$("#quickinv_text").text(localized_strings.options.quickinv);
 			$("#allachievements_text").text(localized_strings.options.showallachievements);
 			$("#showcomparelinks_text").text(localized_strings.options.showcomparelinks);
 			$("#greenlight_banner_text").text(localized_strings.options.greenlight_banner);
