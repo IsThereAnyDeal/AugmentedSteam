@@ -2808,17 +2808,14 @@ function preview_greenlight_votes() {
 					var parent = $(this).parent();
 					if (parent.hasClass("gh_checked") || !parent.hasClass("workshopItem")) return;
 					parent.addClass("gh_checked");
-					$.ajax({
-						url: this.href,
-						context: parent
-					}).done(function (data) {
+					get_http(this.href, (function (data) {
 						var match_vote = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
 						if (match_vote) {
 							this.addClass("gh_fade");
 							this.addClass("gh_vote_" + match_vote[1].toLowerCase());
 						}
-						var match_favorited = data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*[^>]*>([^<]*)</);
-						var match_followed = data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*[^>]*>([^<]*)</);
+						var match_favorited = data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*>([^<]*)</);
+						var match_followed = data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*>([^<]*)</);
 						if (match_favorited || match_followed) {
 							var indicators_right = $("<div class='gh_indicators gh_indicators_right'></div>");
 							if (match_favorited) {
@@ -2827,9 +2824,9 @@ function preview_greenlight_votes() {
 							if (match_followed) {
 								indicators_right.append("<div class='gh_indicators gh_followed' title='"+match_followed[1]+"'></div>");
 							}
-							$(this).prepend(indicators_right);
+							this.prepend(indicators_right);
 						}
-					});
+					}).bind(parent));
 				}
 			});
 		}
