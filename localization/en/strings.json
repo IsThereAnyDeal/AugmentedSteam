@@ -287,6 +287,7 @@
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification when requested",
         "pcgw": "Show PCGamingWiki links",
+        "store_steamcards": "Show SteamCardExchange links on store pages",
         "spamcommentregex": "Regular Expression string:",
         "hide_owned_homepage": "Items you own on the homepage",
         "saved_note": "Options saved",
@@ -304,7 +305,6 @@
         "changelog": "Changelog:",
         "owned": "Items you own",
         "steamdb": "Show SteamDB links",
-        "customizespamcommentregex": "(Customize)",
         "hide_early_access": "Hide Early Access games on homepage, browse, and search pages",
         "reset_note": "Options reset",
         "html5video": "Show videos using HTML5 instead of Flash",
@@ -326,7 +326,16 @@
         "inventory": "Inventory",
         "profile": "Profile",
         "show_languagewarning": "Show warning if browsing in a language other than",
-        "wishlist": "Items on your wishlist"
+        "homepage": "Homepage",
+        "homepage_default_tab": "Default homepage tab",
+        "homepage_default_tab_remember": "Remember Previous",
+        "homepage_default_tab_newreleases": "Popular New Releases",
+        "homepage_default_tab_allreleases": "All New Releases",
+        "homepage_default_tab_topsellers": "Top Sellers",
+        "homepage_default_tab_upcoming": "Upcoming",
+        "homepage_default_tab_specials": "Specials",
+        "wishlist": "Items on your wishlist",
+        "add_another_region": "Add"
     },
     "ready": {
         "errormsg": "Error loading Enhanced Steam data",
