@@ -7392,6 +7392,7 @@ $(document).ready(function(){
 
 					switch (true) {
 						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
+							alternative_linux_icon();
 							appdata_on_wishlist();
 							fix_wishlist_image_not_found();
 							add_empty_wishlist_buttons();
