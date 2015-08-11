@@ -2833,6 +2833,19 @@ function preview_greenlight_votes() {
 	});
 }
 
+function disable_greenlight_autoplay() {
+	storage.get(function(settings) {
+		if (settings.disablegreenlightautoplay === undefined) { settings.disablegreenlightautoplay = false; storage.set({'disablegreenlightautoplay': settings.disablegreenlightautoplay}); }
+		if (settings.disablegreenlightautoplay) {
+			$('iframe').each(function() {
+				if (this.src.match(/(?:[^:]:)?\/\/www.youtube.com\/embed\//)) {
+					this.src = this.src.replace("autoplay=1", "autoplay=0");
+				}
+			});
+		}
+	});
+}
+
 function hide_spam_comments() {
 	storage.get(function(settings) {
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; storage.set({'hidespamcomments': settings.hidespamcomments}); }
@@ -7477,6 +7490,7 @@ $(document).ready(function(){
 							break;
 
 						case /^\/sharedfiles\/.*/.test(path):
+							disable_greenlight_autoplay();
 							hide_greenlight_banner();
 							hide_spam_comments();
 							break;
