@@ -162,6 +162,7 @@
     "avg_price_3cards": "Average price of three trading cards",
     "mods": "Mods",
     "empty_wishlist": "Empty wishlist",
+    "empty_wishlist_confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
     "about": "About",
     "never": "Never",
     "coupon_available": "You have a coupon available!",
@@ -189,6 +190,15 @@
     "collections":"Collections",
     "discussions":"Discussions",
     "about_greenlight":"About Greenlight",
+    "add_wishlist_note": "Add a wishlist note",
+    "update_wishlist_note": "Update wishlist note",
+    "add_wishlist_note_prompt": "Enter your wishlist note",
+    "update_wishlist_note_prompt": "Update your wishlist note",
+    "results": "__num__ Results",
+    "all_results": "All __num__ results displayed",
+    "see_more": "See more",
+    "lowest_price_format": "__price__ at __store__",
+    "historical_low_format": "__price__ at __store__ on __date__",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
@@ -391,6 +401,7 @@
         "unsupported": "This score is awarded to games that have no __type__ support.  The game may be unplayable in __type__, or the image is stretched to fit the window.  Correct aspect ratio is not retained.",
         "gold": "This medal is awarded to games which have received perfect scores from the WSGF for their __type__ support, and are __type__ Certified.",
         "silver": "This medal is awarded to games that have received a calculated grade of B for their __type__ support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.",
-        "limited": "This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues."
+        "limited": "This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues.",
+        "certifications": "WSGF Widescreen Certifications"
     }
 }

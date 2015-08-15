@@ -1239,10 +1239,10 @@ function add_wishlist_pricehistory() {
 	                    		}
 	                    	}
 
-	                        line1 = localized_strings.lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+	                        line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 	                    	if (settings.showlowestpricecoupon) {
 	                    		if (data["price"]["price_voucher"]) {
-	                    			line1 = localized_strings.lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price_voucher"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+	                    			line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 	                    		}
 	                    	}
 	                    }
@@ -1250,7 +1250,7 @@ function add_wishlist_pricehistory() {
 						// "Historical Low"
 						if (data["lowest"]) {
 	                        recorded = new Date(data["lowest"]["recorded"]*1000);
-	                        line2 = localized_strings.historical_low + ': ' + formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+	                        line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 	                    }
 
 						// "Number of times this game has been in a bundle"
@@ -1311,7 +1311,7 @@ function add_wishlist_notes() {
 			$(".wishlistRow").each(function() {
 				var appid = $(this).attr("id").replace("game_", "");
 				var node = $(this);
-				$(this).find(".bottom_controls .popup_block2 .popup_body2").append("<a class='popup_menu_item2 tight es_add_wishlist_note' id='es_add_wishlist_note_" + appid + "'><h5>Add a wishlist note</h5></a>");
+				$(this).find(".bottom_controls .popup_block2 .popup_body2").append("<a class='popup_menu_item2 tight es_add_wishlist_note' id='es_add_wishlist_note_" + appid + "'><h5>"+localized_strings.add_wishlist_note+"</h5></a>");
 				storage.get(function(settings) {
 					var key = appid + "wishlist_note";
 					var array = $.map(settings, function(value, index) {
@@ -1320,7 +1320,7 @@ function add_wishlist_notes() {
 					var wl_note = array[0];
 					if (wl_note) {
 						$(node).find("h4").after("<div class='es_wishlist_note'>" + wl_note.toString() + "</div").css("padding-top", "6px");
-						$("#es_add_wishlist_note_" + appid).find("h5").text("Update wishlist note");
+						$("#es_add_wishlist_note_" + appid).find("h5").text(localized_strings.update_wishlist_note);
 						if ($(node).find(".es_wishlist_note")[0].scrollWidth > $(node).find(".es_wishlist_note")[0].clientWidth) { $(node).find(".es_wishlist_note").attr("title", wl_note); }
 					}
 				});
@@ -1337,9 +1337,9 @@ function add_wishlist_notes() {
 					});
 					var wl_note = array[0];
 					if (wl_note) {
-						var note = prompt("Update your wishlist note", wl_note);
+						var note = prompt(localized_strings.update_wishlist_note_prompt, wl_note);
 					} else {
-						var note = prompt("Enter your wishlist note", "");
+						var note = prompt(localized_strings.add_wishlist_note_prompt, "");
 					}
 					switch (note) {
 						case null:
@@ -1363,7 +1363,7 @@ function add_wishlist_notes() {
 
 // Removes all items from the user's wishlist
 function empty_wishlist() {
-	var conf_text = "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!";
+	var conf_text = localized_strings.empty_wishlist_confirm;
 	var conf = confirm(conf_text);
 	if (conf) {
 		var wishlist_class = ".wishlistRow";
@@ -1950,10 +1950,10 @@ function show_pricing_history(appid, type) {
 									}
 								}
 
-								line1 = localized_strings.lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 								if (settings.showlowestpricecoupon) {
 									if (data["price"]["price_voucher"]) {
-										line1 = localized_strings.lowest_price + ': ' + formatCurrency(escapeHTML(data["price"]["price_voucher"].toString()), currency_type) + ' at <a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a> ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+										line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 									}
 								}
 							}
@@ -1961,7 +1961,7 @@ function show_pricing_history(appid, type) {
 							// "Historical Low"
 							if (data["lowest"]) {
 								recorded = new Date(data["lowest"]["recorded"]*1000);
-								line2 = localized_strings.historical_low + ': ' + formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type) + ' at ' + escapeHTML(data["lowest"]["store"].toString()) + ' on ' + recorded.toDateString() + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 							}
 
 							html = "<div class='es_lowest_price' id='es_price_" + subid + "'><div class='gift_icon' id='es_line_chart_" + subid + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
@@ -2404,7 +2404,7 @@ function endless_scrolling() {
 			$(".search_pagination_right").css("display", "none");
 			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
 				result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
-				$(".search_pagination_left").text(result_count + " Results");
+				$(".search_pagination_left").text(localized_strings.results.replace("__num__", result_count));
 			}
 
 			$(window).scroll(function () {
@@ -2413,7 +2413,7 @@ function endless_scrolling() {
 					if (result_count > $('.search_result_row').length)
 						load_search_results();
 					else
-						$(".search_pagination_left").text('All ' + result_count + ' results displayed');
+						$(".search_pagination_left").text(localized_strings.all_results.replace("__num__", result_count));
 				}
 			});
 		}
@@ -2565,7 +2565,7 @@ function add_popular_tab() {
 						i++;
 					}
 				});
-				$("#tab_popular_content").append("<div class='tab_see_more'>See more: <a href='//store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>Popular Games</span></a></div>");
+				$("#tab_popular_content").append("<div class='tab_see_more'>"+localized_strings.see_more+": <a href='//store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>"+localized_strings.popular+"</span></a></div>");
 			});
 		}
 	});
@@ -3202,7 +3202,7 @@ function add_widescreen_certification(appid) {
 									break;
 							}
 
-							var html = "<div class='block underlined_links'><div class='block_header'><h4>WSGF Widescreen Certifications</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
+							var html = "<div class='block underlined_links'><div class='block_header'><h4>"+localized_strings.wsgf.certifications+"</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
 
 							if (wsg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 							if (mmg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }

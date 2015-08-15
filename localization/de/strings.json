@@ -159,6 +159,7 @@
   "avg_price_3cards":"Durchschnittspreis von drei Sammelkarten",
   "mods":"Modifikationen",
   "empty_wishlist":"Wunschliste leeren",
+  "empty_wishlist_confirm": "Bist du sicher, dass du deine Wunschliste leeren willst?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
   "about":"Über",
   "never":"Niemals",
   "coupon_available":"Du hast einen Gutschein zur Verfügung!",
@@ -185,6 +186,15 @@
   "collections":"Kollektionen",
   "discussions":"Diskussionen",
   "about_greenlight":"Über Greenlight",
+  "add_wishlist_note": "Wunschlisten-Notiz hinzufügen",
+  "update_wishlist_note": "Wunschlisten-Notiz aktualisieren",
+  "add_wishlist_note_prompt": "Gib deine Wunschlisten-Notiz ein",
+  "update_wishlist_note_prompt": "Aktualisiere deine Wunschlisten-Notiz",
+  "results": "__num__ Ergebnisse",
+  "all_results": "Alle __num__ Ergebnisse angezeigt",
+  "see_more": "Mehr ansehen",
+  "lowest_price_format": "__price__ bei __store__",
+  "historical_low_format": "__price__ bei __store__ am __date__",
   "achievements":{
     "option":"Errungenschaften auf Shop Seiten anzeigen",
     "achievements":"Errungenschaften",
@@ -384,6 +394,7 @@
     "unsupported":"Diese Punktzahl wir Spielen verliehen die keinerlei __type__ Unterstützung haben. Es kann sein das das Spiel unspielbar in __type__ ist oder das Bild gestreckt wird um den Bildschirm auszufüllen. Das korrekte Seitenverhältniss wird nicht beibehalten.",
     "gold":"Diese Medaille wird Spielen verliehen die eine perfekte Punktzahl von der WSGF für __type__ Unterstützung und __type__ erhalten haben.",
     "silver":"Diese Medaille wird Spielen verliehen die eine kalkulierte Stufe B für ihre __type__  unterstützung erhalten haben. Alle diese Spiele haben keine größeren Mängel aber ein oder mehere kleine Fehler haben verhindert das sie eine Perfekte Punktzahl erhalten haben.",
-    "limited":"Diese Medaille wird Spielen verliehen die eine kalkulierte Stufe C für ihre __type__ unterstützung erhalten haben. Alle diese Spiele haben __type__ Unterstützung, leiden aber unter wesentlichen Problemen."
+    "limited":"Diese Medaille wird Spielen verliehen die eine kalkulierte Stufe C für ihre __type__ unterstützung erhalten haben. Alle diese Spiele haben __type__ Unterstützung, leiden aber unter wesentlichen Problemen.",
+    "certifications": "WSGF-Breitbild-Zertifizierungen"
   }
 }
