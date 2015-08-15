@@ -671,6 +671,14 @@ function load_translation() {
 			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
 			$("#show_alternative_linux_icon_text").text(localized_strings.options.show_alternative_linux_icon);
 			
+			$("#warning_language option").each(function() {
+				var lang = $(this).text();
+				var lang_trl = localized_strings.options.lang[this.value.toLowerCase()];
+				if (lang != lang_trl) {
+					$(this).text(lang + " (" + lang_trl + ")");
+				}
+			});
+			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
 			$("#store_regionalprice_header").text(localized_strings.options.regional_price);
