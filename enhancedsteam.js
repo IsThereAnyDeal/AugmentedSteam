@@ -1645,17 +1645,10 @@ function add_language_warning() {
 			}
 			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
-			function make_language_pretty(language_string) {
-				return {"Schinese": "Simplified Chinese",
-					"Tchinese": "Traditional Chinese",
-					"Koreana": "Korean"}[language_string] || language_string;
-			}
-
 			if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = currentLanguage; storage.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 			var lang = settings.showlanguagewarninglanguage.toLowerCase();
 
-			currentLanguage = make_language_pretty(currentLanguage);
-			var warning_language = make_language_pretty(settings.showlanguagewarninglanguage);
+			var warning_language = settings.showlanguagewarninglanguage;
 
 			if (warning_language != currentLanguage) {
 				var l_code = {"bulgarian": "bg",
@@ -1685,7 +1678,7 @@ function add_language_warning() {
 					"ukrainian": "uk"}[settings.showlanguagewarninglanguage.toLowerCase()] || "en";
 				$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
 					localized_strings_native = data;
-					$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings_native.using_language.replace("__current__", currentLanguage) + '  <a href="#" id="reset_language_code">' + localized_strings_native.using_language_return.replace("__base__", warning_language) + '</a></div>');
+					$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings_native.using_language.replace("__current__", localized_strings_native.options.lang[currentLanguage.toLowerCase()]) + '  <a href="#" id="reset_language_code">' + localized_strings_native.using_language_return.replace("__base__", localized_strings_native.options.lang[warning_language.toLowerCase()]) + '</a></div>');
 					$("#page_background_holder").css("top", "135px");
 					$("#reset_language_code").click(function(e) {
 						e.preventDefault();
