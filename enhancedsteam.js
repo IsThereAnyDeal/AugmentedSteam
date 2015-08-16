@@ -4357,7 +4357,7 @@ function process_early_access() {
 								$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), $(this).position().left); });
 								break;
 							case /^\/$/.test(window.location.pathname):
-								$(".home_smallcap").each(function(index, value) { check_early_access($(this), 15); });
+								$(".home_smallcap").each(function(index, value) { $(this).find("img").wrap("<div class='es-img-prep' href='" + $(this).attr("href") + "'></div>"); check_early_access($(this).find(".es-img-prep"), 15); });
 								$(".cap").each(function(index, value) { check_early_access($(this)); });
 								$(".special").each(function(index, value) { check_early_access($(this)); });
 								$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
