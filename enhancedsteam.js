@@ -2071,7 +2071,7 @@ function drm_warnings(type) {
 
 			// Ubisoft Uplay detection
 			if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-			if (text.match(/\buplay/i)) { uplay = true; }
+			if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
 
 			// Securom detection
 			if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
