@@ -119,6 +119,7 @@ function save_options() {
 	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 	dynamicgreenlight = $("#dynamicgreenlight").prop('checked');
+	disablegreenlightautoplay = $("#disablegreenlightautoplay").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
@@ -216,6 +217,7 @@ function save_options() {
 		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
 		'dynamicgreenlight': dynamicgreenlight,
+		'disablegreenlightautoplay': disablegreenlightautoplay,
 		'hideactivelistings': hideactivelistings,
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
@@ -421,6 +423,7 @@ function load_options() {
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; chrome.storage.sync.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
+		if (settings.disablegreenlightautoplay === undefined) { settings.disablegreenlightautoplay = false; chrome.storage.sync.set({'disablegreenlightautoplay': settings.disablegreenlightautoplay}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
@@ -519,6 +522,7 @@ function load_options() {
 		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
 		$("#dynamicgreenlight").prop('checked', settings.dynamicgreenlight);
+		$("#disablegreenlightautoplay").prop('checked', settings.disablegreenlightautoplay);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
@@ -634,6 +638,15 @@ function load_translation() {
 			$("#store_general").text(localized_strings.options.general);
 			$("#header_showfakeccwarning_text").text(localized_strings.options.show_regionwarning);
 			$("#store_show_languagewarning_text").text(localized_strings.options.show_languagewarning);
+			$("#homepage_text").text(localized_strings.options.homepage);
+			$("#homepage_default_tab_text").text(localized_strings.options.homepage_default_tab + ":");
+			$("select#homepage_tab_selection option[value=remember]").text(localized_strings.options.homepage_default_tab_remember);
+			$("select#homepage_tab_selection option[value=tab_newreleases_content_trigger]").text(localized_strings.options.homepage_default_tab_newreleases);
+			$("select#homepage_tab_selection option[value=es_allreleases]").text(localized_strings.options.homepage_default_tab_allreleases);
+			$("select#homepage_tab_selection option[value=tab_topsellers_content_trigger]").text(localized_strings.options.homepage_default_tab_topsellers);
+			$("select#homepage_tab_selection option[value=tab_upcoming_content_trigger]").text(localized_strings.options.homepage_default_tab_upcoming);
+			$("select#homepage_tab_selection option[value=tab_specials_content_trigger]").text(localized_strings.options.homepage_default_tab_specials);
+			$("select#homepage_tab_selection option[value=es_popular]").text(localized_strings.popular);
 			$("#send_age_info_text").text(localized_strings.options.send_age_info);
 			$("#html5video_text").text(localized_strings.options.html5video);
 			$("#contscroll_text").text(localized_strings.options.contscroll);
@@ -658,13 +671,22 @@ function load_translation() {
 			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
 			$("#show_alternative_linux_icon_text").text(localized_strings.options.show_alternative_linux_icon);
 			
+			$("#warning_language option").each(function() {
+				var lang = $(this).text();
+				var lang_trl = localized_strings.options.lang[this.value.toLowerCase()];
+				if (lang != lang_trl) {
+					$(this).text(lang + " (" + lang_trl + ")");
+				}
+			});
+			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
 			$("#store_regionalprice_header").text(localized_strings.options.regional_price);
 			$("#showregionalprice_text").text(localized_strings.options.regional_price_on);
-			$('select option:contains("Always")').text(localized_strings.always);
-			$('select option:contains("Never")').text(localized_strings.never);
-			$('select option:contains("on Price Mouseover")').text(localized_strings.options.regional_price_mouse);
+			$('select#regional_price_on option[value=always]').text(localized_strings.always);
+			$('select#regional_price_on option[value=off]').text(localized_strings.never);
+			$('select#regional_price_on option[value=mouse]').text(localized_strings.options.regional_price_mouse);
+			$("#add_another_region").text(localized_strings.options.add_another_region);
 			
 			$("#community_general").text(localized_strings.options.general);
 			$("#community_market").text(localized_strings.options.market);
@@ -679,16 +701,22 @@ function load_translation() {
 			$("#total_spent_text").text(localized_strings.options.total_spent);
 			$("#steamrep_api_text").text(localized_strings.options.steamrepapi);
 			$("#market_total_text").text(localized_strings.options.market_total);
+			$("#hideactivelistings_text").text(localized_strings.options.hideactivelistings);
 			$("#inventory_nav_text").text(localized_strings.options.inventory_nav_text);
 			$("#es_background_text").text(localized_strings.options.es_bg);
 			$("#quickinv_text").text(localized_strings.options.quickinv);
 			$("#quickinv_diff_text").text(localized_strings.options.quickinv_diff);
+			$("#show_quickinv_diff").text("("+localized_strings.customize+")");
+			$("#quickinv_default").text(localized_strings.theworddefault);
 			$("#allachievements_text").text(localized_strings.options.showallachievements);
 			$("#showcomparelinks_text").text(localized_strings.options.showcomparelinks);
 			$("#greenlight_banner_text").text(localized_strings.options.greenlight_banner);
 			$("#dynamicgreenlight_text").text(localized_strings.options.dynamicgreenlight);
+			$("#disablegreenlightautoplay_text").text(localized_strings.options.disablegreenlightautoplay);
+			$("#hidespamcomments_text").text(localized_strings.options.hidespamcomments);
 			$("#spamcommentregex_text").text(localized_strings.options.spamcommentregex);
-			$("#show_spamcommentregex").text(localized_strings.options.customizespamcommentregex);
+			$("#show_spamcommentregex").text("("+localized_strings.customize+")");
+			$("#spamcommentregex_default").text(localized_strings.theworddefault);
 			$("#steamcardexchange_text").text(localized_strings.options.steamcardexchange);
 			$("#wlbuttoncommunityapp_text").text(localized_strings.options.wlbuttoncommunityapp);
 			$("#show1clickgoo_text").text(localized_strings.options.show1clickgoo);
