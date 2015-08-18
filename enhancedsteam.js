@@ -3510,7 +3510,7 @@ function account_total_spent() {
 						var sessionid = $(".page_header_ctn").text().match(/g_sessionID = \"(.+)\";/)[1];
 						var history_promise = (function () {
 							var deferred = new $.Deferred();
-							get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?sessionid=" + sessionid, function(txt) {
+							get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?l=en&sessionid=" + sessionid, function(txt) {
 								var history = JSON.parse(txt);
 								var history_html = $.parseHTML(history["html"]);
 								$.each(history_html, function() {
@@ -3525,7 +3525,7 @@ function account_total_spent() {
 									}
 								});
 								if (history["cursor"]) {
-									get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?cursor%5Btimestamp_newest%5D=" + history["cursor"]["timestamp_newest"] + "&sessionid=" + sessionid, function(txt) {
+									get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?l=en&cursor%5Btimestamp_newest%5D=" + history["cursor"]["timestamp_newest"] + "&sessionid=" + sessionid, function(txt) {
 										var history = JSON.parse(txt);
 										var history_html = $.parseHTML(history["html"]);
 										$.each(history_html, function() {
