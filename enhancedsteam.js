@@ -3518,10 +3518,17 @@ function account_total_spent() {
 										amount = $(this).find(".wht_total").text().trim(),
 										items = $(this).find(".wht_items").text().trim();
 									if (amount && !amount.match("Credit") && type && !items.match("Wallet Credit")) {
-										if (type.match(/^Purchase/)) game_total += parse_currency(amount).value;
-										if (type.match("Market Transaction")) market_total += parse_currency(amount).value;
-										if (type.match("Gift Purchase")) { gift_total += parse_currency(amount).value; }
-										if (type.match("In-Game Purchase")) ingame_total += parse_currency(amount).value;
+										var parsed = parse_currency(amount),
+											calc_value;
+										if (parsed.currency_type != local_currency) {
+											calc_value = parsed.value / getValue(parsed.currency_type + "to" + local_currency);
+										} else {
+											calc_value = parsed.value;
+										}
+										if (type.match(/^Purchase/)) game_total += calc_value;
+										if (type.match("Market Transaction")) market_total += calc_value;
+										if (type.match("Gift Purchase")) { gift_total += calc_value; }
+										if (type.match("In-Game Purchase")) ingame_total += calc_value;
 									}
 								});
 								if (history["cursor"]) {
@@ -3533,10 +3540,17 @@ function account_total_spent() {
 												amount = $(this).find(".wht_total").text().trim(),
 												items = $(this).find(".wht_items").text().trim();
 											if (amount && !amount.match("Credit") && type && !items.match("Wallet Credit")) {
-												if (type.match(/^Purchase/)) game_total += parse_currency(amount).value;
-												if (type.match("Market Transaction")) market_total += parse_currency(amount).value;
-												if (type.match("Gift Purchase")) gift_total += parse_currency(amount).value;
-												if (type.match("In-Game Purchase")) ingame_total += parse_currency(amount).value;
+												var parsed = parse_currency(amount),
+													calc_value;
+												if (parsed.currency_type != local_currency) {
+													calc_value = parsed.value / getValue(parsed.currency_type + "to" + local_currency);
+												} else {
+													calc_value = parsed.value;
+												}
+												if (type.match(/^Purchase/)) game_total += calc_value;
+												if (type.match("Market Transaction")) market_total += calc_value;
+												if (type.match("Gift Purchase")) { gift_total += calc_value; }
+												if (type.match("In-Game Purchase")) ingame_total += calc_value;
 											}
 										});
 										deferred.resolve();
