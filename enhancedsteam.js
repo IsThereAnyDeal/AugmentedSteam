@@ -3498,7 +3498,7 @@ function account_total_spent() {
 				});
 
 				function start_total() {
-					if (window.location.pathname == "/account/store_transactions/") {
+					if (window.location.pathname.match("/account(/store_transactions)?/?$")) {
 						$(".account_setting_block:first .account_setting_sub_block:nth-child(2)").prepend("<div id='es_total' class='es_loading' style='text-align: center;'><span>" + localized_strings.loading + "</span></div>");
 
 						var game_total = 0,
