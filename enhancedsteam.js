@@ -7331,7 +7331,7 @@ $(document).ready(function(){
 							dlc_data_for_dlc_page();
 							break;
 
-						case /^\/account\/.*/.test(path):
+						case /^\/account(\/.*)?/.test(path):
 							account_total_spent();
 							replace_account_name();
 							return;
