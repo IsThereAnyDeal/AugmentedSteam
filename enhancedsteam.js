@@ -6550,55 +6550,45 @@ function add_badge_sort() {
 
 function add_achievement_sort() {
 	if ($("#personalAchieve").length > 0) {
-		if (language == "english") {
-			$("#tabs").before("<div id='achievement_sort_options' class='sort_options'>" + localized_strings.sort_by + "<span id='achievement_sort_default'>" + localized_strings.theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + localized_strings.date_unlocked + "</span></div>");
-			$("#personalAchieve").clone().insertAfter("#personalAchieve").attr("id", "personalAchieveSorted").css("padding", "0px 16px").hide();	
+		$("#tabs").before("<div id='achievement_sort_options' class='sort_options'>" + localized_strings.sort_by + "<span id='achievement_sort_default'>" + localized_strings.theworddefault + "</span><span id='achievement_sort_date' class='es_achievement_sort_link'>" + localized_strings.date_unlocked + "</span></div>");
+		$("#personalAchieve").clone().insertAfter("#personalAchieve").attr("id", "personalAchieveSorted").css("padding", "0px 16px").hide();
+
+		var ajax_url = window.location.href.replace(/(\?[^#]*)?(?:#.*)?$/, function(string, search) {
+			return (search ? search + "&" : "?" ) + "xml=1"
+		});
+		get_http(ajax_url, function(data) {
+			var unlocktimes = {};
+			$($.parseXML(data)).find("unlockTimestamp").each(function() {
+				var imagesrc = $(this).siblings("iconClosed").text();
+				var unlocktime = parseInt($(this).text());
+				unlocktimes[imagesrc] = unlocktime;
+			});
 
 			var achRows = [];
-			$("#personalAchieveSorted").find(".achieveUnlockTime").each(function() {
-				var push = new Array();
-				push[0] = $(this).parent().parent().parent();
-				$(this).parent().parent().parent().next().remove();
-				var unlocktime = $(this).text().trim().replace(/^.+\: /, "").replace(/jan/i, "01").replace(/feb/i, "02").replace(/mar/i, "03").replace(/apr/i, "04").replace(/may/i, "05").replace(/jun/i, "06").replace(/jul/i, "07").replace(/aug/i, "08").replace(/sep/i, "09").replace(/oct/i, "10").replace(/nov/i, "11").replace(/dec/i, "12");
-				var year = new Date().getFullYear();
-				if ($(this).text().replace(/^.+\: /, "").match(/^\d/)) {
-					var parts = unlocktime.match(/(\d+) (\d{2})(?:, (\d{4}))? \@ (\d+):(\d{2})(am|pm)/);
-				} else {
-					var parts = unlocktime.match(/(\d{2}) (\d+)(?:, (\d{4}))? \@ (\d+):(\d{2})(am|pm)/);
-				}
-
-				if (parts[3] === undefined) parts[3] = year;
-				if (parts[6] == "pm" && parts[4] != 12) parts[4] = (parseFloat(parts[4]) + 12).toString();
-				if (parts[6] == "am" && parts[4] == 12) parts[4] = (parseFloat(parts[4]) - 12).toString();
-				
-				if ($(this).text().replace(/^.+\: /, "").match(/^\d/)) {
-					push[2] = Date.UTC(+parts[3], parts[2]-1, +parts[1], +parts[4], +parts[5]) / 1000;
-				} else {
-					push[2] = Date.UTC(+parts[3], parts[1]-1, +parts[2], +parts[4], +parts[5]) / 1000;
-				}	
-				achRows.push(push);
+			$("#personalAchieveSorted .achieveUnlockTime").each(function() {
+				var achRow = $(this).closest(".achieveRow").remove();
+				var unlocktime = unlocktimes[achRow.find(".achieveImgHolder img")[0].src];
+				achRows.push([achRow, unlocktime]);
 			});
 
-			achRows.sort();
-
-			$(achRows).each(function(index, value) {
+			$(achRows.sort()).each(function() {
 				$("#personalAchieveSorted").prepend(this[0]);
 			});
+		});
 
-			$("#achievement_sort_default").on("click", function() {
-				$(this).removeClass('es_achievement_sort_link');
-				$("#achievement_sort_date").addClass("es_achievement_sort_link");
-				$("#personalAchieve").show();
-				$("#personalAchieveSorted").hide();
-			});
+		$("#achievement_sort_default").on("click", function() {
+			$(this).removeClass('es_achievement_sort_link');
+			$("#achievement_sort_date").addClass("es_achievement_sort_link");
+			$("#personalAchieve").show();
+			$("#personalAchieveSorted").hide();
+		});
 
-			$("#achievement_sort_date").on("click", function() {
-				$(this).removeClass('es_achievement_sort_link');
-				$("#achievement_sort_default").addClass("es_achievement_sort_link");
-				$("#personalAchieve").hide();
-				$("#personalAchieveSorted").show();
-			});
-		}
+		$("#achievement_sort_date").on("click", function() {
+			$(this).removeClass('es_achievement_sort_link');
+			$("#achievement_sort_default").addClass("es_achievement_sort_link");
+			$("#personalAchieve").hide();
+			$("#personalAchieveSorted").show();
+		});
 	}
 }
 
