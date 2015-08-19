@@ -3818,6 +3818,127 @@ function inventory_market_helper(response) {
 	}
 }
 
+function add_relist_button() {
+	$("#market_removelisting_dialog_cancel").on("click", function() {
+		$("#es_relist_confirm").hide();
+		$("#market_removelisting_dialog_title").show();
+		$("#market_removelisting_dialog_title_relist").hide();
+		$("#market_removelisting_dialog_description").show();
+		$("#market_removelisting_dialog_description_relist").hide();
+		$("#es_relist").show();
+		$("#es_sell").hide();
+	});
+
+	$("#market_removelisting_dialog_accept").on("click", function() {
+		$("#es_relist").hide();
+	});
+
+	$(".market_listing_cancel_button").on("click", function() {
+		if ($(this).find("a").attr("href").match(/'mylisting', '\d+', 753, '\d+', '\d+'/)) {
+			if ($("#es_relist").length == 0) {
+				$("#market_removelisting_dialog_accept").after("<a id='es_relist' href='#' style='float: right; margin-right: 10px;' class='btn_green_white_innerfade btn_medium_wide'><span>" + localized_strings.edit_price + "</span></a>");		
+			} else {
+				$("#es_relist").show();
+			}
+			$("#es_relist").on("click", function() {
+				if ($("#market_removelisting_dialog_title_relist").length == 0) {
+					$("#market_removelisting_dialog_title").clone().attr("id", "market_removelisting_dialog_title_relist").text(localized_strings.relist_an_item).appendTo("#market_removelisting_dialog .market_dialog_title");
+				} else {
+					$("#market_removelisting_dialog_title_relist").show();
+				}
+				$("#market_removelisting_dialog_title").hide();
+				if ($("#market_removelisting_dialog_description_relist").length == 0) {
+					$("#market_removelisting_dialog_confirmation div:first").attr("id", "market_removelisting_dialog_description");
+					$("#market_removelisting_dialog_description").clone().attr("id", "market_removelisting_dialog_description_relist").text(localized_strings.relist_text).prependTo("#market_removelisting_dialog_confirmation");
+				} else {
+					$("#market_removelisting_dialog_description_relist").text(localized_strings.relist_text);
+					$("#market_removelisting_dialog_description_relist").show();
+				}
+				$("#market_removelisting_dialog_description").hide();
+				$("#market_removelisting_dialog_accept").hide();
+				$("#es_relist").hide();
+				if ($("#es_relist_confirm").length == 0) {
+					$("#es_relist").before("<a id='es_relist_confirm' href='#' style='float: right; margin-right: 10px;' class='btn_green_white_innerfade btn_medium_wide btn_disabled'><span>" + localized_strings.relist + "</span></a><div id='es_sell'></div>");
+				} else {
+					$("#es_relist_confirm").show();
+					$("#es_sell").show();
+				}	
+				if ($(".market_sell_dialog_input_group").length == 0) {
+					$("#es_sell").load("//steamcommunity.com/my/inventory/ .market_sell_dialog_input_group:last", function() { 
+						$(".market_sell_dialog_input_group").css("float", "right");
+						$("#market_sell_buyercurrency_input").focus();
+						$("#es_relist_confirm").removeClass("btn_disabled");
+					});
+				} else {
+					$("#market_sell_buyercurrency_input").val("");
+					$(".market_sell_dialog_input_group").show();
+					$("#market_sell_buyercurrency_input").focus();
+					$("#es_relist_confirm").removeClass("btn_disabled");
+				}
+				
+				$("#es_relist_confirm").on("click", function() {
+					var sell_price = parseFloat($("#market_sell_buyercurrency_input").val()) * 100;
+					if (isNaN(sell_price)) return;
+
+					$("#es_relist_confirm").hide();
+					$(".market_sell_dialog_input_group").hide();
+					$("#market_removelisting_dialog_accept_throbber").show();
+					runInPageContext("function() { var sessionid = g_sessionID; var fee = CalculateFeeAmount (" + sell_price + ", 0.10); window.postMessage({ type: 'es_relist', information: [sessionid,fee] }, '*'); }");
+					window.addEventListener("message", function(event) {
+						if (event.source != window)	return;
+						if (event.data.type && (event.data.type == "es_relist")) { 
+							var sessionid = event.data.information[0];
+							var fee = event.data.information[1];
+							sell_price = sell_price -fee.fees;
+							var item_link = $("#market_removelisting_dialog_itemname a").attr("href");
+							var item_page = $(".market_listing_item_name_block .market_listing_item_name_link[href$='" + item_link + "']");
+							var item_remove = $(item_page).parent().parent().parent().find(".market_listing_cancel_button a").attr("href");
+							var matches = item_remove.match(/'mylisting', '(\d+)', (\d+), '(\d+)', '(\d+)'/);
+							if (matches) {
+								var listingid = matches[1],
+									appid = matches[2],
+									contextid = matches[3],
+									itemid = matches[4];
+								$.ajax({
+									url:"https://steamcommunity.com/market/removelisting/" + listingid,
+									type: "POST",
+									data:{
+										"sessionid": sessionid
+									}
+								}).done(function(){
+									$.ajax({
+										url:"https://steamcommunity.com/market/sellitem/",
+										type: "POST",
+										data:{
+											"sessionid": sessionid,
+											"appid": appid,
+											"contextid": contextid,
+											"assetid": itemid,
+											"amount": 1,
+											"price": sell_price
+										},
+										crossDomain: true,
+										xhrFields: { withCredentials: true }
+									}).done(function(){
+										// For now, simply reload the page.
+										window.location.reload();
+									}).fail(function(data){
+										var response = JSON.parse(data.responseText);
+										$("#market_removelisting_dialog_description_relist").html("<b>" + response.message + "</b>");
+										$("#market_removelisting_dialog_accept_throbber").hide();
+									});
+								});
+							}
+						}
+					});
+				});
+			});
+		} else {
+			$("#es_relist").remove();
+		}
+	});
+}
+
 function hide_empty_inventory_tabs() {
 	var tab_count = 0;
 	$('div.games_list_tabs > a[id^="inventory_link_"]').each(function() {
@@ -7501,6 +7622,7 @@ $(document).ready(function(){
 							add_active_total();
 							minimize_active_listings();
 							add_lowest_market_price();
+							add_relist_button();
 							keep_ssa_checked();
 							break;
 

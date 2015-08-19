@@ -1,6 +1,7 @@
 v7.8
 -----
 + Added quick sell and instant sell buttons to Steam Community items in inventory
++ Added an "Edit Price" button to market listings for Steam Community items when pressing "Remove"
 + Added an option to prevent Greenlight videos from automatically playing when loading the page
 : Fixed a bug that caused sorted achievements not to display correctly
 : Fixed a bug that could sometimes cause Early Access banners to cover non-image elements on the home page
