@@ -1639,9 +1639,16 @@ function add_language_warning() {
 	storage.get(function(settings) {
 		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
 		if (settings.showlanguagewarning) {
-			var currentLanguage = "english";
-			if (cookie.match(/language=([a-z]+)/i)) {
-				currentLanguage = cookie.match(/language=([a-z]+)/i)[1];
+			var currentLanguage;
+			$("script[src]").each(function() {
+				var match = this.src.match(/(?:\?|&(?:amp;)?)l=([^&]+)/);
+				if (match) {
+					currentLanguage = match[1];
+					return false;
+				}
+			});
+			if (currentLanguage === undefined) {
+				currentLanguage = (cookie.match(/language=([a-z]+)/i) || [])[1] || "english";
 			}
 			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
 
