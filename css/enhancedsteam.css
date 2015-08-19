@@ -851,3 +851,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	min-width: 120px;
 	text-align: center;
 }
+
+.search_suggest .match.focus {
+	background: #212d3d !important;
+}
