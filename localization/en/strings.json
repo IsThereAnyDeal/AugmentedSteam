@@ -335,6 +335,7 @@
         "greenlight_banner": "Replace Steam Greenlight banner",
         "dynamicgreenlight": "Use dynamic data while browsing Greenlight",
         "disablegreenlightautoplay": "Disable automatic playing of videos on Greenlight detail pages",
+        "remembergreenlightfilter": "Remember Greenlight filter options",
         "general": "General",
         "market": "Market",
         "inventory": "Inventory",

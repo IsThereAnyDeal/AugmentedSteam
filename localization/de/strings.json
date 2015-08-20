@@ -327,6 +327,7 @@
     "greenlight_banner":"Greenlight Banner ersetzen",
     "dynamicgreenlight":"Verwende dynamische Daten beim Durchsuchen von Greenlight",
     "disablegreenlightautoplay": "Deaktiviere automatisches Abspielen von Videos auf Greenlight-Seiten",
+    "remembergreenlightfilter": "Greenlight-Filter merken",
     "general":"Allgemeines",
     "show_languagewarning":"Warnung anzeigen wenn eine andere Sprache dargestellt wird als",
     "homepage": "Startseite",
