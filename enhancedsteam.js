@@ -2384,6 +2384,39 @@ function load_search_results () {
 	}
 }
 
+function load_search_results_greenlight () {
+	if (!processing) {
+		processing = true;
+		var search_url = document.URL.replace(/(?:[?&]p=\d+|(#)|$)/, "&p=" + search_page + "$1");
+		if ($(".LoadingWrapper").length === 0) {
+			$(".workshopBrowseRow").last().after('<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + localized_strings.loading + '</div></div>');
+		}
+		$.ajax({
+			url: search_url
+		}).done(function(data) {
+			var dom = $.parseHTML(data);
+			var rows = $(dom).find(".workshopBrowseRow");
+
+			$(".LoadingWrapper").remove();
+			$(".workshopBrowseRow").last().after(rows);
+			search_page++;
+			processing = false;
+
+			history.replaceState("", "", search_url)
+			preview_greenlight_votes();
+		}).fail(function() {
+			$(".LoadingWrapper").remove();
+			$(".workshopBrowseRow").last().after("<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + localized_strings.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + localized_strings.search_error_retry + ".</a></div>");
+
+			$("#es_retry").click(function() {
+				processing = false;
+				$("#es_error_msg").remove();
+				load_search_results_greenlight();
+			});
+		});
+	}
+}
+
 function is_element_in_viewport($elem) {
 	// only concerned with vertical at this point
 	var elem_offset = $elem.offset(),
@@ -2415,6 +2448,33 @@ function endless_scrolling() {
 						load_search_results();
 					else
 						$(".search_pagination_left").text(localized_strings.all_results.replace("__num__", result_count));
+				}
+			});
+		}
+	});
+}
+
+function endless_scrolling_greenlight() {
+	storage.get(function(settings) {
+		if (settings.contscroll === undefined) { settings.contscroll = true; storage.set({'contscroll': settings.contscroll}); }
+		if (settings.contscroll) {
+			$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
+			var result_count;
+			var last_page = parseInt($(".workshopBrowsePagingControls .pagelink").last().text());
+			$(".workshopBrowsePaging *").remove();
+			var match = $(".workshopBrowsePagingInfo").text().replace(/\d{1,3}([,. ]?\d{3})*\s*-\s*\d{1,3}([,. ]?\d{3})*/, "").match(/\d{1,3}([,. ]?\d{3})*/);
+			if (match) {
+				result_count = match[0].replace(/[^\d]/, "");
+				$(".workshopBrowsePagingInfo").text(localized_strings.results.replace("__num__", result_count));
+			}
+
+			$(window).scroll(function () {
+				if (is_element_in_viewport($(".workshopBrowsePaging"))) {
+					if (search_page <= last_page) {
+						load_search_results_greenlight();
+					} else {
+						$(".workshopBrowsePagingInfo").text(localized_strings.all_results.replace("__num__", result_count));
+					}
 				}
 			});
 		}
@@ -7644,6 +7704,10 @@ $(document).ready(function(){
 							add_profile_style();
 							break;
 
+						case /^\/sharedfiles\/browse/.test(path):
+							remember_greenlight_filter();
+							endless_scrolling_greenlight();
+
 						case /^\/sharedfiles\/.*/.test(path):
 							disable_greenlight_autoplay();
 							hide_greenlight_banner();
@@ -7652,6 +7716,7 @@ $(document).ready(function(){
 
 						case /^\/workshop\/.*/.test(path):
 							remember_greenlight_filter();
+							endless_scrolling_greenlight();
 							hide_greenlight_banner();
 							hide_spam_comments();
 							preview_greenlight_votes();
