@@ -2798,6 +2798,52 @@ function hide_greenlight_banner() {
 	});
 }
 
+function remember_greenlight_filter() {
+	storage.get(function(settings) {
+		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; storage.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
+		if (settings.greenlightfilteroptions === undefined) { settings.greenlightfilteroptions = []; storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions}); }
+		if (settings.remembergreenlightfilter) {
+			function setGreenlightFilter(option, checked) {
+				var i = $.inArray(option, settings.greenlightfilteroptions);
+				if (checked && i == -1) {
+					settings.greenlightfilteroptions.push(option);
+				} else if (!checked && i > -1) {
+					settings.greenlightfilteroptions.splice(i, 1);
+				}
+				settings.greenlightfilteroptions.sort();
+				storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions});
+			}
+
+			var checkboxes = $(".filterOption input[type=checkbox]");
+
+			if (!checkboxes.filter("[checked]").length && settings.greenlightfilteroptions.length) {
+				checkboxes.each(function() {
+					var option = this.id;
+					var i = $.inArray(option, settings.greenlightfilteroptions);
+					if (i > -1) {
+						this.checked = true;
+					}
+				});
+				$(".workshop_browse_search img").click();
+				return;
+			}
+
+			checkboxes.click(function() {
+				setGreenlightFilter(this.id, this.checked);
+			});
+
+			$(".searchedForTerm").click(function() {
+				var match = this.getAttribute("onclick").match(/RemoveSearchTagCheckbox\(\s*'([^']+)'\s*\)/);
+				if (match) {
+					setGreenlightFilter(match[1], false);
+				}
+			});
+		} else {
+			settings.greenlightfilteroptions = []; storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions});
+		}
+	});
+}
+
 function preview_greenlight_votes() {
 	if (!is_signed_in) return;
 	storage.get(function(settings) {
@@ -7604,6 +7650,7 @@ $(document).ready(function(){
 							break;
 
 						case /^\/workshop\/.*/.test(path):
+							remember_greenlight_filter();
 							hide_greenlight_banner();
 							hide_spam_comments();
 							preview_greenlight_votes();
