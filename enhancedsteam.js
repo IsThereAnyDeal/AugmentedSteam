@@ -1850,6 +1850,8 @@ function display_coupon_message(appid) {
 				actual_price_container = actual_price_container.replace(",", "");
 			}
 
+			actual_price_container = actual_price_container.replace(/\s/g, "");
+
 			var original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
 			var discounted_price = (original_price - (original_price * getValue(appid + "coupon_discount") / 100).toFixed(2)).toFixed(2);
 
