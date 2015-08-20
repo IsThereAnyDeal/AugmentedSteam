@@ -2293,7 +2293,7 @@ function alternative_linux_icon() {
 	storage.get(function(settings) {
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
 		if (settings.show_alternative_linux_icon) {
-			$("span.platform_img.linux").css("background-image","url("+chrome.extension.getURL("img/alternative_linux_icon.png")+")");
+			$("head").append("<style>span.platform_img.linux {background-image: url("+chrome.extension.getURL("img/alternative_linux_icon.png")+")}</style>")
 		}
 	});
 }
@@ -2332,7 +2332,6 @@ function appdata_on_wishlist() {
 						}
 					}
 				});
-				if((index+1) == $('a.btnv6_blue_hoverfade').length) alternative_linux_icon();
 			});
 		});
 	}
@@ -5607,7 +5606,6 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("search_result_row")) {
 					start_highlighting_node(node);
 					check_early_access(node);
-					alternative_linux_icon();
 				}
 
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
@@ -7512,6 +7510,7 @@ $(document).ready(function(){
 
 					switch (true) {
 						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
+							alternative_linux_icon();
 							appdata_on_wishlist();
 							fix_wishlist_image_not_found();
 							add_empty_wishlist_buttons();
