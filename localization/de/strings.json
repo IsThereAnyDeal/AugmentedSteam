@@ -328,6 +328,7 @@
     "dynamicgreenlight":"Verwende dynamische Daten beim Durchsuchen von Greenlight",
     "disablegreenlightautoplay": "Deaktiviere automatisches Abspielen von Videos auf Greenlight-Seiten",
     "remembergreenlightfilter": "Greenlight-Filter merken",
+    "endlessscrollinggreenlight": "Endlosen Bildlauf in den Greenlight-Suchergebnissen aktivieren",
     "general":"Allgemeines",
     "show_languagewarning":"Warnung anzeigen wenn eine andere Sprache dargestellt wird als",
     "homepage": "Startseite",

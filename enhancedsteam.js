@@ -2456,8 +2456,8 @@ function endless_scrolling() {
 
 function endless_scrolling_greenlight() {
 	storage.get(function(settings) {
-		if (settings.contscroll === undefined) { settings.contscroll = true; storage.set({'contscroll': settings.contscroll}); }
-		if (settings.contscroll) {
+		if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; storage.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
+		if (settings.endlessscrollinggreenlight) {
 			$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
 			var result_count;
 			var last_page = parseInt($(".workshopBrowsePagingControls .pagelink").last().text());
