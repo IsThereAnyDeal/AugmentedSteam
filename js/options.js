@@ -686,6 +686,9 @@ function load_translation() {
 					$(this).text(lang + " (" + lang_trl + ")");
 				}
 			});
+			$.each(localized_strings.options.lang, function(lang, lang_trl) {
+				$(".language."+lang).text(lang_trl+":");
+			});
 			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
