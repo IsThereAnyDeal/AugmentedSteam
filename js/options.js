@@ -121,6 +121,7 @@ function save_options() {
 	dynamicgreenlight = $("#dynamicgreenlight").prop('checked');
 	disablegreenlightautoplay = $("#disablegreenlightautoplay").prop('checked');
 	remembergreenlightfilter = $("#remembergreenlightfilter").prop('checked');
+	endlessscrollinggreenlight = $("#endlessscrollinggreenlight").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
 	hidespamcomments = $("#hidespamcomments").prop('checked');
 	spamcommentregex = $("#spamcommentregex").val().trim();
@@ -220,6 +221,7 @@ function save_options() {
 		'dynamicgreenlight': dynamicgreenlight,
 		'disablegreenlightautoplay': disablegreenlightautoplay,
 		'remembergreenlightfilter': remembergreenlightfilter,
+		'endlessscrollinggreenlight': endlessscrollinggreenlight,
 		'hideactivelistings': hideactivelistings,
 		'hidespamcomments': hidespamcomments,
 		'spamcommentregex': spamcommentregex,
@@ -427,6 +429,7 @@ function load_options() {
 		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; chrome.storage.sync.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
 		if (settings.disablegreenlightautoplay === undefined) { settings.disablegreenlightautoplay = false; chrome.storage.sync.set({'disablegreenlightautoplay': settings.disablegreenlightautoplay}); }
 		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; chrome.storage.sync.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
+		if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; chrome.storage.sync.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
 		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
@@ -527,6 +530,7 @@ function load_options() {
 		$("#dynamicgreenlight").prop('checked', settings.dynamicgreenlight);
 		$("#disablegreenlightautoplay").prop('checked', settings.disablegreenlightautoplay);
 		$("#remembergreenlightfilter").prop('checked', settings.remembergreenlightfilter);
+		$("#endlessscrollinggreenlight").prop('checked', settings.endlessscrollinggreenlight);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
 		$("#hidespamcomments").prop('checked', settings.hidespamcomments);
 		$("#spamcommentregex").val(settings.spamcommentregex);
@@ -718,6 +722,7 @@ function load_translation() {
 			$("#dynamicgreenlight_text").text(localized_strings.options.dynamicgreenlight);
 			$("#disablegreenlightautoplay_text").text(localized_strings.options.disablegreenlightautoplay);
 			$("#remembergreenlightfilter_text").text(localized_strings.options.remembergreenlightfilter);
+			$("#endlessscrollinggreenlight_text").text(localized_strings.options.endlessscrollinggreenlight);
 			$("#hidespamcomments_text").text(localized_strings.options.hidespamcomments);
 			$("#spamcommentregex_text").text(localized_strings.options.spamcommentregex);
 			$("#show_spamcommentregex").text("("+localized_strings.customize+")");
