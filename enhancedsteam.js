@@ -5063,6 +5063,12 @@ function customize_app_page() {
 		else { 
 			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_current'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.charts.current + "</div></div>"; 
 		}
+
+		// Steam spy
+		if (settings.show_steamspy_info) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_spy'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.spy.player_data + "</div></div>"; }
+		else { 
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_spy'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.spy.player_data + "</div></div>"; 
+		}
 		
 		// System Requirements
 		if ($(".sys_req").length > 0) {
@@ -5207,6 +5213,24 @@ function customize_app_page() {
 			if (settings.show_steamchart_info && $("#steam-charts").length == 0) {
 				var appid = get_appid(window.location.host + window.location.pathname);
 				add_steamchart_info(appid);
+			}
+		});
+
+		$("#show_apppage_spy").click(function() {
+			if (settings.show_steamspy_info) {
+				settings.show_steamspy_info = false;
+				$("#steam-spy").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_steamspy_info = true;
+				$("#steam-spy").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_steamspy_info': settings.show_steamspy_info});
+
+			if (settings.show_steamspy_info && $("#steam-spy").length == 0) {
+				var appid = get_appid(window.location.host + window.location.pathname);
+				add_steamspy_info(appid);
 			}
 		});
 
