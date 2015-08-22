@@ -8,6 +8,7 @@ v7.8
 : Fixed a bug that sometimes caused incorrect Uplay warning banners to appear on some Finnish store pages
 : Updated the design of the replacement Greenlight banner
 : Fixed a bug that would sometimes cause incorrect placement of birthday balloons over the Family View PIN entry
+: Fixed layout and formatting issues associated with custom profile backgrounds and themes
 
 
 v7.7
