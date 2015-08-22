@@ -2396,13 +2396,14 @@ function load_search_results_greenlight () {
 		}).done(function(data) {
 			var dom = $.parseHTML(data);
 			var rows = $(dom).find(".workshopBrowseRow");
+			rows.first().addClass("page_" + search_page);
 
 			$(".LoadingWrapper").remove();
 			$(".workshopBrowseRow").last().after(rows);
 			search_page++;
 			processing = false;
 
-			history.replaceState("", "", search_url)
+			if (is_element_in_viewport(rows.first().prev()) || is_element_in_viewport(rows.first())) history.replaceState("", "", search_url);
 			preview_greenlight_votes();
 		}).fail(function() {
 			$(".LoadingWrapper").remove();
@@ -2460,6 +2461,10 @@ function endless_scrolling_greenlight() {
 		if (settings.endlessscrollinggreenlight) {
 			$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
 			var result_count;
+			var page_match = document.URL.match(/\?(?:[^#]+&)*p=(\d+)/);
+			var curr_page = page_match ? parseInt(page_match[1]) : 1;
+			search_page = curr_page + 1;
+			$(".workshopBrowseRow").first().addClass("page_" + curr_page);
 			var last_page = parseInt($(".workshopBrowsePagingControls .pagelink").last().text());
 			$(".workshopBrowsePaging *").remove();
 			var match = $(".workshopBrowsePagingInfo").text().replace(/\d{1,3}([,. ]?\d{3})*\s*-\s*\d{1,3}([,. ]?\d{3})*/, "").match(/\d{1,3}([,. ]?\d{3})*/);
@@ -2474,6 +2479,16 @@ function endless_scrolling_greenlight() {
 						load_search_results_greenlight();
 					} else {
 						$(".workshopBrowsePagingInfo").text(localized_strings.all_results.replace("__num__", result_count));
+					}
+				}
+				for (var page = 1; page <= last_page; page++) {
+					var row = $(".workshopBrowseRow.page_" + page);
+					if (row.length && is_element_in_viewport(row)) {
+						var curr_url = document.URL.replace(/(?:[?&]p=\d+|(#)|$)/, "&p=" + page + "$1");
+						if (curr_url != document.URL) {
+							history.replaceState("", "", curr_url);
+						}
+						break;
 					}
 				}
 			});
