@@ -3,10 +3,16 @@ v7.8
 + Added quick sell and instant sell buttons to Steam Community items in inventory
 + Added an "Edit Price" button to market listings for Steam Community items when pressing "Remove"
 + Added an option to prevent Greenlight videos from automatically playing when loading the page
++ Added continous scrolling option to Greenlight pages
++ Added an option to remember Greenlight filter option settings
++ Improved language detection and localized several previously unlocalized features
+: Updated the "Total Spent" feature to work with the account page's new layout
+: Re-arranged the "Community" tab of the options and added sub-headings
 : Fixed a bug that caused sorted achievements not to display correctly
 : Fixed a bug that could sometimes cause Early Access banners to cover non-image elements on the home page
 : Fixed a bug that sometimes caused incorrect Uplay warning banners to appear on some Finnish store pages
 : Updated the design of the replacement Greenlight banner
+: Fixed a bug that caused highlighted games in the quick-search box to not correctly show the selected item
 : Fixed a bug that would sometimes cause incorrect placement of birthday balloons over the Family View PIN entry
 : Fixed layout and formatting issues associated with custom profile backgrounds and themes
 
