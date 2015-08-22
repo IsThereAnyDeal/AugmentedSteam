@@ -1,3 +1,7 @@
+v7.9
+-----
+
+
 v7.8
 -----
 + Added quick sell and instant sell buttons to Steam Community items in inventory
