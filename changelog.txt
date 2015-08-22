@@ -7,6 +7,7 @@ v7.8
 : Fixed a bug that could sometimes cause Early Access banners to cover non-image elements on the home page
 : Fixed a bug that sometimes caused incorrect Uplay warning banners to appear on some Finnish store pages
 : Updated the design of the replacement Greenlight banner
+: Fixed a bug that would sometimes cause incorrect placement of birthday balloons over the Family View PIN entry
 
 
 v7.7

@@ -7404,7 +7404,9 @@ function add_birthday_celebration() {
 						case "store.steampowered.com":
 							switch (true) {
 								case /^\/$/.test(window.location.pathname):
-									$("#global_header").append("<div style='background-image: url("+chrome.extension.getURL("img/birthday_bg.png")+");' class='birthday'></div>");					
+									if ($("#parental_notice").length == 0) {
+										$("#global_header").append("<div style='background-image: url("+chrome.extension.getURL("img/birthday_bg.png")+");' class='birthday'></div>");
+									}
 									break;
 							}
 					}
