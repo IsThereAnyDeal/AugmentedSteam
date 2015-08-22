@@ -1956,6 +1956,7 @@ function show_pricing_history(appid, type) {
 			get_http("//api.enhancedsteam.com/pricev3/?subs=" + subids + "&stores=" + storestring + "&cc=" + cc + "&appid=" + appid + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 				var price_data = JSON.parse(txt);
 				if (price_data) {
+					var bundles = [];
 					var currency_type = price_data[".meta"]["currency"];
 					$.each(price_data, function(key, data) {
 						if (key != ".cached" && key != ".meta" && data) {
@@ -2007,6 +2008,24 @@ function show_pricing_history(appid, type) {
 									}
 									var currentdate = new Date().getTime();
 									if (!enddate || currentdate < enddate) {
+										var bundle = data["bundles"]["live"][i];
+										var bundle_normalized = JSON.stringify({
+											page:  bundle.page || "",
+											title: bundle.title || "",
+											url:   bundle.url || "",
+											tiers: (function() {
+												var tiers = [];
+												for (var tier in bundle.tiers) {
+													tiers.push((bundle.tiers[tier].games || []).sort());
+												}
+												return tiers;
+											})()
+										});
+										if (bundles.indexOf(bundle_normalized) < 0) {
+											bundles.push(bundle_normalized);
+										} else {
+											continue;
+										}
 										if (data["bundles"]["live"][i]["page"]) { purchase = '<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings.buy + ' ' + data["bundles"]["live"][i]["page"] + ' ' + data["bundles"]["live"][i]["title"] + '</h1>'; } 
 										else { purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings.buy + ' ' + data["bundles"]["live"][i]["title"] + '</h1>'; }
 										if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + localized_strings.bundle.offer_ends + ' ' + enddate + '</p>';
