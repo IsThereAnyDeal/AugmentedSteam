@@ -17,7 +17,6 @@ v7.8
 : Fixed a bug that would sometimes cause incorrect placement of birthday balloons over the Family View PIN entry
 : Fixed layout and formatting issues associated with custom profile backgrounds and themes
 
-
 v7.7
 -----
 + Added a "Launch Random Game" button to the Enhanced Steam menu to launch a random game from your library
