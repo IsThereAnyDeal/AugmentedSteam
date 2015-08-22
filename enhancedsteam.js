@@ -3656,12 +3656,10 @@ function account_total_spent() {
 							market_total = 0;
 
 						// Gather data
-						var sessionid = $(".page_header_ctn").text().match(/g_sessionID = \"(.+)\";/)[1];
-						var history_promise = (function () {
-							var deferred = new $.Deferred();
-							get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?l=en&sessionid=" + sessionid, function(txt) {
-								var history = JSON.parse(txt);
-								var history_html = $.parseHTML(history["html"]);
+						function add_it_up(txt) {
+							var history = JSON.parse(txt);
+							var history_html = $.parseHTML(history["html"]);
+							if (history_html) {
 								$.each(history_html, function() {
 									var type = $(this).find(".wht_type div:first").text().trim(),
 										amount = $(this).find(".wht_total").text().trim(),
@@ -3680,33 +3678,24 @@ function account_total_spent() {
 										if (type.match("In-Game Purchase")) ingame_total += calc_value;
 									}
 								});
-								if (history["cursor"]) {
-									get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?l=en&cursor%5Btimestamp_newest%5D=" + history["cursor"]["timestamp_newest"] + "&sessionid=" + sessionid, function(txt) {
-										var history = JSON.parse(txt);
-										var history_html = $.parseHTML(history["html"]);
-										$.each(history_html, function() {
-											var type = $(this).find(".wht_type div:first").text().trim(),
-												amount = $(this).find(".wht_total").text().trim(),
-												items = $(this).find(".wht_items").text().trim();
-											if (amount && !amount.match("Credit") && type && !items.match("Wallet Credit")) {
-												var parsed = parse_currency(amount),
-													calc_value;
-												if (parsed.currency_type != local_currency) {
-													calc_value = parsed.value / getValue(parsed.currency_type + "to" + local_currency);
-												} else {
-													calc_value = parsed.value;
-												}
-												if (type.match(/^Purchase/)) game_total += calc_value;
-												if (type.match("Market Transaction")) market_total += calc_value;
-												if (type.match("Gift Purchase")) { gift_total += calc_value; }
-												if (type.match("In-Game Purchase")) ingame_total += calc_value;
-											}
-										});
-										deferred.resolve();
+								return history["cursor"];
+							}
+						}
+
+						var sessionid = $(".page_header_ctn").text().match(/g_sessionID = \"(.+)\";/)[1];
+						var history_promise = (function () {
+							var deferred = new $.Deferred();
+							get_http("//store.steampowered.com/account/AjaxLoadMoreHistory/?l=en&sessionid=" + sessionid, function(txt) {
+								var next = add_it_up(txt);
+								while (next) {
+									$.ajax({
+										async: false,
+										url: "//store.steampowered.com/account/AjaxLoadMoreHistory/?l=en&cursor%5Btimestamp_newest%5D=" + next["timestamp_newest"] + "&sessionid=" + sessionid
+									}).done(function(data) {
+										next = add_it_up(JSON.stringify(data));
 									});
-								} else {
-									deferred.resolve();
 								}
+								deferred.resolve();
 							});
 							return deferred.promise();
 						})();
