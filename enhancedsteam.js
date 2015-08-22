@@ -3813,7 +3813,7 @@ function inventory_market_helper(response) {
 			});
 		}
 	} else {
-		if ($(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) {
+		if ($(".profile_small_header_name .whiteLink").attr("href").replace(/\/$/, "") !== $(".playerAvatar").find("a").attr("href").replace(/\/$/, "")) {
 			if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
 			if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
 			$('.es_item_action').html("");
@@ -3890,7 +3890,7 @@ function inventory_market_helper(response) {
 				if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
 				if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
 				if (settings.quickinv) {
-					if (marketable == 0 || contextID != 6 || global_id != 753 || $(".profile_small_header_name .whiteLink").attr("href") !== $(".playerAvatar").find("a").attr("href")) { return; }
+					if (marketable == 0 || contextID != 6 || global_id != 753 || $(".profile_small_header_name .whiteLink").attr("href").replace(/\/$/, "") !== $(".playerAvatar").find("a").attr("href").replace(/\/$/, "")) { return; }
 					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
 					$("#iteminfo" + item + "_item_market_actions").append("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $("#iteminfo" + item + "_item_market_actions .item_market_action_button_contents").text() + "</span></a>");
 					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
