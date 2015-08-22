@@ -213,7 +213,9 @@
         "offer_ends": "Offer ends",
         "at_least": "Pay At Least",
         "pwyw": "Pay What You Want",
-        "includes": "Includes (__num__) items",
+        "includes": "Includes __num__ items",
+        "tier_includes": "__tier__ (__price__) includes __num__ items",
+        "tier": "Tier __num__",
         "header": "Bundles that include this game",
         "info": "Bundle Info",
         "bundle_count": "Number of times this game has been in a bundle"

@@ -2012,19 +2012,18 @@ function show_pricing_history(appid, type) {
 										if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + localized_strings.bundle.offer_ends + ' ' + enddate + '</p>';
 										purchase += '<p class="package_contents">';
 										var tier_num = 1,
-											bundle_price;
+											bundle_price,
 											app_name = $(".apphub_AppName").text();
 										$.each(data["bundles"]["live"][i]["tiers"], function(index, value) {
 											purchase += '<b>';
 											if (Object.keys(data["bundles"]["live"][i]["tiers"]).length > 1) {
-												if (value["note"]) {
-													purchase += value["note"];
-												} else {
-													purchase += 'Tier ' + tier_num.toString();
-												}
-												purchase += ' (' + formatCurrency(value["price"], currency_type) + ') '; 
+												var tier_name = value.note || localized_strings.bundle.tier.replace("__num__", tier_num);
+												var tier_price = formatCurrency(value.price, currency_type);
+												purchase += localized_strings.bundle.tier_includes.replace("__tier__", tier_name).replace("__price__", tier_price).replace("__num__", value.games.length);
+											} else {
+												purchase += localized_strings.bundle.includes.replace(/\(?__num__\)?/, value.games.length);
 											}
-											purchase += localized_strings.bundle.includes.replace("(__num__)", value["games"].length) + ':</b> '
+											purchase += ':</b> ';
 											$.each(value["games"], function(game_index, game_value) {
 												if (game_value == app_name) { bundle_price = value["price"]; purchase += "<u>" + game_value + "</u>, "; }
 												else { purchase += game_value + ", "; }
