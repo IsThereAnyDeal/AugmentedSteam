@@ -10,10 +10,16 @@ var total_requests = 0;
 var processed_requests = 0;
 
 var cookie = document.cookie;
-if (cookie.match(/steam_language=([a-z]+);/i)) {
-	var language = cookie.match(/steam_language=([a-z]+);/i)[1];
-} else {
-	var language = "english";
+var language;
+$("script[src]").each(function() {
+	var match = this.src.match(/(?:\?|&(?:amp;)?)l=([^&]+)/);
+	if (match) {
+		language = match[1];
+		return false;
+	}
+});
+if (language === undefined) {
+	language = (cookie.match(/steam_language=([a-z]+)/i) || [])[1] || "english";
 }
 
 // Set language for options page
@@ -1639,18 +1645,7 @@ function add_language_warning() {
 	storage.get(function(settings) {
 		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
 		if (settings.showlanguagewarning) {
-			var currentLanguage;
-			$("script[src]").each(function() {
-				var match = this.src.match(/(?:\?|&(?:amp;)?)l=([^&]+)/);
-				if (match) {
-					currentLanguage = match[1];
-					return false;
-				}
-			});
-			if (currentLanguage === undefined) {
-				currentLanguage = (cookie.match(/language=([a-z]+)/i) || [])[1] || "english";
-			}
-			currentLanguage = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
+			var currentLanguage = language.charAt(0).toUpperCase() + language.slice(1);
 
 			if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = currentLanguage; storage.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
 			var lang = settings.showlanguagewarninglanguage.toLowerCase();
