@@ -311,7 +311,7 @@ function highlight_owned(node) {
 		node.classList.add("es_highlight_owned");
 
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
-		if (settings.highlight_owned === undefined) { settings.highlight_owned = false; storage.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
 
 		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
@@ -329,7 +329,7 @@ function highlight_wishlist(node) {
 		node.classList.add("es_highlight_wishlist");
 
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
-		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = false; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
 
 		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
