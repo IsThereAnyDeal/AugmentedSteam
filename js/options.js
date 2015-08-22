@@ -703,6 +703,7 @@ function load_translation() {
 			$("#community_market").text(localized_strings.options.market);
 			$("#community_inventory").text(localized_strings.options.inventory);
 			$("#community_profile").text(localized_strings.options.profile);
+			$("#community_greenlight").text(localized_strings.options.greenlight);
 			$("#profile_link_text").text(localized_strings.options.profile_links + ":");
 			$("#show_profile_link_images_text").text(localized_strings.options.profile_link_images + ":");
 			$("#profile_link_images_gray").text(localized_strings.options.profile_link_images_gray);
