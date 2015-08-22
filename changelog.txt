@@ -12,6 +12,7 @@ v7.8
 : Fixed a bug that could sometimes cause Early Access banners to cover non-image elements on the home page
 : Fixed a bug that sometimes caused incorrect Uplay warning banners to appear on some Finnish store pages
 : Updated the design of the replacement Greenlight banner
+: Fixed a bug that would sometimes cause bundle dialogs to show multiple times on app pages
 : Fixed a bug that caused highlighted games in the quick-search box to not correctly show the selected item
 : Fixed a bug that would sometimes cause incorrect placement of birthday balloons over the Family View PIN entry
 : Fixed layout and formatting issues associated with custom profile backgrounds and themes
