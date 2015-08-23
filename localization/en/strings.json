@@ -155,6 +155,7 @@
     "saved": "Saved",
     "add_unowned_dlc_to_cart": "Add unowned DLC to cart",
     "buy": "Buy",
+    "buy_package": "Buy __package__",
     "more_information": "More Information",
     "games_discount": "Games With Discounts",
     "region_unavailable": "Not available in this region",
