@@ -6892,6 +6892,71 @@ function add_achievement_sort() {
 	}
 }
 
+function add_friends_sort() {
+	var friends = $(".friendBlock.persona.offline");
+	if (friends) {
+		storage.get(function(settings) {
+			if (settings.sortfriendsby === undefined) { settings.sortfriendsby = "default"; storage.set({'sortfriendsby': settings.sortfriendsby}); }
+			var ajax_url = document.URL.replace(/\/?(?:[?#].*)?$/, "?l=en");
+			get_http(ajax_url, function(txt) {
+				var downtimes = [];
+				var sorted = { default: [], lastonline: [] };
+				var dom = $.parseHTML(txt);
+				$(dom).find(".friendBlock.persona.offline").each(function(i) {
+					var href = $(this).find("a")[0].href;
+					var lastonline = $(this).find(".friendSmallText").text().match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/)
+					if (lastonline) {
+						var days = parseInt(lastonline[1]) || 0;
+						var hours = parseInt(lastonline[2]) || 0;
+						var minutes = parseInt(lastonline[3]) || 0;
+						var downtime = (days * 24 + hours) * 60 + minutes;
+						downtimes.push([href, downtime, i]);
+					} else {
+						downtimes.push([href, Infinity, i]);
+					}
+				});
+				downtimes.sort(function(a, b) {
+					if (a[1] < b[1]) return -1;
+					if (a[1] > b[1]) return 1;
+					if (a[2] < b[2]) return -1;
+					if (a[2] > b[2]) return 1;
+					return 0;
+				});
+				friends.each(function() {
+					sorted.default.push(this);
+					var href = $(this).find("a")[0].href;
+					for (var i = 0; i < downtimes.length; i++) {
+						if (downtimes[i][0] == href) {
+							sorted.lastonline[i] = this;
+							break;
+						}
+					}
+				});
+
+				var sort_friends = function() {
+					if (!$(this).hasClass("es_friends_sort_link")) return;
+					$(this).removeClass("es_friends_sort_link");
+					var order = this.id.replace(/^friends_sort_/, "");
+					var after = $(".friendBlock.persona").last().next();
+					after.before(sorted[order]);
+					settings.sortfriendsby = order;
+					storage.set({'sortfriendsby': settings.sortfriendsby});
+					$("#friends_sort_options span:not(#"+this.id+")").addClass("es_friends_sort_link");
+				};
+
+				var sort_options = $("<div id=friends_sort_options>" + localized_strings.sort_by + "<span id=friends_sort_default>" + localized_strings.theworddefault + "</span><span id=friends_sort_lastonline class=es_friends_sort_link>" + localized_strings.lastonline + "</span></div>");
+				if ($(".manage_friends_btn_ctn").length) {
+					$(".manage_friends_btn_ctn").after(sort_options);
+				} else {
+					$(".maincontent").prepend(sort_options);
+				}
+				sort_options.find("span").on("click", sort_friends);
+				$("#friends_sort_"+settings.sortfriendsby).click();
+			});
+		});
+	}
+}
+
 function add_badge_view_options() {
 	var html  = "<div style='text-align: right;'><span>" + localized_strings.view + ": </span>";
 		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_view_default'><input type='radio' name='es_badge_view' checked><span>" + localized_strings.theworddefault + "</span></label>";
@@ -7752,6 +7817,10 @@ $(document).ready(function(){
 						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
 							add_friends_that_play();
 							add_friends_playtime_sort();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+							add_friends_sort();
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(path):

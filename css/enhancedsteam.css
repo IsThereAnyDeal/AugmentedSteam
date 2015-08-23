@@ -416,6 +416,30 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor: pointer;
 }
 
+#friends_sort_options {
+	text-align: right;
+	margin-bottom: 12px;
+	margin-right: 52px;
+	font-size: 14px;
+	color: #939393;
+}
+
+.manage_friends_header #friends_sort_options {
+	float: right;
+	margin-bottom: 0;
+	margin-right: 35px;
+}
+
+#friends_sort_options span {
+	margin-left: 8px;
+	color: #B0AEAC;
+}
+
+.es_friends_sort_link {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .browse_tag_game_cap img {
 	margin-left: 8px;
 }
