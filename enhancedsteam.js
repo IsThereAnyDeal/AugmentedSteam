@@ -1143,7 +1143,7 @@ function add_wishlist_total() {
 
 	currency_type = currency_symbol_to_type(currency_symbol);
 	total = formatCurrency(parseFloat(total), currency_type);
-	$(".games_list").after("<link href='//store.akamai.steamstatic.com/public/css/v6/game.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("(__num__)", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
+	$(".games_list").after("<link href='//store.akamai.steamstatic.com/public/css/v6/game.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("__num__", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
 }
 
 function add_wishlist_ajaxremove() {
