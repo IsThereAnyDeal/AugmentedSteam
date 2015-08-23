@@ -1,5 +1,6 @@
 v7.9
 -----
+: Fixed a bug that caused quick and instant sell buttons to sometimes appear multiple times
 
 
 v7.8
