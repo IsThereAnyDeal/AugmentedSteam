@@ -2916,7 +2916,7 @@ function remember_greenlight_filter() {
 	storage.get(function(settings) {
 		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; storage.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
 		if (settings.greenlightfilteroptions === undefined) { settings.greenlightfilteroptions = []; storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions}); }
-		if (settings.remembergreenlightfilter) {
+		if (settings.remembergreenlightfilter && !$(".searchedForTerm[onclick^=RemoveSearchTerm]").length) {
 			function setGreenlightFilter(option, checked) {
 				var i = $.inArray(option, settings.greenlightfilteroptions);
 				if (checked && i == -1) {
@@ -2930,7 +2930,7 @@ function remember_greenlight_filter() {
 
 			var checkboxes = $(".filterOption input[type=checkbox]");
 
-			if (!checkboxes.filter("[checked]").length && settings.greenlightfilteroptions.length) {
+			if (!$(".searchedForTerm").length && settings.greenlightfilteroptions.length) {
 				checkboxes.each(function() {
 					var option = this.id;
 					var i = $.inArray(option, settings.greenlightfilteroptions);
@@ -2952,8 +2952,6 @@ function remember_greenlight_filter() {
 					setGreenlightFilter(match[1], false);
 				}
 			});
-		} else {
-			settings.greenlightfilteroptions = []; storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions});
 		}
 	});
 }
