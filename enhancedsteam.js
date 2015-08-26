@@ -3985,7 +3985,7 @@ function add_relist_button() {
 	$(".market_listing_cancel_button").on("click", function() {
 		if ($(this).find("a").attr("href").match(/'mylisting', '\d+', 753, '\d+', '\d+'/)) {
 			if ($("#es_relist").length == 0) {
-				$("#market_removelisting_dialog_accept").after("<a id='es_relist' href='#' style='float: right; margin-right: 10px;' class='btn_green_white_innerfade btn_medium_wide'><span>" + localized_strings.edit_price + "</span></a>");		
+				$("#market_removelisting_dialog_accept").after("<a id='es_relist' href='#' style='margin-right: 0.2em;' class='btn_green_white_innerfade btn_medium_wide'><span>" + localized_strings.edit_price + "</span></a>");		
 			} else {
 				$("#es_relist").show();
 			}
@@ -4005,6 +4005,7 @@ function add_relist_button() {
 				}
 				$("#market_removelisting_dialog_description").hide();
 				$("#market_removelisting_dialog_accept").hide();
+				$("#market_removelisting_dialog_cancelbtn").hide();
 				$("#es_relist").hide();
 				if ($("#es_relist_confirm").length == 0) {
 					$("#es_relist").before("<a id='es_relist_confirm' href='#' style='float: right; margin-right: 10px;' class='btn_green_white_innerfade btn_medium_wide btn_disabled'><span>" + localized_strings.relist + "</span></a><div id='es_sell'></div>");
