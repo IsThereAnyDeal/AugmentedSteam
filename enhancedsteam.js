@@ -4013,10 +4013,12 @@ function add_relist_button() {
 					$("#es_relist_confirm").show();
 					$("#es_sell").show();
 				}	
+				var pricepattern = "^[^\\d,.]*\s*([1-9]\\d{0,2}?(?:([,. ]?)\\d{3}(?:\\2\\d{3})*)?|0)(?:([,.])(\\d{1,2}))?\s*[^\\d,.]*$"
 				if ($(".market_sell_dialog_input_group").length == 0) {
 					$("#es_sell").load("//steamcommunity.com/my/inventory/ .market_sell_dialog_input_group:last", function() { 
 						$(".market_sell_dialog_input_group").css("float", "right");
 						$("#market_sell_buyercurrency_input").focus();
+						$("#market_sell_buyercurrency_input")[0].pattern = pricepattern;
 						$("#es_relist_confirm").removeClass("btn_disabled");
 					});
 				} else {
@@ -4027,8 +4029,12 @@ function add_relist_button() {
 				}
 				
 				$("#es_relist_confirm").on("click", function() {
-					var sell_price = parseFloat($("#market_sell_buyercurrency_input").val()) * 100;
-					if (isNaN(sell_price)) return;
+					var pricematch = $("#market_sell_buyercurrency_input").val().match(pricepattern);
+					if (pricematch) {
+						var sell_price = parseFloat((pricematch[1]).replace(/[^\d]/, "") + "." + (pricematch[4] || 0)) * 100;
+					} else {
+						return;
+					}
 
 					$("#es_relist_confirm").hide();
 					$(".market_sell_dialog_input_group").hide();
