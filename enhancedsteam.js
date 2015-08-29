@@ -2026,8 +2026,8 @@ function show_pricing_history(appid, type) {
 										} else {
 											continue;
 										}
-										if (data["bundles"]["live"][i]["page"]) { purchase = '<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings.buy + ' ' + data["bundles"]["live"][i]["page"] + ' ' + data["bundles"]["live"][i]["title"] + '</h1>'; } 
-										else { purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings.buy + ' ' + data["bundles"]["live"][i]["title"] + '</h1>'; }
+										if (data["bundles"]["live"][i]["page"]) { purchase = '<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings.buy_package.replace(/__package__/, data["bundles"]["live"][i]["page"] + ' ' + data["bundles"]["live"][i]["title"]) + '</h1>'; }
+										else { purchase = '<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>' + localized_strings.buy_package.replace(/__package__/, data["bundles"]["live"][i]["title"]) + '</h1>'; }
 										if (enddate) purchase += '<p class="game_purchase_discount_countdown">' + localized_strings.bundle.offer_ends + ' ' + enddate + '</p>';
 										purchase += '<p class="package_contents">';
 										var tier_num = 1,
