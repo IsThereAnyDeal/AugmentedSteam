@@ -241,6 +241,9 @@ function save_options() {
 		
 		'steamcardexchange': steamcardexchange
 	});
+	if (!remembergreenlightfilter) {
+		chrome.storage.sync.set({'greenlightfilteroptions': []});
+	}
 	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 }
 
