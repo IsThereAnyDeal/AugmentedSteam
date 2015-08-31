@@ -2432,12 +2432,18 @@ function load_search_results_greenlight () {
 		$.ajax({
 			url: search_url
 		}).done(function(data) {
-			var dom = $.parseHTML(data);
+			var dom = $.parseHTML(data, true);
 			var rows = $(dom).find(".workshopBrowseRow");
+			var script = "";
+			$(dom).find(".workshopBrowseRow script").each(function() {
+				script += $(this).text() + "\n";
+				$(this).remove()
+			});
 			rows.first().addClass("page_" + search_page);
 
 			$(".LoadingWrapper").remove();
 			$(".workshopBrowseRow").last().after(rows);
+			runInPageContext("function() {\n" + script + "}");
 			search_page++;
 			processing = false;
 
