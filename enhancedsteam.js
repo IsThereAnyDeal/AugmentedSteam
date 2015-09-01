@@ -2932,16 +2932,32 @@ function remember_greenlight_filter() {
 			var checkboxes = $(".filterOption input[type=checkbox]");
 
 			if (!$(".searchedForTerm").length && settings.greenlightfilteroptions.length) {
+				var form = $("#TagsFilterForm").clone();
+				form.find("#workshopSearchText").remove();
+				var ajax_url = "//" + document.location.host + document.location.pathname + "?" + form.serialize();
 				checkboxes.each(function() {
 					var option = this.id;
 					var i = $.inArray(option, settings.greenlightfilteroptions);
 					if (i > -1) {
 						this.checked = true;
+						ajax_url += "&" + encodeURIComponent(this.name) + "=" + encodeURIComponent(this.value);
 					}
 				});
-				deferred.reject();
-				$(".workshop_browse_search img").click();
-				return;
+				get_http(ajax_url, function(txt) {
+					var parent = $("div.workshopBrowsePagingWithBG").parent();
+					parent.find("> div").remove();
+					var dom = $.parseHTML(txt, true);
+					var script = "";
+					var divs = $(dom).find("div.workshopBrowsePagingWithBG").parent().find("> div");
+					divs.find("script").each(function() {
+						script += $(this).text() + "\n";
+						$(this).remove();
+					});
+					parent.append(divs);
+					runInPageContext("function() {\n" + script + "}");
+					history.replaceState("", "", ajax_url);
+					deferred.resolve();
+				});
 			} else {
 				deferred.resolve();
 			}
