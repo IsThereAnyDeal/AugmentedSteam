@@ -6181,11 +6181,12 @@ function add_app_page_wishlist(appid) {
 function add_app_page_wishlist_changes(appid) {
 	if (is_signed_in) {
 		if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
-			$(".demo_area_button").find("a:first").removeAttr("href");
-			$(".demo_area_button").find("a:first").wrap("<div id='add_to_wishlist_area_success' class='queue_control_button'></div>");
+			$(".queue_actions_ctn").find("img[src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png']").parent().parent().wrap("<div id='add_to_wishlist_area' style='display: inline-block;'></div>");
+			$("#add_to_wishlist_area").find("a:first").removeAttr("href");
+			$("#add_to_wishlist_area").find("a:first").wrap("<div id='add_to_wishlist_area_success' class='queue_control_button'></div>");
 			
 			// Add wishlist areas
-			$(".demo_area_button").prepend("<div id='add_to_wishlist_area' style='display: none;' class='queue_control_button'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div><div id='add_to_wishlist_area_fail' style='display: none;'></div>");
+			$("#add_to_wishlist_area").prepend("<div id='es_wishlist_area' style='display: none;' class='queue_control_button'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div><div id='add_to_wishlist_area_fail' style='display: none;'></div>");
 
 			$("#add_to_wishlist_area_success").hover(
 				function() {
@@ -6213,10 +6214,16 @@ function add_app_page_wishlist_changes(appid) {
 						success: function( msg ) {
 							setValue(appid + "wishlisted", false);
 							$("#add_to_wishlist_area_success").hide();
-							$("#add_to_wishlist_area").show();
+							$("#es_wishlist_area").show();
 						}
 					});
 				});
+			});
+
+			$("#es_wishlist_area").on("click", function() {
+				$("#add_to_wishlist_area_success").show();
+				$("#es_wishlist_area").hide();
+				setTimeout(function() { $("#add_to_wishlist_area").show(); },1000);
 			});
 		}
 	}
