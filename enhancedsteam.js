@@ -7282,54 +7282,58 @@ function add_total_drops_count() {
 		var drops_count = 0,
 			drops_games = 0,
 			booster_games = 0,
-			game_tiles = [];
+			game_tiles = [],
+			completed = false;
 
 		if ($(".pagebtn").length > 0) {
 			if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {				
 				$(".profile_xp_block_right").prepend("<span id='es_calculations' style='color: #fff;'>" + localized_strings.drop_calc + "</span>").css("cursor", "pointer");
 
 				$("#es_calculations").click(function() {
-					$(".profile_xp_block_right").css("cursor", "default");
-					$("#es_calculations").text(localized_strings.loading);
+					if (completed == false) {
+						$(".profile_xp_block_right").css("cursor", "default");
+						$("#es_calculations").text(localized_strings.loading);
 
-					// First, get the contents of the first page
-					$(".progress_info_bold").each(function(i, obj) {
-						var parent = $(obj).parent().parent();
-						if ($(parent).find(".progress_info_bold")[0]) {
-							game_tiles.push(parent);
+						// First, get the contents of the first page
+						$(".progress_info_bold").each(function(i, obj) {
+							var parent = $(obj).parent().parent();
+							if ($(parent).find(".progress_info_bold")[0]) {
+								game_tiles.push(parent);
+							}
+						});
+
+						// Now, get the rest of the pages
+						var base_url = window.location.origin + window.location.pathname + "?p=",
+							last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
+							deferred = new $.Deferred(),
+							promise = deferred.promise(),
+							pages = [];
+
+						for (page = 2; page <= last_page; page++) {
+							pages.push(page);
 						}
-					});
 
-					// Now, get the rest of the pages
-					var base_url = window.location.origin + window.location.pathname + "?p=",
-						last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
-						deferred = new $.Deferred(),
-						promise = deferred.promise(),
-						pages = [];
-
-					for (page = 2; page <= last_page; page++) {
-						pages.push(page);
-					}
-
-					$.each(pages, function (i, item) {
-						promise = promise.then(function() {
-							return $.ajax(base_url + item).done(function(data) {
-								var html = $.parseHTML(data);
-								$(html).find(".progress_info_bold").each(function(i, obj) {
-									var parent = $(obj).parent().parent();
-									if ($(parent).find(".progress_info_bold")[0]) {
-										game_tiles.push(parent);
-									}
+						$.each(pages, function (i, item) {
+							promise = promise.then(function() {
+								return $.ajax(base_url + item).done(function(data) {
+									var html = $.parseHTML(data);
+									$(html).find(".progress_info_bold").each(function(i, obj) {
+										var parent = $(obj).parent().parent();
+										if ($(parent).find(".progress_info_bold")[0]) {
+											game_tiles.push(parent);
+										}
+									});
 								});
 							});
 						});
-					});
 
-					promise.done(function() {
-						add_total_drops_count_calculations(game_tiles);
-					});
-					
-					deferred.resolve();	
+						promise.done(function() {
+							add_total_drops_count_calculations(game_tiles);
+						});
+						
+						deferred.resolve();
+						completed = true;
+					}
 				});
 			}
 		} else {
