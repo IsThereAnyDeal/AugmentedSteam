@@ -6020,14 +6020,16 @@ function add_carousel_descriptions() {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_carousel_descriptions) {
 			if ($(".main_cluster_content").length > 0) {
-				var description_height_to_add = 56;
-				$(".main_cluster_content").css("height", parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px");
+				var description_height_to_add = 56,
+					heightvar = parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px";
+				$(".main_cluster_content").css("height", heightvar);
+				$("#main_cluster_scroll .cluster_capsule").css("height", heightvar);
+				$("#main_cluster_scroll .discount_block").css("bottom", "98px");
 				
 				setTimeout(function() {
 					$.each($(".cluster_capsule"), function(i, _obj) {
 						var appid = get_appid(_obj.href),
-							$desc = $(_obj).find(".main_cap_content"),
-							$desc_content = $("<p></p>");
+							$desc = $(_obj).find(".main_cap_content");
 						
 						$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
 						$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
