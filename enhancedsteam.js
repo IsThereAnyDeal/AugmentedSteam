@@ -5017,11 +5017,11 @@ function show_regional_pricing() {
 										.mouseover(function() {
 											var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
 											if (sale) {
-												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 +"px").css("top", "138px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 +"px").css("top", "138px");
 											} else if (sub) {
-												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 25 + "px").css("top", "70px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 + "px").css("top", "70px");
 											} else {
-												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action").width() + 20 + "px");
+												$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 20 + "px");
 											}
 											$("#es_pricing_" + subid).show();
 										})
