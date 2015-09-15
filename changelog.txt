@@ -2,14 +2,15 @@ v7.9
 -----
 + Added an option to sort your friends page by their time last online
 + Added input validation to "Edit Price" functionality on the market and support for comma decimal separators
-: Fixed a bug that caused quick and instant sell buttons to sometimes appear multiple times
 : Adjusted for a layout change that caused links to SteamDB, SteamCardExchange, and PCGW not to show
 : Adjusted for a layout change that broke the removal of games from your wishlist from their app page
 : Adjusted for a layout change that caused the "No" button to remain present while editing an item's price
+: Adjusted for a layout change that caused the "customize" buttons to be hidden on home and app pages
+: Fixed a bug that caused quick and instant sell buttons to sometimes appear multiple times
 : Fixed a bug that caused price history information to get orphaned on the wishlist page while rearranging
-: Fixed a bug that would sometimes cause the "Customize" button on the "All New Releases" tab to display
+: Fixed a bug that would sometimes cause the "Customize" button on the "All New Releases" tab not to display
 : Fixed a bug that caused multiple clicks on the card drops remaining to show an incorrect total
-
+: Fixed a bug that could cause the homepage layout to behave strangely under certain conditions
 
 v7.8
 -----
