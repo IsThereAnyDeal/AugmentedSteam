@@ -2912,6 +2912,7 @@ function hide_greenlight_banner() {
 }
 
 function remember_greenlight_filter() {
+	var deferred = new $.Deferred();
 	storage.get(function(settings) {
 		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; storage.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
 		if (settings.greenlightfilteroptions === undefined) { settings.greenlightfilteroptions = []; storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions}); }
@@ -2930,15 +2931,34 @@ function remember_greenlight_filter() {
 			var checkboxes = $(".filterOption input[type=checkbox]");
 
 			if (!$(".searchedForTerm").length && settings.greenlightfilteroptions.length) {
+				var form = $("#TagsFilterForm").clone();
+				form.find("#workshopSearchText").remove();
+				var ajax_url = "//" + document.location.host + document.location.pathname + "?" + form.serialize();
 				checkboxes.each(function() {
 					var option = this.id;
 					var i = $.inArray(option, settings.greenlightfilteroptions);
 					if (i > -1) {
 						this.checked = true;
+						ajax_url += "&" + encodeURIComponent(this.name) + "=" + encodeURIComponent(this.value);
 					}
 				});
-				$(".workshop_browse_search img").click();
-				return;
+				get_http(ajax_url, function(txt) {
+					var parent = $("div.workshopBrowsePagingWithBG").parent();
+					parent.find("> div").remove();
+					var dom = $.parseHTML(txt, true);
+					var script = "";
+					var divs = $(dom).find("div.workshopBrowsePagingWithBG").parent().find("> div");
+					divs.find("script").each(function() {
+						script += $(this).text() + "\n";
+						$(this).remove();
+					});
+					parent.append(divs);
+					runInPageContext("function() {\n" + script + "}");
+					history.replaceState("", "", ajax_url);
+					deferred.resolve();
+				});
+			} else {
+				deferred.resolve();
 			}
 
 			checkboxes.click(function() {
@@ -2951,8 +2971,11 @@ function remember_greenlight_filter() {
 					setGreenlightFilter(match[1], false);
 				}
 			});
+		} else {
+			deferred.resolve();
 		}
 	});
+	return deferred.promise();
 }
 
 function preview_greenlight_votes() {
@@ -7859,8 +7882,9 @@ $(document).ready(function(){
 							break;
 
 						case /^\/sharedfiles\/browse/.test(path):
-							remember_greenlight_filter();
-							endless_scrolling_greenlight();
+							remember_greenlight_filter().done(
+								endless_scrolling_greenlight
+							);
 
 						case /^\/sharedfiles\/.*/.test(path):
 							disable_greenlight_autoplay();
@@ -7869,11 +7893,12 @@ $(document).ready(function(){
 							break;
 
 						case /^\/workshop\/.*/.test(path):
-							remember_greenlight_filter();
-							endless_scrolling_greenlight();
+							remember_greenlight_filter().done(
+								endless_scrolling_greenlight,
+								preview_greenlight_votes
+							);
 							hide_greenlight_banner();
 							hide_spam_comments();
-							preview_greenlight_votes();
 							break;
 
 						case /^\/greenlight\/.*/.test(path):
