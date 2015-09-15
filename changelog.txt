@@ -1,3 +1,7 @@
+v8.0
+-----
+
+
 v7.9
 -----
 + Added an option to sort your friends page by their time last online
