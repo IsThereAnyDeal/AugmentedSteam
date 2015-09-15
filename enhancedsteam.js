@@ -5449,8 +5449,8 @@ function customize_home_page() {
 		}
 
 		var specials_section_parent = $(".dailydeal_ctn").parent();
-		specials_section_parent.parent().find("h2:first, .dailydeal_ctn, .home_specials_grid:first, .home_block_footer:first, .home_specials_spacer").wrapAll("<div id='es_specials_section' />");
-		specials_section_parent.parent().find("h2:last, .home_specials_grid:last, .home_block_footer:last").wrapAll("<div id='es_under_ten_section' />");
+		specials_section_parent.parent().find("h2:first, .dailydeal_ctn, .home_specials_ctn:first").wrapAll("<div id='es_specials_section' />");
+		specials_section_parent.parent().find(".home_specials_ctn:last").wrapAll("<div id='es_under_ten_section' />");
 		
 		// Specials
 		if ($("#es_specials_section").length > 0) {
