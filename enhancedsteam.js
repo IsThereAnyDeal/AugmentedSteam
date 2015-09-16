@@ -2485,6 +2485,7 @@ function endless_scrolling() {
 				$(".search_pagination_left").text(localized_strings.results.replace("__num__", result_count));
 			}
 
+			search_page = 2;
 			$(window).scroll(function () {
 				// if the pagination element is in the viewport, continue loading
 				if (is_element_in_viewport($(".search_pagination_left"))) {
