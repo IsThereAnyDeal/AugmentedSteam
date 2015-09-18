@@ -2988,30 +2988,67 @@ function preview_greenlight_votes() {
 	storage.get(function(settings) {
 		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
 		if (settings.dynamicgreenlight) {
-			$("a").each(function() {
-				if (this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=")) {
+			var greenlightCache = $.parseJSON(localStorage.getItem("greenlightCache")) || {};
+			// values: vote, favorited, followed, time
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			$.each(greenlightCache, function(key, values) {
+				if (values[3] < expire_time) {
+					delete greenlightCache[key];
+				}
+			});
+			var items = $(".workshopItem:not(.gh_checked) > a:first-child");
+			var checking = items.length;
+			var cacheChanged = false;
+			items.each(function() {
+				var match = this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=(\\d+)");
+				if (match) {
+					var id = parseInt(match[1], 10);
 					var parent = $(this).parent();
-					if (parent.hasClass("gh_checked") || !parent.hasClass("workshopItem")) return;
 					parent.addClass("gh_checked");
-					get_http(this.href, (function (data) {
-						var match_vote = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
-						if (match_vote) {
-							this.addClass("gh_fade");
-							this.addClass("gh_vote_" + match_vote[1].toLowerCase());
-						}
-						var match_favorited = data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*>([^<]*)</);
-						var match_followed = data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*>([^<]*)</);
+					var promise;
+					var cache_item;
+					if (greenlightCache[id]) {
+						var deferred = new $.Deferred();
+						promise = deferred.promise();
+						cache_item = greenlightCache[id];
+						deferred.resolve();
+					} else {
+						cache_item = [null, false, false, parseInt(Date.now() / 1000, 10)];
+						promise = get_http(this.href, function (data) {
+							if (data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*>([^<]*)</)) cache_item[1] = true;
+							if (data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*>([^<]*)</)) cache_item[2] = true;
+							var match_vote = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
+							if (match_vote) {
+								cache_item[0] = match_vote[1].toLowerCase();
+								greenlightCache[id] = cache_item;
+								cacheChanged = true;
+							}
+						}, {context: parent}).promise();
+					}
+					promise.done(function() {
+						var match_favorited = cache_item[1];
+						var match_followed = cache_item[2];
 						if (match_favorited || match_followed) {
 							var indicators_right = $("<div class='gh_indicators gh_indicators_right'></div>");
 							if (match_favorited) {
-								indicators_right.append("<div class='gh_indicators gh_favorited' title='"+match_favorited[1]+"'></div>");
+								indicators_right.append("<div class='gh_indicators gh_favorited' title='"+localized_strings.favorited+"'></div>");
 							}
 							if (match_followed) {
-								indicators_right.append("<div class='gh_indicators gh_followed' title='"+match_followed[1]+"'></div>");
+								indicators_right.append("<div class='gh_indicators gh_followed' title='"+localized_strings.followed+"'></div>");
 							}
-							this.prepend(indicators_right);
+							parent.prepend(indicators_right);
 						}
-					}).bind(parent));
+						if (cache_item[0]) {
+							parent.addClass("gh_fade");
+							parent.addClass("gh_vote_" + cache_item[0]);
+						}
+					});
+					promise.always(function() {
+						checking--;
+						if (checking == 0 && cacheChanged) {
+							localStorage.setItem("greenlightCache", JSON.stringify(greenlightCache));
+						}
+					});
 				}
 			});
 		}
