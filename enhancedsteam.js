@@ -263,26 +263,24 @@ function matchAll(re, str) {
 	return r;
 }
 
-function get_http(url, callback) {
+function get_http(url, callback, settings) {
 	total_requests += 1;
 	if (localized_strings.ready) $("#es_progress").attr({"max": 100, "title": localized_strings.ready.loading});
 	$("#es_progress").removeClass("complete");
-	var http = new XMLHttpRequest();
-	http.onreadystatechange = function () {
-		if (this.readyState == 4 && this.status == 200) {
-			processed_requests += 1;
-			var complete_percentage = (processed_requests / total_requests) * 100;
-			$("#es_progress").val(complete_percentage);
-			if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready); }
-			callback(this.responseText);
-		}
-
-		if (this.readyState == 4 && this.status != 200) {
+	if (!settings) settings = {};
+	if (!settings.dataType) settings.dataType = "text";
+	var jqxhr = $.ajax(url, settings);
+	jqxhr.done(function() {
+		processed_requests += 1;
+		var complete_percentage = (processed_requests / total_requests) * 100;
+		$("#es_progress").val(complete_percentage);
+		if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready); }
+	});
+	jqxhr.done(callback);
+	jqxhr.fail(function() {
 			$("#es_progress").val(100).addClass("error").attr({"title":localized_strings.ready.errormsg, "max":1});
-		}
-	};
-	http.open('GET', url, true);
-	http.send(null);
+	});
+	return jqxhr;
 }
 
 function get_appid(t) {
