@@ -6070,10 +6070,11 @@ function add_carousel_descriptions() {
 							get_http('//store.steampowered.com/app/' + appid, function(txt) {
 								var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
 								if (desc) {
-									setValue(appid + "carousel", desc[1]);
+									var elem_to_add = $("<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>");
+									elem_to_add.html(elem_to_add.text());
+									setValue(appid + "carousel", elem_to_add.text());
 									setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-									var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>";
-									$desc.append(value_to_add);
+									$desc.append(elem_to_add);
 								}
 							});
 						} else {
