@@ -155,6 +155,7 @@
   "saved":"Enregistré",
   "add_unowned_dlc_to_cart":"Ajouter les DLC non-possédés au panier",
   "buy":"Acheter",
+  "buy_package":"Acheter __package__",
   "more_information":"Plus d'informations",
   "games_discount":"Jeux avec des remises",
   "region_unavailable":"Non disponible dans cette région",
@@ -181,6 +182,7 @@
   "historical_low":"Prix historiquement le plus bas",
   "games_with_booster":"__boostergames__ jeux éligibles pour des booster packs",
   "sort_by":"Trier par :",
+  "lastonline":"Dernier en ligne",
   "edit_price":"Modifier le prix",
   "relist":"Remettre en vente",
   "relist_an_item":"Remettre un objet en vente",
@@ -203,6 +205,8 @@
   "see_more":"En voir plus",
   "lowest_price_format":"__price__ sur __store__",
   "historical_low_format":"__price__ sur __store__ le __date__",
+  "favorited":"Favorited",
+  "followed":"Followed",
   "achievements":{
     "option":"Afficher les succès dans le magasin",
     "achievements":"Succès",
@@ -215,7 +219,7 @@
     "pwyw":"Payez ce que vous voulez",
     "includes":"Inclut __num__ articles",
     "tier_includes":"__tier__ (__price__) inclut __num__ articles",
-    "tier":"Tier __num__",
+    "tier":"Niveau __num__",
     "header":"Packs incluant ce jeu",
     "info":"Infos sur le pack",
     "bundle_count":"Nombre de fois que ce jeu a été dans un pack"
