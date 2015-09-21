@@ -205,6 +205,8 @@
     "see_more": "See more",
     "lowest_price_format": "__price__ at __store__",
     "historical_low_format": "__price__ at __store__ on __date__",
+    "favorited": "Favorited",
+    "followed": "Followed",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
