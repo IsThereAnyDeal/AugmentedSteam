@@ -1,5 +1,11 @@
 v8.0
 -----
+: Continuous scrolling was updated and will no longer reset after changing the search sort order
+: Homepage carousel will now properly display escaped HTML characters
+: Updated Early Access banners to run more efficiently
+: Regional price comparison boxes were resized and placed correctly on store pages
+: Fixed an alignment issue with bundle prices
+: Fixed an issue where there was no preview popup on greenlight items loaded through continous scrolling
 
 
 v7.9
