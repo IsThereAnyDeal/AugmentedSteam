@@ -5,7 +5,7 @@ v8.0
 v7.9.1
 -----
 : Links on app pages to SteamDB, PCGW, and SCE will display at the top of the right column
-: Continuous scrolling was updated and will no longer reset after changing the search sort order
+: Continuous scrolling was updated and will now reset after changing the search sort order
 : Homepage carousel will now properly display escaped HTML characters
 : Updated Early Access banners to run more efficiently
 : Relisting a market item can now be done quickly by typing in the amount and pressing enter
