@@ -1,5 +1,9 @@
 v8.0
 -----
+
+
+v7.9.1
+-----
 : Links on app pages to SteamDB, PCGW, and SCE will display at the top of the right column
 : Continuous scrolling was updated and will no longer reset after changing the search sort order
 : Homepage carousel will now properly display escaped HTML characters
@@ -11,7 +15,6 @@ v8.0
 : Dynamic Greenlight data will now be cached in the browser
 : Astats and Steamgifts links will now force a non-SSL connection as those sites don't support SSL
 : Fixed a bug that caused bundle notifications not to appear on non-English store pages
-
 
 v7.9
 -----
