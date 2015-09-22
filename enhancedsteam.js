@@ -6041,6 +6041,10 @@ function add_steamdb_links(appid, type) {
 			)
 		}
 	});
+
+	if (type == "app") {
+		$('#ReportAppBtn').parent().parent().prependTo($('#ReportAppBtn').parent().parent().parent());
+	}
 }
 
 function add_familysharing_warning(appid) {

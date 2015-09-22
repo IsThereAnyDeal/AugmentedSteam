@@ -1,5 +1,6 @@
 v8.0
 -----
+: Links on app pages to SteamDB, PCGW, and SCE will display at the top of the right column
 : Continuous scrolling was updated and will no longer reset after changing the search sort order
 : Homepage carousel will now properly display escaped HTML characters
 : Updated Early Access banners to run more efficiently
