@@ -11,7 +11,7 @@ v7.9.1
 : Relisting a market item can now be done quickly by typing in the amount and pressing enter
 : Regional price comparison boxes were resized and placed correctly on store pages
 : Fixed an alignment issue with bundle prices
-: Fixed an issue where there was no preview popup on greenlight items loaded through continous scrolling
+: Fixed an issue where there was no preview popup on greenlight items loaded through continuous scrolling
 : Dynamic Greenlight data will now be cached in the browser
 : Astats and Steamgifts links will now force a non-SSL connection as those sites don't support SSL
 : Fixed a bug that caused bundle notifications not to appear on non-English store pages
@@ -35,7 +35,7 @@ v7.8
 + Added quick sell and instant sell buttons to Steam Community items in inventory
 + Added an "Edit Price" button to market listings for Steam Community items when pressing "Remove"
 + Added an option to prevent Greenlight videos from automatically playing when loading the page
-+ Added continous scrolling option to Greenlight pages
++ Added continuous scrolling option to Greenlight pages
 + Added an option to remember Greenlight filter option settings
 + Improved language detection and localized several previously unlocalized features
 : Updated the "Total Spent" feature to work with the account page's new layout
