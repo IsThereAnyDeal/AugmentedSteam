@@ -2983,22 +2983,44 @@ function remember_greenlight_filter() {
 	return deferred.promise();
 }
 
+var greenlightCache = (function() {
+	function greenlightCache_clean(cache) {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		$.each(cache, function(key, values) {
+			if (values[3] < expire_time) {
+				delete cache[key];
+			}
+		});
+	}
+	function greenlightCache_set(id, cache_item) {
+		var cache = $.parseJSON(localStorage.getItem("greenlightCache")) || {};
+		greenlightCache_clean(cache);
+		cache[id] = [cache_item.vote, cache_item.favorited, cache_item.followed, parseInt(Date.now() / 1000, 10)];
+		localStorage.setItem("greenlightCache", JSON.stringify(cache));
+	}
+	function greenlightCache_get(id) {
+		var cache = $.parseJSON(localStorage.getItem("greenlightCache")) || {};
+		greenlightCache_clean(cache);
+		if (cache[id]) {
+			return {
+				vote: cache[id][0],
+				favorited: cache[id][1],
+				followed: cache[id][2]
+			};
+		}
+	}
+	return {
+		get: greenlightCache_get,
+		set: greenlightCache_set
+	}
+})();
+
 function preview_greenlight_votes() {
 	if (!is_signed_in) return;
 	storage.get(function(settings) {
 		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
 		if (settings.dynamicgreenlight) {
-			var greenlightCache = $.parseJSON(localStorage.getItem("greenlightCache")) || {};
-			// values: vote, favorited, followed, time
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			$.each(greenlightCache, function(key, values) {
-				if (values[3] < expire_time) {
-					delete greenlightCache[key];
-				}
-			});
 			var items = $(".workshopItem:not(.gh_checked) > a:first-child");
-			var checking = items.length;
-			var cacheChanged = false;
 			items.each(function() {
 				var match = this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=(\\d+)");
 				if (match) {
@@ -3006,28 +3028,30 @@ function preview_greenlight_votes() {
 					var parent = $(this).parent();
 					parent.addClass("gh_checked");
 					var promise;
-					var cache_item;
-					if (greenlightCache[id]) {
+					var cache_item = greenlightCache.get(id);
+					if (cache_item) {
 						var deferred = new $.Deferred();
 						promise = deferred.promise();
-						cache_item = greenlightCache[id];
 						deferred.resolve();
 					} else {
-						cache_item = [null, false, false, parseInt(Date.now() / 1000, 10)];
+						cache_item = {
+							vote: null,
+							favorited: false,
+							followed: false
+						};
 						promise = get_http(this.href, function (data) {
-							if (data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*>([^<]*)</)) cache_item[1] = true;
-							if (data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*>([^<]*)</)) cache_item[2] = true;
+							if (data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*>([^<]*)</)) cache_item.favorited = true;
+							if (data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*>([^<]*)</)) cache_item.followed = true;
 							var match_vote = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
 							if (match_vote) {
-								cache_item[0] = match_vote[1].toLowerCase();
-								greenlightCache[id] = cache_item;
-								cacheChanged = true;
+								cache_item.vote = match_vote[1].toLowerCase();
+								greenlightCache.set(id, cache_item);
 							}
 						}, {context: parent}).promise();
 					}
 					promise.done(function() {
-						var match_favorited = cache_item[1];
-						var match_followed = cache_item[2];
+						var match_favorited = cache_item.favorited;
+						var match_followed = cache_item.followed;
 						if (match_favorited || match_followed) {
 							var indicators_right = $("<div class='gh_indicators gh_indicators_right'></div>");
 							if (match_favorited) {
@@ -3038,15 +3062,9 @@ function preview_greenlight_votes() {
 							}
 							parent.prepend(indicators_right);
 						}
-						if (cache_item[0]) {
+						if (cache_item.vote) {
 							parent.addClass("gh_fade");
-							parent.addClass("gh_vote_" + cache_item[0]);
-						}
-					});
-					promise.always(function() {
-						checking--;
-						if (checking == 0 && cacheChanged) {
-							localStorage.setItem("greenlightCache", JSON.stringify(greenlightCache));
+							parent.addClass("gh_vote_" + cache_item.vote);
 						}
 					});
 				}
