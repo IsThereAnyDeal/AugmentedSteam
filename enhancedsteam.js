@@ -3625,8 +3625,8 @@ function add_lowest_market_price() {
 	$("#tabContentsMyListings .market_listing_table_header span:first").css("width", "200px");
 	$("#tabContentsMyListings .market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><a class='es_market_lowest_button'>" + localized_strings.lowest + "</a></span>");
 	$("#tabContentsMyListings .market_listing_row").each(function() {
-		$(this).find(".market_listing_edit_buttons").css("width", "200px");
-		$(this).find(".market_listing_edit_buttons").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+		$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
+		$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 	});
 
 	function add_lowest_market_price_data() {
