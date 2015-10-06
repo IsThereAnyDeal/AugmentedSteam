@@ -637,10 +637,11 @@ function display_tags(node) {
 
 			// small_cap will have extra height
 			$tags.css({
-				"display": "table",
-				"margin-top": "4px"
+				"display": "inline-block",
+				"margin-top": "2px",
+				"vertical-align": "middle"
 			});
-			$tag_root.find("h4").before($tags);
+			$tag_root.find("h4").prepend($tags);
 		}
 		else if (node.classList.contains("browse_tag_game")) {
 			$tag_root = $(node);
