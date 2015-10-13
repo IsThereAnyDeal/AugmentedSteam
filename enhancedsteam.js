@@ -676,10 +676,8 @@ function display_tags(node) {
 		}
 		else if (node.classList.contains("wishlistRow")) {
 			$tag_root = $(node).find(".wishlistRowItem");
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "left");
-			$tag_root.find(".bottom_controls").append($tags);
+			remove_existing_tags($tag_root);			
+			$tag_root.find(".wishlist_added_on").after($tags);
 		}
 		else if (node.classList.contains("match")) {
 			$tag_root = $(node);
@@ -7867,7 +7865,9 @@ $(document).ready(function(){
 							add_wishlist_notes();
 
 							// Wishlist highlights
-							start_highlights_and_tags();
+							load_inventory().done(function() {
+								start_highlights_and_tags();
+							});	
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b\/?$/.test(path):

@@ -1,5 +1,6 @@
 v8.0
 -----
+: Fixed a bug that caused tags not to display correctly on wishlist pages
 
 
 v7.9.2
