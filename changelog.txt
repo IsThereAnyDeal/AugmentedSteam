@@ -1,6 +1,7 @@
 v8.0
 -----
 : Fixed a bug that caused tags not to display correctly on wishlist pages
+: Fixed bugs relating to changes Valve made in the badge page layout
 
 
 v7.9.2

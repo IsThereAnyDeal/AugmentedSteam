@@ -6727,7 +6727,7 @@ function add_badge_filter() {
 	if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {
 		var filter_done = false;
 
-		if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
+		if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 			var html  = "<div style='text-align: right;'><span>" + localized_strings.show + ": </span>";
 				html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings.badges_all + "</span></label>";
 				html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings.badges_drops + "</span></label>";
@@ -6816,7 +6816,7 @@ function add_badge_filter() {
 }
 
 function add_badge_sort() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
+	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 		if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
 			$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings.most_drops + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + localized_strings.drops_value + "</a>");
 		}
@@ -7238,7 +7238,7 @@ function add_gamecard_market_links(game) {
 // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
 function add_badge_completion_cost() {
 	if (is_signed_in) {
-		if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
+		if ( $(".profile_small_header_texture:first a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "").replace(/\/$/, "")) {
 			$(".profile_xp_block_right").html("<div id='es_cards_worth'></div>");
 			get_http("//store.steampowered.com/app/220/", function(txt) {
 				var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
@@ -7364,7 +7364,7 @@ function add_gamecard_trading_forum() {
 }
 
 function add_total_drops_count() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".user_avatar a")[0].href) {
+	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 		var drops_count = 0,
 			drops_games = 0,
 			booster_games = 0,
