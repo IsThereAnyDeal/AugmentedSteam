@@ -444,5 +444,10 @@
         "silver": "This medal is awarded to games that have received a calculated grade of B for their __type__ support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.",
         "limited": "This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues.",
         "certifications": "WSGF Widescreen Certifications"
+    },
+    "itad": {
+        "option": "Show menu option to sync data to IsThereAnyDeal.com",
+        "send_to_itad": "Send owned games to IsThereAnyDeal",
+        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
     }
 }

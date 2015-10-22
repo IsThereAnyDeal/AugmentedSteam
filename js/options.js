@@ -57,6 +57,7 @@ function save_options() {
 	show_carousel_descriptions = $("#show_carousel_descriptions").prop('checked');
 	show_early_access = $("#show_early_access").prop('checked');
 	show_alternative_linux_icon = $("#show_alternative_linux_icon").prop('checked');
+	show_itad_button = $("#show_itad_button").prop('checked');
 	
 	// Price Options
 	showlowestprice = $("#showlowestprice").prop('checked');
@@ -198,6 +199,7 @@ function save_options() {
 		'show_carousel_descriptions': show_carousel_descriptions,
 		'show_early_access': show_early_access,
 		'show_alternative_linux_icon': show_alternative_linux_icon,
+		'show_itad_button': show_itad_button,
 		
 		'showlowestprice': showlowestprice,
 		'showlowestprice_onwishlist': showlowestprice_onwishlist,
@@ -408,6 +410,7 @@ function load_options() {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; chrome.storage.sync.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
+		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; chrome.storage.sync.set({'show_itad_button': settings.show_itad_button}); }
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
@@ -506,6 +509,7 @@ function load_options() {
 		$("#show_carousel_descriptions").prop('checked', settings.show_carousel_descriptions);
 		$("#show_early_access").prop('checked', settings.show_early_access);
 		$("#show_alternative_linux_icon").prop('checked', settings.show_alternative_linux_icon);
+		$("#show_itad_button").prop('checked', settings.show_itad_button);
 				
 		// Load Price Options
 		$("#showlowestprice").prop('checked', settings.showlowestprice);
@@ -681,6 +685,7 @@ function load_translation() {
 			$("#store_carousel_descriptions_text").text(localized_strings.options.carousel_description);
 			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
 			$("#show_alternative_linux_icon_text").text(localized_strings.options.show_alternative_linux_icon);
+			$("#show_itad_button_text").text(localized_strings.itad.option);
 			
 			$("#warning_language option").each(function() {
 				var lang = $(this).text();

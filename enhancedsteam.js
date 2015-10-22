@@ -7729,6 +7729,33 @@ function launch_random_button() {
 	});
 }
 
+function add_itad_button() {
+	storage.get(function(settings) {
+		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; storage.set({'show_itad_button': settings.show_itad_button}); }
+		if (settings.show_itad_button) {
+			$("#es_popup").append("<a id='es_itad' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.itad.send_to_itad + "</a>");
+
+			$("#es_itad").on("click", function() {
+				var ripc = function () {
+					var dialog = ShowBlockingWaitDialog("", "");
+					var url = "http://store.steampowered.com/dynamicstore/userdata/" + g_AccountID;
+					$J.get(url).done(function(data) {
+						var form = "<form name='itad_import' method='POST' action='https://isthereanydeal.com/outside/user/collection/3rdparty/steam'>"
+							+"<input type='hidden' name='json' value='" + JSON.stringify(data) + "'>"
+							+"<input type='hidden' name='returnTo' value='" + window.location.href + "'>"
+							+"</form>";
+						$J(form).appendTo("#global_action_menu").submit();
+					});
+				};
+
+				runInPageContext(ripc);
+				$(".newmodal_header .ellipsis").text(localized_strings.loading);
+				$(".waiting_dialog_container").append(localized_strings.itad.sending);
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		signed_in_promise.done(function(){
@@ -7749,6 +7776,7 @@ $(document).ready(function(){
 				replace_account_name();
 				add_birthday_celebration();
 				launch_random_button();
+				add_itad_button();
 			}			
 
 			// Attach event to the logout button

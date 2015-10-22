@@ -1,7 +1,10 @@
 v8.0
 -----
++ Added a menu option for logged in users to send their Steam collection info to IsThereAnyDeal.com
 : Fixed a bug that caused tags not to display correctly on wishlist pages
 : Fixed bugs relating to changes Valve made in the badge page layout
+: Updated Greenlight caching to be more efficient
+: Fixed a tag layout issue on the homepage
 
 
 v7.9.2
