@@ -94,7 +94,9 @@ function save_options() {
 		$("#newegg").prop('checked'),
 		$("#gamesrepublic").prop('checked'),
 		$("#coinplay").prop('checked'),
-		$("#funstock").prop('checked')
+		$("#funstock").prop('checked'),
+		$("#wingamestore").prop('checked'),
+		$("#gamebillet").prop('checked')
 	];
 	showregionalprice = $("#regional_price_on").val();
 	regional_hideworld = $("#regional_hideworld").prop('checked');
@@ -331,6 +333,8 @@ function toggle_stores() {
 			$("#gamesrepublic").prop('checked', settings.stores[27]);
 			$("#coinplay").prop('checked', settings.stores[28]);
 			$("#funstock").prop('checked', settings.stores[29]);
+			$("#wingamestore").prop('checked', settings.stores[30]);
+			$("#gamebillet").prop('checked', settings.stores[31]);
 		});
 		break;
 	}
@@ -389,7 +393,7 @@ function load_options() {
 		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; chrome.storage.sync.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
 
