@@ -1571,19 +1571,19 @@ function add_enhanced_steam_options() {
 	$dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
 	$dropdown_options_container = $("<div class=\"popup_block_new\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
 	$dropdown_options = $dropdown_options_container.find(".popup_body");
-	$dropdown_options.css("display", "none");
+	$dropdown_options_container.hide();
 
 	// remove menu if click anywhere but on "Enhanced Steam". Commented out bit is for clicking on menu won't make it disappear either.
 	$('body').bind('click', function(e) {
 		if(/*$(e.target).closest(".popup_body").length == 0 && */$(e.target).closest("#enhanced_pulldown").length == 0) {
-			if ($dropdown_options.css("display") == "block" || $dropdown_options.css("display") == "") {
-				$dropdown_options.css("display", "none");
+			if ($dropdown_options_container.css("display") == "block" || $dropdown_options_container.css("display") == "") {
+				$dropdown_options_container.fadeOut(200);
 			}
 		}
 	});
 
 	$dropdown.click(function(){
-		$dropdown_options.toggle();
+		$dropdown_options_container.fadeToggle(200);
 	});
 
 	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\""+chrome.extension.getURL("options.html")+"\">"+localized_strings.thewordoptions+"</a>")
