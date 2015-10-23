@@ -205,8 +205,8 @@
   "see_more":"En voir plus",
   "lowest_price_format":"__price__ sur __store__",
   "historical_low_format":"__price__ sur __store__ le __date__",
-  "favorited":"Favorited",
-  "followed":"Followed",
+  "favorited":"Favoris",
+  "followed":"Suivi",
   "achievements":{
     "option":"Afficher les succès dans le magasin",
     "achievements":"Succès",
@@ -444,5 +444,10 @@
     "silver":"Cette médaille est accordée aux jeux qui ont reçu un rang calculé de B pour leur support du __type__. Tous ces jeux n'ont pas de défaut majeur, mais ils en ont au moins un qui les empêche d'avoir un score parfait.",
     "limited":"Ce score est accordé aux jeux qui ont reçu un rang calculé de C pour leur support du __type__. Tous ces jeux ont un certain niveau de support du __type__ mais ont des problèmes importants.",
     "certifications":"Certifications écran large du WSGF"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

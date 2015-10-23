@@ -155,7 +155,7 @@
   "saved":"Lagret",
   "add_unowned_dlc_to_cart":"Legg DLC som ikke eies i handlevogn",
   "buy":"Kjøp",
-  "buy_package":"Buy __package__",
+  "buy_package":"Kjøp __package__",
   "more_information":"Mer informasjon",
   "games_discount":"Spill med rabatter",
   "region_unavailable":"Ikke tilgjengelig i denne regionen",
@@ -182,7 +182,7 @@
   "historical_low":"Historisk laveste pris",
   "games_with_booster":"__boostergames__ spill kvalifisert for booster-pakker",
   "sort_by":"Sorter etter:",
-  "lastonline":"Last Online",
+  "lastonline":"Sist pålogget",
   "edit_price":"Rediger pris",
   "relist":"Legg ut på ny",
   "relist_an_item":"Legg en gjenstand ut på ny",
@@ -205,8 +205,8 @@
   "see_more":"Se mer",
   "lowest_price_format":"__price__ på __store__",
   "historical_low_format":"__price__ på __store__ __date__",
-  "favorited":"Favorited",
-  "followed":"Followed",
+  "favorited":"Favorisert",
+  "followed":"Fulgt",
   "achievements":{
     "option":"Vis prestasjoner på butikksider",
     "achievements":"Prestasjoner",
@@ -444,5 +444,10 @@
     "silver":"Denne medaljen er tildelt spill som har mottatt kalkulert karakter B for deres __type__-støtte.  Alle disse spillene er uten særlig store feil, men har minst én blemme som forhindrer et perfekt resultat.",
     "limited":"Dette resultatet tildeles spill som har mottatt kalkulert grad C for deres __type__-støtte.  Alle disse spillene har et visst nivå av __type__-støtte men har noen betydelige problemer.",
     "certifications":"WSGF widescreen-sertifiseringer"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

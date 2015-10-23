@@ -155,7 +155,7 @@
   "saved":"已保存",
   "add_unowned_dlc_to_cart":"添加未拥有的DLC至购物车",
   "buy":"购买",
-  "buy_package":"Buy __package__",
+  "buy_package":"购买__package__",
   "more_information":"更多信息",
   "games_discount":"优惠游戏",
   "region_unavailable":"在这地区无法提供",
@@ -182,7 +182,7 @@
   "historical_low":"历史最低价",
   "games_with_booster":"__boostergames__个游戏可获得补充包",
   "sort_by":"排序方式",
-  "lastonline":"Last Online",
+  "lastonline":"最后在线",
   "edit_price":"编辑价格",
   "relist":"上架",
   "relist_an_item":"重新上架一件物品",
@@ -205,8 +205,8 @@
   "see_more":"查看更多",
   "lowest_price_format":"在 __store__中 为__price__",
   "historical_low_format":"在__date__时该物品在 __store__中为 __price__",
-  "favorited":"Favorited",
-  "followed":"Followed",
+  "favorited":"收藏",
+  "followed":"已关注",
   "achievements":{
     "option":"在商店页面显示成就",
     "achievements":"成就",
@@ -444,5 +444,10 @@
     "silver":"此奖章是颁给因为有__type__支持而获得 B 等的游戏，在这方面这些游戏并没有重大缺陷，但是至少有一个瑕疵让它无法拿到完美评分",
     "limited":"此游戏因为有__type__支持而获得 C 等的评分，这些游戏有某种层面的__type__支持，但是有严重的问题",
     "certifications":"WSGF 宽屏认证"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

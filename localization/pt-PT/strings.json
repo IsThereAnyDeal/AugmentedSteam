@@ -444,5 +444,10 @@
     "silver":"Esta medalha é dada a jogos que receberam uma nota final B pela sua compatibilidade com __type__.  Todos os jogos com esta nota não possuem grandes problemas, mas pode haver um detalhe que impede a pontuação perfeita.",
     "limited":"Esta pontuação é atribuída a jogos que receberam uma nota calculada de C pelo seu __type__ suporte. Todos estes jogos têm um certo nível de __type__ suporte mas têm problemas significantes.",
     "certifications":"WSGF Widescreen Certifications"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

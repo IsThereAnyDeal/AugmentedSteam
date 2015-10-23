@@ -444,5 +444,10 @@
     "silver":" __type__ 부분에서 B등급을 받아 메달을 수여한 게임입니다. 주된 결점이 없는 게임이지만 완벽한 점수를 받기에 최소한 하나의 흠이 있는 게임입니다.",
     "limited":"__type__ 부분에서 C등급을 받아 메달을 수여한 게임입니다. __type__ 지원이 어느 정도 되지만 중요한 문제가 있는 게임입니다.",
     "certifications":"WSGF Widescreen Certifications"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

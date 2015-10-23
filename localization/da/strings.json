@@ -183,7 +183,7 @@
   "games_with_booster":"__boostergames__ spil som er brugbare overfor booster packs",
   "sort_by":"Sorter efter:",
   "lastonline":"Last Online",
-  "edit_price":"Game dev tycoon",
+  "edit_price":"Edit Price",
   "relist":"Relist",
   "relist_an_item":"Relist an item",
   "relist_text":"Would you like to relist this item at a lower price?",
@@ -444,5 +444,10 @@
     "silver":"Denne medalje er tildelt til spil, der har modtaget en beregnet kategori b for deres __type__ støtte.  Alle spil af denne slags er uden store fejl, men har mindst én plet, der forhindrer en perfekt score.",
     "limited":"Denne score er tildelt til spil, der har modtaget en beregnet kategori c for deres __type__ støtte.  Alle spil af denne slags har en vis grad af __type__ støtte, men har betydelige problemer.",
     "certifications":"WSGF Widescreen certificeringer"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

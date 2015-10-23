@@ -205,8 +205,8 @@
   "see_more":"ดูเพิ่มเติม",
   "lowest_price_format":"__price__ ที่ __store__",
   "historical_low_format":"__price__ ที่ __store__ เมื่อ __date__",
-  "favorited":"Favorited",
-  "followed":"Followed",
+  "favorited":"รายการโปรด",
+  "followed":"ติดตามอยู่",
   "achievements":{
     "option":"แสดงรางวัลความสำเร็จบนหน้าร้านค้า",
     "achievements":"รางวัลความสำเร็จ",
@@ -444,5 +444,10 @@
     "silver":"เหรียญรางวัลนี้ถูกมอบให้เป็นรางวัลสำหรับเกมที่ได้รับเกรดที่คำนวณได้เป็น B ซึ่งรองรับ __type__ เกมเหล่านี้ทั้งหมดจะไม่มีข้อบกพร่องรุนแรง แต่ว่ายังคงมีข้อบกพร่องบางอย่างที่ยังทำให้ไม่ได้รับคะแนนสูงสุด",
     "limited":"คะแนนนี้ถูกมอบให้เป็นรางวัลสำหรับเกมที่ได้รับเกรดที่คำนวณได้เป็น C ซึ่งรองรับ __type__ เกมเหล่านี้ทั้งหมดจะรองรับ __type__ ในบางระดับ แต่ว่ายังคงมีปัญหาที่มีนัยสำคัญอยู่",
     "certifications":"ใบรับรองจอกว้าง WSGF"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }

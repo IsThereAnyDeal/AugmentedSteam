@@ -205,8 +205,8 @@
   "see_more":"Altri dettagli",
   "lowest_price_format":"__price__ su __store__",
   "historical_low_format":"__price__ su __store__ il __date__",
-  "favorited":"Favorited",
-  "followed":"Followed",
+  "favorited":"Preferiti",
+  "followed":"Seguiti",
   "achievements":{
     "option":"Mostra achievement sulle pagine del negozio",
     "achievements":"Achievement",
@@ -444,5 +444,10 @@
     "silver":"Questa medaglia viene assegnata ai giochi che hanno ricevuto il grado B per il loro supporto __type__. Tutti questi giochi non hanno grossi difetti, ma hanno almeno una lacuna che gli impedisce di ottenere un punteggio perfetto.",
     "limited":"Questo punteggio viene assegnato ai giochi che che hanno ricevuto il grado C per il loro supporto __type__. Tutti questi giochi hanno problemi significativi, pur avendo un certo livello di supporto __type__.",
     "certifications":"Certificazioni WSGF Widescreen"
+  },
+  "itad":{
+    "option":"Show menu option to sync data to IsThereAnyDeal.com",
+    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
   }
 }
