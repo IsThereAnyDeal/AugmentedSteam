@@ -77,7 +77,7 @@ function save_options() {
 		$("#gametap").prop('checked'),
 		$("#gamesplanet").prop('checked'),
 		$("#getgames").prop('checked'),
-		$("#desura").prop('checked'),
+		true,
 		$("#gog").prop('checked'),
 		$("#dotemu").prop('checked'),
 		$("#gameolith").prop('checked'),
@@ -315,7 +315,6 @@ function toggle_stores() {
 			$("#gametap").prop('checked', settings.stores[9]);
 			$("#gamesplanet").prop('checked', settings.stores[10]);
 			$("#getgames").prop('checked', settings.stores[11]);
-			$("#desura").prop('checked', settings.stores[12]);
 			$("#gog").prop('checked', settings.stores[13]);
 			$("#dotemu").prop('checked', settings.stores[14]);
 			$("#gameolith").prop('checked', settings.stores[15]);

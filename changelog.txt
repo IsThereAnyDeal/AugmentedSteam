@@ -6,6 +6,7 @@ v8.0
 : Fixed bugs relating to changes Valve made in the badge page layout
 : Updated Greenlight caching to be more efficient
 : Fixed a tag layout issue on the homepage
+- Removed lowest price and price history information for the Desura store
 
 
 v7.9.2

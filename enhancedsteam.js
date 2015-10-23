@@ -1197,7 +1197,6 @@ function add_wishlist_pricehistory() {
 			if (settings.stores[9]) { storestring += "gametap,"; }
 			if (settings.stores[10]) { storestring += "gamesplanet,"; }
 			if (settings.stores[11]) { storestring += "getgames,"; }
-			if (settings.stores[12]) { storestring += "desura,"; }
 			if (settings.stores[13]) { storestring += "gog,"; }
 			if (settings.stores[14]) { storestring += "dotemu,"; }
 			if (settings.stores[15]) { storestring += "gameolith,"; }
@@ -1217,7 +1216,7 @@ function add_wishlist_pricehistory() {
 			if (settings.stores[29]) { storestring += "funstock,"; }
 			if (settings.stores[30]) { storestring += "wingamestore,"; }
 			if (settings.stores[31]) { storestring += "gamebillet,"; }
-			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets,newegg,gamesrepublic,coinplay,funstock,wingamestore,gamebillet"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets,newegg,gamesrepublic,coinplay,funstock,wingamestore,gamebillet"; }
 
 			// Get country code from Steam cookie
 			var cookies = document.cookie;
@@ -1917,7 +1916,6 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[9]) { storestring += "gametap,"; }
 			if (settings.stores[10]) { storestring += "gamesplanet,"; }
 			if (settings.stores[11]) { storestring += "getgames,"; }
-			if (settings.stores[12]) { storestring += "desura,"; }
 			if (settings.stores[13]) { storestring += "gog,"; }
 			if (settings.stores[14]) { storestring += "dotemu,"; }
 			if (settings.stores[15]) { storestring += "gameolith,"; }
@@ -1937,7 +1935,7 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[29]) { storestring += "funstock,"; }
 			if (settings.stores[30]) { storestring += "wingamestore,"; }
 			if (settings.stores[31]) { storestring += "gamebillet,"; }
-			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,desura,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets,newegg,gamesrepublic,coinplay,funstock,wingamestore,gamebillet"; }
+			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets,newegg,gamesrepublic,coinplay,funstock,wingamestore,gamebillet"; }
 
 			// Get country code from the Steam cookie
 			var cookies = document.cookie;
