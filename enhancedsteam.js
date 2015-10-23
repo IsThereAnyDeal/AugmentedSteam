@@ -7446,6 +7446,7 @@ function add_total_drops_count() {
 				});
 			}
 		} else {
+			$(".profile_xp_block_right").prepend("<span id='es_calculations' style='color: #fff;'>" + localized_strings.drop_calc + "</span>");
 			$(".progress_info_bold").each(function(i, obj) {
 				var parent = $(obj).parent().parent();
 				if ($(parent).find(".progress_info_bold")[0]) {

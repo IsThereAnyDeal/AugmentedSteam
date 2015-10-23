@@ -1,5 +1,6 @@
 v8.1
 -----
+: Fixed a bug that would cause users with less than 250 badges to not see badge calculations (thanks judgegr!)
 
 
 v8.0
