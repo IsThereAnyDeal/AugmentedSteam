@@ -1,6 +1,7 @@
 v8.1
 -----
 : Fixed a bug that would cause users with less than 250 badges to not see badge calculations (thanks judgegr!)
+: Fixed a bug that caused badge completion costs to not show correctly on badge pages
 
 
 v8.0

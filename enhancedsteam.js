@@ -7248,7 +7248,7 @@ function add_gamecard_market_links(game) {
 					$(this).children("div:contains('" + cardname + "')").parent().append(html);
 				}
 			});
-			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $("#headerUserAvatarIcon").parent().attr("href")) {
+			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
 				cost = formatCurrency(cost, currency_type);
 				$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
 				$(".badge_empty_right").css("margin-top", "7px");
