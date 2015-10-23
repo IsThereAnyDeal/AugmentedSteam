@@ -882,3 +882,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_sell #market_sell_buyercurrency_input:invalid {
 	border-color: #c00000;
 }
+#enhanced_pulldown {
+	display: inline-block;
+	margin: 1px;
+	padding-left: 4px;
+	line-height: 19px;
+}
+#enhanced_pulldown.focus {
+	margin: 0px;
+	border: 1px solid #82807C;
+	color: #ffffff;
+}
