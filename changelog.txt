@@ -3,6 +3,7 @@ v8.1
 : Fixed a bug that would cause users with less than 250 badges to not see badge calculations (thanks judgegr!)
 : Fixed a bug that caused badge completion costs to not show correctly on badge pages
 : Fixed a bug that caused the Enhanced Steam menu to be placed incorrectly due to a page layout change
+: Fixed a bug that caused the "Install Steam" button to partially dispear when "Hide About" option enabled
 
 
 v8.0

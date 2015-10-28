@@ -1700,7 +1700,7 @@ function remove_install_steam_button() {
 	storage.get(function(settings) {
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideinstallsteambutton) {
-			$('div.header_installsteam_btn').replaceWith('');
+			$('div.header_installsteam_btn').remove();
 		}
 	});
 }
@@ -1710,7 +1710,7 @@ function remove_about_menu() {
 	storage.get(function(settings) {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.hideaboutmenu) {
-			$('a[href$="http://store.steampowered.com/about/"]').replaceWith('');
+			$(".menuitem[href$='http://store.steampowered.com/about/']").remove();
 		}
 	});
 }
