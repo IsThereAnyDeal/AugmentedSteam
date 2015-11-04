@@ -253,6 +253,29 @@ function currency_symbol_from_string (string_with_symbol) {
 	return match ? match[0] : '';
 }
 
+/**
+ * Gets the country code of store region.
+ *
+ * First, look for fakeCC in cookie, which is set for users with store region
+ * different from accessing IP;
+ * if not found, look for steamCountry in cookie;
+ * if not found, default to 'us'.
+ */
+function getStoreRegionCountryCode() {
+	if (getCookie('fakeCC')) {
+		return getCookie('fakeCC');
+	} else if (getCookie('steamCountry')) {
+		// steamCountry looks like:
+		// GB|fae965...
+		var steamCountry = getCookie('steamCountry');
+		var matched = steamCountry.match(/^([a-z]{2})/i);
+		if (matched) {
+			return matched[1];
+		}
+	}
+	return 'us';
+}
+
 function escapeHTML(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
 }
@@ -1226,12 +1249,7 @@ function add_wishlist_pricehistory() {
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets,newegg,gamesrepublic,coinplay,funstock,wingamestore,gamebillet"; }
 
 			// Get country code from Steam cookie
-			var cookies = document.cookie;
-			var matched = cookies.match(/steamCountry=([a-z]{2})/i);
-			var cc = "us";
-			if (matched != null && matched.length == 2) {
-				cc = matched[1];
-			}
+			var cc = getStoreRegionCountryCode();
 
 			function get_price_data(lookup_type, node, id) {
 				html = "<div class='es_lowest_price' id='es_price_" + id + "' style='margin-bottom: 5px;'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
@@ -1946,13 +1964,8 @@ function show_pricing_history(appid, type) {
 			if (settings.stores[31]) { storestring += "gamebillet,"; }
 			if (settings.showallstores) { storestring = "steam,amazonus,impulse,gamersgate,greenmangaming,gamefly,origin,uplay,indiegalastore,gametap,gamesplanet,getgames,gog,dotemu,gameolith,adventureshop,nuuvem,shinyloot,dlgamer,humblestore,squenix,bundlestars,fireflower,humblewidgets,newegg,gamesrepublic,coinplay,funstock,wingamestore,gamebillet"; }
 
-			// Get country code from the Steam cookie
-			var cookies = document.cookie;
-			var matched = cookies.match(/steamCountry=([a-z]{2})/i);
-			var cc = "us";
-			if (matched != null && matched.length == 2) {
-				cc = matched[1];
-			}
+			// Get country code from Steam cookie
+			var cc = getStoreRegionCountryCode();
 
 			// Get all of the subIDs on the page
 			var subids = "";
