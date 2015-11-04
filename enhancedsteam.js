@@ -5144,7 +5144,7 @@ function show_regional_pricing() {
 												} else if (sub) {
 													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 + "px").css("top", "70px");
 												} else {
-													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 20 + "px");
+													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg:last").width() + 20 + "px");
 												}
 												$("#es_pricing_" + subid).show();
 											})
