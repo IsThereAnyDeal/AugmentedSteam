@@ -1,5 +1,7 @@
 v8.1
 -----
++ Added support for INR, TWD, HKD, and CNY currencies
+: Updated regional price comparison feature to be more efficient and to work with new currencies
 
 
 v8.0.1
