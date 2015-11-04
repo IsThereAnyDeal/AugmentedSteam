@@ -5142,7 +5142,7 @@ function show_regional_pricing() {
 													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() - $(app_package).find(".btnv6_blue_blue_innerfade").width() +"px").css("top", "25px");
 													$("#es_pricing_" + subid).css("width", "200px");
 												} else if (sub) {
-													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 + "px").css("top", "70px");
+													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 + "px").css("top", "95px");
 												} else {
 													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg:last").width() + 20 + "px");
 												}
