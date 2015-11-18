@@ -4829,7 +4829,8 @@ function process_early_access() {
 							break;
 						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
 							$(".game_info_cap").each(function(index, value) { check_early_access($(this)); });
-							$(".showcase_slot").each(function(index, value) { check_early_access($(this)); });
+							$(".showcase_gamecollector_game").each(function(index, value) { check_early_access($(this)); });
+							$(".favoritegame_showcase_game").each(function(index, value) { check_early_access($(this)); });
 							break;
 						case /^\/app\/.*/.test(window.location.pathname):
 							if ($(".apphub_EarlyAccess_Title").length > 0) {
