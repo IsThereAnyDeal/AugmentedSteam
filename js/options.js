@@ -1,3 +1,5 @@
+var storage = chrome.storage.sync;
+if (!storage) storage = chrome.storage.local;
 
 // Saves options to localStorage.
 function save_options() {
@@ -146,7 +148,7 @@ function save_options() {
 	
 	steamcardexchange = $("#steamcardexchange").prop('checked');
 
-	chrome.storage.sync.set({
+	storage.set({
 		'highlight_owned_color': highlight_owned_color,
 		'highlight_wishlist_color': highlight_wishlist_color,
 		'highlight_coupon_color': highlight_coupon_color,
@@ -246,7 +248,7 @@ function save_options() {
 		'steamcardexchange': steamcardexchange
 	});
 	if (!remembergreenlightfilter) {
-		chrome.storage.sync.set({'greenlightfilteroptions': []});
+		storage.set({'greenlightfilteroptions': []});
 	}
 	$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
 }
@@ -302,7 +304,7 @@ function toggle_stores() {
 		break;
 		case false:
 		$("#store_stores").show();
-		chrome.storage.sync.get(function(settings) {
+		storage.get(function(settings) {
 			$("#steam").prop('checked', settings.stores[0]);
 			$("#amazonus").prop('checked', settings.stores[1]);
 			$("#impulse").prop('checked', settings.stores[2]);
@@ -340,7 +342,7 @@ function toggle_stores() {
 }
 
 function load_countries() {
-	chrome.storage.sync.get(function(settings) {
+	storage.get(function(settings) {
 		$('.regional_country').each(function (i, el) {
 			$(this).prop('value', settings.regional_countries[i]).siblings('.es_flag').addClass('es_flag_' + settings.regional_countries[i]);
 		});
@@ -356,105 +358,105 @@ $.getJSON(chrome.extension.getURL('cc.json'), function (data) {
 
 // Restores select box state to saved value from SyncStorage.
 function load_options() {
-	chrome.storage.sync.get(function(settings) {
+	storage.get(function(settings) {
 
 		// Load default values for settings if they do not exist (and sync them to Google)
-		if (settings.language === undefined) { settings.language = "eng"; chrome.storage.sync.set({'language': settings.language}); }
-		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	chrome.storage.sync.set({'highlight_owned_color': settings.highlight_owned_color});	}
-		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	chrome.storage.sync.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
-		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269";	chrome.storage.sync.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
-		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
-		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
+		if (settings.language === undefined) { settings.language = "eng"; storage.set({'language': settings.language}); }
+		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836"; storage.set({'highlight_owned_color': settings.highlight_owned_color});	}
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea"; storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
+		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
+		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124";	storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 
-		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	chrome.storage.sync.set({'tag_owned_color': settings.tag_owned_color});	}
-		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	chrome.storage.sync.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
-		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269";	chrome.storage.sync.set({'tag_coupon_color': settings.tag_coupon_color}); }
-		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124";	chrome.storage.sync.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
-		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124";	chrome.storage.sync.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
+		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836"; storage.set({'tag_owned_color': settings.tag_owned_color}); }
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea"; storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
+		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
+		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 
-		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; chrome.storage.sync.set({'highlight_owned': settings.highlight_owned}); }
-		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; chrome.storage.sync.set({'highlight_wishlist': settings.highlight_wishlist}); }
-		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; chrome.storage.sync.set({'highlight_coupon': settings.highlight_coupon}); }
-		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; chrome.storage.sync.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
-		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; chrome.storage.sync.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
-		if (settings.highlight_excludef2p === undefined) { settings.highlight_excludef2p = false; chrome.storage.sync.set({'highlight_excludef2p': settings.highlight_excludef2p}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
+		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
+		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
+		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
+		if (settings.highlight_excludef2p === undefined) { settings.highlight_excludef2p = false; storage.set({'highlight_excludef2p': settings.highlight_excludef2p}); }
 
-		if (settings.tag_owned === undefined) { settings.tag_owned = false; chrome.storage.sync.set({'tag_owned': settings.tag_owned}); }
-		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; chrome.storage.sync.set({'tag_wishlist': settings.tag_wishlist}); }
-		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; chrome.storage.sync.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; chrome.storage.sync.set({'tag_inv_gift': settings.tag_inv_gift}); }
-		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; chrome.storage.sync.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
+		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
+		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
+		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
+		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
+		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
 
-		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; chrome.storage.sync.set({'hidetmsymbols': settings.hidetmsymbols}); }
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; storage.set({'hidetmsymbols': settings.hidetmsymbols}); }
 
-		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; chrome.storage.sync.set({'showlowestprice': settings.showlowestprice}); }
-		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; chrome.storage.sync.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
-		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; chrome.storage.sync.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
-		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
-		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; chrome.storage.sync.set({'showregionalprice': settings.showregionalprice}); }
-		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; chrome.storage.sync.set({'regional_countries': settings.regional_countries}); }
+		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
+		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; storage.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
+		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
+		if (settings.showallstores === undefined) { settings.showallstores = true; storage.set({'showallstores': settings.showallstores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
+		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; storage.set({'regional_countries': settings.regional_countries}); }
 
-		if (settings.showtotal === undefined) { settings.showtotal = true; chrome.storage.sync.set({'showtotal': settings.showtotal}); }
-		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; chrome.storage.sync.set({'showmarkettotal': settings.showmarkettotal}); }
-		if (settings.showsteamrepapi === undefined) { settings.showsteamrepapi = true; chrome.storage.sync.set({'showsteamrepapi': settings.showsteamrepapi}); }
-		if (settings.showmcus === undefined) { settings.showmcus = true; chrome.storage.sync.set({'showmcus': settings.showmcus}); }
-		if (settings.showhltb === undefined) { settings.showhltb = true; chrome.storage.sync.set({'showhltb': settings.showhltb}); }
-		if (settings.showpcgw === undefined) { settings.showpcgw = true; chrome.storage.sync.set({'showpcgw': settings.showpcgw}); }
-		if (settings.showsteamcardexchange === undefined) { settings.showsteamcardexchange = false; chrome.storage.sync.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
-		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; chrome.storage.sync.set({'showsteamdb': settings.showsteamdb}); }
-		if (settings.showastatslink === undefined) { settings.showastatslink = true; chrome.storage.sync.set({'showastatslink': settings.showastatslink}); }
-		if (settings.showwsgf === undefined) { settings.showwsgf = true; chrome.storage.sync.set({'showwsgf': settings.showwsgf}); }
-		if (settings.show_package_info === undefined) { settings.show_package_info = false; chrome.storage.sync.set({'show_package_info': settings.show_package_info}); }
-		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; chrome.storage.sync.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
-		if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; chrome.storage.sync.set({'show_steamchart_info': settings.show_steamchart_info}); }
-		if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; chrome.storage.sync.set({'show_steamspy_info': settings.show_steamspy_info}); }
-		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; chrome.storage.sync.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
-		if (settings.show_early_access === undefined) { settings.show_early_access = true; chrome.storage.sync.set({'show_early_access': settings.show_early_access}); }
-		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; chrome.storage.sync.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
-		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; chrome.storage.sync.set({'show_itad_button': settings.show_itad_button}); }
+		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
+		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
+		if (settings.showsteamrepapi === undefined) { settings.showsteamrepapi = true; storage.set({'showsteamrepapi': settings.showsteamrepapi}); }
+		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
+		if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
+		if (settings.showpcgw === undefined) { settings.showpcgw = true; storage.set({'showpcgw': settings.showpcgw}); }
+		if (settings.showsteamcardexchange === undefined) { settings.showsteamcardexchange = false; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
+		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; storage.set({'showsteamdb': settings.showsteamdb}); }
+		if (settings.showastatslink === undefined) { settings.showastatslink = true; storage.set({'showastatslink': settings.showastatslink}); }
+		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
+		if (settings.show_package_info === undefined) { settings.show_package_info = false; storage.set({'show_package_info': settings.show_package_info}); }
+		if (settings.show_sysreqcheck === undefined) { settings.show_sysreqcheck = false; storage.set({'show_sysreqcheck': settings.show_sysreqcheck}); }
+		if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; storage.set({'show_steamchart_info': settings.show_steamchart_info}); }
+		if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; storage.set({'show_steamspy_info': settings.show_steamspy_info}); }
+		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
+		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
+		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
+		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; storage.set({'show_itad_button': settings.show_itad_button}); }
 		
-		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; chrome.storage.sync.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
-		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; chrome.storage.sync.set({'hideaboutmenu': settings.hideaboutmenu}); }
-		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; chrome.storage.sync.set({'replaceaccountname': settings.replaceaccountname}); }
-		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; chrome.storage.sync.set({'showfakeccwarning': settings.showfakeccwarning}); }
-		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; chrome.storage.sync.set({'showlanguagewarning': settings.showlanguagewarning}); }
-		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; chrome.storage.sync.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
-		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; chrome.storage.sync.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
-		if (settings.send_age_info === undefined) { settings.send_age_info = true; chrome.storage.sync.set({'send_age_info': settings.send_age_info}); }
-		if (settings.html5video === undefined) { settings.html5video = true; chrome.storage.sync.set({'html5video': settings.html5video}); }
-		if (settings.contscroll === undefined) { settings.contscroll = true; chrome.storage.sync.set({'contscroll': settings.contscroll}); }
-		if (settings.showdrm === undefined) { settings.showdrm = true; chrome.storage.sync.set({'showdrm': settings.showdrm}); }
-		if (settings.show_acrtag_info === undefined) { settings.show_acrtag_info = false; chrome.storage.sync.set({'show_acrtag_info': settings.show_acrtag_info}); }
-		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; chrome.storage.sync.set({'regional_hideworld': settings.regional_hideworld});}
-		if (settings.showinvnav === undefined) { settings.showinvnav = false; chrome.storage.sync.set({'showinvnav': settings.showinvnav}); }
-		if (settings.showesbg === undefined) { settings.showesbg = true; chrome.storage.sync.set({'showesbg': settings.showesbg}); }
-		if (settings.quickinv === undefined) { settings.quickinv = true; chrome.storage.sync.set({'quickinv': settings.quickinv}); }
-		if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; chrome.storage.sync.set({'quickinv_diff': settings.quickinv_diff}); }
-		if (settings.showallachievements === undefined) { settings.showallachievements = false; chrome.storage.sync.set({'showallachievements': settings.showallachievements}); }
-		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; chrome.storage.sync.set({'showcomparelinks': settings.showcomparelinks}); }
-		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; chrome.storage.sync.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
-		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; chrome.storage.sync.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
-		if (settings.disablegreenlightautoplay === undefined) { settings.disablegreenlightautoplay = false; chrome.storage.sync.set({'disablegreenlightautoplay': settings.disablegreenlightautoplay}); }
-		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; chrome.storage.sync.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
-		if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; chrome.storage.sync.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
-		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; chrome.storage.sync.set({'hideactivelistings': settings.hideactivelistings}); }
-		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; chrome.storage.sync.set({'hidespamcomments': settings.hidespamcomments}); }
-		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; chrome.storage.sync.set({'spamcommentregex': settings.spamcommentregex}); }
-		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; chrome.storage.sync.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
-		if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; chrome.storage.sync.set({'show1clickgoo': settings.show1clickgoo}); }
-		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
-		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
-		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
-		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
-		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
-		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
-		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
-		if (settings.profile_api_info === undefined) { settings.profile_api_info = false; chrome.storage.sync.set({'profile_api_info': settings.profile_api_info}); }
-		if (settings.api_key == false||settings.api_key==""||settings.api_key===undefined){ settings.profile_api_info = false; chrome.storage.sync.set({'profile_api_info': settings.profile_api_info});}
-		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
-		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; chrome.storage.sync.set({'steamcardexchange': settings.steamcardexchange}); }
+		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
+		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
+		if (settings.replaceaccountname === undefined) { settings.replaceaccountname = false; storage.set({'replaceaccountname': settings.replaceaccountname}); }
+		if (settings.showfakeccwarning === undefined) { settings.showfakeccwarning = true; storage.set({'showfakeccwarning': settings.showfakeccwarning}); }
+		if (settings.showlanguagewarning === undefined) { settings.showlanguagewarning = true; storage.set({'showlanguagewarning': settings.showlanguagewarning}); }
+		if (settings.showlanguagewarninglanguage === undefined) { settings.showlanguagewarninglanguage = "English"; storage.set({'showlanguagewarninglanguage': settings.showlanguagewarninglanguage}); }
+		if (settings.homepage_tab_selection === undefined) { settings.homepage_tab_selection = "remember"; storage.set({'homepage_tab_selection': settings.homepage_tab_selection}); }
+		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
+		if (settings.html5video === undefined) { settings.html5video = true; storage.set({'html5video': settings.html5video}); }
+		if (settings.contscroll === undefined) { settings.contscroll = true; storage.set({'contscroll': settings.contscroll}); }
+		if (settings.showdrm === undefined) { settings.showdrm = true; storage.set({'showdrm': settings.showdrm}); }
+		if (settings.show_acrtag_info === undefined) { settings.show_acrtag_info = false; storage.set({'show_acrtag_info': settings.show_acrtag_info}); }
+		if (settings.regional_hideworld===undefined) { settings.regional_hideworld = false; storage.set({'regional_hideworld': settings.regional_hideworld});}
+		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
+		if (settings.showesbg === undefined) { settings.showesbg = true; storage.set({'showesbg': settings.showesbg}); }
+		if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
+		if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
+		if (settings.showallachievements === undefined) { settings.showallachievements = false; storage.set({'showallachievements': settings.showallachievements}); }
+		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; storage.set({'showcomparelinks': settings.showcomparelinks}); }
+		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
+		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
+		if (settings.disablegreenlightautoplay === undefined) { settings.disablegreenlightautoplay = false; storage.set({'disablegreenlightautoplay': settings.disablegreenlightautoplay}); }
+		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; storage.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
+		if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; storage.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
+		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
+		if (settings.hidespamcomments === undefined) { settings.hidespamcomments = false; storage.set({'hidespamcomments': settings.hidespamcomments}); }
+		if (settings.spamcommentregex === undefined) { settings.spamcommentregex = "[\\u2500-\\u25FF]"; storage.set({'spamcommentregex': settings.spamcommentregex}); }
+		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
+		if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; storage.set({'show_profile_link_images': settings.show_profile_link_images}); }
+		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; storage.set({'profile_steamgifts': settings.profile_steamgifts}); }
+		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; storage.set({'profile_steamrep': settings.profile_steamrep}); }
+		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; storage.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
+		if (settings.profile_astats === undefined) { settings.profile_astats = true; storage.set({'profile_astats': settings.profile_astats}); }
+		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; storage.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; storage.set({'profile_astatsnl': settings.profile_astatsnl}); }
+		if (settings.profile_api_info === undefined) { settings.profile_api_info = false; storage.set({'profile_api_info': settings.profile_api_info}); }
+		if (settings.api_key == false||settings.api_key==""||settings.api_key===undefined){ settings.profile_api_info = false; storage.set({'profile_api_info': settings.profile_api_info});}
+		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; storage.set({'profile_permalink': settings.profile_permalink}); }
+		if (settings.steamcardexchange == undefined) { settings.steamcardexchange = true; storage.set({'steamcardexchange': settings.steamcardexchange}); }
 		
 		// Load Store Options
 		$("#highlight_owned_color").val(settings.highlight_owned_color);
@@ -575,7 +577,7 @@ function load_options() {
 }
 
 function load_translation() {
-	chrome.storage.sync.get(function(settings) {		
+	storage.get(function(settings) {		
 		// Load translation
 		if (settings.language === undefined) { settings.language = "english"; }
 
@@ -783,7 +785,7 @@ function load_translation() {
 }
 
 function load_profile_link_images() {
-	chrome.storage.sync.get(function(settings) {
+	storage.get(function(settings) {
 		settings.show_profile_link_images = $("#profile_link_images_dropdown").val();
 		$("#profile_link_images_dropdown").val(settings.show_profile_link_images);
 		switch(settings.show_profile_link_images) {
@@ -808,7 +810,7 @@ function populate_regional_selects() {
 	var add_another_wrapper = $('#add_another_region').parent(),
 		region_selection = generate_region_select();
 
-	chrome.storage.sync.get(function (settings) {
+	storage.get(function (settings) {
 		$.each(settings.regional_countries, function () {
 			add_another_wrapper.before(region_selection.clone());
 		});
@@ -866,10 +868,10 @@ function steam_credits() {
 }
 
 function clear_settings() {
-	chrome.storage.sync.get(function(settings) {
+	storage.get(function(settings) {
 		var confirm_reset = confirm(localized_strings.options.clear)
 		if(confirm_reset){
-			chrome.storage.sync.clear();
+			storage.clear();
 			load_options();
 			$("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
 		}
@@ -895,7 +897,7 @@ function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").
 
 function load_default_countries() {
 	regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"];
-	chrome.storage.sync.set({'regional_countries': regional_countries}, function() {
+	storage.set({'regional_countries': regional_countries}, function() {
 		$('#region_selects').find('li').remove();
 		populate_regional_selects();
 		$("#saved").stop(true,true).fadeIn().delay(600).fadeOut();

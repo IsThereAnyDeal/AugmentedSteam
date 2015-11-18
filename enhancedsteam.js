@@ -4,6 +4,7 @@ var console_info=["%c Enhanced %cSteam v"+version+" by jshackles %c http://www.e
 console.log.apply(console,console_info);
 
 var storage = chrome.storage.sync;
+if (!storage) storage = chrome.storage.local;
 var info = 0;
 
 var total_requests = 0;
@@ -23,7 +24,7 @@ if (language === undefined) {
 }
 
 // Set language for options page
-chrome.storage.sync.set({'language': language});
+storage.set({'language': language});
 
 var localized_strings = [];
 var localization_promise = (function () {
@@ -320,7 +321,7 @@ function highlight_owned(node) {
 
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
-		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
 
 		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
 		if (settings.hide_owned) hide_node(node);
@@ -338,7 +339,7 @@ function highlight_wishlist(node) {
 
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
-		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
+		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; storage.set({'hide_wishlist': settings.hide_wishlist}); }
 
 		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
 		if (settings.hide_wishlist) hide_node(node);
@@ -352,7 +353,7 @@ function highlight_wishlist(node) {
 function highlight_cart(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_cart");
-		if (settings.hide_cart === undefined) { settings.hide_cart = false; chrome.storage.sync.set({'hide_cart': settings.hide_cart}); }
+		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
 		if (settings.hide_cart) hide_node(node);
 	});
 }
@@ -403,7 +404,7 @@ function highlight_inv_guestpass(node) {
 
 function highlight_nondiscounts(node) {
 	storage.get(function(settings) {
-		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; chrome.storage.sync.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
+		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
 		
 		if (settings.hide_notdiscounted) {
 			$(node).css("display", "none");
@@ -438,7 +439,7 @@ function highlight_notinterested(node) {
 
 	$.when.apply($, [notinterested_promise]).done(function() {
 		storage.get(function(settings) {
-			if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; chrome.storage.sync.set({'hide_notinterested': settings.hide_notinterested}); }
+			if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
 			
 			var notinterested = getValue("ignored_apps");
 			if (notinterested) notinterested = notinterested.split(",");
@@ -526,8 +527,8 @@ function highlight_node(node, color) {
 
 function hide_node(node) {
 	storage.get(function(settings) {
-		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; chrome.storage.sync.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_dlcunownedgames === undefined) { settings.hide_dlcunownedgames = false; storage.set({'hide_dlcunownedgames': settings.hide_dlcunownedgames}); }
 
 		if ($(node).hasClass("info") || $(node).hasClass("dailydeal") || $(node).hasClass("spotlight_content") || $(node).hasClass("browse_tag_game_cap")) { node = $(node).parent()[0]; }
 
@@ -1189,8 +1190,8 @@ function add_wishlist_pricehistory() {
 		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; storage.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
-		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.showallstores === undefined) { settings.showallstores = true; storage.set({'showallstores': settings.showallstores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
 		if (settings.showlowestprice_onwishlist) {
 
 			// Get List of stores we're searching for
@@ -1910,8 +1911,8 @@ function show_pricing_history(appid, type) {
 		if (settings.showlowestprice === undefined) { settings.showlowestprice = true; storage.set({'showlowestprice': settings.showlowestprice}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showlowestprice_region === undefined) { settings.showlowestprice_region = "us"; storage.set({'showlowestprice_region': settings.showlowestprice_region}); }
-		if (settings.showallstores === undefined) { settings.showallstores = true; chrome.storage.sync.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; chrome.storage.sync.set({'stores': settings.stores}); }
+		if (settings.showallstores === undefined) { settings.showallstores = true; storage.set({'showallstores': settings.showallstores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
 		if (settings.showlowestprice) {
 
 			// Get list of stores we're searching for
@@ -2197,17 +2198,17 @@ function add_community_profile_links() {
 	var icon_color='';
 	var profile_link_icon_background = '';
 	storage.get(function(settings) {
-		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; chrome.storage.sync.set({'profile_steamgifts': settings.profile_steamgifts}); }
-		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; chrome.storage.sync.set({'profile_steamrep': settings.profile_steamrep}); }
-		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; chrome.storage.sync.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
-		if (settings.profile_astats === undefined) { settings.profile_astats = true; chrome.storage.sync.set({'profile_astats': settings.profile_astats}); }
-		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; chrome.storage.sync.set({'profile_backpacktf': settings.profile_backpacktf}); }
-		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; chrome.storage.sync.set({'profile_astatsnl': settings.profile_astatsnl}); }
-		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; chrome.storage.sync.set({'profile_permalink': settings.profile_permalink}); }
-		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; chrome.storage.sync.set({'show_profile_link_images': settings.show_profile_link_images}); }
+		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; storage.set({'profile_steamgifts': settings.profile_steamgifts}); }
+		if (settings.profile_steamrep === undefined) { settings.profile_steamrep = true; storage.set({'profile_steamrep': settings.profile_steamrep}); }
+		if (settings.profile_steamdbcalc === undefined) { settings.profile_steamdbcalc = true; storage.set({'profile_steamdbcalc': settings.profile_steamdbcalc}); }
+		if (settings.profile_astats === undefined) { settings.profile_astats = true; storage.set({'profile_astats': settings.profile_astats}); }
+		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; storage.set({'profile_backpacktf': settings.profile_backpacktf}); }
+		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; storage.set({'profile_astatsnl': settings.profile_astatsnl}); }
+		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; storage.set({'profile_permalink': settings.profile_permalink}); }
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; storage.set({'show_profile_link_images': settings.show_profile_link_images}); }
 		if (settings.show_profile_link_images!="false"){if(settings.show_profile_link_images=="color"){icon_color="_col";profile_link_icon_background=" profile_link_icon_background"}}
-		if (settings.profile_api_info === undefined){ settings.profile_api_info = false; chrome.storage.sync.set({'profile_api_info': settings.profile_api_info});}
-		if (settings.api_key == false||settings.api_key==""||settings.api_key===undefined){ settings.profile_api_info = false; chrome.storage.sync.set({'profile_api_info': settings.profile_api_info});}
+		if (settings.profile_api_info === undefined){ settings.profile_api_info = false; storage.set({'profile_api_info': settings.profile_api_info});}
+		if (settings.api_key == false||settings.api_key==""||settings.api_key===undefined){ settings.profile_api_info = false; storage.set({'profile_api_info': settings.profile_api_info});}
 
 		var htmlstr = '';
 		if (settings.profile_steamrep) {
@@ -2553,11 +2554,11 @@ function endless_scrolling_greenlight() {
 
 function add_hide_buttons_to_search() {
 	storage.get(function(settings) {
-		if (settings.hide_owned === undefined) { settings.hide_owned = false; chrome.storage.sync.set({'hide_owned': settings.hide_owned}); }
-		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; chrome.storage.sync.set({'hide_wishlist': settings.hide_wishlist}); }
-		if (settings.hide_cart === undefined) { settings.hide_cart = false; chrome.storage.sync.set({'hide_cart': settings.hide_cart}); }
-		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; chrome.storage.sync.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
-		if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; chrome.storage.sync.set({'hide_notinterested': settings.hide_notinterested}); }
+		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
+		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; storage.set({'hide_wishlist': settings.hide_wishlist}); }
+		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
+		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
+		if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
 		
 		$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings.hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.notdiscounted + "</span></div><div class='tab_filter_control' id='es_notinterested'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.notinterested + "</span></div></div></div>")
 
@@ -2595,10 +2596,10 @@ function add_hide_buttons_to_search() {
 		$("#es_owned_games").click(function() {
 			if ($("#es_owned_games").hasClass("checked")) {
 				$("#es_owned_games").removeClass("checked");
-				chrome.storage.sync.set({'hide_owned': false });
+				storage.set({'hide_owned': false });
 			} else {
 				$("#es_owned_games").addClass("checked");
-				chrome.storage.sync.set({'hide_owned': true });
+				storage.set({'hide_owned': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
@@ -2606,10 +2607,10 @@ function add_hide_buttons_to_search() {
 		$("#es_wishlist_games").click(function() {
 			if ($("#es_wishlist_games").hasClass("checked")) {
 				$("#es_wishlist_games").removeClass("checked");
-				chrome.storage.sync.set({'hide_wishlist': false });
+				storage.set({'hide_wishlist': false });
 			} else {
 				$("#es_wishlist_games").addClass("checked");
-				chrome.storage.sync.set({'hide_wishlist': true });
+				storage.set({'hide_wishlist': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
@@ -2617,10 +2618,10 @@ function add_hide_buttons_to_search() {
 		$("#es_cart_games").click(function() {
 			if ($("#es_cart_games").hasClass("checked")) {
 				$("#es_cart_games").removeClass("checked");
-				chrome.storage.sync.set({'hide_cart': false });
+				storage.set({'hide_cart': false });
 			} else {
 				$("#es_cart_games").addClass("checked");
-				chrome.storage.sync.set({'hide_cart': true });
+				storage.set({'hide_cart': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
@@ -2628,10 +2629,10 @@ function add_hide_buttons_to_search() {
 		$("#es_notdiscounted").click(function() {
 			if ($("#es_notdiscounted").hasClass("checked")) {
 				$("#es_notdiscounted").removeClass("checked");
-				chrome.storage.sync.set({'hide_notdiscounted': false });
+				storage.set({'hide_notdiscounted': false });
 			} else {
 				$("#es_notdiscounted").addClass("checked");
-				chrome.storage.sync.set({'hide_notdiscounted': true });
+				storage.set({'hide_notdiscounted': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
@@ -2639,10 +2640,10 @@ function add_hide_buttons_to_search() {
 		$("#es_notinterested").click(function() {
 			if ($("#es_notinterested").hasClass("checked")) {
 				$("#es_notinterested").removeClass("checked");
-				chrome.storage.sync.set({'hide_notinterested': false });
+				storage.set({'hide_notinterested': false });
 			} else {
 				$("#es_notinterested").addClass("checked");
-				chrome.storage.sync.set({'hide_notinterested': true });
+				storage.set({'hide_notinterested': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
