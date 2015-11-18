@@ -2255,7 +2255,7 @@ function add_community_profile_links() {
 			htmlstr += '<div class="profile_count_link"><a href="//api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + settings.api_key + '&steamids='+steamID+'" target="_blank"><span class="count_link_label">API Information</span><span class="profile_count_link_total">&nbsp;</span></div>';
 		}
 		
-		if (htmlstr != '') { $(".profile_item_links").append(htmlstr); }
+		if (htmlstr != '') { $(".profile_item_links").append(htmlstr + "<div style='clear: both;'></div>"); }
 
 		if ($(".profile_item_links").length == 0) {
 			htmlstr = "<div class='profile_item_links'>" + htmlstr + "</div>";

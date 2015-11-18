@@ -1,7 +1,8 @@
 v8.1
 -----
-+ Added support for INR, TWD, HKD, and CNY currencies
++ Added support for INR, TWD, HKD, SAR, ZAR, AED, and CNY currencies
 : Updated regional price comparison feature to be more efficient and to work with new currencies
+: Fixed a layout issue with profile page links when using responsive design
 
 
 v8.0.1
