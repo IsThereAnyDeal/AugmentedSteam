@@ -230,6 +230,13 @@ function currency_symbol_to_type (currency_symbol) {
 		"HK$": "HKD",
 		"NT$": "TWD",
 		"₹": "INR",
+		"SR": "SAR",
+		"R ": "ZAR",
+		"DH": "AED",
+		"CHF": "CHF",
+		"CLP$": "CLP",
+		"S/.": "PEN",
+		"COL$": "COP",
 		"NZ$": "NZD"}[currency_symbol] || "USD";
 }
 
@@ -256,7 +263,7 @@ function currency_symbol_to_number (currency_symbol) {
 }
 
 function currency_symbol_from_string (string_with_symbol) {
-	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|NZ\$)/;
+	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP$|S\/\.|COL\$|NZ\$)/;
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
