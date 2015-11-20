@@ -3757,7 +3757,7 @@ function account_total_spent() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showtotal) {
 			if ($('.accountBalance').length !== 0) {
-				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD"];
+				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD","INR","TWD","HKD","SAR","ZAR","AED","CHF","CLP","PEN","COP"];
 				var currency_symbol = currency_symbol_from_string($(".accountBalance").text().trim());
 				if (currency_symbol == "") { return; }
 				local_currency = currency_symbol_to_type(currency_symbol);
@@ -3768,7 +3768,7 @@ function account_total_spent() {
 				$.each(available_currencies, function(index, currency_type) {
 					if (currency_type != local_currency) {
 						if (getValue(currency_type + "to" + local_currency)) {
-							var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
+							var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60 * 3; // Three days ago
 							var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
 
 							if (last_updated < expire_time) {
