@@ -153,9 +153,9 @@ var currency_format_info = {
 	"ZAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R ", thousand: " ", decimal: ".", right: false },
 	"AED": { places: 2, hidePlacesWhenZero: false, symbolFormat: " DH", thousand: ",", decimal: ".", right: true },
 	"CHF": { places: 2, hidePlacesWhenZero: false, symbolFormat: "CHF ", thousand: "'", decimal: ".", right: false },
-	"CLP": { places: 3, hidePlacesWhenZero: false, symbolFormat: "CLP$ ", thousand: ",", decimal: ".", right: false },
+	"CLP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "CLP$ ", thousand: ".", decimal: ",", right: false },
 	"PEN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S/.", thousand: ",", decimal: ".", right: false },
-	"COP": { places: 3, hidePlacesWhenZero: false, symbolFormat: "COL$ ", thousand: ".", decimal: ".", right: false },
+	"COP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "COL$ ", thousand: ".", decimal: ",", right: false },
 	"USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
 };
 
