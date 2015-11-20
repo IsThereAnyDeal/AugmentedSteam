@@ -259,7 +259,16 @@ function currency_symbol_to_number (currency_symbol) {
 		"Mex$": 19,
 		"CDN$": 20,
 		"A$": 21,
-		"NZ$": 22}[currency_symbol] || 1;
+		"NZ$": 22,
+		"₹": 24,
+		"CLP$": 25,
+		"S/.": 26,
+		"COL$": 27,
+		"R ": 28,
+		"HK$": 29,
+		"NT$": 30,
+		"SR": 31,
+		"DH": 32}[currency_symbol] || 1;
 }
 
 function currency_symbol_from_string (string_with_symbol) {
