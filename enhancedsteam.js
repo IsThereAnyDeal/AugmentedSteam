@@ -4414,74 +4414,79 @@ function dlc_data_from_site(appid) {
 }
 
 function survey_data_from_site(appid) {
-	if ($("div.game_area_dlc_bubble").length == 0 && $(".game_area_purchase_game").find(".streamingvideo").length == 0) {
-		get_http("//api.enhancedsteam.com/survey/?appid=" + appid, function(txt) {
-			var data = JSON.parse(txt);
-			var html = "<div id='performance_survey' class='game_area_description'><h2>" + localized_strings.survey.performance_survey + "</h2>";
-			if (data["success"]) {
-				html += "<p>" + localized_strings.survey.users.replace("__users__", data["responses"]) + ".</p>";
-				html += "<p><b>" + localized_strings.survey.framerate + "</b>: " + Math.round(data["frp"]) + "% " + localized_strings.survey.framerate_response + " "
-				switch (data["fr"]) {
-					case "30": html += "<span style='color: #8f0e10;'>" + localized_strings.survey.framerate_30 + "</span>"; break;
-				 	case "fi": html += "<span style='color: #e1c48a;'>" + localized_strings.survey.framerate_fi + "</span>"; break;
-				 	case "va": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.framerate_va + "</span>"; break;
-				}
-				html += "<br><b>" + localized_strings.survey.resolution + "</b>: " + localized_strings.survey.resolution_support + " "
-				switch (data["mr"]) {
-					case "less": html += "<span style='color: #8f0e10;'>" + localized_strings.survey.resolution_less.replace("__pixels__", "1920x1080") + "</span>"; break;
-					case "hd": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)") + "</span>"; break;
-					case "wqhd": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)") + "</span>"; break;
-					case "4k": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)") + "</span>"; break;
-				}
-				html += "<br><b>" + localized_strings.survey.graphics_settings + "</b>: ";
-				if (data["gs"]) {
-					html += "<span style='color: #8BC53F;'>" + localized_strings.survey.gs_y + "</span></p>";
-				} else {
-					html += "<span style='color: #8f0e10;'>" + localized_strings.survey.gs_n + "</span></p>";
-				}
-				if (data["nvidia"] !== undefined || data["amd"] !== undefined || data["intel"] !== undefined || data["other"] !== undefined) {
-					html += "<p><b>" + localized_strings.survey.satisfaction + "</b>:";
-					html += "<div class='performance-graph'>";
-					if (data["nvidia"] !== undefined) {
-						if (data["nvidia"] > 90 || data["nvidia"] < 10) {
-							html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia&nbsp;" + data["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'></div></div>";
-						} else {
-							html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
+	storage.get(function(settings) {
+		if (settings.show_apppage_surveys === undefined) { settings.show_apppage_surveys = true; storage.set({'show_apppage_surveys': settings.show_apppage_surveys}); }
+		if (settings.show_apppage_surveys) {
+			if ($("div.game_area_dlc_bubble").length == 0 && $(".game_area_purchase_game:first").find(".streamingvideo").length == 0) {
+				get_http("//api.enhancedsteam.com/survey/?appid=" + appid, function(txt) {
+					var data = JSON.parse(txt);
+					var html = "<div id='performance_survey' class='game_area_description'><h2>" + localized_strings.survey.performance_survey + "</h2>";
+					if (data["success"]) {
+						html += "<p>" + localized_strings.survey.users.replace("__users__", data["responses"]) + ".</p>";
+						html += "<p><b>" + localized_strings.survey.framerate + "</b>: " + Math.round(data["frp"]) + "% " + localized_strings.survey.framerate_response + " "
+						switch (data["fr"]) {
+							case "30": html += "<span style='color: #8f0e10;'>" + localized_strings.survey.framerate_30 + "</span>"; break;
+						 	case "fi": html += "<span style='color: #e1c48a;'>" + localized_strings.survey.framerate_fi + "</span>"; break;
+						 	case "va": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.framerate_va + "</span>"; break;
 						}
+						html += "<br><b>" + localized_strings.survey.resolution + "</b>: " + localized_strings.survey.resolution_support + " "
+						switch (data["mr"]) {
+							case "less": html += "<span style='color: #8f0e10;'>" + localized_strings.survey.resolution_less.replace("__pixels__", "1920x1080") + "</span>"; break;
+							case "hd": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)") + "</span>"; break;
+							case "wqhd": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)") + "</span>"; break;
+							case "4k": html += "<span style='color: #8BC53F;'>" + localized_strings.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)") + "</span>"; break;
+						}
+						html += "<br><b>" + localized_strings.survey.graphics_settings + "</b>: ";
+						if (data["gs"]) {
+							html += "<span style='color: #8BC53F;'>" + localized_strings.survey.gs_y + "</span></p>";
+						} else {
+							html += "<span style='color: #8f0e10;'>" + localized_strings.survey.gs_n + "</span></p>";
+						}
+						if (data["nvidia"] !== undefined || data["amd"] !== undefined || data["intel"] !== undefined || data["other"] !== undefined) {
+							html += "<p><b>" + localized_strings.survey.satisfaction + "</b>:";
+							html += "<div class='performance-graph'>";
+							if (data["nvidia"] !== undefined) {
+								if (data["nvidia"] > 90 || data["nvidia"] < 10) {
+									html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia&nbsp;" + data["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'></div></div>";
+								} else {
+									html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(data["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-data["nvidia"]) + "%;'><span>" + data["nvidia"] + "%</span></div></div>";
+								}
+							}
+							if (data["amd"] !== undefined) {
+								if (data["amd"] > 90 || data["amd"] < 10) {
+									html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD&nbsp;" + data["amd"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'></div></div>";
+								} else {
+									html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
+								}
+							}
+							if (data["intel"] !== undefined) {
+								if (data["intel"] > 90 || data["intel"] < 10) {
+									html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel&nbsp;" + data["intel"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'></div></div>";
+								} else {
+									html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
+								}
+							}
+							if (data["other"] !== undefined) {
+								if (data["other"] > 90 || data["other"] < 10) {
+									html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other&nbsp;" + data["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'></div></div>";
+								} else {
+									html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div>";
+								}
+							}
+							html += "</div>";
+						}
+					} else {
+						html += "<p>" + localized_strings.survey.nobody + ".</p>";
 					}
-					if (data["amd"] !== undefined) {
-						if (data["amd"] > 90 || data["amd"] < 10) {
-							html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD&nbsp;" + data["amd"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'></div></div>";
-						} else {
-							html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(data["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-data["amd"]) + "%'><span>" + data["amd"] + "%</span></div></div>";
-						}
-					}
-					if (data["intel"] !== undefined) {
-						if (data["intel"] > 90 || data["intel"] < 10) {
-							html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel&nbsp;" + data["intel"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'></div></div>";
-						} else {
-							html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(data["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-data["intel"]) + "%'><span>" + data["intel"] + "%</span></div></div>";
-						}
-					}
-					if (data["other"] !== undefined) {
-						if (data["other"] > 90 || data["other"] < 10) {
-							html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other&nbsp;" + data["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'></div></div>";
-						} else {
-							html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(data["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-data["other"]) + "%'><span>" + data["other"] + "%</span></div></div>";
-						}
+					if ($(".game_area_already_owned").length > 0 && $(".hours_played").length > 0) {
+						html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + localized_strings.survey.take + "</span></a>";
 					}
 					html += "</div>";
-				}
-			} else {
-				html += "<p>" + localized_strings.survey.nobody + ".</p>";
+					$(".sys_req").parent().after(html);
+				});
 			}
-			if ($(".game_area_already_owned").length > 0 && $(".hours_played").length > 0) {
-				html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + localized_strings.survey.take + "</span></a>";
-			}	
-			html += "</div>";
-			$(".sys_req").parent().after(html);
-		});
-	}
+		}
+	});
 }
 
 function dlc_data_for_dlc_page() {
@@ -5264,6 +5269,12 @@ function customize_app_page() {
 		else { 
 			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_spy'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.spy.player_data + "</div></div>"; 
 		}
+
+		// Performance surveys
+		if (settings.show_apppage_surveys) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_surveys'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.survey.performance_survey + "</div></div>"; }
+		else { 
+			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_surveys'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.survey.performance_survey + "</div></div>"; 
+		}
 		
 		// System Requirements
 		if ($(".sys_req").length > 0) {
@@ -5426,6 +5437,24 @@ function customize_app_page() {
 			if (settings.show_steamspy_info && $("#steam-spy").length == 0) {
 				var appid = get_appid(window.location.host + window.location.pathname);
 				add_steamspy_info(appid);
+			}
+		});
+
+		$("#show_apppage_surveys").click(function() {
+			if (settings.show_apppage_surveys) {
+				settings.show_apppage_surveys = false;
+				$("#performance_survey").hide();
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_apppage_surveys = true;
+				$("#performance_survey").show();
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_apppage_surveys': settings.show_apppage_surveys});
+
+			if (settings.show_apppage_surveys && $("#performance_survey").length == 0) {
+				var appid = get_appid(window.location.host + window.location.pathname);
+				survey_data_from_site(appid);
 			}
 		});
 
