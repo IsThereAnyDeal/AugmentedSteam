@@ -273,6 +273,7 @@
         "coupon": "Items with coupons",
         "show_package_info": "Show package info for all apps",
         "wlbuttoncommunityapp": "Show \"Add to Wishlist\" button on community app hubs",
+        "removeguideslanguagefilter": "Don't automatically filter guides by user language",
         "regional_price_on": "Show regional price comparison",
         "cart": "Items in your cart",
         "friends_own": "Items your friends own",

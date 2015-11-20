@@ -7837,6 +7837,22 @@ function add_itad_button() {
 	});
 }
 
+function remove_guides_language_filter() {
+	storage.get(function(settings) {
+		if (settings.removeguideslanguagefilter === undefined) { settings.removeguideslanguagefilter = false; storage.set({'removeguideslanguagefilter': settings.removeguideslanguagefilter}); }
+		if (settings.removeguideslanguagefilter) {
+			$("[onclick*=" + language + "]").each(function(elem) {
+				var newOnClick = this.getAttribute("onclick").trim().replace(new RegExp("([?&])requiredtags(?:%5B0?%5D|\\[\\])=" + language), "$1").replace(/(?:([?&])&|[?&](')$)/, "$1$2");
+				$(this).replaceWith($(this).attr("onclick", newOnClick).clone());
+			});
+			$("[href*=" + language + "]").each(function(elem) {
+				var newHref = this.href.trim().replace(new RegExp("([?&])requiredtags(?:%5B0?%5D|\\[\\])=" + language), "$1").replace(/(?:([?&])&|[?&]$)/, "$1");
+				this.href = newHref;
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 	localization_promise.done(function(){
 		signed_in_promise.done(function(){
@@ -8108,6 +8124,9 @@ $(document).ready(function(){
 							add_relist_button();
 							keep_ssa_checked();
 							break;
+
+						case /^\/app\/[^\/]*\/guides/.test(path):
+							remove_guides_language_filter();
 
 						case /^\/app\/.*/.test(path):
 							var appid = get_appid(window.location.host + path);
