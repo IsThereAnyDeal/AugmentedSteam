@@ -62,22 +62,31 @@ var localization_promise = (function () {
 })();
 var user_currency;
 var currency_promise = (function() {
-	var appid = 220;
-	var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids="+appid;
-	var match_cc = window.location.search.match(/(?:^|[?&])(cc=[^&]+)/i);
-	if (match_cc) {
-		ajax_url += "&" + match_cc[1];
-	}
 	var deferred = new $.Deferred();
-	var promise = get_http(ajax_url, function(txt) {
-		var data = $.parseJSON(txt);
-		if (!data[appid].success) return;
-		user_currency = data[appid].data.price_overview.currency;
-	}).fail(function() {
-		user_currency = "USD";
-	}).always(function() {
+	var currency_cache = $.parseJSON(localStorage.getItem("user_currency"));
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	if (currency_cache && currency_cache.updated >= expire_time) {
+		user_currency = currency_cache.currency_type;
 		deferred.resolve();
-	});
+	} else {
+		var appid = 220;
+		var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids="+appid;
+		var match_cc = window.location.search.match(/(?:^|[?&])(cc=[^&]+)/i);
+		if (match_cc) {
+			ajax_url += "&" + match_cc[1];
+		}
+		get_http(ajax_url, function(txt) {
+			var data = $.parseJSON(txt);
+			if (!data[appid].success) return;
+			user_currency = data[appid].data.price_overview.currency;
+		}).fail(function() {
+			user_currency = "USD";
+		}).done(function() {
+			localStorage.setItem("user_currency", JSON.stringify({currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}));
+		}).always(function() {
+			deferred.resolve();
+		});
+	}
 	return deferred.promise();
 })();
 
