@@ -7,7 +7,6 @@ v8.1
 : Fixed a layout issue with profile page links when using responsive design
 : Fixed an issue where Early Access banners would incorrectly show on achievement showcases
 
-
 v8.0.1
 -----
 : Fixed a bug that would cause users with less than 250 badges to not see badge calculations (thanks judgegr!)
