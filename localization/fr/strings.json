@@ -15,7 +15,7 @@
   "store_transactions":"Achats dans le magasin",
   "activates":"Activer sur Steam",
   "games_coupon":"Jeux avec des coupons",
-  "all_friends_own":"(__friendcount__) amis le possèdent",
+  "all_friends_own":"__friendcount__ amis le possèdent",
   "translate":"Traduire",
   "search_names_only":"Chercher uniquement dans les noms",
   "packs":"Packs",
@@ -446,8 +446,8 @@
     "certifications":"Certifications écran large du WSGF"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"Afficher une option dans le menu pour synchroniser les données vers IsThereAnyDeal.com",
+    "send_to_itad":"Envoyer la liste des jeux possédés vers IsThereAnyDeal",
+    "sending":"Chargement de la liste des jeux et des packages vous appartenant et envoit à IsThereAnyDeal.com"
   }
 }

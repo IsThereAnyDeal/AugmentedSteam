@@ -219,7 +219,7 @@
     "pwyw":"付你想要付的價錢",
     "includes":"包含 (__num__) 個項目",
     "tier_includes":"__tier__ (__price__) 包括 __num__ 個項目",
-    "tier":"Tier __num__",
+    "tier":"__num__級",
     "header":"包含此遊戲的組合包",
     "info":"組合包資訊",
     "bundle_count":"此遊戲在組合包中出現的次數"
@@ -302,7 +302,7 @@
     "author_info":"由jshackles製作",
     "profile_link_images_gray":"灰階",
     "quickinv":"在物品庫中的Steam社群項目上顯示快速販賣按鈕",
-    "quickinv_diff":"Quick Sale modifier:",
+    "quickinv_diff":"快速銷售修改器:",
     "library_f2p":"在遊戲庫中顯示試玩版和免費玩遊戲",
     "inventory_market_text":"在物品庫頁面顯示市集價格",
     "send_age_info":"當被要求年齡認證時自動送出",
@@ -342,12 +342,12 @@
     "dynamicgreenlight":"在瀏覽綠光時使用動態資料",
     "disablegreenlightautoplay":"禁止影片在Greenlight資訊頁上自動撥放",
     "remembergreenlightfilter":"記住Greenlight篩選設定",
-    "endlessscrollinggreenlight":"Enable continuous scrolling of Greenlight search results",
+    "endlessscrollinggreenlight":"在青睞之光的搜索結果中啟用連續滾動",
     "general":"一般",
     "market":"市集",
     "inventory":"物品庫",
     "profile":"個人檔案",
-    "greenlight":"Greenlight",
+    "greenlight":"青睞之光",
     "show_languagewarning":"顯示語言警告除非是",
     "homepage":"主頁",
     "homepage_default_tab":"預設首頁分頁",
@@ -446,8 +446,8 @@
     "certifications":"WSGF 寬屏認證"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"顯示将資料同步到 IsThereAnyDeal.com 的功能表選項",
+    "send_to_itad":"向 IsThereAnyDeal 發送已擁有的遊戲",
+    "sending":"載入您擁有的遊戲和套裝軟體並將它們發送到 IsThereAnyDeal.com"
   }
 }

@@ -446,8 +446,8 @@
     "certifications":"WSGF ワイドスクリーン認定"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"IsThereAnyDeal.comとデータを同期するかどうかのオプションを表示する",
+    "send_to_itad":"所持しているゲームの情報をIsThereAnyDealに送信",
+    "sending":"既に所持しているゲームやゲームセットの情報を読み込みIsThereAnyDeal.comに送信する"
   }
 }

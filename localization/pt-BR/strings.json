@@ -446,8 +446,8 @@
     "certifications":"Certificados de Widescreen da WSGF"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"Mostrar opção de menu para sincronizar dados para IsThereAnyDeal.com",
+    "send_to_itad":"Enviar jogos adquiridos para IsThereAnyDeal",
+    "sending":"Carregando seus jogos e pacotes adquiridos e enviando-os para IsThereAnyDeal.com"
   }
 }

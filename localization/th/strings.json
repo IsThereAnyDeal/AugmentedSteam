@@ -205,7 +205,7 @@
   "see_more":"ดูเพิ่มเติม",
   "lowest_price_format":"__price__ ที่ __store__",
   "historical_low_format":"__price__ ที่ __store__ เมื่อ __date__",
-  "favorited":"รายการโปรด",
+  "favorited":"ที่ชื่นชอบ",
   "followed":"ติดตามอยู่",
   "achievements":{
     "option":"แสดงรางวัลความสำเร็จบนหน้าร้านค้า",
@@ -446,8 +446,8 @@
     "certifications":"ใบรับรองจอกว้าง WSGF"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"แสดงตัวเลือกเมนูเพื่อซิงค์ข้อมูลไปยัง IsThereAnyDeal.com",
+    "send_to_itad":"ส่งเกมที่เป็นเจ้าของไปยัง IsThereAnyDeal",
+    "sending":"กำลังโหลดเกมและแพ็กเกจที่คุณเป็นเจ้าของแล้วและกำลังส่งไปยัง IsThereAnyDeal.com"
   }
 }

@@ -182,7 +182,7 @@
   "historical_low":"历史最低价",
   "games_with_booster":"__boostergames__个游戏可获得补充包",
   "sort_by":"排序方式",
-  "lastonline":"最后在线",
+  "lastonline":"最后在线时间",
   "edit_price":"编辑价格",
   "relist":"上架",
   "relist_an_item":"重新上架一件物品",
@@ -446,8 +446,8 @@
     "certifications":"WSGF 宽屏认证"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"在菜单中显示与IsThereAnyDeal.com同步数据的选项",
+    "send_to_itad":"向 IsThereAnyDeal 发送已拥有的游戏列表",
+    "sending":"载入您已拥有的游戏与合集包并将信息发送到IsThereAnyDeal.com"
   }
 }

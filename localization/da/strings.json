@@ -155,7 +155,7 @@
   "saved":"Gemt",
   "add_unowned_dlc_to_cart":"Tilføj ikke-ejet DLC til vogn",
   "buy":"Køb",
-  "buy_package":"Buy __package__",
+  "buy_package":"Køb __package__",
   "more_information":"Mere Information",
   "games_discount":"Spil med rabatter",
   "region_unavailable":"Ikke tilgængelig i denne region",
@@ -182,8 +182,8 @@
   "historical_low":"Historisk laveste pris",
   "games_with_booster":"__boostergames__ spil som er brugbare overfor booster packs",
   "sort_by":"Sorter efter:",
-  "lastonline":"Last Online",
-  "edit_price":"Edit Price",
+  "lastonline":"Sidst Online",
+  "edit_price":"Rediger pris",
   "relist":"Relist",
   "relist_an_item":"Relist an item",
   "relist_text":"Would you like to relist this item at a lower price?",
@@ -206,7 +206,7 @@
   "lowest_price_format":"__price__ på __store__",
   "historical_low_format":"__price__ på __store__ den __date__",
   "favorited":"Favorited",
-  "followed":"Followed",
+  "followed":"Fulgt",
   "achievements":{
     "option":"Vis præstationer på butik sider",
     "achievements":"Præstationer",
@@ -217,9 +217,9 @@
     "offer_ends":"Tilbud slutter",
     "at_least":"Betale mindst",
     "pwyw":"Betal hvad du vil",
-    "includes":"Includes __num__ items",
-    "tier_includes":"__tier__ (__price__) includes __num__ items",
-    "tier":"Tier __num__",
+    "includes":"Inkluderer __num__ genstande",
+    "tier_includes":"__tier__ (__price__) inkluderer __num__ genstande",
+    "tier":"Niveau __num__",
     "header":"Pakker der indeholder dette spil",
     "info":"Pakkeinfo",
     "bundle_count":"Antal gange dette spil har været i et pakke"
@@ -341,7 +341,7 @@
     "greenlight_banner":"Udskift Steam Greenlight banner",
     "dynamicgreenlight":"Brug dynamisk data men du browser Greenlight",
     "disablegreenlightautoplay":"Deaktiver automatisk afspilning af videoer på Greenlight detalje sider",
-    "remembergreenlightfilter":"Remember Greenlight filter options",
+    "remembergreenlightfilter":"Husk Greenlight filterindstillinger",
     "endlessscrollinggreenlight":"Enable continuous scrolling of Greenlight search results",
     "general":"Generel",
     "market":"Marked",
@@ -446,8 +446,8 @@
     "certifications":"WSGF Widescreen certificeringer"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"Vis menupunkt til synkronisering af data til IsThereAnyDeal.com",
+    "send_to_itad":"Send ejede spil til IsThereAnyDeal",
+    "sending":"Indlæser dine ejede spil og pakker og sender dem til IsThereAnyDeal.com"
   }
 }

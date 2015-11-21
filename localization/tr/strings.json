@@ -446,8 +446,8 @@
     "certifications":"WSGF Geniş Ekran Sertifikası"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"IsThereAnyDeal.com ile verileri eşitlemek için menü seçeneği göster",
+    "send_to_itad":"Sahip olunan oyunları IsThereAnyDeal'a gönder",
+    "sending":"Sahip olduğunuz oyunlar ve paketler yükleniyor ve IsThereAnyDeal.com'a gönderiliyor"
   }
 }
