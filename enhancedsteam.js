@@ -60,6 +60,26 @@ var localization_promise = (function () {
 	});
 	return l_deferred.promise();
 })();
+var user_currency;
+var currency_promise = (function() {
+	var appid = 220;
+	var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids="+appid;
+	var match_cc = window.location.search.match(/(?:^|[?&])(cc=[^&]+)/i);
+	if (match_cc) {
+		ajax_url += "&" + match_cc[1];
+	}
+	var deferred = new $.Deferred();
+	var promise = get_http(ajax_url, function(txt) {
+		var data = $.parseJSON(txt);
+		if (!data[appid].success) return;
+		user_currency = data[appid].data.price_overview.currency;
+	}).fail(function() {
+		user_currency = "USD";
+	}).always(function() {
+		deferred.resolve();
+	});
+	return deferred.promise();
+})();
 
 // Check if the user is signed in
 var is_signed_in = false;
@@ -160,7 +180,7 @@ var currency_format_info = {
 };
 
 function formatCurrency(number, type) {
-	var info = currency_format_info[type];
+	var info = currency_format_info[type || user_currency];
 	if (info.hidePlacesWhenZero && (number % 1 === 0)) {
 		info.places = 0;
 	}
@@ -186,7 +206,7 @@ function formatCurrency(number, type) {
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
 	var currency_type = currency_symbol_to_type(currency_symbol);
-	var currency_number = currency_symbol_to_number(currency_symbol);
+	var currency_number = currency_type_to_number(currency_type);
 	var info = currency_format_info[currency_type];
 
 	// remove thousand sep, replace decimal with dot, remove non-numeric
@@ -240,35 +260,35 @@ function currency_symbol_to_type (currency_symbol) {
 		"NZ$": "NZD"}[currency_symbol] || "USD";
 }
 
-function currency_symbol_to_number (currency_symbol) {
-	return {"pуб": 5,
-		"€": 3,
-		"£": 2,
-		"R$": 7,
-		"¥": 8,
-		"kr": 9,
-		"Rp": 10,
-		"RM": 11,
-		"P": 12,
-		"S$": 13,
-		"฿": 14,
-		"₫": 15,
-		"₩": 16,
-		"TL": 17,
-		"₴": 18,
-		"Mex$": 19,
-		"CDN$": 20,
-		"A$": 21,
-		"NZ$": 22,
-		"₹": 24,
-		"CLP$": 25,
-		"S/.": 26,
-		"COL$": 27,
-		"R ": 28,
-		"HK$": 29,
-		"NT$": 30,
-		"SR": 31,
-		"DH": 32}[currency_symbol] || 1;
+function currency_type_to_number (currency_type) {
+	return {"RUB": 5,
+		"EUR": 3,
+		"GBP": 2,
+		"BRL": 7,
+		"JPY": 8,
+		"NOK": 9,
+		"IDR": 10,
+		"MYR": 11,
+		"PHP": 12,
+		"SGD": 13,
+		"THB": 14,
+		"VND": 15,
+		"KRW": 16,
+		"TRY": 17,
+		"UAH": 18,
+		"MXN": 19,
+		"CAD": 20,
+		"AUD": 21,
+		"NZD": 22,
+		"INR": 24,
+		"CLP": 25,
+		"PEN": 26,
+		"COP": 27,
+		"ZAR": 28,
+		"HKD": 29,
+		"TWD": 30,
+		"SAR": 31,
+		"AED": 32}[currency_type] || 1;
 }
 
 function currency_symbol_from_string (string_with_symbol) {
@@ -7866,13 +7886,12 @@ function add_itad_button() {
 }
 
 $(document).ready(function(){
-	localization_promise.done(function(){
-		signed_in_promise.done(function(){
-			var path = window.location.pathname;
-			path = path.replace(/\/+/g, "/");
+	var path = window.location.pathname.replace(/\/+/g, "/");
 
-			// Don't interfere with Storefront API requests
-			if (path.startsWith("/api")) return;
+	// Don't interfere with Storefront API requests
+	if (path.startsWith("/api")) return;
+
+	$.when(localization_promise, signed_in_promise, currency_promise).done(function(){
 			// On window load
 			add_enhanced_steam_options();
 			add_fake_country_code_warning();
@@ -8161,6 +8180,5 @@ $(document).ready(function(){
 					}
 					break;
 			}
-		});
 	});
 });
