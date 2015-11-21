@@ -3696,7 +3696,7 @@ function add_lowest_market_price() {
 		$(this).find(".market_listing_edit_buttons.actual_content").appendTo($(this).find(".market_listing_edit_buttons:first")).css("width", "inherit");
 	});
 
-	function add_lowest_market_price_data() {
+	function add_lowest_market_price_data(item_id) {
 		var cc = "us";
 		var currency = 1;
 		if ($("#marketWalletBalanceAmount").length > 0) { currency = parse_currency($("#marketWalletBalanceAmount").text().trim()).currency_number; }
@@ -3713,8 +3713,8 @@ function add_lowest_market_price() {
 			}
 		}
 
-		$("#tabContentsMyListings .market_listing_row").each(function() {
-			var node = $(this);
+		if (item_id) {
+			var node = $("#" + item_id);
 			var link = node.find(".market_listing_item_name_link").attr("href");
 			if (link) {
 				var appid = link.match(/\/(\d+)\/.+$/)[1];
@@ -3738,16 +3738,44 @@ function add_lowest_market_price() {
 					}
 				});
 			}
-		});
+		} else {
+			$("#tabContentsMyListings .market_listing_row").each(function() {
+				var node = $(this);
+				var link = node.find(".market_listing_item_name_link").attr("href");
+				if (link) {
+					var appid = link.match(/\/(\d+)\/.+$/)[1];
+					var market_hash_name = link.match(/\/\d+\/(.+)$/)[1];
+					get_http("//steamcommunity.com/market/priceoverview/?country=" + cc + "&currency=" + currency + "&appid=" + appid + "&market_hash_name=" + market_hash_name, function(json) {
+						var data = JSON.parse(json);
+						if (data["success"]) {
+							node.find(".market_listing_es_lowest").html(data["lowest_price"]);
+							var my_price = parse_currency($(node).find(".market_listing_price span span:first").text().trim());
+							var low_price = parse_currency(node.find(".market_listing_es_lowest").text());
+
+							// Ours matches the lowest price
+							if (my_price.value <= low_price.value) {
+								node.find(".market_listing_es_lowest").addClass("es_percentage_lower");
+							}
+
+							// Our price is higher than the lowest price
+							if (my_price.value > low_price.value) {
+								node.find(".market_listing_es_lowest").addClass("es_percentage_higher");
+							}
+						}
+					});
+				}
+			});
+		}
 	}
 
-	if ($("#tabContentsMyListings .market_listing_row").length < 11 ) {
+	if ($("#tabContentsMyListings .market_listing_row").length <= 11 ) {
 		add_lowest_market_price_data();
 	} else {
-		$(".market_listing_es_lowest:first").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='margin-top: 13px;'></a>");
+		$(".market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='margin-top: 13px;'></a>");
+		$("#es_selling_total .market_listing_es_lowest").html("&nbsp;");
 	}
 	$(".es_market_lowest_button").click(function() {
-		add_lowest_market_price_data();
+		add_lowest_market_price_data($(this).parent().parent().attr("id"));
 	});
 }
 
