@@ -1467,11 +1467,9 @@ function pack_split(node, ways) {
 		comma = true;
 		price_text = price_text.replace(",", ".");
 	}
-	var currency_symbol = currency_symbol_from_string(price_text);
-	var currency_type = currency_symbol_to_type(currency_symbol);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
-	price_text = formatCurrency(price, currency_type);
+	price_text = formatCurrency(price);
 	$(node).find(".btn_addtocart").last().before(
 		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>"+localized_strings.each+"</div></div>"
 	);
