@@ -4944,16 +4944,9 @@ function show_regional_pricing() {
 			var world = chrome.extension.getURL("img/flags/world.png");
 			var currency_deferred = [];
 			var local_country;
-			var local_currency;
 			var sale;
 			var sub;
 			var region_appended=0;
-			var currency_symbol;
-
-			// Get user's Steam currency
-			currency_symbol = currency_symbol_from_string($(".price:first, .discount_final_price:first").text().trim());
-			if (currency_symbol == "") { return; }
-			local_currency = currency_symbol_to_type(currency_symbol);
 			
 			if (/^\/sale\/.*/.test(window.location.pathname)) {
 				sale=true;
@@ -4990,7 +4983,7 @@ function show_regional_pricing() {
 					var currency = sub_info["prices"][country]["currency"];
 					var percentage;
 					var formatted_price = formatCurrency(price, currency);
-					var formatted_converted_price = formatCurrency(converted_price, local_currency);
+					var formatted_converted_price = formatCurrency(converted_price);
 					
 					percentage = (((converted_price/local_price)*100)-100).toFixed(2);
 					var arrows = chrome.extension.getURL("img/arrows.png");
@@ -5086,30 +5079,30 @@ function show_regional_pricing() {
 						var currency_conversion_promise = (function () {
 							var deferred = new $.Deferred();
 							$.each(available_currencies, function(index, currency_type) {
-								if (currency_type != local_currency) {
-									if (getValue(currency_type + "to" + local_currency)) {
+								if (currency_type != user_currency) {
+									if (getValue(currency_type + "to" + user_currency)) {
 										var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
-										var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
+										var last_updated = getValue(currency_type + "to" + user_currency + "_time") || expire_time - 1;
 
 										if (last_updated < expire_time) {
-											get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+											get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 												complete += 1;
 												conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-												setValue(currency_type + "to" + local_currency, parseFloat(txt));
-												setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+												setValue(currency_type + "to" + user_currency, parseFloat(txt));
+												setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 												if (complete == available_currencies.length - 1) deferred.resolve();;
 											});
 										} else {
 											complete += 1;
-											conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
+											conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + user_currency);
 											if (complete == available_currencies.length - 1) deferred.resolve();;
 										}	
 									} else {
-										get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+										get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 											complete += 1;
 											conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-											setValue(currency_type + "to" + local_currency, parseFloat(txt));
-											setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+											setValue(currency_type + "to" + user_currency, parseFloat(txt));
+											setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 											if (complete == available_currencies.length - 1) deferred.resolve();;
 										});
 									}
