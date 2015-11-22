@@ -1171,14 +1171,12 @@ function add_wishlist_total() {
 	var total = 0;
 	var gamelist = "";
 	var items = 0;
-	var currency_symbol;
 	var apps = "";
 
 	function calculate_node($node, search) {
 		var parsed = parse_currency($node.find(search).text().trim());
 
 		if (parsed) {
-			currency_symbol = parsed.currency_symbol;
 			gamelist += $node.find("h4").text().trim() + ", ";
 			items ++;
 			total += parsed.value;
@@ -1197,8 +1195,7 @@ function add_wishlist_total() {
 	});
 	gamelist = gamelist.replace(/, $/, "");
 
-	currency_type = currency_symbol_to_type(currency_symbol);
-	total = formatCurrency(parseFloat(total), currency_type);
+	total = formatCurrency(parseFloat(total));
 	$(".games_list").after("<link href='//store.akamai.steamstatic.com/public/css/v6/game.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("__num__", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
 }
 
