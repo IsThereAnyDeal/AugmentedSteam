@@ -7326,53 +7326,49 @@ function add_gamecard_market_links(game) {
 		}
 	});
 
-	get_http("//store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
-		var currency_type = currency_symbol_to_type(currency_symbol);		
-		if (currency_type == "USD") { var price_type = "price" } else { var price_type = "price_" + currency_type.toLowerCase(); }
+	var price_type = user_currency == "USD" ? "price" : "price_" + user_currency.toLowerCase();
 
-		get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
-			var data = JSON.parse(txt);
-			var converter=$("<div>");
-			$(".badge_card_set_card").each(function() {
-				var node = $(this);
-				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
-				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
+	get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
+		var data = JSON.parse(txt);
+		var converter=$("<div>");
+		$(".badge_card_set_card").each(function() {
+			var node = $(this);
+			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
+			if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
 
-				var newcardname = converter.text(cardname).html();
-				if (foil) { newcardname += " (Foil)"; }
+			var newcardname = converter.text(cardname).html();
+			if (foil) { newcardname += " (Foil)"; }
 
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].name == newcardname) {
+					var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
+					var card_price = formatCurrency(data[i][price_type]);
+					if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
+				}
+			}
+
+			if (!(marketlink)) { 
+				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
 						var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
-						var card_price = formatCurrency(data[i][price_type], currency_type);
+						var card_price = formatCurrency(data[i][price_type]);
 						if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
 					}
 				}
+			}
 
-				if (!(marketlink)) { 
-					if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
-					for (var i = 0; i < data.length; i++) {
-						if (data[i].name == newcardname) {
-							var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
-							var card_price = formatCurrency(data[i][price_type], currency_type);
-							if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
-						}
-					}
-				}
-
-				if (marketlink && card_price) {
-					var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings.lowest_price + ": " + card_price + "</a>";
-					$(this).children("div:contains('" + cardname + "')").parent().append(html);
-				}
-			});
-			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
-				cost = formatCurrency(cost, currency_type);
-				$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
-				$(".badge_empty_right").css("margin-top", "7px");
-				$(".gamecard_badge_progress .badge_info").css("width", "296px");
+			if (marketlink && card_price) {
+				var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings.lowest_price + ": " + card_price + "</a>";
+				$(this).children("div:contains('" + cardname + "')").parent().append(html);
 			}
 		});
+		if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
+			cost = formatCurrency(cost);
+			$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
+			$(".badge_empty_right").css("margin-top", "7px");
+			$(".gamecard_badge_progress .badge_info").css("width", "296px");
+		}
 	});
 }
 
