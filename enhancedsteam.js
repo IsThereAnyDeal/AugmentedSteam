@@ -1908,8 +1908,6 @@ function display_coupon_message(appid) {
 				var $price_div = $(".game_purchase_action:first"),
 					cart_id = $(document).find("[name=\"subid\"]")[0].value,
 					actual_price_container = $price_div.find(".price,.discount_final_price").text(),		
-					currency_symbol = currency_symbol_from_string(actual_price_container),
-					currency_type = currency_symbol_to_type(currency_symbol),
 					comma = actual_price_container.search(/,\d\d(?!\d)/);
 
 				if (comma > -1) {
@@ -1931,8 +1929,8 @@ function display_coupon_message(appid) {
 						"    <div class=\"discount_block game_purchase_discount\">" +
 						"        <div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
 						"        <div class=\"discount_prices\">" +
-						"            <div class=\"discount_original_price\">" + formatCurrency(original_price, currency_type) + "</div>" +
-						"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price, currency_type) + "</div>" +
+						"            <div class=\"discount_original_price\">" + formatCurrency(original_price) + "</div>" +
+						"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price) + "</div>" +
 						"        </div>" +
 						"    </div>" +
 						"<div class=\"btn_addtocart\">" +
