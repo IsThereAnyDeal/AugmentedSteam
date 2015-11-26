@@ -6744,7 +6744,7 @@ function add_gamelist_achievements() {
 						// Get only items with play time
 						if (!($(value).html().match(/<h5><\/h5>/))) {
 							// Copy achievement stats to row
-							$(value).find(".gameListRowItemName").append("<div class='recentAchievements' id='es_app_" + appid + "' style='padding-top: 14px; padding-right: 4px; width: 205px; float: right; font-size: 10px; font-weight: normal;'>");
+							$(value).find(".gameListRowItemName").append("<div class='es_recentAchievements' id='es_app_" + appid + "'>");
 							$("#es_app_" + appid).html(localized_strings.loading);
 							get_http($(".profile_small_header_texture a")[0].href + '/stats/' + appid, function (txt) {
 								txt = txt.replace(/[ ]src=/g," data-src=");
