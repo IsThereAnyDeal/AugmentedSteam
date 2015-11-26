@@ -1,5 +1,8 @@
 v8.2
 -----
+: Fixed a layout issue with regional price comparisons on sale pages
+: Fixed a layout issue with All New Releases and Popular tabs on the homepage during sales
+: Fixed a layout issue with some achievement progress bars not being displayed correctly
 
 
 v8.1

@@ -5118,7 +5118,7 @@ function show_regional_pricing() {
 												$(".sale_page_purchase_item").eq(index).css({"height":"auto", "min-height":"136px"}).prepend(app_pricing_div);
 												break;
 											default:
-												$(".sale_page_purchase_item").eq(index).find(".game_purchase_action_bg").after(app_pricing_div);
+												$(".sale_page_purchase_item").eq(index).find(".sale_page_purchase_content").before(app_pricing_div);
 												break;
 										}
 									} else {
@@ -5184,8 +5184,7 @@ function show_regional_pricing() {
 											.mouseover(function() {
 												var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
 												if (sale) {
-													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() - $(app_package).find(".btnv6_blue_blue_innerfade").width() +"px").css("top", "25px");
-													$("#es_pricing_" + subid).css("width", "200px");
+													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg:last").width() + $(app_package).find(".btnv6_blue_blue_innerfade").width() + 25 +"px").css("top", $(app_package).find(".sale_page_purchase_header").height() + "px");													
 												} else if (sub) {
 													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 + "px").css("top", "95px");
 												} else {
