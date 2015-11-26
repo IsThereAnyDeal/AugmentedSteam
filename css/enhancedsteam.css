@@ -472,6 +472,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_allreleases {
 	margin-left: 3px;
 }
+.summersale_page_body #tab_allreleases_content .tab_item_overlay img, .summersale_page_body #tab_popular_content .tab_item_overlay img {
+	position: absolute;
+}
 .dailydeal .timer {
 	background:#222;
 	border-radius:2px;
