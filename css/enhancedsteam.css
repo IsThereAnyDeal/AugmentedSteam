@@ -904,4 +904,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .clientConnItemBlock ~ * .es_recentAchievements {
 	bottom: 0;
 }
+.es_recentAchievements .achieveBar {
+    background: #3a3a3a;
+    padding: 1px;
+    border: 1px solid #aeaeae;
+    width: 176.9px;
+}
+.es_recentAchievements .achieveBarProgress {
+    height: 8px;
+    background-color: #aeaeae;
+}
 
