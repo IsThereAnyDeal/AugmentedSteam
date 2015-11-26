@@ -893,3 +893,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	border: 1px solid #82807C;
 	color: #ffffff;
 }
+
+.es_recentAchievements {
+	position: absolute;
+	right: 4px;
+	width: 205px;
+	font-size: 10px;
+	font-weight: normal;
+}
+.clientConnItemBlock ~ * .es_recentAchievements {
+	bottom: 0;
+}
+
