@@ -340,7 +340,6 @@
         "lowestprice_coupon": "Include coupon codes in price comparison",
         "greenlight_banner": "Replace Steam Greenlight banner",
         "dynamicgreenlight": "Use dynamic data while browsing Greenlight",
-        "disablegreenlightautoplay": "Disable automatic playing of videos on Greenlight detail pages",
         "remembergreenlightfilter": "Remember Greenlight filter options",
         "endlessscrollinggreenlight": "Enable continuous scrolling of Greenlight search results",
         "general": "General",

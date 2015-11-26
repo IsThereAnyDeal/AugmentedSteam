@@ -124,7 +124,6 @@ function save_options() {
 	showcomparelinks = $("#showcomparelinks").prop('checked');
 	showgreenlightbanner = $("#showgreenlightbanner").prop('checked');
 	dynamicgreenlight = $("#dynamicgreenlight").prop('checked');
-	disablegreenlightautoplay = $("#disablegreenlightautoplay").prop('checked');
 	remembergreenlightfilter = $("#remembergreenlightfilter").prop('checked');
 	endlessscrollinggreenlight = $("#endlessscrollinggreenlight").prop('checked');
 	hideactivelistings = $("#hideactivelistings").prop('checked');
@@ -225,7 +224,6 @@ function save_options() {
 		'showcomparelinks': showcomparelinks,
 		'showgreenlightbanner': showgreenlightbanner,
 		'dynamicgreenlight': dynamicgreenlight,
-		'disablegreenlightautoplay': disablegreenlightautoplay,
 		'remembergreenlightfilter': remembergreenlightfilter,
 		'endlessscrollinggreenlight': endlessscrollinggreenlight,
 		'hideactivelistings': hideactivelistings,
@@ -438,7 +436,6 @@ function load_options() {
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; storage.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
 		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
-		if (settings.disablegreenlightautoplay === undefined) { settings.disablegreenlightautoplay = false; storage.set({'disablegreenlightautoplay': settings.disablegreenlightautoplay}); }
 		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; storage.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
 		if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; storage.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
@@ -540,7 +537,6 @@ function load_options() {
 		$("#showcomparelinks").prop('checked', settings.showcomparelinks);
 		$("#showgreenlightbanner").prop('checked', settings.showgreenlightbanner);
 		$("#dynamicgreenlight").prop('checked', settings.dynamicgreenlight);
-		$("#disablegreenlightautoplay").prop('checked', settings.disablegreenlightautoplay);
 		$("#remembergreenlightfilter").prop('checked', settings.remembergreenlightfilter);
 		$("#endlessscrollinggreenlight").prop('checked', settings.endlessscrollinggreenlight);
 		$("#hideactivelistings").prop('checked', settings.hideactivelistings);
@@ -737,7 +733,6 @@ function load_translation() {
 			$("#showcomparelinks_text").text(localized_strings.options.showcomparelinks);
 			$("#greenlight_banner_text").text(localized_strings.options.greenlight_banner);
 			$("#dynamicgreenlight_text").text(localized_strings.options.dynamicgreenlight);
-			$("#disablegreenlightautoplay_text").text(localized_strings.options.disablegreenlightautoplay);
 			$("#remembergreenlightfilter_text").text(localized_strings.options.remembergreenlightfilter);
 			$("#endlessscrollinggreenlight_text").text(localized_strings.options.endlessscrollinggreenlight);
 			$("#hidespamcomments_text").text(localized_strings.options.hidespamcomments);
