@@ -3654,13 +3654,11 @@ function add_active_total() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
-			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
-			var currency_type = currency_symbol_to_type(currency_symbol);
-			total = formatCurrency(parseFloat(total), currency_type);
-			total_after = formatCurrency(parseFloat(total_after), currency_type);
+			total = formatCurrency(parseFloat(total));
+			total_after = formatCurrency(parseFloat(total_after));
 			$(".my_listing_section:first .market_recent_listing_row:last").clone().appendTo($(".my_listing_section:first .market_recent_listing_row:last").parent()).attr("id", "es_selling_total");
 			$("#es_selling_total").find("img").remove();
 			$("#es_selling_total").find(".market_listing_edit_buttons").empty();
@@ -3676,12 +3674,10 @@ function add_active_total() {
 			var qty = $(this).parent().find(".market_listing_my_price:last").text().trim();
 			var price = parse_currency($(this).text().replace(/.+@/, "").trim());
 			total += Number(price.value) * Number(qty);
-			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
-			var currency_type = currency_symbol_to_type(currency_symbol);
-			total = formatCurrency(parseFloat(total), currency_type);				
+			total = formatCurrency(parseFloat(total));
 			//$(".my_listing_section:nth-child(2)").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons placeholder'></div><div class='market_listing_my_price es_active_total'><span class='market_listing_item_name' style='color: white'>" + escapeHTML(total) + "</span><br><span class='market_listing_game_name'>" + escapeHTML(localized_strings.buying_total) + "</span></div></div>");
 			$(".my_listing_section:nth-child(2) .market_recent_listing_row:last").clone().appendTo($(".my_listing_section:nth-child(2) .market_recent_listing_row:last").parent()).attr("id", "es_buying_total");
 			$("#es_buying_total").find("img").remove();
