@@ -3561,12 +3561,10 @@ function add_market_total() {
 
 				var pur_total = 0.0;
 				var sale_total = 0.0;
-				var currency_symbol = "";
 
 				function get_market_data(txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
-					if (!currency_symbol) currency_symbol = currency_symbol_from_string($(market).find(".market_listing_price").text().trim());
 					
 					pur_totaler = function (p, i) {
 						if ($(p).find(".market_listing_price").length > 0) {
@@ -3604,15 +3602,14 @@ function add_market_total() {
 				}
 
 				function show_results() {
-					var currency_type = currency_symbol_to_type(currency_symbol);
 					var net = sale_total - pur_total;
 
-					var html = localized_strings.purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total), currency_type) + "</span><br>";
-					html += localized_strings.sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(sale_total), currency_type) + "</span><br>";
+					var html = localized_strings.purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total)) + "</span><br>";
+					html += localized_strings.sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(sale_total)) + "</span><br>";
 					if (net > 0) {
-						html += localized_strings.net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+						html += localized_strings.net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net)) + "</span>";
 					} else {
-						html += localized_strings.net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+						html += localized_strings.net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net)) + "</span>";
 					}
 
 					$("#es_market_summary").html(html);
