@@ -3800,24 +3800,21 @@ function account_total_spent() {
 		if (settings.showtotal) {
 			if ($('.accountBalance').length !== 0) {
 				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD","INR","TWD","HKD","SAR","ZAR","AED","CHF","CLP","PEN","COP"];
-				var currency_symbol = currency_symbol_from_string($(".accountBalance").text().trim());
-				if (currency_symbol == "") { return; }
-				local_currency = currency_symbol_to_type(currency_symbol);
 
 				var complete = 0,
 					base_page = false;
 
 				$.each(available_currencies, function(index, currency_type) {
-					if (currency_type != local_currency) {
-						if (getValue(currency_type + "to" + local_currency)) {
+					if (currency_type != user_currency) {
+						if (getValue(currency_type + "to" + user_currency)) {
 							var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60 * 3; // Three days ago
-							var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
+							var last_updated = getValue(currency_type + "to" + user_currency + "_time") || expire_time - 1;
 
 							if (last_updated < expire_time) {
-								get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+								get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 									complete += 1;
-									setValue(currency_type + "to" + local_currency, parseFloat(txt));
-									setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+									setValue(currency_type + "to" + user_currency, parseFloat(txt));
+									setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 									if (complete == available_currencies.length - 1) start_total();
 								});
 							} else {
@@ -3825,10 +3822,10 @@ function account_total_spent() {
 								if (complete == available_currencies.length - 1) start_total();
 							}
 						} else {
-							get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+							get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 								complete += 1;
-								setValue(currency_type + "to" + local_currency, parseFloat(txt));
-								setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+								setValue(currency_type + "to" + user_currency, parseFloat(txt));
+								setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 								if (complete == available_currencies.length - 1) start_total();
 							});
 						}
@@ -3856,8 +3853,8 @@ function account_total_spent() {
 									if (amount && !amount.match("Credit") && type && !items.match("Wallet Credit")) {
 										var parsed = parse_currency(amount),
 											calc_value;
-										if (parsed.currency_type != local_currency) {
-											calc_value = parsed.value / getValue(parsed.currency_type + "to" + local_currency);
+										if (parsed.currency_type != user_currency) {
+											calc_value = parsed.value / getValue(parsed.currency_type + "to" + user_currency);
 										} else {
 											calc_value = parsed.value;
 										}
@@ -3890,50 +3887,45 @@ function account_total_spent() {
 						})();
 
 						$.when.apply($, [history_promise]).done(function() {
-							total_total = game_total + gift_total + ingame_total + market_total;
-
-							if (currency_symbol) {
-								var currency_type = currency_symbol_to_type(currency_symbol),
-									html = '';
-								
-								if (game_total != 0) {
-									game_total = formatCurrency(parseFloat(game_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + game_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.store_transactions + ':</div></div>';
-								}
-								
-								if (gift_total != 0) {
-									gift_total = formatCurrency(parseFloat(gift_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + gift_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.gift_transactions + ':</div></div>';
-								}
-								
-								if (ingame_total != 0) {
-									ingame_total = formatCurrency(parseFloat(ingame_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + ingame_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.game_transactions + ':</div></div>';
-								}
-								
-								if (market_total != 0) {
-									market_total = formatCurrency(parseFloat(market_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + market_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.market_transactions + ':</div></div>';
-								}
-								
-								if (total_total != 0) {
-									total_total = formatCurrency(parseFloat(total_total), currency_type);
-									html += '<div class="inner_rule" style="margin: 5px 0px 5px 0px;"></div>';
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + total_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.total_spent + ':</div></div>';
-								}
-
-								$('#es_total').html(html);
+							var total_total = game_total + gift_total + ingame_total + market_total, html = '';
+							
+							if (game_total != 0) {
+								game_total = formatCurrency(parseFloat(game_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + game_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.store_transactions + ':</div></div>';
 							}
+							
+							if (gift_total != 0) {
+								gift_total = formatCurrency(parseFloat(gift_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + gift_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.gift_transactions + ':</div></div>';
+							}
+							
+							if (ingame_total != 0) {
+								ingame_total = formatCurrency(parseFloat(ingame_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + ingame_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.game_transactions + ':</div></div>';
+							}
+							
+							if (market_total != 0) {
+								market_total = formatCurrency(parseFloat(market_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + market_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.market_transactions + ':</div></div>';
+							}
+							
+							if (total_total != 0) {
+								total_total = formatCurrency(parseFloat(total_total));
+								html += '<div class="inner_rule" style="margin: 5px 0px 5px 0px;"></div>';
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + total_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.total_spent + ':</div></div>';
+							}
+
+							$('#es_total').html(html);
 						});
 					}
 				}
