@@ -3720,8 +3720,7 @@ function add_lowest_market_price() {
 
 	function add_lowest_market_price_data(item_id) {
 		var cc = "us";
-		var currency = 1;
-		if ($("#marketWalletBalanceAmount").length > 0) { currency = parse_currency($("#marketWalletBalanceAmount").text().trim()).currency_number; }
+		var currency = currency_type_to_number(user_currency);
 
 		// Get country code from Steam cookie
 		var cookies = document.cookie;
