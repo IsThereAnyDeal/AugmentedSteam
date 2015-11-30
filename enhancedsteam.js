@@ -4423,7 +4423,7 @@ function subscription_savings_check() {
 		var bundle_price = parse_currency($bundle_price.text());
 		if (bundle_price) {
 			var corrected_price = not_owned_games_prices - bundle_price.value;
-			var $message = $('<div class="savings">' + formatCurrency(corrected_price, bundle_price.currency_type) + '</div>');
+			var $message = $('<div class="savings">' + formatCurrency(corrected_price) + '</div>');
 			if ($("#package_savings_bar").length === 0) {
 				$(".package_totals_area").append("<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + localized_strings.bundle_saving_text + "</div></div>");
 			}
