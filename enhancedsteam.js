@@ -1259,7 +1259,7 @@ function add_wishlist_pricehistory() {
 
 			function get_price_data(lookup_type, node, id) {
 				html = "<div class='es_lowest_price' id='es_price_" + id + "' style='margin-bottom: 5px;'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
-				$(node).prepend(html);
+				$(node).append(html);
 
 				get_http("//api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 					var data = JSON.parse(txt);
