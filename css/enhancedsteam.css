@@ -140,6 +140,9 @@ img.platform_small, .platform_img {
 	padding:0 5px;
 	font-size:12px;
 }
+.wishlistRowItem {
+	overflow: initial !important;
+}
 #es_permalink_text {
 	color: #EBEBEB;
 	height:29px;
