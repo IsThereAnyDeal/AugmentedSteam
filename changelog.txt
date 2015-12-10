@@ -1,5 +1,6 @@
 v8.2
 -----
+: Fixed an issue where the Enhanced Steam menu wasn't visible to users who weren't logged in to Steam
 
 
 v8.1.1

@@ -1673,6 +1673,7 @@ function add_enhanced_steam_options() {
 
 	$("#global_action_menu").prepend($dropdown);
 	$("#account_dropdown").after($dropdown_options_container);
+	$("#language_pulldown").after($dropdown_options_container);
 
 	$("#global_actions").after("<progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings.ready.ready + "'></progress>");
 }
