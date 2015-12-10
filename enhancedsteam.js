@@ -60,6 +60,35 @@ var localization_promise = (function () {
 	});
 	return l_deferred.promise();
 })();
+var user_currency;
+var currency_promise = (function() {
+	var deferred = new $.Deferred();
+	var currency_cache = $.parseJSON(localStorage.getItem("user_currency"));
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	if (currency_cache && currency_cache.updated >= expire_time) {
+		user_currency = currency_cache.currency_type;
+		deferred.resolve();
+	} else {
+		var appid = 220;
+		var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids="+appid;
+		var match_cc = window.location.search.match(/(?:^|[?&])(cc=[^&]+)/i);
+		if (match_cc) {
+			ajax_url += "&" + match_cc[1];
+		}
+		get_http(ajax_url, function(txt) {
+			var data = $.parseJSON(txt);
+			if (!data[appid].success) return;
+			user_currency = data[appid].data.price_overview.currency;
+		}).fail(function() {
+			user_currency = "USD";
+		}).done(function() {
+			localStorage.setItem("user_currency", JSON.stringify({currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}));
+		}).always(function() {
+			deferred.resolve();
+		});
+	}
+	return deferred.promise();
+})();
 
 // Check if the user is signed in
 var is_signed_in = false;
@@ -160,7 +189,7 @@ var currency_format_info = {
 };
 
 function formatCurrency(number, type) {
-	var info = currency_format_info[type];
+	var info = currency_format_info[type || user_currency];
 	if (info.hidePlacesWhenZero && (number % 1 === 0)) {
 		info.places = 0;
 	}
@@ -186,7 +215,8 @@ function formatCurrency(number, type) {
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
 	var currency_type = currency_symbol_to_type(currency_symbol);
-	var currency_number = currency_symbol_to_number(currency_symbol);
+	if (currency_format_info[user_currency].symbolFormat == currency_format_info[currency_type].symbolFormat) currency_type = user_currency;
+	var currency_number = currency_type_to_number(currency_type);
 	var info = currency_format_info[currency_type];
 
 	// remove thousand sep, replace decimal with dot, remove non-numeric
@@ -240,35 +270,35 @@ function currency_symbol_to_type (currency_symbol) {
 		"NZ$": "NZD"}[currency_symbol] || "USD";
 }
 
-function currency_symbol_to_number (currency_symbol) {
-	return {"pуб": 5,
-		"€": 3,
-		"£": 2,
-		"R$": 7,
-		"¥": 8,
-		"kr": 9,
-		"Rp": 10,
-		"RM": 11,
-		"P": 12,
-		"S$": 13,
-		"฿": 14,
-		"₫": 15,
-		"₩": 16,
-		"TL": 17,
-		"₴": 18,
-		"Mex$": 19,
-		"CDN$": 20,
-		"A$": 21,
-		"NZ$": 22,
-		"₹": 24,
-		"CLP$": 25,
-		"S/.": 26,
-		"COL$": 27,
-		"R ": 28,
-		"HK$": 29,
-		"NT$": 30,
-		"SR": 31,
-		"DH": 32}[currency_symbol] || 1;
+function currency_type_to_number (currency_type) {
+	return {"RUB": 5,
+		"EUR": 3,
+		"GBP": 2,
+		"BRL": 7,
+		"JPY": 8,
+		"NOK": 9,
+		"IDR": 10,
+		"MYR": 11,
+		"PHP": 12,
+		"SGD": 13,
+		"THB": 14,
+		"VND": 15,
+		"KRW": 16,
+		"TRY": 17,
+		"UAH": 18,
+		"MXN": 19,
+		"CAD": 20,
+		"AUD": 21,
+		"NZD": 22,
+		"INR": 24,
+		"CLP": 25,
+		"PEN": 26,
+		"COP": 27,
+		"ZAR": 28,
+		"HKD": 29,
+		"TWD": 30,
+		"SAR": 31,
+		"AED": 32}[currency_type] || 1;
 }
 
 function currency_symbol_from_string (string_with_symbol) {
@@ -1142,14 +1172,12 @@ function add_wishlist_total() {
 	var total = 0;
 	var gamelist = "";
 	var items = 0;
-	var currency_symbol;
 	var apps = "";
 
 	function calculate_node($node, search) {
 		var parsed = parse_currency($node.find(search).text().trim());
 
 		if (parsed) {
-			currency_symbol = parsed.currency_symbol;
 			gamelist += $node.find("h4").text().trim() + ", ";
 			items ++;
 			total += parsed.value;
@@ -1168,8 +1196,7 @@ function add_wishlist_total() {
 	});
 	gamelist = gamelist.replace(/, $/, "");
 
-	currency_type = currency_symbol_to_type(currency_symbol);
-	total = formatCurrency(parseFloat(total), currency_type);
+	total = formatCurrency(parseFloat(total));
 	$(".games_list").after("<link href='//store.akamai.steamstatic.com/public/css/v6/game.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("__num__", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
 }
 
@@ -1441,11 +1468,9 @@ function pack_split(node, ways) {
 		comma = true;
 		price_text = price_text.replace(",", ".");
 	}
-	var currency_symbol = currency_symbol_from_string(price_text);
-	var currency_type = currency_symbol_to_type(currency_symbol);
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
-	price_text = formatCurrency(price, currency_type);
+	price_text = formatCurrency(price);
 	$(node).find(".btn_addtocart").last().before(
 		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>"+localized_strings.each+"</div></div>"
 	);
@@ -1884,8 +1909,6 @@ function display_coupon_message(appid) {
 				var $price_div = $(".game_purchase_action:first"),
 					cart_id = $(document).find("[name=\"subid\"]")[0].value,
 					actual_price_container = $price_div.find(".price,.discount_final_price").text(),		
-					currency_symbol = currency_symbol_from_string(actual_price_container),
-					currency_type = currency_symbol_to_type(currency_symbol),
 					comma = actual_price_container.search(/,\d\d(?!\d)/);
 
 				if (comma > -1) {
@@ -1907,8 +1930,8 @@ function display_coupon_message(appid) {
 						"    <div class=\"discount_block game_purchase_discount\">" +
 						"        <div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
 						"        <div class=\"discount_prices\">" +
-						"            <div class=\"discount_original_price\">" + formatCurrency(original_price, currency_type) + "</div>" +
-						"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price, currency_type) + "</div>" +
+						"            <div class=\"discount_original_price\">" + formatCurrency(original_price) + "</div>" +
+						"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price) + "</div>" +
 						"        </div>" +
 						"    </div>" +
 						"<div class=\"btn_addtocart\">" +
@@ -3526,12 +3549,10 @@ function add_market_total() {
 
 				var pur_total = 0.0;
 				var sale_total = 0.0;
-				var currency_symbol = "";
 
 				function get_market_data(txt) {
 					var data = JSON.parse(txt);
 					market = data['results_html'];
-					if (!currency_symbol) currency_symbol = currency_symbol_from_string($(market).find(".market_listing_price").text().trim());
 					
 					pur_totaler = function (p, i) {
 						if ($(p).find(".market_listing_price").length > 0) {
@@ -3569,15 +3590,14 @@ function add_market_total() {
 				}
 
 				function show_results() {
-					var currency_type = currency_symbol_to_type(currency_symbol);
 					var net = sale_total - pur_total;
 
-					var html = localized_strings.purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total), currency_type) + "</span><br>";
-					html += localized_strings.sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(sale_total), currency_type) + "</span><br>";
+					var html = localized_strings.purchase_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(pur_total)) + "</span><br>";
+					html += localized_strings.sales_total + ":<span class='es_market_summary_item'>" + formatCurrency(parseFloat(sale_total)) + "</span><br>";
 					if (net > 0) {
-						html += localized_strings.net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+						html += localized_strings.net_gain + ":<span class='es_market_summary_item' style='color: green;'>" + formatCurrency(parseFloat(net)) + "</span>";
 					} else {
-						html += localized_strings.net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net), currency_type) + "</span>";
+						html += localized_strings.net_spent + ":<span class='es_market_summary_item' style='color: red;'>" + formatCurrency(parseFloat(net)) + "</span>";
 					}
 
 					$("#es_market_summary").html(html);
@@ -3619,13 +3639,11 @@ function add_active_total() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
-			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
-			var currency_type = currency_symbol_to_type(currency_symbol);
-			total = formatCurrency(parseFloat(total), currency_type);
-			total_after = formatCurrency(parseFloat(total_after), currency_type);
+			total = formatCurrency(parseFloat(total));
+			total_after = formatCurrency(parseFloat(total_after));
 			$(".my_listing_section:first .market_recent_listing_row:last").clone().appendTo($(".my_listing_section:first .market_recent_listing_row:last").parent()).attr("id", "es_selling_total");
 			$("#es_selling_total").find("img").remove();
 			$("#es_selling_total").find(".market_listing_edit_buttons").empty();
@@ -3641,12 +3659,10 @@ function add_active_total() {
 			var qty = $(this).parent().find(".market_listing_my_price:last").text().trim();
 			var price = parse_currency($(this).text().replace(/.+@/, "").trim());
 			total += Number(price.value) * Number(qty);
-			currency_symbol = currency_symbol_from_string($(this).text().trim());
 		});
 		
 		if (total != 0) {
-			var currency_type = currency_symbol_to_type(currency_symbol);
-			total = formatCurrency(parseFloat(total), currency_type);				
+			total = formatCurrency(parseFloat(total));
 			//$(".my_listing_section:nth-child(2)").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons placeholder'></div><div class='market_listing_my_price es_active_total'><span class='market_listing_item_name' style='color: white'>" + escapeHTML(total) + "</span><br><span class='market_listing_game_name'>" + escapeHTML(localized_strings.buying_total) + "</span></div></div>");
 			$(".my_listing_section:nth-child(2) .market_recent_listing_row:last").clone().appendTo($(".my_listing_section:nth-child(2) .market_recent_listing_row:last").parent()).attr("id", "es_buying_total");
 			$("#es_buying_total").find("img").remove();
@@ -3685,8 +3701,7 @@ function add_lowest_market_price() {
 
 	function add_lowest_market_price_data(item_id) {
 		var cc = "us";
-		var currency = 1;
-		if ($("#marketWalletBalanceAmount").length > 0) { currency = parse_currency($("#marketWalletBalanceAmount").text().trim()).currency_number; }
+		var currency = currency_type_to_number(user_currency);
 
 		// Get country code from Steam cookie
 		var cookies = document.cookie;
@@ -3773,24 +3788,21 @@ function account_total_spent() {
 		if (settings.showtotal) {
 			if ($('.accountBalance').length !== 0) {
 				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD","INR","TWD","HKD","SAR","ZAR","AED","CHF","CLP","PEN","COP"];
-				var currency_symbol = currency_symbol_from_string($(".accountBalance").text().trim());
-				if (currency_symbol == "") { return; }
-				local_currency = currency_symbol_to_type(currency_symbol);
 
 				var complete = 0,
 					base_page = false;
 
 				$.each(available_currencies, function(index, currency_type) {
-					if (currency_type != local_currency) {
-						if (getValue(currency_type + "to" + local_currency)) {
+					if (currency_type != user_currency) {
+						if (getValue(currency_type + "to" + user_currency)) {
 							var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60 * 3; // Three days ago
-							var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
+							var last_updated = getValue(currency_type + "to" + user_currency + "_time") || expire_time - 1;
 
 							if (last_updated < expire_time) {
-								get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+								get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 									complete += 1;
-									setValue(currency_type + "to" + local_currency, parseFloat(txt));
-									setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+									setValue(currency_type + "to" + user_currency, parseFloat(txt));
+									setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 									if (complete == available_currencies.length - 1) start_total();
 								});
 							} else {
@@ -3798,10 +3810,10 @@ function account_total_spent() {
 								if (complete == available_currencies.length - 1) start_total();
 							}
 						} else {
-							get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+							get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 								complete += 1;
-								setValue(currency_type + "to" + local_currency, parseFloat(txt));
-								setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+								setValue(currency_type + "to" + user_currency, parseFloat(txt));
+								setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 								if (complete == available_currencies.length - 1) start_total();
 							});
 						}
@@ -3829,8 +3841,8 @@ function account_total_spent() {
 									if (amount && !amount.match("Credit") && type && !items.match("Wallet Credit")) {
 										var parsed = parse_currency(amount),
 											calc_value;
-										if (parsed.currency_type != local_currency) {
-											calc_value = parsed.value / getValue(parsed.currency_type + "to" + local_currency);
+										if (parsed.currency_type != user_currency) {
+											calc_value = parsed.value / getValue(parsed.currency_type + "to" + user_currency);
 										} else {
 											calc_value = parsed.value;
 										}
@@ -3863,50 +3875,45 @@ function account_total_spent() {
 						})();
 
 						$.when.apply($, [history_promise]).done(function() {
-							total_total = game_total + gift_total + ingame_total + market_total;
-
-							if (currency_symbol) {
-								var currency_type = currency_symbol_to_type(currency_symbol),
-									html = '';
-								
-								if (game_total != 0) {
-									game_total = formatCurrency(parseFloat(game_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + game_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.store_transactions + ':</div></div>';
-								}
-								
-								if (gift_total != 0) {
-									gift_total = formatCurrency(parseFloat(gift_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + gift_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.gift_transactions + ':</div></div>';
-								}
-								
-								if (ingame_total != 0) {
-									ingame_total = formatCurrency(parseFloat(ingame_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + ingame_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.game_transactions + ':</div></div>';
-								}
-								
-								if (market_total != 0) {
-									market_total = formatCurrency(parseFloat(market_total), currency_type);
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + market_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.market_transactions + ':</div></div>';
-								}
-								
-								if (total_total != 0) {
-									total_total = formatCurrency(parseFloat(total_total), currency_type);
-									html += '<div class="inner_rule" style="margin: 5px 0px 5px 0px;"></div>';
-									html += '<div class="accountRow accountBalance">';
-									html += '<div class="accountData price">' + total_total + '</div>';
-									html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.total_spent + ':</div></div>';
-								}
-
-								$('#es_total').html(html);
+							var total_total = game_total + gift_total + ingame_total + market_total, html = '';
+							
+							if (game_total != 0) {
+								game_total = formatCurrency(parseFloat(game_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + game_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.store_transactions + ':</div></div>';
 							}
+							
+							if (gift_total != 0) {
+								gift_total = formatCurrency(parseFloat(gift_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + gift_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.gift_transactions + ':</div></div>';
+							}
+							
+							if (ingame_total != 0) {
+								ingame_total = formatCurrency(parseFloat(ingame_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + ingame_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.game_transactions + ':</div></div>';
+							}
+							
+							if (market_total != 0) {
+								market_total = formatCurrency(parseFloat(market_total));
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + market_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.market_transactions + ':</div></div>';
+							}
+							
+							if (total_total != 0) {
+								total_total = formatCurrency(parseFloat(total_total));
+								html += '<div class="inner_rule" style="margin: 5px 0px 5px 0px;"></div>';
+								html += '<div class="accountRow accountBalance">';
+								html += '<div class="accountData price">' + total_total + '</div>';
+								html += '<div class="accountLabel" style="text-align: left;">' + localized_strings.total_spent + ':</div></div>';
+							}
+
+							$('#es_total').html(html);
 						});
 					}
 				}
@@ -3993,21 +4000,18 @@ function inventory_market_helper(response) {
 			if (getValue("steam_currency_number")) {
 				inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + getValue("steam_currency_number") + "&appid=" + global_id + "&market_hash_name=" + hash_name);
 			} else {
-				get_http("//store.steampowered.com/app/220/", function(txt) {
-					var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
-					setValue("steam_currency_number", currency.currency_number);
-					inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + currency.currency_number + "&appid=" + global_id + "&market_hash_name=" + hash_name);
-				});
+				var currency_number = currency_type_to_number(user_currency);
+				setValue("steam_currency_number", currency_number);
+				inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + currency_number + "&appid=" + global_id + "&market_hash_name=" + hash_name);
 			}
 		} else {
 			if (hash_name && hash_name.match(/Booster Pack/g)) {
 				setTimeout(function() {
-					var currency = parse_currency($("#iteminfo" + item + "_item_market_actions").text().match(/\:(.+)/)[1]);
-					var api_url = "//api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + currency.currency_type.toLowerCase();
+					var api_url = "//api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + user_currency.toLowerCase();
 
 					get_http(api_url, function(price_data) {
 						var booster_price = parseFloat(price_data,10) * 3;
-						html = localized_strings.avg_price_3cards + ": " + formatCurrency(booster_price, currency.currency_type) + "<br>";
+						html = localized_strings.avg_price_3cards + ": " + formatCurrency(booster_price) + "<br>";
 						$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
 						$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
 					});
@@ -4047,11 +4051,9 @@ function inventory_market_helper(response) {
 					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
 					get_http(url, function(txt) {
 						var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
-						var currency_match = txt.match(/marketWalletBalanceAmount">.+<\/span>/);
-						if (market_id && currency_match) { 
+						if (market_id) {
 							market_id = market_id[1];
-							var currency = parse_currency(currency_match[0]);
-							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + currency.currency_number + "&item_nameid=" + market_id, function(market_txt) {
+							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + currency_type_to_number(user_currency) + "&item_nameid=" + market_id, function(market_txt) {
 								var market = JSON.parse(market_txt);
 								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
 								var price_low = market.highest_buy_order / 100;
@@ -4061,12 +4063,12 @@ function inventory_market_helper(response) {
 
 								// Add Quick Sell button
 								if (price_high > price_low) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency.currency_type)) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high)) + "</span></a>");
 								}
 
 								// Add Instant Sell button
 								if (market.highest_buy_order) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency.currency_type)) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low)) + "</span></a>");
 								}
 
 								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
@@ -4393,7 +4395,7 @@ function subscription_savings_check() {
 		var bundle_price = parse_currency($bundle_price.text());
 		if (bundle_price) {
 			var corrected_price = not_owned_games_prices - bundle_price.value;
-			var $message = $('<div class="savings">' + formatCurrency(corrected_price, bundle_price.currency_type) + '</div>');
+			var $message = $('<div class="savings">' + formatCurrency(corrected_price) + '</div>');
 			if ($("#package_savings_bar").length === 0) {
 				$(".package_totals_area").append("<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + localized_strings.bundle_saving_text + "</div></div>");
 			}
@@ -4909,16 +4911,9 @@ function show_regional_pricing() {
 			var world = chrome.extension.getURL("img/flags/world.png");
 			var currency_deferred = [];
 			var local_country;
-			var local_currency;
 			var sale;
 			var sub;
 			var region_appended=0;
-			var currency_symbol;
-
-			// Get user's Steam currency
-			currency_symbol = currency_symbol_from_string($(".price:first, .discount_final_price:first").text().trim());
-			if (currency_symbol == "") { return; }
-			local_currency = currency_symbol_to_type(currency_symbol);
 			
 			if (/^\/sale\/.*/.test(window.location.pathname)) {
 				sale=true;
@@ -4955,7 +4950,7 @@ function show_regional_pricing() {
 					var currency = sub_info["prices"][country]["currency"];
 					var percentage;
 					var formatted_price = formatCurrency(price, currency);
-					var formatted_converted_price = formatCurrency(converted_price, local_currency);
+					var formatted_converted_price = formatCurrency(converted_price);
 					
 					percentage = (((converted_price/local_price)*100)-100).toFixed(2);
 					var arrows = chrome.extension.getURL("img/arrows.png");
@@ -5051,30 +5046,30 @@ function show_regional_pricing() {
 						var currency_conversion_promise = (function () {
 							var deferred = new $.Deferred();
 							$.each(available_currencies, function(index, currency_type) {
-								if (currency_type != local_currency) {
-									if (getValue(currency_type + "to" + local_currency)) {
+								if (currency_type != user_currency) {
+									if (getValue(currency_type + "to" + user_currency)) {
 										var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
-										var last_updated = getValue(currency_type + "to" + local_currency + "_time") || expire_time - 1;
+										var last_updated = getValue(currency_type + "to" + user_currency + "_time") || expire_time - 1;
 
 										if (last_updated < expire_time) {
-											get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+											get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 												complete += 1;
 												conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-												setValue(currency_type + "to" + local_currency, parseFloat(txt));
-												setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+												setValue(currency_type + "to" + user_currency, parseFloat(txt));
+												setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 												if (complete == available_currencies.length - 1) deferred.resolve();;
 											});
 										} else {
 											complete += 1;
-											conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + local_currency);
+											conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + user_currency);
 											if (complete == available_currencies.length - 1) deferred.resolve();;
 										}	
 									} else {
-										get_http("//api.enhancedsteam.com/currency/?" + local_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
+										get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
 											complete += 1;
 											conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-											setValue(currency_type + "to" + local_currency, parseFloat(txt));
-											setValue(currency_type + "to" + local_currency + "_time", parseInt(Date.now() / 1000, 10));
+											setValue(currency_type + "to" + user_currency, parseFloat(txt));
+											setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
 											if (complete == available_currencies.length - 1) deferred.resolve();;
 										});
 									}
@@ -7297,53 +7292,49 @@ function add_gamecard_market_links(game) {
 		}
 	});
 
-	get_http("//store.steampowered.com/app/220/", function(txt) {
-		var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
-		var currency_type = currency_symbol_to_type(currency_symbol);		
-		if (currency_type == "USD") { var price_type = "price" } else { var price_type = "price_" + currency_type.toLowerCase(); }
+	var price_type = user_currency == "USD" ? "price" : "price_" + user_currency.toLowerCase();
 
-		get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
-			var data = JSON.parse(txt);
-			var converter=$("<div>");
-			$(".badge_card_set_card").each(function() {
-				var node = $(this);
-				var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
-				if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
+	get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
+		var data = JSON.parse(txt);
+		var converter=$("<div>");
+		$(".badge_card_set_card").each(function() {
+			var node = $(this);
+			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
+			if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
 
-				var newcardname = converter.text(cardname).html();
-				if (foil) { newcardname += " (Foil)"; }
+			var newcardname = converter.text(cardname).html();
+			if (foil) { newcardname += " (Foil)"; }
 
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].name == newcardname) {
+					var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
+					var card_price = formatCurrency(data[i][price_type]);
+					if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
+				}
+			}
+
+			if (!(marketlink)) { 
+				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].name == newcardname) {
 						var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
-						var card_price = formatCurrency(data[i][price_type], currency_type);
+						var card_price = formatCurrency(data[i][price_type]);
 						if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
 					}
 				}
+			}
 
-				if (!(marketlink)) { 
-					if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
-					for (var i = 0; i < data.length; i++) {
-						if (data[i].name == newcardname) {
-							var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
-							var card_price = formatCurrency(data[i][price_type], currency_type);
-							if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
-						}
-					}
-				}
-
-				if (marketlink && card_price) {
-					var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings.lowest_price + ": " + card_price + "</a>";
-					$(this).children("div:contains('" + cardname + "')").parent().append(html);
-				}
-			});
-			if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
-				cost = formatCurrency(cost, currency_type);
-				$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
-				$(".badge_empty_right").css("margin-top", "7px");
-				$(".gamecard_badge_progress .badge_info").css("width", "296px");
+			if (marketlink && card_price) {
+				var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings.lowest_price + ": " + card_price + "</a>";
+				$(this).children("div:contains('" + cardname + "')").parent().append(html);
 			}
 		});
+		if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
+			cost = formatCurrency(cost);
+			$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
+			$(".badge_empty_right").css("margin-top", "7px");
+			$(".gamecard_badge_progress .badge_info").css("width", "296px");
+		}
 	});
 }
 
@@ -7352,102 +7343,98 @@ function add_badge_completion_cost() {
 	if (is_signed_in) {
 		if ( $(".profile_small_header_texture:first a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "").replace(/\/$/, "")) {
 			$(".profile_xp_block_right").html("<div id='es_cards_worth'></div>");
-			get_http("//store.steampowered.com/app/220/", function(txt) {
-				var currency_symbol = currency_symbol_from_string($(txt).find(".price, .discount_final_price").text().trim());
-				var currency_type = currency_symbol_to_type(currency_symbol);
-				var total_worth = 0, count = 0;
+			var total_worth = 0, count = 0;
 
-				// Gather appid info
-				var appids = [],
-					foil_appids = [],
-					nodes = [],
-					foil_nodes = [];
-				$(".badge_row").each(function() {
-					var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//),
-						foil = $(this).find("a:last").attr("href").match(/\?border=1/),
-						node = $(this),
-						push = [];
+			// Gather appid info
+			var appids = [],
+				foil_appids = [],
+				nodes = [],
+				foil_nodes = [];
+			$(".badge_row").each(function() {
+				var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//),
+					foil = $(this).find("a:last").attr("href").match(/\?border=1/),
+					node = $(this),
+					push = [];
 
-					if (game) {
-						push[0] = game[1];
-						push[1] = node[0];
-						if (foil) {
-							foil_appids.push(game[1]);
-							foil_nodes.push(push);
-						} else {
-							appids.push(game[1]);
-							nodes.push(push);
-						}
+				if (game) {
+					push[0] = game[1];
+					push[1] = node[0];
+					if (foil) {
+						foil_appids.push(game[1]);
+						foil_nodes.push(push);
+					} else {
+						appids.push(game[1]);
+						nodes.push(push);
 					}
-				});
-
-				// Next, get the average card values
-				if (appids.length > 0) {
-					get_http("//api.enhancedsteam.com/market_data/average_card_prices/?cur=" + currency_type.toLowerCase() + "&appids=" + appids.join(), function(json) {
-						var data = JSON.parse(json);
-						$.each(nodes, function(index, value) {
-							var appid = value[0],
-								node = value[1];
-
-							if (appid in data["avg_values"]) {
-								if ($(node).find("div[class$='badge_progress_info']").text()) {
-									var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
-									if (card) var need = card[2] - card[1];
-								}
-
-								var cost = (need * parseFloat(data["avg_values"][appid])).toFixed(2);
-								if ($(node).find(".progress_info_bold").text()) {
-									var drops = $(node).find(".progress_info_bold").text().match(/\d+/);
-									if (drops) { var worth = (drops[0] * parseFloat(data["avg_values"][appid])).toFixed(2); }
-								}
-
-								if (worth > 0) {
-									total_worth = total_worth + parseFloat(worth);
-								}
-
-								cost = formatCurrency(cost, currency_type);
-								card = formatCurrency(worth, currency_type);
-								worth_formatted = formatCurrency(total_worth, currency_type);
-
-								if (worth > 0) {
-									$(node).find(".how_to_get_card_drops").after("<span class='es_card_drop_worth'>" + localized_strings.drops_worth_avg + " " + card + "</span>")
-									$(node).find(".how_to_get_card_drops").remove();
-								}
-
-								$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_avg + ": " + cost + "</div>");
-								$(node).find(".badge_empty_right").css("margin-top", "7px");
-								$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
-
-								$("#es_cards_worth").text(localized_strings.drops_worth_avg + " " + worth_formatted);
-							}
-						});
-					});
-				}
-
-				// Finally, do the foils
-				if (foil_appids.length > 0) {
-					get_http("//api.enhancedsteam.com/market_data/average_card_prices/?cur=" + currency_type.toLowerCase() + "&foil=true&appids=" + foil_appids.join(), function(json) {
-						var foil_data = JSON.parse(json);
-						$.each(foil_nodes, function(index, value) {
-							var appid = value[0],
-								node = value[1];
-
-							if (appid in foil_data["avg_values"]) {
-								if ($(node).find("div[class$='badge_progress_info']").text()) {
-									var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
-									if (card) var need = card[2] - card[1];
-								}
-
-								var cost = (need * parseFloat(foil_data["avg_values"][appid])).toFixed(2);
-								cost = formatCurrency(cost, currency_type);
-								$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_avg + ": " + cost + "</div>");
-								$(node).find(".badge_empty_right").css("margin-top", "7px");
-								$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
-							}
-						});
-					});
 				}
 			});
+
+			// Next, get the average card values
+			if (appids.length > 0) {
+				get_http("//api.enhancedsteam.com/market_data/average_card_prices/?cur=" + user_currency.toLowerCase() + "&appids=" + appids.join(), function(json) {
+					var data = JSON.parse(json);
+					$.each(nodes, function(index, value) {
+						var appid = value[0],
+							node = value[1];
+
+						if (appid in data["avg_values"]) {
+							if ($(node).find("div[class$='badge_progress_info']").text()) {
+								var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
+								if (card) var need = card[2] - card[1];
+							}
+
+							var cost = (need * parseFloat(data["avg_values"][appid])).toFixed(2);
+							if ($(node).find(".progress_info_bold").text()) {
+								var drops = $(node).find(".progress_info_bold").text().match(/\d+/);
+								if (drops) { var worth = (drops[0] * parseFloat(data["avg_values"][appid])).toFixed(2); }
+							}
+
+							if (worth > 0) {
+								total_worth = total_worth + parseFloat(worth);
+							}
+
+							cost = formatCurrency(cost);
+							card = formatCurrency(worth);
+							worth_formatted = formatCurrency(total_worth);
+
+							if (worth > 0) {
+								$(node).find(".how_to_get_card_drops").after("<span class='es_card_drop_worth'>" + localized_strings.drops_worth_avg + " " + card + "</span>")
+								$(node).find(".how_to_get_card_drops").remove();
+							}
+
+							$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_avg + ": " + cost + "</div>");
+							$(node).find(".badge_empty_right").css("margin-top", "7px");
+							$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
+
+							$("#es_cards_worth").text(localized_strings.drops_worth_avg + " " + worth_formatted);
+						}
+					});
+				});
+			}
+
+			// Finally, do the foils
+			if (foil_appids.length > 0) {
+				get_http("//api.enhancedsteam.com/market_data/average_card_prices/?cur=" + user_currency.toLowerCase() + "&foil=true&appids=" + foil_appids.join(), function(json) {
+					var foil_data = JSON.parse(json);
+					$.each(foil_nodes, function(index, value) {
+						var appid = value[0],
+							node = value[1];
+
+						if (appid in foil_data["avg_values"]) {
+							if ($(node).find("div[class$='badge_progress_info']").text()) {
+								var card = $(node).find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/);
+								if (card) var need = card[2] - card[1];
+							}
+
+							var cost = (need * parseFloat(foil_data["avg_values"][appid])).toFixed(2);
+							cost = formatCurrency(cost);
+							$(node).find(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_avg + ": " + cost + "</div>");
+							$(node).find(".badge_empty_right").css("margin-top", "7px");
+							$(node).find(".gamecard_badge_progress .badge_info").css("width", "296px");
+						}
+					});
+				});
+			}
 		}
 	}
 }
@@ -7852,13 +7839,12 @@ function add_itad_button() {
 }
 
 $(document).ready(function(){
-	localization_promise.done(function(){
-		signed_in_promise.done(function(){
-			var path = window.location.pathname;
-			path = path.replace(/\/+/g, "/");
+	var path = window.location.pathname.replace(/\/+/g, "/");
 
-			// Don't interfere with Storefront API requests
-			if (path.startsWith("/api")) return;
+	// Don't interfere with Storefront API requests
+	if (path.startsWith("/api")) return;
+
+	$.when(localization_promise, signed_in_promise, currency_promise).done(function(){
 			// On window load
 			add_enhanced_steam_options();
 			add_fake_country_code_warning();
@@ -8146,6 +8132,5 @@ $(document).ready(function(){
 					}
 					break;
 			}
-		});
 	});
 });
