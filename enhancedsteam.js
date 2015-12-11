@@ -4924,11 +4924,15 @@ function show_regional_pricing() {
 				sub=true;
 				pricing_div = $(pricing_div).addClass("es_regional_sub");
 			}
-			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null) {
+			if (getCookie("fakeCC") != null || getCookie("LKGBillingCountry") != null || getCookie("steamCountry")) {
 				if (getCookie("fakeCC")){
 					local_country = getCookie("fakeCC").toLowerCase();
 				} else {
-					local_country = getCookie("LKGBillingCountry").toLowerCase();
+					if (getCookie("LKGBillingCountry")) {
+						local_country = getCookie("LKGBillingCountry").toLowerCase();
+					} else {
+						local_country = getCookie("steamCountry").substring(0,2).toLowerCase();
+					}	
 				}
 			}
 			if(countries.indexOf(local_country)===-1){
