@@ -344,6 +344,51 @@ function get_http(url, callback, settings) {
 	return jqxhr;
 }
 
+var storePageData = (function() {
+	var deferred = new $.Deferred();
+	var data;
+
+	function load(appid, metalink) {
+		data = cache_get(appid);
+		if (data) {
+			deferred.resolveWith(data);
+		} else {
+			var apiurl = "//api.enhancedsteam.com/storepagedata/?appid=" + appid;
+			if (metalink) apiurl += "&mcurl=" + metalink;
+			get_http(apiurl, function(txt) {
+				data = JSON.parse(txt);
+				cache_set(appid, data);
+				deferred.resolveWith(data);
+			}).fail(deferred.reject);
+		}
+		return deferred.promise();
+	}
+	function get(api, callback) {
+		if (api && callback) deferred.done(function() {
+			if (data[api]) callback(data[api]);
+		});
+		return deferred.promise();
+	}
+
+	function cache_set(appid, data) {
+		var expires = parseInt(Date.now() / 1000, 10) + 1 * 60 * 60; // One hour from now
+		var cached = {
+			data: data,
+			expires: expires
+		};
+		localStorage.setItem("storePageData_" + appid, JSON.stringify(cached));
+	}
+	function cache_get(appid) {
+		var cached = $.parseJSON(localStorage.getItem("storePageData_" + appid));
+		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
+	}
+
+	return {
+		load: load,
+		get: get
+	}
+})();
+
 function get_appid(t) {
 	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/)) return RegExp.$1;
 	else return null;
@@ -1525,21 +1570,18 @@ function add_steamchart_info(appid) {
 		storage.get(function(settings) {
 			if (settings.show_steamchart_info === undefined) { settings.show_steamchart_info = true; storage.set({'show_steamchart_info': settings.show_steamchart_info}); }
 			if (settings.show_steamchart_info) {
-				get_http("//api.enhancedsteam.com/charts/?appid=" + appid, function (txt) {
-					if (txt.length > 0) {
-						var data = JSON.parse(txt);
-						if (data["chart"]) {
-							var html = '<div id="steam-charts" class="game_area_description"><h2>' + localized_strings.charts.current + '</h2>';
-							html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="//cdn.akamai.steamstatic.com/steam/apps/' + appid + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
-							html += '<span class="num">' + escapeHTML(data["chart"]["current"]) + '</span><br>' + localized_strings.charts.playing_now + '</div><div class="chart-stat">';
-							html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + localized_strings.charts.peaktoday + '</div><div class="chart-stat">';
-							html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + localized_strings.charts.peakall + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span></div></div>';
+				storePageData.get("charts", function(data) {
+					if (data["chart"]) {
+						var html = '<div id="steam-charts" class="game_area_description"><h2>' + localized_strings.charts.current + '</h2>';
+						html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="//cdn.akamai.steamstatic.com/steam/apps/' + appid + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
+						html += '<span class="num">' + escapeHTML(data["chart"]["current"]) + '</span><br>' + localized_strings.charts.playing_now + '</div><div class="chart-stat">';
+						html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + localized_strings.charts.peaktoday + '</div><div class="chart-stat">';
+						html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + localized_strings.charts.peakall + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span></div></div>';
 
-							if ($("#steam-spy").length) {
-								$("#steam-spy").before(html);
-							} else {
-								$(".sys_req").parent().before(html);
-							}
+						if ($("#steam-spy").length) {
+							$("#steam-spy").before(html);
+						} else {
+							$(".sys_req").parent().before(html);
 						}
 					}
 				});
@@ -1553,39 +1595,36 @@ function add_steamspy_info(appid) {
 		storage.get(function(settings) {
 			if (settings.show_steamspy_info === undefined) { settings.show_steamspy_info = true; storage.set({'show_steamspy_info': settings.show_steamspy_info}); }
 			if (settings.show_steamspy_info) {
-				get_http("//api.enhancedsteam.com/steamspy/?appid=" + appid, function (txt) {
-					if (txt.length > 0) {
-						var data = JSON.parse(txt);
-						if (data["owners"] != 0) {
-							var owners1 = Number(parseInt(data["owners"]) - parseInt(data["owners_variance"])).toLocaleString("en"),
-								owners2 = Number(parseInt(data["owners"]) + parseInt(data["owners_variance"])).toLocaleString("en"),
-								players2weeks1 = Number(parseInt(data["players_2weeks"]) - parseInt(data["players_2weeks_variance"])).toLocaleString("en"),
-								players2weeks2 = Number(parseInt(data["players_2weeks"]) + parseInt(data["players_2weeks_variance"])).toLocaleString("en"),
-								players2weeksp = (parseInt(data["players_2weeks"]) / parseInt(data["owners"]) * 100).toFixed(2),
-								players1 = Number(parseInt(data["players_forever"]) - parseInt(data["players_forever_variance"])).toLocaleString("en"),
-								players2 = Number(parseInt(data["players_forever"]) + parseInt(data["players_forever_variance"])).toLocaleString("en"),
-								playersp = (parseInt(data["players_forever"]) / parseInt(data["owners"]) * 100).toFixed(2)
-								avg_hours = Math.floor(parseInt(data["average_forever"]) / 60),
-								avg_minutes = parseInt(data["average_forever"]) % 60,
-								avg_hours2 = Math.floor(parseInt(data["average_2weeks"]) / 60),
-								avg_minutes2 = parseInt(data["average_2weeks"]) % 60;
+				storePageData.get("steamspy", function(data) {
+					if (data["owners"] != 0) {
+						var owners1 = Number(parseInt(data["owners"]) - parseInt(data["owners_variance"])).toLocaleString("en"),
+							owners2 = Number(parseInt(data["owners"]) + parseInt(data["owners_variance"])).toLocaleString("en"),
+							players2weeks1 = Number(parseInt(data["players_2weeks"]) - parseInt(data["players_2weeks_variance"])).toLocaleString("en"),
+							players2weeks2 = Number(parseInt(data["players_2weeks"]) + parseInt(data["players_2weeks_variance"])).toLocaleString("en"),
+							players2weeksp = (parseInt(data["players_2weeks"]) / parseInt(data["owners"]) * 100).toFixed(2),
+							players1 = Number(parseInt(data["players_forever"]) - parseInt(data["players_forever_variance"])).toLocaleString("en"),
+							players2 = Number(parseInt(data["players_forever"]) + parseInt(data["players_forever_variance"])).toLocaleString("en"),
+							playersp = (parseInt(data["players_forever"]) / parseInt(data["owners"]) * 100).toFixed(2)
+							avg_hours = Math.floor(parseInt(data["average_forever"]) / 60),
+							avg_minutes = parseInt(data["average_forever"]) % 60,
+							avg_hours2 = Math.floor(parseInt(data["average_2weeks"]) / 60),
+							avg_minutes2 = parseInt(data["average_2weeks"]) % 60;
 
-							var html = '<div id="steam-spy" class="game_area_description"><h2>' + localized_strings.spy.player_data + '</h2>';
-							html += "<div class='spy_details'>";
-							html += "<b>" + localized_strings.spy.owners + ":</b> " + owners1 + " - " + owners2;
-							html += "<br><b>" + localized_strings.spy.players_total + ":</b> " + players1 + " - " + players2 + " (" + playersp + "%)";
-							html += "<br><b>" + localized_strings.spy.players_2weeks + ":</b> " + players2weeks1 + " - " + players2weeks2 + " (" + players2weeksp + "%)";
-							html += "<br><b>" + localized_strings.spy.average_playtime + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours).replace("__minutes__", avg_minutes);
-							html += "<br><b>" + localized_strings.spy.average_playtime_2weeks + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours2).replace("__minutes__", avg_minutes2);
-							html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
-							html += "</div>";
+						var html = '<div id="steam-spy" class="game_area_description"><h2>' + localized_strings.spy.player_data + '</h2>';
+						html += "<div class='spy_details'>";
+						html += "<b>" + localized_strings.spy.owners + ":</b> " + owners1 + " - " + owners2;
+						html += "<br><b>" + localized_strings.spy.players_total + ":</b> " + players1 + " - " + players2 + " (" + playersp + "%)";
+						html += "<br><b>" + localized_strings.spy.players_2weeks + ":</b> " + players2weeks1 + " - " + players2weeks2 + " (" + players2weeksp + "%)";
+						html += "<br><b>" + localized_strings.spy.average_playtime + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours).replace("__minutes__", avg_minutes);
+						html += "<br><b>" + localized_strings.spy.average_playtime_2weeks + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours2).replace("__minutes__", avg_minutes2);
+						html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
+						html += "</div>";
 
-							if ($("#steam-charts").length) {
-								$("#steam-charts").after(html);
-							} else {
-								$(".sys_req").parent().before(html);	
-							}							
-						}
+						if ($("#steam-charts").length) {
+							$("#steam-charts").after(html);
+						} else {
+							$(".sys_req").parent().before(html);	
+						}							
 					}
 				});
 			}
@@ -3284,10 +3323,12 @@ function add_metacritic_userscore() {
 		if (settings.showmcus) {
 			if ($("#game_area_metascore")) {
 				var metalink = $("#game_area_metalink").find("a").attr("href");
-				get_http("//api.enhancedsteam.com/metacritic/?mcurl=" + metalink, function (txt) {
-					var metauserscore = parseFloat(txt)*10;
-					var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><span>' + metauserscore + '</span><span class="ms_slash">/</span><span class="ms_base">100</span></div>';
-					if (!isNaN(metauserscore)) $("#game_area_metascore").after(newmeta);
+				storePageData.get("metacritic", function(data) {
+					if (data.userscore) {
+						var metauserscore = data.userscore*10;
+						var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><span>' + metauserscore + '</span><span class="ms_slash">/</span><span class="ms_base">100</span></div>';
+						if (!isNaN(metauserscore)) $("#game_area_metascore").after(newmeta);
+					}
 				});
 			}
 		}
@@ -3316,28 +3357,25 @@ function add_hltb_info(appid) {
 	storage.get(function(settings) {
 		if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
 		if (settings.showhltb) {
-			get_http("//api.enhancedsteam.com/hltb/?appid=" + appid, function (txt) {
-				if (txt.length > 0) {
-					var data = JSON.parse(txt);
-					if (data["hltb"]) {
-						how_long_html = "<div class='block game_details underlined_links'>"
-							+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
-							+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
-						if (data["hltb"]["main_story"]){
-							how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>";
-						}
-						if (data["hltb"]["main_extras"]){
-							how_long_html += "<b>" + localized_strings.hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>";
-						}
-						if (data["hltb"]["comp"]) {
-							how_long_html += "<b>" + localized_strings.hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
-						}
-						how_long_html += "</div>"
-							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>" + localized_strings.more_information + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-							+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'>" + localized_strings.hltb.submit + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-							+ "</div></div></div>";
-						$("div.game_details:first").after(how_long_html);
+			storePageData.get("hltb", function(data) {
+				if (data["hltb"]) {
+					how_long_html = "<div class='block game_details underlined_links'>"
+						+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
+						+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
+					if (data["hltb"]["main_story"]){
+						how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>";
 					}
+					if (data["hltb"]["main_extras"]){
+						how_long_html += "<b>" + localized_strings.hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>";
+					}
+					if (data["hltb"]["comp"]) {
+						how_long_html += "<b>" + localized_strings.hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
+					}
+					how_long_html += "</div>"
+						+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>" + localized_strings.more_information + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+						+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'>" + localized_strings.hltb.submit + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+						+ "</div></div></div>";
+					$("div.game_details:first").after(how_long_html);
 				}
 			});
 		}
@@ -3383,10 +3421,9 @@ function add_widescreen_certification(appid) {
 		if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) {
 			if (settings.showwsgf) {
 				// Check to see if game data exists
-				get_http("//api.enhancedsteam.com/wsgf/?appid=" + appid, function (txt) {
-					$("div.game_details:first").each(function (index, node) {
-						var data = JSON.parse(txt);
-						if (data["node"]) {
+				storePageData.get("wsgf", function(data) {
+					if (data.node) {
+						$("div.game_details:first").each(function (index, node) {
 							var path = data["node"]["Path"];
 							var wsg = data["node"]["WideScreenGrade"];
 							var mmg = data["node"]["MultiMonitorGrade"];
@@ -3496,9 +3533,9 @@ function add_widescreen_certification(appid) {
 							if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'>" + localized_strings.rating_details + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
 							html += "</div></div></div></div>";
 							$(node).after(html);
-						}
+						});
 						
-					});
+					}
 				});
 			}
 		}
@@ -4436,8 +4473,7 @@ function survey_data_from_site(appid) {
 		if (settings.show_apppage_surveys === undefined) { settings.show_apppage_surveys = true; storage.set({'show_apppage_surveys': settings.show_apppage_surveys}); }
 		if (settings.show_apppage_surveys) {
 			if ($("div.game_area_dlc_bubble").length == 0 && $(".game_area_purchase_game:first").find(".streamingvideo").length == 0) {
-				get_http("//api.enhancedsteam.com/survey/?appid=" + appid, function(txt) {
-					var data = JSON.parse(txt);
+				storePageData.get("survey", function(data) {
 					var html = "<div id='performance_survey' class='game_area_description'><h2>" + localized_strings.survey.performance_survey + "</h2>";
 					if (data["success"]) {
 						html += "<p>" + localized_strings.survey.users.replace("__users__", data["responses"]) + ".</p>";
@@ -7878,6 +7914,9 @@ $(document).ready(function(){
 
 						case /^\/app\/.*/.test(path):
 							var appid = get_appid(window.location.host + path);
+							var metalink = $("#game_area_metalink").find("a").attr("href");
+							storePageData.load(appid, metalink);
+
 							add_app_page_wishlist_changes(appid);
 							display_coupon_message(appid);
 							show_pricing_history(appid, "app");
