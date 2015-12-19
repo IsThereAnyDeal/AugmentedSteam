@@ -2017,7 +2017,7 @@ function show_pricing_history(appid, type) {
 						if (key != ".cached" && key != ".meta" && data) {
 							var subid = key.replace("sub/", "");
 							var activates = "", line1 = "", line2 = "", line3 = "", html, recorded;
-							var node = $("input[value=" + subid + "]").parent().parent();
+							var node = $("input[name=subid][value=" + subid + "]").parent().parent();
 
 							// "Lowest Price"
 							if (data["price"]) {
