@@ -306,6 +306,55 @@ function currency_symbol_from_string (string_with_symbol) {
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
+var currencyConversion = (function() {
+	var deferred;
+	var rates;
+	
+	function load(currency) {
+		if (deferred) return deferred.promise();
+		deferred = new $.Deferred();
+		rates = cache_get(currency);
+		if (rates) {
+			deferred.resolveWith(rates);
+		} else {
+			var apiurl = "//api.enhancedsteam.com/currencydata/?base=" + (currency || user_currency);
+			get_http(apiurl, function(txt) {
+				rates = JSON.parse(txt);
+				cache_set(currency || user_currency, rates);
+				deferred.resolveWith(rates);
+			}).fail(deferred.reject);
+		}
+		return deferred.promise();
+	}
+	function convert(amount, currency_from, currency_to) {
+		if (rates) {
+			if (rates[currency_to]) return amount / rates[currency_to][currency_from];
+			if (rates[currency_from]) return amount * rates[currency_from][currency_to];
+		}
+	}
+	
+	function cache_set(currency, rates) {
+		var expires = parseInt(Date.now() / 1000, 10) + 24 * 60 * 60 * 3; // Three days from now
+		var cached = {
+			rates: rates[currency],
+			expires: expires
+		};
+		localStorage.setItem("currencyConversion_" + currency, JSON.stringify(cached));
+	}
+	function cache_get(currency) {
+		var cached = JSON.parse(localStorage.getItem("currencyConversion_" + currency));
+		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) {
+			var rates = {};
+			rates[currency] = cached.rates;
+			return rates;
+		}
+	}
+	
+	return {
+		load: load,
+		convert: convert
+	};
+})();
 
 function escapeHTML(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
@@ -3825,40 +3874,7 @@ function account_total_spent() {
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showtotal) {
 			if ($('.accountBalance').length !== 0) {
-				var available_currencies = ["USD","GBP","EUR","BRL","RUB","JPY","NOK","IDR","MYR","PHP","SGD","THB","VND","KRW","TRY","UAH","MXN","CAD","AUD","NZD","INR","TWD","HKD","SAR","ZAR","AED","CHF","CLP","PEN","COP"];
-
-				var complete = 0,
-					base_page = false;
-
-				$.each(available_currencies, function(index, currency_type) {
-					if (currency_type != user_currency) {
-						if (getValue(currency_type + "to" + user_currency)) {
-							var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60 * 3; // Three days ago
-							var last_updated = getValue(currency_type + "to" + user_currency + "_time") || expire_time - 1;
-
-							if (last_updated < expire_time) {
-								get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
-									complete += 1;
-									setValue(currency_type + "to" + user_currency, parseFloat(txt));
-									setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
-									if (complete == available_currencies.length - 1) start_total();
-								});
-							} else {
-								complete += 1;
-								if (complete == available_currencies.length - 1) start_total();
-							}
-						} else {
-							get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
-								complete += 1;
-								setValue(currency_type + "to" + user_currency, parseFloat(txt));
-								setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
-								if (complete == available_currencies.length - 1) start_total();
-							});
-						}
-					}
-				});
-
-				function start_total() {
+				currencyConversion.load().done(function() {
 					if (window.location.pathname.match("/account(/store_transactions)?/?$")) {
 						$(".account_setting_block:first .account_setting_sub_block:nth-child(2)").prepend("<div id='es_total' class='es_loading' style='text-align: center;'><span>" + localized_strings.loading + "</span></div>");
 
@@ -3880,7 +3896,7 @@ function account_total_spent() {
 										var parsed = parse_currency(amount),
 											calc_value;
 										if (parsed.currency_type != user_currency) {
-											calc_value = parsed.value / getValue(parsed.currency_type + "to" + user_currency);
+											calc_value = currencyConversion.convert(parsed.value, parsed.currency_type, user_currency);
 										} else {
 											calc_value = parsed.value;
 										}
@@ -3954,7 +3970,7 @@ function account_total_spent() {
 							$('#es_total').html(html);
 						});
 					}
-				}
+				});
 			}
 		}
 	});
@@ -5069,57 +5085,7 @@ function show_regional_pricing() {
 				var formatted_regional_price_array=[];
 				$.when.apply(null,currency_deferred).done(function(){
 					$.map(subid_info,function(subid,index){
-
-						// Get applicable currency conversion rates
-						var complete = 0,
-							available_currencies = [],
-							conversion_rates = [];
-
-						for (var price in subid["prices"]) {
-							if (subid["prices"][price]) {
-								if (available_currencies.indexOf(subid["prices"][price]["currency"]) == -1) {
-									available_currencies.push(subid["prices"][price]["currency"]);
-									conversion_rates.push(1);
-								}
-							}
-						}
-
-						var currency_conversion_promise = (function () {
-							var deferred = new $.Deferred();
-							$.each(available_currencies, function(index, currency_type) {
-								if (currency_type != user_currency) {
-									if (getValue(currency_type + "to" + user_currency)) {
-										var expire_time = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60; // One day ago
-										var last_updated = getValue(currency_type + "to" + user_currency + "_time") || expire_time - 1;
-
-										if (last_updated < expire_time) {
-											get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
-												complete += 1;
-												conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-												setValue(currency_type + "to" + user_currency, parseFloat(txt));
-												setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
-												if (complete == available_currencies.length - 1) deferred.resolve();;
-											});
-										} else {
-											complete += 1;
-											conversion_rates[available_currencies.indexOf(currency_type)] = getValue(currency_type + "to" + user_currency);
-											if (complete == available_currencies.length - 1) deferred.resolve();;
-										}	
-									} else {
-										get_http("//api.enhancedsteam.com/currency/?" + user_currency.toLowerCase() + "=1&local=" + currency_type.toLowerCase(), function(txt) {
-											complete += 1;
-											conversion_rates[available_currencies.indexOf(currency_type)] = parseFloat(txt);
-											setValue(currency_type + "to" + user_currency, parseFloat(txt));
-											setValue(currency_type + "to" + user_currency + "_time", parseInt(Date.now() / 1000, 10));
-											if (complete == available_currencies.length - 1) deferred.resolve();;
-										});
-									}
-								}
-							});
-							return deferred.promise();
-						})();
-
-						$.when.apply($, [currency_conversion_promise]).done(function() {
+						currencyConversion.load().done(function() {
 							if(subid){
 								var sub_formatted = [];
 								var convert_deferred=[];
@@ -5132,8 +5098,7 @@ function show_regional_pricing() {
 										if(subid["prices"][country]){
 											var country_currency = subid["prices"][country]["currency"].toString().toUpperCase();
 											var app_price = subid["prices"][country]["final"];
-											var index = $.inArray(country_currency, available_currencies);
-											var converted_price = parseFloat(app_price) / conversion_rates[index];
+											var converted_price = currencyConversion.convert(parseFloat(app_price), country_currency, user_currency);
 											var regional_price = formatPriceData(subid,country,converted_price);
 											regional_price_array[0]=country;
 											regional_price_array[1]=regional_price;
