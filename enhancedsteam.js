@@ -6217,36 +6217,8 @@ function add_steamdb_links(appid, type) {
 }
 
 function add_familysharing_warning(appid) {
-	var exfgls_appids, exfgls_promise = (function () {
-		var deferred = new $.Deferred();
-		if (window.location.protocol != "https:") {
-			// is the data cached?
-			var expire_time = parseInt(Date.now() / 1000, 10) - 8 * 60 * 60;
-			var last_updated = getValue("exfgls_appids_time") || expire_time - 1;
-			
-			if (last_updated < expire_time) {
-				// if no cache exists, pull the data from the website
-				get_http("//api.enhancedsteam.com/exfgls/", function(txt) {
-					exfgls_appids = txt;
-					setValue("exfgls_appids", exfgls_appids);
-					setValue("exfgls_appids_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve();	
-				});
-			} else {
-				exfgls_appids = getValue("exfgls_appids");
-				deferred.resolve();
-			}
-			
-			return deferred.promise();
-		} else {
-			deferred.resolve();
-			return deferred.promise();
-		}
-	})();
-
-	exfgls_promise.done(function(){
-		var exfgls = JSON.parse(getValue("exfgls_appids"));
-		if (exfgls["exfgls"].indexOf(appid) >= 0) {
+	storePageData.get("exfgls", function(data) {
+		if (data.excluded) {
 			$("#game_area_purchase").before('<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">' + localized_strings.family_sharing_notice + '</div><div class="notice_box_bottom"></div></div>');
 		}
 	});
