@@ -8,7 +8,6 @@ v8.2
 : Moved price history on wishlists to the bottom of each entry to prevent elements shifting after data loads
 : Updated app page purchase date to work with new account page layout
 
-
 v8.1.1
 -----
 : Fixed a layout issue with regional price comparisons on sale pages
