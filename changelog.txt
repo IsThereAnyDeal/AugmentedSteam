@@ -1,3 +1,7 @@
+v8.3
+-----
+
+
 v8.2
 -----
 + Significantly improved speed when getting data for app and profile pages and implemented client-side caching
