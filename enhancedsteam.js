@@ -2669,8 +2669,9 @@ function endless_scrolling() {
 			var result_count;
 			$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
 			$(".search_pagination_right").css("display", "none");
-			if ($(".search_pagination_left").text().trim().match(/(\d+)$/)) {
-				result_count = $(".search_pagination_left").text().trim().match(/(\d+)$/)[0];
+			var match = $(".search_pagination_left").text().trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
+			if (match) {
+				result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
 				$(".search_pagination_left").text(localized_strings.results.replace("__num__", result_count));
 			}
 
