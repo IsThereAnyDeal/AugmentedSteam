@@ -312,7 +312,7 @@ var currencyConversion = (function() {
 	function load(currency) {
 		if (deferred) return deferred.promise();
 		deferred = new $.Deferred();
-		rates = cache_get(currency);
+		rates = cache_get(currency || user_currency);
 		if (rates) {
 			deferred.resolveWith(rates);
 		} else {
