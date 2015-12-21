@@ -1,6 +1,11 @@
 v8.2
 -----
++ Significantly improved speed when getting data for app and profile pages and implemented client-side caching
++ Improved currency and country code detection for price history and regional price comparisons
++ Greatly reduced the number of requests required for retrieving currency conversion information
 : Fixed an issue where the Enhanced Steam menu wasn't visible to users who weren't logged in to Steam
+: Fixed a bug Valve created where wishlist "Links" dropdowns won't display correctly
+: Moved price history on wishlists to the bottom of each entry to prevent elements shifting after data loads
 
 
 v8.1.1

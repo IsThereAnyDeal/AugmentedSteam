@@ -129,7 +129,6 @@ body {
 	width:auto;
 	text-align:left;
 }
-
 select, textarea, input[type=text] {
 	background-color: #262626;
 	color: #B8B6B4;
@@ -137,6 +136,9 @@ select, textarea, input[type=text] {
 	padding: 5px;
 	margin-left:10px;
 	font-family:"Arial" sans-serif;
+}
+textarea {
+	width: 850px;
 }
 ul {
 	list-style:none;
