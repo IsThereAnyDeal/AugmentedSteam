@@ -118,7 +118,6 @@ var signed_in_promise = (function () {
 
 // Global scope promise storage; to prevent unecessary API requests
 var loading_inventory;
-var library_all_games = [];
 
 MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
@@ -6780,17 +6779,14 @@ function add_gamelist_achievements() {
 
 function add_gamelist_common() {
 	if($("label").attr("for")=="show_common_games") {
-		get_http('//api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=' + is_signed_in + '&include_played_free_games=1', function (txt) {
-			var data = JSON.parse(txt);
+		get_http('//steamcommunity.com/profiles/' + is_signed_in + '/games/?xml=1', function (txt) {
+			var dom = $.parseXML(txt);
 			$("#gameFilter").parent().after("<input type=\"checkbox\" id=\"es_gl_show_notcommon_games\"><label for=\"es_gl_show_notcommon_games\" id=\"es_gl_show_notcommon_games_label\">"+localized_strings.notcommon_label+"</label>");
 			$("#gameFilter").parent().after("<input type=\"checkbox\" id=\"es_gl_show_common_games\"><label for=\"es_gl_show_common_games\" id=\"es_gl_show_common_games_label\">"+localized_strings.common_label+"</label>");
 			$("#show_common_games, [for=show_common_games]").hide();
-			if (data.response && Object.keys(data.response).length > 0) {
-				library_all_games = data.response.games;
-			}
 			function game_id_toggle(show_toggle) {
-				$.each(library_all_games, function(i,obj){
-					$("#game_"+obj.appid).toggle();
+				$(dom).find("gamesList games game appID").each(function() {
+					$("#game_" + $(this).text()).toggle();
 				});
 			}
 			$("#es_gl_show_notcommon_games").on("change", function() {
