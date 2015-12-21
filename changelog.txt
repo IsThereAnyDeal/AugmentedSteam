@@ -6,6 +6,7 @@ v8.2
 : Fixed an issue where the Enhanced Steam menu wasn't visible to users who weren't logged in to Steam
 : Fixed a bug Valve created where wishlist "Links" dropdowns won't display correctly
 : Moved price history on wishlists to the bottom of each entry to prevent elements shifting after data loads
+: Updated app page purchase date to work with new account page layout
 
 
 v8.1.1

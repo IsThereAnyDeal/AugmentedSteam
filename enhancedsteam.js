@@ -5958,23 +5958,17 @@ function hide_trademark_symbols(community) {
 
 // Display purchase date for owned games
 function display_purchase_date() {
-    if ($(".game_area_already_owned").length > 0) {
-        var appname = $(".apphub_AppName").text();
+	if ($(".game_area_already_owned").length > 0) {
+		var appname = $(".apphub_AppName").text();
 
-        get_http('https://store.steampowered.com/account/store_transactions', function (txt) {
-    		var earliestPurchase = $(txt).find("#store_transactions .block:nth-of-type(1) .transactionRowTitle:contains(" + appname + ")").closest(".transactionRow").last(),
-    			purchaseDate = $(earliestPurchase).find(".transactionRowDate").text();
-
-    		var found = 0;
-    		jQuery("div.game_area_already_owned").each(function (index, node) {
-    			if (found === 0) {
-    				if (purchaseDate) {
-    					node.innerHTML = node.innerHTML + localized_strings.purchase_date.replace("__date__", purchaseDate);
-    					found = 1;
-    				}
-    			}
-    		});
-    	});
+		get_http('https://store.steampowered.com/account/licenses/', function (txt) {
+			var purchaseDate = $(txt).find("td:contains(" + appname + "):last").parent().find(".license_date_col").text();
+			$(".game_area_already_owned:first").each(function (index, node) {
+				if (purchaseDate) {
+					$(".game_area_already_owned:first .already_in_library").append(" " + localized_strings.purchase_date.replace("__date__", purchaseDate));
+				}
+			});
+		});
 	}
 }
 
