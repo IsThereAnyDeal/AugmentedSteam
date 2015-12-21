@@ -70,11 +70,7 @@ var currency_promise = (function() {
 		deferred.resolve();
 	} else {
 		var appid = 220;
-		var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids="+appid;
-		var match_cc = window.location.search.match(/(?:^|[?&])(cc=[^&]+)/i);
-		if (match_cc) {
-			ajax_url += "&" + match_cc[1];
-		}
+		var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids=" + appid + "&cc=" + getStoreRegionCountryCode();
 		get_http(ajax_url, function(txt) {
 			var data = $.parseJSON(txt);
 			if (!data[appid].success) return;
