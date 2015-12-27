@@ -68,13 +68,11 @@ var currency_promise = (function() {
 	if (currency_cache && currency_cache.updated >= expire_time) {
 		user_currency = currency_cache.currency_type;
 		deferred.resolve();
-	} else {
-		var appid = 220;
-		var ajax_url = "//store.steampowered.com/api/appdetails/?filters=price_overview&appids=" + appid + "&cc=" + getStoreRegionCountryCode();
-		get_http(ajax_url, function(txt) {
-			var data = $.parseJSON(txt);
-			if (!data[appid].success) return;
-			user_currency = data[appid].data.price_overview.currency;
+	} else {		
+		get_http("//store.steampowered.com/app/220", function(txt) {
+			var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
+			if (!currency) return;
+			user_currency = currency.currency_type;
 		}).fail(function() {
 			user_currency = "USD";
 		}).done(function() {
@@ -210,7 +208,7 @@ function formatCurrency(number, type) {
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
 	var currency_type = currency_symbol_to_type(currency_symbol);
-	if (currency_format_info[user_currency].symbolFormat == currency_format_info[currency_type].symbolFormat) currency_type = user_currency;
+	if (user_currency && currency_format_info[user_currency].symbolFormat == currency_format_info[currency_type].symbolFormat) currency_type = user_currency;
 	var currency_number = currency_type_to_number(currency_type);
 	var info = currency_format_info[currency_type];
 
