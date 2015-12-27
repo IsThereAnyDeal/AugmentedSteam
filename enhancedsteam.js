@@ -4950,6 +4950,11 @@ function process_early_access() {
 							$(".curated_app_link").each(function(index, value) { check_early_access($(this)); });
 							$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
 							$(".dailydeal_ctn").find("a").each(function(index, value) { check_early_access($(this)); });
+
+							// Sales fields
+							$(".large_sale_caps").find("a").each(function(index, value) { check_early_access($(this)); });
+							$(".small_sale_caps").find("a").each(function(index, value) { check_early_access($(this)); });
+							$(".sale_capsule_image").parent().each(function(index, value) { check_early_access($(this)); });
 							break;
 					}
 				case "steamcommunity.com":

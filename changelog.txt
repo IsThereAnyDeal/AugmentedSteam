@@ -1,5 +1,6 @@
 v8.3
 -----
++ Added early access banners to highlighted sale items and top selling, etc items on sale homepage
 : Resolved another issue with the new currency detection function
 
 
