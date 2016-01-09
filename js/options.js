@@ -100,6 +100,7 @@ function save_options() {
 		$("#wingamestore").prop('checked'),
 		$("#gamebillet").prop('checked')
 	];
+	override_price = $("#override_price").val();
 	showregionalprice = $("#regional_price_on").val();
 	regional_hideworld = $("#regional_hideworld").prop('checked');
 	regional_countries = $.map($('.regional_country'), function (el, i) {
@@ -209,6 +210,7 @@ function save_options() {
 		'showlowestpricecoupon': showlowestpricecoupon,
 		'showallstores': showallstores,
 		'stores': stores,
+		'override_price': override_price,
 		'showregionalprice': showregionalprice,
 		'regional_hideworld': regional_hideworld,
 		'regional_countries': regional_countries,
@@ -393,6 +395,7 @@ function load_options() {
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; storage.set({'showallstores': settings.showallstores}); }
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
+		if (settings.override_price === undefined) { settings.override_price = "auto"; storage.set({'override_price': settings.override_price}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; storage.set({'regional_countries': settings.regional_countries}); }
 
@@ -519,6 +522,7 @@ function load_options() {
 		$("#showlowestpricecoupon").prop('checked', settings.showlowestpricecoupon);
 		$("#stores_all").prop('checked', settings.showallstores);
 		toggle_stores();
+		$("#override_price").val(settings.override_price);
 		$("#regional_price_on").val(settings.showregionalprice);
 		$("#regional_hideworld").prop('checked', settings.regional_hideworld);
 		if (settings.showregionalprice == "off") { $("#region_selects").hide(); }
@@ -701,6 +705,7 @@ function load_translation() {
 			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
+			$("#viewprice_text").text(localized_strings.option.view_in);
 			$("#store_regionalprice_header").text(localized_strings.options.regional_price);
 			$("#showregionalprice_text").text(localized_strings.options.regional_price_on);
 			$('select#regional_price_on option[value=always]').text(localized_strings.always);

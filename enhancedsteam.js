@@ -63,24 +63,32 @@ var localization_promise = (function () {
 var user_currency;
 var currency_promise = (function() {
 	var deferred = new $.Deferred();
-	var currency_cache = $.parseJSON(localStorage.getItem("user_currency"));
-	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-	if (currency_cache && currency_cache.updated >= expire_time) {
-		user_currency = currency_cache.currency_type;
-		deferred.resolve();
-	} else {		
-		get_http("//store.steampowered.com/app/220", function(txt) {
-			var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
-			if (!currency) return;
-			user_currency = currency.currency_type;
-		}).fail(function() {
-			user_currency = "USD";
-		}).done(function() {
-			localStorage.setItem("user_currency", JSON.stringify({currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}));
-		}).always(function() {
+	storage.get(function(settings) {
+		if (settings.override_price === undefined) { settings.override_price = "auto"; storage.set({'override_price': settings.override_price}); }
+		if (settings.override_price != "auto") {
+			user_currency = settings.override_price;
 			deferred.resolve();
-		});
-	}
+		} else {
+			var currency_cache = $.parseJSON(localStorage.getItem("user_currency"));
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+			if (currency_cache && currency_cache.updated >= expire_time) {
+				user_currency = currency_cache.currency_type;
+				deferred.resolve();
+			} else {
+				get_http("//store.steampowered.com/app/220", function(txt) {
+					var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
+					if (!currency) return;
+					user_currency = currency.currency_type;
+				}, "xhrFields: { withCredentials: true }").fail(function() {
+					user_currency = "USD";
+				}).done(function() {
+					localStorage.setItem("user_currency", JSON.stringify({currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}));
+				}).always(function() {
+					deferred.resolve();
+				});
+			}
+		}
+	});
 	return deferred.promise();
 })();
 
@@ -294,6 +302,38 @@ function currency_type_to_number (currency_type) {
 		"AED": 32}[currency_type] || 1;
 }
 
+function currency_number_to_type (currency_number) {
+	return {5: "RUB",
+		3: "EUR",
+		2: "GBP",
+		7: "BRL",
+		8: "JPY",
+		9: "NOK",
+		10: "IDR",
+		11: "MYR",
+		12: "PHP",
+		13: "SGD",
+		14: "THB",
+		15: "VND",
+		16: "KRW",
+		17: "TRY",
+		18: "UAH",
+		19: "MXN",
+		20: "CAD",
+		21: "AUD",
+		22: "NZD",
+		23: "CNY",
+		24: "INR",
+		25: "CLP",
+		26: "PEN",
+		27: "COP",
+		28: "ZAR",
+		29: "HKD",
+		30: "TWD",
+		31: "SAR",
+		32: "AED"}[currency_number] || "USD";
+}
+
 function currency_symbol_from_string (string_with_symbol) {
 	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP$|S\/\.|COL\$|NZ\$)/;
 	var match = string_with_symbol.match(re);
@@ -351,25 +391,25 @@ var currencyConversion = (function() {
 
 /**
  * Gets the country code of store region.
- *
- * First, look for fakeCC in cookie, which is set for users with store region
- * different from accessing IP;
- * if not found, look for steamCountry in cookie;
- * if not found, default to 'us'.
  */
 function getStoreRegionCountryCode() {
-	if (getCookie('fakeCC')) {
-		return getCookie('fakeCC');
-	} else if (getCookie('steamCountry')) {
-		// steamCountry looks like:
-		// GB|fae965...
-		var steamCountry = getCookie('steamCountry');
-		var matched = steamCountry.match(/^([a-z]{2})/i);
-		if (matched) {
-			return matched[1];
+	var cc = "us",
+		cookies = document.cookie,
+		matched = cookies.match(/fakeCC=([a-z]{2})/i);
+	if (matched != null && matched.length == 2) {
+		cc = matched[1];
+	} else {
+		matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
+		if (matched != null && matched.length == 2) {
+			cc = matched[1];
+		} else {
+			matched = cookies.match(/steamCounty([a-z]{2})/i);
+			if (matched != null && matched.length == 2) {
+				cc = matched[1];
+			}
 		}
 	}
-	return 'us';
+	return cc;
 }
 
 function escapeHTML(str) {
@@ -1446,7 +1486,7 @@ function add_wishlist_pricehistory() {
 				get_http("//api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 					var data = JSON.parse(txt);
 					if (data) {
-						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded;
+						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
 						var currency_type = data[".meta"]["currency"];
 
 	        			// "Lowest Price"
@@ -1458,18 +1498,35 @@ function add_wishlist_pricehistory() {
 	                    		}
 	                    	}
 
-	                        line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+	                    	if (settings.override_price != "auto") {
+								currencyConversion.load().done(function() {
+									lowest = currencyConversion.convert(data["price"]["price"], data[".meta"]["currency"], settings.override_price);
+									currency_type = settings.override_price;
+								});
+							} else {
+								lowest = data["price"]["price"].toString();
+							}
+
+	                        line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 	                    	if (settings.showlowestpricecoupon) {
 	                    		if (data["price"]["price_voucher"]) {
-	                    			line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+	                    			line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 	                    		}
 	                    	}
 	                    }
 
 						// "Historical Low"
 						if (data["lowest"]) {
+							if (settings.override_price != "auto") {
+								currencyConversion.load().done(function() {
+									lowesth = currencyConversion.convert(data["lowest"]["price"], data[".meta"]["currency"], settings.override_price);
+									currency_type = settings.override_price;
+								});
+							} else {
+								lowesth = data["lowest"]["price"].toString();
+							}
 	                        recorded = new Date(data["lowest"]["recorded"]*1000);
-	                        line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+	                        line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(lowesth, currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 	                    }
 
 						// "Number of times this game has been in a bundle"
@@ -2160,7 +2217,7 @@ function show_pricing_history(appid, type) {
 					$.each(price_data, function(key, data) {
 						if (key != ".cached" && key != ".meta" && data) {
 							var subid = key.replace("sub/", "");
-							var activates = "", line1 = "", line2 = "", line3 = "", html, recorded;
+							var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
 							var node = $("input[name=subid][value=" + subid + "]").parent().parent();
 
 							// "Lowest Price"
@@ -2172,18 +2229,36 @@ function show_pricing_history(appid, type) {
 									}
 								}
 
-								line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								if (settings.override_price != "auto") {
+									currencyConversion.load().done(function() {
+										lowest = currencyConversion.convert(data["price"]["price"], price_data[".meta"]["currency"], settings.override_price);
+										currency_type = settings.override_price;
+									});
+								} else {
+									lowest = data["price"]["price"].toString();
+								}
+
+								line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 								if (settings.showlowestpricecoupon) {
 									if (data["price"]["price_voucher"]) {
-										line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(escapeHTML(data["price"]["price"].toString()), currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+										line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 									}
 								}
 							}
 
 							// "Historical Low"
 							if (data["lowest"]) {
+								if (settings.override_price != "auto") {
+									currencyConversion.load().done(function() {
+										lowesth = currencyConversion.convert(data["lowest"]["price"], price_data[".meta"]["currency"], settings.override_price);
+										currency_type = settings.override_price;
+									});
+								} else {
+									lowesth = data["lowest"]["price"].toString();
+								}
+
 								recorded = new Date(data["lowest"]["recorded"]*1000);
-								line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(escapeHTML(data["lowest"]["price"].toString()), currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(lowesth, currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
 							}
 
 							html = "<div class='es_lowest_price' id='es_price_" + subid + "'><div class='gift_icon' id='es_line_chart_" + subid + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div>";
@@ -2236,7 +2311,14 @@ function show_pricing_history(appid, type) {
 											purchase += '<b>';
 											if (Object.keys(data["bundles"]["live"][i]["tiers"]).length > 1) {
 												var tier_name = value.note || localized_strings.bundle.tier.replace("__num__", tier_num);
-												var tier_price = formatCurrency(value.price, currency_type);
+												var tier_price = value.price;
+												if (settings.override_price != "auto") {
+													currencyConversion.load().done(function() {
+														tier_price = currencyConversion.convert(value.price, price_data[".meta"]["currency"], settings.override_price);
+														currency_type = settings.override_price;
+													});
+												}
+												tier_price = formatCurrency(tier_price, currency_type);
 												purchase += localized_strings.bundle.tier_includes.replace("__tier__", tier_name).replace("__price__", tier_price).replace("__num__", value.games.length);
 											} else {
 												purchase += localized_strings.bundle.includes.replace(/\(?__num__\)?/, value.games.length);
@@ -2249,9 +2331,15 @@ function show_pricing_history(appid, type) {
 											purchase = purchase.replace(/, $/, "");
 											purchase += "<br>";
 											tier_num += 1;
-										});										
+										});
 										purchase += '</p><div class="game_purchase_action"><div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo"><a class="btnv6_blue_blue_innerfade btn_medium" href="' + data["bundles"]["live"][i]["details"] + '" target="_blank"><span>' + localized_strings.bundle.info + '</span></a></div></div><div class="game_purchase_action_bg">';
 										if (bundle_price && bundle_price > 0) {
+											if (settings.override_price != "auto") {
+												currencyConversion.load().done(function() {
+													bundle_price = currencyConversion.convert(bundle_price, price_data[".meta"]["currency"], settings.override_price);
+													currency_type = settings.override_price;
+												});
+											}
 											if (data["bundles"]["live"][i]["pwyw"]) {
 												purchase += '<div class="es_each_box" itemprop="price">';
 												purchase += '<div class="es_each">' + localized_strings.bundle.at_least + '</div><div class="es_each_price" style="text-align: right;">' + formatCurrency(bundle_price, currency_type) + '</div>';
@@ -4029,7 +4117,7 @@ function inventory_market_prepare() {
 		var es_market_helper = document.createElement("script");
 		es_market_helper.type = "text/javascript";
 		es_market_helper.id = "es_market_helper";
-		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid] }, "*"); });';
+		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
 		document.documentElement.appendChild(es_market_helper);
 
 		window.addEventListener("message", function(event) {
@@ -4047,6 +4135,7 @@ function inventory_market_helper(response) {
 	var assetID = response[6];
 	var sessionID = response[7];
 	var contextID = response[8];
+	var wallet_currency = response[9];
 	var gift = false;
 	if (response[5] && response[5].match(/Gift/)) gift = true;
 	var html;
@@ -4155,7 +4244,7 @@ function inventory_market_helper(response) {
 						var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
 						if (market_id) {
 							market_id = market_id[1];
-							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + currency_type_to_number(user_currency) + "&item_nameid=" + market_id, function(market_txt) {
+							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
 								var market = JSON.parse(market_txt);
 								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
 								var price_low = market.highest_buy_order / 100;
@@ -4165,12 +4254,12 @@ function inventory_market_helper(response) {
 
 								// Add Quick Sell button
 								if (price_high > price_low) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high)) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
 								// Add Instant Sell button
 								if (market.highest_buy_order) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low)) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
 								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
@@ -5051,6 +5140,10 @@ function show_regional_pricing() {
 					var percentage;
 					var formatted_price = formatCurrency(price, currency);
 					var formatted_converted_price = formatCurrency(converted_price);
+
+					if (settings.override_price != "auto") {
+						local_price = currencyConversion.convert(local_price, sub_info["prices"][local_country]["currency"], settings.override_price);
+					}
 					
 					percentage = (((converted_price/local_price)*100)-100).toFixed(2);
 					var arrows = chrome.extension.getURL("img/arrows.png");
