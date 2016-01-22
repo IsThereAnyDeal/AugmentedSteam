@@ -1,6 +1,10 @@
-v8.3
+﻿v8.3
 -----
 
+
+v8.2.4
+-----
+: Fixed a bug in country detection code
 
 v8.2.3
 -----
