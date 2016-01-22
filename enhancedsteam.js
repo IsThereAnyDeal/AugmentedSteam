@@ -403,7 +403,7 @@ function getStoreRegionCountryCode() {
 		if (matched != null && matched.length == 2) {
 			cc = matched[1];
 		} else {
-			matched = cookies.match(/steamCounty=([a-z]{2})/i);
+			matched = cookies.match(/steamCountry=([a-z]{2})/i);
 			if (matched != null && matched.length == 2) {
 				cc = matched[1];
 			}
