@@ -1979,21 +1979,13 @@ function remove_about_menu() {
 }
 
 function add_header_links() {
-	var supernav_content = document.querySelectorAll("#supernav .supernav");
-	if ($("#supernav").length > 0) {
+	if ($(".supernav_container").length > 0) {
 		// add "Forums" after "Workshop"
-		var community = $("#supernav").find("a[href='http://steamcommunity.com/']").attr("data-tooltip-content");
-		if (community === undefined) community = $("#supernav").find("a[href='https://steamcommunity.com/']").attr("data-tooltip-content");
-		var insertAt = community.match(/\/workshop\/">(.+)<\/a>/);
-		community = community.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="//forums.steampowered.com/forums/" target="_blank">' + localized_strings.forums + '</a>' + community.substr(insertAt.index + insertAt[0].length);
-		$("#supernav").find("a[href='http://steamcommunity.com/']").attr("data-tooltip-content", community);
-
+		$(".submenu_community").find("a[href='http://steamcommunity.com/workshop/']").after('<a class="submenuitem" href="//forums.steampowered.com/forums/" target="_blank">' + localized_strings.forums + '</a>');
+		
 		if (is_signed_in) {
-			var user = $("#supernav").find("a[href$='/home/']").attr("data-tooltip-content");
-			var insertAt = user.match(/\/home\/">(.+)<\/a>/);
-			user = user.substr(0, (insertAt.index + insertAt[0].length)) + '<a class="submenuitem" href="//steamcommunity.com/my/games/">' + localized_strings.games + '</a>' + user.substr(insertAt.index + insertAt[0].length);
-			user = user + '<a class="submenuitem" href="//steamcommunity.com/my/recommended/">' + localized_strings.reviews + '</a>';
-			$("#supernav").find("a[href$='/home/']").attr("data-tooltip-content", user);
+			$(".submenu_username").find("a:first").after('<a class="submenuitem" href="//steamcommunity.com/my/games/">' + localized_strings.games + '</a>');
+			$(".submenu_username").append('<a class="submenuitem" href="//steamcommunity.com/my/recommended/">' + localized_strings.reviews + '</a>');
 		}
 	}
 }
