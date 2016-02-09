@@ -4012,7 +4012,7 @@ function add_lowest_market_price() {
 	if ($("#tabContentsMyListings .market_listing_row").length <= 11 ) {
 		add_lowest_market_price_data();
 	} else {
-		$(".market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='margin-top: 13px;'></a>");
+		$(".market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
 		$("#es_selling_total .market_listing_es_lowest").html("&nbsp;");
 	}
 	$(".es_market_lowest_button").click(function() {
