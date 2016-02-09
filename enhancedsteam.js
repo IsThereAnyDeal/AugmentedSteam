@@ -5216,7 +5216,7 @@ function show_regional_pricing() {
 							break;
 					}
 					$.each(subid_info,function(subid_index,package_info){
-						if (subid_index != 0) {
+						if (package_info["subid"] != 0) {
 							currency_deferred.push(
 								$.ajax({
 									url:api_url,
