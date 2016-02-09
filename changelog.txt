@@ -2,6 +2,7 @@
 -----
 + Added a toggle to the market page to hide the list of individual games
 : Fixed a layout issue that caused header links not to show properly in the Steam header
+: Fixed a bug that caused regional price comparisons not to show if the first sub on the page is free
 
 
 v8.2.4

@@ -5190,10 +5190,16 @@ function show_regional_pricing() {
 			$.each(all_game_areas,function(index,app_package){
 				var subid = $(app_package).find("input[name='subid']").val();
 				if(subid>0){
-					subid_info[index]=[];
-					subid_info[index]["subid"]=subid;
-					subid_info[index]["prices"]=[];
+					subid_info.push({
+						subid: subid,
+						prices: []
+					});
 					subid_array.push(subid);
+				} else {
+					subid_info.push({
+						subid: "0",
+						prices: []
+					});
 				}
 			});
 			if(subid_array.length>0){
@@ -5210,27 +5216,29 @@ function show_regional_pricing() {
 							break;
 					}
 					$.each(subid_info,function(subid_index,package_info){
-						currency_deferred.push(
-							$.ajax({
-								url:api_url,
-								data:{
-									packageids:package_info["subid"],
-									cc:cc
-								}
-							}).done(function(data){
-								$.each(data,function(data_subid){
-									if(package_info){
-										if(package_info["subid"]===data_subid){
-											if(data[data_subid]["data"]) {
-												var price = data[data_subid]["data"]["price"];
-												subid_info[subid_index]["prices"][country]=price;
-												pricing_div=$(pricing_div).append(price);
+						if (subid_index != 0) {
+							currency_deferred.push(
+								$.ajax({
+									url:api_url,
+									data:{
+										packageids:package_info["subid"],
+										cc:cc
+									}
+								}).done(function(data){
+									$.each(data,function(data_subid){
+										if(package_info){
+											if(package_info["subid"]===data_subid){
+												if(data[data_subid]["data"]) {
+													var price = data[data_subid]["data"]["price"];
+													subid_info[subid_index]["prices"][country]=price;
+													pricing_div=$(pricing_div).append(price);
+												}
 											}
 										}
-									}
-								});
-							})
-						);
+									});
+								})
+							);
+						};
 					});
 				});
 				var format_deferred=[];
@@ -7923,7 +7931,7 @@ function add_itad_button() {
 			$("#es_itad").on("click", function() {
 				var ripc = function () {
 					var dialog = ShowBlockingWaitDialog("", "");
-					var url = "http://store.steampowered.com/dynamicstore/userdata/" + g_AccountID;
+					var url = "//store.steampowered.com/dynamicstore/userdata/" + g_AccountID;
 					$J.get(url).done(function(data) {
 						var form = "<form name='itad_import' method='POST' action='https://isthereanydeal.com/outside/user/collection/3rdparty/steam'>"
 							+"<input type='hidden' name='json' value='" + JSON.stringify(data) + "'>"
