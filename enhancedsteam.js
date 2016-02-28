@@ -7883,6 +7883,129 @@ function add_booster_prices() {
 	}");
 }
 
+function groups_leave_options() {
+	if (is_signed_in) {
+		var profileurl	= $('.user_avatar')[0].href || $('.user_avatar a')[0].href,
+			processURL	= profileurl + 'home_process',
+			sessionID	= $('#sessionID').val();
+
+		// Insert required data into the DOM
+		$('.sectionText').append(`<div class="es-leave-options">
+			<button class="es-group-leave-button es-leave-selected">Leave Selected</button> 
+			<button class="es-group-leave-button es-leave-all">Leave All</button>
+			<input type="checkbox" class="es-check-all es-select-checkbox" />
+			</div>`);
+		$('.groupLeftBlock').append('<input type="checkbox" class="es-leave-group es-select-checkbox" />').wrapInner('<span class="es-links-wrap" />');
+
+		// Bind actions to "leave" buttons
+		$('.es-leave-selected').on('click', function(){ leave_group(); });
+		$('.es-leave-all').on('click', function(){
+			if (window.confirm('You are about to leave ALL GROUPS you belong to!\n\nAre you sure you want to continue?')) {
+				// Disable the button until action is complete
+				$('.es-leave-all').prop('disabled', true);
+				$('.es-select-checkbox:visible').prop('checked', true).trigger('change');
+				leave_group();
+			}
+		});
+
+		// (De)Select all groups checkbox
+		$('.es-check-all').on('click', function() {
+			$('.es-select-checkbox:visible').prop('checked', $(this).prop('checked')).trigger('change');
+		});
+
+		// Replace Steam's way of leaving groups
+		$('.groupLeftBlock .linkStandard:last-of-type').on('click', function(e) {
+			e.preventDefault();
+
+			leave_group($(this));
+		});
+
+		// Highlight group row when selected
+		$(document.body).on('change', '.es-select-checkbox', function(e){
+			$(this).closest('.groupBlock').toggleClass('es-row-selected', $(this).prop('checked'));
+		});
+
+		// Re-Join a group
+		$(document.body).on('click', '.es-rejoin-group', function(e) {
+			e.preventDefault();
+
+			var el	= $(this),
+				row	= $(el).closest('.groupBlock');
+
+			if (!$(row).hasClass('es-inaction')) {
+				$(row).addClass('es-inaction');
+				$.post($(el).attr('href'), { action: "join", sessionID: sessionID }, function() {
+					$(row).animate({opacity: '1'}, 500);
+					$(el).hide('fast', function(){
+						$(el).parent().find('.es-links-wrap').show('fast');
+						$(row).removeClass('es-inaction');
+					});
+				});
+			}
+		});
+
+		// Leave group(s)
+		function leave_group(elSelector) {
+			// Look for the first check box relative to the document...
+			var el = $('.es-leave-group.es-select-checkbox:visible:checked').first();
+			// ...unless an element was defined in which case look for a checkbox relative to it
+			if (elSelector !== undefined) {
+				el = $(elSelector).parent().find('.es-leave-group.es-select-checkbox:visible');
+			}
+
+			// Check if there is any group selected
+			if ($(el).length > 0 && !$(el).hasClass('es-group-skipped')) {
+				var row	= $(el).closest('.groupBlock');
+				// Make sure it wasn't acted upon already
+				if (!$(row).hasClass('es-inaction')) {
+					var idRegex		= /javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/,
+						links		= $(el).closest('.es-links-wrap').find('.linkStandard'),
+						leaveLink	= $(links).last().attr('href'),
+						groupData	= idRegex.exec(leaveLink);
+						joinGroupEl	= $(el).parent().parent().find('.es-rejoin-group');
+
+					var joinGroupEl = joinGroupEl.length ? joinGroupEl : $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html('Join Group').prependTo($(row).find('.groupLeftBlock'));
+
+					$(row).addClass('es-inaction');
+
+					// If the user is Admin in this group confirmation before leaving is needed
+					if ($(links).length === 1 || window.confirm( 'You are Admin in this group: ' + groupData[2] + '\n\nAre you sure you want to leave?' )) {
+						$.ajax({method: 'POST',
+								url: processURL,
+								data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
+								beforeSend: function(){ $(row).addClass('es-progress'); },
+								cache: true
+						}).done(function() {
+							$(row).addClass('es-complete').animate({opacity: '.30'}, 500, function(){
+								$(row).removeClass('es-inaction es-progress es-complete');
+							});
+							$(el).parent().hide('fast', function(){
+								$(joinGroupEl).show('fast');
+								$(el).prop('checked', false).trigger('change');
+							});
+							// Wait some time between requests
+							setTimeout(function() {
+								leave_group(elSelector);
+							}, 500);
+						}).fail(function() {
+							$('.es-leave-all').prop('disabled', false);
+							$(row).removeClass('es-inaction es-progress es-complete');
+							alert('Something went wrong, please try again.');
+						});
+					} else {
+						$(el).addClass('es-group-skipped').prop('checked', false).trigger('change');
+						$(row).removeClass('es-inaction es-progress es-complete');
+						leave_group(elSelector);
+					}
+				}
+			} else {
+				$('.es-leave-all').prop('disabled', false);
+				$('.es-group-skipped.es-select-checkbox:visible').removeClass('es-group-skipped');
+			}
+		}
+	}
+}
+
 function launch_random_button() {
 	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
 
@@ -8172,6 +8295,10 @@ $(document).ready(function(){
 
 						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(path):
 							add_decline_button();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/groups/.test(path):
+							groups_leave_options();
 							break;
 
 						case /^\/(?:id|profiles)\/.+/.test(path):
