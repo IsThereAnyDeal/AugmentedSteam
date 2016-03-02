@@ -925,16 +925,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Groups page
  **************************************/
 .es-group-leave-button {
-	background: linear-gradient( to bottom, #a4d007 5%, #536904 95%);
+	background: linear-gradient(to bottom, #a4d007 5%, #536904 95%);
 	padding: 4px 8px;
 	border: none;
-	color: #F3FFCA;
+	color: rgba(255, 255, 255, .8);
 	border-radius: 2px;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
 }
 .es-leave-all {
-	background: linear-gradient( to bottom, #D00707 5%, #690404 95%);
-	color: #FFB4B4;
+	background: linear-gradient(to bottom, #D00707 5%, #690404 95%);
 }
 .es-leave-group {vertical-align: middle}
 .es-leave-options {
@@ -942,7 +941,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: -5px 8px 0 0
 }
 .es-select-checkbox {
-	padding: 6px 2px;
 	margin-left: 10px;
 }
 .es-row-selected {
@@ -950,7 +948,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	box-shadow: inset 0 0 1px #506885;
 }
 .es-group-leave-button,
-.es-select-checkbox {cursor: pointer;}
+.es-select-checkbox {
+	cursor: pointer;
+}
 .es-rejoin-group {
 	font-size: 12px;
 	display: none;

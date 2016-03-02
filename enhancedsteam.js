@@ -7891,8 +7891,8 @@ function groups_leave_options() {
 
 		// Insert required data into the DOM
 		$('.sectionText').append(`<div class="es-leave-options">
-			<button class="es-group-leave-button es-leave-selected">Leave Selected</button> 
-			<button class="es-group-leave-button es-leave-all">Leave All</button>
+			<button class="es-group-leave-button es-leave-selected">` + localized_strings.leave_group_selected + `</button> 
+			<button class="es-group-leave-button es-leave-all">` + localized_strings.leave_group_all + `</button>
 			<input type="checkbox" class="es-check-all es-select-checkbox" />
 			</div>`);
 		$('.groupLeftBlock').append('<input type="checkbox" class="es-leave-group es-select-checkbox" />').wrapInner('<span class="es-links-wrap" />');
@@ -7900,7 +7900,7 @@ function groups_leave_options() {
 		// Bind actions to "leave" buttons
 		$('.es-leave-selected').on('click', function(){ leave_group(); });
 		$('.es-leave-all').on('click', function(){
-			if (window.confirm('You are about to leave ALL GROUPS you belong to!\n\nAre you sure you want to continue?')) {
+			if (window.confirm( localized_strings.leave_group_all_confirm )) {
 				// Disable the button until action is complete
 				$('.es-leave-all').prop('disabled', true);
 				$('.es-select-checkbox:visible').prop('checked', true).trigger('change');
@@ -7946,7 +7946,7 @@ function groups_leave_options() {
 
 		// Leave group(s)
 		function leave_group(elSelector) {
-			// Look for the first check box relative to the document...
+			// Look for the first checkbox relative to the document...
 			var el = $('.es-leave-group.es-select-checkbox:visible:checked').first();
 			// ...unless an element was defined in which case look for a checkbox relative to it
 			if (elSelector !== undefined) {
@@ -7964,12 +7964,12 @@ function groups_leave_options() {
 						groupData	= idRegex.exec(leaveLink);
 						joinGroupEl	= $(el).parent().parent().find('.es-rejoin-group');
 
-					var joinGroupEl = joinGroupEl.length ? joinGroupEl : $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html('Join Group').prependTo($(row).find('.groupLeftBlock'));
+					var joinGroupEl = joinGroupEl.length ? joinGroupEl : $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
 
 					$(row).addClass('es-inaction');
 
 					// If the user is Admin in this group confirmation before leaving is needed
-					if ($(links).length === 1 || window.confirm( 'You are Admin in this group: ' + groupData[2] + '\n\nAre you sure you want to leave?' )) {
+					if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
 						$.ajax({method: 'POST',
 								url: processURL,
 								data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
@@ -7990,7 +7990,7 @@ function groups_leave_options() {
 						}).fail(function() {
 							$('.es-leave-all').prop('disabled', false);
 							$(row).removeClass('es-inaction es-progress es-complete');
-							alert('Something went wrong, please try again.');
+							alert( localized_strings.wrong_try_again );
 						});
 					} else {
 						$(el).addClass('es-group-skipped').prop('checked', false).trigger('change');
