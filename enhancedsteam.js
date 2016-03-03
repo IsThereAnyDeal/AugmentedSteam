@@ -3848,7 +3848,7 @@ function add_market_total() {
 function collapse_game_list() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		$("#browseItems .market_search_game_button_group").find("a").wrapAll("<div id='es_market_game_list'></div>");
-		$("#browseItems .market_search_sidebar_section_tip_small").append("<span style='float: right; margin-right: 11px;' id='es_market_game_toggle'>▲</span>");
+		$("#browseItems .market_search_sidebar_section_tip_small").append("<span style='float: right; margin-right: 11px; cursor: pointer;' id='es_market_game_toggle'>▲</span>");
 		
 		if (getValue("show_market_games_section")) {
 			$("#es_market_game_toggle").text("▼");
