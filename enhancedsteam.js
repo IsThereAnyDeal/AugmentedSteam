@@ -5376,7 +5376,7 @@ function show_regional_pricing() {
 
 function customize_app_page() {
 	// Add a "Customize" button
-	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn' style='visibility: visible;'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div>");
+	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div>");
 
 	storage.get(function(settings) {
 		if (settings.show_apppage_recommendedbycurators === undefined) { settings.show_apppage_recommendedbycurators = true; storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators}); }

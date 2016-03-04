@@ -920,6 +920,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
     height: 8px;
     background-color: #aeaeae;
 }
+#es_customize_btn {
+	visibility: visible;
+	margin: -24px 0 0 0;
+}
 
 /***************************************
  * Groups page
