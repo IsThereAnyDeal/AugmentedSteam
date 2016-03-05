@@ -6512,16 +6512,17 @@ function add_app_page_wishlist_changes(appid) {
 		}
 
 		$("#add_to_wishlist_area_success img:last-child").addClass("es-in-wl");
-		$("#add_to_wishlist_area_success").find("a:first").removeAttr("href");
 
-		$("#add_to_wishlist_area_success span").prepend("<img class='es-remove-wl' src='" + chrome.extension.getURL("img/remove.png") + "' style='display:none' />");
-		$("#add_to_wishlist_area_success span").prepend("<img class='es-loading-wl' src='http://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />");
+		$(".es-in-wl").after("<img class='es-remove-wl' src='" + chrome.extension.getURL("img/remove.png") + "' style='display:none' />");
+		$(".es-in-wl").after("<img class='es-loading-wl' src='http://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />");
 
 		// Find the script tag that contains the session id and extract it
 		var session_txt = $('script:contains("g_sessionID")').text();
 		var sessionid = session_txt.match(/g_sessionID = "(.+)"/)[1];
 
-		$("#add_to_wishlist_area_success").on("click", function() {
+		$("#add_to_wishlist_area_success").on("click", function(e) {
+			e.preventDefault();
+
 			var el = $(this),
 				parent = $(this).parent();
 
