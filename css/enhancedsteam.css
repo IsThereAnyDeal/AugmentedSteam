@@ -922,7 +922,22 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 #es_customize_btn {
 	visibility: visible;
+}
+.home_page_content #es_customize_btn {
 	margin: -24px 0 0 0;
+}
+
+/***************************************
+ * App page, wishlist buttons
+ **************************************/
+.es-loading-wl { 
+	-webkit-filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
+}
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl {
+	display: none !important;
+}
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-remove-wl {
+	display: inline !important;
 }
 
 /***************************************
