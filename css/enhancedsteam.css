@@ -927,6 +927,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: -24px 0 0 0;
 }
 
+/* Display emoticons button at all times on profile comments area */
+.commentthread_entry_submitlink {
+	display: block !important
+}
+
 /***************************************
  * App page, wishlist buttons
  **************************************/
