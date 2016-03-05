@@ -4227,7 +4227,7 @@ function inventory_market_helper(response) {
 			storage.get(function(settings) {
 				if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
 				if (settings.show1clickgoo) {
-					$("#es_quickgrind").remove();
+					$("#es_quickgrind").parent().remove();
 					var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
 					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
 					$("#es_quickgrind").on("click", function() {
@@ -4256,10 +4256,22 @@ function inventory_market_helper(response) {
 					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
 					$("#iteminfo" + item + "_item_market_actions").append("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $("#iteminfo" + item + "_item_market_actions .item_market_action_button_contents").text() + "</span></a>");
 					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
+					var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
+
+					// Workaround for preventing actions for the same item if clicked and active
+					$(".inventory_item_link_disabled").attr({class: "inventory_item_link"});
+					$(thisItem + " .inventory_item_link").attr({class: "inventory_item_link_disabled"});
+
+					// Make sure there are no active requests for this item
+					if ( $(thisItem).hasClass("es-loading") ) { return; }
+
+					$(thisItem).addClass("es-loading");
+
 					get_http(url, function(txt) {
 						var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
 						if (market_id) {
 							market_id = market_id[1];
+
 							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
 								var market = JSON.parse(market_txt);
 								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
@@ -4268,14 +4280,19 @@ function inventory_market_helper(response) {
 								price_high = parseFloat(price_high).toFixed(2);
 								price_low = parseFloat(price_low).toFixed(2);
 
+								$(thisItem).removeClass("es-loading");
+
+								// Workaround for showing multiple instances of "Quick Sell" and "Instant Sell" buttons
+								$("#iteminfo" + item).find('#es_quicksell0, #es_instantsell0, #es_quicksell1, #es_instantsell1, .es-btn-spacer').remove();
+
 								// Add Quick Sell button
 								if (price_high > price_low) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
 								// Add Instant Sell button
 								if (market.highest_buy_order) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
 								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
@@ -4292,7 +4309,7 @@ function inventory_market_helper(response) {
 											$.ajax({
 												url:"https://steamcommunity.com/market/sellitem/",
 												type: "POST",
-												data:{
+												data: {
 													"sessionid": sessionID,
 													"appid": global_id,
 													"contextid": contextID,
