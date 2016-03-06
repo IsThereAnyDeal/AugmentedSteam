@@ -48,6 +48,7 @@ function save_options() {
 	showmcus = $("#showmcus").prop('checked');
 	showhltb = $("#showhltb").prop('checked');
 	showpcgw = $("#showpcgw").prop('checked');
+	showclient = $("#showclient").prop('checked');
 	showsteamcardexchange = $("#showsteamcardexchange").prop('checked');
 	showsteamdb = $("#showsteamdb").prop('checked');
 	showastatslink = $("#showastatslink").prop('checked');
@@ -192,6 +193,7 @@ function save_options() {
 		'showmcus': showmcus,
 		'showhltb': showhltb,
 		'showpcgw': showpcgw,
+		'showclient': showclient,
 		'showsteamcardexchange': showsteamcardexchange,
 		'showsteamdb': showsteamdb,
 		'showastatslink': showastatslink,
@@ -405,6 +407,7 @@ function load_options() {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
 		if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
 		if (settings.showpcgw === undefined) { settings.showpcgw = true; storage.set({'showpcgw': settings.showpcgw}); }
+		if (settings.showclient === undefined) { settings.showclient = true; storage.set({'showclient': settings.showclient}); }
 		if (settings.showsteamcardexchange === undefined) { settings.showsteamcardexchange = false; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
 		if (settings.showsteamdb === undefined) { settings.showsteamdb = true; storage.set({'showsteamdb': settings.showsteamdb}); }
 		if (settings.showastatslink === undefined) { settings.showastatslink = true; storage.set({'showastatslink': settings.showastatslink}); }
@@ -503,6 +506,7 @@ function load_options() {
 		$("#showmcus").prop('checked', settings.showmcus);
 		$("#showhltb").prop('checked', settings.showhltb);
 		$("#showpcgw").prop('checked', settings.showpcgw);
+		$("#showclient").prop('checked', settings.showclient);
 		$("#showsteamcardexchange").prop('checked', settings.showsteamcardexchange);
 		$("#showsteamdb").prop('checked', settings.showsteamdb);
 		$("#showastatslink").prop('checked', settings.showastatslink);

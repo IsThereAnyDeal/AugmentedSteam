@@ -3569,6 +3569,15 @@ function add_pcgamingwiki_link(appid) {
 	});
 }
 
+function add_steam_client_link(appid) {
+	storage.get(function(settings) {
+		if (settings.showclient === undefined) { settings.showclient = true; storage.set({'showclient': settings.showclient}); }
+		if (settings.showclient) {
+			$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium steam_client_btn" href="steam://store/' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(http://store.steampowered.com/favicon.ico)"></i>&nbsp;&nbsp; View in Steam Client</span></a>');
+		}
+	});
+}
+
 // Add link to Steam Card Exchange
 function add_steamcardexchange_link(appid){
 	storage.get(function(settings) {
@@ -3848,7 +3857,7 @@ function add_market_total() {
 function collapse_game_list() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		$("#browseItems .market_search_game_button_group").find("a").wrapAll("<div id='es_market_game_list'></div>");
-		$("#browseItems .market_search_sidebar_section_tip_small").append("<span style='float: right; margin-right: 11px;' id='es_market_game_toggle'>▲</span>");
+		$("#browseItems .market_search_sidebar_section_tip_small").append("<span style='float: right; margin-right: 11px; cursor: pointer;' id='es_market_game_toggle'>▲</span>");
 		
 		if (getValue("show_market_games_section")) {
 			$("#es_market_game_toggle").text("▼");
@@ -3872,9 +3881,9 @@ function collapse_game_list() {
 function add_active_total() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		var total = 0;
-		var total_after = 0;	
+		var total_after = 0;
 		
-		$(".my_listing_section:first").find(".market_listing_row").find(".market_listing_my_price").each(function() {
+		$("#tabContentsMyListings .my_listing_section:first .market_listing_row .market_listing_my_price").each(function() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
@@ -3883,7 +3892,7 @@ function add_active_total() {
 		if (total != 0) {
 			total = formatCurrency(parseFloat(total));
 			total_after = formatCurrency(parseFloat(total_after));
-			$(".my_listing_section:first .market_recent_listing_row:last").clone().appendTo($(".my_listing_section:first .market_recent_listing_row:last").parent()).attr("id", "es_selling_total");
+			$("#tabContentsMyListings .my_listing_section:first .market_recent_listing_row:last").clone().appendTo($("#tabContentsMyListings .my_listing_section:first .market_recent_listing_row:last").parent()).attr("id", "es_selling_total");
 			$("#es_selling_total").find("img").remove();
 			$("#es_selling_total").find(".market_listing_edit_buttons").empty();
 			$("#es_selling_total").find(".market_listing_listed_date").empty();
@@ -3894,7 +3903,7 @@ function add_active_total() {
 
 		var total = 0;
 		
-		$(".my_listing_section:nth-child(2)").find(".market_listing_row").find(".market_listing_my_price:first").each(function() {
+		$("#tabContentsMyListings .my_listing_section:nth-child(2)").find(".market_listing_row").find(".market_listing_my_price:first").each(function() {
 			var qty = $(this).parent().find(".market_listing_my_price:last").text().trim();
 			var price = parse_currency($(this).text().replace(/.+@/, "").trim());
 			total += Number(price.value) * Number(qty);
@@ -3903,7 +3912,7 @@ function add_active_total() {
 		if (total != 0) {
 			total = formatCurrency(parseFloat(total));
 			//$(".my_listing_section:nth-child(2)").append("<div class='market_listing_row market_recent_listing_row'><div class='market_listing_right_cell market_listing_edit_buttons placeholder'></div><div class='market_listing_my_price es_active_total'><span class='market_listing_item_name' style='color: white'>" + escapeHTML(total) + "</span><br><span class='market_listing_game_name'>" + escapeHTML(localized_strings.buying_total) + "</span></div></div>");
-			$(".my_listing_section:nth-child(2) .market_recent_listing_row:last").clone().appendTo($(".my_listing_section:nth-child(2) .market_recent_listing_row:last").parent()).attr("id", "es_buying_total");
+			$("#tabContentsMyListings .my_listing_section:nth-child(2) .market_recent_listing_row:last").clone().appendTo($("#tabContentsMyListings .my_listing_section:nth-child(2) .market_recent_listing_row:last").parent()).attr("id", "es_buying_total");
 			$("#es_buying_total").find("img").remove();
 			$("#es_buying_total").find(".market_listing_edit_buttons").empty();
 			$("#es_buying_total").find(".market_listing_item_name_block").empty();
@@ -3980,7 +3989,7 @@ function add_lowest_market_price() {
 				});
 			}
 		} else {
-			$("#tabContentsMyListings .market_listing_row").each(function() {
+			$("#tabContentsMyListings .my_listing_section:first .market_listing_row").each(function() {
 				var node = $(this);
 				var link = node.find(".market_listing_item_name_link").attr("href");
 				if (link) {
@@ -4009,7 +4018,7 @@ function add_lowest_market_price() {
 		}
 	}
 
-	if ($("#tabContentsMyListings .market_listing_row").length <= 11 ) {
+	if ($("#tabContentsMyListings .my_listing_section:first .market_listing_row").length <= 11 ) {
 		add_lowest_market_price_data();
 	} else {
 		$(".market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
@@ -8142,6 +8151,7 @@ $(document).ready(function(){
 
 							add_widescreen_certification(appid);
 							add_hltb_info(appid);
+							add_steam_client_link(appid);
 							add_pcgamingwiki_link(appid);
 							add_steamcardexchange_link(appid);
 							add_app_page_highlights();
