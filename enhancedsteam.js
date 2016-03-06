@@ -3569,6 +3569,15 @@ function add_pcgamingwiki_link(appid) {
 	});
 }
 
+function add_steam_client_link(appid) {
+	storage.get(function(settings) {
+		if (settings.showclient === undefined) { settings.showclient = true; storage.set({'showclient': settings.showclient}); }
+		if (settings.showclient) {
+			$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium steam_client_btn" href="steam://store/' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(http://store.steampowered.com/favicon.ico)"></i>&nbsp;&nbsp; View in Steam Client</span></a>');
+		}
+	});
+}
+
 // Add link to Steam Card Exchange
 function add_steamcardexchange_link(appid){
 	storage.get(function(settings) {
@@ -8001,6 +8010,7 @@ $(document).ready(function(){
 
 							add_widescreen_certification(appid);
 							add_hltb_info(appid);
+							add_steam_client_link(appid);
 							add_pcgamingwiki_link(appid);
 							add_steamcardexchange_link(appid);
 							add_app_page_highlights();
