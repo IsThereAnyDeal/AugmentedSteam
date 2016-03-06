@@ -1,7 +1,7 @@
 <html>
 <script src="js/jQuery.min.js"></script>
-<script src="js/localization.js"></script>
 <script src="js/options.js"></script>
+<link href="css/select2.css" rel="stylesheet" type="text/css">
 <link href="css/options.css" rel="stylesheet" type="text/css">
 <link href="css/es_flags.css" rel="stylesheet" type="text/css">
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -130,77 +130,76 @@
 					</li>
 				</div>
 				<li class="header" id="hide_text">Hide</li>
-				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items you own in search results and tag pages</label></li>
-				<li><input type="checkbox" id="hide_owned_homepage"><label for="hide_owned_homepage" id="hide_owned_homepage_text">Items you own on the homepage</label></li>
+				<li><input type="checkbox" id="hide_owned"><label for="hide_owned" id="hide_owned_text">Items you own in search results</label></li>
 				<li><input type="checkbox" id="hidetmsymbols"><label for="hidetmsymbols" id="hidetmsymbols_text">Trademark and Copyright symbols in game titles</label></li>
-				<li><input type="checkbox" id="hide_early_access"><label for="hide_early_access" id="hide_early_access_text">Hide Early Access games on homepage, browse, and search pages</label></li>
+				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
+				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide "About" link</label></li>
 				<li class="header" id="language_text">Language</li>				
 				<li><input type="checkbox" id="showlanguagewarning"><label for="showlanguagewarning" id="store_show_languagewarning_text">Show warning if browsing in a language other than</label>
 					<select id="warning_language">
 						<option value="English">English</option>
-						<option value="Brazilian">Brazilian</option>
-						<option value="Bulgarian">Bulgarian</option>
-						<option value="Czech">Czech</option>
-						<option value="Danish">Danish</option>
-						<option value="Dutch">Dutch</option>
-						<option value="Finnish">Finnish</option>
-						<option value="French">French</option>
-						<option value="Greek">Greek</option>
-						<option value="German">German</option>
-						<option value="Hungarian">Hungarian</option>
-						<option value="Italian">Italian</option>
-						<option value="Japanese">Japanese</option>
-						<option value="Koreana">Korean</option>
-						<option value="Norwegian">Norwegian</option>
-						<option value="Polish">Polish</option>
-						<option value="Portuguese">Portuguese</option>
-						<option value="Russian">Russian</option>
-						<option value="Romanian">Romanian</option>
-						<option value="Schinese">Simplified Chinese</option>
-						<option value="Spanish">Spanish</option>
-						<option value="Swedish">Swedish</option>
-						<option value="Tchinese">Traditional Chinese</option>
-						<option value="Thai">Thai</option>
-						<option value="Turkish">Turkish</option>
-						<option value="Ukrainian">Ukrainian</option>
+						<option value="Bulgarian">български</option>
+						<option value="Czech">čeština</option>
+						<option value="Danish">Dansk</option>
+						<option value="Dutch">Nederlands</option>
+						<option value="Finnish">Suomi</option>
+						<option value="French">Français</option>
+						<option value="Greek">Ελληνικά</option>
+						<option value="German">Deutsch</option>
+						<option value="Hungarian">Magyar</option>
+						<option value="Italian">Italiano</option>
+						<option value="Japanese">日本語</option>
+						<option value="Koreana">한국어</option>
+						<option value="Norwegian">Norsk</option>
+						<option value="Polish">Polski</option>
+						<option value="Portuguese">Português</option>
+						<option value="Brazilian">Português-Brasil</option>
+						<option value="Russian">Русский</option>
+						<option value="Romanian">Română</option>
+						<option value="Schinese">简体中文</option>
+						<option value="Spanish">Español</option>
+						<option value="Swedish">Svenska</option>
+						<option value="Tchinese">繁體中文</option>
+						<option value="Thai">ไทย</option>
+						<option value="Turkish">Türkçe</option>
+						<option value="Ukrainian">Українська</option>
 					</select>
 				</li>
 				<li class="header" id="homepage_text">Homepage</li>
 				<li><label for="homepage_default_tab" id="homepage_default_tab_text">Default homepage tab:</label>
 					<select id="homepage_tab_selection">
 						<option value="remember">Remember Previous</option>
-						<option value="tab_1_content">New Releases</option>
-						<option value="tab_2_content">Top Sellers</option>
-						<option value="tab_3_content">Coming Soon</option>
-						<option value="tab_discounts_content">Specials</option>
+						<option value="tab_newreleases_content_trigger">Popular New Releases</option>
+						<option value="es_allreleases">All New Releases</option>
+						<option value="tab_topsellers_content_trigger">Top Sellers</option>
+						<option value="tab_upcoming_content_trigger">Upcoming</option>
+						<option value="tab_specials_content_trigger">Specials</option>
 						<option value="es_popular">Popular</option>
 					</select>
 				</li>
-				<li class="header" id="library_text">Library (BETA)</li>
-				<li><input type="checkbox" id="showlibrarymenu"><label for="showlibrarymenu" id="store_show_library_text">Show Library button in header</label></li>
-				<li><input type="checkbox" id="showlibraryf2p"><label for="showlibraryf2p" id="store_show_library_f2p_text">Show played free to play games and demos in library</label></li>
-				<li class="header" id="options_header_text">Header</li>
-				<li><input type="checkbox" id="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text">Hide "Install Steam" button</label></li>
-				<li><input type="checkbox" id="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu">Hide "About" link</label></li>
-				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
 				<li class="header" id="store_general">General</li>
+				<li><input type="checkbox" id="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name">Replace account name with community name</label></li>
 				<li><input type="checkbox" id="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text">Show warning if browsing in non-account region</label></li>
 				<li><input type="checkbox" id="send_age_info"><label for="send_age_info" id="send_age_info_text">Automatically send age verification when requested</label></li>
-				<li><input type="checkbox" id="showspeechsearch"><label for="showspeechsearch" id="showspeechsearch_text">Add speech input to search boxes</label></li>
 				<li><input type="checkbox" id="html5video"><label for="html5video" id="html5video_text">Show videos using HTML5 instead of Flash</label></li>
 				<li><input type="checkbox" id="contscroll"><label for="contscroll" id="contscroll_text">Enable continuous scrolling of search results</label></li>
 				<li><input type="checkbox" id="showdrm"><label for="showdrm" id="store_drm_text">Show 3rd party DRM warnings</label><a href="http://enhancedsteam.com/featuredetail.php?id=3" class="help"></a></li>
+				<li><input type="checkbox" id="showacrtag"><label for="showacrtag" id="store_acrtag_text">Show warnings on items where cross region trading is disabled</label></li>
 				<li><input type="checkbox" id="showmcus"><label for="showmcus" id="store_metacritic_text">Show Metacritic user scores</label><a href="http://enhancedsteam.com/featuredetail.php?id=10" class="help"></a></li>
 				<li><input type="checkbox" id="showhltb"><label for="showhltb" id="store_hltb_text">Show HowLongToBeat.com information</label></li>
 				<li><input type="checkbox" id="showsteamdb"><label for="showsteamdb" id="store_steamdb_text">Show SteamDB links</label></li>
 				<li><input type="checkbox" id="showastatslink"><label for="showastatslink" id="store_astatslink_text">Show AStats link on app pages</label></li>
 				<li><input type="checkbox" id="showpcgw"><label for="showpcgw" id="store_pcgw_text">Show PCGamingWiki links</label></li>
+				<li><input type="checkbox" id="showsteamcardexchange"><label for="showsteamcardexchange" id="store_steamcards_text">Show SteamCardExchange links on store pages</label></li>
 				<li><input type="checkbox" id="showwsgf"><label for="showwsgf" id="store_wsgf_text">Show WSGF (Widescreen) info</label><a href="http://enhancedsteam.com/featuredetail.php?id=15" class="help"></a></li>
 				<li><input type="checkbox" id="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text">Show SteamCharts.com info</label></li>
+				<li><input type="checkbox" id="show_steamspy_info"><label for="show_steamspy_info" id="store_steamspy_info_text">Show steamspy.com info</label></li>
 				<li><input type="checkbox" id="show_package_info"><label for="show_package_info" id="store_package_info_text">Show package info for all apps</label></li>
 				<li><input type="checkbox" id="show_sysreqcheck"><label for="show_sysreqcheck" id="show_sysreqcheck_text">Show button to check system requirements on app pages (Experimental!)</label></li>
 				<li><input type="checkbox" id="show_carousel_descriptions"><label for="show_carousel_descriptions" id="store_carousel_descriptions_text">Show app descriptions on storefront carousel</label><a href="http://enhancedsteam.com/featuredetail.php?id=26" class="help"></a></li>
 				<li><input type="checkbox" id="show_early_access"><label for="show_early_access" id="show_early_access_text">Show Early Access image banners</label>
+				<li><input type="checkbox" id="show_alternative_linux_icon"><label for="show_alternative_linux_icon" id="show_alternative_linux_icon_text">Show alternative Linux icon</label>
+				<li><input type="checkbox" id="show_itad_button"><label for="show_itad_button" id="show_itad_button_text">Show menu option to sync data to IsThereAnyDeal.com</label>
 				</ul>
 			</div>
 
@@ -237,7 +236,7 @@
 							<td><input type="checkbox" id="indiegalastore"><label for="indiegalastore">IndieGala Store</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="desura"><label for="desura">Desura</label></td>
+							<td><input type="checkbox" id="wingamestore"><label for="wingamestore">WinGameStore</label></td>
 							<td><input type="checkbox" id="gog"><label for="gog">GOG</label></td>
 							<td><input type="checkbox" id="humblestore"><label for="humblestore">Humble Store</label></td>
 						</tr>
@@ -247,7 +246,7 @@
 							<td><input type="checkbox" id="getgames"><label for="getgames">GetGames</label></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="gameolith"><label for="gameolith">Gameolith</label></td>
+							<td><input type="checkbox" id="newegg"><label for="newegg">Newegg</label></td>							
 							<td><input type="checkbox" id="adventureshop"><label for="adventureshop">Adventure Shop</label></td>
 							<td><input type="checkbox" id="nuuvem"><label for="nuuvem">Nuuvem</label></td>
 						</tr>
@@ -264,6 +263,54 @@
 						<tr>
 							<td><input type="checkbox" id="fireflower"><label for="fireflower">FireFlower</label></td>
 							<td><input type="checkbox" id="gametap"><label for="gametap">GamesTap</label></td>
+							<td><input type="checkbox" id="gameolith"><label for="gameolith">Gameolith</label></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="gamesrepublic"><label for="gamesrepublic">GamesRepublic</label></td>
+							<td><input type="checkbox" id="coinplay"><label for="coinplay">Coinplay.io</label></td>
+							<td><input type="checkbox" id="funstock"><label for="funstock">FunStock Digital</label></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="gamebillet"><label for="gamebillet">GameBillet</label></td>
+						</tr>
+						<tr>
+						<li id="view_price_li">
+						<label id="viewprice_text">View in</label>
+						<select id="override_price">
+							<option value="auto">Auto-detect</option>
+							<option value="USD">USD</option>
+							<option value="GBP">GBP</option>
+							<option value="EUR">EUR</option>
+							<option value="RUB">RUB</option>
+							<option value="BRL">BRL</option>
+							<option value="JPY">JPY</option>
+							<option value="NOK">NOK</option>
+							<option value="IDR">IDR</option>
+							<option value="MYR">MYR</option>
+							<option value="PHP">PHP</option>
+							<option value="SGD">SGD</option>
+							<option value="THB">THB</option>
+							<option value="VND">VND</option>
+							<option value="KRW">KRW</option>
+							<option value="TRY">TRY</option>
+							<option value="UAH">UAH</option>
+							<option value="MXN">MXN</option>
+							<option value="CAD">CAD</option>
+							<option value="AUD">AUD</option>
+							<option value="NZD">NZD</option>
+							<option value="INR">INR</option>
+							<option value="HKD">HKD</option>
+							<option value="TWD">TWD</option>
+							<option value="CNY">CNY</option>
+							<option value="SAR">SAR</option>
+							<option value="ZAR">ZAR</option>
+							<option value="AED">AED</option>
+							<option value="CHF">CHF</option>
+							<option value="CLP">CLP</option>
+							<option value="PEN">PEN</option>
+							<option value="COP">COP</option>
+						</select>
+						</li>
 						</tr>
 					</table>
 					<li class="header" id="store_regionalprice_header">Regional Price Comparison</li>
@@ -277,89 +324,45 @@
 					</li>
 					<li id="regional_price_hideworld"><input type="checkbox" id="regional_hideworld"><label for="regional_hideworld" id="regional_hideworld_text">Hide globe indicator</label></li>			
 					<div id='region_selects'>
-						<li>
-							<span class="es_flag" id="es_flag_1"></span><select id="regional_country_1" class="regional_country"></select>
-						</li>	
-						<li>
-							<span class="es_flag" id="es_flag_2"></span><select id="regional_country_2" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_3"></span><select id="regional_country_3" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_4"></span><select id="regional_country_4" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_5"></span><select id="regional_country_5" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_6"></span><select id="regional_country_6" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_7"></span><select id="regional_country_7" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_8"></span><select id="regional_country_8" class="regional_country"></select>
-						</li>
-						<li>
-							<span class="es_flag" id="es_flag_9"></span><select id="regional_country_9" class="regional_country"></select>
-						</li>
-						<div style='margin-top: 15px; margin-left: 32px;'><button id="reset_countries" class="btn">Default</button></div>
+						<div style='margin-top: 15px; margin-left: 32px;'><button id="add_another_region" class="btn">Add</button><button id="reset_countries" class="btn">Default</button></div>
 					</div>
 				</ul>
 			</div>
 
 			<div id="maincontent_community" class="content" style="display: none">
 				<ul>
-					<li class="header" id="community_general">General</li>
-					<li>
-						<input type="checkbox" id="showtotal"><label for="showtotal" id="total_spent_text">Show total spent on account page</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=6" class="help"></a>
-					</li>
+					<li class="header" id="community_market">Market</li>
 					<li>
 						<input type="checkbox" id="showmarkettotal"><label for="showmarkettotal" id="market_total_text">Show transaction summary on Market</label>
 						<a href="http://enhancedsteam.com/featuredetail.php?id=16" class="help"></a>
 					</li>
 					<li>
+						<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on Market homepage by default</label>
+					</li>
+					<li class="header" id="community_inventory">Inventory</li>					
+					<li>
+						<input type="checkbox" id="quickinv"><label for="quickinv" id="quickinv_text">Show Quick Sale buttons on Steam Community items in inventory</label><a id="show_quickinv_diff">(Customize)</a>
+					</li>
+					<li id="quickinv_opt">
+						<label for="quickinv_diff" id="quickinv_diff_text">Quick Sale modifier:</label><input type="text" id="quickinv_diff" class="textbox"><button id="quickinv_default" class="btn">Default</button>
+					</li>
+					<li>
+						<input type="checkbox" id="show1clickgoo"><label for="show1clickgoo" id="show1clickgoo_text">Show "1-Click turn into Gems..." button on applicable inventory items</label>
+					</li>
+					<li>
 						<input type="checkbox" id="showinvnav"><label for="showinvnav" id="inventory_nav_text">Show advanced navigation on inventory page</label>
+					</li>
+					<li class="header" id="community_profile">Profile</li>
+					<li>
+						<input type="checkbox" id="showsteamrepapi"><label for="showsteamrepapi" id="steamrep_api_text">Show SteamRep status on profile pages</label>						
 					</li>
 					<li>
 						<input type="checkbox" id="showesbg"><label for="showesbg" id="es_background_text">Set custom background on "Edit Profile" screen</label>
 						<a href="http://enhancedsteam.com/featuredetail.php?id=17" class="help"></a>
 					</li>
 					<li>
-						<input type="checkbox" id="showallachievements"><label for="showallachievements" id="allachievements_text">Show achievement stats on "All Games" page</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=18" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text">Replace Steam Greenlight banner</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=14" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text">Hide all active listings on Market homepage by default</label>
-					</li>
-					<li>
-						<input type="checkbox" id="hidespamcomments"><label for="hidespamcomments" id="hidespamcomments_text">Hide spam comments from Workshop &amp; profiles</label><a id="show_spamcommentregex">(Customize)</a>
-					</li>
-					<li id="spamcommentregex_list">
-						<label for="spamcommentregex" id="spamcommentregex_text">Regular Expression string:</label><input type="text" id="spamcommentregex" class="textbox"><button id="spamcommentregex_default" class="btn">Default</button>
-					</li>
-					<li>
-						<input type="checkbox" id="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text">Show SteamCardExchange links on badges</label>
-						<a href="http://enhancedsteam.com/featuredetail.php?id=19" class="help"></a>
-					</li>
-					<li>
-						<input type="checkbox" id="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text">Show "Add to Wishlist" button on community app hubs</label>
-					</li>
-					<li>
 						<input type="checkbox" id="profile_permalink"><label for="profile_permalink" id="profile_permalink_text">Show permalink on profiles</label>
 					</li>
-				<!-- commenting out for future development
-				<li>
-						<input type="checkbox" id="profile_api_info"><label for="profile_api_info" id="profile_api_info_text">Show user API link on profiles</label>
-						<p id="api_key_block"><span id="api_key_text">API Key</span>: <input type="text" class="textbox" size="38" maxlength="32" id="api_key"><a href="http://steamcommunity.com/dev/apikey" target="_blank" class="help"></a></p>
-					</li>
-				-->
 				<div id="profile_link_text">Show profile links to:</div><a href="http://enhancedsteam.com/featuredetail.php?id=21" class="help"></a>
 				<ul id="profile_links">
 					<li>
@@ -371,10 +374,6 @@
 					<li>
 						<input type="checkbox" id="profile_steamgifts"><label for="profile_steamgifts"><img src="img/ico/steamgifts.png" class="site_icon site_icon_gray" /><img src="img/ico/steamgifts_col.png" class="site_icon site_icon_col" />SteamGifts</label>
 					</li>
-					<li>
-						<input type="checkbox" id="profile_steamtrades"><label for="profile_steamtrades"><img src="img/ico/steamtrades.png" class="site_icon site_icon_gray" /><img src="img/ico/steamtrades_col.png" class="site_icon site_icon_col" />SteamTrades</label>
-					</li>
-
 					<li>
 						<input type="checkbox" id="profile_astats"><label for="profile_astats"><img src="img/ico/achievementstats.png" class="site_icon site_icon_gray" /><img src="img/ico/achievementstats_col.png" class="site_icon site_icon_col" />Achievement Stats</label>
 					</li>
@@ -393,6 +392,46 @@
 						<option value=false id="profile_link_images_none">None</option>
 					</select>
 				</li>
+					<li class="header" id="community_greenlight">Greenlight</li>
+					<li>
+						<input type="checkbox" id="showgreenlightbanner"><label for="showgreenlightbanner" id="greenlight_banner_text">Replace Steam Greenlight banner</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=14" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="dynamicgreenlight"><label for="dynamicgreenlight" id="dynamicgreenlight_text">Use dynamic data while browsing Greenlight</label>
+					</li>
+					<li>
+						<input type="checkbox" id="remembergreenlightfilter"><label for="remembergreenlightfilter" id="remembergreenlightfilter_text">Remember Greenlight filter options</label>
+					</li>
+					<li>
+						<input type="checkbox" id="endlessscrollinggreenlight"><label for="endlessscrollinggreenlight" id="endlessscrollinggreenlight_text">Enable continuous scrolling of Greenlight search results</label>
+					</li>
+					<li class="header" id="community_general">General</li>
+					<li>
+						<input type="checkbox" id="showtotal"><label for="showtotal" id="total_spent_text">Show total spent on account page</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=6" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="showallachievements"><label for="showallachievements" id="allachievements_text">Show achievement stats on "All Games" page</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=18" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="showcomparelinks"><label for="showcomparelinks" id="showcomparelinks_text">Show "Compare" links for achievements on friend activity feed</label>
+					</li>
+					<li>
+						<input type="checkbox" id="hidespamcomments"><label for="hidespamcomments" id="hidespamcomments_text">Hide spam comments from Workshop &amp; profiles</label><a id="show_spamcommentregex">(Customize)</a>
+					</li>
+					<li id="spamcommentregex_list">
+						<label for="spamcommentregex" id="spamcommentregex_text">Regular Expression string:</label><input type="text" id="spamcommentregex" class="textbox"><button id="spamcommentregex_default" class="btn">Default</button>
+					</li>
+					<li>
+						<input type="checkbox" id="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text">Show SteamCardExchange links on badges</label>
+						<a href="http://enhancedsteam.com/featuredetail.php?id=19" class="help"></a>
+					</li>
+					<li>
+						<input type="checkbox" id="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text">Show "Add to Wishlist" button on community app hubs</label>
+					</li>
+									
 			</ul>
 
 		</div>
@@ -409,115 +448,111 @@
 			<ul class="credits">
 				<li class="header" id="programming_text">Programming</li>
 				<li>Jason '<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>' Shackles</li>
-				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">Smashman</a>' Williams</li>
-				<li>Rob '<a href="http://steamcommunity.com/profiles/76561197989222171" id="rjackson_steam">rjacksonm1</a>' Jackson</li>
-				<li>Tomáš '<a href="http://steamcommunity.com/profiles/76561198020275445" id="tomas_steam">Timmy</a>' Duda</li>				
-			</ul>
-			<ul class="credits">
-				<li class="header" id="graphics_text">Graphics</li>
-				<li>SolventSnake</li>
+				<li>Ben '<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">smash.mn</a>' Williams</li>
+				<li></li>
+				<li><div id="view_all"><a href='https://github.com/jshackles/Enhanced_Steam/graphs/contributors'>VIEW ALL</a></div></li>
 			</ul>
 			<div class="header" id="translation_text">Translation</div>
 			<table class="translation">
 				<tr>
-					<td class="language">Portuguese-Brazil:</td>
-					<td>Berna, Mougevit, Ricci, Rubens Vinícius, Scopel, Titoncio, Yachagon, xAranda (NO AUDIO)</td>
+					<td class="language brazilian">Portuguese-Brazil:</td>
+					<td>Berna, Mougevit, Ricci, Rubens Vinícius, Scopel, Titoncio, Yachagon, xAranda (NO AUDIO), 級 Happy</td>
 				</tr>
 				<tr>
-					<td class="language">Bulgarian:</td>
+					<td class="language bulgarian">Bulgarian:</td>
 					<td>Castro Wilde, The Nominomicon, XepouH</td>
 				</tr>
 				<tr>
-					<td class="language">Czech:</td>
-					<td>Arcane, Martin005[CZ], dapil</td>
+					<td class="language czech">Czech:</td>
+					<td>Arcane, Bezdak, Martin005[CZ], benetti32|cz, chriss01cz, dapil, xXx_Pá$0v€cXVI_xXx</td>
 				</tr>
 				<tr>
-					<td class="language">Danish:</td>
-					<td>Cake!, Redzdaz, Saturate, SnoX, UltraSun, XDRosenheim, antim</td>
+					<td class="language danish">Danish:</td>
+					<td>Cake!, Chreddy, Mig_Mikkel [⇄], Redzdaz, Saturate, SnoX, UltraSun, XDRosenheim, antim</td>
 				</tr>
 				<tr>
-					<td class="language">Dutch:</td>
-					<td>Craven, Epicon, FooBar, Justin, Nujj</td>
+					<td class="language dutch">Dutch:</td>
+					<td>AreUTalking2Meh, Bennievv, Boelens, Craven, Epicon, FooBar, HumanaSays, Justin, Nujj, Yeuxkes</td>
 				</tr>
 				<tr>
-					<td class="language">Finnish:</td>
-					<td>3ventic, Mairo vain..., Major Parsnip, Master Indigo, Nightmare_182, Tumpo, frozen.aerocrane, mkfin</td>
+					<td class="language finnish">Finnish:</td>
+					<td>3ventic, Elekton, Hilloh, Lumppari, Mairo vain..., Major Parsnip, Master Indigo, Nightmare_182, NikoDaGreat, Tumpo, frozen.aerocrane, mkfin</td>
 				</tr>
 				<tr>
-					<td class="language">French:</td>
-					<td>Clockmaker, Nuator, Yanuut</td>
+					<td class="language french">French:</td>
+					<td>Clockmaker, Nuator, Quaelor, Stumpokapow, Vardex, Yanuut, eucalyptux</td>
 				</tr>
 				<tr>
-					<td class="language">German:</td>
-					<td>FuriousFry, Incredipede, MAGIC, Phenom, Schnitzelfee, Son of Thor, addicT*, dochris.2, |«ScReaM»|</td>
+					<td class="language german">German:</td>
+					<td>Darkbird |, Edward Cullen, FuriousFry, Gatse, Incredipede, Invisi, MAGIC, Phenom, Pilzsuppe, Schnitzelfee, Son of Thor, addicT*, chrisli, dochris.2, larry_ @ DUAS NIMMA HALTEN, red, |«ScReaM»|, À Cookie Jar</td>
 				</tr>
 				<tr>
-					<td class="language">Greek:</td>
-					<td>Pandorian, SeCTeen, Sub-Zero</td>
+					<td class="language greek">Greek:</td>
+					<td>Coccinella, Pandorian, SeCTeen, Sub-Zero</td>
 				</tr>
 				<tr>
-					<td class="language">Hungarian:</td>
-					<td>DonRoland, Mohariczozo_HUN, Noarpe, [T-A!] Underyx x 6, atomcsikk, nArrow, ๖VaHooK</td>
+					<td class="language hungarian">Hungarian:</td>
+					<td>DonRoland, Mohariczozo_HUN, Noarpe, Sirpi, [T-A!] Underyx x 6, atomcsikk, french_salad, nArrow, ๖VaHooK</td>
 				</tr>
 				<tr>
-					<td class="language">Italian:</td>
-					<td>Copons, Drake Fazuku, Star1s3, Øktøber</td>
+					<td class="language italian">Italian:</td>
+					<td>Copons, Drake Fazuku, Rasin, Star1s3, Øktøber</td>
 				</tr>
 				<tr>
-					<td class="language">Japanese:</td>
-					<td>sumannnala</td>
+					<td class="language japanese">Japanese:</td>
+					<td>aoisensi, k725, sumannnala</td>
 				</tr>
 				<tr>
-					<td class="language">Korean:</td>
-					<td>A Sky Yddet with PK Love!, CanNaJun, Daum, Hirano, LJreal, RaWouk, Rasin, fivestar, meyoung, sunk, 하얀군주</td>
+					<td class="language koreana">Korean:</td>
+					<td>CanNaJun, Daum, Hirano, LJreal, RaWouk, Rasin, [GF]meyoung, fivestar, sunk, À Cookie Jar, 하얀군주</td>
 				</tr>
 				<tr>
-					<td class="language">Norwegian:</td>
-					<td>Lazberg, Stian, Thomas Bin Morris</td>
+					<td class="language norwegian">Norwegian:</td>
+					<td>KappaHD, Lazberg, Morten242, Stian, ⑨ ChocolateShuvuu</td>
 				</tr>
 				<tr>
-					<td class="language">Polish:</td>
-					<td>AciD, Laserman//^^, Parseus, Yobilat, Yocki, devLewy, mahon, skubi07</td>
+					<td class="language polish">Polish:</td>
+					<td>AciD, Bednar, Laserman//^^, Lordomus, Parseus, Xylo, Yobilat, Yocki, devLewy, mahon, skubi07</td>
 				</tr>
 				<tr>
-					<td class="language">Portuguese:</td>
-					<td>Dr. Costa, Matias G. H., MrAltamente, Reckoner, TheScientist, The_Monk, TilenoL</td>
+					<td class="language portuguese">Portuguese:</td>
+					<td>Dr. Costa, Ex0tic, Matias G. H., MrAltamente, Reckoner, Sim, SupSuper, TheScientist, The_Monk, TilenoL</td>
 				</tr>
 				<tr>
-					<td class="language">Romanian:</td>
+					<td class="language romanian">Romanian:</td>
 					<td>Stormania</td>
 				</tr>
 				<tr>
-					<td class="language">Russian:</td>
-					<td>MrFreemanBBQ, Engkariensis, M@gi$te® Y0d@, Mechanic, Robin, ShawNexT</td>
+					<td class="language russian">Russian:</td>
+					<td>Engkariensis, Kosheyaka, M@gi$te® Y0d@, Mechanic, Memfys, MrFreemanBBQ, Robin, Sh1fter, ShawNexT, The Freak, TheMrKochan, delfin_00, dragonsigh</td>
 				</tr>
 				<tr>
-					<td class="language">Simplified Chinese:</td>
-					<td>Iuy, Mr. Error, MyLittleWarhammer, Rabbitism Bomb, Rasin, i7killpii, yuccatoo</td>
+					<td class="language schinese">Simplified Chinese:</td>
+					<td>Aslike2, Deparsoul, FelinaeEbony, Gold, Iuy, M@nkey, Mr. Error, MyLittleWarhammer, Rabbitism Bomb, Rasin, [CN]Johnson, i7killpii, mjy, ssenkrad, yuccatoo</td>
 				</tr>
 				<tr>
-					<td class="language">Spanish:</td>
-					<td>00HiZaM, Alien8, Digmin3, Mr.Avocado, Robotnick, kalprestito, kulapik, wasakakero, xGreg</td>
+					<td class="language spanish">Spanish:</td>
+					<td>#SG# Sharkiller, 00HiZaM, Alien8, Digmin3, ItsMarukka, Kharn Nete, MλXX [PA-D], Profesor Pistacho, Robotnick, Silence, \\Vince, giraam, kalprestito, kulapik, p0tat0, wasakakero, xGreg</td>
 				</tr>
 				<tr>
-					<td class="language">Swedish:</td>
-					<td>Chainsawkitten, Deques, [MG] Rubiin, 전주 0x3 제</td>
+					<td class="language swedish">Swedish:</td>
+					<td>Chainsawkitten, Death King, Deques, Lumppari, [MG] Rubiin, 전주 0x3 제</td>
 				</tr>
 				<tr>
-					<td class="language">Traditional Chinese:</td>
-					<td>Atraveller, Lex Song, Mr. Error, NOKIA SE, Rasin, omylist</td>
+					<td class="language tchinese">Traditional Chinese:</td>
+					<td>Atraveller, JD OwO, Lex Song, MoDMeR, Mr. Error, NOKIA SE, Rasin, omylist, tonyli1357, 破曉之殤丶Revelation</td>
 				</tr>
 				<tr>
-					<td class="language">Thai:</td>
-					<td>Likecyber [FARMING CARDS], Magnative, Radius, [LPG] 7-elephant</td>
+					<td class="language thai">Thai:</td>
+					<td>Epicenter, Likecyber, Magnative, Radius, Rasin, [LPG] 7-elephant</td>
 				</tr>
 				<tr>
-					<td class="language">Turkish:</td>
-					<td>Beedle, Eray, Gevanni, Moscheetos, Neadiatre[Trade] #SOMA, Sound of Night, tyyaman</td>
+					<td class="language turkish">Turkish:</td>
+					<td>Beedle, Dijkstra[TR], Eray, Gevanni, Grievous, Neadiatre[Trade] #SOMA, Sound of Night, Su1ciDe, eayurdaer, tyyaman, veteran, ÖŞEK YALANCI</td>
 				</tr>
 				<tr>
-					<td class="language">Ukranian:</td>
-					<td>Anakin Skywalker, BlackSwan, Dorimi, GreK™, Peacefool Peopel, Smith M.D., Stakan, [BA]zekainhuman</td>
+					<td class="language ukrainian">Ukranian:</td>
+					<td>Anakin Skywalker, BlackSwan, Dorimi, Gentleneer, GreK™, MoDMeR, NutsUA, Peacefool Peopel, Smith M.D., Stakan, [BA]zekainhuman</td>
 				</tr>
 			</table>
 		</div>

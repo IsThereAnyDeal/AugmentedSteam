@@ -20,296 +20,24 @@ span.platform_img {
 
 span.platform_img.steamplay {
 	width: 72px;
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_steamplay_only.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_steamplay.png' );
 }
 
 span.platform_img.win {
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_win.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_win.png' );
 }
 
 span.platform_img.mac {
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_mac.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_mac.png' );
 }
 
 span.platform_img.linux {
-	background-image: url( 'http://cdn3.store.steampowered.com/public/images/v5/platforms/platform_linux.png' );
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_linux.png' );
 }
 
 img.platform_small, .platform_img {
 	vertical-align: middle;
 	margin-right: 1px;
-}
-
-#es_library_list, #es_library_search, #es_library_categories,#es_library_genres {
-	padding-left: 10px;
-	overflow: scroll;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	position: absolute;
-	top: 105px;
-	bottom: 0px;
-	z-index: 4;
-	text-align: left;
-}
-
-#es_library_search {
-	top: 110px;
-	background: url('http://cdn3.store.steampowered.com/public/images/v5/store_header_search.png?v=2') no-repeat;
-	color: #a6a5a2;
-	width: 253px;
-    height: 35px;
-	margin-left: 20px;
-	overflow: hidden;
-}
-
-#es_library_search_input {
-	width: 100%;
-	border: none;
-	background-color: #82807c;
-	color: #cdcac1;
-	margin-top: 5px;
-	outline: none;
-	width: 206px;
-}
-
-#es_library_categories {
-	top: 145px;
-	color: #a6a5a2;
-	width: 253px;
-    height: 35px;
-	margin-left: 10px;
-	overflow: hidden;
-}
-
-#es_library_category_select {
-	width: 250px;
-	border: none;
-	background-color: #82807c;
-	color: #cdcac1;
-	margin-top: 5px;
-	outline: none;
-	width: 206px;
-}
-#es_library_genres {
-	top: 180px;
-	color: #a6a5a2;
-	width: 253px;
-    height: 35px;
-	margin-left: 10px;
-	overflow: hidden;
-}
-
-#es_library_genre_select {
-	width: 250px;
-	border: none;
-	background-color: #82807c;
-	color: #cdcac1;
-	margin-top: 5px;
-	outline: none;
-	width: 206px;
-}
-
-
-#es_library_list {
-	top: 215px;
-	width: 280px;
-}
-
-#es_library_background {
-	margin-left: 150px;
-	position: absolute;
-	top: 105px;
-	bottom: 0px;
-	width: 70%;
-	z-index:1;	
-	opacity:.70;
-}
-
-#es_library_background_filter {
-	margin-left: 150px;
-	position: absolute;
-	top: 105px;
-	bottom: 0px;
-	width: 70%;
-	z-index:2;
-	background: -webkit-radial-gradient(center center, circle, rgba(52, 52, 52, 0) 0%, rgba(0, 0, 0, 1) 80%);
-}
-
-#es_library_right {
-	margin-left: 280px;
-	position: absolute;
-	width: 80%;
-	top: 105px;
-	bottom: 0px;
-}
-
-#es_library_title {
-	display: inline-block;
-	margin-left: 40px;
-	position: relative;
-	top: 40px;
-	padding: 8px 10px;
-	z-index: 3;
-	font-family: Tahoma, Geneva, sans-serif;
-	background-color: rgba(0,0,0,0.6);
-}
-
-#es_library_app_playnow {
-	display: inline-block;
-	margin-left: 40px;
-	position: relative;
-	top: 55px;
-	padding: 8px 10px;
-	z-index: 3;
-	font-family: Tahoma, Geneva, sans-serif;
-	background-color: rgba(0,0,0,0.4);
-}
-
-#es_library_app_playnow a:hover {
-	cursor:default;
-}
-
-#es_library_app_playnow #play_button {
-	vertical-align: middle;
-}
-
-#es_library_hub_link {
-	display: inline-block;
-	position: relative;
-	top: 55px;
-	left: 422px;
-	z-index: 3;
-	padding: 4px;
-}
-
-#es_library_hub_link a {
-	text-decoration: none;
-}
-
-.es_library_app {
-	display: block;
-	width: 275px;
-	height: 18px;
-	padding: 2px 0;
-}
-
-.es_library_selected {
-	background-color: rgba(49,65,89,1);
-}
-
-#es_library_list_loading {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-	z-index: 99;
-	font-size: 20px;
-}
-
-#es_library_list_loading img {
-	margin-right: 10px;
-	vertical-align: middle;
-}
-
-#es_library_list_loading span {
-	vertical-align: top;
-	line-height: 32px;
-}
-
-#es_library_list::-webkit-scrollbar {
-	width: 12px;
-}
-
-#es_library_list::-webkit-scrollbar-track {
-	background: none;
-}
-
-#es_library_list::-webkit-scrollbar-thumb {
-	background: -webkit-linear-gradient(left, #547c90, #002640);
-	border: 1px solid #333333;
-	box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.4);
-}
-
-#es_library_list a:hover {
-	color: white;
-	text-decoration: none;
-	cursor:default;
-}
-
-#es_library_list a {
-	color: #d1cfcd;
-	text-decoration: none;
-}
-
-#es_library_private_profile {
-	font-size: 20px;
-	margin-left: 50px;
-	margin-top: 50px;
-}
-
-#es_library_private_profile a {
-	color: #b8b6b4;
-	text-decoration: none;
-}
-
-#es_library_app_left {
-	display: inline-block;
-	width: 740px;
-	position: relative;
-	left: 40px;
-	top: 80px;
-	z-index: 3;
-}
-
-#es_library_app_right {
-	display: inline-block;
-	width: 250px;
-	position: relative;
-	left: 40px;
-	top: 80px;
-	z-index: 3;
-	vertical-align: top;
-}
-
-.es_library_app_container {
-	position: relative;
-	margin-bottom: 10px;
-	background-color: rgba(0,0,0,0.6);
-	padding: 20px 20px;
-	opacity: 0.7;
-}
-
-#es_library_app_left .es_library_app_container {
-	width: 700px;
-}
-
-#es_library_app_right .es_library_app_container {
-	width: 200px;
-	margin-left: 10px;
-}
-
-.es_library_app_container h2 {
-	color: #5986B3;
-	text-transform: uppercase;
-	font-size: 16px;
-	padding-bottom: 5px;
-}
-
-#es_library_app_news h3 a {
-	font-size: 14px;
-	font-weight: bold;
-	color: #ffffff;
-}
-
-#es_library_app_news .es_library_app_news_post {
-	margin-bottom: 10px;
-}
-
-#es_library_app_links ul {
-	list-style-type: none;
-}
-
-#es_library_app_links li {
-	padding: 2px 0;
 }
 
 .es_badges { 
@@ -348,6 +76,10 @@ img.platform_small, .platform_img {
 
 .blotter_single_item_detail .blotter_control_container, .blotter_single_item_detail .hr {
 	display: block !important;
+}
+
+#chart-heading {
+	background-color: rgba(0,0,0,0);
 }
 
 #chart-heading img {
@@ -408,6 +140,9 @@ img.platform_small, .platform_img {
 	padding:0 5px;
 	font-size:12px;
 }
+.wishlistRowItem {
+	overflow: initial !important;
+}
 #es_permalink_text {
 	color: #EBEBEB;
 	height:29px;
@@ -436,7 +171,7 @@ img.platform_small, .platform_img {
 	display: none;
 	z-index:999;	
 	position:absolute;
-	background: linear-gradient(to bottom, #33425A 5%,#282F3D 95%);
+	background: linear-gradient(to bottom, #33425A 5%,#282F3D 100%);
 	padding: 7px 8px;
 	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
 	border:1px solid black;
@@ -498,11 +233,10 @@ img.platform_small, .platform_img {
 .es_each {
 	color: #626366;
 	font-size: 11px;
-	float:right;
 	margin-top:-2px;
 }
 .es_each_price {
-	color: #B0AEAC;
+	color: rgb(137, 138, 140);
 	font-size: 13px;
 }
 .es_each_box {
@@ -518,11 +252,12 @@ img.platform_small, .platform_img {
 
 .es_btn_systemreqs {
 	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .es_overlay {
 	position: absolute;
-	z-index: 0;
+	z-index: 4;
 }
 .es_card_search {
 	padding:0px 2px;
@@ -576,12 +311,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 #es_dlc_option_button {
 	float: right;
-	font-weight: bold;
-	color: #ffffff;
+	text-decoration: none;
 }
 
 #es_dlc_option_button:hover {
-	text-decoration: underline;
 	cursor: pointer;
 }
 
@@ -621,14 +354,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_lowest_price {
 	padding: 5px 0 5px 46px;
 	height: auto !important;
-	border: 1px solid #4d4b49;
 	border-bottom: 0;
 	background-image: none;
 	padding-left: 46px;
 	position: relative;
 	font-size: 12px;
 	color: #626366;
-	background-color: #1d252e;
+	background-color: rgba( 0, 0, 0, 0.2 );
 }
 
 .es_lowest_price a {
@@ -686,6 +418,30 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor: pointer;
 }
 
+#friends_sort_options {
+	text-align: right;
+	margin-bottom: 12px;
+	margin-right: 52px;
+	font-size: 14px;
+	color: #939393;
+}
+
+.manage_friends_header #friends_sort_options {
+	float: right;
+	margin-bottom: 0;
+	margin-right: 35px;
+}
+
+#friends_sort_options span {
+	margin-left: 8px;
+	color: #B0AEAC;
+}
+
+.es_friends_sort_link {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .browse_tag_game_cap img {
 	margin-left: 8px;
 }
@@ -703,7 +459,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_cards_worth {
-	float: right;
+	float: none;
 	width: 280px;
 	text-align: center;
 	margin-right: 38px;
@@ -712,6 +468,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_popup .hr{
 	margin-top:2px;
 	margin-bottom:2px;
+}
+#es_popular {
+	margin-left: 3px;
+}
+#es_allreleases {
+	margin-left: 3px;
+}
+.summersale_page_body #tab_allreleases_content .tab_item_overlay img, .summersale_page_body #tab_popular_content .tab_item_overlay img {
+	position: absolute;
 }
 .dailydeal .timer {
 	background:#222;
@@ -728,7 +493,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_active_total {
 	float: right;
 	text-align: center;
-	padding-top: 6px;
+	padding-top: 4px;
+	font-size: 12px;
 }
 .birthday {
 	 position: absolute;
@@ -743,18 +509,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 32px;
 	margin-left: 5px;
 }
-#game_background {
-	height: 700px !important;
-	background-size: 100%;
-	display: none;
-}
-#es_background_gradient {
-	height: 700px;
-	position: absolute;
-	width: 100%;
-	background: -webkit-linear-gradient(rgba(255,255,255,0),rgba(255,255,255,0),rgba(0,0,0,1));
-	z-index: 999;
-}
 .es_market_summary_item {
 	float: right;
 	line-height: inherit !important;
@@ -765,7 +519,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_drm_warning {
 	display: table; 
 	width: 100%; 
-	padding: 0px !important;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	min-height: 38px;
 }
 .es_drm_warning span {
 	display: table-cell; 
@@ -854,3 +610,314 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_bad_comment_num {
 	cursor: pointer;
 }
+.es_wishlist_note {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 455px;
+	height: 13px;
+	font-style: italic;
+	margin-top: -3px;
+}
+.es_game_purchase_action_bg {
+	height: 34px;	
+	background-color: #3c3d3e;
+	padding: 3px 3px 3px 0px;
+	border-radius: 3px;
+}
+.es_game_purchase_action .es_game_purchase_price, 
+.es_game_purchase_action .es_game_purchase_discount,
+.es_game_purchase_action .es_game_purchase_action_bg {
+	float: left;
+	margin-left: 3px;
+}
+.es_game_purchase_action .es_game_purchase_price {
+	background-color: #000000;
+	font-size: 13px;
+	padding-top: 8px;
+	padding-left: 12px;
+	padding-right: 12px;
+	height: 26px;
+}
+.es_game_purchase_discount {
+	height: 34px;
+}
+.es_game_purchase_discount .es_discount_pct {
+	position: absolute;
+	left: 0px;
+	width: 69px;
+	height: 34px;
+	line-height: 34px;
+	font-size: 25px;
+	text-align: center;
+}
+.es_game_purchase_discount .es_discount_original_price {
+	position: absolute;
+	left: 76px;
+	top: 2px;
+	font-size: 11px;
+}
+.es_game_purchase_discount .es_discount_final_price {
+	padding-left: 76px;
+	padding-top: 13px;
+	padding-right: 6px;
+	font-size: 14px;
+}
+.es_price, .es_match_price {
+	font-family:tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	font-size: 11px;
+	color: #b0aeac;
+}
+.es_discount_block {
+	position: relative;
+	background-color: #000000;
+}
+.es_discount_pct {
+	background-color: #4c6b22;
+	color: #ffffff;
+}
+.es_discount_original_price {
+	font-family:tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	color: #626366;
+	text-decoration: line-through;
+}
+.es_discount_final_price {
+	font-family:tahoma, helvetica, arial, trebuchet ms, sans-serif;
+	color: #d6d7d8;
+}
+.game_area_rewards_section {
+	margin-top: 30px;
+	margin-bottom: 36px;
+}
+.reward-detail-item {
+	position: relative;
+	height: 64px;
+	display: block;
+	margin-bottom: 30px;
+	color: rgb(66, 66, 66);
+	background: -moz-linear-gradient(-60deg, rgba(97,100,101,0.3) 0%, rgba(226,244,255,0.3) 100%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(97, 100, 101, 0.3)), color-stop(100%,rgba(226, 244, 255, 0.3)));
+	background: -webkit-linear-gradient(-60deg, rgba(97, 100, 101, 0.3) 0%,rgba(226, 244, 255, 0.3) 100%);
+	background: -o-linear-gradient(-60deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+	background: -ms-linear-gradient(-60deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+	background: linear-gradient(135deg, rgba(97, 100, 101, 0.3) 0%,rgba(226, 244, 255, 0.3) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4d616465', endColorstr='#4de2f4ff',GradientType=1 );
+}
+.reward-detail-item.completed {
+	opacity: 0.40;
+}
+.reward-detail-item > .reward-img {
+	position: relative;
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+	overflow: hidden;
+	float: left;
+	margin-right: 10px;
+}
+
+.reward-detail-item > .reward-img > img {
+	position: absolute;
+	height: 64px;
+	width: 64px;
+	-webkit-transition-property: opacity;
+	-moz-transition-property: opacity;
+	-o-transition-property: opacity;
+	transition-property: opacity;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	transition-duration: .4s;
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	-o-transition-timing-function: ease-out;
+	transition-timing-function: ease-out;
+}
+
+.reward-detail-item > .left-side {
+	display: inline-block;
+	position: relative;
+	width: calc(100% - 74px);
+}
+.reward-detail-item > .left-side > .title {
+	display: block;
+	color: rgb(255, 255, 255);
+	font-size: 1.5em;
+	margin-top: 7px;
+}
+.reward-detail-item > .left-side > .text {
+	display: block;
+	color: #8f98a0;
+	font-size: 12px;
+}
+.reward-detail-item > .left-side > .validity {
+	display: block;
+	color: rgb(176, 174, 172);
+	font-size: 0.8em;
+	position: absolute;
+	top: 3px;
+	right: 3px;
+}
+.reward-detail-item .game_purchase_action {
+	position: absolute;
+	right: 16px;
+	bottom: -17px;
+}
+.reward-detail-item .price {
+	color: rgb(137, 138, 140);
+}
+.btn_es_decline {
+	float: right;
+	margin-top: -8px;
+	line-height: 30px;
+	padding-left: 32px !important;
+	background-repeat: no-repeat !important;
+	background-position: 6px 3px !important;
+	margin-left: 4px;
+}
+.market_listing_es_lowest {
+	font-size:85.7%;
+	line-height: 1.25em;
+}
+.spy_details {
+	color: #8f98a0;
+	line-height: 20px;
+}
+
+.spy_details b {
+	color: #61686d;
+	font-weight: normal;
+}
+
+.gh_fade div:not(.gh_indicators) {
+	opacity: 0.2;
+}
+.gh_vote_up:before, .gh_vote_down:before, .gh_vote_later:before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 5px;
+	background: rgba(0, 0, 0, 0.6);
+}
+.gh_indicators_right {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding-left: 5px;
+	background: rgba(0, 0, 0, 0.6);
+}
+.gh_fade:before, .gh_fade .gh_indicators_right {
+	background: none;
+}
+.gh_indicators_right div {
+	display: inline-block;
+	width: 17px;
+	height: 30px;
+	margin-right: 5px;
+	background-position: 0px -60px;
+}
+.gh_vote_up:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
+}
+.gh_vote_down:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
+}
+.gh_vote_later:before {
+	content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
+}
+.gh_favorited {
+	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_fav_tiled.png');
+}
+.gh_followed {
+	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
+}
+.performance-graph {
+    margin-top: -10px;
+    background: linear-gradient(135deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+    width: 98%;
+    border-radius: 6px;
+    border: 1px solid #524f4e;
+    overflow: hidden;
+}
+.performance-graph .row {
+    height: 18px;
+    overflow: hidden;
+}
+.performance-graph .row .nvidia {
+	background: #72b100;
+	color: black;
+}
+.performance-graph .row .amd {
+	 background: #8f0e10;
+}
+.performance-graph .row .intel {
+	 background: #0b5997;
+	 color: #fafaf2;
+}
+.performance-graph .row .other {
+	 background: black;
+}
+.performance-graph .left-bar {
+    height: 100%;
+    text-align: center;
+    float: left;
+    position:relative;
+}
+.performance-graph .right-bar {
+    background: rgba(0,0,0,0.0);
+    min-width:30px;
+    height: 100%;
+    text-align: left;
+    float: left;
+}
+.performance-graph .right-bar span {
+	padding-left: 5px;
+}
+.es_market_btn {
+	margin-bottom: 5px;
+}
+.es_market_btn span {
+	min-width: 120px;
+	text-align: center;
+}
+
+.search_suggest .match.focus {
+	background: #212d3d !important;
+}
+
+#es_sell #market_sell_buyercurrency_input:invalid {
+	border-color: #c00000;
+}
+#enhanced_pulldown {
+	display: inline-block;
+	margin: 1px;
+	padding-left: 4px;
+	line-height: 19px;
+}
+#enhanced_pulldown.focus {
+	margin: 0px;
+	border: 1px solid #82807C;
+	color: #ffffff;
+}
+
+.es_recentAchievements {
+	position: absolute;
+	right: 4px;
+	width: 205px;
+	font-size: 10px;
+	font-weight: normal;
+}
+.clientConnItemBlock ~ * .es_recentAchievements {
+	bottom: 0;
+}
+.es_recentAchievements .achieveBar {
+    background: #3a3a3a;
+    padding: 1px;
+    border: 1px solid #aeaeae;
+    width: 176.9px;
+}
+.es_recentAchievements .achieveBarProgress {
+    height: 8px;
+    background-color: #aeaeae;
+}
+
