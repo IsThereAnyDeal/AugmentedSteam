@@ -683,6 +683,7 @@ function load_translation() {
 			$("#store_metacritic_text").text(localized_strings.options.metacritic);
 			$("#store_hltb_text").text(localized_strings.options.hltb);
 			$("#store_pcgw_text").text(localized_strings.options.pcgw);
+			$("#store_client_text").text(localized_strings.options.showclient);
 			$("#store_steamcards_text").text(localized_strings.options.store_steamcards);
 			$("#store_steamdb_text").text(localized_strings.options.steamdb);
 			$("#store_astatslink_text").text(localized_strings.options.show_astatslink);

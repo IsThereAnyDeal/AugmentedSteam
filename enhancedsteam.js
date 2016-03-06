@@ -3573,7 +3573,7 @@ function add_steam_client_link(appid) {
 	storage.get(function(settings) {
 		if (settings.showclient === undefined) { settings.showclient = true; storage.set({'showclient': settings.showclient}); }
 		if (settings.showclient) {
-			$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium steam_client_btn" href="steam://store/' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(http://store.steampowered.com/favicon.ico)"></i>&nbsp;&nbsp; View in Steam Client</span></a>');
+			$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium steam_client_btn" href="steam://store/' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(http://store.steampowered.com/favicon.ico)"></i>&nbsp;&nbsp; ' + localized_strings.viewinclient + '</span></a>');
 		}
 	});
 }
