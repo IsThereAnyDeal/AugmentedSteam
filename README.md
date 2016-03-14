@@ -31,4 +31,4 @@ Please head over to http://translation.enhancedsteam.com to help out with transl
 License
 -------
 
-Enhanced Steam is Copyright 2012-2015 Jason Shackles.  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.  A copy of the GNU General Public License can be found at http://www.gnu.org/licenses/.
+Enhanced Steam is Copyright 2012-2016 Jason Shackles.  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.  A copy of the GNU General Public License can be found at http://www.gnu.org/licenses/.
