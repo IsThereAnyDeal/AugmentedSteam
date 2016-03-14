@@ -99,7 +99,10 @@ function save_options() {
 		$("#coinplay").prop('checked'),
 		$("#funstock").prop('checked'),
 		$("#wingamestore").prop('checked'),
-		$("#gamebillet").prop('checked')
+		$("#gamebillet").prop('checked'),
+		$("#silagames").prop('checked'),
+		$("#playfield").prop('checked'),
+		$("#imperialgames").prop('checked')
 	];
 	override_price = $("#override_price").val();
 	showregionalprice = $("#regional_price_on").val();
@@ -338,6 +341,9 @@ function toggle_stores() {
 			$("#funstock").prop('checked', settings.stores[29]);
 			$("#wingamestore").prop('checked', settings.stores[30]);
 			$("#gamebillet").prop('checked', settings.stores[31]);
+			$("#silagames").prop('checked', settings.stores[32]);
+			$("#playfield").prop('checked', settings.stores[33]);
+			$("#imperialgames").prop('checked', settings.stores[34]);
 		});
 		break;
 	}
@@ -396,7 +402,7 @@ function load_options() {
 		if (settings.showlowestprice_onwishlist === undefined) { settings.showlowestprice_onwishlist = true; storage.set({'showlowestprice_onwishlist': settings.showlowestprice_onwishlist}); }
 		if (settings.showlowestpricecoupon === undefined) { settings.showlowestpricecoupon = true; storage.set({'showlowestpricecoupon': settings.showlowestpricecoupon}); }
 		if (settings.showallstores === undefined) { settings.showallstores = true; storage.set({'showallstores': settings.showallstores}); }
-		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
+		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
 		if (settings.override_price === undefined) { settings.override_price = "auto"; storage.set({'override_price': settings.override_price}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
 		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; storage.set({'regional_countries': settings.regional_countries}); }

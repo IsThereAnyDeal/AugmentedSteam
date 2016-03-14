@@ -2,6 +2,7 @@
 -----
 + Added a toggle to the market page to hide the list of individual games
 + Added a button to store pages to open that link in the Steam client
++ Added pricing support for Sila Games, Playfield, and Imperial Games
 : Fixed the market page totals to work with listings placed on hold
 : Fixed a layout issue that caused header links not to show properly in the Steam header
 : Fixed a bug that caused regional price comparisons not to show if the first sub on the page is free
