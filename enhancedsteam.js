@@ -4272,7 +4272,7 @@ function inventory_market_helper(response) {
 			storage.get(function(settings) {
 				if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
 				if (settings.show1clickgoo) {
-					$("#es_quickgrind").remove();
+					$("#es_quickgrind").parent().remove();
 					var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
 					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
 					$("#es_quickgrind").on("click", function() {
@@ -4301,10 +4301,22 @@ function inventory_market_helper(response) {
 					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
 					$("#iteminfo" + item + "_item_market_actions").append("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $("#iteminfo" + item + "_item_market_actions .item_market_action_button_contents").text() + "</span></a>");
 					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
+					var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
+
+					// Workaround for preventing actions for the same item if clicked and active
+					$(".inventory_item_link_disabled").attr({class: "inventory_item_link"});
+					$(thisItem + " .inventory_item_link").attr({class: "inventory_item_link_disabled"});
+
+					// Make sure there are no active requests for this item
+					if ( $(thisItem).hasClass("es-loading") ) { return; }
+
+					$(thisItem).addClass("es-loading");
+
 					get_http(url, function(txt) {
 						var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
 						if (market_id) {
 							market_id = market_id[1];
+
 							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
 								var market = JSON.parse(market_txt);
 								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
@@ -4313,14 +4325,19 @@ function inventory_market_helper(response) {
 								price_high = parseFloat(price_high).toFixed(2);
 								price_low = parseFloat(price_low).toFixed(2);
 
+								$(thisItem).removeClass("es-loading");
+
+								// Workaround for showing multiple instances of "Quick Sell" and "Instant Sell" buttons
+								$("#iteminfo" + item).find('#es_quicksell0, #es_instantsell0, #es_quicksell1, #es_instantsell1, .es-btn-spacer').remove();
+
 								// Add Quick Sell button
 								if (price_high > price_low) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
 								// Add Instant Sell button
 								if (market.highest_buy_order) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
 								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
@@ -4337,7 +4354,7 @@ function inventory_market_helper(response) {
 											$.ajax({
 												url:"https://steamcommunity.com/market/sellitem/",
 												type: "POST",
-												data:{
+												data: {
 													"sessionid": sessionID,
 													"appid": global_id,
 													"contextid": contextID,
@@ -5421,7 +5438,7 @@ function show_regional_pricing() {
 
 function customize_app_page() {
 	// Add a "Customize" button
-	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn' style='visibility: visible;'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div>");
+	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div>");
 
 	storage.get(function(settings) {
 		if (settings.show_apppage_recommendedbycurators === undefined) { settings.show_apppage_recommendedbycurators = true; storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators}); }
@@ -6551,51 +6568,52 @@ function add_app_page_wishlist(appid) {
 function add_app_page_wishlist_changes(appid) {
 	if (is_signed_in) {
 		if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
-			$(".queue_actions_ctn").find("img[src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png']").parent().parent().wrap("<div id='add_to_wishlist_area' style='display: inline-block;'></div>");
-			$("#add_to_wishlist_area").find("a:first").removeAttr("href");
-			$("#add_to_wishlist_area").find("a:first").wrap("<div id='add_to_wishlist_area_success' class='queue_control_button'></div>");
-			
-			// Add wishlist areas
-			$("#add_to_wishlist_area").prepend("<div id='es_wishlist_area' style='display: none;' class='queue_control_button'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div><div id='add_to_wishlist_area_fail' style='display: none;'></div>");
-
-			$("#add_to_wishlist_area_success").hover(
-				function() {
-					$(this).find("img").attr("src", chrome.extension.getURL("img/remove.png"));
-				}, function() {
-					$(this).find("img").attr("src", "//store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png");
-				}
-			)
-
-			$("#add_to_wishlist_area_success").on("click", function() {
-				// get community session variable (this is different from the store session)
-				get_http("//steamcommunity.com/my/wishlist", function(txt) {
-					var session = txt.match(/sessionid" value="(.+)"/)[1];
-					var user = ($(".user_avatar").attr('href')).split("/");
-					user = user[user.length - 2];
-
-					$.ajax({
-						type:"POST",
-						url: "//steamcommunity.com/id/" + user + "/wishlist",
-						data:{
-							sessionid: session,
-							action: "remove",
-							appid: appid
-						},
-						success: function( msg ) {
-							setValue(appid + "wishlisted", false);
-							$("#add_to_wishlist_area_success").hide();
-							$("#es_wishlist_area").show();
-						}
-					});
-				});
-			});
-
-			$("#es_wishlist_area").on("click", function() {
-				$("#add_to_wishlist_area_success").show();
-				$("#es_wishlist_area").hide();
-				setTimeout(function() { $("#add_to_wishlist_area").show(); },1000);
-			});
+			$(".queue_actions_ctn").find("img[src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png']").parent().parent().wrap("<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+			$(".queue_actions_ctn").prepend("<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div>");
+			$(".queue_actions_ctn").prepend("<div id='add_to_wishlist_area_fail' style='display: none;'></div>");
 		}
+
+		$("#add_to_wishlist_area_success img:last-child").addClass("es-in-wl");
+
+		$(".es-in-wl").after("<img class='es-remove-wl' src='" + chrome.extension.getURL("img/remove.png") + "' style='display:none' />");
+		$(".es-in-wl").after("<img class='es-loading-wl' src='http://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />");
+
+		// Find the script tag that contains the session id and extract it
+		var session_txt = $('script:contains("g_sessionID")').text();
+		var sessionid = session_txt.match(/g_sessionID = "(.+)"/)[1];
+
+		$("#add_to_wishlist_area_success").on("click", function(e) {
+			e.preventDefault();
+
+			var el = $(this),
+				parent = $(this).parent();
+
+			if ( !$(parent).hasClass("loading") ) {
+				$(parent).addClass("loading");
+
+				$(el).find("img").hide();
+				$('.es-loading-wl').show();
+
+				$.ajax({
+					type: "POST",
+					url: "//store.steampowered.com/api/removefromwishlist",
+					data: {
+						sessionid: sessionid,
+						appid: appid
+					},
+					success: function( msg ) {
+						setValue(appid + "wishlisted", false);
+						$("#add_to_wishlist_area").show();
+						$("#add_to_wishlist_area_success").hide();
+					},
+					complete: function() {
+						$(parent).removeClass("loading");
+						$(el).find("img").hide();
+						$('.es-in-wl').show();
+					}
+				});
+			}
+		});
 	}
 }
 
@@ -7928,6 +7946,129 @@ function add_booster_prices() {
 	}");
 }
 
+function groups_leave_options() {
+	if (is_signed_in) {
+		var profileurl	= $('.user_avatar')[0].href || $('.user_avatar a')[0].href,
+			processURL	= profileurl + 'home_process',
+			sessionID	= $('#sessionID').val();
+
+		// Insert required data into the DOM
+		$('.sectionText').append(`<div class="es-leave-options">
+			<button class="es-group-leave-button es-leave-selected">` + localized_strings.leave_group_selected + `</button> 
+			<button class="es-group-leave-button es-leave-all">` + localized_strings.leave_group_all + `</button>
+			<input type="checkbox" class="es-check-all es-select-checkbox" />
+			</div>`);
+		$('.groupLeftBlock').append('<input type="checkbox" class="es-leave-group es-select-checkbox" />').wrapInner('<span class="es-links-wrap" />');
+
+		// Bind actions to "leave" buttons
+		$('.es-leave-selected').on('click', function(){ leave_group(); });
+		$('.es-leave-all').on('click', function(){
+			if (window.confirm( localized_strings.leave_group_all_confirm )) {
+				// Disable the button until action is complete
+				$('.es-leave-all').prop('disabled', true);
+				$('.es-select-checkbox:visible').prop('checked', true).trigger('change');
+				leave_group();
+			}
+		});
+
+		// (De)Select all groups checkbox
+		$('.es-check-all').on('click', function() {
+			$('.es-select-checkbox:visible').prop('checked', $(this).prop('checked')).trigger('change');
+		});
+
+		// Replace Steam's way of leaving groups
+		$('.groupLeftBlock .linkStandard:last-of-type').on('click', function(e) {
+			e.preventDefault();
+
+			leave_group($(this));
+		});
+
+		// Highlight group row when selected
+		$(document.body).on('change', '.es-select-checkbox', function(e){
+			$(this).closest('.groupBlock').toggleClass('es-row-selected', $(this).prop('checked'));
+		});
+
+		// Re-Join a group
+		$(document.body).on('click', '.es-rejoin-group', function(e) {
+			e.preventDefault();
+
+			var el	= $(this),
+				row	= $(el).closest('.groupBlock');
+
+			if (!$(row).hasClass('es-inaction')) {
+				$(row).addClass('es-inaction');
+				$.post($(el).attr('href'), { action: "join", sessionID: sessionID }, function() {
+					$(row).animate({opacity: '1'}, 500);
+					$(el).hide('fast', function(){
+						$(el).parent().find('.es-links-wrap').show('fast');
+						$(row).removeClass('es-inaction');
+					});
+				});
+			}
+		});
+
+		// Leave group(s)
+		function leave_group(elSelector) {
+			// Look for the first checkbox relative to the document...
+			var el = $('.es-leave-group.es-select-checkbox:visible:checked').first();
+			// ...unless an element was defined in which case look for a checkbox relative to it
+			if (elSelector !== undefined) {
+				el = $(elSelector).parent().find('.es-leave-group.es-select-checkbox:visible');
+			}
+
+			// Check if there is any group selected
+			if ($(el).length > 0 && !$(el).hasClass('es-group-skipped')) {
+				var row	= $(el).closest('.groupBlock');
+				// Make sure it wasn't acted upon already
+				if (!$(row).hasClass('es-inaction')) {
+					var idRegex		= /javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/,
+						links		= $(el).closest('.es-links-wrap').find('.linkStandard'),
+						leaveLink	= $(links).last().attr('href'),
+						groupData	= idRegex.exec(leaveLink);
+						joinGroupEl	= $(el).parent().parent().find('.es-rejoin-group');
+
+					var joinGroupEl = joinGroupEl.length ? joinGroupEl : $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
+
+					$(row).addClass('es-inaction');
+
+					// If the user is Admin in this group confirmation before leaving is needed
+					if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
+						$.ajax({method: 'POST',
+								url: processURL,
+								data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
+								beforeSend: function(){ $(row).addClass('es-progress'); },
+								cache: true
+						}).done(function() {
+							$(row).addClass('es-complete').animate({opacity: '.30'}, 500, function(){
+								$(row).removeClass('es-inaction es-progress es-complete');
+							});
+							$(el).parent().hide('fast', function(){
+								$(joinGroupEl).show('fast');
+								$(el).prop('checked', false).trigger('change');
+							});
+							// Wait some time between requests
+							setTimeout(function() {
+								leave_group(elSelector);
+							}, 500);
+						}).fail(function() {
+							$('.es-leave-all').prop('disabled', false);
+							$(row).removeClass('es-inaction es-progress es-complete');
+							alert( localized_strings.wrong_try_again );
+						});
+					} else {
+						$(el).addClass('es-group-skipped').prop('checked', false).trigger('change');
+						$(row).removeClass('es-inaction es-progress es-complete');
+						leave_group(elSelector);
+					}
+				}
+			} else {
+				$('.es-leave-all').prop('disabled', false);
+				$('.es-group-skipped.es-select-checkbox:visible').removeClass('es-group-skipped');
+			}
+		}
+	}
+}
+
 function launch_random_button() {
 	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
 
@@ -8218,6 +8359,10 @@ $(document).ready(function(){
 
 						case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(path):
 							add_decline_button();
+							break;
+
+						case /^\/(?:id|profiles)\/.+\/groups/.test(path):
+							groups_leave_options();
 							break;
 
 						case /^\/(?:id|profiles)\/.+/.test(path):

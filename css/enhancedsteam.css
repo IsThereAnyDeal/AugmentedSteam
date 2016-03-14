@@ -920,4 +920,85 @@ input[type=checkbox].es_dlc_selection:checked + label {
     height: 8px;
     background-color: #aeaeae;
 }
+#es_customize_btn {
+	visibility: visible;
+}
+.home_page_content #es_customize_btn {
+	margin: -24px 0 0 0;
+}
 
+/* Display emoticons button at all times on profile comments area */
+.commentthread_entry_submitlink {
+	display: block !important
+}
+
+/***************************************
+ * App page, wishlist buttons
+ **************************************/
+.es-loading-wl { 
+	-webkit-filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
+}
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl {
+	display: none !important;
+}
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-remove-wl {
+	display: inline !important;
+}
+
+/***************************************
+ * Groups page
+ **************************************/
+.es-group-leave-button {
+	background: linear-gradient(to bottom, #a4d007 5%, #536904 95%);
+	padding: 4px 8px;
+	border: none;
+	color: rgba(255, 255, 255, .8);
+	border-radius: 2px;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+.es-leave-all {
+	background: linear-gradient(to bottom, #D00707 5%, #690404 95%);
+}
+.es-leave-group {vertical-align: middle}
+.es-leave-options {
+	float: right;
+	margin: -5px 8px 0 0
+}
+.es-select-checkbox {
+	margin-left: 10px;
+}
+.es-row-selected {
+	background-color: #1A2533 !important;
+	box-shadow: inset 0 0 1px #506885;
+}
+.es-group-leave-button,
+.es-select-checkbox {
+	cursor: pointer;
+}
+.es-rejoin-group {
+	font-size: 12px;
+	display: none;
+}
+.groupBlock {position:relative}
+.groupBlock:after {
+	content: "";
+	display: block;
+	width: 0%;
+	height: 3px;
+	position: absolute;
+	bottom: 0;
+	opacity: 0;
+	background: linear-gradient(to right, #4B6C97 90%, #FFFFFF 100%);
+}
+.groupBlock.es-progress:after {
+	transition: width 2s cubic-bezier(0.20, 0, 0, 1), opacity 0s linear;
+	width: 99%;
+	opacity: 1;
+}
+.groupBlock.es-complete:after {
+	width: 100%;
+	transition: width .5s linear, opacity 1s linear;
+	opacity: 0;
+}
+.es-leave-options button:focus {outline: none}
+.es-leave-options button:disabled {opacity: .6}
