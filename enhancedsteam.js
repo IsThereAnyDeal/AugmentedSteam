@@ -3965,15 +3965,15 @@ function minimize_active_listings() {
 
 // Show the lowest market price for items you're selling
 function add_lowest_market_price() {
-	$("#tabContentsMyListings .market_listing_table_header span:first").css("width", "200px");
-	$("#tabContentsMyListings .market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><a class='es_market_lowest_button'>" + localized_strings.lowest + "</a></span>");
-	$("#tabContentsMyListings .my_listing_section:first .market_listing_row").each(function() {
+	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").css("width", "200px");
+	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><a class='es_market_lowest_button'>" + localized_strings.lowest + "</a></span>");
+	$("#es_selling, #es_listingsonhold").find(".market_listing_row").each(function() {
 		$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
 		$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 		$(this).find(".market_listing_edit_buttons.actual_content").appendTo($(this).find(".market_listing_edit_buttons:first")).css("width", "inherit");
 	});
 
-	function add_lowest_market_price_data(item_id) {
+	function add_lowest_market_price_data(section, item_id) {
 		var cc = "us";
 		var currency = currency_type_to_number(user_currency);
 
@@ -4015,7 +4015,7 @@ function add_lowest_market_price() {
 				});
 			}
 		} else {
-			$("#tabContentsMyListings .my_listing_section:first .market_listing_row").each(function() {
+			$("#" + section + " .market_listing_row").each(function() {
 				var node = $(this);
 				var link = node.find(".market_listing_item_name_link").attr("href");
 				if (link) {
@@ -4044,14 +4044,22 @@ function add_lowest_market_price() {
 		}
 	}
 
-	if ($("#tabContentsMyListings .my_listing_section:first .market_listing_row").length <= 11 ) {
-		add_lowest_market_price_data();
+	if ($("#es_listingsonhold .market_listing_row").length <= 11 ) {
+		add_lowest_market_price_data("es_listingsonhold");
 	} else {
-		$(".market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
+		$("#es_listingsonhold .market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
+		$("#es_listingsonhold_total .market_listing_es_lowest").html("&nbsp;");
+	}
+
+	if ($("#es_selling .market_listing_row").length <= 11 ) {
+		add_lowest_market_price_data("es_selling");
+	} else {
+		$("#es_selling .market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
 		$("#es_selling_total .market_listing_es_lowest").html("&nbsp;");
 	}
+
 	$(".es_market_lowest_button").click(function() {
-		add_lowest_market_price_data($(this).parent().parent().attr("id"));
+		add_lowest_market_price_data("ind", $(this).parent().parent().attr("id"));
 	});
 }
 
