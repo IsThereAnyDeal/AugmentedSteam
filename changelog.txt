@@ -4,6 +4,7 @@
 + Added a new feature that allows you to leave several groups at once without having to reload the page
 + Added a button to store pages to open that link in the Steam client
 + Added pricing support for Sila Games, Playfield, and Imperial Games
++ Added an option to disable automatically filtering guides by user language
 : Fixed the market page totals to work with listings placed on hold
 : Fixed a layout issue that caused header links not to show properly in the Steam header
 : Fixed a bug that caused regional price comparisons not to show if the first sub on the page is free

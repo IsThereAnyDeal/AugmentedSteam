@@ -7984,8 +7984,13 @@ function groups_leave_options() {
 		});
 
 		// Highlight group row when selected
-		$(document.body).on('change', '.es-select-checkbox', function(e){
+		$('.es-select-checkbox').change(function(e){
 			$(this).closest('.groupBlock').toggleClass('es-row-selected', $(this).prop('checked'));
+			if ($(".es-select-checkbox:checked").length > 0) {
+				$(".es-leave-selected").addClass("active");
+			} else {
+				$(".es-leave-selected").removeClass("active");
+			}
 		});
 
 		// Re-Join a group

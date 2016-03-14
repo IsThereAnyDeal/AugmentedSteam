@@ -924,7 +924,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	visibility: visible;
 }
 .home_page_content #es_customize_btn {
-	margin: -24px 0 0 0;
+	margin: -12px 0 0 0;
 }
 
 /***************************************
@@ -950,6 +950,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	color: rgba(255, 255, 255, .8);
 	border-radius: 2px;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+.es-leave-selected {	
+	opacity: 0.5;
+	cursor: default !important;
+}
+.es-leave-selected.active{
+	opacity: 1;
+	cursor: pointer !important;
 }
 .es-leave-all {
 	background: linear-gradient(to bottom, #D00707 5%, #690404 95%);
