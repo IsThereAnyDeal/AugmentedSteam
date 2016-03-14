@@ -36,6 +36,7 @@
   "lowest_price":"Tämänhetkinen Alin Hinta",
   "badge_progress":"Näytä merkkien edistyminen",
   "sales_total":"Myyntitulot yhteensä",
+  "hold_total":"Total on hold",
   "view_normal_badge":"Näytä tavallisen merkin edistyminen",
   "community_name_account_header":"Käyttäjän __username__ tili",
   "apppage_sections":"Valitse osastot jotka haluat nähdä tällä sivulla",
@@ -114,6 +115,7 @@
   "notinterested":"Esineet merkattu ei kiinnostaviksi",
   "news":"Uutiset",
   "check_system":"Tarkista järjestelmävaatimukset",
+  "viewinclient":"View in Steam Client",
   "custom_background":"Mukautettu taustakuva",
   "custom_style":"Mukautettu Teema",
   "custom_style_help":"Kaikki Enhanced Steam:in käyttäjät näkevät tämän teeman profiilissasi. Käyttäjät joilla ei ole Enhanced Steam:ia eivät näe täällä tehtyjä teeman muutoksia.",
@@ -313,6 +315,7 @@
     "saved_note":"Asetukset tallennettu",
     "regional_hideworld":"Piilota maapallo-kuvake",
     "show_astatslink":"Näytä AStats-linkki sovellussivuilla",
+    "showclient":"Show Steam Client links",
     "guest":"Tuotteet joihin sinulla on vierailulupa",
     "show_steamchart_info":"Näytä SteamCharts.com tilastot",
     "show_steamspy_info":"Näytä steamspy.com tiedot",
@@ -340,7 +343,6 @@
     "lowestprice_coupon":"Ota kupongit huomioon hintavertailussa",
     "greenlight_banner":"Korvaa Steam Greenlight juliste",
     "dynamicgreenlight":"Käytä dynaamista dataa selaillessa Greenlightiä",
-    "disablegreenlightautoplay":"Poista videoiden automaattinen toisto Greenlight-lisätietosivuilla päältä",
     "remembergreenlightfilter":"Muista Greenlight-filtterin vaihtoehdot",
     "endlessscrollinggreenlight":"Aseta Greenlight-sivujen hakutuloksien jatkuva alaspäin vieritys päälle",
     "general":"Yleiset asetukset",
@@ -446,8 +448,8 @@
     "certifications":"WSGF laajakuva sertifioinnit"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"Näytä valikkovaihtoehto tietojen synkronoimiseksi IsThereAnyDeal.com:iin",
+    "send_to_itad":"Lähetä omistamasi pelit IsThereAnyDeal:iin",
+    "sending":"Omistamiesi pelien ja pakettien lataus ja lähetys IsThereAnyDeal.com:iin"
   }
 }

@@ -36,6 +36,7 @@
   "lowest_price":"Nåværende laveste pris",
   "badge_progress":"Vis merkeframgang",
   "sales_total":"Salgtotal",
+  "hold_total":"Total on hold",
   "view_normal_badge":"Vis normal merkeframgang",
   "community_name_account_header":"__username__s konto",
   "apppage_sections":"Velg delene du ønsker å se på denne siden",
@@ -114,6 +115,7 @@
   "notinterested":"Gjenstander markert ikke interessert",
   "news":"Nyheter",
   "check_system":"Sjekk systemet ditt",
+  "viewinclient":"View in Steam Client",
   "custom_background":"Egendefinert bakgrunn",
   "custom_style":"Tilpasset tema",
   "custom_style_help":"Alle brukere av Enhanced Steam vil se dette temaet i profilen din. Ikke-Enhanced Steam-brukere vil ikke se noen temaendringer som blir gjort her.",
@@ -313,6 +315,7 @@
     "saved_note":"Innstillinger lagret",
     "regional_hideworld":"Skjul klodeindikator",
     "show_astatslink":"Vis AStats-lenke på programsider",
+    "showclient":"Show Steam Client links",
     "guest":"Gjenstander du har et gjestepass for",
     "show_steamchart_info":"Vis SteamCharts.com-informasjon",
     "show_steamspy_info":"Vis steamspy.com info",
@@ -340,7 +343,6 @@
     "lowestprice_coupon":"Inkluder kupongkoder i prissammenligning",
     "greenlight_banner":"Bytte Steam Greenlight-banner",
     "dynamicgreenlight":"Bruk dynamisk data imens du søker i Greenlight",
-    "disablegreenlightautoplay":"Deaktiver automatisk avspilling av videoer på Greenlight-informasjonssider",
     "remembergreenlightfilter":"Husk Greenlight-filtreringsalternativer",
     "endlessscrollinggreenlight":"Aktiver kontinuerlig rulling av Greenlight-søkeresultater",
     "general":"Generelt",
@@ -446,8 +448,8 @@
     "certifications":"WSGF widescreen-sertifiseringer"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"Vis meny for å synkroniserisere data til IsThereAnyDeal.com",
+    "send_to_itad":"Send eide spill til IsThereAnyDeal",
+    "sending":"Laster spill og pakker du eier og sender dem til IsThereAnyDeal.com"
   }
 }

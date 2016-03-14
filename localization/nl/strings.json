@@ -36,6 +36,7 @@
   "lowest_price":"Huidige Laagste Prijs",
   "badge_progress":"Bekijk Badge Progressie",
   "sales_total":"Verkoop totaal",
+  "hold_total":"Total on hold",
   "view_normal_badge":"Bekijk normale Badge progressie",
   "community_name_account_header":"__username__ de rekening",
   "apppage_sections":"Selecteer de secties die u wilt zien op deze pagina",
@@ -114,6 +115,7 @@
   "notinterested":"Voorwerpen gemarkeerd als niet interessant",
   "news":"Nieuws",
   "check_system":"Controleer Je Systeem",
+  "viewinclient":"View in Steam Client",
   "custom_background":"Custom Achtergrond",
   "custom_style":"Aangepast Thema",
   "custom_style_help":"Alle gebruikers van Enhanced Steam zullen dit thema zien op uw profiel. Niet-Enhanced Steam gebruikers zullen eventuele thema veranderingen hier niet zien.",
@@ -302,7 +304,7 @@
     "author_info":"door jshackles",
     "profile_link_images_gray":"Grijswaarden",
     "quickinv":"Geef Quick Sale knoppen op Steam Community items in je inventaris",
-    "quickinv_diff":"Quick Sale modifier:",
+    "quickinv_diff":"Snelle verkoop veranderaar:",
     "library_f2p":"Toon gespeelde gratis om te spelen spellen en demos in bibliotheek",
     "inventory_market_text":"Toon Market prijs in inventory pagina",
     "send_age_info":"Verstuur automatisch leeftijd verificatie wanneer gevraagd",
@@ -313,6 +315,7 @@
     "saved_note":"Opties bewaard",
     "regional_hideworld":"Verberg globale indicator",
     "show_astatslink":"Laat AStats link op app pagina's zien",
+    "showclient":"Show Steam Client links",
     "guest":"Items waar je een gast pas voor hebt ",
     "show_steamchart_info":"Laat SteamCharts.com info zien",
     "show_steamspy_info":"Toon steamspy.com info",
@@ -340,7 +343,6 @@
     "lowestprice_coupon":"Voeg kortingcodes toe bij prijs vergelijking",
     "greenlight_banner":"Vervang Steam Greenlight banner",
     "dynamicgreenlight":"Gebruik dynamische data bij het browsen van Greenlight",
-    "disablegreenlightautoplay":"Schakel automatisch afspelen van video's op Greenlight detailpaginas uit",
     "remembergreenlightfilter":"Herinner Greenlight filteropties",
     "endlessscrollinggreenlight":"Schakel continu scrollen van Greenlight zoek resulataten aan",
     "general":"Algemeen",
@@ -446,8 +448,8 @@
     "certifications":"WSGF breedbeeld certificeringen"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
-    "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+    "option":"Toon menu optie om informatie te synchroniseren met IsThereAnyDeal.com",
+    "send_to_itad":"Verstuur spellen in bezit naar IsThereAnyDeal",
+    "sending":"Spellen en pakketten die je in bezit hebt worden geladen en naar IsThereAnyDeal.com verstuurd"
   }
 }
