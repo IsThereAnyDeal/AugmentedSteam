@@ -1,6 +1,7 @@
 ﻿v8.3
 -----
 + Added a toggle to the market page to hide the list of individual games
++ Added a new feature that allows you to leave several groups at once without having to reload the page
 + Added a button to store pages to open that link in the Steam client
 + Added pricing support for Sila Games, Playfield, and Imperial Games
 : Fixed the market page totals to work with listings placed on hold

@@ -138,7 +138,7 @@ function setValue(key, value) {
 
 function getValue(key) {
 	var v = localStorage.getItem(key);
-	if (v === undefined) return v;
+	if (!v) return v;
 	return JSON.parse(v);
 }
 
