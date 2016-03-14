@@ -1,4 +1,8 @@
-﻿v8.3
+﻿v8.4
+-----
+
+
+v8.3
 -----
 + Added a toggle to the market page to hide the list of individual games
 + Added a new feature that allows you to leave several groups at once without having to reload the page
