@@ -2664,8 +2664,12 @@ function load_search_results () {
 		if ($(".LoadingWrapper").length === 0) {
 			$(".search_pagination:last").before('<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + localized_strings.loading + '</div></div>');
 		}	
+
+		if (search.substring(0,1) == "&") { search = "?" + search.substring(1, search.length); }
+		if (search.substring(0,1) != "?") { search = "?" + search; }
+
 		$.ajax({
-			url: 'store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es'
+			url: '//store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es'
 		}).success(function(txt) {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");

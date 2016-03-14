@@ -1,5 +1,6 @@
 ﻿v8.4
 -----
+: Fixed an issue where search results would be duplicated under certain circumstances
 
 
 v8.3
