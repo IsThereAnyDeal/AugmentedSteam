@@ -720,7 +720,7 @@ function load_translation() {
 			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
-			$("#viewprice_text").text(localized_strings.option.view_in);
+			$("#viewprice_text").text(localized_strings.options.view_in);
 			$("#store_regionalprice_header").text(localized_strings.options.regional_price);
 			$("#showregionalprice_text").text(localized_strings.options.regional_price_on);
 			$('select#regional_price_on option[value=always]').text(localized_strings.always);
