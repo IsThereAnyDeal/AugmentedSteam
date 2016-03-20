@@ -4994,7 +4994,7 @@ function add_astats_link(appid) {
 }
 
 function add_achievement_completion_bar(appid) {
-	$(".myactivity_block").find(".details_block").after("<link href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
+	$(".myactivity_block").find(".details_block:first").after("<link href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 	$("#es_ach_stats").load("//steamcommunity.com/my/stats/" + appid + "/ #topSummaryAchievements", function(response, status, xhr) {				
 		if (response.match(/achieveBarFull\.gif/)) {
 			var BarFull = $("#es_ach_stats").html().match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
@@ -6572,7 +6572,7 @@ function add_app_page_wishlist(appid) {
 function add_app_page_wishlist_changes(appid) {
 	if (is_signed_in) {
 		if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
-			$(".queue_actions_ctn").find("img[src='http://store.akamai.steamstatic.com/public/images/v6/ico/ico_selected.png']").parent().parent().wrap("<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+			$(".queue_actions_ctn").find("a.queue_btn_active:first").wrap("<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
 			$(".queue_actions_ctn").prepend("<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div>");
 			$(".queue_actions_ctn").prepend("<div id='add_to_wishlist_area_fail' style='display: none;'></div>");
 		}
