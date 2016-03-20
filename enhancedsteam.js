@@ -69,24 +69,25 @@ var currency_promise = (function() {
 			user_currency = settings.override_price;
 			deferred.resolve();
 		} else {
-			var currency_cache = $.parseJSON(localStorage.getItem("user_currency"));
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			if (currency_cache && currency_cache.updated >= expire_time) {
-				user_currency = currency_cache.currency_type;
-				deferred.resolve();
-			} else {
-				get_http("//store.steampowered.com/app/220", function(txt) {
-					var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
-					if (!currency) return;
-					user_currency = currency.currency_type;
-				}, "xhrFields: { withCredentials: true }").fail(function() {
-					user_currency = "USD";
-				}).done(function() {
-					localStorage.setItem("user_currency", JSON.stringify({currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}));
-				}).always(function() {
+			chrome.storage.local.get("user_currency", function(currency_cache) {
+				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+				if (currency_cache.user_currency && currency_cache.user_currency.updated >= expire_time) {
+					user_currency = currency_cache.user_currency.currency_type;
 					deferred.resolve();
-				});
-			}
+				} else {
+					get_http("//store.steampowered.com/app/220", function(txt) {
+						var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
+						if (!currency) return;
+						user_currency = currency.currency_type;
+					}, "xhrFields: { withCredentials: true }").fail(function() {
+						user_currency = "USD";
+					}).done(function() {
+						chrome.storage.local.set({user_currency: {currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}});
+					}).always(function() {
+						deferred.resolve();
+					});
+				}
+			});
 		}
 	});
 	return deferred.promise();
