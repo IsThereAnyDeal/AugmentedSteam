@@ -3888,7 +3888,7 @@ function add_active_total() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		
 		// Give proper IDs to each relevant DOM node
-		$("#my_market_listingsonhold_number").parents(".my_listing_section").attr("id", "es_listingsonhold");
+		$("#my_market_listingstoconfirm_number").parents(".my_listing_section").attr("id", "es_listingsonhold");
 		$("#my_market_selllistings_number").parents(".my_listing_section").attr("id", "es_selling");
 		$("#my_market_buylistings_number").parents(".my_listing_section").attr("id", "es_buying");
 
