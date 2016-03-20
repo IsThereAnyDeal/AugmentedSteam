@@ -71,19 +71,26 @@ var currency_promise = (function() {
 		} else {
 			chrome.storage.local.get("user_currency", function(currency_cache) {
 				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-				if (currency_cache.user_currency && currency_cache.user_currency.updated >= expire_time) {
+				if (currency_cache.user_currency && currency_cache.user_currency.currency_type && currency_cache.user_currency.updated >= expire_time) {
 					user_currency = currency_cache.user_currency.currency_type;
 					deferred.resolve();
 				} else {
-					get_http("//store.steampowered.com/app/220", function(txt) {
-						var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
-						if (!currency) return;
-						user_currency = currency.currency_type;
+					get_http("//store.steampowered.com/steamaccount/addfunds", function(txt) {
+						user_currency = $(txt).find("input[name=currency]").first().val();
 					}, "xhrFields: { withCredentials: true }").fail(function() {
-						user_currency = "USD";
+						get_http("//store.steampowered.com/app/220", function(txt) {
+							var currency = parse_currency($(txt).find(".price, .discount_final_price").text().trim());
+							if (!currency) return;
+							user_currency = currency.currency_type;
+						}, "xhrFields: { withCredentials: true }").fail(function() {
+							user_currency = "USD";
+						}).done(function() {
+							chrome.storage.local.set({user_currency: {currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}});
+						}).always(function() {
+							deferred.resolve();
+						});
 					}).done(function() {
 						chrome.storage.local.set({user_currency: {currency_type: user_currency, updated: parseInt(Date.now() / 1000, 10)}});
-					}).always(function() {
 						deferred.resolve();
 					});
 				}
@@ -1865,6 +1872,7 @@ function add_enhanced_steam_options() {
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings.clear_cache + "</a>");
 	$clear_cache_link.click(function(){
 		localStorage.clear();
+		chrome.storage.local.remove("user_currency");
 		location.reload();
 	});
 
