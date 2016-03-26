@@ -6573,8 +6573,8 @@ function add_app_page_wishlist_changes(appid) {
 	if (is_signed_in) {
 		if ($("#add_to_wishlist_area").length == 0 && $(".game_area_already_owned").length == 0) {
 			$(".queue_actions_ctn").find("a.queue_btn_active:first").wrap("<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
-			$(".queue_actions_ctn").prepend("<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div>");
-			$(".queue_actions_ctn").prepend("<div id='add_to_wishlist_area_fail' style='display: none;'></div>");
+			$("#add_to_wishlist_area_success").before("<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist( " + appid + ", \"add_to_wishlist_area\", \"add_to_wishlist_area_success\", \"add_to_wishlist_area_fail\", \"1_5_9__407\" );'><span>" + localized_strings.add_to_wishlist + "</span></a></div>");
+			$("#add_to_wishlist_area_success").before("<div id='add_to_wishlist_area_fail' style='display: none;'></div>");
 		}
 
 		$("#add_to_wishlist_area_success img:last-child").addClass("es-in-wl");
