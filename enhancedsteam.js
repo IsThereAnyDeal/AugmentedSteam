@@ -213,9 +213,15 @@ function formatCurrency(number, type) {
 	return formatted;
 }
 
+function get_currency_from_DOM() {
+	var currency_node = document.querySelector('meta[itemprop="priceCurrency"]');
+	if (currency_node && currency_node.hasAttribute("content")) return currency_node.getAttribute("content");
+	return null;
+}
+
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
-	var currency_type = currency_symbol_to_type(currency_symbol);
+	var currency_type = get_currency_from_DOM() || currency_symbol_to_type(currency_symbol);
 	if (user_currency && currency_format_info[user_currency].symbolFormat == currency_format_info[currency_type].symbolFormat) currency_type = user_currency;
 	var currency_number = currency_type_to_number(currency_type);
 	var info = currency_format_info[currency_type];
@@ -291,6 +297,7 @@ function currency_type_to_number (currency_type) {
 		"CAD": 20,
 		"AUD": 21,
 		"NZD": 22,
+		"CNY": 23,
 		"INR": 24,
 		"CLP": 25,
 		"PEN": 26,
