@@ -4182,7 +4182,7 @@ function inventory_market_prepare() {
 		var es_market_helper = document.createElement("script");
 		es_market_helper.type = "text/javascript";
 		es_market_helper.id = "es_market_helper";
-		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
+		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { if (!g_ActiveInventory.selectedItem.market_hash_name) {g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.market_name} window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
 		document.documentElement.appendChild(es_market_helper);
 
 		window.addEventListener("message", function(event) {
