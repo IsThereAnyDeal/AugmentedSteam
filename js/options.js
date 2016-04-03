@@ -627,9 +627,16 @@ function load_translation() {
 				case "ukrainian": l_code = "uk"; break;
 				default: l_code = "en"; break;
 			}
-			$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
-				localized_strings = data;
-				l_deferred.resolve();
+			$.getJSON(chrome.extension.getURL('/localization/en/strings.json'), function (data) {
+				if (l_code == "en") {
+					localized_strings = data;
+					l_deferred.resolve();
+				} else {
+					$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data_localized) {
+						localized_strings = $.extend(true, data, data_localized);
+						l_deferred.resolve();
+					});
+				}
 			});
 			return l_deferred.promise();
 		})();
@@ -720,7 +727,7 @@ function load_translation() {
 			
 			$("#lowestprice_stores_text").text(localized_strings.stores);
 			$("#lowestprice_stores_all_text").text(localized_strings.options.stores_all);
-			$("#viewprice_text").text(localized_strings.option.view_in);
+			$("#viewprice_text").text(localized_strings.options.view_in);
 			$("#store_regionalprice_header").text(localized_strings.options.regional_price);
 			$("#showregionalprice_text").text(localized_strings.options.regional_price_on);
 			$('select#regional_price_on option[value=always]').text(localized_strings.always);
