@@ -1,4 +1,8 @@
-﻿v8.4
+﻿v8.5
+-----
+
+
+v8.4
 -----
 + Added inventory market support for various games such as H1Z1 and Battleblock Theater
 + Added ability to determine difference between JPY and CNY currency codes
