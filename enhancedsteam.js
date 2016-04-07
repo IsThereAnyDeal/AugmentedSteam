@@ -3911,14 +3911,15 @@ function add_active_total() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		
 		// Give proper IDs to each relevant DOM node
-		$("#my_market_listingstoconfirm_number").parents(".my_listing_section").attr("id", "es_listingsonhold");
+		$("#my_market_listingsonhold_number").parents(".my_listing_section").attr("id", "es_listingsonhold");
+		$("#my_market_listingstoconfirm_number").parents(".my_listing_section").attr("id", "es_listingsawaiting");
 		$("#my_market_selllistings_number").parents(".my_listing_section").attr("id", "es_selling");
 		$("#my_market_buylistings_number").parents(".my_listing_section").attr("id", "es_buying");
 
 		// Listings on hold
 		var total = 0;
-		var total_after = 0;		
-		$("#es_listingsonhold .market_listing_row .market_listing_my_price").each(function() {
+		var total_after = 0;
+		$("#es_listingsonhold .market_listing_row").each(function() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
@@ -3934,6 +3935,27 @@ function add_active_total() {
 			$("#es_listingsonhold_total").find(".market_listing_item_name_block").empty();
 			$("#es_listingsonhold_total").find(".market_table_value").css("margin-top", "3px").css("margin-bottom", "3px");
 			$("#es_listingsonhold_total").find(".market_listing_price").html("<span style='color: white'>" + total + "</span><br><span style='color: #AFAFAF'>(" + total_after + ")</span></span></span><br><span class='market_listing_game_name'>" + localized_strings.hold_total + "</span>");
+		}
+
+		// Listings awaiting confirmation
+		var total = 0;
+		var total_after = 0;
+		$("#es_listingsawaiting .market_listing_row").each(function() {
+			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
+			total += Number(temp[0]);
+			total_after += Number(temp[1]);
+		});
+		
+		if (total != 0) {
+			total = formatCurrency(parseFloat(total));
+			total_after = formatCurrency(parseFloat(total_after));
+			$("#es_listingsawaiting .market_recent_listing_row:last").clone().appendTo($("#es_listingsawaiting .market_recent_listing_row:last").parent()).attr("id", "es_listingsawaiting_total");
+			$("#es_listingsawaiting_total").find("img").remove();
+			$("#es_listingsawaiting_total").find(".market_listing_edit_buttons").empty();
+			$("#es_listingsawaiting_total").find(".market_listing_listed_date").empty();
+			$("#es_listingsawaiting_total").find(".market_listing_item_name_block").empty();
+			$("#es_listingsawaiting_total").find(".market_table_value").css("margin-top", "3px").css("margin-bottom", "3px");
+			$("#es_listingsawaiting_total").find(".market_listing_price").html("<span style='color: white'>" + total + "</span><br><span style='color: #AFAFAF'>(" + total_after + ")</span></span></span><br><span class='market_listing_game_name'>" + localized_strings.hold_total + "</span>");
 		}
 
 		// Sell listings		
@@ -3959,8 +3981,8 @@ function add_active_total() {
 
 		// Buy orders
 		var total = 0;		
-		$("#es_buying .market_listing_row .market_listing_my_price:first").each(function() {
-			var qty = $(this).parent().find(".market_listing_my_price:last").text().trim();
+		$("#es_buying .market_listing_row").each(function() {
+			var qty = $(this).find(".market_listing_my_price:last").text().trim();
 			var price = parse_currency($(this).text().replace(/.+@/, "").trim());
 			total += Number(price.value) * Number(qty);
 		});
@@ -4205,7 +4227,7 @@ function inventory_market_prepare() {
 		var es_market_helper = document.createElement("script");
 		es_market_helper.type = "text/javascript";
 		es_market_helper.id = "es_market_helper";
-		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { if (!g_ActiveInventory.selectedItem.market_hash_name) {g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.market_name} window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
+		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { if (!g_ActiveInventory.selectedItem.market_hash_name) {g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.name} window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
 		document.documentElement.appendChild(es_market_helper);
 
 		window.addEventListener("message", function(event) {

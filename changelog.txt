@@ -1,6 +1,12 @@
 ﻿v8.4
 -----
-: Fixed an issue where search results would be duplicated under certain circumstances
++ Added inventory market support for various games such as H1Z1 and Battleblock Theater
++ Added ability to determine difference between JPY and CNY currency codes
+: Fixed an issue where search results would be duplicated or incorrect under certain circumstances
+: Fixed a bug where some market sections weren't being totaled correctly
+: Fixed a bug where "Open in Steam" would not work if Family settings were enabled
+: Fixed several bugs where user's country code wouldn't be properly detected
+: Fixed a bug where "Add to Wishlist" would sometimes not display properly when browsing discovery queue
 
 
 v8.3
