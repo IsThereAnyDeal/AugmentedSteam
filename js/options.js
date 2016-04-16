@@ -590,12 +590,13 @@ function load_options() {
 	});
 }
 
+var localized_strings = [];
+
 function load_translation() {
 	storage.get(function(settings) {		
 		// Load translation
 		if (settings.language === undefined) { settings.language = "english"; }
 
-		var localized_strings = [];
 		var localization_promise = (function () {
 			var l_deferred = new $.Deferred(),
 				l_code;
@@ -892,7 +893,7 @@ function steam_credits() {
 
 function clear_settings() {
 	storage.get(function(settings) {
-		var confirm_reset = confirm(localized_strings.options.clear)
+		var confirm_reset = confirm(localized_strings.options.clear);
 		if(confirm_reset){
 			storage.clear();
 			load_options();
