@@ -2463,14 +2463,14 @@ function drm_warnings(type) {
 			}
 
 			// Prevent false-positives
-			var appid = get_appid(window.location.host + path);
+			var appid = get_appid(window.location.host + window.location.pathname);
 			if (appid == 21690) { drm = false; } // Resident Evil 5, at Capcom's request
 
 			if (drm) {
 				if ($("#game_area_purchase").find(".game_area_description_bodylabel").length > 0) {
-					$("#game_area_purchase").find(".game_area_description_bodylabel").after('<div class="game_area_already_owned es_drm_warning" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );"><span>' + string_type + ' ' + drm_string + '</span></div>');
+					$("#game_area_purchase").find(".game_area_description_bodylabel").after('<div class="game_area_already_owned es_drm_warning"><span>' + string_type + ' ' + drm_string + '</span></div>');
 				} else {
-					$("#game_area_purchase").prepend('<div class="game_area_already_owned es_drm_warning" style="background-image: url( ' + chrome.extension.getURL("img/game_area_warning.png") + ' );"><span>' + string_type + ' ' + drm_string + '</span></div>');
+					$("#game_area_purchase").prepend('<div class="game_area_already_owned es_drm_warning"><span>' + string_type + ' ' + drm_string + '</span></div>');
 				}	
 			}	
 		}
