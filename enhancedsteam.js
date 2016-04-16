@@ -140,7 +140,7 @@ MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 // Run script in the context of the current tab
 function runInPageContext(fun){
-    var script  = document.createElement('script');
+	var script  = document.createElement('script');
 	script.textContent = '(' + fun + ')();';
 	document.documentElement.appendChild(script);
 	script.parentNode.removeChild(script);
@@ -435,7 +435,7 @@ function getStoreRegionCountryCode() {
 }
 
 function escapeHTML(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
+	return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
 }
 
 function getCookie(name) {
@@ -726,12 +726,12 @@ function highlight_notinterested(node) {
 }
 
 function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16)
+	} : null;
 }
 
 function highlight_node(node, color) {
@@ -1514,16 +1514,16 @@ function add_wishlist_pricehistory() {
 						var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
 						var currency_type = data[".meta"]["currency"];
 
-	        			// "Lowest Price"
+						// "Lowest Price"
 						if (data["price"]) {
-	                        if (data["price"]["drm"] == "steam") {
-	                        	activates = "(<b>" + localized_strings.activates + "</b>)";
-	                    		if (data["price"]["store"] == "Steam") {
-	                    			activates = "";
-	                    		}
-	                    	}
+							if (data["price"]["drm"] == "steam") {
+								activates = "(<b>" + localized_strings.activates + "</b>)";
+								if (data["price"]["store"] == "Steam") {
+									activates = "";
+								}
+							}
 
-	                    	if (settings.override_price != "auto") {
+							if (settings.override_price != "auto") {
 								currencyConversion.load().done(function() {
 									lowest = currencyConversion.convert(data["price"]["price"], data[".meta"]["currency"], settings.override_price);
 									currency_type = settings.override_price;
@@ -1532,13 +1532,13 @@ function add_wishlist_pricehistory() {
 								lowest = data["price"]["price"].toString();
 							}
 
-	                        line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
-	                    	if (settings.showlowestpricecoupon) {
-	                    		if (data["price"]["price_voucher"]) {
-	                    			line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
-	                    		}
-	                    	}
-	                    }
+							line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+							if (settings.showlowestpricecoupon) {
+								if (data["price"]["price_voucher"]) {
+									line1 = localized_strings.lowest_price + ': ' + localized_strings.lowest_price_format.replace("__price__", formatCurrency(lowest, currency_type)).replace("__store__", '<a href="' + escapeHTML(data["price"]["url"].toString()) + '" target="_blank">' + escapeHTML(data["price"]["store"].toString()) + '</a>') + ' ' + localized_strings.after_coupon + ' <b>' + escapeHTML(data["price"]["voucher"].toString()) + '</b> ' + activates + ' (<a href="' + escapeHTML(data["urls"]["info"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								}
+							}
+						}
 
 						// "Historical Low"
 						if (data["lowest"]) {
@@ -1550,9 +1550,9 @@ function add_wishlist_pricehistory() {
 							} else {
 								lowesth = data["lowest"]["price"].toString();
 							}
-	                        recorded = new Date(data["lowest"]["recorded"]*1000);
-	                        line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(lowesth, currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
-	                    }
+							recorded = new Date(data["lowest"]["recorded"]*1000);
+							line2 = localized_strings.historical_low + ': ' + localized_strings.historical_low_format.replace("__price__", formatCurrency(lowesth, currency_type)).replace("__store__", escapeHTML(data["lowest"]["store"].toString())).replace("__date__", recorded.toLocaleDateString()) + ' (<a href="' + escapeHTML(data["urls"]["history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+						}
 
 						// "Number of times this game has been in a bundle"
 						if (data["bundles"]["count"] > 0) {
@@ -1578,8 +1578,8 @@ function add_wishlist_pricehistory() {
 							$("#es_price_" + id).append(localized_strings.no_results_found);
 							return;
 						}
-	                }
-	        	});
+					}
+				});
 			}
 
 			var timeoutId;
@@ -4729,27 +4729,27 @@ function subscription_savings_check() {
 
 // Pull DLC gamedata from enhancedsteam.com
 function dlc_data_from_site(appid) {
-    if ($("div.game_area_dlc_bubble").length > 0) {
-        var appname = $(".apphub_AppName").html();
+	if ($("div.game_area_dlc_bubble").length > 0) {
+		var appname = $(".apphub_AppName").html();
 		appname = rewrite_string(appname, true);
 		get_http("//api.enhancedsteam.com/gamedata/?appid=" + appid + "&appname=" + appname, function (txt) {
-    		var data;
+			var data;
 			if (txt != "{\"dlc\":}}") {
 				data = JSON.parse(txt);
 			}
-            var html = "<div class='block'><div class='block_header'><h4>" + localized_strings.dlc_details + "</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'>";
+			var html = "<div class='block'><div class='block_header'><h4>" + localized_strings.dlc_details + "</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'>";
 
-            if (data) {
-                $.each(data["dlc"], function(index, value) {
-                    html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><a class='name' title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</a></div>";
-                });
+			if (data) {
+				.each(data["dlc"], function(index, value) {
+					html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><a class='name' title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</a></div>";
+				});
 			}
 
 			html += "</div><a class='linkbar' style='margin-top: 10px;' href=\"http://www.enhancedsteam.com/gamedata/dlc_category_suggest.php?appid=" + appid + "&appname=" + appname + "\" target='_blank'>" + localized_strings.dlc_suggest + "</a></div></div></div>";
 
 			$("#friend_block").before(html);
-    	});
-    }
+		});
+	}
 }
 
 function survey_data_from_site(appid) {
@@ -5929,7 +5929,7 @@ function customize_home_page() {
 				$("#es_specials_section").hide();
 			}
 		}
-    
+
 		// Under 10€
 		if ($("#es_under_ten_section").length > 0) {
 			text = $("#es_under_ten_section h2").text();
@@ -6608,8 +6608,8 @@ function add_app_page_wishlist(appid) {
 							setValue(appid + "wishlisted",true);
 						},
 						error: function(e){
-	        				console.log('Error: '+e);
-    					}
+							console.log('Error: '+e);
+						}
 					});
 				});
 			}
