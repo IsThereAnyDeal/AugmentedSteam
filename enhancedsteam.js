@@ -4740,7 +4740,7 @@ function dlc_data_from_site(appid) {
 			var html = "<div class='block'><div class='block_header'><h4>" + localized_strings.dlc_details + "</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'>";
 
 			if (data) {
-				.each(data["dlc"], function(index, value) {
+				$.each(data["dlc"], function(index, value) {
 					html += "<div class='game_area_details_specs'><div class='icon'><img src='http://www.enhancedsteam.com/gamedata/icons/" + escapeHTML(value['icon']) + "' align='top'></div><a class='name' title='" + escapeHTML(value['text']) + "'>" + escapeHTML(index) + "</a></div>";
 				});
 			}
