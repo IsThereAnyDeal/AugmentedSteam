@@ -1027,9 +1027,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Badges page
  * add_badge_view_options()
  **************************************/
- .es_binder_view .badges_sheet {
- 	overflow: hidden;
- }
+.es_binder_view .badges_sheet {
+	overflow: hidden;
+}
 .es_badge_progress_info,
 .es_binder_view .badge_progress_info,
 .es_binder_view .badge_cards,
