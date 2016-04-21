@@ -8000,7 +8000,7 @@ function add_booster_prices() {
 }
 
 function groups_leave_options() {
-	if (is_signed_in) {
+	if (is_signed_in && !$('.error_ctn').length) {
 		var profileurl	= $('.user_avatar')[0].href || $('.user_avatar a')[0].href,
 			processURL	= profileurl + 'home_process',
 			sessionID	= $('#sessionID').val();
