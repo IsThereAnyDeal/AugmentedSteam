@@ -7390,87 +7390,62 @@ function add_friends_sort() {
 }
 
 function add_badge_view_options() {
-	var html  = "<div style='text-align: right;'><span>" + localized_strings.view + ": </span>";
-		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_view_default'><input type='radio' name='es_badge_view' checked><span>" + localized_strings.theworddefault + "</span></label>";
-		html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_view_binder'><input type='radio' name='es_badge_view'><span>" + localized_strings.binder_view + "</span></label>";
-		html += "</div>";
+	$('.profile_badges_header').append(`<div style='text-align: right;'><span>` + localized_strings.view + `: </span>
+		<label class='badge_sort_option whiteLink es_badges es_badge_view_default'><input type='radio' value='defaultview' class='es_badge_view' name='es_badge_view' checked><span>` + localized_strings.theworddefault + `</span></label>
+		<label class='badge_sort_option whiteLink es_badges es_badge_view_binder'><input type='radio' value='binderview' class='es_badge_view' name='es_badge_view'><span>` + localized_strings.binder_view + `</span></label>
+		</div>`);
 
-	$('.profile_badges_header').append(html);
-
-	$("#es_badge_view_default").on('click', function() {
-		window.location.reload();
+	// Change hash when selecting view
+	$(".es_badge_view").change(function() {
+		window.location.hash = $(this).val();
 	});
 
-	$("#es_badge_view_binder").on('click', function() {
-		$('.is_link').each(function () {
-			var $this = $(this);
-			var stats = $this.find("span[class$='progress_info_bold']").html();
-
-			$this.find("div[class$='badge_cards']").remove();
-			$this.find("div[class$='badge_title_stats']").css("display", "none");
-			$this.find("div[class$='badge_description']").css("display", "none");
-			$this.find("span[class$='badge_view_details']").remove();
-			$this.find("div[class$='badge_info_unlocked']").remove();
-			$this.find("div[class$='badge_progress_tasks']").remove();
-			$this.find("div[class$='badge_progress_info']").css({
-				"padding": "0",
-				"float": "none",
-				"margin": "0",
-				"width": "auto"
-			});
-			$this.find("div[class$='badge_title']")
-				.css({
-					"font-size": "12px",
-					"line-height": "26px"
-				})
-				.html( $this.find("div[class$='badge_title']").html().slice(0,-9) );
-
-			$this.find("div[class$='badge_title_row']").css({
-				"padding-top": "0px",
-				"padding-right": "4px",
-				"padding-left": "4px",
-				"height": "24px"
-			});
-			$this.find("div[class$='badge_row_inner']").css("height", "195px");
-			$this.find("div[class$='badge_current']").css("width", "100%");
-			$this.find("div[class$='badge_empty_circle']").css({
-				"float": "center",
-				"margin-left": "45px"
-			});
-			$this.find("div[class$='badge_info_image']").css({
-				"float": "center",
-				"margin": "7px auto 0px auto",
-				"width": "100%"
-			});
-			$this.find("div[class$='badge_content']").css("padding-top", "0px");
-			$this.css({
-				"width": "160px",
-				"height": "195px",
-				"float": "left",
-				"margin-right": "15px",
-				"margin-bottom": "15px"
-			});
-
-			if (stats && stats.match(/\d+/)) {
-				if (!($this.find("span[class$='es_game_stats']").length > 0)) {
-					$this.find("div[class$='badge_content']").first().append("<span class='es_game_stats' style='color: #5491cf; font-size: 12px; white-space: nowrap;'>" + stats + "</span>");
-				}
-			}
-			if ($this.find("div[class$='badge_progress_info']").text()) {
-				var card = $this.find("div[class$='badge_progress_info']").text().trim().match(/(\d+)\D*(\d+)/),
-					text = (card) ? card[1] + " / " + card[2] : '';
-				$this.find("div[class$='badge_progress_info']").text(text);
-			}
-		});
-
-		$(".es_steamcardexchange_link").remove();
-		$(".badges_sheet").css({
-			"text-align": "center",
-			"margin-left": "32px"
-		});
-		$(".badge_empty").css("border", "none");
-		$("#footer_spacer").before('<div style="display: block; clear: both;"></div>');
+	// Monitor for hash changes
+	$(window).on("hashchange", function(){
+		toggleBinderView();
 	});
+
+	toggleBinderView();
+
+	function toggleBinderView(state) {
+		if (window.location.hash === "#binderview" || state === true) {
+			$("div.maincontent").addClass("es_binder_view");
+			
+			$(".es_badge_view_binder input").prop("checked", true);
+
+			// Don't attempt changes again if already loaded
+			if (!$("div.maincontent").hasClass("es_binder_loaded")) {
+				$("div.maincontent").addClass("es_binder_loaded");
+				$('div.badge_row.is_link').each(function () {
+					var $this = $(this);
+
+					var stats = $this.find("span.progress_info_bold").html();
+					if (stats && stats.match(/\d+/)) {
+						$this.find("div.badge_content").first().append("<span class='es_game_stats'>" + stats + "</span>");
+					}
+
+					if ($this.find("div.badge_progress_info").text()) {
+						var card = $this.find("div.badge_progress_info").text().trim().match(/(\d+)\D*(\d+)/),
+							text = (card) ? card[1] + " / " + card[2] : '';
+						$this.find(".badge_progress_info").before('<div class="es_badge_progress_info">' + text + '</div>');
+					}
+				});
+			}
+
+			// Add hash to pagination links
+			$("div.pageLinks").find("a.pagelink, a.pagebtn").attr("href", function(){
+				return $(this).attr("href") + "#binderview";
+			});
+			// Triggers the loading of out-of-view badge images
+			window.dispatchEvent(new Event("resize"));
+		} else {
+			$("div.maincontent").removeClass("es_binder_view");
+			// Remove hash from pagination links
+			$("div.pageLinks").find("a.pagelink, a.pagebtn").attr("href", function(){
+				return $(this).attr("href").replace("#binderview", "");
+			});
+		}
+	}
 }
 
 function add_gamecard_foil_link() {

@@ -1022,3 +1022,75 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es-leave-options button:focus {outline: none}
 .es-leave-options button:disabled {opacity: .6}
+
+/***************************************
+ * Badges page
+ * add_badge_view_options()
+ **************************************/
+ .es_binder_view .badges_sheet {
+ 	overflow: hidden;
+ }
+.es_badge_progress_info,
+.es_binder_view .badge_progress_info,
+.es_binder_view .badge_cards,
+.es_binder_view .badge_title_stats,
+.es_binder_view .badge_description,
+.es_binder_view .badge_view_details,
+.es_binder_view .badge_info_unlocked,
+.es_binder_view .badge_progress_tasks,
+.es_binder_view .es_steamcardexchange_link {
+	display: none !important;
+}
+.es_binder_view .badge_title {
+	font-size: 12px !important;
+	line-height: 26px !important;
+}
+.es_binder_view .badge_title_row {
+	padding-top: 0px !important;
+	padding-right: 4px !important;
+	padding-left: 4px !important;
+	height: 24px !important;
+}
+.es_binder_view .badge_row_inner {
+	height: 195px !important;
+}
+.es_binder_view .badge_current {
+	width: 100% !important;
+}
+.es_binder_view .badge_empty_circle {
+	float: none !important;
+	margin-left: 45px !important;
+}
+.es_binder_view .badge_info_image {
+	float: none !important;
+	margin: 7px auto 0px auto !important;
+	width: 100% !important;
+}
+.es_binder_view .badge_content {
+	padding-top: 0 !important;
+}
+.es_binder_view .is_link {
+	width: 160px !important;
+	height: 195px !important;
+	float: left;
+	margin-right: 15px !important;
+	margin-bottom: 15px !important;
+}
+.es_binder_view .badges_sheet {
+	text-align: center !important;
+	margin-left: 32px !important;
+}
+.es_binder_view .badge_empty {
+	border: none !important;
+}
+.es_binder_view .badge_empty_name {
+	clear: both;
+}
+.es_binder_view .es_badge_progress_info {
+	display: block !important;
+}
+.badge_content .es_game_stats {
+	color: #5491cf;
+	font-size: 12px;
+	white-space: nowrap;
+}
