@@ -684,31 +684,31 @@ function highlight_nondiscounts(node) {
 	});
 }
 
-function highlight_notinterested(node) {
-	var notinterested_promise = (function () {
-		var deferred = new $.Deferred();
-		if (is_signed_in && window.location.protocol != "https:") {
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			var last_updated = getValue("dynamiclist_time") || expire_time - 1;
+var notinterested_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in && window.location.protocol != "https:") {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue("dynamiclist_time") || expire_time - 1;
 
-			if (last_updated < expire_time) {
-				get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
-					var data = JSON.parse(txt);
-					if (data["rgIgnoredApps"]) {
-						setValue("ignored_apps", data["rgIgnoredApps"].toString());
-					}
-					setValue("dynamiclist_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve();
-				});
-			} else {
+		if (last_updated < expire_time) {
+			get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
+				var data = JSON.parse(txt);
+				if (data["rgIgnoredApps"]) {
+					setValue("ignored_apps", data["rgIgnoredApps"].toString());
+				}
+				setValue("dynamiclist_time", parseInt(Date.now() / 1000, 10));
 				deferred.resolve();
-			}
+			});
 		} else {
 			deferred.resolve();
 		}
-		return deferred.promise();
-	})();
+	} else {
+		deferred.resolve();
+	}
+	return deferred.promise();
+})();
 
+function highlight_notinterested(node) {
 	$.when.apply($, [notinterested_promise]).done(function() {
 		storage.get(function(settings) {
 			if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
