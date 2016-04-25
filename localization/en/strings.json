@@ -222,6 +222,10 @@
     "available": "Available",
     "set_as_background": "Set as Background",
     "preview_background": "Preview Background",
+    "details": "Details",
+    "expand_slider": "Expand slider",
+    "contract_slider": "Contract slider",
+    "early_access": "Early Access",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",

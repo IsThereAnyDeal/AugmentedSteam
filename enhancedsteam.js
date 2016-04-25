@@ -5299,61 +5299,63 @@ function add_achievement_completion_bar(appid) {
 var ea_promise, early_access;
 
 // Check for Early Access titles
-function check_early_access(node, image_left, selector_modifier, callback) {
+function check_early_access(node, selector_modifier, callback) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
-			if (!ea_promise) {
-				ea_promise = (function () {
-					var deferred = new $.Deferred();
-					if (window.location.protocol != "https:") {
-						// is the data cached?
-						var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-						var last_updated = getValue("ea_appids_time") || expire_time - 1;
-						if (last_updated < expire_time) {
-							// if no cache exists, pull the data from the website
-							get_http("//api.enhancedsteam.com/early_access/", function(txt) {
-								early_access = JSON.parse(txt);
-								setValue("ea_appids", txt);
-								setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
-								deferred.resolve();	
-							});
+			$(node).each(function(index, value) {
+				var node = $(this);
+
+				if (!ea_promise) {
+					ea_promise = (function () {
+						var deferred = new $.Deferred();
+						if (window.location.protocol != "https:") {
+							// is the data cached?
+							var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+							var last_updated = getValue("ea_appids_time") || expire_time - 1;
+							if (last_updated < expire_time) {
+								// if no cache exists, pull the data from the website
+								get_http("//api.enhancedsteam.com/early_access/", function(txt) {
+									early_access = JSON.parse(txt);
+									setValue("ea_appids", txt);
+									setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
+									deferred.resolve();	
+								});
+							} else {
+								early_access = JSON.parse(getValue("ea_appids"));
+								deferred.resolve();
+							}
 						} else {
-							early_access = JSON.parse(getValue("ea_appids"));
 							deferred.resolve();
 						}
-					} else {
-						deferred.resolve();
-					}
-					return deferred.promise();
-				})();
-			}
-			ea_promise.done(function(){
-				var href = ($(node).find("a").attr("href") || $(node).attr("href"));
-				var appid = get_appid(href);
-				if (appid === null) { 
-					if ($(node).find("img").length > 0) {
-						if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
-							appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+						return deferred.promise();
+					})();
+				}
+				ea_promise.done(function(){
+					var href = ($(node).find("a").attr("href") || $(node).attr("href"));
+					var appid = get_appid(href);
+					if (appid === null) { 
+						if ($(node).find("img").length > 0) {
+							if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
+								appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
+							}
 						}
 					}
-				}
-				if (early_access) {
-					if (early_access["ea"].indexOf(appid) >= 0) {
-						var selector = "img";
-						if (selector_modifier != undefined) selector += selector_modifier;
-						var image_name = "img/overlay/early_access_banner_english.png";
-						if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
-						overlay_img = $("<img class='es_overlay' src='" + chrome.extension.getURL(image_name) + "'>");
-						$(overlay_img).css({"left":image_left+"px"});
-						var height = $(node).height() / 1.6;
-						if (height > 120) height = 120;
-						$(overlay_img).css({"height":height+"px"});
-						$(overlay_img).css("width", "initial");
-						$(node).find(selector.trim()).before(overlay_img);
-						callback && callback();
+					if (early_access) {
+						if (early_access["ea"].indexOf(appid) >= 0) {
+							//console.info("Touched and in EA", node[0]);
+							var selector = "img";
+							if (selector_modifier != undefined) selector += selector_modifier;
+							var image_name = "img/overlay/early_access_banner_english.png";
+							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
+							
+							$(node).addClass("es_early_access").find(selector).wrap('<span class="es_overlay_container" />').filter(function(){ $(this).before("<span class='es_overlay'><img title='" + localized_strings.early_access + "' src='" + chrome.extension.getURL(image_name) + "' /></span>") });
+							callback && callback();
+						} else {
+							//console.log("Touched but NOT in EA", node[0]);
+						}
 					}
-				}
+				});
 			});
 		}
 	});
@@ -5367,97 +5369,226 @@ function process_early_access() {
 			switch (window.location.host) {
 				case "store.steampowered.com":
 					switch (true) {
-						case /^\/app\/.*/.test(window.location.pathname):
+						case /^\/app\/.*/.test(window.location.pathname): // selectors tested
 							$(".game_header_image").append("<a href='" + window.location.href + "'></a>");
-							$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), $(this).position().left); });
-							$(".small_cap").each(function(index, value) { check_early_access($(this), 15); });
+							//$(".game_header_image_ctn").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+							//$(".small_cap").each(function(index, value) { check_early_access($(this), 15); });
+							check_early_access(".game_header_image_ctn, .small_cap");
 							break;
-						case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
-							$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
-							$(".special_tiny_cap").each(function(index, value) { check_early_access($(this)); });
-							$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
-							$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
-							$(".dq_item:not(:first-child)").each(function(index, value) { check_early_access($(this)); });
-							$(".discovery_queue:not(:first-child)").each(function(index, value) { check_early_access($(this)); });
+						case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname): // some selectors tested
+							//$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
+							check_early_access(".tab_item", ":last"); // tested
+							//$(".special_tiny_cap").each(function(index, value) { check_early_access($(this)); });
+							//$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
+							//$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
+							//$(".dq_item:not(:first-child)").each(function(index, value) { check_early_access($(this)); });
+							//$(".discovery_queue:not(:first-child)").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(`.special_tiny_cap,
+												.cluster_capsule,
+												.game_capsule,
+												.dq_item:not(:first-child),
+												.discovery_queue:not(:first-child)`);
 							break;
-						case /^\/search\/.*/.test(window.location.pathname):
-							$(".search_result_row").each(function(index, value) { check_early_access($(this)); });
+						case /^\/search\/.*/.test(window.location.pathname): // selectors tested
+							//$(".search_result_row").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(".search_result_row");
 							break;
-						case /^\/recommended/.test(window.location.pathname):
-							$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), $(this).position().left); });
-							$(".header_image").each(function(index, value) { check_early_access($(this)); });
-							$(".appheader").each(function(index, value) { check_early_access($(this), $(this).position().left); });
-							$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
-							$(".game_capsule_area").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
-							$(".game_capsule").each(function(index, value) { check_early_access($(this), $(this).position().left); });
-							$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this)); });
+						case /^\/recommended/.test(window.location.pathname): // selectors tested
+							//$(".friendplaytime_appheader").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+							//$(".header_image").each(function(index, value) { check_early_access($(this)); });
+							//$(".appheader").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+							//$(".recommendation_carousel_item").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
+							//$(".game_capsule_area").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
+							//$(".game_capsule").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+							//$(".similar_grid_capsule").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(`.friendplaytime_appheader,
+												.header_image,
+												.appheader,
+												.recommendation_carousel_item .carousel_cap,
+												.game_capsule,
+												.game_capsule_area,
+												.similar_grid_capsule`);
 							break;
-						case /^\/tag\/.*/.test(window.location.pathname):
-							$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
-							$(".tab_row").each(function(index, value) { check_early_access($(this)); });
-							$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+						case /^\/tag\/.*/.test(window.location.pathname): // selectors not tested (couldn't find any)
+							//$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
+							//$(".tab_row").each(function(index, value) { check_early_access($(this)); });
+							//$(".browse_tag_game_cap").each(function(index, value) { check_early_access($(this), $(this).position().left); });
+							check_early_access(`.cluster_capsule,
+												.tab_row,
+												.browse_tag_game_cap`);
 							break;
-						case /^\/$/.test(window.location.pathname):
-							$(".home_smallcap").each(function(index, value) { $(this).find("img").wrap("<div class='es-img-prep' href='" + $(this).attr("href") + "'></div>"); check_early_access($(this).find(".es-img-prep"), 15); });
-							$(".cap").each(function(index, value) { check_early_access($(this)); });
-							$(".special").each(function(index, value) { check_early_access($(this)); });
-							$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
-							$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
-							$(".recommended_spotlight_ctn").each(function(index, value) { check_early_access($(this)); });
-							$(".curated_app_link").each(function(index, value) { check_early_access($(this)); });
-							$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
-							$(".dailydeal_ctn").find("a").each(function(index, value) { check_early_access($(this)); });
-
+						case /^\/$/.test(window.location.pathname): // selectors not tested
+							$(".home_smallcap").each(function(index, value) { $(this).find("img").wrap("<div class='es-img-prep' href='" + $(this).attr("href") + "'></div>"); });
+							check_early_access($(".home_smallcap").find(".es-img-prep"));
+							//$(".cap").each(function(index, value) { check_early_access($(this)); });
+							//$(".special").each(function(index, value) { check_early_access($(this)); });
+							//$(".game_capsule").each(function(index, value) { check_early_access($(this)); });
+							//$(".cluster_capsule").each(function(index, value) { check_early_access($(this)); });
+							//$(".recommended_spotlight_ctn").each(function(index, value) { check_early_access($(this)); });
+							//$(".curated_app_link").each(function(index, value) { check_early_access($(this)); });
+							//$(".dailydeal_ctn").find("a").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(`.cap,
+												.special,
+												.game_capsule,
+												.cluster_capsule,
+												.recommended_spotlight_ctn,
+												.curated_app_link,
+												.dailydeal_ctn a`);
+							//$(".tab_item").each(function(index, value) { check_early_access($(this), 0, ":last"); });
+							check_early_access(".tab_item", ":last");
+							
 							// Sales fields
-							$(".large_sale_caps").find("a").each(function(index, value) { check_early_access($(this)); });
-							$(".small_sale_caps").find("a").each(function(index, value) { check_early_access($(this)); });
-							$(".sale_capsule_image").parent().each(function(index, value) { check_early_access($(this)); });
+							//$(".large_sale_caps").find("a").each(function(index, value) { check_early_access($(this)); });
+							//$(".small_sale_caps").find("a").each(function(index, value) { check_early_access($(this)); });
+							//$(".sale_capsule_image").parent().each(function(index, value) { check_early_access($(this)); });
+							check_early_access(".large_sale_caps a, .small_sale_caps a");
+							check_early_access($(".sale_capsule_image").parent());
 							break;
 					}
 				case "steamcommunity.com":
 					switch(true) {
-						case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname):
-							$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
+						// wishlist, games, and followedgames can be combined in one regex expresion
+						case /^\/(?:id|profiles)\/.+\/wishlist/.test(window.location.pathname): // selectors tested
+							//$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(".gameListRowLogo");
 							break;
-						case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname):
-							$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
+						case /^\/(?:id|profiles)\/(.+)\/games/.test(window.location.pathname): // selectors tested
+							//$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(".gameListRowLogo");
 							break;
-						case /^\/(?:id|profiles)\/(.+)\/followedgames/.test(window.location.pathname):
-							$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
+						case /^\/(?:id|profiles)\/(.+)\/followedgames/.test(window.location.pathname): // selectors tested
+							//$(".gameListRowLogo").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(".gameListRowLogo");
 							break;
-						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
-							$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
-								check_early_access($(this), $(this).position().left);
-							});
+						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname): // selectors tested
+							//$(".blotter_gamepurchase_content").find("a").each(function(index, value) {
+								//check_early_access($(this), $(this).position().left);
+							//});
+							check_early_access(".blotter_gamepurchase_content a");
 							break;
-						case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):
-							$(".leftcol").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
+						case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname): // selectors tested
+							//$(".leftcol").each(function(index, value) { check_early_access($(this), $(this).position().left + 8); });
+							check_early_access(".leftcol");
 							break;
-						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
-							$(".game_info_cap").each(function(index, value) { check_early_access($(this)); });
-							$(".showcase_gamecollector_game").each(function(index, value) { check_early_access($(this)); });
-							$(".favoritegame_showcase_game").each(function(index, value) { check_early_access($(this)); });
+						case /^\/(?:id|profiles)\/.+/.test(window.location.pathname): // selectors tested
+							//$(".game_info_cap").each(function(index, value) { check_early_access($(this)); });
+							//$(".showcase_gamecollector_game").each(function(index, value) { check_early_access($(this)); });
+							//$(".favoritegame_showcase_game").each(function(index, value) { check_early_access($(this)); });
+							check_early_access(`.game_info_cap,
+												.showcase_gamecollector_game,
+												.favoritegame_showcase_game`);
 							break;
-						case /^\/app\/.*/.test(window.location.pathname):
+						case /^\/app\/.*/.test(window.location.pathname): // selectors tested
 							if ($(".apphub_EarlyAccess_Title").length > 0) {
+								// using span instead of a div makes the banner proportions correct
 								var logo = $(".apphub_StoreAppLogo:first").wrap(
-									"<div id='es_ea_apphub'><a href='" + window.location.href + "'></a></div>"
+									"<span id='es_ea_apphub'><a href='" + window.location.href + "'></a></span>"
 								);
 
-								var wrapper = $('#es_ea_apphub');
+								//var wrapper = $('#es_ea_apphub');
 
 								// Manually set the wrapper's height because
 								// the logo is a floating element :(
-								wrapper.css('height', logo.css('height'));
+								//wrapper.css('height', logo.css('height'));
 
-								check_early_access(wrapper, null, null, function () {
-									wrapper.css('height', '');
-								});
+								//check_early_access(wrapper, null, null, function () {
+									//wrapper.css('height', '');
+								//});
+								check_early_access("#es_ea_apphub");
 							}
 					}
 			}
 		}
 	});
+}
+
+function media_slider_expander(in_store) {
+	var details = $(".workshop_item_header").find(".col_right").first();
+	if (in_store) {
+		details = $("#game_highlights").find(".rightcol").first();
+	}
+
+	if (details.length) {
+		$("#highlight_player_area").append('<div data-slider-tooltip="' + localized_strings.expand_slider + '" class="es_slider_toggle btnv6_blue_hoverfade btn_medium"><i class="es_slider_toggle_icon"></i></div>');
+
+		if (in_store) {
+			var detailsClone = $(details).find(".glance_ctn").clone().addClass("es_side_details block responsive_apppage_details_left").hide().prependTo(".game_meta_data:first").wrap('<div class="es_side_details_wrap" />');
+			// There are some issues with having duplicates of these on page when trying to add tags
+			detailsClone.find(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn").remove();
+		} else {
+			$(details).clone().attr("class", "panel es_side_details").prepend('<div class="title">' + localized_strings.details + '</div><div class="hr padded"></div>').hide().prependTo(".sidebar");
+			// Sometimes for a split second the slider pushes the details down, this fixes it
+			$(".highlight_ctn").wrap('<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;" />');
+
+			// Don't overlap Sketchfab's "X"
+			if ($(".highlight_sketchfab_model").length) {
+				$("#highlight_player_area").hover(function(){
+					if ($(this).find(".highlight_sketchfab_model").not(":hidden").length) {
+						$(".es_slider_toggle").css("top", "32px");
+					}
+				}, function(){
+					$(".es_slider_toggle").removeAttr("style");
+				});
+			}
+		}
+
+		var expand_slider = getValue("expand_slider") || false;
+		if (expand_slider === true) {
+			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").addClass("expanded");
+			$(".es_side_details_wrap, .es_side_details").show();
+
+			// Change tooltip
+			runInPageContext(function() { $J(".es_slider_toggle").removeData(); });
+			$(".es_slider_toggle").attr("data-slider-tooltip", localized_strings.contract_slider);
+
+			// Triggers the adjustment of the slider scroll bar
+			window.dispatchEvent(new Event("resize"));
+		}
+
+		// Initiate tooltip
+		runInPageContext(function() { $J('.es_slider_toggle').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+
+		$(".es_slider_toggle").on("click", function(e) {
+			e.preventDefault();
+
+			var el = $(this);
+
+			if (!$(el).hasClass("expanded")) { // then is getting expanded
+				$(".es_side_details_wrap").show();
+				// Change tooltip
+				runInPageContext(function() { $J(".es_slider_toggle").removeData(); });
+				$(this).attr("data-slider-tooltip", localized_strings.contract_slider);
+			} else {
+				// Change tooltip
+				runInPageContext(function() { $J(".es_slider_toggle").removeData(); });
+				$(this).attr("data-slider-tooltip", localized_strings.expand_slider);
+			}
+
+			// Animate 
+			$(".es_side_details").stop().slideToggle(500, function(){
+				if (!$(el).hasClass("expanded")) $(".es_side_details_wrap").hide();
+			});
+
+			$(details).hide();
+
+			// Cleanup and Reinitiate tooltip
+			runInPageContext(function() { $J(".store_tooltip").remove(); $J('.es_slider_toggle').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+
+			// On every animation/transition end check the slider state
+			$(".highlight_ctn").one("transitionend", function() {
+				// Save slider state
+				setValue("expand_slider", $(el).hasClass("expanded"));
+
+				// If slider was contracted show the extended details
+				if (!$(el).hasClass("expanded")) $(details).hide().fadeIn("fast");
+
+				// Triggers the adjustment of the slider scroll bar
+				window.dispatchEvent(new Event("resize"));
+			});
+
+			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").toggleClass("expanded");
+		});
+	}
 }
 
 // Display a regional price comparison
@@ -6456,7 +6587,8 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("tab_item")) {
 					runInPageContext("function() { GDynamicStore.DecorateDynamicItems( jQuery('.tab_item') ) }");
 					start_highlighting_node(node);
-					check_early_access(node, 0, ":last");
+					//check_early_access(node, 0, ":last");
+					check_early_access(node, ":last");
 				}
 
 				if (node.id == "search_result_container") {
@@ -6647,7 +6779,7 @@ function add_steamdb_links(appid, type) {
 	});
 
 	if (type == "app") {
-		$('#ReportAppBtn').parent().parent().prependTo($('#ReportAppBtn').parent().parent().parent());
+		$('#ReportAppBtn').parent().parent().addClass("es_useful_links").insertAfter($('.es_side_details_wrap'));
 	}
 }
 
@@ -8444,6 +8576,9 @@ $(document).ready(function(){
 						case /^\/app\/.*/.test(path):
 							var appid = get_appid(window.location.host + path);
 							var metalink = $("#game_area_metalink").find("a").attr("href");
+
+							media_slider_expander(true);
+
 							storePageData.load(appid, metalink);
 
 							add_app_page_wishlist_changes(appid);
@@ -8673,6 +8808,7 @@ $(document).ready(function(){
 						case /^\/sharedfiles\/.*/.test(path):
 							hide_greenlight_banner();
 							hide_spam_comments();
+							media_slider_expander();
 							break;
 
 						case /^\/workshop\/.*/.test(path):
