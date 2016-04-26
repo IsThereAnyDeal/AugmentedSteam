@@ -2673,6 +2673,7 @@ function chat_dropdown_options(in_chat) {
 	if (in_chat) { // we don't include this in the "is_signed_in" condition since "signed_in_promise" fails in chat, however, the page is unreachable if not logged in
 		chrome.storage.local.get("rgChatStartupParam", function(data) {
 			runInPageContext("function(){ Chat.RunStartupParam(" + JSON.stringify(data.rgChatStartupParam) + "); }");
+			chrome.storage.local.remove("rgChatStartupParam");
 		});
 	}
 }
