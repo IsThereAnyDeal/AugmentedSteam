@@ -8213,8 +8213,8 @@ function skip_got_steam() {
 	storage.get(function(settings) {
 		if (settings.skip_got_steam === undefined) { settings.skip_got_steam = true; storage.set({'skip_got_steam': settings.skip_got_steam}); }
 		if (settings.skip_got_steam) {
-			$("a[href^='javascript:showGotSteamModal']").each(function() {
-				$(this).attr("href",$(this).attr("href").split("', '")[1]);
+			$("a[href^='javascript:ShowGotSteamModal']").each(function() {
+				$(this).attr("href",$(this).attr("href").split("'")[1]);
 			});
 		}
 	});
