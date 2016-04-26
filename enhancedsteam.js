@@ -109,17 +109,26 @@ var currency_promise = (function() {
 
 // Check if the user is signed in
 var is_signed_in = false;
+var profile_url = false;
+var profile_path = false;
+var profile_id = false;
+
 var signed_in_promise = (function () {
 	var deferred = new $.Deferred();
 	if ($("#global_actions").find(".playerAvatar").length > 0) {
-		var user_name = $("#global_actions").find(".playerAvatar")[0].outerHTML.match(/\/id\/(.+?)"/);
-		if (user_name) {
+		profile_url = $("#global_actions").find(".playerAvatar")[0].href;
+		profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
+		profile_id = profile_path.match(/^\/id\/(.+?)\/$/)[1];
+
+		if (profile_path) {
 			if (getValue("steamID")) {
 				is_signed_in = getValue("steamID");
 				deferred.resolve();
 			} else {
-				get_http("//steamcommunity.com/id/" + user_name[1], function(txt) {
-					is_signed_in = txt.match(/steamid"\:"(.+)","personaname/)[1];
+				// Make the request to a fake profile, this page is returned with an error
+				// but the steamID is present and the size is less than half in some cases
+				get_http("//steamcommunity.com/profiles/0/", function(txt) {
+					is_signed_in = txt.match(/g_steamID = "(\d+)";/)[1];
 					setValue("steamID", is_signed_in);
 					deferred.resolve();
 				});
