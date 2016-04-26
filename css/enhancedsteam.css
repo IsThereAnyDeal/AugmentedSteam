@@ -1094,3 +1094,33 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-size: 12px;
 	white-space: nowrap;
 }
+
+/***************************************
+ * Front Store page
+ * add_carousel_descriptions()
+ **************************************/
+.es_carousel_desc.main_cluster_content,
+.es_carousel_desc .cluster_capsule,
+.es_carousel_desc .cluster_scroll_area {
+	height: auto !important;
+}
+.es_carousel_desc .main_cap_desc,
+.es_carousel_desc .cluster_maincap_fill  {
+	transition: height 0.2s, max-height 0.2s, ease;
+}
+.es_carousel_desc .main_cap_desc {
+	height: 98px !important;
+	padding: 0 12px 8px 12px !important;
+}
+.es_main_cap_status {
+	font-size: 12px !important;
+	line-height: normal !important;
+}
+.es_carousel_desc .discount_block {
+	bottom: 0 !important;
+}
+.es_carousel_desc .cluster_maincap_fill,
+.es_carousel_desc .es_capsule_image_wrap {
+	position: relative;
+	height: 353px;
+}

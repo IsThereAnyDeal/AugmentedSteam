@@ -6467,19 +6467,15 @@ function add_carousel_descriptions() {
 		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
 		if (settings.show_carousel_descriptions) {
 			if ($(".main_cluster_content").length > 0) {
-				var description_height_to_add = 56,
-					heightvar = parseInt($(".main_cluster_content").css("height").replace("px", ""), 10) + description_height_to_add + "px";
-				$(".main_cluster_content").css("height", heightvar);
-				$("#main_cluster_scroll .cluster_capsule").css("height", heightvar);
-				$("#main_cluster_scroll .discount_block").css("bottom", "98px");
-				
+
 				setTimeout(function() {
+					$(".main_cluster_content").find(".cluster_capsule_image:not(.cluster_maincap_fill_bg)").wrap('<div class="es_capsule_image_wrap" />');
+					$(".main_cluster_content").find(".discount_block").filter(function(){ $(this).prependTo($(this).parent().find(".es_capsule_image_wrap, .cluster_maincap_fill")); });
+					$(".main_cluster_content").addClass("es_carousel_desc");
+					
 					$.each($(".cluster_capsule"), function(i, _obj) {
 						var appid = get_appid(_obj.href),
 							$desc = $(_obj).find(".main_cap_content");
-						
-						$desc.css("height", parseInt($desc.css("height").replace("px", ""), 10) + description_height_to_add + "px");
-						$desc.parent().css("height", parseInt($desc.parent().css("height").replace("px", ""), 10) + description_height_to_add + "px");
 
 						var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 						var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
@@ -6488,7 +6484,7 @@ function add_carousel_descriptions() {
 							get_http('//store.steampowered.com/app/' + appid, function(txt) {
 								var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
 								if (desc) {
-									var elem_to_add = $("<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc[1] + "</div>");
+									var elem_to_add = $("<div class='main_cap_status es_main_cap_status'>" + desc[1] + "</div>");
 									elem_to_add.html(elem_to_add.text());
 									setValue(appid + "carousel", elem_to_add.text());
 									setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
@@ -6497,11 +6493,11 @@ function add_carousel_descriptions() {
 							});
 						} else {
 							var desc = getValue(appid + "carousel");
-							var value_to_add = "<div class='main_cap_status' style='font-size: 12px; line-height: normal;'>" + desc + "</div>";
+							var value_to_add = "<div class='main_cap_status es_main_cap_status'>" + desc + "</div>";
 							$desc.append(value_to_add);
 						}
 					});
-				}, 750);
+				}, 100);
 
 				// purge stale information from localStorage				
 				var i = 0, sKey;
