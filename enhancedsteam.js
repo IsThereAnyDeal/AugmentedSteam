@@ -1334,68 +1334,93 @@ function add_wishlist_filter() {
 }
 
 function add_wishlist_discount_sort() {
-	if ($("#wishlist_sort_options").find("a[href$='price']").length > 0) {
-		$("#wishlist_sort_options").find("a[href$='price']").after("&nbsp;&nbsp;<label id='es_wl_sort_discount'><a>" + localized_strings.discount + "</a></label>");
+	$("#wishlist_sort_options").children("a, span").last().after("&nbsp; <a class='es_wl_sort by_discount' data-sort-by='discount' href='?sort=discount'>" + localized_strings.discount + "</a>");
+
+	$(document).on("click", "a.es_wl_sort:not(.by_added)", function(e) {
+		e.preventDefault();
+		
+		var sort_by = $(this).data("sort-by");
+		switch (sort_by) {
+			case "rank":
+				sort_wishlist(".wishlist_rank", sort_by, true);
+				break;
+			case "added":
+				// Can't do this one... could make a request for it tho...
+				break;
+			case "name":
+				sort_wishlist("h4.ellipsis", sort_by, null, function(val){
+					return val.toLowerCase();
+				});
+				break;
+			case "price":
+				sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
+					return Number(val.replace(/[^0-9\.]+/g, "")) || 31337;
+				});
+				break;
+			case "discount":
+				sort_wishlist(".discount_pct", sort_by, true, function(val){
+					return parseInt(val);
+				});
+			break;
+		}
+		
+		reset_sort_links($(this));
+	});
+
+	// Initiated "discounted" sort if necessary and rebuild sorting links
+	if (getCookie("wishlist_sort2") == "discount") {
+		$(".by_discount").click();
 	} else {
-		$("#wishlist_sort_options").find("span[class='selected_sort']").after("&nbsp;&nbsp;<label id='es_wl_sort_discount'><a>" + localized_strings.discount + "</a></label>");
+		reset_sort_links();
 	}
 
-	$("#es_wl_sort_discount").on("click", function() {
-		var wishlistRows = [];
-		$('.wishlistRow').each(function () {
-			var push = new Array();
-			if ($(this).html().match(/discount_block_inline/)) {
-				push[0] = this.outerHTML;
-				push[1] = $(this).find(".discount_pct").html();
-				push[2] = $(this).find(".discount_final_price").html();
-			} else if ($(this).html().match(/div class=\"price/)) {
-				push[0] = this.outerHTML;
-				push[1] = "0";
-				push[2] = $(this).find(".price").html();
+	function sort_wishlist(sel, cookieVal, asc, fn) {
+		asc = asc === undefined ? false : asc,
+		fn = fn || function(val){ return val };
+
+		var T = asc === true ? 1 : -1,
+			F = asc === true ? -1 : 1;
+
+		var $rows = $(sel).closest(".wishlistRow");
+
+		$rows.sort(function(a, b){
+			a = fn($(a).find(sel).val() || $(a).find(sel).text().trim()),
+			b = fn($(b).find(sel).val() || $(b).find(sel).text().trim());
+
+			if (a == b) return 0;
+			if (asc === true) {
+				return a - b;
+			} else if (asc === false) {
+				return b - a;
 			} else {
-				push[0] = this.outerHTML;
-				push[1] = "0";
-				push[2] = "0";
+				return a < b ? T : F;
 			}
-			wishlistRows.push(push);
-			this.parentNode.removeChild(this);
+
 		});
 
-		wishlistRows.sort(function(a,b) {
-			var discountA = parseInt(a[1],10);
-			var discountB = parseInt(b[1],10);
+		$rows.detach().prependTo($("#wishlist_items"));
+		
+		if (cookieVal) {
+			var dateExpires = new Date();
+			dateExpires.setTime( dateExpires.getTime() + 1000 * 60 * 60 * 1 );
+			document.cookie = 'wishlist_sort2=' + cookieVal + '; expires=' + dateExpires.toGMTString() + ';path=/';
+		}
+	}
 
-			if (discountA > discountB) {
-				return 1;
-			} else if (discountA < discountB) {
-				return -1;
-			} else {
-				var priceA = Number(a[2].replace(/[^0-9\.]+/g,""));
-				var priceB = Number(b[2].replace(/[^0-9\.]+/g,""));
+	function reset_sort_links(clickedLink) {
+		var links = $("#wishlist_sort_options").children("a, span"),
+			sorts = ["rank", "added", "name", "price", "discount"],
+			sorted = getCookie("wishlist_sort2") || false;
 
-				if (priceA > priceB) {
-					return 1;
-				} else if (priceA < priceB) {
-					return -1;
-				} else {
-					return 0;
-				}
+		for (var i = 0; i < links.length; i++) {
+			var thisLink = links[i];
+			if (clickedLink && $(clickedLink)[0].isSameNode(thisLink) || sorted == sorts[i]) {
+				$(thisLink).replaceWith('<span class="es_wl_sort by_' + sorts[i] + ' selected_sort">' + $(thisLink).text() + '</span>');
+			} else if (clickedLink || thisLink.href || sorted && sorted != sorts[i]) {
+				$(thisLink).replaceWith('<a class="es_wl_sort by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(thisLink).text() + '</a>');
 			}
-		});
-
-		$('.wishlistRow').each(function () { $(this).css("display", "none"); });
-
-		$(wishlistRows).each(function() {
-			$("#wishlist_items").append(this[0]);
-		});
-
-		add_wishlist_pricehistory();
-
-		$(this).html("<span style='color: #B0AEAC;'>" + localized_strings.discount + "</span>");
-		var html = $("#wishlist_sort_options").find("span[class='selected_sort']").html();
-		html = "<a onclick='location.reload()'>" + html + "</a>";
-		$("#wishlist_sort_options").find("span[class='selected_sort']").html(html);
-	});
+		}
+	}
 }
 
 // Calculate total cost of all items on wishlist
