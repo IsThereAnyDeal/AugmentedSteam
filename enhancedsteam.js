@@ -1361,13 +1361,13 @@ function add_wishlist_discount_sort() {
 				sort_wishlist(".discount_pct", sort_by, true, function(val){
 					return parseInt(val);
 				});
-			break;
+				break;
 		}
 		
 		reset_sort_links($(this));
 	});
 
-	// Initiated "discounted" sort if necessary and rebuild sorting links
+	// Initiate "discounted" sort if necessary and rebuild sorting links
 	if (getCookie("wishlist_sort2") == "discount") {
 		$(".by_discount").click();
 	} else {
