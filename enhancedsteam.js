@@ -2642,6 +2642,42 @@ function add_twitch_info() {
 	}
 }
 
+function chat_dropdown_options(in_chat) {
+	if (is_signed_in) {
+		var send_button = "div.profile_header_actions > a[href*=LaunchWebChat]";
+		if ($(send_button).length > 0) {
+			var href = $(send_button).attr("href");
+			var friendID = href.match(/javascript:LaunchWebChat\( {friend: (\d+) } \);/)[1];
+			var friendSteamID = $("script:contains('g_rgProfileData')").text().match(/"steamid":"(\d+)",/)[1];
+
+			$(send_button).replaceWith(`
+				<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link" onclick="ShowMenu( this, \'profile_chat_dropdown\', \'right\' );">
+					<span>` + $(send_button).text() + `<img src="http://steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
+				</span>
+				<div class="popup_block" id="profile_chat_dropdown" style="visibility: visible; top: 168px; left: 679px; display: none; opacity: 1;">
+					<div class="popup_body popup_menu shadow_content" style="box-shadow: 0 0 12px #000">
+						<a class="popup_menu_item webchat" href="` + href + `"><img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ` + localized_strings.web_browser_chat + `</a>
+						<a class="popup_menu_item" href="steam://friends/message/` + friendSteamID + `"><img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ` + localized_strings.steam_client_chat + `</a>
+					</div>
+				</div>
+			`);
+
+			// Fixing Valve's mistakes, part 1
+			$(".webchat").on("click", function(){
+				chrome.storage.local.set({rgChatStartupParam: {friend: friendID}});
+			});
+		}
+	}
+
+	// Fixing Valve's mistakes, part 2
+	if (in_chat) { // we don't include this in the "is_signed_in" condition since "signed_in_promise" fails in chat, however, the page is unreachable if not logged in
+		chrome.storage.local.get("rgChatStartupParam", function(data) {
+			runInPageContext("function(){ Chat.RunStartupParam(" + JSON.stringify(data.rgChatStartupParam) + "); }");
+			chrome.storage.local.remove("rgChatStartupParam");
+		});
+	}
+}
+
 function alternative_linux_icon() {
 	storage.get(function(settings) {
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
@@ -8353,6 +8389,10 @@ $(document).ready(function(){
 							});	
 							break;
 
+						case /^\/chat\//.test(path):
+							chat_dropdown_options(true);
+							break;
+
 						case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b\/?$/.test(path):
 							start_friend_activity_highlights();
 							bind_ajax_content_highlighting();
@@ -8433,6 +8473,7 @@ $(document).ready(function(){
 							add_steamrep_api();
 							add_posthistory_link();
 							add_profile_style();
+							chat_dropdown_options();
 							break;
 
 						case /^\/sharedfiles\/browse/.test(path):
