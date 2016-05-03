@@ -176,6 +176,7 @@
     "notcommon_label": "Hide games that you own",
     "show_all_steam_releases": "Show all Steam releases",
     "wishlist": "Wishlist",
+    "on_wishlist": "On Wishlist",
     "notdiscounted": "Items not discounted",
     "cancel": "Cancel",
     "wiki_article": "View __pcgw__ Article",
@@ -248,6 +249,7 @@
         "main": "Main Story"
     },
     "library": {
+        "in_library": "In Library",
         "error_loading_library": "Couldn't load your library.",
         "categories": "Categories...",
         "genres": "Genres...",
