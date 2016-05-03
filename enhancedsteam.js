@@ -2719,6 +2719,11 @@ function appdata_on_wishlist() {
 							if (platforms > 1) { htmlstring = htmlstring + "<span class='platform_img steamplay'></span>"; }
 							$(node).parent().parent().parent().find(".bottom_controls").append(htmlstring);
 						}
+
+						// Add release date info to unreleased apps
+						if (app_data.data.release_date.coming_soon == true) {
+							$(node).parent().before("<div class='price'>" + localized_strings.available + ": " + app_data.data.release_date.date + "</div>");
+						}
 					}
 				});
 			});

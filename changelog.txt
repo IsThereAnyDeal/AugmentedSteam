@@ -1,5 +1,6 @@
 ﻿v8.5
 -----
++ Added release date information for unreleased games on wishlist pages
 : Changing view options on the badges page no longer requires a page reload
 : Fixed a bug where some functions weren't working correctly for users who hadn't configured a custom URL
 : Fixed a bug that would occur when trying to leave multiple groups if there was an error on the page
