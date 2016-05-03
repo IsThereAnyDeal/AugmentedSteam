@@ -6640,25 +6640,32 @@ function add_app_page_wishlist(appid) {
 		if (settings.wlbuttoncommunityapp) {
 			var wishlisted = getValue(appid + "wishlisted");
 			var owned = getValue(appid+"owned");
-			if(!wishlisted && !owned){
-				$(".apphub_Stats").prepend('<div class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings.add_to_wishlist + '</span>');
-				$("#es_wishlist").click(function() {
-					$.ajax({
-						type:"POST",
-						url:"store.steampowered.com/api/addtowishlist",
-						data:{
-							appid:appid
-						},
-						success: function( msg ) {
-							$("#es_wishlist").addClass("btn_disabled");
-							$("#es_wishlist").off("click");
-							setValue(appid + "wishlisted",true);
-						},
-						error: function(e){
-							console.log('Error: '+e);
-						}
+			if(!owned && settings.store_sessionid) {
+				$(".apphub_StoreAppData").append('<a class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings.add_to_wishlist + '</span></a>');
+				
+				if (wishlisted) {
+					$("#es_wishlist").addClass("btn_disabled");
+				} else {
+					$("#es_wishlist").click(function() {
+						$.ajax({
+							type:"POST",
+							url:"//store.steampowered.com/api/addtowishlist",
+							data:{
+								sessionid: settings.store_sessionid,
+								appid: appid
+							},
+							success: function( msg ) {
+								$("#es_wishlist").addClass("btn_disabled");
+								$("#es_wishlist").off("click");
+								setValue(appid + "wishlisted",true);
+							},
+							error: function(e){
+								console.log('Error: '+e);
+							}
+						});
 					});
-				});
+				}
+				
 			}
 		}
 	});

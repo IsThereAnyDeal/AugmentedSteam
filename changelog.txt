@@ -5,6 +5,7 @@
 : Fixed a bug where some functions weren't working correctly for users who hadn't configured a custom URL
 : Fixed a bug that would occur when trying to leave multiple groups if there was an error on the page
 : Fixed a bug that caused the homepage carousel to not display correctly until it scrolled past the first item
+: Fixed a bug where adding games to your wishlist from the community hub would result in an error
 
 
 v8.4
