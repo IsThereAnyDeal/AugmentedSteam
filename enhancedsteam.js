@@ -2773,7 +2773,7 @@ function wishlist_dynamic_data() {
 					var wishlisted = wishlistapps.indexOf(appid);
 					var owned = ownedapps.indexOf(appid);
 					if(owned == -1 && wishlisted == -1 && settings.store_sessionid) {
-						$(node).parent().append('<a class="btnv6_blue_hoverfade btn_small" style="margin-right: 3px" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>');
+						$(node).parent().append('<a class="btnv6_blue_hoverfade btn_small" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>');
 						$("#es_wishlist_" + appid).click(function() {
 							$.ajax({
 								type:"POST",
