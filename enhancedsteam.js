@@ -693,40 +693,15 @@ function highlight_nondiscounts(node) {
 	});
 }
 
-var notinterested_promise = (function () {
-	var deferred = new $.Deferred();
-	if (is_signed_in && window.location.protocol != "https:") {
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-		var last_updated = getValue("dynamiclist_time") || expire_time - 1;
-
-		if (last_updated < expire_time) {
-			get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
-				var data = JSON.parse(txt);
-				if (data["rgIgnoredApps"]) {
-					setValue("ignored_apps", data["rgIgnoredApps"].toString());
-				}
-				setValue("dynamiclist_time", parseInt(Date.now() / 1000, 10));
-				deferred.resolve();
-			});
-		} else {
-			deferred.resolve();
-		}
-	} else {
-		deferred.resolve();
-	}
-	return deferred.promise();
-})();
-
 function highlight_notinterested(node) {
-	$.when.apply($, [notinterested_promise]).done(function() {
+	$.when.apply($, [dynamicstore_promise]).done(function(data) {
 		storage.get(function(settings) {
 			if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
 			
-			var notinterested = getValue("ignored_apps");
-			if (notinterested) notinterested = notinterested.split(",");
+			var notinterested = data.rgIgnoredApps;
 			if ($(node).hasClass("search_result_row")) {
 				var appid = get_appid(node.href);
-				if (settings.hide_notinterested && $.inArray(appid, notinterested) !== -1) {				
+				if (settings.hide_notinterested && $.inArray(appid, notinterested) !== -1) {
 					$(node).css("display", "none");
 				}
 			}
@@ -2731,47 +2706,49 @@ function appdata_on_wishlist() {
 	}
 }
 
+var dynamicstore_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in && window.location.protocol != "https:") {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue("dynamicstored_time") || expire_time - 1;
+		var dynamicstore_data = getValue("dynamicstore_data") || false;
+
+		if (last_updated < expire_time || !dynamicstore_data) {
+			get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
+				var data = JSON.parse(txt);
+				if (data) {
+					setValue("dynamicstore_data", data);
+					setValue("dynamicstored_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve(data);
+				} else {
+					deferred.reject();
+				}
+			});
+		} else if (dynamicstore_data) {
+			deferred.resolve(dynamicstore_data);
+		} else {
+			deferred.reject();
+		}
+	} else {
+		deferred.reject();
+	}
+
+	return deferred.promise();
+})();
+
 function wishlist_dynamic_data() {
 	storage.get(function(settings) {
-		var owned_promise = (function () {
-			var deferred = new $.Deferred();
-			if (is_signed_in && window.location.protocol != "https:") {
-				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-				var last_updated = getValue("dynamicflist_time") || expire_time - 1;
-
-				if (last_updated < expire_time) {
-					get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
-						var data = JSON.parse(txt);
-						if (data["rgOwnedApps"]) {
-							setValue("owned_apps", data["rgOwnedApps"].toString());
-						}
-						if (data["rgWishlist"]) {
-							setValue("wishlist_apps", data["rgWishlist"].toString());
-						}
-						setValue("dynamicflist_time", parseInt(Date.now() / 1000, 10));
-						deferred.resolve();
-					});
-				} else {
-					deferred.resolve();
-				}
-			} else {
-				deferred.resolve();
-			}
-			
-			return deferred.promise();
-		})();
-
-		$.when.apply($, [owned_promise]).done(function() {
-			var ownedapps = getValue("owned_apps");
-			if (ownedapps) ownedapps = ownedapps.split(",");
-			var wishlistapps = getValue("wishlist_apps");
-			if (wishlistapps) wishlistapps = wishlistapps.split(",");
+		$.when.apply($, [dynamicstore_promise]).done(function(data) {
+			var ownedapps = data.rgOwnedApps;
+			var wishlistapps = data.rgWishlist;
 
 			if (is_signed_in && ($(".profile_small_header_bg a:first").attr("href").replace(/\/$/, "") != $("#global_actions .playerAvatar:first").attr("href").replace(/\/$/, ""))) {
 				$('a.btnv6_blue_hoverfade').each(function (index, node) {
-					var appid = get_appid(node.href);
-					var wishlisted = wishlistapps.indexOf(appid);
+					var appid = Number(get_appid(node.href));
+					
 					var owned = ownedapps.indexOf(appid);
+					var wishlisted = wishlistapps.indexOf(appid);
+
 					if(owned == -1 && wishlisted == -1 && settings.store_sessionid) {
 						$(node).parent().append('<a class="btnv6_blue_hoverfade btn_small" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>');
 						$("#es_wishlist_" + appid).click(function() {
@@ -6456,45 +6433,15 @@ function start_highlights_and_tags(){
 }
 
 function start_friend_activity_highlights() {
-	var owned_promise = (function () {
-		var deferred = new $.Deferred();
-		if (is_signed_in && window.location.protocol != "https:") {
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			var last_updated = getValue("dynamicflist_time") || expire_time - 1;
-
-			if (last_updated < expire_time) {
-				get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
-					var data = JSON.parse(txt);
-					if (data["rgOwnedApps"]) {
-						setValue("owned_apps", data["rgOwnedApps"].toString());
-					}
-					if (data["rgWishlist"]) {
-						setValue("wishlist_apps", data["rgWishlist"].toString());
-					}
-					setValue("dynamicflist_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve();
-				});
-			} else {
-				deferred.resolve();
-			}
-		} else {
-			deferred.resolve();
-		}
-		
-		return deferred.promise();
-	})();
-
-	$.when.apply($, [owned_promise]).done(function() {
+	$.when.apply($, [dynamicstore_promise]).done(function(data) {
 		var selectors = [
 			".blotter_author_block a",
 			".blotter_gamepurchase_details a",
 			".blotter_daily_rollup_line a",
 			".blotter_group_announcement_header_text a"
 		];
-		var ownedapps = getValue("owned_apps");
-		if (ownedapps) ownedapps = ownedapps.split(",");
-		var wishlistapps = getValue("wishlist_apps");
-		if (wishlistapps) wishlistapps = wishlistapps.split(",");
+		var ownedapps = data.rgOwnedApps;
+		var wishlistapps = data.rgWishlist;
 
 		// Get all appids and nodes from selectors
 		$.each(selectors, function (i, selector) {
@@ -8247,28 +8194,9 @@ function launch_random_button() {
 	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
 
 	$("#es_random_game").on("click", function() {
-		var owned_promise = (function () {
-			var deferred = new $.Deferred();
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-			var last_updated = getValue("owned_list_time") || expire_time - 1;
-
-			if (last_updated < expire_time) {
-				get_http("//api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + is_signed_in, function(txt) {
-					setValue("owned_apps", txt);
-					setValue("owned_list_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve();
-				});
-			} else {
-				deferred.resolve();
-			}
-			return deferred.promise();
-		})();
-
-		$.when.apply($, [owned_promise]).done(function() {
-			var owned = getValue("owned_apps");
-			var data = JSON.parse(owned);
-			var games = data.response.games;
-			var rand = games[Math.floor(Math.random() * games.length)];
+		$.when.apply($, [dynamicstore_promise]).done(function(data) {
+			var owned = data.rgOwnedApps;
+			var rand = owned[Math.floor(Math.random() * owned.length)];
 			runInPageContext(
 				"function() {\
 					var prompt = ShowConfirmDialog('" + localized_strings.play_game.replace("__gamename__", rand.name.replace("'", "").trim()) + "', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
