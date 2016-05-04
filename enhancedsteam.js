@@ -67,6 +67,7 @@ var localization_promise = (function () {
 	});
 	return l_deferred.promise();
 })();
+
 var user_currency;
 var currency_promise = (function() {
 	var deferred = new $.Deferred();
@@ -139,6 +140,36 @@ var signed_in_promise = (function () {
 	} else {
 		deferred.resolve();
 	}
+	return deferred.promise();
+})();
+
+var dynamicstore_promise = (function () {
+	var deferred = new $.Deferred();
+	if (is_signed_in && window.location.protocol != "https:") {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+		var last_updated = getValue("dynamicstore_time") || expire_time - 1;
+		var dynamicstore_data = getValue("dynamicstore_data") || false;
+
+		if (last_updated < expire_time || !dynamicstore_data) {
+			get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
+				var data = JSON.parse(txt);
+				if (data) {
+					setValue("dynamicstore_data", data);
+					setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
+					deferred.resolve(data);
+				} else {
+					deferred.reject();
+				}
+			});
+		} else if (dynamicstore_data) {
+			deferred.resolve(dynamicstore_data);
+		} else {
+			deferred.reject();
+		}
+	} else {
+		deferred.reject();
+	}
+
 	return deferred.promise();
 })();
 
@@ -2705,36 +2736,6 @@ function appdata_on_wishlist() {
 		});
 	}
 }
-
-var dynamicstore_promise = (function () {
-	var deferred = new $.Deferred();
-	if (is_signed_in && window.location.protocol != "https:") {
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-		var last_updated = getValue("dynamicstored_time") || expire_time - 1;
-		var dynamicstore_data = getValue("dynamicstore_data") || false;
-
-		if (last_updated < expire_time || !dynamicstore_data) {
-			get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
-				var data = JSON.parse(txt);
-				if (data) {
-					setValue("dynamicstore_data", data);
-					setValue("dynamicstored_time", parseInt(Date.now() / 1000, 10));
-					deferred.resolve(data);
-				} else {
-					deferred.reject();
-				}
-			});
-		} else if (dynamicstore_data) {
-			deferred.resolve(dynamicstore_data);
-		} else {
-			deferred.reject();
-		}
-	} else {
-		deferred.reject();
-	}
-
-	return deferred.promise();
-})();
 
 function wishlist_dynamic_data() {
 	storage.get(function(settings) {
