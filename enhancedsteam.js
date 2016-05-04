@@ -2717,7 +2717,7 @@ function appdata_on_wishlist() {
 							if (app_data.data.platforms.mac) { htmlstring += "<span class='platform_img mac'></span>"; platforms += 1; }
 							if (app_data.data.platforms.linux) { htmlstring += "<span class='platform_img linux'></span>"; platforms += 1; }
 							if (platforms > 1) { htmlstring = htmlstring + "<span class='platform_img steamplay'></span>"; }
-							$(node).parent().parent().parent().find(".bottom_controls").append(htmlstring);
+							$(node).parent().parent().parent().find(".bottom_controls").append('<span class="es_platform">' + htmlstring + '</span>');
 						}
 
 						// Add release date info to unreleased apps
@@ -2773,7 +2773,7 @@ function wishlist_dynamic_data() {
 					var wishlisted = wishlistapps.indexOf(appid);
 					var owned = ownedapps.indexOf(appid);
 					if(owned == -1 && wishlisted == -1 && settings.store_sessionid) {
-						$(node).parent().append('<a class="btnv6_blue_hoverfade btn_small" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>');
+						$(node).parent().parent().siblings(".wishlist_added_on").append('(<a class="es_wishlist_add" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>)');
 						$("#es_wishlist_" + appid).click(function() {
 							$.ajax({
 								type:"POST",

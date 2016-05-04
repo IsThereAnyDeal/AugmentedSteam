@@ -368,14 +368,21 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	position: absolute;
 }
 
+.es_wishlist_add,
 .es_wishlist_remove {
 	cursor: pointer;
 	color: #ebebeb;
 }
 
+.es_wishlist_add:hover,
 .es_wishlist_remove:hover {
 	text-decoration: underline;
 }
+
+.es_platform {
+	opacity: 0.5
+}
+
 .ea_app_overlay {
 	top:15px;
 	left:22px;
