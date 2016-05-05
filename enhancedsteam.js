@@ -8198,15 +8198,19 @@ function launch_random_button() {
 		$.when.apply($, [dynamicstore_promise]).done(function(data) {
 			var owned = data.rgOwnedApps;
 			var rand = owned[Math.floor(Math.random() * owned.length)];
-			runInPageContext(
-				"function() {\
-					var prompt = ShowConfirmDialog('" + localized_strings.play_game.replace("__gamename__", rand.name.replace("'", "").trim()) + "', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
-					prompt.done(function(result) {\
-						if (result == 'OK') { window.location.assign('steam://run/" + rand.appid + "'); }\
-						if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand.appid + "'); }\
-					});\
-				 }"
-			);
+			$.ajax({
+				url: '//store.steampowered.com/apphover/' + rand
+			}).done(function(txt) {
+				runInPageContext(
+					"function() {\
+						var prompt = ShowConfirmDialog('" + localized_strings.play_game.replace("__gamename__", $(txt).find("h4:first").text().replace("'", "&#39;").trim()) + "', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
+						prompt.done(function(result) {\
+							if (result == 'OK') { window.location.assign('steam://run/" + rand + "'); }\
+							if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand + "'); }\
+						});\
+					 }"
+				);
+			});
 		});
 	});
 }
