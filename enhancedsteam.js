@@ -7119,7 +7119,13 @@ function add_gamelist_achievements() {
 							get_http($(".profile_small_header_texture a")[0].href + '/stats/' + appid, function (txt) {
 								txt = txt.replace(/[ ]src=/g," data-src=");
 								var parsedhtml = $.parseHTML(txt);
-								$("#es_app_" + appid).html($(parsedhtml).find("#topSummaryAchievements"));
+								var $topSummaryAchievements = $(parsedhtml).find("#topSummaryAchievements");
+								var $img = $topSummaryAchievements.find("img");
+								if ($img.length > 0) {
+									var $text = $($img[0].previousElementSibling.previousSibling);
+									$topSummaryAchievements.html('').append($("<div>").text($text.text().trim()), $img);
+								}
+								$("#es_app_" + appid).html($topSummaryAchievements);
 								$("#es_app_" + appid).find("img").each(function() {
 									var src = $(this).attr("data-src");
 									$(this).attr("src", src);
