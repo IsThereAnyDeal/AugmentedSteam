@@ -2644,15 +2644,15 @@ function add_twitch_info() {
 
 function chat_dropdown_options(in_chat) {
 	if (is_signed_in) {
-		var send_button = $("div.profile_header_actions > a[href*=LaunchWebChat]");
-		if (send_button.length > 0) {
-			var href = send_button.attr("href");
+		var $send_button = $("div.profile_header_actions > a[href*=LaunchWebChat]");
+		if ($send_button.length > 0) {
+			var href = $send_button.attr("href");
 			var friendID = href.match(/javascript:LaunchWebChat\( {friend: (\d+) } \);/)[1];
 			var friendSteamID = $("script:contains('g_rgProfileData')").text().match(/"steamid":"(\d+)",/)[1];
 
-			send_button.replaceWith(`
+			$send_button.replaceWith(`
 				<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link" onclick="ShowMenu( this, \'profile_chat_dropdown\', \'right\' );">
-					<span>` + send_button.text() + `<img src="//steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
+					<span>` + $send_button.text() + `<img src="//steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
 				</span>
 				<div class="popup_block" id="profile_chat_dropdown" style="visibility: visible; top: 168px; left: 679px; display: none; opacity: 1;">
 					<div class="popup_body popup_menu shadow_content" style="box-shadow: 0 0 12px #000">
