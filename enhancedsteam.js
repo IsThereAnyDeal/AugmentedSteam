@@ -1342,7 +1342,7 @@ function add_wishlist_discount_sort() {
 		var sort_by = $(this).data("sort-by");
 		switch (sort_by) {
 			case "rank":
-				sort_wishlist(".wishlist_rank", sort_by, true);
+				sort_wishlist(".wishlist_rank, .wishlist_rank_ro", sort_by, true);
 				break;
 			case "added":
 				// Can't do this one... could make a request for it tho...
@@ -1354,7 +1354,7 @@ function add_wishlist_discount_sort() {
 				break;
 			case "price":
 				sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
-					return Number(val.replace(/[^0-9\.]+/g, "")) || 31337;
+					return Number(val.replace(/\-/g, "0").replace(/[^0-9\.]+/g, "")) || 31337;
 				});
 				break;
 			case "discount":
