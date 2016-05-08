@@ -2994,7 +2994,33 @@ function add_hide_buttons_to_search() {
 		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
 		if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
 		
-		$("#advsearchform").find(".rightcol").prepend("<div class='block' id='es_hide_menu'><div class='block_header'><div>" + localized_strings.hide + "</div></div><div class='block_content block_content_inner'><div class='tab_filter_control' id='es_owned_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.options.owned + "</span></div><div class='tab_filter_control' id='es_wishlist_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.options.wishlist + "</span></div><div class='tab_filter_control' id='es_cart_games'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.options.cart + "</span></div><div class='tab_filter_control' id='es_notdiscounted'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.notdiscounted + "</span></div><div class='tab_filter_control' id='es_notinterested'><div class='tab_filter_control_checkbox'></div><span class='tab_filter_control_label'>" + localized_strings.notinterested + "</span></div></div></div>")
+		$("#advsearchform").find(".rightcol").prepend(`
+			<div class='block' id='es_hide_menu'>
+				<div class='block_header'><div>` + localized_strings.hide + `</div></div>
+				<div class='block_content block_content_inner'>
+					<div class='tab_filter_control' id='es_owned_games'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.options.owned + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_wishlist_games'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.options.wishlist + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_cart_games'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.options.cart + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_notdiscounted'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.notdiscounted + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_notinterested'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.notinterested + `</span>
+					</div>
+				</div>
+			</div>
+		`);
 
 		if (settings.hide_owned) {
 			$("#es_owned_games").addClass("checked");
@@ -6380,13 +6406,12 @@ function bind_ajax_content_highlighting() {
 					check_early_access(node);
 				}
 
-				if (node.classList && node.classList.contains("search_result_row")) {
-					start_highlighting_node(node);
-					check_early_access(node);
+				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) {
+					start_highlighting_node($(node).parent()[0]);
+					check_early_access($(node).parent()[0]);
 				}
 
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
-				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) start_highlighting_node($(node).parent()[0]);
 			}
 		});
 	});
