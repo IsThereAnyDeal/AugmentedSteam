@@ -1120,3 +1120,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	position: relative;
 	height: 353px;
 }
+
+/***************************************
+ * Steam inventory
+ * inventory_market_helper()
+ **************************************/
+.es_background_loading {
+	display: none;
+	width: 16px;
+	margin-left: -8px;
+	vertical-align: middle;
+}

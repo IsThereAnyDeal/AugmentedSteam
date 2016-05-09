@@ -4390,6 +4390,52 @@ function inventory_market_helper(response) {
 	if (response[5] && response[5].match(/Gift/)) gift = true;
 	var html;
 
+	var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
+
+	// Set as background option
+	var sideActs = $("#iteminfo" + item + "_item_actions");
+	var link = $(sideActs).find("a").first();
+	// Make sure there isn't a button already and that the current item is a background image
+	if (!$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
+		$(link).after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//cdn.steamcommunity.com/public/images/login/throbber.gif">');
+		$(".es_set_background").on("click", function(e){
+			e.preventDefault();
+
+			var el = $(this);
+			// Do nothing if loading or already done
+			if (!$(".es_background_loading").is(":visible") && !$(el).hasClass("btn_disabled")) {
+				$(".es_background_loading").show();
+				$(".es_isset_background").removeClass("es_isset_background");
+				$(thisItem).addClass("es_isset_background");
+
+				get_http(profile_url + "/edit", function(txt){
+					// Make sure the background we are trying to set is not set already
+					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/)[1];
+					if (currentBg !== assetID) {
+						var rHtml = $.parseHTML(txt);
+						$(rHtml).find("#profile_background").attr("value", assetID);
+						var $data = $(rHtml).find("#editForm").serializeArray();
+						$.ajax({url: profile_url + "/edit",
+								type: "POST",
+								data: $data
+						}).done(function(txt){
+							var rHtml = $.parseHTML(txt);
+							// Check if it was truly a succesful change
+							if ($(rHtml).find(".saved_changes_msg")) {
+								$(el).addClass("btn_disabled");
+							}
+						}).complete(function(){
+							$(".es_background_loading").fadeOut("fast");
+						});
+					} else {
+						$(el).addClass("btn_disabled");
+						$(".es_background_loading").fadeOut("fast");
+					}
+				});
+			}
+		});
+	}
+
 	if (gift) {
 		$("#es_item" + item).remove();
 		if ($("#iteminfo" + item + "_item_actions").find("a").length > 0) {
@@ -4490,7 +4536,6 @@ function inventory_market_helper(response) {
 					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
 					$("#iteminfo" + item + "_item_market_actions").append("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $("#iteminfo" + item + "_item_market_actions .item_market_action_button_contents").text() + "</span></a>");
 					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
-					var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
 
 					// Workaround for preventing actions for the same item if clicked and active
 					$(".inventory_item_link_disabled").attr({class: "inventory_item_link"});
