@@ -4410,7 +4410,8 @@ function inventory_market_helper(response) {
 
 				get_http(profile_url + "/edit", function(txt){
 					// Make sure the background we are trying to set is not set already
-					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/)[1];
+					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/),
+						currentBg = currentBg ? currentBg[1] : false;
 					if (currentBg !== assetID) {
 						var rHtml = $.parseHTML(txt);
 						$(rHtml).find("#profile_background").attr("value", assetID);
