@@ -61,6 +61,7 @@ function save_options() {
 	show_early_access = $("#show_early_access").prop('checked');
 	show_alternative_linux_icon = $("#show_alternative_linux_icon").prop('checked');
 	show_itad_button = $("#show_itad_button").prop('checked');
+	skip_got_steam = $("#skip_got_steam").prop('checked');
 	
 	// Price Options
 	showlowestprice = $("#showlowestprice").prop('checked');
@@ -210,6 +211,7 @@ function save_options() {
 		'show_early_access': show_early_access,
 		'show_alternative_linux_icon': show_alternative_linux_icon,
 		'show_itad_button': show_itad_button,
+		'skip_got_steam': skip_got_steam,
 		
 		'showlowestprice': showlowestprice,
 		'showlowestprice_onwishlist': showlowestprice_onwishlist,
@@ -428,6 +430,7 @@ function load_options() {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
 		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; storage.set({'show_itad_button': settings.show_itad_button}); }
+		if (settings.skip_got_steam === undefined) { settings.skip_got_steam = true; storage.set({'skip_got_steam': settings.skip_got_steam}); }
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
@@ -528,6 +531,7 @@ function load_options() {
 		$("#show_early_access").prop('checked', settings.show_early_access);
 		$("#show_alternative_linux_icon").prop('checked', settings.show_alternative_linux_icon);
 		$("#show_itad_button").prop('checked', settings.show_itad_button);
+		$("#skip_got_steam").prop('checked', settings.skip_got_steam);
 				
 		// Load Price Options
 		$("#showlowestprice").prop('checked', settings.showlowestprice);
@@ -714,6 +718,7 @@ function load_translation() {
 			$("#show_early_access_text").text(localized_strings.options.show_early_access_text);
 			$("#show_alternative_linux_icon_text").text(localized_strings.options.show_alternative_linux_icon);
 			$("#show_itad_button_text").text(localized_strings.itad.option);
+			$("#skip_got_steam_text").text(localized_strings.options.skip_got_steam);
 			
 			$("#warning_language option").each(function() {
 				var lang = $(this).text();

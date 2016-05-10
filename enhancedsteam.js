@@ -8335,6 +8335,17 @@ function remove_guides_language_filter() {
 	});
 }
 
+function skip_got_steam() {
+	storage.get(function(settings) {
+		if (settings.skip_got_steam === undefined) { settings.skip_got_steam = true; storage.set({'skip_got_steam': settings.skip_got_steam}); }
+		if (settings.skip_got_steam) {
+			$("a[href^='javascript:ShowGotSteamModal']").each(function() {
+				$(this).attr("href",$(this).attr("href").split("'")[1]);
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 	var path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -8411,6 +8422,7 @@ $(document).ready(function(){
 
 							customize_app_page();
 							add_help_button(appid);
+							skip_got_steam();
 							break;
 
 						case /^\/sub\/.*/.test(path):
@@ -8422,6 +8434,7 @@ $(document).ready(function(){
 							add_acrtag_warning();
 
 							show_regional_pricing();
+							skip_got_steam();
 							break;
 
 						case /^\/agecheck\/.*/.test(path):
@@ -8432,6 +8445,10 @@ $(document).ready(function(){
 							dlc_data_for_dlc_page();
 							break;
 
+						case /^\/video\/.*/.test(path):
+							skip_got_steam();
+						break;
+						
 						case /^\/account(\/.*)?/.test(path):
 							account_total_spent();
 							replace_account_name();
