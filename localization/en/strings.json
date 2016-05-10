@@ -216,6 +216,7 @@
     "leave_group_admin_confirm": "You are Admin in this group: __groupname__\nAre you sure you want to leave?",
     "wrong_try_again": "Something went wrong. Please try again.",
     "join_group": "Join Group",
+    "chat": "Chat",
     "web_browser_chat": "Web browser chat",
     "steam_client_chat": "Steam Client chat",
     "available": "Available",

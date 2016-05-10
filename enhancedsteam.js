@@ -2021,6 +2021,7 @@ function add_header_links() {
 		if (is_signed_in) {
 			$(".submenu_username").find("a:first").after('<a class="submenuitem" href="//steamcommunity.com/my/games/">' + localized_strings.games + '</a>');
 			$(".submenu_username").append('<a class="submenuitem" href="//steamcommunity.com/my/recommended/">' + localized_strings.reviews + '</a>');
+			$(".submenu_community .submenuitem:nth-of-type(3)").after('<a class="submenuitem" style="cursor: pointer" onclick="window.open(\'https://steamcommunity.com/chat/\', \'\', \'height=790,width=1015,resize=yes,scrollbars=yes\')">' + localized_strings.chat + '</a>');
 		}
 	}
 }
