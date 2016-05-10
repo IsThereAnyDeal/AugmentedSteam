@@ -3696,6 +3696,32 @@ function add_profile_style() {
 	});
 }
 
+function load_background_preview() {
+	var prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9]+)/i);
+	if (prevHash) {
+		var imgUrl = "//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2] + ".jpg";
+		// Make sure the url is for a valid background image
+		$("body").append('<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
+		$("img.es_bg_test").on('load', function() {
+			$(".no_header.profile_page, .profile_background_image_content").css("background-image", "url('" + imgUrl + "')");
+			$(".es_bg_test").remove();
+		});
+	}
+}
+
+function add_background_preview_link() {
+	if (is_signed_in) {
+		var isSteamPage = window.location.pathname.match(/\/market\/listings\/753\/(.+)/);
+		var $viewFullLink = $("#largeiteminfo_item_actions").find("a");
+		if (isSteamPage && $viewFullLink.length) {
+			var bgLink = $viewFullLink[0].href.match(/images\/items\/(\d+)\/([a-z0-9]+)\.jpg/i);
+			if (bgLink) {
+				$viewFullLink.after('<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="' + profile_url + "#previewBackground/" + bgLink[1] + "/" + bgLink[2] + '"><span>' + localized_strings.preview_background + '</span></a>');
+			}
+		}
+	}
+}
+
 function hide_activity_spam_comments() {
 	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
 		hide_spam_comments();
@@ -8638,6 +8664,7 @@ $(document).ready(function(){
 							add_steamrep_api();
 							add_posthistory_link();
 							add_profile_style();
+							load_background_preview();
 							chat_dropdown_options();
 							break;
 
@@ -8676,6 +8703,7 @@ $(document).ready(function(){
 							add_lowest_market_price();
 							add_relist_button();
 							keep_ssa_checked();
+							add_background_preview_link();
 							break;
 
 						case /^\/app\/[^\/]*\/guides/.test(path):
