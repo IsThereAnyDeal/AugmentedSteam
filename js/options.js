@@ -430,7 +430,7 @@ function load_options() {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
 		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; storage.set({'show_itad_button': settings.show_itad_button}); }
-		if (settings.skip_got_steam === undefined) { settings.skip_got_steam = true; storage.set({'skip_got_steam': settings.skip_got_steam}); }
+		if (settings.skip_got_steam === undefined) { settings.skip_got_steam = false; storage.set({'skip_got_steam': settings.skip_got_steam}); }
 		
 		if (settings.hideinstallsteambutton === undefined) { settings.hideinstallsteambutton = false; storage.set({'hideinstallsteambutton': settings.hideinstallsteambutton}); }
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }

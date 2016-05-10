@@ -3,6 +3,7 @@
 + Added dynamic store data to wishlist pages
 + Added release date information for unreleased games on wishlist pages
 + Added an "Add to your wishlist" button on other people's wishlist pages
++ Added an option to skip the "Got Steam" dialog on store pages
 : Changing view options on the badges page no longer requires a page reload
 : Fixed a bug where some functions weren't working correctly for users who hadn't configured a custom URL
 : Fixed a bug that would occur when trying to leave multiple groups if there was an error on the page
