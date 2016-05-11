@@ -221,6 +221,7 @@
     "steam_client_chat": "Steam Client chat",
     "available": "Available",
     "set_as_background": "Set as Background",
+    "preview_background": "Preview Background",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
