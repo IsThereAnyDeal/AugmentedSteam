@@ -1541,3 +1541,26 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_highlighted .search_capsule {
 	opacity: 1 !important;
 }
+
+/***************************************
+ * Front Store page and Community
+ * add_birthday_celebration()
+ **************************************/
+ .es_birthday #logo_holder img {
+	background: url("chrome-extension://__MSG_@@extension_id__/img/birthday_logo.png") no-repeat;
+	padding: 28px 0;
+	margin-top: -28px;
+}
+.es_birthday.es_store_front #global_header:before {
+	background: url("chrome-extension://__MSG_@@extension_id__/img/birthday_bg.png") repeat-x;
+	content: "";
+	display: block;
+	position: absolute;
+	pointer-events: none;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+	top: 104px;
+	left: 0;
+	opacity: 0.4;
+}

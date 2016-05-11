@@ -8310,9 +8310,9 @@ function add_decline_button() {
 	}
 }
 
-function add_birthday_celebration() {
+function add_birthday_celebration(in_store) {
 	var profile_id = is_signed_in;
-	var setting_name = profile_id[0]+"birthday";
+	var setting_name = profile_id[0] + "birthday";
 	var obj = {};
 	storage.get(function(settings) {
 		if (settings[setting_name] === undefined) {
@@ -8326,27 +8326,14 @@ function add_birthday_celebration() {
 		else {
 			var username = $("#global_header .username").text().trim();
 			var birth_date_unix = settings[setting_name];
-			var birth_date = new Date(birth_date_unix*1000);
+			var birth_date = new Date(birth_date_unix * 1000);
 			var now = new Date();
-			var years=0;
-			if(now.getMonth()==birth_date.getMonth()){
-				if(now.getDate()==birth_date.getDate()){
-					years = now.getFullYear()-birth_date.getFullYear();
-					var message = localized_strings["birthday_message"].replace("__username__", username).replace("__age__", years);
-					$("#logo_holder img").attr({"title":message,"alt":message,"height":100,"src":chrome.extension.getURL("img/birthday_logo.png")}).css('margin-top', '-14px');
-					$(".logo").css({"height":"60px","padding-top":"14px"});
-
-					switch (window.location.host) {
-						case "store.steampowered.com":
-							switch (true) {
-								case /^\/$/.test(window.location.pathname):
-									if ($("#parental_notice").length == 0) {
-										$("#global_header").append("<div style='background-image: url("+chrome.extension.getURL("img/birthday_bg.png")+");' class='birthday'></div>");
-									}
-									break;
-							}
-					}
-				}
+			var years = 0;
+			if (now.getMonth() == birth_date.getMonth() && now.getDate() == birth_date.getDate()) {
+				years = now.getFullYear() - birth_date.getFullYear();
+				var message = localized_strings["birthday_message"].replace("__username__", username).replace("__age__", years);
+				$("body").addClass("es_birthday" + (in_store && $(".home_ctn").length ? " es_store_front" : ""));
+				$("#logo_holder img").attr({"title": message, "alt": message});
 			}
 		}
 	});
@@ -8657,16 +8644,19 @@ $(document).ready(function(){
 			process_early_access();
 			if (is_signed_in) {
 				replace_account_name();
-				add_birthday_celebration();
 				launch_random_button();
 				add_itad_button();
-			}			
+			}
 
 			// Attach event to the logout button
 			$('a[href$="javascript:Logout();"]').bind('click', clear_cache);
 
 			switch (window.location.host) {
 				case "store.steampowered.com":
+
+					if (is_signed_in) {
+						add_birthday_celebration(true);
+					}
 
 					switch (true) {
 						case /^\/cart\/.*/.test(path):
@@ -8791,7 +8781,10 @@ $(document).ready(function(){
 
 				case "steamcommunity.com":
 
-					add_wallet_balance_to_header();
+					if (is_signed_in) {
+						add_birthday_celebration();
+						add_wallet_balance_to_header();
+					}
 
 					switch (true) {
 						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
