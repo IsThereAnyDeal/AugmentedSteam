@@ -1463,25 +1463,33 @@ function add_wishlist_total() {
 }
 
 function add_wishlist_ajaxremove() {
-	$("a[onclick*=wishlist_remove]").each(function() {		
-		var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
-		$(this).after("<span class='es_wishlist_remove' id='es_wishlist_remove_" + appid + "'>" + $(this).text() + "</span>");
-		$(this).remove();
-		var session = decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
+	// Remove "onclick"
+	runInPageContext(function(){ $J("a[onclick*=wishlist_remove]").removeAttr("onclick").addClass("es_wishlist_remove"); });
 
-		$("#es_wishlist_remove_" + appid).on("click", function() {
+	var store_sessionid = false;
+	storage.get(function(settings) {
+		if (settings.store_sessionid) {
+			store_sessionid = settings.store_sessionid;
+		}
+
+		var sessionid = store_sessionid || decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
+
+		$(".es_wishlist_remove").on("click", function(e) {
+			e.preventDefault();
+
+			var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
 			$.ajax({
-				type:"POST",
-				url: window.location,
-				data:{
-					sessionid: session,
+				type: "POST",
+				url: (store_sessionid ? "//store.steampowered.com/api/removefromwishlist" : window.location),
+				data: {
+					sessionid: sessionid,
 					action: "remove",
 					appid: appid
 				},
 				success: function( msg ) {
 					var currentRank = parseFloat($("#game_" + appid + " .wishlist_rank")[0].value);
 					if ($("#es_price_" + appid).length > 0) { $("#es_price_" + appid).remove(); }
-					$("#game_" + appid).remove();
+					$("#game_" + appid).fadeOut("fast", function(){ $(this).remove(); });
 					setValue(appid + "wishlisted", false);
 					for (var i = 0; i < $('.wishlistRow').length; i++) {
 						if ($('.wishlist_rank')[i].value > currentRank) {
