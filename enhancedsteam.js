@@ -3696,19 +3696,6 @@ function add_profile_style() {
 	});
 }
 
-function load_background_preview() {
-	var prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9]+)/i);
-	if (prevHash) {
-		var imgUrl = "//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2] + ".jpg";
-		// Make sure the url is for a valid background image
-		$("body").append('<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
-		$("img.es_bg_test").on('load', function() {
-			$(".no_header.profile_page, .profile_background_image_content").css("background-image", "url('" + imgUrl + "')");
-			$(".es_bg_test").remove();
-		});
-	}
-}
-
 function add_background_preview_link() {
 	if (is_signed_in) {
 		var isSteamPage = window.location.pathname.match(/\/market\/listings\/753\/(.+)/);
@@ -6899,19 +6886,30 @@ function clear_cache() {
 }
 
 function change_user_background() {
-	profileData.get("profile", function(data) {
-		var txt = data.background;
-		if (txt) {
-			$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
-			if ($(".profile_background_image_content").length > 0) {
-				$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
-			} else {
-				$(".no_header").addClass("has_profile_background");
-				$(".profile_content").addClass("has_profile_background");
-				$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
+	var prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9]+)/i);
+	if (prevHash) {
+		var imgUrl = "//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2] + ".jpg";
+		// Make sure the url is for a valid background image
+		$("body").append('<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
+		$("img.es_bg_test").on('load', function() {
+			$(".no_header.profile_page, .profile_background_image_content").css("background-image", "url('" + imgUrl + "')");
+			$(".es_bg_test").remove();
+		});
+	} else {
+		profileData.get("profile", function(data) {
+			var txt = data.background;
+			if (txt) {
+				$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
+				if ($(".profile_background_image_content").length > 0) {
+					$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
+				} else {
+					$(".no_header").addClass("has_profile_background");
+					$(".profile_content").addClass("has_profile_background");
+					$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
+				}
 			}
-		}
-	});
+		});
+	}
 }
 
 function add_es_background_selection() {
@@ -8664,7 +8662,6 @@ $(document).ready(function(){
 							add_steamrep_api();
 							add_posthistory_link();
 							add_profile_style();
-							load_background_preview();
 							chat_dropdown_options();
 							break;
 

@@ -6,6 +6,7 @@
 + Added an "Add to your wishlist" button on other people's wishlist pages
 + Added an option to skip the "Got Steam" dialog on store pages
 + Added a link to the web chat to the Community dropdown menu when logged in
++ Added a button to profile background market pages to preview that background on your own profile
 : Changing view options on the badges page no longer requires a page reload
 : Improved performance of continuous scolling feature
 : Changing sorting options on wishlist pages will no longer cause the page to reload
