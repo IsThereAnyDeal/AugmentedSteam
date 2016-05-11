@@ -220,6 +220,7 @@
     "web_browser_chat": "Web browser chat",
     "steam_client_chat": "Steam Client chat",
     "available": "Available",
+    "set_as_background": "Set as Background",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
