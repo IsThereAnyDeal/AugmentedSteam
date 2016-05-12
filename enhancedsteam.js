@@ -6895,7 +6895,6 @@ function change_user_background() {
 			$(".no_header.profile_page, .profile_background_image_content").css("background-image", "url('" + imgUrl + "')");
 			$(".es_bg_test").remove();
 		});
-
 	} else {
 		profileData.get("profile", function(data) {
 			var txt = data.background;
