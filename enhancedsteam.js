@@ -6171,12 +6171,12 @@ function customize_home_page() {
 		}
 
 		// New on Steam
-		if ($(".new_on_steam").length > 0) {
-			text = $(".new_on_steam").find("a:first").text();
+		if ($(".popular_new_on_steam").length > 0) {
+			text = $(".popular_new_on_steam").find("a:first").text();
 			if (settings.show_homepage_newsteam) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".new_on_steam").hide();
+				$(".popular_new_on_steam").hide();
 			}
 		}
 
@@ -6328,11 +6328,11 @@ function customize_home_page() {
 		$("#show_homepage_newsteam").click(function() {
 			if (settings.show_homepage_newsteam) {
 				settings.show_homepage_newsteam = false;
-				$(".new_on_steam").hide();
+				$(".popular_new_on_steam").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_newsteam = true;
-				$(".new_on_steam").show();
+				$(".popular_new_on_steam").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_newsteam': settings.show_homepage_newsteam});

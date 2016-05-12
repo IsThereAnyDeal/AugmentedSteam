@@ -3,6 +3,7 @@
 + Added dynamic store data to wishlist pages
 + Added a button to profile backgrounds in your inventory to set them as your background with a single click
 + Added release date information for unreleased games on wishlist pages
++ Added a media slider to store and workshop pages to expand the screenshots and movies section
 + Added an "Add to your wishlist" button on other people's wishlist pages
 + Added an option to skip the "Got Steam" dialog on store pages
 + Added a link to the web chat to the Community dropdown menu when logged in
@@ -11,6 +12,7 @@
 : Improved performance of continuous scolling feature
 : Changing sorting options on wishlist pages will no longer cause the page to reload
 : Fixed a bug where some functions weren't working correctly for users who hadn't configured a custom URL
+: Fixed a bug that caused the "New on Steam" section's visibility on the homepage not to toggle
 : Fixed a bug that would occur when trying to leave multiple groups if there was an error on the page
 : Fixed a bug that caused the homepage carousel to not display correctly until it scrolled past the first item
 : Fixed a bug where adding games to your wishlist from the community hub would result in an error
