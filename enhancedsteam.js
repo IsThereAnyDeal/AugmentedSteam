@@ -5460,6 +5460,55 @@ function process_early_access() {
 	});
 }
 
+function player_hd_button() {
+	$(".highlight_movie").each(function(){
+		var $videoControl = $(this).find("video");
+		if ($videoControl.data("hd-src")) {
+			if (!$videoControl.data("sd-src")) {
+				$videoControl.data("sd-src", $videoControl.attr("src"));
+			}
+			$videoControl.parent().find(".time").after('<div class="es_hd_toggle es_video_sd"><span>HD</span></div>');
+		} 
+	});
+
+	$(".es_hd_toggle").on("click", function(){
+		var videoControl = $(this).parent().parent().parent().find("video")[0];
+		toggle_video_definition( videoControl );
+	});
+
+	// When fullscreen button is pressed first time the quality is set to HD
+	// so we set the definition indicator to HD also, but just once
+	$(".fullscreen_button").on("click", function(){
+		$(this).siblings(".es_hd_toggle").removeClass("es_video_sd").addClass("es_video_hd");
+		$(this).off("click");
+	});
+
+	function toggle_video_definition(videoControl, setHd) {
+		var defEle = $(videoControl).parent().find(".es_hd_toggle"),
+			videoPosition = videoControl.currentTime,
+			videoPaused = videoControl.paused,
+			videoIsHd = false;
+		
+		videoControl.preload = "metadata";
+
+		$(videoControl).on('loadedmetadata', function() {
+			this.currentTime = videoPosition;
+			if (!videoPaused) videoControl.play();
+			$(videoControl).off('loadedmetadata');
+		});
+
+		if ($(defEle).hasClass("es_video_sd") || setHd === true) {
+			videoIsHd = true;
+			videoControl.src = $(videoControl).data('hd-src');
+		} else {
+			videoControl.src = $(videoControl).data('sd-src');
+		}
+		videoControl.load();
+
+		$(defEle).toggleClass("es_video_sd", !videoIsHd).toggleClass("es_video_hd", videoIsHd);
+	}
+}
+
 function media_slider_expander(in_store) {
 	var details = $(".workshop_item_header").find(".col_right").first();
 	if (in_store) {
@@ -5500,7 +5549,9 @@ function media_slider_expander(in_store) {
 			$(".es_slider_toggle").attr("data-slider-tooltip", localized_strings.contract_slider);
 
 			// Triggers the adjustment of the slider scroll bar
-			window.dispatchEvent(new Event("resize"));
+			setTimeout(function(){
+				window.dispatchEvent(new Event("resize"));
+			}, 300);
 		}
 
 		// Initiate tooltip
@@ -5523,7 +5574,7 @@ function media_slider_expander(in_store) {
 			}
 
 			// Animate 
-			$(".es_side_details").stop().slideToggle(500, function(){
+			$(".es_side_details").stop().slideToggle(300, function(){
 				if (!$(el).hasClass("expanded")) $(".es_side_details_wrap").hide();
 			});
 
@@ -5541,7 +5592,9 @@ function media_slider_expander(in_store) {
 				if (!$(el).hasClass("expanded")) $(details).hide().fadeIn("fast");
 
 				// Triggers the adjustment of the slider scroll bar
-				window.dispatchEvent(new Event("resize"));
+				setTimeout(function(){
+					window.dispatchEvent(new Event("resize"));
+				}, 300);
 			});
 
 			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").toggleClass("expanded");
@@ -8535,6 +8588,7 @@ $(document).ready(function(){
 							var metalink = $("#game_area_metalink").find("a").attr("href");
 
 							media_slider_expander(true);
+							player_hd_button();
 
 							storePageData.load(appid, metalink);
 

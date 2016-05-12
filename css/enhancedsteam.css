@@ -1134,6 +1134,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-left: -8px;
 	vertical-align: middle;
 }
+
 /**************************************
  * Apps page, workshop items
  * media_slider_expander()
@@ -1143,7 +1144,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .workshop_item_header .highlight_player_item iframe,
 .workshop_item_header .workshopItemPreviewImageEnlargeable,
 .workshop_item_header .workshopItemPreviewImageEnlargeableContainer {
-	transition: width 0.5s ease, max-width 0.5s ease, height 0.5s ease;
+	transition: width 0.3s ease, max-width 0.3s ease, height 0.3s ease;
 }
 .es_slider_toggle {
 	padding: 4px !important;
@@ -1283,4 +1284,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_overlay img {
 	position: relative;
 	height: 100% !important;
+}
+
+/***************************************
+ * App pages
+ * player_hd_button()
+ **************************************/
+.es_hd_toggle {
+	float: right;
+	line-height: 19px;
+	margin-right: 10px;
+	font-family: 'Motiva Sans', sans-serif;
+	font-weight: bold;
+	cursor: pointer;
+}
+.es_hd_toggle.es_video_sd span {
+	opacity: 0.4;
 }
