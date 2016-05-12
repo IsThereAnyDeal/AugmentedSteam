@@ -1265,6 +1265,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	position: relative;
 	display: inherit;
 }
+#tab_allreleases_content .tab_item .es_overlay_container {
+	left: -198px;
+}
+#tab_popular_content .tab_item .es_overlay_container {
+	left: -198px;
+}
 .es_overlay,
 .es_overlay img {
 	position: absolute;
