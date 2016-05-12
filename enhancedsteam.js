@@ -915,7 +915,11 @@ function display_tags(node) {
 		}
 		else if (node.classList.contains("tab_item")) {			
 			remove_existing_tags($(node));
-			$(node).find(".tab_item_content").prepend($tags);
+			$tags.css({
+				"float": "left",
+				"height": "10px"
+			});
+			$(node).find(".tab_item_name").after($tags);
 		}
 		else if (node.classList.contains("search_result_row")) {
 			$tag_root = $(node).find(".search_name");
