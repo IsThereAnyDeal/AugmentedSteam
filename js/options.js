@@ -9,6 +9,7 @@ function save_options() {
 	highlight_coupon_color = $("#highlight_coupon_color").val();
 	highlight_inv_gift_color = $("#highlight_inv_gift_color").val();
 	highlight_inv_guestpass_color = $("#highlight_inv_guestpass_color").val();
+	highlight_notinterested_color = $("#highlight_notinterested_color").val();
 
 	tag_owned_color = $("#tag_owned_color").val();
 	tag_owned_color = $("#tag_owned_color").val();
@@ -16,12 +17,14 @@ function save_options() {
 	tag_coupon_color = $("#tag_coupon_color").val();
 	tag_inv_gift_color = $("#tag_inv_gift_color").val();
 	tag_inv_guestpass_color = $("#tag_inv_guestpass_color").val();
+	tag_notinterested_color = $("#tag_notinterested_color").val();
 
 	highlight_owned = $("#highlight_owned").prop('checked');
 	highlight_wishlist = $("#highlight_wishlist").prop('checked');
 	highlight_coupon = $("#highlight_coupon").prop('checked');
 	highlight_inv_gift = $("#highlight_inv_gift").prop('checked');
 	highlight_inv_guestpass = $("#highlight_inv_guestpass").prop('checked');
+	highlight_notinterested = $("#highlight_notinterested").prop('checked');
 	highlight_excludef2p = $("#highlight_excludef2p").prop('checked');
 
 	tag_owned = $("#tag_owned").prop('checked');
@@ -29,6 +32,7 @@ function save_options() {
 	tag_coupon = $("#tag_coupon").prop('checked');
 	tag_inv_gift = $("#tag_inv_gift").prop('checked');
 	tag_inv_guestpass = $("#tag_inv_guestpass").prop('checked');
+	tag_notinterested = $("#tag_notinterested").prop('checked');
 	
 	hide_owned = $("#hide_owned").prop('checked');
 	hidetmsymbols = $("#hidetmsymbols").prop('checked');
@@ -160,6 +164,7 @@ function save_options() {
 		'highlight_coupon_color': highlight_coupon_color,
 		'highlight_inv_gift_color': highlight_inv_gift_color,
 		'highlight_inv_guestpass_color': highlight_inv_guestpass_color,
+		'highlight_notinterested_color': highlight_notinterested_color,
 		'highlight_excludef2p': highlight_excludef2p,
 
 		'tag_owned_color': tag_owned_color,
@@ -167,18 +172,21 @@ function save_options() {
 		'tag_coupon_color': tag_coupon_color,
 		'tag_inv_gift_color': tag_inv_gift_color,
 		'tag_inv_guestpass_color': tag_inv_guestpass_color,
+		'tag_notinterested_color': tag_notinterested_color,
 
 		'highlight_owned': highlight_owned,
 		'highlight_wishlist': highlight_wishlist,
 		'highlight_coupon': highlight_coupon,
 		'highlight_inv_gift': highlight_inv_gift,
 		'highlight_inv_guestpass': highlight_inv_guestpass,
+		'highlight_notinterested': highlight_notinterested,
 
 		'tag_owned': tag_owned,
 		'tag_wishlist': tag_wishlist,
 		'tag_coupon': tag_coupon,
 		'tag_inv_gift': tag_inv_gift,
 		'tag_inv_guestpass': tag_inv_guestpass,
+		'tag_notinterested': tag_notinterested,
 		
 		'hide_owned': hide_owned,
 		'hidetmsymbols': hidetmsymbols,
@@ -379,18 +387,21 @@ function load_options() {
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124";	storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
+		if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = "#e02b3c";	storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
 
 		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836"; storage.set({'tag_owned_color': settings.tag_owned_color}); }
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea"; storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
+		if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = "#e02b3c"; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
 
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
+		if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
 		if (settings.highlight_excludef2p === undefined) { settings.highlight_excludef2p = false; storage.set({'highlight_excludef2p': settings.highlight_excludef2p}); }
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
@@ -398,6 +409,7 @@ function load_options() {
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
+		if (settings.tag_notinterested === undefined) { settings.tag_notinterested = false; storage.set({'tag_notinterested': settings.tag_notinterested}); }
 
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
 		if (settings.hidetmsymbols === undefined) { settings.hidetmsymbols = false; storage.set({'hidetmsymbols': settings.hidetmsymbols}); }
@@ -479,6 +491,7 @@ function load_options() {
 		$("#highlight_coupon_color").val(settings.highlight_coupon_color);
 		$("#highlight_inv_gift_color").val(settings.highlight_inv_gift_color);
 		$("#highlight_inv_guestpass_color").val(settings.highlight_inv_guestpass_color);
+		$("#highlight_notinterested_color").val(settings.highlight_notinterested_color);
 
 		$("#tag_owned_color").val(settings.tag_owned_color);
 		$("#tag_owned_color").val(settings.tag_owned_color);
@@ -486,12 +499,14 @@ function load_options() {
 		$("#tag_coupon_color").val(settings.tag_coupon_color);
 		$("#tag_inv_gift_color").val(settings.tag_inv_gift_color);
 		$("#tag_inv_guestpass_color").val(settings.tag_inv_guestpass_color);
+		$("#tag_notinterested_color").val(settings.tag_notinterested_color);
 
 		$("#highlight_owned").prop('checked', settings.highlight_owned);
 		$("#highlight_wishlist").prop('checked', settings.highlight_wishlist);
 		$("#highlight_coupon").prop('checked', settings.highlight_coupon);
 		$("#highlight_inv_gift").prop('checked', settings.highlight_inv_gift);
 		$("#highlight_inv_guestpass").prop('checked', settings.highlight_inv_guestpass);
+		$("#highlight_notinterested").prop('checked', settings.highlight_notinterested);
 		$("#highlight_excludef2p").prop('checked', settings.highlight_excludef2p);
 
 		$("#tag_owned").prop('checked', settings.tag_owned);
@@ -499,6 +514,7 @@ function load_options() {
 		$("#tag_coupon").prop('checked', settings.tag_coupon);
 		$("#tag_inv_gift").prop('checked', settings.tag_inv_gift);
 		$("#tag_inv_guestpass").prop('checked', settings.tag_inv_guestpass);
+		$("#tag_notinterested").prop('checked', settings.tag_notinterested);
 		
 		$("#hide_owned").prop('checked', settings.hide_owned);
 		$("#hidetmsymbols").prop('checked', settings.hidetmsymbols);
@@ -665,6 +681,7 @@ function load_translation() {
 			$("#highlight_coupon_text").text(localized_strings.options.coupon);
 			$("#highlight_gift_text").text(localized_strings.options.gift);
 			$("#highlight_guest_text").text(localized_strings.options.guest);
+			$("#highlight_notinterested_text").text(localized_strings.notinterested);
 			$("#highlight_excludef2p_text").text(localized_strings.options.excludef2p);
 
 			$("#tag_text").text(localized_strings.options.tag);
@@ -673,6 +690,7 @@ function load_translation() {
 			$("#tag_coupon_text").text(localized_strings.options.coupon);
 			$("#tag_gift_text").text(localized_strings.options.gift);
 			$("#tag_guest_text").text(localized_strings.options.guest);
+			$("#tag_notinterested_text").text(localized_strings.notinterested);
 			
 			$("#hide_text").text(localized_strings.hide);
 			$("#hide_owned_text").text(localized_strings.options.hide_owned);
@@ -782,12 +800,14 @@ function load_translation() {
 			$("#highlight_coupon_default").text(localized_strings.theworddefault);
 			$("#highlight_inv_gift_default").text(localized_strings.theworddefault);
 			$("#highlight_inv_guestpass_default").text(localized_strings.theworddefault);
+			$("#highlight_notinterested_default").text(localized_strings.theworddefault);
 			$("#highlight_friends_want_color_default").text(localized_strings.theworddefault);
 			$("#tag_owned_color_default").text(localized_strings.theworddefault);
 			$("#tag_wishlist_default").text(localized_strings.theworddefault);
 			$("#tag_coupon_default").text(localized_strings.theworddefault);
 			$("#tag_inv_gift_default").text(localized_strings.theworddefault);
 			$("#tag_inv_guestpass_default").text(localized_strings.theworddefault);
+			$("#tag_notinterested_default").text(localized_strings.theworddefault);
 			$("#tag_friends_want_color_default").text(localized_strings.theworddefault);
 			$("#tag_friends_own_color_default").text(localized_strings.theworddefault);
 			$("#tag_friends_rec_color_default").text(localized_strings.theworddefault);
@@ -917,12 +937,14 @@ function load_default_highlight_wishlist_color() { $("#highlight_wishlist_color"
 function load_default_highlight_coupon_color() { $("#highlight_coupon_color").val("#6b2269"); }
 function load_default_highlight_inv_gift_color() { $("#highlight_inv_gift_color").val("#a75124"); }
 function load_default_highlight_inv_guestpass_color() { $("#highlight_inv_guestpass_color").val("#a75124"); }
+function load_default_highlight_notinterested_color() { $("#highlight_notinterested_color").val("#e02b3c"); }
 
 function load_default_tag_owned_color() { $("#tag_owned_color").val("#5c7836"); }
 function load_default_tag_wishlist_color() { $("#tag_wishlist_color").val("#d3deea"); }
 function load_default_tag_coupon_color() { $("#tag_coupon_color").val("#6b2269"); }
 function load_default_tag_inv_gift_color() { $("#tag_inv_gift_color").val("#a75124"); }
 function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").val("#a75124"); }
+function load_default_tag_notinterested_color() { $("#tag_notinterested_color").val("#e02b3c"); }
 
 function load_default_countries() {
 	regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"];
@@ -946,12 +968,14 @@ $(document).ready(function(){
 	$("#highlight_coupon_default").click(load_default_highlight_coupon_color);
 	$("#highlight_inv_gift_default").click(load_default_highlight_inv_gift_color);
 	$("#highlight_inv_guestpass_default").click(load_default_highlight_inv_guestpass_color);
+	$("#highlight_notinterested_default").click(load_default_highlight_notinterested_color);
 
 	$("#tag_owned_color_default").click(load_default_tag_owned_color);
 	$("#tag_wishlist_default").click(load_default_tag_wishlist_color);
 	$("#tag_coupon_default").click(load_default_tag_coupon_color);
 	$("#tag_inv_gift_default").click(load_default_tag_inv_gift_color);
 	$("#tag_inv_guestpass_default").click(load_default_tag_inv_guestpass_color);
+	$("#tag_notinterested_default").click(load_default_tag_notinterested_color);
 
 	$("#spamcommentregex_default").click(load_default_spamcommentregex);
 	$("#quickinv_default").click(function() { $("#quickinv_diff").val("-0.01"); });

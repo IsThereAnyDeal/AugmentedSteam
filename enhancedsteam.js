@@ -658,7 +658,7 @@ function highlight_wishlist(node) {
 
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
-		if (settings.tag_wishlist) add_tag(node, localized_strings.tag.wishlist, settings.highlight_wishlist_color);
+		if (settings.tag_wishlist) add_tag(node, localized_strings.tag.wishlist, settings.tag_wishlist_color);
 	});
 }
 
@@ -680,7 +680,7 @@ function highlight_coupon(node, discount) {
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_coupon) add_tag(node, localized_strings.tag.coupon + " (" + discount + "%)", settings.highlight_coupon_color);
+		if (settings.tag_coupon) add_tag(node, localized_strings.tag.coupon + " (" + discount + "%)", settings.tag_coupon_color);
 	});
 }
 
@@ -695,7 +695,7 @@ function highlight_inv_gift(node) {
 
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
-		if (settings.tag_inv_gift) add_tag(node, localized_strings.tag.inv_gift, settings.highlight_inv_gift_color);
+		if (settings.tag_inv_gift) add_tag(node, localized_strings.tag.inv_gift, settings.tag_inv_gift_color);
 	});
 }
 
@@ -710,7 +710,7 @@ function highlight_inv_guestpass(node) {
 
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
-		if (settings.tag_inv_guestpass) add_tag(node, localized_strings.tag.inv_guestpass, settings.highlight_inv_guestpass_color);
+		if (settings.tag_inv_guestpass) add_tag(node, localized_strings.tag.inv_guestpass, settings.tag_inv_guestpass_color);
 	});
 }
 
@@ -727,12 +727,24 @@ function highlight_nondiscounts(node) {
 function highlight_notinterested(node) {
 	$.when.apply($, [dynamicstore_promise]).done(function(data) {
 		storage.get(function(settings) {
-			if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
+			var appid = parseInt(get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id));
+			if ($.inArray(appid, data.rgIgnoredApps) != -1) {
+				node.classList.add("es_highlight_notinterested");
+
+				// Highlight games marked not interested
+				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = "#e02b3c"; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
+				if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
+				if (settings.highlight_notinterested) highlight_node(node, settings.highlight_notinterested_color);
+
+				// Tag games marked not interested
+				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = "#e02b3c"; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
+				if (settings.tag_notinterested === undefined) { settings.tag_notinterested = false; storage.set({'tag_notinterested': settings.tag_notinterested}); }
+				if (settings.tag_notinterested) add_tag(node, localized_strings.tag.notinterested, settings.tag_notinterested_color);
 			
-			var notinterested = data.rgIgnoredApps;
-			if ($(node).hasClass("search_result_row")) {
-				var appid = get_appid(node.href);
-				if (settings.hide_notinterested && $.inArray(appid, notinterested) !== -1) {
+				// Hide not interested search results
+				if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
+			
+				if ($(node).hasClass("search_result_row") && settings.hide_notinterested == true) {
 					$(node).css("display", "none");
 				}
 			}
@@ -5263,13 +5275,6 @@ function add_dlc_checkboxes() {
 	$(document).on( "change", ".es_dlc_selection", add_dlc_to_list );
 }
 
-function fix_achievement_icon_size() {
-	if ($(".rightblock").find("img[src$='ico_achievements.png']").length > 0) {
-		$(".rightblock").find("img[src$='ico_achievements.png']").attr("height", "24");
-		$(".rightblock").find("img[src$='ico_achievements.png']").css("margin-top", "-5px");
-	}
-}
-
 function add_astats_link(appid) {
 	storage.get(function(settings) {
 		if (settings.showastatslink === undefined) { settings.showastatslink = true; storage.set({'showastatslink': settings.showastatslink}); }
@@ -8556,7 +8561,6 @@ $(document).ready(function(){
 							add_system_requirements_check(appid);
 							add_app_badge_progress(appid);
 							add_dlc_checkboxes();
-							fix_achievement_icon_size();
 							add_astats_link(appid);
 							add_achievement_completion_bar(appid);
 

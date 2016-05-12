@@ -453,6 +453,7 @@
         "inv_gift": "Gift",
         "inv_guestpass": "Guestpass",
         "owned": "Owned",
+        "notinterested": "Not Interested",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>"
     },
     "wallet": {
