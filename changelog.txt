@@ -8,6 +8,7 @@
 + Added an option to skip the "Got Steam" dialog on store pages
 + Added a link to the web chat to the Community dropdown menu when logged in
 + Added highlighting and tagging options for items marked as "Not Interested"
++ Added a button to toggle HD playback of videos on app pages
 + Added a button to profile background market pages to preview that background on your own profile
 : Changing view options on the badges page no longer requires a page reload
 : Improved performance of continuous scolling feature
