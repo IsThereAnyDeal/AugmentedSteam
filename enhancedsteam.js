@@ -3698,10 +3698,10 @@ function add_profile_style() {
 
 function add_background_preview_link() {
 	if (is_signed_in) {
-		var isSteamPage = window.location.pathname.match(/\/market\/listings\/753\/(.+)/);
+		var isSteamPage = /\/market\/listings\/753\//.test(window.location.pathname);
 		var $viewFullLink = $("#largeiteminfo_item_actions").find("a");
 		if (isSteamPage && $viewFullLink.length) {
-			var bgLink = $viewFullLink[0].href.match(/images\/items\/(\d+)\/([a-z0-9]+)\.jpg/i);
+			var bgLink = $viewFullLink[0].href.match(/images\/items\/(\d+)\/([a-z0-9\.]+)/i);
 			if (bgLink) {
 				$viewFullLink.after('<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="' + profile_url + "#previewBackground/" + bgLink[1] + "/" + bgLink[2] + '"><span>' + localized_strings.preview_background + '</span></a>');
 			}
@@ -6886,9 +6886,9 @@ function clear_cache() {
 }
 
 function change_user_background() {
-	var prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9]+)/i);
+	var prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9\.]+)/i);
 	if (prevHash) {
-		var imgUrl = "//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2] + ".jpg";
+		var imgUrl = "//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2];
 		// Make sure the url is for a valid background image
 		$("body").append('<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
 		$("img.es_bg_test").on('load', function() {
