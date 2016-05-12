@@ -738,7 +738,7 @@ function highlight_notinterested(node) {
 
 				// Tag games marked not interested
 				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = "#e02b3c"; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
-				if (settings.tag_notinterested === undefined) { settings.tag_notinterested = false; storage.set({'tag_notinterested': settings.tag_notinterested}); }
+				if (settings.tag_notinterested === undefined) { settings.tag_notinterested = true; storage.set({'tag_notinterested': settings.tag_notinterested}); }
 				if (settings.tag_notinterested) add_tag(node, localized_strings.tag.notinterested, settings.tag_notinterested_color);
 			
 				// Hide not interested search results
@@ -912,6 +912,10 @@ function display_tags(node) {
 			$(node).find(".tab_discount").css("top","15px");
 			
 			$tag_root.find("h4").after($tags);
+		}
+		else if (node.classList.contains("tab_item")) {			
+			remove_existing_tags($(node));
+			$(node).find(".tab_item_content").prepend($tags);
 		}
 		else if (node.classList.contains("search_result_row")) {
 			$tag_root = $(node).find(".search_name");
@@ -5381,6 +5385,7 @@ function process_early_access() {
 							check_early_access(`.special_tiny_cap,
 												.cluster_capsule,
 												.game_capsule,
+												.browse_tag_game,
 												.dq_item:not(:first-child),
 												.discovery_queue:not(:first-child)`);
 							break;
