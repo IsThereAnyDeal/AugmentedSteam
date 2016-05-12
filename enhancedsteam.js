@@ -6888,13 +6888,14 @@ function clear_cache() {
 function change_user_background() {
 	var prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9]+)/i);
 	if (prevHash) {
-		var imgUrl = "//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2] + ".jpg";
+		var imgUrl = "//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2] + ".jpg";
 		// Make sure the url is for a valid background image
 		$("body").append('<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
 		$("img.es_bg_test").on('load', function() {
 			$(".no_header.profile_page, .profile_background_image_content").css("background-image", "url('" + imgUrl + "')");
 			$(".es_bg_test").remove();
 		});
+
 	} else {
 		profileData.get("profile", function(data) {
 			var txt = data.background;
