@@ -112,14 +112,12 @@ var currency_promise = (function() {
 var is_signed_in = false;
 var profile_url = false;
 var profile_path = false;
-var profile_id = false;
 
 var signed_in_promise = (function () {
 	var deferred = new $.Deferred();
 	if ($("#global_actions").find(".playerAvatar").length > 0) {
 		profile_url = $("#global_actions").find(".playerAvatar")[0].href;
 		profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
-		profile_id = profile_path.match(/^\/id\/(.+?)\/$/)[1];
 
 		if (profile_path) {
 			if (getValue("steamID")) {
