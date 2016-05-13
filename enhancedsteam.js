@@ -117,18 +117,20 @@ var signed_in_promise = (function () {
 	var deferred = new $.Deferred();
 	if ($("#global_actions").find(".playerAvatar").length > 0) {
 		profile_url = $("#global_actions").find(".playerAvatar")[0].href;
-		profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
+		if (profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)) {
+			profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
+		}
 
 		if (profile_path) {
 			if (getValue("steamID")) {
 				is_signed_in = getValue("steamID");
 				deferred.resolve();
 			} else {
-				// Make the request to a fake profile, this page is returned with an error
-				// but the steamID is present and the size is less than half in some cases
-				get_http("//steamcommunity.com/profiles/0/", function(txt) {
-					is_signed_in = txt.match(/g_steamID = "(\d+)";/)[1];
-					setValue("steamID", is_signed_in);
+				get_http("//steamcommunity.com" + profile_path, function(txt) {
+					if (txt.match(/g_steamID = "(\d+)";/)) {
+						is_signed_in = txt.match(/g_steamID = "(\d+)";/)[1];
+						setValue("steamID", is_signed_in);
+					}
 					deferred.resolve();
 				});
 			}
