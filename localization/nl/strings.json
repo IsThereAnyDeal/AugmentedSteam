@@ -176,6 +176,7 @@
   "notcommon_label":"Verberg spellen die jij hebt",
   "show_all_steam_releases":"Laat alle Steam releases zien",
   "wishlist":"Verlanglijst",
+  "on_wishlist":"On Wishlist",
   "notdiscounted":"Artikelen zonder korting",
   "cancel":"Annuleer",
   "wiki_article":"Bekijk __pcgw_ Artikel",
@@ -215,6 +216,16 @@
   "leave_group_admin_confirm":"You are Admin in this group: __groupname__\nAre you sure you want to leave?",
   "wrong_try_again":"Something went wrong. Please try again.",
   "join_group":"Join Group",
+  "chat":"Chat",
+  "web_browser_chat":"Web browser chat",
+  "steam_client_chat":"Steam Client chat",
+  "available":"Available",
+  "set_as_background":"Set as Background",
+  "preview_background":"Preview Background",
+  "details":"Details",
+  "expand_slider":"Expand slider",
+  "contract_slider":"Contract slider",
+  "early_access":"Early Access",
   "achievements":{
     "option":"Toon achievements op winkel pagina's",
     "achievements":"Prestaties",
@@ -245,6 +256,7 @@
     "main":"Hoofdverhaal"
   },
   "library":{
+    "in_library":"In Library",
     "error_loading_library":"Kon jouw bibliotheek niet laden.",
     "categories":"Categorieën...",
     "genres":"Genres...",
@@ -368,6 +380,7 @@
     "homepage_default_tab_specials":"Speciale",
     "wishlist":"Items op jouw wenslijst",
     "add_another_region":"Toevoegen",
+    "skip_got_steam":"Skip the 'Got Steam?' window",
     "lang":{
       "english":"Engels",
       "brazilian":"Portugees-Braziliaans",
@@ -440,6 +453,7 @@
     "inv_gift":"Cadeau",
     "inv_guestpass":"Gastenpas",
     "owned":"In je bezit",
+    "notinterested":"Not Interested",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ willen dit<\/a>"
   },
   "wallet":{

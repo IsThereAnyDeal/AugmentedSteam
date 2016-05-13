@@ -176,6 +176,7 @@
   "notcommon_label":"Esconder jogos que possuis",
   "show_all_steam_releases":"Mostrar todos os lançamentos no Steam",
   "wishlist":"Lista de desejos",
+  "on_wishlist":"On Wishlist",
   "notdiscounted":"Itens sem desconto",
   "cancel":"Cancelar",
   "wiki_article":"Ver Artigo __pcgw__",
@@ -215,6 +216,16 @@
   "leave_group_admin_confirm":"You are Admin in this group: __groupname__\nAre you sure you want to leave?",
   "wrong_try_again":"Something went wrong. Please try again.",
   "join_group":"Join Group",
+  "chat":"Chat",
+  "web_browser_chat":"Web browser chat",
+  "steam_client_chat":"Steam Client chat",
+  "available":"Available",
+  "set_as_background":"Set as Background",
+  "preview_background":"Preview Background",
+  "details":"Details",
+  "expand_slider":"Expand slider",
+  "contract_slider":"Contract slider",
+  "early_access":"Early Access",
   "achievements":{
     "option":"Mostrar proezas em páginas da loja",
     "achievements":"Proezas",
@@ -245,6 +256,7 @@
     "main":"Estória principal"
   },
   "library":{
+    "in_library":"In Library",
     "error_loading_library":"Não foi possível carregar a tua biblioteca.",
     "categories":"Categorias...",
     "genres":"Gêneros...",
@@ -368,6 +380,7 @@
     "homepage_default_tab_specials":"Descontos",
     "wishlist":"Itens na tua lista de desejos",
     "add_another_region":"Adicionar",
+    "skip_got_steam":"Skip the 'Got Steam?' window",
     "lang":{
       "english":"Inglês",
       "brazilian":"Português do Brasil",
@@ -440,6 +453,7 @@
     "inv_gift":"Presente",
     "inv_guestpass":"Convite",
     "owned":"Adquirido",
+    "notinterested":"Not Interested",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ desejam<\/a>"
   },
   "wallet":{
