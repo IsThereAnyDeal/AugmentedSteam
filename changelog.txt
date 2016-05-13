@@ -1,4 +1,8 @@
-﻿v8.5
+﻿v8.6
+-----
+
+
+v8.5
 -----
 + Added dynamic store data to wishlist pages
 + Added a button to profile backgrounds in your inventory to set them as your background with a single click
