@@ -19,7 +19,6 @@
 : Fixed a bug that caused the homepage carousel to not display correctly until it scrolled past the first item
 : Fixed a bug where adding games to your wishlist from the community hub would result in an error
 
-
 v8.4
 -----
 + Added inventory market support for various games such as H1Z1 and Battleblock Theater
