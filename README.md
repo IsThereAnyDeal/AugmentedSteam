@@ -28,6 +28,8 @@ Translators
 
 Please head over to http://translation.enhancedsteam.com to help out with translation!
 
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/enhanced-steam/localized.svg)](http://translation.enhancedsteam.com)
+
 License
 -------
 
