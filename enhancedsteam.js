@@ -6632,6 +6632,10 @@ function bind_ajax_content_highlighting() {
 					check_early_access($(node).parent()[0]);
 				}
 
+				if (node.classList && node.classList.contains("search_result_row")) {
+					highlight_notinterested(node);
+				}
+
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
 			}
 		});
