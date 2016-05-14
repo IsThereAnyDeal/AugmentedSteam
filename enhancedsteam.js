@@ -126,7 +126,7 @@ var signed_in_promise = (function () {
 				is_signed_in = getValue("steamID");
 				deferred.resolve();
 			} else {
-				get_http("//steamcommunity.com" + profile_path, function(txt) {
+				get_http("//steamcommunity.com/profiles/0/", function(txt) {
 					if (txt.match(/g_steamID = "(\d+)";/)) {
 						is_signed_in = txt.match(/g_steamID = "(\d+)";/)[1];
 						setValue("steamID", is_signed_in);
