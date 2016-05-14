@@ -1,6 +1,6 @@
-var version = "8.6"
+var version = "8.6";
 
-var console_info=["%c Enhanced %cSteam v"+version+" by jshackles %c http://www.enhancedsteam.com ","background: #000000;color: #7EBE45", "background: #000000;color: #ffffff",""];
+var console_info=["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console,console_info);
 
 var storage = chrome.storage.sync;
@@ -1987,13 +1987,16 @@ function add_fake_country_code_warning() {
 			var fakeCC = getCookie("fakeCC");
 
 			if (fakeCC && LKGBillingCountry && LKGBillingCountry.length == 2 && LKGBillingCountry != fakeCC) {
-				$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); height: 21px; text-align: center; padding-top: 8px;">' + localized_strings.using_store.replace("__current__", fakeCC) + '  <a href="#" id="reset_fake_country_code">' + localized_strings.using_store_return.replace("__base__", LKGBillingCountry) + '</a></div>');
-				$("#page_background_holder").css("top", "135px");
-				$("#reset_fake_country_code").click(function(e) {
+				$("#global_header").after(`
+					<div class="es_language_warning">` + localized_strings.using_store.replace("__current__", fakeCC) + `
+						<a href="#" id="es_reset_fake_country_code">` + localized_strings.using_store_return.replace("__base__", LKGBillingCountry) + `</a>
+					</div>
+				`);
+				$("#es_reset_fake_country_code").click(function(e) {
 					e.preventDefault();
 					document.cookie = 'fakeCC=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;';
 					window.location.replace(window.location.href.replace(/[?&]cc=.{2}/, ""));
-				})
+				});
 			}
 		}
 	});
@@ -2039,9 +2042,12 @@ function add_language_warning() {
 					"ukrainian": "uk"}[settings.showlanguagewarninglanguage.toLowerCase()] || "en";
 				$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
 					localized_strings_native = data;
-					$("#global_header").after('<div class=content style="background-image: url( ' + chrome.extension.getURL("img/red_banner.png") + '); color: #ffffff; font-size: 12px; height: 21px; text-align: center; padding-top: 8px;">' + localized_strings_native.using_language.replace("__current__", localized_strings_native.options.lang[currentLanguage.toLowerCase()]) + '  <a href="#" id="reset_language_code">' + localized_strings_native.using_language_return.replace("__base__", localized_strings_native.options.lang[warning_language.toLowerCase()]) + '</a></div>');
-					$("#page_background_holder").css("top", "135px");
-					$("#reset_language_code").click(function(e) {
+					$("#global_header").after(`
+						<div class="es_language_warning">` + localized_strings_native.using_language.replace("__current__", localized_strings_native.options.lang[currentLanguage.toLowerCase()]) + `
+							<a href="#" id="es_reset_language_code">` + localized_strings_native.using_language_return.replace("__base__", localized_strings_native.options.lang[warning_language.toLowerCase()]) + `</a>
+						</div>
+					`);
+					$("#es_reset_language_code").click(function(e) {
 						e.preventDefault();
 						document.cookie = 'Steam_Language=' + settings.showlanguagewarninglanguage.toLowerCase() + ';path=/;';
 						window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));

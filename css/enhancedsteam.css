@@ -1301,3 +1301,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_hd_toggle.es_video_sd span {
 	opacity: 0.4;
 }
+
+/***************************************
+ * Store and Community
+ * add_language_warning(),
+ * add_fake_country_code_warning()
+ **************************************/
+.es_language_warning {
+	font-size: 12px;
+	color: #fff;
+	padding: 8px 0;
+	text-align: center;
+	background: linear-gradient(rgb(154, 40, 32) 0%, rgb(214, 53, 37) 100%);
+}
