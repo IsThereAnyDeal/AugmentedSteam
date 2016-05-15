@@ -5356,14 +5356,12 @@ function check_early_access(node, selector_modifier) {
 					}
 					if (early_access) {
 						if (early_access["ea"].indexOf(appid) >= 0) {
-							var selector = "img";
-							if (selector_modifier != undefined) selector += selector_modifier;
 							var image_name = "img/overlay/early_access_banner_english.png";
 							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
+							var selector = "img[src!='"+chrome.extension.getURL(image_name)+"']";
+							if (selector_modifier != undefined) selector += selector_modifier;
 							
 							$(node).addClass("es_early_access").find(selector).wrap('<span class="es_overlay_container" />').filter(function(){ $(this).before("<span class='es_overlay'><img title='" + localized_strings.early_access + "' src='" + chrome.extension.getURL(image_name) + "' /></span>") });
-						} else {
-
 						}
 					}
 				});
