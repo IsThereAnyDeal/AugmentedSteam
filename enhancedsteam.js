@@ -6630,14 +6630,10 @@ function bind_ajax_content_highlighting() {
 					start_highlighting_node(node);
 					check_early_access(node);
 				}
-
-				if ($(node).parent()[0] && $(node).parent()[0].classList.contains("search_result_row")) {
-					start_highlighting_node($(node).parent()[0]);
-					check_early_access($(node).parent()[0]);
-				}
-
+				
 				if (node.classList && node.classList.contains("search_result_row")) {
-					highlight_notinterested(node);
+					start_highlighting_node(node);
+					check_early_access(node);
 				}
 
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
