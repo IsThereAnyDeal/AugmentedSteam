@@ -5322,9 +5322,10 @@ function check_early_access(node, selector_modifier) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
-			$(node).not(".es_early_access").each(function(index, value) {
+			$(node).not(".es_ea_checked").each(function(index, value) {
 				var node = $(this);
 
+				$(node).addClass("es_ea_checked");
 				if (!ea_promise) {
 					ea_promise = (function () {
 						var deferred = new $.Deferred();
