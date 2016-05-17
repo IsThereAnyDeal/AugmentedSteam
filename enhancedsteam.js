@@ -1479,7 +1479,8 @@ function add_wishlist_total() {
 	gamelist = gamelist.replace(/, $/, "");
 
 	total = formatCurrency(parseFloat(total));
-	$(".games_list").after("<link href='//store.akamai.steamstatic.com/public/css/v6/game.css' rel='stylesheet' type='text/css'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("__num__", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div>");
+
+	$(".games_list").after("<div class='es_wishlist_total'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("__num__", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div></div>");
 }
 
 function add_wishlist_ajaxremove() {
@@ -5376,6 +5377,24 @@ function check_early_access(node, selector_modifier) {
 	});
 }
 
+function add_wishlist_search() {
+	// Simply use Valve's function for filtering and we just provide the games list
+	runInPageContext(`function () {
+		$J("#tabs_basebg").prepend('<div class="es_games_filter">` + localized_strings.filter_games + ` <div class="gray_bevel for_text_input"><input type="text" id="gameFilter" name="gameFilter"></div></div>');
+		$J("#gameFilter").on("keyup", function () {
+			if (typeof rgGames === "undefined") {
+				rgGames = [];
+				$J(".wishlistRow").each(function (id, node) {
+					var appName = $J(node).find("h4.ellipsis").text(),
+						appId = node.id.replace("game_", "");
+					rgGames.push({"name": appName, "appid": appId});
+				});
+			}
+			filterApps();
+		});
+	}`);
+}
+
 // Add a blue banner to Early Access games
 function process_early_access() {
 	storage.get(function(settings) {
@@ -8724,6 +8743,7 @@ $(document).ready(function(){
 							add_wishlist_ajaxremove();
 							add_wishlist_pricehistory();
 							add_wishlist_notes();
+							add_wishlist_search();
 
 							// Wishlist highlights
 							load_inventory().done(function() {
