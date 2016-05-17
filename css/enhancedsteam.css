@@ -56,6 +56,9 @@ img.platform_small, .platform_img {
 	cursor: pointer;
 	padding-right: 5px;
 }
+.es_sort:last-child { 
+	padding-right: 0;
+}
 
 .es_sort > input { 
 	display: none; 
@@ -311,8 +314,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_dlc_option_panel {
-    background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);    
-    border-bottom: 1px solid black;
+	background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);	
+	border-bottom: 1px solid black;
 }
 
 .es_dlc_option {
@@ -536,9 +539,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	-webkit-appearance: none;
 	border: none;
 	-webkit-transition: width 1s ease-in-out;
-    -moz-transition: width 1s ease-in-out;
-    -o-transition: width 1s ease-in-out;
-    transition: width 1s ease-in-out;
+	-moz-transition: width 1s ease-in-out;
+	-o-transition: width 1s ease-in-out;
+	transition: width 1s ease-in-out;
 }
 #es_progress.error, #es_progress.complete {
 	width:14px;
@@ -832,16 +835,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
 }
 .performance-graph {
-    margin-top: -10px;
-    background: linear-gradient(135deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
-    width: 98%;
-    border-radius: 6px;
-    border: 1px solid #524f4e;
-    overflow: hidden;
+	margin-top: -10px;
+	background: linear-gradient(135deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+	width: 98%;
+	border-radius: 6px;
+	border: 1px solid #524f4e;
+	overflow: hidden;
 }
 .performance-graph .row {
-    height: 18px;
-    overflow: hidden;
+	height: 18px;
+	overflow: hidden;
 }
 .performance-graph .row .nvidia {
 	background: #72b100;
@@ -858,17 +861,17 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	 background: black;
 }
 .performance-graph .left-bar {
-    height: 100%;
-    text-align: center;
-    float: left;
-    position:relative;
+	height: 100%;
+	text-align: center;
+	float: left;
+	position:relative;
 }
 .performance-graph .right-bar {
-    background: rgba(0,0,0,0.0);
-    min-width:30px;
-    height: 100%;
-    text-align: left;
-    float: left;
+	background: rgba(0,0,0,0.0);
+	min-width:30px;
+	height: 100%;
+	text-align: left;
+	float: left;
 }
 .performance-graph .right-bar span {
 	padding-left: 5px;
@@ -911,14 +914,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	bottom: 0;
 }
 .es_recentAchievements .achieveBar {
-    background: #3a3a3a;
-    padding: 1px;
-    border: 1px solid #aeaeae;
-    width: 176.9px;
+	background: #3a3a3a;
+	padding: 1px;
+	border: 1px solid #aeaeae;
+	width: 176.9px;
 }
 .es_recentAchievements .achieveBarProgress {
-    height: 8px;
-    background-color: #aeaeae;
+	height: 8px;
+	background-color: #aeaeae;
 }
 
 #es_customize_btn {
@@ -1313,4 +1316,104 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	padding: 8px 0;
 	text-align: center;
 	background: linear-gradient(rgb(154, 40, 32) 0%, rgb(214, 53, 37) 100%);
+}
+
+/***************************************
+ * Wishlist
+ * add_wishlist_total()
+ **************************************/
+/* Taken from: http://store.akamai.steamstatic.com/public/css/v6/game.css */
+.es_wishlist_total .game_area_purchase_game,
+.es_wishlist_total .game_area_offsite_purchase {
+	position: relative;
+	background: linear-gradient(135deg, rgba(97,100,101,0.3) 0%,rgba(226,244,255,0.3) 100%);
+	font-size: 12px;
+	color: #898a8c;
+	padding: 16px;
+	padding-bottom: 26px;
+	margin-bottom: 28px;
+	z-index: 1;
+}
+.es_wishlist_total .game_area_purchase_game h1,
+.es_wishlist_total .game_area_offsite_purchase h1 {
+	font-size: 21px;
+	font-family: "Motiva Sans", arial, tahoma;
+	color: #ffffff;
+	font-weight: normal;
+}
+.es_wishlist_total .game_area_purchase_game p.package_contents,
+.es_wishlist_total .game_area_offsite_purchase p.package_contents {
+	color: #8f98a0;
+	font-size: 12px;
+}
+.es_wishlist_total .game_area_purchase_game b,
+.es_wishlist_total .game_area_offsite_purchase b {
+	font-weight: normal;
+	color: #8bc53f;
+}
+.es_wishlist_total .game_area_purchase_game .game_purchase_action,
+.es_wishlist_total .game_area_offsite_purchase .game_purchase_action {
+	position: absolute;
+	right: 16px;
+	bottom: -17px;
+	left: 16px;
+	overflow-x: auto;
+	white-space: nowrap;
+	text-align: right;
+	font-size: 12px;
+	color: #898a8c;
+}
+.es_wishlist_total .game_purchase_action_bg {
+	height: 32px;
+	display: inline-block;
+	background-color: #000000;
+	padding: 2px 2px 2px 0px;
+	border-radius: 2px;
+	white-space: nowrap;
+}
+.es_wishlist_total .game_purchase_action .game_purchase_price {
+	background-color: #000000;
+	font-size: 13px;
+	padding-top: 8px;
+	padding-left: 12px;
+	padding-right: 12px;
+	height: 24px;
+}
+
+/***************************************
+ * Wishlist
+ * add_wishlist_search()
+ **************************************/
+ /* Taken from: http://steamcommunity-a.akamaihd.net/public/css/globalv2.css */
+.es_games_filter .gray_bevel.for_text_input {
+	display: inline-block;
+	padding-bottom: 1px;
+	height: 25px;
+}
+.es_games_filter .gray_bevel input,
+.es_games_filter .gray_bevel textarea {
+	border: none;
+	outline: none;
+	box-shadow: none;
+	background-color: transparent;
+	font-size: 13px;
+	color: #C6D4DF;
+}
+.es_games_filter .gray_bevel input {
+	line-height: 21px;
+	height: 21px;
+}
+.es_games_filter input.gray_bevel {
+	background-color: rgba( 0, 0, 0, 0.2 );
+	border-radius: 3px;
+	border: 1px solid #000;
+	box-shadow: 1px 1px 0 0 rgba( 91, 132, 181, 0.2 );
+	color: #C6D4DF;
+	margin-bottom: 6px;
+	outline: none;
+	padding: 4px 6px;
+}
+/* ES Specific */
+.es_games_filter {
+	float: left;
 }
