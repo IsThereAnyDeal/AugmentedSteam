@@ -1,0 +1,21 @@
+#your_slots_count {
+	padding-bottom: 6px;
+	display: none;
+}
+
+#their_slots_count {
+	padding-bottom: 6px;
+	display: none;
+}
+
+.es_higher {
+	color: rgb(72, 116, 10);
+}
+
+.es_same {
+	color: rgb(225, 225, 15);
+}
+
+.es_lower {
+	color: rgb(216, 54, 54);
+}

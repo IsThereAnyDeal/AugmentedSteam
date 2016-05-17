@@ -1,5 +1,6 @@
 ﻿v8.6
 -----
++ Added an item counter to both party's item selection in trade offer windows
 
 
 v8.5

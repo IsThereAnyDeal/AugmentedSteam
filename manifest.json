@@ -184,6 +184,17 @@
             "css": [
                 "css/es_flags.css"
             ]
+        },
+        {
+            "matches": [
+                "https://steamcommunity.com/tradeoffer/*"
+            ],
+            "js": [
+                "js/steamcommunity.com/tradeoffer.js"
+            ],
+            "css": [
+                "css/steamcommunity.com/tradeoffer.css"
+            ]
         }
     ]
 }
