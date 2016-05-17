@@ -5322,7 +5322,7 @@ function check_early_access(node, selector_modifier) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
-			$(node).each(function(index, value) {
+			$(node).not(".es_early_access").each(function(index, value) {
 				var node = $(this);
 
 				if (!ea_promise) {
@@ -5350,24 +5350,17 @@ function check_early_access(node, selector_modifier) {
 						return deferred.promise();
 					})();
 				}
-				ea_promise.done(function(){
-					var href = ($(node).find("a").attr("href") || $(node).attr("href"));
-					var appid = get_appid(href);
-					if (appid === null) { 
-						if ($(node).find("img").length > 0) {
-							if ($(node).find("img").attr("src").match(/\/apps\/(\d+)\//)) {
-								appid = $(node).find("img").attr("src").match(/\/apps\/(\d+)\//)[1];
-							}
-						}
-					}
+				ea_promise.done(function () {
 					if (early_access) {
-						if (early_access["ea"].indexOf(appid) >= 0) {
+						var href = ($(node).find("a").attr("href") || $(node).attr("href")),
+							imgHeader = $(node).find("img" + (selector_modifier ? selector_modifier : "")),
+							appid = get_appid(href) || (imgHeader.length && /\/apps\/(\d+)\//.test(imgHeader[0].src) && imgHeader[0].src.match(/\/apps\/(\d+)\//)[1]);
+
+						if (appid && early_access["ea"].indexOf(appid) >= 0) {
 							var image_name = "img/overlay/early_access_banner_english.png";
 							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
-							var selector = "img[src!='"+chrome.extension.getURL(image_name)+"']";
-							if (selector_modifier != undefined) selector += selector_modifier;
-							
-							$(node).addClass("es_early_access").find(selector).wrap('<span class="es_overlay_container" />').filter(function(){ $(this).before("<span class='es_overlay'><img title='" + localized_strings.early_access + "' src='" + chrome.extension.getURL(image_name) + "' /></span>") });
+							$(node).addClass("es_early_access");
+							$(imgHeader).wrap('<span class="es_overlay_container" />').before('<span class="es_overlay"><img title="' + localized_strings.early_access + '" src="' + chrome.extension.getURL(image_name) + '" /></span>');
 						}
 					}
 				});
