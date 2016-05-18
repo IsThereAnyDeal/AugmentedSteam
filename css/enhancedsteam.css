@@ -1528,4 +1528,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	100% {
 		white-space: normal;
 	}
+
+/***************************************
+ * Store and Community
+ * highlight_node()
+ **************************************/
+.es_highlighted .ds_flag {
+	display: none !important;
+}
+.es_highlighted img,
+.es_highlighted .search_capsule {
+	opacity: 1 !important;
 }
