@@ -1327,35 +1327,24 @@ function add_wishlist_filter() {
 		html += "<label class='es_sort' id='es_wl_coupon'><input type='radio' id='es_wl_coupon_box' name='es_wl_sort'><span><a>" + localized_strings.games_coupon + "</a></span></label>";
 		html += "</div>";
 
-	$('#wishlist_sort_options').append("<p>" + html);
+	$("#wishlist_sort_options").append("<div class='es_wishlist_filter'>" + html + "</div>");
 
+	$(".es_sort input").on("change", function() {
+		var parentId = $(this).parent()[0].id;
 
-	$('#es_wl_all').on('click', function() {
 		$(".es_lowest_price").remove();
-		$('#es_wl_all_box').prop('checked', true);
-		$('.wishlistRow').css('display', 'block');
-	});
 
-	$('#es_wl_sale').on('click', function() {
-		$(".es_lowest_price").remove();
-		$('#es_wl_sale_box').prop('checked', true);
-		$('.wishlistRow').css('display', 'block');
-		$('.wishlistRow').each(function () {
-			if (!$(this).html().match(/discount_block_inline/)) {
-				$(this).css('display', 'none');
-			}
-		});
-	});
-
-	$('#es_wl_coupon').on('click', function() {
-		$(".es_lowest_price").remove();
-		$('#es_wl_coupon_box').prop('checked', true);
-		$('.wishlistRow').css('display', 'block');
-		$('.wishlistRow').each(function () {
-			if (!$(this)[0].outerHTML.match(/es_highlight_coupon/)) {
-				$(this).css('display', 'none');
-			}
-		});
+		if (parentId === "es_wl_sale") {
+			$(".wishlistRow").hide();
+			$(".discount_block_inline").closest(".wishlistRow").show();
+		}
+		else if (parentId === "es_wl_coupon") {
+			$(".wishlistRow").hide();
+			$(".es_highlight_coupon").show();
+		}
+		else {
+			$(".wishlistRow").show();
+		}
 	});
 }
 

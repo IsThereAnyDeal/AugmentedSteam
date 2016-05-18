@@ -1417,3 +1417,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_games_filter {
 	float: left;
 }
+
+/***************************************
+ * Wishlist
+ * add_wishlist_filter()
+ **************************************/
+.es_wishlist_filter {
+    margin-top: 10px;
+}
+#save_action_disabled_1,
+#save_action_enabled_2 {
+	margin-top: -10px;
+}
