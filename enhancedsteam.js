@@ -2163,7 +2163,10 @@ function display_coupon_message(appid) {
 						var obj = data.rgDescriptions[getValue(appid + "coupon_id")];
 						if (obj) {
 							setValue(appid + "coupon_title", obj.name);
-							setValue(appid + "coupon_discount_note", obj.descriptions[getValue(appid + "coupon_discount_note_id")].value);
+							setValue(appid + "coupon_discount_note", "");
+							if (getValue(appid + "coupon_discount_note_id")) {
+								setValue(appid + "coupon_discount_note", obj.descriptions[getValue(appid + "coupon_discount_note_id")].value);
+							}
 							setValue(appid + "coupon_valid", coupon_date = obj.descriptions[getValue(appid + "coupon_valid_id")].value);
 						}
 						setValue(appid+"coupon_translated", true);
