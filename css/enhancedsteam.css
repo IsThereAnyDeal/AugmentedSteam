@@ -1126,7 +1126,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	position: relative;
 	height: 353px;
 }
-
+.es_carousel_desc {
+	max-height: 459px;
+}
 /***************************************
  * Steam inventory
  * inventory_market_helper()
