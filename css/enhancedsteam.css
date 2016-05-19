@@ -1107,12 +1107,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: auto !important;
 }
 .es_carousel_desc .main_cap_desc,
+.es_carousel_desc .cluster_capsule,
 .es_carousel_desc .cluster_maincap_fill  {
 	transition: height 0.2s, max-height 0.2s, ease;
 }
 .es_carousel_desc .main_cap_desc {
 	height: 98px !important;
 	padding: 0 12px 8px 12px !important;
+}
+@media (max-width: 590px) { /* description text may overflow when this small */
+	.es_carousel_desc .main_cap_desc {
+		height: 122px !important;
+	}
 }
 .es_main_cap_status {
 	font-size: 12px !important;
@@ -1124,7 +1130,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_carousel_desc .cluster_maincap_fill,
 .es_carousel_desc .es_capsule_image_wrap {
 	position: relative;
-	height: 353px;
+}
+.cluster_maincap_fill_placeholder {
+	display: block;
 }
 .es_carousel_desc {
 	max-height: 459px;

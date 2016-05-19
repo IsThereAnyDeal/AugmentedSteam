@@ -6850,6 +6850,10 @@ function add_carousel_descriptions() {
 							$desc.append(value_to_add);
 						}
 					});
+
+					$(window).on("resize", function(){
+						$(".es_carousel_desc").css("max-height", $("a.cluster_capsule").first().height());
+					});
 				}, 100);
 
 				// purge stale information from localStorage				
