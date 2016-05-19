@@ -6735,8 +6735,8 @@ function start_friend_activity_highlights() {
 					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 					if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 					if (getValue(appid + "gift")) highlight_inv_gift(node);
-					if ($.inArray(appid, wishlistapps) !== -1) highlight_wishlist(node);
-					if ($.inArray(appid, ownedapps) !== -1) highlight_owned(node);
+					if ($.inArray(parseFloat(appid), wishlistapps) !== -1) highlight_wishlist(node);
+					if ($.inArray(parseFloat(appid), ownedapps) !== -1) highlight_owned(node);
 				}
 			});
 		});

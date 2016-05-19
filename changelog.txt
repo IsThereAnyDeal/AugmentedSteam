@@ -1,6 +1,9 @@
 ﻿v8.6
 -----
 + Added an item counter to both party's item selection in trade offer windows
+: Fixed a bug that caused highlighting to break on activity pages
+: Fixed a bug that caused coupons not to display correctly on store pages
+: Fixed a bug that caused "Not Interested" tags to not show on continuous scrolling search results
 
 
 v8.5
