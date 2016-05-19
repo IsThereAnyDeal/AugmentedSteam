@@ -1537,6 +1537,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	display: none !important;
 }
 .es_highlighted img,
+.es_highlighted .tab_item_cap,
 .es_highlighted .search_capsule {
 	opacity: 1 !important;
 }
