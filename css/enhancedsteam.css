@@ -613,15 +613,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_bad_comment_num {
 	cursor: pointer;
 }
-.es_wishlist_note {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	width: 455px;
-	height: 13px;
-	font-style: italic;
-	margin-top: -3px;
-}
 .es_game_purchase_action_bg {
 	height: 34px;	
 	background-color: #3c3d3e;
@@ -1423,9 +1414,107 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_wishlist_filter()
  **************************************/
 .es_wishlist_filter {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 #save_action_disabled_1,
 #save_action_enabled_2 {
 	margin-top: -10px;
+}
+
+/***************************************
+ * Wishlist
+ * add_wishlist_notes()
+ **************************************/
+.wishlistRow h4,
+.wishlistRankCtn {
+	padding-top: 0 !important;
+}
+.gameListPriceData {
+	padding-top: 12px !important;
+	padding-right: 0 !important;
+}
+@media (min-width: 600px) {
+	.wishlistRankCtn {
+		min-height: 70px !important;
+	}
+}
+@media (max-width: 600px) {
+	.wishlistRow h4 {
+		margin-bottom: 6px;
+	}
+}
+.wishlistRow,
+.wishlistRowItem {
+	min-height: 72px !important;
+}
+.wishlistRow .es_lowest_price {
+	margin-top: 6px;
+	margin-bottom: 2px;
+}
+.pullup_item {
+	margin-bottom: 0;
+}
+.wishlistRow.sortableRow:not(:hover) {
+	/* Fixes a bug with sortable rows where they are set a high z-index but don't reset back causing them to overlap other elements */
+	z-index: auto !important;
+}
+.es_lowest_price {
+	margin-top: 12px;
+}
+.es_wishlist_note {
+	display: block;
+	overflow: hidden;
+	font-style: italic;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
+	min-height: 24px;
+	color: #A8A8A8;
+	margin-top: 4px;
+	padding: 3px 0 0 0;
+	white-space: nowrap;
+	position: relative;
+}
+.es_wishlist_note span {
+	display: block;
+	font-size: 12px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	padding: 4px 10px 6px 26px;
+}
+.es_wishlist_note:before {
+	display: block;
+	content: "";
+	width: 18px;
+	height: 18px;
+	opacity: 0.5;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	background: no-repeat url("chrome-extension://__MSG_@@extension_id__/img/pinn.png");
+}
+.wishlistRow:hover .es_wishlist_note {
+	color: #EEEEEE;
+	background-color: rgba(0, 0, 0, 0.35);
+}
+.wishlistRow:hover .es_wishlist_note:before {
+	opacity: 0.9;
+}
+#es_note_input {
+	height: 112px;
+	font-size: 14px !important;
+}
+.es_add_wishlist_note {
+	border-top: 1px solid #555;
+}
+.es_wishlist_note:hover {
+	cursor: auto !important;
+	/* Triggering "white-space: normal" immediatly on each hover can make the page laggy, so we do it only if the user is commited to it */
+	animation: delayWhiteSpace linear .15s;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+@keyframes delayWhiteSpace {
+	100% {
+		white-space: normal;
+	}
 }
