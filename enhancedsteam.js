@@ -4470,8 +4470,9 @@ function inventory_market_helper(response) {
 	var sideActs = $("#iteminfo" + item + "_item_actions");
 	var link = $(sideActs).find("a").first();
 	// Make sure there isn't a button already and that the current item is a background image
-	if (!$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
+	if ($(".inventory_links").length && !$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
 		$(link).after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//cdn.steamcommunity.com/public/images/login/throbber.gif">');
+		
 		$(".es_set_background").on("click", function(e){
 			e.preventDefault();
 
