@@ -6837,7 +6837,7 @@ function add_carousel_descriptions() {
 						var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
 
 						if (last_updated < expire_time) {
-							get_http('//store.steampowered.com/apphover/' + appid +'?u=' + accountid + '&amp;pagev6=true', function(txt) {
+							get_http('//store.steampowered.com/apphover/' + appid +'?u=' + accountid + '&pagev6=true', function(txt) {
 								var descText = txt.match(/<p id="hover_desc">([\s\S]*)<\/p>/i);
 
 								if (descText) {
