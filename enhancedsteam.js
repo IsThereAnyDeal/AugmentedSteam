@@ -443,9 +443,9 @@ var currencyConversion = (function() {
 		};
 		localStorage.setItem("currencyConversion_" + currency, JSON.stringify(cached));
 	}
-	function cache_get(currency, fail_safe) {
+	function cache_get(currency, get_cached) {
 		var cached = JSON.parse(localStorage.getItem("currencyConversion_" + currency));
-		if (cached && (cached.expires > parseInt(Date.now() / 1000, 10) || fail_safe)) {
+		if (cached && (cached.expires > parseInt(Date.now() / 1000, 10) || get_cached)) {
 			var rates = {};
 			rates[currency] = cached.rates;
 			return rates;
