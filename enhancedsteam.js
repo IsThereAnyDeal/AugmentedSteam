@@ -1740,22 +1740,18 @@ function add_wishlist_notes() {
 				note = escapeHTML($("#es_note_input").val().trim().replace(/\s\s+/g, " ").substring(0, 512));
 
 			chrome.storage.local.get("wishlist_notes", function(data) {
-				var notes = {};
-				
-				if (data.wishlist_notes) {
-					var appRow = $("#game_" + appid),
-						notes = data.wishlist_notes;
+				var notes = data.wishlist_notes || {},
+					appRow = $("#game_" + appid);
 
-					if (note === "" && notes.hasOwnProperty(appid)) {
-						delete notes[appid];
-						$(appRow).find(".es_wishlist_note").remove();
-						$("#es_add_wishlist_note_" + appid).find("h5").text( localized_strings.add_wishlist_note );
-					} else if (note !== "") {
-						notes[appid] = note;
-						$(appRow).find(".es_wishlist_note").remove();
-						$(appRow).find(".bottom_controls").after( noteTemplate.replace("__note__", note) );
-						$("#es_add_wishlist_note_" + appid).find("h5").text( localized_strings.update_wishlist_note );
-					}
+				if (note === "" && notes.hasOwnProperty(appid)) {
+					delete notes[appid];
+					$(appRow).find(".es_wishlist_note").remove();
+					$("#es_add_wishlist_note_" + appid).find("h5").text( localized_strings.add_wishlist_note );
+				} else if (note !== "") {
+					notes[appid] = note;
+					$(appRow).find(".es_wishlist_note").remove();
+					$(appRow).find(".bottom_controls").after( noteTemplate.replace("__note__", note) );
+					$("#es_add_wishlist_note_" + appid).find("h5").text( localized_strings.update_wishlist_note );
 				}
 				
 				// Update wishlist notes cache
