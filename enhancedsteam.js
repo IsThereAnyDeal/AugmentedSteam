@@ -417,12 +417,13 @@ var currencyConversion = (function() {
 				rates = JSON.parse(txt);
 				cache_set(currency || user_currency, rates);
 				deferred.resolveWith(rates);
-			}).fail(function(){
+			}, {timeout: 10000}).fail(function(){
 				rates = cache_get(currency || user_currency, true);
 				if (rates) {
 					deferred.resolveWith(rates);
+				} else {
+					deferred.reject();
 				}
-				deferred.reject();
 			});
 		}
 		return deferred.promise();
