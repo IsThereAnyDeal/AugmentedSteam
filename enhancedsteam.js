@@ -6854,7 +6854,7 @@ function add_carousel_descriptions() {
 					$(window).on("resize", function(){
 						$(".es_carousel_desc").css("max-height", $("a.cluster_capsule").first().height());
 					});
-				}, 100);
+				}, 200);
 
 				// purge stale information from localStorage				
 				var i = 0, sKey;
