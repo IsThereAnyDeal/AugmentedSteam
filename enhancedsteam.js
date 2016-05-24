@@ -6841,8 +6841,7 @@ function add_carousel_descriptions() {
 								var descText = txt.match(/<p id="hover_desc">([\s\S]*)<\/p>/i);
 
 								if (descText) {
-									var elem_to_add = $("<div class='main_cap_status es_main_cap_status'>" + descText + "</div>");
-									descText = descText[1].trim();
+									var elem_to_add = $("<div class='main_cap_status es_main_cap_status'>" + descText[1].trim() + "</div>");
 
 									elem_to_add.html(elem_to_add.text());
 									setValue(appid + "carousel", elem_to_add.text());
