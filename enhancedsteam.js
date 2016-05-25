@@ -1,7 +1,7 @@
 var version = "8.6";
 
-var console_info=["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
-console.log.apply(console,console_info);
+var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
+console.log.apply(console, console_info);
 
 var storage = chrome.storage.sync;
 if (!storage) storage = chrome.storage.local;
@@ -1563,7 +1563,7 @@ function add_wishlist_pricehistory() {
 			var cc = getStoreRegionCountryCode();
 
 			function get_price_data(lookup_type, node, id) {
-				html = "<div class='es_lowest_price' id='es_price_" + id + "' style='margin-bottom: 5px;'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
+				html = "<div class='es_lowest_price' id='es_price_" + id + "'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
 				$(node).append(html);
 
 				get_http("//api.enhancedsteam.com/pricev2/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
@@ -1664,59 +1664,107 @@ function add_wishlist_pricehistory() {
 }
 
 function add_wishlist_notes() {
-	if(is_signed_in) {
-		var profile = $(".playerAvatar a")[0].href.replace(window.location.protocol + "//steamcommunity.com", "");
-		if (window.location.pathname.startsWith(profile)) {
-			$(".wishlistRow").each(function() {
-				var appid = $(this).attr("id").replace("game_", "");
-				var node = $(this);
-				$(this).find(".bottom_controls .popup_block2 .popup_body2").append("<a class='popup_menu_item2 tight es_add_wishlist_note' id='es_add_wishlist_note_" + appid + "'><h5>"+localized_strings.add_wishlist_note+"</h5></a>");
-				storage.get(function(settings) {
-					var key = appid + "wishlist_note";
-					var array = $.map(settings, function(value, index) {
-						if (index == key) return [value];
-					});
-					var wl_note = array[0];
-					if (wl_note) {
-						$(node).find("h4").after("<div class='es_wishlist_note'>" + wl_note.toString() + "</div").css("padding-top", "6px");
-						$("#es_add_wishlist_note_" + appid).find("h5").text(localized_strings.update_wishlist_note);
-						if ($(node).find(".es_wishlist_note")[0].scrollWidth > $(node).find(".es_wishlist_note")[0].clientWidth) { $(node).find(".es_wishlist_note").attr("title", wl_note); }
-					}
+	if (is_signed_in && window.location.href.startsWith(profile_url)) {
+		var noteTemplate = "<div class='es_wishlist_note'><span>__note__</span></div>";
+		var noteModalTemplate = `<form id="es_note_modal" data-appid="__appid__">
+				<div id="es_note_modal_content">
+					<div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
+						<textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+					</div>
+					<div class="es_note_buttons" style="float: right">
+						<button type="submit" class="btn_green_white_innerfade btn_medium">
+							<span>` + localized_strings.save + `</span>
+						</button>
+						<div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
+							<span>` + localized_strings.cancel + `</span>
+						</div>
+					</div>
+				</div>
+			</form>`;
+
+		// Get notes and insert them into the page
+		chrome.storage.local.get("wishlist_notes", function(data) {
+			if (data.wishlist_notes) {
+				$.each(data.wishlist_notes, function(appid, note) {
+					var bottomCtrls = $("#game_" + appid).find(".bottom_controls");
+					$(bottomCtrls).after( noteTemplate.replace("__note__", note) );
+					$(bottomCtrls).find(".pullup_item").addClass("es_has_note_button");
+					$(bottomCtrls).find(".popup_block2 .popup_body2").append("<a class='es_add_wishlist_note popup_menu_item2 tight' id='es_add_wishlist_note_" + appid + "'><h5>" + localized_strings.update_wishlist_note + "</h5></a>");
 				});
+			} else {
+				// Wishlist note storage method needs updating
+				storage.get(function(settings) {		
+					var notes = {};
+					$.map(settings, function(value, index) {
+						if (index.match(/(\d+)wishlist_note/i)) {
+							var appid = index.match(/(\d+)wishlist_note/i)[1];
+							notes[appid] = escapeHTML(value);
+							// TODO: Also delete these keys
+						}
+					});
+					chrome.storage.local.set({"wishlist_notes": notes});
+
+					console.info("Wishlist notes storage method was changed, reload the page to take effect!");
+
+					return;
+				});
+			}
+		});
+
+		// Show note input modal
+		$(document).on("click", ".es_add_wishlist_note", function(){
+			var appid = $(this).attr("id").replace("es_add_wishlist_note_", ""),
+				appRow = $(this).closest(".wishlistRowItem");
+				gameTitle = $(appRow).find("h4.ellipsis").text(),
+				note =  $(appRow).find(".es_wishlist_note").text() || "";
+
+			$(".popup_block2").hide();
+
+			runInPageContext('function() { ShowDialog("' + localized_strings.note_for + ' ' + gameTitle + '", \`' + noteModalTemplate.replace("__appid__", appid).replace("__note__", note) + '\`); }');
+		});
+
+		// Insert the "add wishlist note" button only when necessary
+		$(document).on("click", ".pullup_item:not(.es_has_note_button)", function(){
+			var appRow = $(this).closest(".wishlistRow"),
+				appid = $(appRow).attr("id").replace("game_", "");
+
+			$(this).addClass("es_has_note_button");
+
+			$(appRow).find(".bottom_controls .popup_block2 .popup_body2").append("<a class='es_add_wishlist_note popup_menu_item2 tight' id='es_add_wishlist_note_" + appid + "'><h5>" + localized_strings.add_wishlist_note + "</h5></a>");
+		});
+
+		// Process note changes
+		$(document).on("submit", "#es_note_modal", function(e) {
+			e.preventDefault();
+			var appid = $(this).data("appid"),
+				note = escapeHTML($("#es_note_input").val().trim().replace(/\s\s+/g, " ").substring(0, 512));
+
+			chrome.storage.local.get("wishlist_notes", function(data) {
+				var notes = data.wishlist_notes || {},
+					appRow = $("#game_" + appid);
+
+				if (note === "" && notes.hasOwnProperty(appid)) {
+					delete notes[appid];
+					$(appRow).find(".es_wishlist_note").remove();
+					$("#es_add_wishlist_note_" + appid).find("h5").text( localized_strings.add_wishlist_note );
+				} else if (note !== "") {
+					notes[appid] = note;
+					$(appRow).find(".es_wishlist_note").remove();
+					$(appRow).find(".bottom_controls").after( noteTemplate.replace("__note__", note) );
+					$("#es_add_wishlist_note_" + appid).find("h5").text( localized_strings.update_wishlist_note );
+				}
+				
+				// Update wishlist notes cache
+				chrome.storage.local.set({"wishlist_notes": notes});
 			});
 
-			$(".es_add_wishlist_note").click(function() {
-				$(".popup_block2").hide();
-				var appid = $(this).attr("id").replace("es_add_wishlist_note_", "");
-				storage.get(function(settings) {
-					var key = appid + "wishlist_note";
-					var obj = {};
-					var array = $.map(settings, function(value, index) {
-						if (index == key) return [value];	
-					});
-					var wl_note = array[0];
-					if (wl_note) {
-						var note = prompt(localized_strings.update_wishlist_note_prompt, wl_note);
-					} else {
-						var note = prompt(localized_strings.add_wishlist_note_prompt, "");
-					}
-					switch (note) {
-						case null:
-							break;
-						case "":
-							storage.remove(appid + "wishlist_note");
-							$("#game_" + appid).find(".es_wishlist_note").remove();
-							break;
-						default:
-							obj[key] = note;
-							storage.set(obj);
-							$("#game_" + appid).find(".es_wishlist_note").remove();
-							$("#game_" + appid).find("h4").after("<div class='es_wishlist_note'>" + note + "</div").css("padding-top", "6px");
-							if ($("#game_" + appid).find(".es_wishlist_note")[0].scrollWidth > $("#game_" + appid).find(".es_wishlist_note")[0].clientWidth) { $("#game_" + appid).find(".es_wishlist_note").attr("title", note); }
-					}
-				});
-			});
-		}
+			runInPageContext( function(){ CModal.DismissActiveModal(); } );
+		});
+
+		// Bind the "Cancel" button to close the modal
+		$(document).on("click", ".es_note_modal_close", function(){
+			runInPageContext( function(){ CModal.DismissActiveModal(); } );
+		});
 	}
 }
 
