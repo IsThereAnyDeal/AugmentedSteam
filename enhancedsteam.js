@@ -642,7 +642,7 @@ function highlight_owned(node) {
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
 
-		if (settings.highlight_owned) highlight_node(node, settings.highlight_owned_color);
+		if (settings.highlight_owned) { $(node).addClass("es_highlighted_owned"); highlight_node(node, settings.highlight_owned_color); }
 		if (settings.hide_owned) hide_node(node);
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
@@ -660,7 +660,7 @@ function highlight_wishlist(node) {
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; storage.set({'hide_wishlist': settings.hide_wishlist}); }
 
-		if (settings.highlight_wishlist) highlight_node(node, settings.highlight_wishlist_color);
+		if (settings.highlight_wishlist) { $(node).addClass("es_highlighted_wishlist"); highlight_node(node, settings.highlight_wishlist_color); }
 		if (settings.hide_wishlist) hide_node(node);
 
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
@@ -683,7 +683,7 @@ function highlight_coupon(node, discount) {
 		node.classList.add("es_highlight_coupon");
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
-		if (settings.highlight_coupon) highlight_node(node, settings.highlight_coupon_color);
+		if (settings.highlight_coupon) { $(node).addClass("es_highlighted_coupon"); highlight_node(node, settings.highlight_coupon_color); }
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
@@ -698,7 +698,7 @@ function highlight_inv_gift(node) {
 
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
-		if (settings.highlight_inv_gift) highlight_node(node, settings.highlight_inv_gift_color);
+		if (settings.highlight_inv_gift) { $(node).addClass("es_highlighted_inv_gift"); highlight_node(node, settings.highlight_inv_gift_color); }
 
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
@@ -713,7 +713,7 @@ function highlight_inv_guestpass(node) {
 
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124"; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
-		if (settings.highlight_inv_guestpass) highlight_node(node, settings.highlight_inv_guestpass_color);
+		if (settings.highlight_inv_guestpass) { $(node).addClass("es_highlighted_inv_guestpass"); highlight_node(node, settings.highlight_inv_guestpass_color); }
 
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
@@ -724,7 +724,6 @@ function highlight_inv_guestpass(node) {
 function highlight_nondiscounts(node) {
 	storage.get(function(settings) {
 		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
-		
 		if (settings.hide_notdiscounted) {
 			$(node).css("display", "none");
 		}
@@ -741,7 +740,7 @@ function highlight_notinterested(node) {
 				// Highlight games marked not interested
 				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = "#e02b3c"; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
 				if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
-				if (settings.highlight_notinterested) highlight_node(node, settings.highlight_notinterested_color);
+				if (settings.highlight_notinterested) { $(node).addClass("es_highlighted_notinterested"); highlight_node(node, settings.highlight_notinterested_color); }
 
 				// Tag games marked not interested
 				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = "#e02b3c"; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
@@ -803,7 +802,7 @@ function highlight_node(node, color) {
 			
 			$(hlNames).each(function (id, name) {
 				hlColor = hexToRgb(settings["highlight_" + name + "_color"]);
-				hlCss += '.es_highlight_' + name + ' { background: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(' + hlColor.r + ', ' + hlColor.g + ', ' + hlColor.b + ', 0.8) 100%) !important; }\n';
+				hlCss += '.es_highlighted_' + name + ' { background: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(' + hlColor.r + ', ' + hlColor.g + ', ' + hlColor.b + ', 0.8) 100%) !important; }\n';
 			});
 
 			$("head").append('<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
@@ -834,7 +833,8 @@ function highlight_node(node, color) {
 			}
 		}
 
-		$(node).addClass("es_highlighted").find(".ds_flag").remove();
+		$(node).removeClass("ds_flagged").find(".ds_flag").remove();
+		$(node).find(".ds_flagged").removeClass("ds_flagged");
 
 		// Set text colour to not conflict with highlight
 		if (node.classList.contains("tab_item")) $node.find("div").css("color", "lightgrey");
