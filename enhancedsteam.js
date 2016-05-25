@@ -4060,7 +4060,7 @@ function add_market_total() {
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
 		if (settings.showmarkettotal) {
 			if (window.location.pathname.match(/^\/market\/$/)) {
-				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings.market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="//cdn.steamcommunity.com/public/images/login/throbber.gif"><span>'+ localized_strings.loading +'</span></div></div></div>');
+				$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings.market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif"><span>'+ localized_strings.loading +'</span></div></div></div>');
 
 				var pur_total = 0.0;
 				var sale_total = 0.0;
@@ -4518,8 +4518,9 @@ function inventory_market_helper(response) {
 	var sideActs = $("#iteminfo" + item + "_item_actions");
 	var link = $(sideActs).find("a").first();
 	// Make sure there isn't a button already and that the current item is a background image
-	if (!$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
-		$(link).after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//cdn.steamcommunity.com/public/images/login/throbber.gif">');
+	if ($(".inventory_links").length && !$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
+		$(link).after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">');
+		
 		$(".es_set_background").on("click", function(e){
 			e.preventDefault();
 
@@ -4587,7 +4588,7 @@ function inventory_market_helper(response) {
 			$('.es_item_action').html("");
 			
 			if (marketable == 0) { $('.es_item_action').remove(); return; }
-			$("#es_item" + item).html("<img src='//cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings.loading+"</span>");
+			$("#es_item" + item).html("<img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading + "</span>");
 
 			function inventory_market_helper_get_price(url) {
 				get_http(url, function (txt) {
@@ -4700,7 +4701,7 @@ function inventory_market_helper(response) {
 								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
 									$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).addClass("btn_disabled");
 									$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).css("pointer-events", "none");
-									$("#iteminfo" + item + "_item_market_actions div:first").html("<div class='es_loading' style='min-height: 66px;'><img src='//cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings.selling +"</div>");
+									$("#iteminfo" + item + "_item_market_actions div:first").html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.selling +"</div>");
 									var sell_price = $(this).attr("price") * 100;
 									runInPageContext("function() { var fee = CalculateFeeAmount (" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
 									
@@ -7043,7 +7044,7 @@ function add_app_page_wishlist_changes(appid) {
 		$("#add_to_wishlist_area_success img:last-child").addClass("es-in-wl");
 
 		$(".es-in-wl").after("<img class='es-remove-wl' src='" + chrome.extension.getURL("img/remove.png") + "' style='display:none' />");
-		$(".es-in-wl").after("<img class='es-loading-wl' src='http://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />");
+		$(".es-in-wl").after("<img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />");
 
 		// Find the script tag that contains the session id and extract it
 		var session_txt = $('script:contains("g_sessionID")').text();
@@ -7126,7 +7127,7 @@ function add_es_background_selection() {
 				var html = "<form id='es_profile_bg' method='POST' action='http://www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
 				html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
 				html += "<input type='hidden' name='appid' id='appid'>";
-				html += "<div class='formRow'><div class='formRowTitle' style='overflow: visible;'>" + localized_strings.custom_background + ":<span class='formRowHint' title='" + localized_strings.custom_background_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='//cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
+				html += "<div class='formRow'><div class='formRowTitle' style='overflow: visible;'>" + localized_strings.custom_background + ":<span class='formRowHint' title='" + localized_strings.custom_background_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
 				html += "<img id='es_profile_background_current_image' src=''>";
 				html += "</div><div class='profile_background_current_description'><div id='es_profile_background_current_name'>";
 				html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + localized_strings.remove + "</span></span>&nbsp;<span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + localized_strings.save + "</span></span></div></div></div></div>";
@@ -7162,7 +7163,7 @@ function add_es_background_selection() {
 						if (appid == 0) {
 							$("#es_profile_background_current_image").attr("src", "");
 						} else {
-							$("#es_profile_background_current_name").after("<div class='es_loading'><img src='//cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>");							
+							$("#es_profile_background_current_name").after("<div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>");							
 
 							get_http("//api.enhancedsteam.com/profile-select-v2-game/?appid=" + appid + "&steam64=" + steam64, function (txt) {
 								var bg_data = JSON.parse(txt);
@@ -7213,7 +7214,7 @@ function add_es_style_selection() {
 		var steam64 = $(document.body).html().match(/g_steamID = \"(.+)\";/)[1];
 		var html = "<form id='es_profile_style' method='POST' action='http://api.enhancedsteam.com/profile_style/profile_style_save.php'><div class='group_content group_summary'>";
 		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
-		html += "<div class='formRow'><div class='formRowTitle'>" + localized_strings.custom_style + ":<span class='formRowHint' title='" + localized_strings.custom_style_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div id='es_style_loading'><img src='//cdn.steamcommunity.com/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
+		html += "<div class='formRow'><div class='formRowTitle'>" + localized_strings.custom_style + ":<span class='formRowHint' title='" + localized_strings.custom_style_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div id='es_style_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
 		html += "<img id='es_profile_style_current_image' src='' style='margin-bottom: 12px;'>";
 		html += "</div><div class='profile_style_current_description'><div id='es_profile_style_current_name'>";
 		html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + localized_strings.remove + "</span></span>&nbsp;<span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + localized_strings.save + "</span></span></div></div></div></div>";
