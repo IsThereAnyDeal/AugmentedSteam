@@ -6882,28 +6882,34 @@ function add_carousel_descriptions() {
 					$(".main_cluster_content").find(".discount_block").filter(function(){ $(this).prependTo($(this).parent().find(".es_capsule_image_wrap, .cluster_maincap_fill")); });
 					$(".main_cluster_content").addClass("es_carousel_desc");
 					
-					$.each($(".cluster_capsule"), function(i, _obj) {
-						var appid = get_appid(_obj.href),
-							$desc = $(_obj).find(".main_cap_content");
+					var accountidtext = $('script:contains("g_AccountID")').text() || "";
+					var accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
+					
+					$.each($(".cluster_capsule"), function(i, node) {
+						var appid = get_appid(node.href),
+							$descNode = $(node).find(".main_cap_content");
 
 						var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 						var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
 
 						if (last_updated < expire_time) {
-							get_http('//store.steampowered.com/app/' + appid, function(txt) {
-								var desc = txt.match(/textarea name="w_text" placeholder="(.+)" maxlength/);
-								if (desc) {
-									var elem_to_add = $("<div class='main_cap_status es_main_cap_status'>" + desc[1] + "</div>");
+							get_http('//store.steampowered.com/apphover/' + appid +'?u=' + accountid + '&pagev6=true', function(txt) {
+								var descText = txt.match(/<p id="hover_desc">([\s\S]*)<\/p>/i);
+
+								if (descText) {
+									var elem_to_add = $("<div class='main_cap_status es_main_cap_status'>" + descText[1].trim() + "</div>");
+
 									elem_to_add.html(elem_to_add.text());
 									setValue(appid + "carousel", elem_to_add.text());
 									setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-									$desc.append(elem_to_add);
+									$descNode.append(elem_to_add);
 								}
 							});
 						} else {
-							var desc = getValue(appid + "carousel");
-							var value_to_add = "<div class='main_cap_status es_main_cap_status'>" + desc + "</div>";
-							$desc.append(value_to_add);
+							var descText = getValue(appid + "carousel");
+							var value_to_add = "<div class='main_cap_status es_main_cap_status'>" + descText + "</div>";
+
+							$descNode.append(value_to_add);
 						}
 					});
 				}, 100);
