@@ -417,7 +417,14 @@ var currencyConversion = (function() {
 				rates = JSON.parse(txt);
 				cache_set(currency || user_currency, rates);
 				deferred.resolveWith(rates);
-			}).fail(deferred.reject);
+			}, {timeout: 10000}).fail(function(){
+				rates = cache_get(currency || user_currency, true);
+				if (rates) {
+					deferred.resolveWith(rates);
+				} else {
+					deferred.reject();
+				}
+			});
 		}
 		return deferred.promise();
 	}
@@ -436,9 +443,9 @@ var currencyConversion = (function() {
 		};
 		localStorage.setItem("currencyConversion_" + currency, JSON.stringify(cached));
 	}
-	function cache_get(currency) {
+	function cache_get(currency, get_cached) {
 		var cached = JSON.parse(localStorage.getItem("currencyConversion_" + currency));
-		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) {
+		if (cached && (cached.expires > parseInt(Date.now() / 1000, 10) || get_cached)) {
 			var rates = {};
 			rates[currency] = cached.rates;
 			return rates;
