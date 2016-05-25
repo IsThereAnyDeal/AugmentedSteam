@@ -6912,7 +6912,11 @@ function add_carousel_descriptions() {
 							$descNode.append(value_to_add);
 						}
 					});
-				}, 100);
+
+					$(window).on("resize", function(){
+						$(".es_carousel_desc").css("max-height", $("a.cluster_capsule").first().height());
+					});
+				}, 200);
 
 				// purge stale information from localStorage				
 				var i = 0, sKey;
