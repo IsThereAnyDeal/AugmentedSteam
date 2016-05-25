@@ -8311,19 +8311,17 @@ function add_decline_button() {
 }
 
 function add_birthday_celebration(in_store) {
-	var profile_id = is_signed_in;
-	var setting_name = profile_id[0] + "birthday";
+	var setting_name = is_signed_in + "birthday";
 	var obj = {};
 	storage.get(function(settings) {
 		if (settings[setting_name] === undefined) {
-			get_http('//api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + profile_id, function (txt) {
+			get_http('//api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=' + is_signed_in, function (txt) {
 				var data = JSON.parse(txt);
 				var timecreated = data["response"]["players"][0]["timecreated"];
 				obj[setting_name] = timecreated;
 				storage.set(obj);
 			});
-		}
-		else {
+		} else {
 			var username = $("#global_header .username").text().trim();
 			var birth_date_unix = settings[setting_name];
 			var birth_date = new Date(birth_date_unix * 1000);
