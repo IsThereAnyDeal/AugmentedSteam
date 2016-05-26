@@ -1713,6 +1713,7 @@ function add_wishlist_notes() {
 				// Wishlist note storage method needs updating
 				storage.get(function(settings) {		
 					var notes = {};
+
 					$.map(settings, function(value, index) {
 						if (index.match(/(\d+)wishlist_note/i)) {
 							var appid = index.match(/(\d+)wishlist_note/i)[1];
@@ -1723,7 +1724,6 @@ function add_wishlist_notes() {
 					chrome.storage.local.set({"wishlist_notes": notes});
 
 					console.info("Wishlist notes storage method was changed, reload the page to take effect!");
-
 					return;
 				});
 			}
@@ -1732,7 +1732,7 @@ function add_wishlist_notes() {
 		// Show note input modal
 		$(document).on("click", ".es_add_wishlist_note", function(){
 			var appid = $(this).attr("id").replace("es_add_wishlist_note_", ""),
-				appRow = $(this).closest(".wishlistRowItem");
+				appRow = $(this).closest(".wishlistRowItem"),
 				gameTitle = $(appRow).find("h4.ellipsis").text(),
 				note =  $(appRow).find(".es_wishlist_note").text() || "";
 
@@ -2709,10 +2709,13 @@ function add_wishlist_profile_link() {
 
 	// Get count of wishlisted items
 	get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
-		var html = $.parseHTML(txt);
-		var count = ($(html).find(".wishlistRow").length);
+		var count = txt.match(/id="game_(\d+)"/g).length;
 
-		if (count) { $("#es_wishlist_count").text(count); } else { $('#es_wishlist_link').remove(); }
+		if (count) {
+			$("#es_wishlist_count").text(count);
+		} else {
+			$("#es_wishlist_link").remove();
+		}
 	});	
 }
 
