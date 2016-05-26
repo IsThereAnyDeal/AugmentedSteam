@@ -2709,10 +2709,10 @@ function add_wishlist_profile_link() {
 
 	// Get count of wishlisted items
 	get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
-		var count = txt.match(/id="game_(\d+)"/g).length;
+		var count = txt.match(/id="game_(\d+)"/g);
 
 		if (count) {
-			$("#es_wishlist_count").text(count);
+			$("#es_wishlist_count").text(count.length);
 		} else {
 			$("#es_wishlist_link").remove();
 		}
