@@ -1457,37 +1457,57 @@ function add_wishlist_discount_sort() {
 }
 
 // Calculate total cost of all items on wishlist
-function add_wishlist_total() {
-	var total = 0;
-	var gamelist = "";
-	var items = 0;
-	var apps = "";
+function add_wishlist_total(showTotal) {
+	if ($('.wishlistRow').length < 100 || showTotal) {
+		var total = 0,
+			items = 0,
+			gamelist = "",
+			apps = "";
 
-	function calculate_node($node, search) {
-		var parsed = parse_currency($node.find(search).text().trim());
+		function calculate_node($node, search) {
+			var parsed = parse_currency($node.find(search).text().trim());
 
-		if (parsed) {
-			gamelist += $node.find("h4").text().trim() + ", ";
-			items ++;
-			total += parsed.value;
-			apps += get_appid($node.find(".btnv6_blue_hoverfade").attr("href")) + ",";
+			if (parsed) {
+				gamelist += $node.find("h4").text().trim() + ", ";
+				total += parsed.value;
+				apps += get_appid($node.find(".btnv6_blue_hoverfade").attr("href")) + ",";
+				items ++;
+			}
 		}
+
+		$('.wishlistRow').each(function(){
+			var $this = $(this);
+
+			if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
+				calculate_node($this, "div[class='price']");
+
+			if ($this.find("div[class='discount_final_price']").length != 0)
+				calculate_node($this, "div[class='discount_final_price']");
+		});
+		gamelist = gamelist.replace(/, $/, "");
+
+		total = formatCurrency(parseFloat(total));
+
+		$(".games_list").after(`
+			<div class='es_wishlist_total'>
+				<div class='game_area_purchase_game'>
+					<h1>` + localized_strings.wishlist + `</h1>
+					<p class='package_contents'><b>` + localized_strings.bundle.includes.replace("__num__", items) + `:</b> ` + gamelist + `</p>
+					<div class='game_purchase_action'>
+						<div class='game_purchase_action_bg'>
+							<div class='game_purchase_price price'>` + total + `</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		`);
+	} else {
+		$(".games_list").after("<div class='es_show_wishlist_total btn_darkblue_white_innerfade'><span>" + localized_strings.show_wishlist_total + "<span></div>");
+		$(document).on("click", ".es_show_wishlist_total", function(){
+			$(this).remove();
+			add_wishlist_total(true);
+		});
 	}
-
-	$('.wishlistRow').each(function () {
-		var $this = $(this);
-
-		if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
-			calculate_node($this, "div[class='price']");
-
-		if ($this.find("div[class='discount_final_price']").length != 0)
-			calculate_node($this, "div[class='discount_final_price']");
-	});
-	gamelist = gamelist.replace(/, $/, "");
-
-	total = formatCurrency(parseFloat(total));
-
-	$(".games_list").after("<div class='es_wishlist_total'><div class='game_area_purchase_game' style='width: 600px; margin-top: 15px;'><h1>" + localized_strings.wishlist + "</h1><p class='package_contents'><b>" + localized_strings.bundle.includes.replace("__num__", items) + ":</b> " + gamelist + "</p><div class='game_purchase_action'><div class='game_purchase_action_bg'><div class='game_purchase_price price'>" + total + "</div></div></div></div></div></div></div>");
 }
 
 function add_wishlist_ajaxremove() {

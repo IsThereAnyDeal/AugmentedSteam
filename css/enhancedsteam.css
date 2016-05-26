@@ -129,16 +129,6 @@ img.platform_small, .platform_img {
 .apphub_HeaderTop.es_greenlight.es_released {
 	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
 }
-#es_empty_wishlist,#es_empty_owned_wishlist {
-	width:auto;
-	display:inline-block;
-	padding:0 5px 0 5px;
-	border-color:#af1900;
-	color:#af1900;
-}
-#es_empty_owned_wishlist {
-	margin-left:6px;
-}
 .wishlistRowItem {
 	overflow: initial !important;
 }
@@ -1381,6 +1371,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	padding-right: 12px;
 	height: 24px;
 }
+/* ES specific */
+.es_wishlist_total,
+.es_show_wishlist_total {
+	width: 100%;
+	margin-top: 20px;
+	display: inline-block;
+	clear: both;
+}
+.es_show_wishlist_total span {
+	padding: 10px;
+	text-align: center;
+}
 
 /***************************************
  * Wishlist
@@ -1415,7 +1417,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	outline: none;
 	padding: 4px 6px;
 }
-/* ES Specific */
+/* ES specific */
 .es_games_filter {
 	float: left;
 }
@@ -1428,7 +1430,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: 10px;
 }
 #save_action_disabled_1,
-#save_action_enabled_2 {
+#save_action_enabled_1 {
 	margin-top: -10px;
 }
 
@@ -1528,6 +1530,30 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	100% {
 		white-space: normal;
 	}
+}
+
+/***************************************
+ * Wishlist
+ * add_empty_wishlist_buttons()
+ **************************************/
+#es_empty_wishlist {
+	width: auto;
+	display: inline-block;
+	padding: 0 5px 0 5px;
+	border-color: #af1900;
+	color: #af1900;
+	float: right;
+}
+#save_action_enabled_2 .btn_small {
+	float: left;
+}
+#save_action_enabled_2 .save_button_nag {
+	float: left;
+	margin: 3px 10px;
+}
+#save_action_enabled_2,
+#save_action_disabled_2 {
+	float: left;
 }
 
 /***************************************
