@@ -3784,7 +3784,7 @@ function add_profile_style() {
 function add_background_preview_link() {
 	if (is_signed_in) {
 		var isSteamPage = /\/market\/listings\/753\//.test(window.location.pathname);
-		var $viewFullLink = $("#largeiteminfo_item_actions").find("a");
+		var $viewFullLink = $("#largeiteminfo_item_actions").find("a").first();
 		if (isSteamPage && $viewFullLink.length) {
 			var bgLink = $viewFullLink[0].href.match(/images\/items\/(\d+)\/([a-z0-9\.]+)/i);
 			if (bgLink) {
