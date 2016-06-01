@@ -1149,11 +1149,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .workshop_item_header .highlight_player_item iframe,
 .workshop_item_header .workshopItemPreviewImageEnlargeable,
 .workshop_item_header .workshopItemPreviewImageEnlargeableContainer {
-	transition: width 0.3s ease, max-width 0.3s ease, height 0.3s ease;
+	transition: width 0.25s ease, max-width 0.25s ease, height 0.25s ease;
 }
 .es_slider_toggle {
-	padding: 4px !important;
 	position: absolute !important;
+	padding: 0 !important;
 	right: 4px;
 	top: 4px;
 	opacity: 0;
@@ -1164,6 +1164,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_slider_toggle:hover {
 	border: 1px solid rgba(255,255,255,0.75) !important;
 }
+.es_slider_toggle > div {
+	padding: 4px !important;
+}
 .es_slider_toggle i {
 	display: block;
 	background-image: url('data:image/gif;base64,R0lGODlhEAAgAIABAP///////yH5BAEAAAEALAAAAAAQACAAAAJAjH+gC+jB1HNxpmqjnHVz31iQOIoh5D0Spmom+y0kypDaOWf2hVMNjLi9asNUTFZECpO9FjIDDLqOvyYvscsVAAA7');
@@ -1172,8 +1175,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: 16px;
 	height: 16px;
 }
-.es_slider_toggle.expanded i {
+.es_slider_toggle .es_slider_contract i {
 	background-position: bottom left;
+}
+.es_slider_toggle.es_expanded .es_slider_expand,
+.es_slider_toggle:not(.es_expanded) .es_slider_contract {
+	display: none !important;
 }
 #highlight_player_area:hover .es_slider_toggle {
 	opacity: 0.80;
@@ -1181,16 +1188,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #highlight_player_area {
 	width: auto !important;
 }
-.workshop_item_header.expanded .col_right {
+.workshop_item_header.es_expanded .col_right {
 	display: none;
 }
-.workshop_item_header.expanded .highlight_ctn,
-.workshop_item_header.expanded .highlight_overflow {
+.workshop_item_header.es_expanded .highlight_ctn,
+.workshop_item_header.es_expanded .highlight_overflow {
 	width: 920px;
 }
-.workshop_item_header.expanded .highlight_player_item iframe,
-.workshop_item_header.expanded .workshopItemPreviewImageEnlargeable,
-.workshop_item_header.expanded .workshopItemPreviewImageEnlargeableContainer {
+.workshop_item_header.es_expanded .highlight_player_item iframe,
+.workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeable,
+.workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeableContainer {
 	width: 920px;
 	height: 520px;
 	max-width: 920px !important;
@@ -1201,11 +1208,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .highlight_overflow {
 	z-index: 5;
 }
+/* When browser window is too small hide the side details and the toggle button in Store */
 @media (max-width: 910px) {
 	#game_highlights .rightcol {
 		display: block !important;
 	}
-	/* Hide the side bar and the toggle button in Store */
 	.game_meta_data .es_side_details,
 	.game_meta_data .es_side_details_wrap,
 	#game_highlights .es_slider_toggle {
@@ -1216,24 +1223,24 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	#game_highlights .highlight_ctn {
 		width: 616px;
 	}
-	#game_highlights.expanded .highlight_ctn {
+	#game_highlights.es_expanded .highlight_ctn {
 		width: 940px;
 	}
-	#game_highlights.expanded .highlight_overflow {
+	#game_highlights.es_expanded .highlight_overflow {
 		margin-right: 0;
 	}
-	#game_highlights.expanded .rightcol {
+	#game_highlights.es_expanded .rightcol {
 		display: none !important;
 	}
-	#game_highlights.expanded .leftcol {
+	#game_highlights.es_expanded .leftcol {
 		float: none !important;
 		width: auto !important;
 	}
 
 	.es_slider_toggle,
-	.es_side_details.expanded,
-	.es_side_details_wrap.expanded {
-		display: block !important
+	.es_side_details.es_expanded,
+	.es_side_details_wrap.es_expanded {
+		display: block;
 	}
 	.es_side_details .game_header_image_full {
 		width: 276px !important;
@@ -1303,7 +1310,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-weight: bold;
 	cursor: pointer;
 }
-.es_hd_toggle.es_video_sd span {
+.es_playback_sd .es_hd_toggle span {
 	opacity: 0.4;
 }
 
