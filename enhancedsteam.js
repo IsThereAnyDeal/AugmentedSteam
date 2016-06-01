@@ -5910,10 +5910,8 @@ function show_regional_pricing() {
 									if(subid){
 										if (settings.showregionalprice == "mouse") {
 											if(!(settings.regional_hideworld)){
-												$(app_package).find(".price").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"5px 8px"});
-												$(app_package).find(".discount_original_price").css({"position":"relative","float":"left"});
-												$(app_package).find(".discount_block").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"77px 8px","background-color":"#000000"});
-												$(app_package).find(".discount_prices").css({"background":"none"});
+												$(app_package).find(".price, .discount_prices").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"9px"});
+												$(app_package).find(".price").css("padding-left", "32px");
 											}
 											$(app_package).find(".price, .discount_block")
 											.mouseover(function() {
