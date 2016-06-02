@@ -5772,7 +5772,7 @@ function show_regional_pricing(type) {
 									url: api_url,
 									data: {
 										packageids: package_info["subid"],
-										// conversion for "eu2" has to be removed sincere "eu" regions were merged
+										// conversion for "eu2" should to be removed since "eu" regions were merged
 										cc: (country === "eu1" ? "fr" : (country === "eu2" ? "it" : country))
 									}
 								}).done(function(data) {
