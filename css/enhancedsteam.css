@@ -166,68 +166,8 @@ img.platform_small, .platform_img {
 	background:#EBEBEB;
 	border-radius:4px;
 }
-.es_regional_container {
-	display: none;
-	z-index:999;	
-	position:absolute;
-	background: linear-gradient(to bottom, #33425A 5%,#282F3D 100%);
-	padding: 7px 8px;
-	box-shadow: 5px 5px 5px rgba(0,0,0,0.8);
-	border:1px solid black;
-	margin-top:-25px;
-}
-.es_regional_price {
-	margin-right:8px;
-	font-size:14px;
-}
-.es_regional_converted {
-	font-size:12px;
-}
-.es_percentage {
-	font-size:12px;
-	margin-left:3px;
-}
-.es_percentage_higher {
-	color:red;
-}
-.es_percentage_lower {
-	color:green;
-}
-.es_percentage_equal {
-	color:yellow;
-}
-.es_percentage_indicator {
-	width:7px;
-	height:4px;
-	display:inline-block;
-	margin-bottom:3px;
-	margin-right:2px;
-}
-.es_percentage_higher > .es_percentage_indicator {
-	background-position:0 -4px;
-}
-.es_percentage_equal > .es_percentage_indicator {
-	background-position:0 -8px;
-	margin-bottom:1px;
-}
-.es_regional_always {
-	display:inline-block;
-	position:relative;
-	float:right;
-	margin-bottom:5px;
-	margin-top:auto;
-}
-.es_regional_sale {
-	margin-bottom:55px;
-}
-.es_regional_dailydeal {
-	margin-top:auto;
-}
-.es_regional_unavailable {
-	font-size:12px;
-}
 .es_flag {
-	margin-right:4px;
+	margin-right: 4px;
 }
 .es_each {
 	color: #626366;
@@ -1551,4 +1491,111 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	top: 104px;
 	left: 0;
 	opacity: 0.4;
+}
+
+/***************************************
+ * Wishlist
+ * show_regional_pricing()
+ **************************************/
+.es_regional_prices .game_purchase_action,
+.es_regional_prices .discount_block.game_purchase_discount {
+	overflow-x: initial !important;
+	overflow: visible !important;
+}
+.es_regional_prices.game_area_purchase_game:hover,
+.es_regional_prices.sale_page_purchase_item:hover {
+	z-index: 9999;
+}
+.es_regional_prices.sale_page_purchase_item {
+	height: auto;
+	min-height: 136px;
+}
+.es_regional_prices:not(.es_regional_always) .game_purchase_action_bg {
+	cursor: help;
+	position: relative;
+}
+.es_regional_icon {
+	padding-left: 23px !important;
+	background: no-repeat url("chrome-extension://__MSG_@@extension_id__/img/flags/world.png") 8px 8px !important;
+}
+.es_regional_icon.price {
+	padding-left: 30px !important;
+}
+.es_regional_container {
+	z-index: 999;
+	background: linear-gradient(to bottom, #33425A 5%, #282F3D 100%);
+	padding: 7px 8px;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
+	border: 1px solid black;
+	margin-top: -25px;
+	text-align: left;
+}
+.es_regional_prices:not(.es_regional_always) .es_regional_container {
+	display: none;
+	position: absolute;
+	pointer-events: none;
+	top: 20px;
+	right: 100%;
+}
+.es_regional_always:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.es_regional_always .es_regional_container {
+	display: inline-block;
+	position: relative;
+	float: right;
+	margin-bottom: 5px;
+	margin-top: auto;
+}
+.es_regional_always .es_regional_sale {
+	margin-bottom: 55px;
+}
+.es_regional_onmouse .game_purchase_price:hover ~ .es_regional_container,
+.es_regional_onmouse .game_purchase_discount:hover ~ .es_regional_container {
+	display: block !important;
+}
+.es_regional_price {
+	margin-right: 8px;
+	font-size: 14px;
+}
+.es_regional_converted {
+	font-size: 12px;
+}
+.es_percentage {
+	font-size: 12px;
+	margin-left: 3px;
+}
+.es_percentage:before {
+	content: "";
+	width: 7px;
+	height: 4px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+	position: relative;
+	display: inline-block;
+	background: no-repeat url("chrome-extension://__MSG_@@extension_id__/img/arrows.png") top left;
+}
+.es_percentage_higher:before {
+	background-position: 0 -4px;
+}
+.es_percentage_equal:before {
+	background-position: 0 -8px;
+	margin-bottom: 1px;
+}
+.es_percentage_higher {
+	color: red;
+}
+.es_percentage_lower {
+	color: green;
+}
+.es_percentage_equal {
+	color: yellow;
+}
+.es_regional_dailydeal {
+	margin-top: auto;
+}
+.es_regional_unavailable {
+	font-size: 12px;
 }
