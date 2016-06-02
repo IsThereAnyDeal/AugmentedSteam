@@ -883,7 +883,7 @@ function generate_region_select() {
 		options = options.add($('<option/>').attr('value', index.toLowerCase()).text(value));
 	});
 
-	region_selection.append($('<span/>').addClass('es_flag').css("background-image", "url("+chrome.extension.getURL("img/flags/flags.png")+")"));
+	region_selection.append($('<span/>').addClass('es_flag'));
 	region_selection.append($('<select/>').addClass('regional_country').append(options));
 	region_selection.append($('<a/>').addClass('select2-search-choice-close remove_region'));
 
