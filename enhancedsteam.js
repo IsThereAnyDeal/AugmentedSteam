@@ -8099,27 +8099,8 @@ function add_badge_completion_cost() {
 	}
 }
 
-function add_gamecard_trading_forum() {
-	var forumAdded = false;
-	function get_number(bracketed_number){
-		return parseInt(bracketed_number.trim().substr(1, bracketed_number.length-2));
-	}
-	function addForum(){
-		var pathname = window.location.pathname;
-		var appid = window.location.pathname.split("/")[4];
-		$(".badge_detail_tasks_rule").next().next().after('<div class="gamecards_inventorylink"><a href="' + window.location.protocol + '//steamcommunity.com/app/'+appid+'/tradingforum/" class="btn_grey_grey btn_medium"><span>' + localized_strings.visit_trade_forum + '</span></a></div>');
-		forumAdded = true;
-	}
-	var all_cards = $(".badge_card_set_card");
-	var all_owned = $(".badge_card_set_card.owned");
-	if (all_cards.length == all_owned.length){
-		$.each(all_owned, function(){
-			var num_owned = get_number($(this).find(".badge_card_set_text_qty").text());
-			if (num_owned>0 && !forumAdded){
-				addForum();
-			}
-		});
-	}
+function add_trade_forum_link(appid) {
+	$(".gamecards_inventorylink").append('<a class="es_visit_tforum btn_grey_grey btn_medium" style="float: right; margin-top: -10px;" href="//steamcommunity.com/app/' + appid + '/tradingforum/" ><span>' + localized_strings.visit_trade_forum + '</span></a>');	
 }
 
 function add_total_drops_count() {
@@ -8854,7 +8835,7 @@ $(document).ready(function(){
 							add_cardexchange_links(gamecard);
 							add_gamecard_market_links(gamecard);
 							add_gamecard_foil_link();
-							add_gamecard_trading_forum();
+							add_trade_forum_link(gamecard);
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
