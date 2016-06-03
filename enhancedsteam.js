@@ -4048,15 +4048,9 @@ function add_dlc_page_link(appid) {
 
 // Fix "No image available" in wishlist
 function fix_wishlist_image_not_found() {
-	var items = document.getElementById("wishlist_items");
-	if (items) {
-		imgs = items.getElementsByTagName("img");
-		for (var i = 0; i < imgs.length; i++)
-		if (imgs[i].src == "http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
-			var gameurl = imgs[i].parentNode.href;
-			imgs[i].src = "http://cdn.akamai.steamstatic.com/steam/apps/" + gameurl.substring(gameurl.lastIndexOf("/") + 1) + "/header.jpg";
-		}
-	}
+	$("img[src$='338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif']").attr("src", function(){
+		return "//steamcdn-a.akamaihd.net/steam/apps/" + get_appid( $(this).parent()[0].href ) + "/capsule_184x69.jpg";
+	});
 }
 
 function fix_profile_image_not_found() {
