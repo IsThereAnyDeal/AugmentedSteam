@@ -274,9 +274,17 @@ function get_currency_from_DOM() {
 	return null;
 }
 
+var page_currency;
+function memoized_get_currency_from_DOM() {
+	if(!page_currency) {
+		page_currency = { value: get_currency_from_DOM() };
+	}
+	return page_currency.value;
+}
+
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
-	var currency_type = get_currency_from_DOM() || currency_symbol_to_type(currency_symbol);
+	var currency_type = memoized_get_currency_from_DOM() || currency_symbol_to_type(currency_symbol);
 	if (user_currency && currency_format_info[user_currency].symbolFormat == currency_format_info[currency_type].symbolFormat) currency_type = user_currency;
 	var currency_number = currency_type_to_number(currency_type);
 	var info = currency_format_info[currency_type];
