@@ -5589,9 +5589,9 @@ function init_hd_player() {
 				if ($(this).hasClass("es_expanded")) {
 					$("video.highlight_movie.es_video_sd").each(function(){
 						toggle_video_definition( $(this)[0], true );
-
-						setValue("playback_hd", true);
 					});
+
+					setValue("playback_hd", true);
 				}
 			});
 
