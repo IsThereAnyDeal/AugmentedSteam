@@ -421,7 +421,7 @@ function load_options() {
 		if (settings.stores === undefined) { settings.stores = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]; storage.set({'stores': settings.stores}); }
 		if (settings.override_price === undefined) { settings.override_price = "auto"; storage.set({'override_price': settings.override_price}); }
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
-		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; storage.set({'regional_countries': settings.regional_countries}); }
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us", "gb", "eu1", "ru", "br", "au", "jp"]; storage.set({'regional_countries': settings.regional_countries}); }
 
 		if (settings.showtotal === undefined) { settings.showtotal = true; storage.set({'showtotal': settings.showtotal}); }
 		if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
@@ -947,7 +947,7 @@ function load_default_tag_inv_guestpass_color() { $("#tag_inv_guestpass_color").
 function load_default_tag_notinterested_color() { $("#tag_notinterested_color").val("#e02b3c"); }
 
 function load_default_countries() {
-	regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"];
+	regional_countries = ["us","gb","eu1","ru","br","au","jp"];
 	storage.set({'regional_countries': regional_countries}, function() {
 		$('#region_selects').find('li').remove();
 		populate_regional_selects();
