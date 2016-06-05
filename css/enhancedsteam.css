@@ -1377,7 +1377,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 30px;
 }
 .es_wishlist_filter {
-	margin-top: 5px;
+	margin-top: 10px;
 }
 #save_action_disabled_1,
 #save_action_enabled_1 {
@@ -1575,14 +1575,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .store_nav .tab:hover > span.pulldown > span {
     background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png' );
 }
-.popup_block_new .popup_body {
+#wishlist_sort_options .popup_block_new .popup_body {
     border: none !important;
     position: relative;
     background: #417A9B !important;
     padding: 6px 0px;
 }
-.popup_menu_subheader {
-    color: #13242e;
+#wishlist_sort_options .popup_menu_item {
+	color: #e5e4dc;
 }
 
 /***************************************

@@ -2,7 +2,7 @@
 -----
 + Added an item counter to both party's item selection in trade offer windows
 + Added a filter box to wishlist pages, making it easy to find games by name
-+ Wishlist sort options are now in a drop down menu, rather than links
++ Wishlist sort and filter options are now in a drop down menu, rather than links
 + Added a new wishlist sort option to sort by discount dollar amount
 + Video player HD settings will now be saved between page loads
 : Wishlist totals for large wishlists will display after pressing a button, improving performance

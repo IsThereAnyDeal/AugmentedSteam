@@ -1348,29 +1348,32 @@ function add_empty_wishlist_buttons() {
 
 function add_wishlist_filter() {
 	var html  = "<span>" + localized_strings.show + ": </span>";
-		html += "<label class='es_sort' id='es_wl_all'><input type='radio' id='es_wl_all_box' name='es_wl_sort' checked><span><a>" + localized_strings.games_all + "</a></span></label>";
-		html += "<label class='es_sort' id='es_wl_sale'><input type='radio' id='es_wl_sale_box' name='es_wl_sort'><span><a>" + localized_strings.games_discount + "</a></span></label>";
-		html += "<label class='es_sort' id='es_wl_coupon'><input type='radio' id='es_wl_coupon_box' name='es_wl_sort'><span><a>" + localized_strings.games_coupon + "</a></span></label>";
-		html += "</div>";
+		html += '<div class="store_nav" style="float: right; margin-left: 5px;"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.games_all + '</div><span></span></span></div></div>';
+		html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
+		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="all">' + localized_strings.games_all + '</a>';
+		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="sale">' + localized_strings.games_discount + '</a>';
+		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="coupon">' + localized_strings.games_coupon + '</a>';		
+		html += "</div></div>";
 
 	$("#wishlist_sort_options").append("<div class='es_wishlist_filter'>" + html + "</div>");
 
-	$(".es_sort input").on("change", function() {
-		var parentId = $(this).parent()[0].id;
+	$(document).on("click", "a.es_wl_filter", function(e) {
+		e.preventDefault();
+		var filter_type = $(this).data("filter-by");
 
-		$(".es_lowest_price").remove();
-
-		if (parentId === "es_wl_sale") {
+		if (filter_type === "sale") {
 			$(".wishlistRow").hide();
 			$(".discount_block_inline").closest(".wishlistRow").show();
 		}
-		else if (parentId === "es_wl_coupon") {
+		else if (filter_type === "coupon") {
 			$(".wishlistRow").hide();
 			$(".es_highlight_coupon").show();
 		}
 		else {
 			$(".wishlistRow").show();
 		}
+		$("#es_filter_active").text($(this).text());
+		$("#es_filter_flyout").fadeOut();
 	});
 }
 
