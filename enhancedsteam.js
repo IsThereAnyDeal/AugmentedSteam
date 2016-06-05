@@ -274,9 +274,17 @@ function get_currency_from_DOM() {
 	return null;
 }
 
+var page_currency;
+function memoized_get_currency_from_DOM() {
+	if(!page_currency) {
+		page_currency = { value: get_currency_from_DOM() };
+	}
+	return page_currency.value;
+}
+
 function parse_currency(str) {
 	var currency_symbol = currency_symbol_from_string(str);
-	var currency_type = get_currency_from_DOM() || currency_symbol_to_type(currency_symbol);
+	var currency_type = memoized_get_currency_from_DOM() || currency_symbol_to_type(currency_symbol);
 	if (user_currency && currency_format_info[user_currency].symbolFormat == currency_format_info[currency_type].symbolFormat) currency_type = user_currency;
 	var currency_number = currency_type_to_number(currency_type);
 	var info = currency_format_info[currency_type];
@@ -1368,6 +1376,7 @@ function add_wishlist_filter() {
 
 function add_wishlist_discount_sort() {
 	$("#wishlist_sort_options").children("a, span").last().after("&nbsp; <a class='es_wl_sort by_discount' data-sort-by='discount' href='?sort=discount'>" + localized_strings.discount + "</a>");
+	$("#wishlist_sort_options").children("a, span").last().after("&nbsp; <a class='es_wl_sort by_discountabs' data-sort-by='discountabs' href='?sort=discountabs'>" + localized_strings.discountabs + "</a>");
 
 	$(document).on("click", "a.es_wl_sort:not(.by_added)", function(e) {
 		e.preventDefault();
@@ -1395,6 +1404,12 @@ function add_wishlist_discount_sort() {
 					return parseInt(val);
 				});
 				break;
+			case "discountabs":
+				add_wishlist_discabs_sort();
+				sort_wishlist(".discount_abs_raw", sort_by, true, function(val){
+					return parseFloat(val);
+				});
+				break;
 		}
 		
 		reset_sort_links($(this));
@@ -1403,6 +1418,8 @@ function add_wishlist_discount_sort() {
 	// Initiate "discounted" sort if necessary and rebuild sorting links
 	if (getCookie("wishlist_sort2") == "discount") {
 		$(".by_discount").click();
+	} else if (getCookie("wishlist_sort2") == "discountabs") {
+		$(".by_discountabs").click();
 	} else {
 		reset_sort_links();
 	}
@@ -1442,7 +1459,7 @@ function add_wishlist_discount_sort() {
 
 	function reset_sort_links(clickedLink) {
 		var links = $("#wishlist_sort_options").children("a, span"),
-			sorts = ["rank", "added", "name", "price", "discount"],
+			sorts = ["rank", "added", "name", "price", "discount", "discountabs"],
 			sorted = getCookie("wishlist_sort2") || false;
 
 		for (var i = 0; i < links.length; i++) {
@@ -1454,6 +1471,39 @@ function add_wishlist_discount_sort() {
 			}
 		}
 	}
+}
+
+// Calculate absolute discount value of each item on wishlist
+function add_wishlist_discabs_sort() {
+	var price_cache = {};
+	$('.wishlistRow').not(":has(.discount_abs_raw)").each(function () {
+		var $this = $(this);
+		var absolute_discount = absolute_discount_for_wishlist_row($this, price_cache);
+		$this.children().last().after("<div class='discount_abs_raw'>" + absolute_discount + "</div>");
+		$this.find(".discount_abs_raw").css("display", "none");
+		$this.find(".discount_final_price").after("<div class='discount_abs'>( " + formatCurrency(absolute_discount) + " )</div>");
+	});
+}
+
+function absolute_discount_for_wishlist_row($this, price_cache) {
+	var html = $this.html();
+	if (html.match(/discount_block_inline/)) {
+		var finalPrice = memoized_parse_currency($this.find(".discount_final_price").html(), price_cache);
+		var originalPrice = memoized_parse_currency($this.find(".discount_original_price").html(), price_cache);
+		return finalPrice.value - originalPrice.value;
+	}
+	if (html.match(/div class=\"price/)) {
+		var price = memoized_parse_currency($this.find(".price").html(), price_cache);
+		return price ? price.value : 0;
+	}
+	return 0;
+}
+
+function memoized_parse_currency(str, cache) {
+	if(!cache[str]) {
+		cache[str] = { value: parse_currency(str) };
+	}
+	return cache[str].value;
 }
 
 // Calculate total cost of all items on wishlist

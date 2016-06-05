@@ -129,6 +129,7 @@
     "always": "Always",
     "compare": "Compare",
     "discount": "Discount",
+    "discountabs": "Absolute Discount",
     "rating_details": "See rating details",
     "drops_worth_avg": "Worth Approximately",
     "using_store_return": "Click here to go back to the __base__ store.",
