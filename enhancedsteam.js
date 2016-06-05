@@ -1385,7 +1385,7 @@ function add_wishlist_discount_sort() {
 	var html = '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_sort_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
 		$("#wishlist_sort_options").children("a, span").each(function() { html += '<a class="popup_menu_item ' + $(this).attr("class") + '" data-sort-by="' + $(this).attr("data-sort-by") + '" href="' + $(this).attr("href") + '">' + $(this).text() + '</a>'; });
 		html += "</div></div>";
-	$("#wishlist_sort_options").after(html);
+	$("#wishlist_sort_options").append(html);
 	
 	runInPageContext(function() { BindAutoFlyoutEvents(); });
 
