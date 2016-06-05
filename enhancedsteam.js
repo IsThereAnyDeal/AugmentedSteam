@@ -5758,87 +5758,73 @@ function media_slider_expander(in_store) {
 }
 
 // Display a regional price comparison
-function show_regional_pricing() {
+function show_regional_pricing(type) {
 	storage.get(function(settings) {
 		if (settings.showregionalprice === undefined) { settings.showregionalprice = "mouse"; storage.set({'showregionalprice': settings.showregionalprice}); }
-		if (settings.regional_countries === undefined) { settings.regional_countries = ["us","gb","eu1","eu2","ru","br","au","jp"]; storage.set({'regional_countries': settings.regional_countries}); }
-		if (settings.regional_hideworld === undefined) { settings.regional_hideworld = false; storage.set({'regional_hideworld':settings.regional_hideworld}); }
-		if (settings.regional_countries<1){settings.showregionalprice="off";}
-		if (settings.showregionalprice != "off") {
+		if (settings.regional_countries === undefined) { settings.regional_countries = ["us", "gb", "eu1", "ru", "br", "au", "jp"]; storage.set({'regional_countries': settings.regional_countries}); }
+		if (settings.regional_hideworld === undefined) { settings.regional_hideworld = false; storage.set({'regional_hideworld': settings.regional_hideworld}); }
+		if (settings.regional_countries < 1) { settings.showregionalprice = "off"; }
+
+		if (settings.showregionalprice !== "off") {
 			var api_url = "//store.steampowered.com/api/packagedetails/";
 			var countries = settings.regional_countries;
-			var pricing_div = "<div class='es_regional_container'></div>";
-			var world = chrome.extension.getURL("img/flags/world.png");
+			var pricing_div = $('<div class="es_regional_container es_regional_' + (type || 'app') + '"></div>');
 			var currency_deferred = [];
 			var local_country;
-			var sale;
-			var sub;
-			var region_appended=0;
-			
-			if (/^\/sale\/.*/.test(window.location.pathname)) {
-				sale=true;
-				pricing_div = $(pricing_div).addClass("es_regional_sale");
-			}
-			if (/^\/sub\/.*/.test(window.location.pathname)) {
-				sub=true;
-				pricing_div = $(pricing_div).addClass("es_regional_sub");
-			}
+			var sale = (type === "sale");
+			var sub = (type === "sub");
+
 			local_country = getStoreRegionCountryCode().toLowerCase();
-			if(countries.indexOf(local_country)===-1){
+			if (countries.indexOf(local_country) === -1) {
 				countries.push(local_country);
 			}
-			var all_game_areas = $(".game_area_purchase_game").toArray();
-			if (sale) {
-				all_game_areas = $(".sale_page_purchase_item").toArray();
+
+			if (settings.showregionalprice === "mouse") {
+				$(pricing_div).prepend('<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
 			}
+
 			var subid_info = [];
 			var subid_array = [];
+			var all_game_areas = (sale ? $(".sale_page_purchase_item") : $(".game_area_purchase_game")).toArray();
 
-			function formatPriceData(sub_info,country,converted_price) {
-				var flag_div = "<div class=\"es_flag\" style='background-image:url("+chrome.extension.getURL("img/flags/flags.png")+")'></div>";
-				if (sub_info["prices"][country]){
-					var price = sub_info["prices"][country]["final"]/100;
-					var local_price = sub_info["prices"][local_country]["final"]/100;
-					converted_price = converted_price/100;
-					converted_price = converted_price.toFixed(2);
+			function formatPriceData(sub_info, country, converted_price) {
+				var regional_price_div = "";
+				
+				if (sub_info["prices"][country]) {
+					converted_price = (converted_price / 100).toFixed(2);
+
+					var price = sub_info["prices"][country]["final"] / 100;
+					var local_price = sub_info["prices"][local_country]["final"] / 100;
 					var currency = sub_info["prices"][country]["currency"];
-					var percentage;
 					var formatted_price = formatCurrency(price, currency);
 					var formatted_converted_price = formatCurrency(converted_price);
+					var percentage_indicator = "es_percentage_equal";
+					var percentage;
 
 					if (settings.override_price != "auto") {
 						local_price = currencyConversion.convert(local_price, sub_info["prices"][local_country]["currency"], settings.override_price);
 					}
-					
-					percentage = (((converted_price/local_price)*100)-100).toFixed(2);
-					var arrows = chrome.extension.getURL("img/arrows.png");
-					var percentage_span="<span class=\"es_percentage\"><div class=\"es_percentage_indicator\" style='background-image:url("+arrows+")'></div></span>";
-					if (percentage<0) {
+
+					percentage = (((converted_price / local_price) * 100) - 100).toFixed(2);
+					if (percentage < 0) {
 						percentage = Math.abs(percentage);
-						percentage_span = $(percentage_span).addClass("es_percentage_lower");
-					}else if (percentage==0) {
-						percentage_span = $(percentage_span).addClass("es_percentage_equal");
-					}else {
-						percentage_span = $(percentage_span).addClass("es_percentage_higher");
+						percentage_indicator = "es_percentage_lower";
+					} else if (percentage > 0) {
+						percentage_indicator = "es_percentage_higher";
 					}
-					percentage_span = $(percentage_span).append(percentage+"%");
-					var regional_price_div = "<div class=\"es_regional_price\">"+formatted_price+"&nbsp;<span class=\"es_regional_converted\">("+formatted_converted_price+")</span></div>";
-					flag_div = $(flag_div).addClass("es_flag_"+country);
-					regional_price_div = $(regional_price_div).prepend(flag_div);
-					regional_price_div = $(regional_price_div).append(percentage_span);
-					return regional_price_div;
+
+					regional_price_div = '<div class="es_regional_price es_flag es_flag_' + country + '">' + formatted_price + ' <span class="es_regional_converted">(' + formatted_converted_price + ')</span><span class="es_percentage ' + percentage_indicator + '">' + percentage + '%</span></div>';
+				} else {
+					regional_price_div = '<div class="es_regional_price es_flag es_flag_' + country + '"><span class="es_regional_unavailable">' + localized_strings.region_unavailable + '</span></div>';
 				}
-				else {
-					var regional_price_div = "<div class=\"es_regional_price\"><span class=\"es_regional_unavailable\">"+localized_strings.region_unavailable+"</span></div>";
-					flag_div = $(flag_div).addClass("es_flag_"+country);
-					regional_price_div = $(regional_price_div).prepend(flag_div);
-					return regional_price_div;
-				}
+
+				return regional_price_div;
 			}
 
-			$.each(all_game_areas,function(index,app_package){
+			$.each(all_game_areas, function(index, app_package) {
 				var subid = $(app_package).find("input[name='subid']").val();
-				if(subid>0){
+				
+				if (subid > 0) {
 					subid_info.push({
 						subid: subid,
 						prices: []
@@ -5851,36 +5837,28 @@ function show_regional_pricing() {
 					});
 				}
 			});
-			if(subid_array.length>0){
-				$.each(countries,function(index,country){
-					switch (country) {
-						case "eu1":
-							cc="fr";
-							break;
-						case "eu2":
-							cc="it";
-							break;
-						default:
-							cc=country;
-							break;
-					}
-					$.each(subid_info,function(subid_index,package_info){
+
+			if (subid_array.length) {
+				$.each(countries, function(index, country) {
+					$.each(subid_info, function(subid_index, package_info) {
 						if (package_info["subid"] != 0) {
 							currency_deferred.push(
 								$.ajax({
-									url:api_url,
-									data:{
-										packageids:package_info["subid"],
-										cc:cc
+									url: api_url,
+									data: {
+										packageids: package_info["subid"],
+										// conversion for "eu2" should to be removed since "eu" regions were merged
+										cc: (country === "eu1" ? "fr" : (country === "eu2" ? "it" : country))
 									}
-								}).done(function(data){
-									$.each(data,function(data_subid){
-										if(package_info){
-											if(package_info["subid"]===data_subid){
-												if(data[data_subid]["data"]) {
+								}).done(function(data) {
+									$.each(data, function(data_subid) {
+										if (package_info) {
+											if (package_info["subid"] === data_subid) {
+												if (data[data_subid]["data"]) {
 													var price = data[data_subid]["data"]["price"];
-													subid_info[subid_index]["prices"][country]=price;
-													pricing_div=$(pricing_div).append(price);
+
+													subid_info[subid_index]["prices"][country] = price;
+													pricing_div = $(pricing_div).append(price);
 												}
 											}
 										}
@@ -5890,129 +5868,59 @@ function show_regional_pricing() {
 						};
 					});
 				});
-				var format_deferred=[];
-				var formatted_regional_price_array=[];
-				$.when.apply(null,currency_deferred).done(function(){
-					$.map(subid_info,function(subid,index){
-						currencyConversion.load().done(function() {
-							if(subid){
+
+				$.when.apply(null, currency_deferred).done(function(){
+					currencyConversion.load().done(function(){
+						$.each(subid_info, function(index, subid) {
+							if (subid["subid"] != 0) {
 								var sub_formatted = [];
-								var convert_deferred=[];
-								var all_convert_deferred = $.Deferred();
-								var app_pricing_div = $(pricing_div).clone();
-								$(app_pricing_div).attr("id", "es_pricing_" + subid_info[index]["subid"].toString());
-								$.each(countries,function(country_index,country){
-									var regional_price_array=[];
-									if(country!==local_country){
-										if(subid["prices"][country]){
+								var app_pricing_div = $(pricing_div).clone().attr("id", "es_pricing_" + subid["subid"].toString());
+
+								// Format prices for each country
+								$.each(countries, function(country_index, country) {
+									if (country !== local_country) {
+										if (subid["prices"][country]) {
 											var country_currency = subid["prices"][country]["currency"].toString().toUpperCase();
 											var app_price = subid["prices"][country]["final"];
 											var converted_price = currencyConversion.convert(parseFloat(app_price), country_currency, user_currency);
-											var regional_price = formatPriceData(subid,country,converted_price);
-											regional_price_array[0]=country;
-											regional_price_array[1]=regional_price;
-											sub_formatted.push(regional_price_array);	
-										}
-										else {
-											var regional_price = formatPriceData(subid,country);
-											regional_price_array[0]=country;
-											regional_price_array[1]=regional_price;
-											sub_formatted.push(regional_price_array);
-										}
-									}
-								});
-								$.when.apply(null,convert_deferred).done(function(){
-									if (sale){
-										switch(settings.showregionalprice){
-											case "always":
-												$(".sale_page_purchase_item").eq(index).css({"height":"auto", "min-height":"136px"}).prepend(app_pricing_div);
-												break;
-											default:
-												$(".sale_page_purchase_item").eq(index).find(".sale_page_purchase_content").before(app_pricing_div);
-												break;
-										}
-									} else {
-										switch(settings.showregionalprice){
-											case "always":
-												$(".game_area_purchase_game").eq(index).find(".game_purchase_action").before(app_pricing_div);
-												break;
-											default:
-												$(".game_area_purchase_game").eq(index).append(app_pricing_div);
-												$(app_pricing_div).css("top", $(".game_area_purchase_game").eq(index).outerHeight(true));
-												$(".game_area_purchase_game").css("z-index", "auto");
-												$(".game_purchase_action").css("z-index", "1");
-												break;
-										}
-									}
-									sub_formatted["subid"]=subid_info[index]["subid"].toString();									
-									formatted_regional_price_array.push(sub_formatted);
-									all_convert_deferred.resolve();
-								});
-								format_deferred.push(all_convert_deferred.promise());
-							}
-							$.when.apply($, [format_deferred]).done(function(){
-								var all_sub_sorted_divs=[];
-								$.each(formatted_regional_price_array,function(formatted_div_index,formatted_div){
-									var sorted_formatted_divs=[];
-									$.each(countries,function(country_index,country){
-										$.each(formatted_div,function(regional_div_index,regional_div){
-											var sort_div_country = regional_div[0];
-											if(country==sort_div_country){
-												sorted_formatted_divs.push(regional_div[1]);
-											}
-										});
-									});
-									sorted_formatted_divs["subid"]=formatted_div["subid"];
-									all_sub_sorted_divs.push(sorted_formatted_divs);
-								});
-								$.each(all_sub_sorted_divs,function(index,sorted_divs){
-									var subid = subid_array[index];
-									$.each(sorted_divs,function(price_index,regional_div){
-										$("#es_pricing_"+sorted_divs["subid"]).append(regional_div);
-										if(regional_div!=undefined){
-											region_appended++;
-										}
-									});
-									if (settings.showregionalprice == "mouse") {
-										$("#es_pricing_"+subid).append("<div class='miniprofile_arrow right' style='position: absolute; top: 12px; right: -8px;'></div>");
-										if(region_appended<=1){
-											$("#es_pricing_"+subid).find(".miniprofile_arrow").css("top","6px");
-										}
-									}
-								});
-								$.each(all_game_areas,function(index,app_package){
-									var subid = $(app_package).find("input[name='subid']").val();
-									if(subid){
-										if (settings.showregionalprice == "mouse") {
-											if(!(settings.regional_hideworld)){
-												$(app_package).find(".price, .discount_prices").css({"padding-left":"25px","background-image":"url("+world+")","background-repeat":"no-repeat","background-position":"9px"});
-												$(app_package).find(".price").css("padding-left", "32px");
-											}
-											$(app_package).find(".price, .discount_block")
-											.mouseover(function() {
-												var purchase_location = $(app_package).find("div.game_purchase_action_bg").offset();
-												if (sale) {
-													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg:last").width() + $(app_package).find(".btnv6_blue_blue_innerfade").width() + 25 +"px").css("top", $(app_package).find(".sale_page_purchase_header").height() + "px");													
-												} else if (sub) {
-													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg").width() + 25 + "px").css("top", "95px");
-												} else {
-													$("#es_pricing_" + subid).css("right", $(app_package).find(".game_purchase_action_bg:last").width() + 20 + "px");
-												}
-												$("#es_pricing_" + subid).show();
-											})
-											.mouseout(function() {
-												$("#es_pricing_" + subid).hide();
-											})
-											.css("cursor","help");
+											var regional_price = formatPriceData(subid, country, converted_price);
+
+											sub_formatted.push(regional_price);	
 										} else {
-											$("#es_pricing_" + subid).addClass("es_regional_always");
-											if (!sale){
-												$("#es_pricing_"+subid).after("<div style='clear:both'></div>");
-											}
+											var regional_price = formatPriceData(subid, country);
+	
+											sub_formatted.push(regional_price);
 										}
 									}
 								});
-							});
+
+								$(app_pricing_div).append(sub_formatted);
+
+								// Insert regional prices into the page
+								var price_container;
+								if (sale) {
+									price_container = $(".sale_page_purchase_item").eq(index).addClass("es_regional_prices");
+									
+									if (settings.showregionalprice === "always") {
+										$(price_container).addClass("es_regional_always").prepend(app_pricing_div);
+									} else {
+										$(price_container).addClass("es_regional_onmouse").find(".game_purchase_action_bg").last().append(app_pricing_div);
+									}
+								} else {
+									price_container = $(".game_area_purchase_game").eq(index).addClass("es_regional_prices");
+									
+									if (settings.showregionalprice === "always") {
+										$(price_container).addClass("es_regional_always").find(".game_purchase_action").before(app_pricing_div);
+									} else {
+										$(price_container).addClass("es_regional_onmouse").find(".game_purchase_action_bg").last().append(app_pricing_div);
+									}
+								}
+
+								// Add the "globe" icon
+								if (settings.showregionalprice === "mouse" && !(settings.regional_hideworld)) {
+									$(price_container).find(".price, .discount_prices").addClass("es_regional_icon");
+								}
+							}
 						});
 					});
 				});
@@ -8760,7 +8668,7 @@ $(document).ready(function(){
 							add_astats_link(appid);
 							add_achievement_completion_bar(appid);
 
-							show_regional_pricing();
+							show_regional_pricing("app");
 							add_acrtag_warning();
 							add_review_toggle_button();
 
@@ -8777,7 +8685,7 @@ $(document).ready(function(){
 							add_steamdb_links(subid, "sub");
 							add_acrtag_warning();
 
-							show_regional_pricing();
+							show_regional_pricing("sub");
 							skip_got_steam();
 							break;
 
@@ -8810,7 +8718,7 @@ $(document).ready(function(){
 							break;
 
 						case /^\/sale\/.*/.test(path):
-							show_regional_pricing();
+							show_regional_pricing("sale");
 							break;
 
 						// Storefront-front only
