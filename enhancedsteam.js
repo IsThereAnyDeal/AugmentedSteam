@@ -5534,144 +5534,202 @@ function process_early_access() {
 	});
 }
 
-function player_hd_button() {
-	$(".highlight_movie").each(function(){
-		var $videoControl = $(this).find("video");
-		if ($videoControl.data("hd-src")) {
-			if (!$videoControl.data("sd-src")) {
-				$videoControl.data("sd-src", $videoControl.attr("src"));
-			}
-			$videoControl.parent().find(".time").after('<div class="es_hd_toggle es_video_sd"><span>HD</span></div>');
-		} 
-	});
+function init_hd_player() {
+	var addedHdOpts = false;
 
-	$(".es_hd_toggle").on("click", function(){
-		var videoControl = $(this).parent().parent().parent().find("video")[0];
-		toggle_video_definition( videoControl );
-	});
+	// Initiate the HD options only when "Autoplay" is active or when selecting a video
+	if (getCookie("bGameHighlightAutoplayDisabled") === "false") {
+		add_hd_options();
+	} else {
+		$("video.highlight_movie").on("loadedmetadata", function(){
+			setTimeout(function(){ // prevents a bug in Chrome which causes videos to stop playing after changing the src
+				add_hd_options();
+			}, 150);
 
-	// When fullscreen button is pressed first time the quality is set to HD
-	// so we set the definition indicator to HD also, but just once
-	$(".fullscreen_button").on("click", function(){
-		$(this).siblings(".es_hd_toggle").removeClass("es_video_sd").addClass("es_video_hd");
-		$(this).off("click");
-	});
-
-	function toggle_video_definition(videoControl, setHd) {
-		var defEle = $(videoControl).parent().find(".es_hd_toggle"),
-			videoPosition = videoControl.currentTime,
-			videoPaused = videoControl.paused,
-			videoIsHd = false;
-		
-		videoControl.preload = "metadata";
-
-		$(videoControl).on('loadedmetadata', function() {
-			this.currentTime = videoPosition;
-			if (!videoPaused) videoControl.play();
-			$(videoControl).off('loadedmetadata');
+			$("video.highlight_movie").off("loadedmetadata");
 		});
+	}
 
-		if ($(defEle).hasClass("es_video_sd") || setHd === true) {
-			videoIsHd = true;
-			videoControl.src = $(videoControl).data('hd-src');
-		} else {
-			videoControl.src = $(videoControl).data('sd-src');
+	function add_hd_options() {
+		if (!addedHdOpts) {
+			addedHdOpts = true;
+
+			var playInHD = getValue("playback_hd");
+
+			// Add "HD" button and "sd-src" to all videos and set definition
+			$("video.highlight_movie").each(function(i, videoControl){
+				if ($(videoControl).data("hd-src")) {
+					$(videoControl).data("sd-src", videoControl.src);
+					$(videoControl).parent().find(".time").after('<div class="es_hd_toggle"><span>HD</span></div>');
+				}
+
+				toggle_video_definition( videoControl, playInHD );
+			});
+
+			// When the "HD" button is clicked change the definition for all videos accordingly
+			$(document).on("click", ".es_hd_toggle", function(){
+				var videoControl = $(this).closest("div.highlight_movie").find("video")[0],
+					playInHD = toggle_video_definition( videoControl );
+
+				$("video.highlight_movie").not(videoControl).each(function(){
+					toggle_video_definition( $(this)[0], playInHD );
+				});
+
+				setValue("playback_hd", playInHD);
+			});
+
+			// When the slider is expanded first time after the page was loaded set videos definition to HD
+			$(document).one("click", ".es_slider_toggle", function(){
+				if ($(this).hasClass("es_expanded")) {
+					$("video.highlight_movie.es_video_sd").each(function(){
+						toggle_video_definition( $(this)[0], true );
+					});
+
+					setValue("playback_hd", true);
+				}
+			});
+
+			// When fullscreen button is pressed first time the definition is set to HD
+			// so we set the definition indicator to HD also, but don't save the setting
+			$(".fullscreen_button").on("click", function(){
+				var $videoCntr = $(this).closest("div.highlight_movie");
+
+				$videoCntr.removeClass("es_playback_sd").addClass("es_playback_hd");
+				$videoCntr.find("video.highlight_movie").removeClass("es_video_sd").addClass("es_video_hd");
+				$(this).off("click");
+			});
 		}
-		videoControl.load();
+	}
 
-		$(defEle).toggleClass("es_video_sd", !videoIsHd).toggleClass("es_video_hd", videoIsHd);
+	function toggle_video_definition(videoControl, setHD) {
+		var videoIsVisible = $(videoControl).parent().is(":visible"),
+			videoIsHD = false,
+			loadedSrc = $(videoControl).hasClass("es_loaded_src"),
+			playInHD = getValue("playback_hd") || $(videoControl).hasClass("es_video_hd");
+
+		if (videoIsVisible) {
+			var videoPosition = videoControl.currentTime,
+				videoPaused = videoControl.paused;
+
+			videoControl.preload = "metadata";
+			
+			$(videoControl).on("loadedmetadata", function() {
+				this.currentTime = videoPosition;
+				if (!videoPaused) videoControl.play();
+
+				$(videoControl).off("loadedmetadata");
+			});
+		}
+
+		if (!playInHD && setHD === undefined || setHD === true) {
+			videoIsHD = true;
+			videoControl.src = $(videoControl).data("hd-src");
+		} else if (loadedSrc) {
+			videoControl.src = $(videoControl).data("sd-src");
+		}
+
+		if (videoIsVisible && loadedSrc) {
+			videoControl.load();
+		}
+
+		$(videoControl).addClass("es_loaded_src").toggleClass("es_video_sd", !videoIsHD).toggleClass("es_video_hd", videoIsHD);
+		$(videoControl).parent().toggleClass("es_playback_sd", !videoIsHD).toggleClass("es_playback_hd", videoIsHD);
+
+		return videoIsHD;
 	}
 }
 
 function media_slider_expander(in_store) {
-	var details = $(".workshop_item_header").find(".col_right").first();
+	var details = $(".workshop_item_header").find(".col_right").first(),
+		detailsBuilt = false;
+
 	if (in_store) {
 		details = $("#game_highlights").find(".rightcol").first();
 	}
 
 	if (details.length) {
-		$("#highlight_player_area").append('<div data-slider-tooltip="' + localized_strings.expand_slider + '" class="es_slider_toggle btnv6_blue_hoverfade btn_medium"><i class="es_slider_toggle_icon"></i></div>');
+		$("#highlight_player_area").append(`
+			<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
+				<div data-slider-tooltip="` + localized_strings.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
+				<div data-slider-tooltip="` + localized_strings.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
+			</div>
+		`);
 
-		if (in_store) {
-			var detailsClone = $(details).find(".glance_ctn").clone().addClass("es_side_details block responsive_apppage_details_left").hide().prependTo(".game_meta_data:first").wrap('<div class="es_side_details_wrap" />');
-			// There are some issues with having duplicates of these on page when trying to add tags
-			detailsClone.find(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn").remove();
-		} else {
-			$(details).clone().attr("class", "panel es_side_details").prepend('<div class="title">' + localized_strings.details + '</div><div class="hr padded"></div>').hide().prependTo(".sidebar");
-			// Sometimes for a split second the slider pushes the details down, this fixes it
-			$(".highlight_ctn").wrap('<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;" />');
+		// Initiate tooltip
+		runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
 
-			// Don't overlap Sketchfab's "X"
-			if ($(".highlight_sketchfab_model").length) {
-				$("#highlight_player_area").hover(function(){
-					if ($(this).find(".highlight_sketchfab_model").not(":hidden").length) {
-						$(".es_slider_toggle").css("top", "32px");
+		function build_side_details() {
+			if (!detailsBuilt) {
+				detailsBuilt = true;
+
+				if (in_store) {
+					var $detailsClone = $(details).find(".glance_ctn").clone().addClass("es_side_details block responsive_apppage_details_left").hide().prependTo($("div.rightcol.game_meta_data").first()).wrap('<div class="es_side_details_wrap" />');
+					// There are some issues with having duplicates of these on page when trying to add tags
+					$detailsClone.find(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn").remove();
+				} else {
+					$(details).clone().attr("class", "panel es_side_details").prepend('<div class="title">' + localized_strings.details + '</div><div class="hr padded"></div>').hide().prependTo(".sidebar");
+					// Sometimes for a split second the slider pushes the details down, this fixes it
+					$(".highlight_ctn").wrap('<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;" />');
+
+					// Don't overlap Sketchfab's "X"
+					if ($(".highlight_sketchfab_model").length) {
+						$("#highlight_player_area").hover(function(){
+							if ($(this).find(".highlight_sketchfab_model").not(":hidden").length) {
+								$(".es_slider_toggle").css("top", "32px");
+							}
+						}, function(){
+							$(".es_slider_toggle").removeAttr("style");
+						});
 					}
-				}, function(){
-					$(".es_slider_toggle").removeAttr("style");
-				});
+				}
 			}
 		}
 
 		var expand_slider = getValue("expand_slider") || false;
 		if (expand_slider === true) {
-			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").addClass("expanded");
-			$(".es_side_details_wrap, .es_side_details").show();
+			build_side_details();
 
-			// Change tooltip
-			runInPageContext(function() { $J(".es_slider_toggle").removeData(); });
-			$(".es_slider_toggle").attr("data-slider-tooltip", localized_strings.contract_slider);
+			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").addClass("es_expanded");
+			$(".es_side_details_wrap, .es_side_details").show();
 
 			// Triggers the adjustment of the slider scroll bar
 			setTimeout(function(){
 				window.dispatchEvent(new Event("resize"));
-			}, 300);
+			}, 250);
 		}
-
-		// Initiate tooltip
-		runInPageContext(function() { $J('.es_slider_toggle').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
 
 		$(".es_slider_toggle").on("click", function(e) {
 			e.preventDefault();
 
 			var el = $(this);
 
-			if (!$(el).hasClass("expanded")) { // then is getting expanded
+			$(details).hide();
+			build_side_details();
+
+			if (!$(el).hasClass("es_expanded")) {
 				$(".es_side_details_wrap").show();
-				// Change tooltip
-				runInPageContext(function() { $J(".es_slider_toggle").removeData(); });
-				$(this).attr("data-slider-tooltip", localized_strings.contract_slider);
-			} else {
-				// Change tooltip
-				runInPageContext(function() { $J(".es_slider_toggle").removeData(); });
-				$(this).attr("data-slider-tooltip", localized_strings.expand_slider);
 			}
 
 			// Animate 
-			$(".es_side_details").stop().slideToggle(300, function(){
-				if (!$(el).hasClass("expanded")) $(".es_side_details_wrap").hide();
+			$(".es_side_details").stop().slideToggle(250, function(){
+				if (!$(el).hasClass("es_expanded")) $(".es_side_details_wrap").hide();
 			});
-
-			$(details).hide();
-
-			// Cleanup and Reinitiate tooltip
-			runInPageContext(function() { $J(".store_tooltip").remove(); $J('.es_slider_toggle').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
 
 			// On every animation/transition end check the slider state
 			$(".highlight_ctn").one("transitionend", function() {
 				// Save slider state
-				setValue("expand_slider", $(el).hasClass("expanded"));
+				setValue("expand_slider", $(el).hasClass("es_expanded"));
 
 				// If slider was contracted show the extended details
-				if (!$(el).hasClass("expanded")) $(details).hide().fadeIn("fast");
+				if (!$(el).hasClass("es_expanded")) $(details).hide().fadeIn("fast");
 
 				// Triggers the adjustment of the slider scroll bar
 				setTimeout(function(){
 					window.dispatchEvent(new Event("resize"));
-				}, 300);
+				}, 250);
 			});
 
-			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").toggleClass("expanded");
+			$(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap").toggleClass("es_expanded");
 		});
 	}
 }
@@ -6861,7 +6919,12 @@ function add_steamdb_links(appid, type) {
 	});
 
 	if (type == "app") {
-		$('#ReportAppBtn').parent().parent().addClass("es_useful_links").insertAfter($('.es_side_details_wrap'));
+		var useful_links = $('#ReportAppBtn').parent().parent().addClass("es_useful_links");
+		if ($(".es_side_details_wrap").length) {
+			$(useful_links).insertAfter(".es_side_details_wrap");
+		} else {
+			$(useful_links).prependTo($("div.rightcol.game_meta_data").first());
+		}
 	}
 }
 
@@ -8639,7 +8702,7 @@ $(document).ready(function(){
 							var metalink = $("#game_area_metalink").find("a").attr("href");
 
 							media_slider_expander(true);
-							player_hd_button();
+							init_hd_player();
 
 							storePageData.load(appid, metalink);
 
