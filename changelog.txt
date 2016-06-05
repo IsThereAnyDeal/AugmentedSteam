@@ -1,11 +1,15 @@
 ﻿v8.6
 -----
 + Added an item counter to both party's item selection in trade offer windows
++ Added a filter box to wishlist pages, making it easy to find games by name
++ Wishlist sort options are now in a drop down menu, rather than links
++ Added a new wishlist sort option to sort by discount dollar amount
 + Video player HD settings will now be saved between page loads
 : Wishlist totals for large wishlists will display after pressing a button, improving performance
 : Fixed a bug that caused highlighting to break on activity pages
 : Fixed a bug that caused coupons not to display correctly on store pages
 : Fixed a bug that caused "Not Interested" tags to not show on continuous scrolling search results
+: Fixed a bug that caused users homepage carousel to be malformed in some cases
 : Fixed a layout bug with regional price comparison on sale items
 - References to the EU2 region have been removed from regional price displays
 

@@ -1375,8 +1375,19 @@ function add_wishlist_filter() {
 }
 
 function add_wishlist_discount_sort() {
-	$("#wishlist_sort_options").children("a, span").last().after("&nbsp; <a class='es_wl_sort by_discount' data-sort-by='discount' href='?sort=discount'>" + localized_strings.discount + "</a>");
-	$("#wishlist_sort_options").children("a, span").last().after("&nbsp; <a class='es_wl_sort by_discountabs' data-sort-by='discountabs' href='?sort=discountabs'>" + localized_strings.discountabs + "</a>");
+	$("#wishlist_sort_options").html($("#wishlist_sort_options").html().replace(/&nbsp;/g, ""));
+	$("#wishlist_sort_options").children("a, span").last().after("<span class='es_wl_sort by_discount' data-sort-by='discount' href='?sort=discount'>" + localized_strings.discountper + "</span>");
+	$("#wishlist_sort_options").children("a, span").last().after("<span class='es_wl_sort by_discountabs' data-sort-by='discountabs' href='?sort=discountabs'>" + localized_strings.discountabs + "</span>");
+
+	reset_sort_links($(".selected_sort"));
+
+	$("#wishlist_sort_options").prepend('<div class="store_nav" style="float: right; margin-left: 5px;"><div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_sort_active" style="display: inline;">' + $(".selected_sort").text() + '</div><span></span></span></div></div>');
+	var html = '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_sort_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
+		$("#wishlist_sort_options").children("a, span").each(function() { html += '<a class="popup_menu_item ' + $(this).attr("class") + '" data-sort-by="' + $(this).attr("data-sort-by") + '" href="' + $(this).attr("href") + '">' + $(this).text() + '</a>'; });
+		html += "</div></div>";
+	$("#wishlist_sort_options").after(html);
+	
+	runInPageContext(function() { BindAutoFlyoutEvents(); });
 
 	$(document).on("click", "a.es_wl_sort:not(.by_added)", function(e) {
 		e.preventDefault();
@@ -1411,7 +1422,8 @@ function add_wishlist_discount_sort() {
 				});
 				break;
 		}
-		
+		$("#es_sort_active").text($(this).text());
+		$("#es_sort_flyout").fadeOut();
 		reset_sort_links($(this));
 	});
 
@@ -1445,7 +1457,6 @@ function add_wishlist_discount_sort() {
 			} else {
 				return a < b ? T : F;
 			}
-
 		});
 
 		$rows.detach().prependTo($("#wishlist_items"));
@@ -1465,9 +1476,9 @@ function add_wishlist_discount_sort() {
 		for (var i = 0; i < links.length; i++) {
 			var thisLink = links[i];
 			if (clickedLink && $(clickedLink)[0].isSameNode(thisLink) || sorted == sorts[i]) {
-				$(thisLink).replaceWith('<span class="es_wl_sort by_' + sorts[i] + ' selected_sort">' + $(thisLink).text() + '</span>');
+				$(thisLink).replaceWith('<span style="display: none;" class="es_wl_sort by_' + sorts[i] + ' selected_sort" data-sort-by="' + sorts[i] + '">' + $(thisLink).text() + '</span>');
 			} else if (clickedLink || thisLink.href || sorted && sorted != sorts[i]) {
-				$(thisLink).replaceWith('<a class="es_wl_sort by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(thisLink).text() + '</a>');
+				$(thisLink).replaceWith('<a style="display: none;" class="es_wl_sort by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(thisLink).text() + '</a>');
 			}
 		}
 	}

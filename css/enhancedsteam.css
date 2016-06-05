@@ -1373,12 +1373,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Wishlist
  * add_wishlist_filter()
  **************************************/
+#wishlist_sort_options {
+	line-height: 30px;
+}
 .es_wishlist_filter {
-	margin-top: 10px;
+	margin-top: 5px;
 }
 #save_action_disabled_1,
 #save_action_enabled_1 {
-	margin-top: -10px;
+	margin-top: -30px;
 }
 
 /***************************************
@@ -1527,7 +1530,63 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * Wishlist
+ * Drop down menus
+ * add_wishlist_discount_sort()
+ **************************************/
+/* Taken from: http://store.akamai.steamstatic.com/public/css/v6/store.css */
+.store_nav .tab {
+	padding: 1px;
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer;
+	background: rgba( 103, 193, 245, 0.4 );
+}
+.store_nav .tab > span {
+
+	font-size: 12px;
+	color: #67c1f5;
+	line-height: 29px;
+	padding: 0 15px;
+	display: block;
+}
+.store_nav .tab.lesspadding > span {
+	padding: 0 12px;
+}
+.store_nav .tab:hover > span, .store_nav .tab:hover, .store_nav .tab.focus > span, .store_nav .tab.focus {
+	filter: none;
+    color: #ffffff;
+    background: -webkit-linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%); /* Chrome10+,Safari5.1+ */
+}
+.store_nav .tab > span.pulldown {
+	padding-right: 7px;
+	background: none;
+}
+.store_nav .tab > span.pulldown > span {
+	width: 19px;
+	height: 12px;
+	padding: 0;
+	display: inline-block;
+	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded.png' );
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	vertical-align: text-bottom;
+}
+.store_nav .tab:hover > span.pulldown > span {
+    background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png' );
+}
+.popup_block_new .popup_body {
+    border: none !important;
+    position: relative;
+    background: #417A9B !important;
+    padding: 6px 0px;
+}
+.popup_menu_subheader {
+    color: #13242e;
+}
+
+/***************************************
+ * Regional Price Comparison
  * show_regional_pricing()
  **************************************/
 .es_regional_prices .game_purchase_action,
