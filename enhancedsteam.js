@@ -1382,7 +1382,7 @@ function add_wishlist_discount_sort() {
 		sorted = getCookie("wishlist_sort2") || "rank",
 		linksHtml = "";
 
-	// Build links array
+	// Build dropdown links HTML
 	$("#wishlist_sort_options").children("a, span").hide().each(function(i, link){
 		linksHtml += '<a class="es_wl_sort popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
 	});
@@ -1417,11 +1417,11 @@ function add_wishlist_discount_sort() {
 	runInPageContext(function() { BindAutoFlyoutEvents(); });
 
 	// Initiate "discounted" sorts if necessary
-	if (getCookie("wishlist_sort2") == "discount") {
+	if (sorted == "discount") {
 		sort_wishlist(".discount_pct", sorted, true, function(val){
 			return parseInt(val);
 		});
-	} else if (getCookie("wishlist_sort2") == "discountabs") {
+	} else if (sorted == "discountabs") {
 		add_wishlist_discountabs();
 		sort_wishlist(".es_discountabs_raw", sorted, true, function(val){
 			return parseFloat(val);
@@ -1429,7 +1429,6 @@ function add_wishlist_discount_sort() {
 	} else {
 		$("a.by_" + sorted).addClass("active");
 	}
-
 
 	// Bind sort actions to links
 	$(document).on("click", "a.es_wl_sort:not(.by_added)", function(e){
@@ -1515,7 +1514,7 @@ function add_wishlist_discount_sort() {
 function add_wishlist_discountabs() {
 	var price_cache = {};
 
-	$(".discount_pct").not(".es_has_discountabs").each(function () {
+	$(".discount_pct").not(".es_has_discountabs").each(function(){
 		var $this = $(this).addClass("es_has_discountabs"),
 			absolute_discount = absolute_discount_for_wishlist_row($this.closest(".wishlistRow"), price_cache);
 
