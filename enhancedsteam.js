@@ -1347,8 +1347,8 @@ function add_empty_wishlist_buttons() {
 }
 
 function add_wishlist_filter() {
-	var html  = "<span>" + localized_strings.show + ": </span>";
-		html += '<div class="store_nav" style="float: right; margin-left: 5px;"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.games_all + '</div><span></span></span></div></div>';
+	var html  = "<span>" + localized_strings.show + " </span>";
+		html += '<div class="store_nav"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.games_all + '</div><span></span></span></div></div>';
 		html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
 		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="all">' + localized_strings.games_all + '</a>';
 		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="sale">' + localized_strings.games_discount + '</a>';
@@ -1384,7 +1384,7 @@ function add_wishlist_discount_sort() {
 
 	reset_sort_links($(".selected_sort"));
 
-	$("#wishlist_sort_options").prepend('<div class="store_nav" style="float: right; margin-left: 5px;"><div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_sort_active" style="display: inline;">' + $(".selected_sort").text() + '</div><span></span></span></div></div>');
+	$("#wishlist_sort_options").find("span:first").before('<div class="store_nav"><div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_sort_active" style="display: inline;">' + $(".selected_sort").text() + '</div><span></span></span></div></div>');
 	var html = '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_sort_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
 		$("#wishlist_sort_options").children("a, span").each(function() { html += '<a class="popup_menu_item ' + $(this).attr("class") + '" data-sort-by="' + $(this).attr("data-sort-by") + '" href="' + $(this).attr("href") + '">' + $(this).text() + '</a>'; });
 		html += "</div></div>";

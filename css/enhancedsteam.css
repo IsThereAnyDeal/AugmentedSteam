@@ -1377,11 +1377,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 30px;
 }
 .es_wishlist_filter {
-	margin-top: 10px;
-}
-#save_action_disabled_1,
-#save_action_enabled_1 {
-	margin-top: -30px;
+	display: inline;
+	margin-left: 25px;
 }
 
 /***************************************
@@ -1583,6 +1580,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 #wishlist_sort_options .popup_menu_item {
 	color: #e5e4dc;
+}
+#wishlist_sort_options .tab {
+	float: none;
+}
+#wishlist_sort_options .store_nav {
+	display: inline;
+	float: none; 
+	margin-left: 5px;
 }
 
 /***************************************
