@@ -1395,14 +1395,14 @@ function add_wishlist_discount_sort() {
 		node.nodeValue = $(node).text().trim();
 	});
 
-	// Insert dropdown button
+	// Insert dropdown options links
 	$("#wishlist_sort_options").append(`
 		<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
 			<div class="popup_body popup_menu">` + linksHtml + `</div>
 		</div>
 	`);
 
-	// Insert dropdown options
+	// Insert dropdown button
 	$("#wishlist_sort_options").find("span").first().after(`
 		<div class="store_nav">
 			<div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
@@ -1530,9 +1530,10 @@ function absolute_discount_for_wishlist_row($this, price_cache) {
 }
 
 function memoized_parse_currency(str, cache) {
-	if(!cache[str]) {
+	if (!cache[str]) {
 		cache[str] = { value: parse_currency(str) };
 	}
+
 	return cache[str].value;
 }
 
