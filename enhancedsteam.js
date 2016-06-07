@@ -1378,69 +1378,104 @@ function add_wishlist_filter() {
 }
 
 function add_wishlist_discount_sort() {
-	$("#wishlist_sort_options").html($("#wishlist_sort_options").html().replace(/&nbsp;/g, ""));
-	$("#wishlist_sort_options").children("a, span").last().after("<span class='es_wl_sort by_discount' data-sort-by='discount' href='?sort=discount'>" + localized_strings.discountper + "</span>");
-	$("#wishlist_sort_options").children("a, span").last().after("<span class='es_wl_sort by_discountabs' data-sort-by='discountabs' href='?sort=discountabs'>" + localized_strings.discountabs + "</span>");
+	var sorts = ["rank", "added", "name", "price", "discount", "discountabs"],
+		sorted = getCookie("wishlist_sort2") || "rank",
+		linksHtml = "";
 
-	reset_sort_links($(".selected_sort"));
+	// Build dropdown links HTML
+	$("#wishlist_sort_options").children("a, span").hide().each(function(i, link){
+		linksHtml += '<a class="es_wl_sort popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
+	});
+	linksHtml += '<a class="es_wl_sort popup_menu_item by_discount" data-sort-by="discount" href="?sort=discount">' + localized_strings.discountper + '</a>';
+	linksHtml += '<a class="es_wl_sort popup_menu_item by_discountabs" data-sort-by="discountabs" href="?sort=discountabs">' + localized_strings.discountabs + '</a>';
 
-	$("#wishlist_sort_options").find("span:first").before('<div class="store_nav"><div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_sort_active" style="display: inline;">' + $(".selected_sort").text() + '</div><span></span></span></div></div>');
-	var html = '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_sort_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
-		$("#wishlist_sort_options").children("a, span").each(function() { html += '<a class="popup_menu_item ' + $(this).attr("class") + '" data-sort-by="' + $(this).attr("data-sort-by") + '" href="' + $(this).attr("href") + '">' + $(this).text() + '</a>'; });
-		html += "</div></div>";
-	$("#wishlist_sort_options").append(html);
+	// Cleanup spaces 
+	$("#wishlist_sort_options").contents().each(function(i, node){
+		if (i === 0) $(node).wrap("<span />");
+		node.nodeValue = $(node).text().trim();
+	});
+
+	// Insert dropdown options links
+	$("#wishlist_sort_options").append(`
+		<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+			<div class="popup_body popup_menu">` + linksHtml + `</div>
+		</div>
+	`);
+
+	// Insert dropdown button
+	$("#wishlist_sort_options").find("span").first().after(`
+		<div class="store_nav">
+			<div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+				<span class="pulldown">
+					<div id="es_sort_active" style="display: inline;">` + $("#es_sort_flyout").find("a.by_" + sorted).text() + `</div>
+					<span></span>
+				</span>
+			</div>
+		</div>
+	`);
 	
 	runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-	$(document).on("click", "a.es_wl_sort:not(.by_added)", function(e) {
-		e.preventDefault();
-		
-		var sort_by = $(this).data("sort-by");
-		switch (sort_by) {
-			case "rank":
-				sort_wishlist(".wishlist_rank, .wishlist_rank_ro", sort_by, true);
-				break;
-			case "added":
-				// Can't do this one... could make a request for it tho...
-				break;
-			case "name":
-				sort_wishlist("h4.ellipsis", sort_by, null, function(val){
-					return val.toLowerCase();
-				});
-				break;
-			case "price":
-				sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
-					return Number(val.replace(/\-/g, "0").replace(/[^0-9\.]+/g, "")) || 31337;
-				});
-				break;
-			case "discount":
-				sort_wishlist(".discount_pct", sort_by, true, function(val){
-					return parseInt(val);
-				});
-				break;
-			case "discountabs":
-				add_wishlist_discabs_sort();
-				sort_wishlist(".discount_abs_raw", sort_by, true, function(val){
-					return parseFloat(val);
-				});
-				break;
-		}
-		$("#es_sort_active").text($(this).text());
-		$("#es_sort_flyout").fadeOut();
-		reset_sort_links($(this));
-	});
-
-	// Initiate "discounted" sort if necessary and rebuild sorting links
-	if (getCookie("wishlist_sort2") == "discount") {
-		$(".by_discount").click();
-	} else if (getCookie("wishlist_sort2") == "discountabs") {
-		$(".by_discountabs").click();
+	// Initiate "discounted" sorts if necessary
+	if (sorted == "discount") {
+		sort_wishlist(".discount_pct", sorted, true, function(val){
+			return parseInt(val);
+		});
+	} else if (sorted == "discountabs") {
+		add_wishlist_discountabs();
+		sort_wishlist(".es_discountabs_raw", sorted, true, function(val){
+			return parseFloat(val);
+		});
 	} else {
-		reset_sort_links();
+		$("a.by_" + sorted).addClass("active");
 	}
 
+	// Bind sort actions to links
+	$(document).on("click", "a.es_wl_sort:not(.by_added)", function(e){
+		e.preventDefault();
+
+		// Don't sort again if sort is active
+		if (!$(this).hasClass("active")) {
+			var sort_by = $(this).data("sort-by");
+			switch (sort_by) {
+				case "rank":
+					sort_wishlist(".wishlist_rank, .wishlist_rank_ro", sort_by, true);
+					break;
+				case "added":
+					// Can't do this one... could make a request for it tho...
+					break;
+				case "name":
+					sort_wishlist("h4.ellipsis", sort_by, null, function(val){
+						return val.toLowerCase();
+					});
+					break;
+				case "price":
+					sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
+						return Number(val.replace(/\-/g, "0").replace(/[^0-9\.]+/g, "")) || 31337;
+					});
+					break;
+				case "discount":
+					sort_wishlist(".discount_pct", sort_by, true, function(val){
+						return parseInt(val);
+					});
+					break;
+				case "discountabs":
+					add_wishlist_discountabs();
+					sort_wishlist(".es_discountabs_raw", sort_by, true, function(val){
+						return parseFloat(val);
+					});
+					break;
+			}
+
+			// Change text of dropdown button to reflect current selection
+			$("#es_sort_active").text($(this).text());
+		}
+
+		$("#es_sort_flyout").fadeOut();
+	});
+
 	function sort_wishlist(sel, cookieVal, asc, fn) {
-		asc = asc === undefined ? false : asc,
+		asc = asc === undefined ? false : asc;
 		fn = fn || function(val){ return val };
 
 		var T = asc === true ? 1 : -1,
@@ -1468,55 +1503,37 @@ function add_wishlist_discount_sort() {
 			var dateExpires = new Date();
 			dateExpires.setTime( dateExpires.getTime() + 1000 * 60 * 60 * 1 );
 			document.cookie = 'wishlist_sort2=' + cookieVal + '; expires=' + dateExpires.toGMTString() + ';path=/';
-		}
-	}
 
-	function reset_sort_links(clickedLink) {
-		var links = $("#wishlist_sort_options").children("a, span"),
-			sorts = ["rank", "added", "name", "price", "discount", "discountabs"],
-			sorted = getCookie("wishlist_sort2") || false;
-
-		for (var i = 0; i < links.length; i++) {
-			var thisLink = links[i];
-			if (clickedLink && $(clickedLink)[0].isSameNode(thisLink) || sorted == sorts[i]) {
-				$(thisLink).replaceWith('<span style="display: none;" class="es_wl_sort by_' + sorts[i] + ' selected_sort" data-sort-by="' + sorts[i] + '">' + $(thisLink).text() + '</span>');
-			} else if (clickedLink || thisLink.href || sorted && sorted != sorts[i]) {
-				$(thisLink).replaceWith('<a style="display: none;" class="es_wl_sort by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(thisLink).text() + '</a>');
-			}
+			$("a.es_wl_sort").removeClass("active");
+			$("a.by_" + cookieVal).addClass("active");
 		}
 	}
 }
 
-// Calculate absolute discount value of each item on wishlist
-function add_wishlist_discabs_sort() {
+// Calculate absolute discount value of each discounted item on wishlist
+function add_wishlist_discountabs() {
 	var price_cache = {};
-	$('.wishlistRow').not(":has(.discount_abs_raw)").each(function () {
-		var $this = $(this);
-		var absolute_discount = absolute_discount_for_wishlist_row($this, price_cache);
-		$this.children().last().after("<div class='discount_abs_raw'>" + absolute_discount + "</div>");
-		$this.find(".discount_abs_raw").css("display", "none");
-		$this.find(".discount_final_price").after("<div class='discount_abs'>( " + formatCurrency(absolute_discount) + " )</div>");
+
+	$(".discount_pct").not(".es_has_discountabs").each(function(){
+		var $this = $(this).addClass("es_has_discountabs"),
+			absolute_discount = absolute_discount_for_wishlist_row($this.closest(".wishlistRow"), price_cache);
+
+		$this.append("<div class='es_discountabs'>(" + formatCurrency(absolute_discount) + ")</div><input class='es_discountabs_raw' type='hidden' value='" + absolute_discount + "' />");
 	});
 }
 
 function absolute_discount_for_wishlist_row($this, price_cache) {
-	var html = $this.html();
-	if (html.match(/discount_block_inline/)) {
-		var finalPrice = memoized_parse_currency($this.find(".discount_final_price").html(), price_cache);
-		var originalPrice = memoized_parse_currency($this.find(".discount_original_price").html(), price_cache);
-		return finalPrice.value - originalPrice.value;
-	}
-	if (html.match(/div class=\"price/)) {
-		var price = memoized_parse_currency($this.find(".price").html(), price_cache);
-		return price ? price.value : 0;
-	}
-	return 0;
+	var finalPrice = memoized_parse_currency($this.find(".discount_final_price").text(), price_cache),
+		originalPrice = memoized_parse_currency($this.find(".discount_original_price").text(), price_cache);
+
+	return finalPrice.value - originalPrice.value;
 }
 
 function memoized_parse_currency(str, cache) {
-	if(!cache[str]) {
+	if (!cache[str]) {
 		cache[str] = { value: parse_currency(str) };
 	}
+
 	return cache[str].value;
 }
 

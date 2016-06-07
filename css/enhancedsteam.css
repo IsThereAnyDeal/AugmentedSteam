@@ -1589,6 +1589,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	float: none; 
 	margin-left: 5px;
 }
+/* ES specific */
+.es_discountabs {
+	opacity: 0.62;
+}
 
 /***************************************
  * Regional Price Comparison
