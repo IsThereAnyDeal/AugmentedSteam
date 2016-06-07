@@ -11,7 +11,9 @@
 : Fixed a bug that caused "Not Interested" tags to not show on continuous scrolling search results
 : Fixed a bug that caused users homepage carousel to be malformed in some cases
 : Fixed a layout bug with regional price comparison on sale items
+: Gamefly has been renamed to Direct2Drive in price comparisons
 - References to the EU2 region have been removed from regional price displays
+- Closed stores Shinyloot, Adventure Shop, GameTap, GetGames, and Gameolith were removed from comparisons
 
 
 v8.5

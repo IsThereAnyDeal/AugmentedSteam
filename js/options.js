@@ -78,20 +78,20 @@ function save_options() {
 		$("#impulse").prop('checked'),
 		$("#gamersgate").prop('checked'),
 		$("#greenmangaming").prop('checked'),
-		$("#gamefly").prop('checked'),
+		$("#direct2drive").prop('checked'),
 		$("#origin").prop('checked'),
 		$("#uplay").prop('checked'),
 		$("#indiegalastore").prop('checked'),
-		$("#gametap").prop('checked'),
+		true,
 		$("#gamesplanet").prop('checked'),
-		$("#getgames").prop('checked'),
+		true,
 		true,
 		$("#gog").prop('checked'),
 		$("#dotemu").prop('checked'),
-		$("#gameolith").prop('checked'),
-		$("#adventureshop").prop('checked'),
+		true,
+		true,
 		$("#nuuvem").prop('checked'),
-		$("#shinyloot").prop('checked'),
+		true,
 		$("#dlgamer").prop('checked'),			
 		$("#humblestore").prop('checked'),
 		$("#indiegamestand").prop('checked'),
@@ -327,19 +327,14 @@ function toggle_stores() {
 			$("#impulse").prop('checked', settings.stores[2]);
 			$("#gamersgate").prop('checked', settings.stores[3]);
 			$("#greenmangaming").prop('checked', settings.stores[4]);
-			$("#gamefly").prop('checked', settings.stores[5]);
+			$("#direct2drive").prop('checked', settings.stores[5]);
 			$("#origin").prop('checked', settings.stores[6]);
 			$("#uplay").prop('checked', settings.stores[7]);
 			$("#indiegalastore").prop('checked', settings.stores[8]);
-			$("#gametap").prop('checked', settings.stores[9]);
 			$("#gamesplanet").prop('checked', settings.stores[10]);
-			$("#getgames").prop('checked', settings.stores[11]);
 			$("#gog").prop('checked', settings.stores[13]);
 			$("#dotemu").prop('checked', settings.stores[14]);
-			$("#gameolith").prop('checked', settings.stores[15]);
-			$("#adventureshop").prop('checked', settings.stores[16]);
 			$("#nuuvem").prop('checked', settings.stores[17]);
-			$("#shinyloot").prop('checked', settings.stores[18]);
 			$("#dlgamer").prop('checked', settings.stores[19]);
 			$("#humblestore").prop('checked', settings.stores[20]);
 			$("#indiegamestand").prop('checked', settings.stores[21]);
