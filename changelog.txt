@@ -15,7 +15,6 @@
 - References to the EU2 region have been removed from regional price displays
 - Closed stores Shinyloot, Adventure Shop, GameTap, GetGames, and Gameolith were removed from comparisons
 
-
 v8.5
 -----
 + Added dynamic store data to wishlist pages
