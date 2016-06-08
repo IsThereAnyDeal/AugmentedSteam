@@ -129,6 +129,8 @@
   "always":"Винаги",
   "compare":"Сравни",
   "discount":"Отстъпка",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Виж детайли за рейтинга",
   "drops_worth_avg":"Приблизителна стойност",
   "using_store_return":"Click here to go back to the __base__ store.",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Показване на постиженията на страницата на магазина",
     "achievements":"Постижения",
@@ -472,5 +477,9 @@
     "option":"Show menu option to sync data to IsThereAnyDeal.com",
     "send_to_itad":"Send owned games to IsThereAnyDeal",
     "sending":"Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

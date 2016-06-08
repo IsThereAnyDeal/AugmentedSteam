@@ -129,6 +129,8 @@
   "always":"Immer",
   "compare":"Vergleichen",
   "discount":"Preisnachlass",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Bewertungsdetails ansehen",
   "drops_worth_avg":"Ungefährer Wert",
   "using_store_return":"Hier klicken, um zum Shop für __base__ zurückzukehren.",
@@ -226,6 +228,9 @@
   "expand_slider":"Slider vergrößern",
   "contract_slider":"Slider verkleinern",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Errungenschaften auf Shopseiten anzeigen",
     "achievements":"Errungenschaften",
@@ -319,7 +324,7 @@
     "total_spent":"Gesamtausgaben in den Accountdetails anzeigen",
     "about_text":"<div class=\"header\">Über <a href='http:\/\/www.enhancedsteam.com'>Enhanced Steam<\/a>:<\/div><p>Enhanced Steam ist eine Google Chrome Erweiterung die der Steam Webseite viele neue Funktionen hinzufügt.<p>Enthaltene Funktionen:<ul><li>Hervorheben von Spielen die du bereits besitzt<\/li><li>Spiele die sich auf deiner Wunschliste befinden hervorheben<\/li><li>Korrektes berechnen von Bundle Preisnachlässen basierend auf bereits im Besitz befindlichen Titeln<\/li><li>Anzeigen von deinen Gesamtausgaben auf Steam seit bestehen deines Kontos<\/li><li>Hervorheben von DLC auf Spieleseiten den du bereits besitzt<\/li><li>Korrektur von \"Kein Bild verfügbar\" Spieleicons auf deiner Wunschliste für jedes Spiel oder DLC<\/li><li>Warnhinweise falls ein Spiel DRM Maßnahmen von dritten verwendet<\/li><\/ul><p>Bitte denke über eine kleine Spende nach falls du diese Erweiterung nützlich findest.",
     "stores_all":"Alle Shops vergleichen",
-    "show_early_access_text":"Earl-Access-Banner anzeigen",
+    "show_early_access_text":"Early-Access-Banner anzeigen",
     "author_info":"von jshackles",
     "profile_link_images_gray":"Graustufen",
     "quickinv":"Zeige Schnellverkauf-Schaltflächen bei Steam-Community-Gegenständen im Inventar",
@@ -472,5 +477,9 @@
     "option":"Menüoption zum Senden von Daten an IsThereAnyDeal.com anzeigen",
     "send_to_itad":"Spiele in deinem Besitz an IsThereAnyDeal senden",
     "sending":"Lade Spiele und Pakete in deinem Besitz und sende sie an IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

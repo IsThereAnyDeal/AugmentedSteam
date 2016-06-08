@@ -129,6 +129,8 @@
   "always":"Vždy",
   "compare":"Porovnat",
   "discount":"Sleva",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Zobrazit detaily hodnocení",
   "drops_worth_avg":"Přibližná hodnota",
   "using_store_return":"Klikněte zde pro návrat na __base__ Obchod.",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Ukázat achievementy na stránce obchodu",
     "achievements":"Achievementy",
@@ -472,5 +477,9 @@
     "option":"Zobrazit nabídku Možností synchronizace dat do IsThereAnyDeal.com",
     "send_to_itad":"Odeslat vlastněné hry na IsThereAnyDeal",
     "sending":"Načítám vlastněné hry a balíčky a posílám je do IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

@@ -129,6 +129,8 @@
   "always":"常に表示",
   "compare":"比較",
   "discount":"割引",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"評価の詳細を表示",
   "drops_worth_avg":"およその価値",
   "using_store_return":"ここをクリックすると__base__ストアに戻ります。",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"ストアページで実績を表示",
     "achievements":"実績",
@@ -472,5 +477,9 @@
     "option":"IsThereAnyDeal.comとデータを同期するかどうかのオプションを表示する",
     "send_to_itad":"所持しているゲームの情報をIsThereAnyDealに送信",
     "sending":"既に所持しているゲームやゲームセットの情報を読み込みIsThereAnyDeal.comに送信する"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

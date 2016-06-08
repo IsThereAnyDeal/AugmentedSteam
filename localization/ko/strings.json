@@ -1,7 +1,7 @@
 {
   "post_history":"게시물 기록 보기",
   "forums":"포럼",
-  "total_size":"총 크기",
+  "total_size":"전체 크기",
   "dlc_details":"다운로드 컨텐츠 세부사항",
   "badge_not_unlocked":"잠금을 해제하지 않음",
   "each":"각각",
@@ -129,6 +129,8 @@
   "always":"항상",
   "compare":"비교",
   "discount":"할인",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"평가 내용 보기",
   "drops_worth_avg":"대략적인 가치",
   "using_store_return":"여기를 클릭하면 __base__ 상점으로 돌아갑니다.",
@@ -176,7 +178,7 @@
   "notcommon_label":"소유중인 게임 숨기기",
   "show_all_steam_releases":"스팀 모든 자료 보기",
   "wishlist":"찜 목록",
-  "on_wishlist":"On Wishlist",
+  "on_wishlist":"위시리스트에",
   "notdiscounted":"아니 할인 항목",
   "cancel":"취소",
   "wiki_article":"__pcgw__ 기사 보기",
@@ -216,16 +218,19 @@
   "leave_group_admin_confirm":"당신이 이 그룹의 관리자입니다: __groupname__\n정말로 탈퇴하시겠습니까?",
   "wrong_try_again":"오류가 발생하였습니다. 다시 시도해 주세요.",
   "join_group":"그룹에 가입",
-  "chat":"Chat",
+  "chat":"채팅",
   "web_browser_chat":"웹 브라우저 채팅",
   "steam_client_chat":"스팀 클라이언트 채팅",
-  "available":"Available",
-  "set_as_background":"Set as Background",
-  "preview_background":"Preview Background",
-  "details":"Details",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
-  "early_access":"Early Access",
+  "available":"이용 가능",
+  "set_as_background":"배경으로 설정",
+  "preview_background":"배경 미리보기",
+  "details":"자세히",
+  "expand_slider":"확대",
+  "contract_slider":"축소",
+  "early_access":"앞서 해보기",
+  "filter_games":"게임 필터",
+  "note_for":"Note for",
+  "show_wishlist_total":"찜 목록 전체 보기",
   "achievements":{
     "option":"상점 페이지에 도전과제 표시",
     "achievements":"도전과제",
@@ -256,7 +261,7 @@
     "main":"메인"
   },
   "library":{
-    "in_library":"In Library",
+    "in_library":"라이브러리에",
     "error_loading_library":"라이브러리를 불러오지 못했습니다.",
     "categories":"카테고리",
     "genres":"장르...",
@@ -380,7 +385,7 @@
     "homepage_default_tab_specials":"특가상품",
     "wishlist":"찜 목록",
     "add_another_region":"추가하기",
-    "skip_got_steam":"Skip the 'Got Steam?' window",
+    "skip_got_steam":"'스팀이 설치되어 있습니까?' 창 생략",
     "lang":{
       "english":"영어",
       "brazilian":"포르투갈어-브라질",
@@ -453,7 +458,7 @@
     "inv_gift":"선물",
     "inv_guestpass":"게스트 패스",
     "owned":"소유",
-    "notinterested":"Not Interested",
+    "notinterested":"관심 없음",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ 명이 원함<\/a>"
   },
   "wallet":{
@@ -472,5 +477,9 @@
     "option":"IsThereAnyDeal.com에서 데이터 동기화 메뉴 옵션 표시",
     "send_to_itad":"IsThereAnyDeal에 소유 게임 목록 제출",
     "sending":"IsThereAnyDeal.com에 소유 게임과 패키지를 제출 하는중"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ 항목",
+    "num_items":"__num__ 항목들"
   }
 }

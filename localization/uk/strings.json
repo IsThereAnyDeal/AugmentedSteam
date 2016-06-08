@@ -129,6 +129,8 @@
   "always":"Завжди",
   "compare":"Порівняти",
   "discount":"Знижка",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Переглянути інформацію рейтингу",
   "drops_worth_avg":"Приблизна вартість",
   "using_store_return":"Натисніть тут, щоб повернутися в __base__ магазин.",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Відображати досягнення на сторінках у магазині",
     "achievements":"Досягнення",
@@ -472,5 +477,9 @@
     "option":"Показати меню для синхронізації даних с IsThereAnyDeal.com",
     "send_to_itad":"Відіслати список придбаних ігор на IsThereAnyDeal",
     "sending":"Завантажити список придбаних ігр та комплектів і відправити їх на IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

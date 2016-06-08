@@ -129,6 +129,8 @@
   "always":"Siempre",
   "compare":"Comparar",
   "discount":"Descuento",
+  "discountper":"Descuento (porcentaje)",
+  "discountabs":"Descuento (cantidad)",
   "rating_details":"Ver detalles",
   "drops_worth_avg":"Valoración Aproximada",
   "using_store_return":"Haz clic aquí para volver a la tienda __base__.",
@@ -226,6 +228,9 @@
   "expand_slider":"Ampliar el control deslizante",
   "contract_slider":"Contraer el control deslizante",
   "early_access":"Early access",
+  "filter_games":"Filtrar juegos",
+  "note_for":"Nota para",
+  "show_wishlist_total":"Ver total de lista de deseados",
   "achievements":{
     "option":"Mostrar logros en las páginas de la tienda",
     "achievements":"Logros",
@@ -453,7 +458,7 @@
     "inv_gift":"Regalo",
     "inv_guestpass":"Pase de invitado",
     "owned":"Comprado",
-    "notinterested":"Not Interested",
+    "notinterested":"No me interesa",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ amigos lo desean<\/a>"
   },
   "wallet":{
@@ -472,5 +477,9 @@
     "option":"Mostrar opción de menú para sincronizar datos con IsThereAnyDeal.com",
     "send_to_itad":"Enviar los juegos que tienes a IsThereAnyDeal",
     "sending":"Cargando tus juegos y paquetes y enviándolos a IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ objt",
+    "num_items":"__num__ objts"
   }
 }

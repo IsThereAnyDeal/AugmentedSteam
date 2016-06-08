@@ -129,6 +129,8 @@
   "always":"總是",
   "compare":"比較",
   "discount":"特價",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"檢視分級資訊",
   "drops_worth_avg":"大約值",
   "using_store_return":"按此回到 __base__ 的商店",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"在商店頁面中顯示成就",
     "achievements":"成就",
@@ -472,5 +477,9 @@
     "option":"顯示将資料同步到 IsThereAnyDeal.com 的功能表選項",
     "send_to_itad":"向 IsThereAnyDeal 發送已擁有的遊戲",
     "sending":"載入您擁有的遊戲和套裝軟體並將它們發送到 IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

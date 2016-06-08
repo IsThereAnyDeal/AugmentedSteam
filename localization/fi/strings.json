@@ -129,6 +129,8 @@
   "always":"Aina",
   "compare":"Vertaile",
   "discount":"Alennus",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Näytä pisteytyksen lisätiedot",
   "drops_worth_avg":"Arvoltaan noin",
   "using_store_return":"Klikkaa tästä palataksesi __base__ kauppaan",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Näytä saavutukset kauppasivuilla",
     "achievements":"Saavutukset",
@@ -472,5 +477,9 @@
     "option":"Näytä valikkovaihtoehto tietojen synkronoimiseksi IsThereAnyDeal.com:iin",
     "send_to_itad":"Lähetä omistamasi pelit IsThereAnyDeal:iin",
     "sending":"Omistamiesi pelien ja pakettien lataus ja lähetys IsThereAnyDeal.com:iin"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

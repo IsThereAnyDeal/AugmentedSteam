@@ -129,6 +129,8 @@
   "always":"Mindig",
   "compare":"Összehasonlítás",
   "discount":"Kedvezmény",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Értékelések megnézése",
   "drops_worth_avg":"Hozzávetőleges érték",
   "using_store_return":"Kattints ide, hogy visszatérj a  __base__ boltba.",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Teljesítmények mutatása az áruház oldalain",
     "achievements":"Teljesítmények",
@@ -472,5 +477,9 @@
     "option":"Adatok szinkronizálása menü megjelenítése a IsThereAnyDeal.com-hoz",
     "send_to_itad":"Saját játékok elküldése a(z) IsThereAnyDeal-nek",
     "sending":"A saját játékok és csomagok betöltése és elküldése a(z) IsThereAnyDeal.com-nak"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

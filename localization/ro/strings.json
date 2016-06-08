@@ -1,5 +1,5 @@
 {
-  "post_history":"Vezi istoric postare",
+  "post_history":"Vezi istoricul postării",
   "forums":"Forumuri",
   "total_size":"Dimensiune totală",
   "dlc_details":"Detalii conținut descărcabil",
@@ -129,6 +129,8 @@
   "always":"Întotdeauna",
   "compare":"Compară",
   "discount":"Reducere",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Vezi detalii evaluare",
   "drops_worth_avg":"În valoare de aproximativ",
   "using_store_return":"Click aici pentru a reveni la magazinul __base__.",
@@ -176,7 +178,7 @@
   "notcommon_label":"Ascunde jocurile pe care le dețin",
   "show_all_steam_releases":"Afișează toate lansările Steam",
   "wishlist":"Listă de dorințe",
-  "on_wishlist":"On Wishlist",
+  "on_wishlist":"Pe lista de dorințe",
   "notdiscounted":"Elemente fără reducere",
   "cancel":"Anulează",
   "wiki_article":"Vezi articol __pcgw__",
@@ -217,15 +219,18 @@
   "wrong_try_again":"A apărut o problemă. Te rugăm să mai încerci o dată.",
   "join_group":"Alătură-te grupului",
   "chat":"Chat",
-  "web_browser_chat":"Web browser chat",
-  "steam_client_chat":"Steam Client chat",
-  "available":"Available",
-  "set_as_background":"Set as Background",
-  "preview_background":"Preview Background",
-  "details":"Details",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
-  "early_access":"Early Access",
+  "web_browser_chat":"Prin Browserul web",
+  "steam_client_chat":"Prin Steam",
+  "available":"Disponibil",
+  "set_as_background":"Setează ca Fundal",
+  "preview_background":"Examinează Fundal",
+  "details":"Detalii",
+  "expand_slider":"Extinde",
+  "contract_slider":"Restrânge",
+  "early_access":"Acces Timpuriu",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Afișează realizările pe paginile magazinelor",
     "achievements":"Realizări",
@@ -256,7 +261,7 @@
     "main":"Povestea principală"
   },
   "library":{
-    "in_library":"In Library",
+    "in_library":"În Colecție",
     "error_loading_library":"Nu am putut încărca colecția ta.",
     "categories":"Categorii...",
     "genres":"Genuri...",
@@ -380,7 +385,7 @@
     "homepage_default_tab_specials":"Oferte speciale",
     "wishlist":"Produse în lista de dorințe",
     "add_another_region":"Adaugă",
-    "skip_got_steam":"Skip the 'Got Steam?' window",
+    "skip_got_steam":"Sări peste fereastra 'Ai Steam?'",
     "lang":{
       "english":"Engleză",
       "brazilian":"Portugheză-Brazilia",
@@ -453,7 +458,7 @@
     "inv_gift":"Cadou",
     "inv_guestpass":"Guestpass",
     "owned":"Deținute",
-    "notinterested":"Not Interested",
+    "notinterested":"Nu mă interesează",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ iși doresc<\/a>"
   },
   "wallet":{
@@ -472,5 +477,9 @@
     "option":"Arată opțiunea din meniu pentru a sincroniza datele pentru IsThereAnyDeal.com",
     "send_to_itad":"Trimite jocuri deja cumpărate către IsThereAnyDeal",
     "sending":"Încărcăm jocurile tale deja cumpărate și pachete și le trimitem către IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

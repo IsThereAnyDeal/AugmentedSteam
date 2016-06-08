@@ -129,6 +129,8 @@
   "always":"Alltid",
   "compare":"Jämför",
   "discount":"Rabatt",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Se betygsdetaljer",
   "drops_worth_avg":"Cirkavärde",
   "using_store_return":"Klicka här för att gå tillbaka till\"__base__\"butiken.",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Visa framsteg på butikssidorna",
     "achievements":"Framsteg",
@@ -472,5 +477,9 @@
     "option":"Visa menyn Alternativ för att synkroniseringsdata till IsThereAnyDeal.com",
     "send_to_itad":"Skicka ägda spel till IsThereAnyDeal",
     "sending":"Laddar din ägda spel och paket och skicka dem till IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }

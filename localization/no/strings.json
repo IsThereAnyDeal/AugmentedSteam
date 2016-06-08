@@ -129,6 +129,8 @@
   "always":"Alltid",
   "compare":"Sammenlign",
   "discount":"Rabatt",
+  "discountper":"Discount (Percentage)",
+  "discountabs":"Discount (Amount)",
   "rating_details":"Se vurderingsdetaljer",
   "drops_worth_avg":"Verdt omtrent",
   "using_store_return":"Klikk her for å gå tilbake til __base__-butikken.",
@@ -226,6 +228,9 @@
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
+  "filter_games":"Filter games",
+  "note_for":"Note for",
+  "show_wishlist_total":"Show wishlist Total",
   "achievements":{
     "option":"Vis prestasjoner på butikksider",
     "achievements":"Prestasjoner",
@@ -472,5 +477,9 @@
     "option":"Vis meny for å synkroniserisere data til IsThereAnyDeal.com",
     "send_to_itad":"Send eide spill til IsThereAnyDeal",
     "sending":"Laster spill og pakker du eier og sender dem til IsThereAnyDeal.com"
+  },
+  "tradeoffer":{
+    "num_item":"__num__ item",
+    "num_items":"__num__ items"
   }
 }
