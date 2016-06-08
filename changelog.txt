@@ -1,4 +1,8 @@
-﻿v8.6
+﻿v8.7
+-----
+
+
+v8.6
 -----
 + Added an item counter to both party's item selection in trade offer windows
 + Added a filter box to wishlist pages, making it easy to find games by name
