@@ -862,8 +862,9 @@ function highlight_node(node, color) {
 
 		// Blotter activity
 		if ($node.parent().parent()[0]) {
-			if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line") || $node.parent().parent()[0].classList.contains("blotter_group_announcement_header") || $node.parent().parent()[0].classList.contains("blotter_author_block") || $node.parent().parent()[0].classList.contains("blotter_gamepurchase") || $node.parent().parent()[0].classList.contains("blotter_recommendation")) {
+			if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line") || $node.parent()[0].classList.contains("blotter_group_announcement_header") || $node.parent().parent()[0].classList.contains("blotter_author_block") || $node.parent()[0].classList.contains("blotter_gamepurchase_details") || $node.parent().parent()[0].classList.contains("blotter_recommendation")) {
 				$node.css("color", color);
+				$node.removeClass();
 				return;
 			}
 		}

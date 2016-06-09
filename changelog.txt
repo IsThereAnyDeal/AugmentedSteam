@@ -1,5 +1,6 @@
 ﻿v8.7
 -----
+: Fixed a bug where activity page highlighting displayed incorrectly
 
 
 v8.6
