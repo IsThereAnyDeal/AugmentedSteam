@@ -132,7 +132,7 @@ var signed_in_promise = (function () {
 						setValue("steamID", is_signed_in);
 					}
 					deferred.resolve();
-				});
+				}, { xhrFields: {withCredentials: true} });
 			}
 		} else {
 			deferred.resolve();
