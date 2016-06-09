@@ -160,10 +160,13 @@
                 "https://steamcommunity.com/*"
             ],
             "exclude_matches": [
-                "https://store.steampowered.com/checkout/*",
-                "https://store.steampowered.com/login/*",
-                "https://store.steampowered.com/join/*",
-                "https://steamcommunity.com/login/*"
+                "*://store.steampowered.com/dynamicstore/*",
+                "*://store.steampowered.com/checkout/*",
+                "*://store.steampowered.com/widget/*",
+                "*://store.steampowered.com/login/*",
+                "*://store.steampowered.com/join/*",
+                "*://store.steampowered.com/api/*",
+                "*://steamcommunity.com/login/*"
             ],
             "js": [
                 "js/jQuery.min.js",
