@@ -8666,9 +8666,6 @@ function skip_got_steam() {
 $(document).ready(function(){
 	var path = window.location.pathname.replace(/\/+/g, "/");
 
-	// Don't interfere with Storefront API requests
-	if (path.startsWith("/api")) return;
-
 	$.when(localization_promise, signed_in_promise, currency_promise).done(function(){
 			// On window load
 			add_enhanced_steam_options();
