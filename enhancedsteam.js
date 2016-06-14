@@ -4590,47 +4590,102 @@ function account_total_spent() {
 	});
 }
 
-function inventory_market_prepare() {
-		$("#es_market_helper").remove();
-		var es_market_helper = document.createElement("script");
-		es_market_helper.type = "text/javascript";
-		es_market_helper.id = "es_market_helper";
-		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { if (!g_ActiveInventory.selectedItem.market_hash_name) {g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.name} window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
-		document.documentElement.appendChild(es_market_helper);
+// Source: https://greasyfork.org/en/scripts/12228-setmutationhandler/code
+function setMutationHandler(baseNode, selector, cb, options) {
+	var ob = new MutationObserver(function(mutations) {
+		for (var i=0, ml=mutations.length, m; (i<ml) && (m=mutations[i]); i++)
+			switch (m.type) {
+				case 'childList':
+					if (m.addedNodes[0] && m.addedNodes[0].nodeType == 3) { // Node.TEXT_NODE
+						if (m.target.matches(selector) && !cb.call(ob, [m.target], m))
+							return;
+						//continue; // commented as it seems to break the code...
+					}
+					for (var j=0, nodes=m.addedNodes, nl=nodes.length, n; (j<nl) && (n=nodes[j]); j++)
+						if (n.nodeType == 1) 
+							if ((n = n.matches(selector) ? [n] : n.querySelectorAll(selector)) && n.length)
+								if (!cb.call(ob, Array.prototype.slice.call(n), m))
+									return;
+					break;
+				case 'attributes':
+					if (m.target.matches(selector) && !cb.call(ob, [m.target], m))
+						return;
+					break;
+				case 'characterData':
+					if (m.target.parentNode && m.target.parentNode.matches(selector) && !cb.call(ob, [m.target.parentNode], m))
+						return;
+					break;
+			}
+	});
+	ob.observe(baseNode, options || {subtree:true, childList:true}); 
+	return ob;
+}
 
-		window.addEventListener("message", function(event) {
-			if (event.source != window)	return;
-			if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
-		}, false);
+function inventory_market_prepare() {
+	runInPageContext(`function(){
+		$J(document).on("click", ".inventory_item_link, .newitem", function(){
+			if (!g_ActiveInventory.selectedItem.market_hash_name) {
+				g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.name
+			}
+			window.postMessage({
+				type: "es_sendmessage",
+				information: [
+					iActiveSelectView, 
+					g_ActiveInventory.selectedItem.marketable,
+					g_ActiveInventory.appid,
+					g_ActiveInventory.selectedItem.market_hash_name,
+					g_ActiveInventory.selectedItem.market_fee_app,
+					g_ActiveInventory.selectedItem.type,
+					g_ActiveInventory.selectedItem.id,
+					g_sessionID,
+					g_ActiveInventory.selectedItem.contextid,
+					g_rgWalletInfo.wallet_currency,
+					g_ActiveInventory.owner.strSteamId
+				]
+			}, "*");
+		});
+	}`);
+
+	window.addEventListener("message", function(event) {
+		if (event.source !== window) return;
+		if (event.data.type && (event.data.type === "es_sendmessage")) { inventory_market_helper(event.data.information); }
+	}, false);
 }
 
 function inventory_market_helper(response) {
-	var item = response[0];
-	var marketable = response[1];
-	var global_id = response[2];
-	var hash_name = response[3];
-	var appid = response[4];
-	var assetID = response[6];
-	var sessionID = response[7];
-	var contextID = response[8];
-	var wallet_currency = response[9];
-	var gift = false;
-	if (response[5] && response[5].match(/Gift/)) gift = true;
-	var html;
+	var html = "",
+		item = response[0],
+		marketable = response[1],
+		global_id = response[2],
+		hash_name = response[3],
+		appid = response[4],
+		assetID = response[6],
+		sessionID = response[7],
+		contextID = response[8];
+		wallet_currency = response[9],
+		owner_steamid = response[10],
+		is_gift = response[5] && /Gift/i.test(response[5]),
+		is_booster = hash_name && /Booster Pack/i.test(hash_name),
+		owns_inventory = (owner_steamid === is_signed_in);
 
 	var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
+	var $sideActs = $("#iteminfo" + item + "_item_actions");
+	var $sideMarketActs = $("#iteminfo" + item + "_item_market_actions");
+
+	// Workaround for preventing actions for the same item if clicked and active
+	$(".inventory_item_link_disabled").prop("class", "inventory_item_link");
+	$(thisItem + " .inventory_item_link").prop("class", "inventory_item_link_disabled");
 
 	// Set as background option
-	var sideActs = $("#iteminfo" + item + "_item_actions");
-	var link = $(sideActs).find("a").first();
-	// Make sure there isn't a button already and that the current item is a background image
-	if ($(".inventory_links").length && !$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
-		$(link).after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">');
+	var $viewFullBtn = $sideActs.find("a").first();
+	if (owns_inventory && $(".inventory_links").length && !$sideActs.find(".es_set_background").length && /public\/images\/items/.test($viewFullBtn.attr("href"))) {
+		$viewFullBtn.after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">');
 		
 		$(".es_set_background").on("click", function(e){
 			e.preventDefault();
 
 			var el = $(this);
+
 			// Do nothing if loading or already done
 			if (!$(".es_background_loading").is(":visible") && !$(el).hasClass("btn_disabled")) {
 				$(".es_background_loading").show();
@@ -4639,19 +4694,19 @@ function inventory_market_helper(response) {
 
 				get_http(profile_url + "/edit", function(txt){
 					// Make sure the background we are trying to set is not set already
-					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/),
+					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/i),
 						currentBg = currentBg ? currentBg[1] : false;
 					if (currentBg !== assetID) {
 						var rHtml = $.parseHTML(txt);
 						$(rHtml).find("#profile_background").attr("value", assetID);
-						var $data = $(rHtml).find("#editForm").serializeArray();
+						var sData = $(rHtml).find("#editForm").serializeArray();
 						$.ajax({url: profile_url + "/edit",
 								type: "POST",
-								data: $data
+								data: sData,
+								xhrFields: {withCredentials: true}
 						}).done(function(txt){
-							var rHtml = $.parseHTML(txt);
 							// Check if it was truly a succesful change
-							if ($(rHtml).find(".saved_changes_msg")) {
+							if (/"saved_changes_msg"/i.test(txt)) {
 								$(el).addClass("btn_disabled");
 							}
 						}).complete(function(){
@@ -4661,187 +4716,247 @@ function inventory_market_helper(response) {
 						$(el).addClass("btn_disabled");
 						$(".es_background_loading").fadeOut("fast");
 					}
-				});
+				}, { xhrFields: {withCredentials: true} });
 			}
 		});
 	}
 
-	if (gift) {
+	// Show prices for gifts
+	if (is_gift) {
 		$("#es_item" + item).remove();
-		if ($("#iteminfo" + item + "_item_actions").find("a").length > 0) {
-			var gift_appid = get_appid($("#iteminfo" + item + "_item_actions").find("a")[0].href);
-			get_http("//store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
-				var data = JSON.parse(txt);
-				if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
-					var currency = data[gift_appid]["data"]["price_overview"]["currency"];
-					var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
-					var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
-					
-					$("#iteminfo" + item + "_item_actions").css("height", "50px");
-					if (discount > 0) {
-						var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
-						$("#iteminfo" + item + "_item_actions").append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
-					} else {
-						$("#iteminfo" + item + "_item_actions").append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
-					}	
-				}
-			});
-		}
-	} else {
-		if ($(".profile_small_header_name .whiteLink").attr("href").replace(/\/$/, "") !== $(".playerAvatar").find("a").attr("href").replace(/\/$/, "")) {
-			if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
-			if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
-			$('.es_item_action').html("");
-			
-			if (marketable == 0) { $('.es_item_action').remove(); return; }
-			$("#es_item" + item).html("<img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading + "</span>");
+		if ($sideActs.find("a").length > 0) {
+			var link = $sideActs.find("a")[0].href;
+			var gift_appid = get_appid(link); // || get_subid(link);
 
-			function inventory_market_helper_get_price(url) {
-				get_http(url, function (txt) {
-					data = JSON.parse(txt);
-					$("#es_item" + item).html("");
-					if (data.success) {
-						html = "<div><div style='height: 24px;'><a href='//steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings.view_in_market + "</a></div>";
-						html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + data.lowest_price;
-						if (data.volume) {
-							html += "<br>" + localized_strings.last_24.replace("__sold__", data.volume);
-						}
-
-						$("#es_item" + item).html(html);
-					} else {
-						$("#es_item" + item).remove();
+			// TODO: Add support for package(sub)
+			if (gift_appid) {
+				get_http("//store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
+					var data = JSON.parse(txt);
+					if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
+						var currency = data[gift_appid]["data"]["price_overview"]["currency"];
+						var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
+						var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
+						
+						$sideActs.css("height", "50px");
+						if (discount > 0) {
+							var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
+							$sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
+						} else {
+							$sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
+						}	
 					}
 				});
 			}
+		}
+	} else {
+		if (owns_inventory) {
+			// If is a booster pack add the average price of three cards
+			if (is_booster) {
+				var $sideMarketActsDiv = $sideMarketActs.find("div").last().css("margin-bottom", "8px"),
+					dataCardsPrice = $(thisItem).data("cards-price");
 
-			if (getValue("steam_currency_number")) {
-				inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + getValue("steam_currency_number") + "&appid=" + global_id + "&market_hash_name=" + hash_name);
-			} else {
-				var currency_number = currency_type_to_number(user_currency);
-				setValue("steam_currency_number", currency_number);
-				inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + currency_number + "&appid=" + global_id + "&market_hash_name=" + hash_name);
-			}
-		} else {
-			if (hash_name && hash_name.match(/Booster Pack/g)) {
-				setTimeout(function() {
-					var api_url = "//api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + user_currency.toLowerCase();
+				// Monitor for when the price and volume are added
+				setMutationHandler(document, ".item_market_actions div:last-child br:last-child", function(){
+					if (dataCardsPrice) {
+						$sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + dataCardsPrice + "<br>");
+					} else {
+						var api_url = "//api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + user_currency.toLowerCase();
 
-					get_http(api_url, function(price_data) {
-						var booster_price = parseFloat(price_data,10) * 3;
-						html = localized_strings.avg_price_3cards + ": " + formatCurrency(booster_price) + "<br>";
-						$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
-						$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
-					});
-				}, 1000);
+						get_http(api_url, function(price_data) {
+							var booster_price = formatCurrency(parseFloat(price_data,10) * 3);
+
+							$(thisItem).data("cards-price", booster_price);
+							$sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + booster_price + "<br>");
+						});
+					}
+
+					this.disconnect();
+				});
 			}
+
 			storage.get(function(settings) {
+				// 1-Click turn into gems option
 				if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
 				if (settings.show1clickgoo) {
-					$("#es_quickgrind").parent().remove();
 					var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
-					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
+
+					$("#es_quickgrind").parent().remove();
+					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "' assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
+					
+					// TODO: Add prompt?
 					$("#es_quickgrind").on("click", function() {
-						runInPageContext("function() { \
-							var rgAJAXParams = {\
-								sessionid: g_sessionID,\
-								appid: " + $(this).attr("appid") + ",\
-								assetid: " + $(this).attr("assetID") + ",\
-								contextid: 6\
-							};\
-							var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';\
-							$J.get( strActionURL, rgAJAXParams ).done( function( data ) {\
-								strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';\
-								rgAJAXParams.goo_value_expected = data.goo_value;\
-								$J.post( strActionURL, rgAJAXParams).done( function( data ) {\
-									ReloadCommunityInventory();\
-								});\
-							});\
-						}");
+						runInPageContext(`function() {
+							var rgAJAXParams = {
+								sessionid: g_sessionID,
+								appid: " + $(this).attr("appid") + ",
+								assetid: " + $(this).attr("assetID") + ",
+								contextid: 6
+							};
+							var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
+							$J.get( strActionURL, rgAJAXParams ).done( function( data ) {
+								strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+								rgAJAXParams.goo_value_expected = data.goo_value;
+								$J.post( strActionURL, rgAJAXParams).done( function( data ) {
+									ReloadCommunityInventory();
+								});
+							});
+						}`);
 					});
 				}
+
+				// Quick sell options
 				if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
 				if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
 				if (settings.quickinv) {
-					if (marketable == 0 || contextID != 6 || global_id != 753 || $(".profile_small_header_name .whiteLink").attr("href").replace(/\/$/, "") !== $(".playerAvatar").find("a").attr("href").replace(/\/$/, "") || $("#iteminfo" + item + "_item_market_actions .item_market_action_button").css("display") == "none") { return; }
-					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
-					$("#iteminfo" + item + "_item_market_actions").append("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $("#iteminfo" + item + "_item_market_actions .item_market_action_button_contents").text() + "</span></a>");
-					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
+					if (marketable && contextID == 6 && global_id == 753) {
+						// Replace the "Sell" button
+						$("a.item_market_action_button").replaceWith("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $sideMarketActs.find(".item_market_action_button_contents").text() + "</span></a>");
 
-					// Workaround for preventing actions for the same item if clicked and active
-					$(".inventory_item_link_disabled").attr({class: "inventory_item_link"});
-					$(thisItem + " .inventory_item_link").attr({class: "inventory_item_link_disabled"});
+						if (!$(thisItem).hasClass("es-loading")) {
+							var url = $sideMarketActs.find("a")[0].href;
+							
+							$(thisItem).addClass("es-loading");
 
-					// Make sure there are no active requests for this item
-					if ( $(thisItem).hasClass("es-loading") ) { return; }
-
-					$(thisItem).addClass("es-loading");
-
-					get_http(url, function(txt) {
-						var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
-						if (market_id) {
-							market_id = market_id[1];
-
-							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
-								var market = JSON.parse(market_txt);
-								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
-								var price_low = market.highest_buy_order / 100;
-								if (price_high < 0.03) price_high = 0.03;
-								price_high = parseFloat(price_high).toFixed(2);
-								price_low = parseFloat(price_low).toFixed(2);
-
-								$(thisItem).removeClass("es-loading");
-
-								// Workaround for showing multiple instances of "Quick Sell" and "Instant Sell" buttons
-								$("#iteminfo" + item).find('#es_quicksell0, #es_instantsell0, #es_quicksell1, #es_instantsell1, .es-btn-spacer').remove();
+							// Check if price is stored in data
+							if ($(thisItem).hasClass("es-price-loaded")) {
+								var price_high = $(thisItem).data("price-high"),
+									price_low = $(thisItem).data("price-low");
 
 								// Add Quick Sell button
-								if (price_high > price_low) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+								if (price_high) {
+									$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
-
 								// Add Instant Sell button
-								if (market.highest_buy_order) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+								if (price_low) {
+									$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
-								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
-									$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).addClass("btn_disabled");
-									$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).css("pointer-events", "none");
-									$("#iteminfo" + item + "_item_market_actions div:first").html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.selling +"</div>");
-									var sell_price = $(this).attr("price") * 100;
-									runInPageContext("function() { var fee = CalculateFeeAmount (" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
-									
-									window.addEventListener("message", function(event) {
-										if (event.source != window)	return;
-										if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
-											sell_price = sell_price - event.data.information.fees;
-											$.ajax({
-												url:"https://steamcommunity.com/market/sellitem/",
-												type: "POST",
-												data: {
-													"sessionid": sessionID,
-													"appid": global_id,
-													"contextid": contextID,
-													"assetid": assetID,
-													"amount": 1,
-													"price": sell_price
-												},
-												crossDomain: true,
-												xhrFields: { withCredentials: true }
-											}).done(function(data){
-												$("#iteminfo" + item + "_item_market_actions").slideUp();
-												$("#item" + global_id + "_" + contextID + "_" + assetID).addClass("btn_disabled");
-												$("#item" + global_id + "_" + contextID + "_" + assetID).removeClass("activeInfo");
-												$("#item" + global_id + "_" + contextID + "_" + assetID).css("pointer-events", "none");
-											});
-										}
-									}, false);
+								$(thisItem).removeClass("es-loading");
+							} else {
+								get_http(url, function(txt) {
+									var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
+
+									if (market_id) {
+										market_id = market_id[1];
+
+										get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
+											var market = JSON.parse(market_txt),
+												price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff),
+												price_low = market.highest_buy_order / 100;
+											
+											if (price_high < 0.03) price_high = 0.03;
+											price_high = parseFloat(price_high).toFixed(2);
+											price_low = parseFloat(price_low).toFixed(2);
+
+											// Store prices as data
+											if (price_high > price_low) {
+												$(thisItem).data("price-high", price_high);
+											}
+											if (market.highest_buy_order) {
+												$(thisItem).data("price-low", price_low);
+											}
+
+											$(thisItem).addClass("es-price-loaded");
+											
+											// Fixes multiple buttons
+											if ( $(".inventory_item_link_disabled").parent().is($(thisItem)) ) {
+												// Add "Quick Sell" button
+												if (price_high > price_low) {
+													$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+												}
+												// Add "Instant Sell" button
+												if (market.highest_buy_order) {
+													$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+												}
+											}
+										}).complete(function(){
+											$(thisItem).removeClass("es-loading");
+										});
+									}
 								});
-							});
+							}
 						}
-					});
+
+						// Bind actions to "Quick Sell" and "Instant Sel" buttons
+						$(document).on("click", "#es_instantsell" + item + ", #es_quicksell" + item, function(e){
+							e.stopImmediatePropagation();
+
+							var sell_price = $(this).attr("price") * 100;
+
+							$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).addClass("btn_disabled").css("pointer-events", "none");
+
+							$sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
+
+							runInPageContext("function() { var fee = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
+							
+							window.addEventListener("message", function(event) {
+								if (event.source !== window) return;
+								if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
+									sell_price = sell_price - event.data.information.fees;
+									$.ajax({
+										url: "https://steamcommunity.com/market/sellitem/",
+										type: "POST",
+										data: {
+											"sessionid": sessionID,
+											"appid": global_id,
+											"contextid": contextID,
+											"assetid": assetID,
+											"amount": 1,
+											"price": sell_price
+										},
+										crossDomain: true,
+										xhrFields: { withCredentials: true }
+									}).complete(function(data){
+										$sideMarketActs.slideUp();
+										$(thisItem).toggleClass("btn_disabled activeInfo").css("pointer-events", "none");
+									});
+								}
+							}, false);
+						});
+					}
 				}
 			});
+		}
+		// If is not own inventory but the item is marketable then we need to build the HTML for showing info
+		else if (marketable) {
+			var dataLowest = $(thisItem).data("lowest-price"),
+				dataSold = $(thisItem).data("sold-volume");
+			
+			$sideMarketActs.show().html("<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
+
+			// "View in market" link
+			html += "<div style='height: 24px;'><a href='//steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings.view_in_market + "</a></div>";
+
+			// Check if price is stored in data
+			if (dataLowest) {
+				html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + dataLowest;
+				// Check if volume is stored in data
+				if (dataSold) {
+					html += "<br>" + localized_strings.last_24.replace("__sold__", dataSold);
+				}
+				html += "</div>";
+
+				$sideMarketActs.html(html);
+			} else {
+				get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + hash_name, function(txt) {
+					var data = JSON.parse(txt);
+
+					if (data.success) {
+						$(thisItem).data("lowest-price", data.lowest_price);
+						
+						html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + data.lowest_price;
+						if (data.volume) { 
+							$(thisItem).data("sold-volume", data.volume);
+							html += "<br>" + localized_strings.last_24.replace("__sold__", data.volume);
+						}
+						html += "</div>";
+					}
+
+					$sideMarketActs.html(html);
+				}).fail(function(){ // At least show the "View in Market" button
+					$sideMarketActs.html(html);
+				});
+			}
 		}
 	}
 }
