@@ -7006,16 +7006,20 @@ function start_highlighting_node(node) {
 }
 
 // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
-setMutationHandler($("#content_more")[0], ".ds_wishlist", function(nodes){
-	$.each(nodes, function(i, node){
-		if ($(node).parent().hasClass("single")) {
-			node = $(node).parent().parent()[0];
-		}
-		highlight_wishlist(node);
-	});
+function highlight_recommendations() {
+	if ($("#content_more").length) {
+		setMutationHandler($("#content_more")[0], ".ds_wishlist", function(nodes){
+			$.each(nodes, function(i, node){
+				if ($(node).parent().hasClass("single")) {
+					node = $(node).parent().parent()[0];
+				}
+				highlight_wishlist(node);
+			});
 
-	return true;
-});
+			return true;
+		});
+	}
+}
 
 // Add a link to an item's page on steamdb.info
 function add_steamdb_links(appid, type) {
@@ -8922,6 +8926,7 @@ $(document).ready(function(){
 							add_allreleases_tab();
 							set_homepage_tab();
 							add_carousel_descriptions();
+							highlight_recommendations();
 							window.setTimeout(function() { customize_home_page(); }, 500);
 							break;
 					}
