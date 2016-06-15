@@ -1702,3 +1702,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_regional_unavailable {
 	font-size: 12px;
 }
+
+/***************************************
+ * Store front page recommendations
+ **************************************/
+#content_more .home_content_item {
+	padding: 3px;
+	margin-right: 5px;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+#content_more .home_content_item:last-child {
+	margin-right: 0;
+}
