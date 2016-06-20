@@ -409,10 +409,11 @@ function currency_symbol_from_string (string_with_symbol) {
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
+
 var currencyConversion = (function() {
 	var deferred;
 	var rates;
-	
+
 	function load(currency) {
 		if (deferred) return deferred.promise();
 		deferred = new $.Deferred();
@@ -436,6 +437,7 @@ var currencyConversion = (function() {
 		}
 		return deferred.promise();
 	}
+
 	function convert(amount, currency_from, currency_to) {
 		if (rates) {
 			if (rates[currency_to]) return amount / rates[currency_to][currency_from];
@@ -521,7 +523,7 @@ function get_http(url, callback, settings) {
 	});
 	jqxhr.done(callback);
 	jqxhr.fail(function() {
-			$("#es_progress").val(100).addClass("error").attr({"title":localized_strings.ready.errormsg, "max":1});
+		$("#es_progress").val(100).addClass("error").attr({"title":localized_strings.ready.errormsg, "max":1});
 	});
 	return jqxhr;
 }
@@ -545,6 +547,7 @@ var storePageData = (function() {
 		}
 		return deferred.promise();
 	}
+
 	function get(api, callback) {
 		if (api && callback) deferred.done(function() {
 			if (data[api]) callback(data[api]);
@@ -560,6 +563,7 @@ var storePageData = (function() {
 		};
 		localStorage.setItem("storePageData_" + appid, JSON.stringify(cached));
 	}
+
 	function cache_get(appid) {
 		var cached = $.parseJSON(localStorage.getItem("storePageData_" + appid));
 		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
@@ -570,6 +574,7 @@ var storePageData = (function() {
 		get: get
 	}
 })();
+
 var profileData = (function() {
 	var deferred = new $.Deferred();
 	var data;
@@ -591,6 +596,7 @@ var profileData = (function() {
 		}
 		return deferred.promise();
 	}
+
 	function get(api, callback) {
 		if (api && callback) deferred.done(function() {
 			if (data[api]) callback(data[api]);
@@ -606,10 +612,12 @@ var profileData = (function() {
 		};
 		localStorage.setItem("profileData_" + steamid, JSON.stringify(cached));
 	}
+
 	function cache_get(steamid) {
 		var cached = $.parseJSON(localStorage.getItem("profileData_" + steamid));
 		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
 	}
+
 	function clearOwn() {
 		localStorage.removeItem("profileData_" + is_signed_in);
 	}
@@ -641,12 +649,21 @@ function get_appid_wishlist(t) {
 	else return null;
 }
 
+var highlight_defaults = {
+	"owned": "#5c7836",
+	"wishlist": "#1c3788",
+	"coupon": "#a26426",
+	"inv_gift": "#800040",
+	"inv_guestpass": "#008080",
+	"notinterested": "#4f4f4f"
+}
+
 // Color the tile for owned games
 function highlight_owned(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_owned");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned; storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
 
@@ -654,78 +671,81 @@ function highlight_owned(node) {
 		if (settings.hide_owned) hide_node(node);
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
-		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
-		if (settings.tag_owned) add_tag(node, localized_strings.tag.owned, settings.tag_owned_color);
+		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = highlight_defaults.owned;	storage.set({'tag_owned_color': settings.tag_owned_color}); }
+		if (settings.tag_owned) add_tag(node, "owned");
 	});
 }
 
 // Color the tile for wishlist games
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_wishlist");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = highlight_defaults.wishlist; storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; storage.set({'hide_wishlist': settings.hide_wishlist}); }
 
 		if (settings.highlight_wishlist) { $(node).addClass("es_highlighted_wishlist"); highlight_node(node, settings.highlight_wishlist_color); }
 		if (settings.hide_wishlist) hide_node(node);
 
-		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = highlight_defaults.wishlist;	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
-		if (settings.tag_wishlist) add_tag(node, localized_strings.tag.wishlist, settings.tag_wishlist_color);
+		if (settings.tag_wishlist) add_tag(node, "wishlist");
 	});
 }
 
 function highlight_cart(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_cart");
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
-		if (settings.hide_cart) hide_node(node);
+		if (settings.hide_cart) {
+			node.classList.add("es_highlight");
+			node.classList.add("es_highlight_hidden");
+			hide_node(node);
+		}
 	});
 }
 
 // Color the tile for items with coupons
 function highlight_coupon(node, discount) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_coupon");
-		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
+		node.classList.add("es_highlight");
+		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = highlight_defaults.coupon; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_coupon) { $(node).addClass("es_highlighted_coupon"); highlight_node(node, settings.highlight_coupon_color); }
 
-		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
+		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = highlight_defaults.coupon; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_coupon) add_tag(node, localized_strings.tag.coupon + " (" + discount + "%)", settings.tag_coupon_color);
+		if (settings.tag_coupon) add_tag(node, "coupon");
 	});
 }
 
 // Color the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_inv_gift");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
+		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = highlight_defaults.inv_gift; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_gift) { $(node).addClass("es_highlighted_inv_gift"); highlight_node(node, settings.highlight_inv_gift_color); }
 
-		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
+		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = highlight_defaults.inv_gift; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
-		if (settings.tag_inv_gift) add_tag(node, localized_strings.tag.inv_gift, settings.tag_inv_gift_color);
+		if (settings.tag_inv_gift) add_tag(node, "inv_gift");
 	});
 }
 
 // Color the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_inv_guestpass");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124"; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
+		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = highlight_defaults.inv_guestpass; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
 		if (settings.highlight_inv_guestpass) { $(node).addClass("es_highlighted_inv_guestpass"); highlight_node(node, settings.highlight_inv_guestpass_color); }
 
-		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
+		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = highlight_defaults.inv_guestpass; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
-		if (settings.tag_inv_guestpass) add_tag(node, localized_strings.tag.inv_guestpass, settings.tag_inv_guestpass_color);
+		if (settings.tag_inv_guestpass) add_tag(node, "inv_guestpass");
 	});
 }
 
@@ -733,7 +753,7 @@ function highlight_nondiscounts(node) {
 	storage.get(function(settings) {
 		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
 		if (settings.hide_notdiscounted) {
-			$(node).css("display", "none");
+			$(node).hide();
 		}
 	});
 }
@@ -743,23 +763,22 @@ function highlight_notinterested(node) {
 		storage.get(function(settings) {
 			var appid = parseInt(get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id));
 			if ($.inArray(appid, data.rgIgnoredApps) != -1) {
-				node.classList.add("es_highlight_notinterested");
+				node.classList.add("es_highlight");
 
 				// Highlight games marked not interested
-				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = "#e02b3c"; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
+				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = highlight_defaults.notinterested; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
 				if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
 				if (settings.highlight_notinterested) { $(node).addClass("es_highlighted_notinterested"); highlight_node(node, settings.highlight_notinterested_color); }
 
 				// Tag games marked not interested
-				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = "#e02b3c"; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
+				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = highlight_defaults.notinterested; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
 				if (settings.tag_notinterested === undefined) { settings.tag_notinterested = true; storage.set({'tag_notinterested': settings.tag_notinterested}); }
-				if (settings.tag_notinterested) add_tag(node, localized_strings.tag.notinterested, settings.tag_notinterested_color);
+				if (settings.tag_notinterested) add_tag(node, "notinterested");
 			
 				// Hide not interested search results
 				if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
-			
 				if ($(node).hasClass("search_result_row") && settings.hide_notinterested === true) {
-					$(node).css("display", "none");
+					$(node).hide();
 				}
 			}
 		});
@@ -805,12 +824,10 @@ function highlight_node(node, color) {
 			highlight_css_loaded = true;
 
 			var hlCss = "",
-				hlColor = "",
 				hlNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
 			
-			$(hlNames).each(function (id, name) {
-				hlColor = hexToRgb(settings["highlight_" + name + "_color"]);
-				hlCss += '.es_highlighted_' + name + ' { background: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(' + hlColor.r + ', ' + hlColor.g + ', ' + hlColor.b + ', 0.8) 100%) !important; }\n';
+			$(hlNames).each(function (i, name) {
+				hlCss += '.es_highlighted_' + name + ' { background: ' + settings["highlight_" + name + "_color"] + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
 			});
 
 			$("head").append('<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
@@ -826,12 +843,12 @@ function highlight_node(node, color) {
 			$node = $(node).find(".large_cap_content");
 		}
 
-		// App and community hub page headers
-		if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
+		// App and community hub page headers // won't work
+		/*if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
 			$node = $(node).find(".apphub_AppName");
 			$node.css("color", color);
 			return;
-		}
+		}*/
 
 		// Blotter activity
 		if ($node.parent().parent()[0]) {
@@ -843,10 +860,6 @@ function highlight_node(node, color) {
 
 		$(node).removeClass("ds_flagged").find(".ds_flag").remove();
 		$(node).find(".ds_flagged").removeClass("ds_flagged");
-
-		// Set text colour to not conflict with highlight
-		if (node.classList.contains("tab_item")) $node.find("div").css("color", "lightgrey");
-		if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 	});
 }
 
@@ -859,7 +872,7 @@ function hide_node(node) {
 
 		if (settings.hide_owned) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule") || node.classList.contains("browse_tag_game")) {
-				hide_the_node(node);
+				$(node).hide();
 				if ($(document).height() <= $(window).height()) {
 					load_search_results();
 				}
@@ -869,299 +882,184 @@ function hide_node(node) {
 		// Hide DLC for unowned items
 		if (settings.hide_dlcunownedgames) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
-				hide_the_node(node);
+				$(node).hide();
 			}
 		}
 	});
 }
 
-function hide_the_node(node) {
-	$(node).css("display", "none");
-}
+var tag_css_loaded = false;
 
-function add_tag (node, string, color) {
-	/* To add coloured tags to the end of app names instead of colour
-	highlighting; this allows an to be "highlighted" multiple times; e.g.
-	inventory and owned. */
-	node.tags = node.tags || [];
-	var tagItem = [string, color];
-	var already_tagged = false;
+function add_tag(node, tag) {
+	storage.get(function(settings) {
+		if (settings.tag_short === undefined) { settings.tag_short = true; storage.set({'tag_short': settings.tag_short}); }
 
-	// Check if it isn't already tagged
-	for (var i = 0; i < node.tags.length; i++) {
-		if (node.tags[i][0] === tagItem[0]) already_tagged = true;
-	}
-	if (!already_tagged) {
-		node.tags.push(tagItem);
-		display_tags(node);
-	}
-}
-
-function display_tags(node) {
-	var remove_existing_tags = function remove_existing_tags(tag_root) {
-		if (tag_root.find(".tags").length > 0) {
-			tag_root.find(".tags").remove();
-		}
-	},
-	new_display_tag = function new_display_tag(text, color) {
-		var $tag = $("<span>" + tag[0] + "</span>");
-
-		$tag.css({
-			"backgroundColor": tag[1],
-			"color": "white",
-			"float": "right",
-			"padding": "2px",
-			"margin-right": "4px",
-			"margin-bottom": "4px",
-			"border": "1px solid #262627"
-		});
-
-		return $tag;
-	};
-
-	if (node.tags) {
-
-		// Make tags
-		$tags = $("<div class=\"tags\"></div>");
-		for (var i = 0; i < node.tags.length; i++) {
-			var tag = node.tags[i];
-			var $tag = new_display_tag(tag[0], tag[1]);
-			$tags.append($tag);
-		}
-
-		// Apply tags differently per type of node
-		var $tag_root;
-		if (node.classList.contains("tab_row")) {
-			$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
-			remove_existing_tags($tag_root);
-
-			$(node).find(".tab_discount").css("top","15px");
+		// Load the colors CSS for tags
+		if (!tag_css_loaded) {
+			tag_css_loaded = true;
 			
-			$tag_root.find("h4").after($tags);
-		}
-		else if (node.classList.contains("tab_item")) {			
-			remove_existing_tags($(node));
-			$tags.css({
-				"float": "left",
-				"height": "10px"
-			});
-			$(node).find(".tab_item_name").after($tags);
-		}
-		else if (node.classList.contains("search_result_row")) {
-			$tag_root = $(node).find(".search_name");
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"display": "inline-block",
-				"vertical-align": "middle",
-				"font-size": "small"
+			var tagCss = "";
+			tagNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
+		
+			$(tagNames).each(function (i, name) {
+				tagCss += '.es_tag_' + name + ' { background-color: ' + settings["tag_" + name + "_color"] + ' }\n';
 			});
 
-			$tag_root.find("p").prepend($tags);
-
-			// Remove margin-bottom, border, and tweak padding on carousel lists
-			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css({
-					"margin-bottom": "0",
-					"border": "0",
-					"padding": "3px"
-				});
-			});
+			$("head").append('<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
 		}
-		else if (node.classList.contains("dailydeal")) {
-			$tag_root = $(node).parent();
-			remove_existing_tags($tag_root);
 
-			$tag_root.find(".game_purchase_action").before($tags);
-			$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
-		}
-		else if (node.classList.contains("small_cap")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
+		var $tags = $(node).find(".es_tags");
 
-			// small_cap will have extra height
-			$tags.css({
-				"display": "inline-block",
-				"margin-top": "2px",
-				"vertical-align": "middle"
-			});
-			$tag_root.find("h4").prepend($tags);
-		}
-		else if (node.classList.contains("browse_tag_game")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-			$tags.css("display", "table");
-			$tags.css("margin-left", "8px");
-			$tag_root.find(".browse_tag_game_price").after($tags);
-		}
-		else if (node.classList.contains("game_area_dlc_row")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
+		// Add the tags container if needed
+		if (!$tags.length) {
+			$tags = $('<div class="es_tags' + (settings.tag_short ? ' es_tags_short' : '') + '" />');
 
-			var clone = $(node).clone();
-			clone.css({
-				visibility:'hidden',
-				width : '',
-				height: '',
-				maxWidth : '',
-				maxHeight: ''
-			});
-			$('body').append(clone);
-			var width = $(clone).find(".game_area_dlc_price").width();
-			clone.remove();
-			
-			$tags.css("margin-right", width + 3);
-			$tag_root.find(".game_area_dlc_name").before($tags);
+			var $tag_root;
+			if (node.classList.contains("tab_row")) { // can't find it
+				$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
 
-			// Remove margin-bottom on DLC lists to prevent horrible pyramidding
-			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css("margin-bottom", "0");
-				$(obj).css("padding", "0 2px");
-			});
-		}
-		else if (node.classList.contains("wishlistRow")) {
-			$tag_root = $(node).find(".wishlistRowItem");
-			remove_existing_tags($tag_root);			
-			$tag_root.find(".wishlist_added_on").after($tags);
-		}
-		else if (node.classList.contains("match")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
+				$(node).find(".tab_discount").css("top","15px");
+				
+				$tag_root.find("h4").after($tags);
+			}
+			else if (node.classList.contains("home_smallcap")) { // done
+				$(node).find(".home_smallcap_title").prepend($tags);
+			}
+			else if (node.classList.contains("curated_app_item")) { // done
+				$(node).find(".home_headerv5_title").prepend($tags);
+			}
+			else if (node.classList.contains("tab_item")) { // done
+				$(node).find(".tab_item_name").after($tags);
+			}
+			else if (node.classList.contains("search_result_row")) { // done
+				$(node).find("p").prepend($tags);
+			}
+			else if (node.classList.contains("dailydeal")) { // can't find it
+				$tag_root = $(node).parent();
 
-			$tags.css({
-				"float": "right",
-				"width": "130px",
-				"margin-top": "30px"
-			});	
-
-			$tag_root.find(".match_price").after($tags);
-		}
-		else if (node.classList.contains("cluster_capsule")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"display": "inline-block",
-				"vertical-align": "middle",
-				"font-size": "small"
-			});	
-
-			$tags.each(function() {
-				$(this).children().css("float", "none");
-			});
-
-			$tag_root.find(".main_cap_platform_area").append($tags);
-
-			// Remove margin-bottom, border, and tweak padding on carousel lists
-			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css({
-					"margin-bottom": "0",
-					"border": "0",
-					"padding": "3px"		
-				});	
-			});
-		}
-		else if (node.classList.contains("recommendation_highlight")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-			
-			if ($(".game_purchase_action").length > 0) {
-				$tags.css("float", "left");
 				$tag_root.find(".game_purchase_action").before($tags);
-				$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
-			} else {
+				$tag_root.find(".game_purchase_action").before($('<div style="clear: right;"></div>'));
+			}
+			else if (node.classList.contains("small_cap")) { // done
+				$(node).find("h4").prepend($tags);
+			}
+			else if (node.classList.contains("browse_tag_game")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("display", "table");
+				$tags.css("margin-left", "8px");
+				$tag_root.find(".browse_tag_game_price").after($tags);
+			}
+			else if (node.classList.contains("game_area_dlc_row")) { // done
+				$(node).find(".game_area_dlc_price").prepend($tags);
+			}
+			else if (node.classList.contains("wishlistRow")) { // done
+				$(node).find(".wishlist_added_on").after($tags);
+			}
+			else if (node.classList.contains("match")) { // done
+				$(node).find(".match_price").after($tags);
+			}
+			else if (node.classList.contains("cluster_capsule")) { // done
+				$(node).find(".main_cap_platform_area").append($tags);
+			}
+			else if (node.classList.contains("recommendation_highlight")) { // can't find it
+				$tag_root = $(node);
+				
+				if ($(".game_purchase_action").length > 0) {
+					$tags.css("float", "left");
+					$tag_root.find(".game_purchase_action").before($tags);
+					$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+				} else {
+					$tags.css("float", "right");
+					$tag_root.find(".price").parent().before($tags);
+				}	
+			}
+			else if (node.classList.contains("similar_grid_item")) { // can't find it
+				$tag_root = $(node);
+
 				$tags.css("float", "right");
-				$tag_root.find(".price").parent().before($tags);
-			}	
+				$tag_root.find(".similar_grid_price").find(".price").append($tags);
+			}
+			else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("float", "left");
+
+				$tag_root.find(".buttons").before($tags);
+			}
+			else if (node.classList.contains("friendplaytime_game")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("float", "left");
+
+				$tag_root.find(".friendplaytime_buttons").before($tags);
+			}
+			/*else if (node.classList.contains("inline_tags")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("display", "inline-block");
+				$tags.css("margin-left", "3px");
+
+				$tags.children().remove();
+				// Display inline as text only
+				$.each(node.tags, function (i, obj) {
+					var $obj = $("<span>" + obj[0] + "</span>");
+					// $obj.css("border-bottom", "2px solid " + obj[1]);
+					// $obj.css("background-color", obj[1]);
+					// $obj.css("color", "white");
+
+					if (i === 0) $tags.append(" (");
+					$tags.append($obj);
+					if (i === node.tags.length - 1) {
+						$tags.append(")");
+					}
+					else {
+						$tags.append(", ");
+					}
+				});
+				$tag_root.after($tags);
+			}
+			else if (node.classList.contains("apphub_HeaderStandardTop")) { // won't work
+				$tag_root = $(node);
+				// Height to accomodate tags
+				$tag_root.css("height", "auto");
+
+				$tags.css({
+					"float": "left",
+					"margin-top": "4px",
+					"margin-left": "3px"
+				});
+
+				$tag_root.find(".apphub_AppName").after($tags);
+				$tag_root.find(".apphub_AppName").after($('<div style="clear: right;"></div>'));
+			}
+			else if (node.classList.contains("apphub_HeaderTop")) { // won't work
+				$tag_root = $(node);
+
+				$tag_root.find(".apphub_AppName").css("width", "0px")
+
+				$tags.css({
+					"float": "left",
+					"margin-top": "4px",
+					"margin-left": "3px"
+				});
+
+				$tag_root.find(".apphub_OtherSiteInfo").append($tags);
+				$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
+
+				var max_width = 948-($(".apphub_OtherSiteInfo").width() + 69);
+
+				$tag_root.find(".apphub_AppName").css("max-width", max_width+"px").attr("title", $tag_root.find(".apphub_AppName").text());
+				$tag_root.find(".apphub_AppName").css("width", "auto")
+				$tag_root.find(".apphub_AppName").css("overflow", "hidden");
+			}*/
+		} 
+
+		// Add the tag
+		if (!$tags.find(".es_tag_" + tag).length) {
+			$tags.append('<span class="es_tag_' + tag + '">' + localized_strings.tag[tag] + '</span>');
 		}
-		else if (node.classList.contains("similar_grid_item")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "right");
-			$tag_root.find(".similar_grid_price").find(".price").append($tags);
-		}
-		else if (node.classList.contains("recommendation_carousel_item")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "left");
-
-			$tag_root.find(".buttons").before($tags);
-		}
-		else if (node.classList.contains("friendplaytime_game")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "left");
-
-			$tag_root.find(".friendplaytime_buttons").before($tags);
-		}
-		else if (node.classList.contains("inline_tags")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root.parent());
-
-			$tags.css("display", "inline-block");
-			$tags.css("margin-left", "4px");
-
-			$tags.children().remove();
-			// Display inline as text only
-			$.each(node.tags, function (i, obj) {
-				var $obj = $("<span>" + obj[0] + "</span>");
-				// $obj.css("border-bottom", "2px solid " + obj[1]);
-				// $obj.css("background-color", obj[1]);
-				// $obj.css("color", "white");
-
-				if (i === 0) $tags.append(" (");
-				$tags.append($obj);
-				if (i === node.tags.length - 1) {
-					$tags.append(")");
-				}
-				else {
-					$tags.append(", ");
-				}
-			});
-			$tag_root.after($tags);
-		}
-		else if (node.classList.contains("apphub_HeaderStandardTop")) {
-			$tag_root = $(node);
-			// Height to accomodate tags
-			$tag_root.css("height", "auto");
-
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"float": "left",
-				"margin-top": "4px",
-				"margin-left": "4px"
-			});
-
-			$tag_root.find(".apphub_AppName").after($tags);
-			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
-		}
-		else if (node.classList.contains("apphub_HeaderTop")) {
-			$tag_root = $(node);
-
-			$tag_root.find(".apphub_AppName").css("width", "0px")
-
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"float": "left",
-				"margin-top": "4px",
-				"margin-left": "4px"
-			});
-
-			$tag_root.find(".apphub_OtherSiteInfo").append($tags);
-			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
-
-			var max_width = 948-($(".apphub_OtherSiteInfo").width() + 69);
-
-			$tag_root.find(".apphub_AppName").css("max-width", max_width+"px").attr("title", $tag_root.find(".apphub_AppName").text());
-			$tag_root.find(".apphub_AppName").css("width", "auto")
-			$tag_root.find(".apphub_AppName").css("overflow", "hidden");
-		}
-	}
+	});
 }
 
 function load_inventory() {
@@ -1928,9 +1826,12 @@ function pack_split(node, ways) {
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
 	price_text = formatCurrency(price);
-	$(node).find(".btn_addtocart").last().before(
-		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>"+localized_strings.each+"</div></div>"
-	);
+	$(node).find(".btn_addtocart").last().parent().prepend(`
+		<div class="es_each_box">
+			<div class="es_each_price">` + price_text + `</div>
+			<div class="es_each">` + localized_strings.each + `</div>
+		</div>
+	`);
 }
 
 function add_pack_breakdown() {
@@ -2967,7 +2868,7 @@ function wishlist_dynamic_data() {
 					var owned = ownedapps.indexOf(appid);
 					var wishlisted = wishlistapps.indexOf(appid);
 
-					if(owned == -1 && wishlisted == -1 && settings.store_sessionid) {
+					if (owned == -1 && wishlisted == -1 && settings.store_sessionid) {
 						$(node).parent().parent().siblings(".wishlist_added_on").append('(<a class="es_wishlist_add" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>)');
 						$("#es_wishlist_" + appid).click(function() {
 							$.ajax({
@@ -3792,12 +3693,12 @@ function hide_spam_comments() {
 					comment_num(bad_comment_num, frame);
 				}
 			}
-			var observer = new WebKitMutationObserver(function(mutations) {
+			var observer = new MutationObserver(function(mutations) {
 				check_hide_comments();
 			});
 			if($("#AppHubContent").html()) {
-				var modal_content_observer = new WebKitMutationObserver(function(mutations) {
-					var frame_comment_observer = new WebKitMutationObserver(function(mutations) {
+				var modal_content_observer = new MutationObserver(function(mutations) {
+					var frame_comment_observer = new MutationObserver(function(mutations) {
 						frame_check_hide_comments();
 						for (var i=0; i<frames.length; i++) {
 							var frame = frames[i].document;
@@ -3889,7 +3790,7 @@ function add_background_preview_link() {
 }
 
 function hide_activity_spam_comments() {
-	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
+	var blotter_content_observer = new MutationObserver(function(mutations) {
 		hide_spam_comments();
 	});
 	blotter_content_observer.observe($("#blotter_content")[0], {childList:true, subtree:true});
@@ -5578,52 +5479,59 @@ function add_achievement_completion_bar(appid) {
 	});
 }
 
-var ea_promise, early_access;
+
+var ea_promise = (function() {
+	var deferred = new $.Deferred();
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	var last_updated = getValue("ea_appids_time") || expire_time - 1;
+	
+	if (last_updated < expire_time) {
+		// If no cache exists, pull the data from the website
+		get_http("//api.enhancedsteam.com/early_access/", function(txt) {
+			early_access_data = JSON.parse(txt);
+			setValue("ea_appids", early_access_data);
+			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
+			
+			deferred.resolve(early_access_data);	
+		}).fail(function(){
+			// If request fails return data from cache
+			if (getValue("ea_appids_time")) {
+				deferred.resolve(getValue("ea_appids"));
+			} else {
+				deferred.reject();
+			}
+		});
+	} else {
+		deferred.resolve(getValue("ea_appids"));
+	}
+
+	return deferred.promise();
+})();
 
 // Check for Early Access titles
 function check_early_access(node, selector_modifier) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
-			$(node).not(".es_ea_checked").each(function(index, value) {
-				var node = $(this);
-
+			$(node).not(".es_ea_checked").each(function(i, node) {
 				$(node).addClass("es_ea_checked");
-				if (!ea_promise) {
-					ea_promise = (function () {
-						var deferred = new $.Deferred();
-						if (window.location.protocol != "https:") {
-							// is the data cached?
-							var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-							var last_updated = getValue("ea_appids_time") || expire_time - 1;
-							if (last_updated < expire_time) {
-								// if no cache exists, pull the data from the website
-								get_http("//api.enhancedsteam.com/early_access/", function(txt) {
-									early_access = JSON.parse(txt);
-									setValue("ea_appids", txt);
-									setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
-									deferred.resolve();	
-								});
-							} else {
-								early_access = JSON.parse(getValue("ea_appids"));
-								deferred.resolve();
-							}
-						} else {
-							deferred.resolve();
-						}
-						return deferred.promise();
-					})();
-				}
-				ea_promise.done(function () {
-					if (early_access) {
+
+				ea_promise.done(function(early_access_data){
+					if (typeof early_access_data !== "object") {
+						early_access_data = JSON.parse(early_access_data);
+					}
+					if (early_access_data) {
 						var href = ($(node).find("a").attr("href") || $(node).attr("href")),
 							imgHeader = $(node).find("img" + (selector_modifier ? selector_modifier : "")),
 							appid = get_appid(href) || (imgHeader.length && /\/apps\/(\d+)\//.test(imgHeader[0].src) && imgHeader[0].src.match(/\/apps\/(\d+)\//)[1]);
 
-						if (appid && early_access["ea"].indexOf(appid) >= 0) {
+						if (appid && early_access_data["ea"].indexOf(appid) >= 0) {
 							var image_name = "img/overlay/early_access_banner_english.png";
 							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
 							$(node).addClass("es_early_access");
+							if ($(imgHeader).hasClass("tab_item_cap")) {
+								$(imgHeader).prop("class", "tab_item_cap_img").wrap('<div class="tab_item_cap" />');
+							}
 							$(imgHeader).wrap('<span class="es_overlay_container" />').before('<span class="es_overlay"><img title="' + localized_strings.early_access + '" src="' + chrome.extension.getURL(image_name) + '" /></span>');
 						}
 					}
@@ -6790,7 +6698,7 @@ function hide_trademark_symbols(community) {
 					$(this).html(replace_symbols($(this).html()));
 				});
 			});
-			var observer = new WebKitMutationObserver(function(mutations) {
+			var observer = new MutationObserver(function(mutations) {
 					$.each(mutations,function(mutation_index, mutation){
 						if(mutations[mutation_index]["addedNodes"]){
 							$.each(mutations[mutation_index]["addedNodes"], function(node_index, node){
@@ -6837,7 +6745,6 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want and not some unrelated DOM change
-				//if (node.id == "search_result_container") add_cart_to_search();
 				if (node.classList && node.classList.contains("inventory_page")) {
 					add_inventory_gotopage();
 				}
@@ -6885,33 +6792,33 @@ function bind_ajax_content_highlighting() {
 function start_highlights_and_tags(){
 	// Batch all the document.ready appid lookups into one storefront call.
 	var selectors = [
-		"div.tab_row",				// Storefront rows
+		"div.tab_row",					// Storefront rows
 		"div.dailydeal_ctn",
-		"div.wishlistRow",			// Wishlist rows
+		"div.wishlistRow",				// Wishlist rows
 		"a.game_area_dlc_row",			// DLC on app pages
-		"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+		"a.small_cap",					// Featured storefront items and "recommended" section on app pages
 		"a.home_smallcap",
 		"a.search_result_row",			// Search result rows
-		"a.match",				// Search suggestions rows
+		"a.match",						// Search suggestions rows
 		"a.cluster_capsule",			// Carousel items
-		"div.recommendation_highlight",		// Recommendation pages
+		"div.recommendation_highlight",	// Recommendation pages
 		"div.recommendation_carousel_item",	// Recommendation pages
 		"div.friendplaytime_game",		// Recommendation pages
-		"div.dlc_page_purchase_dlc",		// DLC page rows
-		"div.sale_page_purchase_item",		// Sale pages
-		"div.item",				// Sale pages / featured pages
+		"div.dlc_page_purchase_dlc",	// DLC page rows
+		"div.sale_page_purchase_item",	// Sale pages
+		"div.item",						// Sale pages / featured pages
 		"div.home_area_spotlight",		// Midweek and weekend deals
 		"div.browse_tag_game",			// Tagged games
-		"div.similar_grid_item",			// Items on the "Similarly tagged" pages
-		"div.tab_item",			// Items on new homepage
-		"div.special",			// new homepage specials
-		"div.curated_app_item",	// curated app items!
-		"a.summersale_dailydeal" // Summer sale daily deal
+		"div.similar_grid_item",		// Items on the "Similarly tagged" pages
+		"div.tab_item",					// Items on new homepage
+		"div.special",					// new homepage specials
+		"div.curated_app_item",			// curated app items!
+		"a.summersale_dailydeal"		// Summer sale daily deal
 	];
 		
 	setTimeout(function() {
 		$.each(selectors, function (i, selector) {
-			$.each($(selector), function(j, node){
+			$.each($(selector).not(".es_highlight"), function(j, node){
 				var node_to_highlight = node;
 				if ($(node).hasClass("item")) { node_to_highlight = $(node).find(".info")[0]; }
 				if ($(node).hasClass("home_area_spotlight")) { node_to_highlight = $(node).find(".spotlight_content")[0]; }
@@ -7174,7 +7081,7 @@ function highlight_market_items() {
 			var market_name = getValue("card:" + item_name);
 			if (market_name) {
 				storage.get(function(settings) {
-					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned;	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 					if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 					if (settings.highlight_owned) {
 						node = $(node).find("div");
@@ -7210,6 +7117,7 @@ function get_store_session() {
 	}
 }
 
+// TODO: This should be done with dynamic store data to make sure things are in sync
 function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
@@ -8911,7 +8819,6 @@ $(document).ready(function(){
 							break;
 
 						case /^\/search\/.*/.test(path):
-							//add_cart_to_search();
 							endless_scrolling();
 							add_hide_buttons_to_search();
 							break;
