@@ -3245,7 +3245,7 @@ function add_popular_tab() {
 						var currently = $(this).find(".currentServers:first").text();
 						var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, \"global_hover\", {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, \"global_hover\" )' id='tab_row_popular_" + appid + "'>";
 						html += "<a class='tab_item_overlay' href='//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='//store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-						html += "<img class='tab_item_cap' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+						html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
 						html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'>" + currently + " " + localized_strings.charts.playing_now + "</div><br clear='all'></div>";
 
 						html += "</div>";
@@ -3279,7 +3279,7 @@ function add_allreleases_tab() {
 				var price = $(this).find(".search_price").html();
 				var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, \"global_hover\", {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, \"global_hover\" )' id='tab_row_popular_" + appid + "'>";
 				html += "<a class='tab_item_overlay' href='//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='//store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-				html += "<img class='tab_item_cap' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+				html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
 				// price info
 				if (discount_pct) {
 					html += "<div class='discount_block tab_item_discount'><div class='discount_pct'>" + discount_pct + "</div><div class='discount_prices'>" + price + "</div></div>";
@@ -5529,9 +5529,6 @@ function check_early_access(node, selector_modifier) {
 							var image_name = "img/overlay/early_access_banner_english.png";
 							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
 							$(node).addClass("es_early_access");
-							if ($(imgHeader).hasClass("tab_item_cap")) {
-								$(imgHeader).prop("class", "tab_item_cap_img").wrap('<div class="tab_item_cap" />');
-							}
 							$(imgHeader).wrap('<span class="es_overlay_container" />').before('<span class="es_overlay"><img title="' + localized_strings.early_access + '" src="' + chrome.extension.getURL(image_name) + '" /></span>');
 						}
 					}
