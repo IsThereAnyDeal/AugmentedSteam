@@ -762,13 +762,20 @@ function highlight_notinterested(node) {
 	$.when.apply($, [dynamicstore_promise]).done(function(data) {
 		storage.get(function(settings) {
 			var appid = parseInt(get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id));
-			if ($.inArray(appid, data.rgIgnoredApps) != -1) {
+			if (appid && $.inArray(appid, data.rgIgnoredApps) != -1) {
+				if ($(node).hasClass("home_area_spotlight")) {
+					node = $(node).find(".spotlight_content")[0];
+				}
+
 				node.classList.add("es_highlight");
 
 				// Highlight games marked not interested
 				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = highlight_defaults.notinterested; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
 				if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
-				if (settings.highlight_notinterested) { $(node).addClass("es_highlighted_notinterested"); highlight_node(node, settings.highlight_notinterested_color); }
+				if (settings.highlight_notinterested) {
+					$(node).addClass("es_highlighted_notinterested");
+					highlight_node(node, settings.highlight_notinterested_color);
+				}
 
 				// Tag games marked not interested
 				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = highlight_defaults.notinterested; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
