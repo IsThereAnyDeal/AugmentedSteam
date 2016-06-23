@@ -581,14 +581,17 @@ var profileData = (function() {
 		data = cache_get(steamid);
 		if (data) {
 			deferred.resolveWith(data);
-		} else {
+		} else if (steamid) {
 			var apiurl = "//api.enhancedsteam.com/profiledata/?steam64=" + steamid;
 			get_http(apiurl, function(txt) {
 				data = JSON.parse(txt);
 				cache_set(steamid, data);
 				deferred.resolveWith(data);
-			}).fail(deferred.reject);
+			}).fail(deferred.reject());
+		} else {
+			deferred.reject();
 		}
+
 		return deferred.promise();
 	}
 	function get(api, callback) {
