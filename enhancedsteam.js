@@ -2202,10 +2202,10 @@ function add_language_warning() {
 							<a href="#" id="es_reset_language_code">` + localized_strings_native.using_language_return.replace("__base__", localized_strings_native.options.lang[warning_language.toLowerCase()]) + `</a>
 						</div>
 					`);
-					$("#es_reset_language_code").click(function(e) {
+					$("#es_reset_language_code").on("click", function(e) {
 						e.preventDefault();
-						document.cookie = 'Steam_Language=' + settings.showlanguagewarninglanguage.toLowerCase() + ';path=/;';
-						window.location.replace(window.location.href.replace(/[?&]l=[a-z]+/, ""));
+
+						runInPageContext("function(){ ChangeLanguage( '" + settings.showlanguagewarninglanguage.toLowerCase() + "' ) }");
 					});
 				});
 			}
