@@ -8659,8 +8659,19 @@ function skip_got_steam() {
 	storage.get(function(settings) {
 		if (settings.skip_got_steam === undefined) { settings.skip_got_steam = false; storage.set({'skip_got_steam': settings.skip_got_steam}); }
 		if (settings.skip_got_steam) {
-			$("a[href^='javascript:ShowGotSteamModal']").each(function() {
-				$(this).attr("href",$(this).attr("href").split("'")[1]);
+			$("a[href^='javascript:ShowGotSteamModal']").prop("href", function(){
+				return this.href.split("'")[1];
+			});
+		}
+	});
+}
+
+function disable_link_filter() {
+	storage.get(function(settings) {
+		if (settings.disablelinkfilter === undefined) { settings.disablelinkfilter = false; storage.set({'disable_link_filter': settings.disablelinkfilter}); }
+		if (settings.disablelinkfilter) {
+			$("a.bb_link[href*='/linkfilter/']").prop("href", function(){
+				return this.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
 			});
 		}
 	});
@@ -8678,6 +8689,7 @@ $(document).ready(function(){
 			remove_about_menu();
 			add_header_links();
 			process_early_access();
+			disable_link_filter();
 			if (is_signed_in) {
 				replace_account_name();
 				launch_random_button();
