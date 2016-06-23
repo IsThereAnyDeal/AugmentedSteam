@@ -7387,7 +7387,12 @@ function total_size() {
 
 	mbt = (mbt / 1024);
 	var total = (gbt + mbt).toFixed(2);
-	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings.total_size + ":</p><p class='clientConnMachineText'>" +total + " GiB</p></div.");
+	$(".clientConnChangingText").before(`
+		<div style="float:right;">
+			<p class="clientConnHeaderText">` + localized_strings.total_size + `</p>
+			<p class="clientConnMachineText">` + total + ` GiB</p>
+		</div>
+	`);
 }
 
 // Display total time played for all games
@@ -7403,7 +7408,12 @@ function total_time() {
 		}
 	});
 	var total = time.toFixed(1);
-	$(".clientConnChangingText").before("<div style='float:right;'><p class='clientConnHeaderText'>" + localized_strings.total_time + ":</p><p class='clientConnMachineText'>" +total + " Hours</p></div>");
+	$(".clientConnChangingText").before(`
+		<div style="float: right; margin-left: 10px;">
+			<p class="clientConnHeaderText">` + localized_strings.total_time + `:</p>
+			<p class="clientConnMachineText">` + localized_strings.hours_short.replace("__hours__", total) + `</p>
+		</div>
+	`);
 }
 
 function add_gamelist_sort() {
@@ -7473,6 +7483,8 @@ function add_gamelist_filter() {
 			$('.gameListRowItem').find(".color_uninstalled").parent().parent().css("display", "none");
 			$('.gameListRowItem').find(".color_disabled").parent().parent().css("display", "none");
 			$("#es_gl_installed_input").prop("checked", true);
+			// Triggers the loading of out-of-view app images
+			window.dispatchEvent(new Event("resize"));
 		});
 	}
 }
