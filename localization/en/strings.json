@@ -259,7 +259,10 @@
         "main_e": "Main Story and Extras",
         "compl": "Completionist",
         "submit": "Submit Your Time",
-        "main": "Main Story"
+        "main": "Main Story",
+        "no_data": "No data found",
+        "help": "Click here to help",
+        "wrong": "Wrong game?"
     },
     "library": {
         "in_library": "In Library",
