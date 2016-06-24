@@ -409,10 +409,11 @@ function currency_symbol_from_string (string_with_symbol) {
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
+
 var currencyConversion = (function() {
 	var deferred;
 	var rates;
-	
+
 	function load(currency) {
 		if (deferred) return deferred.promise();
 		deferred = new $.Deferred();
@@ -436,6 +437,7 @@ var currencyConversion = (function() {
 		}
 		return deferred.promise();
 	}
+
 	function convert(amount, currency_from, currency_to) {
 		if (rates) {
 			if (rates[currency_to]) return amount / rates[currency_to][currency_from];
@@ -521,7 +523,7 @@ function get_http(url, callback, settings) {
 	});
 	jqxhr.done(callback);
 	jqxhr.fail(function() {
-			$("#es_progress").val(100).addClass("error").attr({"title":localized_strings.ready.errormsg, "max":1});
+		$("#es_progress").val(100).addClass("error").attr({"title":localized_strings.ready.errormsg, "max":1});
 	});
 	return jqxhr;
 }
@@ -545,6 +547,7 @@ var storePageData = (function() {
 		}
 		return deferred.promise();
 	}
+
 	function get(api, callback) {
 		if (api && callback) deferred.done(function() {
 			if (data[api]) callback(data[api]);
@@ -560,6 +563,7 @@ var storePageData = (function() {
 		};
 		localStorage.setItem("storePageData_" + appid, JSON.stringify(cached));
 	}
+
 	function cache_get(appid) {
 		var cached = $.parseJSON(localStorage.getItem("storePageData_" + appid));
 		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
@@ -570,6 +574,7 @@ var storePageData = (function() {
 		get: get
 	}
 })();
+
 var profileData = (function() {
 	var deferred = new $.Deferred();
 	var data;
@@ -594,6 +599,7 @@ var profileData = (function() {
 
 		return deferred.promise();
 	}
+
 	function get(api, callback) {
 		if (api && callback) deferred.done(function() {
 			if (data[api]) callback(data[api]);
@@ -609,10 +615,12 @@ var profileData = (function() {
 		};
 		localStorage.setItem("profileData_" + steamid, JSON.stringify(cached));
 	}
+
 	function cache_get(steamid) {
 		var cached = $.parseJSON(localStorage.getItem("profileData_" + steamid));
 		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
 	}
+
 	function clearOwn() {
 		localStorage.removeItem("profileData_" + is_signed_in);
 	}
@@ -644,12 +652,21 @@ function get_appid_wishlist(t) {
 	else return null;
 }
 
+var highlight_defaults = {
+	"owned": "#5c7836",
+	"wishlist": "#1c3788",
+	"coupon": "#a26426",
+	"inv_gift": "#800040",
+	"inv_guestpass": "#008080",
+	"notinterested": "#4f4f4f"
+}
+
 // Color the tile for owned games
 function highlight_owned(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_owned");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned; storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
 
@@ -657,78 +674,81 @@ function highlight_owned(node) {
 		if (settings.hide_owned) hide_node(node);
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
-		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = "#5c7836";	storage.set({'tag_owned_color': settings.tag_owned_color}); }
-		if (settings.tag_owned) add_tag(node, localized_strings.tag.owned, settings.tag_owned_color);
+		if (settings.tag_owned_color === undefined) { settings.tag_owned_color = highlight_defaults.owned;	storage.set({'tag_owned_color': settings.tag_owned_color}); }
+		if (settings.tag_owned) add_tag(node, "owned");
 	});
 }
 
 // Color the tile for wishlist games
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_wishlist");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = "#d3deea";	storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
+		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = highlight_defaults.wishlist; storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; storage.set({'hide_wishlist': settings.hide_wishlist}); }
 
 		if (settings.highlight_wishlist) { $(node).addClass("es_highlighted_wishlist"); highlight_node(node, settings.highlight_wishlist_color); }
 		if (settings.hide_wishlist) hide_node(node);
 
-		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = "#d3deea";	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
+		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = highlight_defaults.wishlist;	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
 		if (settings.tag_wishlist === undefined) { settings.tag_wishlist = false; storage.set({'tag_wishlist': settings.tag_wishlist}); }
-		if (settings.tag_wishlist) add_tag(node, localized_strings.tag.wishlist, settings.tag_wishlist_color);
+		if (settings.tag_wishlist) add_tag(node, "wishlist");
 	});
 }
 
 function highlight_cart(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_cart");
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
-		if (settings.hide_cart) hide_node(node);
+		if (settings.hide_cart) {
+			node.classList.add("es_highlight");
+			node.classList.add("es_highlight_hidden");
+			hide_node(node);
+		}
 	});
 }
 
 // Color the tile for items with coupons
 function highlight_coupon(node, discount) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_coupon");
-		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = "#6b2269"; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
+		node.classList.add("es_highlight");
+		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = highlight_defaults.coupon; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
 		if (settings.highlight_coupon) { $(node).addClass("es_highlighted_coupon"); highlight_node(node, settings.highlight_coupon_color); }
 
-		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = "#6b2269"; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
+		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = highlight_defaults.coupon; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
-		if (settings.tag_coupon) add_tag(node, localized_strings.tag.coupon + " (" + discount + "%)", settings.tag_coupon_color);
+		if (settings.tag_coupon) add_tag(node, "coupon");
 	});
 }
 
 // Color the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_inv_gift");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = "#a75124"; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
+		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = highlight_defaults.inv_gift; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
 		if (settings.highlight_inv_gift) { $(node).addClass("es_highlighted_inv_gift"); highlight_node(node, settings.highlight_inv_gift_color); }
 
-		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = "#a75124"; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
+		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = highlight_defaults.inv_gift; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
-		if (settings.tag_inv_gift) add_tag(node, localized_strings.tag.inv_gift, settings.tag_inv_gift_color);
+		if (settings.tag_inv_gift) add_tag(node, "inv_gift");
 	});
 }
 
 // Color the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight_inv_guestpass");
+		node.classList.add("es_highlight");
 
-		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = "#a75124"; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
+		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = highlight_defaults.inv_guestpass; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
 		if (settings.highlight_inv_guestpass) { $(node).addClass("es_highlighted_inv_guestpass"); highlight_node(node, settings.highlight_inv_guestpass_color); }
 
-		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = "#a75124"; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
+		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = highlight_defaults.inv_guestpass; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
-		if (settings.tag_inv_guestpass) add_tag(node, localized_strings.tag.inv_guestpass, settings.tag_inv_guestpass_color);
+		if (settings.tag_inv_guestpass) add_tag(node, "inv_guestpass");
 	});
 }
 
@@ -736,7 +756,7 @@ function highlight_nondiscounts(node) {
 	storage.get(function(settings) {
 		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
 		if (settings.hide_notdiscounted) {
-			$(node).css("display", "none");
+			$(node).hide();
 		}
 	});
 }
@@ -745,24 +765,30 @@ function highlight_notinterested(node) {
 	$.when.apply($, [dynamicstore_promise]).done(function(data) {
 		storage.get(function(settings) {
 			var appid = parseInt(get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id));
-			if ($.inArray(appid, data.rgIgnoredApps) != -1) {
-				node.classList.add("es_highlight_notinterested");
+			if (appid && $.inArray(appid, data.rgIgnoredApps) != -1) {
+				if ($(node).hasClass("home_area_spotlight")) {
+					node = $(node).find(".spotlight_content")[0];
+				}
+
+				node.classList.add("es_highlight");
 
 				// Highlight games marked not interested
-				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = "#e02b3c"; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
+				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = highlight_defaults.notinterested; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
 				if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
-				if (settings.highlight_notinterested) { $(node).addClass("es_highlighted_notinterested"); highlight_node(node, settings.highlight_notinterested_color); }
+				if (settings.highlight_notinterested) {
+					$(node).addClass("es_highlighted_notinterested");
+					highlight_node(node, settings.highlight_notinterested_color);
+				}
 
 				// Tag games marked not interested
-				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = "#e02b3c"; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
+				if (settings.tag_notinterested_color === undefined) { settings.tag_notinterested_color = highlight_defaults.notinterested; storage.set({'tag_notinterested_color': settings.tag_notinterested_color}); }
 				if (settings.tag_notinterested === undefined) { settings.tag_notinterested = true; storage.set({'tag_notinterested': settings.tag_notinterested}); }
-				if (settings.tag_notinterested) add_tag(node, localized_strings.tag.notinterested, settings.tag_notinterested_color);
+				if (settings.tag_notinterested) add_tag(node, "notinterested");
 			
 				// Hide not interested search results
 				if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
-			
 				if ($(node).hasClass("search_result_row") && settings.hide_notinterested === true) {
-					$(node).css("display", "none");
+					$(node).hide();
 				}
 			}
 		});
@@ -808,12 +834,10 @@ function highlight_node(node, color) {
 			highlight_css_loaded = true;
 
 			var hlCss = "",
-				hlColor = "",
 				hlNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
 			
-			$(hlNames).each(function (id, name) {
-				hlColor = hexToRgb(settings["highlight_" + name + "_color"]);
-				hlCss += '.es_highlighted_' + name + ' { background: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(' + hlColor.r + ', ' + hlColor.g + ', ' + hlColor.b + ', 0.8) 100%) !important; }\n';
+			$(hlNames).each(function (i, name) {
+				hlCss += '.es_highlighted_' + name + ' { background: ' + settings["highlight_" + name + "_color"] + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
 			});
 
 			$("head").append('<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
@@ -829,12 +853,12 @@ function highlight_node(node, color) {
 			$node = $(node).find(".large_cap_content");
 		}
 
-		// App and community hub page headers
-		if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
+		// App and community hub page headers // won't work
+		/*if (node.classList.contains("apphub_HeaderTop") || node.classList.contains("apphub_HeaderStandardTop")) {
 			$node = $(node).find(".apphub_AppName");
 			$node.css("color", color);
 			return;
-		}
+		}*/
 
 		// Blotter activity
 		if ($node.parent().parent()[0]) {
@@ -846,10 +870,6 @@ function highlight_node(node, color) {
 
 		$(node).removeClass("ds_flagged").find(".ds_flag").remove();
 		$(node).find(".ds_flagged").removeClass("ds_flagged");
-
-		// Set text colour to not conflict with highlight
-		if (node.classList.contains("tab_item")) $node.find("div").css("color", "lightgrey");
-		if (node.classList.contains("search_result_row")) $node.find(".search_name").css("color", "lightgrey");
 	});
 }
 
@@ -862,7 +882,7 @@ function hide_node(node) {
 
 		if (settings.hide_owned) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule") || node.classList.contains("browse_tag_game")) {
-				hide_the_node(node);
+				$(node).hide();
 				if ($(document).height() <= $(window).height()) {
 					load_search_results();
 				}
@@ -872,299 +892,184 @@ function hide_node(node) {
 		// Hide DLC for unowned items
 		if (settings.hide_dlcunownedgames) {
 			if (node.classList.contains("search_result_row") || node.classList.contains("game_area_dlc_row") || node.classList.contains("item") || node.classList.contains("cluster_capsule")) {
-				hide_the_node(node);
+				$(node).hide();
 			}
 		}
 	});
 }
 
-function hide_the_node(node) {
-	$(node).css("display", "none");
-}
+var tag_css_loaded = false;
 
-function add_tag (node, string, color) {
-	/* To add coloured tags to the end of app names instead of colour
-	highlighting; this allows an to be "highlighted" multiple times; e.g.
-	inventory and owned. */
-	node.tags = node.tags || [];
-	var tagItem = [string, color];
-	var already_tagged = false;
+function add_tag(node, tag) {
+	storage.get(function(settings) {
+		if (settings.tag_short === undefined) { settings.tag_short = true; storage.set({'tag_short': settings.tag_short}); }
 
-	// Check if it isn't already tagged
-	for (var i = 0; i < node.tags.length; i++) {
-		if (node.tags[i][0] === tagItem[0]) already_tagged = true;
-	}
-	if (!already_tagged) {
-		node.tags.push(tagItem);
-		display_tags(node);
-	}
-}
-
-function display_tags(node) {
-	var remove_existing_tags = function remove_existing_tags(tag_root) {
-		if (tag_root.find(".tags").length > 0) {
-			tag_root.find(".tags").remove();
-		}
-	},
-	new_display_tag = function new_display_tag(text, color) {
-		var $tag = $("<span>" + tag[0] + "</span>");
-
-		$tag.css({
-			"backgroundColor": tag[1],
-			"color": "white",
-			"float": "right",
-			"padding": "2px",
-			"margin-right": "4px",
-			"margin-bottom": "4px",
-			"border": "1px solid #262627"
-		});
-
-		return $tag;
-	};
-
-	if (node.tags) {
-
-		// Make tags
-		$tags = $("<div class=\"tags\"></div>");
-		for (var i = 0; i < node.tags.length; i++) {
-			var tag = node.tags[i];
-			var $tag = new_display_tag(tag[0], tag[1]);
-			$tags.append($tag);
-		}
-
-		// Apply tags differently per type of node
-		var $tag_root;
-		if (node.classList.contains("tab_row")) {
-			$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
-			remove_existing_tags($tag_root);
-
-			$(node).find(".tab_discount").css("top","15px");
+		// Load the colors CSS for tags
+		if (!tag_css_loaded) {
+			tag_css_loaded = true;
 			
-			$tag_root.find("h4").after($tags);
-		}
-		else if (node.classList.contains("tab_item")) {			
-			remove_existing_tags($(node));
-			$tags.css({
-				"float": "left",
-				"height": "10px"
-			});
-			$(node).find(".tab_item_name").after($tags);
-		}
-		else if (node.classList.contains("search_result_row")) {
-			$tag_root = $(node).find(".search_name");
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"display": "inline-block",
-				"vertical-align": "middle",
-				"font-size": "small"
+			var tagCss = "";
+			tagNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
+		
+			$(tagNames).each(function (i, name) {
+				tagCss += '.es_tag_' + name + ' { background-color: ' + settings["tag_" + name + "_color"] + ' }\n';
 			});
 
-			$tag_root.find("p").prepend($tags);
-
-			// Remove margin-bottom, border, and tweak padding on carousel lists
-			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css({
-					"margin-bottom": "0",
-					"border": "0",
-					"padding": "3px"
-				});
-			});
+			$("head").append('<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
 		}
-		else if (node.classList.contains("dailydeal")) {
-			$tag_root = $(node).parent();
-			remove_existing_tags($tag_root);
 
-			$tag_root.find(".game_purchase_action").before($tags);
-			$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
-		}
-		else if (node.classList.contains("small_cap")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
+		var $tags = $(node).find(".es_tags");
 
-			// small_cap will have extra height
-			$tags.css({
-				"display": "inline-block",
-				"margin-top": "2px",
-				"vertical-align": "middle"
-			});
-			$tag_root.find("h4").prepend($tags);
-		}
-		else if (node.classList.contains("browse_tag_game")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-			$tags.css("display", "table");
-			$tags.css("margin-left", "8px");
-			$tag_root.find(".browse_tag_game_price").after($tags);
-		}
-		else if (node.classList.contains("game_area_dlc_row")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
+		// Add the tags container if needed
+		if (!$tags.length) {
+			$tags = $('<div class="es_tags' + (settings.tag_short ? ' es_tags_short' : '') + '" />');
 
-			var clone = $(node).clone();
-			clone.css({
-				visibility:'hidden',
-				width : '',
-				height: '',
-				maxWidth : '',
-				maxHeight: ''
-			});
-			$('body').append(clone);
-			var width = $(clone).find(".game_area_dlc_price").width();
-			clone.remove();
-			
-			$tags.css("margin-right", width + 3);
-			$tag_root.find(".game_area_dlc_name").before($tags);
+			var $tag_root;
+			if (node.classList.contains("tab_row")) { // can't find it
+				$tag_root = $(node).find(".tab_desc").removeClass("with_discount");
 
-			// Remove margin-bottom on DLC lists to prevent horrible pyramidding
-			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css("margin-bottom", "0");
-				$(obj).css("padding", "0 2px");
-			});
-		}
-		else if (node.classList.contains("wishlistRow")) {
-			$tag_root = $(node).find(".wishlistRowItem");
-			remove_existing_tags($tag_root);			
-			$tag_root.find(".wishlist_added_on").after($tags);
-		}
-		else if (node.classList.contains("match")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
+				$(node).find(".tab_discount").css("top","15px");
+				
+				$tag_root.find("h4").after($tags);
+			}
+			else if (node.classList.contains("home_smallcap")) { // done
+				$(node).find(".home_smallcap_title").prepend($tags);
+			}
+			else if (node.classList.contains("curated_app_item")) { // done
+				$(node).find(".home_headerv5_title").prepend($tags);
+			}
+			else if (node.classList.contains("tab_item")) { // done
+				$(node).find(".tab_item_name").after($tags);
+			}
+			else if (node.classList.contains("search_result_row")) { // done
+				$(node).find("p").prepend($tags);
+			}
+			else if (node.classList.contains("dailydeal")) { // can't find it
+				$tag_root = $(node).parent();
 
-			$tags.css({
-				"float": "right",
-				"width": "130px",
-				"margin-top": "30px"
-			});	
-
-			$tag_root.find(".match_price").after($tags);
-		}
-		else if (node.classList.contains("cluster_capsule")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"display": "inline-block",
-				"vertical-align": "middle",
-				"font-size": "small"
-			});	
-
-			$tags.each(function() {
-				$(this).children().css("float", "none");
-			});
-
-			$tag_root.find(".main_cap_platform_area").append($tags);
-
-			// Remove margin-bottom, border, and tweak padding on carousel lists
-			$.each($tag_root.find(".tags span"), function (i, obj) {
-				$(obj).css({
-					"margin-bottom": "0",
-					"border": "0",
-					"padding": "3px"		
-				});	
-			});
-		}
-		else if (node.classList.contains("recommendation_highlight")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-			
-			if ($(".game_purchase_action").length > 0) {
-				$tags.css("float", "left");
 				$tag_root.find(".game_purchase_action").before($tags);
-				$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
-			} else {
+				$tag_root.find(".game_purchase_action").before($('<div style="clear: right;"></div>'));
+			}
+			else if (node.classList.contains("small_cap")) { // done
+				$(node).find("h4").prepend($tags);
+			}
+			else if (node.classList.contains("browse_tag_game")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("display", "table");
+				$tags.css("margin-left", "8px");
+				$tag_root.find(".browse_tag_game_price").after($tags);
+			}
+			else if (node.classList.contains("game_area_dlc_row")) { // done
+				$(node).find(".game_area_dlc_price").prepend($tags);
+			}
+			else if (node.classList.contains("wishlistRow")) { // done
+				$(node).find(".wishlist_added_on").after($tags);
+			}
+			else if (node.classList.contains("match")) { // done
+				$(node).find(".match_price").after($tags);
+			}
+			else if (node.classList.contains("cluster_capsule")) { // done
+				$(node).find(".main_cap_platform_area").append($tags);
+			}
+			else if (node.classList.contains("recommendation_highlight")) { // can't find it
+				$tag_root = $(node);
+				
+				if ($(".game_purchase_action").length > 0) {
+					$tags.css("float", "left");
+					$tag_root.find(".game_purchase_action").before($tags);
+					$tag_root.find(".game_purchase_action").before($("<div style=\"clear: right;\"></div>"));
+				} else {
+					$tags.css("float", "right");
+					$tag_root.find(".price").parent().before($tags);
+				}	
+			}
+			else if (node.classList.contains("similar_grid_item")) { // can't find it
+				$tag_root = $(node);
+
 				$tags.css("float", "right");
-				$tag_root.find(".price").parent().before($tags);
-			}	
+				$tag_root.find(".similar_grid_price").find(".price").append($tags);
+			}
+			else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("float", "left");
+
+				$tag_root.find(".buttons").before($tags);
+			}
+			else if (node.classList.contains("friendplaytime_game")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("float", "left");
+
+				$tag_root.find(".friendplaytime_buttons").before($tags);
+			}
+			/*else if (node.classList.contains("inline_tags")) { // can't find it
+				$tag_root = $(node);
+
+				$tags.css("display", "inline-block");
+				$tags.css("margin-left", "3px");
+
+				$tags.children().remove();
+				// Display inline as text only
+				$.each(node.tags, function (i, obj) {
+					var $obj = $("<span>" + obj[0] + "</span>");
+					// $obj.css("border-bottom", "2px solid " + obj[1]);
+					// $obj.css("background-color", obj[1]);
+					// $obj.css("color", "white");
+
+					if (i === 0) $tags.append(" (");
+					$tags.append($obj);
+					if (i === node.tags.length - 1) {
+						$tags.append(")");
+					}
+					else {
+						$tags.append(", ");
+					}
+				});
+				$tag_root.after($tags);
+			}
+			else if (node.classList.contains("apphub_HeaderStandardTop")) { // won't work
+				$tag_root = $(node);
+				// Height to accomodate tags
+				$tag_root.css("height", "auto");
+
+				$tags.css({
+					"float": "left",
+					"margin-top": "4px",
+					"margin-left": "3px"
+				});
+
+				$tag_root.find(".apphub_AppName").after($tags);
+				$tag_root.find(".apphub_AppName").after($('<div style="clear: right;"></div>'));
+			}
+			else if (node.classList.contains("apphub_HeaderTop")) { // won't work
+				$tag_root = $(node);
+
+				$tag_root.find(".apphub_AppName").css("width", "0px")
+
+				$tags.css({
+					"float": "left",
+					"margin-top": "4px",
+					"margin-left": "3px"
+				});
+
+				$tag_root.find(".apphub_OtherSiteInfo").append($tags);
+				$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
+
+				var max_width = 948-($(".apphub_OtherSiteInfo").width() + 69);
+
+				$tag_root.find(".apphub_AppName").css("max-width", max_width+"px").attr("title", $tag_root.find(".apphub_AppName").text());
+				$tag_root.find(".apphub_AppName").css("width", "auto")
+				$tag_root.find(".apphub_AppName").css("overflow", "hidden");
+			}*/
+		} 
+
+		// Add the tag
+		if (!$tags.find(".es_tag_" + tag).length) {
+			$tags.append('<span class="es_tag_' + tag + '">' + localized_strings.tag[tag] + '</span>');
 		}
-		else if (node.classList.contains("similar_grid_item")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "right");
-			$tag_root.find(".similar_grid_price").find(".price").append($tags);
-		}
-		else if (node.classList.contains("recommendation_carousel_item")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "left");
-
-			$tag_root.find(".buttons").before($tags);
-		}
-		else if (node.classList.contains("friendplaytime_game")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root);
-
-			$tags.css("float", "left");
-
-			$tag_root.find(".friendplaytime_buttons").before($tags);
-		}
-		else if (node.classList.contains("inline_tags")) {
-			$tag_root = $(node);
-			remove_existing_tags($tag_root.parent());
-
-			$tags.css("display", "inline-block");
-			$tags.css("margin-left", "4px");
-
-			$tags.children().remove();
-			// Display inline as text only
-			$.each(node.tags, function (i, obj) {
-				var $obj = $("<span>" + obj[0] + "</span>");
-				// $obj.css("border-bottom", "2px solid " + obj[1]);
-				// $obj.css("background-color", obj[1]);
-				// $obj.css("color", "white");
-
-				if (i === 0) $tags.append(" (");
-				$tags.append($obj);
-				if (i === node.tags.length - 1) {
-					$tags.append(")");
-				}
-				else {
-					$tags.append(", ");
-				}
-			});
-			$tag_root.after($tags);
-		}
-		else if (node.classList.contains("apphub_HeaderStandardTop")) {
-			$tag_root = $(node);
-			// Height to accomodate tags
-			$tag_root.css("height", "auto");
-
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"float": "left",
-				"margin-top": "4px",
-				"margin-left": "4px"
-			});
-
-			$tag_root.find(".apphub_AppName").after($tags);
-			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
-		}
-		else if (node.classList.contains("apphub_HeaderTop")) {
-			$tag_root = $(node);
-
-			$tag_root.find(".apphub_AppName").css("width", "0px")
-
-			remove_existing_tags($tag_root);
-
-			$tags.css({
-				"float": "left",
-				"margin-top": "4px",
-				"margin-left": "4px"
-			});
-
-			$tag_root.find(".apphub_OtherSiteInfo").append($tags);
-			$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
-
-			var max_width = 948-($(".apphub_OtherSiteInfo").width() + 69);
-
-			$tag_root.find(".apphub_AppName").css("max-width", max_width+"px").attr("title", $tag_root.find(".apphub_AppName").text());
-			$tag_root.find(".apphub_AppName").css("width", "auto")
-			$tag_root.find(".apphub_AppName").css("overflow", "hidden");
-		}
-	}
+	});
 }
 
 function load_inventory() {
@@ -1931,9 +1836,12 @@ function pack_split(node, ways) {
 	var price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
 	price = (Math.ceil(price * 100) / 100);
 	price_text = formatCurrency(price);
-	$(node).find(".btn_addtocart").last().before(
-		"<div class='es_each_box'><div class='es_each_price'>" + price_text + "</div><div class='es_each'>"+localized_strings.each+"</div></div>"
-	);
+	$(node).find(".btn_addtocart").last().parent().prepend(`
+		<div class="es_each_box">
+			<div class="es_each_price">` + price_text + `</div>
+			<div class="es_each">` + localized_strings.each + `</div>
+		</div>
+	`);
 }
 
 function add_pack_breakdown() {
@@ -2970,7 +2878,7 @@ function wishlist_dynamic_data() {
 					var owned = ownedapps.indexOf(appid);
 					var wishlisted = wishlistapps.indexOf(appid);
 
-					if(owned == -1 && wishlisted == -1 && settings.store_sessionid) {
+					if (owned == -1 && wishlisted == -1 && settings.store_sessionid) {
 						$(node).parent().parent().siblings(".wishlist_added_on").append('(<a class="es_wishlist_add" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>)');
 						$("#es_wishlist_" + appid).click(function() {
 							$.ajax({
@@ -3349,7 +3257,7 @@ function add_popular_tab() {
 						var currently = $(this).find(".currentServers:first").text();
 						var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, \"global_hover\", {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, \"global_hover\" )' id='tab_row_popular_" + appid + "'>";
 						html += "<a class='tab_item_overlay' href='//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='//store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-						html += "<img class='tab_item_cap' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+						html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
 						html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'>" + currently + " " + localized_strings.charts.playing_now + "</div><br clear='all'></div>";
 
 						html += "</div>";
@@ -3383,7 +3291,7 @@ function add_allreleases_tab() {
 				var price = $(this).find(".search_price").html();
 				var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, \"global_hover\", {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, \"global_hover\" )' id='tab_row_popular_" + appid + "'>";
 				html += "<a class='tab_item_overlay' href='//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='//store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-				html += "<img class='tab_item_cap' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg'>";
+				html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
 				// price info
 				if (discount_pct) {
 					html += "<div class='discount_block tab_item_discount'><div class='discount_pct'>" + discount_pct + "</div><div class='discount_prices'>" + price + "</div></div>";
@@ -3797,12 +3705,12 @@ function hide_spam_comments() {
 					comment_num(bad_comment_num, frame);
 				}
 			}
-			var observer = new WebKitMutationObserver(function(mutations) {
+			var observer = new MutationObserver(function(mutations) {
 				check_hide_comments();
 			});
 			if($("#AppHubContent").html()) {
-				var modal_content_observer = new WebKitMutationObserver(function(mutations) {
-					var frame_comment_observer = new WebKitMutationObserver(function(mutations) {
+				var modal_content_observer = new MutationObserver(function(mutations) {
+					var frame_comment_observer = new MutationObserver(function(mutations) {
 						frame_check_hide_comments();
 						for (var i=0; i<frames.length; i++) {
 							var frame = frames[i].document;
@@ -3894,7 +3802,7 @@ function add_background_preview_link() {
 }
 
 function hide_activity_spam_comments() {
-	var blotter_content_observer = new WebKitMutationObserver(function(mutations) {
+	var blotter_content_observer = new MutationObserver(function(mutations) {
 		hide_spam_comments();
 	});
 	blotter_content_observer.observe($("#blotter_content")[0], {childList:true, subtree:true});
@@ -4595,47 +4503,102 @@ function account_total_spent() {
 	});
 }
 
-function inventory_market_prepare() {
-		$("#es_market_helper").remove();
-		var es_market_helper = document.createElement("script");
-		es_market_helper.type = "text/javascript";
-		es_market_helper.id = "es_market_helper";
-		es_market_helper.textContent = 'jQuery("#inventories").on("click", ".itemHolder, .newitem", function() { if (!g_ActiveInventory.selectedItem.market_hash_name) {g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.name} window.postMessage({ type: "es_sendmessage", information: [iActiveSelectView,g_ActiveInventory.selectedItem.marketable,g_ActiveInventory.appid,g_ActiveInventory.selectedItem.market_hash_name,g_ActiveInventory.selectedItem.market_fee_app,g_ActiveInventory.selectedItem.type,g_ActiveInventory.selectedItem.id,g_sessionID,g_ActiveInventory.selectedItem.contextid,g_rgWalletInfo.wallet_currency] }, "*"); });';
-		document.documentElement.appendChild(es_market_helper);
+// Source: https://greasyfork.org/en/scripts/12228-setmutationhandler/code
+function setMutationHandler(baseNode, selector, cb, options) {
+	var ob = new MutationObserver(function(mutations) {
+		for (var i=0, ml=mutations.length, m; (i<ml) && (m=mutations[i]); i++)
+			switch (m.type) {
+				case 'childList':
+					if (m.addedNodes[0] && m.addedNodes[0].nodeType == 3) { // Node.TEXT_NODE
+						if (m.target.matches(selector) && !cb.call(ob, [m.target], m))
+							return;
+						//continue; // commented as it seems to break the code...
+					}
+					for (var j=0, nodes=m.addedNodes, nl=nodes.length, n; (j<nl) && (n=nodes[j]); j++)
+						if (n.nodeType == 1) 
+							if ((n = n.matches(selector) ? [n] : n.querySelectorAll(selector)) && n.length)
+								if (!cb.call(ob, Array.prototype.slice.call(n), m))
+									return;
+					break;
+				case 'attributes':
+					if (m.target.matches(selector) && !cb.call(ob, [m.target], m))
+						return;
+					break;
+				case 'characterData':
+					if (m.target.parentNode && m.target.parentNode.matches(selector) && !cb.call(ob, [m.target.parentNode], m))
+						return;
+					break;
+			}
+	});
+	ob.observe(baseNode, options || {subtree:true, childList:true}); 
+	return ob;
+}
 
-		window.addEventListener("message", function(event) {
-			if (event.source != window)	return;
-			if (event.data.type && (event.data.type == "es_sendmessage")) { inventory_market_helper(event.data.information); }
-		}, false);
+function inventory_market_prepare() {
+	runInPageContext(`function(){
+		$J(document).on("click", ".inventory_item_link, .newitem", function(){
+			if (!g_ActiveInventory.selectedItem.market_hash_name) {
+				g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.name
+			}
+			window.postMessage({
+				type: "es_sendmessage",
+				information: [
+					iActiveSelectView, 
+					g_ActiveInventory.selectedItem.marketable,
+					g_ActiveInventory.appid,
+					g_ActiveInventory.selectedItem.market_hash_name,
+					g_ActiveInventory.selectedItem.market_fee_app,
+					g_ActiveInventory.selectedItem.type,
+					g_ActiveInventory.selectedItem.id,
+					g_sessionID,
+					g_ActiveInventory.selectedItem.contextid,
+					g_rgWalletInfo.wallet_currency,
+					g_ActiveInventory.owner.strSteamId
+				]
+			}, "*");
+		});
+	}`);
+
+	window.addEventListener("message", function(event) {
+		if (event.source !== window) return;
+		if (event.data.type && (event.data.type === "es_sendmessage")) { inventory_market_helper(event.data.information); }
+	}, false);
 }
 
 function inventory_market_helper(response) {
-	var item = response[0];
-	var marketable = response[1];
-	var global_id = response[2];
-	var hash_name = response[3];
-	var appid = response[4];
-	var assetID = response[6];
-	var sessionID = response[7];
-	var contextID = response[8];
-	var wallet_currency = response[9];
-	var gift = false;
-	if (response[5] && response[5].match(/Gift/)) gift = true;
-	var html;
+	var html = "",
+		item = response[0],
+		marketable = response[1],
+		global_id = response[2],
+		hash_name = response[3],
+		appid = response[4],
+		assetID = response[6],
+		sessionID = response[7],
+		contextID = response[8];
+		wallet_currency = response[9],
+		owner_steamid = response[10],
+		is_gift = response[5] && /Gift/i.test(response[5]),
+		is_booster = hash_name && /Booster Pack/i.test(hash_name),
+		owns_inventory = (owner_steamid === is_signed_in);
 
 	var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
+	var $sideActs = $("#iteminfo" + item + "_item_actions");
+	var $sideMarketActs = $("#iteminfo" + item + "_item_market_actions");
+
+	// Workaround for preventing actions for the same item if clicked and active
+	$(".inventory_item_link_disabled").prop("class", "inventory_item_link");
+	$(thisItem + " .inventory_item_link").prop("class", "inventory_item_link_disabled");
 
 	// Set as background option
-	var sideActs = $("#iteminfo" + item + "_item_actions");
-	var link = $(sideActs).find("a").first();
-	// Make sure there isn't a button already and that the current item is a background image
-	if ($(".inventory_links").length && !$(sideActs).find(".es_set_background").length && /public\/images\/items/.test($(link).attr("href"))) {
-		$(link).after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">');
+	var $viewFullBtn = $sideActs.find("a").first();
+	if (owns_inventory && $(".inventory_links").length && !$sideActs.find(".es_set_background").length && /public\/images\/items/.test($viewFullBtn.attr("href"))) {
+		$viewFullBtn.after('<a class="es_set_background btn_small btn_darkblue_white_innerfade' + ($(thisItem).hasClass('es_isset_background') ? " btn_disabled" : "") + '"><span>' + localized_strings.set_as_background + '</span></a><img class="es_background_loading" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">');
 		
 		$(".es_set_background").on("click", function(e){
 			e.preventDefault();
 
 			var el = $(this);
+
 			// Do nothing if loading or already done
 			if (!$(".es_background_loading").is(":visible") && !$(el).hasClass("btn_disabled")) {
 				$(".es_background_loading").show();
@@ -4644,19 +4607,19 @@ function inventory_market_helper(response) {
 
 				get_http(profile_url + "/edit", function(txt){
 					// Make sure the background we are trying to set is not set already
-					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/),
+					var currentBg = txt.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/i),
 						currentBg = currentBg ? currentBg[1] : false;
 					if (currentBg !== assetID) {
 						var rHtml = $.parseHTML(txt);
 						$(rHtml).find("#profile_background").attr("value", assetID);
-						var $data = $(rHtml).find("#editForm").serializeArray();
+						var sData = $(rHtml).find("#editForm").serializeArray();
 						$.ajax({url: profile_url + "/edit",
 								type: "POST",
-								data: $data
+								data: sData,
+								xhrFields: {withCredentials: true}
 						}).done(function(txt){
-							var rHtml = $.parseHTML(txt);
 							// Check if it was truly a succesful change
-							if ($(rHtml).find(".saved_changes_msg")) {
+							if (/"saved_changes_msg"/i.test(txt)) {
 								$(el).addClass("btn_disabled");
 							}
 						}).complete(function(){
@@ -4666,187 +4629,247 @@ function inventory_market_helper(response) {
 						$(el).addClass("btn_disabled");
 						$(".es_background_loading").fadeOut("fast");
 					}
-				});
+				}, { xhrFields: {withCredentials: true} });
 			}
 		});
 	}
 
-	if (gift) {
+	// Show prices for gifts
+	if (is_gift) {
 		$("#es_item" + item).remove();
-		if ($("#iteminfo" + item + "_item_actions").find("a").length > 0) {
-			var gift_appid = get_appid($("#iteminfo" + item + "_item_actions").find("a")[0].href);
-			get_http("//store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
-				var data = JSON.parse(txt);
-				if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
-					var currency = data[gift_appid]["data"]["price_overview"]["currency"];
-					var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
-					var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
-					
-					$("#iteminfo" + item + "_item_actions").css("height", "50px");
-					if (discount > 0) {
-						var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
-						$("#iteminfo" + item + "_item_actions").append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
-					} else {
-						$("#iteminfo" + item + "_item_actions").append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
-					}	
-				}
-			});
-		}
-	} else {
-		if ($(".profile_small_header_name .whiteLink").attr("href").replace(/\/$/, "") !== $(".playerAvatar").find("a").attr("href").replace(/\/$/, "")) {
-			if ($('#es_item0').length == 0) { $("#iteminfo0_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item0></div>"); }
-			if ($('#es_item1').length == 0) { $("#iteminfo1_item_market_actions").after("<div class='item_market_actions es_item_action' id=es_item1></div>"); }
-			$('.es_item_action').html("");
-			
-			if (marketable == 0) { $('.es_item_action').remove(); return; }
-			$("#es_item" + item).html("<img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading + "</span>");
+		if ($sideActs.find("a").length > 0) {
+			var link = $sideActs.find("a")[0].href;
+			var gift_appid = get_appid(link); // || get_subid(link);
 
-			function inventory_market_helper_get_price(url) {
-				get_http(url, function (txt) {
-					data = JSON.parse(txt);
-					$("#es_item" + item).html("");
-					if (data.success) {
-						html = "<div><div style='height: 24px;'><a href='//steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings.view_in_market + "</a></div>";
-						html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + data.lowest_price;
-						if (data.volume) {
-							html += "<br>" + localized_strings.last_24.replace("__sold__", data.volume);
-						}
-
-						$("#es_item" + item).html(html);
-					} else {
-						$("#es_item" + item).remove();
+			// TODO: Add support for package(sub)
+			if (gift_appid) {
+				get_http("//store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
+					var data = JSON.parse(txt);
+					if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
+						var currency = data[gift_appid]["data"]["price_overview"]["currency"];
+						var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
+						var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
+						
+						$sideActs.css("height", "50px");
+						if (discount > 0) {
+							var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
+							$sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
+						} else {
+							$sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
+						}	
 					}
 				});
 			}
+		}
+	} else {
+		if (owns_inventory) {
+			// If is a booster pack add the average price of three cards
+			if (is_booster) {
+				var $sideMarketActsDiv = $sideMarketActs.find("div").last().css("margin-bottom", "8px"),
+					dataCardsPrice = $(thisItem).data("cards-price");
 
-			if (getValue("steam_currency_number")) {
-				inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + getValue("steam_currency_number") + "&appid=" + global_id + "&market_hash_name=" + hash_name);
-			} else {
-				var currency_number = currency_type_to_number(user_currency);
-				setValue("steam_currency_number", currency_number);
-				inventory_market_helper_get_price("//steamcommunity.com/market/priceoverview/?currency=" + currency_number + "&appid=" + global_id + "&market_hash_name=" + hash_name);
-			}
-		} else {
-			if (hash_name && hash_name.match(/Booster Pack/g)) {
-				setTimeout(function() {
-					var api_url = "//api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + user_currency.toLowerCase();
+				// Monitor for when the price and volume are added
+				setMutationHandler(document, ".item_market_actions div:last-child br:last-child", function(){
+					if (dataCardsPrice) {
+						$sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + dataCardsPrice + "<br>");
+					} else {
+						var api_url = "//api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + user_currency.toLowerCase();
 
-					get_http(api_url, function(price_data) {
-						var booster_price = parseFloat(price_data,10) * 3;
-						html = localized_strings.avg_price_3cards + ": " + formatCurrency(booster_price) + "<br>";
-						$("#iteminfo" + item + "_item_market_actions").find("div:last").css("margin-bottom", "8px");
-						$("#iteminfo" + item + "_item_market_actions").find("div:last").append(html);
-					});
-				}, 1000);
+						get_http(api_url, function(price_data) {
+							var booster_price = formatCurrency(parseFloat(price_data,10) * 3);
+
+							$(thisItem).data("cards-price", booster_price);
+							$sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + booster_price + "<br>");
+						});
+					}
+
+					this.disconnect();
+				});
 			}
+
 			storage.get(function(settings) {
+				// 1-Click turn into gems option
 				if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
 				if (settings.show1clickgoo) {
-					$("#es_quickgrind").parent().remove();
 					var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
-					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "'assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
+
+					$("#es_quickgrind").parent().remove();
+					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "' assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
+					
+					// TODO: Add prompt?
 					$("#es_quickgrind").on("click", function() {
-						runInPageContext("function() { \
-							var rgAJAXParams = {\
-								sessionid: g_sessionID,\
-								appid: " + $(this).attr("appid") + ",\
-								assetid: " + $(this).attr("assetID") + ",\
-								contextid: 6\
-							};\
-							var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';\
-							$J.get( strActionURL, rgAJAXParams ).done( function( data ) {\
-								strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';\
-								rgAJAXParams.goo_value_expected = data.goo_value;\
-								$J.post( strActionURL, rgAJAXParams).done( function( data ) {\
-									ReloadCommunityInventory();\
-								});\
-							});\
-						}");
+						runInPageContext(`function() {
+							var rgAJAXParams = {
+								sessionid: g_sessionID,
+								appid: " + $(this).attr("appid") + ",
+								assetid: " + $(this).attr("assetID") + ",
+								contextid: 6
+							};
+							var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
+							$J.get( strActionURL, rgAJAXParams ).done( function( data ) {
+								strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+								rgAJAXParams.goo_value_expected = data.goo_value;
+								$J.post( strActionURL, rgAJAXParams).done( function( data ) {
+									ReloadCommunityInventory();
+								});
+							});
+						}`);
 					});
 				}
+
+				// Quick sell options
 				if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
 				if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
 				if (settings.quickinv) {
-					if (marketable == 0 || contextID != 6 || global_id != 753 || $(".profile_small_header_name .whiteLink").attr("href").replace(/\/$/, "") !== $(".playerAvatar").find("a").attr("href").replace(/\/$/, "") || $("#iteminfo" + item + "_item_market_actions .item_market_action_button").css("display") == "none") { return; }
-					$("#iteminfo" + item + "_item_market_actions .item_market_action_button").hide();
-					$("#iteminfo" + item + "_item_market_actions").append("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $("#iteminfo" + item + "_item_market_actions .item_market_action_button_contents").text() + "</span></a>");
-					var url = $("#iteminfo" + item + "_item_market_actions a").attr("href");
+					if (marketable && contextID == 6 && global_id == 753) {
+						// Replace the "Sell" button
+						$("a.item_market_action_button").replaceWith("<a class='btn_small btn_green_white_innerfade es_market_btn' id='es_sell' href='javascript:SellCurrentSelection()'><span>" + $sideMarketActs.find(".item_market_action_button_contents").text() + "</span></a>");
 
-					// Workaround for preventing actions for the same item if clicked and active
-					$(".inventory_item_link_disabled").attr({class: "inventory_item_link"});
-					$(thisItem + " .inventory_item_link").attr({class: "inventory_item_link_disabled"});
+						if (!$(thisItem).hasClass("es-loading")) {
+							var url = $sideMarketActs.find("a")[0].href;
+							
+							$(thisItem).addClass("es-loading");
 
-					// Make sure there are no active requests for this item
-					if ( $(thisItem).hasClass("es-loading") ) { return; }
-
-					$(thisItem).addClass("es-loading");
-
-					get_http(url, function(txt) {
-						var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
-						if (market_id) {
-							market_id = market_id[1];
-
-							get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
-								var market = JSON.parse(market_txt);
-								var price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff);								
-								var price_low = market.highest_buy_order / 100;
-								if (price_high < 0.03) price_high = 0.03;
-								price_high = parseFloat(price_high).toFixed(2);
-								price_low = parseFloat(price_low).toFixed(2);
-
-								$(thisItem).removeClass("es-loading");
-
-								// Workaround for showing multiple instances of "Quick Sell" and "Instant Sell" buttons
-								$("#iteminfo" + item).find('#es_quicksell0, #es_instantsell0, #es_quicksell1, #es_instantsell1, .es-btn-spacer').remove();
+							// Check if price is stored in data
+							if ($(thisItem).hasClass("es-price-loaded")) {
+								var price_high = $(thisItem).data("price-high"),
+									price_low = $(thisItem).data("price-low");
 
 								// Add Quick Sell button
-								if (price_high > price_low) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+								if (price_high) {
+									$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
-
 								// Add Instant Sell button
-								if (market.highest_buy_order) {
-									$("#iteminfo" + item + "_item_market_actions").append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+								if (price_low) {
+									$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
 								}
 
-								$("#es_instantsell" + item + ", #es_quicksell" + item).click(function() {
-									$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).addClass("btn_disabled");
-									$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).css("pointer-events", "none");
-									$("#iteminfo" + item + "_item_market_actions div:first").html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.selling +"</div>");
-									var sell_price = $(this).attr("price") * 100;
-									runInPageContext("function() { var fee = CalculateFeeAmount (" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
-									
-									window.addEventListener("message", function(event) {
-										if (event.source != window)	return;
-										if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
-											sell_price = sell_price - event.data.information.fees;
-											$.ajax({
-												url:"https://steamcommunity.com/market/sellitem/",
-												type: "POST",
-												data: {
-													"sessionid": sessionID,
-													"appid": global_id,
-													"contextid": contextID,
-													"assetid": assetID,
-													"amount": 1,
-													"price": sell_price
-												},
-												crossDomain: true,
-												xhrFields: { withCredentials: true }
-											}).done(function(data){
-												$("#iteminfo" + item + "_item_market_actions").slideUp();
-												$("#item" + global_id + "_" + contextID + "_" + assetID).addClass("btn_disabled");
-												$("#item" + global_id + "_" + contextID + "_" + assetID).removeClass("activeInfo");
-												$("#item" + global_id + "_" + contextID + "_" + assetID).css("pointer-events", "none");
-											});
-										}
-									}, false);
+								$(thisItem).removeClass("es-loading");
+							} else {
+								get_http(url, function(txt) {
+									var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
+
+									if (market_id) {
+										market_id = market_id[1];
+
+										get_http("//steamcommunity.com/market/itemordershistogram?language=english&currency=" + wallet_currency + "&item_nameid=" + market_id, function(market_txt) {
+											var market = JSON.parse(market_txt),
+												price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff),
+												price_low = market.highest_buy_order / 100;
+											
+											if (price_high < 0.03) price_high = 0.03;
+											price_high = parseFloat(price_high).toFixed(2);
+											price_low = parseFloat(price_low).toFixed(2);
+
+											// Store prices as data
+											if (price_high > price_low) {
+												$(thisItem).data("price-high", price_high);
+											}
+											if (market.highest_buy_order) {
+												$(thisItem).data("price-low", price_low);
+											}
+
+											$(thisItem).addClass("es-price-loaded");
+											
+											// Fixes multiple buttons
+											if ( $(".inventory_item_link_disabled").parent().is($(thisItem)) ) {
+												// Add "Quick Sell" button
+												if (price_high > price_low) {
+													$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+												}
+												// Add "Instant Sell" button
+												if (market.highest_buy_order) {
+													$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+												}
+											}
+										}).complete(function(){
+											$(thisItem).removeClass("es-loading");
+										});
+									}
 								});
-							});
+							}
 						}
-					});
+
+						// Bind actions to "Quick Sell" and "Instant Sel" buttons
+						$(document).on("click", "#es_instantsell" + item + ", #es_quicksell" + item, function(e){
+							e.stopImmediatePropagation();
+
+							var sell_price = $(this).attr("price") * 100;
+
+							$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).addClass("btn_disabled").css("pointer-events", "none");
+
+							$sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
+
+							runInPageContext("function() { var fee = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
+							
+							window.addEventListener("message", function(event) {
+								if (event.source !== window) return;
+								if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
+									sell_price = sell_price - event.data.information.fees;
+									$.ajax({
+										url: "https://steamcommunity.com/market/sellitem/",
+										type: "POST",
+										data: {
+											"sessionid": sessionID,
+											"appid": global_id,
+											"contextid": contextID,
+											"assetid": assetID,
+											"amount": 1,
+											"price": sell_price
+										},
+										crossDomain: true,
+										xhrFields: { withCredentials: true }
+									}).complete(function(data){
+										$sideMarketActs.slideUp();
+										$(thisItem).toggleClass("btn_disabled activeInfo").css("pointer-events", "none");
+									});
+								}
+							}, false);
+						});
+					}
 				}
 			});
+		}
+		// If is not own inventory but the item is marketable then we need to build the HTML for showing info
+		else if (marketable) {
+			var dataLowest = $(thisItem).data("lowest-price"),
+				dataSold = $(thisItem).data("sold-volume");
+			
+			$sideMarketActs.show().html("<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
+
+			// "View in market" link
+			html += "<div style='height: 24px;'><a href='//steamcommunity.com/market/listings/" + global_id + "/" + hash_name + "'>" + localized_strings.view_in_market + "</a></div>";
+
+			// Check if price is stored in data
+			if (dataLowest) {
+				html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + dataLowest;
+				// Check if volume is stored in data
+				if (dataSold) {
+					html += "<br>" + localized_strings.last_24.replace("__sold__", dataSold);
+				}
+				html += "</div>";
+
+				$sideMarketActs.html(html);
+			} else {
+				get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + hash_name, function(txt) {
+					var data = JSON.parse(txt);
+
+					if (data.success) {
+						$(thisItem).data("lowest-price", data.lowest_price);
+						
+						html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + data.lowest_price;
+						if (data.volume) { 
+							$(thisItem).data("sold-volume", data.volume);
+							html += "<br>" + localized_strings.last_24.replace("__sold__", data.volume);
+						}
+						html += "</div>";
+					}
+
+					$sideMarketActs.html(html);
+				}).fail(function(){ // At least show the "View in Market" button
+					$sideMarketActs.html(html);
+				});
+			}
 		}
 	}
 }
@@ -5468,49 +5491,53 @@ function add_achievement_completion_bar(appid) {
 	});
 }
 
-var ea_promise, early_access;
+
+var ea_promise = (function() {
+	var deferred = new $.Deferred();
+	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
+	var last_updated = getValue("ea_appids_time") || expire_time - 1;
+	
+	if (last_updated < expire_time) {
+		// If no cache exists, pull the data from the website
+		get_http("//api.enhancedsteam.com/early_access/", function(txt) {
+			early_access_data = JSON.parse(txt);
+			setValue("ea_appids", early_access_data);
+			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
+			
+			deferred.resolve(early_access_data);	
+		}).fail(function(){
+			// If request fails return data from cache
+			if (getValue("ea_appids_time")) {
+				deferred.resolve(getValue("ea_appids"));
+			} else {
+				deferred.reject();
+			}
+		});
+	} else {
+		deferred.resolve(getValue("ea_appids"));
+	}
+
+	return deferred.promise();
+})();
 
 // Check for Early Access titles
 function check_early_access(node, selector_modifier) {
 	storage.get(function(settings) {
 		if (settings.show_early_access === undefined) { settings.show_early_access = true; storage.set({'show_early_access': settings.show_early_access}); }
 		if (settings.show_early_access) {
-			$(node).not(".es_ea_checked").each(function(index, value) {
-				var node = $(this);
-
+			$(node).not(".es_ea_checked").each(function(i, node) {
 				$(node).addClass("es_ea_checked");
-				if (!ea_promise) {
-					ea_promise = (function () {
-						var deferred = new $.Deferred();
-						if (window.location.protocol != "https:") {
-							// is the data cached?
-							var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-							var last_updated = getValue("ea_appids_time") || expire_time - 1;
-							if (last_updated < expire_time) {
-								// if no cache exists, pull the data from the website
-								get_http("//api.enhancedsteam.com/early_access/", function(txt) {
-									early_access = JSON.parse(txt);
-									setValue("ea_appids", txt);
-									setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
-									deferred.resolve();	
-								});
-							} else {
-								early_access = JSON.parse(getValue("ea_appids"));
-								deferred.resolve();
-							}
-						} else {
-							deferred.resolve();
-						}
-						return deferred.promise();
-					})();
-				}
-				ea_promise.done(function () {
-					if (early_access) {
+
+				ea_promise.done(function(early_access_data){
+					if (typeof early_access_data !== "object") {
+						early_access_data = JSON.parse(early_access_data);
+					}
+					if (early_access_data) {
 						var href = ($(node).find("a").attr("href") || $(node).attr("href")),
 							imgHeader = $(node).find("img" + (selector_modifier ? selector_modifier : "")),
 							appid = get_appid(href) || (imgHeader.length && /\/apps\/(\d+)\//.test(imgHeader[0].src) && imgHeader[0].src.match(/\/apps\/(\d+)\//)[1]);
 
-						if (appid && early_access["ea"].indexOf(appid) >= 0) {
+						if (appid && early_access_data["ea"].indexOf(appid) >= 0) {
 							var image_name = "img/overlay/early_access_banner_english.png";
 							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
 							$(node).addClass("es_early_access");
@@ -6680,7 +6707,7 @@ function hide_trademark_symbols(community) {
 					$(this).html(replace_symbols($(this).html()));
 				});
 			});
-			var observer = new WebKitMutationObserver(function(mutations) {
+			var observer = new MutationObserver(function(mutations) {
 					$.each(mutations,function(mutation_index, mutation){
 						if(mutations[mutation_index]["addedNodes"]){
 							$.each(mutations[mutation_index]["addedNodes"], function(node_index, node){
@@ -6727,7 +6754,6 @@ function bind_ajax_content_highlighting() {
 			for (var i = 0; i < mutation.addedNodes.length; i++) {
 				var node = mutation.addedNodes[i];
 				// Check the node is what we want and not some unrelated DOM change
-				//if (node.id == "search_result_container") add_cart_to_search();
 				if (node.classList && node.classList.contains("inventory_page")) {
 					add_inventory_gotopage();
 				}
@@ -6775,33 +6801,33 @@ function bind_ajax_content_highlighting() {
 function start_highlights_and_tags(){
 	// Batch all the document.ready appid lookups into one storefront call.
 	var selectors = [
-		"div.tab_row",				// Storefront rows
+		"div.tab_row",					// Storefront rows
 		"div.dailydeal_ctn",
-		"div.wishlistRow",			// Wishlist rows
+		"div.wishlistRow",				// Wishlist rows
 		"a.game_area_dlc_row",			// DLC on app pages
-		"a.small_cap",				// Featured storefront items and "recommended" section on app pages
+		"a.small_cap",					// Featured storefront items and "recommended" section on app pages
 		"a.home_smallcap",
 		"a.search_result_row",			// Search result rows
-		"a.match",				// Search suggestions rows
+		"a.match",						// Search suggestions rows
 		"a.cluster_capsule",			// Carousel items
-		"div.recommendation_highlight",		// Recommendation pages
+		"div.recommendation_highlight",	// Recommendation pages
 		"div.recommendation_carousel_item",	// Recommendation pages
 		"div.friendplaytime_game",		// Recommendation pages
-		"div.dlc_page_purchase_dlc",		// DLC page rows
-		"div.sale_page_purchase_item",		// Sale pages
-		"div.item",				// Sale pages / featured pages
+		"div.dlc_page_purchase_dlc",	// DLC page rows
+		"div.sale_page_purchase_item",	// Sale pages
+		"div.item",						// Sale pages / featured pages
 		"div.home_area_spotlight",		// Midweek and weekend deals
 		"div.browse_tag_game",			// Tagged games
-		"div.similar_grid_item",			// Items on the "Similarly tagged" pages
-		"div.tab_item",			// Items on new homepage
-		"div.special",			// new homepage specials
-		"div.curated_app_item",	// curated app items!
-		"a.summersale_dailydeal" // Summer sale daily deal
+		"div.similar_grid_item",		// Items on the "Similarly tagged" pages
+		"div.tab_item",					// Items on new homepage
+		"div.special",					// new homepage specials
+		"div.curated_app_item",			// curated app items!
+		"a.summersale_dailydeal"		// Summer sale daily deal
 	];
 		
 	setTimeout(function() {
 		$.each(selectors, function (i, selector) {
-			$.each($(selector), function(j, node){
+			$.each($(selector).not(".es_highlight"), function(j, node){
 				var node_to_highlight = node;
 				if ($(node).hasClass("item")) { node_to_highlight = $(node).find(".info")[0]; }
 				if ($(node).hasClass("home_area_spotlight")) { node_to_highlight = $(node).find(".spotlight_content")[0]; }
@@ -6893,6 +6919,22 @@ function start_highlighting_node(node) {
 	if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 	if (getValue(appid + "gift")) highlight_inv_gift(node);
 	highlight_notinterested(node);
+}
+
+// Monitor and highlight wishlishted recommendations at the bottom of Store's front page
+function highlight_recommendations() {
+	if ($("#content_more").length) {
+		setMutationHandler($("#content_more")[0], ".ds_wishlist", function(nodes){
+			$.each(nodes, function(i, node){
+				if ($(node).parent().hasClass("single")) {
+					node = $(node).parent().parent()[0];
+				}
+				highlight_wishlist(node);
+			});
+
+			return true;
+		});
+	}
 }
 
 // Add a link to an item's page on steamdb.info
@@ -7048,7 +7090,7 @@ function highlight_market_items() {
 			var market_name = getValue("card:" + item_name);
 			if (market_name) {
 				storage.get(function(settings) {
-					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = "#5c7836";	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned;	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 					if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 					if (settings.highlight_owned) {
 						node = $(node).find("div");
@@ -7084,6 +7126,7 @@ function get_store_session() {
 	}
 }
 
+// TODO: This should be done with dynamic store data to make sure things are in sync
 function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
@@ -8809,7 +8852,6 @@ $(document).ready(function(){
 							break;
 
 						case /^\/search\/.*/.test(path):
-							//add_cart_to_search();
 							endless_scrolling();
 							add_hide_buttons_to_search();
 							break;
@@ -8824,6 +8866,7 @@ $(document).ready(function(){
 							add_allreleases_tab();
 							set_homepage_tab();
 							add_carousel_descriptions();
+							highlight_recommendations();
 							window.setTimeout(function() { customize_home_page(); }, 500);
 							break;
 					}

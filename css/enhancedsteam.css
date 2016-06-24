@@ -73,10 +73,6 @@ img.platform_small, .platform_img {
 	color: #B0AEAC;
 }
 
-.tags span {
-	border-radius: 0.5em;
-}
-
 .blotter_single_item_detail .blotter_control_container, .blotter_single_item_detail .hr {
 	display: block !important;
 }
@@ -1058,6 +1054,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_carousel_desc {
 	max-height: 459px;
 }
+.main_cap_platform_area {
+	padding: 0;
+	line-height: 28px;
+}
 
 /***************************************
  * Steam inventory
@@ -1208,11 +1208,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	position: relative;
 	display: inherit;
 }
-#tab_allreleases_content .tab_item .es_overlay_container {
-	left: -198px;
-}
-#tab_popular_content .tab_item .es_overlay_container {
-	left: -198px;
+.home_tabs_content .es_early_access .tab_item_cap {
+	line-height: 48px !important;
 }
 .es_overlay,
 .es_overlay img {
@@ -1226,6 +1223,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_overlay img {
 	position: relative;
 	height: 100% !important;
+}
+.spotlight_img.es_early_access > a {
+	display: inherit;
 }
 
 /***************************************
@@ -1701,4 +1701,90 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_regional_unavailable {
 	font-size: 12px;
+}
+
+/***************************************
+ * Store front page recommendations
+ **************************************/
+#content_more .home_content_item {
+	padding: 3px;
+	margin-right: 5px;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+#content_more .home_content_item:last-child {
+	margin-right: 0;
+}
+
+/***************************************
+ * Store pages
+ * add_tag()
+ **************************************/
+.es_tags {
+	position: relative;
+	z-index: 6;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: default !important;
+}
+.es_tags span {
+	padding: 3px 5px;
+	margin: 0 3px 0 0;
+	font-size: 10px;
+	font-family: Arial, sans-serif;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.75);
+	max-height: 11px;
+	line-height: 12px;
+	display: inline-block;
+	box-shadow: rgba(0, 0, 0, 0.7) 0 0 0 1px inset, rgba(255, 255, 255, 0.12) 0 0 0 2px inset;
+}
+.es_tags.es_tags_short:not(:hover) span {
+	font-size: 0;
+}
+.es_tags.es_tags_short span:first-letter {
+	font-size: 10px;
+}
+
+.wishlistRow .es_tags {
+	float: right;
+	margin-top: 3px;
+}
+.game_area_dlc_price .es_tags {
+	margin-top: -1px;
+}
+.game_area_dlc_price .es_tags ~ div {
+	display: inline-block;
+}
+.small_cap .es_tags {
+	margin-top: 0;
+}
+.tab_item .es_tags {
+	z-index: 10;
+	float: left;
+}
+#search_suggestion_contents .es_tags {
+	float: right;
+	margin-top: 30px;
+}
+/*.es_highlight div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
+	color: rgba(255, 255, 255, 0.8) !important;
+}*/
+.es_highlight div.search_released,
+.es_highlight div.tab_item_details,
+.es_highlight div.tab_item_top_tags,
+.es_highlight div.discount_original_price {
+	color: rgba(255, 255, 255, 0.31) !important;
+}
+.es_highlight div.discount_final_price {
+	color: rgba(255, 255, 255, 0.65) !important;
+}
+.es_highlight .tab_item_top_tags {
+	text-overflow: ellipsis;
+}
+.es_highlight .discount_pct,
+.es_highlight .search_discount span {
+	box-shadow: rgba(255, 255, 255, 0.08) 0 0 0 1px inset;
+}
+.es_highlighted_owned ~ .ds_owned_flag {
+	display: none;
 }
