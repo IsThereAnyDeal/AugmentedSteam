@@ -3852,22 +3852,22 @@ function add_hltb_info(appid) {
 		if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
 		if (settings.showhltb) {
 			storePageData.get("hltb", function(data) {
-				if (data["hltb"]) {
+				if (data) {
 					how_long_html = "<div class='block game_details underlined_links'>"
 						+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
 						+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
-					if (data["hltb"]["main_story"]){
-						how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_story']) + "</span><br>";
+					if (data["main_story"]){
+						how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['main_story']) + "</span><br>";
 					}
-					if (data["hltb"]["main_extras"]){
-						how_long_html += "<b>" + localized_strings.hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['main_extras']) + "</span><br>";
+					if (data["main_extras"]){
+						how_long_html += "<b>" + localized_strings.hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['main_extras']) + "</span><br>";
 					}
-					if (data["hltb"]["comp"]) {
-						how_long_html += "<b>" + localized_strings.hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['hltb']['comp']) + "</span><br>"
+					if (data["comp"]) {
+						how_long_html += "<b>" + localized_strings.hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['comp']) + "</span><br>"
 					}
 					how_long_html += "</div>"
-						+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['url']) + "' target='_blank'>" + localized_strings.more_information + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-						+ "<a class='linkbar' href='" + escapeHTML(data['hltb']['submit_url']) + "' target='_blank'>" + localized_strings.hltb.submit + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+						+ "<a class='linkbar' href='" + escapeHTML(data['url']) + "' target='_blank'>" + localized_strings.more_information + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+						+ "<a class='linkbar' href='" + escapeHTML(data['submit_url']) + "' target='_blank'>" + localized_strings.hltb.submit + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
 						+ "</div></div></div>";
 					$("div.game_details:first").after(how_long_html);
 				}
@@ -3921,124 +3921,121 @@ function add_app_page_highlights() {
 function add_widescreen_certification(appid) {
 	storage.get(function(settings) {
 		if (settings.showwsgf === undefined) { settings.showwsgf = true; storage.set({'showwsgf': settings.showwsgf}); }
-		if (document.body.innerHTML.indexOf("<p>Requires the base game <a href=") <= 0) {
+		if ($(".game_area_dlc_bubble").length <= 0) {
 			if (settings.showwsgf) {
 				// Check to see if game data exists
 				storePageData.get("wsgf", function(data) {
-					if (data.node) {
-						$("div.game_details:first").each(function (index, node) {
-							var path = data["node"]["Path"];
-							var wsg = data["node"]["WideScreenGrade"];
-							var mmg = data["node"]["MultiMonitorGrade"];
-							var fkg = data["node"]["Grade4k"];
-							var uws = data["node"]["UltraWideScreenGrade"];
-							var wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
-							var fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
+					$("div.game_details:first").each(function (index, node) {
+						var path = data["Path"];
+						var wsg = data["WideScreenGrade"];
+						var mmg = data["MultiMonitorGrade"];
+						var fkg = data["Grade4k"];
+						var uws = data["UltraWideScreenGrade"];
+						var wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
+						var fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
 
-							switch (wsg) {
-								case "A":
-									wsg_icon = chrome.extension.getURL("img/wsgf/ws-gold.png");
-									wsg_text = localized_strings.wsgf.gold.replace(/__type__/g, "Widescreen");
-									break;
-								case "B":
-									wsg_icon = chrome.extension.getURL("img/wsgf/ws-silver.png");
-									wsg_text = localized_strings.wsgf.silver.replace(/__type__/g, "Widescreen");
-									break;
-								case "C":
-									wsg_icon = chrome.extension.getURL("img/wsgf/ws-limited.png");
-									wsg_text = localized_strings.wsgf.limited.replace(/__type__/g, "Widescreen");
-									break;
-								case "Incomplete":
-									wsg_icon = chrome.extension.getURL("img/wsgf/ws-incomplete.png");
-									wsg_text = localized_strings.wsgf.incomplete;
-									break;
-								case "Unsupported":
-									wsg_icon = chrome.extension.getURL("img/wsgf/ws-unsupported.png");
-									wsg_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "Widescreen");
-									break;
-							}
+						switch (wsg) {
+							case "A":
+								wsg_icon = chrome.extension.getURL("img/wsgf/ws-gold.png");
+								wsg_text = localized_strings.wsgf.gold.replace(/__type__/g, "Widescreen");
+								break;
+							case "B":
+								wsg_icon = chrome.extension.getURL("img/wsgf/ws-silver.png");
+								wsg_text = localized_strings.wsgf.silver.replace(/__type__/g, "Widescreen");
+								break;
+							case "C":
+								wsg_icon = chrome.extension.getURL("img/wsgf/ws-limited.png");
+								wsg_text = localized_strings.wsgf.limited.replace(/__type__/g, "Widescreen");
+								break;
+							case "Incomplete":
+								wsg_icon = chrome.extension.getURL("img/wsgf/ws-incomplete.png");
+								wsg_text = localized_strings.wsgf.incomplete;
+								break;
+							case "Unsupported":
+								wsg_icon = chrome.extension.getURL("img/wsgf/ws-unsupported.png");
+								wsg_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "Widescreen");
+								break;
+						}
 
-							switch (mmg) {
-								case "A":
-									mmg_icon = chrome.extension.getURL("img/wsgf/mm-gold.png");
-									mmg_text = localized_strings.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
-									break;
-								case "B":
-									mmg_icon = chrome.extension.getURL("img/wsgf/mm-silver.png");
-									mmg_text = localized_strings.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
-									break;
-								case "C":
-									mmg_icon = chrome.extension.getURL("img/wsgf/mm-limited.png");
-									mmg_text = localized_strings.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
-									break;
-								case "Incomplete":
-									mmg_icon = chrome.extension.getURL("img/wsgf/mm-incomplete.png");
-									mmg_text = localized_strings.wsgf.incomplete;
-									break;
-								case "Unsupported":
-									mmg_icon = chrome.extension.getURL("img/wsgf/mm-unsupported.png");
-									mmg_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
-									break;
-							}
+						switch (mmg) {
+							case "A":
+								mmg_icon = chrome.extension.getURL("img/wsgf/mm-gold.png");
+								mmg_text = localized_strings.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
+								break;
+							case "B":
+								mmg_icon = chrome.extension.getURL("img/wsgf/mm-silver.png");
+								mmg_text = localized_strings.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
+								break;
+							case "C":
+								mmg_icon = chrome.extension.getURL("img/wsgf/mm-limited.png");
+								mmg_text = localized_strings.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
+								break;
+							case "Incomplete":
+								mmg_icon = chrome.extension.getURL("img/wsgf/mm-incomplete.png");
+								mmg_text = localized_strings.wsgf.incomplete;
+								break;
+							case "Unsupported":
+								mmg_icon = chrome.extension.getURL("img/wsgf/mm-unsupported.png");
+								mmg_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
+								break;
+						}
 
-							switch (uws) {
-								case "A":
-									uws_icon = chrome.extension.getURL("img/wsgf/uw-gold.png");
-									uws_text = localized_strings.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
-									break;
-								case "B":
-									uws_icon = chrome.extension.getURL("img/wsgf/uw-silver.png");
-									uws_text = localized_strings.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
-									break;
-								case "C":
-									uws_icon = chrome.extension.getURL("img/wsgf/uw-limited.png");
-									uws_text = localized_strings.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
-									break;
-								case "Incomplete":
-									uws_icon = chrome.extension.getURL("img/wsgf/uw-incomplete.png");
-									uws_text = localized_strings.wsgf.incomplete;
-									break;
-								case "Unsupported":
-									uws_icon = chrome.extension.getURL("img/wsgf/uw-unsupported.png");
-									uws_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
-									break;
-							}
+						switch (uws) {
+							case "A":
+								uws_icon = chrome.extension.getURL("img/wsgf/uw-gold.png");
+								uws_text = localized_strings.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
+								break;
+							case "B":
+								uws_icon = chrome.extension.getURL("img/wsgf/uw-silver.png");
+								uws_text = localized_strings.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
+								break;
+							case "C":
+								uws_icon = chrome.extension.getURL("img/wsgf/uw-limited.png");
+								uws_text = localized_strings.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
+								break;
+							case "Incomplete":
+								uws_icon = chrome.extension.getURL("img/wsgf/uw-incomplete.png");
+								uws_text = localized_strings.wsgf.incomplete;
+								break;
+							case "Unsupported":
+								uws_icon = chrome.extension.getURL("img/wsgf/uw-unsupported.png");
+								uws_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
+								break;
+						}
 
-							switch (fkg) {
-								case "A":
-									fkg_icon = chrome.extension.getURL("img/wsgf/4k-gold.png");
-									fkg_text = localized_strings.wsgf.gold.replace(/__type__/g, "4k UHD");
-									break;
-								case "B":
-									fkg_icon = chrome.extension.getURL("img/wsgf/4k-silver.png");
-									fkg_text = localized_strings.wsgf.silver.replace(/__type__/g, "4k UHD");
-									break;
-								case "C":
-									fkg_icon = chrome.extension.getURL("img/wsgf/4k-limited.png");
-									fkg_text = localized_strings.wsgf.limited.replace(/__type__/g, "4k UHD");
-									break;
-								case "Incomplete":
-									fkg_icon = chrome.extension.getURL("img/wsgf/4k-incomplete.png");
-									fkg_text = localized_strings.wsgf.incomplete;
-									break;
-								case "Unsupported":
-									fkg_icon = chrome.extension.getURL("img/wsgf/4k-unsupported.png");
-									fkg_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "4k UHD");
-									break;
-							}
+						switch (fkg) {
+							case "A":
+								fkg_icon = chrome.extension.getURL("img/wsgf/4k-gold.png");
+								fkg_text = localized_strings.wsgf.gold.replace(/__type__/g, "4k UHD");
+								break;
+							case "B":
+								fkg_icon = chrome.extension.getURL("img/wsgf/4k-silver.png");
+								fkg_text = localized_strings.wsgf.silver.replace(/__type__/g, "4k UHD");
+								break;
+							case "C":
+								fkg_icon = chrome.extension.getURL("img/wsgf/4k-limited.png");
+								fkg_text = localized_strings.wsgf.limited.replace(/__type__/g, "4k UHD");
+								break;
+							case "Incomplete":
+								fkg_icon = chrome.extension.getURL("img/wsgf/4k-incomplete.png");
+								fkg_text = localized_strings.wsgf.incomplete;
+								break;
+							case "Unsupported":
+								fkg_icon = chrome.extension.getURL("img/wsgf/4k-unsupported.png");
+								fkg_text = localized_strings.wsgf.unsupported.replace(/__type__/g, "4k UHD");
+								break;
+						}
 
-							var html = "<div class='block underlined_links'><div class='block_header'><h4>"+localized_strings.wsgf.certifications+"</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
+						var html = "<div class='block underlined_links'><div class='block_header'><h4>"+localized_strings.wsgf.certifications+"</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
 
-							if (wsg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-							if (mmg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-							if (uws != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(uws_icon) + "' height='120' title='" + escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-							if (fkg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(fkg_icon) + "' height='120' title='" + escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-							if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'>" + localized_strings.rating_details + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
-							html += "</div></div></div></div>";
-							$(node).after(html);
-						});
-						
-					}
+						if (wsg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+						if (mmg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+						if (uws != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(uws_icon) + "' height='120' title='" + escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+						if (fkg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(fkg_icon) + "' height='120' title='" + escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+						if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + escapeHTML(path) + "'>" + localized_strings.rating_details + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
+						html += "</div></div></div></div>";
+						$(node).after(html);
+					});
 				});
 			}
 		}

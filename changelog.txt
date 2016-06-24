@@ -1,6 +1,10 @@
 ﻿v8.7
 -----
++ Added an option to disable Steam's link filter, but please be careful!
++ Added an option to shorten tags to a single letter in order to save space
+: Updated the look and feel of highlighting and tags, updated default colors to more closely match Steam
 : Fixed a bug where activity page highlighting displayed incorrectly
+: Fixed a bug that caused WSGF and HLTB data not to display on store pages
 
 
 v8.6
