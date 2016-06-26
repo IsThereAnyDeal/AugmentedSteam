@@ -2813,6 +2813,17 @@ function chat_dropdown_options(in_chat) {
 	}
 }
 
+function ingame_name_link() {
+	var $ingameAppIdSel = $("input[name='ingameAppID']");
+
+	if ($ingameAppIdSel.length && $ingameAppIdSel.val()) {
+		var tooltip = localized_strings.view_in + ' ' + localized_strings.store;
+
+		$(".profile_in_game_name").wrapInner('<a data-community-tooltip="' + tooltip + '" href="//store.steampowered.com/app/' + $ingameAppIdSel.val() + '" target="_blank" />');
+		runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+	}
+}
+
 function alternative_linux_icon() {
 	storage.get(function(settings) {
 		if (settings.show_alternative_linux_icon === undefined) { settings.show_alternative_linux_icon = false; storage.set({'show_alternative_linux_icon': settings.show_alternative_linux_icon}); }
@@ -9007,6 +9018,7 @@ $(document).ready(function(){
 							add_posthistory_link();
 							add_profile_style();
 							chat_dropdown_options();
+							ingame_name_link();
 							break;
 
 						case /^\/sharedfiles\/browse/.test(path):
