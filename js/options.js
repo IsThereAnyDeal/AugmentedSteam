@@ -49,7 +49,37 @@ var settings_defaults = {
 	"showlowestprice_onwishlist": true,
 	"showlowestpricecoupon": true,
 	"showallstores": true,
-	"stores": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+	"stores": {
+		"steam": true,
+		"amazonus": true,
+		"impulse": true,
+		"gamersgate": true,
+		"greenmangaming": true,
+		"direct2drive": true,
+		"origin": true,
+		"uplay": true,
+		"indiegalastore": true,
+		"gamesplanet": true,
+		"indiegamestand": true,
+		"gog": true,
+		"dotemu": true,
+		"nuuvem": true,
+		"dlgamer": true,
+		"humblestore": true,
+		"squenix": true,
+		"bundlestars": true,
+		"fireflower": true,
+		"humblewidgets": true,
+		"newegg": true,
+		"gamesrepublic": true,
+		"coinplay": true,
+		"funstock": true,
+		"wingamestore": true,
+		"gamebillet": true,
+		"silagames": true,
+		"playfield": true,
+		"imperialgames": true
+	},
 	"override_price": "auto",
 	"showregionalprice": "mouse",
 	"regional_countries": ["us", "gb", "eu1", "ru", "br", "au", "jp"],
@@ -93,6 +123,7 @@ var settings_defaults = {
 	"quickinv": true,
 	"quickinv_diff": -0.01,
 	"showallachievements": false,
+	"showachinstore": true,
 	"showcomparelinks": false,
 	"showgreenlightbanner": false,
 	"dynamicgreenlight": false,
@@ -136,8 +167,9 @@ function save_options() {
 
 	// Get checked stores, but only if loaded already from storage
 	if (!$("#stores_all").prop('checked') && $("#store_stores").hasClass("es_checks_loaded")) {
-		saveSettings.stores = $.map($("#store_stores").find("input[type='checkbox']"), function(el, i) {
-			return $(el).prop("checked");
+		saveSettings.stores = {};
+		$("#store_stores").find("input[type='checkbox']").each(function(i, el) {
+			saveSettings.stores[$(this).prop("id")] = $(this).prop("checked");
 		});
 	}
 
@@ -169,7 +201,7 @@ function toggle_stores() {
 		$("#store_stores").show();
 		storage.get(function(settings) {
 			$("#store_stores").addClass("es_checks_loaded").find("input[type='checkbox']").each(function(i, checkbox) {
-				$(checkbox).prop("checked", settings.stores[i]);
+				$(checkbox).prop("checked", settings.stores[$(this).prop("id")]);
 			});
 		});
 	}
@@ -214,6 +246,12 @@ function load_options() {
 
 		// Initiate settings against the defaults
 		settings = checkSettings(settings_defaults, settings);
+		
+		// Change the way we store stores settings
+		if (settings.stores instanceof Array) {
+			settings.stores = settings_defaults.stores;
+			storage.set({"stores": settings_defaults.stores});
+		}
 
 		// Set the value or state for each input
 		$("[data-setting]").each(function(){
