@@ -1585,7 +1585,7 @@ function add_wishlist_pricehistory() {
 			// Get List of stores we're searching for
 			var storestring = "";
 			$.each(settings.stores, function(store, value) {
-				if (settings.stores[store] === true) {
+				if (settings.stores[store] === true || settings.showallstores) {
 					storestring += store + ",";
 				}
 			});
