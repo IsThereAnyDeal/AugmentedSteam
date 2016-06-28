@@ -208,17 +208,13 @@ a:hover {
 	margin-top:5px;
 	width:auto;
 }
-#show_spamcommentregex {
-	margin-left:5px;
-	color:#EFFFEF;
-}
 #spamcommentregex_list {
 	margin-left:10px;
 	margin-bottom:5px;
 	display:none;
 }
+#show_spamcommentregex,
 #show_quickinv_diff {
-	margin-left:5px;
 	color:#EFFFEF;
 }
 #quickinv_opt {
