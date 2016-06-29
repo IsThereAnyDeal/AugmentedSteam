@@ -1,6 +1,8 @@
 ﻿v8.7
 -----
++ Added a crowd-sourcing feature to gather HowLongToBeat data that shows up on store pages
 + Added an option to disable Steam's link filter, but please be careful!
++ User's "In Game" status on profile pages is now a link that takes you to that game's store page
 + Added an option to shorten tags to a single letter in order to save space
 : Updated the look and feel of highlighting and tags, updated default colors to more closely match Steam
 : Fixed a bug where activity page highlighting displayed incorrectly
