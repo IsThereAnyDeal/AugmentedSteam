@@ -3061,7 +3061,7 @@ function endless_scrolling() {
 
 			var result_count;
 			$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
-			$(".search_pagination_right").css("display", "none");
+			$(".search_pagination_right").hide();
 			var match = $(".search_pagination_left").text().trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
 			if (match) {
 				result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
@@ -3184,10 +3184,10 @@ function add_hide_buttons_to_search() {
 		function add_hide_buttons_to_search_click() {
 			$(".search_result_row").each(function() {
 				$(this).css("display", "block");
-				if ($("#es_owned_games").is(".checked") && $(this).is(".ds_owned")) { $(this).css("display", "none"); }
-				if ($("#es_wishlist_games").is(".checked") && $(this).is(".ds_wishlist")) { $(this).css("display", "none"); }
-				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).css("display", "none"); }
-				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).css("display", "none"); }
+				if ($("#es_owned_games").is(".checked") && $(this).is(".ds_owned")) { $(this).hide(); }
+				if ($("#es_wishlist_games").is(".checked") && $(this).is(".ds_wishlist")) { $(this).hide(); }
+				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).hide(); }
+				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).hide(); }
 				if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
 			});
 		}
@@ -4327,7 +4327,7 @@ function minimize_active_listings() {
 		if (settings.hideactivelistings === undefined) { settings.hideactivelistings = false; storage.set({'hideactivelistings': settings.hideactivelistings}); }
 		if (settings.hideactivelistings) {
 			if (window.location.pathname.match(/^\/market\/$/)) {
-				$("#tabContentsMyListings").css("display", "none");
+				$("#tabContentsMyListings").hide();
 				$("#tabMyListings").removeClass("market_tab_well_tab_active");
 				$("#tabMyListings").addClass("market_tab_well_tab_inactive");
 			}
@@ -7568,8 +7568,8 @@ function add_gamelist_filter() {
 		});
 
 		$('#es_gl_installed').on('click', function() {
-			$('.gameListRowItem').find(".color_uninstalled").parent().parent().css("display", "none");
-			$('.gameListRowItem').find(".color_disabled").parent().parent().css("display", "none");
+			$('.gameListRowItem').find(".color_uninstalled").parent().parent().hide();
+			$('.gameListRowItem').find(".color_disabled").parent().parent().hide();
 			$("#es_gl_installed_input").prop("checked", true);
 			// Triggers the loading of out-of-view app images
 			window.dispatchEvent(new Event("resize"));
@@ -7679,95 +7679,93 @@ function add_cardexchange_links(game) {
 	});
 }
 
+var resetLazyLoader = function() { runInPageContext(function() { 
+		// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+		CScrollOffsetWatcher.sm_rgWatchers = [];
+		
+		// Recreate registered image lazy loader watchers
+		$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+			// LoadImageGroupOnScroll is found in shared_global.js
+			LoadImageGroupOnScroll(e.id, e.id.substr(19));
+		});
+	});
+};
+
 function add_badge_filter() {
-	if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {
-		var filter_done = false;
+	var filter_done = false;
 
-		if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
-			var html  = "<div style='text-align: right;'><span>" + localized_strings.show + ": </span>";
-				html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings.badges_all + "</span></label>";
-				html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings.badges_drops + "</span></label>";
-				html += "</div>";
+	if ($(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
+		var html  = "<div style='text-align: right;'><span>" + localized_strings.show + ": </span>";
+			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings.badges_all + "</span></label>";
+			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings.badges_drops + "</span></label>";
+			html += "</div>";
 
-			$('.profile_badges_header').append(html);
+		$('.profile_badges_header').append(html);
+		
+		$('#es_badge_all').on('click', function() {
+			$('.is_link').css('display', 'block');
+			resetLazyLoader();
+		});
 
-			var resetLazyLoader = function() { runInPageContext(function() { 
-					// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
-					CScrollOffsetWatcher.sm_rgWatchers = [];
-					
-					// Recreate registered image lazy loader watchers
-					$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
-						// LoadImageGroupOnScroll is found in shared_global.js
-						LoadImageGroupOnScroll(e.id, e.id.substr(19));
-					});
-				});
-			};
-			
-			$('#es_badge_all').on('click', function() {
-				$('.is_link').css('display', 'block');
-				resetLazyLoader();
-			});
+		$('#es_badge_drops').click(function(event) {
+			event.preventDefault();
+			$("#es_badge_drops").find("input").prop("checked", true);
 
-			$('#es_badge_drops').click(function(event) {
-				event.preventDefault();
-				$("#es_badge_drops").find("input").prop("checked", true);
+			// Load additinal badge sections if multiple pages are present
+			if ($(".pagebtn").length > 0 && filter_done == false) {
+				var base_url = window.location.origin + window.location.pathname + "?p=",
+					last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
+					deferred = new $.Deferred(),
+					promise = deferred.promise(),
+					pages = [];
 
-				// Load additinal badge sections if multiple pages are present
-				if ($(".pagebtn").length > 0 && filter_done == false) {
-					var base_url = window.location.origin + window.location.pathname + "?p=",
-						last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
-						deferred = new $.Deferred(),
-						promise = deferred.promise(),
-						pages = [];
+				for (page = 2; page <= last_page; page++) {
+					pages.push(page);
+				}
 
-					for (page = 2; page <= last_page; page++) {
-						pages.push(page);
-					}
-
-					$.each(pages, function (i, item) {
-						promise = promise.then(function() {
-							return $.ajax(base_url + item).done(function(data) {
-								var html = $.parseHTML(data);
-								$(html).find(".badge_row").each(function(i, obj) {
-									$(".badges_sheet").append(obj);
-								});
+				$.each(pages, function (i, item) {
+					promise = promise.then(function() {
+						return $.ajax(base_url + item).done(function(data) {
+							var html = $.parseHTML(data);
+							$(html).find(".badge_row").each(function(i, obj) {
+								$(".badges_sheet").append(obj);
 							});
 						});
 					});
+				});
 
-					promise.done(function() {
-						$(".profile_paging").css("display", "none");
-						filter_done = true;
-						add_badge_filter_processing();
-					});
-					
-					deferred.resolve();	
-				} else {
+				promise.done(function() {
+					$(".profile_paging").hide();
+					filter_done = true;
 					add_badge_filter_processing();
-				}
+				});
+				
+				deferred.resolve();	
+			} else {
+				add_badge_filter_processing();
+			}
 
-				function add_badge_filter_processing() {
-					$('.is_link').each(function () {
-						if (!($(this).html().match(/progress_info_bold".+\d/))) {
-							$(this).css('display', 'none');
-						} else if (parseFloat($(this).html().match(/progress_info_bold".+?(\d+)/)[1]) == 0) {
-							$(this).css('display', 'none');
-						} else {
-							if ($(this).html().match(/badge_info_unlocked/)) {
-								if (!($(this).html().match(/badge_current/))) {
-									$(this).css('display', 'none');
-								}
-							}
-							// Hide foil badges too
-							if (!($(this).html().match(/progress_info_bold/))) {
-								$(this).css('display', 'none');
+			function add_badge_filter_processing() {
+				$('.is_link').each(function () {
+					if (!($(this).html().match(/progress_info_bold".+\d/))) {
+						$(this).hide();
+					} else if (parseFloat($(this).html().match(/progress_info_bold".+?(\d+)/)[1]) == 0) {
+						$(this).hide();
+					} else {
+						if ($(this).html().match(/badge_info_unlocked/)) {
+							if (!($(this).html().match(/badge_current/))) {
+								$(this).hide();
 							}
 						}
-					});
-					resetLazyLoader();
-				}
-			});
-		}
+						// Hide foil badges too
+						if (!($(this).html().match(/progress_info_bold/))) {
+							$(this).hide();
+						}
+					}
+				});
+				resetLazyLoader();
+			}
+		});
 	}
 }
 
@@ -7776,18 +7774,6 @@ function add_badge_sort() {
 		if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
 			$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings.most_drops + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + localized_strings.drops_value + "</a>");
 		}
-
-		var resetLazyLoader = function() { runInPageContext(function() { 
-				// Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
-				CScrollOffsetWatcher.sm_rgWatchers = [];
-				
-				// Recreate registered image lazy loader watchers
-				$J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
-					// LoadImageGroupOnScroll is found in shared_global.js
-					LoadImageGroupOnScroll(e.id, e.id.substr(19));
-				});
-			});
-		};
 
 		function add_badge_sort_drops() {
 			var badgeRows = [];
@@ -7815,7 +7801,7 @@ function add_badge_sort() {
 				}
 			});
 
-			$('.badge_row').each(function () { $(this).css("display", "none"); });
+			$('.badge_row').each(function () { $(this).hide(); });
 
 			$(badgeRows).each(function() {
 				$(".badges_sheet:first").append(this[0]);
@@ -7852,7 +7838,7 @@ function add_badge_sort() {
 				});
 
 				promise.done(function() {
-					$(".profile_paging").css("display", "none");
+					$(".profile_paging").hide();
 					sort_drops_done = true;
 					add_badge_sort_drops();
 				});
@@ -7889,7 +7875,7 @@ function add_badge_sort() {
 				}
 			});
 
-			$('.badge_row').each(function () { $(this).css("display", "none"); });
+			$('.badge_row').each(function () { $(this).hide(); });
 
 			$(badgeRows).each(function() {
 				$(".badges_sheet:first").append(this[0]);
@@ -8012,10 +7998,12 @@ function add_friends_sort() {
 }
 
 function add_badge_view_options() {
-	$('.profile_badges_header').append(`<div style='text-align: right;'><span>` + localized_strings.view + `: </span>
+	$('.profile_badges_header').append(`
+		<div style='text-align: right;'><span>` + localized_strings.view + `: </span>
 		<label class='badge_sort_option whiteLink es_badges es_badge_view_default'><input type='radio' value='defaultview' class='es_badge_view' name='es_badge_view' checked><span>` + localized_strings.theworddefault + `</span></label>
 		<label class='badge_sort_option whiteLink es_badges es_badge_view_binder'><input type='radio' value='binderview' class='es_badge_view' name='es_badge_view'><span>` + localized_strings.binder_view + `</span></label>
-		</div>`);
+		</div>
+	`);
 
 	// Change hash when selecting view
 	$(".es_badge_view").change(function() {
@@ -8038,7 +8026,7 @@ function add_badge_view_options() {
 			// Don't attempt changes again if already loaded
 			if (!$("div.maincontent").hasClass("es_binder_loaded")) {
 				$("div.maincontent").addClass("es_binder_loaded");
-				$('div.badge_row.is_link').each(function () {
+				$("div.badge_row.is_link").each(function () {
 					var $this = $(this);
 
 					var stats = $this.find("span.progress_info_bold").html();
@@ -8077,8 +8065,8 @@ function add_gamecard_foil_link() {
 	var url_parameters_array = url_search.replace("?","").split("&");
 
 	$.each(url_parameters_array,function(index,url_parameter){
-		if(url_parameter=="border=1"){
-			foil=true;
+		if (url_parameter == "border=1"){
+			foil = true;
 			foil_index=index;
 		}
 	});
@@ -8093,7 +8081,7 @@ function add_gamecard_foil_link() {
 		}
 	}
 	else {
-		if(url_parameters_array[0]!=""){
+		if (url_parameters_array[0] != ""){
 			url_parameters_array.push("border=1");
 			var url_parameters_out = url_parameters_array.join("&");
 			$(".gamecards_inventorylink").append("<a class='btn_grey_grey btn_small_thin' href='" + window.location.origin + window.location.pathname + "?"+url_parameters_out+"'><span>"+localized_strings.view_foil_badge+"</span></a>");
@@ -8110,7 +8098,7 @@ function add_gamecard_market_links(game) {
 	var url_parameters_array = url_search.replace("?","").split("&");
 	var cost = 0;
 
-	$.each(url_parameters_array,function(index,url_parameter){
+	$.each(url_parameters_array, function(index,url_parameter){
 		if(url_parameter=="border=1"){
 			foil=true;
 		}
@@ -8120,7 +8108,8 @@ function add_gamecard_market_links(game) {
 
 	get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 		var data = JSON.parse(txt);
-		var converter=$("<div>");
+		var converter = $("<div>");
+
 		$(".badge_card_set_card").each(function() {
 			var node = $(this);
 			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
@@ -8153,6 +8142,7 @@ function add_gamecard_market_links(game) {
 				$(this).children("div:contains('" + cardname + "')").parent().append(html);
 			}
 		});
+		
 		if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
 			cost = formatCurrency(cost);
 			$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
@@ -8165,8 +8155,12 @@ function add_gamecard_market_links(game) {
 // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
 function add_badge_completion_cost() {
 	if (is_signed_in) {
-		if ( $(".profile_small_header_texture:first a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "").replace(/\/$/, "")) {
+		if ($(".profile_small_header_texture:first a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "").replace(/\/$/, "")) {
+			var faq_html = $(".profile_xp_block_right").html();
+			$(".profile_xp_block_mid").append("<div class='es_faq_cards'>" + faq_html + "</div>");
+			
 			$(".profile_xp_block_right").html("<div id='es_cards_worth'></div>");
+			
 			var total_worth = 0, count = 0;
 
 			// Gather appid info
@@ -8174,9 +8168,9 @@ function add_badge_completion_cost() {
 				foil_appids = [],
 				nodes = [],
 				foil_nodes = [];
-			$(".badge_row").each(function() {
-				var game = $(this).find(".badge_row_overlay").attr("href").match(/\/(\d+)\//),
-					foil = $(this).find("a:last").attr("href").match(/\?border=1/),
+			$(".badge_row.is_link").each(function() {
+				var game = $(this).find(".badge_row_overlay")[0].href.match(/gamecards\/(\d+)\//),
+					foil = /\?border=1/.test($(this).find("a:last")[0].href),
 					node = $(this),
 					push = [];
 
@@ -8268,66 +8262,62 @@ function add_trade_forum_link(appid) {
 }
 
 function add_total_drops_count() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
+	if (is_signed_in && $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 		var drops_count = 0,
 			drops_games = 0,
-			booster_games = 0,
 			game_tiles = [],
 			completed = false;
 
-		if ($(".pagebtn").length > 0) {
-			if (window.location.href.match(/\/$/) || window.location.href.match(/p\=1$/)) {				
-				$(".profile_xp_block_right").prepend("<span id='es_calculations' style='color: #fff;'>" + localized_strings.drop_calc + "</span>").css("cursor", "pointer");
+		if ($(".pagebtn").length) {
+			$(".profile_xp_block_right").prepend("<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + localized_strings.drop_calc + "</span></div></div>");
 
-				$("#es_calculations").click(function() {
-					if (completed == false) {
-						$(".profile_xp_block_right").css("cursor", "default");
-						$("#es_calculations").text(localized_strings.loading);
+			$("#es_calculations").click(function() {
+				if (completed == false) {
+					$("#es_calculations").text(localized_strings.loading);
 
-						// First, get the contents of the first page
-						$(".progress_info_bold").each(function(i, obj) {
-							var parent = $(obj).parent().parent();
-							if ($(parent).find(".progress_info_bold")[0]) {
-								game_tiles.push(parent);
-							}
-						});
-
-						// Now, get the rest of the pages
-						var base_url = window.location.origin + window.location.pathname + "?p=",
-							last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
-							deferred = new $.Deferred(),
-							promise = deferred.promise(),
-							pages = [];
-
-						for (page = 2; page <= last_page; page++) {
-							pages.push(page);
+					// First, get the contents of the first page
+					$(".progress_info_bold").each(function(i, obj) {
+						var parent = $(obj).parent().parent();
+						if ($(parent).find(".progress_info_bold")[0]) {
+							game_tiles.push(parent);
 						}
+					});
 
-						$.each(pages, function (i, item) {
-							promise = promise.then(function() {
-								return $.ajax(base_url + item).done(function(data) {
-									var html = $.parseHTML(data);
-									$(html).find(".progress_info_bold").each(function(i, obj) {
-										var parent = $(obj).parent().parent();
-										if ($(parent).find(".progress_info_bold")[0]) {
-											game_tiles.push(parent);
-										}
-									});
+					// Now, get the rest of the pages
+					var base_url = window.location.origin + window.location.pathname + "?p=",
+						last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
+						deferred = new $.Deferred(),
+						promise = deferred.promise(),
+						pages = [];
+
+					for (page = 2; page <= last_page; page++) {
+						pages.push(page);
+					}
+
+					$.each(pages, function (i, item) {
+						promise = promise.then(function() {
+							return $.ajax(base_url + item).done(function(data) {
+								var html = $.parseHTML(data);
+								$(html).find(".progress_info_bold").each(function(i, obj) {
+									var parent = $(obj).parent().parent();
+									if ($(parent).find(".progress_info_bold")[0]) {
+										game_tiles.push(parent);
+									}
 								});
 							});
 						});
+					});
 
-						promise.done(function() {
-							add_total_drops_count_calculations(game_tiles);
-						});
-						
-						deferred.resolve();
-						completed = true;
-					}
-				});
-			}
+					promise.done(function() {
+						add_total_drops_count_calculations(game_tiles);
+					});
+					
+					deferred.resolve();
+					completed = true;
+				}
+			});
 		} else {
-			$(".profile_xp_block_right").prepend("<span id='es_calculations' style='color: #fff;'>" + localized_strings.drop_calc + "</span>");
+			$(".profile_xp_block_right").prepend("<div id='es_calculations'>" + localized_strings.drop_calc + "</div>");
 			$(".progress_info_bold").each(function(i, obj) {
 				var parent = $(obj).parent().parent();
 				if ($(parent).find(".progress_info_bold")[0]) {
@@ -8340,7 +8330,7 @@ function add_total_drops_count() {
 		function add_total_drops_count_calculations(games) {
 			$(games).each(function(i, obj) {
 				var obj_count = obj.find(".progress_info_bold")[0].innerHTML.match(/\d+/);
-				if (obj_count && obj_count[0]!='0') {
+				if (obj_count && obj_count[0] != '0') {
 					drops_count += parseInt(obj_count[0]);
 					drops_games = drops_games + 1;
 				}
@@ -8349,19 +8339,16 @@ function add_total_drops_count() {
 			$("#es_calculations").html(localized_strings.card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings.games_with_drops.replace("__dropsgames__", drops_games));
 
 			get_http("//steamcommunity.com/my/ajaxgetboostereligibility/", function(txt) {
-				var eligible = $.parseHTML(txt);
-				$(eligible).find(".booster_eligibility_games").children().each(function(i, obj) {
-					booster_games += 1;
-				});
+				var booster_games = txt.match(/class="booster_eligibility_game"/g),
+					booster_games = booster_games && booster_games.length || 0;
 
 				$("#es_calculations").append("<br>" + localized_strings.games_with_booster.replace("__boostergames__", booster_games));
 			});
 		}
 
-		if ($(".badge_details_set_favorite").find(".btn_grey_black").length > 0) { $(".badge_details_set_favorite").append("<div class='btn_grey_black btn_small_thin' id='es_faq_link'><span>" + localized_strings.faqs + "</span></div>"); }
-		$("#es_faq_link").click(function() {
-			window.location = "//steamcommunity.com/tradingcards/faq";
-		});
+		//if ($(".badge_details_set_favorite").find(".btn_grey_black").length > 0) {
+		//	$(".badge_details_set_favorite").append("<a class='btn_grey_black btn_small_thin' href='//steamcommunity.com/tradingcards/faq'><span>" + localized_strings.faqs + "</span></a>");
+		//}
 	}
 }
 
@@ -8399,11 +8386,7 @@ function add_friends_that_play() {
 				$('.friends_that_play_content').append(html);
 
 				// Reinitialize miniprofiles by injecting the function call.
-
-				var injectedCode = 'InitMiniprofileHovers();';
-				var script = document.createElement('script');
-				script.appendChild(document.createTextNode('(function() { '+ injectedCode +' })();'));
-				(document.body || document.head || document.documentElement).appendChild(script);
+				runInPageContext("function(){ InitMiniprofileHovers(); }");
 			});
 		}
 	});
@@ -8990,7 +8973,7 @@ $(document).ready(function(){
 							add_gamelist_common();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/badges/.test(path):
+						case /^\/(?:id|profiles)\/.+\/badges(\/$|\?p=[0-9]+)?/.test(path):
 							add_badge_completion_cost();
 							add_total_drops_count();
 							add_cardexchange_links();

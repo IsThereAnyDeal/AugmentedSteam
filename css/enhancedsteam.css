@@ -386,13 +386,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-bottom: 4px;
 }
 
-#es_cards_worth {
-	float: none;
-	width: 280px;
-	text-align: center;
-	margin-right: 38px;
-	color: #fff;
-}
 #es_popup .hr{
 	margin-top:2px;
 	margin-bottom:2px;
@@ -1841,4 +1834,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	100% {
 		box-shadow: 0 0 8px 1px #51771d;
 	}
+
+/***************************************
+ * Badges pages
+ * add_badge_completion_cost()
+ **************************************/
+.profile_xp_block_right {
+	width: 280px !important;
+	text-align: right !important;
+	cursor: auto;
+}
+.es_faq_cards {
+	margin-top: 4px;
 }
