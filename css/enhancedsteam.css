@@ -458,35 +458,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: normal; 
 	padding-left: 15px;
 }
-#es_progress {
-	display: block;
-	float: right;
-	margin-top: 55px;
-	-webkit-appearance: none;
-	border: none;
-	-webkit-transition: width 1s ease-in-out;
-	-moz-transition: width 1s ease-in-out;
-	-o-transition: width 1s ease-in-out;
-	transition: width 1s ease-in-out;
-}
-#es_progress.error, #es_progress.complete {
-	width:14px;
-}
-#es_progress::-webkit-progress-bar { 
-	background: black; 
-	border-radius: 8px;
-	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
-}
-#es_progress::-webkit-progress-value { 
-	background: #5c7836;
-	border-radius: 8px;
-	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
-}
-#es_progress.error::-webkit-progress-value { 
-	background: #B31414;
-	border-radius: 0px;
-	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
-}
+
 #es-lightbox {
 	position: fixed;
 	top: 0;
@@ -1787,4 +1759,86 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_highlighted_owned ~ .ds_owned_flag {
 	display: none;
+}
+
+/***************************************
+ * Site wide
+ * get_http()
+ **************************************/
+#es_progress {
+	display: block;
+	float: right;
+	position: relative;
+	margin-top: 55px;
+	height: 14px;
+	box-sizing: content-box;
+	border-radius: 8px;
+	overflow: hidden;
+	border: none;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+	-webkit-appearance: none;
+	-webkit-transition: width 1s ease-in-out;
+	-moz-transition: width 1s ease-in-out;
+	-o-transition: width 1s ease-in-out;
+	transition: width 1s ease-in-out;
+}
+#es_progress.error,
+#es_progress.complete {
+	width: 14px;
+}
+/* This prevents the black bleeding from "progress-bar" background
+	around the edges of "progress-value" to make it look smoother */
+#es_progress.error::-webkit-progress-value,
+#es_progress.complete::-webkit-progress-value {
+	width: calc(100% + 2px) !important;
+	height: 16px;
+	margin: -1px 0 0 -1px;
+}
+#es_progress.error {
+	animation: delayBoxShadowRed linear 1s;
+	animation-fill-mode: forwards;
+}
+#es_progress.error:before {
+	display: block;
+	content: "!";
+	position: absolute;
+	top: 1px;
+	right: 0;
+	left: 0;
+	line-height: 12px;
+	text-align: center;
+	color: rgb(255, 149, 149);
+	font-size: 14px;
+	font-family: Impact, Charcoal, sans-serif;
+	text-shadow: 0 0 1px black;
+}
+#es_progress.complete {
+	animation: delayBoxShadowGreen linear 1s;
+	animation-fill-mode: forwards;
+}
+#es_progress::-webkit-progress-inner-element {
+	border-radius: 8px;
+}
+#es_progress::-webkit-progress-bar {
+	background-color: black; 
+	border-radius: 8px;
+}
+#es_progress::-webkit-progress-value {
+	background-color: #51771d;
+	border-radius: 8px;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 5%, rgba(255, 255, 255, 0) 95%);
+}
+#es_progress.error::-webkit-progress-value {
+	background-color: #B31414;
+	border-radius: 8px;
+}
+@keyframes delayBoxShadowRed {
+	100% {
+		box-shadow: 0 0 8px 1px #B31414;
+	}
+}
+@keyframes delayBoxShadowGreen {
+	100% {
+		box-shadow: 0 0 8px 1px #51771d;
+	}
 }
