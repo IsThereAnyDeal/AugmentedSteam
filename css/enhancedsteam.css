@@ -1768,6 +1768,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_progress {
 	display: block;
 	float: right;
+	position: relative;
 	margin-top: 55px;
 	height: 14px;
 	box-sizing: content-box;
@@ -1796,6 +1797,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_progress.error {
 	animation: delayBoxShadowRed linear 1s;
 	animation-fill-mode: forwards;
+}
+#es_progress.error:before {
+	display: block;
+	content: "!";
+	position: absolute;
+	top: 1px;
+	right: 0;
+	left: 0;
+	line-height: 12px;
+	text-align: center;
+	color: rgb(255, 149, 149);
+	font-size: 14px;
+	font-family: Impact, Charcoal, sans-serif;
+	text-shadow: 0 0 1px black;
 }
 #es_progress.complete {
 	animation: delayBoxShadowGreen linear 1s;
