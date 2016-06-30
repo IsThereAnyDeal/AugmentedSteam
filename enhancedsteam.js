@@ -8973,7 +8973,7 @@ $(document).ready(function(){
 							add_gamelist_common();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/badges(\/$|\?p=[0-9]+)?/.test(path):
+						case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9+]$)/.test(path):
 							add_badge_completion_cost();
 							add_total_drops_count();
 							add_cardexchange_links();
