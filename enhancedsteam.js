@@ -3887,44 +3887,46 @@ function add_steamreview_userscore(appid) {
 }
 
 function add_hltb_info(appid) {
-	storage.get(function(settings) {
-		if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
-		if (settings.showhltb) {
-			storePageData.get("hltb", function(data) {
-				if (data["success"]) {
-					how_long_html = "<div class='block game_details underlined_links'>"
-						+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
-						+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
-					if (data["main_story"]){
-						how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['main_story']) + "</span><br>";
+	if ($(".game_area_dlc_bubble").length === 0) {
+		storage.get(function(settings) {
+			if (settings.showhltb === undefined) { settings.showhltb = true; storage.set({'showhltb': settings.showhltb}); }
+			if (settings.showhltb) {
+				storePageData.get("hltb", function(data) {
+					if (data["success"]) {
+						how_long_html = "<div class='block game_details underlined_links'>"
+							+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
+							+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
+						if (data["main_story"]){
+							how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['main_story']) + "</span><br>";
+						}
+						if (data["main_extras"]){
+							how_long_html += "<b>" + localized_strings.hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['main_extras']) + "</span><br>";
+						}
+						if (data["comp"]) {
+							how_long_html += "<b>" + localized_strings.hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['comp']) + "</span><br>"
+						}
+						how_long_html += "</div>"
+							+ "<a class='linkbar' href='" + escapeHTML(data['url']) + "' target='_blank'>" + localized_strings.more_information + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+							+ "<a class='linkbar' href='" + escapeHTML(data['submit_url']) + "' target='_blank'>" + localized_strings.hltb.submit + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+							+ "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + localized_strings.hltb.wrong + " - " + localized_strings.hltb.help + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+							+ "</div></div></div>";
+						$("div.game_details:first").after(how_long_html);
+					} else {
+						how_long_html = "<div class='block game_details underlined_links'>"
+							+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
+							+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>"
+							+ localized_strings.hltb.no_data + "</div>"
+							+ "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + localized_strings.hltb.help + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+							+ "</div></div></div>";
+						$("div.game_details:first").after(how_long_html);
 					}
-					if (data["main_extras"]){
-						how_long_html += "<b>" + localized_strings.hltb.main_e + ":</b><span style='float: right;'>" + escapeHTML(data['main_extras']) + "</span><br>";
-					}
-					if (data["comp"]) {
-						how_long_html += "<b>" + localized_strings.hltb.compl + ":</b><span style='float: right;'>" + escapeHTML(data['comp']) + "</span><br>"
-					}
-					how_long_html += "</div>"
-						+ "<a class='linkbar' href='" + escapeHTML(data['url']) + "' target='_blank'>" + localized_strings.more_information + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-						+ "<a class='linkbar' href='" + escapeHTML(data['submit_url']) + "' target='_blank'>" + localized_strings.hltb.submit + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-						+ "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + localized_strings.hltb.wrong + " - " + localized_strings.hltb.help + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-						+ "</div></div></div>";
-					$("div.game_details:first").after(how_long_html);
-				} else {
-					how_long_html = "<div class='block game_details underlined_links'>"
-						+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
-						+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>"
-						+ localized_strings.hltb.no_data + "</div>"
-						+ "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + localized_strings.hltb.help + " <img src='//cdn2.store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-						+ "</div></div></div>";
-					$("div.game_details:first").after(how_long_html);
-				}
-				$("#suggest").on("click", function() {
-					delValue("storePageData_" + appid);
+					$("#suggest").on("click", function() {
+						delValue("storePageData_" + appid);
+					});
 				});
-			});
-		}
-	});
+			}
+		});
+	}
 }
 
 // Add link to game pages on pcgamingwiki.com
