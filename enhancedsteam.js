@@ -145,22 +145,31 @@ var signed_in_promise = (function () {
 
 var dynamicstore_promise = (function () {
 	var deferred = new $.Deferred();
-	if (is_signed_in && window.location.protocol != "https:") {
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-		var last_updated = getValue("dynamicstore_time") || expire_time - 1;
-		var dynamicstore_data = getValue("dynamicstore_data") || false;
 
-		if (last_updated < expire_time || !dynamicstore_data) {
-			get_http("//store.steampowered.com/dynamicstore/userdata/", function(txt) {
+	if (is_signed_in && window.location.protocol != "https:") {
+		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
+			last_updated = getValue("dynamicstore_time") || expire_time - 1,
+			dynamicstore_data = getValue("dynamicstore_data"),
+			dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
+			dataVersion_cache = getValue("unUserdataVersion") || 0;
+
+		if (last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) {
+			var accountidtext = $('script:contains("g_AccountID")').text() || "",
+				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
+
+			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : ""), function(txt) {
 				var data = JSON.parse(txt);
 				if (data) {
 					setValue("dynamicstore_data", data);
 					setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
+
 					deferred.resolve(data);
 				} else {
 					deferred.reject();
 				}
 			});
+
+			setValue("unUserdataVersion", dataVersion);
 		} else if (dynamicstore_data) {
 			deferred.resolve(dynamicstore_data);
 		} else {
@@ -5536,30 +5545,34 @@ function add_achievement_completion_bar(appid) {
 	});
 }
 
-
 var ea_promise = (function() {
 	var deferred = new $.Deferred();
+
+	var ea_cache = getValue("ea_appids");
+	if (ea_cache) {
+		//console.info("EA cache was hit!")
+		deferred.resolve(ea_cache);
+	}
+
+	// Check if cache needs updating
 	var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
 	var last_updated = getValue("ea_appids_time") || expire_time - 1;
-	
+
+	// Update cache in the background
 	if (last_updated < expire_time) {
+		//console.info("EA cache needs to be updated...");
 		// If no cache exists, pull the data from the website
 		get_http("//api.enhancedsteam.com/early_access/", function(txt) {
 			early_access_data = JSON.parse(txt);
 			setValue("ea_appids", early_access_data);
 			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
 			
-			deferred.resolve(early_access_data);	
+			//console.info("EA cache update was succesful!");
+			deferred.resolve(early_access_data);
 		}).fail(function(){
-			// If request fails return data from cache
-			if (getValue("ea_appids_time")) {
-				deferred.resolve(getValue("ea_appids"));
-			} else {
-				deferred.reject();
-			}
+			//console.info("EA cache update failed!");
+			deferred.reject();
 		});
-	} else {
-		deferred.resolve(getValue("ea_appids"));
 	}
 
 	return deferred.promise();
