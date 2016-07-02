@@ -1,4 +1,8 @@
-﻿v8.7
+﻿v8.8
+-----
+
+
+v8.7
 -----
 + A huge amount of cache optimization - thanks JoiNNN!
 + Added a crowd-sourcing feature to gather HowLongToBeat data that shows up on store pages
