@@ -129,8 +129,8 @@
   "always":"Altid",
   "compare":"Sammenlign",
   "discount":"Rabat",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Rabat (procent)",
+  "discountabs":"Rabat (beløb)",
   "rating_details":"Se bedømmelse detaljer",
   "drops_worth_avg":"Værd ca",
   "using_store_return":"Klik her for at gå tilbage til butikken for __base__.",
@@ -222,15 +222,16 @@
   "web_browser_chat":"Webbrowser chat",
   "steam_client_chat":"Steam klient chat",
   "available":"Tilgængelig",
-  "set_as_background":"Set as Background",
-  "preview_background":"Preview Background",
-  "details":"Details",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
+  "set_as_background":"Anvend som baggrund",
+  "preview_background":"Preview baggrund",
+  "details":"Detaljer",
+  "expand_slider":"Gør slideren større",
+  "contract_slider":"Gør slideren mindre",
   "early_access":"Early Access",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "filter_games":"Filter spil",
+  "note_for":"Note Til",
+  "show_wishlist_total":"Vis hvad hele din ønskeliste koster",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Vis præstationer på butik sider",
     "achievements":"Præstationer",
@@ -258,7 +259,10 @@
     "main_e":"Hovedhistorie og ekstra",
     "compl":"Fuldførnist",
     "submit":"Indsend din tid",
-    "main":"Hovedhistorie"
+    "main":"Hovedhistorie",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"I Dit Bibliotek",
@@ -298,7 +302,8 @@
     "coupon":"Genstande med kuponer",
     "show_package_info":"Vis pakke info for alle apps",
     "wlbuttoncommunityapp":"Vis \"tilføj til ønskeliste\" knap på fællesskabs sider",
-    "removeguideslanguagefilter":"Don't automatically filter guides by user language",
+    "removeguideslanguagefilter":"Lad vær med at automatisk filtrer guides efter dit sprog",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Vis regional prissammenligning",
     "cart":"Varer i din vogn",
     "friends_own":"Genstande dine venner ejer",
@@ -386,6 +391,7 @@
     "wishlist":"Genstande på din ønskeliste",
     "add_another_region":"Tilføj",
     "skip_got_steam":"Springe vinduet 'Har du Steam?' over",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Engelsk",
       "brazilian":"Portugisisk-Brasilien",
@@ -458,7 +464,7 @@
     "inv_gift":"Gave",
     "inv_guestpass":"Gæstepas",
     "owned":"Ejet",
-    "notinterested":"Not Interested",
+    "notinterested":"Ikke interesseret",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ ønsker<\/a>"
   },
   "wallet":{
@@ -479,7 +485,7 @@
     "sending":"Indlæser dine ejede spil og pakker og sender dem til IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ genstand",
+    "num_items":"__num__ genstande"
   }
 }

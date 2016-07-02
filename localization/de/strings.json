@@ -129,8 +129,8 @@
   "always":"Immer",
   "compare":"Vergleichen",
   "discount":"Preisnachlass",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Rabatt (Prozent)",
+  "discountabs":"Rabatt (Betrag)",
   "rating_details":"Bewertungsdetails ansehen",
   "drops_worth_avg":"Ungefährer Wert",
   "using_store_return":"Hier klicken, um zum Shop für __base__ zurückzukehren.",
@@ -228,9 +228,10 @@
   "expand_slider":"Slider vergrößern",
   "contract_slider":"Slider verkleinern",
   "early_access":"Early Access",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "filter_games":"Spiele filtern",
+  "note_for":"Notiz für",
+  "show_wishlist_total":"Wunschlisten-Gesamtbetrag anzeigen",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Errungenschaften auf Shopseiten anzeigen",
     "achievements":"Errungenschaften",
@@ -258,7 +259,10 @@
     "main_e":"Hauptgeschichte und Extras",
     "compl":"Vervollständiger",
     "submit":"Deine Zeit übertragen",
-    "main":"Hauptgeschichte"
+    "main":"Hauptgeschichte",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"In Bibliothek",
@@ -299,6 +303,7 @@
     "show_package_info":"Paketinformationen für alle Anwendungen anzeigen",
     "wlbuttoncommunityapp":"\"Zur Wunschliste hinzufügen\"-Schaltfläche zu Community-Hub-Seiten hinzufügen",
     "removeguideslanguagefilter":"Guides nicht automatisch nach Sprache filtern",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Regionalen Preisvergleich anzeigen",
     "cart":"Spiele in deinem Warenkorb",
     "friends_own":"Titel, die deine Freunde besitzen",
@@ -386,6 +391,7 @@
     "wishlist":"Spiele auf meiner Wunschliste",
     "add_another_region":"Hinzufügen",
     "skip_got_steam":"Fenster \"Ist Steam auf Ihrem Computer installiert?\" überspringen",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Englisch",
       "brazilian":"Brasil. Portugiesisch",
@@ -479,7 +485,7 @@
     "sending":"Lade Spiele und Pakete in deinem Besitz und sende sie an IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ Gegenstand",
+    "num_items":"__num__ Gegenstände"
   }
 }

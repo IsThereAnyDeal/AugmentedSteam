@@ -25,7 +25,7 @@
   "hide":"Спрятать",
   "cards_owned":"Есть __owned__ карт из __possible__ возможных",
   "common_label":"Спрятать игры, которых у вас нет",
-  "birthday_message":"С днем рождения, __username__! Вашему аккаунту исполнилось следующее кол-во лет: __age__ ",
+  "birthday_message":"С днем рождения, __username__! Вашему аккаунту исполнилось __age__ лет.",
   "buying_total":"Суммарная цена заказов",
   "allreleases_products":"Выберите типы продуктов, которые вы хотите отображать в этом разделе",
   "library_menu":"Библиотека",
@@ -102,7 +102,7 @@
   "using_language_return":"Нажмите здесь, чтобы пользоваться Steam на __base__ языке.",
   "spam_comment_warn":"Тут обитают драконы...",
   "guides":"Руководства",
-  "buy_wishlist":"Выкупить список желаемого",
+  "buy_wishlist":"Купить список желаемого",
   "highlight":"Подсвечивать",
   "save":"Сохранить",
   "add_to_cart":"Добавить в корзину",
@@ -129,8 +129,8 @@
   "always":"Всегда",
   "compare":"Сравнить",
   "discount":"Скидка",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Скидка (в процентах)",
+  "discountabs":"Скидка (в сумме)",
   "rating_details":"Просмотреть информацию рейтинга",
   "drops_worth_avg":"Примерная стоимость",
   "using_store_return":"Нажмите здесь, чтобы вернуться в __base__ магазин.",
@@ -228,9 +228,10 @@
   "expand_slider":"Разверните слайдер",
   "contract_slider":"Свернуть слайдер",
   "early_access":"Ранний доступ",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "filter_games":"Фильтр игр",
+  "note_for":"Примечания для",
+  "show_wishlist_total":"Показать весь список желаемого",
+  "tag_short":"Использовать короткие теги для экономии места",
   "achievements":{
     "option":"Отображать достижения на страницах в магазине",
     "achievements":"Достижения",
@@ -258,7 +259,10 @@
     "main_e":"История и другое",
     "compl":"На 100%",
     "submit":"Отправить свое время",
-    "main":"История"
+    "main":"История",
+    "no_data":"Данные не найдены",
+    "help":"Нажмите здесь, чтобы помочь",
+    "wrong":"Неверная игра?"
   },
   "library":{
     "in_library":"В Библиотеке",
@@ -299,6 +303,7 @@
     "show_package_info":"Отображать информацию о наборах для всех продуктов",
     "wlbuttoncommunityapp":"Отображать кнопку \"Добавить в список желаемого\" в центрах сообщества",
     "removeguideslanguagefilter":"Отменить автофильтр руководств по языку в профиле",
+    "disablelinkfilter":"Отключить подтверждение при переходе на внешние сайты",
     "regional_price_on":"Отображать сравнение цен",
     "cart":"Товаров в Вашей корзине",
     "friends_own":"Продукты, которые есть у ваших друзей",
@@ -386,6 +391,7 @@
     "wishlist":"Продукты, которые находятся в вашем списке желаемого",
     "add_another_region":"Добавить",
     "skip_got_steam":"Пропустить окно\"У Вас есть установленный Steam клиент ?\"",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Английский",
       "brazilian":"Португальско-бразильский",
@@ -479,7 +485,7 @@
     "sending":"Загрузка ваших игр и дополнений и отправка на IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ элемент",
+    "num_items":"__num__ элементы"
   }
 }

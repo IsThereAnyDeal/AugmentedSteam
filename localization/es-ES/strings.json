@@ -231,6 +231,7 @@
   "filter_games":"Filtrar juegos",
   "note_for":"Nota para",
   "show_wishlist_total":"Ver total de lista de deseados",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Mostrar logros en las páginas de la tienda",
     "achievements":"Logros",
@@ -258,7 +259,10 @@
     "main_e":"Historia y extras",
     "compl":"Completitsta",
     "submit":"Enviar tu tiempo",
-    "main":"Historia principal"
+    "main":"Historia principal",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"En la biblioteca",
@@ -299,6 +303,7 @@
     "show_package_info":"Mostrar información de pack para todas las aplicaciones",
     "wlbuttoncommunityapp":"Mostrar botón \"Añadir a la lista de deseados\" en los puntos de encuentro",
     "removeguideslanguagefilter":"No filtrar las guías automáticamente por el idioma del usuario",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Mostrar comparación de precios regionales",
     "cart":"Artículos en su carro",
     "friends_own":"Artículos que tienen tus amigos",
@@ -386,6 +391,7 @@
     "wishlist":"Artículos en tu lista de deseados",
     "add_another_region":"Añadir",
     "skip_got_steam":"Saltar la ventana de '¿Tienes Steam?'",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"inglés",
       "brazilian":"portugués de Brasil",

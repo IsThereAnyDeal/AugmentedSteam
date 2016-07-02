@@ -129,8 +129,8 @@
   "always":"항상",
   "compare":"비교",
   "discount":"할인",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"할인율",
+  "discountabs":"할인 금액",
   "rating_details":"평가 내용 보기",
   "drops_worth_avg":"대략적인 가치",
   "using_store_return":"여기를 클릭하면 __base__ 상점으로 돌아갑니다.",
@@ -231,6 +231,7 @@
   "filter_games":"게임 필터",
   "note_for":"Note for",
   "show_wishlist_total":"찜 목록 전체 보기",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"상점 페이지에 도전과제 표시",
     "achievements":"도전과제",
@@ -258,7 +259,10 @@
     "main_e":"메인과 추가 스토리",
     "compl":"완벽하게 모두 플레이",
     "submit":"플레이 타임 제출하기",
-    "main":"메인"
+    "main":"메인",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"라이브러리에",
@@ -299,6 +303,7 @@
     "show_package_info":"모든 앱의 패키지 정보를 표시",
     "wlbuttoncommunityapp":"커뮤니티 허브에서 \"찜 목록에 추가\" 버튼 보이기",
     "removeguideslanguagefilter":"사용자 언어를 기준으로 자동 가이드 필터링 하지 않기",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"지역별 가격 비교를 보여준다",
     "cart":"장바구니에 있는 물품들",
     "friends_own":"당신의 친구가 소유한 아이템",
@@ -386,6 +391,7 @@
     "wishlist":"찜 목록",
     "add_another_region":"추가하기",
     "skip_got_steam":"'스팀이 설치되어 있습니까?' 창 생략",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"영어",
       "brazilian":"포르투갈어-브라질",

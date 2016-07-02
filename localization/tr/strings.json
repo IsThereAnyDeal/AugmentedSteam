@@ -129,8 +129,8 @@
   "always":"Her Zaman",
   "compare":"Karşılaştır",
   "discount":"İndirim",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"İndirim Yüzdesi",
+  "discountabs":"İndirim Tutarı",
   "rating_details":"Değerlendirme detaylarını gör",
   "drops_worth_avg":"Tahmini Değer",
   "using_store_return":"Buraya tıklayarak __base__ mağazasına geri dönün.",
@@ -228,9 +228,10 @@
   "expand_slider":"Kaydırıcıyı genişlet",
   "contract_slider":"Kaydırıcıyı daralt",
   "early_access":"Erken Erişim",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "filter_games":"Filtreli oyunlar",
+  "note_for":"için not",
+  "show_wishlist_total":"Toplam istek listesini göster",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Başarımları mağaza sayfalarında göster",
     "achievements":"Başarımlar",
@@ -258,7 +259,10 @@
     "main_e":"Ana Hikaye ve Ekstralar",
     "compl":"Tamamlayıcı",
     "submit":"Zamanınızı Gönderin",
-    "main":"Ana Hikaye"
+    "main":"Ana Hikaye",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"Kütüphanede",
@@ -299,6 +303,7 @@
     "show_package_info":"Tüm uygulamalar için paket bilgisini göster",
     "wlbuttoncommunityapp":"Kullanıcı topluluk uygulamasında \"İstek Listesine ekle\" butonu göster",
     "removeguideslanguagefilter":"Kullanıcı diline göre kılavuzları otomatik filtreleme",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Karşılaştırmada bölgesel fiyatları göster",
     "cart":"Sepetinizdeki ürünler",
     "friends_own":"Arkadaşlarının sahip oldukları eşyalar",
@@ -386,6 +391,7 @@
     "wishlist":"İstek listenizdeki eşyalar",
     "add_another_region":"Ekle",
     "skip_got_steam":"'Steam'iniz var mı?' penceresini atla",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"İngilizce",
       "brazilian":"Portekizce-Brezilya",
@@ -479,7 +485,7 @@
     "sending":"Sahip olduğunuz oyunlar ve paketler yükleniyor ve IsThereAnyDeal.com'a gönderiliyor"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ eşya",
+    "num_items":"__num__ eşyalar"
   }
 }

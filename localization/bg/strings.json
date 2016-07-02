@@ -196,7 +196,7 @@
   "drm_third_party_sub":"Warning: One or more titles in this package use 3rd party DRM",
   "customize":"Персонализиране",
   "bundle_saving_text":"Here's what you save by buying this bundle",
-  "thewordoptions":"Опцйи",
+  "thewordoptions":"Опции",
   "concepts":"Concepts",
   "collections":"Колекции",
   "discussions":"Дискусии",
@@ -231,6 +231,7 @@
   "filter_games":"Filter games",
   "note_for":"Note for",
   "show_wishlist_total":"Show wishlist Total",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Показване на постиженията на страницата на магазина",
     "achievements":"Постижения",
@@ -258,7 +259,10 @@
     "main_e":"Главна история и екстри",
     "compl":"Завършеност",
     "submit":"Въведете Вашето време",
-    "main":"Основна история"
+    "main":"Основна история",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"In Library",
@@ -299,6 +303,7 @@
     "show_package_info":"Покажи информация за всички приложения",
     "wlbuttoncommunityapp":"Покажи бутон \"Добави към wishlist\" в страницата на обществеността",
     "removeguideslanguagefilter":"Don't automatically filter guides by user language",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Сравнение на цените по региони",
     "cart":"Елементи във Вашата количка",
     "friends_own":"Предмети, които приятелите ви имат",
@@ -353,7 +358,7 @@
     "owned":"Притежавани предмети",
     "steamdb":"Покажи линкове от SteamDB",
     "hide_early_access":"Hide Early Access games on homepage, browse, and search pages",
-    "reset_note":"Options reset",
+    "reset_note":"Анулиране на опциите",
     "html5video":"Show videos using HTML5 instead of Flash",
     "profiles_link_group_game":"Game exclusive",
     "friends_wishlist":"Предмети, които приятелите ви искат",
@@ -367,7 +372,7 @@
     "lowestprice_coupon":"Включи кодове за купони в сравнение на цената",
     "greenlight_banner":"Замени банера на Steam Greenlight",
     "dynamicgreenlight":"Use dynamic data while browsing Greenlight",
-    "remembergreenlightfilter":"Remember Greenlight filter options",
+    "remembergreenlightfilter":"Запомни опциите на филтъра на \"Зелена Светлина\"",
     "endlessscrollinggreenlight":"Enable continuous scrolling of Greenlight search results",
     "general":"Общи",
     "market":"Market",
@@ -386,6 +391,7 @@
     "wishlist":"Предмети в списъка с желания",
     "add_another_region":"Добави",
     "skip_got_steam":"Skip the 'Got Steam?' window",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"английски",
       "brazilian":"португалски (Бразилия)",
@@ -440,8 +446,8 @@
     "resolution_up":"разделителна способност до __pixels__",
     "graphics_settings":"Графични настройки",
     "satisfaction":"Performance Satisfaction by GPU",
-    "gs_y":"Has built-in graphic options or a graphics menu",
-    "gs_n":"Does not have built-in graphic options or a graphics menu",
+    "gs_y":"Има вградени графични опции или графично меню",
+    "gs_n":"Няма вградени графични опции или графично меню",
     "nobody":"Nobody has taken a performance survey for this game yet",
     "take":"Take The Survey"
   },

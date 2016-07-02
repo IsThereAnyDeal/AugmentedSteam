@@ -129,8 +129,8 @@
   "always":"總是",
   "compare":"比較",
   "discount":"特價",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"折扣(百分率)",
+  "discountabs":"折扣(金額)",
   "rating_details":"檢視分級資訊",
   "drops_worth_avg":"大約值",
   "using_store_return":"按此回到 __base__ 的商店",
@@ -178,7 +178,7 @@
   "notcommon_label":"隱藏你擁有的遊戲",
   "show_all_steam_releases":"顯示所有Steam產品",
   "wishlist":"願望清單",
-  "on_wishlist":"On Wishlist",
+  "on_wishlist":"在願望清單上",
   "notdiscounted":"物品未打折",
   "cancel":"取消",
   "wiki_article":"檢視 __pcgw__ 的文章",
@@ -218,19 +218,20 @@
   "leave_group_admin_confirm":"您是__groupname__ 的管理員，你確定你要離開嗎？",
   "wrong_try_again":"未知錯誤，請重試!",
   "join_group":"加入群組",
-  "chat":"Chat",
-  "web_browser_chat":"Web browser chat",
-  "steam_client_chat":"Steam Client chat",
+  "chat":"聊天",
+  "web_browser_chat":"使用瀏覽器聊天",
+  "steam_client_chat":"使用Steam聊天",
   "available":"Available",
-  "set_as_background":"Set as Background",
-  "preview_background":"Preview Background",
-  "details":"Details",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
-  "early_access":"Early Access",
-  "filter_games":"Filter games",
+  "set_as_background":"設為背景",
+  "preview_background":"預覽背景",
+  "details":"詳細資料",
+  "expand_slider":"放大卷軸",
+  "contract_slider":"縮小卷軸",
+  "early_access":"搶先體驗",
+  "filter_games":"篩選遊戲",
   "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "show_wishlist_total":"顯示願望清單總數",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"在商店頁面中顯示成就",
     "achievements":"成就",
@@ -258,10 +259,13 @@
     "main_e":"主線加支線",
     "compl":"完美主義者",
     "submit":"送出你的時數",
-    "main":"主線故事"
+    "main":"主線故事",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
-    "in_library":"In Library",
+    "in_library":"在遊戲庫中",
     "error_loading_library":"無法載入您的收藏庫。",
     "categories":"目錄...",
     "genres":"類型...",
@@ -299,6 +303,7 @@
     "show_package_info":"顯示所有軟體的package資訊",
     "wlbuttoncommunityapp":"在社群中心中顯示\"加入到願望清單\"按紐",
     "removeguideslanguagefilter":"不自動由使用者語言篩選指南",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"顯示各地區價格比較",
     "cart":"購物車裡的物品",
     "friends_own":"朋友擁有的項目",
@@ -385,7 +390,8 @@
     "homepage_default_tab_specials":"特惠",
     "wishlist":"在願望清單上的項目",
     "add_another_region":"增加",
-    "skip_got_steam":"Skip the 'Got Steam?' window",
+    "skip_got_steam":"跳過 '安裝Steam了嗎？' 視窗",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"英文",
       "brazilian":"葡萄牙文-巴西",
@@ -458,7 +464,7 @@
     "inv_gift":"禮物",
     "inv_guestpass":"招待券",
     "owned":"已經擁有的",
-    "notinterested":"Not Interested",
+    "notinterested":"不感興趣",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ 想要<\/a>"
   },
   "wallet":{
@@ -479,7 +485,7 @@
     "sending":"載入您擁有的遊戲和套裝軟體並將它們發送到 IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ 物品",
+    "num_items":"__num__ 物品"
   }
 }

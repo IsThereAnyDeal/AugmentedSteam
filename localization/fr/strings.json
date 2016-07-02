@@ -129,8 +129,8 @@
   "always":"Toujours",
   "compare":"Comparer",
   "discount":"Remise",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Remise (Pourcentage)",
+  "discountabs":"Remise (montant)",
   "rating_details":"Voir le détail de l'évaluation",
   "drops_worth_avg":"Valeur approximative",
   "using_store_return":"Cliquez ici pour retourner sur le magasin __base__.",
@@ -228,9 +228,10 @@
   "expand_slider":"Agrandir",
   "contract_slider":"Réduire",
   "early_access":"Accès anticipé",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "filter_games":"Filtrer les jeux",
+  "note_for":"Note pour",
+  "show_wishlist_total":"Afficher le total de la liste de souhaits",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Afficher les succès dans le magasin",
     "achievements":"Succès",
@@ -258,7 +259,10 @@
     "main_e":"Histoire principale et extras ",
     "compl":"Perfectionniste ",
     "submit":"Envoyer votre temps",
-    "main":"Histoire principale "
+    "main":"Histoire principale ",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"Dans votre bibliothèque",
@@ -299,6 +303,7 @@
     "show_package_info":"Afficher les informations sur les packages pour toutes les applications",
     "wlbuttoncommunityapp":"Afficher le bouton \"Ajouter à votre liste de souhaits\" dans les hubs de la communauté",
     "removeguideslanguagefilter":"Ne pas filtrer automatiquement les guides par la langue de l'utilisateur",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Afficher la comparaison des prix par région",
     "cart":"Articles dans votre panier",
     "friends_own":"Articles que vos amis possèdent",
@@ -386,6 +391,7 @@
     "wishlist":"Articles dans votre liste de souhaits",
     "add_another_region":"Ajouter",
     "skip_got_steam":"Éviter la fenêtre \"Vous avez Steam ?\"",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Anglais",
       "brazilian":"Portugais du Brésil",
@@ -479,7 +485,7 @@
     "sending":"Chargement de la liste des jeux et des packages vous appartenant et envoit à IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ objet",
+    "num_items":"__num__ objets"
   }
 }

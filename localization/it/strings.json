@@ -231,6 +231,7 @@
   "filter_games":"Filter games",
   "note_for":"Note for",
   "show_wishlist_total":"Show wishlist Total",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Mostra achievement sulle pagine del negozio",
     "achievements":"Achievement",
@@ -258,7 +259,10 @@
     "main_e":"Storia principale + Extra",
     "compl":"Completamento al 100%",
     "submit":"Invia il tuo tempo",
-    "main":"Storia principale"
+    "main":"Storia principale",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"In libreria",
@@ -299,6 +303,7 @@
     "show_package_info":"Mostra \"Informazioni sul Pacchetto\" per tutte le applicazioni",
     "wlbuttoncommunityapp":"Mostra pulsante \"Aggiungi a Lista dei desideri\" in Hub della Comunità",
     "removeguideslanguagefilter":"Non filtrare automaticamente le Guide per lingua",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Mostra comparazione dei prezzi regionali",
     "cart":"Articoli nel carrello",
     "friends_own":"Giochi che possiedono i tuoi amici",
@@ -386,6 +391,7 @@
     "wishlist":"Giochi in Lista dei desideri",
     "add_another_region":"Aggiungi",
     "skip_got_steam":"Salta la finestra 'Hai già Steam?'",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Inglese",
       "brazilian":"Portoghese brasiliano",

@@ -231,6 +231,7 @@
   "filter_games":"Filter games",
   "note_for":"Note for",
   "show_wishlist_total":"Show wishlist Total",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"ストアページで実績を表示",
     "achievements":"実績",
@@ -258,7 +259,10 @@
     "main_e":"主なストーリーとおまけ",
     "compl":"完璧主義者",
     "submit":"あなたの時間を送信",
-    "main":"主なストーリー"
+    "main":"主なストーリー",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"In Library",
@@ -299,6 +303,7 @@
     "show_package_info":"全アプリのパッケージ情報を表示",
     "wlbuttoncommunityapp":"「ウィッシュリストに追加」ボタンをコミュニティアプリハブに表示",
     "removeguideslanguagefilter":"ユーザーの言語設定によるガイドの自動フィルタリングをしない",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"地域別価格比較を表示",
     "cart":"カートにあるアイテム",
     "friends_own":"フレンドが所有しているアイテム",
@@ -386,6 +391,7 @@
     "wishlist":"ウィッシュリストにあるアイテム",
     "add_another_region":"追加",
     "skip_got_steam":"Skip the 'Got Steam?' window",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"英語",
       "brazilian":"ブラジルポルトガル語",

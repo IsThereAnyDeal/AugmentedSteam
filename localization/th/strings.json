@@ -231,6 +231,7 @@
   "filter_games":"Filter games",
   "note_for":"Note for",
   "show_wishlist_total":"Show wishlist Total",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"แสดงรางวัลความสำเร็จบนหน้าร้านค้า",
     "achievements":"รางวัลความสำเร็จ",
@@ -258,7 +259,10 @@
     "main_e":"เนื้อเรื่องหลักและเนื้อหาพิเศษ",
     "compl":"ผู้ชื่นชอบความสมบูรณ์",
     "submit":"ส่งเวลาของคุณ",
-    "main":"เนื้อเรื่องหลัก"
+    "main":"เนื้อเรื่องหลัก",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"ในคลัง",
@@ -299,6 +303,7 @@
     "show_package_info":"แสดงข้อมูลแพ็กเกจของแอปทั้งหมด",
     "wlbuttoncommunityapp":"แสดงปุ่ม \"เพิ่มในสิ่งที่คุณอยากได้\" บนศูนย์กลางชุมชนของแอป",
     "removeguideslanguagefilter":"ให้แสดงคู่มือทุกภาษา.",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"แสดงการเปรียบเทียบราคาตามภูมิภาค",
     "cart":"สินค้าในรถเข็นของคุณ",
     "friends_own":"รายการที่เพื่อนของคุณเป็นเจ้าของแล้ว",
@@ -386,6 +391,7 @@
     "wishlist":"รายการในสิ่งที่อยากได้ของคุณ",
     "add_another_region":"เพิ่ม",
     "skip_got_steam":"ข้ามหน้าต่าง 'Got Steam?'",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"อังกฤษ",
       "brazilian":"โปรตุเกส-บราซิล",

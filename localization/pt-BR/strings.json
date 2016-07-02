@@ -130,7 +130,7 @@
   "compare":"Comparar",
   "discount":"Desconto",
   "discountper":"Desconto (percentual)",
-  "discountabs":"Desconto (Amount)",
+  "discountabs":"Desconto (valor)",
   "rating_details":"Ver detalhes da avaliação",
   "drops_worth_avg":"Valor aproximado:",
   "using_store_return":"Clique aqui para voltar à loja da região __base__.",
@@ -229,8 +229,9 @@
   "contract_slider":"Contrair",
   "early_access":"Acesso antecipado",
   "filter_games":"Filtrar jogos",
-  "note_for":"Note for",
+  "note_for":"Nota para",
   "show_wishlist_total":"Exibir total da lista de desejos",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Exibir conquistas na página da loja",
     "achievements":"Conquistas",
@@ -258,7 +259,10 @@
     "main_e":"História principal e extras",
     "compl":"Completar tudo",
     "submit":"Envie o seu tempo",
-    "main":"História principal"
+    "main":"História principal",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"Na biblioteca",
@@ -299,6 +303,7 @@
     "show_package_info":"Exibir informações do pacote para todos os aplicativos",
     "wlbuttoncommunityapp":"Exibir botão \"Adicionar à lista de desejos\" em Centrais da Comunidade",
     "removeguideslanguagefilter":"Não filtrar automaticamente guias pelo idioma do usuário",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Exibir comparação de preços regionais",
     "cart":"itens no seu carrinho",
     "friends_own":"Itens que os seus amigos possuem",
@@ -386,6 +391,7 @@
     "wishlist":"Itens na sua lista de desejos",
     "add_another_region":"Adicionar",
     "skip_got_steam":"Pular a janela \"Você tem o Steam?\"",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Inglês",
       "brazilian":"Português (Brasil)",

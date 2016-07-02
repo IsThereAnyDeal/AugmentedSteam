@@ -129,8 +129,8 @@
   "always":"Zawsze",
   "compare":"Porównaj",
   "discount":"Zniżka",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Rabat (w procentach)",
+  "discountabs":"Rabat (suma)",
   "rating_details":"Zobacz informacje o ocenach",
   "drops_worth_avg":"Szacowana wartość",
   "using_store_return":"Kliknij tutaj, aby powrócić do sklepu __base__.",
@@ -228,9 +228,10 @@
   "expand_slider":"Rozwiń suwak",
   "contract_slider":"Zwiń suwak",
   "early_access":"Wczesny dostęp",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
+  "filter_games":"Filter gier",
+  "note_for":"Notatka dla",
+  "show_wishlist_total":"Pokaż listę życzeń",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Pokaż osiągnięcia na stronach sklepu",
     "achievements":"Osiągnięcia",
@@ -258,7 +259,10 @@
     "main_e":"Główny wątek i dodatki",
     "compl":"Kompletne ukończenie",
     "submit":"Podaj swój czas",
-    "main":"Główny wątek"
+    "main":"Główny wątek",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"W bibliotece",
@@ -299,6 +303,7 @@
     "show_package_info":"Pokaż informacje o paczkach dla wszystkich aplikacji",
     "wlbuttoncommunityapp":"Pokaż przycisk „Dodaj do listy życzeń” na stronach społeczności",
     "removeguideslanguagefilter":"Nie filtruj automatycznie poradników po języku użytkownika",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Pokaż porównanie cen regionalnych",
     "cart":"Rzeczy w koszyku",
     "friends_own":"Tytuły posiadane przez znajomych",
@@ -386,6 +391,7 @@
     "wishlist":"Tytuły na liście życzeń",
     "add_another_region":"Dodaj",
     "skip_got_steam":"Pomiń okno \"Masz Steama?\"",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Angielski",
       "brazilian":"Portugalski Brazylia",

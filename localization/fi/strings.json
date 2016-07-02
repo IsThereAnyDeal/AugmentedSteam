@@ -231,6 +231,7 @@
   "filter_games":"Filter games",
   "note_for":"Note for",
   "show_wishlist_total":"Show wishlist Total",
+  "tag_short":"Use short tags to save space",
   "achievements":{
     "option":"Näytä saavutukset kauppasivuilla",
     "achievements":"Saavutukset",
@@ -258,7 +259,10 @@
     "main_e":"Päätarina ja ekstrat",
     "compl":"Perfektionisti",
     "submit":"Kerro oma aikasi",
-    "main":"Päätarina"
+    "main":"Päätarina",
+    "no_data":"No data found",
+    "help":"Click here to help",
+    "wrong":"Wrong game?"
   },
   "library":{
     "in_library":"In Library",
@@ -299,6 +303,7 @@
     "show_package_info":"Näytä \"paketin tiedot\" nappula kaikille tuotteille",
     "wlbuttoncommunityapp":"Näytä \"Lisää toivelistaan\" nappula tuotteiden yhteisökeskuksissa",
     "removeguideslanguagefilter":"Don't automatically filter guides by user language",
+    "disablelinkfilter":"Disable confirmation when accessing external sites",
     "regional_price_on":"Näytä alueellinen hintavertailu",
     "cart":"Kohteet ostoskorissasi",
     "friends_own":"Tuotteet jotka ystäväsi omistavat",
@@ -386,6 +391,7 @@
     "wishlist":"Tuotteet toivelistallasi",
     "add_another_region":"Lisää",
     "skip_got_steam":"Skip the 'Got Steam?' window",
+    "store_general_thirdparty":"Options for information from 3rd party sites",
     "lang":{
       "english":"Englanti",
       "brazilian":"Brazilian Portugali",
