@@ -146,14 +146,14 @@ var signed_in_promise = (function () {
 var dynamicstore_promise = (function () {
 	var deferred = new $.Deferred();
 
-	if (is_signed_in && window.location.protocol != "https:") {
+	if (is_signed_in) {
 		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
 			last_updated = getValue("dynamicstore_time") || expire_time - 1,
 			dynamicstore_data = getValue("dynamicstore_data"),
 			dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
 			dataVersion_cache = getValue("unUserdataVersion") || 0;
 
-		if (last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) {
+		if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
 			var accountidtext = $('script:contains("g_AccountID")').text() || "",
 				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
 
@@ -2733,21 +2733,31 @@ function add_community_profile_links() {
 }
 
 function add_wishlist_profile_link() {
-	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
-	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
-
-	$(".profile_item_links").find(".profile_count_link:first").after("<div class='profile_count_link' id='es_wishlist_link'><a href='//steamcommunity.com/profiles/" + steamID + "/wishlist'><span class='count_link_label'>" + localized_strings.wishlist + "</span>&nbsp;<span class='profile_count_link_total' id='es_wishlist_count'></span></a></div>");
-
-	// Get count of wishlisted items
-	get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
-		var count = txt.match(/id="game_(\d+)"/g);
-
-		if (count) {
-			$("#es_wishlist_count").text(count.length);
-		} else {
-			$("#es_wishlist_link").remove();
+	if ($(".profile_item_links").length) {
+		var steamID = $("input[name='abuseID']").val();
+	
+		if (!steamID) {
+			var rgData = $("script:contains('g_rgProfileData')").text();
+			if (rgData && /steamid"\:"\d+","personaname/.test(rgData)) {
+				steamID = rgData.match(/steamid"\:"(\d+)","personaname/)[1];
+			}
 		}
-	});	
+
+		if (steamID) {
+			$(".profile_item_links").find(".profile_count_link:first").after("<div class='profile_count_link' id='es_wishlist_link'><a href='//steamcommunity.com/profiles/" + steamID + "/wishlist'><span class='count_link_label'>" + localized_strings.wishlist + "</span>&nbsp;<span class='profile_count_link_total' id='es_wishlist_count'></span></a></div>");
+
+			// Get count of wishlisted items
+			get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
+				var count = txt.match(/id="game_(\d+)"/g);
+
+				if (count) {
+					$("#es_wishlist_count").text(count.length);
+				} else {
+					$("#es_wishlist_link").remove();
+				}
+			});
+		}
+	}
 }
 
 // Add supporter badges to supporter's profiles
