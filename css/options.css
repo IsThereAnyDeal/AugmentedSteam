@@ -2,7 +2,7 @@ body {
 	background: -webkit-linear-gradient(top,  #000000 0%,#0b1821 100%); /* Chrome10+,Safari5.1+ */
 	margin-left: 0px;
 	color: #efffef;
-	font-family:"Arial" sans-serif;
+	font-family:"Arial", sans-serif;
 }
 
 #side_bar {
