@@ -1848,3 +1848,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_faq_cards {
 	margin-top: 4px;
 }
+
+/***************************************
+ * Activity pages
+ * add_achievement_comparison_link()
+ **************************************/
+.blotter_block a.es_highlight {
+	color: rgba(255, 255, 255, 0.80);
+	padding: 1px 4px;
+	line-height: 20px;
+	white-space: nowrap;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+	text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
+}
+.es_achievement_compare {
+	font-size: 10px;
+	float: right;
+	margin-right: 6px;
+}
+.es_achievements {
+	margin-top: 0 !important;
+}
+

@@ -869,15 +869,6 @@ function highlight_node(node, color) {
 			return;
 		}*/
 
-		// Blotter activity
-		if ($node.parent().parent()[0]) {
-			if ($node.parent().parent()[0].classList.contains("blotter_daily_rollup_line") || $node.parent()[0].classList.contains("blotter_group_announcement_header") || $node.parent().parent()[0].classList.contains("blotter_author_block") || $node.parent()[0].classList.contains("blotter_gamepurchase_details") || $node.parent().parent()[0].classList.contains("blotter_recommendation")) {
-				$node.css("color", color);
-				$node.removeClass();
-				return;
-			}
-		}
-
 		$(node).removeClass("ds_flagged").find(".ds_flag").remove();
 		$(node).find(".ds_flagged").removeClass("ds_flagged");
 	});
@@ -6922,33 +6913,26 @@ function start_highlights_and_tags(){
 
 function start_friend_activity_highlights() {
 	$.when.apply($, [dynamicstore_promise]).done(function(data) {
-		var selectors = [
-			".blotter_author_block a",
-			".blotter_gamepurchase_details a",
-			".blotter_daily_rollup_line a",
-			".blotter_group_announcement_header_text a"
-		];
 		var ownedapps = data.rgOwnedApps;
 		var wishlistapps = data.rgWishlist;
 
 		// Get all appids and nodes from selectors
-		$.each(selectors, function (i, selector) {
-			$.each($(selector), function(j, node){
-				var appid = get_appid(node.href);
-				if (appid && !node.classList.contains("blotter_userstats_game")) {
-					if (selector == ".blotter_author_block a") { $(node).addClass("inline_tags"); }
-					if (selector == ".blotter_daily_rollup_line a") {
-						if ($(node).parent().parent().html().match(/<img src="(.+apps.+)"/)) {
-							add_achievement_comparison_link($(node).parent().parent());
-						}
+		$(".blotter_block").not(".es_highlight_checked").addClass("es_highlight_checked").find("a").each(function (i, node) {
+			var appid = get_appid(node.href);
+
+			if (appid && !$(node).hasClass("blotter_userstats_game")) {
+				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+				if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+				if (getValue(appid + "gift")) highlight_inv_gift(node);
+				if ($.inArray(parseFloat(appid), wishlistapps) !== -1) highlight_wishlist(node);
+				if ($.inArray(parseFloat(appid), ownedapps) !== -1) {
+					highlight_owned(node);
+					// Add achievements comparison link
+					if ($(node).parent().parent().hasClass("blotter_daily_rollup_line")) {
+						add_achievement_comparison_link($(node).parent(), appid);
 					}
-					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-					if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
-					if (getValue(appid + "gift")) highlight_inv_gift(node);
-					if ($.inArray(parseFloat(appid), wishlistapps) !== -1) highlight_wishlist(node);
-					if ($.inArray(parseFloat(appid), ownedapps) !== -1) highlight_owned(node);
 				}
-			});
+			}
 		});
 	});
 }
@@ -7112,21 +7096,51 @@ function add_carousel_descriptions() {
 	});
 }
 
-function add_achievement_comparison_link(node) {
+var memoized_stats_link = {};
+function memoize_stats_link(appid, state, cappid) {
+	if (!memoized_stats_link.hasOwnProperty(appid) || memoized_stats_link[appid].state !== "loaded") {
+		memoized_stats_link[appid] = { "state": state, "cappid": cappid };
+	}
+
+	return memoized_stats_link[appid];
+}
+
+function add_achievement_comparison_link(node, appid) {
 	storage.get(function(settings) {
 		if (settings.showcomparelinks === undefined) { settings.showcomparelinks = false; storage.set({'showcomparelinks': settings.showcomparelinks}); }
 		if (settings.showcomparelinks) {
-			if (!($(node).html().match(/es_achievement_compare/))&&!$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare")) {
-				$(node).find("span:not(.nickname_block,.nickname_name)").attr("data-compare","true");
-				var links = $(node).find("a");
-				var appid = get_appid(links[2].href);
-				get_http(links[0].href + "/stats/" + appid, function(txt) {
-					var html = txt.match(/<a href="(.+)compare">/);
-					if (html) {
-						$(node).find("span:not(.nickname_block,.nickname_name)").css("margin-top", "0px");
-						$(node).find("span:not(.nickname_block,.nickname_name)").append("<br><a href='//steamcommunity.com" + html[1] + "compare' class='es_achievement_compare' target='_blank' style='font-size: 10px; float: right; margin-right: 6px;'>(" + localized_strings.compare + ")</a>");
-					}
-				});
+			var $node = $(node).addClass("es_achievements");
+
+			memoized_stats_link[appid] = memoized_stats_link[appid] || memoize_stats_link(appid, "toload");
+
+			if ($node.next().is("img") && memoized_stats_link[appid].state !== "failed") {
+				var links = $node.find("a");
+
+				// Prepare the link
+				$node.append("<br><a class='es_achievement_compare' data-appid='" + appid + "' href='" + links[0].href + "/stats/" + "' target='_blank'></a>");
+
+				if (memoized_stats_link[appid].state === "loaded") {
+					$node.find(".es_achievement_compare").addClass("es_has_compare").text("(" + localized_strings.compare + ")").prop("href", function(){ return ($(this).prop("href") + memoized_stats_link[appid].cappid + "/compare") });
+				} else if (memoized_stats_link[appid].state === "toload") {
+					memoize_stats_link(appid, "loading");
+
+					get_http(links[0].href + "/stats/" + appid, function(txt) {
+						var html = txt.match(/<a href=".*\/stats\/(.+)\/compare">/);
+						
+						if (html) {
+							memoize_stats_link(appid, "loaded", html[1]);
+							// We do all links that have been revealed while loading
+							$(".es_achievement_compare[data-appid='" + appid + "']").not(".es_has_compare").addClass("es_has_compare").text("(" + localized_strings.compare + ")").prop("href", function(){ return ($(this).prop("href") + memoized_stats_link[appid].cappid + "/compare") });
+						} else {
+							memoize_stats_link(appid, "failed");
+							// Remove compare links for this app if there is there no data
+							$(".es_achievement_compare[data-appid='" + appid + "']").remove();
+						}
+					}).fail(function(){
+						// If it failed mark it for another attempt
+						memoize_stats_link(appid, "toload");
+					});
+				}
 			}
 		}
 	});
@@ -8770,11 +8784,21 @@ function disable_link_filter() {
 	storage.get(function(settings) {
 		if (settings.disablelinkfilter === undefined) { settings.disablelinkfilter = false; storage.set({'disable_link_filter': settings.disablelinkfilter}); }
 		if (settings.disablelinkfilter) {
-			$("a.bb_link[href*='/linkfilter/']").prop("href", function(){
-				return this.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
+			remove_links_filter();
+
+			setMutationHandler(document, "#announcementsContainer, .commentthread_comments", function(){
+				remove_links_filter();
+
+				return true; // keep on monitoring
 			});
 		}
 	});
+
+	function remove_links_filter() {
+		$("a.bb_link[href*='/linkfilter/']").prop("href", function(){
+			return this.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
+		});
+	}
 }
 
 $(document).ready(function(){
