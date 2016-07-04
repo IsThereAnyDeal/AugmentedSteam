@@ -601,9 +601,9 @@ var profileData = (function() {
 				data = JSON.parse(txt);
 				cache_set(steamid, data);
 				deferred.resolveWith(data);
-			}).fail(deferred.reject());
+			}).fail(deferred.reject);
 		} else {
-			deferred.reject();
+			deferred.reject;
 		}
 
 		return deferred.promise();
