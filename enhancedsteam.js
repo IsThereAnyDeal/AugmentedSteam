@@ -6917,7 +6917,7 @@ function start_friend_activity_highlights() {
 		var wishlistapps = data.rgWishlist;
 
 		// Get all appids and nodes from selectors
-		$(".blotter_block").not(".es_highlight_checked").addClass("es_highlight_checked").find("a").each(function (i, node) {
+		$(".blotter_block").not(".es_highlight_checked").addClass("es_highlight_checked").find("a").not(".blotter_gamepurchase_logo").each(function (i, node) {
 			var appid = get_appid(node.href);
 
 			if (appid && !$(node).hasClass("blotter_userstats_game")) {
