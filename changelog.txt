@@ -2,6 +2,12 @@
 -----
 
 
+v8.7.1
+-----
+: Fixed a bug that caused some elements on the "Edit Profile" page not to load correctly
+: Fixed a bug that caused Enhanced Steam to interact with other extensions incorrectly
+: Dynamic storefront data will now draw from cached data when browsing over HTTPS
+
 v8.7
 -----
 + A huge amount of cache optimization - thanks JoiNNN!
