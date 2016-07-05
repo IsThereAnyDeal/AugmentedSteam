@@ -4762,8 +4762,8 @@ function inventory_market_helper(response) {
 						runInPageContext(`function() {
 							var rgAJAXParams = {
 								sessionid: g_sessionID,
-								appid: " + $(this).attr("appid") + ",
-								assetid: " + $(this).attr("assetID") + ",
+								appid: ` + $(this).attr("appid") + `,
+								assetid: ` + $(this).attr("assetID") + `,
 								contextid: 6
 							};
 							var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
