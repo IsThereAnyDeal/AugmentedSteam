@@ -4791,6 +4791,10 @@ function inventory_market_helper(response) {
 							
 							$(thisItem).addClass("es-loading");
 
+							// Add the links with no data, so we can bind actions to them, we add the data later
+							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "'></a>");
+							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "'></a>");
+
 							// Check if price is stored in data
 							if ($(thisItem).hasClass("es-price-loaded")) {
 								var price_high = $(thisItem).data("price-high"),
@@ -4798,11 +4802,11 @@ function inventory_market_helper(response) {
 
 								// Add Quick Sell button
 								if (price_high) {
-									$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+									$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 								}
 								// Add Instant Sell button
 								if (price_low) {
-									$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+									$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 								}
 
 								$(thisItem).removeClass("es-loading");
@@ -4836,11 +4840,11 @@ function inventory_market_helper(response) {
 											if ( $(".inventory_item_link_disabled").parent().is($(thisItem)) ) {
 												// Add "Quick Sell" button
 												if (price_high > price_low) {
-													$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "' price='" + price_high + "'><span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span></a>");
+													$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 												// Add "Instant Sell" button
 												if (market.highest_buy_order) {
-													$sideMarketActs.append("<br class='es-btn-spacer'><a class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "' price='" + price_low + "'><span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span></a>");
+													$("#es_instantsell" + item).attr("price", price_high).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 											}
 										}).complete(function(){
@@ -4851,13 +4855,14 @@ function inventory_market_helper(response) {
 							}
 						}
 
+
 						// Bind actions to "Quick Sell" and "Instant Sel" buttons
-						$(document).on("click", "#es_instantsell" + item + ", #es_quicksell" + item, function(e){
-							e.stopImmediatePropagation();
+						$("#es_quicksell" + item + ", #es_instantsell" + item).on("click", function(e){
+							e.preventDefault();
 
 							var sell_price = $(this).attr("price") * 100;
 
-							$("#es_sell, #es_instantsell" + item + ", #es_quicksell" + item).addClass("btn_disabled").css("pointer-events", "none");
+							$("#es_sell, #es_quicksell" + item + ", #es_instantsell" + item).addClass("btn_disabled").css("pointer-events", "none");
 
 							$sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
 
