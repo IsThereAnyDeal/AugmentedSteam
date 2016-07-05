@@ -1870,3 +1870,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: 0 !important;
 }
 
+/***************************************
+ * Apps community hub
+ * add_app_page_wishlist()
+ **************************************/
+.apphub_StoreInfoHeader.es_highlighted .price,
+.apphub_StoreInfoHeader.es_highlighted .discount_final_price,
+.apphub_StoreInfoHeader.es_highlighted .apphub_StoreAppText {
+	color: rgba(255, 255, 255, 0.65);
+}
+
