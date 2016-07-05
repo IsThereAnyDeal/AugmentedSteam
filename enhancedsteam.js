@@ -4844,7 +4844,7 @@ function inventory_market_helper(response) {
 												}
 												// Add "Instant Sell" button
 												if (market.highest_buy_order) {
-													$("#es_instantsell" + item).attr("price", price_high).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+													$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 											}
 										}).complete(function(){
