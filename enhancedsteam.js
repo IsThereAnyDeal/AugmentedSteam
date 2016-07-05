@@ -7290,6 +7290,9 @@ function add_app_page_wishlist_changes(appid) {
 						setValue(appid + "wishlisted", false);
 						$("#add_to_wishlist_area").show();
 						$("#add_to_wishlist_area_success").hide();
+
+						// Invalidate dynamic store data cache
+						runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
 					},
 					complete: function() {
 						$(parent).removeClass("loading");
