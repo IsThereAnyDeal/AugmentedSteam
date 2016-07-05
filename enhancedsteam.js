@@ -673,13 +673,13 @@ var highlight_defaults = {
 // Color the tile for owned games
 function highlight_owned(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight");
+		node.classList.add("es_highlight_checked");
 
 		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned; storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
 		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
 		if (settings.hide_owned === undefined) { settings.hide_owned = false; storage.set({'hide_owned': settings.hide_owned}); }
 
-		if (settings.highlight_owned) { $(node).addClass("es_highlighted_owned"); highlight_node(node, settings.highlight_owned_color); }
+		if (settings.highlight_owned) { $(node).addClass("es_highlighted es_highlighted_owned"); highlight_node(node, settings.highlight_owned_color); }
 		if (settings.hide_owned) hide_node(node);
 
 		if (settings.tag_owned === undefined) { settings.tag_owned = false; storage.set({'tag_owned': settings.tag_owned}); }
@@ -691,13 +691,13 @@ function highlight_owned(node) {
 // Color the tile for wishlist games
 function highlight_wishlist(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight");
+		node.classList.add("es_highlight_checked");
 
 		if (settings.highlight_wishlist_color === undefined) { settings.highlight_wishlist_color = highlight_defaults.wishlist; storage.set({'highlight_wishlist_color': settings.highlight_wishlist_color}); }
 		if (settings.highlight_wishlist === undefined) { settings.highlight_wishlist = true; storage.set({'highlight_wishlist': settings.highlight_wishlist}); }
 		if (settings.hide_wishlist === undefined) { settings.hide_wishlist = false; storage.set({'hide_wishlist': settings.hide_wishlist}); }
 
-		if (settings.highlight_wishlist) { $(node).addClass("es_highlighted_wishlist"); highlight_node(node, settings.highlight_wishlist_color); }
+		if (settings.highlight_wishlist) { $(node).addClass("es_highlighted es_highlighted_wishlist"); highlight_node(node, settings.highlight_wishlist_color); }
 		if (settings.hide_wishlist) hide_node(node);
 
 		if (settings.tag_wishlist_color === undefined) { settings.tag_wishlist_color = highlight_defaults.wishlist;	storage.set({'tag_wishlist_color': settings.tag_wishlist_color}); }
@@ -710,8 +710,7 @@ function highlight_cart(node) {
 	storage.get(function(settings) {
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
 		if (settings.hide_cart) {
-			node.classList.add("es_highlight");
-			node.classList.add("es_highlight_hidden");
+			node.classList.add("es_highlight_checked es_highlighted es_highlight_hidden");
 			hide_node(node);
 		}
 	});
@@ -720,10 +719,11 @@ function highlight_cart(node) {
 // Color the tile for items with coupons
 function highlight_coupon(node, discount) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight");
+		node.classList.add("es_highlight_checked");
+
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = highlight_defaults.coupon; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
-		if (settings.highlight_coupon) { $(node).addClass("es_highlighted_coupon"); highlight_node(node, settings.highlight_coupon_color); }
+		if (settings.highlight_coupon) { $(node).addClass("es_highlighted es_highlighted_coupon"); highlight_node(node, settings.highlight_coupon_color); }
 
 		if (settings.tag_coupon_color === undefined) { settings.tag_coupon_color = highlight_defaults.coupon; storage.set({'tag_coupon_color': settings.tag_coupon_color}); }
 		if (settings.tag_coupon === undefined) { settings.tag_coupon = false; storage.set({'tag_coupon': settings.tag_coupon}); }
@@ -734,11 +734,11 @@ function highlight_coupon(node, discount) {
 // Color the tile for items in inventory
 function highlight_inv_gift(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight");
+		node.classList.add("es_highlight_checked");
 
 		if (settings.highlight_inv_gift_color === undefined) { settings.highlight_inv_gift_color = highlight_defaults.inv_gift; storage.set({'highlight_inv_gift_color': settings.highlight_inv_gift_color}); }
 		if (settings.highlight_inv_gift === undefined) { settings.highlight_inv_gift = false; storage.set({'highlight_inv_gift': settings.highlight_inv_gift}); }
-		if (settings.highlight_inv_gift) { $(node).addClass("es_highlighted_inv_gift"); highlight_node(node, settings.highlight_inv_gift_color); }
+		if (settings.highlight_inv_gift) { $(node).addClass("es_highlighted es_highlighted_inv_gift"); highlight_node(node, settings.highlight_inv_gift_color); }
 
 		if (settings.tag_inv_gift_color === undefined) { settings.tag_inv_gift_color = highlight_defaults.inv_gift; storage.set({'tag_inv_gift_color': settings.tag_inv_gift_color}); }
 		if (settings.tag_inv_gift === undefined) { settings.tag_inv_gift = false; storage.set({'tag_inv_gift': settings.tag_inv_gift}); }
@@ -749,11 +749,11 @@ function highlight_inv_gift(node) {
 // Color the tile for items in inventory
 function highlight_inv_guestpass(node) {
 	storage.get(function(settings) {
-		node.classList.add("es_highlight");
+		node.classList.add("es_highlight_checked");
 
 		if (settings.highlight_inv_guestpass_color === undefined) { settings.highlight_inv_guestpass_color = highlight_defaults.inv_guestpass; storage.set({'highlight_inv_guestpass_color': settings.highlight_inv_guestpass_color}); }
 		if (settings.highlight_inv_guestpass === undefined) { settings.highlight_inv_guestpass = false; storage.set({'highlight_inv_guestpass': settings.highlight_inv_guestpass}); }
-		if (settings.highlight_inv_guestpass) { $(node).addClass("es_highlighted_inv_guestpass"); highlight_node(node, settings.highlight_inv_guestpass_color); }
+		if (settings.highlight_inv_guestpass) { $(node).addClass("es_highlighted es_highlighted_inv_guestpass"); highlight_node(node, settings.highlight_inv_guestpass_color); }
 
 		if (settings.tag_inv_guestpass_color === undefined) { settings.tag_inv_guestpass_color = highlight_defaults.inv_guestpass; storage.set({'tag_inv_guestpass_color': settings.tag_inv_guestpass_color}); }
 		if (settings.tag_inv_guestpass === undefined) { settings.tag_inv_guestpass = false; storage.set({'tag_inv_guestpass': settings.tag_inv_guestpass}); }
@@ -779,13 +779,13 @@ function highlight_notinterested(node) {
 					node = $(node).find(".spotlight_content")[0];
 				}
 
-				node.classList.add("es_highlight");
+				node.classList.add("es_highlight_checked");
 
 				// Highlight games marked not interested
 				if (settings.highlight_notinterested_color === undefined) { settings.highlight_notinterested_color = highlight_defaults.notinterested; storage.set({'highlight_notinterested_color': settings.highlight_notinterested_color}); }
 				if (settings.highlight_notinterested === undefined) { settings.highlight_notinterested = false; storage.set({'highlight_notinterested': settings.highlight_notinterested}); }
 				if (settings.highlight_notinterested) {
-					$(node).addClass("es_highlighted_notinterested");
+					$(node).addClass("es_highlighted es_highlighted_notinterested");
 					highlight_node(node, settings.highlight_notinterested_color);
 				}
 
@@ -6888,7 +6888,7 @@ function start_highlights_and_tags(){
 		
 	setTimeout(function() {
 		$.each(selectors, function (i, selector) {
-			$.each($(selector).not(".es_highlight"), function(j, node){
+			$.each($(selector).not(".es_highlighted"), function(j, node){
 				var node_to_highlight = node;
 				if ($(node).hasClass("item")) { node_to_highlight = $(node).find(".info")[0]; }
 				if ($(node).hasClass("home_area_spotlight")) { node_to_highlight = $(node).find(".spotlight_content")[0]; }
@@ -6914,8 +6914,9 @@ function start_highlights_and_tags(){
 					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
 					if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
 					if (getValue(appid + "gift")) highlight_inv_gift(node);
-					highlight_notinterested(node);
 				}
+
+				highlight_notinterested(node);
 			});
 		});
 	}, 500);
@@ -6969,9 +6970,12 @@ function start_highlighting_node(node) {
 	}
 
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-	if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-	if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
-	if (getValue(appid + "gift")) highlight_inv_gift(node);
+	if (appid) {
+		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
+		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+		if (getValue(appid + "gift")) highlight_inv_gift(node);
+	}
+
 	highlight_notinterested(node);
 }
 
