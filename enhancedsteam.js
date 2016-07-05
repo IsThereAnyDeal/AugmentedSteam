@@ -4710,7 +4710,7 @@ function inventory_market_helper(response) {
 						var currency = data[gift_appid]["data"]["price_overview"]["currency"];
 						var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
 						var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
-						
+
 						$sideActs.css("height", "50px");
 						if (discount > 0) {
 							var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
@@ -4756,7 +4756,7 @@ function inventory_market_helper(response) {
 
 					$("#es_quickgrind").parent().remove();
 					$("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "' assetid='" + assetID + "'><span>1-Click " + turn_word + "</span></div>");
-					
+
 					// TODO: Add prompt?
 					$("#es_quickgrind").on("click", function() {
 						runInPageContext(`function() {
@@ -4788,7 +4788,7 @@ function inventory_market_helper(response) {
 
 						if (!$(thisItem).hasClass("es-loading")) {
 							var url = $sideMarketActs.find("a")[0].href;
-							
+
 							$(thisItem).addClass("es-loading");
 
 							// Add the links with no data, so we can bind actions to them, we add the data later
@@ -4821,7 +4821,7 @@ function inventory_market_helper(response) {
 											var market = JSON.parse(market_txt),
 												price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff),
 												price_low = market.highest_buy_order / 100;
-											
+
 											if (price_high < 0.03) price_high = 0.03;
 											price_high = parseFloat(price_high).toFixed(2);
 											price_low = parseFloat(price_low).toFixed(2);
@@ -4835,7 +4835,7 @@ function inventory_market_helper(response) {
 											}
 
 											$(thisItem).addClass("es-price-loaded");
-											
+
 											// Fixes multiple buttons
 											if ( $(".inventory_item_link_disabled").parent().is($(thisItem)) ) {
 												// Add "Quick Sell" button
@@ -4855,7 +4855,6 @@ function inventory_market_helper(response) {
 							}
 						}
 
-
 						// Bind actions to "Quick Sell" and "Instant Sel" buttons
 						$("#es_quicksell" + item + ", #es_instantsell" + item).on("click", function(e){
 							e.preventDefault();
@@ -4867,7 +4866,7 @@ function inventory_market_helper(response) {
 							$sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
 
 							runInPageContext("function() { var fee = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
-							
+
 							window.addEventListener("message", function(event) {
 								if (event.source !== window) return;
 								if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
@@ -4900,7 +4899,7 @@ function inventory_market_helper(response) {
 		else if (marketable) {
 			var dataLowest = $(thisItem).data("lowest-price"),
 				dataSold = $(thisItem).data("sold-volume");
-			
+
 			$sideMarketActs.show().html("<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
 
 			// "View in market" link
