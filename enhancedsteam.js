@@ -710,7 +710,7 @@ function highlight_cart(node) {
 	storage.get(function(settings) {
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
 		if (settings.hide_cart) {
-			node.classList.add("es_highlight_checked es_highlighted es_highlight_hidden");
+			node.classList.add("es_highlight_checked es_highlighted es_highlighted_hidden");
 			hide_node(node);
 		}
 	});
