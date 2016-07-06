@@ -143,6 +143,7 @@ var signed_in_promise = (function () {
 	return deferred.promise();
 })();
 
+// TODO: We should store the data in ES's storage to ensure that is in sync across Store and Community
 var dynamicstore_promise = (function () {
 	var deferred = new $.Deferred();
 
@@ -157,7 +158,7 @@ var dynamicstore_promise = (function () {
 			var accountidtext = $('script:contains("g_AccountID")').text() || "",
 				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
 
-			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : ""), function(txt) {
+			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + last_updated), function(txt) {
 				var data = JSON.parse(txt);
 				if (data) {
 					setValue("dynamicstore_data", data);
@@ -7218,41 +7219,54 @@ function get_store_session() {
 	}
 }
 
-// TODO: This should be done with dynamic store data to make sure things are in sync
 function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
-		if (settings.wlbuttoncommunityapp) {
-			var wishlisted = getValue(appid + "wishlisted");
-			var owned = getValue(appid+"owned");
-			if(!owned && settings.store_sessionid) {
-				$(".apphub_StoreAppData").append('<a class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px" id="es_wishlist"><span>' + localized_strings.add_to_wishlist + '</span></a>');
-				
-				if (wishlisted) {
-					$("#es_wishlist").addClass("btn_disabled");
-					$("#es_wishlist").html("<span>" + localized_strings.on_wishlist + "</span>");
+		if (settings.wlbuttoncommunityapp && settings.store_sessionid) {
+			// Get dynamic store data
+			$.when.apply($, [dynamicstore_promise]).done(function(data) {
+				var ownedapps = data.rgOwnedApps;
+				var wishlistapps = data.rgWishlist;
+
+				// Check if owned already and highlight
+				if ($.inArray(parseFloat(appid), ownedapps) !== -1) {
+					highlight_owned($(".apphub_StoreInfoHeader")[0]);
 				} else {
-					$("#es_wishlist").click(function() {
-						$.ajax({
-							type:"POST",
-							url:"//store.steampowered.com/api/addtowishlist",
-							data:{
-								sessionid: settings.store_sessionid,
-								appid: appid
-							},
-							success: function( msg ) {
-								$("#es_wishlist").addClass("btn_disabled");
-								$("#es_wishlist").off("click");
-								$("#es_wishlist").html("<span>" + localized_strings.on_wishlist + "</span>");
-								setValue(appid + "wishlisted",true);
-							},
-							error: function(e){
-								console.log('Error: '+e);
-							}
+					// Check if wished already and highlight
+					if ($.inArray(parseFloat(appid), wishlistapps) !== -1) {
+						highlight_wishlist($(".apphub_StoreInfoHeader")[0]);
+					} else {
+						$(".apphub_StoreAppData").append('<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px"><span>' + localized_strings.add_to_wishlist + '</span></a>');
+						$("#es_wishlist").on("click", function(e) {
+							e.preventDefault();
+
+							var $el = $(this);
+
+							$.ajax({
+								type: "POST",
+								url: "//store.steampowered.com/api/addtowishlist",
+								data: {
+									sessionid: settings.store_sessionid,
+									appid: appid
+								},
+								success: function( msg ) {
+									$el.addClass("btn_disabled");
+									$el.off("click");
+									$el.html("<span>" + localized_strings.on_wishlist + "</span>");
+
+									highlight_wishlist($(".apphub_StoreInfoHeader")[0]);
+
+									// Invalidate dynamic store data cache
+									delValue("dynamicstore_time");
+								},
+								error: function(e){
+									console.log('Error: ' + e);
+								}
+							});
 						});
-					});
+					}
 				}
-			}
+			});
 		}
 	});
 }
