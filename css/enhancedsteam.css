@@ -1,4 +1,5 @@
-.blotter_author_block :any(.es_highlight_owned, .es_highlight_wishlist, .es_highlight_coupon, .es_highlight_inv_gift, .es_highlight_inv_guestpass, .es_highlight_friends_want) {
+/* are these still needed? */
+.blotter_author_block :any(.es_highlighted_owned, .es_highlighted_wishlist, .es_highlighted_coupon, .es_highlighted_inv_gift, .es_highlighted_inv_guestpass, .es_highlighted_friends_want) {
 	border-width: 0 0.2em 0 0.2em;
 	border-style: solid;
 	border-radius: 0.5em;
@@ -1731,23 +1732,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	float: right;
 	margin-top: 30px;
 }
-/*.es_highlight div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
+/*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
 	color: rgba(255, 255, 255, 0.8) !important;
 }*/
-.es_highlight div.search_released,
-.es_highlight div.tab_item_details,
-.es_highlight div.tab_item_top_tags,
-.es_highlight div.discount_original_price {
+.es_highlighted div.search_released,
+.es_highlighted div.tab_item_details,
+.es_highlighted div.tab_item_top_tags,
+.es_highlighted div.discount_original_price {
 	color: rgba(255, 255, 255, 0.31) !important;
 }
-.es_highlight div.discount_final_price {
+.es_highlighted div.discount_final_price {
 	color: rgba(255, 255, 255, 0.65) !important;
 }
-.es_highlight .tab_item_top_tags {
+.es_highlighted .tab_item_top_tags {
 	text-overflow: ellipsis;
 }
-.es_highlight .discount_pct,
-.es_highlight .search_discount span {
+.es_highlighted .discount_pct,
+.es_highlighted .search_discount span {
 	box-shadow: rgba(255, 255, 255, 0.08) 0 0 0 1px inset;
 }
 .es_highlighted_owned ~ .ds_owned_flag {
@@ -1853,7 +1854,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Activity pages
  * add_achievement_comparison_link()
  **************************************/
-.blotter_block a.es_highlight {
+.blotter_block a.es_highlighted {
 	color: rgba(255, 255, 255, 0.80);
 	padding: 1px 4px;
 	line-height: 20px;
