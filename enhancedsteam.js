@@ -520,23 +520,63 @@ function matchAll(re, str) {
 
 function get_http(url, callback, settings) {
 	total_requests += 1;
-	if (localized_strings.ready) $("#es_progress").attr({"max": 100, "title": localized_strings.ready.loading});
+
+	if (localized_strings.ready) {
+		$("#es_progress").attr({"max": 100, "title": localized_strings.ready.loading});
+	}
 	$("#es_progress").removeClass("complete");
+	
 	if (!settings) settings = {};
 	if (!settings.dataType) settings.dataType = "text";
+	
 	var jqxhr = $.ajax(url, settings);
-	jqxhr.done(function() {
+	
+	jqxhr.done(function(){
 		processed_requests += 1;
 		var complete_percentage = (processed_requests / total_requests) * 100;
+		
 		$("#es_progress").val(complete_percentage);
-		if (complete_percentage == 100) { $("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready); }
+		if (complete_percentage == 100) {
+			$("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready);
+		}
 	});
+	
 	jqxhr.done(callback);
-	jqxhr.fail(function() {
-		$("#es_progress").val(100).addClass("error").attr({"title":localized_strings.ready.errormsg, "max":1});
+	
+	jqxhr.fail(function(jqxhr, textStatus, errorThrown) {
+		$("#es_progress").val(100).addClass("error").attr({"title": "", "max": 1});
+
+		if (!$(".es_progress_error").length) {
+			$("#es_progress").after('<div class="es_progress_error">' + localized_strings.ready.failed + ':' + '<ul></ul></div>');
+		}
+		
+		if (!settings.errorMessage) {
+			settings.errorMessage = "<span>" + this.url + "</span>";
+			if (jqxhr.status) settings.errorMessage +=  " (" + jqxhr.status + ": " + errorThrown + ")";
+		}
+
+		$(".es_progress_error ul").append('<li>' + settings.errorMessage + '</li>');
 	});
+
 	return jqxhr;
 }
+
+// FOR TESTING PURPOSES ONLY, PLEASE REMOVE
+/*setTimeout(function(){
+	get_http("//api.steampowered.com/");
+
+	get_http("//api.enhancedsteam.com/early_acess_fake/", function(txt) {
+		// nothing to do
+	}, {errorMessage: "Failed to load Early Access data"});
+
+	get_http("//api.enhancedsteam.com/early_acess_fake/", function(txt) {
+		// nothing to do
+	});
+
+	get_http("//google.com/404", function(txt) {
+		// nothing to do
+	}, {errorMessage: "Request to Google failed"});
+}, 2000);*/
 
 var storePageData = (function() {
 	var deferred = new $.Deferred();
@@ -2050,7 +2090,7 @@ function add_enhanced_steam_options() {
 	$("#account_dropdown").after($dropdown_options_container);
 	$("#language_pulldown").after($dropdown_options_container);
 
-	$("#global_actions").after("<progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings.ready.ready + "'></progress>");
+	$("#global_actions").after("<div class='es_progress_wrap'><progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings.ready.ready + "'></progress></div>");
 }
 
 // Display warning if browsing using non-account region
