@@ -2,6 +2,15 @@
 -----
 
 
+v8.7.2
+-----
+: Fixed a bug that caused quicksell and instantsell buttons to not work correctly under some conditions
+: Updated the look and feel of activity page highlights so that they're easier to read
+: Fixed a bug where the highlighting process on activity pages would run over already highlighted items
+: Fixed a bug that caused "1-click turn to gems" feature not to work correctly
+: Optimized the option reset feature on the options page
+: Updated wishlist highlighting for community hub pages
+
 v8.7.1
 -----
 : Fixed a bug that caused some elements on the "Edit Profile" page not to load correctly
