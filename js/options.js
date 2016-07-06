@@ -228,18 +228,18 @@ function load_options() {
 		// Loops over the default settings and if the setting can't be found in storage the default is set
 		function checkSettings(settings, settingsStrg) {
 			var data = {};
+			var dataToSet = {};
 
 			$.each(settings, function(setting, defaultValue){
 				if (typeof settingsStrg[setting] === 'undefined') {
 					data[setting] = defaultValue;
-
-					var tmpObj = {};
-					tmpObj[setting] = defaultValue;
-					storage.set(tmpObj);
+					dataToSet[setting] = defaultValue;
 				} else {
 					data[setting] = settingsStrg[setting];
 				}
 			});
+
+			if ($.isEmptyObject(dataToSet) === false) storage.set(dataToSet);
 
 			return data;
 		}
