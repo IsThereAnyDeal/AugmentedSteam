@@ -8737,26 +8737,53 @@ function groups_leave_options() {
 	}
 }
 
+var owned_playable_apps = (function() {
+	var deferred = new $.Deferred();
+
+	var owned_playable_cache = getValue("owned_apps"),
+		expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours
+		last_updated = getValue("owned_list_time") || expire_time - 1;
+
+	// Return data from cache if available
+	if (owned_playable_cache) {
+		deferred.resolve(owned_playable_cache);
+	}
+
+	// Update cache if needed
+	if (last_updated < expire_time) {
+		get_http("//api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + is_signed_in, function(txt) {
+			var data = JSON.parse(txt);
+			if (data && data.hasOwnProperty("response")) {
+				setValue("owned_apps", data);
+				setValue("owned_list_time", parseInt(Date.now() / 1000, 10));
+
+				deferred.resolve(data);
+			}
+		}).fail(function(){
+			deferred.reject();
+		});
+	}
+
+	return deferred.promise();
+})();
+
 function launch_random_button() {
 	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
 
 	$("#es_random_game").on("click", function() {
-		$.when.apply($, [dynamicstore_promise]).done(function(data) {
-			var owned = data.rgOwnedApps;
-			var rand = owned[Math.floor(Math.random() * owned.length)];
-			$.ajax({
-				url: '//store.steampowered.com/apphover/' + rand
-			}).done(function(txt) {
-				runInPageContext(
-					"function() {\
-						var prompt = ShowConfirmDialog('" + localized_strings.play_game.replace("__gamename__", $(txt).find("h4:first").text().replace("'", "&#39;").trim()) + "', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
-						prompt.done(function(result) {\
-							if (result == 'OK') { window.location.assign('steam://run/" + rand + "'); }\
-							if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand + "'); }\
-						});\
-					 }"
-				);
-			});
+		$.when.apply($, [owned_playable_apps]).done(function(data) {
+			var games = data.response.games,
+				rand = games[Math.floor(Math.random() * games.length)];
+
+			runInPageContext(
+				"function() {\
+					var prompt = ShowConfirmDialog('" + localized_strings.play_game.replace("__gamename__", rand.name.replace("'", "").trim()) + "', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
+					prompt.done(function(result) {\
+						if (result == 'OK') { window.location.assign('steam://run/" + rand.appid + "'); }\
+						if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand + "'); }\
+					});\
+				}"
+			);
 		});
 	});
 }
