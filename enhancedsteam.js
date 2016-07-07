@@ -6797,20 +6797,57 @@ function hide_trademark_symbols(community) {
 	});
 }
 
+// Purchase dates promise
+var purchase_dates_promise = function(appname) {
+	var deferred = new $.Deferred();
+
+	var purchase_dates = getValue("purchase_dates"),
+		expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60, // 1 hour ago
+		last_updated = getValue("purchase_dates_time") || expire_time - 1;
+
+	// Return date from cache
+	if (purchase_dates && purchase_dates[appname]) {
+		deferred.resolve(purchase_dates[appname]);
+	}
+
+	// Update cache if needed
+	if (last_updated < expire_time) {
+		get_http('https://store.steampowered.com/account/licenses/', function(txt) {
+			var dates_data = {};
+
+			$(txt).find(".license_date_col").not(":eq(0)").each(function(i, node) {
+				var $nameTd = $(node).next("td");
+				$nameTd.find("div").remove();
+
+				dates_data[$nameTd.text().trim()] = $(node).text();
+			});
+			
+			deferred.resolve(dates_data[appname]);
+
+			setValue("purchase_dates", dates_data);
+			setValue("purchase_dates_time", parseInt(Date.now() / 1000, 10));
+		}).fail(function(){
+			deferred.reject();
+		});
+	}
+
+	return deferred.promise();
+};
+
 // Display purchase date for owned games
 function display_purchase_date() {
-	if ($(".game_area_already_owned").length > 0) {
-		var appname = $(".apphub_AppName").text();
+	storage.get(function(settings) {
+		if (settings.purchase_dates === undefined) { settings.purchase_dates = true; storage.set({'purchase_dates': settings.purchase_dates}); }
+		if (settings.purchase_dates && $(".game_area_already_owned").length) {
+			var appname = $(".apphub_AppName").text().trim();
 
-		get_http('https://store.steampowered.com/account/licenses/', function (txt) {
-			var purchaseDate = $(txt).find("td:contains(" + appname + "):last").parent().find(".license_date_col").text();
-			$(".game_area_already_owned:first").each(function (index, node) {
+			$.when(purchase_dates_promise(appname)).done(function(purchaseDate) {
 				if (purchaseDate) {
 					$(".game_area_already_owned:first .already_in_library").append(" " + localized_strings.purchase_date.replace("__date__", purchaseDate));
 				}
 			});
-		});
-	}
+		}
+	});
 }
 
 function bind_ajax_content_highlighting() {

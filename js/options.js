@@ -146,7 +146,8 @@ var settings_defaults = {
 	"profile_api_info": false, // not used?
 	"api_key": false, // not used?
 	"profile_permalink": true,
-	"steamcardexchange": true
+	"steamcardexchange": true,
+	"purchase_dates": true
 };
 
 // Saves options to localStorage
