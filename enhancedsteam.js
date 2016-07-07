@@ -8329,7 +8329,6 @@ function add_total_drops_count() {
 	if (is_signed_in && $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 		var drops_count = 0,
 			drops_games = 0,
-			game_tiles = [],
 			completed = false;
 
 		if ($(".pagebtn").length) {
@@ -8340,10 +8339,12 @@ function add_total_drops_count() {
 					$("#es_calculations").text(localized_strings.loading);
 
 					// First, get the contents of the first page
-					$(".progress_info_bold").each(function(i, obj) {
-						var parent = $(obj).parent().parent();
-						if ($(parent).find(".progress_info_bold")[0]) {
-							game_tiles.push(parent);
+					$(".progress_info_bold").each(function(i, node) {
+						var count = $(node).text().match(/(\d+)/);
+
+						if (count) {
+							drops_games = drops_games + 1;
+							drops_count += +count[1];
 						}
 					});
 
@@ -8361,11 +8362,12 @@ function add_total_drops_count() {
 					$.each(pages, function (i, item) {
 						promise = promise.then(function() {
 							return $.ajax(base_url + item).done(function(data) {
-								var html = $.parseHTML(data);
-								$(html).find(".progress_info_bold").each(function(i, obj) {
-									var parent = $(obj).parent().parent();
-									if ($(parent).find(".progress_info_bold")[0]) {
-										game_tiles.push(parent);
+								$(data).find(".progress_info_bold").each(function(i, node) {
+									var count = $(node).text().match(/(\d+)/);
+
+									if (count) {
+										drops_games = drops_games + 1;
+										drops_count += +count[1];
 									}
 								});
 							});
@@ -8373,7 +8375,7 @@ function add_total_drops_count() {
 					});
 
 					promise.done(function() {
-						add_total_drops_count_calculations(game_tiles);
+						add_drops_count();
 					});
 					
 					deferred.resolve();
@@ -8382,24 +8384,19 @@ function add_total_drops_count() {
 			});
 		} else {
 			$(".profile_xp_block_right").prepend("<div id='es_calculations'>" + localized_strings.drop_calc + "</div>");
-			$(".progress_info_bold").each(function(i, obj) {
-				var parent = $(obj).parent().parent();
-				if ($(parent).find(".progress_info_bold")[0]) {
-					game_tiles.push(parent);
+			$(".progress_info_bold").each(function(i, node) {
+				var count = $(node).text().match(/(\d+)/);
+
+				if (count) {
+					drops_games = drops_games + 1;
+					drops_count += +count[1];
 				}
 			});
-			add_total_drops_count_calculations(game_tiles);
+
+			add_drops_count();
 		}
 
-		function add_total_drops_count_calculations(games) {
-			$(games).each(function(i, obj) {
-				var obj_count = obj.find(".progress_info_bold")[0].innerHTML.match(/\d+/);
-				if (obj_count && obj_count[0] != '0') {
-					drops_count += parseInt(obj_count[0]);
-					drops_games = drops_games + 1;
-				}
-			});
-
+		function add_drops_count() {
 			$("#es_calculations").html(localized_strings.card_drops_remaining.replace("__drops__", drops_count) + "<br>" + localized_strings.games_with_drops.replace("__dropsgames__", drops_games));
 
 			get_http("//steamcommunity.com/my/ajaxgetboostereligibility/", function(txt) {
