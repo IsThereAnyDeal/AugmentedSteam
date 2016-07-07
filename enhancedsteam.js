@@ -8780,7 +8780,7 @@ function launch_random_button() {
 					var prompt = ShowConfirmDialog('" + localized_strings.play_game.replace("__gamename__", rand.name.replace("'", "").trim()) + "', '<img src=//cdn.akamai.steamstatic.com/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + localized_strings.visit_store + "'); \
 					prompt.done(function(result) {\
 						if (result == 'OK') { window.location.assign('steam://run/" + rand.appid + "'); }\
-						if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand + "'); }\
+						if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand.appid + "'); }\
 					});\
 				}"
 			);
