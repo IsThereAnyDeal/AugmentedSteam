@@ -8339,7 +8339,7 @@ function add_total_drops_count() {
 					$("#es_calculations").text(localized_strings.loading);
 
 					// First, get the contents of the first page
-					$(".progress_info_bold").each(function(i, node) {
+					$('.badge_title_stats_drops').find(".progress_info_bold").each(function(i, node) {
 						var count = $(node).text().match(/(\d+)/);
 
 						if (count) {
@@ -8362,7 +8362,7 @@ function add_total_drops_count() {
 					$.each(pages, function (i, item) {
 						promise = promise.then(function() {
 							return $.ajax(base_url + item).done(function(data) {
-								$(data).find(".progress_info_bold").each(function(i, node) {
+								$(data).find('.badge_title_stats_drops').find(".progress_info_bold").each(function(i, node) {
 									var count = $(node).text().match(/(\d+)/);
 
 									if (count) {
@@ -8384,7 +8384,7 @@ function add_total_drops_count() {
 			});
 		} else {
 			$(".profile_xp_block_right").prepend("<div id='es_calculations'>" + localized_strings.drop_calc + "</div>");
-			$(".progress_info_bold").each(function(i, node) {
+			$('.badge_title_stats_drops').find(".progress_info_bold").each(function(i, node) {
 				var count = $(node).text().match(/(\d+)/);
 
 				if (count) {
