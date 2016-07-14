@@ -6830,7 +6830,8 @@ var purchase_dates_promise = function(lang, appname) {
 				"Standard Edition",
 				"Steam Store and Retail Key",
 				"Retail( Key)?",
-				"Complete$"
+				"Complete$",
+				":"
 			];
 
 			purchase_dates[lang] = {};
@@ -6866,7 +6867,7 @@ function display_purchase_date() {
 	storage.get(function(settings) {
 		if (settings.purchase_dates === undefined) { settings.purchase_dates = true; storage.set({'purchase_dates': settings.purchase_dates}); }
 		if (settings.purchase_dates && $(".game_area_already_owned").length) {
-			var appname = replace_symbols($(".apphub_AppName").text().trim());
+			var appname = replace_symbols($(".apphub_AppName").text().trim().replace(":", ""));
 
 			$.when(purchase_dates_promise(language, appname)).done(function(purchaseDate) {
 				if (purchaseDate) {
