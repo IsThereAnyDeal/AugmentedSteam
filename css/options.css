@@ -1,5 +1,7 @@
 body {
+	background: #000000; /* fallback */
 	background: -webkit-linear-gradient(top,  #000000 0%,#0b1821 100%); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom, #000000 0%, #0b1821 100%); /* Standard */
 	margin-left: 0px;
 	color: #efffef;
 	font-family:"Arial", sans-serif;
