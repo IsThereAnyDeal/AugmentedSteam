@@ -2030,10 +2030,10 @@ function version_check() {
 		if ((version !== settings.version) && settings.version_show) {
 			// User is loading a new version of Enhanced Steam for the first time
 			$.get(chrome.extension.getURL('changelog_new.html'), function(data) {
-				var dialog = "<div style=\"float: left; margin-right: 21px;\"><img src=\"" + chrome.extension.getURL("img/enhancedsteam.png") + "\"></div><div style=\"float: right;\">" + localized_strings.update.changes + ":<ul class=\"es_changelog\">" + data.replace(/\r?\n|\r/g, "") + "</ul>";
+				var dialog = "<div style=\"float: left; margin-right: 21px;\"><img src=\"" + chrome.extension.getURL("img/enhancedsteam.png") + "\"></div><div style=\"float: right;\">" + localized_strings.update.changes + ":<ul class=\"es_changelog\">" + data.replace(/\r?\n|\r/g, "").replace("'", "\\'") + "</ul>";
 				runInPageContext(
 					"function() {\
-						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , \"" + localized_strings.donate + "\", \"" + localized_strings.close + "\", \"" + localized_strings.update.dont_show + "\"); \
+						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , '" + localized_strings.donate.replace("'", "\\'") + "', '" + localized_strings.close.replace("'", "\\'") + "', '" + localized_strings.update.dont_show.replace("'", "\\'") + "'); \
 						prompt.done(function(result) {\
 							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate.php'); }\
 							if (result == 'SECONDARY') {  }\
