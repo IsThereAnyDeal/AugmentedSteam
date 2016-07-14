@@ -561,23 +561,6 @@ function get_http(url, callback, settings) {
 	return jqxhr;
 }
 
-// FOR TESTING PURPOSES ONLY, PLEASE REMOVE
-/*setTimeout(function(){
-	get_http("//api.steampowered.com/");
-
-	get_http("//api.enhancedsteam.com/early_acess_fake/", function(txt) {
-		// nothing to do
-	}, {errorMessage: "Failed to load Early Access data"});
-
-	get_http("//api.enhancedsteam.com/early_acess_fake/", function(txt) {
-		// nothing to do
-	});
-
-	get_http("//google.com/404", function(txt) {
-		// nothing to do
-	}, {errorMessage: "Request to Google failed"});
-}, 2000);*/
-
 var storePageData = (function() {
 	var deferred = new $.Deferred();
 	var data;
