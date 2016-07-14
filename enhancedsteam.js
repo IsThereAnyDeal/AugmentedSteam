@@ -4106,25 +4106,11 @@ function add_dlc_page_link(appid) {
 	}
 }
 
-// Fix "No image available" in wishlist
-function fix_wishlist_image_not_found() {
+// Fix "No image available" on apps image header
+function fix_app_image_not_found() {
 	$("img[src$='338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif']").attr("src", function(){
 		return "//steamcdn-a.akamaihd.net/steam/apps/" + get_appid( $(this).parent()[0].href ) + "/capsule_184x69.jpg";
 	});
-}
-
-function fix_profile_image_not_found() {
-	var items = $(".recent_game");
-	if (items) {
-		imgs = $(items).find("img");
-		for (var i = 0; i < imgs.length; i++)
-		if (imgs[i].src == "http://media.steampowered.com/steamcommunity/public/images/avatars/33/338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif") {
-			var gameurl = imgs[i].parentNode.href;
-			imgs[i].src = "http://cdn.akamai.steamstatic.com/steam/apps/" + gameurl.substring(gameurl.lastIndexOf("/") + 1) + "/header.jpg";
-			imgs[i].width = 184;
-			imgs[i].height = 69;
-		}
-	}
 }
 
 function add_market_total() {
@@ -8998,7 +8984,7 @@ $(document).ready(function(){
 							alternative_linux_icon();
 							appdata_on_wishlist();
 							wishlist_dynamic_data();
-							fix_wishlist_image_not_found();
+							fix_app_image_not_found();
 							add_empty_wishlist_buttons();
 							add_wishlist_filter();
 							add_wishlist_discount_sort();
@@ -9093,7 +9079,7 @@ $(document).ready(function(){
 							add_twitch_info();
 							change_user_background();
 							add_profile_store_links();
-							fix_profile_image_not_found();
+							fix_app_image_not_found();
 							hide_spam_comments();
 							add_steamrep_api();
 							add_posthistory_link();
