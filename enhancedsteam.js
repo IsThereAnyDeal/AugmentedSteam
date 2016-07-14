@@ -6774,9 +6774,7 @@ function hide_trademark_symbols(community) {
 			} else {
 				selectors.push(".game_area_already_owned",".details_block",".game_description_snippet",".game_area_description",".glance_details",".game_area_dlc_bubble game_area_bubble",".package_contents",".game_area_dlc_name",".tab_desc");
 			}
-			function replace_symbols(input){
-				return input.replace(/[\u00AE\u00A9\u2122]/g,"");
-			}
+			
 			$.each(selectors, function(index, selector){
 				$(selector).each(function(){
 					$(this).html(replace_symbols($(this).html()));
@@ -6806,35 +6804,55 @@ function hide_trademark_symbols(community) {
 	});
 }
 
+// Replaces "R", "C" and "TM" signs
+function replace_symbols(input){
+	return input.replace(/[\u00AE\u00A9\u2122]/g, "");
+}
+
 // Purchase dates promise
-var purchase_dates_promise = function(appname) {
+var purchase_dates_promise = function(lang, appname) {
 	var deferred = new $.Deferred();
 
-	var purchase_dates = getValue("purchase_dates"),
+	var purchase_dates = getValue("purchase_dates") || {},
 		expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60, // 1 hour ago
 		last_updated = getValue("purchase_dates_time") || expire_time - 1;
 
 	// Return date from cache
-	if (purchase_dates && purchase_dates[appname]) {
-		deferred.resolve(purchase_dates[appname]);
+	if (purchase_dates && purchase_dates[lang] && purchase_dates[lang][appname]) {
+		deferred.resolve(purchase_dates[lang][appname]);
 	}
 
 	// Update cache if needed
-	if (last_updated < expire_time) {
-		get_http('https://store.steampowered.com/account/licenses/', function(txt) {
-			var dates_data = {};
+	if (last_updated < expire_time || !purchase_dates[lang]) {
+		get_http('https://store.steampowered.com/account/licenses/?l=' + lang, function(txt) {
+			var replace_strings = [
+				"- Complete Pack",
+				"Standard Edition",
+				"Steam Store and Retail Key",
+				"Retail( Key)?",
+				"Complete$"
+			];
+
+			purchase_dates[lang] = {};
 
 			$(txt).find(".license_date_col").not(":eq(0)").each(function(i, node) {
 				var $nameTd = $(node).next("td");
 				$nameTd.find("div").remove();
 
-				dates_data[$nameTd.text().trim()] = $(node).text();
-			});
-			
-			deferred.resolve(dates_data[appname]);
+				// Clean game name
+				var game_name = replace_symbols($nameTd.text());
+				replace_strings.forEach(function(string) {
+					var regex = new RegExp(string, "ig");
+					game_name = game_name.replace(regex, "");
+				});
 
-			setValue("purchase_dates", dates_data);
+				purchase_dates[lang][game_name.trim()] = $(node).text();
+			});
+
+			setValue("purchase_dates", purchase_dates);
 			setValue("purchase_dates_time", parseInt(Date.now() / 1000, 10));
+			
+			deferred.resolve(purchase_dates[lang][appname]);
 		}).fail(function(){
 			deferred.reject();
 		});
@@ -6848,9 +6866,9 @@ function display_purchase_date() {
 	storage.get(function(settings) {
 		if (settings.purchase_dates === undefined) { settings.purchase_dates = true; storage.set({'purchase_dates': settings.purchase_dates}); }
 		if (settings.purchase_dates && $(".game_area_already_owned").length) {
-			var appname = $(".apphub_AppName").text().trim();
+			var appname = replace_symbols($(".apphub_AppName").text().trim());
 
-			$.when(purchase_dates_promise(appname)).done(function(purchaseDate) {
+			$.when(purchase_dates_promise(language, appname)).done(function(purchaseDate) {
 				if (purchaseDate) {
 					$(".game_area_already_owned:first .already_in_library").append(" " + localized_strings.purchase_date.replace("__date__", purchaseDate));
 				}
