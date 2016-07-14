@@ -1789,6 +1789,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: -1px 0 0 -1px;
 }
 #es_progress.error {
+	cursor: help;
 	animation: delayBoxShadowRed linear 1s;
 	animation-fill-mode: forwards;
 }
@@ -1835,6 +1836,47 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	100% {
 		box-shadow: 0 0 8px 1px #51771d;
 	}
+}
+.es_progress_wrap {
+	position: relative;
+	float: right;
+}
+.es_progress_error {
+	display: none;
+	color: #ccc;
+	font-size: 11px;
+	background-color: #333;
+	border: 1px solid #444;
+	position: absolute;
+	min-width: 200px;
+	max-width: 250px;
+	padding: 5px;
+	top: 52px;
+	right: 22px;
+	font-size: 11px;
+	list-style-position: inside;
+}
+.es_progress_error span {
+	word-break: break-all;
+}
+.es_progress_error:before {
+	content: "";
+	display: block;
+	background-color: #444;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	top: 5px;
+	right: -5px;
+	z-index: -1;
+	transform: rotateZ(45deg);
+}
+.es_progress_error ul {
+	margin: 0 0 0 6px;
+	padding: 0;
+}
+.es_progress_wrap:hover .es_progress_error {
+	display: block !important;
 }
 
 /***************************************

@@ -425,7 +425,8 @@
     "ready": {
         "errormsg": "Error loading Enhanced Steam data",
         "loading": "Enhanced Steam loading data...",
-        "ready": "Enhanced Steam ready"
+        "ready": "Enhanced Steam ready",
+        "failed": "One or more requests failed"
     },
     "twitch": {
         "now_streaming": "__username__ is live streaming on Twitch",
