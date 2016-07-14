@@ -6835,6 +6835,8 @@ var purchase_dates_promise = function(lang, appname) {
 				"Retail( Key)?",
 				"Complete$",
 				"Free$",
+				"(RoW)",
+				"ROW",
 				":"
 			];
 
