@@ -21,6 +21,7 @@
     "packs": "Packs",
     "remove_owned_wishlist": "Remove owned games from wishlist",
     "donate": "Donate",
+    "close": "Close",
     "coupon_application_note": "A coupon in your inventory will be applied automatically at checkout.",
     "hide": "Hide",
     "cards_owned": "__owned__ of __possible__ cards owned",
@@ -489,5 +490,10 @@
     "tradeoffer": {
         "num_item": "__num__ item",
         "num_items": "__num__ items"
+    },
+    "update": {
+        "dont_show": "Don't Show Again",
+        "updated": "Enhanced Steam has been updated to __version__",
+        "changes": "This release includes the following changes"
     }
 }

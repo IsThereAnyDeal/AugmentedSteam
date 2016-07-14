@@ -1670,6 +1670,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Version update dialog
+ **************************************/
+.es_changelog {
+	padding: 10px;
+	margin: 0px 0px 0px 15px;
+	min-width: 300px;
+}
+
+/***************************************
  * Store front page recommendations
  **************************************/
 #content_more .home_content_item {

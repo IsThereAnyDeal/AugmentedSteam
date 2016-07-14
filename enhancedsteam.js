@@ -2018,6 +2018,34 @@ function add_wallet_balance_to_header() {
 	$("#es_wallet").load('http://store.steampowered.com #header_wallet_ctn');
 }
 
+// Checks to see if the extension has been updated
+function version_check() {
+	storage.get(function(settings) {
+		if (settings.version === undefined) { 
+			// New installation detected
+			settings.version = version; storage.set({'version': settings.version});
+			return;
+		}
+		if (settings.version_show === undefined) { settings.version_show = true; storage.set({'version_show': settings.version_show}); }
+		if ((version !== settings.version) && settings.version_show) {
+			// User is loading a new version of Enhanced Steam for the first time
+			$.get(chrome.extension.getURL('changelog_new.html'), function(data) {
+				var dialog = "<div style=\"float: left; margin-right: 21px;\"><img src=\"" + chrome.extension.getURL("img/enhancedsteam.png") + "\"></div><div style=\"float: right;\">" + localized_strings.update.changes + ":<ul class=\"es_changelog\">" + data.replace(/\r?\n|\r/g, "") + "</ul>";
+				runInPageContext(
+					"function() {\
+						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , \"" + localized_strings.donate + "\", \"" + localized_strings.close + "\", \"" + localized_strings.update.dont_show + "\"); \
+						prompt.done(function(result) {\
+							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate.php'); }\
+							if (result == 'SECONDARY') {  }\
+						});\
+					}"
+				);
+			});
+			storage.set({'version': version});
+		}
+	});
+}
+
 // Add a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
 	$dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
@@ -8911,6 +8939,7 @@ $(document).ready(function(){
 
 	$.when(localization_promise, signed_in_promise, currency_promise).done(function(){
 			// On window load
+			version_check();
 			add_enhanced_steam_options();
 			add_fake_country_code_warning();
 			add_language_warning();
