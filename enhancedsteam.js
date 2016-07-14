@@ -6829,8 +6829,12 @@ var purchase_dates_promise = function(lang, appname) {
 				"- Complete Pack",
 				"Standard Edition",
 				"Steam Store and Retail Key",
+				"- Hardware Survey",
+				"ComputerGamesRO -",
+				"Founder Edition",
 				"Retail( Key)?",
 				"Complete$",
+				"Free$",
 				":"
 			];
 
@@ -6841,7 +6845,7 @@ var purchase_dates_promise = function(lang, appname) {
 				$nameTd.find("div").remove();
 
 				// Clean game name
-				var game_name = replace_symbols($nameTd.text());
+				var game_name = replace_symbols($nameTd.text()).trim();
 				replace_strings.forEach(function(string) {
 					var regex = new RegExp(string, "ig");
 					game_name = game_name.replace(regex, "");
@@ -6867,7 +6871,7 @@ function display_purchase_date() {
 	storage.get(function(settings) {
 		if (settings.purchase_dates === undefined) { settings.purchase_dates = true; storage.set({'purchase_dates': settings.purchase_dates}); }
 		if (settings.purchase_dates && $(".game_area_already_owned").length) {
-			var appname = replace_symbols($(".apphub_AppName").text().trim().replace(":", ""));
+			var appname = replace_symbols($(".apphub_AppName").text().replace(":", "")).trim();
 
 			$.when(purchase_dates_promise(language, appname)).done(function(purchaseDate) {
 				if (purchaseDate) {
