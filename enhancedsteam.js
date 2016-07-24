@@ -8808,7 +8808,7 @@ function groups_leave_options() {
 	}
 }
 
-var owned_playable_promise = (function() {
+var owned_playable_promise = function() {
 	var deferred = new $.Deferred();
 
 	var owned_playable_cache = getValue("owned_apps"),
@@ -8836,13 +8836,13 @@ var owned_playable_promise = (function() {
 	}
 
 	return deferred.promise();
-})();
+};
 
 function launch_random_button() {
 	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
 
 	$("#es_random_game").on("click", function() {
-		$.when.apply($, [owned_playable_promise]).done(function(data) {
+		$.when(owned_playable_promise()).done(function(data) {
 			var games = data.response.games,
 				rand = games[Math.floor(Math.random() * games.length)];
 
