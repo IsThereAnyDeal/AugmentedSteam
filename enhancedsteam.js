@@ -54,15 +54,23 @@ var localization_promise = (function () {
 		"thai": "th",
 		"turkish": "tr",
 		"ukrainian": "uk"}[language] || "en";
-	$.getJSON(chrome.extension.getURL('/localization/en/strings.json'), function (data) {
-		if (l_code == "en") {
-			localized_strings = data;
-			l_deferred.resolve();
-		} else {
-			$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data_localized) {
-				localized_strings = $.extend(true, data, data_localized);
+	$.ajax({
+		url: chrome.extension.getURL('/localization/en/strings.json'),
+		mimeType: "application/json",
+		success: function (data) {
+			if (l_code == "en") {
+				localized_strings = data;
 				l_deferred.resolve();
-			});
+			} else {
+				$.ajax({
+					url: chrome.extension.getURL('/localization/' + l_code + '/strings.json'),
+					mimeType: "application/json",
+					success: function (data_localized) {
+						localized_strings = $.extend(true, data, data_localized);
+						l_deferred.resolve();
+					}
+				});
+			}
 		}
 	});
 	return l_deferred.promise();
@@ -2166,18 +2174,22 @@ function add_language_warning() {
 					"thai": "th",
 					"turkish": "tr",
 					"ukrainian": "uk"}[settings.showlanguagewarninglanguage.toLowerCase()] || "en";
-				$.getJSON(chrome.extension.getURL('/localization/' + l_code + '/strings.json'), function (data) {
-					localized_strings_native = data;
-					$("#global_header").after(`
-						<div class="es_language_warning">` + localized_strings_native.using_language.replace("__current__", localized_strings_native.options.lang[currentLanguage.toLowerCase()]) + `
-							<a href="#" id="es_reset_language_code">` + localized_strings_native.using_language_return.replace("__base__", localized_strings_native.options.lang[warning_language.toLowerCase()]) + `</a>
-						</div>
-					`);
-					$("#es_reset_language_code").on("click", function(e) {
-						e.preventDefault();
+				$.ajax({
+					url: chrome.extension.getURL('/localization/' + l_code + '/strings.json'),
+					mimeType: "application/json",
+					success: function (data) {
+						localized_strings_native = data;
+						$("#global_header").after(`
+							<div class="es_language_warning">` + localized_strings_native.using_language.replace("__current__", localized_strings_native.options.lang[currentLanguage.toLowerCase()]) + `
+								<a href="#" id="es_reset_language_code">` + localized_strings_native.using_language_return.replace("__base__", localized_strings_native.options.lang[warning_language.toLowerCase()]) + `</a>
+							</div>
+						`);
+						$("#es_reset_language_code").on("click", function(e) {
+							e.preventDefault();
 
-						runInPageContext("function(){ ChangeLanguage( '" + settings.showlanguagewarninglanguage.toLowerCase() + "' ) }");
-					});
+							runInPageContext("function(){ ChangeLanguage( '" + settings.showlanguagewarninglanguage.toLowerCase() + "' ) }");
+						});
+					}
 				});
 			}
 		}
