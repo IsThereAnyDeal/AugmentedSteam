@@ -13,3 +13,9 @@
 .es_percentage:before {
 	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/arrows.png") top left;
 }
+#es_progress::-moz-progress-bar {
+	background-color: #51771d;
+}
+#es_progress.error::-moz-progress-bar {
+	background-color: #B31414;
+}
