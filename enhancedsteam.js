@@ -2043,7 +2043,7 @@ function version_check() {
 					"function() {\
 						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , '" + localized_strings.donate.replace("'", "\\'") + "', '" + localized_strings.close.replace("'", "\\'") + "', '" + localized_strings.update.dont_show.replace("'", "\\'") + "'); \
 						prompt.done(function(result) {\
-							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate.php'); }\
+							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate/'); }\
 							if (result == 'SECONDARY') {  }\
 						});\
 					}"
@@ -2082,7 +2082,7 @@ function add_enhanced_steam_options() {
 	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings.contribute + "</a>");
 	$translate_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//translation.enhancedsteam.com\">" + localized_strings.translate + "</a>");
 	$bug_feature_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam/issues\">" + localized_strings.bug_feature + "</a>");
-	$donation_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//enhancedsteam.com/donate.php\">" + localized_strings.donate + "</a>");
+	$donation_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//enhancedsteam.com/donate/\">" + localized_strings.donate + "</a>");
 	$group_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//" + localized_strings.official_group_url + "\">" + localized_strings.official_group + "</a>");
 
 	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings.clear_cache + "</a>");

@@ -12,7 +12,7 @@ Installation
 ------------
 
 ##### Automatic
-Click [here](http://www.enhancedsteam.com/download-chrome.php) and follow the instructions
+Click [here](http://www.enhancedsteam.com/download/) and follow the instructions
 
 _(Not Working? Try [here](https://chrome.google.com/webstore/detail/enhanced-steam/okadibdjfemgnhjiembecghcbfknbfhg))_
 
