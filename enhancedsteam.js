@@ -616,6 +616,52 @@ var storePageData = (function() {
 	}
 })();
 
+var storePageDataCN = (function() {
+	var deferred = new $.Deferred();
+	var data;
+
+	function load(appid) {
+		data = cache_get(appid);
+		if (data) {
+			deferred.resolveWith(data);
+		} else {
+			var apiurl = "//api.enhancedsteam.com/storepagedatacn/?appid=" + appid;
+			get_http(apiurl, function(txt) {
+				data = JSON.parse(txt);
+				cache_set(appid, data);
+				deferred.resolveWith(data);
+			}).fail(deferred.reject);
+		}
+		return deferred.promise();
+	}
+
+	function get(api, callback) {
+		if (api && callback) deferred.done(function() {
+			if (data[api]) callback(data[api]);
+		});
+		return deferred.promise();
+	}
+
+	function cache_set(appid, data) {
+		var expires = parseInt(Date.now() / 1000, 10) + 1 * 60 * 60; // One hour from now
+		var cached = {
+			data: data,
+			expires: expires
+		};
+		localStorage.setItem("storePageDataCN_" + appid, JSON.stringify(cached));
+	}
+
+	function cache_get(appid) {
+		var cached = $.parseJSON(localStorage.getItem("storePageDataCN_" + appid));
+		if (cached && cached.expires > parseInt(Date.now() / 1000, 10)) return cached.data;
+	}
+
+	return {
+		load: load,
+		get: get
+	}
+})();
+
 var profileData = (function() {
 	var deferred = new $.Deferred();
 	var data;
@@ -6481,6 +6527,15 @@ function add_help_button(appid) {
 	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/#HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
 }
 
+function add_chinese_name(appid) {
+	storePageDataCN.get("chineseName", function(data) {
+		$(".breadcrumbs").find("span[itemprop='name']").append("「" + data + "」");
+		$(".apphub_AppName:first").append("「" + data + "」");
+		var title = $(document).prop('title');
+		$(document).prop('title', title + "「" + data + "」");
+	});
+}
+
 function customize_home_page() {
 	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px; visibility: visible;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 	$(".home_page_body_ctn:first").css("min-height", "400px");
@@ -9062,6 +9117,12 @@ $(document).ready(function(){
 							customize_app_page();
 							add_help_button(appid);
 							skip_got_steam();
+
+							if (language == "schinese" || language == "tchinese") {
+								storePageDataCN.load(appid);
+								add_chinese_name(appid);
+							}
+
 							break;
 
 						case /^\/sub\/.*/.test(path):
