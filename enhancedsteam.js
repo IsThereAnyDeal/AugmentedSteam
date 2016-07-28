@@ -6527,7 +6527,7 @@ function add_help_button(appid) {
 	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/#HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
 }
 
-function add_chinese_name(appid) {
+function add_chinese_name() {
 	storePageDataCN.get("chineseName", function(data) {
 		$(".breadcrumbs").find("span[itemprop='name']").append("「" + data + "」");
 		$(".apphub_AppName:first").append("「" + data + "」");
@@ -6536,7 +6536,7 @@ function add_chinese_name(appid) {
 	});
 }
 
-function add_keylol_link(appid) {
+function add_keylol_link() {
 	storePageDataCN.get("link", function(data) {
 		$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium keylol_btn" href="' + data + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/ico/keylol.png") + ')"></i>&nbsp;&nbsp; 查看其乐据点</span></a>');
 
@@ -6552,6 +6552,24 @@ function add_keylol_link(appid) {
 			html += "</div></div>";
 			$("div.game_details:first").after(html);
 		});
+	});
+}
+
+function add_steamcn_mods() {
+	if (language == "schinese") { var heading = "第三方汉化"; }
+	if (language == "tchinese") { var heading = "第三方漢化"; }
+	$(".game_language_options").parent().append("<div class='block_title' style='margin-top: 10px;'>" + heading + ":</div><span id='es_c_mods'></span>");
+
+	storePageDataCN.get("chineseLocalizations", function(data) {
+		$.each(data, function() {
+			$("#es_c_mods").append("<a class='linkbar' href='" + this.link + "' target='_blank'>" + this.title + "</a>");
+		});
+	});
+
+	storePageDataCN.get("link", function(data) {
+		if (language == "schinese") { var link = "完整汉化情报"; }
+		if (language == "tchinese") { var link = "更多漢化信息"; }
+		$("#es_c_mods").after("<a href='" + data + "/intel' class='all_languages' target='_blank'>" + link + "</a>&nbsp;<img src='http://store.akamai.steamstatic.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'>");
 	});
 }
 
@@ -9139,8 +9157,9 @@ $(document).ready(function(){
 
 							if (language == "schinese" || language == "tchinese") {
 								storePageDataCN.load(appid);
-								add_chinese_name(appid);
-								add_keylol_link(appid);
+								add_chinese_name();
+								add_keylol_link();
+								add_steamcn_mods();
 							}
 
 							break;
