@@ -6536,6 +6536,25 @@ function add_chinese_name(appid) {
 	});
 }
 
+function add_keylol_link(appid) {
+	storePageDataCN.get("link", function(data) {
+		$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium keylol_btn" href="' + data + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/ico/keylol.png") + ')"></i>&nbsp;&nbsp; 查看其乐据点</span></a>');
+
+		storePageDataCN.get("averageRating", function(score) {
+			var html = "<div class='block game_details underlined_links es_keylol'><div style='background-image: url(" + chrome.extension.getURL("img/keylol_bg.png") + "); background-repeat: no-repeat; height: 35px; font-size: 24px; color: #8BC53F; text-align: right; font-family: Motiva Sans Light, Arial, Helvetica, sans-serif; width: 270px;'>";
+			html += "<span>" + score + "</span>";
+			html += "<span style='color: #61686d; font-size: 25px;'>/</span>"
+			html += "<span style='color: #61686d; font-size: 11px;'>10</span></div>"
+			if (language == "schinese") { var title = "阅读游戏评测"; }
+			if (language == "tchinese") { var title = "閱覽遊戲評測"; }
+			html += "<a href='" + data + "/timeline'>" + title + "</a>&nbsp;";
+			html += "<img src='http://store.akamai.steamstatic.com/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>";
+			html += "</div></div>";
+			$("div.game_details:first").after(html);
+		});
+	});
+}
+
 function customize_home_page() {
 	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px; visibility: visible;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 	$(".home_page_body_ctn:first").css("min-height", "400px");
@@ -9121,6 +9140,7 @@ $(document).ready(function(){
 							if (language == "schinese" || language == "tchinese") {
 								storePageDataCN.load(appid);
 								add_chinese_name(appid);
+								add_keylol_link(appid);
 							}
 
 							break;
