@@ -2060,8 +2060,15 @@ function send_age_verification() {
 	storage.get(function(settings) {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
 		if (settings.send_age_info) {
-			document.getElementsByName("ageYear")[0].value="1955";
-			document.getElementsByClassName("btnv6_blue_hoverfade")[0].click();
+
+			if ($("#ageYear").length != 0) {
+				$("#ageYear").attr("value", "1955");
+				$(".btnv6_blue_hoverfade")[0].click();
+			} else {
+				if ($(".agegate_text_container.btns a:first").attr("href") == "#") {
+					$(".agegate_text_container.btns a:first")[0].click();
+				}
+			}
 		}
 	});
 }
@@ -9107,6 +9114,10 @@ $(document).ready(function(){
 							add_empty_cart_button();
 							break;
 
+						case /\bagecheck\b/.test(path):
+							send_age_verification();
+							break;
+
 						case /^\/app\/.*/.test(path):
 							var appid = get_appid(window.location.host + path);
 							var metalink = $("#game_area_metalink").find("a").attr("href");
@@ -9174,10 +9185,6 @@ $(document).ready(function(){
 
 							show_regional_pricing("sub");
 							skip_got_steam();
-							break;
-
-						case /^\/agecheck\/.*/.test(path):
-							send_age_verification();
 							break;
 
 						case /^\/dlc\/.*/.test(path):

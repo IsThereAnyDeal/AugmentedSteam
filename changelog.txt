@@ -1,5 +1,6 @@
 ﻿v8.8
 -----
++ The feature to automatically send age verification now works with new tag-based verification pages
 
 
 v8.7.2
