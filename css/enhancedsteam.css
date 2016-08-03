@@ -1678,6 +1678,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	min-width: 300px;
 }
 
+.es_changelog li {
+	margin-bottom: 3px;
+}
+
 /***************************************
  * Store front page recommendations
  **************************************/
