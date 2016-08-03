@@ -21,6 +21,7 @@
   "packs":"合集包",
   "remove_owned_wishlist":"将已拥有游戏移出愿望单",
   "donate":"捐赠",
+  "close":"Close",
   "coupon_application_note":"付款时自动使用库存中的优惠券",
   "hide":"隐藏",
   "cards_owned":"在__possible__张中已拥有__owned__张",
@@ -229,9 +230,9 @@
   "contract_slider":"还原",
   "early_access":"抢先体验版本",
   "filter_games":"筛选游戏",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "note_for":"注释",
+  "show_wishlist_total":"显示愿望单总计",
+  "tag_short":"使用短标记，以节省空间",
   "achievements":{
     "option":"在商店页面显示成就",
     "achievements":"成就",
@@ -260,9 +261,9 @@
     "compl":"完美主义者",
     "submit":"提交你的时间",
     "main":"主线剧情",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"找不到数据",
+    "help":"点击这里获取帮助",
+    "wrong":"游戏不对？"
   },
   "library":{
     "in_library":"在库里",
@@ -303,7 +304,7 @@
     "show_package_info":"显示全部包信息",
     "wlbuttoncommunityapp":"在社区应用页面显示\"添加至愿望单\"按钮",
     "removeguideslanguagefilter":"不根据用户的语言自动过滤指南",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"在访问外部站点时禁用确认",
     "regional_price_on":"显示地区价格比较",
     "cart":"购物车中的物品",
     "friends_own":"好友拥有的项目",
@@ -391,7 +392,8 @@
     "wishlist":"愿望单中的项目",
     "add_another_region":"添加",
     "skip_got_steam":"跳过“安装 Steam”提示窗",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"第三方网站信息选项",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"英语",
       "brazilian":"葡萄牙语-巴西",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Enhanced Steam 数据载入错误",
     "loading":"Enhanced Steam 数据载入中...",
-    "ready":"Enhanced Steam 已就绪"
+    "ready":"Enhanced Steam 已就绪",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__正在Twitch上直播",
@@ -485,7 +488,12 @@
     "sending":"载入您已拥有的游戏与合集包并将信息发送到IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ 个对象",
+    "num_items":"__num__ 个对象"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

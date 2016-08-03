@@ -21,6 +21,7 @@
   "packs":"Pakker",
   "remove_owned_wishlist":"Fjern eide spill fra ønskeliste",
   "donate":"Donér",
+  "close":"Close",
   "coupon_application_note":"En kupong i lageret ditt vil bli brukt automatisk ved kassen.",
   "hide":"Gjem",
   "cards_owned":"__owned__ av __possible__ kort eid",
@@ -392,6 +393,7 @@
     "add_another_region":"Legg til",
     "skip_got_steam":"Skip the 'Got Steam?' window",
     "store_general_thirdparty":"Options for information from 3rd party sites",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Engelsk",
       "brazilian":"Brasiliansk portugisisk",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Feil under lasting av Enhanced Steam-data",
     "loading":"Enhanced Steam laster data...",
-    "ready":"Enhanced Steam klar"
+    "ready":"Enhanced Steam klar",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ streamer på Twitch",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ item",
     "num_items":"__num__ items"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

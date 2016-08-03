@@ -21,6 +21,7 @@
   "packs":"Paketler",
   "remove_owned_wishlist":"Sahip olunan oyunları istek listesinden çıkar",
   "donate":"Bağış Yap",
+  "close":"Close",
   "coupon_application_note":"Envanterinizdeki bir kupon, satın alımda otomatik olarak kullanılacak.",
   "hide":"Gizle",
   "cards_owned":"__possible__ kart hakkından __owned__ ü",
@@ -231,7 +232,7 @@
   "filter_games":"Filtreli oyunlar",
   "note_for":"için not",
   "show_wishlist_total":"Toplam istek listesini göster",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Alanı kazanmak için kısa etiketleri kullanın",
   "achievements":{
     "option":"Başarımları mağaza sayfalarında göster",
     "achievements":"Başarımlar",
@@ -260,9 +261,9 @@
     "compl":"Tamamlayıcı",
     "submit":"Zamanınızı Gönderin",
     "main":"Ana Hikaye",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Veri bulunamadı",
+    "help":"Yardım için buraya tıklayın",
+    "wrong":"Yanlış oyun?"
   },
   "library":{
     "in_library":"Kütüphanede",
@@ -303,7 +304,7 @@
     "show_package_info":"Tüm uygulamalar için paket bilgisini göster",
     "wlbuttoncommunityapp":"Kullanıcı topluluk uygulamasında \"İstek Listesine ekle\" butonu göster",
     "removeguideslanguagefilter":"Kullanıcı diline göre kılavuzları otomatik filtreleme",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Dış sitelerine erişirken onay devre dışı bırakma",
     "regional_price_on":"Karşılaştırmada bölgesel fiyatları göster",
     "cart":"Sepetinizdeki ürünler",
     "friends_own":"Arkadaşlarının sahip oldukları eşyalar",
@@ -391,7 +392,8 @@
     "wishlist":"İstek listenizdeki eşyalar",
     "add_another_region":"Ekle",
     "skip_got_steam":"'Steam'iniz var mı?' penceresini atla",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"3 parti sitelerden bilgi için seçenekleri",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"İngilizce",
       "brazilian":"Portekizce-Brezilya",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Enhanced Steam verilerini yüklerken hata oluştu",
     "loading":"Enhanced Steam verileri yüklüyor...",
-    "ready":"Enhanced Steam hazır"
+    "ready":"Enhanced Steam hazır",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ Twitch üzerinden canlı yayın yapıyor",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ eşya",
     "num_items":"__num__ eşyalar"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

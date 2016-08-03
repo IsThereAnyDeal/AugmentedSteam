@@ -21,6 +21,7 @@
   "packs":"Csomagok",
   "remove_owned_wishlist":"A már megvett játékok törlése a kívánságlistáról",
   "donate":"Támogatás",
+  "close":"Close",
   "coupon_application_note":"A Raktáradban lévő kupon automatikusan érvénybe lép a pénztárnál.",
   "hide":"Elrejt",
   "cards_owned":"__owned__ db kártyád van a lehetséges __possible__ db-ból",
@@ -225,13 +226,13 @@
   "set_as_background":"Beállítás háttérképként",
   "preview_background":"Háttérkép előnézete",
   "details":"Részletek",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
+  "expand_slider":"Galéria nagyítása",
+  "contract_slider":"Galéria visszaállítása",
   "early_access":"Korai hozzáférés",
   "filter_games":"Játékszűrő",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "note_for":"Megjegyzés",
+  "show_wishlist_total":"Teljes kívánságlista mutatása",
+  "tag_short":"Használj rövid tag-eket, hogy helyet takaríts meg",
   "achievements":{
     "option":"Teljesítmények mutatása az áruház oldalain",
     "achievements":"Teljesítmények",
@@ -262,7 +263,7 @@
     "main":"Főszál",
     "no_data":"Nem található adat",
     "help":"Kattints ide a segítséghez",
-    "wrong":"Wrong game?"
+    "wrong":"Rossz játék?"
   },
   "library":{
     "in_library":"Könyvtárban",
@@ -302,8 +303,8 @@
     "coupon":"Kuponok",
     "show_package_info":"Csomag információ megjelenítése minden alkalmazásra",
     "wlbuttoncommunityapp":"\"Tedd Kivánságlistára\" gomb megjelenítése a közösségi alkalmazásokon",
-    "removeguideslanguagefilter":"Don't automatically filter guides by user language",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "removeguideslanguagefilter":"Ne szűrje automatikusan az Útmutatókat nyelv szerint",
+    "disablelinkfilter":"Megerősítés kikapcsolása külső oldalak esetén",
     "regional_price_on":"Mutassa a régiók árainak összevetését",
     "cart":"Termékek a kosaradban",
     "friends_own":"Barátaid által birtokolt tárgyak",
@@ -332,19 +333,19 @@
     "show_early_access_text":"Mutassa a Korai Hozzáférés jelzéseket",
     "author_info":"jshackles által",
     "profile_link_images_gray":"Szürke",
-    "quickinv":"Show Quick Sale buttons on Steam Community items in inventory",
-    "quickinv_diff":"Quick Sale modifier:",
+    "quickinv":"Gyors Eladás gomb mutatása a Közösségi tárgyakon a raktárban",
+    "quickinv_diff":"Gyors Eladás szerkesztő:",
     "library_f2p":"Játszott ingyenes és demó játékok mutatása a könyvtárban",
     "inventory_market_text":"Piaci ár megjelenítése a raktár oldalon",
     "send_age_info":"Automatikusan elküldi az életkor ellenőrzést amikor kérik",
     "pcgw":"Mutassa a PCGaminfWiki linkeket",
-    "store_steamcards":"Show SteamCardExchange links on store pages",
+    "store_steamcards":"SteamCardExchange link mutatása az áruház oldalain",
     "spamcommentregex":"Reguláris kifejezés:",
     "hide_owned_homepage":"Tételek a saját honlapján",
     "saved_note":"Beállítások mentve",
     "regional_hideworld":"Globális mutató elrejtése",
     "show_astatslink":"AStats hivatkozás mutatása az áruház oldalain",
-    "showclient":"Show Steam Client links",
+    "showclient":"Steam Kliens linkek mutatása",
     "guest":"Vendégkártyák",
     "show_steamchart_info":"Mutassa a SteamCharts.com infókat",
     "show_steamspy_info":"Steamspy.com információ mutatása",
@@ -366,7 +367,7 @@
     "profile_link_images_color":"Színezett",
     "hide_about":"\"Névjegy\" hivatkozás elrejtése",
     "inventory_nav_text":"Bővített kezelési lehetőségek a raktár oldalon",
-    "carousel_description":"Show app descriptions on storefront carousel",
+    "carousel_description":"Leírások mutatása a főoldal galériájában",
     "market_total":"Tranzakció összefoglalás megjelenítése a Piacon",
     "hide_install":"A \"Steam telepítése\" gomb elrejtése",
     "lowestprice_coupon":"Kupon kódok beszámítása ár összehasonlításkor",
@@ -390,8 +391,9 @@
     "homepage_default_tab_specials":"Speciálisok",
     "wishlist":"Tárgyak a kívánságlistádon",
     "add_another_region":"Hozzáad",
-    "skip_got_steam":"Skip the 'Got Steam?' window",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "skip_got_steam":"'Van Steamed?' ablak átugrása",
+    "store_general_thirdparty":"Beállítások külső oldalak információiról",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Angol",
       "brazilian":"Portugál-Brazil",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Hiba az Enhanced Steam adatbetöltése közben",
     "loading":"Enhanced Steam betölti az adatokat...",
-    "ready":"Enhanced Steam kész"
+    "ready":"Enhanced Steam kész",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ éppen közvetít a Twitch-en",
@@ -473,10 +476,10 @@
   },
   "wsgf":{
     "incomplete":"Nem teljes",
-    "unsupported":"This score is awarded to games that have no __type__ support.  The game may be unplayable in __type__, or the image is stretched to fit the window.  Correct aspect ratio is not retained.",
-    "gold":"This medal is awarded to games which have received perfect scores from the WSGF for their __type__ support, and are __type__ Certified.",
-    "silver":"This medal is awarded to games that have received a calculated grade of B for their __type__ support.  All of these games are without major flaws, but have at least one blemish that prevents a perfect score.",
-    "limited":"This score is awarded to games that have received a calculated grade of C for their __type__ support.  All of these games have some level of __type__ support but have significant issues.",
+    "unsupported":"Ezt az eredmény azok a játékok kapják amik nem támogatják az __type__-t. A játék játszhatatlan lehet __type__-ben, vagy a kép szét lesz húzva. A helyes arányok nem lesznek megtartva.",
+    "gold":"Ez az érem olyan játékoknak van kiosztva amik tökéletes pontszámot kaptak a WSGF-től az ő __type__ támogatásuk miatt, és __type__ Hitelesítettek.",
+    "silver":"Ez az érem azoknak a játékoknak van ítélve akik egy kiszámított B értékelést értek el az ő __type__ támogatásukkal. Minden ilyen játék különösebb gondoktól mentes, de legalább egy olyan hibával rendelkezik ami megakadályozza a tökéletes pontszámot.",
+    "limited":"Ez a pontszám azoknak a játékoknak jár akik egy kiszámított C szintet kaptak az ő __type__ támogatásukkal. Minden ilyen játék támogatja valamelyest az __type__-t de komoly gondokkal küzdenek.",
     "certifications":"WSGF Szélesvásznú Tanusítványok"
   },
   "itad":{
@@ -485,7 +488,12 @@
     "sending":"A saját játékok és csomagok betöltése és elküldése a(z) IsThereAnyDeal.com-nak"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ tárgy",
+    "num_items":"__num__ tárgyak"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

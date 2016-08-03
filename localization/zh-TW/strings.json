@@ -21,6 +21,7 @@
   "packs":"包",
   "remove_owned_wishlist":"從願望清單中移除已擁有的遊戲",
   "donate":"捐獻",
+  "close":"Close",
   "coupon_application_note":"一張在你物品庫中的優惠券會在結帳時自動抵用。",
   "hide":"隱藏",
   "cards_owned":"在 __possible__張中已擁有__owned__張",
@@ -221,7 +222,7 @@
   "chat":"聊天",
   "web_browser_chat":"使用瀏覽器聊天",
   "steam_client_chat":"使用Steam聊天",
-  "available":"Available",
+  "available":"可用",
   "set_as_background":"設為背景",
   "preview_background":"預覽背景",
   "details":"詳細資料",
@@ -229,9 +230,9 @@
   "contract_slider":"縮小卷軸",
   "early_access":"搶先體驗",
   "filter_games":"篩選遊戲",
-  "note_for":"Note for",
+  "note_for":"請注意",
   "show_wishlist_total":"顯示願望清單總數",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"使用簡短的標籤以節省空間",
   "achievements":{
     "option":"在商店頁面中顯示成就",
     "achievements":"成就",
@@ -260,9 +261,9 @@
     "compl":"完美主義者",
     "submit":"送出你的時數",
     "main":"主線故事",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"找不到資料",
+    "help":"按此處取得協助",
+    "wrong":"錯的遊戲嗎？"
   },
   "library":{
     "in_library":"在遊戲庫中",
@@ -303,7 +304,7 @@
     "show_package_info":"顯示所有軟體的package資訊",
     "wlbuttoncommunityapp":"在社群中心中顯示\"加入到願望清單\"按紐",
     "removeguideslanguagefilter":"不自動由使用者語言篩選指南",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"停用造訪外部網站時的確認訊息",
     "regional_price_on":"顯示各地區價格比較",
     "cart":"購物車裡的物品",
     "friends_own":"朋友擁有的項目",
@@ -391,7 +392,8 @@
     "wishlist":"在願望清單上的項目",
     "add_another_region":"增加",
     "skip_got_steam":"跳過 '安裝Steam了嗎？' 視窗",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"來自第三方網站資訊的選項",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"英文",
       "brazilian":"葡萄牙文-巴西",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Enhanced Steam 資料載入錯誤",
     "loading":"增強的蒸氣加載數據...",
-    "ready":"提高蒸汽準備"
+    "ready":"提高蒸汽準備",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ 在 Twitch 上直播中",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ 物品",
     "num_items":"__num__ 物品"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

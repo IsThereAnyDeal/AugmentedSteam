@@ -21,6 +21,7 @@
   "packs":"묶음",
   "remove_owned_wishlist":"소유한 게임을 찜 목록에서 제거",
   "donate":"기부하기",
+  "close":"Close",
   "coupon_application_note":"보관함에 있는 쿠폰은 결제할 때 자동으로 적용됩니다.",
   "hide":"숨김",
   "cards_owned":"__possible__장의 카드 중 __owned__장을 소유하고 있음",
@@ -231,7 +232,7 @@
   "filter_games":"게임 필터",
   "note_for":"Note for",
   "show_wishlist_total":"찜 목록 전체 보기",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"공간을 절약하기 위해 짧은 태그 사용",
   "achievements":{
     "option":"상점 페이지에 도전과제 표시",
     "achievements":"도전과제",
@@ -260,9 +261,9 @@
     "compl":"완벽하게 모두 플레이",
     "submit":"플레이 타임 제출하기",
     "main":"메인",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"데이터를 찾을 수 없습니다",
+    "help":"도움을 원하시면 이 곳을 눌러주세요",
+    "wrong":"이 게임이 아닙니까?"
   },
   "library":{
     "in_library":"라이브러리에",
@@ -303,7 +304,7 @@
     "show_package_info":"모든 앱의 패키지 정보를 표시",
     "wlbuttoncommunityapp":"커뮤니티 허브에서 \"찜 목록에 추가\" 버튼 보이기",
     "removeguideslanguagefilter":"사용자 언어를 기준으로 자동 가이드 필터링 하지 않기",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"외부 사이트에 접속할 때 확인여부를 묻지 않도록 설정",
     "regional_price_on":"지역별 가격 비교를 보여준다",
     "cart":"장바구니에 있는 물품들",
     "friends_own":"당신의 친구가 소유한 아이템",
@@ -391,7 +392,8 @@
     "wishlist":"찜 목록",
     "add_another_region":"추가하기",
     "skip_got_steam":"'스팀이 설치되어 있습니까?' 창 생략",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"서드파티 사이트에서 추출한 정보에 대한 옵션",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"영어",
       "brazilian":"포르투갈어-브라질",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Enhanced Steam 데이터 로딩 오류",
     "loading":"Enhanced Steam 데이터 로딩중...",
-    "ready":"Enhanced Steam 준비"
+    "ready":"Enhanced Steam 준비",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__는 트위치에서 라이브 스트리밍 중",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ 항목",
     "num_items":"__num__ 항목들"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

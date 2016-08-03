@@ -21,6 +21,7 @@
   "packs":"Комплекты",
   "remove_owned_wishlist":"Убрать из списка желаемого купленные игры",
   "donate":"Пожертвовать",
+  "close":"Close",
   "coupon_application_note":"При покупке купон будет использован автоматически.",
   "hide":"Спрятать",
   "cards_owned":"Есть __owned__ карт из __possible__ возможных",
@@ -391,7 +392,8 @@
     "wishlist":"Продукты, которые находятся в вашем списке желаемого",
     "add_another_region":"Добавить",
     "skip_got_steam":"Пропустить окно\"У Вас есть установленный Steam клиент ?\"",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Настройки получения информации от сторонних сайтов",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Английский",
       "brazilian":"Португальско-бразильский",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Ошибка загрузки данных Enhanced Steam",
     "loading":"«Enhanced Steam» загружается...",
-    "ready":"\"Enhanced Steam\" готов"
+    "ready":"\"Enhanced Steam\" готов",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ начал трансляцию на Twich",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ элемент",
     "num_items":"__num__ элементы"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

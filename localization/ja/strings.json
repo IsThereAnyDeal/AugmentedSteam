@@ -21,6 +21,7 @@
   "packs":"パック",
   "remove_owned_wishlist":"ウィッシュリストから所有しているゲームを削除",
   "donate":"寄付",
+  "close":"Close",
   "coupon_application_note":"インベントリにあるクーポンは支払い時に自動的に適用されます。",
   "hide":"非表示",
   "cards_owned":"__possible__ 枚のカード中__owned__枚所有しています",
@@ -129,8 +130,8 @@
   "always":"常に表示",
   "compare":"比較",
   "discount":"割引",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"割引 (百分率)",
+  "discountabs":"割引 (金額)",
   "rating_details":"評価の詳細を表示",
   "drops_worth_avg":"およその価値",
   "using_store_return":"ここをクリックすると__base__ストアに戻ります。",
@@ -178,7 +179,7 @@
   "notcommon_label":"自分が所有しているゲームを非表示にする",
   "show_all_steam_releases":"Steam のリリースをすべて表示",
   "wishlist":"ウィッシュリスト",
-  "on_wishlist":"On Wishlist",
+  "on_wishlist":"ウィッシュリストに入っています",
   "notdiscounted":"割引していないアイテム",
   "cancel":"キャンセル",
   "wiki_article":"__pcgw__ の記事を表示",
@@ -218,20 +219,20 @@
   "leave_group_admin_confirm":"あなたは__groupname__グループの管理者です。\n本当にグループから脱退しますか?",
   "wrong_try_again":"何か問題が起きたようです。後でもう一度やり直してください。",
   "join_group":"グループに参加する",
-  "chat":"Chat",
-  "web_browser_chat":"Web browser chat",
-  "steam_client_chat":"Steam Client chat",
-  "available":"Available",
-  "set_as_background":"Set as Background",
-  "preview_background":"Preview Background",
-  "details":"Details",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
-  "early_access":"Early Access",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "chat":"チャット",
+  "web_browser_chat":"ウェブブラウザーチャット",
+  "steam_client_chat":"Steam クライアントチャット",
+  "available":"利用可能",
+  "set_as_background":"背景として設定します。",
+  "preview_background":"背景をプレビュー",
+  "details":"詳細",
+  "expand_slider":"スライダーを拡張",
+  "contract_slider":"スライダーを縮小",
+  "early_access":"早期アクセス",
+  "filter_games":"ゲームをフィルター",
+  "note_for":"注意:",
+  "show_wishlist_total":"ウィッシュリストの合計額を表示",
+  "tag_short":"スペースの節約のため短縮タグを使用する",
   "achievements":{
     "option":"ストアページで実績を表示",
     "achievements":"実績",
@@ -260,12 +261,12 @@
     "compl":"完璧主義者",
     "submit":"あなたの時間を送信",
     "main":"主なストーリー",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"データが見つかりません",
+    "help":"ここをクリックでヘルプを表示",
+    "wrong":"違うゲームですか？"
   },
   "library":{
-    "in_library":"In Library",
+    "in_library":"ライブラリー内",
     "error_loading_library":"ライブラリを読み込めませんでした。",
     "categories":"カテゴリ...",
     "genres":"ジャンル...",
@@ -303,7 +304,7 @@
     "show_package_info":"全アプリのパッケージ情報を表示",
     "wlbuttoncommunityapp":"「ウィッシュリストに追加」ボタンをコミュニティアプリハブに表示",
     "removeguideslanguagefilter":"ユーザーの言語設定によるガイドの自動フィルタリングをしない",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"外部サイトにアクセスする際の確認を無効にする",
     "regional_price_on":"地域別価格比較を表示",
     "cart":"カートにあるアイテム",
     "friends_own":"フレンドが所有しているアイテム",
@@ -390,8 +391,9 @@
     "homepage_default_tab_specials":"スペシャル",
     "wishlist":"ウィッシュリストにあるアイテム",
     "add_another_region":"追加",
-    "skip_got_steam":"Skip the 'Got Steam?' window",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "skip_got_steam":"「Steam をお持ちですか？」のウィンドウをスキップする",
+    "store_general_thirdparty":"サードパーティーサイト由来の情報についてのオプション",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"英語",
       "brazilian":"ブラジルポルトガル語",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Enhanced Steam のデータロードエラー",
     "loading":"Enhanced Steam がデータをロード中……",
-    "ready":"Enhanced Steam 準備完了"
+    "ready":"Enhanced Steam 準備完了",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ はTwitchで配信中です",
@@ -464,7 +467,7 @@
     "inv_gift":"ギフト",
     "inv_guestpass":"ゲストパス",
     "owned":"所持",
-    "notinterested":"Not Interested",
+    "notinterested":"興味がありません",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ 人が欲しがっています<\/a>"
   },
   "wallet":{
@@ -485,7 +488,12 @@
     "sending":"既に所持しているゲームやゲームセットの情報を読み込みIsThereAnyDeal.comに送信する"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ つのアイテム",
+    "num_items":"__num__ 個のアイテム"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

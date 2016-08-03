@@ -21,6 +21,7 @@
   "packs":"Balíčky",
   "remove_owned_wishlist":"Odstranit vlastněné hry ze Seznamu přání",
   "donate":"Přispět",
+  "close":"Close",
   "coupon_application_note":"Kupón ve vašem inventáři bude automaticky aplikován při nákupu.",
   "hide":"Schovat",
   "cards_owned":"Vlastněno __owned__ z __possible__ karet",
@@ -130,7 +131,7 @@
   "compare":"Porovnat",
   "discount":"Sleva",
   "discountper":"Sleva v procentech",
-  "discountabs":"Discount (Amount)",
+  "discountabs":"Hodnota slevy (Amount)",
   "rating_details":"Zobrazit detaily hodnocení",
   "drops_worth_avg":"Přibližná hodnota",
   "using_store_return":"Klikněte zde pro návrat na __base__ Obchod.",
@@ -178,7 +179,7 @@
   "notcommon_label":"Schovat hry, které vlastníte",
   "show_all_steam_releases":"Zobrazit vše vydané ve službě Steam",
   "wishlist":"Seznam přání",
-  "on_wishlist":"On Wishlist",
+  "on_wishlist":"Seznam přání",
   "notdiscounted":"Nezlevněné položky",
   "cancel":"Zrušit",
   "wiki_article":"Ukázat článek __pcgw__",
@@ -219,19 +220,19 @@
   "wrong_try_again":"Něco se pokazilo. Zkuste prosím znovu.",
   "join_group":"Připojit se ke skupině",
   "chat":"Chat",
-  "web_browser_chat":"Web browser chat",
-  "steam_client_chat":"Steam Client chat",
+  "web_browser_chat":"Webový chat",
+  "steam_client_chat":"Chat v klientovi Steamu",
   "available":"Available",
   "set_as_background":"Nastavit jako pozadí",
   "preview_background":"Preview Background",
-  "details":"Details",
-  "expand_slider":"Expand slider",
-  "contract_slider":"Contract slider",
-  "early_access":"Early Access",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "details":"Podrobnosti",
+  "expand_slider":"Rozšířit posuvník",
+  "contract_slider":"Zmenšit posuvník",
+  "early_access":"Předběžný přístup",
+  "filter_games":"Filtrovat hry",
+  "note_for":"Poznámka pro",
+  "show_wishlist_total":"Zobrazit cenu seznamu přání",
+  "tag_short":"Použít zkrácené značky, aby se ušetřilo místo",
   "achievements":{
     "option":"Ukázat achievementy na stránce obchodu",
     "achievements":"Achievementy",
@@ -260,12 +261,12 @@
     "compl":"Vše dokončeno",
     "submit":"Pošlete svůj čas",
     "main":"Hlavní příběh",
-    "no_data":"No data found",
-    "help":"Click here to help",
+    "no_data":"Nebyla nalezena jakákoli data",
+    "help":"Klikněte zde pro pomoc",
     "wrong":"Wrong game?"
   },
   "library":{
-    "in_library":"In Library",
+    "in_library":"V knihovně",
     "error_loading_library":"Nepodařilo se načíst vaši knihovnu.",
     "categories":"Kategorie...",
     "genres":"Žánry...",
@@ -303,7 +304,7 @@
     "show_package_info":"Ukázat Informace o balíčku pro všechny aplikace",
     "wlbuttoncommunityapp":"Ukázat tlačítko \"Přidat do Seznamu přání\" na komunitních hubech aplikací",
     "removeguideslanguagefilter":"Nefiltrovat automaticky uživatelské návody podle jazyka",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Zakázat potvrzení, když přecházím na jiné stránky",
     "regional_price_on":"Ukázat srovnání cen v regionech",
     "cart":"Položky ve vašem košíku",
     "friends_own":"Položky, které vlastní vaši přátelé",
@@ -390,8 +391,9 @@
     "homepage_default_tab_specials":"Slevněné",
     "wishlist":"Položky, které máte na Seznamu přání",
     "add_another_region":"Přidat",
-    "skip_got_steam":"Skip the 'Got Steam?' window",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "skip_got_steam":"Přeskočit okno \"Máte klienta služby Steam?\"",
+    "store_general_thirdparty":"Nastavení pro informace ze stránek třetích stran",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Angličtina",
       "brazilian":"Portugalská-Brazilština",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Chyba při načítání Enhanced Steam dat",
     "loading":"Enhanced Steam načítá data...",
-    "ready":"Enhanced Steam je připravený."
+    "ready":"Enhanced Steam je připravený.",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ živě steamuje na Twitch",
@@ -464,7 +467,7 @@
     "inv_gift":"Vlastněný dárek",
     "inv_guestpass":"Vlastněný Guest Pass",
     "owned":"Vlastněné",
-    "notinterested":"Not Interested",
+    "notinterested":"Nezajímá mě",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ si přeje<\/a>"
   },
   "wallet":{
@@ -485,7 +488,12 @@
     "sending":"Načítám vlastněné hry a balíčky a posílám je do IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ položka",
+    "num_items":"__num__ položek"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

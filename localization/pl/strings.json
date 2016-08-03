@@ -21,6 +21,7 @@
   "packs":"Zestawy",
   "remove_owned_wishlist":"Usuń posiadane tytuły z listy źyczeń",
   "donate":"Dotacje",
+  "close":"Close",
   "coupon_application_note":"Kupon z Twojego ekwipunku zostanie użyty automatycznie.",
   "hide":"Ukryj",
   "cards_owned":"Posiadanych kart: __owned__ z __possible__",
@@ -231,7 +232,7 @@
   "filter_games":"Filter gier",
   "note_for":"Notatka dla",
   "show_wishlist_total":"Pokaż listę życzeń",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Użyj krótkich tagów aby zaoszczędzić miejsce",
   "achievements":{
     "option":"Pokaż osiągnięcia na stronach sklepu",
     "achievements":"Osiągnięcia",
@@ -260,9 +261,9 @@
     "compl":"Kompletne ukończenie",
     "submit":"Podaj swój czas",
     "main":"Główny wątek",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Nie odnaleziono danych",
+    "help":"Kliknij tutaj, aby uzyskać pomoc",
+    "wrong":"Niewłaściwa gra?"
   },
   "library":{
     "in_library":"W bibliotece",
@@ -303,7 +304,7 @@
     "show_package_info":"Pokaż informacje o paczkach dla wszystkich aplikacji",
     "wlbuttoncommunityapp":"Pokaż przycisk „Dodaj do listy życzeń” na stronach społeczności",
     "removeguideslanguagefilter":"Nie filtruj automatycznie poradników po języku użytkownika",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Wyłącz potwierdzenia podczas przechodzenia na zewnętrzne witryny",
     "regional_price_on":"Pokaż porównanie cen regionalnych",
     "cart":"Rzeczy w koszyku",
     "friends_own":"Tytuły posiadane przez znajomych",
@@ -391,7 +392,8 @@
     "wishlist":"Tytuły na liście życzeń",
     "add_another_region":"Dodaj",
     "skip_got_steam":"Pomiń okno \"Masz Steama?\"",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Opcja do uzyskiwania informacji ze stron zewnętrznych",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Angielski",
       "brazilian":"Portugalski Brazylia",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Błąd wczytywania danych Enhanced Steam",
     "loading":"Wczytywanie danych Enhanced Steam...",
-    "ready":"Enhanced Steam jest gotowy"
+    "ready":"Enhanced Steam jest gotowy",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ streamuje teraz na Twitchu",
@@ -485,7 +488,12 @@
     "sending":"Wczytywanie pakietów i gier z Twojej biblioteki, i wysyłanie ich do IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ przedmiot",
+    "num_items":"__num__ przedmioty"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

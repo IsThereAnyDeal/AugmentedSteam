@@ -21,6 +21,7 @@
   "packs":"Paketit",
   "remove_owned_wishlist":"Poista omistetut pelit toivelistalta",
   "donate":"Lahjoita",
+  "close":"Close",
   "coupon_application_note":"Tavaraluettelossasi oleva kuponki käytetään automaattisesti kassalla.",
   "hide":"Piilota",
   "cards_owned":"__owned__ \/ __possible__ korttia kerätty",
@@ -392,6 +393,7 @@
     "add_another_region":"Lisää",
     "skip_got_steam":"Skip the 'Got Steam?' window",
     "store_general_thirdparty":"Options for information from 3rd party sites",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Englanti",
       "brazilian":"Brazilian Portugali",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Virhe ladatessa Enhanced Steamin tietoja",
     "loading":"Enhanced Steam lataa tietoja...",
-    "ready":"Enhanced Steam on valmis"
+    "ready":"Enhanced Steam on valmis",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ on lähettämässä suoraa lähetystä Twitchissä",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ item",
     "num_items":"__num__ items"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

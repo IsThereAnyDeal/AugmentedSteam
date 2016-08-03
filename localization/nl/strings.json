@@ -21,6 +21,7 @@
   "packs":"Pakketten ",
   "remove_owned_wishlist":"Verwijder eigen games van je wenslijst",
   "donate":"Doneer",
+  "close":"Close",
   "coupon_application_note":"Een waardebon in je inventaris wordt automatisch toegepast bij het afrekenen.",
   "hide":"Verberg",
   "cards_owned":"__owned__ of __possible__ kaarten bezeten",
@@ -228,10 +229,10 @@
   "expand_slider":"Uitbreiden schuif",
   "contract_slider":"Sluiten schuif",
   "early_access":"Vroege Toegang",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
+  "filter_games":"spel filters",
+  "note_for":"Opmerking voor",
   "show_wishlist_total":"Toon volledige wenslijst",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Gebruik korte tags om ruimte te besparen",
   "achievements":{
     "option":"Toon achievements op winkel pagina's",
     "achievements":"Prestaties",
@@ -260,9 +261,9 @@
     "compl":"Perfectionist",
     "submit":"Verstuur jouw tijd",
     "main":"Hoofdverhaal",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Geen Gegevens Gevonden",
+    "help":"Klik hier om te helpen",
+    "wrong":"Verkeerde Spel?"
   },
   "library":{
     "in_library":"In Bibliotheek",
@@ -303,7 +304,7 @@
     "show_package_info":"Laat pakket informatie voor alle apps zien",
     "wlbuttoncommunityapp":"Toon \"Voeg toe aan wenslijst\" knop bij gemeenschap app hubs",
     "removeguideslanguagefilter":"Niet doen automatisch filteren gidsen door gebruiker taal",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Bevestiging uitschakelen bij het benaderen van externe sites",
     "regional_price_on":"Toon regionale prijs vergelijking",
     "cart":"Artikelen in je winkelwagen",
     "friends_own":"Items die je vrienden hebben",
@@ -391,7 +392,8 @@
     "wishlist":"Items op jouw wenslijst",
     "add_another_region":"Toevoegen",
     "skip_got_steam":"Overslaan van het venster 'Kreeg stoom?'",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Opties voor informatie uit 3rd sites",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Engels",
       "brazilian":"Portugees-Braziliaans",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Fout tijdens het laden van Enhanced Steam gegevens",
     "loading":"Enhanced Steam is gegevens aan het laden...",
-    "ready":"Enhanced Steam gereed"
+    "ready":"Enhanced Steam gereed",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ is aan het livestreamen op Twitch",
@@ -485,7 +488,12 @@
     "sending":"Spellen en pakketten die je in bezit hebt worden geladen en naar IsThereAnyDeal.com verstuurd"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ object",
+    "num_items":"__num__ object"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

@@ -21,6 +21,7 @@
   "packs":"Packs",
   "remove_owned_wishlist":"Retirer les jeux possédés de la liste de souhaits",
   "donate":"Faire un don",
+  "close":"Fermer",
   "coupon_application_note":"Un coupon de votre inventaire sera utilisé automatiquement à l'achat.",
   "hide":"Cacher",
   "cards_owned":"__owned__ cartes sur __possible__ possédées",
@@ -154,7 +155,7 @@
   "view_badge_foil":"Voir le badge premium",
   "net_spent":"Dépense nette",
   "homepage_carousel":"Carrousel",
-  "acrtag_tooltip":"Cet article ne peut pas être échangé entre les régions s'il a acheté en Europe de l'Est, en Amérique du Sud ou en Asie du Sud-Est",
+  "acrtag_tooltip":"Cet article ne peut pas être échangé entre les régions s'il est acheté en Europe de l'Est, en Amérique du Sud ou en Asie du Sud-Est",
   "official_group":"Groupe officiel",
   "saved":"Enregistré",
   "add_unowned_dlc_to_cart":"Ajouter les DLC non-possédés au panier",
@@ -231,7 +232,7 @@
   "filter_games":"Filtrer les jeux",
   "note_for":"Note pour",
   "show_wishlist_total":"Afficher le total de la liste de souhaits",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Utiliser des tags courts pour économiser l’espace",
   "achievements":{
     "option":"Afficher les succès dans le magasin",
     "achievements":"Succès",
@@ -260,9 +261,9 @@
     "compl":"Perfectionniste ",
     "submit":"Envoyer votre temps",
     "main":"Histoire principale ",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Aucune donnée trouvée",
+    "help":"Cliquez ici pour aider",
+    "wrong":"Mauvais jeu ?"
   },
   "library":{
     "in_library":"Dans votre bibliothèque",
@@ -303,7 +304,7 @@
     "show_package_info":"Afficher les informations sur les packages pour toutes les applications",
     "wlbuttoncommunityapp":"Afficher le bouton \"Ajouter à votre liste de souhaits\" dans les hubs de la communauté",
     "removeguideslanguagefilter":"Ne pas filtrer automatiquement les guides par la langue de l'utilisateur",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Désactiver la confirmation lors de l'accès à des sites externes",
     "regional_price_on":"Afficher la comparaison des prix par région",
     "cart":"Articles dans votre panier",
     "friends_own":"Articles que vos amis possèdent",
@@ -391,7 +392,8 @@
     "wishlist":"Articles dans votre liste de souhaits",
     "add_another_region":"Ajouter",
     "skip_got_steam":"Éviter la fenêtre \"Vous avez Steam ?\"",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Options pour les informations de sites tiers",
+    "purchase_dates":"Afficher les dates d'achat dans le magasin",
     "lang":{
       "english":"Anglais",
       "brazilian":"Portugais du Brésil",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Erreur lors du chargement des données d'Enhanced Steam",
     "loading":"Chargement des données d'Enhanced Steam...",
-    "ready":"Enhanced Steam prêt"
+    "ready":"Enhanced Steam prêt",
+    "failed":"Une ou plusieurs demandes ont échoué"
   },
   "twitch":{
     "now_streaming":"__username__ diffuse en direct sur Twitch",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ objet",
     "num_items":"__num__ objets"
+  },
+  "update":{
+    "dont_show":"Ne plus afficher",
+    "updated":"Enhanced Steam a été mis à jour à la version __version__",
+    "changes":"Cette version inclut les modifications suivantes"
   }
 }

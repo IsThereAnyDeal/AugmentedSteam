@@ -21,6 +21,7 @@
   "packs":"Pachete",
   "remove_owned_wishlist":"Elimină jocurile deținute din lista de dorințe",
   "donate":"Donează",
+  "close":"Close",
   "coupon_application_note":"Un cupon de reducere din inventarul tău Steam va fi aplicat automat la această comandă.",
   "hide":"Ascunde",
   "cards_owned":"__owned__ cărţi colectate din __possible__ posibile",
@@ -99,7 +100,7 @@
   "market_transactions":"Tranzacții piață",
   "card_drops_remaining":"__drops__ cărți de schimb rămase de obținut",
   "badges_drops":"Insigne cu cărți de schimb rămase",
-  "using_language_return":"Apasă aici pentru a naviga pe Steam pe __base__.",
+  "using_language_return":"Click aici pentru a naviga pe Steam în __base__.",
   "spam_comment_warn":"Aici vor fi dragoni...",
   "guides":"Tutoriale",
   "buy_wishlist":"Cumpără lista de dorințe",
@@ -144,7 +145,7 @@
   "games_with_drops":"__dropsgames__ jocuri ce contin cărți de schimb rămase de obținut",
   "binder_view":"Vizualizare tip dosar",
   "view_stats":"Vezi statistici",
-  "using_language":"Navighezi pe Steam pe __current__.",
+  "using_language":"Navighezi pe Steam în __current__.",
   "popular":"Populare",
   "visit_trade_forum":"Vizitează forumul de schimb",
   "software":"Aplicații",
@@ -155,7 +156,7 @@
   "net_spent":"Cheltuit net",
   "homepage_carousel":"Carusel",
   "acrtag_tooltip":"Acest element nu pot fi schimbat între regiuni în cazul în care a fost achiziţionat în Europa de Est, America de Sud sau în Asia de Sud-Est",
-  "official_group":"Grup Oficial",
+  "official_group":"Grupul oficial",
   "saved":"Salvat",
   "add_unowned_dlc_to_cart":"Adauga DLC-urile pe care nu le deții în coş",
   "buy":"Cumpără",
@@ -164,7 +165,7 @@
   "games_discount":"Jocuri cu reduceri",
   "region_unavailable":"Nu este disponibil în această regiune",
   "item_type":"Tip Produs",
-  "avg_price_3cards":"Prețul mediu celor trei cărți de schimb",
+  "avg_price_3cards":"Prețul mediu a trei cărți de schimb",
   "mods":"Mod-uri",
   "empty_wishlist":"Golește lista de dorințe",
   "empty_wishlist_confirm":"Ești sigur că vrei să golești lista de dorințe?\nAceastă acțiune este ireversibilă!",
@@ -231,7 +232,7 @@
   "filter_games":"Filtrează jocuri",
   "note_for":"Notiţă pentru",
   "show_wishlist_total":"Arată totalul listei de dorințe",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Folosește etichete scurte pentru a economisi spațiu",
   "achievements":{
     "option":"Afișează realizările pe paginile magazinului",
     "achievements":"Realizări",
@@ -260,9 +261,9 @@
     "compl":"Jocul complet",
     "submit":"Trimite timpul tău",
     "main":"Povestea principală",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Nu există date",
+    "help":"Click aici pentru a ajuta",
+    "wrong":"Jocul greșit?"
   },
   "library":{
     "in_library":"În Colecție",
@@ -289,7 +290,7 @@
     "contscroll":"Activează derularea continuă a rezultatelor căutării",
     "profile_link_images_none":"Niciunul",
     "replace_account_name":"Înlocuiţi numele contului steam cu numele profilului",
-    "profile_links":"Afișează link-uri de profil pe",
+    "profile_links":"Afișează link-uri pe profil pentru",
     "library_header":"Colecție (BETA)",
     "tag":"Etichetă",
     "show_alternative_linux_icon":"Arată o altă alternativă a pictogramei Linux",
@@ -303,11 +304,11 @@
     "show_package_info":"Afișează informații pachet pentru toate aplicațiile",
     "wlbuttoncommunityapp":"Arată butonul \"Adaugă la lista de dorințe\" pe paginile comunității jocului",
     "removeguideslanguagefilter":"Nu filtra automat ghidurile după limba utilizatorului",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Dezactivează confirmarea la accesarea site-urilor externe",
     "regional_price_on":"Arată diferența preţurilor între regiuni",
     "cart":"Articole in coș",
     "friends_own":"Produse deținute de prietenii tăi",
-    "drm":"Afișează avertismente DRM 3rd party ",
+    "drm":"Afișează avertismente pentru jocurile cu DRM terțe",
     "profile_permalink":"Afișează link permanent pe profil",
     "show_regionwarning":"Arată un avertisment dacă navighezi pe o regiune diferită",
     "foot_link":"Extensia Enhanced Steam",
@@ -321,7 +322,7 @@
     "reset":"Resetează opțiuni",
     "api_key":"Cheie API",
     "gift":"Produse stocate drept cadou",
-    "show_sysreqcheck":"Arată butonul de verificare a cerințele de sistem pe pagina produsului (Experimental!)",
+    "show_sysreqcheck":"Arată butonul de verificare a cerințelor de sistem pe pagina produsului (Experimental!)",
     "es_bg":"Opțiune setare fundal personalizat pe pagina \"Editare profil\"",
     "regional_price_mouse":"trecând cu mouse-ul peste preț",
     "friends_rec":"Produse recenzate de prietenii tăi",
@@ -391,7 +392,8 @@
     "wishlist":"Produse în lista de dorințe",
     "add_another_region":"Adaugă",
     "skip_got_steam":"Sări peste fereastra 'Ai Steam?'",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Opțiuni pentru informații ce provin de pe alte site-uri terțe",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Engleză",
       "brazilian":"Portugheză-Brazilia",
@@ -423,8 +425,9 @@
   },
   "ready":{
     "errormsg":"Eroare la încărcarea datelor Enhanced Steam",
-    "loading":"Enhanced Steam se încarcă datele...",
-    "ready":"Enhanced Steam pregătit"
+    "loading":"Enhanced Steam încarcă datele...",
+    "ready":"Enhanced Steam pregătit",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ este live pe Twitch",
@@ -462,7 +465,7 @@
     "coupon":"Cupon",
     "friends_rec":"<a href=\"http:\/\/store.steampowered.com\/recommended\/byfriends\/__appid__\">__friendcount__ prieteni recomandă",
     "inv_gift":"Cadou",
-    "inv_guestpass":"Permis de acces",
+    "inv_guestpass":"Invitaţie",
     "owned":"Deținute",
     "notinterested":"Nu mă interesează",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ își doresc<\/a>"
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ obiect",
     "num_items":"__num__ obiecte"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

@@ -21,6 +21,7 @@
   "packs":"Набори",
   "remove_owned_wishlist":"Видалити придбані ігри зі списку бажаного",
   "donate":"Пожертва",
+  "close":"Close",
   "coupon_application_note":"При покупці купон буде використаний автоматично.",
   "hide":"Приховати",
   "cards_owned":"Є __owned__ карт з __possible__ можливих",
@@ -231,7 +232,7 @@
   "filter_games":"Фільтр ігор",
   "note_for":"Примітка для",
   "show_wishlist_total":"Показати весь список бажаного",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Використовуйте короткі теґи, щоб зберегти простір",
   "achievements":{
     "option":"Відображати досягнення на сторінках у магазині",
     "achievements":"Досягнення",
@@ -260,9 +261,9 @@
     "compl":"На 100%",
     "submit":"Вислати свій час",
     "main":"Основна історія",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Дані не знайдено",
+    "help":"Натисніть сюди для допомоги",
+    "wrong":"Неправильна гра?"
   },
   "library":{
     "in_library":"У Бібліотеці",
@@ -303,7 +304,7 @@
     "show_package_info":"Відображати інформацію про наборах для всіх продуктів",
     "wlbuttoncommunityapp":"Відображати кнопку \"Додати в список бажаного\" ​​в центрах спільноти",
     "removeguideslanguagefilter":"Не фільтрувати автоматично гайди на мові користувача",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Вимкнути підтвердження при зверненні до зовнішніх сайтів",
     "regional_price_on":"Відображати порівняння цін",
     "cart":"Продукти у вашому кошику",
     "friends_own":"Предмети, які є у ваших друзів",
@@ -392,6 +393,7 @@
     "add_another_region":"Додати",
     "skip_got_steam":"Приховати вікно 'Інсталювати Steam?'",
     "store_general_thirdparty":"Options for information from 3rd party sites",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Англійська",
       "brazilian":"Португальська (Бразилія)",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Помилка завантаження даних Enhanced Steam",
     "loading":"Enhanced Steam завантажує дані...",
-    "ready":"Enhanced Steam готовий"
+    "ready":"Enhanced Steam готовий",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ зараз віщає на каналі Twitch",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ річ",
     "num_items":"__num_речей"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

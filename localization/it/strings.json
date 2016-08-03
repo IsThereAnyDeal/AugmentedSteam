@@ -21,6 +21,7 @@
   "packs":"Pacchetti",
   "remove_owned_wishlist":"Rimuovi giochi posseduti",
   "donate":"Donazioni",
+  "close":"Close",
   "coupon_application_note":"Un coupon presente nel tuo inventario verrà utilizzato al momento del pagamento.",
   "hide":"Nascondi",
   "cards_owned":"__owned__ di __possible__ carte possedute",
@@ -129,8 +130,8 @@
   "always":"Sempre",
   "compare":"Confronta",
   "discount":"Sconto",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Sconto (Percentuale)",
+  "discountabs":"Sconto (Cifra)",
   "rating_details":"Vedi nel dettaglio",
   "drops_worth_avg":"Valore approssimativo",
   "using_store_return":"Clicca qui per tornare allo Store __base__.",
@@ -228,10 +229,10 @@
   "expand_slider":"Ingrandisci slider",
   "contract_slider":"Ripristina slider",
   "early_access":"Accesso anticipato",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "filter_games":"Filtra giochi",
+  "note_for":"Nota per",
+  "show_wishlist_total":"Mostra lista dei desideri completa",
+  "tag_short":"Usa tag corti per salvare spazio",
   "achievements":{
     "option":"Mostra achievement sulle pagine del negozio",
     "achievements":"Achievement",
@@ -260,9 +261,9 @@
     "compl":"Completamento al 100%",
     "submit":"Invia il tuo tempo",
     "main":"Storia principale",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Dati non trovati",
+    "help":"Clicca qui per aiuto",
+    "wrong":"Gioco sbagliato?"
   },
   "library":{
     "in_library":"In libreria",
@@ -303,7 +304,7 @@
     "show_package_info":"Mostra \"Informazioni sul Pacchetto\" per tutte le applicazioni",
     "wlbuttoncommunityapp":"Mostra pulsante \"Aggiungi a Lista dei desideri\" in Hub della Comunità",
     "removeguideslanguagefilter":"Non filtrare automaticamente le Guide per lingua",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Disattiva conferma per accesso a siti esterni",
     "regional_price_on":"Mostra comparazione dei prezzi regionali",
     "cart":"Articoli nel carrello",
     "friends_own":"Giochi che possiedono i tuoi amici",
@@ -391,7 +392,8 @@
     "wishlist":"Giochi in Lista dei desideri",
     "add_another_region":"Aggiungi",
     "skip_got_steam":"Salta la finestra 'Hai già Steam?'",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Opzioni per informazioni da siti di terze parti",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Inglese",
       "brazilian":"Portoghese brasiliano",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Errore nel caricamento di Enhanced Steam",
     "loading":"Caricamento di Enhanced Steam in corso...",
-    "ready":"Enhanced Steam pronto"
+    "ready":"Enhanced Steam pronto",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ è in diretta su Twitch",
@@ -485,7 +488,12 @@
     "sending":"Caricamento dei giochi posseduti e invio dei dati a IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ oggetto",
+    "num_items":"__num__ oggetti"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

@@ -21,6 +21,7 @@
   "packs":"Πακέτα",
   "remove_owned_wishlist":"Αφαίρεση αγορασμένων παιχνιδιών από την λίστα επιθυμιών",
   "donate":"Δωρεά",
+  "close":"Close",
   "coupon_application_note":"Ένα κουπόνι στα αντικείμενα σας θα εφαρμοστεί αυτομάτως στο Ταμείο.",
   "hide":"Απόκρυψη",
   "cards_owned":"__owned__ της __possible__ κάρτες σε ιδιοκτισία",
@@ -392,6 +393,7 @@
     "add_another_region":"Προσθήκη",
     "skip_got_steam":"Skip the 'Got Steam?' window",
     "store_general_thirdparty":"Options for information from 3rd party sites",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Αγγλικά",
       "brazilian":"Πορτογαλικά-Βραζιλιάνικα",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Σφάλμα κατά τη φόρτωση δεδομένων Enhanced Steam",
     "loading":"Φόρτωση δεδομένων Enhanced Steam...",
-    "ready":"Το Enhanced Steam είναι έτοιμο"
+    "ready":"Το Enhanced Steam είναι έτοιμο",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ κάνει απευθείας μετάδοση στο Twitch",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ item",
     "num_items":"__num__ items"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

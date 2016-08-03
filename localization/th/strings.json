@@ -21,6 +21,7 @@
   "packs":"แพ็ค",
   "remove_owned_wishlist":"ลบเกมที่มีออกจากสิ่งที่คุณอยากได้",
   "donate":"บริจาค",
+  "close":"Close",
   "coupon_application_note":"คูปองในคลังของคุณจะถูกนำมาปรับใช้โดยอัตโนมัติเมื่อคิดเงิน",
   "hide":"ซ่อน",
   "cards_owned":"เป็นเจ้าของการ์ด __owned__ จาก __possible__ ใบ",
@@ -392,6 +393,7 @@
     "add_another_region":"เพิ่ม",
     "skip_got_steam":"ข้ามหน้าต่าง 'Got Steam?'",
     "store_general_thirdparty":"Options for information from 3rd party sites",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"อังกฤษ",
       "brazilian":"โปรตุเกส-บราซิล",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"พบข้อผิดพลาดในการโหลดข้อมูล Enhanced Steam",
     "loading":"Enhanced Steam กำลังโหลดข้อมูล...",
-    "ready":"Enhanced Steam พร้อมใช้งาน"
+    "ready":"Enhanced Steam พร้อมใช้งาน",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ กำลังสตรีมสดบน Twitch",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ item",
     "num_items":"__num__ items"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }

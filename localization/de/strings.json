@@ -21,6 +21,7 @@
   "packs":"Pakete",
   "remove_owned_wishlist":"Spiele, die du schon besitzt, von der Wunschliste entfernen",
   "donate":"Spenden",
+  "close":"Close",
   "coupon_application_note":"Ein Gutschein aus deinem Inventar wird automatisch im Warenkorb angewendet.",
   "hide":"Verbergen",
   "cards_owned":"__owned__ von __possible__ Karten im Besitz",
@@ -231,7 +232,7 @@
   "filter_games":"Spiele filtern",
   "note_for":"Notiz für",
   "show_wishlist_total":"Wunschlisten-Gesamtbetrag anzeigen",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Kurze Tags benutzen, um Platz zu sparen",
   "achievements":{
     "option":"Errungenschaften auf Shopseiten anzeigen",
     "achievements":"Errungenschaften",
@@ -260,9 +261,9 @@
     "compl":"Vervollständiger",
     "submit":"Deine Zeit übertragen",
     "main":"Hauptgeschichte",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"Keine Daten gefunden",
+    "help":"Hier klicken um zu helfen",
+    "wrong":"Falsches Spiel?"
   },
   "library":{
     "in_library":"In Bibliothek",
@@ -303,7 +304,7 @@
     "show_package_info":"Paketinformationen für alle Anwendungen anzeigen",
     "wlbuttoncommunityapp":"\"Zur Wunschliste hinzufügen\"-Schaltfläche zu Community-Hub-Seiten hinzufügen",
     "removeguideslanguagefilter":"Guides nicht automatisch nach Sprache filtern",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"Bestätigung bei Verweisen auf externe Seiten deaktivieren",
     "regional_price_on":"Regionalen Preisvergleich anzeigen",
     "cart":"Spiele in deinem Warenkorb",
     "friends_own":"Titel, die deine Freunde besitzen",
@@ -391,7 +392,8 @@
     "wishlist":"Spiele auf meiner Wunschliste",
     "add_another_region":"Hinzufügen",
     "skip_got_steam":"Fenster \"Ist Steam auf Ihrem Computer installiert?\" überspringen",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
+    "store_general_thirdparty":"Optionen für Informationen von Seiten von Dritten",
+    "purchase_dates":"Show apps purchase date on store pages",
     "lang":{
       "english":"Englisch",
       "brazilian":"Brasil. Portugiesisch",
@@ -424,7 +426,8 @@
   "ready":{
     "errormsg":"Fehler beim Laden von Enchanced Steam-Daten",
     "loading":"Enhanced Steam lädt Daten...",
-    "ready":"Enchanced Steam ist bereit"
+    "ready":"Enchanced Steam ist bereit",
+    "failed":"One or more requests failed"
   },
   "twitch":{
     "now_streaming":"__username__ ist live auf Twitch",
@@ -487,5 +490,10 @@
   "tradeoffer":{
     "num_item":"__num__ Gegenstand",
     "num_items":"__num__ Gegenstände"
+  },
+  "update":{
+    "dont_show":"Don't Show Again",
+    "updated":"Enhanced Steam has been updated to __version__",
+    "changes":"This release includes the following changes"
   }
 }
