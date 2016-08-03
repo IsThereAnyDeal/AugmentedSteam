@@ -16,7 +16,6 @@
 : Fixed a bug where Firefox would throw a "Not well formed" error when loading localization files
 : Fixed a bug that caused card drop count calculations to be incorrect under certain circumstances
 
-
 v8.7.2
 -----
 : Fixed a bug that caused quicksell and instantsell buttons to not work correctly under some conditions
