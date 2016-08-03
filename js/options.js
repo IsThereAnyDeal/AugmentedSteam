@@ -95,6 +95,7 @@ var settings_defaults = {
 	"showsteamdb": true,
 	"showastatslink": true,
 	"showwsgf": true,
+	"show_keylol_links": false,
 	"show_package_info": false,
 	"show_sysreqcheck": false,
 	"show_steamchart_info": true,
@@ -360,6 +361,11 @@ function load_translation() {
 
 			if (!(settings.language == "schinese" || settings.language == "tchinese")) {
 				$("#profile_steamrepcn").parent().hide();
+				$("#show_keylol_links").parent().hide();
+			} else {
+				if (settings.language == "schinese") { var title = "显示 Keylol 链接"; }
+				if (settings.language == "tchinese") { var title = "顯示Keylol連結"; }
+				$("#store_keylol_text").text(title);
 			}
 
 			// Localize elements with text

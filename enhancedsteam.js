@@ -6544,21 +6544,26 @@ function add_chinese_name() {
 }
 
 function add_keylol_link() {
-	storePageDataCN.get("link", function(data) {
-		$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium keylol_btn" href="' + data + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/ico/keylol.png") + ')"></i>&nbsp;&nbsp; 查看其乐据点</span></a>');
+	storage.get(function(settings) {
+		if (settings.show_keylol_links === undefined) { settings.show_keylol_links = false; storage.set({'show_keylol_links': settings.show_keylol_links}); }
+		if (settings.show_keylol_links) {
+			storePageDataCN.get("link", function(data) {
+				$('#ReportAppBtn').parent().prepend('<a class="btnv6_blue_hoverfade btn_medium keylol_btn" href="' + data + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/ico/keylol.png") + ')"></i>&nbsp;&nbsp; 查看其乐据点</span></a>');
 
-		storePageDataCN.get("averageRating", function(score) {
-			var html = "<div class='block game_details underlined_links es_keylol'><div style='background-image: url(" + chrome.extension.getURL("img/keylol_bg.png") + "); background-repeat: no-repeat; height: 35px; font-size: 24px; color: #8BC53F; text-align: right; font-family: Motiva Sans Light, Arial, Helvetica, sans-serif; width: 270px;'>";
-			html += "<span>" + score + "</span>";
-			html += "<span style='color: #61686d; font-size: 25px;'>/</span>"
-			html += "<span style='color: #61686d; font-size: 11px;'>10</span></div>"
-			if (language == "schinese") { var title = "阅读游戏评测"; }
-			if (language == "tchinese") { var title = "閱覽遊戲評測"; }
-			html += "<a href='" + data + "/timeline'>" + title + "</a>&nbsp;";
-			html += "<img src='http://store.akamai.steamstatic.com/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>";
-			html += "</div></div>";
-			$("div.game_details:first").after(html);
-		});
+				storePageDataCN.get("averageRating", function(score) {
+					var html = "<div class='block game_details underlined_links es_keylol'><div style='background-image: url(" + chrome.extension.getURL("img/keylol_bg.png") + "); background-repeat: no-repeat; height: 35px; font-size: 24px; color: #8BC53F; text-align: right; font-family: Motiva Sans Light, Arial, Helvetica, sans-serif; width: 270px;'>";
+					html += "<span>" + score + "</span>";
+					html += "<span style='color: #61686d; font-size: 25px;'>/</span>"
+					html += "<span style='color: #61686d; font-size: 11px;'>10</span></div>"
+					if (language == "schinese") { var title = "阅读游戏评测"; }
+					if (language == "tchinese") { var title = "閱覽遊戲評測"; }
+					html += "<a href='" + data + "/timeline'>" + title + "</a>&nbsp;";
+					html += "<img src='http://store.akamai.steamstatic.com/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>";
+					html += "</div></div>";
+					$("div.game_details:first").after(html);
+				});
+			});
+		}
 	});
 }
 
