@@ -283,6 +283,7 @@
     },
     "options": {
         "wsgf": "Show WSGF (Widescreen) info",
+        "version_show": "Show change log when Enhanced Steam updates",
         "steamcardexchange": "Show SteamCardExchange links on badges",
         "regional_price": "Regional Price Comparison",
         "acrtag": "Show warnings on items where cross region trading is disabled",

@@ -2097,7 +2097,7 @@ function version_check() {
 						var prompt = ShowConfirmDialog(\"" + localized_strings.update.updated.replace("__version__", version) + "\", '" + dialog + "' , '" + localized_strings.donate.replace("'", "\\'") + "', '" + localized_strings.close.replace("'", "\\'") + "', '" + localized_strings.update.dont_show.replace("'", "\\'") + "'); \
 						prompt.done(function(result) {\
 							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate/'); }\
-							if (result == 'SECONDARY') {  }\
+							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
 						});\
 					}"
 				);
@@ -2105,6 +2105,13 @@ function version_check() {
 			storage.set({'version': version});
 		}
 	});
+
+	window.addEventListener("message", function(event) {
+		if (event.source !== window) return;
+		if (event.data.type && (event.data.type === "es_sendmessage_change")) { 
+			storage.set({'version_show': false});
+		}
+	}, false);
 }
 
 // Add a link to options to the global menu (where is Install Steam button)
