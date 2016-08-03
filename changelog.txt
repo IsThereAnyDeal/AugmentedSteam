@@ -14,7 +14,7 @@
 : Fixed a rendering issue in Firefox where the options screen would show a white background
 : Fixed a bug where regional price comparison icons would not display in Firefox
 : Fixed a bug where Firefox would throw a "Not well formed" error when loading localization files
-
+: Fixed a bug that caused card drop count calculations to be incorrect under certain circumstances
 
 
 v8.7.2
