@@ -5017,31 +5017,46 @@ function inventory_market_helper(response) {
 
 			// Check if price is stored in data
 			if (dataLowest) {
-				html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + dataLowest;
-				// Check if volume is stored in data
-				if (dataSold) {
-					html += "<br>" + localized_strings.last_24.replace("__sold__", dataSold);
+				html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+				if (dataLowest !== "nodata") {
+					html += localized_strings.starting_at + ': ' + dataLowest;
+					// Check if volume is stored in data
+					if (dataSold) {
+						html += '<br>' + localized_strings.last_24.replace("__sold__", dataSold);
+					}
+				} else {
+					html += localized_strings.no_price_data;
 				}
-				html += "</div>";
+
+				html += '</div>';
 
 				$sideMarketActs.html(html);
 			} else {
 				get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + hash_name, function(txt) {
 					var data = JSON.parse(txt);
 
-					if (data.success) {
-						$(thisItem).data("lowest-price", data.lowest_price);
-						
-						html += "<div style='min-height: 3em; margin-left: 1em;'>" + localized_strings.starting_at + ": " + data.lowest_price;
-						if (data.volume) { 
-							$(thisItem).data("sold-volume", data.volume);
-							html += "<br>" + localized_strings.last_24.replace("__sold__", data.volume);
+					html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+					if (data && data.success) {
+						$(thisItem).data("lowest-price", data.lowest_price || "nodata");
+						if (data.lowest_price) {
+							html += localized_strings.starting_at + ': ' + data.lowest_price;
+							if (data.volume) { 
+								$(thisItem).data("sold-volume", data.volume);
+								html += '<br>' + localized_strings.last_24.replace("__sold__", data.volume);
+							}
+						} else {
+							html += localized_strings.no_price_data;
 						}
-						html += "</div>";
+					} else {
+						html += localized_strings.no_price_data;
 					}
 
+					html += '</div>';
+
 					$sideMarketActs.html(html);
-				}).fail(function(){ // At least show the "View in Market" button
+				}).fail(function(){ // At least show the "View in Market" link
 					$sideMarketActs.html(html);
 				});
 			}
