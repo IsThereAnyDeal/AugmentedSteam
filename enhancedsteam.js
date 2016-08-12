@@ -4371,7 +4371,7 @@ function add_active_total() {
 		// Listings on hold
 		var total = 0;
 		var total_after = 0;
-		$("#es_listingsonhold .market_listing_row").each(function() {
+		$("#es_listingsonhold .market_listing_row .market_listing_my_price").each(function() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
@@ -4392,11 +4392,12 @@ function add_active_total() {
 		// Listings awaiting confirmation
 		var total = 0;
 		var total_after = 0;
-		$("#es_listingsawaiting .market_listing_row").each(function() {
+		$("#es_listingsawaiting .market_listing_row .market_listing_my_price").each(function() {
 			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
 			total += Number(temp[0]);
 			total_after += Number(temp[1]);
 		});
+
 		
 		if (total != 0) {
 			total = formatCurrency(parseFloat(total));
@@ -4435,7 +4436,10 @@ function add_active_total() {
 		var total = 0;		
 		$("#es_buying .market_listing_row").each(function() {
 			var qty = $(this).find(".market_listing_my_price:last").text().trim();
-			var price = parse_currency($(this).text().replace(/.+@/, "").trim());
+			var priceEl = $(this).find(".market_listing_my_price:first .market_listing_price").contents().filter(function () {
+				return this.nodeType === 3;
+			});
+			var price = parse_currency(priceEl.text().trim());
 			total += Number(price.value) * Number(qty);
 		});
 		
