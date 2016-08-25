@@ -1,5 +1,6 @@
 ﻿v8.9
 -----
+: Fixed a bug where agegate pages would throw an error rather than correctly entering a date
 
 
 v8.8

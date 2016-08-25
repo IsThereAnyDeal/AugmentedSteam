@@ -2062,7 +2062,9 @@ function send_age_verification() {
 		if (settings.send_age_info) {
 
 			if ($("#ageYear").length != 0) {
-				$("#ageYear").attr("value", "1955");
+				var myYear = Math.floor(Math.random()*75)+10;
+				var ageYear = "19" + myYear;
+				$("#ageYear").val(ageYear);
 				$(".btnv6_blue_hoverfade")[0].click();
 			} else {
 				if ($(".agegate_text_container.btns a:first").attr("href") == "#") {
