@@ -7220,7 +7220,7 @@ function start_highlighting_node(node) {
 // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
 function highlight_recommendations() {
 	if ($("#content_more").length) {
-		setMutationHandler($("#content_more")[0], ".ds_wishlist", function(nodes){
+		setMutationHandler($("#content_more")[0], ".home_content_item.ds_wishlist, .gamelink.ds_wishlist", function(nodes){
 			$.each(nodes, function(i, node){
 				if ($(node).parent().hasClass("single")) {
 					node = $(node).parent().parent()[0];
