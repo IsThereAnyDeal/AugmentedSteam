@@ -162,13 +162,19 @@ var dynamicstore_promise = (function () {
 			dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
 			dataVersion_cache = getValue("unUserdataVersion") || 0;
 
+		// Return data from cache if available
+		if (dynamicstore_data) {
+			deferred.resolve(dynamicstore_data);
+		}
+
+		// Update data if needed
 		if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
 			var accountidtext = $('script:contains("g_AccountID")').text() || "",
 				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
 
 			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + last_updated), function(txt) {
 				var data = JSON.parse(txt);
-				if (data) {
+				if (data && data.hasOwnProperty("rgOwnedApps") && !$.isEmptyObject(data.rgOwnedApps)) {
 					setValue("dynamicstore_data", data);
 					setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
 
@@ -176,13 +182,11 @@ var dynamicstore_promise = (function () {
 				} else {
 					deferred.reject();
 				}
+			}).fail(function(){
+				deferred.reject();
 			});
 
 			setValue("unUserdataVersion", dataVersion);
-		} else if (dynamicstore_data) {
-			deferred.resolve(dynamicstore_data);
-		} else {
-			deferred.reject();
 		}
 	} else {
 		deferred.reject();
