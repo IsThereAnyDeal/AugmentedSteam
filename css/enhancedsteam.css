@@ -1684,6 +1684,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Store front page recommendations
+ * highlight_recommendations()
  **************************************/
 #content_more .home_content_item {
 	padding: 3px;
