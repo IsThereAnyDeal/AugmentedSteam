@@ -3001,6 +3001,11 @@ function alternative_linux_icon() {
 	});
 }
 
+
+// TODO: Cache this data, but only the required entries! Store the data combined in one row
+// but update apps individually based on "release_date.coming_soon". Unreleased apps will be
+// updated at least once a day while others can be updated once a week. If more than three
+// subsequent API request errors occur when pulling or updating data delay the process for a while.
 function appdata_on_wishlist() {
 	if ($('a.btnv6_blue_hoverfade').length < 200) {
 		$('a.btnv6_blue_hoverfade').each(function (index, node) {
@@ -3036,7 +3041,7 @@ function appdata_on_wishlist() {
 
 						// Add release date info to unreleased apps
 						if (app_data.data.release_date.coming_soon == true) {
-							$(node).parent().before("<div class='price'>" + localized_strings.available + ": " + app_data.data.release_date.date + "</div>");
+							$(node).parent().before('<div class="releasedate">' + localized_strings.available + ': ' + app_data.data.release_date.date + '</div>');
 						}
 					}
 				});
