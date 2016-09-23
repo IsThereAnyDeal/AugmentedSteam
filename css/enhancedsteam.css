@@ -1474,9 +1474,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_birthday_celebration()
  **************************************/
 .es_birthday #logo_holder img {
-	background: url("chrome-extension://__MSG_@@extension_id__/img/birthday_logo.png") no-repeat;
-	padding: 28px 0;
-	margin-top: -28px;
+	background: url("chrome-extension://__MSG_@@extension_id__/img/birthday_logo_bg.gif") no-repeat;
+	padding: 30px 10px 30px 10px;
+	margin-top: -30px;
+	margin-left: -10px;
 }
 .es_birthday.es_store_front #global_header:before {
 	background: url("chrome-extension://__MSG_@@extension_id__/img/birthday_bg.png") repeat-x;

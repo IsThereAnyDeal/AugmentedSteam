@@ -1,6 +1,7 @@
 ﻿v8.9
 -----
 : Fixed a bug where agegate pages would throw an error rather than correctly entering a date
+: Fixed an issue with surprise logos not displaying correctly
 
 
 v8.8
