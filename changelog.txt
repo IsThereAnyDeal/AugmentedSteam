@@ -2,6 +2,10 @@
 -----
 : Fixed a bug where agegate pages would throw an error rather than correctly entering a date
 : Fixed an issue with surprise logos not displaying correctly
+: Fixed a bug with recommendations highlights on storefront
+: Fixed a bug where invalid dynamic store data would be cached incorrectly
+: Fixed a bug that caused items with quotes in their names to not show correct buttons in inventory
+: Fixed a bug that displayed an incorrect wishlist total if some items were not yet available
 
 
 v8.8
