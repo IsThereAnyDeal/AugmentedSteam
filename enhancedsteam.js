@@ -4346,6 +4346,41 @@ function add_market_total() {
 	});
 }
 
+function add_market_sort() {
+	if (window.location.pathname.match(/^\/market\/$/)) {
+		
+		// Push rows into array
+		var market_rows = [];
+		$("#es_selling").find(".market_listing_row").each(function (index, value) {
+			var push = new Array();
+			var name = $(this).find(".market_listing_item_name").text();
+			var date = $(this).find(".market_listing_listed_date").text();
+			var row = $(this);
+
+			if (name) {
+				push[0] = row[0].outerHTML;
+				push[1] = name;
+				push[2] = date;
+				market_rows.push(push);
+				$(row).remove();
+			}
+		});
+
+		// Sort alphabetically by name
+		market_rows.sort(function(a,b) {
+			if (a[1] > b[1]) return -1;
+			if (a[1] < b[1]) return 1;
+			return 0;
+		});
+		$("#es_selling").find(".market_listing_header_namespacer").parent().after(" ▲");
+
+		// Display sorted rows
+		$(market_rows).each(function() {
+			$("#es_selling_total").prepend(this[0]);
+		});
+	}
+}
+
 function collapse_game_list() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		$("#browseItems .market_search_game_button_group").find("a").wrapAll("<div id='es_market_game_list'></div>");
@@ -9414,6 +9449,7 @@ $(document).ready(function(){
 							add_relist_button();
 							keep_ssa_checked();
 							add_background_preview_link();
+							add_market_sort();
 							break;
 
 						case /^\/app\/[^\/]*\/guides/.test(path):
