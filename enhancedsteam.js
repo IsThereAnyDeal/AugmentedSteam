@@ -7128,7 +7128,7 @@ function start_highlights_and_tags(){
 		"div.browse_tag_game",			// Tagged games
 		"div.similar_grid_item",		// Items on the "Similarly tagged" pages
 		"div.tab_item",					// Items on new homepage
-		"div.special",					// new homepage specials
+		"a.special",					// new homepage specials
 		"div.curated_app_item",			// curated app items!
 		"a.summersale_dailydeal"		// Summer sale daily deal
 	];

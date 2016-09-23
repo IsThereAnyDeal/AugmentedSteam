@@ -6,6 +6,7 @@
 : Fixed a bug where invalid dynamic store data would be cached incorrectly
 : Fixed a bug that caused items with quotes in their names to not show correct buttons in inventory
 : Fixed a bug that displayed an incorrect wishlist total if some items were not yet available
+: Fixed a bug where some home page elements weren't highlighted correctly
 
 
 v8.8
