@@ -4350,10 +4350,10 @@ function add_market_sort() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		// Indicate default sort and add buttons to header
 		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").append("<span id='es_current_sort'> ▲</span>");
-		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' style='cursor: pointer; margin-left: 5px;'></span>");
+		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' style='cursor: pointer; margin-left: 5px; width: 374px; float: right;' class='market_sortable_column'></span>");
 		$("#es_selling").find(".market_listing_header_namespacer").remove();
-		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").wrap("<span id='es_marketsort_date' style='cursor: pointer;' class='asc'></span>");
-		$("#es_selling").find(".market_listing_table_header .market_listing_my_price:last").wrap("<span id='es_marketsort_price' style='cursor: pointer;'></span>");
+		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' style='cursor: pointer;' class='asc'></span>");
+		$("#es_selling").find(".market_listing_table_header .market_listing_my_price:last").addClass("market_sortable_column").wrap("<span id='es_marketsort_price' style='cursor: pointer;'></span>");
 
 		// Push rows into array
 		var market_rows = [];
