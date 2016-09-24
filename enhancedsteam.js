@@ -4361,11 +4361,10 @@ function add_market_sort() {
 			var push = new Array(),
 				name = $(this).find(".market_listing_item_name").text(),
 				date = $(this).find(".market_listing_listed_date").text(),
-				price = $(this).find(".market_listing_my_price:not(.market_listing_es_lowest)").text().trim(),
-				row = $(this);
+				price = $(this).find(".market_listing_my_price:not(.market_listing_es_lowest)").text().trim();
 
 			if (name) {
-				push[0] = row[0].outerHTML;
+				push[0] = $(this);
 				push[1] = name;
 				push[2] = date;
 				push[3] = price;
