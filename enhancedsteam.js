@@ -4350,13 +4350,14 @@ function add_market_sort() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		// Indicate default sort and add buttons to header
 		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").append("<span id='es_current_sort'> ▲</span>");
-		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' style='cursor: pointer; margin-left: 5px; width: 124px; float: left;' class='market_sortable_column'></span>");
-		$("#es_selling").find(".market_listing_header_namespacer").remove();
+		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' style='cursor: pointer; padding-left: 5px; width: 124px; float: left;' class='market_sortable_column'></span>");
+		$("#es_selling").find(".market_listing_header_namespacer").remove();		
 		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' style='cursor: pointer;' class='asc'></span>");
 		$("#es_selling").find(".market_listing_table_header .market_listing_my_price:last").addClass("market_sortable_column").wrap("<span id='es_marketsort_price' style='cursor: pointer;'></span>");
+		$("#es_marketsort_name").after("<span id='es_marketsort_game' style='cursor: pointer; float: left; width: 124px; padding-left: 5px;' class='market_sortable_column'><span>" + localized_strings.game_name.toUpperCase() + "</span></span>");
 
 		// Add header click handlers
-		$("#es_marketsort_date, #es_marketsort_name, #es_marketsort_price").on("click", function() {
+		$("#es_marketsort_date, #es_marketsort_name, #es_marketsort_price, #es_marketsort_game").on("click", function() {
 			$("#es_current_sort").remove();
 			if ($(this).hasClass("asc")) {
 				$(this).removeClass("asc");
@@ -4383,6 +4384,9 @@ function add_market_sort() {
 					break;
 				case "es_marketsort_price":
 					sel = ".market_listing_price";
+					break;
+				case "es_marketsort_game":
+					sel = ".market_listing_game_name";
 					break;
 			}
 
