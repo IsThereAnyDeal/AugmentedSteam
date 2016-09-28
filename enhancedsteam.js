@@ -1475,7 +1475,7 @@ function add_wishlist_discount_sort() {
 		var $rows = $(sel).closest(".wishlistRow");
 
 		$rows.sort(function(a, b){
-			a = fn($(a).find(sel).val() || $(a).find(sel).text().trim()),
+			a = fn($(a).find(sel).val() || $(a).find(sel).text().trim());
 			b = fn($(b).find(sel).val() || $(b).find(sel).text().trim());
 
 			if (a == b) return 0;
@@ -4348,39 +4348,48 @@ function add_market_total() {
 
 function add_market_sort() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
+		var dateSortIntd = false;
+		
 		// Indicate default sort and add buttons to header
-		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").append("<span id='es_current_sort'> ▲</span>");
-		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' style='cursor: pointer; padding-left: 5px; width: 124px; float: left;' class='market_sortable_column'></span>");
-		$("#es_selling").find(".market_listing_header_namespacer").remove();		
-		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' style='cursor: pointer;' class='asc'></span>");
-		$("#es_selling").find(".market_listing_table_header .market_listing_my_price:last").addClass("market_sortable_column").wrap("<span id='es_marketsort_price' style='cursor: pointer;'></span>");
-		$("#es_marketsort_name").after("<span id='es_marketsort_game' style='cursor: pointer; float: left; width: 124px; padding-left: 5px;' class='market_sortable_column'><span>" + localized_strings.game_name.toUpperCase() + "</span></span>");
-
+		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>");
+		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' class='es_marketsort active asc'></span>");
+		$("#es_selling").find(".market_listing_table_header .market_listing_my_price:last").addClass("market_sortable_column").wrap("<span id='es_marketsort_price' class='es_marketsort'></span>");
+		$("#es_marketsort_name").before("<span id='es_marketsort_game' class='es_marketsort market_sortable_column'><span>" + localized_strings.game_name.toUpperCase() + "</span></span>");
+		
 		// Add header click handlers
-		$("#es_marketsort_date, #es_marketsort_name, #es_marketsort_price, #es_marketsort_game").on("click", function() {
-			$("#es_current_sort").remove();
-			if ($(this).hasClass("asc")) {
-				$(this).removeClass("asc");
-				market_sort_rows($(this).attr("id"), true);
-				$(this).find("span:last").append("<span id='es_current_sort'> ▼</span>");
-			} else {
-				$(this).addClass("asc");
-				market_sort_rows($(this).attr("id"), false);
-				$(this).find("span:last").append("<span id='es_current_sort'> ▲</span>");
+		$(".es_marketsort").on("click", function(){
+			var state = $(this).hasClass("asc");
+
+			$(".es_marketsort").removeClass("active");
+			$(this).addClass("active").toggleClass("asc", !state).toggleClass("desc", state);
+
+			// Initiate and save the default sorting, which is by date, this way later we can reliably sort by date no matter the language set
+			if (!dateSortIntd) {
+				dateSortIntd = true;
+
+				$(".market_listing_listed_date").each(function(i, node) {
+					$(node).append("<div class='market_listing_listed_position'>" + i + "</div>");
+				});
 			}
+
+			market_sort_rows($(this).attr("id"), state);
 		});
 
 		function market_sort_rows(parent, asc) {
 			asc = asc === undefined ? false : asc;
 
+			var sel, isNumber;
+			var T = asc === true ? 1 : -1,
+				F = asc === true ? -1 : 1;
 			var $rows = $("#es_selling").find(".market_listing_row:not(#es_selling_total)");
-			var sel;
+			
 			switch (parent) {
 				case "es_marketsort_name":
 					sel = ".market_listing_item_name";
 					break;
 				case "es_marketsort_date":
-					sel = ".market_listing_listed_date";
+					sel = ".market_listing_listed_position";
+					isNumber = true;
 					break;
 				case "es_marketsort_price":
 					sel = ".market_listing_price";
@@ -4391,17 +4400,18 @@ function add_market_sort() {
 			}
 
 			$rows.sort(function(a, b){
-				a = $(a).find(sel).text().trim(),
+				a = $(a).find(sel).text().trim();
 				b = $(b).find(sel).text().trim();
 
-				if (asc) {
-					if (a > b) return -1;
-					if (a < b) return 1;
-					return 0;
+				if (a == b) return 0;
+				if (isNumber) {
+					if (asc === true) {
+						return b - a;
+					} else {
+						return a - b;
+					}
 				} else {
-					if (a < b) return -1;
-					if (a > b) return 1;
-					return 0;
+					return a < b ? T : F;
 				}
 			});
 
@@ -4544,7 +4554,7 @@ function minimize_active_listings() {
 // Show the lowest market price for items you're selling
 function add_lowest_market_price() {
 	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").css("width", "200px");
-	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><a class='es_market_lowest_button'>" + localized_strings.lowest + "</a></span>");
+	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
 	$("#es_selling, #es_listingsonhold").find(".market_listing_row").each(function() {
 		$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
 		$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
