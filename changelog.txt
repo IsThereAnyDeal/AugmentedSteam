@@ -1,6 +1,7 @@
 ﻿v8.9
 -----
 + Added sorting options to the "my sell listing" section of the market home page
+: Updated visual layout of badge page sorting, filtering, and viewing options
 : Fixed a bug where agegate pages would throw an error rather than correctly entering a date
 : Fixed an issue with surprise logos not displaying correctly
 : Fixed a bug with recommendations highlights on storefront

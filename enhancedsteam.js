@@ -8090,15 +8090,19 @@ function add_badge_filter() {
 	var filter_done = false;
 
 	if ($(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
-		var html  = "<div style='text-align: right;'><span>" + localized_strings.show + ": </span>";
-			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_all'><input type='radio' name='es_badge_sort' checked><span>" + localized_strings.badges_all + "</span></label>";
-			html += "<label class='badge_sort_option whiteLink es_badges' id='es_badge_drops'><input type='radio' name='es_badge_sort'><span>" + localized_strings.badges_drops + "</span></label>";
-			html += "</div>";
+		var html  = '<span>' + localized_strings.show + ' </span>';
+			html += '<div class="store_nav"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.badges_all + '</div><span></span></span></div></div>';
+			html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
+			html += '<a class="popup_menu_item es_bg_filter" id="es_badge_all">' + localized_strings.badges_all + '</a>';
+			html += '<a class="popup_menu_item es_bg_filter" id="es_badge_drops">' + localized_strings.badges_drops + '</a>';
+			html += "</div></div>";
 
-		$('.profile_badges_header').append(html);
+		$("#wishlist_sort_options").prepend("<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
 		
 		$('#es_badge_all').on('click', function() {
 			$('.is_link').css('display', 'block');
+			$("#es_filter_active").text(localized_strings.badges_all);
+			$("#es_filter_flyout").fadeOut();
 			resetLazyLoader();
 		});
 
@@ -8158,6 +8162,8 @@ function add_badge_filter() {
 						}
 					}
 				});
+				$("#es_filter_active").text(localized_strings.badges_drops);
+				$("#es_filter_flyout").fadeOut();
 				resetLazyLoader();
 			}
 		});
@@ -8166,9 +8172,41 @@ function add_badge_filter() {
 
 function add_badge_sort() {
 	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
-		if ($(".profile_badges_sortoptions").find("a[href$='sort=r']").length > 0) {
-			$(".profile_badges_sortoptions").find("a[href$='sort=r']").after("&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_drops'>" + localized_strings.most_drops + "</a>&nbsp;&nbsp;<a class='badge_sort_option whiteLink' id='es_badge_sort_value'>" + localized_strings.drops_value + "</a>");
-		}
+		var sorts = ["p", "c", "a", "r"],
+			sorted = window.location.search.replace("?sort=", "") || "p",
+			linksHtml = "";
+
+		// Build dropdown links HTML
+		$(".profile_badges_sortoptions").children("a").hide().each(function(i, link){
+			linksHtml += '<a class="badge_sort_option popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
+		});
+		linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + localized_strings.most_drops + '</a>';
+		linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + localized_strings.drops_value + '</a>';
+
+		$(".profile_badges_sortoptions").wrap("<span id='wishlist_sort_options'></span>");
+
+		// Insert dropdown options links
+		$(".profile_badges_sortoptions").append(`
+			<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+				<div class="popup_body popup_menu">` + linksHtml + `</div>
+			</div>
+		`);
+
+		// Insert dropdown button
+		$(".profile_badges_sortoptions").find("span").first().after(`
+			<span id="wishlist_sort_options">
+				<div class="store_nav">
+					<div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+						<span class="pulldown">
+							<div id="es_sort_active" style="display: inline;">` + $("#es_sort_flyout").find("a.by_" + sorted).text() + `</div>
+							<span></span>
+						</span>
+					</div>
+				</div>
+			</span>
+		`);
+
+		runInPageContext(function() { BindAutoFlyoutEvents(); });
 
 		function add_badge_sort_drops() {
 			var badgeRows = [];
@@ -8210,6 +8248,7 @@ function add_badge_sort() {
 		var sort_drops_done = false;
 
 		$("#es_badge_sort_drops").on("click", function() {
+			var sort_text = $(this).text();
 			if ($(".pagebtn").length > 0 && sort_drops_done == false) {
 				var base_url = window.location.origin + window.location.pathname + "?p=",
 					last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
@@ -8236,6 +8275,8 @@ function add_badge_sort() {
 					$(".profile_paging").hide();
 					sort_drops_done = true;
 					add_badge_sort_drops();
+					$("#es_sort_active").text(sort_text);
+					$("#es_sort_flyout").fadeOut();
 				});
 
 				deferred.resolve();
@@ -8245,6 +8286,7 @@ function add_badge_sort() {
 		});
 
 		$("#es_badge_sort_value").on("click", function() {
+			var sort_text = $(this).text();
 			var badgeRows = [];
 			$('.badge_row').each(function () {
 				var push = new Array();
@@ -8276,9 +8318,9 @@ function add_badge_sort() {
 				$(".badges_sheet:first").append(this[0]);
 			});
 
-			$(".active").removeClass("active");
-			$(this).addClass("active");
 			resetLazyLoader();
+			$("#es_sort_active").text(sort_text);
+			$("#es_sort_flyout").fadeOut();
 		});
 	}
 }
@@ -8393,16 +8435,18 @@ function add_friends_sort() {
 }
 
 function add_badge_view_options() {
-	$('.profile_badges_header').append(`
-		<div style='text-align: right;'><span>` + localized_strings.view + `: </span>
-		<label class='badge_sort_option whiteLink es_badges es_badge_view_default'><input type='radio' value='defaultview' class='es_badge_view' name='es_badge_view' checked><span>` + localized_strings.theworddefault + `</span></label>
-		<label class='badge_sort_option whiteLink es_badges es_badge_view_binder'><input type='radio' value='binderview' class='es_badge_view' name='es_badge_view'><span>` + localized_strings.binder_view + `</span></label>
-		</div>
-	`);
+	var html  = '<span>' + localized_strings.view + ' </span>';
+		html += '<div class="store_nav"><div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_badgeview_active" style="display: inline;">' + localized_strings.theworddefault + '</div><span></span></span></div></div>';
+		html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
+		html += '<a class="popup_menu_item es_bg_view" data-view="defaultview">' + localized_strings.theworddefault + '</a>';
+		html += '<a class="popup_menu_item es_bg_view" data-view="binderview">' + localized_strings.binder_view + '</a>';
+		html += "</div></div>";
+
+	$("#wishlist_sort_options").prepend("<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
 	// Change hash when selecting view
-	$(".es_badge_view").change(function() {
-		window.location.hash = $(this).val();
+	$(".es_bg_view").on("click", function() {
+		window.location.hash = $(this).attr("data-view");
 	});
 
 	// Monitor for hash changes
@@ -8443,12 +8487,14 @@ function add_badge_view_options() {
 			});
 			// Triggers the loading of out-of-view badge images
 			window.dispatchEvent(new Event("resize"));
+			$("#es_badgeview_active").text(localized_strings.binder_view);
 		} else {
 			$("div.maincontent").removeClass("es_binder_view");
 			// Remove hash from pagination links
 			$("div.pageLinks").find("a.pagelink, a.pagebtn").attr("href", function(){
 				return $(this).attr("href").replace("#binderview", "");
 			});
+			$("#es_badgeview_active").text(localized_strings.theworddefault);
 		}
 	}
 }
@@ -9415,8 +9461,8 @@ $(document).ready(function(){
 							add_badge_completion_cost();
 							add_total_drops_count();
 							add_cardexchange_links();
-							add_badge_filter();
 							add_badge_sort();
+							add_badge_filter();
 							add_badge_view_options();
 							break;
 
