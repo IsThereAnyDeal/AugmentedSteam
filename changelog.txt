@@ -10,7 +10,6 @@
 : Fixed a bug that displayed an incorrect wishlist total if some items were not yet available
 : Fixed a bug where some home page elements weren't highlighted correctly
 
-
 v8.8
 -----
 + Added a version update dialog box to display a change log to the user when the extension is updated
