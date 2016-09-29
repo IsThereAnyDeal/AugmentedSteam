@@ -1,4 +1,8 @@
-﻿v8.9
+﻿v9.0
+-----
+
+
+v8.9
 -----
 + Added sorting options to the "my sell listing" section of the market home page
 : Updated visual layout of badge page sorting, filtering, and viewing options
