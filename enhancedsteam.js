@@ -9326,9 +9326,9 @@ $(document).ready(function(){
 
 							if (language == "schinese" || language == "tchinese") {
 								storePageDataCN.load(appid);
-								add_chinese_name();
 								add_keylol_link();
 								add_steamcn_mods();
+								if (language == "schinese") add_chinese_name();
 							}
 
 							break;
