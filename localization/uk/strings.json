@@ -21,7 +21,7 @@
   "packs":"Набори",
   "remove_owned_wishlist":"Видалити придбані ігри зі списку бажаного",
   "donate":"Пожертва",
-  "close":"Close",
+  "close":"Закрити",
   "coupon_application_note":"При покупці купон буде використаний автоматично.",
   "hide":"Приховати",
   "cards_owned":"Є __owned__ карт з __possible__ можливих",
@@ -233,6 +233,7 @@
   "note_for":"Примітка для",
   "show_wishlist_total":"Показати весь список бажаного",
   "tag_short":"Використовуйте короткі теґи, щоб зберегти простір",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Відображати досягнення на сторінках у магазині",
     "achievements":"Досягнення",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Відображати інформацію про підтримку широкоекранних моніторів (WSGF)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Відображати посилання сайту SteamCardExchange на значках",
     "regional_price":"Порівняння цін в регіонах",
     "acrtag":"Показати попередження на пункти, де хрест регіону торгівлі вимкнуто",
@@ -392,8 +394,8 @@
     "wishlist":"Предмети списку побажань",
     "add_another_region":"Додати",
     "skip_got_steam":"Приховати вікно 'Інсталювати Steam?'",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "store_general_thirdparty":"Налаштування отримання інформації від сторонніх сайтів",
+    "purchase_dates":"Показати дату покупки програм на сторінці магазину",
     "lang":{
       "english":"Англійська",
       "brazilian":"Португальська (Бразилія)",
@@ -427,7 +429,7 @@
     "errormsg":"Помилка завантаження даних Enhanced Steam",
     "loading":"Enhanced Steam завантажує дані...",
     "ready":"Enhanced Steam готовий",
-    "failed":"One or more requests failed"
+    "failed":"Один або кілька запитів не вдалися"
   },
   "twitch":{
     "now_streaming":"__username__ зараз віщає на каналі Twitch",
@@ -492,8 +494,8 @@
     "num_items":"__num_речей"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Більше не показувати",
+    "updated":"Enhanced Steam було оновлено до версії __version__",
+    "changes":"Цей реліз включає в себе наступні зміни"
   }
 }

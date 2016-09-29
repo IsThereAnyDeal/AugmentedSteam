@@ -21,7 +21,7 @@
   "packs":"묶음",
   "remove_owned_wishlist":"소유한 게임을 찜 목록에서 제거",
   "donate":"기부하기",
-  "close":"Close",
+  "close":"닫기",
   "coupon_application_note":"보관함에 있는 쿠폰은 결제할 때 자동으로 적용됩니다.",
   "hide":"숨김",
   "cards_owned":"__possible__장의 카드 중 __owned__장을 소유하고 있음",
@@ -230,9 +230,10 @@
   "contract_slider":"축소",
   "early_access":"앞서 해보기",
   "filter_games":"게임 필터",
-  "note_for":"Note for",
+  "note_for":"참고:",
   "show_wishlist_total":"찜 목록 전체 보기",
   "tag_short":"공간을 절약하기 위해 짧은 태그 사용",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"상점 페이지에 도전과제 표시",
     "achievements":"도전과제",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"WSGF (와이드 스크린) 정보를 표시",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"배지에 SteamCardExchange에 대한 링크를 표시합니다.",
     "regional_price":"지역별 가격 비교",
     "acrtag":"물품에 대한 나라 간의 거래가 불가능할 경우 경고 메시지 보기",
@@ -393,7 +395,7 @@
     "add_another_region":"추가하기",
     "skip_got_steam":"'스팀이 설치되어 있습니까?' 창 생략",
     "store_general_thirdparty":"서드파티 사이트에서 추출한 정보에 대한 옵션",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"상점 페이지에 상품 구매 날짜를 표시",
     "lang":{
       "english":"영어",
       "brazilian":"포르투갈어-브라질",
@@ -427,7 +429,7 @@
     "errormsg":"Enhanced Steam 데이터 로딩 오류",
     "loading":"Enhanced Steam 데이터 로딩중...",
     "ready":"Enhanced Steam 준비",
-    "failed":"One or more requests failed"
+    "failed":"하나 이상의 요청이 실패함"
   },
   "twitch":{
     "now_streaming":"__username__는 트위치에서 라이브 스트리밍 중",
@@ -492,8 +494,8 @@
     "num_items":"__num__ 항목들"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"다시 표시하지 않음",
+    "updated":"Enhanced Steam이 __version__ 버전으로 업데이트 되었습니다.",
+    "changes":"이 업데이트의 내용은 다음과 같습니다"
   }
 }

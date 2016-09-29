@@ -21,7 +21,7 @@
   "packs":"Zestawy",
   "remove_owned_wishlist":"Usuń posiadane tytuły z listy źyczeń",
   "donate":"Dotacje",
-  "close":"Close",
+  "close":"Zamknij",
   "coupon_application_note":"Kupon z Twojego ekwipunku zostanie użyty automatycznie.",
   "hide":"Ukryj",
   "cards_owned":"Posiadanych kart: __owned__ z __possible__",
@@ -233,6 +233,7 @@
   "note_for":"Notatka dla",
   "show_wishlist_total":"Pokaż listę życzeń",
   "tag_short":"Użyj krótkich tagów aby zaoszczędzić miejsce",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Pokaż osiągnięcia na stronach sklepu",
     "achievements":"Osiągnięcia",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Pokaż informacje z WSGF (dot. ekranów panoramicznych)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Pokaż linki do SteamCardExchange na odznakach",
     "regional_price":"Porównanie cen regionalnych",
     "acrtag":"Pokaż ostrzeżenia dla przedmiotów, dla których wymiana pomiędzy regionami jest wyłączona",
@@ -393,7 +395,7 @@
     "add_another_region":"Dodaj",
     "skip_got_steam":"Pomiń okno \"Masz Steama?\"",
     "store_general_thirdparty":"Opcja do uzyskiwania informacji ze stron zewnętrznych",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Pokaż datę zakupu aplikacji na stronach Sklepu",
     "lang":{
       "english":"Angielski",
       "brazilian":"Portugalski Brazylia",
@@ -427,7 +429,7 @@
     "errormsg":"Błąd wczytywania danych Enhanced Steam",
     "loading":"Wczytywanie danych Enhanced Steam...",
     "ready":"Enhanced Steam jest gotowy",
-    "failed":"One or more requests failed"
+    "failed":"Jeden lub więcej żądań nie powiodło się"
   },
   "twitch":{
     "now_streaming":"__username__ streamuje teraz na Twitchu",
@@ -492,8 +494,8 @@
     "num_items":"__num__ przedmioty"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Nie pokazuj ponownie",
+    "updated":"Enhanced Steam został zaktualizowany do __version__",
+    "changes":"To wydanie zawiera następujące zmiany"
   }
 }

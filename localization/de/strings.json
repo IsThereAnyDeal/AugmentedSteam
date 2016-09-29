@@ -21,7 +21,7 @@
   "packs":"Pakete",
   "remove_owned_wishlist":"Spiele, die du schon besitzt, von der Wunschliste entfernen",
   "donate":"Spenden",
-  "close":"Close",
+  "close":"Schließen",
   "coupon_application_note":"Ein Gutschein aus deinem Inventar wird automatisch im Warenkorb angewendet.",
   "hide":"Verbergen",
   "cards_owned":"__owned__ von __possible__ Karten im Besitz",
@@ -233,6 +233,7 @@
   "note_for":"Notiz für",
   "show_wishlist_total":"Wunschlisten-Gesamtbetrag anzeigen",
   "tag_short":"Kurze Tags benutzen, um Platz zu sparen",
+  "no_price_data":"Keine Preisdaten verfügbar",
   "achievements":{
     "option":"Errungenschaften auf Shopseiten anzeigen",
     "achievements":"Errungenschaften",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Informationen von WSGF (Widescreen) anzeigen",
+    "version_show":"Zeige Änderungsprotokoll, wenn Enhanced Steam aktualisiert",
     "steamcardexchange":"SteamCardExchange-Links bei Abzeichen anzeigen",
     "regional_price":"Regionaler Preisvergleich",
     "acrtag":"Warnungen bei Spielen anzeigen, bei denen der grenzüberschreitende Handel deaktiviert ist",
@@ -393,7 +395,7 @@
     "add_another_region":"Hinzufügen",
     "skip_got_steam":"Fenster \"Ist Steam auf Ihrem Computer installiert?\" überspringen",
     "store_general_thirdparty":"Optionen für Informationen von Seiten von Dritten",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Kaufdatum auf Store-Seiten zeigen",
     "lang":{
       "english":"Englisch",
       "brazilian":"Brasil. Portugiesisch",
@@ -427,7 +429,7 @@
     "errormsg":"Fehler beim Laden von Enchanced Steam-Daten",
     "loading":"Enhanced Steam lädt Daten...",
     "ready":"Enchanced Steam ist bereit",
-    "failed":"One or more requests failed"
+    "failed":"Eine oder mehrere Anfragen sind gescheitert"
   },
   "twitch":{
     "now_streaming":"__username__ ist live auf Twitch",
@@ -492,8 +494,8 @@
     "num_items":"__num__ Gegenstände"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Nicht erneut zeigen",
+    "updated":"Enhanced Steam wurde auf __version__ aktualisiert",
+    "changes":"Diese Version enthält die folgenden Änderungen"
   }
 }

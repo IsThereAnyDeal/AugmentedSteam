@@ -21,7 +21,7 @@
   "packs":"Paketit",
   "remove_owned_wishlist":"Poista omistetut pelit toivelistalta",
   "donate":"Lahjoita",
-  "close":"Close",
+  "close":"Sulje",
   "coupon_application_note":"Tavaraluettelossasi oleva kuponki käytetään automaattisesti kassalla.",
   "hide":"Piilota",
   "cards_owned":"__owned__ \/ __possible__ korttia kerätty",
@@ -37,7 +37,7 @@
   "lowest_price":"Tämänhetkinen Alin Hinta",
   "badge_progress":"Näytä merkkien edistyminen",
   "sales_total":"Myyntitulot yhteensä",
-  "hold_total":"Total on hold",
+  "hold_total":"Yhteensä odottamassa",
   "view_normal_badge":"Näytä tavallisen merkin edistyminen",
   "community_name_account_header":"Käyttäjän __username__ tili",
   "apppage_sections":"Valitse osastot jotka haluat nähdä tällä sivulla",
@@ -116,7 +116,7 @@
   "notinterested":"Esineet merkattu ei kiinnostaviksi",
   "news":"Uutiset",
   "check_system":"Tarkista järjestelmävaatimukset",
-  "viewinclient":"View in Steam Client",
+  "viewinclient":"Näytä Steam-ohjelmassa",
   "custom_background":"Mukautettu taustakuva",
   "custom_style":"Mukautettu Teema",
   "custom_style_help":"Kaikki Enhanced Steam:in käyttäjät näkevät tämän teeman profiilissasi. Käyttäjät joilla ei ole Enhanced Steam:ia eivät näe täällä tehtyjä teeman muutoksia.",
@@ -130,8 +130,8 @@
   "always":"Aina",
   "compare":"Vertaile",
   "discount":"Alennus",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"Alennus (Prosenttia)",
+  "discountabs":"Alennus (Summa)",
   "rating_details":"Näytä pisteytyksen lisätiedot",
   "drops_worth_avg":"Arvoltaan noin",
   "using_store_return":"Klikkaa tästä palataksesi __base__ kauppaan",
@@ -179,7 +179,7 @@
   "notcommon_label":"Piilota omistamasi pelit",
   "show_all_steam_releases":"Näytä kaikki Steam-julkaisut",
   "wishlist":"Toivelista",
-  "on_wishlist":"On Wishlist",
+  "on_wishlist":"Toivelistalla",
   "notdiscounted":"Ei alennetut kohteet",
   "cancel":"Peruuta",
   "wiki_article":"Näytä __pcgw__ -artikkeli",
@@ -213,26 +213,27 @@
   "historical_low_format":"__price__ __store__:ssa __date__",
   "favorited":"Lisätty suosikiksi",
   "followed":"Seurattu",
-  "leave_group_selected":"Leave Selected",
-  "leave_group_all":"Leave All",
-  "leave_group_all_confirm":"You are about to leave ALL GROUPS you belong to!\nAre you sure you want to continue?",
-  "leave_group_admin_confirm":"You are Admin in this group: __groupname__\nAre you sure you want to leave?",
-  "wrong_try_again":"Something went wrong. Please try again.",
-  "join_group":"Join Group",
-  "chat":"Chat",
+  "leave_group_selected":"Poistu valituista",
+  "leave_group_all":"Poistu kaikista",
+  "leave_group_all_confirm":"Olet poistumassa KAIKISTA RYHMISTÄSI! Oletko varma että haluat jatkaa?",
+  "leave_group_admin_confirm":"Olet ryhmän __groupname__ ylläpitäjä.\nHaluatko varmasti poistua ryhmästä?",
+  "wrong_try_again":"Jokin meni vikaan. Yritä uudelleen.",
+  "join_group":"Liity ryhmään",
+  "chat":"Keskustelu",
   "web_browser_chat":"Web browser chat",
   "steam_client_chat":"Steam Client chat",
   "available":"Available",
-  "set_as_background":"Set as Background",
-  "preview_background":"Preview Background",
-  "details":"Details",
+  "set_as_background":"Aseta taustakuvaksi",
+  "preview_background":"Esikatsele taustakuvaa",
+  "details":"Yksityiskohdat",
   "expand_slider":"Expand slider",
   "contract_slider":"Contract slider",
   "early_access":"Early Access",
-  "filter_games":"Filter games",
+  "filter_games":"Suodata pelejä",
   "note_for":"Note for",
   "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "tag_short":"Käytä lyhyitä avainsanoja tilan säästämiseksi",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Näytä saavutukset kauppasivuilla",
     "achievements":"Saavutukset",
@@ -261,12 +262,12 @@
     "compl":"Perfektionisti",
     "submit":"Kerro oma aikasi",
     "main":"Päätarina",
-    "no_data":"No data found",
+    "no_data":"Tietoja ei löytynyt",
     "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "wrong":"Väärä peli?"
   },
   "library":{
-    "in_library":"In Library",
+    "in_library":"Kirjastossa",
     "error_loading_library":"Kokoelmasi lataaminen epäonnistui.",
     "categories":"Kategoriat...",
     "genres":"Lajityypit...",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Näytä WSGF:n laajakuvatuen merkit",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Näytä SteamCardExchange linkit merkkilistassa",
     "regional_price":"Alueellinen hintavertailu",
     "acrtag":"Näytä varoitukset kohteissa joiden vaihtaminen on estetty alueiden välillä",
@@ -303,8 +305,8 @@
     "coupon":"Tuotteet joihin voit käyttää kuponkeja",
     "show_package_info":"Näytä \"paketin tiedot\" nappula kaikille tuotteille",
     "wlbuttoncommunityapp":"Näytä \"Lisää toivelistaan\" nappula tuotteiden yhteisökeskuksissa",
-    "removeguideslanguagefilter":"Don't automatically filter guides by user language",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "removeguideslanguagefilter":"Älä suodata oppaita automaattisesti käyttäjän kielen mukaan",
+    "disablelinkfilter":"Ohita vahvistus ulkopuolisille sivustoille siirryttäessä",
     "regional_price_on":"Näytä alueellinen hintavertailu",
     "cart":"Kohteet ostoskorissasi",
     "friends_own":"Tuotteet jotka ystäväsi omistavat",
@@ -427,7 +429,7 @@
     "errormsg":"Virhe ladatessa Enhanced Steamin tietoja",
     "loading":"Enhanced Steam lataa tietoja...",
     "ready":"Enhanced Steam on valmis",
-    "failed":"One or more requests failed"
+    "failed":"Yksi tai useampi pyyntö epäonnistui"
   },
   "twitch":{
     "now_streaming":"__username__ on lähettämässä suoraa lähetystä Twitchissä",
@@ -467,7 +469,7 @@
     "inv_gift":"Lahja",
     "inv_guestpass":"Vierailulupa",
     "owned":"Omistetut",
-    "notinterested":"Not Interested",
+    "notinterested":"En ole kiinnostunut",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ toivoo<\/a>"
   },
   "wallet":{
@@ -488,12 +490,12 @@
     "sending":"Omistamiesi pelien ja pakettien lataus ja lähetys IsThereAnyDeal.com:iin"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ kohde",
+    "num_items":"__num__ kohdetta"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Älä näytä uudelleen",
+    "updated":"Enhanced Steam on päivitetty versioon __version__",
+    "changes":"Tämä julkaisu sisältää seuraavat muutokset"
   }
 }

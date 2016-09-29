@@ -21,7 +21,7 @@
   "packs":"Комплекты",
   "remove_owned_wishlist":"Убрать из списка желаемого купленные игры",
   "donate":"Пожертвовать",
-  "close":"Close",
+  "close":"Закрыть",
   "coupon_application_note":"При покупке купон будет использован автоматически.",
   "hide":"Спрятать",
   "cards_owned":"Есть __owned__ карт из __possible__ возможных",
@@ -233,6 +233,7 @@
   "note_for":"Примечания для",
   "show_wishlist_total":"Показать весь список желаемого",
   "tag_short":"Использовать короткие теги для экономии места",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Отображать достижения на страницах в магазине",
     "achievements":"Достижения",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Отображать информацию о поддержке широкоэкранных мониторов (WSGF)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Отображать ссылки сайта SteamCardExchange на значках",
     "regional_price":"Сравнение цен в регионах",
     "acrtag":"Показать предупреждения к предметам, у которых запрещен обмен между регионами",
@@ -393,7 +395,7 @@
     "add_another_region":"Добавить",
     "skip_got_steam":"Пропустить окно\"У Вас есть установленный Steam клиент ?\"",
     "store_general_thirdparty":"Настройки получения информации от сторонних сайтов",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Показывать дату покупки приложения на странице магазина",
     "lang":{
       "english":"Английский",
       "brazilian":"Португальско-бразильский",
@@ -427,7 +429,7 @@
     "errormsg":"Ошибка загрузки данных Enhanced Steam",
     "loading":"«Enhanced Steam» загружается...",
     "ready":"\"Enhanced Steam\" готов",
-    "failed":"One or more requests failed"
+    "failed":"Не удалось выполнить запрос(ы)"
   },
   "twitch":{
     "now_streaming":"__username__ начал трансляцию на Twich",
@@ -492,8 +494,8 @@
     "num_items":"__num__ элементы"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Больше не показывать",
+    "updated":"Enhanced Steam был обновлён до версии __version__",
+    "changes":"Эта версия включает в себя следующие изменения"
   }
 }

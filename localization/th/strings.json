@@ -21,7 +21,7 @@
   "packs":"แพ็ค",
   "remove_owned_wishlist":"ลบเกมที่มีออกจากสิ่งที่คุณอยากได้",
   "donate":"บริจาค",
-  "close":"Close",
+  "close":"ปิด",
   "coupon_application_note":"คูปองในคลังของคุณจะถูกนำมาปรับใช้โดยอัตโนมัติเมื่อคิดเงิน",
   "hide":"ซ่อน",
   "cards_owned":"เป็นเจ้าของการ์ด __owned__ จาก __possible__ ใบ",
@@ -130,8 +130,8 @@
   "always":"สม่ำเสมอ",
   "compare":"เปรียบเทียบ",
   "discount":"ลดราคา",
-  "discountper":"Discount (Percentage)",
-  "discountabs":"Discount (Amount)",
+  "discountper":"ส่วนลด (เปอร์เซ็นต์)",
+  "discountabs":"ส่วนลด (ราคา)",
   "rating_details":"ดูรายละเอียดการให้คะแนน",
   "drops_worth_avg":"มูลค่าโดยประมาณ",
   "using_store_return":"คลิกที่นี่เพื่อกลับไปยังร้านค้า __base__",
@@ -229,10 +229,11 @@
   "expand_slider":"ขยายออก",
   "contract_slider":"หดลง",
   "early_access":"ช่วงพัฒนา",
-  "filter_games":"Filter games",
-  "note_for":"Note for",
-  "show_wishlist_total":"Show wishlist Total",
-  "tag_short":"Use short tags to save space",
+  "filter_games":"ตัวกรอง",
+  "note_for":"หมายเหตุสำหรับ",
+  "show_wishlist_total":"โชว์ราคารวมของสิ่งที่อยากได้",
+  "tag_short":"ใช้ tags สั้นๆ",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"แสดงรางวัลความสำเร็จบนหน้าร้านค้า",
     "achievements":"รางวัลความสำเร็จ",
@@ -261,9 +262,9 @@
     "compl":"ผู้ชื่นชอบความสมบูรณ์",
     "submit":"ส่งเวลาของคุณ",
     "main":"เนื้อเรื่องหลัก",
-    "no_data":"No data found",
-    "help":"Click here to help",
-    "wrong":"Wrong game?"
+    "no_data":"ไม่พบข้อมูล",
+    "help":"คลิกที่นี่เพื่อลองอีกครั้ง",
+    "wrong":"เกมไม่ถูกต้อง"
   },
   "library":{
     "in_library":"ในคลัง",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"แสดงข้อมูล WSGF (Widescreen)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"แสดงลิงก์ SteamCardExchange บนหน้าเหรียญตรา",
     "regional_price":"การเปรียบเทียบราคาตามภูมิภาค",
     "acrtag":"แสดงคำเตือนบนรายการที่ไม่สามารถแลกเปลี่ยนข้ามภูมิภาคได้",
@@ -304,7 +306,7 @@
     "show_package_info":"แสดงข้อมูลแพ็กเกจของแอปทั้งหมด",
     "wlbuttoncommunityapp":"แสดงปุ่ม \"เพิ่มในสิ่งที่คุณอยากได้\" บนศูนย์กลางชุมชนของแอป",
     "removeguideslanguagefilter":"ให้แสดงคู่มือทุกภาษา.",
-    "disablelinkfilter":"Disable confirmation when accessing external sites",
+    "disablelinkfilter":"ปิดใช้งานการยืนยันเมื่อเข้าถึงเว็บไซต์ภายนอก",
     "regional_price_on":"แสดงการเปรียบเทียบราคาตามภูมิภาค",
     "cart":"สินค้าในรถเข็นของคุณ",
     "friends_own":"รายการที่เพื่อนของคุณเป็นเจ้าของแล้ว",
@@ -392,8 +394,8 @@
     "wishlist":"รายการในสิ่งที่อยากได้ของคุณ",
     "add_another_region":"เพิ่ม",
     "skip_got_steam":"ข้ามหน้าต่าง 'Got Steam?'",
-    "store_general_thirdparty":"Options for information from 3rd party sites",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "store_general_thirdparty":"ตัวเลือกในการรับข้อมูลจากเว็บไซต์ภายนอก",
+    "purchase_dates":"แสดงวันที่ซื้อในหน้าร้านค้า",
     "lang":{
       "english":"อังกฤษ",
       "brazilian":"โปรตุเกส-บราซิล",
@@ -427,7 +429,7 @@
     "errormsg":"พบข้อผิดพลาดในการโหลดข้อมูล Enhanced Steam",
     "loading":"Enhanced Steam กำลังโหลดข้อมูล...",
     "ready":"Enhanced Steam พร้อมใช้งาน",
-    "failed":"One or more requests failed"
+    "failed":"คำร้องขอล้มเหลว"
   },
   "twitch":{
     "now_streaming":"__username__ กำลังสตรีมสดบน Twitch",
@@ -488,12 +490,12 @@
     "sending":"กำลังโหลดเกมและแพ็กเกจที่คุณเป็นเจ้าของแล้วและกำลังส่งไปยัง IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ item",
-    "num_items":"__num__ items"
+    "num_item":"__num__ ชิ้น",
+    "num_items":"__num__ ชิ้น"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"ไม่ต้องแสดงอีก",
+    "updated":"Enhanced Steam อัพเดทสู่เวอร์ชั่น __version__",
+    "changes":"เวอร์ชั่นนี้มีการเปลี่ยนแปลงอะไรบ้าง?"
   }
 }

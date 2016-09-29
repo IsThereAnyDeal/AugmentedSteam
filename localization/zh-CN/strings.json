@@ -21,7 +21,7 @@
   "packs":"合集包",
   "remove_owned_wishlist":"将已拥有游戏移出愿望单",
   "donate":"捐赠",
-  "close":"Close",
+  "close":"关闭",
   "coupon_application_note":"付款时自动使用库存中的优惠券",
   "hide":"隐藏",
   "cards_owned":"在__possible__张中已拥有__owned__张",
@@ -233,6 +233,7 @@
   "note_for":"注释",
   "show_wishlist_total":"显示愿望单总计",
   "tag_short":"使用短标记，以节省空间",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"在商店页面显示成就",
     "achievements":"成就",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"显示WSGF（宽屏支持）信息",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"在徽章页面显示SteamCardExchange链接",
     "regional_price":"地区价格比较",
     "acrtag":"在禁止跨区域交易的物品处显示警告",
@@ -393,7 +395,7 @@
     "add_another_region":"添加",
     "skip_got_steam":"跳过“安装 Steam”提示窗",
     "store_general_thirdparty":"第三方网站信息选项",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"在商店页面上显示购买日期",
     "lang":{
       "english":"英语",
       "brazilian":"葡萄牙语-巴西",
@@ -427,7 +429,7 @@
     "errormsg":"Enhanced Steam 数据载入错误",
     "loading":"Enhanced Steam 数据载入中...",
     "ready":"Enhanced Steam 已就绪",
-    "failed":"One or more requests failed"
+    "failed":"一个或多个请求失败"
   },
   "twitch":{
     "now_streaming":"__username__正在Twitch上直播",
@@ -492,8 +494,8 @@
     "num_items":"__num__ 个对象"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"不再显示",
+    "updated":"Enhanced Steam已更新至 __version__",
+    "changes":"此版本包括以下更改"
   }
 }

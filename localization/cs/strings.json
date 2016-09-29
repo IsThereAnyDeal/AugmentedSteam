@@ -21,7 +21,7 @@
   "packs":"Balíčky",
   "remove_owned_wishlist":"Odstranit vlastněné hry ze Seznamu přání",
   "donate":"Přispět",
-  "close":"Close",
+  "close":"Zavřít",
   "coupon_application_note":"Kupón ve vašem inventáři bude automaticky aplikován při nákupu.",
   "hide":"Schovat",
   "cards_owned":"Vlastněno __owned__ z __possible__ karet",
@@ -222,9 +222,9 @@
   "chat":"Chat",
   "web_browser_chat":"Webový chat",
   "steam_client_chat":"Chat v klientovi Steamu",
-  "available":"Available",
+  "available":"K dispozici",
   "set_as_background":"Nastavit jako pozadí",
-  "preview_background":"Preview Background",
+  "preview_background":"Náhled pozadí",
   "details":"Podrobnosti",
   "expand_slider":"Rozšířit posuvník",
   "contract_slider":"Zmenšit posuvník",
@@ -233,6 +233,7 @@
   "note_for":"Poznámka pro",
   "show_wishlist_total":"Zobrazit cenu seznamu přání",
   "tag_short":"Použít zkrácené značky, aby se ušetřilo místo",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Ukázat achievementy na stránce obchodu",
     "achievements":"Achievementy",
@@ -263,7 +264,7 @@
     "main":"Hlavní příběh",
     "no_data":"Nebyla nalezena jakákoli data",
     "help":"Klikněte zde pro pomoc",
-    "wrong":"Wrong game?"
+    "wrong":"Špatná hra?"
   },
   "library":{
     "in_library":"V knihovně",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Ukázat informace z WSGF (širokoúhlé hraní)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Ukázat odkazy na SteamCardExchange u odznaků",
     "regional_price":"Srovnání cen v regionech",
     "acrtag":"Zobrazit upozornění, pokud je zakázáno obchodování mezi oblastmi",
@@ -427,7 +429,7 @@
     "errormsg":"Chyba při načítání Enhanced Steam dat",
     "loading":"Enhanced Steam načítá data...",
     "ready":"Enhanced Steam je připravený.",
-    "failed":"One or more requests failed"
+    "failed":"Jeden nebo více požadavků selhalo"
   },
   "twitch":{
     "now_streaming":"__username__ živě steamuje na Twitch",
@@ -492,7 +494,7 @@
     "num_items":"__num__ položek"
   },
   "update":{
-    "dont_show":"Don't Show Again",
+    "dont_show":"Příště nezobrazovat",
     "updated":"Enhanced Steam has been updated to __version__",
     "changes":"This release includes the following changes"
   }

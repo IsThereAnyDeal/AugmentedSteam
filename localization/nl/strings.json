@@ -21,7 +21,7 @@
   "packs":"Pakketten ",
   "remove_owned_wishlist":"Verwijder eigen games van je wenslijst",
   "donate":"Doneer",
-  "close":"Close",
+  "close":"Sluiten",
   "coupon_application_note":"Een waardebon in je inventaris wordt automatisch toegepast bij het afrekenen.",
   "hide":"Verberg",
   "cards_owned":"__owned__ of __possible__ kaarten bezeten",
@@ -233,6 +233,7 @@
   "note_for":"Opmerking voor",
   "show_wishlist_total":"Toon volledige wenslijst",
   "tag_short":"Gebruik korte tags om ruimte te besparen",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Toon achievements op winkel pagina's",
     "achievements":"Prestaties",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Laat WSGF (Widescreen) informatie zien",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Toon SteamCardExchange links bij badges",
     "regional_price":"Regionale prijs vergelijking",
     "acrtag":"Toon waarschuwingen op voorwerpen waar grensoverschrijdende regio handel is uitgeschakeld",
@@ -393,7 +395,7 @@
     "add_another_region":"Toevoegen",
     "skip_got_steam":"Overslaan van het venster 'Kreeg stoom?'",
     "store_general_thirdparty":"Opties voor informatie uit 3rd sites",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Toon datum van de aankoop van de apps op de winkelpagina 's",
     "lang":{
       "english":"Engels",
       "brazilian":"Portugees-Braziliaans",
@@ -427,7 +429,7 @@
     "errormsg":"Fout tijdens het laden van Enhanced Steam gegevens",
     "loading":"Enhanced Steam is gegevens aan het laden...",
     "ready":"Enhanced Steam gereed",
-    "failed":"One or more requests failed"
+    "failed":"Een of meer aanvragen mislukt"
   },
   "twitch":{
     "now_streaming":"__username__ is aan het livestreamen op Twitch",
@@ -492,8 +494,8 @@
     "num_items":"__num__ object"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Niet nogmaals tonen",
+    "updated":"Enhanced Steam is vernieuwd naar __version__",
+    "changes":"Deze release bevat de volgende wijzigingen"
   }
 }

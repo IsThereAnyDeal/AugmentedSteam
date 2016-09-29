@@ -21,7 +21,7 @@
   "packs":"Pakke",
   "remove_owned_wishlist":"Fjern spil du ejer fra din ønskeliste",
   "donate":"Doner ",
-  "close":"Close",
+  "close":"Luk",
   "coupon_application_note":"En kupon i din beholdning anvendes automatisk ved kassen.",
   "hide":"Skjul",
   "cards_owned":"__owned__ __possible__ kort ejes",
@@ -233,6 +233,7 @@
   "note_for":"Note Til",
   "show_wishlist_total":"Vis hvad hele din ønskeliste koster",
   "tag_short":"Brug korte tags for at bevare plads",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Vis præstationer på butik sider",
     "achievements":"Præstationer",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Vis WSGF (Widescreen) info ",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Vis SteamCardExchange links på skilte",
     "regional_price":"Regional Prissammenligning",
     "acrtag":"Vis advarsler på varer hvor grænseoverskridende regionbyte er deaktiveret",
@@ -393,7 +395,7 @@
     "add_another_region":"Tilføj",
     "skip_got_steam":"Springe vinduet 'Har du Steam?' over",
     "store_general_thirdparty":"Muligheder for information fra 3 parts sider",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Vis apps købsdato på forhandler sider",
     "lang":{
       "english":"Engelsk",
       "brazilian":"Portugisisk-Brasilien",
@@ -427,7 +429,7 @@
     "errormsg":"Fejl under indlæsning af Enhanced Steam data",
     "loading":"Enhanced Steam indlæser data...",
     "ready":"Enhanced Steam er klar",
-    "failed":"One or more requests failed"
+    "failed":"Én eller flere anmodninger mislykkedes"
   },
   "twitch":{
     "now_streaming":"__username__ live streamer på Twitch",
@@ -492,8 +494,8 @@
     "num_items":"__num__ genstande"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Vis ikke igen",
+    "updated":"Enhanced Steam er blevet opdateret til __version__",
+    "changes":"Denne udgivelse indeholder følgende ændringer"
   }
 }

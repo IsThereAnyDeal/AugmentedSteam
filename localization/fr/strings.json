@@ -114,7 +114,7 @@
   "gift_transactions":"Achats de cadeaux",
   "demos":"Démos",
   "notinterested":"Articles marqués \"Pas intéressé\"",
-  "news":"Actualités",
+  "news":"Nouveautés",
   "check_system":"Vérifier votre système",
   "viewinclient":"Voir dans le client Steam",
   "custom_background":"Arrière-plan personnalisé",
@@ -233,6 +233,7 @@
   "note_for":"Note pour",
   "show_wishlist_total":"Afficher le total de la liste de souhaits",
   "tag_short":"Utiliser des tags courts pour économiser l’espace",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Afficher les succès dans le magasin",
     "achievements":"Succès",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Afficher les informations du WSGF (écran large)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Afficher les liens SteamCardExchange sur les badges",
     "regional_price":"Comparaison des prix par région",
     "acrtag":"Afficher des avertissements sur les articles quand l'échange entre régions est désactivé",

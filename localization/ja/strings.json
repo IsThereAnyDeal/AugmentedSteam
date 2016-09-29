@@ -21,7 +21,7 @@
   "packs":"パック",
   "remove_owned_wishlist":"ウィッシュリストから所有しているゲームを削除",
   "donate":"寄付",
-  "close":"Close",
+  "close":"閉じる",
   "coupon_application_note":"インベントリにあるクーポンは支払い時に自動的に適用されます。",
   "hide":"非表示",
   "cards_owned":"__possible__ 枚のカード中__owned__枚所有しています",
@@ -233,6 +233,7 @@
   "note_for":"注意:",
   "show_wishlist_total":"ウィッシュリストの合計額を表示",
   "tag_short":"スペースの節約のため短縮タグを使用する",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"ストアページで実績を表示",
     "achievements":"実績",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"WSGF (ワイドスクリーン) 情報を表示",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"バッジにSteamCardExchangeへのリンクを表示",
     "regional_price":"地域別価格比較",
     "acrtag":"クロスリージョントレードが無効になっている場合、アイテムに警告を表示する",
@@ -393,7 +395,7 @@
     "add_another_region":"追加",
     "skip_got_steam":"「Steam をお持ちですか？」のウィンドウをスキップする",
     "store_general_thirdparty":"サードパーティーサイト由来の情報についてのオプション",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"ストアページにアプリの購入日を表示する",
     "lang":{
       "english":"英語",
       "brazilian":"ブラジルポルトガル語",
@@ -427,7 +429,7 @@
     "errormsg":"Enhanced Steam のデータロードエラー",
     "loading":"Enhanced Steam がデータをロード中……",
     "ready":"Enhanced Steam 準備完了",
-    "failed":"One or more requests failed"
+    "failed":"1つ以上のリクエストが失敗しました"
   },
   "twitch":{
     "now_streaming":"__username__ はTwitchで配信中です",
@@ -492,8 +494,8 @@
     "num_items":"__num__ 個のアイテム"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"再び表示しない",
+    "updated":"Enhanced Steamは、__version__に更新されました",
+    "changes":"このリリースには、以下の変更が含まれています"
   }
 }

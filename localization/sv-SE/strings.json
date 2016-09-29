@@ -21,7 +21,7 @@
   "packs":"Paket",
   "remove_owned_wishlist":"Ta bort alla ägda spel ifrån önskelistan",
   "donate":"Donera",
-  "close":"Close",
+  "close":"Stäng",
   "coupon_application_note":"En kupong i ditt förråd kommer automatiskt appliceras i kassan",
   "hide":"Göm",
   "cards_owned":"__owned__ av __possible__ kort ägda",
@@ -233,6 +233,7 @@
   "note_for":"Anmärkning för",
   "show_wishlist_total":"Visa önskelista totalt",
   "tag_short":"Använda korta Taggar för att spara utrymme",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Visa framsteg på butikssidorna",
     "achievements":"Framsteg",
@@ -245,7 +246,7 @@
     "pwyw":"Betala vad du vill",
     "includes":"Inkluderar __num__ föremål",
     "tier_includes":"__tier__ (__price__) innehåller __num__ föremål",
-    "tier":"Tier __num__",
+    "tier":"Nivå __num__",
     "header":"Antal paket som har detta spel",
     "info":"Paket information",
     "bundle_count":"Antal gånger som detta spel har varit med i ett paket"
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Visa WSGF (Widescreen) information",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Visa SteamCardExchange länkar i märken",
     "regional_price":"Regionala prisjämförelse",
     "acrtag":"Visa varningar på spel där byten mellan regioner är inaktiverat",
@@ -393,7 +395,7 @@
     "add_another_region":"Lägg tilll",
     "skip_got_steam":"Hoppa över 'har du Steam?' fönstret",
     "store_general_thirdparty":"Alternativ för information ifrån tredjepartssidor",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Visa appars inköpsdatum på butikssidor",
     "lang":{
       "english":"Engelska",
       "brazilian":"Portugisisk-Brasilien",
@@ -427,7 +429,7 @@
     "errormsg":"Fel vid inläsning av Enhanced Steams data",
     "loading":"Enhanced Steam laddar data...",
     "ready":"Enhanced Steam är redo",
-    "failed":"One or more requests failed"
+    "failed":"En eller flera förfrågningar misslyckades"
   },
   "twitch":{
     "now_streaming":"__username__ streamar live på Twitch",
@@ -492,8 +494,8 @@
     "num_items":"__num__ Objekt"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Visa inte igen",
+    "updated":"Enhanced Steam har uppdaterats till __version__",
+    "changes":"Den här versionen innehåller följande ändringar"
   }
 }

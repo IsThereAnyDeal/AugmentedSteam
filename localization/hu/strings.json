@@ -21,7 +21,7 @@
   "packs":"Csomagok",
   "remove_owned_wishlist":"A már megvett játékok törlése a kívánságlistáról",
   "donate":"Támogatás",
-  "close":"Close",
+  "close":"Bezár",
   "coupon_application_note":"A Raktáradban lévő kupon automatikusan érvénybe lép a pénztárnál.",
   "hide":"Elrejt",
   "cards_owned":"__owned__ db kártyád van a lehetséges __possible__ db-ból",
@@ -233,6 +233,7 @@
   "note_for":"Megjegyzés",
   "show_wishlist_total":"Teljes kívánságlista mutatása",
   "tag_short":"Használj rövid tag-eket, hogy helyet takaríts meg",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Teljesítmények mutatása az áruház oldalain",
     "achievements":"Teljesítmények",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Mutassa a WSGF (Széles képernyő) infókat",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"SteamCardExchange linkek mutatása a Kitűzőkőn",
     "regional_price":"Régiók árainak összehasonlítása",
     "acrtag":"Mutassa mely régiókban blokkolt a kereskedelem a játékokon.",
@@ -393,7 +395,7 @@
     "add_another_region":"Hozzáad",
     "skip_got_steam":"'Van Steamed?' ablak átugrása",
     "store_general_thirdparty":"Beállítások külső oldalak információiról",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Vásárlás dátumának mutatása az áruház oldalain",
     "lang":{
       "english":"Angol",
       "brazilian":"Portugál-Brazil",
@@ -427,7 +429,7 @@
     "errormsg":"Hiba az Enhanced Steam adatbetöltése közben",
     "loading":"Enhanced Steam betölti az adatokat...",
     "ready":"Enhanced Steam kész",
-    "failed":"One or more requests failed"
+    "failed":"Egy vagy több lekérés sikertelen"
   },
   "twitch":{
     "now_streaming":"__username__ éppen közvetít a Twitch-en",
@@ -492,8 +494,8 @@
     "num_items":"__num__ tárgyak"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Ne Mutassa Újra",
+    "updated":"Enhanced Steam frissítve lett a __version__ verzióra",
+    "changes":"Ez a kiadás a következő változásokat tartalmazza"
   }
 }

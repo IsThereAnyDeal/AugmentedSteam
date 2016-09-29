@@ -21,7 +21,7 @@
   "packs":"Pachete",
   "remove_owned_wishlist":"Elimină jocurile deținute din lista de dorințe",
   "donate":"Donează",
-  "close":"Close",
+  "close":"Închide",
   "coupon_application_note":"Un cupon de reducere din inventarul tău Steam va fi aplicat automat la această comandă.",
   "hide":"Ascunde",
   "cards_owned":"__owned__ cărţi colectate din __possible__ posibile",
@@ -233,6 +233,7 @@
   "note_for":"Notiţă pentru",
   "show_wishlist_total":"Arată totalul listei de dorințe",
   "tag_short":"Folosește etichete scurte pentru a economisi spațiu",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Afișează realizările pe paginile magazinului",
     "achievements":"Realizări",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"Afișează informații WSGF (Panoramic)",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Afișează link-uri SteamCardExchange la insigne",
     "regional_price":"Compararea prețurilor pe regiuni",
     "acrtag":"Arată avertismente pe obiectele unde schimbul intre regiuni este dezactivat",
@@ -393,7 +395,7 @@
     "add_another_region":"Adaugă",
     "skip_got_steam":"Sări peste fereastra 'Ai Steam?'",
     "store_general_thirdparty":"Opțiuni pentru informații ce provin de pe alte site-uri terțe",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Arată data achiziționării aplicațiilor pe paginile magazinului",
     "lang":{
       "english":"Engleză",
       "brazilian":"Portugheză-Brazilia",
@@ -427,7 +429,7 @@
     "errormsg":"Eroare la încărcarea datelor Enhanced Steam",
     "loading":"Enhanced Steam încarcă datele...",
     "ready":"Enhanced Steam pregătit",
-    "failed":"One or more requests failed"
+    "failed":"Una sau mai multe solicitări au eșuat"
   },
   "twitch":{
     "now_streaming":"__username__ este live pe Twitch",
@@ -492,8 +494,8 @@
     "num_items":"__num__ obiecte"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Nu mai afișa",
+    "updated":"Enhanced Steam a fost actualizat la versiunea __version__",
+    "changes":"Această versiune include următoarele schimbări"
   }
 }

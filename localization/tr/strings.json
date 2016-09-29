@@ -21,7 +21,7 @@
   "packs":"Paketler",
   "remove_owned_wishlist":"Sahip olunan oyunları istek listesinden çıkar",
   "donate":"Bağış Yap",
-  "close":"Close",
+  "close":"Kapat",
   "coupon_application_note":"Envanterinizdeki bir kupon, satın alımda otomatik olarak kullanılacak.",
   "hide":"Gizle",
   "cards_owned":"__possible__ kart hakkından __owned__ ü",
@@ -233,6 +233,7 @@
   "note_for":"için not",
   "show_wishlist_total":"Toplam istek listesini göster",
   "tag_short":"Alanı kazanmak için kısa etiketleri kullanın",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"Başarımları mağaza sayfalarında göster",
     "achievements":"Başarımlar",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"WSGF (Geniş Ekran) bilgisini göster",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"Rozetlerde SteamCardExchange linklerini göster",
     "regional_price":"Bölgesel Fiyat Karşılaştırması",
     "acrtag":"Ülkeler arası takas yapılamayan eşyaların üzerinde uyarı göster",
@@ -393,7 +395,7 @@
     "add_another_region":"Ekle",
     "skip_got_steam":"'Steam'iniz var mı?' penceresini atla",
     "store_general_thirdparty":"3 parti sitelerden bilgi için seçenekleri",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Uygulamaların satın alım tarihini mağaza sayfasında göster",
     "lang":{
       "english":"İngilizce",
       "brazilian":"Portekizce-Brezilya",
@@ -427,7 +429,7 @@
     "errormsg":"Enhanced Steam verilerini yüklerken hata oluştu",
     "loading":"Enhanced Steam verileri yüklüyor...",
     "ready":"Enhanced Steam hazır",
-    "failed":"One or more requests failed"
+    "failed":"Bir veya fazla istek başarısız oldu"
   },
   "twitch":{
     "now_streaming":"__username__ Twitch üzerinden canlı yayın yapıyor",
@@ -492,8 +494,8 @@
     "num_items":"__num__ eşyalar"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"Bir daha gösterme",
+    "updated":"Enchanced Steam __version__ sürümüne güncellendi",
+    "changes":"Bu sürüm şu değişiklikleri içeriyor"
   }
 }

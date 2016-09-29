@@ -21,7 +21,7 @@
   "packs":"包",
   "remove_owned_wishlist":"從願望清單中移除已擁有的遊戲",
   "donate":"捐獻",
-  "close":"Close",
+  "close":"關閉",
   "coupon_application_note":"一張在你物品庫中的優惠券會在結帳時自動抵用。",
   "hide":"隱藏",
   "cards_owned":"在 __possible__張中已擁有__owned__張",
@@ -233,6 +233,7 @@
   "note_for":"請注意",
   "show_wishlist_total":"顯示願望清單總數",
   "tag_short":"使用簡短的標籤以節省空間",
+  "no_price_data":"No price data available",
   "achievements":{
     "option":"在商店頁面中顯示成就",
     "achievements":"成就",
@@ -283,6 +284,7 @@
   },
   "options":{
     "wsgf":"顯示寬螢幕支援資訊",
+    "version_show":"Show change log when Enhanced Steam updates",
     "steamcardexchange":"在徽章上顯示SteamCardExchange連結",
     "regional_price":"各地區價格比較",
     "acrtag":"顯示標記於禁止跨區交易的物品",
@@ -393,7 +395,7 @@
     "add_another_region":"增加",
     "skip_got_steam":"跳過 '安裝Steam了嗎？' 視窗",
     "store_general_thirdparty":"來自第三方網站資訊的選項",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"在商店頁面顯示軟體購買日期",
     "lang":{
       "english":"英文",
       "brazilian":"葡萄牙文-巴西",
@@ -427,7 +429,7 @@
     "errormsg":"Enhanced Steam 資料載入錯誤",
     "loading":"增強的蒸氣加載數據...",
     "ready":"提高蒸汽準備",
-    "failed":"One or more requests failed"
+    "failed":"有一個或多個請求失敗"
   },
   "twitch":{
     "now_streaming":"__username__ 在 Twitch 上直播中",
@@ -492,8 +494,8 @@
     "num_items":"__num__ 物品"
   },
   "update":{
-    "dont_show":"Don't Show Again",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "dont_show":"不要再顯示",
+    "updated":"Enhanced Steam 已經更新至 __version__",
+    "changes":"這個發行版本包含下列的更動"
   }
 }
