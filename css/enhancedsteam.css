@@ -1803,6 +1803,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 16px;
 	margin: -1px 0 0 -1px;
 }
+#es_progress.complete {
+	animation: delayBoxShadowGreen linear 1s;
+	animation-fill-mode: forwards;
+}
 #es_progress.error {
 	cursor: help;
 	animation: delayBoxShadowRed linear 1s;
@@ -1821,10 +1825,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-size: 14px;
 	font-family: Impact, Charcoal, sans-serif;
 	text-shadow: 0 0 1px black;
-}
-#es_progress.complete {
-	animation: delayBoxShadowGreen linear 1s;
-	animation-fill-mode: forwards;
 }
 #es_progress::-webkit-progress-inner-element {
 	border-radius: 8px;
@@ -1936,5 +1936,45 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .apphub_StoreInfoHeader.es_highlighted .discount_final_price,
 .apphub_StoreInfoHeader.es_highlighted .apphub_StoreAppText {
 	color: rgba(255, 255, 255, 0.65);
+}
+
+/***************************************
+ * Market
+ * add_market_sort()
+ **************************************/
+.es_marketsort {
+	cursor: pointer;
+	display: inline-block;
+	float: right;
+}
+#es_marketsort_name {
+	display: block;
+	float: none;
+}
+#es_marketsort_game {
+	width: 165px;
+	padding-left: 5px;
+}
+.es_marketsort.active span:last-child::after {
+	display: inline;
+	margin-left: 4px;
+	margin-right: -16px;
+	color: #eee;
+	font-size: 12px;
+}
+.es_marketsort.active.asc span:last-child::after {
+	content: "▲";
+}
+.es_marketsort.active.desc span:last-child::after {
+	content: "▼";
+}
+#es_selling .market_listing_table_header {
+	overflow: hidden;
+}
+#es_selling .market_listing_header_namespacer {
+	visibility: hidden;
+}
+.market_listing_listed_position {
+	display: none;
 }
 
