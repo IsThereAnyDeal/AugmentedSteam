@@ -120,7 +120,6 @@ var currency_promise = (function() {
 var is_signed_in = false;
 var profile_url = false;
 var profile_path = false;
-var should_Show_Wishlist_Button = true;
 
 var signed_in_promise = (function () {
 	var deferred = new $.Deferred();
@@ -1328,7 +1327,16 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_buttons() {
-	if(is_signed_in && should_Show_Wishlist_Button) {
+	if(is_signed_in) {
+		storage.get(function(settings) {
+	 		if (settings.showemptywishlist === undefined) { 
+	 			settings.showemptywishlist = true; 
+	 			storage.set({'showemptywishlist': settings.showemptywishlist}); 
+	 		}
+	 		if (!settings.hideaboutemptywishlist) {
+	 			return;
+	 		}
+	 	});
 		var profile = $(".playerAvatar a")[0].href.replace(window.location.protocol + "//steamcommunity.com", "");
 		if (window.location.pathname.startsWith(profile)) {
 			var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings.empty_wishlist + "</div>");
@@ -2279,16 +2287,6 @@ function remove_about_menu() {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.hideaboutmenu) {
 			$(".menuitem[href$='http://store.steampowered.com/about/']").remove();
-		}
-	});
-}
-
-// Remove the "Empty Wishlist" button at the bottom of the wishlist page
-function remove_empty_wishlist_button() {
-	storage.get(function(settings) {
-		if (settings.hideaboutemptywishlist === undefined) { settings.hideaboutemptywishlist = false; storage.set({'hideaboutemptywishlist': settings.hideaboutemptywishlist}); }
-		if (settings.hideaboutemptywishlist) {
-			should_Show_Wishlist_Button = false;
 		}
 	});
 }
@@ -9259,7 +9257,6 @@ $(document).ready(function(){
 			add_language_warning();
 			remove_install_steam_button();
 			remove_about_menu();
-			remove_empty_wishlist_button();
 			add_header_links();
 			process_early_access();
 			disable_link_filter();
