@@ -108,6 +108,7 @@ var settings_defaults = {
 	
 	"hideinstallsteambutton": false,
 	"hideaboutmenu": false,
+	"hideaboutemptywishlist": false,
 	"version_show": true,
 	"replaceaccountname": false,
 	"showfakeccwarning": true,
