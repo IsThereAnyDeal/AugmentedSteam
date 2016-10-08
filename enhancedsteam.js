@@ -3355,7 +3355,7 @@ function add_hide_buttons_to_search() {
 				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).hide(); }
 				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).hide(); }
 				if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
-				if ($("#es_notlowerrate").is(".checked")) && ($(this).find(".search_reviewscore").children("span.search_review_summary.positive").length == 0) { $(this).hide(); }
+				if ($("#es_notlowerrate").is(".checked") && $(this).find(".search_reviewscore").children("span.search_review_summary.positive").length == 0) { $(this).hide(); }
 			});
 		}
 
