@@ -1,4 +1,4 @@
-var version = "9.0";
+var version = "8.9";
 
 var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console, console_info);
@@ -884,6 +884,10 @@ function highlight_notinterested(node) {
 			}
 		});
 	});
+}
+
+function hightlight_notlowerrate(node) {
+
 }
 
 function hexToRgb(hex) {
@@ -3311,6 +3315,10 @@ function add_hide_buttons_to_search() {
 						<div class='tab_filter_control_checkbox'></div>
 						<span class='tab_filter_control_label'>` + localized_strings.notinterested + `</span>
 					</div>
+					<div class='tab_filter_control' id='es_notlowerrate'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.notlowerrate + `</span>
+					</div>
 				</div>
 			</div>
 		`);
@@ -3335,6 +3343,10 @@ function add_hide_buttons_to_search() {
 			$("#es_notinterested").addClass("checked");
 		}
 
+		if (settings.hide_lowerrate) {
+			$("#es_notlowerrate").addClass("checked");
+		}
+
 		function add_hide_buttons_to_search_click() {
 			$(".search_result_row").each(function() {
 				$(this).css("display", "block");
@@ -3343,6 +3355,7 @@ function add_hide_buttons_to_search() {
 				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).hide(); }
 				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).hide(); }
 				if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
+				if ($("#es_notlowerrate").is(".checked")) && ($(this).find(".search_reviewscore").children("span.search_review_summary.positive").length == 0) { $(this).hide(); }
 			});
 		}
 
@@ -3397,6 +3410,17 @@ function add_hide_buttons_to_search() {
 			} else {
 				$("#es_notinterested").addClass("checked");
 				storage.set({'hide_notinterested': true });
+			}
+			add_hide_buttons_to_search_click();
+		});
+
+		$("#es_notlowerrate").click(function() {
+			if ($("#es_notlowerrate").hasClass("checked")) {
+				$("#es_notlowerrate").removeClass("checked");
+				storage.set({'hide_notlowerrate': false });
+			} else {
+				$("#es_notlowerrate").addClass("checked");
+				storage.set({'hide_notlowerrate': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
