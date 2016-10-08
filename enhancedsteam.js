@@ -886,8 +886,14 @@ function highlight_notinterested(node) {
 	});
 }
 
-function hightlight_notlowerrate(node) {
-
+function apply_rate_filter (node) {
+    storage.get(function (settings) {
+        if (settings.hide_mixed && $(node).find('.search_reviewscore').children('span.search_review_summary.mixed').length > 0) { $(node).hide(); }
+        if (settings.hide_negative && $(node).find('.search_reviewscore').children('span.search_review_summary.negative').length > 0) { $(node).hide(); }
+        if ($(document).height() <= $(window).height()) {
+            load_search_results()
+        }
+    })
 }
 
 function hexToRgb(hex) {
@@ -7297,6 +7303,7 @@ function start_highlights_and_tags(){
 				}
 
 				highlight_notinterested(node);
+				apply_rate_filter(node);
 			});
 		});
 	}, 500);
@@ -7357,6 +7364,7 @@ function start_highlighting_node(node) {
 	}
 
 	highlight_notinterested(node);
+	apply_rate_filter(node);
 }
 
 // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
