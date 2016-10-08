@@ -1329,20 +1329,21 @@ function load_inventory() {
 function add_empty_wishlist_buttons() {
 	if(is_signed_in) {
 		storage.get(function(settings) {
-	 		if (settings.showemptywishlist === undefined) { 
-	 			settings.showemptywishlist = true; 
-	 			storage.set({'showemptywishlist': settings.showemptywishlist}); 
-	 		}
-	 		if (!settings.hideaboutemptywishlist) {
-	 			return;
-	 		}
-	 	});
-		var profile = $(".playerAvatar a")[0].href.replace(window.location.protocol + "//steamcommunity.com", "");
-		if (window.location.pathname.startsWith(profile)) {
-			var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings.empty_wishlist + "</div>");
-			$(".save_actions_enabled").filter(":last").after(empty_buttons);
-			$("#es_empty_wishlist").click(empty_wishlist);
-		}
+			if (settings.showemptywishlist === undefined) { 
+				settings.showemptywishlist = true; 
+				storage.set({'showemptywishlist': settings.showemptywishlist}); 
+			}
+			if (!settings.showemptywishlist) {
+				return;
+			}
+		
+			var profile = $(".playerAvatar a")[0].href.replace(window.location.protocol + "//steamcommunity.com", "");
+			if (window.location.pathname.startsWith(profile)) {
+				var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings.empty_wishlist + "</div>");
+				$(".save_actions_enabled").filter(":last").after(empty_buttons);
+				$("#es_empty_wishlist").click(empty_wishlist);
+			}
+		});
 	}
 }
 
