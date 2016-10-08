@@ -3315,9 +3315,13 @@ function add_hide_buttons_to_search() {
 						<div class='tab_filter_control_checkbox'></div>
 						<span class='tab_filter_control_label'>` + localized_strings.notinterested + `</span>
 					</div>
-					<div class='tab_filter_control' id='es_notlowerrate'>
+					<div class='tab_filter_control' id='es_notmixed'>
 						<div class='tab_filter_control_checkbox'></div>
-						<span class='tab_filter_control_label'>` + localized_strings.notlowerrate + `</span>
+						<span class='tab_filter_control_label'>` + localized_strings.mixed_item + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_notnegative'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.negative_item + `</span>
 					</div>
 				</div>
 			</div>
@@ -3343,8 +3347,12 @@ function add_hide_buttons_to_search() {
 			$("#es_notinterested").addClass("checked");
 		}
 
-		if (settings.hide_lowerrate) {
-			$("#es_notlowerrate").addClass("checked");
+		if (settings.hide_mixed) {
+			$("#es_notmixed").addClass("checked");
+		}
+
+		if (settings.hide_negative) {
+			$("#es_notnegative").addClass("checked");
 		}
 
 		function add_hide_buttons_to_search_click() {
@@ -3355,7 +3363,8 @@ function add_hide_buttons_to_search() {
 				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).hide(); }
 				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).hide(); }
 				if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
-				if ($("#es_notlowerrate").is(".checked") && $(this).find(".search_reviewscore").children("span.search_review_summary.positive").length == 0) { $(this).hide(); }
+				if ($("#es_notmixed").is(".checked") && $(this).find(".search_reviewscore").children("span.search_review_summary.mixed").length > 0) { $(this).hide(); }
+				if ($("#es_notnegative").is(".checked") && $(this).find(".search_reviewscore").children("span.search_review_summary.negative").length > 0) { $(this).hide(); }
 			});
 		}
 
@@ -3414,13 +3423,24 @@ function add_hide_buttons_to_search() {
 			add_hide_buttons_to_search_click();
 		});
 
-		$("#es_notlowerrate").click(function() {
-			if ($("#es_notlowerrate").hasClass("checked")) {
-				$("#es_notlowerrate").removeClass("checked");
-				storage.set({'hide_notlowerrate': false });
+		$("#es_notmixed").click(function() {
+			if ($("#es_notmixed").hasClass("checked")) {
+				$("#es_notmixed").removeClass("checked");
+				storage.set({'hide_mixed': false });
 			} else {
-				$("#es_notlowerrate").addClass("checked");
-				storage.set({'hide_notlowerrate': true });
+				$("#es_notmixed").addClass("checked");
+				storage.set({'hide_mixed': true });
+			}
+			add_hide_buttons_to_search_click();
+		});
+
+		$("#es_notnegative").click(function() {
+			if ($("#es_notnegative").hasClass("checked")) {
+				$("#es_notnegative").removeClass("checked");
+				storage.set({'hide_negative': false });
+			} else {
+				$("#es_notnegative").addClass("checked");
+				storage.set({'hide_negative': true });
 			}
 			add_hide_buttons_to_search_click();
 		});
