@@ -116,6 +116,8 @@
     "notinterested": "Items marked not interested",
     "mixed_item": "Mixed rating items",
     "negative_item": "Negative rating items",
+    "price_above":"Items' price above",
+    "price_above_tooltip":"Zero for free items or items without price tags; leave this field empty work as disable",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Steam Client",
