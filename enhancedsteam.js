@@ -887,44 +887,45 @@ function highlight_notinterested(node) {
 }
 
 function apply_rate_filter (node) {
-    storage.get(function (settings) {
-        if (settings.hide_mixed && $(node).find('.search_reviewscore').children('span.search_review_summary.mixed').length > 0) { $(node).hide(); }
-        if (settings.hide_negative && $(node).find('.search_reviewscore').children('span.search_review_summary.negative').length > 0) { $(node).hide(); }
-        if ($(document).height() <= $(window).height()) {
-            load_search_results()
-        }
-    })
+	storage.get(function (settings) {
+		if (settings.hide_mixed && $(node).find('.search_reviewscore').children('span.search_review_summary.mixed').length > 0) { $(node).hide(); }
+		if (settings.hide_negative && $(node).find('.search_reviewscore').children('span.search_review_summary.negative').length > 0) { $(node).hide(); }
+		if ($(document).height() <= $(window).height()) {
+			load_search_results()
+		}
+	})
 }
 
 function apply_price_filter (node) {
-    storage.get(function (settings) {
-        if (settings.hide_priceabove
-        && settings.priceabove_value !== '' 
-        && !(Number.isNaN(settings.priceabove_value))) { 
-            var html = $(node).find("div.col.search_price.responsive_secondrow").html()
-            var intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "").replace(",", "");
-            intern = intern.split(/\s+/);
-            for(var idx=intern.length; idx>0; idx--){
-                if(intern[idx-1].length == 0){
-                    continue;
-                }
-                var price = Number(intern[idx-1]);
-                if(!Number.isNaN(price) && price > settings.priceabove_value){
-                    $(node).hide()
-                    break;
-                }
-            }
-        }
-        if ($(document).height() <= $(window).height()) {
-            load_search_results()
-        }
-    })
+	storage.get(function (settings) {
+		if (settings.hide_priceabove
+		&& settings.priceabove_value !== '' 
+		&& !(Number.isNaN(settings.priceabove_value))) { 
+			var html = $(node).find("div.col.search_price.responsive_secondrow").html()
+			var intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "").replace(",", "");
+			intern = intern.split(/\s+/);
+			for(var idx=intern.length; idx>0; idx--){
+				if(intern[idx-1].length == 0){
+					continue;
+				}
+				var price = Number(intern[idx-1]);
+				if(!Number.isNaN(price) && price > settings.priceabove_value){
+					$(node).hide()
+					break;
+				}
+			}
+		}
+		if ($(document).height() <= $(window).height()) {
+			load_search_results()
+		}
+	})
 }
 
 function validate_price (priceText, event) {
-    priceText += event.key;
-    var price = Number(priceText);
-    return !(Number.isNaN(price));
+	if(event.key === 'Enter' ) return true;
+	priceText += event.key;
+	var price = Number(priceText);
+	return !(Number.isNaN(price));
 }
 
 function hexToRgb(hex) {
@@ -2427,31 +2428,31 @@ function display_coupon_message(appid) {
 
 				$('#game_area_purchase').before($(""+
 				"<div class=\"early_access_header\">" +
-				"    <div class=\"heading\">" +
-				"        <h1 class=\"inset\">" + localized_strings.coupon_available + "</h1>" +
-				"        <h2 class=\"inset\">" + localized_strings.coupon_application_note + "</h2>" +
-				"        <p>" + localized_strings.coupon_learn_more + "</p>" +
-				"    </div>" +
-				"    <div class=\"devnotes\">" +
-				"        <table border=0>" +
-				"            <tr>" +
-				"                <td rowspan=3>" +
-				"                    <img src=\"//cdn.steamcommunity.com/economy/image/" + getValue(appid + "coupon_imageurl") + "\"/>" +
-				"                </td>" +
-				"                <td valign=center>" +
-				"                    <h1>" + coupon_title + "</h1>" +
-				"                </td>" +
-				"            </tr>" +
-				"            <tr>" +
-				"                <td>" + coupon_discount_note + "</td>" +
-				"            </tr>" +
-				"            <tr>" +
-				"                <td>" +
-				"                    <font style=\"color:#A75124;\">" + coupon_date + "</font>" +
-				"                </td>" +
-				"            </tr>" +
-				"        </table>" +
-				"    </div>" +
+				"	<div class=\"heading\">" +
+				"		<h1 class=\"inset\">" + localized_strings.coupon_available + "</h1>" +
+				"		<h2 class=\"inset\">" + localized_strings.coupon_application_note + "</h2>" +
+				"		<p>" + localized_strings.coupon_learn_more + "</p>" +
+				"	</div>" +
+				"	<div class=\"devnotes\">" +
+				"		<table border=0>" +
+				"			<tr>" +
+				"				<td rowspan=3>" +
+				"					<img src=\"//cdn.steamcommunity.com/economy/image/" + getValue(appid + "coupon_imageurl") + "\"/>" +
+				"				</td>" +
+				"				<td valign=center>" +
+				"					<h1>" + coupon_title + "</h1>" +
+				"				</td>" +
+				"			</tr>" +
+				"			<tr>" +
+				"				<td>" + coupon_discount_note + "</td>" +
+				"			</tr>" +
+				"			<tr>" +
+				"				<td>" +
+				"					<font style=\"color:#A75124;\">" + coupon_date + "</font>" +
+				"				</td>" +
+				"			</tr>" +
+				"		</table>" +
+				"	</div>" +
 				"</div>"));
 
 				var $price_div = $(".game_purchase_action:first"),
@@ -2475,16 +2476,16 @@ function display_coupon_message(appid) {
 
 					$price_div[0].innerHTML = ""+
 						"<div class=\"game_purchase_action_bg\">" +
-						"    <div class=\"discount_block game_purchase_discount\">" +
-						"        <div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
-						"        <div class=\"discount_prices\">" +
-						"            <div class=\"discount_original_price\">" + formatCurrency(original_price) + "</div>" +
-						"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price) + "</div>" +
-						"        </div>" +
-						"    </div>" +
+						"	<div class=\"discount_block game_purchase_discount\">" +
+						"		<div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
+						"		<div class=\"discount_prices\">" +
+						"			<div class=\"discount_original_price\">" + formatCurrency(original_price) + "</div>" +
+						"			<div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price) + "</div>" +
+						"		</div>" +
+						"	</div>" +
 						"<div class=\"btn_addtocart\">" +
-						"        <a class=\"btnv6_green_white_innerfade btn_medium\" href=\"javascript:addToCart( " + cart_id + ");\"><span>" + localized_strings.add_to_cart + "</span></a>" +
-						"    </div>" +
+						"		<a class=\"btnv6_green_white_innerfade btn_medium\" href=\"javascript:addToCart( " + cart_id + ");\"><span>" + localized_strings.add_to_cart + "</span></a>" +
+						"	</div>" +
 						"</div>";
 				}
 			}
@@ -3511,15 +3512,15 @@ function add_hide_buttons_to_search() {
 			}
 			add_hide_buttons_to_search_click();
 		});
-		$("#es_notpriceabove_val").click(function(ev){
-			ev.stopPropagation()
-		});
-		$("#es_notpriceabove_val").keypress(function(ev){
-			return validate_price(this.value, ev);
-		});
 		
-		var elem = document.getElementById("es_notpriceabove_val")
-		if (elem !== undefined && elem != null) {
+		var elem = document.getElementById("es_notpriceabove_val");
+		if (elem !== undefined && elem !== null) {
+			elem.onclick = function(ev){
+				ev.stopPropagation()
+			}
+			elem.onkeypress = function(ev){
+				return validate_price(this.value, ev);
+			};
 			elem.onchange = function(){
 				var price = '';
 				if(this.value != ''){
