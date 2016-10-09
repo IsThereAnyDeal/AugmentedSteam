@@ -3512,9 +3512,11 @@ function add_hide_buttons_to_search() {
 			}
 			add_hide_buttons_to_search_click();
 		});
+		document.getElementById("es_notpriceabove").title = localized_strings.price_above_tooltip;
 		
 		var elem = document.getElementById("es_notpriceabove_val");
 		if (elem !== undefined && elem !== null) {
+			elem.title = localized_strings.price_above_tooltip;
 			elem.onclick = function(ev){
 				ev.stopPropagation()
 			}
