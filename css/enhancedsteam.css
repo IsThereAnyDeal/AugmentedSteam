@@ -851,15 +851,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	border: none;
 	color: rgba(255, 255, 255, .8);
 	border-radius: 2px;
+	cursor: pointer;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
 }
-.es-leave-selected {	
+.es-group-leave-button:disabled {	
 	opacity: 0.5;
-	cursor: default !important;
-}
-.es-leave-selected.active{
-	opacity: 1;
-	cursor: pointer !important;
 }
 .es-leave-all {
 	background: linear-gradient(to bottom, #D00707 5%, #690404 95%);
@@ -871,14 +867,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es-select-checkbox {
 	margin-left: 10px;
+	cursor: pointer;
 }
 .es-row-selected {
 	background-color: #1A2533 !important;
 	box-shadow: inset 0 0 1px #506885;
-}
-.es-group-leave-button,
-.es-select-checkbox {
-	cursor: pointer;
 }
 .es-rejoin-group {
 	font-size: 12px;
