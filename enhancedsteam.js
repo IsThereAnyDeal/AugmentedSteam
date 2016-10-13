@@ -8985,16 +8985,16 @@ function add_booster_prices() {
 
 function groups_leave_options() {
 	if (is_signed_in && !$('.error_ctn').length) {
-		var profileurl	= $('.user_avatar')[0].href || $('.user_avatar a')[0].href,
-			processURL	= profileurl + 'home_process',
-			sessionID	= $('#sessionID').val();
+		var sessionID = $('#sessionID').val();
 
 		// Insert required data into the DOM
-		$('.sectionText').append(`<div class="es-leave-options">
-			<button class="es-group-leave-button es-leave-selected">` + localized_strings.leave_group_selected + `</button> 
-			<button class="es-group-leave-button es-leave-all">` + localized_strings.leave_group_all + `</button>
-			<input type="checkbox" class="es-check-all es-select-checkbox" />
-			</div>`);
+		$('.sectionText').append(`
+			<div class="es-leave-options">
+				<button class="es-group-leave-button es-leave-selected" disabled>` + localized_strings.leave_group_selected + `</button>
+				<button class="es-group-leave-button es-leave-all">` + localized_strings.leave_group_all + `</button>
+				<input type="checkbox" class="es-check-all es-select-checkbox" />
+			</div>
+		`);
 		$('.groupLeftBlock').append('<input type="checkbox" class="es-leave-group es-select-checkbox" />').wrapInner('<span class="es-links-wrap" />');
 
 		// Bind actions to "leave" buttons
@@ -9023,11 +9023,7 @@ function groups_leave_options() {
 		// Highlight group row when selected
 		$('.es-select-checkbox').change(function(e){
 			$(this).closest('.groupBlock').toggleClass('es-row-selected', $(this).prop('checked'));
-			if ($(".es-select-checkbox:checked").length > 0) {
-				$(".es-leave-selected").addClass("active");
-			} else {
-				$(".es-leave-selected").removeClass("active");
-			}
+			$(".es-leave-selected").prop("disabled", !$(".es-select-checkbox:checked").length > 0);
 		});
 
 		// Re-Join a group
@@ -9076,10 +9072,9 @@ function groups_leave_options() {
 					// If the user is Admin in this group confirmation before leaving is needed
 					if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
 						$.ajax({method: 'POST',
-								url: processURL,
+								url: profile_url + 'home_process',
 								data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
-								beforeSend: function(){ $(row).addClass('es-progress'); },
-								cache: true
+								beforeSend: function(){ $(row).addClass('es-progress'); }
 						}).done(function() {
 							$(row).addClass('es-complete').animate({opacity: '.30'}, 500, function(){
 								$(row).removeClass('es-inaction es-progress es-complete');
