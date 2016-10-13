@@ -903,7 +903,7 @@ function highlight_node(node, color) {
 	storage.get(function(settings) {
 		if (settings.highlight_excludef2p === undefined) { settings.highlight_excludef2p = false; storage.set({'highlight_excludef2p': settings.highlight_excludef2p}); }
 		if (settings.highlight_excludef2p) {
-			if ($(node).html().match(/<div class="(tab_price|large_cap_price|col search_price|main_cap_price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i)) {
+			if ($(node).html().match(/<div class="(tab_price|large_cap_price|col search_price|main_cap_price|price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i)) {
 				return;
 			}
 			if ($(node).html().match(/<h5>(Free to Play|Play for Free!)<\/h5>/i)) {
