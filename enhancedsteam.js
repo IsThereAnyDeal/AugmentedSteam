@@ -903,16 +903,10 @@ function apply_price_filter (node) {
 		&& !(Number.isNaN(settings.priceabove_value))) { 
 			var html = $(node).find("div.col.search_price.responsive_secondrow").html()
 			var intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "").replace(",", "");
-			intern = intern.split(/\s+/);
-			for(var idx=intern.length; idx>0; idx--){
-				if(intern[idx-1].length == 0){
-					continue;
-				}
-				var price = Number(intern[idx-1]);
-				if(!Number.isNaN(price) && price > settings.priceabove_value){
-					$(node).hide()
-					break;
-				}
+			var trim = intern.trim();
+			var parsed = parse_currency(trim);
+			if (parsed && parsed.value > settings.priceabove_value) {
+				$(node).hide()
 			}
 		}
 		if ($(document).height() <= $(window).height()) {
