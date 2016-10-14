@@ -902,9 +902,8 @@ function apply_price_filter (node) {
 		&& settings.priceabove_value !== '' 
 		&& !(Number.isNaN(settings.priceabove_value))) { 
 			var html = $(node).find("div.col.search_price.responsive_secondrow").html()
-			var intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "").replace(",", "");
-			var trim = intern.trim();
-			var parsed = parse_currency(trim);
+			var intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
+			var parsed = parse_currency(intern.trim());
 			if (parsed && parsed.value > settings.priceabove_value) {
 				$(node).hide()
 			}
