@@ -1327,18 +1327,14 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_buttons() {
-	if(is_signed_in) {
+	if (is_signed_in && window.location.href.startsWith(profile_url)) {
 		storage.get(function(settings) {
 			if (settings.showemptywishlist === undefined) { 
 				settings.showemptywishlist = true; 
 				storage.set({'showemptywishlist': settings.showemptywishlist}); 
 			}
-			if (!settings.showemptywishlist) {
-				return;
-			}
-		
-			var profile = $(".playerAvatar a")[0].href.replace(window.location.protocol + "//steamcommunity.com", "");
-			if (window.location.pathname.startsWith(profile)) {
+
+			if (settings.showemptywishlist) {
 				var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings.empty_wishlist + "</div>");
 				$(".save_actions_enabled").filter(":last").after(empty_buttons);
 				$("#es_empty_wishlist").click(empty_wishlist);
