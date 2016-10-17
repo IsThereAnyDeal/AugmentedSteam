@@ -6056,12 +6056,8 @@ function init_hd_player() {
 }
 
 function media_slider_expander(in_store) {
-	var details = $(".workshop_item_header").find(".col_right").first(),
-		detailsBuilt = false;
-
-	if (in_store) {
-		details = $("#game_highlights").find(".rightcol").first();
-	}
+	var detailsBuilt = false,
+		details = in_store ? $("#game_highlights").find(".rightcol").first() : $(".workshop_item_header").find(".col_right").first();
 
 	if (details.length) {
 		$("#highlight_player_area").append(`

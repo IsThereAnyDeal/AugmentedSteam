@@ -1035,6 +1035,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  **************************************/
 .highlight_ctn,
 .highlight_overflow,
+.workshop_item_header #highlight_player_area,
 .workshop_item_header .highlight_player_item iframe,
 .workshop_item_header .workshopItemPreviewImageEnlargeable,
 .workshop_item_header .workshopItemPreviewImageEnlargeableContainer {
@@ -1080,16 +1081,17 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .workshop_item_header.es_expanded .col_right {
 	display: none;
 }
-.workshop_item_header.es_expanded .highlight_ctn,
-.workshop_item_header.es_expanded .highlight_overflow {
-	width: 920px;
-}
 .workshop_item_header.es_expanded .highlight_player_item iframe,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeable,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeableContainer {
-	width: 920px;
+	width: auto;
 	height: 520px;
 	max-width: 920px !important;
+}
+.workshop_item_header.es_expanded .highlight_ctn,
+.workshop_item_header.es_expanded .highlight_overflow,
+.workshop_item_header.es_expanded .highlight_player_item iframe {
+	width: 920px;
 }
 .workshop_item_header .es_slider_toggle {
 	display: block;
