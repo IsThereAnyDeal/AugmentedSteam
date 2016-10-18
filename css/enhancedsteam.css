@@ -1986,3 +1986,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: calc(100% - 10px);
 	padding: 5px;
 }
+
+/***************************************
+ * Global Achievements pages
+ **************************************/
+.achieveRow:not(.unlocked) > .compareImg > img:not(:hover) {
+	opacity: 0.15;
+	filter: grayscale(75%);
+	transition: opacity 0.25s ease-in-out;
+}
