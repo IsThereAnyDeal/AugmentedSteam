@@ -886,6 +886,41 @@ function highlight_notinterested(node) {
 	});
 }
 
+function apply_rate_filter (node) {
+	storage.get(function (settings) {
+		if (settings.hide_mixed && $(node).find('.search_reviewscore').children('span.search_review_summary.mixed').length > 0) { $(node).hide(); }
+		if (settings.hide_negative && $(node).find('.search_reviewscore').children('span.search_review_summary.negative').length > 0) { $(node).hide(); }
+		if ($(document).height() <= $(window).height()) {
+			load_search_results()
+		}
+	})
+}
+
+function apply_price_filter (node) {
+	storage.get(function (settings) {
+		if (settings.hide_priceabove
+		&& settings.priceabove_value !== '' 
+		&& !(Number.isNaN(settings.priceabove_value))) { 
+			var html = $(node).find("div.col.search_price.responsive_secondrow").html()
+			var intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
+			var parsed = parse_currency(intern.trim());
+			if (parsed && parsed.value > settings.priceabove_value) {
+				$(node).hide()
+			}
+		}
+		if ($(document).height() <= $(window).height()) {
+			load_search_results()
+		}
+	})
+}
+
+function validate_price (priceText, event) {
+	if(event.key === 'Enter' ) return true;
+	priceText += event.key;
+	var price = Number(priceText);
+	return !(Number.isNaN(price));
+}
+
 function hexToRgb(hex) {
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	return result ? {
@@ -3292,6 +3327,10 @@ function add_hide_buttons_to_search() {
 		if (settings.hide_cart === undefined) { settings.hide_cart = false; storage.set({'hide_cart': settings.hide_cart}); }
 		if (settings.hide_notdiscounted === undefined) { settings.hide_notdiscounted = false; storage.set({'hide_notdiscounted': settings.hide_notdiscounted}); }
 		if (settings.hide_notinterested === undefined) { settings.hide_notinterested = false; storage.set({'hide_notinterested': settings.hide_notinterested}); }
+		if (settings.hide_mixed === undefined) { settings.hide_mixed = false; storage.set({'hide_mixed': settings.hide_mixed}); }
+		if (settings.hide_negative === undefined) { settings.hide_negative = false; storage.set({'hide_negative': settings.hide_negative}); }
+		if (settings.hide_priceabove === undefined) { settings.hide_priceabove = false; storage.set({'hide_priceabove': settings.hide_priceabove}); }
+		if (settings.priceabove_value === undefined) { settings.priceabove_value = ''; storage.set({'priceabove_value': settings.priceabove_value}); }
 		
 		$("#advsearchform").find(".rightcol").prepend(`
 			<div class='block' id='es_hide_menu'>
@@ -3317,6 +3356,21 @@ function add_hide_buttons_to_search() {
 						<div class='tab_filter_control_checkbox'></div>
 						<span class='tab_filter_control_label'>` + localized_strings.notinterested + `</span>
 					</div>
+					<div class='tab_filter_control' id='es_notmixed'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.mixed_item + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_notnegative'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.negative_item + `</span>
+					</div>
+					<div class='tab_filter_control' id='es_notpriceabove'>
+						<div class='tab_filter_control_checkbox'></div>
+						<span class='tab_filter_control_label'>` + localized_strings.price_above + `</span>
+						<div>
+						<input type="number" id='es_notpriceabove_val' class='es_input_number'></input>
+						</div>
+					</div>
 				</div>
 			</div>
 		`);
@@ -3341,6 +3395,21 @@ function add_hide_buttons_to_search() {
 			$("#es_notinterested").addClass("checked");
 		}
 
+		if (settings.hide_mixed) {
+			$("#es_notmixed").addClass("checked");
+		}
+
+		if (settings.hide_negative) {
+			$("#es_notnegative").addClass("checked");
+		}
+		
+		if (settings.hide_priceabove) {
+			$("#es_notpriceabove").addClass("checked");
+		}
+		if (settings.priceabove_value ) {
+			$("#es_notpriceabove_val").val(settings.priceabove_value);
+		}
+
 		function add_hide_buttons_to_search_click() {
 			$(".search_result_row").each(function() {
 				$(this).css("display", "block");
@@ -3349,6 +3418,9 @@ function add_hide_buttons_to_search() {
 				if ($("#es_cart_games").is(".checked") && $(this).is(".ds_incart")) { $(this).hide(); }
 				if ($("#es_notdiscounted").is(".checked") && $(this).find(".search_discount").children("span").length == 0) { $(this).hide(); }
 				if ($("#es_notinterested").is(".checked")) { highlight_notinterested(this); }
+				if ($("#es_notmixed").is(".checked") && $(this).find(".search_reviewscore").children("span.search_review_summary.mixed").length > 0) { $(this).hide(); }
+				if ($("#es_notnegative").is(".checked") && $(this).find(".search_reviewscore").children("span.search_review_summary.negative").length > 0) { $(this).hide(); }
+				if ($("#es_notpriceabove").is(".checked")) { apply_price_filter(this); }
 			});
 		}
 
@@ -3406,6 +3478,62 @@ function add_hide_buttons_to_search() {
 			}
 			add_hide_buttons_to_search_click();
 		});
+
+		$("#es_notmixed").click(function() {
+			if ($("#es_notmixed").hasClass("checked")) {
+				$("#es_notmixed").removeClass("checked");
+				storage.set({'hide_mixed': false });
+			} else {
+				$("#es_notmixed").addClass("checked");
+				storage.set({'hide_mixed': true });
+			}
+			add_hide_buttons_to_search_click();
+		});
+
+		$("#es_notnegative").click(function() {
+			if ($("#es_notnegative").hasClass("checked")) {
+				$("#es_notnegative").removeClass("checked");
+				storage.set({'hide_negative': false });
+			} else {
+				$("#es_notnegative").addClass("checked");
+				storage.set({'hide_negative': true });
+			}
+			add_hide_buttons_to_search_click();
+		});
+		
+		$("#es_notpriceabove").click(function() {
+			if ($("#es_notpriceabove").hasClass("checked")) {
+				$("#es_notpriceabove").removeClass("checked");
+				storage.set({'hide_priceabove': false });
+			} else {
+				$("#es_notpriceabove").addClass("checked");
+				storage.set({'hide_priceabove': true });
+			}
+			add_hide_buttons_to_search_click();
+		});
+		document.getElementById("es_notpriceabove").title = localized_strings.price_above_tooltip;
+		
+		var elem = document.getElementById("es_notpriceabove_val");
+		if (elem !== undefined && elem !== null) {
+			elem.title = localized_strings.price_above_tooltip;
+			elem.onclick = function(ev){
+				ev.stopPropagation()
+			}
+			elem.onkeypress = function(ev){
+				return validate_price(this.value, ev);
+			};
+			elem.onchange = function(){
+				var price = '';
+				if(this.value != ''){
+					var price = Number(this.value);
+					if( Number.isNaN(price) ) {
+						price = '';
+					}
+				}
+				storage.set({"priceabove_value": price });
+				add_hide_buttons_to_search_click()
+			}
+		}
 	});
 }
 
@@ -7255,6 +7383,8 @@ function start_highlights_and_tags(){
 				}
 
 				highlight_notinterested(node);
+				apply_rate_filter(node);
+				apply_price_filter(node);
 			});
 		});
 	}, 500);
@@ -7315,6 +7445,8 @@ function start_highlighting_node(node) {
 	}
 
 	highlight_notinterested(node);
+	apply_rate_filter(node);
+	apply_price_filter(node);
 }
 
 // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
