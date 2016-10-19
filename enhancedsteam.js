@@ -3335,7 +3335,7 @@ function add_hide_buttons_to_search() {
 		$("#advsearchform").find(".rightcol").prepend(`
 			<div class='block' id='es_hide_menu'>
 				<div class='block_header'><div>` + localized_strings.hide + `</div></div>
-				<div class='block_content block_content_inner'>
+				<div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
 					<div class='tab_filter_control' id='es_owned_games'>
 						<div class='tab_filter_control_checkbox'></div>
 						<span class='tab_filter_control_label'>` + localized_strings.options.owned + `</span>
@@ -3372,8 +3372,10 @@ function add_hide_buttons_to_search() {
 						</div>
 					</div>
 				</div>
+				<a class="see_all_expander" href="#" id="es_hide_expander" onclick="ExpandOptions(this, 'es_hide_options'); return false;"></a>
 			</div>
 		`);
+		$("#es_hide_expander").text($(".see_all_expander:last").text());
 
 		if (settings.hide_owned) {
 			$("#es_owned_games").addClass("checked");
