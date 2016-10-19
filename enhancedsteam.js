@@ -7346,7 +7346,7 @@ function start_highlights_and_tags(){
 		"div.home_area_spotlight",		// Midweek and weekend deals
 		"div.browse_tag_game",			// Tagged games
 		"div.similar_grid_item",		// Items on the "Similarly tagged" pages
-		"div.tab_item",					// Items on new homepage
+		"a.tab_item",					// Items on new homepage
 		"a.special",					// new homepage specials
 		"div.curated_app_item",			// curated app items!
 		"a.summersale_dailydeal"		// Summer sale daily deal
