@@ -1,5 +1,9 @@
 ﻿v9.0
 -----
++ Added an option to hide the "Empty Wishlist" button on users wishlist pages
++ Added additional search filtering options to hide games based on mixed or negative review scores
++ Added a search filter to exclude items over a certain price
+: Fixed a bug on workshop items where the media slider could distort images in some cases
 
 
 v8.9
