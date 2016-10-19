@@ -3399,14 +3399,20 @@ function add_hide_buttons_to_search() {
 
 		if (settings.hide_mixed) {
 			$("#es_notmixed").addClass("checked");
+			$("#es_hide_options").css("height", "auto");
+			$("#es_hide_expander").hide();
 		}
 
 		if (settings.hide_negative) {
 			$("#es_notnegative").addClass("checked");
+			$("#es_hide_options").css("height", "auto");
+			$("#es_hide_expander").hide();
 		}
 		
 		if (settings.hide_priceabove) {
 			$("#es_notpriceabove").addClass("checked");
+			$("#es_hide_options").css("height", "auto");
+			$("#es_hide_expander").hide();
 		}
 		if (settings.priceabove_value ) {
 			$("#es_notpriceabove_val").val(settings.priceabove_value);
