@@ -4083,7 +4083,13 @@ function add_steamrep_api() {
 }
 
 function add_posthistory_link() {
-	$("#profile_action_dropdown .popup_body .profile_actions_follow").after("<a class='popup_menu_item' href='" + window.location.pathname + "/posthistory'><img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; " + localized_strings.post_history + "</a>");
+	$("#profile_action_dropdown .popup_body .profile_actions_follow").after("<a class='popup_menu_item' id='es_posthistory' href='" + window.location.pathname + "/posthistory'><img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; " + localized_strings.post_history + "</a>");
+}
+
+function add_nickname_link() {
+	if ($("#profile_action_dropdown .popup_body").find("img[src*='notification_icon_edit_bright']").length == 0) {
+		$("#es_posthistory").after("<a class='popup_menu_item' href='#' onclick='ShowNicknameModal(); HideMenu( \"profile_action_dropdown_link\", \"profile_action_dropdown\" ); return false;'><img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png'>&nbsp; " + localized_strings.add_nickname + "</a>");
+	}
 }
 
 function add_profile_style() {
@@ -9644,6 +9650,7 @@ $(document).ready(function(){
 							hide_spam_comments();
 							add_steamrep_api();
 							add_posthistory_link();
+							add_nickname_link();
 							add_profile_style();
 							chat_dropdown_options();
 							ingame_name_link();
