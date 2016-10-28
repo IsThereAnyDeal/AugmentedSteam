@@ -1987,6 +1987,21 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	padding: 5px;
 }
 
+.es_input_text {
+	background-color: #2a3f5a;
+        color: #fff;
+    border: 1px solid #000;
+    border-radius: 3px;
+    box-shadow: 1px 1px 0px #45556c;
+    width: 200px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.es_input_text.blur {
+	color:#62696e;
+}
+
 /***************************************
  * Global Achievements pages
  **************************************/
