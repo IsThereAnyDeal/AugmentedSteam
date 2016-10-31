@@ -5,6 +5,7 @@
 + Added a search filter to exclude items over a certain price
 + Added a feature that dims unlocked achievement icons on progress pages
 + Adds an "Add Nickname" button to profiles of users you're not currently friends with
++ Added SteamTrades icon to user's Steam profile pages
 : Fixed a bug where some homepage elements weren't highlighted correctly
 : Fixed a bug on workshop items where the media slider could distort images in some cases
 
