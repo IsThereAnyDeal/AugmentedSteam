@@ -239,6 +239,7 @@
     "show_wishlist_total": "Show wishlist Total",
     "tag_short": "Use short tags to save space",
     "no_price_data": "No price data available",
+    "exclude_tags": "Exclude tags",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
