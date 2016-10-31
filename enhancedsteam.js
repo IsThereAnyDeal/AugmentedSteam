@@ -5040,7 +5040,8 @@ function inventory_market_prepare() {
 					g_sessionID,
 					g_ActiveInventory.selectedItem.contextid,
 					g_rgWalletInfo.wallet_currency,
-					g_ActiveInventory.owner.strSteamId
+					g_ActiveInventory.owner.strSteamId,
+					g_ActiveInventory.selectedItem.market_marketable_restriction
 				]
 			}, "*");
 		});
@@ -5064,6 +5065,7 @@ function inventory_market_helper(response) {
 		contextID = response[8];
 		wallet_currency = response[9],
 		owner_steamid = response[10],
+		restriction = response[11],
 		is_gift = response[5] && /Gift/i.test(response[5]),
 		is_booster = hash_name && /Booster Pack/i.test(hash_name),
 		owns_inventory = (owner_steamid === is_signed_in);
@@ -5320,6 +5322,63 @@ function inventory_market_helper(response) {
 					}
 				}
 			});
+
+			// Item in user's inventory is not marketable due to market restriction
+			if (restriction > 0 && marketable == 0) {
+				var dataLowest = $(thisItem).data("lowest-price"),
+					dataSold = $(thisItem).data("sold-volume");
+
+				$sideMarketActs.show().html("<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
+
+				// "View in market" link
+				html += '<div style="height: 24px;"><a href="//steamcommunity.com/market/listings/' + global_id + '/' + encodeURI(hash_name) + '">' + localized_strings.view_in_market + '</a></div>';
+
+				// Check if price is stored in data
+				if (dataLowest) {
+					html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+					if (dataLowest !== "nodata") {
+						html += localized_strings.starting_at + ': ' + dataLowest;
+						// Check if volume is stored in data
+						if (dataSold) {
+							html += '<br>' + localized_strings.last_24.replace("__sold__", dataSold);
+						}
+					} else {
+						html += localized_strings.no_price_data;
+					}
+
+					html += '</div>';
+
+					$sideMarketActs.html(html);
+				} else {
+					get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + encodeURI(hash_name), function(txt) {
+						var data = JSON.parse(txt);
+
+						html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+						if (data && data.success) {
+							$(thisItem).data("lowest-price", data.lowest_price || "nodata");
+							if (data.lowest_price) {
+								html += localized_strings.starting_at + ': ' + data.lowest_price;
+								if (data.volume) { 
+									$(thisItem).data("sold-volume", data.volume);
+									html += '<br>' + localized_strings.last_24.replace("__sold__", data.volume);
+								}
+							} else {
+								html += localized_strings.no_price_data;
+							}
+						} else {
+							html += localized_strings.no_price_data;
+						}
+
+						html += '</div>';
+
+						$sideMarketActs.html(html);
+					}).fail(function(){ // At least show the "View in Market" link
+						$sideMarketActs.html(html);
+					});
+				}
+			}
 		}
 		// If is not own inventory but the item is marketable then we need to build the HTML for showing info
 		else if (marketable) {

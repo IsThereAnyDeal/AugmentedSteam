@@ -8,6 +8,7 @@
 + Adds an "Add Nickname" button to profiles of users you're not currently friends with
 + Added SteamTrades icon to user's Steam profile pages
 + Added sort and view options to other user's badge pages
++ Added market links and pricing information to inventory items with market restrictions
 : Fixed a bug where some homepage elements weren't highlighted correctly
 : Fixed a bug on workshop items where the media slider could distort images in some cases
 
