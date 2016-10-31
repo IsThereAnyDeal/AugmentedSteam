@@ -8404,156 +8404,161 @@ function add_badge_filter() {
 function add_badge_sort() {
 	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 		var sorts = ["p", "c", "a", "r"],
-			sorted = window.location.search.replace("?sort=", "") || "p",
-			linksHtml = "";
+			sorted = window.location.search.replace("?sort=", "") || "p";
+	} else {
+		var sorts = ["c", "a", "r"],
+			sorted = window.location.search.replace("?sort=", "") || "c";
+	}
+	linksHtml = "";
 
-		// Build dropdown links HTML
-		$(".profile_badges_sortoptions").children("a").hide().each(function(i, link){
-			linksHtml += '<a class="badge_sort_option popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
-		});
+	// Build dropdown links HTML
+	$(".profile_badges_sortoptions").children("a").hide().each(function(i, link){
+		linksHtml += '<a class="badge_sort_option popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
+	});
+	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
 		linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + localized_strings.most_drops + '</a>';
 		linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + localized_strings.drops_value + '</a>';
+	}
 
-		$(".profile_badges_sortoptions").wrap("<span id='wishlist_sort_options'></span>");
+	$(".profile_badges_sortoptions").wrap("<span id='wishlist_sort_options'></span>");
 
-		// Insert dropdown options links
-		$(".profile_badges_sortoptions").append(`
-			<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-				<div class="popup_body popup_menu">` + linksHtml + `</div>
-			</div>
-		`);
+	// Insert dropdown options links
+	$(".profile_badges_sortoptions").append(`
+		<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+			<div class="popup_body popup_menu">` + linksHtml + `</div>
+		</div>
+	`);
 
-		// Insert dropdown button
-		$(".profile_badges_sortoptions").find("span").first().after(`
-			<span id="wishlist_sort_options">
-				<div class="store_nav">
-					<div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
-						<span class="pulldown">
-							<div id="es_sort_active" style="display: inline;">` + $("#es_sort_flyout").find("a.by_" + sorted).text() + `</div>
-							<span></span>
-						</span>
-					</div>
+	// Insert dropdown button
+	$(".profile_badges_sortoptions").find("span").first().after(`
+		<span id="wishlist_sort_options">
+			<div class="store_nav">
+				<div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+					<span class="pulldown">
+						<div id="es_sort_active" style="display: inline;">` + $("#es_sort_flyout").find("a.by_" + sorted).text() + `</div>
+						<span></span>
+					</span>
 				</div>
-			</span>
-		`);
+			</div>
+		</span>
+	`);
 
-		runInPageContext(function() { BindAutoFlyoutEvents(); });
+	runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-		function add_badge_sort_drops() {
-			var badgeRows = [];
-			$('.badge_row').each(function () {
-				var push = new Array();
-				if ($(this).html().match(/progress_info_bold".+\d/)) {
-					push[0] = this.outerHTML;
-					push[1] = $(this).find(".progress_info_bold").html().match(/\d+/)[0];
-				} else {
-					push[0] = this.outerHTML;
-					push[1] = "0";
-				}
-				badgeRows.push(push);
-				this.parentNode.removeChild(this);
-			});
-
-			badgeRows.sort(function(a,b) {
-				var dropsA = parseInt(a[1],10);
-				var dropsB = parseInt(b[1],10);
-
-				if (dropsA < dropsB) {
-					return 1;
-				} else {
-					return -1;
-				}
-			});
-
-			$('.badge_row').each(function () { $(this).hide(); });
-
-			$(badgeRows).each(function() {
-				$(".badges_sheet:first").append(this[0]);
-			});
-
-			$(".active").removeClass("active");
-			$("#es_badge_sort_drops").addClass("active");
-			resetLazyLoader();
-		}
-
-		var sort_drops_done = false;
-
-		$("#es_badge_sort_drops").on("click", function() {
-			var sort_text = $(this).text();
-			if ($(".pagebtn").length > 0 && sort_drops_done == false) {
-				var base_url = window.location.origin + window.location.pathname + "?p=",
-					last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
-					deferred = new $.Deferred(),
-					promise = deferred.promise(),
-					pages = [];
-
-				for (page = 2; page <= last_page; page++) {
-					pages.push(page);
-				}
-
-				$.each(pages, function (i, item) {
-					promise = promise.then(function() {
-						return $.ajax(base_url + item).done(function(data) {
-							var html = $.parseHTML(data);
-							$(html).find(".badge_row").each(function(i, obj) {
-								$(".badges_sheet").append(obj);
-							});
-						});
-					});
-				});
-
-				promise.done(function() {
-					$(".profile_paging").hide();
-					sort_drops_done = true;
-					add_badge_sort_drops();
-					$("#es_sort_active").text(sort_text);
-					$("#es_sort_flyout").fadeOut();
-				});
-
-				deferred.resolve();
+	function add_badge_sort_drops() {
+		var badgeRows = [];
+		$('.badge_row').each(function () {
+			var push = new Array();
+			if ($(this).html().match(/progress_info_bold".+\d/)) {
+				push[0] = this.outerHTML;
+				push[1] = $(this).find(".progress_info_bold").html().match(/\d+/)[0];
 			} else {
-				add_badge_sort_drops();
+				push[0] = this.outerHTML;
+				push[1] = "0";
+			}
+			badgeRows.push(push);
+			this.parentNode.removeChild(this);
+		});
+
+		badgeRows.sort(function(a,b) {
+			var dropsA = parseInt(a[1],10);
+			var dropsB = parseInt(b[1],10);
+
+			if (dropsA < dropsB) {
+				return 1;
+			} else {
+				return -1;
 			}
 		});
 
-		$("#es_badge_sort_value").on("click", function() {
-			var sort_text = $(this).text();
-			var badgeRows = [];
-			$('.badge_row').each(function () {
-				var push = new Array();
-				if ($(this).find(".es_card_drop_worth").length > 0) {
-					push[0] = this.outerHTML;
-					push[1] = $(this).find(".es_card_drop_worth").html();
-				} else {
-					push[0] = this.outerHTML;
-					push[1] = localized_strings.drops_worth_avg;
-				}
-				badgeRows.push(push);
-				$(this).remove();
-			});
+		$('.badge_row').each(function () { $(this).hide(); });
 
-			badgeRows.sort(function(a, b) {
-				var worthA = a[1];
-				var worthB = b[1];
-
-				if (worthA < worthB) {
-					return 1;
-				} else {
-					return -1;
-				}
-			});
-
-			$('.badge_row').each(function () { $(this).hide(); });
-
-			$(badgeRows).each(function() {
-				$(".badges_sheet:first").append(this[0]);
-			});
-
-			resetLazyLoader();
-			$("#es_sort_active").text(sort_text);
-			$("#es_sort_flyout").fadeOut();
+		$(badgeRows).each(function() {
+			$(".badges_sheet:first").append(this[0]);
 		});
+
+		$(".active").removeClass("active");
+		$("#es_badge_sort_drops").addClass("active");
+		resetLazyLoader();
 	}
+
+	var sort_drops_done = false;
+
+	$("#es_badge_sort_drops").on("click", function() {
+		var sort_text = $(this).text();
+		if ($(".pagebtn").length > 0 && sort_drops_done == false) {
+			var base_url = window.location.origin + window.location.pathname + "?p=",
+				last_page = parseFloat($(".profile_paging:first").find(".pagelink:last").text()),
+				deferred = new $.Deferred(),
+				promise = deferred.promise(),
+				pages = [];
+
+			for (page = 2; page <= last_page; page++) {
+				pages.push(page);
+			}
+
+			$.each(pages, function (i, item) {
+				promise = promise.then(function() {
+					return $.ajax(base_url + item).done(function(data) {
+						var html = $.parseHTML(data);
+						$(html).find(".badge_row").each(function(i, obj) {
+							$(".badges_sheet").append(obj);
+						});
+					});
+				});
+			});
+
+			promise.done(function() {
+				$(".profile_paging").hide();
+				sort_drops_done = true;
+				add_badge_sort_drops();
+				$("#es_sort_active").text(sort_text);
+				$("#es_sort_flyout").fadeOut();
+			});
+
+			deferred.resolve();
+		} else {
+			add_badge_sort_drops();
+		}
+	});
+
+	$("#es_badge_sort_value").on("click", function() {
+		var sort_text = $(this).text();
+		var badgeRows = [];
+		$('.badge_row').each(function () {
+			var push = new Array();
+			if ($(this).find(".es_card_drop_worth").length > 0) {
+				push[0] = this.outerHTML;
+				push[1] = $(this).find(".es_card_drop_worth").html();
+			} else {
+				push[0] = this.outerHTML;
+				push[1] = localized_strings.drops_worth_avg;
+			}
+			badgeRows.push(push);
+			$(this).remove();
+		});
+
+		badgeRows.sort(function(a, b) {
+			var worthA = a[1];
+			var worthB = b[1];
+
+			if (worthA < worthB) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+
+		$('.badge_row').each(function () { $(this).hide(); });
+
+		$(badgeRows).each(function() {
+			$(".badges_sheet:first").append(this[0]);
+		});
+
+		resetLazyLoader();
+		$("#es_sort_active").text(sort_text);
+		$("#es_sort_flyout").fadeOut();
+	});
 }
 
 function add_achievement_sort() {
