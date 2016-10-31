@@ -3,6 +3,7 @@
 + Added an option to hide the "Empty Wishlist" button on users wishlist pages
 + Added additional search filtering options to hide games based on mixed or negative review scores
 + Added a search filter to exclude items over a certain price
++ Added a search filter to exclude user-selectable tags from search results
 + Added a feature that dims unlocked achievement icons on progress pages
 + Adds an "Add Nickname" button to profiles of users you're not currently friends with
 + Added SteamTrades icon to user's Steam profile pages

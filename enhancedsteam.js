@@ -3336,8 +3336,7 @@ function add_exclude_tags_to_search() {
 					<div class="tab_filter_control_checkbox"></div>
 					<span class="tab_filter_control_label">${this.dataset.loc}</span>
 					</div>`);
-			exclude_item.click(function() { 
-//			runInPageContext(function() {
+			exclude_item.click(function() {
 				var strValues = decodeURIComponent( $("#tags").val() );
 				var value = String(this.dataset.value);
 				if ( !$(this).hasClass( 'checked' ) )
@@ -3365,7 +3364,6 @@ function add_exclude_tags_to_search() {
 					$(this).removeClass('checked');
 				}
 				runInPageContext(function() {AjaxSearchResults();});
-//			})
 			});
 		    tagfilter_exclude_divs.push(exclude_item);
 		});
@@ -3384,10 +3382,10 @@ function add_exclude_tags_to_search() {
 		`;
 
 
-		$("#advsearchform").find(".rightcol").prepend(dom_item);
+		$("#TagFilter_Container").parent().parent().after(dom_item);
 		$("#es_tagfilter_exclude_container").append(tagfilter_exclude_divs);
 		runInPageContext(function() {
-			$J( '#es_tagfilter_exclude_container' ).tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': 'Search for more tags' });
+			$J( '#es_tagfilter_exclude_container' ).tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value });
 		});
 
 }
