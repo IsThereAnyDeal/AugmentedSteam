@@ -3447,7 +3447,7 @@ function add_hide_buttons_to_search() {
 						<div class='tab_filter_control_checkbox'></div>
 						<span class='tab_filter_control_label'>` + localized_strings.price_above + `</span>
 						<div>
-						<input type="number" id='es_notpriceabove_val' class='es_input_number'></input>
+						<input type="number" id='es_notpriceabove_val' class='es_input_number' step=0.01></input>
 						</div>
 					</div>
 				</div>
