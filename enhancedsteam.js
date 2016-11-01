@@ -3328,62 +3328,65 @@ function endless_scrolling_greenlight() {
 }
 
 function add_exclude_tags_to_search() {
-	var tagfilter_divs = $('#TagFilter_Container')[0].children;
-	var tagfilter_exclude_divs = [];
-	$.each(tagfilter_divs, function(i,val) {
-		var exclude_item = $(`<div class="tab_filter_control " data-param="tags" data-value="-${this.dataset.value}" data-loc="${this.dataset.loc}">
-				<div class="tab_filter_control_checkbox"></div>
-				<span class="tab_filter_control_label">${this.dataset.loc}</span>
-				</div>`);
-		exclude_item.click(function() {
-			var strValues = decodeURIComponent( $("#tags").val() );
-			var value = String(this.dataset.value);
-			if ( !$(this).hasClass( 'checked' ) )
-			{
-				var rgValues;
-				if( !strValues )
-					rgValues = [ value ];
+		var tagfilter_divs = $('#TagFilter_Container')[0].children;
+		var tagfilter_exclude_divs = [];
+		//tag numbers from the URL are already in the element with id #tags
+		var tags = decodeURIComponent($("#tags").val()).split(',');
+		$.each(tagfilter_divs, function(i,val) {
+			var item_checked=tags.indexOf("-"+this.dataset.value)>-1?"checked":"";
+			var exclude_item = $(`<div class="tab_filter_control  ${item_checked}" data-param="tags" data-value="-${this.dataset.value}" data-loc="${this.dataset.loc}">
+					<div class="tab_filter_control_checkbox"></div>
+					<span class="tab_filter_control_label">${this.dataset.loc}</span>
+					</div>`);
+			exclude_item.click(function() { 
+				var strValues = decodeURIComponent( $("#tags").val() );
+				var value = String(this.dataset.value);
+				if ( !$(this).hasClass( 'checked' ) )
+				{
+					var rgValues;
+					if( !strValues )
+						rgValues = [ value ];
+					else
+					{
+						rgValues = strValues.split(',');
+						if( $.inArray(value, rgValues) == -1 )
+							rgValues.push(value)
+					}
+
+					$("#tags").val( rgValues.join(',') );
+					$(this).addClass('checked');
+				}
 				else
 				{
-					rgValues = strValues.split(',');
-					if( $.inArray(value, rgValues) == -1 )
-						rgValues.push(value)
+					var rgValues = strValues.split(',');
+					if( rgValues.indexOf(value) != -1 )
+						rgValues.splice( rgValues.indexOf(value), 1 );
+
+					$("#tags").val( rgValues.join(',') );
+					$(this).removeClass('checked');
 				}
-
-				$("#tags").val( rgValues.join(',') );
-				$(this).addClass('checked');
-			}
-			else
-			{
-				var rgValues = strValues.split(',');
-				if( rgValues.indexOf(value) != -1 )
-					rgValues.splice( rgValues.indexOf(value), 1 );
-
-				$("#tags").val( rgValues.join(',') );
-				$(this).removeClass('checked');
-			}
-			runInPageContext(function() {AjaxSearchResults();});
+				runInPageContext(function() {AjaxSearchResults();});
+			});
+		    tagfilter_exclude_divs.push(exclude_item);
 		});
-		tagfilter_exclude_divs.push(exclude_item);
-	});
 
-	var dom_item = `
-		<div class='block' id='es_tagfilter_exclude'>
-			<div class='block_header'>
-				<div>${localized_strings.exclude_tags}</div>
-			 </div>
-			 <div class='block_content block_content_inner'>
-				<div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
-				<input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">
+		var dom_item = `
+			<div class='block' id='es_tagfilter_exclude'>
+				<div class='block_header'>
+					<div>${localized_strings.exclude_tags}</div>
+				 </div>
+				 <div class='block_content block_content_inner'>
+					<div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
+					<input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">				
+				</div>
 			</div>
-		</div>
-	`;
+		`;
 
 	$("#TagFilter_Container").parent().parent().after(dom_item);
-	$("#es_tagfilter_exclude_container").append(tagfilter_exclude_divs);
-	runInPageContext(function() {
+		$("#es_tagfilter_exclude_container").append(tagfilter_exclude_divs);
+		runInPageContext(function() {
 		$J( '#es_tagfilter_exclude_container' ).tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value });
-	});
+		});
 
 	var observer = new MutationObserver(function(mutations) {
 		$.each(mutations,function(mutation_index, mutation){
@@ -3391,12 +3394,13 @@ function add_exclude_tags_to_search() {
 				$.each(mutations[mutation_index]["addedNodes"], function(node_index, node){
 					if ($(node).hasClass("tag_dynamic") && parseFloat($(node).attr("data-tag_value")) < 0)  {
 						$(node).find(".label").text(localized_strings.not.replace("__tag__", $(node).text()));
-					}
+			}
 				});
 			}
-		})
+		})		
 	});
 	observer.observe($(".termcontainer")[0], {childList:true, subtree:true});
+	runInPageContext(function(){UpdateTags()});
 }
 
 function add_hide_buttons_to_search() {
