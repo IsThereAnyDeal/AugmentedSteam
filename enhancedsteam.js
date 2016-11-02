@@ -9508,7 +9508,7 @@ function disable_link_filter() {
 		if (settings.disablelinkfilter) {
 			remove_links_filter();
 
-			setMutationHandler(document, "#announcementsContainer, .commentthread_comments", function(){
+			setMutationHandler(document, "#announcementsContainer, .commentthread_comments, .newmodal", function(){
 				remove_links_filter();
 
 				return true; // keep on monitoring
