@@ -11,6 +11,8 @@
 + Added market links and pricing information to inventory items with market restrictions
 : Fixed a bug where some homepage elements weren't highlighted correctly
 : Fixed a bug on workshop items where the media slider could distort images in some cases
+: Fixed a bug where the link filter wouldn't be disabled properly in modal boxes
+: Fixed a bug that caused the user profile Twitch integration to fail in some circumstances
 
 
 v8.9
