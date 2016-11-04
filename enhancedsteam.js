@@ -2970,19 +2970,21 @@ function add_twitch_info() {
 		if (twitch_id) {
 			twitch_id = twitch_id.replace(/\//g, "");
 			get_http("//api.enhancedsteam.com/twitch/?channel=" + twitch_id, function (txt) {
-				var data = JSON.parse(txt);
-				if (data["streams"].length > 0) {
-					var html = "<div class='profile_customization_header'>" + localized_strings.twitch.now_streaming.replace("__username__", data["streams"][0]["channel"]["display_name"]) + "</div><div class='profile_customization_block'><div class='favoritegame_showcase' id='es_twitch'></div></div></div>";
-					html += "<div class='showcase_content_bg' style='height: 120px;'><div class='favoritegame_showcase_game showcase_slot'><div class='favorite_game_cap'><a class='whiteLink' href='" + data["streams"][0]["channel"]["url"] + "' target='_blank'>";
-					html += "<img style='width: 160px; height: 90px; margin-top: 6px;' src='" + data["streams"][0]["preview"]["template"].replace("{width}", "160").replace("{height}", "90") + "'></a></div><div class='showcase_item_detail_title' style='margin-left: -25px; padding-top: 0px;'>";
-					html += "<a class='whiteLink' href='" + data["streams"][0]["channel"]["url"] + "' target='_blank'>" + data["streams"][0]["channel"]["game"] + "</a></div>";
-					html += "<div class='favoritegroup_description' style='margin-left: -25px; height: 16px; overflow: hidden;'>" + data["streams"][0]["channel"]["status"] + "</div>";
-					html += "<div class='favoritegroup_stats showcase_stats_row' style='position: inherit; margin-left: -25px; margin-top: 8px;'>";
-					html += "<div class='showcase_stat favoritegroup_ingame'><div class='value'>" + data["streams"][0]["viewers"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div><div class='label'>" + localized_strings.twitch.viewers + "</div></div>";
-					html += "<div class='showcase_stat favoritegroup_online'><div class='value'>" + data["streams"][0]["channel"]["followers"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div><div class='label'>" + localized_strings.twitch.followers + "</div></div>";
-					html += "<div class='showcase_stat'><div class='value'>" + data["streams"][0]["channel"]["views"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div><div class='label'>" + localized_strings.twitch.views + "</div></div>";
-					$("#es_twitch").html(html);
-					$("#es_twitch").slideDown();
+				if (txt) {
+					var data = JSON.parse(txt);
+					if (data["streams"].length > 0) {
+						var html = "<div class='profile_customization_header'>" + localized_strings.twitch.now_streaming.replace("__username__", data["streams"][0]["channel"]["display_name"]) + "</div><div class='profile_customization_block'><div class='favoritegame_showcase' id='es_twitch'></div></div></div>";
+						html += "<div class='showcase_content_bg' style='height: 120px;'><div class='favoritegame_showcase_game showcase_slot'><div class='favorite_game_cap'><a class='whiteLink' href='" + data["streams"][0]["channel"]["url"] + "' target='_blank'>";
+						html += "<img style='width: 160px; height: 90px; margin-top: 6px;' src='" + data["streams"][0]["preview"]["template"].replace("{width}", "160").replace("{height}", "90") + "'></a></div><div class='showcase_item_detail_title' style='margin-left: -25px; padding-top: 0px;'>";
+						html += "<a class='whiteLink' href='" + data["streams"][0]["channel"]["url"] + "' target='_blank'>" + data["streams"][0]["channel"]["game"] + "</a></div>";
+						html += "<div class='favoritegroup_description' style='margin-left: -25px; height: 16px; overflow: hidden;'>" + data["streams"][0]["channel"]["status"] + "</div>";
+						html += "<div class='favoritegroup_stats showcase_stats_row' style='position: inherit; margin-left: -25px; margin-top: 8px;'>";
+						html += "<div class='showcase_stat favoritegroup_ingame'><div class='value'>" + data["streams"][0]["viewers"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div><div class='label'>" + localized_strings.twitch.viewers + "</div></div>";
+						html += "<div class='showcase_stat favoritegroup_online'><div class='value'>" + data["streams"][0]["channel"]["followers"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div><div class='label'>" + localized_strings.twitch.followers + "</div></div>";
+						html += "<div class='showcase_stat'><div class='value'>" + data["streams"][0]["channel"]["views"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</div><div class='label'>" + localized_strings.twitch.views + "</div></div>";
+						$("#es_twitch").html(html);
+						$("#es_twitch").slideDown();
+					}
 				}
 			});
 		}
