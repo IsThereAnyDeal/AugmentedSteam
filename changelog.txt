@@ -1,4 +1,8 @@
-﻿v9.0
+﻿v9.1
+-----
+
+
+v9.0
 -----
 + Added an option to hide the "Empty Wishlist" button on users wishlist pages
 + Added additional search filtering options to hide games based on mixed or negative review scores
