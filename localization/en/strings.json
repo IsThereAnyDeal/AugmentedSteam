@@ -119,7 +119,7 @@
     "mixed_item": "Mixed rating items",
     "negative_item": "Negative rating items",
     "price_above":"Items that cost more than",
-    "price_above_tooltip":"Zero for free items or items without price tags; leave this field empty work as disable",
+    "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Steam Client",
