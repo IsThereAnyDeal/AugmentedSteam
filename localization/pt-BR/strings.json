@@ -1,5 +1,6 @@
 {
   "post_history":"Ver histórico de publicações",
+  "add_nickname":"Adicionar apelido",
   "forums":"Fóruns",
   "total_size":"Tamanho total",
   "dlc_details":"Detalhes do conteúdo adicional",
@@ -106,6 +107,7 @@
   "buy_wishlist":"Comprar lista de desejos",
   "highlight":"Destacar",
   "save":"Salvar",
+  "not":"Not __tag__",
   "add_to_cart":"+ Carrinho",
   "view":"Ver",
   "games_all":"Todos os jogos",
@@ -114,13 +116,17 @@
   "gift_transactions":"Transações de presentes",
   "demos":"Demonstrações",
   "notinterested":"Itens marcados como \"não interessado\"",
+  "mixed_item":"Itens de avaliação mista",
+  "negative_item":"Itens de avaliação negativa",
+  "price_above":"Itens que custam mais de",
+  "price_above_tooltip":"Zero para itens gratuitos ou sem preço; deixe em braco para desativar",
   "news":"Notícias",
   "check_system":"Analisar requisitos",
-  "viewinclient":"Ver no Cliente Steam",
+  "viewinclient":"Ver no cliente Steam",
   "custom_background":"Plano de fundo personalizado",
-  "custom_style":"Tema Personalizado",
+  "custom_style":"Tema personalizado",
   "custom_style_help":"Todos os usuários do Enhanced Steam verão este tema no seu perfil.  Usuários que não possuem Enhanced Steam não verão nenhuma alteração de tema realizada aqui.",
-  "noneselected":"Nada Selecionado \/ Sem Mudanças",
+  "noneselected":"Nenhum selecionado \/ Inalterado",
   "most_drops":"Mais cartas para obter",
   "badge_foil_progress":"Ver progresso da insígnia brilhante",
   "net_gain":"Lucro final",
@@ -188,11 +194,11 @@
   "historical_low":"Menor preço registrado",
   "games_with_booster":"Apto a receber pacotes bônus de __boostergames__ jogos",
   "sort_by":"Ordenar por:",
-  "lastonline":"Última Vez Online",
-  "edit_price":"Editar Preço",
-  "relist":"Listar novamente",
-  "relist_an_item":"Listar novamente um item",
-  "relist_text":"Você gostaria de listar novamente este item num preço menor?",
+  "lastonline":"Última vez online",
+  "edit_price":"Editar preço",
+  "relist":"Anunciar novamente",
+  "relist_an_item":"Anunciar um item novamente",
+  "relist_text":"Você gostaria de anunciar novamente este item com um preço menor?",
   "search_market":"Buscar no Mercado da Comunidade Steam",
   "drm_third_party_sub":"Aviso: Um ou mais títulos neste pacote usa GDD de terceiros",
   "customize":"Personalizar",
@@ -206,16 +212,16 @@
   "update_wishlist_note":"Atualizar anotação da lista de desejos",
   "add_wishlist_note_prompt":"Insira sua anotação da lista de desejos",
   "update_wishlist_note_prompt":"Atualize sua anotação da lista de desejos",
-  "results":"__num__ Resultados",
+  "results":"__num__ resultados",
   "all_results":"Todos os __num__ resultados exibidos",
   "see_more":"Ver mais",
   "lowest_price_format":"__price__ na __store__",
   "historical_low_format":"__price__ na __store__ em __date__",
   "favorited":"Favoritos",
   "followed":"Seguindo",
-  "leave_group_selected":"Sair dos Selecionados",
-  "leave_group_all":"Sair de Todos",
-  "leave_group_all_confirm":"Você está prestes a sair de TODOS OS GRUPOS a que pertence!\nVocê tem certeza que quer continuar?",
+  "leave_group_selected":"Sair dos selecionados",
+  "leave_group_all":"Sair de todos",
+  "leave_group_all_confirm":"Você está prestes a sair de TODOS OS GRUPOS a que pertence!\nTem certeza de que deseja continuar?",
   "leave_group_admin_confirm":"Você é Administrador neste grupo: __groupname__\nTem certeza de que deseja sair?",
   "wrong_try_again":"Algo deu errado. Por favor, tente novamente.",
   "join_group":"Entrar no grupo",
@@ -233,7 +239,8 @@
   "note_for":"Nota para",
   "show_wishlist_total":"Exibir total da lista de desejos",
   "tag_short":"Use marcadores curtos para economizar espaço",
-  "no_price_data":"No price data available",
+  "no_price_data":"Não há informações de preço disponíveis",
+  "exclude_tags":"Exclude tags",
   "achievements":{
     "option":"Exibir conquistas na página da loja",
     "achievements":"Conquistas",
@@ -280,11 +287,11 @@
     "players_2weeks":"Jogadores nas últimas duas semanas",
     "average_playtime":"Tempo médio de jogo",
     "average_playtime_2weeks":"Tempo médio de jogo nas duas últimas semanas",
-    "formatted_time":"__hours__ horas, __minutes__ minutos"
+    "formatted_time":"__hours__ horas e __minutes__ minutos"
   },
   "options":{
     "wsgf":"Exibir informações do site WSGF (Widescreen)",
-    "version_show":"Show change log when Enhanced Steam updates",
+    "version_show":"Exibir registro de alterações quando o Enhanced Steam atualizar",
     "steamcardexchange":"Exibir links para o site SteamCardExchange em insígnias",
     "regional_price":"Comparação de preços regionais",
     "acrtag":"Exibir avisos em itens que não podem ser trocados entre certas regiões",
@@ -368,6 +375,7 @@
     "showspeechsearch":"Adicionar busca por voz em caixas de busca",
     "profile_link_images_color":"Coloridas",
     "hide_about":"Ocultar link \"Sobre\"",
+    "show_empty_wishlist":"Exibir botão \"Esvaziar lista de desejos\"",
     "inventory_nav_text":"Exibir navegação avançada na página do inventário",
     "carousel_description":"Exibir descrições de aplicativos no carrossel da página inicial da loja",
     "market_total":"Exibir resumo de transações no Mercado",
@@ -469,7 +477,7 @@
     "inv_gift":"Presente",
     "inv_guestpass":"Passe",
     "owned":"Possuo",
-    "notinterested":"Sem interesse",
+    "notinterested":"Dispensado",
     "friends_want":"<a href=\"http:\/\/steamcommunity.com\/my\/friendsthatplay\/__appid__\">__friendcount__ desejam<\/a>"
   },
   "wallet":{
@@ -485,7 +493,7 @@
     "certifications":"Certificados de Widescreen da WSGF"
   },
   "itad":{
-    "option":"Mostrar opção de menu para sincronizar dados para IsThereAnyDeal.com",
+    "option":"Exibir opção para sincronizar dados com IsThereAnyDeal.com",
     "send_to_itad":"Enviar jogos adquiridos para IsThereAnyDeal",
     "sending":"Carregando seus jogos e pacotes adquiridos e enviando-os para IsThereAnyDeal.com"
   },
@@ -495,7 +503,7 @@
   },
   "update":{
     "dont_show":"Não exibir novamente",
-    "updated":"Enhanced Steam foi atualizado para a versão __version__",
-    "changes":"Esta nova versão inclui as seguintes mudanças"
+    "updated":"O Enhanced Steam foi atualizado para a versão __version__",
+    "changes":"Esta nova versão inclui as seguintes alterações"
   }
 }

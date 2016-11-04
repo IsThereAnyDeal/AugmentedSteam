@@ -1,5 +1,6 @@
 {
   "post_history":"Sprawdź historię wpisów",
+  "add_nickname":"Add Nickname",
   "forums":"Fora",
   "total_size":"Całkowity rozmiar",
   "dlc_details":"Szczegóły dot. DLC",
@@ -106,6 +107,7 @@
   "buy_wishlist":"Zakup całą listę życzeń",
   "highlight":"Zaznacz",
   "save":"Zapisz",
+  "not":"Not __tag__",
   "add_to_cart":"Dodaj do koszyka",
   "view":"Wyświetl",
   "games_all":"Wszystkie gry",
@@ -114,6 +116,10 @@
   "gift_transactions":"Transakcje podarunków",
   "demos":"Wersje demo",
   "notinterested":"Produkty oznaczone jako ignorowane",
+  "mixed_item":"Elementy z oceną mieszaną",
+  "negative_item":"Elementy z oceną negatywną",
+  "price_above":"Elementy które kosztują więcej niż",
+  "price_above_tooltip":"Zero dla elementów darmowych bądź bez podanej ceny; zostaw pole puste aby wyłączyć",
   "news":"Aktualności",
   "check_system":"Sprawdź swój system",
   "viewinclient":"Pokaż w kliencie Steam",
@@ -233,7 +239,8 @@
   "note_for":"Notatka dla",
   "show_wishlist_total":"Pokaż listę życzeń",
   "tag_short":"Użyj krótkich tagów aby zaoszczędzić miejsce",
-  "no_price_data":"No price data available",
+  "no_price_data":"Brak dostępnych informacji o cenie",
+  "exclude_tags":"Exclude tags",
   "achievements":{
     "option":"Pokaż osiągnięcia na stronach sklepu",
     "achievements":"Osiągnięcia",
@@ -284,7 +291,7 @@
   },
   "options":{
     "wsgf":"Pokaż informacje z WSGF (dot. ekranów panoramicznych)",
-    "version_show":"Show change log when Enhanced Steam updates",
+    "version_show":"Pokaż dziennik zmian po aktualizacji Enhanced Steam",
     "steamcardexchange":"Pokaż linki do SteamCardExchange na odznakach",
     "regional_price":"Porównanie cen regionalnych",
     "acrtag":"Pokaż ostrzeżenia dla przedmiotów, dla których wymiana pomiędzy regionami jest wyłączona",
@@ -368,6 +375,7 @@
     "showspeechsearch":"Włącz głosowe uzupełnianie pól wyszukiwania",
     "profile_link_images_color":"Kolorowe",
     "hide_about":"Ukryj link \"O Steam\"",
+    "show_empty_wishlist":"Pokaż przycisk \"Wyczyść listę życzeń\"",
     "inventory_nav_text":"Pokaż zaawansowane opcje nawigacji na stronie ekwipunku",
     "carousel_description":"Pokaż opisy na karuzeli sklepu Steam",
     "market_total":"Pokaż podsumowanie transakcji na rynku",
@@ -429,7 +437,7 @@
     "errormsg":"Błąd wczytywania danych Enhanced Steam",
     "loading":"Wczytywanie danych Enhanced Steam...",
     "ready":"Enhanced Steam jest gotowy",
-    "failed":"Jeden lub więcej żądań nie powiodło się"
+    "failed":"Jedno lub więcej żądań nie powiodło się"
   },
   "twitch":{
     "now_streaming":"__username__ streamuje teraz na Twitchu",

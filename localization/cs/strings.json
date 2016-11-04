@@ -1,5 +1,6 @@
 {
   "post_history":"Zobrazit historii příspěvků",
+  "add_nickname":"Add Nickname",
   "forums":"Fóra",
   "total_size":"Celková velikost",
   "dlc_details":"Detaily DLC",
@@ -106,6 +107,7 @@
   "buy_wishlist":"Koupit obsah Seznamu přání",
   "highlight":"Zvýraznění",
   "save":"Uložit",
+  "not":"Not __tag__",
   "add_to_cart":"Přidat do košíku",
   "view":"Zobrazit",
   "games_all":"Všechny hry",
@@ -114,6 +116,10 @@
   "gift_transactions":"Dárkové transakce",
   "demos":"Dema",
   "notinterested":"Položky označené jako nezajímavé",
+  "mixed_item":"Mixed rating items",
+  "negative_item":"Negative rating items",
+  "price_above":"Items that cost more than",
+  "price_above_tooltip":"Zero for free items or items without price tags; leave this field empty work as disable",
   "news":"Novinky",
   "check_system":"Zkontrolujte váš systém",
   "viewinclient":"Zobrazit ve Steam aplikaci",
@@ -233,7 +239,8 @@
   "note_for":"Poznámka pro",
   "show_wishlist_total":"Zobrazit cenu seznamu přání",
   "tag_short":"Použít zkrácené značky, aby se ušetřilo místo",
-  "no_price_data":"No price data available",
+  "no_price_data":"Údaje o ceně nejsou dostupné",
+  "exclude_tags":"Exclude tags",
   "achievements":{
     "option":"Ukázat achievementy na stránce obchodu",
     "achievements":"Achievementy",
@@ -284,7 +291,7 @@
   },
   "options":{
     "wsgf":"Ukázat informace z WSGF (širokoúhlé hraní)",
-    "version_show":"Show change log when Enhanced Steam updates",
+    "version_show":"Ukázat seznam změn při aktualizacích Enhanced Steamu",
     "steamcardexchange":"Ukázat odkazy na SteamCardExchange u odznaků",
     "regional_price":"Srovnání cen v regionech",
     "acrtag":"Zobrazit upozornění, pokud je zakázáno obchodování mezi oblastmi",
@@ -368,6 +375,7 @@
     "showspeechsearch":"Přidat hlasové zadávání do vyhledávacích polí",
     "profile_link_images_color":"Barevné",
     "hide_about":"Schovat odkaz \"O Steamu\"",
+    "show_empty_wishlist":"Show \"Empty Wishlist\" button",
     "inventory_nav_text":"Ukázat pokročilou navigaci na stránce Inventář",
     "carousel_description":"Ukázat popis aplikace na slideshow na stránce Obchod",
     "market_total":"Ukázat shrnutí transakcí na Tržišti",
@@ -395,7 +403,7 @@
     "add_another_region":"Přidat",
     "skip_got_steam":"Přeskočit okno \"Máte klienta služby Steam?\"",
     "store_general_thirdparty":"Nastavení pro informace ze stránek třetích stran",
-    "purchase_dates":"Show apps purchase date on store pages",
+    "purchase_dates":"Zobrazit datumy nákupu aplikací v obchodě",
     "lang":{
       "english":"Angličtina",
       "brazilian":"Portugalská-Brazilština",
@@ -495,7 +503,7 @@
   },
   "update":{
     "dont_show":"Příště nezobrazovat",
-    "updated":"Enhanced Steam has been updated to __version__",
-    "changes":"This release includes the following changes"
+    "updated":"Enhanced Steam byl aktualizován na verzi __version__",
+    "changes":"Tato aktualizace obsahuje následující změny"
   }
 }

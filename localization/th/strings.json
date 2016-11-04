@@ -1,5 +1,6 @@
 {
   "post_history":"ดูประวัติการโพสต์",
+  "add_nickname":"Add Nickname",
   "forums":"ฟอรัม",
   "total_size":"ขนาดรวม",
   "dlc_details":"รายละเอียดเนื้อหาที่ดาวน์โหลดได้",
@@ -106,6 +107,7 @@
   "buy_wishlist":"ซื้อสิ่งที่คุณอยากได้",
   "highlight":"ไฮไลท์",
   "save":"บันทึก",
+  "not":"Not __tag__",
   "add_to_cart":"เพิ่มลงในรถเข็น",
   "view":"ดู",
   "games_all":"เกมทั้งหมด",
@@ -114,6 +116,10 @@
   "gift_transactions":"การทำรายการของขวัญ",
   "demos":"เดโม",
   "notinterested":"รายการที่ทำเครื่องหมายเป็นไม่สนใจ",
+  "mixed_item":"Mixed rating items",
+  "negative_item":"Negative rating items",
+  "price_above":"Items that cost more than",
+  "price_above_tooltip":"Zero for free items or items without price tags; leave this field empty work as disable",
   "news":"ข่าวสาร",
   "check_system":"ตรวจสอบระบบของคุณ",
   "viewinclient":"ดูใน Steam Client",
@@ -233,7 +239,8 @@
   "note_for":"หมายเหตุสำหรับ",
   "show_wishlist_total":"โชว์ราคารวมของสิ่งที่อยากได้",
   "tag_short":"ใช้ tags สั้นๆ",
-  "no_price_data":"No price data available",
+  "no_price_data":"ไม่มีข้อมูลราคา",
+  "exclude_tags":"Exclude tags",
   "achievements":{
     "option":"แสดงรางวัลความสำเร็จบนหน้าร้านค้า",
     "achievements":"รางวัลความสำเร็จ",
@@ -263,8 +270,8 @@
     "submit":"ส่งเวลาของคุณ",
     "main":"เนื้อเรื่องหลัก",
     "no_data":"ไม่พบข้อมูล",
-    "help":"คลิกที่นี่เพื่อลองอีกครั้ง",
-    "wrong":"เกมไม่ถูกต้อง"
+    "help":"คลิกที่นี่เพื่อแก้ไข",
+    "wrong":"เกมไม่ถูกต้องหรือ"
   },
   "library":{
     "in_library":"ในคลัง",
@@ -284,7 +291,7 @@
   },
   "options":{
     "wsgf":"แสดงข้อมูล WSGF (Widescreen)",
-    "version_show":"Show change log when Enhanced Steam updates",
+    "version_show":"แสดงบันทึกการเปลี่ยนแปลงเมื่ออัปเดต Enhanced Steam",
     "steamcardexchange":"แสดงลิงก์ SteamCardExchange บนหน้าเหรียญตรา",
     "regional_price":"การเปรียบเทียบราคาตามภูมิภาค",
     "acrtag":"แสดงคำเตือนบนรายการที่ไม่สามารถแลกเปลี่ยนข้ามภูมิภาคได้",
@@ -368,6 +375,7 @@
     "showspeechsearch":"เพิ่มข้อมูลนำเข้าโดยใช้เสียงในช่องค้นหา",
     "profile_link_images_color":"ลงสี",
     "hide_about":"ซ่อนลิงก์ \"เกี่ยวกับ\"",
+    "show_empty_wishlist":"Show \"Empty Wishlist\" button",
     "inventory_nav_text":"แสดงเส้นทางขั้นสูงในหน้าช่องเก็บของ",
     "carousel_description":"แสดงรายละเอียดแอปบนรายการแนะนำที่หน้าแรกของร้านค้า",
     "market_total":"แสดงสรุปการทำรายการบนตลาด",
