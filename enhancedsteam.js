@@ -4176,17 +4176,15 @@ function add_profile_style() {
 		if ($.inArray(txt, available_styles) > -1) {
 			switch (txt) {
 				case "holiday2014":
-					$("head").append("<link rel='stylesheet' type='text/css' href='http://steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
+					$("head").append("<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
 					$(".profile_header_bg_texture").append("<div class='holidayprofile_header_overlay'></div>");
 					$(".profile_page").addClass("holidayprofile");
-					$.getScript("http://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
+					$.getScript("//steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
 						runInPageContext("function() { StartAnimation(); }");
 					});
 					break;
 				case "clear":
-					$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
-					$(".profile_header_bg").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/profile_header_bg.png") + "')");
-					$(".profile_header_bg_texture").css("background-image", "none");
+					$("body").addClass("es_profile_style es_style_clear");
 					break;
 				default:
 					$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");

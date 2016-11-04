@@ -2010,3 +2010,22 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	filter: grayscale(75%);
 	transition: opacity 0.25s ease-in-out;
 }
+
+/***************************************
+ * User profiles
+ * add_profile_style()
+ **************************************/
+.es_profile_style.es_style_clear .profile_header_badge {
+	background-color: rgba(22,22,23, 0.6) !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+.es_profile_style.es_style_clear .profile_content {
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
+.es_profile_style.es_style_clear .profile_header_bg,
+.es_profile_style.es_style_clear .profile_header_bg_texture {
+	background-image: none !important;
+}
+
