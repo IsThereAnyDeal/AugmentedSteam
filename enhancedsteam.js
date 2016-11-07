@@ -2163,60 +2163,36 @@ function version_check() {
 
 // Add a link to options to the global menu (where is Install Steam button)
 function add_enhanced_steam_options() {
-	$dropdown = $("<span class=\"pulldown global_action_link\" id=\"enhanced_pulldown\">Enhanced Steam</span>");
-	$dropdown_options_container = $("<div class=\"popup_block_new\"><div class=\"popup_body popup_menu\" id=\"es_popup\"></div></div>");
-	$dropdown_options = $dropdown_options_container.find(".popup_body");
-	$dropdown_options_container.hide();
-	$dropdown_options_container.css("margin-top", "-1px");
+	$('#global_action_menu').prepend(`
+		<div id="es_menu">
+			<span id="es_pulldown" class="pulldown global_action_link" onclick="ShowMenu( this, 'es_popup', 'right', 'bottom', true );">Enhanced Steam</span>
+			<div id="es_popup" class="popup_block_new">
+				<div class="popup_body popup_menu">
+					<a class="popup_menu_item" target="_blank" href="${ chrome.extension.getURL("options.html") }">${ localized_strings.thewordoptions }</a>
+					<a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${ localized_strings.clear_cache }</a>
+					<div class="hr"></div>
+					<a class="popup_menu_item" target="_blank" href="//github.com/jshackles/Enhanced_Steam">${ localized_strings.contribute }</a>
+					<a class="popup_menu_item" target="_blank" href="//translation.enhancedsteam.com">${ localized_strings.translate }</a>
+					<a class="popup_menu_item" target="_blank" href="//github.com/jshackles/Enhanced_Steam/issues">${ localized_strings.bug_feature }</a>
+					<div class="hr"></div>
+					<a class="popup_menu_item" target="_blank" href="//www.enhancedsteam.com">${ localized_strings.website }</a>
+					<a class="popup_menu_item" target="_blank" href="//${ localized_strings.official_group_url }">${ localized_strings.official_group }</a>
+					<a class="popup_menu_item" target="_blank" href="//enhancedsteam.com/donate/">${ localized_strings.donate }</a>
+				</div>
+			</div>
+		</div>
+	`);
 
-	// remove menu if click anywhere but on "Enhanced Steam". Commented out bit is for clicking on menu won't make it disappear either.
-	$('body').bind('click', function(e) {
-		if(/*$(e.target).closest(".popup_body").length == 0 && */$(e.target).closest("#enhanced_pulldown").length == 0) {
-			if ($dropdown_options_container.css("display") == "block" || $dropdown_options_container.css("display") == "") {
-				$dropdown_options_container.fadeOut(200);
-				$dropdown.removeClass("focus");
-			}
-		}
-	});
+	$('#es_clear_cache').on('click', function(e){
+		e.preventDefault();
 
-	$dropdown.click(function(){
-		$dropdown_options_container.fadeToggle(200);
-		$dropdown.toggleClass("focus");
-	});
-
-	$options_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\""+chrome.extension.getURL("options.html")+"\">"+localized_strings.thewordoptions+"</a>")
-	$website_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"http://www.enhancedsteam.com\">" + localized_strings.website + "</a>");
-	$contribute_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam\">" + localized_strings.contribute + "</a>");
-	$translate_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//translation.enhancedsteam.com\">" + localized_strings.translate + "</a>");
-	$bug_feature_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//github.com/jshackles/Enhanced_Steam/issues\">" + localized_strings.bug_feature + "</a>");
-	$donation_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//enhancedsteam.com/donate/\">" + localized_strings.donate + "</a>");
-	$group_link = $("<a class=\"popup_menu_item\" target=\"_blank\" href=\"//" + localized_strings.official_group_url + "\">" + localized_strings.official_group + "</a>");
-
-	$clear_cache_link = $("<a class=\"popup_menu_item\" href=\"\">" + localized_strings.clear_cache + "</a>");
-	$clear_cache_link.click(function(){
 		localStorage.clear();
 		chrome.storage.local.remove("user_currency");
 		location.reload();
 	});
 
-	$spacer = $("<div class=\"hr\"></div>");
-
-	$dropdown_options.append($options_link);
-	$dropdown_options.append($clear_cache_link);
-	$dropdown_options.append($spacer.clone());
-	$dropdown_options.append($contribute_link);
-	$dropdown_options.append($translate_link);
-	$dropdown_options.append($bug_feature_link);
-	$dropdown_options.append($spacer.clone());
-	$dropdown_options.append($website_link);
-	$dropdown_options.append($group_link);
-	$dropdown_options.append($donation_link);
-
-	$("#global_action_menu").prepend($dropdown);
-	$("#account_dropdown").after($dropdown_options_container);
-	$("#language_pulldown").after($dropdown_options_container);
-
-	$("#global_actions").after("<div class='es_progress_wrap'><progress id='es_progress' class='complete' value='1' max='1' title='" + localized_strings.ready.ready + "'></progress></div>");
+	// Add ES progress indicator
+	$('#global_actions').after('<div class="es_progress_wrap"><progress id="es_progress" class="complete" value="1" max="1" title="${ localized_strings.ready.ready }"></progress></div>');
 }
 
 // Display warning if browsing using non-account region
@@ -9428,7 +9404,7 @@ var owned_playable_promise = function() {
 };
 
 function launch_random_button() {
-	$("#es_popup").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
+	$("#es_popup").find(".popup_menu").append("<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.launch_random + "</a>");
 
 	$("#es_random_game").on("click", function() {
 		$.when(owned_playable_promise()).done(function(data) {
@@ -9452,7 +9428,7 @@ function add_itad_button() {
 	storage.get(function(settings) {
 		if (settings.show_itad_button === undefined) { settings.show_itad_button = false; storage.set({'show_itad_button': settings.show_itad_button}); }
 		if (settings.show_itad_button) {
-			$("#es_popup").append("<a id='es_itad' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.itad.send_to_itad + "</a>");
+			$("#es_popup").find(".popup_menu").append("<a id='es_itad' class='popup_menu_item' style='cursor: pointer;'>" + localized_strings.itad.send_to_itad + "</a>");
 
 			$("#es_itad").on("click", function() {
 				var ripc = function () {
