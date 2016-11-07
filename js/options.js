@@ -150,7 +150,8 @@ var settings_defaults = {
 	"profile_astatsnl": true,
 	"profile_permalink": true,
 	"steamcardexchange": true,
-	"purchase_dates": true
+	"purchase_dates": true,
+	"add_wallet_balance": true
 };
 
 // Saves options to localStorage
