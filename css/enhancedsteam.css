@@ -774,17 +774,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_sell #market_sell_buyercurrency_input:invalid {
 	border-color: #c00000;
 }
-#enhanced_pulldown {
-	display: inline-block;
-	margin: 1px;
-	padding-left: 4px;
-	line-height: 19px;
-}
-#enhanced_pulldown.focus {
-	margin: 0px;
-	border: 1px solid #82807C;
-	color: #ffffff;
-}
 
 .es_recentAchievements {
 	position: absolute;
@@ -2029,3 +2018,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-image: none !important;
 }
 
+/***************************************
+ * Site wide
+ * add_enhanced_steam_options()
+ **************************************/
+#es_menu {
+	display: inline-block;
+}
+#es_popup {
+	display: none;
+}
+#es_pulldown {
+	vertical-align: middle;
+	display: inline-block;
+	margin: 1px;
+	padding-left: 4px;
+	line-height: 19px;
+}
+#es_pulldown.focus {
+	margin: 0px;
+	border: 1px solid #82807C;
+	color: #ffffff;
+}
