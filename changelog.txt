@@ -1,10 +1,13 @@
 ﻿v9.1
 -----
+
+
+v9.0.1
+-----
 + Home page "All New Releases" and "Popular" tabs now use the same visual format of other tabs
 : Fixed a few localization errors in the options page
 - Removed the home page carousel feature as it is now somewhat redundant with popup flyovers
 - Removed the home page customization feature as it was causing some user's browsers to crash
-
 
 v9.0
 -----
