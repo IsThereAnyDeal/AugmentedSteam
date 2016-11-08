@@ -3670,6 +3670,7 @@ function add_popular_tab() {
 					}
 				});
 				$("#tab_popular_content").append("<div class='tab_see_more'>"+localized_strings.see_more+": <a href='//store.steampowered.com/stats/' class='btnv6_blue_hoverfade btn_small_tall'><span>"+localized_strings.popular+"</span></a></div>");
+				runInPageContext("function() { GHomepage.InstrumentTabbedSection(); }");
 			});
 		}
 	});
@@ -3711,6 +3712,7 @@ function add_allreleases_tab() {
 			});
 			var button = $("#tab_newreleases_content").find(".tab_see_more").clone();
 			$("#tab_allreleases_content").append(button);
+			runInPageContext("function() { GHomepage.InstrumentTabbedSection(); }");
 		});
 	}
 
@@ -6995,70 +6997,48 @@ function customize_home_page() {
 		var html = "<div class='home_viewsettings_popup'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings.apppage_sections + "</div>"
 
 		// Carousel
-		if ($("#home_main_cluster").length > 0) {
-			text = localized_strings.homepage_carousel;
+		if ($("#home_maincap_v7").length > 0) {
+			text = $("#home_maincap_v7").parent().find("h2").text();
 			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#home_main_cluster").parent().hide();
+				$("#home_maincap_v7").parent().hide();
 			}
 		}
 
-		// Spotlight
-		if ($("#spotlight_scroll").length > 0) {
-			text = localized_strings.homepage_spotlight;
+		// Special Offers
+		if ($("#spotlight_carousel").length > 0) {
+			text = $("#spotlight_carousel").parent().find("h2").text();
 			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#spotlight_scroll").parent().parent().hide();
-			}
-		}
-
-		// New on Steam
-		if ($(".popular_new_on_steam").length > 0) {
-			text = $(".popular_new_on_steam").find("a:first").text();
-			if (settings.show_homepage_newsteam) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_newsteam'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".popular_new_on_steam").hide();
+				$("#spotlight_carousel").parent().parent().hide();
 			}
 		}
 
 		// Recently Updated
-		if ($(".recently_updated").length > 0) {
-			text = $(".recently_updated").find("a:first").text();
+		if ($(".recently_updated_block").length > 0) {
+			text = $(".recently_updated_block").find("h2").text();
 			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".recently_updated").hide();
+				$(".recently_updated_block").hide();
 			}
 		}
 
-		// Recommended For You
-		if ($(".recommended").length > 0) {
-			text = $(".recommended").find("h2:first").text();
-			if (settings.show_homepage_recommended) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_recommended'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".recommended").hide();
-			}
-		}
-
-		// Explore Your Queue
+		// Your Discovery Queue
 		if ($(".discovery_queue_ctn").length > 0) {
-			text = $(".discovery_queue_ctn").find("a:first").text();
+			text = $(".discovery_queue_ctn").find("h2").text();
 			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".discovery_queue_ctn").hide();
-				$("#content_callout").hide();
-				$("#content_loading").hide();
 			}
 		}
 
 		// Steam Curators
-		if ($(".apps_recommended_by_curators_ctn").length > 0) {
-			text = $(".apps_recommended_by_curators_ctn").find("a:first").text();
+		if ($(".steam_curators_ctn").length > 0) {
+			text = $(".steam_curators_ctn").find("a:first").text();
 			if (settings.show_homepage_curators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7073,31 +7053,7 @@ function customize_home_page() {
 			if (settings.show_homepage_tabs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".home_tab_col").hide();
-			}
-		}
-
-		var specials_section_parent = $(".dailydeal_ctn").parent();
-		specials_section_parent.parent().find("h2:first, .dailydeal_ctn, .home_specials_ctn:first").wrapAll("<div id='es_specials_section' />");
-		specials_section_parent.parent().find(".home_specials_ctn:last").wrapAll("<div id='es_under_ten_section' />");
-		
-		// Specials
-		if ($("#es_specials_section").length > 0) {
-			text = $("#es_specials_section h2").text();
-			if (settings.show_homepage_specials) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#es_specials_section").hide();
-			}
-		}
-
-		// Under 10€
-		if ($("#es_under_ten_section").length > 0) {
-			text = $("#es_under_ten_section h2").text();
-			if (settings.show_homepage_under_ten) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_under_ten'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#es_under_ten_section").hide();
+				$(".home_tab_col").parent().hide();
 			}
 		}
 
@@ -7146,11 +7102,11 @@ function customize_home_page() {
 		$("#show_homepage_carousel").click(function() {
 			if (settings.show_homepage_carousel) {
 				settings.show_homepage_carousel = false;
-				$("#home_main_cluster").parent().hide();
+				$("#home_maincap_v7").parent().hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_carousel = true;
-				$("#home_main_cluster").parent().show();
+				$("#home_maincap_v7").parent().show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_carousel': settings.show_homepage_carousel});
@@ -7159,67 +7115,37 @@ function customize_home_page() {
 		$("#show_homepage_spotlight").click(function() {
 			if (settings.show_homepage_spotlight) {
 				settings.show_homepage_spotlight = false;
-				$("#spotlight_scroll").parent().parent().hide();
+				$("#spotlight_carousel").parent().parent().hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_spotlight = true;
-				$("#spotlight_scroll").parent().parent().show();
+				$("#spotlight_carousel").parent().parent().show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight});
 		});
 
-		$("#show_homepage_newsteam").click(function() {
-			if (settings.show_homepage_newsteam) {
-				settings.show_homepage_newsteam = false;
-				$(".popular_new_on_steam").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_newsteam = true;
-				$(".popular_new_on_steam").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_newsteam': settings.show_homepage_newsteam});
-		});
-
 		$("#show_homepage_updated").click(function() {
 			if (settings.show_homepage_updated) {
 				settings.show_homepage_updated = false;
-				$(".recently_updated").hide();
+				$(".recently_updated_block").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_updated = true;
-				$(".recently_updated").show();
+				$(".recently_updated_block").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_updated': settings.show_homepage_updated});
-		});
-
-		$("#show_homepage_recommended").click(function() {
-			if (settings.show_homepage_recommended) {
-				settings.show_homepage_recommended = false;
-				$(".recommended").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_recommended = true;
-				$(".recommended").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_recommended': settings.show_homepage_recommended});
 		});
 
 		$("#show_homepage_explore").click(function() {
 			if (settings.show_homepage_explore) {
 				settings.show_homepage_explore = false;
 				$(".discovery_queue_ctn").hide();
-				$("#content_callout").hide();
-				$("#content_loading").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_explore = true;
 				$(".discovery_queue_ctn").show();
-				$("#content_callout").show();
-				$("#content_loading").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_explore': settings.show_homepage_explore});
@@ -7228,16 +7154,11 @@ function customize_home_page() {
 		$("#show_homepage_curators").click(function() {
 			if (settings.show_homepage_curators) {
 				settings.show_homepage_curators = false;
-				$(".apps_recommended_by_curators_ctn").hide();
 				$(".steam_curators_ctn").hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_curators = true;
-				if ($("#apps_recommended_by_curators").children().length > 0) {
-					$(".apps_recommended_by_curators_ctn").show();
-				} else {
-					$(".steam_curators_ctn").show();
-				}	
+				$(".steam_curators_ctn").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_curators': settings.show_homepage_curators});
@@ -7246,40 +7167,14 @@ function customize_home_page() {
 		$("#show_homepage_tabs").click(function() {
 			if (settings.show_homepage_tabs) {
 				settings.show_homepage_tabs = false;
-				$(".home_tab_col").hide();
+				$(".home_tab_col").parent().hide();
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_tabs = true;
-				$(".home_tab_col").show();
+				$(".home_tab_col").parent().show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_tabs': settings.show_homepage_tabs});
-		});
-
-		$("#show_homepage_specials").click(function() {
-			if (settings.show_homepage_specials) {
-				settings.show_homepage_specials = false;
-				$("#es_specials_section").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_specials = true;
-				$("#es_specials_section").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_specials': settings.show_homepage_specials});
-		});
-
-		$("#show_homepage_under_ten").click(function() {
-			if (settings.show_homepage_under_ten) {
-				settings.show_homepage_under_ten = false;
-				$("#es_under_ten_section").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_under_ten = true;
-				$("#es_under_ten_section").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_under_ten': settings.show_homepage_under_ten});
 		});
 
 		$("#show_homepage_sidebar").click(function() {
@@ -7661,73 +7556,6 @@ function add_familysharing_warning(appid) {
 	storePageData.get("exfgls", function(data) {
 		if (data.excluded) {
 			$("#game_area_purchase").before('<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">' + localized_strings.family_sharing_notice + '</div><div class="notice_box_bottom"></div></div>');
-		}
-	});
-}
-
-// Display app descriptions on storefront carousel
-function add_carousel_descriptions() {
-	storage.get(function(settings) {
-		if (settings.show_carousel_descriptions === undefined) { settings.show_carousel_descriptions = true; storage.set({'show_carousel_descriptions': settings.show_carousel_descriptions}); }
-		if (settings.show_carousel_descriptions) {
-			if ($(".main_cluster_content").length > 0) {
-
-				setTimeout(function() {
-					$(".main_cluster_content").find(".cluster_capsule_image:not(.cluster_maincap_fill_bg)").wrap('<div class="es_capsule_image_wrap" />');
-					$(".main_cluster_content").find(".discount_block").filter(function(){ $(this).prependTo($(this).parent().find(".es_capsule_image_wrap, .cluster_maincap_fill")); });
-					$(".main_cluster_content").addClass("es_carousel_desc");
-					
-					var accountidtext = $('script:contains("g_AccountID")').text() || "";
-					var accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
-					
-					$.each($(".cluster_capsule"), function(i, node) {
-						var appid = get_appid(node.href),
-							$descNode = $(node).find(".main_cap_content");
-
-						var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-						var last_updated = getValue(appid + "carousel_time") || expire_time - 1;
-
-						if (last_updated < expire_time) {
-							get_http('//store.steampowered.com/apphover/' + appid +'?u=' + accountid + '&pagev6=true', function(txt) {
-								var descText = txt.match(/<p id="hover_desc">([\s\S]*)<\/p>/i);
-
-								if (descText) {
-									var elem_to_add = $("<div class='main_cap_status es_main_cap_status'>" + descText[1].trim() + "</div>");
-
-									elem_to_add.html(elem_to_add.text());
-									setValue(appid + "carousel", elem_to_add.text());
-									setValue(appid + "carousel_time", parseInt(Date.now() / 1000, 10));
-									$descNode.append(elem_to_add);
-								}
-							});
-						} else {
-							var descText = getValue(appid + "carousel");
-							var value_to_add = "<div class='main_cap_status es_main_cap_status'>" + descText + "</div>";
-
-							$descNode.append(value_to_add);
-						}
-					});
-
-					$(window).on("resize", function(){
-						$(".es_carousel_desc").css("max-height", $("a.cluster_capsule").first().height());
-					});
-				}, 200);
-
-				// purge stale information from localStorage				
-				var i = 0, sKey;
-				for (; sKey = window.localStorage.key(i); i++) {
-					if (sKey.match(/carousel_time/)) {
-						var expire_time = parseInt(Date.now() / 1000, 10) - 8 * 60 * 60; // Eight hours ago
-						var last_updated = window.localStorage.getItem(sKey) || expire_time - 1;
-
-						if (last_updated < expire_time) {
-							var appid = sKey.match(/\d+/)[0];
-							delValue(appid + "carousel");
-							delValue(appid + "carousel_time");
-						}
-					}
-				}
-			}
 		}
 	});
 }
@@ -9664,9 +9492,8 @@ $(document).ready(function(){
 							add_popular_tab();
 							add_allreleases_tab();
 							set_homepage_tab();
-							add_carousel_descriptions();
 							highlight_recommendations();
-							window.setTimeout(function() { customize_home_page(); }, 500);
+							//customize_home_page();
 							break;
 					}
 
