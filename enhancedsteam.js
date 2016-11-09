@@ -6960,6 +6960,7 @@ function customize_home_page() {
 	storage.get(function(settings) {
 		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_homepage_carousel': settings.show_homepage_carousel}); }
 		if (settings.show_homepage_spotlight === undefined) { settings.show_homepage_spotlight = true; storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight}); }
+		if (settings.show_homepage_friends === undefined) { settings.show_homepage_friends = true; storage.set({'show_homepage_friends': settings.show_homepage_friends}); }
 		if (settings.show_homepage_newsteam === undefined) { settings.show_homepage_newsteam = true; storage.set({'show_homepage_newsteam': settings.show_homepage_newsteam}); }
 		if (settings.show_homepage_updated === undefined) { settings.show_homepage_updated = true; storage.set({'show_homepage_updated': settings.show_homepage_updated}); }
 		if (settings.show_homepage_recommended === undefined) { settings.show_homepage_recommended = true; storage.set({'show_homepage_recommended': settings.show_homepage_recommended}); }
@@ -6978,7 +6979,7 @@ function customize_home_page() {
 			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#home_maincap_v7").parent().hide();
+				$("#home_maincap_v7").parent().css("height", "0px").css("overflow", "hidden");
 			}
 		}
 
@@ -6988,7 +6989,17 @@ function customize_home_page() {
 			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#spotlight_carousel").parent().parent().hide();
+				$("#spotlight_carousel").parent().parent().css("height", "0px").css("overflow", "hidden");
+			}
+		}
+
+		// Trending Among Friends
+		if ($("#friends_carousel").length > 0) {
+			text = $("#friends_carousel").parent().find("h2").text();
+			if (settings.show_homepage_friends) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$("#friends_carousel").parent().parent().css("height", "0px").css("overflow", "hidden").css("margin", "auto");
 			}
 		}
 
@@ -6998,7 +7009,7 @@ function customize_home_page() {
 			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".recently_updated_block").hide();
+				$(".recently_updated_block").css("height", "0px").css("overflow", "hidden");
 			}
 		}
 
@@ -7008,7 +7019,7 @@ function customize_home_page() {
 			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".discovery_queue_ctn").hide();
+				$(".discovery_queue_ctn").css("height", "0px").css("overflow", "hidden").css("padding", "0px");
 			}
 		}
 
@@ -7018,8 +7029,8 @@ function customize_home_page() {
 			if (settings.show_homepage_curators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".apps_recommended_by_curators_ctn").hide();
-				$(".steam_curators_ctn").hide();
+				$(".apps_recommended_by_curators_ctn").css("height", "0px").css("overflow", "hidden");
+				$(".steam_curators_ctn").css("height", "0px").css("overflow", "hidden");
 			}
 		}
 
@@ -7029,7 +7040,7 @@ function customize_home_page() {
 			if (settings.show_homepage_tabs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".home_tab_col").parent().hide();
+				$(".home_tab_col").parent().css("height", "0px").css("overflow", "hidden");
 			}
 		}
 
@@ -7078,11 +7089,11 @@ function customize_home_page() {
 		$("#show_homepage_carousel").click(function() {
 			if (settings.show_homepage_carousel) {
 				settings.show_homepage_carousel = false;
-				$("#home_maincap_v7").parent().hide();
+				$("#home_maincap_v7").parent().css("height", "0px").css("overflow", "hidden");
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_carousel = true;
-				$("#home_maincap_v7").parent().show();
+				$("#home_maincap_v7").parent().css("height", "inherit").css("overflow", "initial");
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_carousel': settings.show_homepage_carousel});
@@ -7091,24 +7102,37 @@ function customize_home_page() {
 		$("#show_homepage_spotlight").click(function() {
 			if (settings.show_homepage_spotlight) {
 				settings.show_homepage_spotlight = false;
-				$("#spotlight_carousel").parent().parent().hide();
+				$("#spotlight_carousel").parent().parent().css("height", "0px").css("overflow", "hidden");
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_spotlight = true;
-				$("#spotlight_carousel").parent().parent().show();
+				$("#spotlight_carousel").parent().parent().css("height", "inherit").css("overflow", "initial");
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight});
 		});
 
+		$("#show_homepage_friends").click(function() {
+			if (settings.show_homepage_friends) {
+				settings.show_homepage_friends = false;
+				$("#friends_carousel").parent().parent().css("height", "0px").css("overflow", "hidden");
+				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+			} else {
+				settings.show_homepage_friends = true;
+				$("#friends_carousel").parent().parent().css("height", "inherit").css("overflow", "initial");
+				$(this).find(".home_viewsettings_checkbox").addClass("checked");
+			}
+			storage.set({'show_homepage_friends': settings.show_homepage_friends});
+		});
+
 		$("#show_homepage_updated").click(function() {
 			if (settings.show_homepage_updated) {
 				settings.show_homepage_updated = false;
-				$(".recently_updated_block").hide();
+				$(".recently_updated_block").css("height", "0px").css("overflow", "hidden");
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_updated = true;
-				$(".recently_updated_block").show();
+				$(".recently_updated_block").css("height", "inherit").css("overflow", "initial");
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_updated': settings.show_homepage_updated});
@@ -7117,11 +7141,11 @@ function customize_home_page() {
 		$("#show_homepage_explore").click(function() {
 			if (settings.show_homepage_explore) {
 				settings.show_homepage_explore = false;
-				$(".discovery_queue_ctn").hide();
+				$(".discovery_queue_ctn").css("height", "0px").css("overflow", "hidden");
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_explore = true;
-				$(".discovery_queue_ctn").show();
+				$(".discovery_queue_ctn").css("height", "inherit").css("overflow", "initial");
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_explore': settings.show_homepage_explore});
@@ -7130,11 +7154,11 @@ function customize_home_page() {
 		$("#show_homepage_curators").click(function() {
 			if (settings.show_homepage_curators) {
 				settings.show_homepage_curators = false;
-				$(".steam_curators_ctn").hide();
+				$(".steam_curators_ctn").css("height", "0px").css("overflow", "hidden").css("padding", "0px");;
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_curators = true;
-				$(".steam_curators_ctn").show();
+				$(".steam_curators_ctn").css("height", "inherit").css("overflow", "initial").css("padding", "25px 0");;
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_curators': settings.show_homepage_curators});
@@ -7143,11 +7167,11 @@ function customize_home_page() {
 		$("#show_homepage_tabs").click(function() {
 			if (settings.show_homepage_tabs) {
 				settings.show_homepage_tabs = false;
-				$(".home_tab_col").parent().hide();
+				$(".home_tab_col").parent().css("height", "0px").css("overflow", "hidden");
 				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 			} else {
 				settings.show_homepage_tabs = true;
-				$(".home_tab_col").parent().show();
+				$(".home_tab_col").parent().css("height", "inherit").css("overflow", "initial");
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
 			storage.set({'show_homepage_tabs': settings.show_homepage_tabs});
@@ -9469,7 +9493,7 @@ $(document).ready(function(){
 							add_allreleases_tab();
 							set_homepage_tab();
 							highlight_recommendations();
-							//customize_home_page();
+							customize_home_page();
 							break;
 					}
 
