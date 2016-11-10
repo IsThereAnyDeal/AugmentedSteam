@@ -2799,8 +2799,7 @@ function add_empty_cart_button() {
 function add_community_profile_links() {
 	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
 	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
-	var icon_color='';
-	var profile_link_icon_background = '';
+
 	storage.get(function(settings) {
 		if (settings.profile_steamgifts === undefined) { settings.profile_steamgifts = true; storage.set({'profile_steamgifts': settings.profile_steamgifts}); }
 		if (settings.profile_steamtrades === undefined) { settings.profile_steamtrades = true; storage.set({'profile_steamtrades': settings.profile_steamtrades}); }
@@ -2810,77 +2809,94 @@ function add_community_profile_links() {
 		if (settings.profile_backpacktf === undefined) { settings.profile_backpacktf = true; storage.set({'profile_backpacktf': settings.profile_backpacktf}); }
 		if (settings.profile_astatsnl === undefined) { settings.profile_astatsnl = true; storage.set({'profile_astatsnl': settings.profile_astatsnl}); }
 		if (settings.profile_steamrepcn === undefined) { settings.profile_steamrepcn = true; storage.set({'profile_steamrepcn': settings.profile_steamrepcn}); }
-		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; storage.set({'profile_permalink': settings.profile_permalink}); }
-		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; storage.set({'show_profile_link_images': settings.show_profile_link_images}); }
-		if (settings.show_profile_link_images!="false"){if(settings.show_profile_link_images=="color"){icon_color="_col";profile_link_icon_background=" profile_link_icon_background"}}
-
-		var htmlstr = '';
-
-		if ((language == "schinese" || language == "tchinese") && settings.profile_steamrepcn) {
-			if (language == "schinese") { var name = "查看信誉记录"}
-			if (language == "tchinese") { var name = "確認信譽記錄"}
-			htmlstr += '<div class="profile_count_link"><a href="//steamrepcn.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">' + name + '</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/srcn.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-
-		if (settings.profile_steamrep) {
-			htmlstr += '<div class="profile_count_link"><a href="//steamrep.com/profiles/' + steamID + '" target="_blank"><span class="count_link_label">SteamRep</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/steamrep'+icon_color+'.png') + '" class="profile_link_icon'+profile_link_icon_background+'">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-		if (settings.profile_steamdbcalc) {
-			htmlstr += '<div class="profile_count_link"><a href="//steamdb.info/calculator/?player=' + steamID + '" target="_blank"><span class="count_link_label">SteamDB</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/steamdb.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-		if (settings.profile_steamgifts) {
-			htmlstr += '<div class="profile_count_link"><a href="http://www.steamgifts.com/go/user/' + steamID + '" target="_blank"><span class="count_link_label">SteamGifts</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/steamgifts'+icon_color+'.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-		if (settings.profile_steamtrades) {
-			htmlstr += '<div class="profile_count_link"><a href="http://www.steamtrades.com/user/' + steamID + '" target="_blank"><span class="count_link_label">SteamTrades</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/steamtrades'+icon_color+'.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-		if (settings.profile_astats) {
-			htmlstr += '<div class="profile_count_link"><a href="//www.achievementstats.com/index.php?action=profile&playerId=' + steamID + '" target="_blank"><span class="count_link_label">Achievement Stats</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/achievementstats'+icon_color+'.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-		if (settings.profile_backpacktf) {
-			htmlstr += '<div class="profile_count_link"><a href="//backpack.tf/profiles/' + steamID + '" target="_blank"><span class="count_link_label">Backpack.tf</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/backpacktf'+icon_color+'.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-		if (settings.profile_astatsnl) {
-			htmlstr += '<div class="profile_count_link"><a href="http://astats.astats.nl/astats/User_Info.php?steamID64=' + steamID + '" target="_blank"><span class="count_link_label">AStats.nl</span>&nbsp;<span class="profile_count_link_total">';
-			if (settings.show_profile_link_images!="false"){htmlstr += '<img src="' + chrome.extension.getURL('img/ico/astatsnl'+icon_color+'.png') + '" class="profile_link_icon">';}
-			else {htmlstr += '&nbsp;'}
-			htmlstr += '</span></a></div>';
-		}
-
-		if (settings.profile_permalink) {
-			htmlstr += "<div class=\"profile_count_link\" id=\"es_permalink_div\"><span id=\"es_permalink_text\">"+localized_strings.permalink+"</span><input type=\"text\" id=\"es_permalink\" value=\"" + window.location.protocol + "//steamcommunity.com/profiles/"+steamID+"\" readonly></div>";
-		}
 		
-		if (htmlstr != '') { $(".profile_item_links").append(htmlstr + "<div style='clear: both;'></div>"); }
-
-		if ($(".profile_item_links").length == 0) {
-			htmlstr = "<div class='profile_item_links'>" + htmlstr + "</div>";
-			$(".profile_rightcol").append(htmlstr);
-			$(".profile_rightcol").after("<div style='clear: both'></div>");
+		if (settings.profile_permalink === undefined) { settings.profile_permalink = true; storage.set({'profile_permalink': settings.profile_permalink}); }
+		
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; storage.set({'show_profile_link_images': settings.show_profile_link_images}); }
+		
+		var icon_type = "none";
+		if (settings.show_profile_link_images != "false") {
+			icon_type = (settings.show_profile_link_images == "color" ? "color" : "gray");
 		}
 
-		$("#es_permalink").click(function(){
+		var links = {
+			"steamrep": {
+				"link": `//steamrep.com/profiles/${ steamID }`,
+				"name": "SteamRep",
+			},
+			"steamdbcalc": {
+				"link": `//steamdb.info/calculator/?player=${ steamID }`,
+				"name": "SteamDB",
+			},
+			"steamgifts": {
+				"link": `//www.steamgifts.com/go/user/${ steamID }`,
+				"name": "SteamGifts",
+			},
+			"steamtrades": {
+				"link": `//www.steamtrades.com/user/${ steamID }`,
+				"name": "SteamTrades",
+			},
+			"astats": {
+				"link": `//www.achievementstats.com/index.php?action=profile&playerId=${ steamID }`,
+				"name": "Achievement Stats",
+			},
+			"backpacktf": {
+				"link": `//backpack.tf/profiles/${ steamID }`,
+				"name": "Backpack.tf",
+			},
+			"astatsnl": {
+				"link": `//astats.astats.nl/astats/User_Info.php?steamID64=${ steamID }`,
+				"name": "AStats.nl",
+			}
+		};
+
+		// Add "SteamRepCN"	
+		if (language == "schinese" || language == "tchinese") {
+			links = $.extend({
+					"steamrepcn": {
+						"link": `//steamrepcn.com/profiles/${ steamID }`,
+						"name": (language == "schinese" ? "查看信誉记录" : "確認信譽記錄"),
+					}
+				},
+				links
+			);
+		}
+
+		// Build the links HTML
+		var htmlstr = "";
+		$.each(links, function(site, info){
+			if (settings["profile_" + site]) {
+				htmlstr += `
+					<div class="es_profile_link profile_count_link">
+						<a class="es_sites_icons es_${ site }_icon es_${ icon_type }" href="${ info.link }" target="_blank">
+							<span class="count_link_label">${ info.name }</span>
+						</a>
+					</div>
+				`;
+			}
+		});
+
+		// Do the "Permalink" input separately
+		if (settings.profile_permalink) {
+			htmlstr += `
+				<div id="es_permalink_div" class="profile_count_link">
+					<span class="count_link_label">${ localized_strings.permalink }</span>
+					<input id="es_permalink" type="text" value="http://steamcommunity.com/profiles/${ steamID }" readonly />
+				</div>
+			`;
+		}
+
+		// Insert the links HMTL into the page
+		if (htmlstr) {
+			if ($(".profile_item_links").length) {
+				$(".profile_item_links").append(htmlstr + '<div style="clear: both;"></div>');
+			} else {
+				$(".profile_rightcol").append('<div class="profile_item_links">' + htmlstr + '</div>');
+				$(".profile_rightcol").after('<div style="clear: both;"></div>');
+			}
+		}
+
+		$("#es_permalink").on("click", function(){
 			$(this).select();
 		});
 	});
