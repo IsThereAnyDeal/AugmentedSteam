@@ -129,14 +129,6 @@ img.platform_small, .platform_img {
 .wishlistRowItem {
 	overflow: initial !important;
 }
-#es_permalink_text {
-	color: #EBEBEB;
-	height:29px;
-}
-#es_permalink {
-	margin: 8px 0px 0px 6px;
-	direction:rtl;
-}
 .search_result_row .tags a {
 	text-decoration: none;
 	color: #FFF;
@@ -2039,4 +2031,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: 0px;
 	border: 1px solid #82807C;
 	color: #ffffff;
+}
+.es_profile_link a {
+	display: inline-block;
+	margin-top: 10px;
+}
+
+/***************************************
+ * Users profiles
+ * add_community_profile_links()
+ **************************************/
+#es_permalink {
+	padding: 2px 3px;
+	margin: 8px 0px 0px 6px;
+	direction: rtl;
+	box-shadow: rgb(0, 0, 0) 0px 0px 1px 1px inset,
+				rgba(193, 193, 193, 0.168627) 0px 0px 0px 1px;
+}
+#es_permalink_div .count_link_label {
+	color: #EBEBEB;
 }

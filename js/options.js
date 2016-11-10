@@ -398,20 +398,12 @@ function load_profile_link_images() {
 	storage.get(function(settings) {
 		settings.show_profile_link_images = $("#profile_link_images_dropdown").val();
 		$("#profile_link_images_dropdown").val(settings.show_profile_link_images);
-		switch(settings.show_profile_link_images) {
-			case "gray":
-				$(".site_icon").show();
-				$(".site_icon_col").hide();
-				break;
-			case "color":
-				$(".site_icon").show();
-				$(".site_icon_gray").hide();
-				break;
-			case "false":
-				$(".site_icon").hide();
-				break;
-			default:
-				break;
+		
+		$(".es_sites_icons").show();
+		$("#profile_links").toggleClass("es_gray", (settings.show_profile_link_images == "gray"));
+		
+		if (settings.show_profile_link_images == "false") {
+			$(".es_sites_icons").hide();
 		}
 	});
 }
