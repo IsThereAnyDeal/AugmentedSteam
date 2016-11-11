@@ -6982,6 +6982,7 @@ function customize_home_page() {
 		if (settings.show_homepage_recommended === undefined) { settings.show_homepage_recommended = true; storage.set({'show_homepage_recommended': settings.show_homepage_recommended}); }
 		if (settings.show_homepage_explore === undefined) { settings.show_homepage_explore = true; storage.set({'show_homepage_explore': settings.show_homepage_explore}); }
 		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_homepage_curators': settings.show_homepage_curators}); }
+		if (settings.show_homepage_hardware === undefined) { settings.show_homepage_hardware = true; storage.set({'show_homepage_hardware': settings.show_homepage_hardware}); }
 		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_homepage_tabs': settings.show_homepage_tabs}); }
 		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_homepage_specials': settings.show_homepage_specials}); }
 		if (settings.show_homepage_marketing === undefined) { settings.show_homepage_marketing = true; storage.set({'show_show_homepage_marketing': settings.show_homepage_marketing}); }
@@ -7048,6 +7049,16 @@ function customize_home_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".recently_updated_block").addClass("es_hide");
+			}
+		}
+
+		// Hardware Ads
+		if ($(".hardware_content").length > 0) {
+			text = localized_strings.hardwareads;
+			if (settings.show_homepage_hardware) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_hardware'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_hardware'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".hardware_content").parent().addClass("es_hide");
 			}
 		}
 
@@ -7150,6 +7161,7 @@ function customize_home_page() {
 		addToggleHandler("show_homepage_updated", $(".recently_updated_block"));
 		addToggleHandler("show_homepage_explore", $(".discovery_queue_ctn"));
 		addToggleHandler("show_homepage_curators", $(".steam_curators_ctn"));
+		addToggleHandler("show_homepage_hardware", $(".hardware_content").parent());
 		addToggleHandler("show_homepage_tabs", $(".home_tab_col").parent());
 		addToggleHandler("show_homepage_specials", $(".specials_under10").parent().parent());
 		addToggleHandler("show_homepage_marketing", $(".marketingmessage_area"));
