@@ -811,6 +811,24 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Customize buttons
+ **************************************/
+.es_hide {
+	height: 0px;
+	overflow: hidden;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+.es_show {
+	height: inherit;
+	overflow: initial;
+}
+
+
+/***************************************
  * App page, wishlist buttons
  **************************************/
 .es-loading-wl { 

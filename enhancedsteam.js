@@ -6984,7 +6984,7 @@ function customize_home_page() {
 		if (settings.show_homepage_curators === undefined) { settings.show_homepage_curators = true; storage.set({'show_homepage_curators': settings.show_homepage_curators}); }
 		if (settings.show_homepage_tabs === undefined) { settings.show_homepage_tabs = true; storage.set({'show_homepage_tabs': settings.show_homepage_tabs}); }
 		if (settings.show_homepage_specials === undefined) { settings.show_homepage_specials = true; storage.set({'show_homepage_specials': settings.show_homepage_specials}); }
-		if (settings.show_homepage_under_ten === undefined) { settings.show_homepage_under_ten = true; storage.set({'show_show_homepage_under_ten': settings.show_homepage_under_ten}); }
+		if (settings.show_homepage_marketing === undefined) { settings.show_homepage_marketing = true; storage.set({'show_show_homepage_marketing': settings.show_homepage_marketing}); }
 		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar}); }
 
 		var html = "<div class='home_viewsettings_popup'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings.apppage_sections + "</div>"
@@ -6995,7 +6995,8 @@ function customize_home_page() {
 			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#home_maincap_v7").parent().css("height", "0px").css("overflow", "hidden");
+				$("#home_maincap_v7").parent().addClass("es_hide");
+				$("#home_maincap_v7").parent().parent().css({"padding-top": "0px", "padding-bottom": "0px", "margin-top": "0px"});
 			}
 		}
 
@@ -7005,7 +7006,7 @@ function customize_home_page() {
 			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#spotlight_carousel").parent().parent().css("height", "0px").css("overflow", "hidden");
+				$("#spotlight_carousel").parent().parent().addClass("es_hide");
 			}
 		}
 
@@ -7015,17 +7016,7 @@ function customize_home_page() {
 			if (settings.show_homepage_friends) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#friends_carousel").parent().parent().css("height", "0px").css("overflow", "hidden").css("margin", "auto");
-			}
-		}
-
-		// Recently Updated
-		if ($(".recently_updated_block").length > 0) {
-			text = $(".recently_updated_block").find("h2").text();
-			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".recently_updated_block").css("height", "0px").css("overflow", "hidden");
+				$("#friends_carousel").parent().parent().addClass("es_hide");
 			}
 		}
 
@@ -7035,7 +7026,7 @@ function customize_home_page() {
 			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".discovery_queue_ctn").css("height", "0px").css("overflow", "hidden").css("padding", "0px");
+				$(".discovery_queue_ctn").addClass("es_hide");
 			}
 		}
 
@@ -7046,7 +7037,17 @@ function customize_home_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".apps_recommended_by_curators_ctn").css("height", "0px").css("overflow", "hidden");
-				$(".steam_curators_ctn").css("height", "0px").css("overflow", "hidden");
+				$(".steam_curators_ctn").addClass("es_hide");
+			}
+		}
+
+		// Recently Updated
+		if ($(".recently_updated_block").length > 0) {
+			text = $(".recently_updated_block").find("h2").text();
+			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".recently_updated_block").addClass("es_hide");
 			}
 		}
 
@@ -7056,7 +7057,27 @@ function customize_home_page() {
 			if (settings.show_homepage_tabs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".home_tab_col").parent().css("height", "0px").css("overflow", "hidden");
+				$(".home_tab_col").parent().addClass("es_hide");
+			}
+		}
+
+		// Under $10
+		if ($(".specials_under10").length > 0) {
+			text = $(".specials_under10").find("h2").text();
+			if (settings.show_homepage_specials) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".specials_under10").parent().parent().addClass("es_hide");
+			}
+		}
+
+		// Updates and Offers
+		if ($(".marketingmessage_area").length > 0) {
+			text = $(".marketingmessage_area").find("h2").text();
+			if (settings.show_homepage_marketing) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_marketing'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_marketing'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".marketingmessage_area").addClass("es_hide");
 			}
 		}
 
@@ -7102,96 +7123,36 @@ function customize_home_page() {
 			}
 		});
 
-		$("#show_homepage_carousel").click(function() {
-			if (settings.show_homepage_carousel) {
-				settings.show_homepage_carousel = false;
-				$("#home_maincap_v7").parent().css("height", "0px").css("overflow", "hidden");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_carousel = true;
-				$("#home_maincap_v7").parent().css("height", "inherit").css("overflow", "initial");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_carousel': settings.show_homepage_carousel});
-		});
+		function addToggleHandler(name, element) {
+			var obj = {};
+			obj[name] = settings[name];
+			$("#" + name).click(function() {
+				element.removeClass("es_hide").removeClass("es_show");
+				if (obj[name]) {
+					obj[name] = false;
+					element.addClass("es_hide");
+					if (name == "show_homepage_carousel") {
+						element.parent().css({"padding-top": "0px", "padding-bottom": "0px", "margin-top": "0px"});
+					}
+					$(this).find(".home_viewsettings_checkbox").removeClass("checked");
+				} else {
+					obj[name] = true;
+					element.addClass("es_show");
+					$(this).find(".home_viewsettings_checkbox").addClass("checked");
+				}
+				storage.set(obj);
+			});
+		}
 
-		$("#show_homepage_spotlight").click(function() {
-			if (settings.show_homepage_spotlight) {
-				settings.show_homepage_spotlight = false;
-				$("#spotlight_carousel").parent().parent().css("height", "0px").css("overflow", "hidden");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_spotlight = true;
-				$("#spotlight_carousel").parent().parent().css("height", "inherit").css("overflow", "initial");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight});
-		});
-
-		$("#show_homepage_friends").click(function() {
-			if (settings.show_homepage_friends) {
-				settings.show_homepage_friends = false;
-				$("#friends_carousel").parent().parent().css("height", "0px").css("overflow", "hidden");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_friends = true;
-				$("#friends_carousel").parent().parent().css("height", "inherit").css("overflow", "initial");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_friends': settings.show_homepage_friends});
-		});
-
-		$("#show_homepage_updated").click(function() {
-			if (settings.show_homepage_updated) {
-				settings.show_homepage_updated = false;
-				$(".recently_updated_block").css("height", "0px").css("overflow", "hidden");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_updated = true;
-				$(".recently_updated_block").css("height", "inherit").css("overflow", "initial");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_updated': settings.show_homepage_updated});
-		});
-
-		$("#show_homepage_explore").click(function() {
-			if (settings.show_homepage_explore) {
-				settings.show_homepage_explore = false;
-				$(".discovery_queue_ctn").css("height", "0px").css("overflow", "hidden");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_explore = true;
-				$(".discovery_queue_ctn").css("height", "inherit").css("overflow", "initial");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_explore': settings.show_homepage_explore});
-		});
-
-		$("#show_homepage_curators").click(function() {
-			if (settings.show_homepage_curators) {
-				settings.show_homepage_curators = false;
-				$(".steam_curators_ctn").css("height", "0px").css("overflow", "hidden").css("padding", "0px");;
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_curators = true;
-				$(".steam_curators_ctn").css("height", "inherit").css("overflow", "initial").css("padding", "25px 0");;
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_curators': settings.show_homepage_curators});
-		});
-
-		$("#show_homepage_tabs").click(function() {
-			if (settings.show_homepage_tabs) {
-				settings.show_homepage_tabs = false;
-				$(".home_tab_col").parent().css("height", "0px").css("overflow", "hidden");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_tabs = true;
-				$(".home_tab_col").parent().css("height", "inherit").css("overflow", "initial");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_homepage_tabs': settings.show_homepage_tabs});
-		});
+		addToggleHandler("show_homepage_carousel", $("#home_maincap_v7").parent());
+		addToggleHandler("show_homepage_spotlight", $("#spotlight_carousel").parent().parent());
+		addToggleHandler("show_homepage_friends", $("#friends_carousel").parent().parent());
+		addToggleHandler("show_homepage_updated", $(".recently_updated_block"));
+		addToggleHandler("show_homepage_explore", $(".discovery_queue_ctn"));
+		addToggleHandler("show_homepage_curators", $(".steam_curators_ctn"));
+		addToggleHandler("show_homepage_tabs", $(".home_tab_col").parent());
+		addToggleHandler("show_homepage_specials", $(".specials_under10").parent().parent());
+		addToggleHandler("show_homepage_marketing", $(".marketingmessage_area"));
 
 		$("#show_homepage_sidebar").click(function() {
 			if (settings.show_homepage_sidebar) {
