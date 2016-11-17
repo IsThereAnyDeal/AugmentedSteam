@@ -2148,7 +2148,7 @@ function version_check() {
 						});\
 					}"
 				);
-			});
+			}, "html");
 			storage.set({'version': version});
 		}
 	});
