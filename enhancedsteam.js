@@ -3470,18 +3470,25 @@ function add_hide_buttons_to_search() {
 			$("#es_notmixed").addClass("checked");
 			$("#es_hide_options").css("height", "auto");
 			$("#es_hide_expander").hide();
+			$(".search_result_row").each(function() {
+				if ($(this).find(".search_reviewscore").children("span.search_review_summary.mixed").length > 0) { $(this).hide(); }
+			});
 		}
 
 		if (settings.hide_negative) {
 			$("#es_notnegative").addClass("checked");
 			$("#es_hide_options").css("height", "auto");
 			$("#es_hide_expander").hide();
+			$(".search_result_row").each(function() {
+				if ($(this).find(".search_reviewscore").children("span.search_review_summary.negative").length > 0) { $(this).hide(); }
+			});
 		}
 		
 		if (settings.hide_priceabove) {
 			$("#es_notpriceabove").addClass("checked");
 			$("#es_hide_options").css("height", "auto");
 			$("#es_hide_expander").hide();
+			$(".search_result_row").each(function() { apply_price_filter(this); });	
 		}
 		if (settings.priceabove_value ) {
 			$("#es_notpriceabove_val").val(settings.priceabove_value);
@@ -7352,6 +7359,8 @@ function bind_ajax_content_highlighting() {
 				if (node.classList && node.classList.contains("search_result_row")) {
 					start_highlighting_node(node);
 					check_early_access(node);
+					apply_rate_filter(node);
+					apply_price_filter(node);
 				}
 
 				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
@@ -7419,8 +7428,6 @@ function start_highlights_and_tags(){
 				}
 
 				highlight_notinterested(node);
-				apply_rate_filter(node);
-				apply_price_filter(node);
 			});
 		});
 	}, 500);
@@ -7481,8 +7488,6 @@ function start_highlighting_node(node) {
 	}
 
 	highlight_notinterested(node);
-	apply_rate_filter(node);
-	apply_price_filter(node);
 }
 
 // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
