@@ -5573,9 +5573,13 @@ function add_relist_button() {
 function hide_empty_inventory_tabs() {
 	var tab_count = 0;
 	$('div.games_list_tabs > a[id^="inventory_link_"]').each(function() {
-		var separator = $(this).next('div[class^="games_list_tab_"]');
+		var separator = $(this).next('div[class^="games_list_tab_"]'),
+			number_element = $(this).find('span.games_list_tab_number').first(),
+			items_number = number_element.length ? parseInt(number_element.text().replace(/[^0-9]+/g, '')) : 0;
+
 		$(this).removeClass('first_tab fourth_tab');
-		if (parseInt($(this).children('span.games_list_tab_number').html().replace(/,/g, '').match(/\d+/)[0]) == 0) {
+
+		if (items_number == 0) {
 			$(this).hide();
 			separator.hide();
 		} else {
@@ -5584,6 +5588,7 @@ function hide_empty_inventory_tabs() {
 
 		tab_count == 1 && $(this).addClass('first_tab');
 		tab_count == 4 && $(this).addClass('fourth_tab');
+
 		separator.removeClass().addClass(((tab_count > 0) && (tab_count%4 == 0)) ? 'games_list_tab_row_separator' : 'games_list_tab_separator');
 	});
 }
