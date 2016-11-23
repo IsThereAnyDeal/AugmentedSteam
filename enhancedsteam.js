@@ -2703,14 +2703,7 @@ function drm_warnings(type) {
 		if (settings.showdrm === undefined) { settings.showdrm = true; storage.set({'showdrm': settings.showdrm}); }
 		if (settings.showdrm) {
 
-			var gfwl;
-			var uplay;
-			var securom;
-			var tages;
-			var stardock;
-			var rockstar;
-			var kalypso;
-			var drm;
+			var gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
 
 			var text = $("#game_area_description").html();
 			text += $(".game_area_sys_req").html();
@@ -2748,6 +2741,9 @@ function drm_warnings(type) {
 			// Kalypso Launcher detection
 			if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
 
+			// Denuvo Antitamper detection
+			if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
+
 			// Detect other DRM
 			if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
 			if (text.indexOf("No 3rd Party DRM") > 0) { drm = false; }
@@ -2763,6 +2759,7 @@ function drm_warnings(type) {
 			if (stardock) { drm_string += 'Stardock Account Required, '; drm = true; }
 			if (rockstar) { drm_string += 'Rockstar Social Club, '; drm = true; }
 			if (kalypso) { drm_string += "Kalypso Launcher, "; drm = true; }
+			if (denuvo) { drm_string += "Denuvo Antitamper, "; drm = true; }
 
 			if (drm_string == "(") {
 				drm_string = "";

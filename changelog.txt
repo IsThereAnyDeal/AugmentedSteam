@@ -1,5 +1,9 @@
 ﻿v9.1
 -----
++ Added DRM detection for games utilizing Denuvo Antitamper DRM
++ Added an option as to whether you would like your wallet balance show in the header of community pages
+: Updated external site icons with higher resolution versions
+: Fixed a bug that caused some "season packs" to show a split calculation
 
 
 v9.0.1
