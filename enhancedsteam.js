@@ -1983,6 +1983,7 @@ function add_pack_breakdown() {
 		var title = $(this).find("h1").text().trim();
 		title = title.toLowerCase().replace(/-/g, ' ');
 		if (!title || !title.contains('pack')) return;
+		if (title.contains('pack') && title.contains('season')) return;
 
 		if (title.contains(' 2 pack') && !title.contains('bioshock')) { pack_split(this, 2); }
 		else if (title.contains(' two pack')) { pack_split(this, 2); }
