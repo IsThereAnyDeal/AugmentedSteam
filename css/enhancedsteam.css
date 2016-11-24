@@ -2069,3 +2069,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_permalink_div .count_link_label {
 	color: #EBEBEB;
 }
+
+/***************************************
+ * Apps Store pages
+ * add_metacritic_userscore()
+ **************************************/
+#game_area_userscore {
+	color: #4a617c
+}
+#game_area_userscore span {
+	color: #7e96a3;
+}
+#game_area_metascore.es_area_userscore .metacritic {
+	margin-top: -4px !important;
+}
+
