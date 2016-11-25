@@ -8287,20 +8287,20 @@ function add_badge_filter() {
 }
 
 function add_badge_sort() {
-	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
-		var sorts = ["p", "c", "a", "r"],
-			sorted = window.location.search.replace("?sort=", "") || "p";
-	} else {
-		var sorts = ["c", "a", "r"],
-			sorted = window.location.search.replace("?sort=", "") || "c";
+	var is_own_profile = $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, ""),
+		sorts = ["c", "a", "r"],
+		sorted = $("a.badge_sort_option.active")[0].search.replace("?sort=", "") || (is_own_profile ? "p" : "c"),
+		linksHtml = "";
+	
+	if (is_own_profile) {
+		sorts.unshift("p");
 	}
-	linksHtml = "";
 
 	// Build dropdown links HTML
 	$(".profile_badges_sortoptions").children("a").hide().each(function(i, link){
 		linksHtml += '<a class="badge_sort_option popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
 	});
-	if ( $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
+	if (is_own_profile) {
 		linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + localized_strings.most_drops + '</a>';
 		linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + localized_strings.drops_value + '</a>';
 	}
@@ -9573,7 +9573,7 @@ $(document).ready(function(){
 							add_gamelist_common();
 							break;
 
-						case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9+]$)/.test(path):
+						case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
 							add_badge_completion_cost();
 							add_total_drops_count();
 							add_cardexchange_links();
