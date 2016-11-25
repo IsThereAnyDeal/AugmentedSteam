@@ -4468,12 +4468,7 @@ function add_widescreen_certification(appid) {
 }
 
 function add_dlc_page_link(appid) {
-	if ($(".game_area_dlc_section").length > 0) {
-		var html = $(".game_area_dlc_section").html();
-		title = html.match(/<h2 class=\"gradientbg">(.+)<\/h2>/)[1];
-		html = html.replace(title, "<a href='//store.steampowered.com/dlc/" + appid + "'>" + title + "</a>");
-		$(".game_area_dlc_section").html(html);
-	}
+	$(".game_area_dlc_section").find("h2.gradientbg").wrapInner(`<a href="//store.steampowered.com/dlc/${ appid }"></a>`);
 }
 
 // Fix "No image available" on apps image header
