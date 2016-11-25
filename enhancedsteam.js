@@ -2126,7 +2126,7 @@ function add_wallet_balance_to_header() {
 	storage.get(function(settings) {
 		if (settings.add_wallet_balance === undefined) { settings.add_wallet_balance = true; storage.set({'add_wallet_balance': settings.add_wallet_balance}); }
 		if (settings.add_wallet_balance) {
-			$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; padding-right:12px; line-height: normal;'>");
+			$("#global_action_menu").append("<div id='es_wallet' style='text-align:right; line-height: normal;'>");
 			$("#es_wallet").load('//store.steampowered.com/about/ #header_wallet_ctn');
 		}
 	});
