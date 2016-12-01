@@ -4226,13 +4226,18 @@ function add_metacritic_userscore() {
 	storage.get(function(settings) {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
 		if (settings.showmcus) {
-			if ($("#game_area_metascore")) {
-				var metalink = $("#game_area_metalink").find("a").attr("href");
+			if ($("#game_area_metascore").length) {
 				storePageData.get("metacritic", function(data) {
 					if (data.userscore) {
-						var metauserscore = data.userscore*10;
-						var newmeta = '<div id="game_area_metascore" style="background-image: url(' + chrome.extension.getURL("img/metacritic_bg.png") + ');"><span>' + metauserscore + '</span><span class="ms_slash">/</span><span class="ms_base">100</span></div>';
-						if (!isNaN(metauserscore)) $("#game_area_metascore").after(newmeta);
+						var metauserscore = data.userscore * 10;
+						if (!isNaN(metauserscore)) {
+							$("#game_area_metascore").addClass("es_area_userscore");
+							$("#game_area_metalink").after(`
+								<div id="game_area_userscore">
+									${ localized_strings.user_score }: <span>${ metauserscore }/100</span>
+								</div>
+							`);
+						}
 					}
 				});
 			}

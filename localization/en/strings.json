@@ -242,6 +242,7 @@
     "tag_short": "Use short tags to save space",
     "no_price_data": "No price data available",
     "exclude_tags": "Exclude tags",
+    "user_score": "User Score",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
