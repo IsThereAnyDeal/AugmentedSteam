@@ -7892,6 +7892,7 @@ function add_es_background_selection() {
 				});
 
 				$("#es_background_remove_btn").click(function() {
+					profileData.clearOwn();
 					$("#es_profile_remove").submit();
 				});
 			}
@@ -7954,6 +7955,7 @@ function add_es_style_selection() {
 		});
 
 		$("#es_style_remove_btn").click(function() {
+			profileData.clearOwn();
 			$("#es_style_remove").submit();
 		});
 	}
