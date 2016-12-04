@@ -7791,19 +7791,21 @@ function change_user_background() {
 			$(".es_bg_test").remove();
 		});
 	} else {
-		profileData.get("profile", function(data) {
-			var txt = data.background;
-			if (txt) {
-				$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
-				if ($(".profile_background_image_content").length > 0) {
-					$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
-				} else {
-					$(".no_header").addClass("has_profile_background");
-					$(".profile_content").addClass("has_profile_background");
-					$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
+		if (!$(".profile_page.private_profile").length) {
+			profileData.get("profile", function(data) {
+				var txt = data.background;
+				if (txt) {
+					$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
+					if ($(".profile_background_image_content").length > 0) {
+						$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
+					} else {
+						$(".no_header").addClass("has_profile_background");
+						$(".profile_content").addClass("has_profile_background");
+						$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 }
 
