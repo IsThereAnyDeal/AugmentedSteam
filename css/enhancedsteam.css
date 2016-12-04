@@ -801,13 +801,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .home_page_body_ctn:not(.has_takeover) #es_customize_btn {
 	position: absolute;
-	right: 15px;
+	right: 232px;
 }
 .home_page_body_ctn:not(.has_takeover) .home_cluster_ctn {
 	margin-top: 40px
 }
 .home_page_body_ctn:not(.has_takeover) #es_customize_btn .home_viewsettings_popup {
 	right: 2px;
+}
+.home_viewsettings_label {
+	text-transform: capitalize;
 }
 
 /***************************************

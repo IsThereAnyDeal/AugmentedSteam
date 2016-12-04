@@ -7007,7 +7007,7 @@ function customize_home_page() {
 
 		// Carousel
 		if ($("#home_maincap_v7").length > 0) {
-			text = $("#home_maincap_v7").parent().find("h2").text();
+			text = $("#home_maincap_v7").parent().find("h2").text().toLowerCase();
 			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7018,7 +7018,7 @@ function customize_home_page() {
 
 		// Special Offers
 		if ($("#spotlight_carousel").length > 0) {
-			text = $("#spotlight_carousel").parent().find("h2").text();
+			text = $("#spotlight_carousel").parent().find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7028,7 +7028,7 @@ function customize_home_page() {
 
 		// Trending Among Friends
 		if ($("#friends_carousel").length > 0) {
-			text = $("#friends_carousel").parent().find("h2").text();
+			text = $("#friends_carousel").parent().find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_friends) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7038,7 +7038,7 @@ function customize_home_page() {
 
 		// Your Discovery Queue
 		if ($(".discovery_queue_ctn").length > 0) {
-			text = $(".discovery_queue_ctn").find("h2").text();
+			text = $(".discovery_queue_ctn").find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7048,7 +7048,7 @@ function customize_home_page() {
 
 		// Steam Curators
 		if ($(".steam_curators_ctn").length > 0) {
-			text = $(".steam_curators_ctn").find("a:first").text();
+			text = $(".steam_curators_ctn").find("a:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_curators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7059,7 +7059,7 @@ function customize_home_page() {
 
 		// Recently Updated
 		if ($(".recently_updated_block").length > 0) {
-			text = $(".recently_updated_block").find("h2").text();
+			text = $(".recently_updated_block").find("h2").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7089,7 +7089,7 @@ function customize_home_page() {
 
 		// Under $10
 		if ($(".specials_under10").length > 0) {
-			text = $(".specials_under10").find("h2").text();
+			text = $(".specials_under10").find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_specials) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7099,7 +7099,7 @@ function customize_home_page() {
 
 		// Updates and Offers
 		if ($(".marketingmessage_area").length > 0) {
-			text = $(".marketingmessage_area").find("h2").text();
+			text = $(".marketingmessage_area").find("h2").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
 			if (settings.show_homepage_marketing) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_marketing'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_marketing'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7156,14 +7156,14 @@ function customize_home_page() {
 				element.removeClass("es_hide").removeClass("es_show");
 				if (obj[name]) {
 					obj[name] = false;
-					element.addClass("es_hide");
+					element.slideUp();
 					if (name == "show_homepage_carousel") {
 						element.parent().css({"padding-top": "0px", "padding-bottom": "0px", "margin-top": "0px"});
 					}
 					$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 				} else {
 					obj[name] = true;
-					element.addClass("es_show");
+					element.slideDown();
 					$(this).find(".home_viewsettings_checkbox").addClass("checked");
 				}
 				storage.set(obj);
