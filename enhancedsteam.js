@@ -4174,30 +4174,32 @@ function add_nickname_link() {
 }
 
 function add_profile_style() {
-	profileData.get("profile_style", function(data) {
-		var txt = data.style;
-		var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
-		if ($.inArray(txt, available_styles) > -1) {
-			switch (txt) {
-				case "holiday2014":
-					$("head").append("<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
-					$(".profile_header_bg_texture").append("<div class='holidayprofile_header_overlay'></div>");
-					$(".profile_page").addClass("holidayprofile");
-					$.getScript("//steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
-						runInPageContext("function() { StartAnimation(); }");
-					});
-					break;
-				case "clear":
-					$("body").addClass("es_profile_style es_style_clear");
-					break;
-				default:
-					$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
-					$(".profile_header_bg_texture").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/header.jpg") + "')");
-					$(".profile_customization").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/showcase.png") + "')");
-					break;
+	if (!$(".profile_page.private_profile").length) {
+		profileData.get("profile_style", function(data) {
+			var txt = data.style;
+			var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
+			if ($.inArray(txt, available_styles) > -1) {
+				switch (txt) {
+					case "holiday2014":
+						$("head").append("<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
+						$(".profile_header_bg_texture").append("<div class='holidayprofile_header_overlay'></div>");
+						$(".profile_page").addClass("holidayprofile");
+						$.getScript("//steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js").done(function() {
+							runInPageContext("function() { StartAnimation(); }");
+						});
+						break;
+					case "clear":
+						$("body").addClass("es_profile_style es_style_clear");
+						break;
+					default:
+						$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
+						$(".profile_header_bg_texture").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/header.jpg") + "')");
+						$(".profile_customization").css("background-image", "url('" + chrome.extension.getURL("img/profile_styles/" + txt + "/showcase.png") + "')");
+						break;
+				}
 			}
-		}
-	});
+		});
+	}
 }
 
 function add_background_preview_link() {
@@ -7780,19 +7782,21 @@ function change_user_background() {
 			$(".es_bg_test").remove();
 		});
 	} else {
-		profileData.get("profile", function(data) {
-			var txt = data.background;
-			if (txt) {
-				$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
-				if ($(".profile_background_image_content").length > 0) {
-					$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
-				} else {
-					$(".no_header").addClass("has_profile_background");
-					$(".profile_content").addClass("has_profile_background");
-					$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
+		if (!$(".profile_page.private_profile").length) {
+			profileData.get("profile", function(data) {
+				var txt = data.background;
+				if (txt) {
+					$(".no_header")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
+					if ($(".profile_background_image_content").length > 0) {
+						$(".profile_background_image_content")[0].style.backgroundImage = "url(" + escapeHTML(txt) + ")";
+					} else {
+						$(".no_header").addClass("has_profile_background");
+						$(".profile_content").addClass("has_profile_background");
+						$(".profile_content").prepend('<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + escapeHTML(txt) + ');"></div></div></div>');
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 }
 
