@@ -5259,7 +5259,6 @@ function inventory_market_helper(response) {
 												$(thisItem).data("price-low", price_low);
 											}
 											// Fixes multiple buttons
-											//console.log($(".item.activeInfo").is($(thisItem)), $(".item.activeInfo").prop("id"), $(thisItem).prop("id"));
 											if ($(".item.activeInfo").is($(thisItem))) {
 												$(thisItem).addClass("es-price-loaded");
 												// Add "Quick Sell" button
