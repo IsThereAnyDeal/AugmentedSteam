@@ -5024,24 +5024,24 @@ function setMutationHandler(baseNode, selector, cb, options) {
 function inventory_market_prepare() {
 	runInPageContext(`function(){
 		$J(document).on("click", ".inventory_item_link, .newitem", function(){
-			if (!g_ActiveInventory.selectedItem.market_hash_name) {
-				g_ActiveInventory.selectedItem.market_hash_name = g_ActiveInventory.selectedItem.name
+			if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
+				g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
 			}
 			window.postMessage({
 				type: "es_sendmessage",
 				information: [
 					iActiveSelectView, 
-					g_ActiveInventory.selectedItem.marketable,
+					g_ActiveInventory.selectedItem.description.marketable,
 					g_ActiveInventory.appid,
-					g_ActiveInventory.selectedItem.market_hash_name,
-					g_ActiveInventory.selectedItem.market_fee_app,
-					g_ActiveInventory.selectedItem.type,
-					g_ActiveInventory.selectedItem.id,
+					g_ActiveInventory.selectedItem.description.market_hash_name,
+					g_ActiveInventory.selectedItem.description.owner_actions[0].link,
+					g_ActiveInventory.selectedItem.description.type,
+					g_ActiveInventory.selectedItem.assetid,
 					g_sessionID,
 					g_ActiveInventory.selectedItem.contextid,
 					g_rgWalletInfo.wallet_currency,
-					g_ActiveInventory.owner.strSteamId,
-					g_ActiveInventory.selectedItem.market_marketable_restriction
+					g_ActiveInventory.m_owner.strSteamId,
+					g_ActiveInventory.selectedItem.description.market_marketable_restriction
 				]
 			}, "*");
 		});
@@ -5059,7 +5059,7 @@ function inventory_market_helper(response) {
 		marketable = response[1],
 		global_id = response[2],
 		hash_name = response[3],
-		appid = response[4],
+		appid = response[4].replace(/\D/g,"");
 		assetID = response[6],
 		sessionID = response[7],
 		contextID = response[8];
@@ -5070,13 +5070,9 @@ function inventory_market_helper(response) {
 		is_booster = hash_name && /Booster Pack/i.test(hash_name),
 		owns_inventory = (owner_steamid === is_signed_in);
 
-	var thisItem = "#item" + global_id +"_"+ contextID +"_"+ assetID;
+	var thisItem = "#" + global_id +"_"+ contextID +"_"+ assetID;
 	var $sideActs = $("#iteminfo" + item + "_item_actions");
 	var $sideMarketActs = $("#iteminfo" + item + "_item_market_actions");
-
-	// Workaround for preventing actions for the same item if clicked and active
-	$(".inventory_item_link_disabled").prop("class", "inventory_item_link");
-	$(thisItem + " .inventory_item_link").prop("class", "inventory_item_link_disabled");
 
 	// Set as background option
 	var $viewFullBtn = $sideActs.find("a").first();
@@ -5263,17 +5259,13 @@ function inventory_market_helper(response) {
 											}
 
 											$(thisItem).addClass("es-price-loaded");
-
-											// Fixes multiple buttons
-											if ( $(".inventory_item_link_disabled").parent().is($(thisItem)) ) {
-												// Add "Quick Sell" button
-												if (price_high > price_low) {
-													$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-												}
-												// Add "Instant Sell" button
-												if (market.highest_buy_order) {
-													$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-												}
+											// Add "Quick Sell" button
+											if (price_high > price_low) {
+												$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+											}
+											// Add "Instant Sell" button
+											if (market.highest_buy_order) {
+												$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 											}
 										}).complete(function(){
 											$(thisItem).removeClass("es-loading");
@@ -5314,7 +5306,7 @@ function inventory_market_helper(response) {
 										xhrFields: { withCredentials: true }
 									}).complete(function(data){
 										$sideMarketActs.slideUp();
-										$(thisItem).toggleClass("btn_disabled activeInfo").css("pointer-events", "none");
+										$(thisItem).addClass("btn_disabled activeInfo").css("pointer-events", "none");
 									});
 								}
 							}, false);
