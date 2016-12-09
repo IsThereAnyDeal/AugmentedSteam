@@ -1,4 +1,8 @@
-﻿v9.1
+﻿v9.2
+-----
+
+
+v9.1
 -----
 + Added DRM detection for games utilizing Denuvo Antitamper DRM
 + Added home page customization with the ability to hide particular sections
