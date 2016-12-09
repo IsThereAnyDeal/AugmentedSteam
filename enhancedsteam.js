@@ -4222,7 +4222,6 @@ function hide_activity_spam_comments() {
 
 // Add Metacritic user scores to store page
 function add_metacritic_userscore() {
-	// Add metacritic user reviews
 	storage.get(function(settings) {
 		if (settings.showmcus === undefined) { settings.showmcus = true; storage.set({'showmcus': settings.showmcus}); }
 		if (settings.showmcus) {
@@ -4231,12 +4230,12 @@ function add_metacritic_userscore() {
 					if (data.userscore) {
 						var metauserscore = data.userscore * 10;
 						if (!isNaN(metauserscore)) {
-							$("#game_area_metascore").addClass("es_area_userscore");
-							$("#game_area_metalink").after(`
-								<div id="game_area_userscore">
-									${ localized_strings.user_score }: <span>${ metauserscore }/100</span>
-								</div>
-							`);
+							$("#game_area_metascore").after("<div id='game_area_userscore'></div>");
+							var rating;
+							if (metauserscore >= 75) { rating = "high"; } else {
+								if (metauserscore >= 50) { rating = "medium"; } else { rating = "low"; }
+							}
+							$("#game_area_userscore").append("<div class='score " + rating + "'>" + metauserscore + "</div><div class='logo'></div><div class='wordmark'><div class='metacritic'>" + localized_strings.user_score + "</div></div>");
 						}
 					}
 				});

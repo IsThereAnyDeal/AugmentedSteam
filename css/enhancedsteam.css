@@ -2098,3 +2098,62 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: -66px !important;
 	padding-top: 24px !important;
 }
+
+/***************************************
+ * MetaCritic User Scores
+ * add_metacritic_userscore()
+ **************************************/
+#game_area_userscore {
+	margin-top: 6px;
+	padding-top: 10px;
+	clear: both;
+}
+
+#game_area_userscore .score {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 25px;
+	text-align: center;
+	float: left;
+}
+
+#game_area_userscore .score.high {
+	background-color: #66CC33;
+}
+
+#game_area_userscore .score.medium {
+	background-color: #FFCC33;
+}
+
+#game_area_userscore .score.low {
+	background-color: #FF0000;
+}
+
+#game_area_userscore .logo {
+	background-image: url(/public/images/v6/mc_logo_no_text.png);
+	background-repeat: no-repeat;
+	height: 35px;
+	width: 35px;
+	margin-left: 10px;
+	margin-top: 10px;
+	float: left;
+}
+
+#game_area_userscore .wordmark {
+	float: left;
+	width: 180px;
+}
+
+#game_area_userscore .metacritic {
+	font-family: "Motiva Sans", Sans-serif;
+	font-weight: bold; /* bold */
+	color: #FFFFFF;
+	margin-left: 2px;
+	font-size: 26px;
+	line-height: 26px;
+	margin-top: 12px;
+	float: left;
+}

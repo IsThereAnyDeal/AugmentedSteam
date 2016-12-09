@@ -1,9 +1,12 @@
 ﻿v9.1
 -----
 + Added DRM detection for games utilizing Denuvo Antitamper DRM
++ Added home page customization with the ability to hide particular sections
 + Added an option as to whether you would like your wallet balance show in the header of community pages
+: Updated the quick sell and instant sell buttons to use the new inventory data layout Valve created
 : Updated external site icons with higher resolution versions
-: Fixed a bug that caused some "season packs" to show a split calculation
+: Fixed a bug that caused some "season packs" to incorrectly show a split calculation
+: Fixed a bug where metacritic user scores weren't displaying correctly with the new layout
 
 
 v9.0.1
