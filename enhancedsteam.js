@@ -5258,15 +5258,18 @@ function inventory_market_helper(response) {
 											if (market.highest_buy_order) {
 												$(thisItem).data("price-low", price_low);
 											}
-
-											$(thisItem).addClass("es-price-loaded");
-											// Add "Quick Sell" button
-											if (price_high > price_low) {
-												$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-											}
-											// Add "Instant Sell" button
-											if (market.highest_buy_order) {
-												$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+											// Fixes multiple buttons
+											//console.log($(".item.activeInfo").is($(thisItem)), $(".item.activeInfo").prop("id"), $(thisItem).prop("id"));
+											if ($(".item.activeInfo").is($(thisItem))) {
+												$(thisItem).addClass("es-price-loaded");
+												// Add "Quick Sell" button
+												if (price_high > price_low) {
+													$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+												}
+												// Add "Instant Sell" button
+												if (market.highest_buy_order) {
+													$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+												}
 											}
 										}).complete(function(){
 											$(thisItem).removeClass("es-loading");
