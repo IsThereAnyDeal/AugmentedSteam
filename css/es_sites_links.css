@@ -2,7 +2,7 @@
  * Users profiles
  * add_community_profile_links()
  **************************************/
-.es_sites_icons:after {
+.es_sites_icons:not(.es_none):after {
 	content: "";
 	display: inline-block;
 	width: 16px;
