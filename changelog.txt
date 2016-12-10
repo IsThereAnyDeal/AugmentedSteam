@@ -1,5 +1,6 @@
 ﻿v9.2
 -----
+: Updated the advanced inventory controls to work with the new layout, they are now enabled by default
 
 
 v9.1

@@ -5607,7 +5607,7 @@ function keep_ssa_checked() {
 
 function add_inventory_gotopage(){
 	storage.get(function(settings) {
-		if (settings.showinvnav === undefined) { settings.showinvnav = false; storage.set({'showinvnav': settings.showinvnav}); }
+		if (settings.showinvnav === undefined) { settings.showinvnav = true; storage.set({'showinvnav': settings.showinvnav}); }
 		if (settings.showinvnav) {
 			$("#es_gotopage").remove();
 			$("#pagebtn_first").remove();
@@ -5618,17 +5618,27 @@ function add_inventory_gotopage(){
 			es_gotopage.id = "es_gotopage";
 			es_gotopage.textContent =
 				["g_ActiveInventory.GoToPage = function(page){",
-				 "	var iCurPage = this.pageCurrent;",
-				 "	var iNextPage = Math.min(Math.max(0, --page), this.pageTotal-1);",
-				 "	this.pageList[iCurPage].hide();",
-				 "	this.pageList[iNextPage].show();",
-				 "	this.pageCurrent = iNextPage;",
-				 "	this.LoadPageImages(this.pageList[iNextPage]);",
-				 "	this.PreloadPageImages(iNextPage);",
-				 "	this.UpdatePageCounts();",
+				 "  var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();",
+				 "	var iCurPage = this.m_iCurrentPage;",
+				 "	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);",
+				 "  var iPages = this.m_cPages",
+				 "  var _this = this;",
+				 "  if (iCurPage < iNextPage) {",
+				 "    if (iCurPage < iPages - 1) {",
+				 "      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );",
+				 "      this.m_$Inventory.css( 'left', '0' );",
+				 "      this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );",
+				 "    }",
+				 "  } else if (iCurPage > iNextPage) {",
+				 "    if (iCurPage > 0) {",
+				 "      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );",
+				 "      this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );",
+				 "      this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );",
+				 "    }",
+				 "  }",
 				 "}",
 				 "function InventoryLastPage(){",
-				 "	g_ActiveInventory.GoToPage(g_ActiveInventory.pageTotal);",
+				 "	g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);",
 				 "}",
 				 "function InventoryFirstPage(){",
 				 "	g_ActiveInventory.GoToPage(1);",
@@ -5640,30 +5650,35 @@ function add_inventory_gotopage(){
 				 "}"].join('\n');
 
 			document.documentElement.appendChild(es_gotopage);
+			
+			var es_pagebtn_observer = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					if ($(mutation.target).attr("id") == "pagebtn_next" && mutation.attributeName === 'class') {
+						if ($(mutation.target).hasClass("disabled")) {
+							$("#pagebtn_last").addClass("disabled");
+						} else {
+							$("#pagebtn_last").removeClass("disabled");
+						}
+					}
+					if ($(mutation.target).attr("id") == "pagebtn_previous" && mutation.attributeName === 'class') {
+						if ($(mutation.target).hasClass("disabled")) {
+							$("#pagebtn_first").addClass("disabled");
+						} else {
+							$("#pagebtn_first").removeClass("disabled");
+						}
+					}
+				});
+			});
+			es_pagebtn_observer.observe($('#pagebtn_next')[0], { attributes: true });
+			es_pagebtn_observer.observe($('#pagebtn_previous')[0], { attributes: true });
 
 			// Go to first page
-			var firstpage = document.createElement("a");
-			firstpage.textContent = "<<";
-			firstpage.id = "pagebtn_first";
-			firstpage.classList.add("pagecontrol_element");
-			firstpage.classList.add("pagebtn");
-			firstpage.href = "javascript:InventoryFirstPage();";
-			$("#pagebtn_previous").after(firstpage);
+			$("#pagebtn_previous").after("<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled'><<</a>");
 
 			// Go to last page
-			var lastpage = document.createElement("a");
-			lastpage.textContent = ">>";
-			lastpage.id = "pagebtn_last";
-			lastpage.classList.add("pagecontrol_element");
-			lastpage.classList.add("pagebtn");
-			lastpage.href = "javascript:InventoryLastPage();";
-			$("#pagebtn_next").before(lastpage);
+			$("#pagebtn_next").before("<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element'>>></a>");
 
-			$(".pagebtn").css({
-				"padding": "0",
-				"width": "32px",
-				"margin": "0 3px"
-			});
+			$(".pagebtn").css({"padding": "0", "width": "32px", "margin": "0 3px" });
 			var page_go = document.createElement("div");
 			page_go.id = "es_pagego";
 			$(page_go).css({"float":"left"});
@@ -5682,7 +5697,7 @@ function add_inventory_gotopage(){
 			$(page_go).append(pagenumber);
 
 			var goto_btn = document.createElement("a");
-			goto_btn.textContent = "Go";
+			goto_btn.textContent = localized_strings.go;
 			goto_btn.id = "gotopage_btn";
 			goto_btn.classList.add("pagebtn");
 			goto_btn.href = "javascript:InventoryGoToPage();";
@@ -5693,8 +5708,6 @@ function add_inventory_gotopage(){
 			$(page_go).append(goto_btn);
 
 			$("#inventory_pagecontrols").before(page_go);
-			// TODO: Maybe use &laquo; or &#8810; for first/last button text?
-			// TODO: Disable buttons when already on first/last page?
 		}
 	});
 }
@@ -9563,6 +9576,7 @@ $(document).ready(function(){
 							inventory_market_prepare();
 							hide_empty_inventory_tabs();
 							keep_ssa_checked();
+							add_inventory_gotopage();
 							break;
 
 						case /^\/(?:id|profiles)\/(.+)\/games/.test(path):

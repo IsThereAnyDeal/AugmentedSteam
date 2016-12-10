@@ -121,7 +121,7 @@ var settings_defaults = {
 	"showdrm": true,
 	"show_acrtag_info": false,
 	"regional_hideworld": false,
-	"showinvnav": false,
+	"showinvnav": true,
 	"showesbg": true,
 	"quickinv": true,
 	"quickinv_diff": -0.01,
