@@ -2198,7 +2198,7 @@ function add_enhanced_steam_options() {
 	});
 
 	// Add ES progress indicator
-	$('#global_actions').after('<div class="es_progress_wrap"><progress id="es_progress" class="complete" value="1" max="1" title="${ localized_strings.ready.ready }"></progress></div>');
+	$('#global_actions').after(`<div class="es_progress_wrap"><progress id="es_progress" class="complete" value="1" max="1" title="${ localized_strings.ready.ready }"></progress></div>`);
 }
 
 // Display warning if browsing using non-account region
