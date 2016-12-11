@@ -8213,7 +8213,7 @@ var resetLazyLoader = function() { runInPageContext(function() {
 function add_badge_filter() {
 	var filter_done = false;
 
-	if ($(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, "")) {
+	if ($(".profile_small_header_texture a")[0].href == ($("a.playerAvatar").prop("href") || "").replace(/\/$/, "")) {
 		var html  = '<span>' + localized_strings.show + ' </span>';
 			html += '<div class="store_nav"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.badges_all + '</div><span></span></span></div></div>';
 			html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
@@ -8295,7 +8295,7 @@ function add_badge_filter() {
 }
 
 function add_badge_sort() {
-	var is_own_profile = $(".profile_small_header_texture a")[0].href == $(".playerAvatar:first a")[0].href.replace(/\/$/, ""),
+	var is_own_profile = $(".profile_small_header_texture a")[0].href == ($("a.playerAvatar").prop("href") || "").replace(/\/$/, ""),
 		sorts = ["c", "a", "r"],
 		sorted = $("a.badge_sort_option.active")[0].search.replace("?sort=", "") || (is_own_profile ? "p" : "c"),
 		linksHtml = "";
