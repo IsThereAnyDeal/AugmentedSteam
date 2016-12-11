@@ -4479,8 +4479,10 @@ function add_dlc_page_link(appid) {
 
 // Fix "No image available" on apps image header
 function fix_app_image_not_found() {
-	$("img[src$='338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif']").attr("src", function(){
-		return "//steamcdn-a.akamaihd.net/steam/apps/" + get_appid( $(this).parent()[0].href ) + "/capsule_184x69.jpg";
+	$("img[src$='338200c5d6c4d9bdcf6632642a2aeb591fb8a5c2.gif']").attr("src", function(){		
+		var appid = get_appid($(this).parent()[0].href);
+		if (appid == 223530) { return; };
+		return "//steamcdn-a.akamaihd.net/steam/apps/" + appid + "/capsule_184x69.jpg";
 	});
 }
 
