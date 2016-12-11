@@ -2,7 +2,7 @@
 	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/pinn.png");
 }
 .es_birthday #logo_holder img {
-	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_logo.png") no-repeat;
+	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_logo_bg.gif") no-repeat;
 }
 .es_birthday.es_store_front #global_header:before {
 	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_bg.png") repeat-x;
