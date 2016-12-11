@@ -9640,8 +9640,10 @@ $(document).ready(function(){
 
 						case /^\/sharedfiles\/browse/.test(path):
 							remember_greenlight_filter().done(
-								endless_scrolling_greenlight
+								endless_scrolling_greenlight,
+								preview_greenlight_votes
 							);
+							hide_greenlight_banner();
 
 						case /^\/sharedfiles\/.*/.test(path):
 							hide_greenlight_banner();
@@ -9649,12 +9651,7 @@ $(document).ready(function(){
 							media_slider_expander();
 							break;
 
-						case /^\/workshop\/.*/.test(path):
-							remember_greenlight_filter().done(
-								endless_scrolling_greenlight,
-								preview_greenlight_votes
-							);
-							hide_greenlight_banner();
+						case /^\/workshop\/.*/.test(path):							
 							hide_spam_comments();
 							break;
 

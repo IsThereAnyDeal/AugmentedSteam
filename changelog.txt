@@ -3,6 +3,7 @@
 : Updated the advanced inventory controls to work with the new layout, they are now enabled by default
 : Fixed a bug where site icons would display incorrectly on profiles if the display style was set to none
 : Fixed a bug that would sometimes cause quick sell functions to sometimes sell items for the wrong amount
+: Fixed a bug that could cause some game's workshop item list not to load correctly
 
 
 v9.1
