@@ -5051,6 +5051,26 @@ function inventory_market_prepare() {
 	window.addEventListener("message", function(event) {
 		if (event.source !== window) return;
 		if (event.data.type && (event.data.type === "es_sendmessage")) { inventory_market_helper(event.data.information); }
+		if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
+			var sell_price = event.data.information.amount - event.data.information.fees;
+			$.ajax({
+				url: "https://steamcommunity.com/market/sellitem/",
+				type: "POST",
+				data: {
+					"sessionid": event.data.sessionID,
+					"appid": event.data.global_id,
+					"contextid": event.data.contextID,
+					"assetid": event.data.assetID,
+					"amount": 1,
+					"price": sell_price
+				},
+				crossDomain: true,
+				xhrFields: { withCredentials: true }
+			}).complete(function(data){
+				$("#es_instantsell" + event.data.assetID).parent().slideUp();
+				$("#" + event.data.global_id + "_" + event.data.contextID + "_" + event.data.assetID).addClass("btn_disabled activeInfo").css("pointer-events", "none");
+			});
+		}
 	}, false);
 }
 
@@ -5217,8 +5237,8 @@ function inventory_market_helper(response) {
 							$(thisItem).addClass("es-loading");
 
 							// Add the links with no data, so we can bind actions to them, we add the data later
-							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + item + "'></a>");
-							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + item + "'></a>");
+							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + assetID + "'></a>");
+							$sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + assetID + "'></a>");
 
 							// Check if price is stored in data
 							if ($(thisItem).hasClass("es-price-loaded")) {
@@ -5227,11 +5247,11 @@ function inventory_market_helper(response) {
 
 								// Add Quick Sell button
 								if (price_high) {
-									$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+									$("#es_quicksell" + assetID).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 								}
 								// Add Instant Sell button
 								if (price_low) {
-									$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+									$("#es_instantsell" + assetID).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 								}
 
 								$(thisItem).removeClass("es-loading");
@@ -5263,11 +5283,11 @@ function inventory_market_helper(response) {
 												$(thisItem).addClass("es-price-loaded");
 												// Add "Quick Sell" button
 												if (price_high > price_low) {
-													$("#es_quicksell" + item).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+													$("#es_quicksell" + assetID).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 												// Add "Instant Sell" button
 												if (market.highest_buy_order) {
-													$("#es_instantsell" + item).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+													$("#es_instantsell" + assetID).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 											}
 										}).complete(function(){
@@ -5278,41 +5298,15 @@ function inventory_market_helper(response) {
 							}
 						}
 
-						// Bind actions to "Quick Sell" and "Instant Sel" buttons
-						$("#es_quicksell" + item + ", #es_instantsell" + item).on("click", function(e){
+						// Bind actions to "Quick Sell" and "Instant Sell" buttons
+						$("#es_quicksell" + assetID + ", #es_instantsell" + assetID).on("click", function(e){
 							e.preventDefault();
 
 							var sell_price = $(this).attr("price") * 100;
-
-							$("#es_sell, #es_quicksell" + item + ", #es_instantsell" + item).addClass("btn_disabled").css("pointer-events", "none");
-
+							$("#es_sell, #es_quicksell" + assetID + ", #es_instantsell" + assetID).addClass("btn_disabled").css("pointer-events", "none");
 							$sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
 
-							runInPageContext("function() { var fee = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee }, '*'); }");
-
-							window.addEventListener("message", function(event) {
-								if (event.source !== window) return;
-								if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
-									sell_price = sell_price - event.data.information.fees;
-									$.ajax({
-										url: "https://steamcommunity.com/market/sellitem/",
-										type: "POST",
-										data: {
-											"sessionid": sessionID,
-											"appid": global_id,
-											"contextid": contextID,
-											"assetid": assetID,
-											"amount": 1,
-											"price": sell_price
-										},
-										crossDomain: true,
-										xhrFields: { withCredentials: true }
-									}).complete(function(data){
-										$sideMarketActs.slideUp();
-										$(thisItem).addClass("btn_disabled activeInfo").css("pointer-events", "none");
-									});
-								}
-							}, false);
+							runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetID + "', information: fee_info, sessionID: '" + sessionID + "', global_id: '" + global_id + "', contextID: '" + contextID + "', assetID: '" + assetID + "' }, '*'); }");
 						});
 					}
 				}
