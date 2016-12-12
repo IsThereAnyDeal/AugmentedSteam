@@ -5037,7 +5037,7 @@ function inventory_market_prepare() {
 					g_ActiveInventory.selectedItem.description.marketable,
 					g_ActiveInventory.appid,
 					g_ActiveInventory.selectedItem.description.market_hash_name,
-					g_ActiveInventory.selectedItem.description.owner_actions[0].link,
+					(g_ActiveInventory.selectedItem.description.market_hash_name.match(/^([0-9]+)\-/) || [])[1],
 					g_ActiveInventory.selectedItem.description.type,
 					g_ActiveInventory.selectedItem.assetid,
 					g_sessionID,
@@ -5082,7 +5082,7 @@ function inventory_market_helper(response) {
 		marketable = response[1],
 		global_id = response[2],
 		hash_name = response[3],
-		appid = response[4].replace(/\D/g,"");
+		appid = response[4];
 		assetID = response[6],
 		sessionID = response[7],
 		contextID = response[8];
