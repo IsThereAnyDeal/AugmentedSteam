@@ -7271,30 +7271,29 @@ var purchase_dates_promise = function(lang, appname) {
 	if (last_updated < expire_time || !purchase_dates[lang]) {
 		get_http('https://store.steampowered.com/account/licenses/?l=' + lang, function(txt) {
 			var replace_strings = [
-				"- Complete Pack",
-				"Standard Edition",
-				"Steam Store and Retail Key",
-				"- Hardware Survey",
-				"ComputerGamesRO -",
-				"Founder Edition",
-				"Retail( Key)?",
-				"Complete$",
-				"Free$",
-				"(RoW)",
-				"ROW",
-				":"
+				new RegExp("- Complete Pack", "ig"),
+				new RegExp("Standard Edition", "ig"),
+				new RegExp("Steam Store and Retail Key", "ig"),
+				new RegExp("- Hardware Survey", "ig"),
+				new RegExp("ComputerGamesRO -", "ig"),
+				new RegExp("Founder Edition", "ig"),
+				new RegExp("Retail( Key)?", "ig"),
+				new RegExp("Complete$", "ig"),
+				new RegExp("Free$", "ig"),
+				new RegExp("(RoW)", "ig"),
+				new RegExp("ROW", "ig"),
+				new RegExp(":", "ig")
 			];
 
 			purchase_dates[lang] = {};
 
-			$(txt).find(".license_date_col").not(":eq(0)").each(function(i, node) {
+			$(txt).find("#main_content").find(".license_date_col").not(":eq(0)").each(function(i, node) {
 				var $nameTd = $(node).next("td");
 				$nameTd.find("div").remove();
 
 				// Clean game name
 				var game_name = replace_symbols($nameTd.text()).trim();
-				replace_strings.forEach(function(string) {
-					var regex = new RegExp(string, "ig");
+				replace_strings.forEach(function(regex) {
 					game_name = game_name.replace(regex, "");
 				});
 
