@@ -5493,43 +5493,47 @@ function add_relist_button() {
 				}
 				
 				$("#es_relist_confirm").on("click", function() {
-					var pricematch = $("#market_sell_buyercurrency_input").val().match(pricepattern);
+					/*var pricematch = $("#market_sell_buyercurrency_input").val().match(pricepattern);
 					if (pricematch) {
 						var sell_price = parseFloat((pricematch[1] || "").replace(/[^\d]/, "") + "." + (pricematch[4] || 0)) * 100;
 					} else {
 						return;
-					}
+					}*/
 
 					$("#es_relist_confirm").hide();
 					$(".market_sell_dialog_input_group").hide();
 					$("#market_removelisting_dialog_accept_throbber").show();
-					runInPageContext("function() { var sessionid = g_sessionID; var fee = CalculateFeeAmount (" + sell_price + ", 0.10); window.postMessage({ type: 'es_relist', information: [sessionid,fee] }, '*'); }");
+					
+					runInPageContext("function() { var sessionid = g_sessionID; var fee = CalculateFeeAmount (GetPriceValueAsInt($J('#market_sell_buyercurrency_input').val()), 0.10); window.postMessage({ type: 'es_relist', information: [sessionid, fee] }, '*'); }");
 					window.addEventListener("message", function(event) {
 						if (event.source != window)	return;
 						if (event.data.type && (event.data.type == "es_relist")) { 
-							var sessionid = event.data.information[0];
-							var fee = event.data.information[1];
-							sell_price = sell_price -fee.fees;
-							var item_link = $("#market_removelisting_dialog_itemname a").attr("href");
-							var item_page = $(".market_listing_item_name_block .market_listing_item_name_link[href$='" + item_link + "']");
-							var item_remove = $(item_page).parent().parent().parent().find(".market_listing_cancel_button a").attr("href");
-							var matches = item_remove.match(/'mylisting', '(\d+)', (\d+), '(\d+)', '(\d+)'/);
+							var sessionid = event.data.information[0],
+								fee = event.data.information[1],
+								sell_price = fee.amount - fee.fees,
+								item_link = $("#market_removelisting_dialog_itemname a").attr("href"),
+								item_page = $(".market_listing_item_name_block .market_listing_item_name_link[href$='" + item_link + "']"),
+								item_remove = $(item_page).parent().parent().parent().find(".market_listing_cancel_button a").attr("href"),
+								matches = item_remove.match(/'mylisting', '(\d+)', (\d+), '(\d+)', '(\d+)'/);
+
+							//console.log(sell_price, fee);
+							
 							if (matches) {
 								var listingid = matches[1],
 									appid = matches[2],
 									contextid = matches[3],
 									itemid = matches[4];
 								$.ajax({
-									url:"https://steamcommunity.com/market/removelisting/" + listingid,
+									url: "https://steamcommunity.com/market/removelisting/" + listingid,
 									type: "POST",
-									data:{
+									data: {
 										"sessionid": sessionid
 									}
 								}).done(function(){
 									$.ajax({
-										url:"https://steamcommunity.com/market/sellitem/",
+										url: "https://steamcommunity.com/market/sellitem/",
 										type: "POST",
-										data:{
+										data: {
 											"sessionid": sessionid,
 											"appid": appid,
 											"contextid": contextid,
