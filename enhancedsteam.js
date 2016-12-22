@@ -9367,6 +9367,17 @@ function disable_link_filter() {
 	}
 }
 
+// Fix Store's main menu dropdown not being hidden on mouse out
+function fix_menu_dropdown() {
+	runInPageContext(function(){
+		$J('.tab.flyout_tab').on('mouseleave', function(e) {
+			var $Tab = $J(this);
+			var $Content = $J('#' + $Tab.data('flyout') );
+			$Content.data( 'flyout-event-running', false );
+		});
+	});
+}
+
 $(document).ready(function(){
 	var path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -9512,7 +9523,6 @@ $(document).ready(function(){
 							customize_home_page();
 							break;
 					}
-
 					// Alternative Linux icon
 					alternative_linux_icon();
 
@@ -9524,6 +9534,8 @@ $(document).ready(function(){
 					hide_trademark_symbols();
 					set_html5_video();
 					get_store_session();
+
+					fix_menu_dropdown();
 					break;
 
 				case "steamcommunity.com":
