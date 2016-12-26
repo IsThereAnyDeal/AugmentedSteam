@@ -2100,7 +2100,7 @@ function send_age_verification() {
 		if (settings.send_age_info === undefined) { settings.send_age_info = true; storage.set({'send_age_info': settings.send_age_info}); }
 		if (settings.send_age_info) {
 
-			if ($("#ageYear").length != 0) {
+			if ($("#ageYear").length) {
 				var myYear = Math.floor(Math.random()*75)+10;
 				var ageYear = "19" + myYear;
 				$("#ageYear").val(ageYear);
@@ -2109,6 +2109,11 @@ function send_age_verification() {
 				if ($(".agegate_text_container.btns a:first").attr("href") == "#") {
 					$(".agegate_text_container.btns a:first")[0].click();
 				}
+			}
+
+			// Automatically confirm age gate verification
+			if ($("#age_gate_btn_continue").length) {
+				$("#age_gate_btn_continue").click();
 			}
 		}
 	});
@@ -9499,6 +9504,15 @@ function disable_link_filter() {
 	}
 }
 
+// Fix Store's main menu dropdown not being hidden on mouse out
+function fix_menu_dropdown() {
+	runInPageContext(function(){
+		$J('div.tab.flyout_tab').on('mouseleave', function() {
+			$J('#' + $J(this).data('flyout')).data('flyout-event-running', false);
+		});
+	});
+}
+
 $(document).ready(function(){
 	var path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -9656,6 +9670,7 @@ $(document).ready(function(){
 					hide_trademark_symbols();
 					set_html5_video();
 					//get_store_session();
+					fix_menu_dropdown();
 					break;
 
 				case "steamcommunity.com":
@@ -9822,6 +9837,7 @@ $(document).ready(function(){
 							add_app_page_wishlist(appid);
 							hide_spam_comments();
 							add_steamdb_links(appid, "gamehub");
+							send_age_verification();
 							break;
 
 						case /^\/games\/.*/.test(path):
