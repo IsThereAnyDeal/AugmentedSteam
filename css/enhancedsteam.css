@@ -1977,8 +1977,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /**************************************
  * Search result filter
+ * add_hide_buttons_to_search()
  *************************************/
-
 .es_input_number {
 	background-color: rgba( 103, 193, 245, 0.2 );
 	color: #fff;
@@ -1988,7 +1988,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: calc(100% - 10px);
 	padding: 5px;
 }
-
 .es_input_text {
 	background-color: #2a3f5a;
         color: #fff;
@@ -1999,7 +1998,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
     padding: 5px;
     margin: 5px;
 }
-
 .es_input_text.blur {
 	color:#62696e;
 }
@@ -2108,7 +2106,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	padding-top: 10px;
 	clear: both;
 }
-
 #game_area_userscore .score {
 	width: 50px;
 	height: 50px;
@@ -2119,19 +2116,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	text-align: center;
 	float: left;
 }
-
 #game_area_userscore .score.high {
 	background-color: #66CC33;
 }
-
 #game_area_userscore .score.medium {
 	background-color: #FFCC33;
 }
-
 #game_area_userscore .score.low {
 	background-color: #FF0000;
 }
-
 #game_area_userscore .logo {
 	background-image: url(/public/images/v6/mc_logo_no_text.png);
 	background-repeat: no-repeat;
@@ -2141,12 +2134,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: 10px;
 	float: left;
 }
-
 #game_area_userscore .wordmark {
 	float: left;
 	width: 180px;
 }
-
 #game_area_userscore .metacritic {
 	font-family: "Motiva Sans", Sans-serif;
 	font-weight: bold; /* bold */
@@ -2157,3 +2148,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: 12px;
 	float: left;
 }
+
+/***************************************
+ * Wishlists
+ * wishlist_add_to_cart()
+ **************************************/
+.es_add_to_cart .es_loading_img {
+	width: 16px;
+	vertical-align: middle;
+	margin: -1px -10px 0 4px;
+	filter: brightness(350%);
+}
+
