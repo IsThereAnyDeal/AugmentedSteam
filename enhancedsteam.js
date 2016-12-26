@@ -3093,7 +3093,7 @@ var get_subid = function(appid) {
 
 function wishlist_add_to_cart() {
 	storage.get(function(settings){
-		if (settings.add_to_cart_wishlist === undefined) { settings.add_to_cart_wishlist = false; storage.set({'add_to_cart_wishlist': settings.add_to_cart_wishlist}); }
+		if (settings.add_to_cart_wishlist === undefined) { settings.add_to_cart_wishlist = true; storage.set({'add_to_cart_wishlist': settings.add_to_cart_wishlist}); }
 		if (settings.add_to_cart_wishlist) {
 
 			$("div.gameListPriceData").each(function(i, node) {
