@@ -9372,6 +9372,15 @@ function disable_link_filter() {
 	}
 }
 
+// Fix Store's main menu dropdown not being hidden on mouse out
+function fix_menu_dropdown() {
+	runInPageContext(function(){
+		$J('div.tab.flyout_tab').on('mouseleave', function() {
+			$J('#' + $J(this).data('flyout')).data('flyout-event-running', false);
+		});
+	});
+}
+
 $(document).ready(function(){
 	var path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -9529,6 +9538,8 @@ $(document).ready(function(){
 					hide_trademark_symbols();
 					set_html5_video();
 					get_store_session();
+
+					fix_menu_dropdown();
 					break;
 
 				case "steamcommunity.com":
