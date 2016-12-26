@@ -151,7 +151,8 @@ var settings_defaults = {
 	"profile_permalink": true,
 	"steamcardexchange": true,
 	"purchase_dates": true,
-	"add_wallet_balance": true
+	"add_wallet_balance": true,
+	"add_to_cart_wishlist": false
 };
 
 // Saves options to localStorage

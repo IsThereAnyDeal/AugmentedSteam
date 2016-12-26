@@ -1627,23 +1627,16 @@ function add_wishlist_ajaxremove() {
 	// Remove "onclick"
 	runInPageContext(function(){ $J("a[onclick*=wishlist_remove]").removeAttr("onclick").addClass("es_wishlist_remove"); });
 
-	var store_sessionid = false;
-	storage.get(function(settings) {
-		if (settings.store_sessionid) {
-			store_sessionid = settings.store_sessionid;
-		}
-
-		var sessionid = store_sessionid || decodeURIComponent(cookie.match(/sessionid=(.+?);/i)[1]);
-
+	$.when.apply($, [get_store_session]).done(function(store_sessionid) {
 		$(".es_wishlist_remove").on("click", function(e) {
 			e.preventDefault();
 
 			var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
 			$.ajax({
 				type: "POST",
-				url: (store_sessionid ? "//store.steampowered.com/api/removefromwishlist" : window.location),
+				url: "//store.steampowered.com/api/removefromwishlist",
 				data: {
-					sessionid: sessionid,
+					sessionid: store_sessionid,
 					action: "remove",
 					appid: appid
 				},
@@ -2197,8 +2190,7 @@ function add_enhanced_steam_options() {
 	$('#es_clear_cache').on('click', function(e){
 		e.preventDefault();
 
-		localStorage.clear();
-		chrome.storage.local.remove("user_currency");
+		clear_cache();
 		location.reload();
 	});
 
@@ -2790,16 +2782,26 @@ function drm_warnings(type) {
 
 // Remove all items from cart
 function add_empty_cart_button() {
-	addtext = "<a href='#' class='es_empty btnv6_green_white_innerfade btn_medium continue' style='float: left;'><span>" + localized_strings.empty_cart + "</span></a>";
+	$("div.checkout_content").prepend(`
+		<button class='es_empty_cart btnv6_green_white_innerfade btn_small continue' style='float: left;'>
+			<span>${ localized_strings.empty_cart }</span>
+		</button>
+	`);
 
-	$('.checkout_content').prepend(addtext);
-	if ($(".cart_row").length === 0) {
-		$(".es_empty").addClass("btn_disabled");
+	if (!$(".cart_row").length) {
+		$(".es_empty_cart").addClass("btn_disabled").prop("disabled", true);
 	}
 
-	$(".es_empty").click(function() {
-		document.cookie = "shoppingCartGID=0; path=/; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
-		window.location.assign('//store.steampowered.com/cart');
+	$(".es_empty_cart").on("click", function() {
+		runInPageContext(`function(){
+			var prompt = ShowConfirmDialog('` + localized_strings.empty_cart + `', '` + localized_strings.empty_cart_confirmation + `');
+			prompt.done(function(result) {
+				if (result == 'OK') {
+					document.cookie = "shoppingCartGID=0; path=/; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
+					window.location.assign('//store.steampowered.com/cart/');
+				}
+			});
+		}`);
 	});
 }
 
@@ -3051,6 +3053,93 @@ function alternative_linux_icon() {
 	});
 }
 
+var get_subid = function(appid) {
+	var deferred = new $.Deferred();
+
+	// Try to retrieve the subid from Steam's API
+	$.ajax({
+		url: '//store.steampowered.com/api/appdetails/?appids=' + appid,
+		crossDomain: true,
+		xhrFields: { withCredentials: true }
+	}).done(function(data) {
+		$.each(data, function(appid, app_data) {
+			if (app_data.success) {
+				deferred.resolve(app_data.data.packages[0]);
+			} else {
+				deferred.reject();
+			}
+		});
+	}).fail(function(){
+	// Steam API call failed, try to retrieve it from app's store page
+		$.ajax({
+			url: '//store.steampowered.com/app/' + appid + '/',
+			crossDomain: true,
+			xhrFields: { withCredentials: true }
+		}).done(function(txt) {
+			var subid = (txt.match(/name="subid" value="(\d+)"/i) || [])[1];
+			
+			if (subid) {
+				deferred.resolve(subid);
+			} else {
+				deferred.reject();
+			}
+		}).fail(function(){
+			deferred.reject();
+		});
+	});
+
+	return deferred.promise();
+};
+
+function wishlist_add_to_cart() {
+	storage.get(function(settings){
+		if (settings.add_to_cart_wishlist === undefined) { settings.add_to_cart_wishlist = false; storage.set({'add_to_cart_wishlist': settings.add_to_cart_wishlist}); }
+		if (settings.add_to_cart_wishlist) {
+
+			$("div.gameListPriceData").each(function(i, node) {
+				if ($(node).find("div.discount_block").length || $.inArray($(node).find("div.price").text().trim(), ['', 'Free to Play']) == -1) {
+					$(node).find("div.storepage_btn_ctn").prepend(`
+						<button type="submit" class="es_add_to_cart btnv6_green_white_innerfade btn_small">
+							<span>${ localized_strings.add_to_cart }
+							<img class="es_loading_img" style="display:none;" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" />
+							</span>
+						</button>
+					`);
+				}
+			});
+
+			$(".es_add_to_cart").on("click", function(e){
+				e.preventDefault();
+				
+				if (!$(this).is(".es_loading_cart")) {
+					var thisBtn = $(this).addClass("es_loading_cart");
+					var appid = get_appid($(this).next("a").prop("href"));
+
+					$(thisBtn).find(".es_loading_img").fadeIn();
+					
+					$.when(get_store_session, get_subid(appid)).done(function(store_sessionid, subid) {
+						$.ajax({
+							type: 'POST',
+							url: '//store.steampowered.com/cart/',
+							data: {
+								snr: '1_5_9__403',
+								action: 'add_to_cart',
+								sessionid: store_sessionid,
+								subid: subid
+							},
+							crossDomain: true,
+							xhrFields: { withCredentials: true }
+						}).done(function(txt) {
+							$(thisBtn).addClass("btn_disabled").prop("disabled", true);
+						}).complete(function() {
+							$(thisBtn).removeClass("es_loading_cart").find(".es_loading_img").fadeOut();
+						});
+					});
+				}
+			});
+		}
+	});
+}
 
 // TODO: Cache this data, but only the required entries! Store the data combined in one row
 // but update apps individually based on "release_date.coming_soon". Unreleased apps will be
@@ -3064,20 +3153,6 @@ function appdata_on_wishlist() {
 				var storefront_data = JSON.parse(data);
 				$.each(storefront_data, function(appid, app_data) {
 					if (app_data.success) {
-						storage.get(function(settings) {
-							if (settings.store_sessionid) {
-								// Add "Add to Cart" button
-								if (app_data.data.packages && app_data.data.packages[0]) {
-									var htmlstring = '<form name="add_to_cart_' + app_data.data.packages[0] + '" action="http://store.steampowered.com/cart/" method="POST">';
-									htmlstring += '<input type="hidden" name="snr" value="1_5_9__403">';
-									htmlstring += '<input type="hidden" name="action" value="add_to_cart">';
-									htmlstring += '<input type="hidden" name="sessionid" value="' + settings.store_sessionid + '">';
-									htmlstring += '<input type="hidden" name="subid" value="' + app_data.data.packages[0] + '">';
-									htmlstring += '</form>';
-									$(node).before('</form>' + htmlstring + '<a href="#" onclick="document.forms[\'add_to_cart_' + app_data.data.packages[0] + '\'].submit();" class="btnv6_green_white_innerfade btn_small"><span>' + localized_strings.add_to_cart + '</span></a>  ');
-								}
-							}
-						});
 						// Add platform information
 						if (app_data.data.platforms) {
 							var htmlstring = "";
@@ -3102,7 +3177,7 @@ function appdata_on_wishlist() {
 
 function wishlist_dynamic_data() {
 	storage.get(function(settings) {
-		$.when.apply($, [dynamicstore_promise]).done(function(data) {
+		$.when.apply($, [dynamicstore_promise, get_store_session]).done(function(data, store_sessionid) {
 			var ownedapps = data.rgOwnedApps;
 			var wishlistapps = data.rgWishlist;
 
@@ -3113,14 +3188,14 @@ function wishlist_dynamic_data() {
 					var owned = ownedapps.indexOf(appid);
 					var wishlisted = wishlistapps.indexOf(appid);
 
-					if (owned == -1 && wishlisted == -1 && settings.store_sessionid) {
+					if (owned == -1 && wishlisted == -1 && store_sessionid) {
 						$(node).parent().parent().siblings(".wishlist_added_on").append('(<a class="es_wishlist_add" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>)');
 						$("#es_wishlist_" + appid).click(function() {
 							$.ajax({
 								type:"POST",
 								url:"//store.steampowered.com/api/addtowishlist",
 								data:{
-									sessionid: settings.store_sessionid,
+									sessionid: store_sessionid,
 									appid: appid
 								},
 								success: function( msg ) {
@@ -7671,20 +7746,75 @@ function set_html5_video() {
 	});
 }
 
-function get_store_session() {
+var get_store_session = (function () {
+	var deferred = new $.Deferred();
+
 	if (is_signed_in) {
-		if (cookie.match(/sessionid+=([^\\s;]*);/)) {
-			storage.set({'store_sessionid': cookie.match(/sessionid+=([^\\s;]*);/)[1] });
-		}	
+		var sessionid = false;
+
+		chrome.storage.local.get("store_sessionid", function(data) {
+			// Return from cache if available
+			if (data.store_sessionid) {
+				deferred.resolve(data.store_sessionid.id);
+			}
+
+			// Check if cache needs updating
+			var expire_time = parseInt(Date.now() / 1000, 10) - 12 * 60 * 60; // 12 hours ago
+			var last_updated = data.store_sessionid && data.store_sessionid.updated || expire_time - 1;
+
+			if (!data.store_sessionid || last_updated < expire_time) {
+				if (window.location.host === "store.steampowered.com") {
+					sessionid = (cookie.match(/sessionid+=([^\\s;]*);/) || $("body").text().match(/g_sessionID = "(.+)";/i) || [])[1];
+
+					if (sessionid) {
+						chrome.storage.local.set({
+							'store_sessionid': {
+								'id': sessionid,
+								'updated': parseInt(Date.now() / 1000, 10)
+							}
+						});
+						deferred.resolve(sessionid);
+					} else {
+						deferred.reject();
+					}
+				} else {
+					get_http("//store.steampowered.com/about/", function(txt) {
+						sessionid = (txt.match(/g_sessionID = "(.+)"/i) || [])[1];
+
+						if (sessionid) {
+							chrome.storage.local.set({
+								'store_sessionid': {
+									'id': sessionid,
+									'updated': parseInt(Date.now() / 1000, 10)
+								}
+							});
+							deferred.resolve(sessionid);
+						} else {
+							deferred.reject();
+						}
+					}, {
+						xhrFields: {
+							withCredentials: true
+						}
+					}).fail(function(){
+						deferred.reject();
+					});
+				}
+			}
+		});
+	} else {
+		deferred.reject();
 	}
-}
+
+	return deferred.promise();
+})();
 
 function add_app_page_wishlist(appid) {
 	storage.get(function(settings) {
 		if (settings.wlbuttoncommunityapp === undefined) { settings.wlbuttoncommunityapp = true; storage.set({'wlbuttoncommunityapp': settings.wlbuttoncommunityapp}); }
-		if (settings.wlbuttoncommunityapp && settings.store_sessionid) {
+		if (settings.wlbuttoncommunityapp) {
 			// Get dynamic store data
-			$.when.apply($, [dynamicstore_promise]).done(function(data) {
+			$.when.apply($, [dynamicstore_promise, get_store_session]).done(function(data, store_sessionid) {
 				var ownedapps = data.rgOwnedApps;
 				var wishlistapps = data.rgWishlist;
 
@@ -7706,7 +7836,7 @@ function add_app_page_wishlist(appid) {
 								type: "POST",
 								url: "//store.steampowered.com/api/addtowishlist",
 								data: {
-									sessionid: settings.store_sessionid,
+									sessionid: store_sessionid,
 									appid: appid
 								},
 								success: function( msg ) {
@@ -7789,6 +7919,8 @@ function add_app_page_wishlist_changes(appid) {
 
 function clear_cache() {
 	localStorage.clear();
+	chrome.storage.local.remove("user_currency");
+	chrome.storage.local.remove("store_sessionid");
 }
 
 function change_user_background() {
@@ -9412,7 +9544,7 @@ $(document).ready(function(){
 					}
 
 					switch (true) {
-						case /^\/cart\/.*/.test(path):
+						case /^\/cart(\/)?.*/.test(path):
 							add_empty_cart_button();
 							break;
 
@@ -9537,8 +9669,7 @@ $(document).ready(function(){
 					bind_ajax_content_highlighting();
 					hide_trademark_symbols();
 					set_html5_video();
-					get_store_session();
-
+					//get_store_session();
 					fix_menu_dropdown();
 					break;
 
@@ -9563,6 +9694,7 @@ $(document).ready(function(){
 							add_wishlist_pricehistory();
 							add_wishlist_notes();
 							add_wishlist_search();
+							wishlist_add_to_cart();
 
 							// Wishlist highlights
 							load_inventory().done(function() {
