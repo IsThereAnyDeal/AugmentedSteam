@@ -7354,8 +7354,9 @@ var purchase_dates_promise = function(lang, appname) {
 	// Update cache if needed
 	if (last_updated < expire_time || !purchase_dates[lang]) {
 		get_http('https://store.steampowered.com/account/licenses/?l=' + lang, function(txt) {
-			var replace_strings = [
-				"- Complete Pack",
+			var replace_strings = [];
+
+			[	"- Complete Pack",
 				"Standard Edition",
 				"Steam Store and Retail Key",
 				"- Hardware Survey",
@@ -7366,8 +7367,10 @@ var purchase_dates_promise = function(lang, appname) {
 				"Free$",
 				"(RoW)",
 				"ROW",
-				":"
-			];
+				":",
+			].forEach(function(str) {
+				replace_strings.push(new RegExp(str, "ig"));
+			});
 
 			purchase_dates[lang] = {};
 
@@ -7377,8 +7380,8 @@ var purchase_dates_promise = function(lang, appname) {
 
 				// Clean game name
 				var game_name = replace_symbols($nameTd.text()).trim();
-				replace_strings.forEach(function(string) {
-					game_name = game_name.replace(new RegExp(string, "ig"), "");
+				replace_strings.forEach(function(regex) {
+					game_name = game_name.replace(regex, "");
 				});
 
 				purchase_dates[lang][game_name.trim()] = $(node).text();
