@@ -2089,10 +2089,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Users profiles
  * add_profile_style()
  **************************************/
-.holidayprofile .persona_name.persona_name_spacer {
+.es_profile_style .holidayprofile .persona_name.persona_name_spacer {
 	pointer-events: none; /* fixes username and alias dropdown not being clickable */
 }
-.holidayprofile .profile_content {
+.es_profile_style .holidayprofile .profile_content {
 	margin-top: -66px !important;
 	padding-top: 24px !important;
 }

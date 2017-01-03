@@ -4259,6 +4259,7 @@ function add_profile_style() {
 			var txt = data.style;
 			var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
 			if ($.inArray(txt, available_styles) > -1) {
+				$("body").addClass("es_profile_style");
 				switch (txt) {
 					case "holiday2014":
 						$("head").append("<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
@@ -4269,7 +4270,7 @@ function add_profile_style() {
 						});
 						break;
 					case "clear":
-						$("body").addClass("es_profile_style es_style_clear");
+						$("body").addClass("es_style_clear");
 						break;
 					default:
 						$("head").append("<link rel='stylesheet' type='text/css' href='" + chrome.extension.getURL("img/profile_styles/" + txt + "/style.css") + "'>");
