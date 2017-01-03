@@ -7355,20 +7355,23 @@ var purchase_dates_promise = function(lang, appname) {
 	// Update cache if needed
 	if (last_updated < expire_time || !purchase_dates[lang]) {
 		get_http('https://store.steampowered.com/account/licenses/?l=' + lang, function(txt) {
-			var replace_strings = [
-				new RegExp("- Complete Pack", "ig"),
-				new RegExp("Standard Edition", "ig"),
-				new RegExp("Steam Store and Retail Key", "ig"),
-				new RegExp("- Hardware Survey", "ig"),
-				new RegExp("ComputerGamesRO -", "ig"),
-				new RegExp("Founder Edition", "ig"),
-				new RegExp("Retail( Key)?", "ig"),
-				new RegExp("Complete$", "ig"),
-				new RegExp("Free$", "ig"),
-				new RegExp("(RoW)", "ig"),
-				new RegExp("ROW", "ig"),
-				new RegExp(":", "ig")
-			];
+			var replace_strings = [];
+
+			[	"- Complete Pack",
+				"Standard Edition",
+				"Steam Store and Retail Key",
+				"- Hardware Survey",
+				"ComputerGamesRO -",
+				"Founder Edition",
+				"Retail( Key)?",
+				"Complete$",
+				"Free$",
+				"(RoW)",
+				"ROW",
+				":",
+			].forEach(function(str) {
+				replace_strings.push(new RegExp(str, "ig"));
+			});
 
 			purchase_dates[lang] = {};
 
