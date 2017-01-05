@@ -10,9 +10,6 @@
 .es_regional_icon {
 	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/flags/world.png") 8px 8px !important;
 }
-.es_percentage:before {
-	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/arrows.png") top left;
-}
 #es_progress::-moz-progress-bar {
 	background-color: #51771d;
 }
