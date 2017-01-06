@@ -4966,6 +4966,14 @@ function add_lowest_market_price() {
 	});
 }
 
+function add_badge_page_link() {
+		var cardType = "";
+		if (document.URL.endsWith("%20%28Foil%29")) {
+			cardType = "?border=1";
+		}
+	}
+}
+
 // Add a "Total spent on Steam" to the account details page
 function account_total_spent() {
 	storage.get(function(settings) {
@@ -9830,6 +9838,7 @@ $(document).ready(function(){
 							keep_ssa_checked();
 							add_background_preview_link();
 							add_market_sort();
+							add_badge_page_link();
 							break;
 
 						case /^\/app\/[^\/]*\/guides/.test(path):
