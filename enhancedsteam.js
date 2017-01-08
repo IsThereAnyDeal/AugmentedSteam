@@ -5257,6 +5257,10 @@ function inventory_market_helper(response) {
 				var $sideMarketActsDiv = $sideMarketActs.find("div").last().css("margin-bottom", "8px"),
 					dataCardsPrice = $(thisItem).data("cards-price");
 
+				$(`#iteminfo${ item }_item_owner_actions`).prepend(`
+					<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${ appid }/"><span>${ localized_strings.badge_progress }</span></a>
+				`);
+
 				// Monitor for when the price and volume are added
 				setMutationHandler(document, ".item_market_actions div:last-child br:last-child", function(){
 					if (dataCardsPrice) {
