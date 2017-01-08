@@ -2160,3 +2160,28 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	filter: brightness(350%);
 }
 
+/***************************************
+ * Store app pages
+ * add_app_badge_progres()
+ **************************************/
+.es_badges_progress_block .es_cards_numbers {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-left: 44px;
+	color: #67c1f5;
+	clear: both;
+}
+.es_badges_progress_block .es_cards_owned {
+	padding-top: 8px;
+}
+.es_progress_block {
+	overflow: hidden;
+}
+.es_progress_block .badge_info_description {
+	width: 275px;
+}
+.es_progress_block .badge_empty_circle {
+	margin: 0px 46px 14px 8px;
+	border-radius: 46px;
+}
+

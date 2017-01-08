@@ -37,7 +37,8 @@
     "translation": "Translation",
     "lowest": "Lowest",
     "lowest_price": "Current Lowest Price",
-    "badge_progress": "View Badge Progress",
+    "view_badge_progress": "View badge progress",
+    "badge_progress": "Badge Progress",
     "sales_total": "Sales total",
     "hold_total": "Total on hold",
     "view_normal_badge": "View Normal Badge Progress",
@@ -410,6 +411,7 @@
         "skip_got_steam": "Skip the 'Got Steam?' window",
         "store_general_thirdparty": "Options for information from 3rd party sites",
         "purchase_dates": "Show apps purchase date on store pages",
+        "show_badge_progress": "Show apps badge progress on store pages",
         "lang": {
             "english": "English",
             "brazilian": "Portuguese-Brazil",
