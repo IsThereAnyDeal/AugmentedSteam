@@ -4966,6 +4966,18 @@ function add_lowest_market_price() {
 	});
 }
 
+function add_badge_page_link() {
+	var badgeAppID = document.URL.match("(?:\/753\/)([0-9]+)(?=-)");
+	if (badgeAppID[1]) {
+		var badgeAppID = badgeAppID[1];
+		var cardType = "";
+		if (document.URL.endsWith("%20%28Foil%29")) {
+			cardType = "?border=1";
+		}
+		$("div.market_listing_nav").append('<a class="btn_grey_grey btn_medium" target="_blank" href="//steamcommunity.com/my/gamecards/' + badgeAppID + cardType +'" style="float: right; margin-top: -10px;"><span><img src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0px;" width="24" height="16" border="0" align="top">&nbsp; ' + localized_strings.view_badge + '</span></a>');
+	}
+}
+
 // Add a "Total spent on Steam" to the account details page
 function account_total_spent() {
 	storage.get(function(settings) {
@@ -9834,6 +9846,7 @@ $(document).ready(function(){
 							keep_ssa_checked();
 							add_background_preview_link();
 							add_market_sort();
+							add_badge_page_link();
 							break;
 
 						case /^\/app\/[^\/]*\/guides/.test(path):
