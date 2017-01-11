@@ -2160,3 +2160,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	filter: brightness(350%);
 }
 
+/***************************************
+ * Steam Web Chat
+ **************************************/
+.chat_dialog_content_inner {
+	position: relative !important; /* fixes chat scrollbar not sticking to the bottom after typing */
+}
