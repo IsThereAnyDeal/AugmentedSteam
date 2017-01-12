@@ -582,7 +582,11 @@ var storePageData = (function() {
 		if (data) {
 			deferred.resolveWith(data);
 		} else {
+			var all = parseInt($("#review_type_all").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
+				pos = parseInt($("#review_type_positive").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
+				stm = parseInt($("#purchase_type_steam").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, ""));
 			var apiurl = "//api.enhancedsteam.com/storepagedata/?appid=" + appid;
+			if (all && pos && stm) apiurl += "&r_all=" + all + "&r_pos=" + pos + "&r_stm=" + stm;
 			if (metalink) apiurl += "&mcurl=" + metalink;
 			get_http(apiurl, function(txt) {
 				data = JSON.parse(txt);
