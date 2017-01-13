@@ -7802,7 +7802,7 @@ var get_store_session = (function () {
 					}
 				} else {
 					get_http("//store.steampowered.com/about/", function(txt) {
-						sessionid = (txt.match(/g_sessionID = "(.+)"/i) || [])[1];
+						sessionid = (txt.match(/g_AccountID = [\d]{2,}/i) && txt.match(/g_sessionID = "(.+)"/i) || [])[1];
 
 						if (sessionid) {
 							chrome.storage.local.set({
