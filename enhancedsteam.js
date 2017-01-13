@@ -6022,11 +6022,13 @@ function add_app_badge_progress(appid) {
 				});
 
 				function display_badge_info(responseText, blockSel) {
-					if ($(responseText).find(".friendPlayerLevelNum").length != 1) {
-						var card_num_owned = $(responseText).find(".badge_detail_tasks .owned").length,
-							card_num_total = $(responseText).find(".badge_detail_tasks .badge_card_set_card").length,
-							progress_text_length = $(responseText).find(".gamecard_badge_progress").text().trim().length,
-							next_level_empty_badge = $(responseText).find(".gamecard_badge_progress .badge_info").length,
+					var $responseText = $(responseText);
+
+					if ($responseText.find(".friendPlayerLevelNum").length != 1) {
+						var card_num_owned = $responseText.find(".badge_detail_tasks .owned").length,
+							card_num_total = $responseText.find(".badge_detail_tasks .badge_card_set_card").length,
+							progress_text_length = $responseText.find(".gamecard_badge_progress").text().trim().length,
+							next_level_empty_badge = $responseText.find(".gamecard_badge_progress .badge_info").length,
 							show_card_num = (card_num_owned > 0 && progress_text_length == 0) || (card_num_owned > 0 && !badge_completed),
 							badge_completed = (progress_text_length > 0 && next_level_empty_badge == 0),
 							isNormalBadge = $(blockSel).is(".es_normal_badge_progress");
@@ -6036,7 +6038,7 @@ function add_app_badge_progress(appid) {
 
 							$(blockSel).show().append(`
 								<div class="es_cards_numbers">
-									<div class="es_cards_remaining">${ $(responseText).find(".progress_info_bold").text() }</div>
+									<div class="es_cards_remaining">${ $responseText.find(".progress_info_bold").text() }</div>
 								</div>
 								<div class="game_area_details_specs">
 									<div class="icon"><img src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
