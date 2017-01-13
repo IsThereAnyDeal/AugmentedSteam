@@ -1636,29 +1636,35 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_percentage:before {
 	content: "";
-	width: 7px;
-	height: 4px;
+	width: 0;
+	height: 0;
 	margin-right: 2px;
 	margin-bottom: 2px;
 	position: relative;
 	display: inline-block;
-	background: no-repeat url("chrome-extension://__MSG_@@extension_id__/img/arrows.png") top left;
+	border-color: transparent;
+	border-style: solid;
 }
 .es_percentage_higher:before {
-	background-position: 0 -4px;
+	border-width: 0 5px 5px 5px;
+	border-bottom-color: #ff1717;
 }
 .es_percentage_equal:before {
-	background-position: 0 -8px;
-	margin-bottom: 1px;
+	width: 6px;
+	content: "=";
+}
+.es_percentage_lower:before {
+	border-width: 5px 5px 0 5px;
+	border-top-color: #60ad0a;
 }
 .es_percentage_higher {
-	color: red;
-}
-.es_percentage_lower {
-	color: green;
+	color: #ff1717;
 }
 .es_percentage_equal {
-	color: yellow;
+	color: #e5e500;
+}
+.es_percentage_lower {
+	color: #60ad0a;
 }
 .es_regional_dailydeal {
 	margin-top: auto;
@@ -2185,3 +2191,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	border-radius: 46px;
 }
 
+/***************************************
+ * Steam Web Chat
+ **************************************/
+.chat_dialog_content_inner {
+	position: relative !important; /* fixes chat scrollbar not sticking to the bottom after typing */
+}

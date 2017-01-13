@@ -582,7 +582,11 @@ var storePageData = (function() {
 		if (data) {
 			deferred.resolveWith(data);
 		} else {
+			var all = parseInt($("#review_type_all").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
+				pos = parseInt($("#review_type_positive").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
+				stm = parseInt($("#purchase_type_steam").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, ""));
 			var apiurl = "//api.enhancedsteam.com/storepagedata/?appid=" + appid;
+			if (all && pos && stm) apiurl += "&r_all=" + all + "&r_pos=" + pos + "&r_stm=" + stm;
 			if (metalink) apiurl += "&mcurl=" + metalink;
 			get_http(apiurl, function(txt) {
 				data = JSON.parse(txt);
@@ -4966,6 +4970,18 @@ function add_lowest_market_price() {
 	});
 }
 
+function add_badge_page_link() {
+	var badgeAppID = document.URL.match("(?:\/753\/)([0-9]+)(?=-)");
+	if (badgeAppID[1]) {
+		var badgeAppID = badgeAppID[1];
+		var cardType = "";
+		if (document.URL.endsWith("%20%28Foil%29")) {
+			cardType = "?border=1";
+		}
+		$("div.market_listing_nav").append('<a class="btn_grey_grey btn_medium" target="_blank" href="//steamcommunity.com/my/gamecards/' + badgeAppID + cardType +'" style="float: right; margin-top: -10px;"><span><img src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0px;" width="24" height="16" border="0" align="top">&nbsp; ' + localized_strings.view_badge + '</span></a>');
+	}
+}
+
 // Add a "Total spent on Steam" to the account details page
 function account_total_spent() {
 	storage.get(function(settings) {
@@ -5256,6 +5272,10 @@ function inventory_market_helper(response) {
 			if (is_booster) {
 				var $sideMarketActsDiv = $sideMarketActs.find("div").last().css("margin-bottom", "8px"),
 					dataCardsPrice = $(thisItem).data("cards-price");
+
+				$(`#iteminfo${ item }_item_owner_actions`).prepend(`
+					<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${ appid }/"><span>${ localized_strings.badge_progress }</span></a>
+				`);
 
 				// Monitor for when the price and volume are added
 				setMutationHandler(document, ".item_market_actions div:last-child br:last-child", function(){
@@ -9822,6 +9842,7 @@ $(document).ready(function(){
 							keep_ssa_checked();
 							add_background_preview_link();
 							add_market_sort();
+							add_badge_page_link();
 							break;
 
 						case /^\/app\/[^\/]*\/guides/.test(path):
