@@ -6031,9 +6031,9 @@ function add_app_badge_progress(appid) {
 							next_level_empty_badge = $responseText.find(".gamecard_badge_progress .badge_info").length,
 							show_card_num = (card_num_owned > 0 && progress_text_length == 0) || (card_num_owned > 0 && !badge_completed),
 							badge_completed = (progress_text_length > 0 && next_level_empty_badge == 0),
-							isNormalBadge = $(blockSel).is(".es_normal_badge_progress");
+							is_normal_badge = $(blockSel).is(".es_normal_badge_progress");
 
-						if (isNormalBadge || (card_num_owned > 0 || !$(blockSel).find(".badge_empty_circle").length)) {
+						if (is_normal_badge || (card_num_owned > 0 || !$(blockSel).find(".badge_empty_circle").length)) {
 							$(".es_badges_progress_block").show();
 
 							$(blockSel).show().append(`
@@ -6042,7 +6042,7 @@ function add_app_badge_progress(appid) {
 								</div>
 								<div class="game_area_details_specs">
 									<div class="icon"><img src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
-									<a href="//steamcommunity.com/my/gamecards/${ appid + (isNormalBadge ? `/` : `?border=1`) }" class="name">${ badge_completed ? localized_strings.view_badge : localized_strings.view_badge_progress }</a>
+									<a href="//steamcommunity.com/my/gamecards/${ appid + (is_normal_badge ? `/` : `?border=1`) }" class="name">${ badge_completed ? localized_strings.view_badge : localized_strings.view_badge_progress }</a>
 								</div>
 							`);
 
