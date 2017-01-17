@@ -1,5 +1,13 @@
 ﻿v9.2
 -----
++ Added a confirmation dialog when emptying your shopping cart
++ Add to Cart buttons will now display on larger wishlists
++ Added a "View badge progress" button to booster packs in inventory and on trading cards in market
+: Fixed a bug that caused other users inventory to not load price information under some circumstances
+: Updated age gate bypass to work with additional new age gate types
+: Fixed Steam store main menu dropdowns not being hidden on mouse out
+: Improved performance on store pages for users with large purchase histories
+: Fixed a bug in custom holiday profile themes that effected legitimate users of that theme
 
 
 v9.1.1
