@@ -2197,3 +2197,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .chat_dialog_content_inner {
 	position: relative !important; /* fixes chat scrollbar not sticking to the bottom after typing */
 }
+
+/***************************************
+ * Wishlist review scores
+ **************************************/
+.es_wishlist_score {
+	margin-top: 15px;
+	margin-left: 10px;
+	cursor: pointer;
+}

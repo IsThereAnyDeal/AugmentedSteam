@@ -246,6 +246,7 @@
     "no_price_data": "No price data available",
     "exclude_tags": "Exclude tags",
     "user_score": "User Score",
+    "review_summary": "__percent__ of the __num__ user reviews for this game are positive.",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
