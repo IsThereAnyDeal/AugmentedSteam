@@ -3148,9 +3148,11 @@ function wishlist_add_to_cart() {
 function wishlist_add_ratings() {
 	var appids = [];
 
-	$('a.btnv6_blue_hoverfade').each(function (index, node) {
-		appids.push(get_appid(node.href));
-	});
+	if ($('a.btnv6_blue_hoverfade').length < 1000) {
+		$('a.btnv6_blue_hoverfade').each(function (index, node) {
+			appids.push(get_appid(node.href));
+		});
+	}
 
 	if (appids.length) {
 		get_http('//api.enhancedsteam.com/reviews/?appids=' + appids.join(","), function (data) {
