@@ -5311,7 +5311,7 @@ function inventory_market_helper(response) {
 					dataCardsPrice = $(thisItem).data("cards-price");
 
 				$(`#iteminfo${ item }_item_owner_actions`).prepend(`
-					<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${ appid }/"><span>${ localized_strings.badge_progress }</span></a>
+					<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${ appid }/"><span>${ localized_strings.view_badge_progress }</span></a>
 				`);
 
 				// Monitor for when the price and volume are added
