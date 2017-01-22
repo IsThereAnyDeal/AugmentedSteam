@@ -9571,7 +9571,7 @@ function fix_menu_dropdown() {
 
 function market_popular_refresh_toggle() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
-		$(".market_tab_well_tabs").append(`
+		$("#sellListings").find(".market_tab_well_tabs").append(`
 			<div class="es_popular_refresh_toggle btn_grey_black btn_small" data-community-tooltip="${ localized_strings.market_popular_items_toggle }"></div>
 		`);
 
