@@ -800,8 +800,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: -24px 0 0 0;
 }
 .home_page_body_ctn:not(.has_takeover) #es_customize_btn {
-	position: absolute;
-	right: 232px;
+	position: relative;
+	float: right;
 }
 .home_page_body_ctn:not(.has_takeover) .home_cluster_ctn {
 	margin-top: 40px

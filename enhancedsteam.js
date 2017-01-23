@@ -7126,7 +7126,7 @@ function add_steamcn_mods() {
 }
 
 function customize_home_page() {
-	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin-bottom: 4px; visibility: visible;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
+	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin: -10px 0px; visibility: visible;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 	$(".home_page_body_ctn:first").css("min-height", "400px");
 	$(".has_takeover").css("min-height", "600px");
 
@@ -7256,11 +7256,6 @@ function customize_home_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$(".home_page_gutter").hide();
-				$(".home_page_body_ctn").css("margin-left", "0px");
-				$(".home_page_content").css("padding-left", "0px");
-				$("#global_header .content:first").css("right", "10px");
-				$(".hardware_ctn").css("padding-left", "0px");
-				$(".has_takeover").find(".page_background_holder").css("margin-left", "-202px");
 			}
 		}
 
@@ -7322,27 +7317,7 @@ function customize_home_page() {
 		addToggleHandler("show_homepage_tabs", $(".home_tab_col").parent());
 		addToggleHandler("show_homepage_specials", $(".specials_under10").parent().parent());
 		addToggleHandler("show_homepage_marketing", $(".marketingmessage_area"));
-
-		$("#show_homepage_sidebar").click(function() {
-			if (settings.show_homepage_sidebar) {
-				settings.show_homepage_sidebar = false;
-				$(".home_page_gutter").hide();
-				$(".home_page_body_ctn").css("margin-left", "0px");
-				$(".home_page_content").css("padding-left", "0px");
-				$("#global_header .content:first").css("right", "10px");
-				$(".has_takeover").find(".page_background_holder").css("margin-left", "-202px");
-				$(".hardware_ctn").css("padding-left", "0px");
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_homepage_sidebar = true;
-				$(".home_page_gutter").show();
-				$(".home_page_content").css("padding-left", "204px");
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-				$(".has_takeover").find(".page_background_holder").css("margin-left", "0px");
-				$("#global_header .content:first").css("right", "-90px");
-			}
-			storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar});
-		});
+		addToggleHandler("show_homepage_sidebar", $(".home_page_gutter"));
 	});
 }
 
