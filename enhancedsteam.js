@@ -9569,6 +9569,30 @@ function fix_menu_dropdown() {
 	});
 }
 
+function market_popular_refresh_toggle() {
+	if (window.location.pathname.match(/^\/market\/$/)) {
+		$("#sellListings").find(".market_tab_well_tabs").append(`
+			<div class="es_popular_refresh_toggle btn_grey_black btn_small" data-community-tooltip="${ localized_strings.market_popular_items_toggle }"></div>
+		`);
+
+		toggle_refresh(getValue("popular_refresh") || false);
+
+		$(".es_popular_refresh_toggle").on("click", function(){
+			toggle_refresh(!getValue("popular_refresh"));
+		});
+
+		runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+
+		function toggle_refresh(state) {
+			$(".es_popular_refresh_toggle").toggleClass("es_refresh_off", !state);
+			
+			setValue("popular_refresh", state);
+			
+			runInPageContext("function(){ g_bMarketWindowHidden = " + state +"; }");
+		}
+	}
+}
+
 $(document).ready(function(){
 	var path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -9885,6 +9909,7 @@ $(document).ready(function(){
 							add_background_preview_link();
 							add_market_sort();
 							add_badge_page_link();
+							market_popular_refresh_toggle();
 							break;
 
 						case /^\/app\/[^\/]*\/guides/.test(path):

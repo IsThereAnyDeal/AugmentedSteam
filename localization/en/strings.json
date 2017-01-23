@@ -247,6 +247,7 @@
     "exclude_tags": "Exclude tags",
     "user_score": "User Score",
     "review_summary": "__percent__ of the __num__ user reviews for this game are positive.",
+    "market_popular_items_toggle": "Toggle live updating for Popular Items",
     "achievements": {
         "option": "Show achievements on store pages",
         "achievements": "Achievements",
