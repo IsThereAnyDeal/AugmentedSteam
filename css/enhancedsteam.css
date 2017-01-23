@@ -2230,3 +2230,33 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-size: 16px;
 }
 
+/***************************************
+ * Store front (sidebar toggling)
+ * customize_home_page()
+ **************************************/
+@media (min-width: 1208px) {
+	div#global_header .content {
+		right: 0 !important;
+	}
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
+	.footer_content,
+	.hardware_ctn {
+		padding-left: 16px !important;
+	}
+}
+@media (min-width: 1208px) and (max-width: 1440px) {
+	body:not(.es_homepage_sidebar_hidden) div#global_header .content {
+		right: -110px !important;
+	}
+}
+@media (min-width: 1442px) {
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
+	.footer_content,
+	.hardware_ctn {
+		padding-right: 16px !important;
+	}
+}
+body.es_homepage_sidebar_hidden .home_page_gutter {
+	opacity: 0;
+}
+

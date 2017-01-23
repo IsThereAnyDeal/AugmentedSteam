@@ -7289,20 +7289,23 @@ function customize_home_page() {
 		function addToggleHandler(name, element) {
 			var obj = {};
 			obj[name] = settings[name];
+			$("body").toggleClass("es_" + name.replace("show_", "") + "_hidden", !obj[name]);
+			
 			$("#" + name).click(function() {
 				element.removeClass("es_hide").removeClass("es_show");
 				if (obj[name]) {
 					obj[name] = false;
-					element.slideUp();
+					element.stop().slideUp();
 					if (name == "show_homepage_carousel") {
 						element.parent().css({"padding-top": "0px", "padding-bottom": "0px", "margin-top": "0px"});
 					}
 					$(this).find(".home_viewsettings_checkbox").removeClass("checked");
 				} else {
 					obj[name] = true;
-					element.slideDown();
+					element.stop().slideDown();
 					$(this).find(".home_viewsettings_checkbox").addClass("checked");
 				}
+				$("body").toggleClass("es_" + name.replace("show_", "") + "_hidden", !obj[name]);
 				storage.set(obj);
 			});
 		}
