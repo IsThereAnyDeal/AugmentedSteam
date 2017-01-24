@@ -2236,7 +2236,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * customize_home_page()
  **************************************/
 @media (min-width: 1208px) {
-	div#global_header .content {
+	div#global_header .content,
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_body_ctn .page_background_holder {
 		right: 0 !important;
 	}
 	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
