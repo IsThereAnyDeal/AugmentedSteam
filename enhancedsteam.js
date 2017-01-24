@@ -1243,14 +1243,6 @@ function load_inventory() {
 			if (txt) {
 				if (txt.charAt(0) != "<") {
 					localStorage.setItem("inventory_6", txt);
-					var data = JSON.parse(txt);
-					if (data.success) {
-						$.each(data.rgDescriptions, function(i, obj) {
-							if (obj.market_hash_name) {
-								setValue("card:" + obj.market_hash_name, true);
-							}
-						});
-					}
 					card_deferred.resolve();
 				}
 			}
@@ -1327,7 +1319,6 @@ function load_inventory() {
 			var i = 0, sKey;
 			for (; sKey = window.localStorage.key(i); i++) {
 				if (sKey.match(/coupon/)) { delValue(sKey); }
-				if (sKey.match(/card:/)) { delValue(sKey); }
 				if (sKey.match(/gift/)) { delValue(sKey); }
 				if (sKey.match(/guestpass/)) { delValue(sKey); }
 			}
@@ -5911,7 +5902,7 @@ function subscription_savings_check() {
 function dlc_data_from_site(appid) {
 	if ($("div.game_area_dlc_bubble").length > 0) {
 		var appname = $(".apphub_AppName").html();
-		appname = rewrite_string(appname, true);
+		appname = encodeURIComponent(appname);
 		get_http("//api.enhancedsteam.com/gamedata/?appid=" + appid + "&appname=" + appname, function (txt) {
 			var data;
 			if (txt != "{\"dlc\":}}") {
@@ -7726,34 +7717,29 @@ function add_achievement_comparison_link(node, appid) {
 	});
 }
 
-function rewrite_string(string, websafe) {
-	if (websafe) {
-		string = encodeURIComponent(string);
-	} else {		
-		string = decodeURI(string);
-	}
-	return string;
-}
-
 function highlight_market_items() {
+	var market_data = getValue("inventory_6");
+	market_data = market_data["rgDescriptions"];
+
 	$.each($(".market_listing_row_link"), function (i, node) {
 		var current_market_name = node.href.match(/steamcommunity.com\/market\/listings\/753\/(.+)\?/);
 		if (!current_market_name) { current_market_name = node.href.match(/steamcommunity.com\/market\/listings\/753\/(.+)/); }
 		if (current_market_name) {
-			var item_name = rewrite_string(current_market_name[1]);
-			var market_name = getValue("card:" + item_name);
-			if (market_name) {
-				storage.get(function(settings) {
-					if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned;	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
-					if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
-					if (settings.highlight_owned) {
-						node = $(node).find("div");
-						$(node).css("backgroundImage", "none");
-						$(node).css("color", "white");
-						$(node).css("backgroundColor", settings.highlight_owned_color);
-					}
-				});
-			}
+			var item_name = decodeURIComponent(current_market_name[1]);
+			$.each(market_data, function(key, value) {
+				if (value.market_hash_name == item_name) {
+					storage.get(function(settings) {
+						if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned;	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+						if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+						if (settings.highlight_owned) {
+							node = $(node).find("div");
+							$(node).css("backgroundImage", "none");
+							$(node).css("color", "white");
+							$(node).css("backgroundColor", settings.highlight_owned_color);
+						}
+					});
+				}
+			});
 		}
 	});
 }

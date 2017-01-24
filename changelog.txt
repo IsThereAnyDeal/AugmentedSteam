@@ -10,6 +10,7 @@
 : Fixed Steam store main menu dropdowns not being hidden on mouse out
 : Fixed issues on homepage when hiding the sidebar at some zoom levels and lower resolutions
 : Improved performance on store pages for users with large purchase histories
+: Fixed a bug where emoticons weren't correctly highlighted as owned on market pages
 : Fixed a bug in custom holiday profile themes that effected legitimate users of that theme
 
 
