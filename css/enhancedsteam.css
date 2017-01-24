@@ -2261,3 +2261,22 @@ body.es_homepage_sidebar_hidden .home_page_gutter {
 	opacity: 0;
 }
 
+/***************************************
+ * Wishlists
+ * wishlist_add_ratings()
+ **************************************/
+.es_wishlist_score {
+	position: relative;
+}
+.es_wishlist_score:after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	box-shadow: 0 0 0 1px inset rgba(255, 255, 255, 0.20);
+	pointer-events: none;
+}
+
