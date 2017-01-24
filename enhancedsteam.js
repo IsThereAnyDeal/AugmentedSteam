@@ -3146,33 +3146,56 @@ function wishlist_add_to_cart() {
 }
 
 function wishlist_add_ratings() {
-	var appids = [];
+	var appids = [],
+		img_pos = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_positive.png",
+		img_mix = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_mixed.png",
+		img_neg = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_negative.png",
+		img;
 
 	if ($('a.btnv6_blue_hoverfade').length < 1000) {
 		$('a.btnv6_blue_hoverfade').each(function (index, node) {
-			appids.push(get_appid(node.href));
+			var appid = get_appid(node.href);
+			var review_cache = getValue("reviewData_" + appid);
+
+			if (review_cache) {
+				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24; // One day ago
+				var last_updated = review_cache["u"] || expire_time - 1;
+
+				if (last_updated < expire_time) {
+					appids.push(appid);
+				} else {
+					build_review(appid, review_cache["s"]);
+				}
+			} else {
+				appids.push(appid);
+			}
 		});
+	}
+
+	function build_review(appid, scores) {
+		var percent = (Math.floor(100 * (scores["p"] / scores["t"])) / 100).toFixed(2) * 100;
+
+		if (percent >= 70) { img = img_pos; }
+		else if (percent >= 40) { img = img_mix; }
+		else { img = img_neg; }
+
+		var percent_text = percent + "%",
+			total_text = scores["t"].toLocaleString();
+
+		$("#game_" + appid).find(".wishlistRankCtn").append("<div class='es_wishlist_score'><img src='" + img + "' data-community-tooltip='" + localized_strings.review_summary.replace("__percent__", percent_text).replace("__num__", total_text) + "'></div>");
 	}
 
 	if (appids.length) {
 		get_http('//api.enhancedsteam.com/reviews/?appids=' + appids.join(","), function (data) {
 			var review_data = JSON.parse(data);
 			$.each(review_data, function(appid, scores) {
-				var img_pos = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_positive.png",
-					img_mix = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_mixed.png",
-					img_neg = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_negative.png",
-					img;
-
-				var percent = (Math.floor(100 * (scores["p"] / scores["t"])) / 100).toFixed(2) * 100;
-
-				if (percent >= 70) { img = img_pos; }
-				else if (percent >= 40) { img = img_mix; }
-				else { img = img_neg; }
-
-				var percent_text = percent + "%",
-					total_text = scores["t"].toLocaleString();
-
-				$("#game_" + appid).find(".wishlistRankCtn").append("<div class='es_wishlist_score'><img src='" + img + "' data-community-tooltip='" + localized_strings.review_summary.replace("__percent__", percent_text).replace("__num__", total_text) + "'></div>");
+				build_review(appid, scores);
+				var update_time = parseInt(Date.now() / 1000, 10);
+				var cached = {
+					s: scores,
+					u: update_time
+				};
+				setValue("reviewData_" + appid, cached);
 			});
 			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
 		});
