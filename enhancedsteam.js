@@ -7312,12 +7312,11 @@ function customize_home_page() {
 		function addToggleHandler(name, element) {
 			var obj = {};
 			obj[name] = settings[name];
-			$("body").toggleClass(name.replace("es_", "") + "_hidden", !obj[name]);
+			$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !obj[name]);
 			
 			$("#" + name).click(function() {
 				element.removeClass("es_hide").removeClass("es_show");
-				$("body").toggleClass(name.replace("es_", "") + "_hidden", !obj[name]);
-				
+
 				if (obj[name]) {
 					obj[name] = false;
 					element.stop().slideUp();
@@ -7330,7 +7329,9 @@ function customize_home_page() {
 					element.stop().slideDown();
 					$(this).find(".home_viewsettings_checkbox").addClass("checked");
 				}
-				
+
+				$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !obj[name]);
+
 				storage.set(obj);
 			});
 		}
