@@ -6751,7 +6751,7 @@ function show_regional_pricing(type) {
 
 function customize_app_page() {
 	// Add a "Customize" button
-	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div>");
+	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 
 	storage.get(function(settings) {
 		if (settings.show_apppage_recommendedbycurators === undefined) { settings.show_apppage_recommendedbycurators = true; storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators}); }
@@ -6873,33 +6873,14 @@ function customize_app_page() {
 		}
 
 		$("#es_customize_btn").append(html);
-		$("#es_customize_btn").after("<div style='clear: both;'></div>");
 
-		$("#es_customize_btn").find(".home_customize_btn").click(function() {
-			if ($(this).hasClass("active")) {
-				$(this).removeClass("active");
-			} else {
-				$(this).addClass("active");
-			}
-
-			if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
-				$(this).parent().find(".home_viewsettings_popup").hide();
-			} else {
-				var pos_top = $("#es_customize_btn").offset().top + 20;
-				var pos_left = $("#es_customize_btn").offset().left - 150;
-				$(this).parent().find(".home_viewsettings_popup").css("top", pos_top + "px").css("left", pos_left + "px");
-				$(this).parent().find(".home_viewsettings_popup").show();
-			}
+		$("#es_customize_btn").find(".home_customize_btn").on("click", function(){
+			$(this).toggleClass("active").next(".home_viewsettings_popup").stop().slideToggle(100);
 		});
 
-		$('body').bind('click', function(e) {
-			if($(e.target).closest("#es_customize_btn").length == 0) {
-				if ($("#es_customize_btn").find(".home_customize_btn").hasClass("active")) {
-					$("#es_customize_btn").find(".home_customize_btn").removeClass("active");
-				}
-				if ($("#es_customize_btn").find(".home_viewsettings_popup").is(":visible")) {
-					$("#es_customize_btn").find(".home_viewsettings_popup").hide();
-				}
+		$("body").on("click", function(e) {
+			if ($(e.target).closest("#es_customize_btn").length == 0) {
+				$("#es_customize_btn").find(".home_customize_btn.active").removeClass("active").next(".home_viewsettings_popup").slideToggle(100);
 			}
 		});
 
@@ -7126,7 +7107,7 @@ function add_steamcn_mods() {
 }
 
 function customize_home_page() {
-	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin: -10px 0px; visibility: visible;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
+	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin: -10px 0px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 	$(".home_page_body_ctn:first").css("min-height", "400px");
 	$(".has_takeover").css("min-height", "600px");
 
@@ -7261,28 +7242,13 @@ function customize_home_page() {
 
 		$("#es_customize_btn").append(html);
 
-		$("#es_customize_btn").find(".home_customize_btn").click(function() {
-			if ($(this).hasClass("active")) {
-				$(this).removeClass("active");
-			} else {
-				$(this).addClass("active");
-			}
-
-			if ($(this).parent().find(".home_viewsettings_popup").is(":visible")) {
-				$(this).parent().find(".home_viewsettings_popup").hide();
-			} else {
-				$(this).parent().find(".home_viewsettings_popup").show();
-			}
+		$("#es_customize_btn").find(".home_customize_btn").on("click", function(){
+			$(this).toggleClass("active").next(".home_viewsettings_popup").stop().slideToggle(100);
 		});
 
-		$('body').bind('click', function(e) {
-			if($(e.target).closest("#es_customize_btn").length == 0) {
-				if ($("#es_customize_btn").find(".home_customize_btn").hasClass("active")) {
-					$("#es_customize_btn").find(".home_customize_btn").removeClass("active");
-				}
-				if ($("#es_customize_btn").find(".home_viewsettings_popup").is(":visible")) {
-					$("#es_customize_btn").find(".home_viewsettings_popup").hide();
-				}
+		$("body").on("click", function(e) {
+			if ($(e.target).closest("#es_customize_btn").length == 0) {
+				$("#es_customize_btn").find(".home_customize_btn.active").removeClass("active").next(".home_viewsettings_popup").slideToggle(100);
 			}
 		});
 
