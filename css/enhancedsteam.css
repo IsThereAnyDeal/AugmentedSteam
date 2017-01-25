@@ -2223,12 +2223,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_popular_refresh_toggle:after {
 	content: "▶";
-	font-size: 12px;
+	font-size: 14px;
 	display: inline-block;
 }
 .es_popular_refresh_toggle.es_refresh_off:after {
-	content: "⏸";
-	font-size: 16px;
+	content: "❚❚";
+	font-size: 11px;
 }
 
 /***************************************
