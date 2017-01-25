@@ -6783,9 +6783,7 @@ function customize_app_page() {
 
 		// Helpful customer reviews
 		if ($(".user_reviews_header").length > 0) {
-			text_search = $(".user_reviews_header:first").clone();
-			$("div", text_search).remove();
-			text = $(text_search).text();
+			text = $(".user_reviews_header:first").contents().filter(function() { return this.nodeType === 3; })[0].data;
 			if (settings.show_apppage_customerreviews) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_customerreviews'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_customerreviews'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -6967,7 +6965,7 @@ function customize_app_page() {
 				settings.show_apppage_customerreviews = true;
 				$(".user_reviews_header").show();
 				$(".user_reviews_filter_bar").show();				
-				$("#Reviews_all").show();
+				$("#Reviews_summary").show();
 				$("#app_reviews_hash").show();
 				$(this).find(".home_viewsettings_checkbox").addClass("checked");
 			}
