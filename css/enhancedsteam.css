@@ -2276,7 +2276,7 @@ body.es_homepage_sidebar_hidden .home_page_gutter {
 	left: 0;
 	width: 16px;
 	height: 16px;
-	box-shadow: 0 0 0 1px inset rgba(255, 255, 255, 0.20);
+	box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset;
 	pointer-events: none;
 }
 
