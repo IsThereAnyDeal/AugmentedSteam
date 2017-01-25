@@ -2747,7 +2747,7 @@ function drm_warnings(type) {
 
 			// Detect other DRM
 			if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
-			if (text.indexOf("No 3rd-party DRM") > 0) { drm = false; }
+			if (text.indexOf("No 3rd party DRM") > 0) { drm = false; }
 			
 			var string_type;
 			var drm_string = "(";
