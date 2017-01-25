@@ -12,6 +12,7 @@
 : Improved performance on store pages for users with large purchase histories
 : Fixed a bug where emoticons weren't correctly highlighted as owned on market pages
 : Fixed a bug in custom holiday profile themes that effected legitimate users of that theme
+: Fixed a bug where filtering a wishlist to items with coupons wouldn't work correctly
 
 
 v9.1.1

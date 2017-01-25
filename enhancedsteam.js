@@ -803,9 +803,10 @@ function highlight_cart(node) {
 }
 
 // Color the tile for items with coupons
-function highlight_coupon(node, discount) {
+function highlight_coupon(node) {
 	storage.get(function(settings) {
 		node.classList.add("es_highlight_checked");
+		node.classList.add("es_highlight_coupon");
 
 		if (settings.highlight_coupon_color === undefined) { settings.highlight_coupon_color = highlight_defaults.coupon; storage.set({'highlight_coupon_color': settings.highlight_coupon_color}); }
 		if (settings.highlight_coupon === undefined) { settings.highlight_coupon = false; storage.set({'highlight_coupon': settings.highlight_coupon}); }
@@ -1126,65 +1127,6 @@ function add_tag(node, tag) {
 
 				$tag_root.find(".friendplaytime_buttons").before($tags);
 			}
-			/*else if (node.classList.contains("inline_tags")) { // can't find it
-				$tag_root = $(node);
-
-				$tags.css("display", "inline-block");
-				$tags.css("margin-left", "3px");
-
-				$tags.children().remove();
-				// Display inline as text only
-				$.each(node.tags, function (i, obj) {
-					var $obj = $("<span>" + obj[0] + "</span>");
-					// $obj.css("border-bottom", "2px solid " + obj[1]);
-					// $obj.css("background-color", obj[1]);
-					// $obj.css("color", "white");
-
-					if (i === 0) $tags.append(" (");
-					$tags.append($obj);
-					if (i === node.tags.length - 1) {
-						$tags.append(")");
-					}
-					else {
-						$tags.append(", ");
-					}
-				});
-				$tag_root.after($tags);
-			}
-			else if (node.classList.contains("apphub_HeaderStandardTop")) { // won't work
-				$tag_root = $(node);
-				// Height to accomodate tags
-				$tag_root.css("height", "auto");
-
-				$tags.css({
-					"float": "left",
-					"margin-top": "4px",
-					"margin-left": "3px"
-				});
-
-				$tag_root.find(".apphub_AppName").after($tags);
-				$tag_root.find(".apphub_AppName").after($('<div style="clear: right;"></div>'));
-			}
-			else if (node.classList.contains("apphub_HeaderTop")) { // won't work
-				$tag_root = $(node);
-
-				$tag_root.find(".apphub_AppName").css("width", "0px")
-
-				$tags.css({
-					"float": "left",
-					"margin-top": "4px",
-					"margin-left": "3px"
-				});
-
-				$tag_root.find(".apphub_OtherSiteInfo").append($tags);
-				$tag_root.find(".apphub_AppName").after($("<div style=\"clear: right;\"></div>"));
-
-				var max_width = 948-($(".apphub_OtherSiteInfo").width() + 69);
-
-				$tag_root.find(".apphub_AppName").css("max-width", max_width+"px").attr("title", $tag_root.find(".apphub_AppName").text());
-				$tag_root.find(".apphub_AppName").css("width", "auto")
-				$tag_root.find(".apphub_AppName").css("overflow", "hidden");
-			}*/
 		} 
 
 		// Add the tag
@@ -1259,41 +1201,45 @@ function load_inventory() {
 							if (obj.actions) {
 								var packageids = [];
 								for (var j = 0; j < obj.actions.length; j++) {
-									//obj.actions[j]
 									var link = obj.actions[j].link;
 									var packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
-
-									// If sub+packageid is in localStorage then we don't need to get this info reloaded.
-									// This sick optimization saves 268ms per page load! Woo!
-									if (!getValue("sub" + packageid)) packageids.push(packageid);
+									if (!getValue("couponCheck_" + packageid)) packageids.push(packageid);
 								}
 								if (packageids.length > 0){
 									get_http("//store.steampowered.com/api/packagedetails/?packageids=" + packageids.join(","), function(txt) {
 										var package_data = JSON.parse(txt);
 										$.each(package_data, function(package_id, _package) {
 											if (_package.success) {
-												setValue("sub" + package_id, true);
+												setValue("couponCheck_" + package_id, true);
 												$.each(_package.data.apps, function(i, app) {
 													if (getValue(app.id + "coupon")) {
 														if (getValue(app.id + "coupon_discount") >= obj.name.match(/([1-9][0-9])%/)[1]) { return; }
 													}
-													setValue(app.id + "coupon", true);
-													setValue(app.id + "coupon_sub", package_id);
-													setValue(app.id + "coupon_imageurl", obj.icon_url);
-													setValue(app.id + "coupon_title", obj.name);
-													setValue(app.id + "coupon_discount", obj.name.match(/([1-9][0-9])%/)[1]);
-													setValue(app.id + "coupon_id", id);
+													var coupon_data = {
+														sub: package_id,
+														image_url: obj.icon_url,
+														title: obj.name,
+														discount: obj.name.match(/([1-9][0-9])%/)[1],
+														id: id
+													};
 													for (var i = 0; i < obj.descriptions.length; i++) {
 														if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
-															setValue(app.id + "coupon_discount_note", obj.descriptions[i].value);
-															setValue(app.id + "coupon_discount_note_id", i);
-															setValue(app.id + "coupon_discount_doesnt_stack", true);
+															var push = {
+																discount_note: obj.descriptions[i].value,
+																discount_note_id: i,
+																discount_doesnt_stack: true
+															};
+															Object.assign(coupon_data, push);
 														}
 														else if (obj.descriptions[i].value.startsWith("(Valid")) {
-															setValue(app.id + "coupon_valid_id", i);
-															setValue(app.id + "coupon_valid", obj.descriptions[i].value);
+															var push = {
+																valid_id: i,
+																valid: obj.descriptions[i].value
+															};
+															Object.assign(coupon_data, push);
 														}
 													};
+													setValue("couponData_" + app.id, coupon_data);
 												});
 											}
 										});
@@ -1318,7 +1264,8 @@ function load_inventory() {
 			// purge stale information from localStorage
 			var i = 0, sKey;
 			for (; sKey = window.localStorage.key(i); i++) {
-				if (sKey.match(/coupon/)) { delValue(sKey); }
+				if (sKey.match(/couponData_/)) { delValue(sKey); }
+				if (sKey.match(/couponCheck_/)) { delValue(sKey); }
 				if (sKey.match(/gift/)) { delValue(sKey); }
 				if (sKey.match(/guestpass/)) { delValue(sKey); }
 			}
@@ -2370,102 +2317,73 @@ function add_custom_wallet_amount() {
 // If app has a coupon, display a message.
 function display_coupon_message(appid) {
 	load_inventory().done(function() {
-		if (getValue(appid+"coupon")) {
-			// Get JSON coupon results
+		var coupon_data = getValue("couponData_" + appid);
+		if (coupon_data) {
+			var coupon_title = coupon_data["title"],
+				coupon_discount_note = coupon_data["discount_note"] ? coupon_data["discount_note"] : "",
+				coupon_date = coupon_data["valid"].replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
 
-			var display_coupon_message_localized = function(txt) {
+			$('#game_area_purchase').before($(""+
+			"<div class=\"early_access_header\">" +
+			"    <div class=\"heading\">" +
+			"        <h1 class=\"inset\">" + localized_strings.coupon_available + "</h1>" +
+			"        <h2 class=\"inset\">" + localized_strings.coupon_application_note + "</h2>" +
+			"        <p>" + localized_strings.coupon_learn_more + "</p>" +
+			"    </div>" +
+			"    <div class=\"devnotes\">" +
+			"        <table border=0>" +
+			"            <tr>" +
+			"                <td rowspan=3>" +
+			"                    <img src=\"//cdn.steamcommunity.com/economy/image/" + coupon_data["image_url"] + "\"/>" +
+			"                </td>" +
+			"                <td valign=center>" +
+			"                    <h1>" + coupon_title + "</h1>" +
+			"                </td>" +
+			"            </tr>" +
+			"            <tr>" +
+			"                <td>" + coupon_discount_note + "</td>" +
+			"            </tr>" +
+			"            <tr>" +
+			"                <td>" +
+			"                    <font style=\"color:#A75124;\">" + coupon_date + "</font>" +
+			"                </td>" +
+			"            </tr>" +
+			"        </table>" +
+			"    </div>" +
+			"</div>"));
 
-				if (txt && !txt.startsWith("<")) {
-					var data = $.parseJSON(txt);
-					if (data.success) {
-						var obj = data.rgDescriptions[getValue(appid + "coupon_id")];
-						if (obj) {
-							setValue(appid + "coupon_title", obj.name);
-							setValue(appid + "coupon_discount_note", "");
-							if (getValue(appid + "coupon_discount_note_id")) {
-								setValue(appid + "coupon_discount_note", obj.descriptions[getValue(appid + "coupon_discount_note_id")].value);
-							}
-							setValue(appid + "coupon_valid", coupon_date = obj.descriptions[getValue(appid + "coupon_valid_id")].value);
-						}
-						setValue(appid+"coupon_translated", true);
-					}
-				}
+			var $price_div = $(".game_purchase_action:first"),
+				cart_id = $(document).find("[name=\"subid\"]")[0].value,
+				actual_price_container = $price_div.find(".price,.discount_final_price").text(),
+				comma = actual_price_container.search(/,\d\d(?!\d)/);
 
-				var coupon_title = getValue(appid + "coupon_title");
-				var coupon_discount_note = getValue(appid + "coupon_discount_note");
-				var coupon_date = getValue(appid + "coupon_valid");
-				if (coupon_discount_note === null) { coupon_discount_note = ""; }
-				coupon_date = coupon_date.replace(/\[date](.+)\[\/date]/, function(m0, m1) {
-					return new Date(m1 * 1000).toLocaleString();
-				});
-
-				$('#game_area_purchase').before($(""+
-				"<div class=\"early_access_header\">" +
-				"    <div class=\"heading\">" +
-				"        <h1 class=\"inset\">" + localized_strings.coupon_available + "</h1>" +
-				"        <h2 class=\"inset\">" + localized_strings.coupon_application_note + "</h2>" +
-				"        <p>" + localized_strings.coupon_learn_more + "</p>" +
-				"    </div>" +
-				"    <div class=\"devnotes\">" +
-				"        <table border=0>" +
-				"            <tr>" +
-				"                <td rowspan=3>" +
-				"                    <img src=\"//cdn.steamcommunity.com/economy/image/" + getValue(appid + "coupon_imageurl") + "\"/>" +
-				"                </td>" +
-				"                <td valign=center>" +
-				"                    <h1>" + coupon_title + "</h1>" +
-				"                </td>" +
-				"            </tr>" +
-				"            <tr>" +
-				"                <td>" + coupon_discount_note + "</td>" +
-				"            </tr>" +
-				"            <tr>" +
-				"                <td>" +
-				"                    <font style=\"color:#A75124;\">" + coupon_date + "</font>" +
-				"                </td>" +
-				"            </tr>" +
-				"        </table>" +
-				"    </div>" +
-				"</div>"));
-
-				var $price_div = $(".game_purchase_action:first"),
-					cart_id = $(document).find("[name=\"subid\"]")[0].value,
-					actual_price_container = $price_div.find(".price,.discount_final_price").text(),		
-					comma = actual_price_container.search(/,\d\d(?!\d)/);
-
-				if (comma > -1) {
-					actual_price_container = actual_price_container.replace(",", ".");
-				} else {
-					actual_price_container = actual_price_container.replace(",", "");
-				}
-
-				actual_price_container = actual_price_container.replace(/\s/g, "");
-
-				var original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
-				var discounted_price = (original_price - (original_price * getValue(appid + "coupon_discount") / 100).toFixed(2)).toFixed(2);
-
-				if (!($price_div.find(".game_purchase_discount").length > 0 && getValue(appid + "coupon_discount_doesnt_stack"))) {
-					// If not (existing discounts and coupon does not stack)
-
-					$price_div[0].innerHTML = ""+
-						"<div class=\"game_purchase_action_bg\">" +
-						"    <div class=\"discount_block game_purchase_discount\">" +
-						"        <div class=\"discount_pct\">-" + getValue(appid + "coupon_discount") + "%</div>" +
-						"        <div class=\"discount_prices\">" +
-						"            <div class=\"discount_original_price\">" + formatCurrency(original_price) + "</div>" +
-						"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price) + "</div>" +
-						"        </div>" +
-						"    </div>" +
-						"<div class=\"btn_addtocart\">" +
-						"        <a class=\"btnv6_green_white_innerfade btn_medium\" href=\"javascript:addToCart( " + cart_id + ");\"><span>" + localized_strings.add_to_cart + "</span></a>" +
-						"    </div>" +
-						"</div>";
-				}
-			}
-			if (getValue(appid+"coupon_translated")) {
-				display_coupon_message_localized();
+			if (comma > -1) {
+				actual_price_container = actual_price_container.replace(",", ".");
 			} else {
-				get_http(($(".user_avatar")[0].href || $(".user_avatar a")[0].href) + '/inventory/json/753/3/', display_coupon_message_localized);
+				actual_price_container = actual_price_container.replace(",", "");
+			}
+
+			actual_price_container = actual_price_container.replace(/\s/g, "");
+
+			var original_price = parseFloat(actual_price_container.match(/([0-9]+(?:(?:\,|\.)[0-9]+)?)/)[1]);
+			var discounted_price = (original_price - (original_price * coupon_data["discount"] / 100).toFixed(2)).toFixed(2);
+
+			if (!($price_div.find(".game_purchase_discount").length > 0 && coupon_data["discount_doesnt_stack"])) {
+				// If not (existing discounts and coupon does not stack)
+
+				$price_div[0].innerHTML = ""+
+					"<div class=\"game_purchase_action_bg\">" +
+					"    <div class=\"discount_block game_purchase_discount\">" +
+					"        <div class=\"discount_pct\">-" + coupon_data["discount"] + "%</div>" +
+					"        <div class=\"discount_prices\">" +
+					"            <div class=\"discount_original_price\">" + formatCurrency(original_price) + "</div>" +
+					"            <div class=\"discount_final_price\" itemprop=\"price\">" + formatCurrency(discounted_price) + "</div>" +
+					"        </div>" +
+					"    </div>" +
+					"<div class=\"btn_addtocart\">" +
+					"        <a class=\"btnv6_green_white_innerfade btn_medium\" href=\"javascript:addToCart( " + cart_id + ");\"><span>" + localized_strings.add_to_cart + "</span></a>" +
+					"    </div>" +
+					"</div>";
 			}
 		}
 	});
@@ -5669,8 +5587,6 @@ function add_relist_button() {
 								item_page = $(".market_listing_item_name_block .market_listing_item_name_link[href$='" + item_link + "']"),
 								item_remove = $(item_page).parent().parent().parent().find(".market_listing_cancel_button a").attr("href"),
 								matches = item_remove.match(/'mylisting', '(\d+)', (\d+), '(\d+)', '(\d+)'/);
-
-							//console.log(sell_price, fee);
 							
 							if (matches) {
 								var listingid = matches[1],
@@ -6227,7 +6143,6 @@ var ea_promise = (function() {
 
 	var ea_cache = getValue("ea_appids");
 	if (ea_cache) {
-		//console.info("EA cache was hit!")
 		deferred.resolve(ea_cache);
 	}
 
@@ -6237,17 +6152,13 @@ var ea_promise = (function() {
 
 	// Update cache in the background
 	if (last_updated < expire_time) {
-		//console.info("EA cache needs to be updated...");
 		// If no cache exists, pull the data from the website
 		get_http("//api.enhancedsteam.com/early_access/", function(txt) {
 			early_access_data = JSON.parse(txt);
 			setValue("ea_appids", early_access_data);
 			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
-			
-			//console.info("EA cache update was succesful!");
 			deferred.resolve(early_access_data);
 		}).fail(function(){
-			//console.info("EA cache update failed!");
 			deferred.reject();
 		});
 	}
@@ -7536,7 +7447,7 @@ function start_highlights_and_tags(){
 				var appid = get_appid(node.href || $(node).find("a").attr("href")) || get_appid_wishlist(node.id);
 				if (appid) {
 					if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-					if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+					if (getValue("couponData_" + appid)) highlight_coupon(node);
 					if (getValue(appid + "gift")) highlight_inv_gift(node);
 				}
 
@@ -7557,7 +7468,7 @@ function start_friend_activity_highlights() {
 
 			if (appid && !$(node).hasClass("blotter_userstats_game")) {
 				if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-				if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+				if (getValue("couponData_" + appid)) highlight_coupon(node);
 				if (getValue(appid + "gift")) highlight_inv_gift(node);
 				if ($.inArray(parseFloat(appid), wishlistapps) !== -1) highlight_wishlist(node);
 				if ($.inArray(parseFloat(appid), ownedapps) !== -1) {
@@ -7596,7 +7507,7 @@ function start_highlighting_node(node) {
 	var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
 	if (appid) {
 		if (getValue(appid + "guestpass")) highlight_inv_guestpass(node);
-		if (getValue(appid + "coupon")) highlight_coupon(node, getValue(appid + "coupon_discount"));
+		if (getValue("couponData_" + appid)) highlight_coupon(node);
 		if (getValue(appid + "gift")) highlight_inv_gift(node);
 	}
 
