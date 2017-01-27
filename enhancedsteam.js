@@ -2826,31 +2826,42 @@ function add_community_profile_links() {
 }
 
 function add_wishlist_profile_link() {
-	if ($(".profile_item_links").length) {
-		var steamID = $("input[name='abuseID']").val();
-	
-		if (!steamID) {
-			var rgData = $("script:contains('g_rgProfileData')").text();
-			if (rgData && /steamid"\:"\d+","personaname/.test(rgData)) {
-				steamID = rgData.match(/steamid"\:"(\d+)","personaname/)[1];
+	storage.get(function(settings) {
+		if (settings.show_wishlist_link === undefined) { settings.show_wishlist_link = true; storage.set({'show_wishlist_link': settings.show_wishlist_link}); }
+		if (settings.show_wishlist_count === undefined) { settings.show_wishlist_count = true; storage.set({'show_wishlist_count': settings.show_wishlist_count}); }
+
+		if (settings.show_wishlist_link && $(".profile_item_links").length) {
+			var steamID = $("input[name='abuseID']").val();
+
+			if (!steamID) {
+				var rgData = $("script:contains('g_rgProfileData')").text();
+				steamID = (rgData && rgData.match(/steamid"\:"(\d+)","personaname/) || [])[1];
+			}
+
+			if (steamID) {
+				$(".profile_item_links").find(".profile_count_link:first").after(`
+					<div id="es_wishlist_link" class="profile_count_link">
+						<a href="//steamcommunity.com/profiles/${ steamID }/wishlist">
+							<span class="count_link_label">${ localized_strings.wishlist }</span>&nbsp;
+							<span id="es_wishlist_count" class="profile_count_link_total"></span>
+						</a>
+					</div>
+				`);
+
+				if (settings.show_wishlist_count) {
+					get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
+						var count = txt.match(/id="game_(\d+)"/g);
+
+						if (count) {
+							$("#es_wishlist_count").text(count.length);
+						} else {
+							$("#es_wishlist_link").remove();
+						}
+					});
+				}
 			}
 		}
-
-		if (steamID) {
-			$(".profile_item_links").find(".profile_count_link:first").after("<div class='profile_count_link' id='es_wishlist_link'><a href='//steamcommunity.com/profiles/" + steamID + "/wishlist'><span class='count_link_label'>" + localized_strings.wishlist + "</span>&nbsp;<span class='profile_count_link_total' id='es_wishlist_count'></span></a></div>");
-
-			// Get count of wishlisted items
-			get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
-				var count = txt.match(/id="game_(\d+)"/g);
-
-				if (count) {
-					$("#es_wishlist_count").text(count.length);
-				} else {
-					$("#es_wishlist_link").remove();
-				}
-			});
-		}
-	}
+	});
 }
 
 // Add supporter badges to supporter's profiles

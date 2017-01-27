@@ -414,6 +414,8 @@
         "store_general_thirdparty": "Options for information from 3rd party sites",
         "purchase_dates": "Show apps purchase date on store pages",
         "show_badge_progress": "Show apps badge progress on store pages",
+        "show_wishlist_link": "Show a Wishlist link on profiles",
+        "show_wishlist_count": "Show the number of items on Wishlist",
         "lang": {
             "english": "English",
             "brazilian": "Portuguese-Brazil",
