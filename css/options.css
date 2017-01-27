@@ -25,6 +25,7 @@ body {
 	position: fixed;
 	top: 0px;
 	width: 100%;
+	z-index: 999;
 	background-image: url( ../img/header_bg.jpg );
 	border-bottom: 1px solid #4D4B48;
 }
@@ -252,4 +253,10 @@ a:hover {
 }
 .credits li {
 	font-size: medium;
+}
+.has_master_toggle {
+	margin-left: 20px;
+}
+.disabled {
+	opacity: 0.6;
 }
