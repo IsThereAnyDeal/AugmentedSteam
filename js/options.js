@@ -263,10 +263,7 @@ function load_options() {
 		}
 
 		$("[data-parent-of]").on("change", function(){
-			var groupSel = $(this).data("parent-of"),
-				state = !$(this).is(":checked");
-
-			$(groupSel).toggleClass("disabled", state).find("input, select").prop("disabled", state);
+			initParentOf($(this));
 		});
 
 		// Set the value or state for each input
@@ -275,10 +272,14 @@ function load_options() {
 
 			if (settings_defaults.hasOwnProperty(setting)) {
 				if ($(this).is(":checkbox")) {
-					$(this).prop('checked', settings[setting]).trigger("change");
+					$(this).prop('checked', settings[setting]);
 				} else {
-					$(this).val(settings[setting]).trigger("change");
+					$(this).val(settings[setting]);
 				}
+			}
+
+			if ($(this).data("parent-of")) {
+				initParentOf($(this));
 			}
 		});
 
@@ -298,9 +299,14 @@ function load_options() {
 
 		load_translation();
 		load_profile_link_images();
-
-		
 	});
+}
+
+function initParentOf(node) {
+	var groupSel = $(node).data("parent-of"),
+		state = !$(node).is(":checked");
+
+	$(groupSel).toggleClass("disabled", state).find("input, select").prop("disabled", state);
 }
 
 var localized_strings = [];
