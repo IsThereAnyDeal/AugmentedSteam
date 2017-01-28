@@ -2275,9 +2275,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * Store front (sidebar toggling)
+ * Store front
  * customize_home_page()
  **************************************/
+ /* Sidebar */
 @media (min-width: 1208px) {
 	div#global_header .content,
 	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_body_ctn .page_background_holder {
@@ -2304,6 +2305,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 body.es_homepage_sidebar_hidden .home_page_gutter {
 	opacity: 0;
 }
+/* Carousel */
+div.home_cluster_ctn.home_ctn {
+	transition: padding 0.50s;
+}
+body.es_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
+	padding: 0;
+}
 
 /***************************************
  * Wishlists
@@ -2323,4 +2331,3 @@ body.es_homepage_sidebar_hidden .home_page_gutter {
 	box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset;
 	pointer-events: none;
 }
-

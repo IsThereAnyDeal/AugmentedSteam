@@ -232,6 +232,11 @@ String.prototype.contains = function(it) {
 	return this.indexOf(it) != -1;
 };
 
+// Returns first level text only
+$.fn.firstText = function() {
+	return this.contents().filter(function() { return this.nodeType === 3; })[0].data;
+};
+
 var currency_format_info = {
 	"BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
 	"EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: " ", decimal: ",", right: true },
@@ -6819,7 +6824,7 @@ function customize_app_page() {
 
 		// Helpful customer reviews
 		if ($(".user_reviews_header").length > 0) {
-			text = $(".user_reviews_header:first").contents().filter(function() { return this.nodeType === 3; })[0].data;
+			text = $(".user_reviews_header:first").firstText();
 			if (settings.show_apppage_customerreviews) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_customerreviews'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_customerreviews'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
@@ -7066,10 +7071,6 @@ function add_steamcn_mods() {
 }
 
 function customize_home_page() {
-	$(".home_page_content:first").append("<div id='es_customize_btn' class='home_actions_ctn' style='margin: -10px 0px;'><div class='home_btn home_customize_btn' style='z-index: 13;'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
-	$(".home_page_body_ctn:first").css("min-height", "400px");
-	$(".has_takeover").css("min-height", "600px");
-
 	storage.get(function(settings) {
 		if (settings.show_homepage_carousel === undefined) { settings.show_homepage_carousel = true; storage.set({'show_homepage_carousel': settings.show_homepage_carousel}); }
 		if (settings.show_homepage_spotlight === undefined) { settings.show_homepage_spotlight = true; storage.set({'show_homepage_spotlight': settings.show_homepage_spotlight}); }
@@ -7085,122 +7086,19 @@ function customize_home_page() {
 		if (settings.show_homepage_marketing === undefined) { settings.show_homepage_marketing = true; storage.set({'show_show_homepage_marketing': settings.show_homepage_marketing}); }
 		if (settings.show_homepage_sidebar === undefined) { settings.show_homepage_sidebar = true; storage.set({'show_homepage_sidebar': settings.show_homepage_sidebar}); }
 
-		var html = "<div class='home_viewsettings_popup'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings.apppage_sections + "</div>"
+		$(".home_page_content:first").append(`
+			<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px;">
+				<div class="home_btn home_customize_btn" style="z-index: 13;">${ localized_strings.customize }</div>
+				<div class='home_viewsettings_popup'>
+					<div class='home_viewsettings_instructions' style='font-size: 12px;'>${ localized_strings.apppage_sections }</div>
+				</div>
+			</div>
+			<div style="clear: both;"></div>
+		`);
 
-		// Carousel
-		if ($("#home_maincap_v7").length > 0) {
-			text = $("#home_maincap_v7").parent().find("h2").text().toLowerCase();
-			if (settings.show_homepage_carousel) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_carousel'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#home_maincap_v7").parent().addClass("es_hide");
-				$("#home_maincap_v7").parent().parent().css({"padding-top": "0px", "padding-bottom": "0px", "margin-top": "0px"});
-			}
-		}
-
-		// Special Offers
-		if ($("#spotlight_carousel").length > 0) {
-			text = $("#spotlight_carousel").parent().find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_spotlight) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_spotlight'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#spotlight_carousel").parent().parent().addClass("es_hide");
-			}
-		}
-
-		// Trending Among Friends
-		if ($("#friends_carousel").length > 0) {
-			text = $("#friends_carousel").parent().find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_friends) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_friends'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#friends_carousel").parent().parent().addClass("es_hide");
-			}
-		}
-
-		// Your Discovery Queue
-		if ($(".discovery_queue_ctn").length > 0) {
-			text = $(".discovery_queue_ctn").find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_explore) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_explore'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".discovery_queue_ctn").addClass("es_hide");
-			}
-		}
-
-		// Steam Curators
-		if ($(".steam_curators_ctn").length > 0) {
-			text = $(".steam_curators_ctn").find("a:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_curators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_curators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".apps_recommended_by_curators_ctn").css("height", "0px").css("overflow", "hidden");
-				$(".steam_curators_ctn").addClass("es_hide");
-			}
-		}
-
-		// Recently Updated
-		if ($(".recently_updated_block").length > 0) {
-			text = $(".recently_updated_block").find("h2").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_updated) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_updated'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".recently_updated_block").addClass("es_hide");
-			}
-		}
-
-		// Hardware Ads
-		if ($(".hardware_content").length > 0) {
-			text = localized_strings.hardwareads;
-			if (settings.show_homepage_hardware) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_hardware'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_hardware'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".hardware_content").parent().addClass("es_hide");
-			}
-		}
-
-		// Homepage Tabs
-		if ($(".home_tab_col").length > 0) {
-			text = localized_strings.homepage_tabs;
-			if (settings.show_homepage_tabs) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_tabs'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".home_tab_col").parent().addClass("es_hide");
-			}
-		}
-
-		// Under $10
-		if ($(".specials_under10").length > 0) {
-			text = $(".specials_under10").find("h2:first").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_specials) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_specials'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".specials_under10").parent().parent().addClass("es_hide");
-			}
-		}
-
-		// Updates and Offers
-		if ($(".marketingmessage_area").length > 0) {
-			text = $(".marketingmessage_area").find("h2").contents().filter(function() { return this.nodeType === 3; })[0].data.toLowerCase();
-			if (settings.show_homepage_marketing) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_marketing'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_marketing'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".marketingmessage_area").addClass("es_hide");
-			}
-		}
-
-		// Sidebar
-		if ($(".home_page_gutter").length > 0) {
-			text = localized_strings.homepage_sidebar;
-			if (settings.show_homepage_sidebar) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_homepage_sidebar'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".home_page_gutter").hide();
-			}
-		}
-
-		$("#es_customize_btn").append(html);
-
+		$(".home_page_body_ctn:first").css("min-height", "400px");
+		$(".has_takeover").css("min-height", "600px");
+	
 		$("#es_customize_btn").find(".home_customize_btn").on("click", function(){
 			$(this).toggleClass("active").next(".home_viewsettings_popup").stop().slideToggle(100);
 		});
@@ -7211,44 +7109,48 @@ function customize_home_page() {
 			}
 		});
 
-		function addToggleHandler(name, element) {
-			var obj = {};
-			obj[name] = settings[name];
-			$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !obj[name]);
-			
-			$("#" + name).click(function() {
-				element.removeClass("es_hide").removeClass("es_show");
-
-				if (obj[name]) {
-					obj[name] = false;
-					element.stop().slideUp();
-					if (name == "show_homepage_carousel") {
-						element.parent().css({"padding-top": "0px", "padding-bottom": "0px", "margin-top": "0px"});
-					}
-					$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-				} else {
-					obj[name] = true;
-					element.stop().slideDown();
-					$(this).find(".home_viewsettings_checkbox").addClass("checked");
-				}
-
-				$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !obj[name]);
-
-				storage.set(obj);
-			});
-		}
-
 		addToggleHandler("show_homepage_carousel", $("#home_maincap_v7").parent());
 		addToggleHandler("show_homepage_spotlight", $("#spotlight_carousel").parent().parent());
 		addToggleHandler("show_homepage_friends", $("#friends_carousel").parent().parent());
 		addToggleHandler("show_homepage_updated", $(".recently_updated_block"));
 		addToggleHandler("show_homepage_explore", $(".discovery_queue_ctn"));
-		addToggleHandler("show_homepage_curators", $(".steam_curators_ctn"));
-		addToggleHandler("show_homepage_hardware", $(".hardware_content").parent());
-		addToggleHandler("show_homepage_tabs", $(".home_tab_col").parent());
+		addToggleHandler("show_homepage_curators", $(".steam_curators_ctn, .apps_recommended_by_curators_ctn"), $(".steam_curators_ctn").find("a:first").firstText().toLowerCase());
+		addToggleHandler("show_homepage_hardware", $(".hardware_content").parent(), localized_strings.hardwareads);
+		addToggleHandler("show_homepage_tabs", $(".home_tab_col").parent(), localized_strings.homepage_tabs);
 		addToggleHandler("show_homepage_specials", $(".specials_under10").parent().parent());
 		addToggleHandler("show_homepage_marketing", $(".marketingmessage_area"));
-		addToggleHandler("show_homepage_sidebar", $(".home_page_gutter"));
+		addToggleHandler("show_homepage_sidebar", $(".home_page_gutter"), localized_strings.homepage_sidebar);
+
+		function addToggleHandler(name, element, text) {
+			if (element.length) {
+				var obj = {};
+				obj[name] = settings[name];
+				text = (typeof text === "string" && text) || element.find("h2:first").firstText().toLowerCase();
+				
+				$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !settings[name]);
+
+				element.toggleClass("es_hide", !settings[name]);
+				if (element.is(".es_hide")) element.slideUp();
+
+				$("#es_customize_btn").find(".home_viewsettings_popup").append(`
+					<div class="home_viewsettings_checkboxrow ellipsis" id="${ name }">
+						<div class="home_viewsettings_checkbox ${ settings[name] ? `checked` : `` }"></div>
+						<div class="home_viewsettings_label">${ text }</div>
+					</div>
+				`);
+				
+				$("#" + name).on("click", function() {
+					obj[name] = !obj[name];
+
+					element.removeClass("es_show es_hide").stop().slideToggle();
+					$(this).find(".home_viewsettings_checkbox").toggleClass("checked", obj[name]);
+
+					$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !obj[name]);
+
+					storage.set(obj);
+				});
+			}
+		}
 	});
 }
 
