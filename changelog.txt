@@ -1,6 +1,7 @@
 ﻿v9.2
 -----
 + Added Steam review rating scores to users wishlists
++ Added OpenCritic.com reviews to store pages
 + Added a button to toggle live market updates for popular items on or off
 + Added a confirmation dialog when emptying your shopping cart
 + Add to Cart buttons will now display on larger wishlists

@@ -588,11 +588,17 @@ var storePageData = (function() {
 			var apiurl = "//api.enhancedsteam.com/storepagedata/?appid=" + appid;
 			if (all && pos && stm) apiurl += "&r_all=" + all + "&r_pos=" + pos + "&r_stm=" + stm;
 			if (metalink) apiurl += "&mcurl=" + metalink;
-			get_http(apiurl, function(txt) {
-				data = JSON.parse(txt);
-				cache_set(appid, data);
-				deferred.resolveWith(data);
-			}).fail(deferred.reject);
+			
+			storage.get(function(settings) {
+				if (settings.showoc === undefined) { settings.showoc = true; storage.set({'showoc': settings.showoc}); }
+				if (settings.showoc) { apiurl += "&oc"; }
+
+				get_http(apiurl, function(txt) {
+					data = JSON.parse(txt);
+					cache_set(appid, data);
+					deferred.resolveWith(data);
+				}).fail(deferred.reject);
+			});			
 		}
 		return deferred.promise();
 	}
@@ -4304,6 +4310,25 @@ function add_metacritic_userscore() {
 					}
 				});
 			}
+		}
+	});
+}
+
+// Adds data from OpenCritic.com to the store page, if applicable
+function add_opencritic_data(appid) {
+	storage.get(function(settings) {
+		if (settings.showoc === undefined) { settings.showoc = true; storage.set({'showoc': settings.showoc}); }
+		if (settings.showoc) {
+			storePageData.get("oc", function(data) {
+				if (data.score && data.score > 0) {
+					if ($(".rightcol .responsive_apppage_reviewblock").length > 0) {
+						$("#game_area_userscore").after("<div id='game_area_opencritic'></div>");
+					} else {
+						$(".rightcol.game_meta_data:first").append("<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
+					}
+					$("#game_area_opencritic").append("<div class='score " + data.award.toLowerCase() + "'>" + data.score + "</div><div><img src='" + chrome.extension.getURL("img/opencritic.png") + "'></div><div class='oc_text'>\"" + data.award + "\" - <a href='" + data.url + "' target='_blank'>" + localized_strings.read_reviews + " </a></div>");
+				}
+			});
 		}
 	});
 }
@@ -9526,6 +9551,7 @@ $(document).ready(function(){
 
 							drm_warnings("app");
 							add_metacritic_userscore();
+							add_opencritic_data(appid);
 							add_steamreview_userscore(appid);
 							display_purchase_date();
 

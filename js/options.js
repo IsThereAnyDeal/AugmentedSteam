@@ -88,6 +88,7 @@ var settings_defaults = {
 	"showmarkettotal": true,
 	"showsteamrepapi": true,
 	"showmcus": true,
+	"showoc": true,
 	"showhltb": true,
 	"showpcgw": true,
 	"showclient": true,

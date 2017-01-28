@@ -2157,6 +2157,49 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * OpenCritic User Scores
+ * add_opencritic_userscore()
+ **************************************/
+#game_area_opencritic {
+	margin-top: 6px;
+	padding-top: 10px;
+	clear: both;
+}
+#game_area_opencritic.solo {
+	margin-top: 0px !important;
+	padding-top: 0px !important;
+}
+#game_area_opencritic .score {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 25px;
+	text-align: center;
+	float: left;
+}
+#game_area_opencritic .score.mighty {
+	background-color: rgb(252, 67, 10);
+}
+#game_area_opencritic .score.strong {
+	background-color: rgb(158, 0, 180);
+}
+#game_area_opencritic .score.fair {
+	background-color: rgb(74, 161, 206);
+}
+#game_area_opencritic .score.weak {
+	background-color: rgb(128, 176, 106);
+}
+#game_area_opencritic .oc_text {
+	margin-left: 100px;
+	margin-top: -21px;
+}
+#game_area_opencritic .oc_text:after {
+	content: url(/public/images/ico/iconExternalLink.gif);
+}
+
+/***************************************
  * Wishlists
  * wishlist_add_to_cart()
  **************************************/
