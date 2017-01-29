@@ -3104,31 +3104,41 @@ function wishlist_add_ratings() {
 	}
 
 	function build_review(appid, scores) {
-		var percent = (Math.floor(100 * (scores["p"] / scores["t"])) / 100).toFixed(2) * 100;
+		if (scores) {
+			var percent = (Math.floor(100 * (scores["p"] / scores["t"])) / 100).toFixed(2) * 100;
 
-		if (percent >= 70) { img = img_pos; }
-		else if (percent >= 40) { img = img_mix; }
-		else { img = img_neg; }
+			if (percent >= 70) { img = img_pos; }
+			else if (percent >= 40) { img = img_mix; }
+			else { img = img_neg; }
 
-		var percent_text = percent + "%",
-			total_text = scores["t"].toLocaleString();
+			var percent_text = percent + "%",
+				total_text = scores["t"].toLocaleString();
 
-		$("#game_" + appid).find(".wishlistRankCtn").append("<div class='es_wishlist_score'><img src='" + img + "' data-community-tooltip='" + localized_strings.review_summary.replace("__percent__", percent_text).replace("__num__", total_text) + "'></div>");
+			$("#game_" + appid).find(".wishlistRankCtn").append("<div class='es_wishlist_score'><img src='" + img + "' data-community-tooltip='" + localized_strings.review_summary.replace("__percent__", percent_text).replace("__num__", total_text) + "'></div>");
+		}
 	}
 
+	var update_time = parseInt(Date.now() / 1000, 10);
 	if (appids.length) {
 		get_http('//api.enhancedsteam.com/reviews/?appids=' + appids.join(","), function (data) {
 			var review_data = JSON.parse(data);
 			$.each(review_data, function(appid, scores) {
 				build_review(appid, scores);
-				var update_time = parseInt(Date.now() / 1000, 10);
 				var cached = {
 					s: scores,
 					u: update_time
 				};
 				setValue("reviewData_" + appid, cached);
+				appids.splice(appids.indexOf(appid), 1);
 			});
 			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+		});
+		$.each(appids, function(index, appid) {
+			var cached = {
+				s: false,
+				u: update_time
+			};
+			setValue("reviewData_" + appid, cached);
 		});
 	}
 }
