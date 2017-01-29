@@ -2091,6 +2091,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #game_area_metascore.es_area_userscore .metacritic {
 	margin-top: -4px !important;
 }
+#game_area_metascore .score,
+#game_area_userscore .score {
+	padding: 0 !important;
+}
 
 /***************************************
  * Users profiles
