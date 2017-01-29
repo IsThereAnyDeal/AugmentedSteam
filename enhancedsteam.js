@@ -6104,7 +6104,7 @@ function add_dlc_checkboxes() {
 			$(this).find(".game_area_dlc_name").prepend("<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + $(this).find("input").val() + "' value='" + $(this).find("input").val() + "'><label for='es_select_dlc_" + $(this).find("input").val() + "' style='background-image: url( " + chrome.extension.getURL("img/check_sheet.png") + ");'></label>");
 		} else {
 			$(this).find(".game_area_dlc_name").css("margin-left", "23px");
-		}	
+		}
 	}).hover(function() { 
 		$(this).find(".ds_flag").hide();
 	}, function() { 
@@ -6126,25 +6126,25 @@ function add_dlc_checkboxes() {
 	$(".game_area_dlc_section").find(".gradientbg").after("<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
 	$("#es_dlc_option_panel").append("<div class='es_dlc_option' id='unowned_dlc_check'>" + localized_strings.select.unowned_dlc + "</div>");
-	$("#unowned_dlc_check").on("click", function() {		
+	$("#unowned_dlc_check").on("click", function() {
 		$(".game_area_dlc_section").find(".game_area_dlc_row").each(function() {
-			if (!($(this).hasClass("es_highlight_owned"))) {
-				$(this).find("input").prop("checked", true).change();				
+			if (!($(this).hasClass("es_highlighted_owned"))) {
+				$(this).find("input").prop("checked", true).change();
 			}
 		});
 	});
 
 	$("#es_dlc_option_panel").append("<div class='es_dlc_option' id='wl_dlc_check'>" + localized_strings.select.wishlisted_dlc + "</div>");
-	$("#wl_dlc_check").on("click", function() {		
+	$("#wl_dlc_check").on("click", function() {	
 		$(".game_area_dlc_section").find(".game_area_dlc_row").each(function() {
-			if ($(this).hasClass("es_highlight_wishlist")) {
+			if ($(this).hasClass("es_highlighted_wishlist")) {
 				$(this).find("input").prop("checked", true).change();
-			}	
+			}
 		});
 	});
 
 	$("#es_dlc_option_panel").append("<div class='es_dlc_option' id='no_dlc_check'>" + localized_strings.select.none + "</div>");
-	$("#no_dlc_check").on("click", function() {		
+	$("#no_dlc_check").on("click", function() {
 		$(".game_area_dlc_section").find(".game_area_dlc_row").each(function() {
 			$(this).find("input").prop("checked", false).change();
 		});
