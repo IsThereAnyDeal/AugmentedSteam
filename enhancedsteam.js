@@ -5968,7 +5968,7 @@ function survey_data_from_site(appid) {
 						html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + localized_strings.survey.take + "</span></a>";
 					}
 					html += "</div>";
-					$(".sys_req").parent().after(html);
+					$(".sys_req").parent().before(html);
 				});
 			}
 		}
@@ -9469,8 +9469,6 @@ $(document).ready(function(){
 							show_pricing_history(appid, "app");
 							dlc_data_from_site(appid);
 
-							survey_data_from_site(appid);
-
 							drm_warnings("app");
 							add_metacritic_userscore();
 							add_opencritic_data(appid);
@@ -9490,6 +9488,7 @@ $(document).ready(function(){
 							add_package_info_button();
 							add_steamchart_info(appid);
 							add_steamspy_info(appid);
+							survey_data_from_site(appid);
 							add_system_requirements_check(appid);
 							add_app_badge_progress(appid);
 							add_dlc_checkboxes();
