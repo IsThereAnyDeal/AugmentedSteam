@@ -4358,24 +4358,6 @@ function add_opencritic_data(appid) {
 	});
 }
 
-// Add Steam user review score
-function add_steamreview_userscore(appid) {
-	if ($(".game_area_dlc_bubble,.noReviewsYetTitle").length === 0) {
-		var positive = 0,
-			negative = 0;
-
-		positive = parseFloat($("#ReviewsTab_positive").find("span:last").text().replace(/\(|\)|,/g, ""));
-		negative = parseFloat($("#ReviewsTab_negative").find("span:last").text().replace(/\(|\)|,/g, ""));
-
-		var pos_percent = ((positive / (positive + negative)) * 100).toFixed(0),
-			neg_percent = ((negative / (positive + negative)) * 100).toFixed(0);
-
-		if (!isNaN(pos_percent) && !isNaN(neg_percent)) {
-			$(".game_details").find(".details_block:first").before('<div id="es_review_score"><div style="display: inline-block; margin-right: 25px;"><img src="//store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsUp_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + pos_percent + '%</span></div><div style="display: inline-block;"><img src="//store.akamai.steamstatic.com/public/shared/images/userreviews/icon_thumbsDown_v6.png" width="24" height="24" class="es_review_image"><span class="es_review_text"> ' + neg_percent + '%</span></div><div style="clear: both;"></div></div>');
-		}
-	}
-}
-
 function add_hltb_info(appid) {
 	if ($(".game_area_dlc_bubble").length === 0) {
 		storage.get(function(settings) {
@@ -9472,7 +9454,6 @@ $(document).ready(function(){
 							drm_warnings("app");
 							add_metacritic_userscore();
 							add_opencritic_data(appid);
-							add_steamreview_userscore(appid);
 							display_purchase_date();
 
 							add_widescreen_certification(appid);
