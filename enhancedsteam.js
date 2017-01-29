@@ -6733,7 +6733,7 @@ function show_regional_pricing(type) {
 
 function customize_app_page() {
 	// Add a "Customize" button
-	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
+	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
 
 	storage.get(function(settings) {
 		if (settings.show_apppage_recommendedbycurators === undefined) { settings.show_apppage_recommendedbycurators = true; storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators}); }
