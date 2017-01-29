@@ -1,4 +1,8 @@
-﻿v9.2
+﻿v9.3
+-----
+
+
+v9.2
 -----
 + Added Steam review rating scores to users wishlists
 + Added OpenCritic.com reviews to store pages
