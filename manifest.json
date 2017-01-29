@@ -57,9 +57,6 @@
         "img/flags/flags.png",
         "img/check_sheet.png",
         "img/flags/world.png",
-        "img/select2.png",
-        "img/select2x2.png",
-        "img/select2-spinner.png",
         "img/steamcardexchange.png",
         "img/decline.png",
         "img/remove.png",
@@ -168,12 +165,10 @@
             ],
             "js": [
                 "js/jQuery.min.js",
-                "js/select2.min.js",
                 "enhancedsteam.js"
             ],
             "css": [
-                "css/enhancedsteam.css",
-                "css/select2.css"
+                "css/enhancedsteam.css"
             ]
         },
         {
