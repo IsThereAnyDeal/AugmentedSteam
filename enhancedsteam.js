@@ -4333,6 +4333,7 @@ function add_metacritic_userscore() {
 function add_opencritic_data(appid) {
 	storage.get(function(settings) {
 		if (settings.showoc === undefined) { settings.showoc = true; storage.set({'showoc': settings.showoc}); }
+		if (settings.show_apppage_reviews === undefined) { settings.show_apppage_reviews = true; storage.set({'show_apppage_reviews': settings.show_apppage_reviews}); }
 		if (settings.showoc) {
 			storePageData.get("oc", function(data) {
 				if (data.score && data.score > 0) {
@@ -4351,6 +4352,9 @@ function add_opencritic_data(appid) {
 							$("#game_area_reviews").find("p").append("<div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "' target='_blank'>OpenCritic.com</a></div>");
 						} else {
 							$(".leftcol .early_access_announcements:first").after("<div id='game_area_reviews' class='game_area_description'><h2>" + localized_strings.reviews + "</h2><div id='es_opencritic_reviews'></div><div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "' target='_blank'>OpenCritic.com</a></div></div>");
+							if (settings.show_apppage_reviews == false) {
+								$("#game_area_reviews").hide();
+							}
 						}
 
 						var review_text = "";
