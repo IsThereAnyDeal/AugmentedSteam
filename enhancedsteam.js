@@ -4321,12 +4321,32 @@ function add_opencritic_data(appid) {
 		if (settings.showoc) {
 			storePageData.get("oc", function(data) {
 				if (data.score && data.score > 0) {
+					// Add data to metacritic side bar, or create one if that block doesn't exist
 					if ($(".rightcol .responsive_apppage_reviewblock").length > 0) {
 						$("#game_area_userscore").after("<div id='game_area_opencritic'></div>");
 					} else {
 						$(".rightcol.game_meta_data:first").append("<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
 					}
 					$("#game_area_opencritic").append("<div class='score " + data.award.toLowerCase() + "'>" + data.score + "</div><div><img src='" + chrome.extension.getURL("img/opencritic.png") + "'></div><div class='oc_text'>\"" + data.award + "\" - <a href='" + data.url + "' target='_blank'>" + localized_strings.read_reviews + " </a></div>");
+
+					// Add data to the review section in the left column, or create one if that block doesn't exist
+					if (data.reviews.length > 0) {
+						if ($("#game_area_reviews").length > 0) {
+							$("#game_area_reviews").find("p").prepend("<div id='es_opencritic_reviews'></div>");
+							$("#game_area_reviews").find("p").append("<div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "' target='_blank'>OpenCritic.com</a></div>");
+						} else {
+							$(".leftcol .early_access_announcements:first").after("<div id='game_area_reviews' class='game_area_description'><h2>" + localized_strings.reviews + "</h2><div id='es_opencritic_reviews'></div><div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "' target='_blank'>OpenCritic.com</a></div></div>");
+						}
+
+						var review_text = "";
+						$.each(data.reviews, function(key, reviewdata) {
+							var date = new Date(reviewdata.date);
+							review_text += "<p>\"" + reviewdata.snippet + "\"<br>" + reviewdata.dScore + " - <a href='" + reviewdata.rURL + "' target='_blank' data-store-tooltip='" + reviewdata.author + ", " + date.toLocaleDateString() + "'>" + reviewdata.name + "</a></p>";
+						});
+
+						$("#es_opencritic_reviews").append(review_text);
+						runInPageContext("function() {BindStoreTooltip(jQuery('#game_area_reviews [data-store-tooltip]')) }");
+					}
 				}
 			});
 		}
