@@ -6,6 +6,7 @@
 + Added a confirmation dialog when emptying your shopping cart
 + Add to Cart buttons will now display on larger wishlists
 + Added a "View badge progress" button to booster packs in inventory and on trading cards in market
++ Added an option for viewing user's wishlist data on their profile
 : Fixed a bug that caused other users inventory to not load price information under some circumstances
 : Updated age gate bypass to work with additional new age gate types
 : Fixed Steam store main menu dropdowns not being hidden on mouse out
@@ -14,7 +15,8 @@
 : Fixed a bug where emoticons weren't correctly highlighted as owned on market pages
 : Fixed a bug in custom holiday profile themes that effected legitimate users of that theme
 : Fixed a bug where filtering a wishlist to items with coupons wouldn't work correctly
-
+: Fixed a bug that caused DLC selection on store pages not to work correctly
+: Fixed a bug that caused Early Access and coupon headers to not display correctly on the store
 
 v9.1.1
 -----
