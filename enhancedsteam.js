@@ -2618,7 +2618,7 @@ function show_pricing_history(appid, type) {
 	});
 }
 
-// Add red warnings for 3rd party DRMs
+// Add red warnings for 3rd-party DRMs
 function drm_warnings(type) {
 	storage.get(function(settings) {
 		if (settings.showdrm === undefined) { settings.showdrm = true; storage.set({'showdrm': settings.showdrm}); }
@@ -2667,7 +2667,7 @@ function drm_warnings(type) {
 
 			// Detect other DRM
 			if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
-			if (text.indexOf("No 3rd Party DRM") > 0) { drm = false; }
+			if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 			
 			var string_type;
 			var drm_string = "(";
@@ -2680,7 +2680,7 @@ function drm_warnings(type) {
 			if (stardock) { drm_string += 'Stardock Account Required, '; drm = true; }
 			if (rockstar) { drm_string += 'Rockstar Social Club, '; drm = true; }
 			if (kalypso) { drm_string += "Kalypso Launcher, "; drm = true; }
-			if (denuvo) { drm_string += "Denuvo Antitamper, "; drm = true; }
+			if (denuvo) { drm_string += "Denuvo Anti-tamper, "; drm = true; }
 
 			if (drm_string == "(") {
 				drm_string = "";
