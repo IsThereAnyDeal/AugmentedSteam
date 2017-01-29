@@ -6753,16 +6753,6 @@ function customize_app_page() {
 		var html = "<div class='home_viewsettings_popup' style='display: none'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings.apppage_sections + "</div>"
 		html += "<div class='home_viewsettings_checkboxrow ellipsis disabled'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.apppage_purchase + "</div></div>";
 		
-		// Recommended by Curators
-		if ($(".steam_curators_block").length > 0) {
-			var text = $(".steam_curators_block").find("h2:first").text();		
-			if (settings.show_apppage_recommendedbycurators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recommendedbycurators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recommendedbycurators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".steam_curators_block").hide();
-			}
-		}
-		
 		// Recent updates
 		if ($(".early_access_announcements").length > 0) {
 			var text_search = $(".early_access_announcements").find("h2:first").clone();
@@ -6839,6 +6829,16 @@ function customize_app_page() {
 			else {
 				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_morelikethis'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
 				$("#recommended_block").hide();
+			}
+		}
+
+		// Recommended by Curators
+		if ($(".steam_curators_block").length > 0) {
+			var text = $(".steam_curators_block").find("h2:first").text();		
+			if (settings.show_apppage_recommendedbycurators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recommendedbycurators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
+			else {
+				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recommendedbycurators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
+				$(".steam_curators_block").hide();
 			}
 		}
 
