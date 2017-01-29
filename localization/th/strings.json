@@ -23,6 +23,7 @@
   "remove_owned_wishlist":"ลบเกมที่มีออกจากสิ่งที่คุณอยากได้",
   "donate":"บริจาค",
   "close":"ปิด",
+  "go":"Go",
   "coupon_application_note":"คูปองในคลังของคุณจะถูกนำมาปรับใช้โดยอัตโนมัติเมื่อคิดเงิน",
   "hide":"ซ่อน",
   "cards_owned":"เป็นเจ้าของการ์ด __owned__ จาก __possible__ ใบ",
@@ -36,6 +37,7 @@
   "translation":"การแปลภาษา",
   "lowest":"ต่ำที่สุด",
   "lowest_price":"ราคาถูกที่สุดในขณะนี้",
+  "view_badge_progress":"View badge progress",
   "badge_progress":"ดูความคืบหน้าเหรียญตรา",
   "sales_total":"ยอดการขายรวม",
   "hold_total":"ราคาทั้งหมด",
@@ -53,7 +55,7 @@
   "quick_sell":"ขายด่วน __amount__ รายการ",
   "instant_sell":"ขายทันที __amount__ รายการ",
   "starting_at":"เริ่มต้นที่",
-  "hardwareads":"Hardware Advertising",
+  "hardwareads":"การโฆษณาฮาร์ดแวร์",
   "homepage_tabs":"แท็บหน้าหลัก",
   "store":"ร้านค้า",
   "view_in":"ดูใน",
@@ -89,6 +91,8 @@
   "search_error_retry":"คลิกที่นี่เพื่อลองอีกครั้ง",
   "contribute":"ให้การสนับสนุน (GitHub)",
   "reviews":"บทวิจารณ์",
+  "read_reviews":"Read Reviews",
+  "read_more_reviews":"Read more reviews at",
   "size":"ขนาด",
   "package_info":"ข้อมูลแพ็กเกจ",
   "badge_completion_avg":"ราคาเฉลี่ยเพื่อหาให้ครบ",
@@ -99,6 +103,7 @@
   "price":"ราคา",
   "view_marketplace":"ดูในตลาด",
   "empty_cart":"ล้างรถเข็น",
+  "empty_cart_confirmation":"Are you sure you want to empty the shopping cart?",
   "market_transactions":"การทำรายการในตลาด",
   "card_drops_remaining":"คงเหลือการ์ดดรอป __drops__ ใบ",
   "badges_drops":"เหรียญตราที่ยังคงเหลือการ์ดดรอป",
@@ -120,7 +125,7 @@
   "mixed_item":"รายการคะแนนผสมกัน",
   "negative_item":"รายการคะแนนแง่ลบ",
   "price_above":"รายการที่มีราคามากกว่า",
-  "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
+  "price_above_tooltip":"กรอกศูนย์สำหรับรายการฟรีหรือรายการที่ไม่มีแท็กราคา ปล่อยช่องนี้ว่างไว้เพื่อปิดการใช้งานคุณสมบัตินี้",
   "news":"ข่าวสาร",
   "check_system":"ตรวจสอบระบบของคุณ",
   "viewinclient":"ดูใน Steam Client",
@@ -239,10 +244,12 @@
   "filter_games":"ตัวกรองเกม",
   "note_for":"หมายเหตุสำหรับ",
   "show_wishlist_total":"โชว์ราคารวมของสิ่งที่อยากได้",
-  "tag_short":"ใช้แท็กสั้น ๆ เพื่อประหยัดพื้นที่",
-  "no_price_data":"ไม่มีข้อมูลราคา",
+  "tag_short":"ใช้แท็กแบบสั้นเพื่อประหยัดพื้นที่",
+  "no_price_data":"ข้อมูลราคาไม่พร้อมใช้งาน",
   "exclude_tags":"ไม่รวมแท็ก",
-  "user_score":"User Score",
+  "user_score":"คะแนนผู้ใช้",
+  "review_summary":"__percent__ of the __num__ user reviews for this game are positive.",
+  "market_popular_items_toggle":"Toggle live updating for Popular Items",
   "achievements":{
     "option":"แสดงรางวัลความสำเร็จบนหน้าร้านค้า",
     "achievements":"รางวัลความสำเร็จ",
@@ -272,8 +279,8 @@
     "submit":"ส่งเวลาของคุณ",
     "main":"เนื้อเรื่องหลัก",
     "no_data":"ไม่พบข้อมูล",
-    "help":"คลิกที่นี่เพื่อแก้ไข",
-    "wrong":"เกมไม่ถูกต้องหรือไม่?"
+    "help":"คลิกที่นี่สำหรับความช่วยเหลือ",
+    "wrong":"ผิดเกม?"
   },
   "library":{
     "in_library":"ในคลัง",
@@ -308,6 +315,7 @@
     "showcomparelinks":"แสดงลิงก์ \"เปรียบเทียบ\" สำหรับรางวัลความสำเร็จบนฟีดกิจกรรมของเพื่อน",
     "hidetmsymbols":"เครื่องหมายการค้าและเครื่องหมายลิขสิทธิ์ในชื่อเกม",
     "metacritic":"แสดงคะแนนจากผู้ใช้ใน Metacritic",
+    "opencritic":"Show Opencritic.com information",
     "hideactivelistings":"ซ่อนรายการความเคลื่อนไหวทั้งหมดในหน้าแรกของตลาดเป็นค่าเริ่มต้น",
     "clear":"คุณแน่ใจหรือไม่ว่าคุณต้องการที่จะรีเซ็ตการตั้งค่าทั้งหมด? การกระทำนี้ไม่สามารถย้อนกลับได้",
     "profile_api_info":"แสดงลิงก์ API ของผู้ใช้บนโปรไฟล์",
@@ -339,7 +347,8 @@
     "friends_rec":"รายการที่เพื่อนของคุณได้เขียนบทวิจารณ์ไว้",
     "lowestprice_header":"ประวัติข้อมูลราคา",
     "total_spent":"แสดงค่าใช้จ่ายรวมบนหน้าบัญชี",
-    "add_wallet_balance":"Show Steam Wallet funds in header",
+    "add_wallet_balance":"แสดงเงินวอลเล็ต Steam ในเฮดเดอร์",
+    "add_to_cart_wishlist":"Show \"Add to Cart\" button on Wishlists",
     "about_text":"<div class=\"header\">เกี่ยวกับ <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam เป็นส่วนขยายสำหรับ Google Chrome ซึ่งได้เพิ่มคุณสมบัติใหม่มากมายไปยังเว็บไซต์ Steam<p>คุณสมบัติดังเช่น:<ul><li>การไฮไลท์เกมที่คุณเป็นเจ้าของอยู่แล้ว</li><li>การไฮไลท์เกมที่อยู่ในสิ่งที่อยากได้ของคุณ</li><li>การปรับแก้การคำนวณส่วนลดของบันเดิลตามเกมที่คุณได้เป็นเจ้าของอยู่แล้ว</li><li>การแสดงจำนวนเงินที่คุณได้ใช้จ่ายไปบน Steam ตลอดช่วงเวลาที่ผ่านมาในบัญชีของคุณ</li><li>การไฮไลท์ DLC ที่คุณเป็นเจ้าของแล้วบนหน้าเกม</li><li>การแก้ไขไอคอนเกมที่ \"ไม่มีภาพให้แสดง\" ในสิ่งที่อยากได้ของคุณสำหรับเกมหรือ DLC ใดก็ตาม</li><li>การแสดงให้เห็นว่ามีการใช้งาน DRM ภายนอก</li></ul><p>หากคุณเห็นว่าส่วนขยายนี้เป็นประโยชน์ กรุณาพิจารณาการบริจาคให้กับเรา",
     "stores_all":"เปรียบเทียบกับร้านค้าทั้งหมด",
     "show_early_access_text":"แสดงภาพแบนเนอร์เกมระหว่างการพัฒนา",
@@ -405,8 +414,11 @@
     "wishlist":"รายการในสิ่งที่อยากได้ของคุณ",
     "add_another_region":"เพิ่ม",
     "skip_got_steam":"ข้ามหน้าต่าง 'Got Steam?'",
-    "store_general_thirdparty":"ตัวเลือกในการรับข้อมูลจากเว็บไซต์ภายนอก",
+    "store_general_thirdparty":"ตัวเลือกสำหรับข้อมูลจากเว็บไซต์ภายนอก",
     "purchase_dates":"แสดงวันที่สั่งซื้อแอปในหน้าร้านค้า",
+    "show_badge_progress":"Show apps badge progress on store pages",
+    "show_wishlist_link":"Show a Wishlist link on profiles",
+    "show_wishlist_count":"Show the number of items on Wishlist",
     "lang":{
       "english":"อังกฤษ",
       "brazilian":"โปรตุเกส-บราซิล",
@@ -440,7 +452,7 @@
     "errormsg":"พบข้อผิดพลาดในการโหลดข้อมูล Enhanced Steam",
     "loading":"Enhanced Steam กำลังโหลดข้อมูล...",
     "ready":"Enhanced Steam พร้อมใช้งาน",
-    "failed":"คำร้องขอล้มเหลวมากกว่าหนึ่งครั้ง"
+    "failed":"คำร้องล้มเหลวหนึ่งคำร้องหรือมากกว่า"
   },
   "twitch":{
     "now_streaming":"__username__ กำลังสตรีมสดบน Twitch",
@@ -501,12 +513,12 @@
     "sending":"กำลังโหลดเกมและแพ็กเกจที่คุณเป็นเจ้าของแล้วและกำลังส่งไปยัง IsThereAnyDeal.com"
   },
   "tradeoffer":{
-    "num_item":"__num__ ชิ้น",
-    "num_items":"__num__ ชิ้น"
+    "num_item":"__num__ ไอเท็ม",
+    "num_items":"__num__ ไอเท็ม"
   },
   "update":{
     "dont_show":"ไม่ต้องแสดงอีก",
-    "updated":"Enhanced Steam อัพเดทสู่เวอร์ชั่น __version__",
-    "changes":"เวอร์ชั่นนี้มีการเปลี่ยนแปลงอะไรบ้าง?"
+    "updated":"Enhanced Steam ได้รับการอัปเดตเป็น __version__",
+    "changes":"รีลีสนี้ประกอบด้วยการเปลี่ยนแปลงต่อไปนี้"
   }
 }
