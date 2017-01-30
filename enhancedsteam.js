@@ -1309,7 +1309,7 @@ function load_inventory() {
 		return deferred.promise();
 	} else {
 		var deferred = new $.Deferred();
-		deferred.resolve();
+		deferred.reject();
 		return deferred.promise();
 	}
 }
