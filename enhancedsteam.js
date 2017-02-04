@@ -1362,8 +1362,8 @@ function add_wishlist_filter() {
 	});
 }
 
-function add_wishlist_discount_sort() {
-	var sorts = ["rank", "added", "name", "price", "discount", "discountabs"],
+function add_wishlist_sorts() {
+	var sorts = ["rank", "added", "name", "price", "score", "discount", "discountabs"],
 		sorted = getCookie("wishlist_sort2") || "rank",
 		linksHtml = "";
 
@@ -1371,6 +1371,7 @@ function add_wishlist_discount_sort() {
 	$("#wishlist_sort_options").children("a, span").hide().each(function(i, link){
 		linksHtml += '<a class="es_wl_sort popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
 	});
+	linksHtml += '<a class="es_wl_sort popup_menu_item by_score" data-sort-by="score" href="?sort=discount">' + localized_strings.user_reviews + '</a>';
 	linksHtml += '<a class="es_wl_sort popup_menu_item by_discount" data-sort-by="discount" href="?sort=discount">' + localized_strings.discountper + '</a>';
 	linksHtml += '<a class="es_wl_sort popup_menu_item by_discountabs" data-sort-by="discountabs" href="?sort=discountabs">' + localized_strings.discountabs + '</a>';
 
@@ -1402,7 +1403,11 @@ function add_wishlist_discount_sort() {
 	runInPageContext(function() { BindAutoFlyoutEvents(); });
 
 	// Initiate "discounted" sorts if necessary
-	if (sorted == "discount") {
+	if (sorted == "score") {
+		sort_wishlist(".es_wishlist_score", sorted, false, function(val){
+			return parseInt(val);
+		});
+	} else if (sorted == "discount") {
 		sort_wishlist(".discount_pct", sorted, true, function(val){
 			return parseInt(val);
 		});
@@ -1437,6 +1442,11 @@ function add_wishlist_discount_sort() {
 				case "price":
 					sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
 						return Number(val.replace(/\-/g, "0").replace(/[^0-9\.]+/g, "")) || 31337;
+					});
+					break;
+				case "score":
+					sort_wishlist(".es_wishlist_score", sort_by, false, function(val){
+						return parseInt(val);
 					});
 					break;
 				case "discount":
@@ -3077,69 +3087,65 @@ function wishlist_add_to_cart() {
 }
 
 function wishlist_add_ratings() {
-	var appids = [],
-		img_pos = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_positive.png",
-		img_mix = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_mixed.png",
-		img_neg = "//store.edgecast.steamstatic.com/public/images/v6/user_reviews_negative.png",
-		img;
+	var appsUpdateQueue = [];
 
-	if ($('a.btnv6_blue_hoverfade').length < 1000) {
-		$('a.btnv6_blue_hoverfade').each(function (index, node) {
-			var appid = get_appid(node.href);
-			var review_cache = getValue("reviewData_" + appid);
+	$('a.btnv6_blue_hoverfade').each(function (index, node) {
+		var appid = get_appid(node.href);
+		var review_cache = getValue("reviewData_" + appid);
 
-			if (review_cache) {
-				var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24; // One day ago
-				var last_updated = review_cache["u"] || expire_time - 1;
+		if (review_cache) {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24; // One day ago
+			var last_updated = review_cache["u"] || expire_time - 1;
 
-				if (last_updated < expire_time) {
-					appids.push(appid);
-				} else {
-					build_review(appid, review_cache["s"]);
-				}
-			} else {
-				appids.push(appid);
-			}
-		});
-	}
+			if (review_cache["s"])
+				build_review(appid, review_cache["s"]);
 
-	function build_review(appid, scores) {
-		if (scores) {
-			var percent = (Math.floor(100 * (scores["p"] / scores["t"])) / 100).toFixed(2) * 100;
-
-			if (percent >= 70) { img = img_pos; }
-			else if (percent >= 40) { img = img_mix; }
-			else { img = img_neg; }
-
-			var percent_text = percent + "%",
-				total_text = scores["t"].toLocaleString();
-
-			$("#game_" + appid).find(".wishlistRankCtn").append("<div class='es_wishlist_score'><img src='" + img + "' data-community-tooltip='" + localized_strings.review_summary.replace("__percent__", percent_text).replace("__num__", total_text) + "'></div>");
+			if (last_updated < expire_time)
+				appsUpdateQueue.push(appid);
+		} else {
+			appsUpdateQueue.push(appid);
 		}
-	}
+	});
 
-	var update_time = parseInt(Date.now() / 1000, 10);
-	if (appids.length) {
-		get_http('//api.enhancedsteam.com/reviews/?appids=' + appids.join(","), function (data) {
+	// Update cache in background
+	if (appsUpdateQueue.length) {
+		var update_time = parseInt(Date.now() / 1000, 10);
+		
+		get_http('//api.enhancedsteam.com/reviews/', function(data) {
 			var review_data = JSON.parse(data);
 			$.each(review_data, function(appid, scores) {
-				build_review(appid, scores);
 				var cached = {
 					s: scores,
 					u: update_time
 				};
 				setValue("reviewData_" + appid, cached);
-				appids.splice(appids.indexOf(appid), 1);
+				appsUpdateQueue.splice(appsUpdateQueue.indexOf(appid), 1);
 			});
-			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+		}, {
+			method: "POST",
+			data: { "appids": appsUpdateQueue.join(",") }
 		});
-		$.each(appids, function(index, appid) {
+
+		$.each(appsUpdateQueue, function(index, appid) {
 			var cached = {
 				s: false,
 				u: update_time
 			};
 			setValue("reviewData_" + appid, cached);
 		});
+	}
+
+	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+
+	function build_review(appid, scores) {
+		var percent = ((Math.floor(100 * (scores["p"] / scores["t"])) / 100) * 100).toFixed(),
+			score = (percent >= 70 ? "positive" : (percent >= 40 ? "mixed" : "negative"));
+
+		var tooltip = localized_strings.review_summary
+						.replace("__percent__", percent + "%")
+						.replace("__num__", scores["t"].toLocaleString());
+
+		$("#game_" + appid).find(".wishlistRankCtn").append(`<div class="es_wishlist_score es_score_${ score }" data-community-tooltip="${ tooltip }">${ percent + `%` }</div>`);
 	}
 }
 
@@ -9586,7 +9592,6 @@ $(document).ready(function(){
 							fix_app_image_not_found();
 							add_empty_wishlist_buttons();
 							add_wishlist_filter();
-							add_wishlist_discount_sort();
 							add_wishlist_total();
 							add_wishlist_ajaxremove();
 							add_wishlist_pricehistory();
@@ -9594,6 +9599,7 @@ $(document).ready(function(){
 							add_wishlist_search();
 							wishlist_add_to_cart();
 							wishlist_add_ratings();
+							add_wishlist_sorts();
 
 							// Wishlist highlights
 							load_inventory().done(function() {

@@ -1493,7 +1493,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Drop down menus
- * add_wishlist_discount_sort()
+ * add_wishlist_sorts()
  **************************************/
 /* Taken from: http://store.akamai.steamstatic.com/public/css/v6/store.css */
 #wishlist_sort_options .store_nav .tab {
@@ -1530,14 +1530,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 12px;
 	padding: 0;
 	display: inline-block;
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png' );
 	background-position: center;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	vertical-align: text-bottom;
 }
 #wishlist_sort_options .store_nav .tab:hover > span.pulldown > span {
-    background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png' );
+    background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png' );
 }
 #wishlist_sort_options .popup_block_new .popup_body {
     border: none !important;
@@ -2247,15 +2247,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * Wishlist review scores
- **************************************/
-.es_wishlist_score {
-	margin-top: 15px;
-	margin-left: 10px;
-	cursor: pointer;
-}
-
-/***************************************
  * Market
  * market_popular_refresh_toggle()
  **************************************/
@@ -2323,15 +2314,29 @@ body.es_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
  **************************************/
 .es_wishlist_score {
 	position: relative;
+	margin: 5px 0 0 10px;
+	cursor: pointer;
 }
-.es_wishlist_score:after {
+.wishlistRow:hover .es_wishlist_score {
+	color: #77a0b7;
+}
+.es_wishlist_score:before {
 	content: "";
 	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
+	position: relative;
 	width: 16px;
 	height: 16px;
+	margin: 0 0 2px 2px;
 	box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset;
 	pointer-events: none;
 }
+.es_wishlist_score.es_score_positive:before {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_positive.png');
+}
+.es_wishlist_score.es_score_mixed:before {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_mixed.png');
+}
+.es_wishlist_score.es_score_negative:before {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_negative.png');
+}
+
