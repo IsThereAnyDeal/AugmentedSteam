@@ -21,19 +21,19 @@ span.platform_img {
 
 span.platform_img.steamplay {
 	width: 72px;
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_steamplay.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png' );
 }
 
 span.platform_img.win {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_win.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png' );
 }
 
 span.platform_img.mac {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_mac.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png' );
 }
 
 span.platform_img.linux {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_linux.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png' );
 }
 
 img.platform_small, .platform_img {
@@ -117,14 +117,14 @@ img.platform_small, .platform_img {
 	padding-top: 5px;
 }
 .apphub_HeaderTop.es_greenlight {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_blue.jpg');
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
 	background-position: left center;
 }
 .apphub_HeaderTop.es_greenlight.es_greenlit {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green.jpg');
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green.jpg');
 }
 .apphub_HeaderTop.es_greenlight.es_released {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
 }
 .wishlistRowItem {
 	overflow: initial !important;
@@ -233,7 +233,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_dlc_option_panel {
-	background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);	
+	background: url('//steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');	
 	border-bottom: 1px solid black;
 }
 
