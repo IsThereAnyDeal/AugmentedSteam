@@ -201,6 +201,14 @@
             "css": [
                 "css/es_sites_links.css"
             ]
+        },
+        {
+            "matches": [
+                "*://store.steampowered.com/"
+            ],
+            "css": [
+                "css/store.steampowered.com/store_front.css"
+            ]
         }
     ]
 }
