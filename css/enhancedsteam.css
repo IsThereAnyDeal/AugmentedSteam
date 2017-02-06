@@ -21,19 +21,19 @@ span.platform_img {
 
 span.platform_img.steamplay {
 	width: 72px;
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_steamplay.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png' );
 }
 
 span.platform_img.win {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_win.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png' );
 }
 
 span.platform_img.mac {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_mac.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png' );
 }
 
 span.platform_img.linux {
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/icon_platform_linux.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png' );
 }
 
 img.platform_small, .platform_img {
@@ -117,14 +117,14 @@ img.platform_small, .platform_img {
 	padding-top: 5px;
 }
 .apphub_HeaderTop.es_greenlight {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_blue.jpg');
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
 	background-position: left center;
 }
 .apphub_HeaderTop.es_greenlight.es_greenlit {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green.jpg');
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green.jpg');
 }
 .apphub_HeaderTop.es_greenlight.es_released {
-	background-image: url('http://cdn.steamcommunity.com/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
 }
 .wishlistRowItem {
 	overflow: initial !important;
@@ -233,7 +233,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_dlc_option_panel {
-	background: url(http://cdn.steamcommunity.com/public/images/profile/profile_header_bg_texture.jpg);	
+	background: url('//steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');	
 	border-bottom: 1px solid black;
 }
 
@@ -1493,7 +1493,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Drop down menus
- * add_wishlist_discount_sort()
+ * add_wishlist_sorts()
  **************************************/
 /* Taken from: http://store.akamai.steamstatic.com/public/css/v6/store.css */
 #wishlist_sort_options .store_nav .tab {
@@ -1530,14 +1530,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 12px;
 	padding: 0;
 	display: inline-block;
-	background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png' );
 	background-position: center;
 	background-repeat: no-repeat;
 	cursor: pointer;
 	vertical-align: text-bottom;
 }
 #wishlist_sort_options .store_nav .tab:hover > span.pulldown > span {
-    background-image: url( 'http://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png' );
+    background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png' );
 }
 #wishlist_sort_options .popup_block_new .popup_body {
     border: none !important;
@@ -2247,15 +2247,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * Wishlist review scores
- **************************************/
-.es_wishlist_score {
-	margin-top: 15px;
-	margin-left: 10px;
-	cursor: pointer;
-}
-
-/***************************************
  * Market
  * market_popular_refresh_toggle()
  **************************************/
@@ -2284,15 +2275,29 @@ input[type=checkbox].es_dlc_selection:checked + label {
  **************************************/
 .es_wishlist_score {
 	position: relative;
+	margin: 5px 0 0 10px;
+	cursor: pointer;
 }
-.es_wishlist_score:after {
+.wishlistRow:hover .es_wishlist_score {
+	color: #77a0b7;
+}
+.es_wishlist_score:before {
 	content: "";
 	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
+	position: relative;
 	width: 16px;
 	height: 16px;
+	margin: 0 0 2px 2px;
 	box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset;
 	pointer-events: none;
 }
+.es_wishlist_score.es_score_positive:before {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_positive.png');
+}
+.es_wishlist_score.es_score_mixed:before {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_mixed.png');
+}
+.es_wishlist_score.es_score_negative:before {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_negative.png');
+}
+
