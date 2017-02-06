@@ -3109,6 +3109,17 @@ function wishlist_add_ratings() {
 		}
 	});
 
+	function build_review(appid, scores) {
+		var percent = ((Math.floor(100 * (scores["p"] / scores["t"])) / 100) * 100).toFixed(),
+			score = (percent >= 70 ? "positive" : (percent >= 40 ? "mixed" : "negative"));
+
+		var tooltip = localized_strings.review_summary
+						.replace("__percent__", percent + "%")
+						.replace("__num__", scores["t"].toLocaleString());
+
+		$("#game_" + appid).find(".wishlistRankCtn").append(`<div class="es_wishlist_score es_score_${ score }" data-community-tooltip="${ tooltip }">${ percent + `%` }</div>`);
+	}
+
 	// Update cache in background
 	if (appsUpdateQueue.length) {
 		var update_time = parseInt(Date.now() / 1000, 10);
@@ -3116,6 +3127,7 @@ function wishlist_add_ratings() {
 		get_http('//api.enhancedsteam.com/reviews/', function(data) {
 			var review_data = JSON.parse(data);
 			$.each(review_data, function(appid, scores) {
+				build_review(appid, scores);
 				var cached = {
 					s: scores,
 					u: update_time
@@ -3138,17 +3150,6 @@ function wishlist_add_ratings() {
 	}
 
 	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
-
-	function build_review(appid, scores) {
-		var percent = ((Math.floor(100 * (scores["p"] / scores["t"])) / 100) * 100).toFixed(),
-			score = (percent >= 70 ? "positive" : (percent >= 40 ? "mixed" : "negative"));
-
-		var tooltip = localized_strings.review_summary
-						.replace("__percent__", percent + "%")
-						.replace("__num__", scores["t"].toLocaleString());
-
-		$("#game_" + appid).find(".wishlistRankCtn").append(`<div class="es_wishlist_score es_score_${ score }" data-community-tooltip="${ tooltip }">${ percent + `%` }</div>`);
-	}
 }
 
 // TODO: Cache this data, but only the required entries! Store the data combined in one row
