@@ -2207,11 +2207,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Wishlists
  * wishlist_add_to_cart()
  **************************************/
-.es_add_to_cart .es_loading_img {
+.es_add_to_cart.es_loading_cart span:after {
+	content: "";
+	display: inline-block;
 	width: 16px;
+	height: 16px;
 	vertical-align: middle;
 	margin: -1px -10px 0 4px;
 	filter: brightness(350%);
+	background-image: url('//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif');
+	background-size: 16px 16px;
 }
 
 /***************************************
