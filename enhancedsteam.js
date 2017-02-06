@@ -2988,7 +2988,7 @@ function alternative_linux_icon() {
 	});
 }
 
-var get_subid = function(appid) {
+var get_app_subid = function(appid) {
 	var deferred = new $.Deferred();
 
 	// Try to retrieve the subid from Steam's API
@@ -3005,7 +3005,7 @@ var get_subid = function(appid) {
 			}
 		});
 	}).fail(function(){
-	// Steam API call failed, try to retrieve it from app's store page
+		// Steam API call failed, try to retrieve it from app's store page
 		$.ajax({
 			url: '//store.steampowered.com/app/' + appid + '/',
 			crossDomain: true,
@@ -3034,25 +3034,21 @@ function wishlist_add_to_cart() {
 			$("div.gameListPriceData").each(function(i, node) {
 				if ($(node).find("div.discount_block").length || $.inArray($(node).find("div.price").text().trim(), ['', 'Free to Play']) == -1) {
 					$(node).find("div.storepage_btn_ctn").prepend(`
-						<button type="submit" class="es_add_to_cart btnv6_green_white_innerfade btn_small">
-							<span>${ localized_strings.add_to_cart }
-							<img class="es_loading_img" style="display:none;" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" />
-							</span>
+						<button class="es_add_to_cart btnv6_green_white_innerfade btn_small">
+							<span>${ localized_strings.add_to_cart }</span>
 						</button>
 					`);
 				}
 			});
 
-			$(".es_add_to_cart").on("click", function(e){
+			$("button.es_add_to_cart").on("click", function(e){
 				e.preventDefault();
-				
+
 				if (!$(this).is(".es_loading_cart")) {
 					var thisBtn = $(this).addClass("es_loading_cart");
 					var appid = get_appid($(this).next("a").prop("href"));
-
-					$(thisBtn).find(".es_loading_img").fadeIn();
 					
-					$.when(get_store_session, get_subid(appid)).done(function(store_sessionid, subid) {
+					$.when(get_store_session, get_app_subid(appid)).then(function(store_sessionid, subid) {
 						$.ajax({
 							type: 'POST',
 							url: '//store.steampowered.com/cart/',
@@ -3064,11 +3060,13 @@ function wishlist_add_to_cart() {
 							},
 							crossDomain: true,
 							xhrFields: { withCredentials: true }
-						}).done(function(txt) {
+						}).done(function() {
 							$(thisBtn).addClass("btn_disabled").prop("disabled", true);
 						}).complete(function() {
-							$(thisBtn).removeClass("es_loading_cart").find(".es_loading_img").fadeOut();
+							$(thisBtn).removeClass("es_loading_cart");
 						});
+					}, function(){
+						$(thisBtn).removeClass("es_loading_cart");
 					});
 				}
 			});
