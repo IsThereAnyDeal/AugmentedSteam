@@ -4350,15 +4350,15 @@ function add_opencritic_data(appid) {
 					} else {
 						$(".rightcol.game_meta_data:first").append("<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
 					}
-					$("#game_area_opencritic").append("<div class='score " + data.award.toLowerCase() + "'>" + data.score + "</div><div><img src='" + chrome.extension.getURL("img/opencritic.png") + "'></div><div class='oc_text'>\"" + data.award + "\" - <a href='" + data.url + "' target='_blank'>" + localized_strings.read_reviews + " </a></div>");
+					$("#game_area_opencritic").append("<div class='score " + data.award.toLowerCase() + "'>" + data.score + "</div><div><img src='" + chrome.extension.getURL("img/opencritic.png") + "'></div><div class='oc_text'>\"" + data.award + "\" - <a href='" + data.url + "?utm_source=enhanced-steam&utm_medium=average' target='_blank'>" + localized_strings.read_reviews + " </a></div>");
 
 					// Add data to the review section in the left column, or create one if that block doesn't exist
 					if (data.reviews.length > 0) {
 						if ($("#game_area_reviews").length > 0) {
 							$("#game_area_reviews").find("p").prepend("<div id='es_opencritic_reviews'></div>");
-							$("#game_area_reviews").find("p").append("<div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "' target='_blank'>OpenCritic.com</a></div>");
+							$("#game_area_reviews").find("p").append("<div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "?utm_source=enhanced-steam&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>");
 						} else {
-							$(".leftcol .early_access_announcements:first").after("<div id='game_area_reviews' class='game_area_description'><h2>" + localized_strings.reviews + "</h2><div id='es_opencritic_reviews'></div><div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "' target='_blank'>OpenCritic.com</a></div></div>");
+							$(".leftcol .early_access_announcements:first").after("<div id='game_area_reviews' class='game_area_description'><h2>" + localized_strings.reviews + "</h2><div id='es_opencritic_reviews'></div><div class='chart-footer'>" + localized_strings.read_more_reviews + " <a href='" + data.url + "?utm_source=enhanced-steam&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div></div>");
 							if (settings.show_apppage_reviews == false) {
 								$("#game_area_reviews").hide();
 							}
