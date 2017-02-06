@@ -2837,42 +2837,44 @@ function add_community_profile_links() {
 }
 
 function add_wishlist_profile_link() {
-	storage.get(function(settings) {
-		if (settings.show_wishlist_link === undefined) { settings.show_wishlist_link = true; storage.set({'show_wishlist_link': settings.show_wishlist_link}); }
-		if (settings.show_wishlist_count === undefined) { settings.show_wishlist_count = true; storage.set({'show_wishlist_count': settings.show_wishlist_count}); }
+	if (!$("body.profile_page.private_profile").length) {
+		storage.get(function(settings) {
+			if (settings.show_wishlist_link === undefined) { settings.show_wishlist_link = true; storage.set({'show_wishlist_link': settings.show_wishlist_link}); }
+			if (settings.show_wishlist_count === undefined) { settings.show_wishlist_count = true; storage.set({'show_wishlist_count': settings.show_wishlist_count}); }
 
-		if (settings.show_wishlist_link && $(".profile_item_links").length) {
-			var steamID = $("input[name='abuseID']").val();
+			if (settings.show_wishlist_link && $(".profile_item_links").length) {
+				var steamID = $("input[name='abuseID']").val();
 
-			if (!steamID) {
-				var rgData = $("script:contains('g_rgProfileData')").text();
-				steamID = (rgData && rgData.match(/steamid"\:"(\d+)","personaname/) || [])[1];
-			}
+				if (!steamID) {
+					var rgData = $("script:contains('g_rgProfileData')").text();
+					steamID = (rgData && rgData.match(/steamid"\:"(\d+)","personaname/) || [])[1];
+				}
 
-			if (steamID) {
-				$(".profile_item_links").find(".profile_count_link:first").after(`
-					<div id="es_wishlist_link" class="profile_count_link">
-						<a href="//steamcommunity.com/profiles/${ steamID }/wishlist">
-							<span class="count_link_label">${ localized_strings.wishlist }</span>&nbsp;
-							<span id="es_wishlist_count" class="profile_count_link_total"></span>
-						</a>
-					</div>
-				`);
+				if (steamID) {
+					$(".profile_item_links").find(".profile_count_link:first").after(`
+						<div id="es_wishlist_link" class="profile_count_link">
+							<a href="//steamcommunity.com/profiles/${ steamID }/wishlist">
+								<span class="count_link_label">${ localized_strings.wishlist }</span>&nbsp;
+								<span id="es_wishlist_count" class="profile_count_link_total"></span>
+							</a>
+						</div>
+					`);
 
-				if (settings.show_wishlist_count) {
-					get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
-						var count = txt.match(/id="game_(\d+)"/g);
+					if (settings.show_wishlist_count) {
+						get_http("//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
+							var count = txt.match(/id="game_(\d+)"/g);
 
-						if (count) {
-							$("#es_wishlist_count").text(count.length);
-						} else {
-							$("#es_wishlist_link").remove();
-						}
-					});
+							if (count) {
+								$("#es_wishlist_count").text(count.length);
+							} else {
+								$("#es_wishlist_link").remove();
+							}
+						});
+					}
 				}
 			}
-		}
-	});
+		});
+	}
 }
 
 // Add supporter badges to supporter's profiles
@@ -4256,7 +4258,7 @@ function add_nickname_link() {
 }
 
 function add_profile_style() {
-	if (!$(".profile_page.private_profile").length) {
+	if (!$("body.profile_page.private_profile").length) {
 		profileData.get("profile_style", function(data) {
 			var txt = data.style;
 			var available_styles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
