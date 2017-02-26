@@ -9163,7 +9163,7 @@ function disable_link_filter() {
 	});
 
 	function remove_links_filter() {
-		$("a.bb_link[href*='/linkfilter/']").prop("href", function(){
+		$("a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']").prop("href", function(){
 			return this.href.replace("https://steamcommunity.com/linkfilter/?url=", "");
 		});
 	}
