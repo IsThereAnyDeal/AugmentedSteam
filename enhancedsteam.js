@@ -3348,7 +3348,7 @@ function endless_scrolling() {
 		if (settings.contscroll) {
 
 			var result_count;
-			$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
+			$(document.body).append('<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
 			$(".search_pagination_right").hide();
 			var match = $(".search_pagination_left").text().trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
 			if (match) {
@@ -3375,7 +3375,7 @@ function endless_scrolling_greenlight() {
 		storage.get(function(settings) {
 			if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; storage.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
 			if (settings.endlessscrollinggreenlight) {
-				$(document.body).append('<link rel="stylesheet" type="text/css" href="//store.akamai.steamstatic.com/public/css/v6/home.css">');
+				$(document.body).append('<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
 				var result_count;
 				var page_match = document.URL.match(/\?(?:[^#]+&)*p=(\d+)/);
 				var curr_page = page_match ? parseInt(page_match[1]) : 1;
@@ -3948,7 +3948,7 @@ function hide_greenlight_banner() {
 			var banner = $("#ig_top_workshop");
 			var breadcrumbs = $(".breadcrumbs");
 
-			var greenlight_info = '<link rel="stylesheet" type="text/css" href="//cdn.steamcommunity.com/public/shared/css/apphub.css">';
+			var greenlight_info = '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/shared/css/apphub.css">';
 			greenlight_info += '<div class="apphub_HeaderTop es_greenlight"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
 			greenlight_info += '<div class="apphub_sectionTabs">';
 			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=items"><span>'+localized_strings.games+'</span></a>';
@@ -6032,7 +6032,7 @@ function add_app_badge_progress(appid) {
 		storage.get(function(settings) {
 			if (settings.show_badge_progress === undefined) { settings.show_badge_progress = true; storage.set({'show_badge_progress': settings.show_badge_progress}); }
 			if (settings.show_badge_progress && $(".icon").find('img[src$="/ico_cards.png"]').length) {
-				$("head").append('<link rel="stylesheet" type="text/css" href="//cdn.steamcommunity.com/public/css/skin_1/badges.css">');
+				$("head").append('<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
 
 				$("#category_block").after(`
 					<div class="es_badges_progress_block block" style="display: none;">
@@ -6738,306 +6738,6 @@ function show_regional_pricing(type) {
 	});
 }
 
-function customize_app_page() {
-	// Add a "Customize" button
-	$(".purchase_area_spacer:last").after("<link rel='stylesheet' type='text/css' href='//store.akamai.steamstatic.com/public/css/v6/home.css'><style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style><div id='es_customize_btn' class='home_actions_ctn'><div class='home_btn home_customize_btn'>" + localized_strings.customize + "</div></div><div style='clear: both;'></div>");
-
-	storage.get(function(settings) {
-		if (settings.show_apppage_recommendedbycurators === undefined) { settings.show_apppage_recommendedbycurators = true; storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators}); }
-		if (settings.show_apppage_recentupdates === undefined) { settings.show_apppage_recentupdates = true; storage.set({'show_apppage_recentupdates': settings.show_apppage_recentupdates}); }
-		if (settings.show_apppage_reviews === undefined) { settings.show_apppage_reviews = true; storage.set({'show_apppage_reviews': settings.show_apppage_reviews}); }
-		if (settings.show_apppage_about === undefined) { settings.show_apppage_about = true; storage.set({'show_apppage_about': settings.show_apppage_about}); }
-		if (settings.show_apppage_sysreq === undefined) { settings.show_apppage_sysreq = true; storage.set({'show_apppage_sysreq': settings.show_apppage_sysreq}); }
-		if (settings.show_apppage_legal === undefined) { settings.show_apppage_legal = true; storage.set({'show_apppage_legal': settings.show_apppage_legal}); }
-		if (settings.show_apppage_morelikethis === undefined) { settings.show_apppage_morelikethis = true; storage.set({'show_apppage_morelikethis': settings.show_apppage_morelikethis}); }
-		if (settings.show_apppage_customerreviews === undefined) { settings.show_apppage_customerreviews = true; storage.set({'show_apppage_customerreviews': settings.show_apppage_customerreviews}); }
-		if (settings.show_apppage_surveys === undefined) { settings.show_apppage_surveys = true; storage.set({'show_apppage_surveys': settings.show_apppage_surveys}); }
-
-		var html = "<div class='home_viewsettings_popup' style='display: none'><div class='home_viewsettings_instructions' style='font-size: 12px;'>" + localized_strings.apppage_sections + "</div>"
-		html += "<div class='home_viewsettings_checkboxrow ellipsis disabled'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.apppage_purchase + "</div></div>";
-		
-		// Recent updates
-		if ($(".early_access_announcements").length > 0) {
-			var text_search = $(".early_access_announcements").find("h2:first").clone();
-			$("span", text_search).remove();
-			text = $(text_search).text();
-			if (settings.show_apppage_recentupdates) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recentupdates'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recentupdates'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".early_access_announcements").hide();
-			}
-		}
-		
-		// Reviews
-		if ($("#game_area_reviews").length > 0) {
-			text = $("#game_area_reviews").find("h2:first").text();
-			if (settings.show_apppage_reviews) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_reviews'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_reviews'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#game_area_reviews").hide();
-			}
-		}
-
-		// About this game
-		if ($("#game_area_description").length > 0) {
-			text = $("#game_area_description").find("h2:first").text();
-			if (settings.show_apppage_about) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_about'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_about'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#game_area_description").parent().parent().hide();
-			}
-		}
-
-		// Steam charts
-		if (settings.show_steamchart_info) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_current'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.charts.current + "</div></div>"; }
-		else { 
-			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_current'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.charts.current + "</div></div>"; 
-		}
-
-		// Steam spy
-		if (settings.show_steamspy_info) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_spy'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.spy.player_data + "</div></div>"; }
-		else { 
-			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_spy'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.spy.player_data + "</div></div>"; 
-		}
-
-		// Performance surveys
-		if (settings.show_apppage_surveys) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_surveys'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.survey.performance_survey + "</div></div>"; }
-		else { 
-			html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_surveys'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.survey.performance_survey + "</div></div>"; 
-		}
-		
-		// System Requirements
-		if ($(".sys_req").length > 0) {
-			text = $(".sys_req").find("h2:first").text();
-			if (settings.show_apppage_sysreq) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_sysreq'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_sysreq'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".sys_req").parent().hide();
-			}
-		}
-
-		// Legal Information
-		if ($("#game_area_legal").length > 0) {
-			if (settings.show_apppage_legal) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_legal'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + localized_strings.apppage_legal + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_legal'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + localized_strings.apppage_legal + "</div></div>";
-				$("#game_area_legal").hide();
-			}
-		}
-
-		// More like this
-		if ($("#recommended_block").length > 0) {
-			text = $("#recommended_block").find("h4:first").text();
-			if (settings.show_apppage_morelikethis) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_morelikethis'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_morelikethis'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$("#recommended_block").hide();
-			}
-		}
-
-		// Recommended by Curators
-		if ($(".steam_curators_block").length > 0) {
-			var text = $(".steam_curators_block").find("h2:first").text();		
-			if (settings.show_apppage_recommendedbycurators) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recommendedbycurators'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_recommendedbycurators'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".steam_curators_block").hide();
-			}
-		}
-
-		// Helpful customer reviews
-		if ($(".user_reviews_header").length > 0) {
-			text = $(".user_reviews_header:first").firstText();
-			if (settings.show_apppage_customerreviews) { html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_customerreviews'><div class='home_viewsettings_checkbox checked'></div><div class='home_viewsettings_label'>" + text + "</div></div>"; }
-			else {
-				html += "<div class='home_viewsettings_checkboxrow ellipsis' id='show_apppage_customerreviews'><div class='home_viewsettings_checkbox'></div><div class='home_viewsettings_label'>" + text + "</div></div>";
-				$(".user_reviews_header").hide();
-				$(".user_reviews_filter_bar").hide();
-				$(".loading_more_reviews").hide();
-				$(".user_reviews_container").hide();
-				$("#app_reviews_hash").hide();
-			}
-		}
-
-		$("#es_customize_btn").append(html);
-
-		$("#es_customize_btn").find(".home_customize_btn").on("click", function(){
-			$(this).toggleClass("active").next(".home_viewsettings_popup").stop().slideToggle(100);
-		});
-
-		$("body").on("click", function(e) {
-			if ($(e.target).closest("#es_customize_btn").length == 0) {
-				$("#es_customize_btn").find(".home_customize_btn.active").removeClass("active").next(".home_viewsettings_popup").slideToggle(100);
-			}
-		});
-
-		$("#show_apppage_recommendedbycurators").click(function() {
-			if (settings.show_apppage_recommendedbycurators) {
-				settings.show_apppage_recommendedbycurators = false;
-				$(".steam_curators_block").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_recommendedbycurators = true;
-				$(".steam_curators_block").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators});
-		});
-
-		$("#show_apppage_recentupdates").click(function() {
-			if (settings.show_apppage_recentupdates) {
-				settings.show_apppage_recentupdates = false;
-				$(".early_access_announcements").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_recentupdates = true;
-				$(".early_access_announcements").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_recentupdates': settings.show_apppage_recentupdates});
-		});
-
-		$("#show_apppage_reviews").click(function() {
-			if (settings.show_apppage_reviews) {
-				settings.show_apppage_reviews = false;
-				$("#game_area_reviews").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_reviews = true;
-				$("#game_area_reviews").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_reviews': settings.show_apppage_reviews});
-		});
-
-		$("#show_apppage_about").click(function() {
-			if (settings.show_apppage_about) {
-				settings.show_apppage_about = false;
-				$("#game_area_description").parent().parent().hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_about = true;
-				$("#game_area_description").parent().parent().show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_about': settings.show_apppage_about});
-		});
-
-		$("#show_apppage_current").click(function() {
-			if (settings.show_steamchart_info) {
-				settings.show_steamchart_info = false;
-				$("#steam-charts").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_steamchart_info = true;
-				$("#steam-charts").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_steamchart_info': settings.show_steamchart_info});
-
-			if (settings.show_steamchart_info && $("#steam-charts").length == 0) {
-				var appid = get_appid(window.location.host + window.location.pathname);
-				add_steamchart_info(appid);
-			}
-		});
-
-		$("#show_apppage_spy").click(function() {
-			if (settings.show_steamspy_info) {
-				settings.show_steamspy_info = false;
-				$("#steam-spy").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_steamspy_info = true;
-				$("#steam-spy").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_steamspy_info': settings.show_steamspy_info});
-
-			if (settings.show_steamspy_info && $("#steam-spy").length == 0) {
-				var appid = get_appid(window.location.host + window.location.pathname);
-				add_steamspy_info(appid);
-			}
-		});
-
-		$("#show_apppage_surveys").click(function() {
-			if (settings.show_apppage_surveys) {
-				settings.show_apppage_surveys = false;
-				$("#performance_survey").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_surveys = true;
-				$("#performance_survey").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_surveys': settings.show_apppage_surveys});
-
-			if (settings.show_apppage_surveys && $("#performance_survey").length == 0) {
-				var appid = get_appid(window.location.host + window.location.pathname);
-				survey_data_from_site(appid);
-			}
-		});
-
-		$("#show_apppage_sysreq").click(function() {
-			if (settings.show_apppage_sysreq) {
-				settings.show_apppage_sysreq = false;
-				$(".sys_req").parent().hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_sysreq = true;
-				$(".sys_req").parent().show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_sysreq': settings.show_apppage_sysreq});
-		});
-
-		$("#show_apppage_legal").click(function() {
-			if (settings.show_apppage_legal) {
-				settings.show_apppage_legal = false;
-				$("#game_area_legal").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_legal = true;
-				$("#game_area_legal").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_legal': settings.show_apppage_legal});
-		});
-
-		$("#show_apppage_morelikethis").click(function() {
-			if (settings.show_apppage_morelikethis) {
-				settings.show_apppage_morelikethis = false;
-				$("#recommended_block").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_morelikethis = true;
-				$("#recommended_block").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_morelikethis': settings.show_apppage_morelikethis});
-		});
-
-		$("#show_apppage_customerreviews").click(function() {
-			if (settings.show_apppage_customerreviews) {
-				settings.show_apppage_customerreviews = false;
-				$(".user_reviews_header").hide();
-				$(".user_reviews_filter_bar").hide();
-				$(".loading_more_reviews").hide();
-				$(".user_reviews_container").hide();
-				$("#app_reviews_hash").hide();
-				$(this).find(".home_viewsettings_checkbox").removeClass("checked");
-			} else {
-				settings.show_apppage_customerreviews = true;
-				$(".user_reviews_header").show();
-				$(".user_reviews_filter_bar").show();				
-				$("#Reviews_summary").show();
-				$("#app_reviews_hash").show();
-				$(this).find(".home_viewsettings_checkbox").addClass("checked");
-			}
-			storage.set({'show_apppage_customerreviews': settings.show_apppage_customerreviews});
-		});
-	});
-}
-
 function add_help_button(appid) {
 	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/#HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
 }
@@ -7090,6 +6790,89 @@ function add_steamcn_mods() {
 		if (language == "schinese") { var link = "完整汉化情报"; }
 		if (language == "tchinese") { var link = "更多漢化信息"; }
 		$("#es_c_mods").after("<a href='" + data + "/intel' class='all_languages' target='_blank'>" + link + "</a>&nbsp;<img src='//steamstore-a.akamaihd.net/public/images/v5/ico_external_link.gif' border='0' align='bottom'>");
+	});
+}
+
+function customize_app_page(appid) {
+	storage.get(function(settings) {
+		if (settings.show_apppage_recommendedbycurators === undefined) { settings.show_apppage_recommendedbycurators = true; storage.set({'show_apppage_recommendedbycurators': settings.show_apppage_recommendedbycurators}); }
+		if (settings.show_apppage_recentupdates === undefined) { settings.show_apppage_recentupdates = true; storage.set({'show_apppage_recentupdates': settings.show_apppage_recentupdates}); }
+		if (settings.show_apppage_reviews === undefined) { settings.show_apppage_reviews = true; storage.set({'show_apppage_reviews': settings.show_apppage_reviews}); }
+		if (settings.show_apppage_about === undefined) { settings.show_apppage_about = true; storage.set({'show_apppage_about': settings.show_apppage_about}); }
+		if (settings.show_apppage_sysreq === undefined) { settings.show_apppage_sysreq = true; storage.set({'show_apppage_sysreq': settings.show_apppage_sysreq}); }
+		if (settings.show_apppage_legal === undefined) { settings.show_apppage_legal = true; storage.set({'show_apppage_legal': settings.show_apppage_legal}); }
+		if (settings.show_apppage_morelikethis === undefined) { settings.show_apppage_morelikethis = true; storage.set({'show_apppage_morelikethis': settings.show_apppage_morelikethis}); }
+		if (settings.show_apppage_customerreviews === undefined) { settings.show_apppage_customerreviews = true; storage.set({'show_apppage_customerreviews': settings.show_apppage_customerreviews}); }
+		if (settings.show_apppage_surveys === undefined) { settings.show_apppage_surveys = true; storage.set({'show_apppage_surveys': settings.show_apppage_surveys}); }
+
+		$(".purchase_area_spacer:last").append(`
+			<link rel='stylesheet' type='text/css' href='//steamstore-a.akamaihd.net/public/css/v6/home.css'>
+			<style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style>
+			<div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
+				<div class="home_btn home_customize_btn" style="z-index: 13;">${ localized_strings.customize }</div>
+				<div class='home_viewsettings_popup'>
+					<div class='home_viewsettings_instructions' style='font-size: 12px;'>${ localized_strings.apppage_sections }</div>
+				</div>
+			</div>
+			<div style="clear: both;"></div>
+		`);
+
+		$("#es_customize_btn").find(".home_customize_btn").on("click", function(){
+			$(this).toggleClass("active").next(".home_viewsettings_popup").stop().slideToggle(100);
+		});
+
+		$("body").on("click", function(e) {
+			if ($(e.target).closest("#es_customize_btn").length == 0) {
+				$("#es_customize_btn").find(".home_customize_btn.active").removeClass("active").next(".home_viewsettings_popup").slideToggle(100);
+			}
+		});
+
+		addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
+		addToggleHandler("show_apppage_reviews", "#game_area_reviews");
+		addToggleHandler("show_apppage_about", "#game_area_description");
+		addToggleHandler("show_steamchart_info", "#steam-charts", localized_strings.charts.current, true, function(){ if (!$("#steam-charts").length) add_steamchart_info(appid); });
+		addToggleHandler("show_steamspy_info", "#steam-spy", localized_strings.spy.player_data, true, function(){ if (!$("#steam-spy").length) add_steamspy_info(appid); });
+		addToggleHandler("show_apppage_surveys", "#performance_survey", localized_strings.survey.performance_survey, true, function(){ if (!$("#performance_survey").length) survey_data_from_site(appid); });
+		addToggleHandler("show_apppage_sysreq", ".sys_req");
+		addToggleHandler("show_apppage_legal", "#game_area_legal", localized_strings.apppage_legal);
+		addToggleHandler("show_apppage_morelikethis", "#recommended_block", $("#recommended_block").find("h4:first").text());
+		addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
+		addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", $(".user_reviews_header:first").firstText());
+
+		function addToggleHandler(name, elSelector, text, forceShow, callback) {
+			var element = $(elSelector);
+
+			if (element.length || forceShow == true) {
+				var obj = {};
+				obj[name] = settings[name];
+				text = (typeof text === "string" && text) || element.find("h2:first").firstText().toLowerCase();
+				
+				$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !settings[name]);
+
+				element.toggleClass("es_hide", !settings[name]);
+				if (element.is(".es_hide")) element.slideUp();
+
+				$("#es_customize_btn").find(".home_viewsettings_popup").append(`
+					<div class="home_viewsettings_checkboxrow ellipsis" id="${ name }">
+						<div class="home_viewsettings_checkbox ${ settings[name] ? `checked` : `` }"></div>
+						<div class="home_viewsettings_label">${ text }</div>
+					</div>
+				`);
+				
+				$(document).on("click", "#" + name, function() {
+					obj[name] = !obj[name];
+
+					$(document).find(elSelector).removeClass("es_show es_hide").stop().slideToggle();
+					$(this).find(".home_viewsettings_checkbox").toggleClass("checked", obj[name]);
+
+					$("body").toggleClass(name.replace("show_", "es_") + "_hidden", !obj[name]);
+
+					storage.set(obj);
+
+					callback && callback();
+				});
+			}
+		}
 	});
 }
 
@@ -9501,7 +9284,7 @@ $(document).ready(function(){
 							add_acrtag_warning();
 							add_review_toggle_button();
 
-							customize_app_page();
+							customize_app_page(appid);
 							add_help_button(appid);
 							skip_got_steam();
 
