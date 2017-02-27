@@ -2259,6 +2259,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: 20px;
 	height: 20px;
 	text-align: center;
+	font-size: 12px;
 	line-height: 20px;
 	float: right;
 	margin: 8px 8px 0 0;
@@ -2266,12 +2267,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_popular_refresh_toggle:after {
 	content: "▶";
-	font-size: 14px;
 	display: inline-block;
 }
 .es_popular_refresh_toggle.es_refresh_off:after {
 	content: "❚❚";
-	font-size: 11px;
 }
 
 /***************************************
