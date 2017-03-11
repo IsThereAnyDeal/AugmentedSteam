@@ -4693,8 +4693,7 @@ function add_market_total() {
 
 function add_market_sort() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
-		var dateSortIntd = false;
-		
+
 		// Indicate default sort and add buttons to header
 		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>");
 		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' class='es_marketsort active asc'></span>");
@@ -4702,22 +4701,25 @@ function add_market_sort() {
 		$("#es_marketsort_name").before("<span id='es_marketsort_game' class='es_marketsort market_sortable_column'><span>" + localized_strings.game_name.toUpperCase() + "</span></span>");
 		
 		// Add header click handlers
-		$(".es_marketsort").on("click", function(){
+		$(document).on("click", ".es_marketsort", function(){
 			var state = $(this).hasClass("asc");
 
 			$(".es_marketsort").removeClass("active");
 			$(this).addClass("active").toggleClass("asc", !state).toggleClass("desc", state);
 
 			// Initiate and save the default sorting, which is by date, this way later we can reliably sort by date no matter the language set
-			if (!dateSortIntd) {
-				dateSortIntd = true;
-
-				$(".market_listing_listed_date").each(function(i, node) {
-					$(node).append("<div class='market_listing_listed_position'>" + i + "</div>");
+			if (!$(".market_listing_listed_position").length) {
+				$("div.market_listing_row").find("div.market_listing_listed_date").each(function(i, node) {
+					$(node).append('<div class="market_listing_listed_position">' + i + '</div>');
 				});
 			}
 
 			market_sort_rows($(this).attr("id"), state);
+		});
+
+		$(document).on("click", ".market_paging_controls span", function(){
+			$(".es_marketsort").removeClass("active");
+			$("#es_marketsort_date").removeClass("desc").addClass("active asc");
 		});
 
 		function market_sort_rows(parent, asc) {
@@ -4760,7 +4762,7 @@ function add_market_sort() {
 				}
 			});
 
-			$rows.detach().insertBefore($("#es_selling_total"));
+			$rows.detach().prependTo($("#tabContentsMyActiveMarketListingsRows"));
 		}
 	}
 }
