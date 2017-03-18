@@ -3044,7 +3044,7 @@ function wishlist_add_to_cart() {
 		if (settings.add_to_cart_wishlist) {
 
 			$("div.gameListPriceData").each(function(i, node) {
-				if ($(node).find("div.discount_block").length || $.inArray($(node).find("div.price").text().trim(), ['', 'Free to Play']) == -1) {
+				if ($(node).find("div.discount_block").length || !$(node).find("div.price").text().trim().match(/(^$|Free( to play)?)/i)) {
 					$(node).find("div.storepage_btn_ctn").prepend(`
 						<button class="es_add_to_cart btnv6_green_white_innerfade btn_small">
 							<span>${ localized_strings.add_to_cart }</span>
