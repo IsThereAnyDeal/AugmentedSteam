@@ -1587,36 +1587,39 @@ function add_wishlist_total(showTotal) {
 }
 
 function add_wishlist_ajaxremove() {
-	// Remove "onclick"
-	runInPageContext(function(){ $J("a[onclick*=wishlist_remove]").removeAttr("onclick").addClass("es_wishlist_remove"); });
+	if (is_signed_in && $("a[onclick*=wishlist_remove]").length) {
+		// Remove "onclick"
+		runInPageContext(function(){ $J("a[onclick*=wishlist_remove]").removeAttr("onclick").addClass("es_wishlist_remove"); });
 
-	$.when.apply($, [get_store_session]).done(function(store_sessionid) {
-		$(".es_wishlist_remove").on("click", function(e) {
-			e.preventDefault();
+		$.when(get_store_session).done(function(store_sessionid) {
+			$(".es_wishlist_remove").on("click", function(e) {
+				e.preventDefault();
 
-			var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
-			$.ajax({
-				type: "POST",
-				url: "//store.steampowered.com/api/removefromwishlist",
-				data: {
-					sessionid: store_sessionid,
-					action: "remove",
-					appid: appid
-				},
-				success: function( msg ) {
+				var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
+
+				$.ajax({
+					type: "POST",
+					url: "//store.steampowered.com/api/removefromwishlist",
+					data: {
+						sessionid: store_sessionid,
+						action: "remove",
+						appid: appid
+					}
+				}).done(function() {
 					var currentRank = parseFloat($("#game_" + appid + " .wishlist_rank")[0].value);
-					if ($("#es_price_" + appid).length > 0) { $("#es_price_" + appid).remove(); }
+
+					$("#es_price_" + appid).remove();
 					$("#game_" + appid).fadeOut("fast", function(){ $(this).remove(); });
-					setValue(appid + "wishlisted", false);
+
 					for (var i = 0; i < $('.wishlistRow').length; i++) {
 						if ($('.wishlist_rank')[i].value > currentRank) {
 							$('.wishlist_rank')[i].value = $('.wishlist_rank')[i].value - 1;	
 						}
 					}
-				}
+				});
 			});
 		});
-	});
+	}
 }
 
 function add_wishlist_pricehistory() {
@@ -7414,22 +7417,36 @@ function set_html5_video() {
 var get_store_session = (function () {
 	var deferred = new $.Deferred();
 
-	if (is_signed_in) {
-		var sessionid = false;
+	chrome.storage.local.get("store_sessionid", function(data) {
+		var sessionid = "";
 
-		chrome.storage.local.get("store_sessionid", function(data) {
-			// Return from cache if available
-			if (data.store_sessionid) {
-				deferred.resolve(data.store_sessionid.id);
-			}
+		// Return from cache if available
+		if (data.store_sessionid) {
+			deferred.resolve(data.store_sessionid.id);
+		}
 
-			// Check if cache needs updating
-			var expire_time = parseInt(Date.now() / 1000, 10) - 12 * 60 * 60; // 12 hours ago
-			var last_updated = data.store_sessionid && data.store_sessionid.updated || expire_time - 1;
+		// Check if cache needs updating
+		var expire_time = parseInt(Date.now() / 1000, 10) - 12 * 60 * 60; // 12 hours ago
+		var last_updated = data.store_sessionid && data.store_sessionid.updated || expire_time - 1;
 
-			if (!data.store_sessionid || last_updated < expire_time) {
-				if (window.location.host === "store.steampowered.com") {
-					sessionid = (cookie.match(/sessionid+=([^\\s;]*);/) || $("body").text().match(/g_sessionID = "(.+)";/i) || [])[1];
+		if (!data.store_sessionid || last_updated < expire_time) {
+			if (window.location.host === "store.steampowered.com") {
+				sessionid = (cookie.match(/sessionid+=([^\\s;]*);/) || $("body").text().match(/g_sessionID = "(.+)";/i) || [])[1];
+
+				if (sessionid) {
+					chrome.storage.local.set({
+						'store_sessionid': {
+							'id': sessionid,
+							'updated': parseInt(Date.now() / 1000, 10)
+						}
+					});
+					deferred.resolve(sessionid);
+				} else {
+					deferred.reject();
+				}
+			} else {
+				get_http("//store.steampowered.com/about/", function(txt) {
+					sessionid = (/*txt.match(/g_AccountID = [\d]{2,}/i) &&*/ txt.match(/g_sessionID = "(.+)"/i) || [])[1];
 
 					if (sessionid) {
 						chrome.storage.local.set({
@@ -7442,34 +7459,16 @@ var get_store_session = (function () {
 					} else {
 						deferred.reject();
 					}
-				} else {
-					get_http("//store.steampowered.com/about/", function(txt) {
-						sessionid = (txt.match(/g_AccountID = [\d]{2,}/i) && txt.match(/g_sessionID = "(.+)"/i) || [])[1];
-
-						if (sessionid) {
-							chrome.storage.local.set({
-								'store_sessionid': {
-									'id': sessionid,
-									'updated': parseInt(Date.now() / 1000, 10)
-								}
-							});
-							deferred.resolve(sessionid);
-						} else {
-							deferred.reject();
-						}
-					}, {
-						xhrFields: {
-							withCredentials: true
-						}
-					}).fail(function(){
-						deferred.reject();
-					});
-				}
+				}, {
+					xhrFields: {
+						withCredentials: true
+					}
+				}).fail(function(){
+					deferred.reject();
+				});
 			}
-		});
-	} else {
-		deferred.reject();
-	}
+		}
+	});
 
 	return deferred.promise();
 })();
@@ -7564,7 +7563,6 @@ function add_app_page_wishlist_changes(appid) {
 						appid: appid
 					},
 					success: function( msg ) {
-						setValue(appid + "wishlisted", false);
 						$("#add_to_wishlist_area").show();
 						$("#add_to_wishlist_area_success").hide();
 
