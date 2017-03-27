@@ -1371,7 +1371,7 @@ function add_wishlist_sorts() {
 	$("#wishlist_sort_options").children("a, span").hide().each(function(i, link){
 		linksHtml += '<a class="es_wl_sort popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
 	});
-	linksHtml += '<a class="es_wl_sort popup_menu_item by_score" data-sort-by="score" href="?sort=discount">' + localized_strings.user_reviews + '</a>';
+	linksHtml += '<a class="es_wl_sort popup_menu_item by_score" data-sort-by="score" href="?sort=score">' + localized_strings.user_reviews + '</a>';
 	linksHtml += '<a class="es_wl_sort popup_menu_item by_discount" data-sort-by="discount" href="?sort=discount">' + localized_strings.discountper + '</a>';
 	linksHtml += '<a class="es_wl_sort popup_menu_item by_discountabs" data-sort-by="discountabs" href="?sort=discountabs">' + localized_strings.discountabs + '</a>';
 
@@ -3110,7 +3110,39 @@ function wishlist_add_ratings() {
 		}
 	});
 
-	function build_review(appid, scores) {
+	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+
+	// Update cache in background
+	if (appsUpdateQueue.length) {
+		var update_time = parseInt(Date.now() / 1000, 10);
+
+		get_http('//api.enhancedsteam.com/reviews/', function(data) {
+			var review_data = JSON.parse(data);
+
+			$.each(review_data, function(appid, scores) {
+				build_review(appid, scores, 'update');
+				setValue("reviewData_" + appid, {
+					s: scores,
+					u: update_time
+				});
+				appsUpdateQueue.splice(appsUpdateQueue.indexOf(appid), 1);
+			});
+
+			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+		}, {
+			method: "POST",
+			data: { "appids": appsUpdateQueue.join(",") }
+		});
+
+		$.each(appsUpdateQueue, function(index, appid) {
+			setValue("reviewData_" + appid, {
+				s: false,
+				u: update_time
+			});
+		});
+	}
+
+	function build_review(appid, scores, type) {
 		var percent = ((Math.floor(100 * (scores["p"] / scores["t"])) / 100) * 100).toFixed(),
 			score = (percent >= 70 ? "positive" : (percent >= 40 ? "mixed" : "negative"));
 
@@ -3118,39 +3150,11 @@ function wishlist_add_ratings() {
 						.replace("__percent__", percent + "%")
 						.replace("__num__", scores["t"].toLocaleString());
 
-		$("#game_" + appid).find(".wishlistRankCtn").append(`<div class="es_wishlist_score es_score_${ score }" data-community-tooltip="${ tooltip }">${ percent + `%` }</div>`);
+		if (type === "update")
+			$("#game_" + appid).find("div.es_wishlist_score").remove();
+
+		$("#game_" + appid).find("div.wishlistRankCtn").append(`<div class="es_wishlist_score es_score_${ score }" data-community-tooltip="${ tooltip }">${ percent + `%` }</div>`);
 	}
-
-	// Update cache in background
-	if (appsUpdateQueue.length) {
-		var update_time = parseInt(Date.now() / 1000, 10);
-		
-		get_http('//api.enhancedsteam.com/reviews/', function(data) {
-			var review_data = JSON.parse(data);
-			$.each(review_data, function(appid, scores) {
-				build_review(appid, scores);
-				var cached = {
-					s: scores,
-					u: update_time
-				};
-				setValue("reviewData_" + appid, cached);
-				appsUpdateQueue.splice(appsUpdateQueue.indexOf(appid), 1);
-			});
-		}, {
-			method: "POST",
-			data: { "appids": appsUpdateQueue.join(",") }
-		});
-
-		$.each(appsUpdateQueue, function(index, appid) {
-			var cached = {
-				s: false,
-				u: update_time
-			};
-			setValue("reviewData_" + appid, cached);
-		});
-	}
-
-	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
 }
 
 // TODO: Cache this data, but only the required entries! Store the data combined in one row
