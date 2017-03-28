@@ -53,7 +53,7 @@ var localization_promise = (function () {
 		"tchinese": "zh-TW",
 		"thai": "th",
 		"turkish": "tr",
-		"ukrainian": "uk"}[language] || "en";
+		"ukrainian": "ua"}[language] || "en";
 	$.ajax({
 		url: chrome.extension.getURL('/localization/en/strings.json'),
 		mimeType: "application/json",
@@ -2225,7 +2225,7 @@ function add_language_warning() {
 					"tchinese": "zh-TW",
 					"thai": "th",
 					"turkish": "tr",
-					"ukrainian": "uk"}[settings.showlanguagewarninglanguage.toLowerCase()] || "en";
+					"ukrainian": "ua"}[settings.showlanguagewarninglanguage.toLowerCase()] || "en";
 				$.ajax({
 					url: chrome.extension.getURL('/localization/' + l_code + '/strings.json'),
 					mimeType: "application/json",
