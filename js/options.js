@@ -344,7 +344,7 @@ function load_translation() {
 				case "tchinese": l_code = "zh-TW"; break;
 				case "thai": l_code = "th"; break;
 				case "turkish": l_code = "tr"; break;
-				case "ukrainian": l_code = "uk"; break;
+				case "ukrainian": l_code = "ua"; break;
 				default: l_code = "en"; break;
 			}
 
