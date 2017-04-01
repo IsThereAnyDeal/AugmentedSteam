@@ -4247,13 +4247,31 @@ function add_steamrep_api() {
 	storage.get(function(settings) {
 		if (settings.showsteamrepapi === undefined) { settings.showsteamrepapi = true; storage.set({'showsteamrepapi': settings.showsteamrepapi}); }
 		if(settings.showsteamrepapi) {
-			profileData.get("steamrep", function(txt) {
+			profileData.get("steamrepv2", function(txt) {
 				if (txt == "") return;
+
+				if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+				if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+
+				// Build array from returned special reputation
+				var rep = txt.split(",");
+
+				// Build SteamRep section
 				if ($(".profile_in_game").length == 0) {
-					$(".profile_rightcol").prepend(txt);
+					$(".profile_rightcol").prepend("<div id='es_steamrep'></div>");
 				} else {
-					$(".profile_rightcol .profile_in_game:first").after(txt);
+					$(".profile_rightcol .profile_in_game:first").after("<div id='es_steamrep'></div>");
 				}
+				
+				$.each(rep, function(index, value) {
+					var rep_section = $("<div><a href='//steamrep.com/profiles/" + steamID + "' target='_blank'>" + escapeHTML(value) + "</a></div>");
+					if (value.match(/scammer/i) || value.match(/banned/i)) { rep_section.addClass("banned").prepend("<img src='" + chrome.extension.getURL("img/sr/banned.png") + "'> "); }
+					else if (value.match(/valve admin/i)) { rep_section.addClass("valve").prepend("<img src='" + chrome.extension.getURL("img/sr/valve.png") + "'> "); }
+					else if (value.match(/caution/i)) { rep_section.addClass("caution").prepend("<img src='" + chrome.extension.getURL("img/sr/caution.png") + "'> "); }
+					else if (value.match(/admin/i) || value.match(/middleman/i)) { rep_section.addClass("okay").prepend("<img src='" + chrome.extension.getURL("img/sr/okay.png") + "'> "); }
+					else if (value.match(/donator/i)) { rep_section.addClass("donate").prepend("<img src='" + chrome.extension.getURL("img/sr/donate.png") + "'> "); }
+					$("#es_steamrep").append(rep_section);
+				});
 			});
 		}
 	});

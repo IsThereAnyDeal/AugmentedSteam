@@ -4,6 +4,7 @@
 + Added some behind the scenes updates to OpenCritic reviews, should now display correctly on all pages
 : Fixed a bug where Steam Card Exchange links would not display properly on store pages
 : Fixed a bug where the Ukraine region had an incorrect ISO code
+: Updated SteamRep section on profile pages to use updated API and safer code
 
 
 v9.2

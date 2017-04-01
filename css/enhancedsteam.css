@@ -2305,3 +2305,27 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/user_reviews_negative.png');
 }
 
+/***************************************
+ * SteamRep
+ * add_steamrep_api()
+ **************************************/
+#es_steamrep {
+	font-size: 11px;
+	font-family: Verdana;
+	margin-bottom: 10px;
+}
+#es_steamrep .banned a {
+	color: #FF0000;
+}
+#es_steamrep .valve a {
+	color: #A50F79;
+}
+#es_steamrep .caution a {
+	color: #FC970A;
+}
+#es_steamrep .okay a {
+	color: #008000;
+}
+#es_steamrep .donate a {
+	color: #0F67A1;
+}
