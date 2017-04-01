@@ -4246,32 +4246,51 @@ function hide_spam_comments() {
 function add_steamrep_api() {
 	storage.get(function(settings) {
 		if (settings.showsteamrepapi === undefined) { settings.showsteamrepapi = true; storage.set({'showsteamrepapi': settings.showsteamrepapi}); }
-		if(settings.showsteamrepapi) {
+		if (settings.showsteamrepapi) {
 			profileData.get("steamrepv2", function(txt) {
-				if (txt == "") return;
+				if (txt !== "") {
+					// Get the SteamID
+					var steamID = $("input[name='abuseID']").val();
+					if (!steamID) {
+						var rgData = $("script:contains('g_rgProfileData')").text();
+						steamID = (rgData && rgData.match(/steamid"\:"(\d+)","personaname/) || [])[1];
+					}
 
-				if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
-				if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+					if (steamID) {
+						// Build reputation images regexp
+						var repimgs = {
+							"banned": "scammer|banned",
+							"valve": "valve admin",
+							"caution": "caution",
+							"okay": "admin|middleman",
+							"donate": "donator"
+						};
+						$.each(repimgs, function(img, match) {
+							repimgs[img] = new RegExp(repimgs[img], "gi");
+						});
 
-				// Build array from returned special reputation
-				var rep = txt.split(",");
+						// Build array from returned special reputation
+						var reps = txt.split(",");
 
-				// Build SteamRep section
-				if ($(".profile_in_game").length == 0) {
-					$(".profile_rightcol").prepend("<div id='es_steamrep'></div>");
-				} else {
-					$(".profile_rightcol .profile_in_game:first").after("<div id='es_steamrep'></div>");
+						// Build SteamRep section
+						$("div.responsive_status_info").append('<div id="es_steamrep"></div>');
+
+						reps.forEach(function(value) {
+							$.each(repimgs, function(img, regexp) {
+								if (value.match(regexp)) {
+									$("#es_steamrep").append(`
+										<div class="${ img }">
+											<img src="${ chrome.extension.getURL(`img/sr/${ img }.png`) }" /> 
+											<a href="//steamrep.com/profiles/${ steamID }" target="_blank"> ${ escapeHTML(value) }</a>
+										</div>
+									`);
+
+									return;
+								}
+							});
+						});
+					}
 				}
-				
-				$.each(rep, function(index, value) {
-					var rep_section = $("<div><a href='//steamrep.com/profiles/" + steamID + "' target='_blank'>" + escapeHTML(value) + "</a></div>");
-					if (value.match(/scammer/i) || value.match(/banned/i)) { rep_section.addClass("banned").prepend("<img src='" + chrome.extension.getURL("img/sr/banned.png") + "'> "); }
-					else if (value.match(/valve admin/i)) { rep_section.addClass("valve").prepend("<img src='" + chrome.extension.getURL("img/sr/valve.png") + "'> "); }
-					else if (value.match(/caution/i)) { rep_section.addClass("caution").prepend("<img src='" + chrome.extension.getURL("img/sr/caution.png") + "'> "); }
-					else if (value.match(/admin/i) || value.match(/middleman/i)) { rep_section.addClass("okay").prepend("<img src='" + chrome.extension.getURL("img/sr/okay.png") + "'> "); }
-					else if (value.match(/donator/i)) { rep_section.addClass("donate").prepend("<img src='" + chrome.extension.getURL("img/sr/donate.png") + "'> "); }
-					$("#es_steamrep").append(rep_section);
-				});
 			});
 		}
 	});
