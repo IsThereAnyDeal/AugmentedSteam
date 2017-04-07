@@ -749,7 +749,7 @@ function get_appids(t) {
 }
 
 function get_subid(t) {
-	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/)) return RegExp.$1;
+	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:sub|bundle)\/(\d+)\/?/)) return RegExp.$1;
 	else return null;
 }
 
@@ -2466,22 +2466,33 @@ function show_pricing_history(appid, type) {
 				// Get country code from Steam cookie
 				var cc = getStoreRegionCountryCode();
 
+				// if this is a bundle page, get and pass the bundleid
+				var bundleid = "";
+				if (type == "bundle") {
+					bundleid = appid;
+				}
+
 				// Get all of the subIDs on the page
 				var subids = "";
 				$("input[name=subid]").each(function(index, value) {
 					subids += value.value + ",";
 				});
 
-				get_http("//api.enhancedsteam.com/pricev3/?subs=" + subids + "&stores=" + storestring + "&cc=" + cc + "&appid=" + appid + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
+				get_http("//api.enhancedsteam.com/pricev3/?bundleid=" + bundleid + "&subs=" + subids + "&stores=" + storestring + "&cc=" + cc + "&appid=" + appid + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 					var price_data = JSON.parse(txt);
 					if (price_data) {
 						var bundles = [];
 						var currency_type = price_data[".meta"]["currency"];
 						$.each(price_data, function(key, data) {
 							if (key != ".cached" && key != ".meta" && data) {
-								var subid = key.replace("sub/", "");
-								var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
-								var node = $("input[name=subid][value=" + subid + "]").parent().parent();
+								if (bundleid != "") {
+									var subid = key.replace("bundle/", "");
+									var node = $(".game_area_purchase_game:first");
+								} else {
+									var subid = key.replace("sub/", "");
+									var node = $("input[name=subid][value=" + subid + "]").parent().parent();
+								}								
+								var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;								
 
 								// "Lowest Price"
 								if (data["price"]) {
@@ -7335,6 +7346,9 @@ function add_steamdb_links(appid, type) {
 				case "sub":
 					$(".share").before('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/sub/' + appid + '/" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url('+ chrome.extension.getURL("img/steamdb_store.png") +')"></i>&nbsp; &nbsp;' + localized_strings.view_in + ' Steam Database</span></a>');
 					break;
+				case "bundle":
+					$(".share").before('<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/bundle/' + appid + '/" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url('+ chrome.extension.getURL("img/steamdb_store.png") +')"></i>&nbsp; &nbsp;' + localized_strings.view_in + ' Steam Database</span></a>');
+					break;
 			}
 
 			$(".steamdb_ico").hover(
@@ -9347,6 +9361,13 @@ $(document).ready(function(){
 
 							show_regional_pricing("sub");
 							skip_got_steam();
+							break;
+
+						case /^\/bundle\/.*/.test(path):
+							var bundleid = get_subid(window.location.host + path);
+							drm_warnings("sub");
+							show_pricing_history(bundleid, "bundle");
+							add_steamdb_links(bundleid, "bundle");
 							break;
 
 						case /^\/dlc\/.*/.test(path):
