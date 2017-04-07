@@ -4948,15 +4948,18 @@ function minimize_active_listings() {
 
 // Show the lowest market price for items you're selling
 function add_lowest_market_price() {
-	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").css("width", "200px");
-	$("#es_selling, #es_listingsonhold").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
-	$("#es_selling, #es_listingsonhold").find(".market_listing_row").each(function() {
-		$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
-		$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
-		$(this).find(".market_listing_edit_buttons.actual_content").appendTo($(this).find(".market_listing_edit_buttons:first")).css("width", "inherit");
-	});
+	$("#es_selling").find(".market_listing_table_header span:first").css("width", "200px");
+	$("#es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
 
 	function add_lowest_market_price_data(section, item_id) {
+		$("#es_selling").find(".market_listing_row").each(function() {
+			$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
+			if ($(this).find(".market_listing_es_lowest").length == 0) {
+				$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+				$(this).find(".market_listing_edit_buttons.actual_content").appendTo($(this).find(".market_listing_edit_buttons:first")).css("width", "inherit");
+			}
+		});
+
 		var cc = "us";
 		var currency = currency_type_to_number(user_currency);
 
@@ -5026,24 +5029,20 @@ function add_lowest_market_price() {
 			});
 		}
 	}
+	
+	add_lowest_market_price_data("es_listingsonhold");
+	add_lowest_market_price_data("es_selling");
 
-	if ($("#es_listingsonhold .market_listing_row").length <= 11 ) {
-		add_lowest_market_price_data("es_listingsonhold");
-	} else {
-		$("#es_listingsonhold .market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
-		$("#es_listingsonhold_total .market_listing_es_lowest").html("&nbsp;");
-	}
-
-	if ($("#es_selling .market_listing_row").length <= 11 ) {
-		add_lowest_market_price_data("es_selling");
-	} else {
-		$("#es_selling .market_listing_es_lowest").html("<a class='es_market_lowest_button'><img src='//store.akamai.steamstatic.com/public/images/v6/ico/ico_cloud.png' height=24 style='vertical-align: middle;'></a>");
-		$("#es_selling_total .market_listing_es_lowest").html("&nbsp;");
-	}
-
-	$(".es_market_lowest_button").click(function() {
-		add_lowest_market_price_data("ind", $(this).parent().parent().attr("id"));
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			for (var i = 0; i < mutation.addedNodes.length; i++) {
+				var node = mutation.addedNodes[i];
+				if (node.classList && node.classList.contains("market_listing_row")) add_lowest_market_price_data("es_selling", node.id);
+			}
+		});
 	});
+	var target = document.querySelector("#es_selling");
+	observer.observe(target, { subtree: true, childList: true });
 }
 
 function add_badge_page_link() {
@@ -7175,7 +7174,7 @@ function bind_ajax_content_highlighting() {
 					apply_price_filter(node);
 				}
 
-				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();				
+				if (node.classList && node.classList.contains("market_listing_row_link")) highlight_market_items();
 			}
 		});
 	});
