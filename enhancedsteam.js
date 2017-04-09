@@ -4846,103 +4846,6 @@ function collapse_game_list() {
 	}
 }
 
-function add_active_total() {
-	if (window.location.pathname.match(/^\/market\/$/)) {
-		
-		// Give proper IDs to each relevant DOM node
-		$("#my_market_listingsonhold_number").parents(".my_listing_section").attr("id", "es_listingsonhold");
-		$("#my_market_listingstoconfirm_number").parents(".my_listing_section").attr("id", "es_listingsawaiting");
-		$("#my_market_selllistings_number").parents(".my_listing_section").attr("id", "es_selling");
-		$("#my_market_buylistings_number").parents(".my_listing_section").attr("id", "es_buying");
-
-		// Listings on hold
-		var total = 0;
-		var total_after = 0;
-		$("#es_listingsonhold .market_listing_row .market_listing_my_price").each(function() {
-			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
-			total += Number(temp[0]);
-			total_after += Number(temp[1]);
-		});
-		
-		if (total != 0) {
-			total = formatCurrency(parseFloat(total));
-			total_after = formatCurrency(parseFloat(total_after));
-			$("#es_listingsonhold .market_recent_listing_row:last").clone().appendTo($("#es_listingsonhold .market_recent_listing_row:last").parent()).attr("id", "es_listingsonhold_total");
-			$("#es_listingsonhold_total").find("img").remove();
-			$("#es_listingsonhold_total").find(".market_listing_edit_buttons").empty();
-			$("#es_listingsonhold_total").find(".market_listing_listed_date").empty();
-			$("#es_listingsonhold_total").find(".market_listing_item_name_block").empty();
-			$("#es_listingsonhold_total").find(".market_table_value").css("margin-top", "3px").css("margin-bottom", "3px");
-			$("#es_listingsonhold_total").find(".market_listing_price").html("<span style='color: white'>" + total + "</span><br><span style='color: #AFAFAF'>(" + total_after + ")</span></span></span><br><span class='market_listing_game_name'>" + localized_strings.hold_total + "</span>");
-		}
-
-		// Listings awaiting confirmation
-		var total = 0;
-		var total_after = 0;
-		$("#es_listingsawaiting .market_listing_row .market_listing_my_price").each(function() {
-			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
-			total += Number(temp[0]);
-			total_after += Number(temp[1]);
-		});
-
-		
-		if (total != 0) {
-			total = formatCurrency(parseFloat(total));
-			total_after = formatCurrency(parseFloat(total_after));
-			$("#es_listingsawaiting .market_recent_listing_row:last").clone().appendTo($("#es_listingsawaiting .market_recent_listing_row:last").parent()).attr("id", "es_listingsawaiting_total");
-			$("#es_listingsawaiting_total").find("img").remove();
-			$("#es_listingsawaiting_total").find(".market_listing_edit_buttons").empty();
-			$("#es_listingsawaiting_total").find(".market_listing_listed_date").empty();
-			$("#es_listingsawaiting_total").find(".market_listing_item_name_block").empty();
-			$("#es_listingsawaiting_total").find(".market_table_value").css("margin-top", "3px").css("margin-bottom", "3px");
-			$("#es_listingsawaiting_total").find(".market_listing_price").html("<span style='color: white'>" + total + "</span><br><span style='color: #AFAFAF'>(" + total_after + ")</span></span></span><br><span class='market_listing_game_name'>" + localized_strings.hold_total + "</span>");
-		}
-
-		// Sell listings		
-		var total = 0;
-		var total_after = 0;		
-		$("#es_selling .market_listing_row .market_listing_my_price").each(function() {
-			var temp = $(this).text().trim().replace(/pуб./g,"").replace(/,(\d\d(?!\d))/g, ".$1").replace(/[^0-9(\.]+/g,"").split("(");
-			total += Number(temp[0]);
-			total_after += Number(temp[1]);
-		});
-		
-		if (total != 0) {
-			total = formatCurrency(parseFloat(total));
-			total_after = formatCurrency(parseFloat(total_after));
-			$("#es_selling .market_recent_listing_row:last").clone().appendTo($("#es_selling .market_recent_listing_row:last").parent()).attr("id", "es_selling_total");
-			$("#es_selling_total").find("img").remove();
-			$("#es_selling_total").find(".market_listing_edit_buttons").empty();
-			$("#es_selling_total").find(".market_listing_listed_date").empty();
-			$("#es_selling_total").find(".market_listing_item_name_block").empty();
-			$("#es_selling_total").find(".market_table_value").css("margin-top", "3px").css("margin-bottom", "3px");
-			$("#es_selling_total").find(".market_listing_price").html("<span style='color: white'>" + total + "</span><br><span style='color: #AFAFAF'>(" + total_after + ")</span></span></span><br><span class='market_listing_game_name'>" + localized_strings.sales_total + "</span>");
-		}
-
-		// Buy orders
-		var total = 0;		
-		$("#es_buying .market_listing_row").each(function() {
-			var qty = $(this).find(".market_listing_my_price:last").text().trim();
-			var priceEl = $(this).find(".market_listing_my_price:first .market_listing_price").contents().filter(function () {
-				return this.nodeType === 3;
-			});
-			var price = parse_currency(priceEl.text().trim());
-			total += Number(price.value) * Number(qty);
-		});
-		
-		if (total != 0) {
-			total = formatCurrency(parseFloat(total));			
-			$("#es_buying .market_recent_listing_row:last").clone().appendTo($("#es_buying .market_recent_listing_row:last").parent()).attr("id", "es_buying_total");
-			$("#es_buying_total").find("img").remove();
-			$("#es_buying_total").find(".market_listing_edit_buttons").empty();
-			$("#es_buying_total").find(".market_listing_item_name_block").empty();
-			$("#es_buying_total").find(".market_listing_buyorder_qty").empty();
-			$("#es_buying_total").find(".market_table_value").css("margin-top", "3px").css("margin-bottom", "3px");
-			$("#es_buying_total").find(".market_listing_price").html("<span style='color: white'>" + total + "</span><br><span class='market_listing_game_name'>" + localized_strings.buying_total + "</span>");
-		}
-	}
-}
-
 // Hide active listings on Market homepage
 function minimize_active_listings() {
 	storage.get(function(settings) {
@@ -4959,11 +4862,12 @@ function minimize_active_listings() {
 
 // Show the lowest market price for items you're selling
 function add_lowest_market_price() {
-	$("#es_selling").find(".market_listing_table_header span:first").css("width", "200px");
-	$("#es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
+	$("#my_market_selllistings_number").parents(".my_listing_section").addClass("es_selling");
+	$(".es_selling").find(".market_listing_table_header span:first").css("width", "200px");
+	$(".es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
 
 	function add_lowest_market_price_data(section, item_id) {
-		$("#es_selling").find(".market_listing_row").each(function() {
+		$(".es_selling").find(".market_listing_row").each(function() {
 			$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
 			if ($(this).find(".market_listing_es_lowest").length == 0) {
 				$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
@@ -5012,7 +4916,7 @@ function add_lowest_market_price() {
 				});
 			}
 		} else {
-			$("#" + section + " .market_listing_row").each(function() {
+			$("." + section + " .market_listing_row").each(function() {
 				var node = $(this);
 				var link = node.find(".market_listing_item_name_link").attr("href");
 				if (link) {
@@ -5040,7 +4944,7 @@ function add_lowest_market_price() {
 			});
 		}
 	}
-	
+
 	add_lowest_market_price_data("es_listingsonhold");
 	add_lowest_market_price_data("es_selling");
 
@@ -5052,7 +4956,7 @@ function add_lowest_market_price() {
 			}
 		});
 	});
-	var target = document.querySelector("#es_selling");
+	var target = document.querySelector(".es_selling");
 	observer.observe(target, { subtree: true, childList: true });
 }
 
@@ -9570,7 +9474,6 @@ $(document).ready(function(){
 							});
 							add_market_total();
 							collapse_game_list();
-							add_active_total();
 							minimize_active_listings();
 							add_lowest_market_price();
 							add_relist_button();
