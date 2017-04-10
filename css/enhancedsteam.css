@@ -1972,10 +1972,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_marketsort.active.desc span:last-child::after {
 	content: "▼";
 }
-#es_selling .market_listing_table_header {
+#tabContentsMyActiveMarketListingsTable .market_listing_table_header {
 	overflow: hidden;
 }
-#es_selling .market_listing_header_namespacer {
+#tabContentsMyActiveMarketListingsTable .market_listing_header_namespacer {
 	visibility: hidden;
 }
 .market_listing_listed_position {

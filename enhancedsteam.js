@@ -4750,9 +4750,10 @@ function add_market_sort() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 
 		// Indicate default sort and add buttons to header
-		$("#es_selling").find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>");
-		$("#es_selling").find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' class='es_marketsort active asc'></span>");
-		$("#es_selling").find(".market_listing_table_header .market_listing_my_price:last").addClass("market_sortable_column").wrap("<span id='es_marketsort_price' class='es_marketsort'></span>");
+		var $sellContainer = $("#tabContentsMyActiveMarketListingsTable");
+		$sellContainer.find(".market_listing_table_header span:last").parent().wrap("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>");
+		$sellContainer.find(".market_listing_table_header .market_listing_listed_date").addClass("market_sortable_column").wrap("<span id='es_marketsort_date' class='es_marketsort active asc'></span>");
+		$sellContainer.find(".market_listing_table_header .market_listing_my_price:last").addClass("market_sortable_column").wrap("<span id='es_marketsort_price' class='es_marketsort'></span>");
 		$("#es_marketsort_name").before("<span id='es_marketsort_game' class='es_marketsort market_sortable_column'><span>" + localized_strings.game_name.toUpperCase() + "</span></span>");
 		
 		// Add header click handlers
@@ -4783,7 +4784,7 @@ function add_market_sort() {
 			var sel, isNumber;
 			var T = asc === true ? 1 : -1,
 				F = asc === true ? -1 : 1;
-			var $rows = $("#es_selling").find(".market_listing_row:not(#es_selling_total)");
+			var $rows = $("#tabContentsMyActiveMarketListingsTable").find(".market_listing_row");
 			
 			switch (parent) {
 				case "es_marketsort_name":
