@@ -71,8 +71,12 @@ var settings_defaults = {
 		"newegg": true,
 		"coinplay": true,
 		"wingamestore": true,
+		"macgamestore": true,
 		"gamebillet": true,
-		"silagames": true
+		"silagames": true,
+		"itchio": true,
+		"gamejolt": true,
+		"paradox": true
 	},
 	"override_price": "auto",
 	"showregionalprice": "mouse",

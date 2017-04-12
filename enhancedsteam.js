@@ -1651,8 +1651,12 @@ function add_wishlist_pricehistory() {
 				"newegg": true,
 				"coinplay": true,
 				"wingamestore": true,
+				"macgamestore": true,
 				"gamebillet": true,
-				"silagames": true
+				"silagames": true,
+				"itchio": true,
+				"gamejolt": true,
+				"paradox": true
 			};
 			storage.set({'stores': settings.stores});
 		}
@@ -2436,8 +2440,12 @@ function show_pricing_history(appid, type) {
 				"newegg": true,
 				"coinplay": true,
 				"wingamestore": true,
+				"macgamestore": true,
 				"gamebillet": true,
-				"silagames": true
+				"silagames": true,
+				"itchio": true,
+				"gamejolt": true,
+				"paradox": true
 			};
 			storage.set({'stores': settings.stores});
 		}

@@ -5,6 +5,7 @@
 + Added DRM warnings, price history information, and SteamDB links to bundle pages
 : Updated SteamRep section on profile pages to use updated API and safer code
 : Updated market code so that an items lowest price is shown on subsequent pages
+: Updated stores used in price comparisons (removed 6 legacy stores, added 4 new stores)
 : Fixed a bug where Steam Card Exchange links would not display properly on store pages
 : Fixed a bug where the Ukraine region had an incorrect ISO code
 : Fixed a bug where SteamDB links were not correctly formed on some pages
