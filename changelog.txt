@@ -11,7 +11,6 @@
 : Fixed a bug where SteamDB links were not correctly formed on some pages
 - Removed market section totals as they conflicted with new market page updates
 
-
 v9.2
 -----
 + Added Steam review rating scores to users wishlists
