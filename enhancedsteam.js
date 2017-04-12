@@ -1634,7 +1634,6 @@ function add_wishlist_pricehistory() {
 				"amazonus": true,
 				"impulse": true,
 				"gamersgate": true,
-				"greenmangaming": true,
 				"direct2drive": true,
 				"origin": true,
 				"uplay": true,
@@ -1642,7 +1641,6 @@ function add_wishlist_pricehistory() {
 				"gamesplanet": true,
 				"indiegamestand": true,
 				"gog": true,
-				"dotemu": true,
 				"nuuvem": true,
 				"dlgamer": true,
 				"humblestore": true,
@@ -1651,14 +1649,10 @@ function add_wishlist_pricehistory() {
 				"fireflower": true,
 				"humblewidgets": true,
 				"newegg": true,
-				"gamesrepublic": true,
 				"coinplay": true,
-				"funstock": true,
 				"wingamestore": true,
 				"gamebillet": true,
-				"silagames": true,
-				"playfield": true,
-				"imperialgames": true
+				"silagames": true
 			};
 			storage.set({'stores': settings.stores});
 		}
@@ -2425,7 +2419,6 @@ function show_pricing_history(appid, type) {
 				"amazonus": true,
 				"impulse": true,
 				"gamersgate": true,
-				"greenmangaming": true,
 				"direct2drive": true,
 				"origin": true,
 				"uplay": true,
@@ -2433,7 +2426,6 @@ function show_pricing_history(appid, type) {
 				"gamesplanet": true,
 				"indiegamestand": true,
 				"gog": true,
-				"dotemu": true,
 				"nuuvem": true,
 				"dlgamer": true,
 				"humblestore": true,
@@ -2442,14 +2434,10 @@ function show_pricing_history(appid, type) {
 				"fireflower": true,
 				"humblewidgets": true,
 				"newegg": true,
-				"gamesrepublic": true,
 				"coinplay": true,
-				"funstock": true,
 				"wingamestore": true,
 				"gamebillet": true,
-				"silagames": true,
-				"playfield": true,
-				"imperialgames": true
+				"silagames": true
 			};
 			storage.set({'stores': settings.stores});
 		}
