@@ -4859,102 +4859,105 @@ function minimize_active_listings() {
 
 // Show the lowest market price for items you're selling
 function add_lowest_market_price() {
-	$("#my_market_selllistings_number").parents(".my_listing_section").addClass("es_selling");
-	$(".es_selling").find(".market_listing_table_header span:first").css("width", "200px");
-	$(".es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
+	if (is_signed_in) {
+		var cc = getStoreRegionCountryCode(),
+			currency = currency_type_to_number(user_currency);
 
-	function add_lowest_market_price_data(section, item_id) {
-		$(".es_selling").find(".market_listing_row").each(function() {
-			$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
-			if ($(this).find(".market_listing_es_lowest").length == 0) {
-				$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
-				$(this).find(".market_listing_edit_buttons.actual_content").appendTo($(this).find(".market_listing_edit_buttons:first")).css("width", "inherit");
+		$("#my_market_selllistings_number").parents(".my_listing_section").addClass("es_selling");
+		$(".es_selling").find(".market_listing_table_header span:first").css("width", "200px");
+		$(".es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
+
+		var memoized_market_price = {};
+		function memoize_market_price(market_hash_name, data) {
+			if (!memoized_market_price.hasOwnProperty(market_hash_name)) {
+				memoized_market_price[market_hash_name] = { "data": data };
 			}
-		});
 
-		var cc = "us";
-		var currency = currency_type_to_number(user_currency);
+			return memoized_market_price[market_hash_name];
+		}
 
-		// Get country code from Steam cookie
-		var cookies = document.cookie;
-		var matched = cookies.match(/fakeCC=([a-z]{2})/i);
-		if (matched != null && matched.length == 2) {
-			cc = matched[1];
-		} else {
-			matched = cookies.match(/steamCC(?:_\d+){4}=([a-z]{2})/i);
-			if (matched != null && matched.length == 2) {
-				cc = matched[1];
+		function insert_price(node, data) {
+			$(node).addClass("es_priced").find(".market_listing_es_lowest").html(data["lowest_price"]);
+
+			var my_price = parse_currency($(node).find(".market_listing_price span span:first").text().trim());
+			var low_price = parse_currency($(node).find(".market_listing_es_lowest").text());
+
+			// Ours matches the lowest price
+			if (my_price.value <= low_price.value) {
+				$(node).find(".market_listing_es_lowest").addClass("es_percentage_lower");
+			}
+
+			// Our price is higher than the lowest price
+			if (my_price.value > low_price.value) {
+				$(node).find(".market_listing_es_lowest").addClass("es_percentage_higher");
 			}
 		}
 
-		if (item_id) {
-			var node = $("#" + item_id);
-			var link = node.find(".market_listing_item_name_link").attr("href");
-			if (link) {
-				var appid = link.match(/\/(\d+)\/.+$/)[1];
-				var market_hash_name = link.match(/\/\d+\/(.+)$/)[1];
-				get_http("//steamcommunity.com/market/priceoverview/?country=" + cc + "&currency=" + currency + "&appid=" + appid + "&market_hash_name=" + market_hash_name, function(json) {
-					var data = JSON.parse(json);
-					if (data["success"]) {
-						node.find(".market_listing_es_lowest").html(data["lowest_price"]);
-						var my_price = parse_currency($(node).find(".market_listing_price span span:first").text().trim());
-						var low_price = parse_currency(node.find(".market_listing_es_lowest").text());
+		function add_lowest_market_price_data(section, item_id) {
+			$(".es_selling").find(".market_listing_row").each(function() {
+				$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
+				if ($(this).find(".market_listing_es_lowest").length == 0) {
+					$(this).find(".market_listing_edit_buttons:first").after("<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+					$(this).find(".market_listing_edit_buttons.actual_content").appendTo($(this).find(".market_listing_edit_buttons:first")).css("width", "inherit");
+				}
+			});
 
-						// Ours matches the lowest price
-						if (my_price.value <= low_price.value) {
-							node.find(".market_listing_es_lowest").addClass("es_percentage_lower");
-						}
-
-						// Our price is higher than the lowest price
-						if (my_price.value > low_price.value) {
-							node.find(".market_listing_es_lowest").addClass("es_percentage_higher");
-						}
-					}
-				});
+			var sel = `${ section } .market_listing_row:not(.es_priced)`;
+			if (item_id) {
+				sel = `#${ item_id }:not(.es_priced)`;
 			}
-		} else {
-			$("." + section + " .market_listing_row").each(function() {
-				var node = $(this);
-				var link = node.find(".market_listing_item_name_link").attr("href");
+
+			process_listings_rows(sel);
+		}
+
+		function process_listings_rows(sel) {
+			var q = 0;
+
+			$(sel).slice(0, 5).each(function(i, node) {
+				var link = $(node).find(".market_listing_item_name_link").attr("href");
+
 				if (link) {
-					var appid = link.match(/\/(\d+)\/.+$/)[1];
-					var market_hash_name = link.match(/\/\d+\/(.+)$/)[1];
-					get_http("//steamcommunity.com/market/priceoverview/?country=" + cc + "&currency=" + currency + "&appid=" + appid + "&market_hash_name=" + market_hash_name, function(json) {
-						var data = JSON.parse(json);
-						if (data["success"]) {
-							node.find(".market_listing_es_lowest").html(data["lowest_price"]);
-							var my_price = parse_currency($(node).find(".market_listing_price span span:first").text().trim());
-							var low_price = parse_currency(node.find(".market_listing_es_lowest").text());
+					var appid = link.match(/\/(\d+)\/.+$/)[1],
+						market_hash_name = link.match(/\/\d+\/(.+)$/)[1],
+						market_hash_name_enc = encodeURI(market_hash_name);
 
-							// Ours matches the lowest price
-							if (my_price.value <= low_price.value) {
-								node.find(".market_listing_es_lowest").addClass("es_percentage_lower");
-							}
-
-							// Our price is higher than the lowest price
-							if (my_price.value > low_price.value) {
-								node.find(".market_listing_es_lowest").addClass("es_percentage_higher");
-							}
+					if (memoized_market_price[market_hash_name_enc]) {
+						insert_price($(node), memoized_market_price[market_hash_name_enc]["data"]);
+						// Continue with the next rows if this is the last one
+						if (i >= 4) {
+							process_listings_rows(sel);
 						}
-					});
+					} else {
+						get_http("//steamcommunity.com/market/priceoverview/?country=" + cc + "&currency=" + currency + "&appid=" + appid + "&market_hash_name=" + market_hash_name, function(json) {
+							var data = JSON.parse(json);
+
+							if (data["success"]) {
+								memoize_market_price(market_hash_name_enc, data);
+
+								insert_price($(node), data);
+							}
+							// Decrease the queue count
+							q--;
+							// Continue with the next rows if queue is empty
+							if (q == 0) {
+								process_listings_rows(sel);
+							}
+						});
+
+						q++;
+					}
 				}
 			});
 		}
-	}
 
-	add_lowest_market_price_data("es_listingsonhold");
-	add_lowest_market_price_data("es_selling");
+		add_lowest_market_price_data(".es_selling");
 
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			for (var i = 0; i < mutation.addedNodes.length; i++) {
-				var node = mutation.addedNodes[i];
-				if (node.classList && node.classList.contains("market_listing_row")) add_lowest_market_price_data("es_selling", node.id);
-			}
+		setMutationHandler(document, "#tabContentsMyActiveMarketListings_start", function(){
+			add_lowest_market_price_data(".es_selling");
+
+			return true;
 		});
-	});
-	var target = document.querySelector(".es_selling");
-	observer.observe(target, { subtree: true, childList: true });
+	}
 }
 
 function add_badge_page_link() {
