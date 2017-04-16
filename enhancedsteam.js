@@ -151,43 +151,50 @@ var signed_in_promise = (function () {
 	return deferred.promise();
 })();
 
-// TODO: We should store the data in ES's storage to ensure that is in sync across Store and Community
 var dynamicstore_promise = (function () {
 	var deferred = new $.Deferred();
 
 	if (is_signed_in) {
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
-			last_updated = getValue("dynamicstore_time") || expire_time - 1,
-			dynamicstore_data = getValue("dynamicstore_data"),
-			dataVersion = sessionStorage.getItem("unUserdataVersion") || 0,
-			dataVersion_cache = getValue("unUserdataVersion") || 0;
-
-		// Return data from cache if available
-		if (dynamicstore_data) {
-			deferred.resolve(dynamicstore_data);
-		}
-
-		// Update data if needed
-		if ((last_updated < expire_time || !dynamicstore_data || dataVersion && dataVersion !== dataVersion_cache) && window.location.protocol != "https:") {
-			var accountidtext = $('script:contains("g_AccountID")').text() || "",
-				accountid = /g_AccountID = (\d+);/.test(accountidtext) ? accountidtext.match(/g_AccountID = (\d+);/)[1] : 0;
-
-			get_http("//store.steampowered.com/dynamicstore/userdata/" + (accountid ? "?id=" + accountid + "&v=" + dataVersion : "?v=" + expire_time), function(txt) {
-				var data = JSON.parse(txt);
-				if (data && data.hasOwnProperty("rgOwnedApps") && !$.isEmptyObject(data.rgOwnedApps)) {
-					setValue("dynamicstore_data", data);
-					setValue("dynamicstore_time", parseInt(Date.now() / 1000, 10));
-
-					deferred.resolve(data);
-				} else {
-					deferred.reject();
+		chrome.storage.local.get("dynamicstore", function(userdata) {
+			// Return data from cache if available
+			if (userdata.dynamicstore && userdata.dynamicstore.data) {
+				deferred.resolve(userdata.dynamicstore.data);
+			} else {
+				userdata.dynamicstore = {
+					data: "",
+					updated: expire_time - 1,
+					unUserdataVersion: 0
 				}
-			}).fail(function(){
-				deferred.reject();
-			});
+			}
 
-			setValue("unUserdataVersion", dataVersion);
-		}
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
+				dataVersion = sessionStorage.getItem("unUserdataVersion") || 0;
+
+			// Update data if needed
+			if ((userdata.dynamicstore.updated < expire_time || !userdata.dynamicstore.data || dataVersion && dataVersion !== userdata.dynamicstore.unUserdataVersion)) {
+				var accountidtext = $('script:contains("g_AccountID")').text() || "",
+					accountid = (accountidtext.match(/g_AccountID = (\d+);/) || [])[1];
+
+				get_http("//store.steampowered.com/dynamicstore/userdata/?v=" + expire_time + (accountid ? "&id=" + accountid : ""), function(txt) {
+					var data = JSON.parse(txt);
+					if (data && data.hasOwnProperty("rgOwnedApps") && !$.isEmptyObject(data.rgOwnedApps)) {
+						chrome.storage.local.set({
+							dynamicstore: {
+								data: data,
+								updated: parseInt(Date.now() / 1000, 10),
+								unUserdataVersion: dataVersion
+							}
+						});
+
+						deferred.resolve(data);
+					} else {
+						deferred.reject();
+					}
+				}).fail(function(){
+					deferred.reject();
+				});
+			}
+		});
 	} else {
 		deferred.reject();
 	}
