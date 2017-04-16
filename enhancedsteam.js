@@ -8975,10 +8975,8 @@ function groups_leave_options() {
 								$(joinGroupEl).show('fast');
 								$(el).prop('checked', false).trigger('change');
 							});
-							// Wait some time between requests
-							setTimeout(function() {
-								leave_group(elSelector);
-							}, 500);
+
+							leave_group(elSelector);
 						}).fail(function() {
 							$('.es-leave-all').prop('disabled', false);
 							$(row).removeClass('es-inaction es-progress es-complete');
