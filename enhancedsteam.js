@@ -4863,10 +4863,6 @@ function add_lowest_market_price() {
 		var cc = getStoreRegionCountryCode(),
 			currency = currency_type_to_number(user_currency);
 
-		$("#my_market_selllistings_number").parents(".my_listing_section").addClass("es_selling");
-		$(".es_selling").find(".market_listing_table_header span:first").css("width", "200px");
-		$(".es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
-
 		var memoized_market_price = {};
 		function memoize_market_price(market_hash_name, data) {
 			if (!memoized_market_price.hasOwnProperty(market_hash_name)) {
@@ -4894,6 +4890,12 @@ function add_lowest_market_price() {
 		}
 
 		function add_lowest_market_price_data(section, item_id) {
+			if (!$(".es_selling").length) {
+				$("#my_market_selllistings_number").parents(".my_listing_section").addClass("es_selling");
+				$(".es_selling").find(".market_listing_table_header span:first").css("width", "200px");
+				$(".es_selling").find(".market_listing_table_header span:first").after("<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + localized_strings.lowest + "</span></span>");
+			}
+
 			$(".es_selling").find(".market_listing_row").each(function() {
 				$(this).find(".market_listing_edit_buttons:first").css("width", "200px");
 				if ($(this).find(".market_listing_es_lowest").length == 0) {
@@ -4952,7 +4954,7 @@ function add_lowest_market_price() {
 
 		add_lowest_market_price_data(".es_selling");
 
-		setMutationHandler(document, "#tabContentsMyActiveMarketListings_start", function(){
+		setMutationHandler(document, "#tabContentsMyActiveMarketListingsRows", function(){
 			add_lowest_market_price_data(".es_selling");
 
 			return true;
