@@ -8426,61 +8426,43 @@ function add_gamecard_foil_link() {
 }
 
 function add_gamecard_market_links(game) {
-	var foil;
-	var url_search = window.location.search;
-	var url_parameters_array = url_search.replace("?","").split("&");
-	var cost = 0;
-
-	$.each(url_parameters_array, function(index,url_parameter){
-		if(url_parameter=="border=1"){
-			foil=true;
-		}
-	});
-
-	var price_type = user_currency == "USD" ? "price" : "price_" + user_currency.toLowerCase();
+	var cost = 0,
+		foil = /border=1/i.test(document.URL),
+		price_type = "price" + (user_currency != "USD" ? "_" + user_currency.toLowerCase() : "");
 
 	get_http("//api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
 		var data = JSON.parse(txt);
-		var converter = $("<div>");
 
-		$(".badge_card_set_card").each(function() {
-			var node = $(this);
-			var cardname = $(this).html().match(/(.+)<div style=\"/)[1].trim().replace(/&amp;/g, '&');
-			if (cardname == "") { cardname = $(this).html().match(/<div class=\"badge_card_set_text\">(.+)<\/div>/)[1].trim().replace(/&amp;/g, '&'); }
+		// Turn card names into keys, this way we no longer need to loop and search the data each and everytime
+		var namedData = {};
+		for (var i = 0; i < data.length; i++) {
+			namedData[data[i].name] = data[i];
+		}
 
-			var newcardname = converter.text(cardname).html();
-			if (foil) { newcardname += " (Foil)"; }
-
-			for (var i = 0; i < data.length; i++) {
-				if (data[i].name == newcardname) {
-					var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
-					var card_price = formatCurrency(data[i][price_type]);
-					if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
-				}
+		$(".badge_card_set_card").each(function(i, node) {
+			var cardName = $(node).find(".badge_card_set_text").first().text().trim().replace(/&amp;/g, '&');
+			var cardData = namedData[cardName] || namedData[cardName + "(Trading Card)"];
+			if (foil) {
+				cardData = namedData[cardName + " (Foil)"] || namedData[cardName + " (Foil Trading Card)"];
 			}
 
-			if (!(marketlink)) { 
-				if (foil) { newcardname = newcardname.replace("(Foil)", "(Foil Trading Card)"); } else { newcardname += " (Trading Card)"; }
-				for (var i = 0; i < data.length; i++) {
-					if (data[i].name == newcardname) {
-						var marketlink = "//steamcommunity.com/market/listings/" + data[i].url;
-						var card_price = formatCurrency(data[i][price_type]);
-						if ($(node).hasClass("unowned")) cost += parseFloat(data[i][price_type]);
-					}
-				}
-			}
+			if (cardData) {
+				var marketlink = "//steamcommunity.com/market/listings/" + cardData.url;
+				var card_price = formatCurrency(cardData[price_type]);
+				
+				if ($(node).hasClass("unowned")) cost += parseFloat(cardData[price_type]);
 
-			if (marketlink && card_price) {
-				var html = "<a class=\"es_card_search\" href=\"" + marketlink + "\">" + localized_strings.lowest_price + ": " + card_price + "</a>";
-				$(this).children("div:contains('" + cardname + "')").parent().append(html);
+				if (marketlink && card_price) {
+					var html = `<a class="es_card_search" href="${ marketlink }">${ localized_strings.lowest_price }: ${ card_price }</a>`;
+					$(node).append(html);
+				}
 			}
 		});
 		
 		if (cost > 0 && $(".profile_small_header_name .whiteLink").attr("href") == $(".user_avatar:first").attr("href").replace(/\/$/, "")) {
 			cost = formatCurrency(cost);
-			$(".badge_empty_name:last").after("<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + localized_strings.badge_completion_cost+ ": " + cost + "</div>");
+			$(".badge_empty_name:last").after('<div class="badge_empty_name badge_info_unlocked">' + localized_strings.badge_completion_cost + ': ' + cost + '</div>');
 			$(".badge_empty_right").css("margin-top", "7px");
-			$(".gamecard_badge_progress .badge_info").css("width", "296px");
 		}
 	});
 }
