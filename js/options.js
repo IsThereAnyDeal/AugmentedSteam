@@ -76,7 +76,8 @@ var settings_defaults = {
 		"silagames": true,
 		"itchio": true,
 		"gamejolt": true,
-		"paradox": true
+		"paradox": true,
+		"dreamgame": true
 	},
 	"override_price": "auto",
 	"showregionalprice": "mouse",
