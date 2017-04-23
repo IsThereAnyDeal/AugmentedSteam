@@ -3,8 +3,7 @@ var version = "9.4";
 var console_info = ["%c Enhanced %cSteam v" + version + " by jshackles %c http://www.enhancedsteam.com ", "background: #000000;color: #7EBE45", "background: #000000;color: #ffffff", ""];
 console.log.apply(console, console_info);
 
-var storage = chrome.storage.sync;
-if (!storage) storage = chrome.storage.local;
+var storage = chrome.storage.sync || chrome.storage.local;
 var info = 0;
 
 var total_requests = 0;
@@ -7548,6 +7547,7 @@ function clear_cache() {
 	localStorage.clear();
 	chrome.storage.local.remove("user_currency");
 	chrome.storage.local.remove("store_sessionid");
+	chrome.storage.local.remove("dynamicstore");
 }
 
 function change_user_background() {
