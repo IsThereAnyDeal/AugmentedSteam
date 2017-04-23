@@ -155,6 +155,9 @@ var dynamicstore_promise = (function () {
 
 	if (is_signed_in) {
 		chrome.storage.local.get("dynamicstore", function(userdata) {
+			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
+				dataVersion = sessionStorage.getItem("unUserdataVersion") || 0;
+
 			// Return data from cache if available
 			if (userdata.dynamicstore && userdata.dynamicstore.data) {
 				deferred.resolve(userdata.dynamicstore.data);
@@ -165,9 +168,6 @@ var dynamicstore_promise = (function () {
 					unUserdataVersion: 0
 				}
 			}
-
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24, // 24 hours ago
-				dataVersion = sessionStorage.getItem("unUserdataVersion") || 0;
 
 			// Update data if needed
 			if ((userdata.dynamicstore.updated < expire_time || !userdata.dynamicstore.data || dataVersion && dataVersion !== userdata.dynamicstore.unUserdataVersion)) {
@@ -1617,6 +1617,10 @@ function add_wishlist_ajaxremove() {
 					$("#es_price_" + appid).remove();
 					$("#game_" + appid).fadeOut("fast", function(){ $(this).remove(); });
 
+					// Clear dynamicstore cache
+					chrome.storage.local.remove("dynamicstore");
+
+					// Update ranks
 					for (var i = 0; i < $('.wishlistRow').length; i++) {
 						if ($('.wishlist_rank')[i].value > currentRank) {
 							$('.wishlist_rank')[i].value = $('.wishlist_rank')[i].value - 1;	
@@ -3204,62 +3208,74 @@ function appdata_on_wishlist() {
 	}
 }
 
-function wishlist_dynamic_data() {
-	storage.get(function(settings) {
-		$.when.apply($, [dynamicstore_promise, get_store_session]).done(function(data, store_sessionid) {
-			var ownedapps = data.rgOwnedApps;
-			var wishlistapps = data.rgWishlist;
+function wishlist_highlight_apps() {
+	if (is_signed_in && ($(".profile_small_header_bg a:first").attr("href").replace(/\/$/, "") != $("#global_actions .playerAvatar:first").attr("href").replace(/\/$/, ""))) {
+		storage.get(function(settings) {
+			$.when.apply($, [dynamicstore_promise, get_store_session]).done(function(data, store_sessionid) {
+				var ownedapps = data.rgOwnedApps;
+				var wishlistapps = data.rgWishlist;
+				
+				$("div.wishlistRow").each(function(i, node) {
+					var appid = Number(get_appid_wishlist(node.id)),
+						owned = ownedapps.indexOf(appid) != -1,
+						wishlisted = wishlistapps.indexOf(appid) != -1;
 
-			if (is_signed_in && ($(".profile_small_header_bg a:first").attr("href").replace(/\/$/, "") != $("#global_actions .playerAvatar:first").attr("href").replace(/\/$/, ""))) {
-				$('a.btnv6_blue_hoverfade').each(function (index, node) {
-					var appid = Number(get_appid(node.href));
-					
-					var owned = ownedapps.indexOf(appid);
-					var wishlisted = wishlistapps.indexOf(appid);
-
-					if (owned == -1 && wishlisted == -1 && store_sessionid) {
-						$(node).parent().parent().siblings(".wishlist_added_on").append('(<a class="es_wishlist_add" id="es_wishlist_' + appid + '"><span>' + localized_strings.add_to_wishlist + '</span></a>)');
-						$("#es_wishlist_" + appid).click(function() {
-							$.ajax({
-								type:"POST",
-								url:"//store.steampowered.com/api/addtowishlist",
-								data:{
-									sessionid: store_sessionid,
-									appid: appid
-								},
-								success: function( msg ) {
-									$("#es_wishlist_" + appid).addClass("btn_disabled");
-									$("#es_wishlist_" + appid).off("click");
-									$("#es_wishlist_" + appid).html("<span>" + localized_strings.on_wishlist + "</span>");
-								},
-								error: function(e){
-									console.log('Error: '+e);
-								}
-							});
-						});
+					// Add "Add to your wishlist" link
+					if (!owned && !wishlisted) {
+						$(node).find(".wishlist_added_on").append('<span>(<a class="es_wishlist_add" data-appid="' + appid + '">' + localized_strings.add_to_wishlist + '</a>)</span>');
 					}
 
-					if (owned != -1) {
-						$(node).parents(".wishlistRow").addClass("ds_collapse_flag ds_flagged ds_owned");
+					// Highlight as owned
+					if (owned) {
+						$(node).addClass("ds_collapse_flag ds_flagged ds_owned");
 						if (settings.highlight_owned) {
-							highlight_owned($(node).parents(".wishlistRow")[0]);
+							highlight_owned($(node)[0]);
 						} else {
-							$(node).parents(".wishlistRow").append('<div class="ds_flag ds_owned_flag">' + localized_strings.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
+							$(node).append('<div class="ds_flag ds_owned_flag">' + localized_strings.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
 						}
 					}
 
-					if (wishlisted != -1) {
-						$(node).parents(".wishlistRow").addClass("ds_collapse_flag ds_flagged ds_wishlist");
+					// Highlight as wishlisted
+					if (wishlisted) {
+						$(node).addClass("ds_collapse_flag ds_flagged ds_wishlist");
 						if (settings.highlight_wishlist) {
-							highlight_wishlist($(node).parents(".wishlistRow")[0]);
+							highlight_wishlist($(node)[0]);
 						} else {
-							$(node).parents(".wishlistRow").append('<div class="ds_flag ds_wishlist_flag">' + localized_strings.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+							$(node).append('<div class="ds_flag ds_wishlist_flag">' + localized_strings.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
 						}	
 					}
 				});
-			}
+
+				// Bind actions to "Add to your wishlist" buttons
+				$("a.es_wishlist_add").on("click", function(){
+					var $el = $(this),
+						$wishlistRow = $(this).closest("div.wishlistRow");
+
+					$.ajax({
+						type: "POST",
+						url: "//store.steampowered.com/api/addtowishlist",
+						data: {
+							sessionid: store_sessionid,
+							appid: $el.data("appid")
+						}
+					}).done(function(){
+						$el.parent().remove();
+
+						// Highlight the row as wishlisted
+						$wishlistRow.addClass("ds_collapse_flag ds_flagged ds_wishlist");
+						if (settings.highlight_wishlist) {
+							highlight_wishlist($wishlistRow[0]);
+						} else {
+							$wishlistRow.append('<div class="ds_flag ds_wishlist_flag">' + localized_strings.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+						}
+
+						// Clear dynamicstore cache
+						chrome.storage.local.remove("dynamicstore");
+					});
+				});
+			});
 		});
-	});
+	}
 }
 
 var processing = false;
@@ -7465,20 +7481,14 @@ function add_app_page_wishlist(appid) {
 								data: {
 									sessionid: store_sessionid,
 									appid: appid
-								},
-								success: function( msg ) {
-									$el.addClass("btn_disabled");
-									$el.off("click");
-									$el.html("<span>" + localized_strings.on_wishlist + "</span>");
-
-									highlight_wishlist($(".apphub_StoreInfoHeader")[0]);
-
-									// Invalidate dynamic store data cache
-									delValue("dynamicstore_time");
-								},
-								error: function(e){
-									console.log('Error: ' + e);
 								}
+							}).done(function(){
+								$el.off("click").addClass("btn_disabled").html("<span>" + localized_strings.on_wishlist + "</span>");
+
+								highlight_wishlist($(".apphub_StoreInfoHeader")[0]);
+
+								// Clear dynamicstore cache
+								chrome.storage.local.remove("dynamicstore");
 							});
 						});
 					}
@@ -7503,8 +7513,7 @@ function add_app_page_wishlist_changes(appid) {
 		$(".es-in-wl").after("<img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />");
 
 		// Find the script tag that contains the session id and extract it
-		var session_txt = $('script:contains("g_sessionID")').text();
-		var sessionid = session_txt.match(/g_sessionID = "(.+)"/)[1];
+		var sessionid = ($('script:contains("g_sessionID")').text().match(/g_sessionID = "(.+)"/) || [])[1];
 
 		$("#add_to_wishlist_area_success").on("click", function(e) {
 			e.preventDefault();
@@ -7512,7 +7521,7 @@ function add_app_page_wishlist_changes(appid) {
 			var el = $(this),
 				parent = $(this).parent();
 
-			if ( !$(parent).hasClass("loading") ) {
+			if (!$(parent).hasClass("loading")) {
 				$(parent).addClass("loading");
 
 				$(el).find("img").hide();
@@ -7524,19 +7533,19 @@ function add_app_page_wishlist_changes(appid) {
 					data: {
 						sessionid: sessionid,
 						appid: appid
-					},
-					success: function( msg ) {
-						$("#add_to_wishlist_area").show();
-						$("#add_to_wishlist_area_success").hide();
-
-						// Invalidate dynamic store data cache
-						runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
-					},
-					complete: function() {
-						$(parent).removeClass("loading");
-						$(el).find("img").hide();
-						$('.es-in-wl').show();
 					}
+				}).done(function() {
+					$("#add_to_wishlist_area").show();
+					$("#add_to_wishlist_area_success").hide();
+
+					// Clear dynamicstore cache
+					chrome.storage.local.remove("dynamicstore");
+					// Invalidate dynamic store data cache
+					runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
+				}).complete(function() {
+					$(parent).removeClass("loading");
+					$(el).find("img").hide();
+					$('.es-in-wl').show();
 				});
 			}
 		});
@@ -9341,7 +9350,7 @@ $(document).ready(function(){
 						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
 							alternative_linux_icon();
 							appdata_on_wishlist();
-							wishlist_dynamic_data();
+							wishlist_highlight_apps();
 							fix_app_image_not_found();
 							add_empty_wishlist_buttons();
 							add_wishlist_filter();
