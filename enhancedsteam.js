@@ -5415,7 +5415,7 @@ function inventory_market_helper(response) {
 				$sideMarketActs.show().html("<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
 
 				// "View in market" link
-				html += '<div style="height: 24px;"><a href="//steamcommunity.com/market/listings/' + global_id + '/' + encodeURI(hash_name) + '">' + localized_strings.view_in_market + '</a></div>';
+				html += '<div style="height: 24px;"><a href="//steamcommunity.com/market/listings/' + global_id + '/' + encodeURIComponent(hash_name) + '">' + localized_strings.view_in_market + '</a></div>';
 
 				// Check if price is stored in data
 				if (dataLowest) {
@@ -5435,7 +5435,7 @@ function inventory_market_helper(response) {
 
 					$sideMarketActs.html(html);
 				} else {
-					get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + encodeURI(hash_name), function(txt) {
+					get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + encodeURIComponent(hash_name), function(txt) {
 						var data = JSON.parse(txt);
 
 						html += '<div style="min-height: 3em; margin-left: 1em;">';
@@ -5472,7 +5472,7 @@ function inventory_market_helper(response) {
 			$sideMarketActs.show().html("<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
 
 			// "View in market" link
-			html += '<div style="height: 24px;"><a href="//steamcommunity.com/market/listings/' + global_id + '/' + encodeURI(hash_name) + '">' + localized_strings.view_in_market + '</a></div>';
+			html += '<div style="height: 24px;"><a href="//steamcommunity.com/market/listings/' + global_id + '/' + encodeURIComponent(hash_name) + '">' + localized_strings.view_in_market + '</a></div>';
 
 			// Check if price is stored in data
 			if (dataLowest) {
@@ -5492,7 +5492,7 @@ function inventory_market_helper(response) {
 
 				$sideMarketActs.html(html);
 			} else {
-				get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + encodeURI(hash_name), function(txt) {
+				get_http("//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + global_id + "&market_hash_name=" + encodeURIComponent(hash_name), function(txt) {
 					var data = JSON.parse(txt);
 
 					html += '<div style="min-height: 3em; margin-left: 1em;">';
