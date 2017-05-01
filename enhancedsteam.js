@@ -7383,29 +7383,29 @@ function add_achievement_comparison_link(node, appid) {
 	});
 }
 
+var steamInvNamesList = {};
 function highlight_market_items() {
-	var market_data = getValue("inventory_6");
-	market_data = market_data["rgDescriptions"];
+	storage.get(function(settings) {
+		if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned;	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
+		if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
+		if (settings.highlight_owned) {
+			var market_data = (getValue("inventory_6") || [])["rgDescriptions"];
 
-	$.each($(".market_listing_row_link"), function (i, node) {
-		var current_market_name = node.href.match(/steamcommunity.com\/market\/listings\/753\/(.+)\?/);
-		if (!current_market_name) { current_market_name = node.href.match(/steamcommunity.com\/market\/listings\/753\/(.+)/); }
-		if (current_market_name) {
-			var item_name = decodeURIComponent(current_market_name[1]);
-			$.each(market_data, function(key, value) {
-				if (value.market_hash_name == item_name) {
-					storage.get(function(settings) {
-						if (settings.highlight_owned_color === undefined) { settings.highlight_owned_color = highlight_defaults.owned;	storage.set({'highlight_owned_color': settings.highlight_owned_color}); }
-						if (settings.highlight_owned === undefined) { settings.highlight_owned = true; storage.set({'highlight_owned': settings.highlight_owned}); }
-						if (settings.highlight_owned) {
-							node = $(node).find("div");
-							$(node).css("backgroundImage", "none");
-							$(node).css("color", "white");
-							$(node).css("backgroundColor", settings.highlight_owned_color);
-						}
+			if (market_data) {
+				if ($.isEmptyObject(steamInvNamesList)) {
+					$.each(market_data, function(key, value) {
+						return steamInvNamesList[value.market_hash_name] = "";
 					});
 				}
-			});
+
+				$.each($(".market_listing_row_link"), function(i, node) {
+					var current_market_name = (node.href.match(/market\/listings\/753\/(.+)(\?)?/) || [])[1];
+
+					if (current_market_name && steamInvNamesList.hasOwnProperty(decodeURIComponent(current_market_name))) {
+						highlight_owned($(node).find("div").first()[0]);
+					}
+				});
+			}
 		}
 	});
 }
