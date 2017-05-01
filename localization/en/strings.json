@@ -181,6 +181,7 @@
     "mods": "Mods",
     "empty_wishlist": "Empty wishlist",
     "empty_wishlist_confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
+    "empty_wishlist_loading": "Emptying your wishlist, please wait...",
     "about": "About",
     "never": "Never",
     "coupon_available": "You have a coupon available!",
