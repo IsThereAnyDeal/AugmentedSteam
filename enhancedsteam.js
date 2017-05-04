@@ -2761,31 +2761,6 @@ function drm_warnings(type) {
 	});
 }
 
-// Remove all items from cart
-function add_empty_cart_button() {
-	$("div.checkout_content").prepend(`
-		<button class='es_empty_cart btnv6_green_white_innerfade btn_small continue' style='float: left;'>
-			<span>${ localized_strings.empty_cart }</span>
-		</button>
-	`);
-
-	if (!$(".cart_row").length) {
-		$(".es_empty_cart").addClass("btn_disabled").prop("disabled", true);
-	}
-
-	$(".es_empty_cart").on("click", function() {
-		runInPageContext(`function(){
-			var prompt = ShowConfirmDialog('` + localized_strings.empty_cart + `', '` + localized_strings.empty_cart_confirmation + `');
-			prompt.done(function(result) {
-				if (result == 'OK') {
-					document.cookie = "shoppingCartGID=0; path=/; expires=Thu, 01-Jan-1970 00:00:01 GMT;";
-					window.location.assign('//store.steampowered.com/cart/');
-				}
-			});
-		}`);
-	});
-}
-
 // User profile pages
 function add_community_profile_links() {
 	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
@@ -9221,10 +9196,6 @@ $(document).ready(function(){
 					}
 
 					switch (true) {
-						case /^\/cart(\/)?.*/.test(path):
-							add_empty_cart_button();
-							break;
-
 						case /\bagecheck\b/.test(path):
 							send_age_verification();
 							break;
