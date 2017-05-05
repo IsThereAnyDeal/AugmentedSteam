@@ -1654,19 +1654,14 @@ function wishlist_remove_app(appid, useApi, updateRanks) {
 	updateRanks = (updateRanks === undefined ? true : updateRanks);
 
 	var deferred = new $.Deferred();
-	var url = (useApi ? "//store.steampowered.com/api/removefromwishlist" : profile_url + "wishlist/");
+	var url = "//store.steampowered.com/api/removefromwishlist";
 
-	if (useApi) {
-		$.when(get_store_session).then(function(store_sessionid) {
-			wishlist_remove_request(url, store_sessionid);
-		});
-	} else {
-		var session_txt = $('script:contains("g_sessionID")').text();
-		var sessionid = session_txt.match(/g_sessionID = "(.+)"/)[1];
-		wishlist_remove_request(url, sessionid);
-	}
+	$.when(get_store_session).then(function(sessionid) {
+		if (!useApi) {
+			sessionid = ($('script:contains("g_sessionID")').text().match(/g_sessionID = "(.+)"/) || [])[1];
+			url = profile_url + "wishlist/";
+		}
 
-	function wishlist_remove_request(url, sessionid) {
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -1678,10 +1673,14 @@ function wishlist_remove_app(appid, useApi, updateRanks) {
 		}).done(function() {
 			$("#game_" + appid).fadeOut("fast", function(){
 				$(this).remove();
+
+				// Clear dynamicstore cache
+				chrome.storage.local.remove("dynamicstore");
 				
 				deferred.resolve(1);
 			});
 
+			// Update ranks
 			if (updateRanks) {
 				var currentRank = parseFloat($("#game_" + appid + " .wishlist_rank")[0].value);
 
@@ -1694,7 +1693,7 @@ function wishlist_remove_app(appid, useApi, updateRanks) {
 		}).fail(function(){
 			deferred.reject(0);
 		});
-	}
+	});
 
 	return deferred.promise();
 }
@@ -7572,6 +7571,11 @@ function add_app_page_wishlist_changes(appid) {
 					$('.es-in-wl').show();
 				});
 			}
+		});
+
+		$("#add_to_wishlist_area").on("click", function(){
+			// Clear dynamicstore cache
+			chrome.storage.local.remove("dynamicstore");
 		});
 	}
 }
