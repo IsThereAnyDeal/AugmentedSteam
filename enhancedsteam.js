@@ -3116,13 +3116,14 @@ function wishlist_add_ratings() {
 		var review_cache = getValue("reviewData_" + appid);
 
 		if (review_cache) {
-			var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60 * 24; // One day ago
-			var last_updated = review_cache["u"] || expire_time - 1;
+			var time_now = parseInt(Date.now() / 1000, 10);
+			var last_updated = review_cache["u"] || time_now - 1;
 
 			if (review_cache["s"])
 				build_review(appid, review_cache["s"]);
 
-			if (last_updated < expire_time)
+			// Update valid data every 24 hours and invalid data every hour
+			if (last_updated < (time_now - 60 * 60 * 24) || !review_cache["s"] && last_updated < (time_now - 60 * 60))
 				appsUpdateQueue.push(appid);
 		} else {
 			appsUpdateQueue.push(appid);
