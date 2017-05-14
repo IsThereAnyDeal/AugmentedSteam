@@ -233,8 +233,9 @@ String.prototype.contains = function(it) {
 };
 
 // Returns first level text only
-$.fn.firstText = function() {
-	return this.contents().filter(function() { return this.nodeType === 3; })[0].data;
+$.fn.firstText = function(i) {
+	i = i || 0;
+	return this.contents().filter(function() { return this.nodeType === 3; })[i].data;
 };
 
 var currency_format_info = {
@@ -8468,7 +8469,7 @@ function add_gamecard_market_links(game) {
 		}
 
 		$(".badge_card_set_card").each(function(i, node) {
-			var cardName = $(node).find(".badge_card_set_text").first().text().trim().replace(/&amp;/g, '&');
+			var cardName = $(node).find(".badge_card_set_text").first().text().replace(/&amp;/g, '&').replace(/\(\d+\)/g, '').trim();
 			var cardData = namedData[cardName] || namedData[cardName + "(Trading Card)"];
 			if (foil) {
 				cardData = namedData[cardName + " (Foil)"] || namedData[cardName + " (Foil Trading Card)"];
