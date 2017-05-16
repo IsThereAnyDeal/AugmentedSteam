@@ -2310,11 +2310,8 @@ function remove_about_menu() {
 }
 
 function add_header_links() {
-	if ($(".supernav_container").length > 0) {
-		// add "Forums" after "Workshop"
-		$(".submenu_community").find("a[href='" + window.location.protocol + "//steamcommunity.com/workshop/']").after('<a class="submenuitem" href="//forums.steampowered.com/forums/" target="_blank">' + localized_strings.forums + '</a>');
-		
-		if (is_signed_in) {
+	if (is_signed_in) {
+		if ($(".supernav_container").length > 0) {
 			$(".submenu_username").find("a:first").after('<a class="submenuitem" href="//steamcommunity.com/my/games/">' + localized_strings.games + '</a>');
 			$(".submenu_username").append('<a class="submenuitem" href="//steamcommunity.com/my/recommended/">' + localized_strings.reviews + '</a>');
 			$(".submenu_community .submenuitem:nth-of-type(3)").after('<a class="submenuitem" style="cursor: pointer" onclick="window.open(\'https://steamcommunity.com/chat/\', \'\', \'height=790,width=1015,resize=yes,scrollbars=yes\')">' + localized_strings.chat + '</a>');
