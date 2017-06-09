@@ -272,6 +272,7 @@
         "peaktoday": "today's peak"
     },
     "hltb": {
+        "title": "How Long to Beat",
         "main_e": "Main Story and Extras",
         "compl": "Completionist",
         "submit": "Submit Your Time",

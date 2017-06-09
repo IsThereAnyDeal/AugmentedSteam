@@ -4171,8 +4171,8 @@ function add_hltb_info(appid) {
 			if (settings.showhltb) {
 				storePageData.get("hltb", function(data) {
 					if (data["success"]) {
-						how_long_html = "<div class='block game_details underlined_links'>"
-							+ "<div class='block_header'><h4>How Long to Beat</h4></div>"
+						how_long_html = "<div class='block responsive_apppage_details_right heading'>" + localized_strings.hltb.title + "</div>"
+							+ "<div class='block game_details underlined_links'>"
 							+ "<div class='block_content'><div class='block_content_inner'><div class='details_block'>";
 						if (data["main_story"]){
 							how_long_html += "<b>" + localized_strings.hltb.main + ":</b><span style='float: right;'>" + escapeHTML(data['main_story']) + "</span><br>";
@@ -4357,7 +4357,7 @@ function add_widescreen_certification(appid) {
 								break;
 						}
 
-						var html = "<div class='block underlined_links'><div class='block_header'><h4>"+localized_strings.wsgf.certifications+"</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
+						var html = "<div class='block responsive_apppage_details_right heading'>"+localized_strings.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
 
 						if (wsg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(wsg_icon) + "' height='120' title='" + escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
 						if (mmg != "Incomplete") { html += "<a target='_blank' href='" + escapeHTML(path) + "'><img src='" + escapeHTML(mmg_icon) + "' height='120' title='" + escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
