@@ -5745,10 +5745,10 @@ function add_app_badge_progress(appid) {
 				$("head").append('<link rel="stylesheet" type="text/css" href="' + protocol + '//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
 
 				$("#category_block").after(`
+					<div class="block responsive_apppage_details_right heading">
+						${ localized_strings.badge_progress }
+					</div>
 					<div class="es_badges_progress_block block" style="display: none;">
-						<div class="block_header">
-							<h4>${ localized_strings.badge_progress }</h4>
-						</div>
 						<div class="block_content_inner">
 							<div class="es_normal_badge_progress es_progress_block" style="display: none;"></div>
 							<div class="es_foil_badge_progress es_progress_block" style="display: none;"></div>
