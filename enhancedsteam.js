@@ -1752,15 +1752,16 @@ function add_wishlist_pricehistory() {
 				// Get country code from Steam cookie
 				var cc = getStoreRegionCountryCode();
 
-				function get_price_data(lookup_type, node, id) {
+				function get_price_data(node, id) {
 					html = "<div class='es_lowest_price' id='es_price_" + id + "'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
 					$(node).append(html);
 
-					get_http(protocol + "//api.enhancedsteam.com/pricev3/?search=" + lookup_type + "/" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
+					get_http(protocol + "//api.enhancedsteam.com/pricev3/?appid=" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 						var data = JSON.parse(txt);
 						if (data) {
 							var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
 							var currency_type = data[".meta"]["currency"];
+							data = data["app/" + id];
 
 							// "Lowest Price"
 							if (data["price"]) {
@@ -1838,7 +1839,7 @@ function add_wishlist_pricehistory() {
 						timeoutId = window.setTimeout(function() {					
 							timeoutId = null;						
 							if ($("#es_price_" + appid).length == 0) {							
-								get_price_data("app", node, appid);
+								get_price_data(node, appid);
 							}	
 						}, 1000);
 					}
