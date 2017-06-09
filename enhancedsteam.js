@@ -3333,46 +3333,6 @@ function load_search_results () {
 	}
 }
 
-function load_search_results_greenlight () {
-	if (!processing) {
-		processing = true;
-		var search_url = document.URL.replace(/(?:[?&]p=\d+|(#)|$)/, "&p=" + search_page + "$1");
-		if ($(".LoadingWrapper").length === 0) {
-			$(".workshopBrowseRow").last().after('<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + localized_strings.loading + '</div></div>');
-		}
-		$.ajax({
-			url: search_url
-		}).done(function(data) {
-			var dom = $.parseHTML(data, true);
-			var rows = $(dom).find(".workshopBrowseRow");
-			var script = "";
-			$(dom).find(".workshopBrowseRow script").each(function() {
-				script += $(this).text() + "\n";
-				$(this).remove()
-			});
-			rows.first().addClass("page_" + search_page);
-
-			$(".LoadingWrapper").remove();
-			$(".workshopBrowseRow").last().after(rows);
-			runInPageContext("function() {\n" + script + "}");
-			search_page++;
-			processing = false;
-
-			if (is_element_in_viewport(rows.first().prev()) || is_element_in_viewport(rows.first())) history.replaceState("", "", search_url);
-			preview_greenlight_votes();
-		}).fail(function() {
-			$(".LoadingWrapper").remove();
-			$(".workshopBrowseRow").last().after("<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + localized_strings.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + localized_strings.search_error_retry + ".</a></div>");
-
-			$("#es_retry").click(function() {
-				processing = false;
-				$("#es_error_msg").remove();
-				load_search_results_greenlight();
-			});
-		});
-	}
-}
-
 function is_element_in_viewport($elem) {
 	// only concerned with vertical at this point
 	var elem_offset = $elem.offset(),
@@ -3410,49 +3370,6 @@ function endless_scrolling() {
 			});
 		}
 	});
-}
-
-function endless_scrolling_greenlight() {
-	if ($(".greenlit_items").length) {
-		storage.get(function(settings) {
-			if (settings.endlessscrollinggreenlight === undefined) { settings.endlessscrollinggreenlight = true; storage.set({'endlessscrollinggreenlight': settings.endlessscrollinggreenlight}); }
-			if (settings.endlessscrollinggreenlight) {
-				$(document.body).append('<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
-				var result_count;
-				var page_match = document.URL.match(/\?(?:[^#]+&)*p=(\d+)/);
-				var curr_page = page_match ? parseInt(page_match[1]) : 1;
-				search_page = curr_page + 1;
-				$(".workshopBrowseRow").first().addClass("page_" + curr_page);
-				var last_page = parseInt($(".workshopBrowsePagingControls .pagelink").last().text());
-				$(".workshopBrowsePaging *").remove();
-				var match = $(".workshopBrowsePagingInfo").text().replace(/\d{1,3}([,. ]?\d{3})*\s*-\s*\d{1,3}([,. ]?\d{3})*/, "").match(/\d{1,3}([,. ]?\d{3})*/);
-				if (match) {
-					result_count = match[0].replace(/[^\d]/, "");
-					$(".workshopBrowsePagingInfo").text(localized_strings.results.replace("__num__", result_count));
-				}
-
-				$(window).scroll(function () {
-					if (is_element_in_viewport($(".workshopBrowsePaging"))) {
-						if (search_page <= last_page) {
-							load_search_results_greenlight();
-						} else {
-							$(".workshopBrowsePagingInfo").text(localized_strings.all_results.replace("__num__", result_count));
-						}
-					}
-					for (var page = 1; page <= last_page; page++) {
-						var row = $(".workshopBrowseRow.page_" + page);
-						if (row.length && is_element_in_viewport(row)) {
-							var curr_url = document.URL.replace(/(?:[?&]p=\d+|(#)|$)/, "&p=" + page + "$1");
-							if (curr_url != document.URL) {
-								history.replaceState("", "", curr_url);
-							}
-							break;
-						}
-					}
-				});
-			}
-		});
-	}
 }
 
 function add_exclude_tags_to_search() {
@@ -3977,218 +3894,6 @@ function add_allreleases_tab() {
 						get_allreleases_results(result);
 					});
 				});
-			});
-		}
-	});
-}
-
-// Change Steam Greenlight pages
-function hide_greenlight_banner() {
-	storage.get(function(settings) {
-		if (settings.showgreenlightbanner === undefined) { settings.showgreenlightbanner = false; storage.set({'showgreenlightbanner': settings.showgreenlightbanner}); }
-		if (settings.showgreenlightbanner) {
-			var banner = $("#ig_top_workshop");
-			var breadcrumbs = $(".breadcrumbs");
-
-			var greenlight_info = '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/shared/css/apphub.css">';
-			greenlight_info += '<div class="apphub_HeaderTop es_greenlight"><div class="apphub_AppName ellipsis">Greenlight</div><div style="clear: both"></div>'
-			greenlight_info += '<div class="apphub_sectionTabs">';
-			greenlight_info += '<a class="apphub_sectionTab" id="games_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=items"><span>'+localized_strings.games+'</span></a>';
-			greenlight_info += '<a class="apphub_sectionTab" id="software_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=software"><span>'+localized_strings.software+'</span></a>';
-			greenlight_info += '<a class="apphub_sectionTab" id="concepts_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=concepts"><span>'+localized_strings.concepts+'</span></a>';
-			greenlight_info += '<a class="apphub_sectionTab" id="collections_apphub_sectionTab" href="//steamcommunity.com/workshop/browse/?appid=765&section=collections"><span>'+localized_strings.collections+'</span></a>';
-			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/discussions/?appid=765"><span>'+localized_strings.discussions+'</span></a>';
-			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/about/?appid=765&section=faq"><span>'+localized_strings.about_greenlight+'</span></a>';
-			greenlight_info += '<a class="apphub_sectionTab" href="//steamcommunity.com/workshop/news/?appid=765"><span>'+localized_strings.news+'</span></a>';
-			greenlight_info += '</div>';
-			if(breadcrumbs.find("a:first").text().trim()=="Greenlight"){
-				banner.before(greenlight_info);
-				var collection_header = $("#ig_collection_header");
-				collection_header.css("height","auto");
-				collection_header.find("img").hide();
-				if(banner.hasClass("blue")) {
-					banner.hide();
-				}
-				else if(banner.hasClass("green")) {
-					$(".es_greenlight").toggleClass("es_greenlit");
-					banner.css("background-image","url("+chrome.extension.getURL("img/gl_banner.jpg")+")")
-				}else if(banner.hasClass("greenFlash")) {
-					$(".es_greenlight").toggleClass("es_released");
-					banner.css("background-image","url("+chrome.extension.getURL("img/gl_banner.jpg")+")")
-				}
-				var second_breadcrumb = breadcrumbs.find("a:nth-child(2)").text().trim();
-				switch (second_breadcrumb) {
-					case localized_strings.games:
-						$("#games_apphub_sectionTab").toggleClass("active");
-						break;
-					case localized_strings.software:
-						$("#software_apphub_sectionTab").toggleClass("active");
-						break;
-					case localized_strings.concepts:
-						$("#concepts_apphub_sectionTab").toggleClass("active");
-						break;
-					case localized_strings.collections:
-						breadcrumbs.before(greenlight_info);
-						$("#collections_apphub_sectionTab").toggleClass("active");
-						break;
-				}
-			}
-		}
-	});
-}
-
-function remember_greenlight_filter() {
-	var deferred = new $.Deferred();
-	storage.get(function(settings) {
-		if (settings.remembergreenlightfilter === undefined) { settings.remembergreenlightfilter = false; storage.set({'remembergreenlightfilter': settings.remembergreenlightfilter}); }
-		if (settings.greenlightfilteroptions === undefined) { settings.greenlightfilteroptions = []; storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions}); }
-		if (settings.remembergreenlightfilter && !$(".searchedForTerm[onclick^=RemoveSearchTerm]").length) {
-			function setGreenlightFilter(option, checked) {
-				var i = $.inArray(option, settings.greenlightfilteroptions);
-				if (checked && i == -1) {
-					settings.greenlightfilteroptions.push(option);
-				} else if (!checked && i > -1) {
-					settings.greenlightfilteroptions.splice(i, 1);
-				}
-				settings.greenlightfilteroptions.sort();
-				storage.set({'greenlightfilteroptions': settings.greenlightfilteroptions});
-			}
-
-			var checkboxes = $(".filterOption input[type=checkbox]");
-
-			if (!$(".searchedForTerm").length && settings.greenlightfilteroptions.length) {
-				var form = $("#TagsFilterForm").clone();
-				form.find("#workshopSearchText").remove();
-				var ajax_url = "//" + document.location.host + document.location.pathname + "?" + form.serialize();
-				checkboxes.each(function() {
-					var option = this.id;
-					var i = $.inArray(option, settings.greenlightfilteroptions);
-					if (i > -1) {
-						this.checked = true;
-						ajax_url += "&" + encodeURIComponent(this.name) + "=" + encodeURIComponent(this.value);
-					}
-				});
-				get_http(ajax_url, function(txt) {
-					var parent = $("div.workshopBrowsePagingWithBG").parent();
-					parent.find("> div").remove();
-					var dom = $.parseHTML(txt, true);
-					var script = "";
-					var divs = $(dom).find("div.workshopBrowsePagingWithBG").parent().find("> div");
-					divs.find("script").each(function() {
-						script += $(this).text() + "\n";
-						$(this).remove();
-					});
-					parent.append(divs);
-					runInPageContext("function() {\n" + script + "}");
-					history.replaceState("", "", ajax_url);
-					deferred.resolve();
-				});
-			} else {
-				deferred.resolve();
-			}
-
-			checkboxes.click(function() {
-				setGreenlightFilter(this.id, this.checked);
-			});
-
-			$(".searchedForTerm").click(function() {
-				var match = this.getAttribute("onclick").match(/RemoveSearchTagCheckbox\(\s*'([^']+)'\s*\)/);
-				if (match) {
-					setGreenlightFilter(match[1], false);
-				}
-			});
-		} else {
-			deferred.resolve();
-		}
-	});
-	return deferred.promise();
-}
-
-var greenlightCache = (function() {
-	function greenlightCache_clean(cache) {
-		var expire_time = parseInt(Date.now() / 1000, 10) - 1 * 60 * 60; // One hour ago
-		$.each(cache, function(key, values) {
-			if (values[3] < expire_time) {
-				delete cache[key];
-			}
-		});
-	}
-	function greenlightCache_set(id, cache_item) {
-		var cache = $.parseJSON(localStorage.getItem("greenlightCache")) || {};
-		greenlightCache_clean(cache);
-		cache[id] = [cache_item.vote, cache_item.favorited, cache_item.followed, parseInt(Date.now() / 1000, 10)];
-		localStorage.setItem("greenlightCache", JSON.stringify(cache));
-	}
-	function greenlightCache_get(id) {
-		var cache = $.parseJSON(localStorage.getItem("greenlightCache")) || {};
-		greenlightCache_clean(cache);
-		if (cache[id]) {
-			return {
-				vote: cache[id][0],
-				favorited: cache[id][1],
-				followed: cache[id][2]
-			};
-		}
-	}
-	return {
-		get: greenlightCache_get,
-		set: greenlightCache_set
-	}
-})();
-
-function preview_greenlight_votes() {
-	if (!is_signed_in) return;
-	storage.get(function(settings) {
-		if (settings.dynamicgreenlight === undefined) { settings.dynamicgreenlight = false; storage.set({'dynamicgreenlight': settings.dynamicgreenlight}); }
-		if (settings.dynamicgreenlight) {
-			var items = $(".workshopItem:not(.gh_checked) > a:first-child");
-			items.each(function() {
-				var match = this.href.match("^[^:]+://steamcommunity\\.com/sharedfiles/filedetails/\\?id=(\\d+)");
-				if (match) {
-					var id = parseInt(match[1], 10);
-					var parent = $(this).parent();
-					parent.addClass("gh_checked");
-					var promise;
-					var cache_item = greenlightCache.get(id);
-					if (cache_item) {
-						var deferred = new $.Deferred();
-						promise = deferred.promise();
-						deferred.resolve();
-					} else {
-						cache_item = {
-							vote: null,
-							favorited: false,
-							followed: false
-						};
-						promise = get_http(this.href, function (data) {
-							if (data.match(/<[^>]*FavoriteItemOptionFavorited[^>]*selected[^>]*>([^<]*)</)) cache_item.favorited = true;
-							if (data.match(/<[^>]*FollowItemOptionFollowed[^>]*selected[^>]*>([^<]*)</)) cache_item.followed = true;
-							var match_vote = data.match(/<a[^>]*toggled[^>]*id="Vote(Up|Down|Later)Btn"[^>]*>/);
-							if (match_vote) {
-								cache_item.vote = match_vote[1].toLowerCase();
-								greenlightCache.set(id, cache_item);
-							}
-						}, {context: parent}).promise();
-					}
-					promise.done(function() {
-						var match_favorited = cache_item.favorited;
-						var match_followed = cache_item.followed;
-						if (match_favorited || match_followed) {
-							var indicators_right = $("<div class='gh_indicators gh_indicators_right'></div>");
-							if (match_favorited) {
-								indicators_right.append("<div class='gh_indicators gh_favorited' title='"+localized_strings.favorited+"'></div>");
-							}
-							if (match_followed) {
-								indicators_right.append("<div class='gh_indicators gh_followed' title='"+localized_strings.followed+"'></div>");
-							}
-							parent.prepend(indicators_right);
-						}
-						if (cache_item.vote) {
-							parent.addClass("gh_fade");
-							parent.addClass("gh_vote_" + cache_item.vote);
-						}
-					});
-				}
 			});
 		}
 	});
@@ -9465,25 +9170,13 @@ $(document).ready(function(){
 							ingame_name_link();
 							break;
 
-						case /^\/sharedfiles\/browse/.test(path):
-							remember_greenlight_filter().done(
-								endless_scrolling_greenlight,
-								preview_greenlight_votes
-							);
-							hide_greenlight_banner();
-
 						case /^\/sharedfiles\/.*/.test(path):
-							hide_greenlight_banner();
 							hide_spam_comments();
 							media_slider_expander();
 							break;
 
 						case /^\/workshop\/.*/.test(path):							
 							hide_spam_comments();
-							break;
-
-						case /^\/greenlight\/.*/.test(path):
-							preview_greenlight_votes();
 							break;
 
 						case /^\/market\/.*/.test(path):

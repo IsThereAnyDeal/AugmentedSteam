@@ -5,6 +5,7 @@
 : Updated wishlist emptying feature to work with larger wishlists and be more robust in general
 : Fixed a timing issue when leaving multiple groups at once
 - Removed Empty Cart feature as this feature is now part of Steam and is therefore redundant
+- Removed functions related to Steam Greenlight
 
 
 v9.3
