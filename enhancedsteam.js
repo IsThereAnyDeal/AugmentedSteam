@@ -5598,7 +5598,7 @@ function dlc_data_from_site(appid) {
 			if (txt != "{\"dlc\":}}") {
 				data = JSON.parse(txt);
 			}
-			var html = "<div class='block'><div class='block_header'><h4>" + localized_strings.dlc_details + "</h4></div><div class='block_content'><div class='block_content_inner'><div class='details_block'>";
+			var html = "<div class='block responsive_apppage_details_right heading'>" + localized_strings.dlc_details + "</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>";
 
 			if (data) {
 				$.each(data["dlc"], function(index, value) {
@@ -5608,7 +5608,7 @@ function dlc_data_from_site(appid) {
 
 			html += "</div><a class='linkbar' style='margin-top: 10px;' href=\"http://www.enhancedsteam.com/gamedata/dlc_category_suggest.php?appid=" + appid + "&appname=" + appname + "\" target='_blank'>" + localized_strings.dlc_suggest + "</a></div></div></div>";
 
-			$("#friend_block").before(html);
+			$("#category_block").parent().before(html);
 		});
 	}
 }
