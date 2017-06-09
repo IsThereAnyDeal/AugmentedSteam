@@ -6546,7 +6546,7 @@ function customize_app_page(appid) {
 		addToggleHandler("show_apppage_legal", "#game_area_legal", localized_strings.apppage_legal);
 		addToggleHandler("show_apppage_morelikethis", "#recommended_block", $("#recommended_block").find("h4:first").text());
 		addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
-		addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", $(".user_reviews_header:first").firstText());
+		if ($(".user_reviews_header:first").length > 0) addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", $(".user_reviews_header:first").firstText());
 
 		function addToggleHandler(name, elSelector, text, forceShow, callback) {
 			var element = $(elSelector);
