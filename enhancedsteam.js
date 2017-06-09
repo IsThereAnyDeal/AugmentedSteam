@@ -8193,7 +8193,7 @@ function add_gamecard_market_links(game) {
 
 		$(".badge_card_set_card").each(function(i, node) {
 			var cardName = $(node).find(".badge_card_set_text").first().text().replace(/&amp;/g, '&').replace(/\(\d+\)/g, '').trim();
-			var cardData = namedData[cardName] || namedData[cardName + "(Trading Card)"];
+			var cardData = namedData[cardName] || namedData[cardName + " (Trading Card)"];
 			if (foil) {
 				cardData = namedData[cardName + " (Foil)"] || namedData[cardName + " (Foil Trading Card)"];
 			}
