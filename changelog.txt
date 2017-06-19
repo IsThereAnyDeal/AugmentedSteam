@@ -10,7 +10,6 @@
 - Removed Empty Cart feature as this feature is now part of Steam and is therefore redundant
 - Removed functions related to Steam Greenlight
 
-
 v9.3
 -----
 + Added the ability to sort wishlists by review scores, which will display the highest rated items first
