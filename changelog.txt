@@ -1,5 +1,6 @@
 ﻿v9.4
 -----
++ Added the ability to create custom user-configurable profile links
 : Updated the visual style of app page elements to more closely match Valve's new style
 : Fixed a bug that caused some market items not to display features correctly in user's inventories
 : Fixed a bug that caused market sorting options to disappear when paginating

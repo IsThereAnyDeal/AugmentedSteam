@@ -2873,6 +2873,50 @@ function add_community_profile_links() {
 	});
 }
 
+function add_custom_profile_links() {
+	if ($("#reportAbuseModal").length > 0) { var steamID = document.getElementsByName("abuseID")[0].value; }
+	if (steamID === undefined && document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)) { var steamID = document.documentElement.outerHTML.match(/steamid"\:"(.+)","personaname/)[1]; }
+	storage.get(function(settings) {
+		if (settings.profile_custom === undefined) { settings.profile_custom = false; storage.set({'profile_custom': settings.profile_custom}); }
+		if (settings.profile_custom_url === undefined) { settings.profile_custom_url = ""; storage.set({'profile_custom_url': settings.profile_custom_url}); }
+		if (settings.profile_custom_icon === undefined) { settings.profile_custom_icon = false; storage.set({'profile_custom_icon': settings.profile_custom_icon}); }
+		if (settings.profile_custom_name === undefined) { settings.profile_custom_name = ""; storage.set({'profile_custom_name': settings.profile_custom_name}); }
+
+		if (settings.show_profile_link_images === undefined) { settings.show_profile_link_images = "gray"; storage.set({'show_profile_link_images': settings.show_profile_link_images}); }
+
+		var icon_type = "none";
+		if (settings.show_profile_link_images != "false") {
+			icon_type = (settings.show_profile_link_images == "color" ? "color" : "gray");
+		}
+
+		if (settings.profile_custom && settings.profile_custom_url && settings.profile_custom_icon && settings.profile_custom_name) {
+			if (!settings.profile_custom_url.includes("[ID]")) settings.profile_custom_url += "[ID]"
+			var name = settings.profile_custom_name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'),
+				link = protocol + "//" + settings.profile_custom_url.replace("[ID]", steamID).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'),
+				icon = protocol + "//" + settings.profile_custom_icon.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');			
+			var htmlstr = `
+				<div class="es_profile_link profile_count_link">
+					<a class="es_sites_icons es_none es_${ icon_type }" href="${ link }" target="_blank">
+						<span class="count_link_label">${ name }</span>`;
+						if (icon_type != "none") { htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${ icon });"></i>`; }
+					htmlstr += `</a>
+				</div>
+			`;
+
+			if ($(".profile_item_links").length) {
+				if ($("#es_permalink_div").length) {
+					$("#es_permalink_div").before(htmlstr + '<div style="clear: both;"></div>');
+				} else {
+					$(".profile_item_links").append(htmlstr + '<div style="clear: both;"></div>');
+				}
+			} else {
+				$(".profile_rightcol").append('<div class="profile_item_links">' + htmlstr + '</div>');
+				$(".profile_rightcol").after('<div style="clear: both;"></div>');
+			}
+		}
+	});
+}
+
 function add_wishlist_profile_link() {
 	if (!$("body.profile_page.private_profile").length) {
 		storage.get(function(settings) {
@@ -9157,6 +9201,7 @@ $(document).ready(function(){
 						case /^\/(?:id|profiles)\/.+/.test(path):
 							profileData.load();
 							add_community_profile_links();
+							add_custom_profile_links();
 							add_wishlist_profile_link();
 							add_supporter_badges();
 							add_twitch_info();
