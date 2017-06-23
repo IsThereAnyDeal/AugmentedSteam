@@ -1,5 +1,6 @@
 ﻿v9.5
 -----
+: Fixed a bug where package info buttons were malformed
 
 
 v9.4
