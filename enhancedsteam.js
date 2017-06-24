@@ -6494,7 +6494,7 @@ function show_regional_pricing(type) {
 }
 
 function add_help_button(appid) {
-	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/#HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
+	$(".game_area_play_stats .already_owned_actions").after("<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + appid + "'><span>" + localized_strings.get_help + "</span></a></div>");
 }
 
 function add_chinese_name() {
