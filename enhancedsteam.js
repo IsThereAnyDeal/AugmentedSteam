@@ -1375,6 +1375,8 @@ function add_wishlist_sorts() {
 		sorted = getCookie("wishlist_sort2") || "rank",
 		linksHtml = "";
 
+	updateRankMode(sorted);
+
 	// Build dropdown links HTML
 	$("#wishlist_sort_options").children("a, span").hide().each(function(i, link){
 		linksHtml += '<a class="es_wl_sort popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
@@ -1469,6 +1471,7 @@ function add_wishlist_sorts() {
 					});
 					break;
 			}
+			updateRankMode(sort_by);
 
 			// Change text of dropdown button to reflect current selection
 			$("#es_sort_active").text($(this).text());
@@ -1509,6 +1512,26 @@ function add_wishlist_sorts() {
 
 			$("a.es_wl_sort").removeClass("active");
 			$("a.by_" + cookieVal).addClass("active");
+		}
+	}
+
+	function updateRankMode(sort_by) {
+		if (sort_by == "rank") {
+			runInPageContext(function() {
+				g_bRankMode = true;
+				Sortable.create($('wishlist_items'), {tag: 'div', scroll: window, onUpdate: UpdateWishlistOrdering, starteffect: function(e) {e.addClassName("inDrag")}, endeffect: function(e) {e.removeClassName("inDrag")}});
+				jQuery(".wishlistRow").each(function() {
+					Event.observe(this, "mousedown", BlurRanks);
+				}).addClass("sortableRow");
+			});
+		} else {
+			runInPageContext(function() {
+				g_bRankMode = false;
+				Sortable.destroy($('wishlist_items'));
+				jQuery(".wishlistRow").each(function() {
+					Event.stopObserving(this, "mousedown");
+				}).removeClass("sortableRow");
+			});
 		}
 	}
 }
