@@ -6975,6 +6975,7 @@ function start_friend_activity_highlights() {
 						add_achievement_comparison_link($(node).parent(), appid);
 					}
 				}
+				highlight_notinterested(node);
 			}
 		});
 	});
@@ -7326,7 +7327,7 @@ function add_app_page_wishlist_changes(appid) {
 			}
 		});
 
-		$("#add_to_wishlist_area").on("click", function(){
+		$("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore").on("click", function(){
 			// Clear dynamicstore cache
 			chrome.storage.local.remove("dynamicstore");
 		});
