@@ -1805,7 +1805,11 @@ function add_wishlist_pricehistory() {
 
 							// "Number of times this game has been in a bundle"
 							if (data["bundles"]["count"] > 0) {
-								line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundle_history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"];
+								var bundles_url = data["urls"]["bundle_history"];
+								if (typeof bundles_url === "string" && bundles_url.length > 0) {
+									line3 += ' (<a href="' + escapeHTML(bundles_url) + '" target="_blank">' + localized_strings.info + '</a>)';
+								}
 							}
 
 							if (line1 && line2) {
@@ -2577,7 +2581,11 @@ function show_pricing_history(appid, type) {
 
 								// "Number of times this game has been in a bundle"
 								if (data["bundles"]["count"] > 0) {
-									line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundles"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+									line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"];
+									var bundles_url = data["urls"]["bundle_history"];
+									if (typeof bundles_url === "string" && bundles_url.length > 0) {
+										line3 += ' (<a href="' + escapeHTML(bundles_url) + '" target="_blank">' + localized_strings.info + '</a>)';
+									}
 								}
 
 								if (line1 && line2) {
