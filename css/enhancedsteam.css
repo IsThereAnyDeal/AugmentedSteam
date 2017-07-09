@@ -2068,16 +2068,50 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_community_profile_links()
  **************************************/
 #es_permalink {
-	padding: 2px 3px;
-	margin: 8px 0px 0px 6px;
+	width: 175px;
+	padding: 2px 1px 1px 1px;
+	border-radius: 0;
 	direction: rtl;
-	box-shadow: rgb(0, 0, 0) 0px 0px 1px 1px inset,
-				rgba(193, 193, 193, 0.168627) 0px 0px 0px 1px;
+	box-shadow: rgb(0, 0, 0) 0 0 1px 1px inset;
 }
 #es_permalink_div .count_link_label {
+	margin-top: 10px;
+	float: left;
 	color: #EBEBEB;
 }
-
+.es_copy_wrap {
+	float: left;
+	overflow: hidden;
+	border-radius: 3px;
+	margin: 8px -4px 0 6px;
+	box-shadow: rgba(193, 193, 193, 0.168627) 0 0 0 1px;
+}
+#es_permalink_copy {
+	border: 0;
+	float: right;
+	border-radius: 0;
+	cursor: pointer;
+	padding: 1px 4px;
+	border-left: 1px solid #313131;
+	background: linear-gradient(to bottom, #333333 5%, #222222 95%);
+}
+#es_permalink_copy img {
+	width: 14px;
+	padding: 1px 0 2px 0;
+	vertical-align: middle;
+	filter: invert(55%);
+}
+#es_permalink_copy:hover {
+	background: linear-gradient(to bottom, #444444 5%, #333333 95%);
+}
+#es_permalink_copy:hover img {
+	filter: invert(75%);
+}
+@media screen and (max-width: 910px) {
+	#es_permalink {
+		width: 67px;
+	}
+}
 /***************************************
  * Apps Store pages
  * add_metacritic_userscore()

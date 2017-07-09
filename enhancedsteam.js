@@ -2852,7 +2852,10 @@ function add_community_profile_links() {
 			htmlstr += `
 				<div id="es_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${ localized_strings.permalink }</span>
-					<input id="es_permalink" type="text" value="http://steamcommunity.com/profiles/${ steamID }" readonly />
+					<div class="es_copy_wrap">
+						<input id="es_permalink" type="text" value="http://steamcommunity.com/profiles/${ steamID }" readonly />
+						<button id="es_permalink_copy"><img src="${ chrome.extension.getURL(`img/clippy.svg`) }" /></button>
+					</div>
 				</div>
 			`;
 		}
@@ -2869,6 +2872,11 @@ function add_community_profile_links() {
 
 		$("#es_permalink").on("click", function(){
 			$(this).select();
+		});
+
+		$("#es_permalink_copy").on("click", function(){
+			$("#es_permalink").select();
+			document.execCommand('copy');
 		});
 	});
 }
