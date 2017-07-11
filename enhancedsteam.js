@@ -4274,8 +4274,8 @@ function add_steam_client_link(appid) {
 // Add link to Steam Card Exchange
 function add_steamcardexchange_link(appid){
 	storage.get(function(settings) {
-		if (settings.steamcardexchange === undefined ){ settings.steamcardexchange = false; storage.set({'steamcardexchange': settings.steamcardexchange}); }
-		if (settings.steamcardexchange) {
+		if (settings.showsteamcardexchange === undefined ){ settings.showsteamcardexchange = false; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
+		if (settings.showsteamcardexchange) {
 			if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
 				$("#ReportAppBtn").parent().prepend('<a class="btnv6_blue_hoverfade btn_medium cardexchange_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/steamcardexchange.png") + ')"></i>&nbsp;&nbsp; ' + localized_strings.view_in + ' Steam Card Exchange</span></a>');
 			}
