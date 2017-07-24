@@ -8713,7 +8713,7 @@ function groups_leave_options() {
 					$(row).animate({opacity: '1'}, 500);
 					$(el).hide('fast', function(){
 						$(el).parent().find('.es-links-wrap').show('fast');
-						$(row).removeClass('es-inaction');
+						$(row).removeClass('es-inaction es-group-left');
 					});
 				});
 			}
@@ -8721,58 +8721,50 @@ function groups_leave_options() {
 
 		// Leave group(s)
 		function leave_group(elSelector) {
-			// Look for the first checkbox relative to the document...
-			var el = $('.es-leave-group.es-select-checkbox:visible:checked').first();
-			// ...unless an element was defined in which case look for a checkbox relative to it
-			if (elSelector !== undefined) {
-				el = $(elSelector).parent().find('.es-leave-group.es-select-checkbox:visible');
-			}
+			var row = (elSelector === undefined ? $('div.es-row-selected').not('.es-inaction').first() : $(elSelector).closest('div.groupBlock').not('.es-inaction'));
 
 			// Check if there is any group selected
-			if ($(el).length > 0 && !$(el).hasClass('es-group-skipped')) {
-				var row	= $(el).closest('.groupBlock');
-				// Make sure it wasn't acted upon already
-				if (!$(row).hasClass('es-inaction')) {
-					var idRegex		= /javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/,
-						links		= $(el).closest('.es-links-wrap').find('.linkStandard'),
-						leaveLink	= $(links).last().attr('href'),
-						groupData	= idRegex.exec(leaveLink);
-						joinGroupEl	= $(el).parent().parent().find('.es-rejoin-group');
+			if ($(row).length && !$(row).hasClass('es-group-skipped')) {
+				var links		= $(row).find('.es-links-wrap .linkStandard'),
+					checkBox	= $(row).find('.es-links-wrap .es-select-checkbox'),
+					leaveLink	= $(links).last().attr('href'),
+					groupData	= leaveLink.match(/javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/),
+					joinGroupEl	= $(row).find('.es-rejoin-group')[0] || $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
 
-					var joinGroupEl = joinGroupEl.length ? joinGroupEl : $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
+				$(row).addClass('es-inaction');
 
-					$(row).addClass('es-inaction');
-
-					// If the user is Admin in this group confirmation before leaving is needed
-					if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
-						$.ajax({method: 'POST',
-								url: profile_url + 'home_process',
-								data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
-								beforeSend: function(){ $(row).addClass('es-progress'); }
-						}).done(function() {
-							$(row).addClass('es-complete').animate({opacity: '.30'}, 500, function(){
-								$(row).removeClass('es-inaction es-progress es-complete');
-							});
-							$(el).parent().hide('fast', function(){
-								$(joinGroupEl).show('fast');
-								$(el).prop('checked', false).trigger('change');
-							});
-
-							leave_group(elSelector);
-						}).fail(function() {
-							$('.es-leave-all').prop('disabled', false);
+				// If the user is an Admin in this group confirmation before leaving is needed
+				if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
+					$.ajax({
+						method: 'POST',
+						url: profile_url + 'home_process',
+						data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
+						beforeSend: function(){ $(row).addClass('es-progress'); }
+					}).done(function(){
+						$(row).addClass('es-complete es-group-left').animate({opacity: '.30'}, 500, function(){
 							$(row).removeClass('es-inaction es-progress es-complete');
-							alert( localized_strings.wrong_try_again );
 						});
-					} else {
-						$(el).addClass('es-group-skipped').prop('checked', false).trigger('change');
-						$(row).removeClass('es-inaction es-progress es-complete');
+						$(row).find('.es-links-wrap').hide('fast', function(){
+							$(joinGroupEl).show('fast');
+							$(checkBox).prop('checked', false).trigger('change');
+						});
+
 						leave_group(elSelector);
-					}
+					}).fail(function(){
+						$('.es-leave-all').prop('disabled', false);
+						$(row).removeClass('es-inaction es-progress es-complete');
+						
+						alert( localized_strings.wrong_try_again );
+					});
+				} else {
+					$(row).addClass('es-group-skipped').removeClass('es-inaction es-progress es-complete');
+					$(checkBox).prop('checked', false).trigger('change');
+					
+					leave_group(elSelector);
 				}
 			} else {
 				$('.es-leave-all').prop('disabled', false);
-				$('.es-group-skipped.es-select-checkbox:visible').removeClass('es-group-skipped');
+				$('div.es-group-skipped').removeClass('es-group-skipped');
 			}
 		}
 	}
