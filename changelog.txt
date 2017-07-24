@@ -1,6 +1,11 @@
 ﻿v9.5
 -----
++ Added price history support for Dreamgame store
 : Fixed a bug where package info buttons were malformed
+: Fixed a bug that caused the "Get Help" buttons not to direct users to the correct support website
+: Fixed a bug that caused "Not Interested" highlighting not to work correctly on activity pages
+: Fixed a bug that caused Twitch streaming info not to display on profiles without a showcase activated
+
 
 
 v9.4
