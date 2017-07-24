@@ -8631,7 +8631,7 @@ function add_review_toggle_button() {
 		$("#es_review_section").hide();
 	}
 
-	$("#es_review_toggle").on("click", function() {
+	$(document).on("click", "#es_review_toggle", function() {
 		if (getValue("show_review_section") == true) {
 			$("#es_review_toggle").find("span").text("▲");
 			$("#es_review_section").slideDown();
