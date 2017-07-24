@@ -1734,7 +1734,8 @@ function add_wishlist_pricehistory() {
 				"silagames": true,
 				"itchio": true,
 				"gamejolt": true,
-				"paradox": true
+				"paradox": true,
+				"dreamgame": true
 			};
 			storage.set({'stores': settings.stores});
 		}
@@ -2487,7 +2488,8 @@ function show_pricing_history(appid, type) {
 				"silagames": true,
 				"itchio": true,
 				"gamejolt": true,
-				"paradox": true
+				"paradox": true,
+				"dreamgame": true
 			};
 			storage.set({'stores': settings.stores});
 		}
