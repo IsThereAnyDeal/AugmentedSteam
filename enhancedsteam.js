@@ -7186,7 +7186,7 @@ function highlight_market_items() {
 				}
 
 				$.each($(".market_listing_row_link"), function(i, node) {
-					var current_market_name = (node.href.match(/market\/listings\/753\/(.+)(\?)?/) || [])[1];
+					var current_market_name = (node.href.match(/market\/listings\/753\/(.+?)(\?|$)/) || [])[1];
 
 					if (current_market_name && steamInvNamesList.hasOwnProperty(decodeURIComponent(current_market_name))) {
 						highlight_owned($(node).find("div").first()[0]);
