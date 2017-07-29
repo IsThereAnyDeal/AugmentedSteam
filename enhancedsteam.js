@@ -6310,6 +6310,8 @@ function media_slider_expander(in_store) {
 						});
 					}
 				}
+
+				runInPageContext(function(){ BindStoreTooltip($J('[data-store-tooltip]')); });
 			}
 		}
 
