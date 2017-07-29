@@ -4762,15 +4762,25 @@ function add_sold_amount(appid) {
 		market_hash_name = (link.match(/\/\d+\/(.+)$/) || [])[1];
 
 
-	get_http(protocol + "//steamcommunity.com/market/priceoverview/?appid=" + appid + "&country=" + cc + "&currency=" + currency + "&market_hash_name=" + market_hash_name, function(json) {
+	get_http(`${ protocol }//steamcommunity.com/market/priceoverview/?appid=${ appid }&country=${ cc }&currency=${ currency }&market_hash_name=${ market_hash_name }`, function(json) {
 		var data = JSON.parse(json);
 
 		if (data["success"]) {
-			$(".market_commodity_orders_header:first, .jqplot-title:first, .market_section_title:first").append(`
+			var  soldHtml = `
 				<div class="es_sold_amount">
 					${ localized_strings.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote"> ${ data[`volume`] || 0 } </span>`) }
 				</div>
-			`);
+			`;
+
+			$(".market_commodity_orders_header:first, .jqplot-title:first, .market_section_title:first").append(soldHtml);
+
+			setMutationHandler(document, ".jqplot-event-canvas", function(){
+				if (!$("#pricehistory").find(".es_sold_amount").length) {
+					$('.jqplot-title:first').append(soldHtml);
+				}
+
+				return true;
+			});
 		}
 	});
 }
