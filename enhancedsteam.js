@@ -4766,7 +4766,7 @@ function add_sold_amount(appid) {
 		var data = JSON.parse(json);
 
 		if (data["success"]) {
-			var  soldHtml = `
+			var soldHtml = `
 				<div class="es_sold_amount">
 					${ localized_strings.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote"> ${ data[`volume`] || 0 } </span>`) }
 				</div>
