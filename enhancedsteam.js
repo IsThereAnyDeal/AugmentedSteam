@@ -1375,6 +1375,8 @@ function add_wishlist_sorts() {
 		sorted = getCookie("wishlist_sort2") || "rank",
 		linksHtml = "";
 
+	updateRankMode(sorted);
+
 	// Build dropdown links HTML
 	$("#wishlist_sort_options").children("a, span").hide().each(function(i, link){
 		linksHtml += '<a class="es_wl_sort popup_menu_item by_' + sorts[i] + '" data-sort-by="' + sorts[i] + '" href="?sort=' + sorts[i] + '">' + $(this).text().trim() + '</a>';
@@ -1469,6 +1471,7 @@ function add_wishlist_sorts() {
 					});
 					break;
 			}
+			updateRankMode(sort_by);
 
 			// Change text of dropdown button to reflect current selection
 			$("#es_sort_active").text($(this).text());
@@ -1509,6 +1512,26 @@ function add_wishlist_sorts() {
 
 			$("a.es_wl_sort").removeClass("active");
 			$("a.by_" + cookieVal).addClass("active");
+		}
+	}
+
+	function updateRankMode(sort_by) {
+		if (sort_by == "rank") {
+			runInPageContext(function() {
+				g_bRankMode = true;
+				Sortable.create($('wishlist_items'), {tag: 'div', scroll: window, onUpdate: UpdateWishlistOrdering, starteffect: function(e) {e.addClassName("inDrag")}, endeffect: function(e) {e.removeClassName("inDrag")}});
+				jQuery(".wishlistRow").each(function() {
+					Event.observe(this, "mousedown", BlurRanks);
+				}).addClass("sortableRow");
+			});
+		} else {
+			runInPageContext(function() {
+				g_bRankMode = false;
+				Sortable.destroy($('wishlist_items'));
+				jQuery(".wishlistRow").each(function() {
+					Event.stopObserving(this, "mousedown");
+				}).removeClass("sortableRow");
+			});
 		}
 	}
 }
@@ -1734,7 +1757,8 @@ function add_wishlist_pricehistory() {
 				"silagames": true,
 				"itchio": true,
 				"gamejolt": true,
-				"paradox": true
+				"paradox": true,
+				"dreamgame": true
 			};
 			storage.set({'stores': settings.stores});
 		}
@@ -1805,7 +1829,11 @@ function add_wishlist_pricehistory() {
 
 							// "Number of times this game has been in a bundle"
 							if (data["bundles"]["count"] > 0) {
-								line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundle_history"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+								line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"];
+								var bundles_url = data["urls"]["bundles"] || data["urls"]["bundle_history"];
+								if (typeof bundles_url === "string" && bundles_url.length > 0) {
+									line3 += ' (<a href="' + escapeHTML(bundles_url) + '" target="_blank">' + localized_strings.info + '</a>)';
+								}
 							}
 
 							if (line1 && line2) {
@@ -2487,7 +2515,8 @@ function show_pricing_history(appid, type) {
 				"silagames": true,
 				"itchio": true,
 				"gamejolt": true,
-				"paradox": true
+				"paradox": true,
+				"dreamgame": true
 			};
 			storage.set({'stores': settings.stores});
 		}
@@ -2577,7 +2606,11 @@ function show_pricing_history(appid, type) {
 
 								// "Number of times this game has been in a bundle"
 								if (data["bundles"]["count"] > 0) {
-									line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"] + ' (<a href="' + escapeHTML(data["urls"]["bundles"].toString()) + '" target="_blank">' + localized_strings.info + '</a>)';
+									line3 = "<br>" + localized_strings.bundle.bundle_count + ": " + data["bundles"]["count"];
+									var bundles_url = data["urls"]["bundles"] || data["urls"]["bundle_history"];
+									if (typeof bundles_url === "string" && bundles_url.length > 0) {
+										line3 += ' (<a href="' + escapeHTML(bundles_url) + '" target="_blank">' + localized_strings.info + '</a>)';
+									}
 								}
 
 								if (line1 && line2) {
@@ -2852,7 +2885,10 @@ function add_community_profile_links() {
 			htmlstr += `
 				<div id="es_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${ localized_strings.permalink }</span>
-					<input id="es_permalink" type="text" value="http://steamcommunity.com/profiles/${ steamID }" readonly />
+					<div class="es_copy_wrap">
+						<input id="es_permalink" type="text" value="http://steamcommunity.com/profiles/${ steamID }" readonly />
+						<button id="es_permalink_copy"><img src="${ chrome.extension.getURL(`img/clippy.svg`) }" /></button>
+					</div>
 				</div>
 			`;
 		}
@@ -2869,6 +2905,11 @@ function add_community_profile_links() {
 
 		$("#es_permalink").on("click", function(){
 			$(this).select();
+		});
+
+		$("#es_permalink_copy").on("click", function(){
+			$("#es_permalink").select();
+			document.execCommand('copy');
 		});
 	});
 }
@@ -4273,8 +4314,8 @@ function add_steam_client_link(appid) {
 // Add link to Steam Card Exchange
 function add_steamcardexchange_link(appid){
 	storage.get(function(settings) {
-		if (settings.steamcardexchange === undefined ){ settings.steamcardexchange = false; storage.set({'steamcardexchange': settings.steamcardexchange}); }
-		if (settings.steamcardexchange) {
+		if (settings.showsteamcardexchange === undefined ){ settings.showsteamcardexchange = false; storage.set({'showsteamcardexchange': settings.showsteamcardexchange}); }
+		if (settings.showsteamcardexchange) {
 			if ($(".icon").find('img[src$="/ico_cards.png"]').length > 0) {
 				$("#ReportAppBtn").parent().prepend('<a class="btnv6_blue_hoverfade btn_medium cardexchange_btn" target="_blank" href="http://www.steamcardexchange.net/index.php?gamepage-appid-' + appid + '" style="display: block; margin-bottom: 6px;"><span><i class="ico16" style="background-image:url(' + chrome.extension.getURL("img/steamcardexchange.png") + ')"></i>&nbsp;&nbsp; ' + localized_strings.view_in + ' Steam Card Exchange</span></a>');
 			}
@@ -6297,6 +6338,8 @@ function media_slider_expander(in_store) {
 						});
 					}
 				}
+
+				runInPageContext(function(){ BindStoreTooltip($J('[data-store-tooltip]')); });
 			}
 		}
 
@@ -7173,7 +7216,7 @@ function highlight_market_items() {
 				}
 
 				$.each($(".market_listing_row_link"), function(i, node) {
-					var current_market_name = (node.href.match(/market\/listings\/753\/(.+)(\?)?/) || [])[1];
+					var current_market_name = (node.href.match(/market\/listings\/753\/(.+?)(\?|$)/) || [])[1];
 
 					if (current_market_name && steamInvNamesList.hasOwnProperty(decodeURIComponent(current_market_name))) {
 						highlight_owned($(node).find("div").first()[0]);
@@ -8659,7 +8702,7 @@ function add_review_toggle_button() {
 		$("#es_review_section").hide();
 	}
 
-	$("#es_review_toggle").on("click", function() {
+	$(document).on("click", "#es_review_toggle", function() {
 		if (getValue("show_review_section") == true) {
 			$("#es_review_toggle").find("span").text("▲");
 			$("#es_review_section").slideDown();
@@ -8739,7 +8782,7 @@ function groups_leave_options() {
 					$(row).animate({opacity: '1'}, 500);
 					$(el).hide('fast', function(){
 						$(el).parent().find('.es-links-wrap').show('fast');
-						$(row).removeClass('es-inaction');
+						$(row).removeClass('es-inaction es-group-left');
 					});
 				});
 			}
@@ -8747,58 +8790,50 @@ function groups_leave_options() {
 
 		// Leave group(s)
 		function leave_group(elSelector) {
-			// Look for the first checkbox relative to the document...
-			var el = $('.es-leave-group.es-select-checkbox:visible:checked').first();
-			// ...unless an element was defined in which case look for a checkbox relative to it
-			if (elSelector !== undefined) {
-				el = $(elSelector).parent().find('.es-leave-group.es-select-checkbox:visible');
-			}
+			var row = (elSelector === undefined ? $('div.es-row-selected').not('.es-inaction').first() : $(elSelector).closest('div.groupBlock').not('.es-inaction'));
 
 			// Check if there is any group selected
-			if ($(el).length > 0 && !$(el).hasClass('es-group-skipped')) {
-				var row	= $(el).closest('.groupBlock');
-				// Make sure it wasn't acted upon already
-				if (!$(row).hasClass('es-inaction')) {
-					var idRegex		= /javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/,
-						links		= $(el).closest('.es-links-wrap').find('.linkStandard'),
-						leaveLink	= $(links).last().attr('href'),
-						groupData	= idRegex.exec(leaveLink);
-						joinGroupEl	= $(el).parent().parent().find('.es-rejoin-group');
+			if ($(row).length && !$(row).hasClass('es-group-skipped')) {
+				var links		= $(row).find('.es-links-wrap .linkStandard'),
+					checkBox	= $(row).find('.es-links-wrap .es-select-checkbox'),
+					leaveLink	= $(links).last().attr('href'),
+					groupData	= leaveLink.match(/javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/),
+					joinGroupEl	= $(row).find('.es-rejoin-group')[0] || $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
 
-					var joinGroupEl = joinGroupEl.length ? joinGroupEl : $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
+				$(row).addClass('es-inaction');
 
-					$(row).addClass('es-inaction');
-
-					// If the user is Admin in this group confirmation before leaving is needed
-					if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
-						$.ajax({method: 'POST',
-								url: profile_url + 'home_process',
-								data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
-								beforeSend: function(){ $(row).addClass('es-progress'); }
-						}).done(function() {
-							$(row).addClass('es-complete').animate({opacity: '.30'}, 500, function(){
-								$(row).removeClass('es-inaction es-progress es-complete');
-							});
-							$(el).parent().hide('fast', function(){
-								$(joinGroupEl).show('fast');
-								$(el).prop('checked', false).trigger('change');
-							});
-
-							leave_group(elSelector);
-						}).fail(function() {
-							$('.es-leave-all').prop('disabled', false);
+				// If the user is an Admin in this group confirmation before leaving is needed
+				if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
+					$.ajax({
+						method: 'POST',
+						url: profile_url + 'home_process',
+						data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
+						beforeSend: function(){ $(row).addClass('es-progress'); }
+					}).done(function(){
+						$(row).addClass('es-complete es-group-left').animate({opacity: '.30'}, 500, function(){
 							$(row).removeClass('es-inaction es-progress es-complete');
-							alert( localized_strings.wrong_try_again );
 						});
-					} else {
-						$(el).addClass('es-group-skipped').prop('checked', false).trigger('change');
-						$(row).removeClass('es-inaction es-progress es-complete');
+						$(row).find('.es-links-wrap').hide('fast', function(){
+							$(joinGroupEl).show('fast');
+							$(checkBox).prop('checked', false).trigger('change');
+						});
+
 						leave_group(elSelector);
-					}
+					}).fail(function(){
+						$('.es-leave-all').prop('disabled', false);
+						$(row).removeClass('es-inaction es-progress es-complete');
+						
+						alert( localized_strings.wrong_try_again );
+					});
+				} else {
+					$(row).addClass('es-group-skipped').removeClass('es-inaction es-progress es-complete');
+					$(checkBox).prop('checked', false).trigger('change');
+					
+					leave_group(elSelector);
 				}
 			} else {
 				$('.es-leave-all').prop('disabled', false);
-				$('.es-group-skipped.es-select-checkbox:visible').removeClass('es-group-skipped');
+				$('div.es-group-skipped').removeClass('es-group-skipped');
 			}
 		}
 	}
