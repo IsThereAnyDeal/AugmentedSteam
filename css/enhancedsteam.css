@@ -1191,6 +1191,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .spotlight_img.es_early_access > a {
 	display: inherit;
 }
+.showcase_slot .es_overlay_container {
+	pointer-events: none !important;
+}
 
 /***************************************
  * App pages
