@@ -5,7 +5,7 @@
 : Fixed a bug that caused the "Get Help" buttons not to direct users to the correct support website
 : Fixed a bug that caused "Not Interested" highlighting not to work correctly on activity pages
 : Fixed a bug that caused Twitch streaming info not to display on profiles without a showcase activated
-
+- Removed market relisting function, as this is no longer supported by Valve
 
 
 v9.4
