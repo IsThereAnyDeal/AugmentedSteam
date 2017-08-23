@@ -6036,69 +6036,81 @@ function process_early_access() {
 }
 
 function init_hd_player() {
-	var addedHdOpts = false;
+	var playInHD = getValue("playback_hd");
 
-	// Initiate the HD options only when "Autoplay" is active or when selecting a video
-	if (getCookie("bGameHighlightAutoplayDisabled") === "false") {
-		add_hd_options();
-	} else {
-		$("video.highlight_movie").on("loadedmetadata", function(){
+	// Initiate the HD options
+	$("div.highlight_movie").each(function(i, node) {
+		setMutationHandler(node, "video.highlight_movie", function(nodes) {
+			playInHD = getValue("playback_hd");
+
 			setTimeout(function(){ // prevents a bug in Chrome which causes videos to stop playing after changing the src
-				add_hd_options();
-			}, 150);
+				// Add "HD" button and "sd-src" to the video and set definition
+				var videoControl = $(nodes)[0];
 
-			$("video.highlight_movie").off("loadedmetadata");
-		});
-	}
-
-	function add_hd_options() {
-		if (!addedHdOpts) {
-			addedHdOpts = true;
-
-			var playInHD = getValue("playback_hd");
-
-			// Add "HD" button and "sd-src" to all videos and set definition
-			$("video.highlight_movie").each(function(i, videoControl){
 				if ($(videoControl).data("hd-src")) {
 					$(videoControl).data("sd-src", videoControl.src);
 					$(videoControl).parent().find(".time").after('<div class="es_hd_toggle"><span>HD</span></div>');
 				}
 
+				// Override Valve's auto switch to HD when putting a video in fullscreen
+				$(videoControl).parent().find(".fullscreen_button").replaceWith( $(`<div class="fullscreen_button"></div>`).on("click", function(){ toggleFullscreen(videoControl) }) );
+
 				toggle_video_definition( videoControl, playInHD );
+			}, 150);
+
+			this.disconnect();
+		});
+	});
+
+	// When the "HD" button is clicked change the definition for all videos accordingly
+	$(document).on("click", ".es_hd_toggle", function(){
+		var videoControl = $(this).closest("div.highlight_movie").find("video")[0],
+			playInHD = toggle_video_definition( videoControl );
+
+		$("video.highlight_movie").not(videoControl).each(function(){
+			toggle_video_definition( $(this)[0], playInHD );
+		});
+
+		setValue("playback_hd", playInHD);
+	});
+
+	// When the slider is expanded first time after the page was loaded set videos definition to HD
+	$(document).one("click", ".es_slider_toggle", function(){
+		if ($(this).hasClass("es_expanded")) {
+			$("video.highlight_movie.es_video_sd").each(function(){
+				toggle_video_definition( $(this)[0], true );
 			});
 
-			// When the "HD" button is clicked change the definition for all videos accordingly
-			$(document).on("click", ".es_hd_toggle", function(){
-				var videoControl = $(this).closest("div.highlight_movie").find("video")[0],
-					playInHD = toggle_video_definition( videoControl );
+			setValue("playback_hd", true);
+		}
+	});
 
-				$("video.highlight_movie").not(videoControl).each(function(){
-					toggle_video_definition( $(this)[0], playInHD );
-				});
+	function toggleFullscreen(videoControl) {
+		var eleContainer = videoControl.parentNode;
+		var isFullscreen = document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen || videoControl.fullscreenElement || document.msFullscreenElement;
 
-				setValue("playback_hd", playInHD);
-			});
-
-			// When the slider is expanded first time after the page was loaded set videos definition to HD
-			$(document).one("click", ".es_slider_toggle", function(){
-				if ($(this).hasClass("es_expanded")) {
-					$("video.highlight_movie.es_video_sd").each(function(){
-						toggle_video_definition( $(this)[0], true );
-					});
-
-					setValue("playback_hd", true);
-				}
-			});
-
-			// When fullscreen button is pressed first time the definition is set to HD
-			// so we set the definition indicator to HD also, but don't save the setting
-			$(".fullscreen_button").on("click", function(){
-				var $videoCntr = $(this).closest("div.highlight_movie");
-
-				$videoCntr.removeClass("es_playback_sd").addClass("es_playback_hd");
-				$videoCntr.find("video.highlight_movie").removeClass("es_video_sd").addClass("es_video_hd");
-				$(this).off("click");
-			});
+		if( !isFullscreen ) {
+			if( eleContainer.requestFullscreen )
+				eleContainer.requestFullscreen();
+			else if( eleContainer.webkitRequestFullScreen )
+				eleContainer.webkitRequestFullScreen();
+			else if( eleContainer.mozRequestFullScreen )
+				eleContainer.mozRequestFullScreen();
+			else if ( videoControl.webkitSupportsFullscreen )
+				videoControl.webkitEnterFullscreen();
+			else if ( eleContainer.msRequestFullscreen )
+				eleContainer.msRequestFullscreen();
+		} else {
+			if( document.cancelFullscreen )
+				document.cancelFullscreen();
+			else if( document.webkitCancelFullScreen )
+				document.webkitCancelFullScreen();
+			else if( document.mozCancelFullScreen )
+				document.mozCancelFullScreen();
+			else if ( videoControl.webkitExitFullscreen )
+				videoControl.webkitExitFullscreen();
+			else if ( document.msExitFullscreen )
+				document.msExitFullscreen();
 		}
 	}
 
