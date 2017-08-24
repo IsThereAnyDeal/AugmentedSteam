@@ -2552,14 +2552,15 @@ function show_pricing_history(appid, type) {
 						var currency_type = price_data[".meta"]["currency"];
 						$.each(price_data, function(key, data) {
 							if (key != ".cached" && key != ".meta" && data) {
+								var subid = key.replace(/(bundle|sub|app)\//i, "");
+								
 								if (bundleid != "") {
-									var subid = key.replace("bundle/", "");
 									var node = $(".game_area_purchase_game:first");
 								} else {
-									var subid = key.replace("sub/", "");
-									var node = $("input[name=subid][value=" + subid + "]").parent().parent();
-								}								
-								var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;								
+									var node = $("input[name='subid'][value='" + subid + "']").parent().parent();
+								}
+
+								var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
 
 								// "Lowest Price"
 								if (data["price"]) {
