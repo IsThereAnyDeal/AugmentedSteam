@@ -1750,7 +1750,6 @@ function add_wishlist_pricehistory() {
 				"fireflower": true,
 				"humblewidgets": true,
 				"newegg": true,
-				"coinplay": true,
 				"wingamestore": true,
 				"macgamestore": true,
 				"gamebillet": true,
@@ -1758,7 +1757,9 @@ function add_wishlist_pricehistory() {
 				"itchio": true,
 				"gamejolt": true,
 				"paradox": true,
-				"dreamgame": true
+				"dreamgame": true,
+				"chrono": true,
+				"savemi": true
 			};
 			storage.set({'stores': settings.stores});
 		}
@@ -2508,7 +2509,6 @@ function show_pricing_history(appid, type) {
 				"fireflower": true,
 				"humblewidgets": true,
 				"newegg": true,
-				"coinplay": true,
 				"wingamestore": true,
 				"macgamestore": true,
 				"gamebillet": true,
@@ -2516,7 +2516,9 @@ function show_pricing_history(appid, type) {
 				"itchio": true,
 				"gamejolt": true,
 				"paradox": true,
-				"dreamgame": true
+				"dreamgame": true,
+				"chrono": true,
+				"savemi": true
 			};
 			storage.set({'stores': settings.stores});
 		}

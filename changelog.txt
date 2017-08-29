@@ -2,7 +2,7 @@
 -----
 + Added the amount of items sold in the last 24 hours to the market listing pages
 + Added a store page link to badge progress pages
-+ Added price history support for Dreamgame store
++ Added price history support for Chrono.gg, Dreamgame, and Savemi stores
 : Fixed a bug which caused some users "Sell" buttons to disappear when selecting items in inventory
 : Fixed a bug that caused video resolution selection feature to be hidden
 : Fixed a bug where package info buttons were malformed
@@ -10,6 +10,7 @@
 : Fixed a bug that caused "Not Interested" highlighting not to work correctly on activity pages
 : Fixed a bug that caused Twitch streaming info not to display on profiles without a showcase activated
 - Removed market relisting function, as this is no longer supported by Valve
+- Removed support for Coinplay.io in price comparisons 
 
 
 v9.4

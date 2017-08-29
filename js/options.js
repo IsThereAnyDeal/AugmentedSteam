@@ -69,7 +69,6 @@ var settings_defaults = {
 		"fireflower": true,
 		"humblewidgets": true,
 		"newegg": true,
-		"coinplay": true,
 		"wingamestore": true,
 		"macgamestore": true,
 		"gamebillet": true,
@@ -77,7 +76,9 @@ var settings_defaults = {
 		"itchio": true,
 		"gamejolt": true,
 		"paradox": true,
-		"dreamgame": true
+		"dreamgame": true,
+		"chrono": true,
+		"savemi": true
 	},
 	"override_price": "auto",
 	"showregionalprice": "mouse",
