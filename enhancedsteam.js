@@ -747,7 +747,7 @@ var profileData = (function() {
 })();
 
 function get_appid(t) {
-	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/)) return RegExp.$1;
+	if (t && t.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/)) return RegExp.$2;
 	else return null;
 }
 
@@ -4164,11 +4164,10 @@ function add_profile_style() {
 	}
 }
 
-function add_background_preview_link() {
-	if (is_signed_in) {
-		var isSteamPage = /\/market\/listings\/753\//.test(window.location.pathname);
+function add_background_preview_link(appid) {
+	if (appid == 753) {
 		var $viewFullLink = $("#largeiteminfo_item_actions").find("a").first();
-		if (isSteamPage && $viewFullLink.length) {
+		if ($viewFullLink.length) {
 			var bgLink = $viewFullLink[0].href.match(/images\/items\/(\d+)\/([a-z0-9\.]+)/i);
 			if (bgLink) {
 				$viewFullLink.after('<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="' + profile_url + "#previewBackground/" + bgLink[1] + "/" + bgLink[2] + '"><span>' + localized_strings.preview_background + '</span></a>');
@@ -4797,16 +4796,45 @@ function add_lowest_market_price() {
 	}
 }
 
-function add_badge_page_link() {
-	var badgeAppID = (document.URL.match("(?:\/753\/)([0-9]+)(?=-)") || [])[1];
+function add_sold_amount(appid) {
+	var cc = getStoreRegionCountryCode(),
+		currency = currency_type_to_number(user_currency);
 
-	if (badgeAppID) {
+	var link = $(".market_listing_nav a").last().attr("href"),
+		market_hash_name = (link.match(/\/\d+\/(.+)$/) || [])[1];
+
+
+	get_http(`${ protocol }//steamcommunity.com/market/priceoverview/?appid=${ appid }&country=${ cc }&currency=${ currency }&market_hash_name=${ market_hash_name }`, function(json) {
+		var data = JSON.parse(json);
+
+		if (data["success"]) {
+			var soldHtml = `
+				<div class="es_sold_amount">
+					${ localized_strings.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote"> ${ data[`volume`] || 0 } </span>`) }
+				</div>
+			`;
+
+			$(".market_commodity_orders_header:first, .jqplot-title:first, .market_section_title:first").append(soldHtml);
+
+			setMutationHandler(document, ".jqplot-event-canvas", function(){
+				if (!$("#pricehistory").find(".es_sold_amount").length) {
+					$('.jqplot-title:first').append(soldHtml);
+				}
+
+				return true;
+			});
+		}
+	});
+}
+
+function add_badge_page_link(appid) {
+	if (appid == 753) {
 		var cardType = document.URL.endsWith("%20%28Foil%29") ? "?border=1" : "";
 
 		$("div.market_listing_nav").append(`
-			<a class="btn_grey_grey btn_medium" href="` + protocol + `//steamcommunity.com/my/gamecards/${ badgeAppID + cardType }" style="float: right; margin-top: -10px;" target="_blank">
+			<a class="btn_grey_grey btn_medium" href="${ protocol }//steamcommunity.com/my/gamecards/${ appid + cardType }" style="float: right; margin-top: -10px;" target="_blank">
 				<span>
-					<img src="` + protocol + `//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0px;" width="24" height="16" border="0" align="top">
+					<img src="${ protocol }//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0px;" width="24" height="16" border="0" align="top">
 					${ localized_strings.view_badge }
 				</span>
 			</a>
@@ -5265,7 +5293,7 @@ function inventory_market_helper(response) {
 						html += localized_strings.starting_at + ': ' + dataLowest;
 						// Check if volume is stored in data
 						if (dataSold) {
-							html += '<br>' + localized_strings.last_24.replace("__sold__", dataSold);
+							html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", dataSold);
 						}
 					} else {
 						html += localized_strings.no_price_data;
@@ -5286,7 +5314,7 @@ function inventory_market_helper(response) {
 								html += localized_strings.starting_at + ': ' + data.lowest_price;
 								if (data.volume) { 
 									$(thisItem).data("sold-volume", data.volume);
-									html += '<br>' + localized_strings.last_24.replace("__sold__", data.volume);
+									html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", data.volume);
 								}
 							} else {
 								html += localized_strings.no_price_data;
@@ -5322,7 +5350,7 @@ function inventory_market_helper(response) {
 					html += localized_strings.starting_at + ': ' + dataLowest;
 					// Check if volume is stored in data
 					if (dataSold) {
-						html += '<br>' + localized_strings.last_24.replace("__sold__", dataSold);
+						html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", dataSold);
 					}
 				} else {
 					html += localized_strings.no_price_data;
@@ -5343,7 +5371,7 @@ function inventory_market_helper(response) {
 							html += localized_strings.starting_at + ': ' + data.lowest_price;
 							if (data.volume) { 
 								$(thisItem).data("sold-volume", data.volume);
-								html += '<br>' + localized_strings.last_24.replace("__sold__", data.volume);
+								html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", data.volume);
 							}
 						} else {
 							html += localized_strings.no_price_data;
@@ -9132,6 +9160,12 @@ $(document).ready(function(){
 							hide_spam_comments();
 							break;
 
+						case /^\/market\/listings\/.*/.test(path):
+							var appid = get_appid(window.location.host + path);
+							add_sold_amount(appid);
+							add_badge_page_link(appid);
+							add_background_preview_link(appid);
+
 						case /^\/market\/.*/.test(path):
 							load_inventory().done(function() {
 								highlight_market_items();
@@ -9142,9 +9176,7 @@ $(document).ready(function(){
 							minimize_active_listings();
 							add_lowest_market_price();
 							keep_ssa_checked();
-							add_background_preview_link();
 							add_market_sort();
-							add_badge_page_link();
 							market_popular_refresh_toggle();
 							break;
 

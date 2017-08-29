@@ -2366,3 +2366,34 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_steamrep .donate a {
 	color: #0F67A1;
 }
+
+/***************************************
+ * Market listings pages
+ * add_sold_amount()
+ **************************************/
+#market_commodity_orders_header {
+	position: relative;
+}
+.market_commodity_orders_header .es_sold_amount {
+	position: absolute;
+	top: 36px;
+	right: 0;
+	left: 0;
+}
+.market_section_title .es_sold_amount {
+	font-size: 16px !important;
+}
+.jqplot-title .es_sold_amount,
+.market_section_title .es_sold_amount {
+	z-index: 999;
+	position: relative;
+	display: inline-block !important;
+}
+.jqplot-title .es_sold_amount:before,
+.market_section_title .es_sold_amount:before {
+	content: "(";
+}
+.jqplot-title .es_sold_amount:after,
+.market_section_title .es_sold_amount:after {
+	content: ")";
+}
