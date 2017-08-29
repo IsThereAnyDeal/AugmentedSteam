@@ -3,6 +3,7 @@
 + Added the amount of items sold in the last 24 hours to the market listing pages
 + Added a store page link to badge progress pages
 + Added price history support for Dreamgame store
+: Fixed a bug that caused video resolution selection feature to be hidden
 : Fixed a bug where package info buttons were malformed
 : Fixed a bug that caused the "Get Help" buttons not to direct users to the correct support website
 : Fixed a bug that caused "Not Interested" highlighting not to work correctly on activity pages
