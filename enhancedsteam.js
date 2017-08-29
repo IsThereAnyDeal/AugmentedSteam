@@ -8311,8 +8311,17 @@ function add_badge_completion_cost() {
 	}
 }
 
-function add_trade_forum_link(appid) {
-	$(".gamecards_inventorylink").append('<a class="es_visit_tforum btn_grey_grey btn_medium" style="float: right; margin-top: -10px;" href="' + protocol + '//steamcommunity.com/app/' + appid + '/tradingforum/" ><span>' + localized_strings.visit_trade_forum + '</span></a>');	
+function add_store_trade_forum_link(appid) {
+	$(".gamecards_inventorylink").append(`
+		<div style="float: right; margin-top: -10px;">
+			<a class="es_visit_tforum btn_grey_grey btn_medium" href="${ protocol }//store.steampowered.com/app/${ appid }">
+				<span>${ localized_strings.visit_store }</span>
+			</a>
+			<a class="es_visit_tforum btn_grey_grey btn_medium" href="${ protocol }//steamcommunity.com/app/${ appid }/tradingforum/">
+				<span>${ localized_strings.visit_trade_forum }</span>
+			</a>
+		</div>
+	`);	
 }
 
 function add_total_drops_count() {
@@ -9112,7 +9121,7 @@ $(document).ready(function(){
 							add_cardexchange_links(gamecard);
 							add_gamecard_market_links(gamecard);
 							add_gamecard_foil_link();
-							add_trade_forum_link(gamecard);
+							add_store_trade_forum_link(gamecard);
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
