@@ -5195,9 +5195,9 @@ function inventory_market_helper(response) {
 				if (settings.quickinv) {
 					if (marketable && contextID == 6 && global_id == 753) {
 						// Restyle the existing "Sell" button
-						$sideMarketActs.find("a.item_market_action_button").removeClass().addClass("btn_small btn_green_white_innerfade es_market_btn").attr("id", "es_sell");
-						$("#es_sell").find("span.item_market_action_button_left, span.item_market_action_button_right, span.item_market_action_button_preload").hide();
-						$("#es_sell").find("span.item_market_action_button_contents").removeClass();
+						$sideMarketActs.find("a.item_market_action_button").removeClass().addClass("btn_small btn_green_white_innerfade es_market_btn").attr("id", "es_sell_" + item);
+						$("#es_sell_" + item).find("span.item_market_action_button_left, span.item_market_action_button_right, span.item_market_action_button_preload").hide();
+						$("#es_sell_" + item).find("span.item_market_action_button_contents").removeClass();
 
 						if (!$(thisItem).hasClass("es-loading")) {
 							var url = $sideMarketActs.find("a")[0].href;
