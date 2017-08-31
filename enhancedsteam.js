@@ -123,31 +123,32 @@ var profile_path = false;
 
 var signed_in_promise = (function () {
 	var deferred = new $.Deferred();
-	if ($("#global_actions").find(".playerAvatar").length > 0) {
-		profile_url = $("#global_actions").find(".playerAvatar")[0].href;
-		if (profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)) {
-			profile_path = profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/)[0];
-		}
 
-		if (profile_path) {
-			if (getValue("steamID")) {
-				is_signed_in = getValue("steamID");
-				deferred.resolve();
-			} else {
-				get_http(protocol + "//steamcommunity.com/profiles/0/", function(txt) {
-					if (txt.match(/g_steamID = "(\d+)";/)) {
-						is_signed_in = txt.match(/g_steamID = "(\d+)";/)[1];
-						setValue("steamID", is_signed_in);
-					}
-					deferred.resolve();
-				}, { xhrFields: {withCredentials: true} });
-			}
-		} else {
+	profile_url = $("#global_actions").find(".playerAvatar").prop("href");
+	profile_path = profile_url && (profile_url.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
+
+	if (profile_path) {
+		var user_login = getValue("user_login");
+
+		if (user_login && user_login.profile_path == profile_path) {
+			is_signed_in = user_login.steamID;
+			
 			deferred.resolve();
+		} else {
+			get_http("//steamcommunity.com/profiles/0/", function(txt) {
+				is_signed_in = (txt.match(/g_steamID = "(\d+)";/) || [])[1];
+
+				if (is_signed_in) {
+					setValue("user_login", {"steamID": is_signed_in, "profile_path": profile_path});
+				}
+
+				deferred.resolve();
+			}, { xhrFields: {withCredentials: true} });
 		}
 	} else {
 		deferred.resolve();
 	}
+
 	return deferred.promise();
 })();
 
