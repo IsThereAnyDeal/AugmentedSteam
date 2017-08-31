@@ -5425,9 +5425,10 @@ function keep_ssa_checked() {
 		if (settings.keepssachecked) {
 			$("#market_sell_dialog_accept_ssa").attr("checked", true);
 			$("#market_buynow_dialog_accept_ssa").attr("checked", true);
+			$("#accept_ssa").attr("checked", true);
 		}
 
-		$("#market_sell_dialog_accept_ssa, #market_buynow_dialog_accept_ssa").click(function() {
+		$("#market_sell_dialog_accept_ssa, #market_buynow_dialog_accept_ssa, #accept_ssa").click(function() {
 			if (settings.keepssachecked) {
 				settings.keepssachecked = false;
 			} else {
@@ -9016,6 +9017,11 @@ $(document).ready(function(){
 						case /^\/video\/.*/.test(path):
 							skip_got_steam();
 						break;
+
+						case /^\/account\/registerkey(\/.*)?/.test(path):
+							keep_ssa_checked();							
+							return;
+							break;
 						
 						case /^\/account(\/.*)?/.test(path):
 							account_total_spent();
