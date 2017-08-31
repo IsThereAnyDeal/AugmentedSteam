@@ -13,7 +13,6 @@
 - Removed market relisting function, as this is no longer supported by Valve
 - Removed support for Coinplay.io in price comparisons 
 
-
 v9.4
 -----
 + Added the ability to create custom user-configurable profile links
