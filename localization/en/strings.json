@@ -23,6 +23,7 @@
     "donate": "Donate",
     "close": "Close",
     "go": "Go",
+    "activate": "Activate a product",
     "coupon_application_note": "A coupon in your inventory will be applied automatically at checkout.",
     "hide": "Hide",
     "cards_owned": "__owned__ of __possible__ cards owned",

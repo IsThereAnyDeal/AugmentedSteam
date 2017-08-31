@@ -1,5 +1,6 @@
 ﻿v9.5
 -----
++ Added a link to logged-in users account dropdown to redeem keys from the Steam website
 + Added the amount of items sold in the last 24 hours to the market listing pages
 + Added a store page link to badge progress pages
 + Added price history support for Chrono.gg, Dreamgame, and Savemi stores

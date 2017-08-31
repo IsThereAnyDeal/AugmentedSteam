@@ -8860,6 +8860,10 @@ function disable_link_filter() {
 	}
 }
 
+function add_redeem_link() {
+	$("#account_dropdown").find(".popup_menu_item:last-child").before("<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>" + localized_strings.activate + "</a>");
+}
+
 // Fix Store's main menu dropdown not being hidden on mouse out
 function fix_menu_dropdown() {
 	runInPageContext(function(){
@@ -8908,6 +8912,7 @@ $(document).ready(function(){
 			process_early_access();
 			disable_link_filter();
 			if (is_signed_in) {
+				add_redeem_link();
 				replace_account_name();
 				launch_random_button();
 				add_itad_button();
