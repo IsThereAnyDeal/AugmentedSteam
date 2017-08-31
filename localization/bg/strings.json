@@ -23,6 +23,7 @@
   "donate":"Дарения",
   "close":"Затвори",
   "go":"Go",
+  "activate":"Activate a product",
   "coupon_application_note":"Купон от инвентара ви автоматично ще бъде приложен при плащане.",
   "hide":"Скрий",
   "cards_owned":"Притежавате __owned__ от __possible__ карти",
@@ -96,7 +97,8 @@
   "package_info":"Пакет информация",
   "badge_completion_avg":"Средна цена за завършване",
   "using_store":"Вие ползвате магазина на Steam в регион __current__.",
-  "last_24":"Обем: __sold__ продадени през последните 24 часа",
+  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
+  "sold_last_24":"__sold__ sold in the last 24 hours",
   "homepage_sidebar":"Странична лента",
   "drop_calc":"Щракнете тук за изчисляване на останалите падания",
   "price":"Цена",
@@ -206,7 +208,7 @@
   "search_market":"Търсене Steam обществен пазар",
   "drm_third_party_sub":"Внимание: Едно или повече заглавия в този пакет използват DRM от 3-ти страни",
   "customize":"Персонализиране",
-  "custom":"Custom",
+  "custom":"По избор",
   "bundle_saving_text":"Ако си купиш този пакет, спестяваш",
   "thewordoptions":"Опции",
   "concepts":"Концепции",
@@ -248,7 +250,7 @@
   "user_score":"Потребителски рейтинг",
   "user_reviews":"Мнения на потребителите",
   "review_summary":"__percent__ от __num__ мненията на потребителите за тази игра са положителни.",
-  "market_popular_items_toggle":"Toggle live updating for Popular Items",
+  "market_popular_items_toggle":"Превключване на актуализиране за популярни продукти",
   "achievements":{
     "option":"Показване на постиженията на страницата на магазина",
     "achievements":"Постижения",
@@ -273,7 +275,7 @@
     "peaktoday":"днешен връх"
   },
   "hltb":{
-    "title":"How Long to Beat",
+    "title":"Колко време отнема приключването й",
     "main_e":"Главна история и екстри",
     "compl":"Завършеност",
     "submit":"Въведете Вашето време",
@@ -311,8 +313,8 @@
     "profile_links":"Покажи профилни линкове към",
     "library_header":"Library (BETA)",
     "tag":"Тагове",
-    "icon":"Icon",
-    "name":"Name",
+    "icon":"Икона",
+    "name":"Име",
     "show_alternative_linux_icon":"Покажи алтернативна Linux иконка",
     "showcomparelinks":"Покажи линк \"Сравни\" за постижения на приятели",
     "hidetmsymbols":"Trademark и Copyright символи в имената на игрите",
@@ -505,8 +507,8 @@
     "certifications":"WSGF сертификати за широкоекранен дисплей"
   },
   "itad":{
-    "option":"Show menu option to sync data to IsThereAnyDeal.com",
-    "send_to_itad":"Send owned games to IsThereAnyDeal",
+    "option":"Покажи опцията за синхронизиране на данни с IsThereAnyDeal.com",
+    "send_to_itad":"Изпрати притежаваните игри в IsThereAnyDeal",
     "sending":"Зареждане на Вашите игри и пращане към IsThereAnyDeal.com"
   },
   "tradeoffer":{
