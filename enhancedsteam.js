@@ -3257,6 +3257,9 @@ function wishlist_add_ratings() {
 	}
 
 	function build_review(appid, scores, type) {
+		if (scores["t"] <= 0)
+			return;
+
 		var percent = ((Math.floor(100 * (scores["p"] / scores["t"])) / 100) * 100).toFixed(),
 			score = (percent >= 70 ? "positive" : (percent >= 40 ? "mixed" : "negative"));
 
