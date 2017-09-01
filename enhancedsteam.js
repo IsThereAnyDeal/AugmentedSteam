@@ -4832,10 +4832,11 @@ function add_sold_amount(appid) {
 
 function add_badge_page_link(appid) {
 	if (appid == 753) {
-		var cardType = document.URL.endsWith("%20%28Foil%29") ? "?border=1" : "";
+		var gameapp = window.location.href.match(/steamcommunity\.com\/market\/listings\/(\d+)\/(\d+)\/?/)[2];
+		var cardType = document.URL.endsWith("%20(Foil)") ? "?border=1" : "";
 
 		$("div.market_listing_nav").append(`
-			<a class="btn_grey_grey btn_medium" href="${ protocol }//steamcommunity.com/my/gamecards/${ appid + cardType }" style="float: right; margin-top: -10px;" target="_blank">
+			<a class="btn_grey_grey btn_medium" href="${ protocol }//steamcommunity.com/my/gamecards/${ gameapp + cardType }" style="float: right; margin-top: -10px;" target="_blank">
 				<span>
 					<img src="${ protocol }//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0px;" width="24" height="16" border="0" align="top">
 					${ localized_strings.view_badge }

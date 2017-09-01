@@ -1,5 +1,6 @@
 ﻿v9.6
 -----
+: Fixed a bug where badge links on market listings weren't linking to the correct page
 
 
 v9.5
