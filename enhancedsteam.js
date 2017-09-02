@@ -4833,13 +4833,13 @@ function add_sold_amount(appid) {
 	});
 }
 
-function add_badge_page_link(appid) {
-	if (appid == 753) {
-		var gameapp = window.location.href.match(/steamcommunity\.com\/market\/listings\/(\d+)\/(\d+)\/?/)[2];
-		var cardType = document.URL.endsWith("%20(Foil)") ? "?border=1" : "";
+function add_badge_page_link() {
+	var gameAppID = (document.URL.match("\/753\/([0-9]+)-") || [])[1],
+		cardType = document.URL.match("Foil(%20Trading%20Card)?%29") ? "?border=1" : "";
 
+	if (gameAppID && gameAppID != 753) {
 		$("div.market_listing_nav").append(`
-			<a class="btn_grey_grey btn_medium" href="${ protocol }//steamcommunity.com/my/gamecards/${ gameapp + cardType }" style="float: right; margin-top: -10px;" target="_blank">
+			<a class="btn_grey_grey btn_medium" href="${ protocol }//steamcommunity.com/my/gamecards/${ gameAppID + cardType }" style="float: right; margin-top: -10px;" target="_blank">
 				<span>
 					<img src="${ protocol }//store.akamai.steamstatic.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0px;" width="24" height="16" border="0" align="top">
 					${ localized_strings.view_badge }
@@ -9204,7 +9204,7 @@ $(document).ready(function(){
 						case /^\/market\/listings\/.*/.test(path):
 							var appid = get_appid(window.location.host + path);
 							add_sold_amount(appid);
-							add_badge_page_link(appid);
+							add_badge_page_link();
 							add_background_preview_link(appid);
 
 						case /^\/market\/.*/.test(path):
