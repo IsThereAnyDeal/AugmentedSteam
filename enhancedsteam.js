@@ -5897,12 +5897,12 @@ var ea_promise = (function() {
 	// Update cache in the background
 	if (last_updated < expire_time) {
 		// If no cache exists, pull the data from the website
-		get_http(protocol + "//api.enhancedsteam.com/early_access/", function(txt) {
-			early_access_data = JSON.parse(txt);
+		get_http(protocol + "//api.enhancedsteam.com/early_access/", function(early_access_data) {
 			setValue("ea_appids", early_access_data);
 			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
+
 			deferred.resolve(early_access_data);
-		}).fail(function(){
+		}, { dataType: "json"} ).fail(function(){
 			deferred.reject();
 		});
 	}
