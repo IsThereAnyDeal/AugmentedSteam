@@ -4659,30 +4659,6 @@ function add_market_sort() {
 	}
 }
 
-function collapse_game_list() {
-	if (window.location.pathname.match(/^\/market\/$/)) {
-		$("#browseItems .market_search_game_button_group").find("a").wrapAll("<div id='es_market_game_list'></div>");
-		$("#browseItems .market_search_sidebar_section_tip_small").append("<span style='float: right; margin-right: 11px; cursor: pointer;' id='es_market_game_toggle'>▲</span>");
-		
-		if (getValue("show_market_games_section")) {
-			$("#es_market_game_toggle").text("▼");
-			$("#es_market_game_list").hide();
-		}
-
-		$("#browseItems .market_search_sidebar_section_tip_small").on("click", function() {
-			if (getValue("show_market_games_section") == true) {
-				$("#es_market_game_toggle").text("▲");
-				$("#es_market_game_list").slideDown();
-				setValue("show_market_games_section", false);
-			} else {
-				$("#es_market_game_toggle").text("▼");
-				$("#es_market_game_list").slideUp();
-				setValue("show_market_games_section", true);
-			}
-		});
-	}
-}
-
 // Hide active listings on Market homepage
 function minimize_active_listings() {
 	storage.get(function(settings) {
@@ -9213,7 +9189,6 @@ $(document).ready(function(){
 								bind_ajax_content_highlighting();
 							});
 							add_market_total();
-							collapse_game_list();
 							minimize_active_listings();
 							add_lowest_market_price();
 							keep_ssa_checked();
