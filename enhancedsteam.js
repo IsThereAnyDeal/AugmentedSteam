@@ -5419,6 +5419,95 @@ function keep_ssa_checked() {
 	});
 }
 
+function activate_multiple_keys() {
+	var activateModalTemplate = `<form id="es_activate_modal">
+		<div id="es_activate_modal_content">
+			<div class="newmodal_prompt_with_textarea gray_bevel fullwidth" id="es_activate_input_text">
+				<textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
+			</div>
+			<div class="es_activate_buttons" style="float: right">
+				<button type="submit" class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
+					<span>` + localized_strings.activate_products + `</span>
+				</button>
+				<div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
+					<span>` + localized_strings.cancel + `</span>
+				</div>
+			</div>
+		</div>
+	</form>`;
+
+	// Show note input modal
+	$(document).on("click", "#es_activate_multiple", function(){
+		runInPageContext('function() { ShowDialog("' + localized_strings.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", $("#product_key").attr("value").replace(/\,/g, "\n")) + '\`); }');
+	});
+
+	// Insert the "activate multiple products" button
+	$("#registerkey_examples_text").before("<a class='btnv6_blue_hoverfade btn_medium' id='es_activate_multiple' style='margin-bottom: 15px;'><span>" + localized_strings.activate_multiple + "</span></a><div style='clear: both;'></div>");
+	
+	// Process activation
+	$(document).on("submit", "#es_activate_modal", function(e) {
+		e.preventDefault();
+		$.when(get_store_session).then(function(sessionid) {
+			$(".es_activate_modal_submit").hide();
+			$(".es_activate_modal_close").hide();
+			var keys = [];
+
+			// turn textbox into table to display results
+			var lines = $("#es_key_input").val().split("\n");
+			$("#es_activate_input_text").before("<div id='es_activate_results'></div>");
+			$("#es_activate_input_text").hide();			
+			$.each(lines, function(e) {
+				var attempt = String(this);
+				keys.push(attempt);
+				$("#es_activate_results").append("<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + chrome.extension.getURL("img/questionmark.png") + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "<span style='float:right;' id='attempt_" + attempt + "_result'></span></div>");
+			});
+
+			// attempt to activate each key in sequence
+			var promises = [];
+
+			for (var i = 0; i < keys.length; i++) {
+				var current_key = keys[i];
+				var request = $.ajax({
+					type: "POST",
+					url: protocol + "//store.steampowered.com/account/ajaxregisterkey",
+					data: {
+						sessionid: sessionid,
+						product_key: current_key
+					},
+					product_key: current_key
+				}).done(function(data) {
+					var attempted = this.product_key;
+					if (data["success"] == 1) {
+						$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/okay.png"));
+						if (data["purchase_receipt_info"]["line_items"].length > 0) {
+							$("#attempt_" + attempted + "_result").text(data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
+						}
+					} else {
+						$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/banned.png"));
+						$("#attempt_" + attempted + "_result").text(localized_strings.error);
+					}
+				}).fail(function() {
+					var attempted = this.product_key;
+					$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/banned.png"));
+					$("#attempt_" + attempted + "_result").text(localized_strings.error);
+				});
+
+				promises.push(request);
+			}
+
+			$.when.apply(null, promises).done(function(){
+				$(".es_activate_modal_close").find("span").text(localized_strings.close);
+				$(".es_activate_modal_close").show();
+			});
+		});
+	});
+
+	// Bind the "Cancel" button to close the modal
+	$(document).on("click", ".es_activate_modal_close", function(){
+		runInPageContext( function(){ CModal.DismissActiveModal(); } );
+	});	
+}
+
 function add_inventory_gotopage(){
 	storage.get(function(settings) {
 		if (settings.showinvnav === undefined) { settings.showinvnav = true; storage.set({'showinvnav': settings.showinvnav}); }
@@ -8999,7 +9088,8 @@ $(document).ready(function(){
 						break;
 
 						case /^\/account\/registerkey(\/.*)?/.test(path):
-							keep_ssa_checked();							
+							keep_ssa_checked();
+							activate_multiple_keys();
 							return;
 							break;
 						

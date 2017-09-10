@@ -16,6 +16,7 @@
     ],
     "web_accessible_resources": [
         "img/game_area_warning.png",
+        "img/questionmark.png",
         "img/line_chart.png",
         "img/birthday_logo_bg.gif",
         "img/birthday_bg.png",

@@ -1,6 +1,9 @@
 ﻿v9.6
 -----
++ Added the ability to activate multiple product codes at once to product activation page
 : Fixed a bug where badge links on market listings weren't linking to the correct page
+: Fixed a bug that caused wishlist reviews to be incorrect for games with no review data
+- Removed market game list collapsing as this feature was added to Steam by Valve
 
 
 v9.5
