@@ -5506,7 +5506,7 @@ function activate_multiple_keys() {
 								break;
 							case 53:
 								message = localized_strings.register.toomany;
-								breakk
+								break;
 						}
 						$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/banned.png"));
 						$("#attempt_" + attempted + "_result").text(message);
