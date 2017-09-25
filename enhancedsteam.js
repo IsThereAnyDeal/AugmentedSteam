@@ -5459,7 +5459,7 @@ function activate_multiple_keys() {
 			$.each(lines, function(e) {
 				var attempt = String(this);
 				keys.push(attempt);
-				$("#es_activate_results").append("<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + chrome.extension.getURL("img/questionmark.png") + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "<span style='float:right;' id='attempt_" + attempt + "_result'></span></div>");
+				$("#es_activate_results").append("<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + chrome.extension.getURL("img/questionmark.png") + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
 			});
 
 			// attempt to activate each key in sequence
@@ -5476,20 +5476,47 @@ function activate_multiple_keys() {
 					},
 					product_key: current_key
 				}).done(function(data) {
-					var attempted = this.product_key;
+					var attempted = this.product_key,
+						message = localized_strings.register.default;
 					if (data["success"] == 1) {
 						$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/okay.png"));
 						if (data["purchase_receipt_info"]["line_items"].length > 0) {
-							$("#attempt_" + attempted + "_result").text(data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
+							$("#attempt_" + attempted + "_result").text(localized_strings.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]));
+							$("#attempt_" + attempted + "_result").slideDown();
 						}
 					} else {
+						switch(data["purchase_result_details"]) {
+							case 9:
+								message = localized_strings.register.owned;
+								break;
+							case 13:
+								message = localized_strings.register.notavail;
+								break;
+							case 14:
+								message = localized_strings.register.invalid;
+								break;
+							case 15:
+								message = localized_strings.register.already;
+								break;
+							case 24:
+								message = localized_strings.register.dlc;
+								break;
+							case 50:
+								message = localized_strings.register.wallet;
+								break;
+							case 53:
+								message = localized_strings.register.toomany;
+								breakk
+						}
 						$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/banned.png"));
-						$("#attempt_" + attempted + "_result").text(localized_strings.error);
+						$("#attempt_" + attempted + "_result").text(message);
+						$("#attempt_" + attempted + "_result").slideDown();
 					}
 				}).fail(function() {
 					var attempted = this.product_key;
 					$("#attempt_" + attempted + "_icon img").attr("src", chrome.extension.getURL("img/sr/banned.png"));
 					$("#attempt_" + attempted + "_result").text(localized_strings.error);
+					$("#attempt_" + attempted + "_result").slideDown();
 				});
 
 				promises.push(request);
