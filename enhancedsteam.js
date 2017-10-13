@@ -3161,7 +3161,7 @@ function wishlist_add_to_cart() {
 
 			$("div.gameListPriceData").each(function(i, node) {
 				if ($(node).find("div.discount_block").length || !$(node).find("div.price").text().trim().match(/(^$|Free( to play)?)/i)) {
-					$(node).find("div.storepage_btn_ctn").prepend(`
+					$(node).parent().find("div.storepage_btn_ctn").prepend(`
 						<button class="es_add_to_cart btnv6_green_white_innerfade btn_small">
 							<span>${ localized_strings.add_to_cart }</span>
 						</button>
@@ -3274,6 +3274,18 @@ function wishlist_add_ratings() {
 	}
 }
 
+function change_wishlist_format() {
+	$(".wishlistRowItem").each(function() {
+		var store_link = $(this).find("a").attr("href"),
+			game_name = $(this).find("h4").text();
+
+		$(this).find("h4").html("<a href='" + store_link + "'>" + game_name + "</a>");
+		$(this).find("a.btn_small").hide();
+		$(this).find("div.storepage_btn_ctn").insertBefore($(this).find(".gameListPriceData")).css("float", "right").css("margin-left", "15px");
+		$(this).parent().css("border-radius", "4px");
+	});
+}
+
 // TODO: Cache this data, but only the required entries! Store the data combined in one row
 // but update apps individually based on "release_date.coming_soon". Unreleased apps will be
 // updated at least once a day while others can be updated once a week. If more than three
@@ -3299,7 +3311,7 @@ function appdata_on_wishlist() {
 
 						// Add release date info to unreleased apps
 						if (app_data.data.release_date.coming_soon == true) {
-							$(node).parent().before('<div class="releasedate">' + localized_strings.available + ': ' + app_data.data.release_date.date + '</div>');
+							$(node).parent().parent().parent().find(".wishlist_added_on").after('<div class="releasedate" style="float: right;">' + localized_strings.available + ': ' + app_data.data.release_date.date + '</div>');
 						}
 					}
 				});
@@ -9183,6 +9195,7 @@ $(document).ready(function(){
 
 					switch (true) {
 						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
+							change_wishlist_format();
 							alternative_linux_icon();
 							appdata_on_wishlist();
 							wishlist_highlight_apps();

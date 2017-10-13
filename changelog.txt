@@ -2,6 +2,7 @@
 -----
 + Added the ability to activate multiple product codes at once to product activation page
 : Fixed formatting of wishlist numbers on profile pages to match Valve's visual style
+: Updated visual style of wishlist pages and made item names on wishlists clickable
 : Fixed a bug where badge links on market listings weren't linking to the correct page
 : Fixed a bug that caused wishlist reviews to be incorrect for games with no review data
 - Removed market game list collapsing as this feature was added to Steam by Valve
