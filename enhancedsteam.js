@@ -2991,7 +2991,7 @@ function add_wishlist_profile_link() {
 							var count = txt.match(/id="game_(\d+)"/g);
 
 							if (count) {
-								$("#es_wishlist_count").text(count.length);
+								$("#es_wishlist_count").text(count.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 							} else {
 								$("#es_wishlist_link").remove();
 							}
