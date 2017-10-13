@@ -5436,9 +5436,19 @@ function activate_multiple_keys() {
 		</div>
 	</form>`;
 
+	$("#product_key").on("input propertychange paste", function() {
+		if ($("#product_key").val().indexOf(",") > 0) {
+			$("#register_btn").attr("href", "#").off("click").on("click", function() {
+				runInPageContext('function() { ShowDialog("' + localized_strings.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", $("#product_key").val().replace(/\,/g, "\n")) + '\`); }');
+			});
+		} else {
+			$("#register_btn").attr("href", "javascript:RegisterProductKey();").off("click");
+		}
+	});
+
 	// Show note input modal
 	$(document).on("click", "#es_activate_multiple", function(){
-		runInPageContext('function() { ShowDialog("' + localized_strings.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", $("#product_key").attr("value").replace(/\,/g, "\n")) + '\`); }');
+		runInPageContext('function() { ShowDialog("' + localized_strings.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", $("#product_key").val().replace(/\,/g, "\n")) + '\`); }');
 	});
 
 	// Insert the "activate multiple products" button
@@ -5455,7 +5465,7 @@ function activate_multiple_keys() {
 			// turn textbox into table to display results
 			var lines = $("#es_key_input").val().split("\n");
 			$("#es_activate_input_text").before("<div id='es_activate_results'></div>");
-			$("#es_activate_input_text").hide();			
+			$("#es_activate_input_text").hide();
 			$.each(lines, function(e) {
 				var attempt = String(this);
 				keys.push(attempt);
@@ -5532,7 +5542,7 @@ function activate_multiple_keys() {
 	// Bind the "Cancel" button to close the modal
 	$(document).on("click", ".es_activate_modal_close", function(){
 		runInPageContext( function(){ CModal.DismissActiveModal(); } );
-	});	
+	});
 }
 
 function add_inventory_gotopage(){
