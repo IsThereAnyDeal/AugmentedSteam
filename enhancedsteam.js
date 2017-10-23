@@ -4495,7 +4495,7 @@ function fix_app_image_not_found() {
 function add_market_total() {
 	if (is_signed_in) {
 		storage.get(function(settings) {
-			if (settings.showmarkettotal === undefined) { settings.showmarkettotal = true; storage.set({'showmarkettotal': settings.showmarkettotal}); }
+			if (settings.showmarkettotal === undefined) { settings.showmarkettotal = false; storage.set({'showmarkettotal': settings.showmarkettotal}); }
 			if (settings.showmarkettotal) {
 				if (window.location.pathname.match(/^\/market\/$/)) {
 					$("#moreInfo").before('<div id="es_summary"><div class="market_search_sidebar_contents"><h2 class="market_section_title">'+ localized_strings.market_transactions +'</h2><div class="market_search_game_button_group" id="es_market_summary" style="width: 238px"><img src="' + protocol + '//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif"><span>'+ localized_strings.loading +'</span></div></div></div>');

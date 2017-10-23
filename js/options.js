@@ -85,7 +85,7 @@ var settings_defaults = {
 	"regional_countries": ["us", "gb", "eu1", "ru", "br", "au", "jp"],
 
 	"showtotal": true,
-	"showmarkettotal": true,
+	"showmarkettotal": false,
 	"showsteamrepapi": true,
 	"showmcus": true,
 	"showoc": true,
