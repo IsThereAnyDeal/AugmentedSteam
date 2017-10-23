@@ -1,4 +1,8 @@
-﻿v9.6
+﻿v9.7
+-----
+
+
+v9.6
 -----
 + Added the ability to activate multiple product codes at once to product activation page
 : Improved compatibility with HTTPS Everywhere extension
