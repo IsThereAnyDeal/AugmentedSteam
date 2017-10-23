@@ -3021,7 +3021,8 @@ function add_supporter_badges() {
 
 			html += '<div style="clear: left;"></div></div>';
 			$(".profile_badges").after(html);
-			$("#es_supporter_badges .profile_badges_badge:last").addClass("last");
+			$("#es_supporter_badges .profile_badges_badge:nth-child(4n+1)").addClass("last").css("margin-bottom", "16px");
+			$("#es_supporter_badges .profile_badges_badge:last").css("margin-bottom", "0px");
 			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
 		}
 	});
