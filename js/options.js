@@ -119,7 +119,6 @@ var settings_defaults = {
 	"html5video": true,
 	"contscroll": true,
 	"showdrm": true,
-	"show_acrtag_info": false,
 	"regional_hideworld": false,
 	"showinvnav": true,
 	"showesbg": true,

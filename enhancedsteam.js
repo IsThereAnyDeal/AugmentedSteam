@@ -8660,55 +8660,6 @@ function add_birthday_celebration(in_store) {
 	});
 }
 
-function add_acrtag_warning() {
-	storage.get(function(settings) {
-		if (settings.show_acrtag_info === undefined) { settings.show_acrtag_info = false; storage.set({'show_acrtag_info': settings.show_acrtag_info}); }
-		if (settings.show_acrtag_info) {
-			var acrtag_subids, acrtag_promise = (function () {
-				var deferred = new $.Deferred();
-				if (protocol != "https:") {
-					// is the data cached?
-					var expire_time = parseInt(Date.now() / 1000, 10) - 8 * 60 * 60;
-					var last_updated = getValue("acrtag_subids_time") || expire_time - 1;
-					
-					if (last_updated < expire_time) {
-						// if no cache exists, pull the data from the website
-						get_http("https://api.enhancedsteam.com/acrtag/", function(txt) {
-							acrtag_subids = txt;
-							setValue("acrtag_subids", acrtag_subids);
-							setValue("acrtag_subids_time", parseInt(Date.now() / 1000, 10));
-							deferred.resolve();	
-						});
-					} else {
-						acrtag_subids = getValue("acrtag_subids");
-						deferred.resolve();
-					}
-					
-					return deferred.promise();
-				} else {
-					deferred.resolve();
-					return deferred.promise();
-				}
-			})();
-
-			acrtag_promise.done(function(){
-				var all_game_areas = $(".game_area_purchase_game");
-				var acrtag = JSON.parse(getValue("acrtag_subids"));
-
-				$.each(all_game_areas,function(index,app_package){
-					var subid = $(app_package).find("input[name='subid']").val();
-					if (subid > 0) {
-						if (acrtag["acrtag"].indexOf(subid) >= 0) {
-							$(this).after('<div class="DRM_notice" style="padding-left: 17px; margin-top: 0px; padding-top: 20px; min-height: 28px;"><div class="gift_icon"><img src="' + chrome.extension.getURL("img/trading.png") + '" style="float: left; margin-right: 13px;"></div><div data-store-tooltip="' + localized_strings.acrtag_tooltip + '">' + localized_strings.acrtag_msg + '.</div></div>');
-							runInPageContext("function() {BindStoreTooltip(jQuery('.DRM_notice [data-store-tooltip]')) }");
-						}
-					}
-				});
-			});
-		}
-	});
-}
-
 function add_review_toggle_button() {
 	$("#review_create").find("h1").append("<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
 	$("#review_container").find("p, .avatar_block, .content").wrapAll("<div id='es_review_section'></div>");
@@ -9094,7 +9045,6 @@ $(document).ready(function(){
 							add_achievement_completion_bar(appid);
 
 							show_regional_pricing("app");
-							add_acrtag_warning();
 							add_review_toggle_button();
 
 							customize_app_page(appid);
@@ -9116,7 +9066,6 @@ $(document).ready(function(){
 							subscription_savings_check();
 							show_pricing_history(subid, "sub");
 							add_steamdb_links(subid, "sub");
-							add_acrtag_warning();
 
 							show_regional_pricing("sub");
 							skip_got_steam();
