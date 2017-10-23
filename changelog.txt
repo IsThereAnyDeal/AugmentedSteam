@@ -1,6 +1,7 @@
 ﻿v9.6
 -----
 + Added the ability to activate multiple product codes at once to product activation page
+: Improved compatibility with HTTPS Everywhere extension
 : Fixed formatting of wishlist numbers on profile pages to match Valve's visual style
 : Updated visual style of wishlist pages and made item names on wishlists clickable
 : Fixed a bug where badge links on market listings weren't linking to the correct page
