@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Remover jogos adquiridos da lista de desejos",
   "donate":"Fazer um donativo",
   "close":"Fechar",
+  "error":"Ocorreu um erro",
   "go":"Ir",
-  "activate":"Activate a product",
+  "activate":"Activar um produto",
+  "activate_multiple_header":"Escreve os codigos de produto abaixo, um por linha",
+  "activate_multiple":"Ativar múltiplos produtos",
+  "activate_products":"Ativar produtos",
   "coupon_application_note":"Um cupão de desconto do teu inventário será aplicado automaticamente no fim da compra",
   "hide":"Esconder",
   "cards_owned":"__owned__ de __possible__ cartas adquiridas",
@@ -97,8 +101,8 @@
   "package_info":"Informações do pacote",
   "badge_completion_avg":"Custo médio para completar",
   "using_store":"Estás a usar a loja Steam da região __current__.",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"Quantidade: __sold__ vendido(s) nas últimas 24 horas",
+  "sold_last_24":"__sold__ vendido(s) nas últimas 24 horas",
   "homepage_sidebar":"Barra Lateral",
   "drop_calc":"Clique aqui para calcular as quedas restantes",
   "price":"Preço",
@@ -519,5 +523,16 @@
     "dont_show":"Não mostrar novamente",
     "updated":"Enhanced Steam foi atualizada para a versão __version__",
     "changes":"Esta atualização contém as seguintes alterações"
+  },
+  "register":{
+    "success":"__gamename__ ativado com sucesso",
+    "owned":"Esta conta Steam ja possuí um(ns) produto(s) que contém na oferta.",
+    "notavail":"Desculpa, maa este produto não esta disponível para compra no seu pais. O seu produto-chave não foi consumido.",
+    "invalid":"O produto chave não é válido.\nPor favor volte a verificar para ver se não digitou mal a chave.",
+    "already":"O código que introduziu ja foi ativado numa conta de Steam diferente.",
+    "dlc":"O código que digitou requer a posse doutro produto antes da ativação.",
+    "wallet":"O código que digitou é dum Steam Gift Card ou um código de Steam Wallet",
+    "toomany":"Têm havido muitas tentativas de ativação recentes. Por favor espere e tente mais tarde.",
+    "default":"Ocorreu um erro inesperado. O teu código nao foi redimido. Por favor  em 30 minutos tenta redimir o codigo novamente."
   }
 }

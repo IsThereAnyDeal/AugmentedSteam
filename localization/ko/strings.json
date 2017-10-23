@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"소유한 게임을 찜 목록에서 제거",
   "donate":"기부하기",
   "close":"닫기",
+  "error":"오류가 발생했습니다",
   "go":"검색",
-  "activate":"Activate a product",
+  "activate":"제품 코드 활성화하기",
+  "activate_multiple_header":"아래에 제품 코드를 한 줄에 하나씩 입력하십시오.",
+  "activate_multiple":"여러 개의 제품 활성화",
+  "activate_products":"제품 활성화",
   "coupon_application_note":"보관함에 있는 쿠폰은 결제할 때 자동으로 적용됩니다.",
   "hide":"숨김",
   "cards_owned":"__possible__장의 카드 중 __owned__장을 소유하고 있음",
@@ -97,8 +101,8 @@
   "package_info":"패키지 정보",
   "badge_completion_avg":"배지 완성 평균 비용",
   "using_store":"__current__ 지역의 Steam 상점을 이용하고 있습니다.",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"최근 24시간 동안 팔린 개수: __sold__ 개",
+  "sold_last_24":"최근 24시간 동안 __sold__ 개 팔림",
   "homepage_sidebar":"사이드바",
   "drop_calc":"획득 가능한 카드 세어보기",
   "price":"가격",
@@ -275,7 +279,7 @@
     "peaktoday":"오늘의 최고조"
   },
   "hltb":{
-    "title":"How Long to Beat",
+    "title":"플레이 타임",
     "main_e":"메인과 추가 스토리",
     "compl":"완벽하게 모두 플레이",
     "submit":"플레이 타임 제출하기",
@@ -519,5 +523,16 @@
     "dont_show":"다시 표시하지 않음",
     "updated":"Enhanced Steam이 __version__ 버전으로 업데이트 되었습니다.",
     "changes":"이 업데이트의 내용은 다음과 같습니다"
+  },
+  "register":{
+    "success":"성공적으로 활성화됨  __gamename__",
+    "owned":"이 스팀 계정은 이 제안에 포함되어있는 상품(들)을 이미 소유하고 있습니다.",
+    "notavail":"죄송합니다, 이 지역에서는 이 제품이 지원되지 않습니다. 귀하의 제품 코드가 등록되지 않았습니다.",
+    "invalid":"귀하가 입력하신 제품 코드는 존재하지 않습니다. 잘못 입력하셨는지 다시 한번 확인 해주세요.",
+    "already":"귀하가 입력하신 제품 코드는 이미 다른 계정에서 활성화 되어있습니다.",
+    "dlc":"입력한 제품 키를 활성화하기 전에 다른 기본 제품이 있어야 합니다.",
+    "wallet":"입력 한 코드는 스팀 기프트 카드 또는 스팀 월렛입니다.",
+    "toomany":"이 계정은 최근 너무 많은 활성화를 시도하였습니다. 잠시 후 다시 시도해주세요.",
+    "default":"오류가 발생했습니다. 귀하의 코드가 등록되지 않았습니다. 30분 뒤에 다시 시도해주세요."
   }
 }

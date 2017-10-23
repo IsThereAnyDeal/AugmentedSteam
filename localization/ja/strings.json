@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"ウィッシュリストから所有しているゲームを削除",
   "donate":"寄付",
   "close":"閉じる",
+  "error":"エラーが発生しました。",
   "go":"行く",
-  "activate":"Activate a product",
+  "activate":"製品を有効化",
+  "activate_multiple_header":"下に一行に一つの製品コードを入力してください。",
+  "activate_multiple":"複数の製品を有効化",
+  "activate_products":"製品を有効化",
   "coupon_application_note":"インベントリにあるクーポンは支払い時に自動的に適用されます。",
   "hide":"非表示",
   "cards_owned":"__possible__ 枚のカード中__owned__枚所有しています",
@@ -519,5 +523,16 @@
     "dont_show":"再び表示しない",
     "updated":"Enhanced Steamは、__version__に更新されました",
     "changes":"このリリースには、以下の変更が含まれています"
+  },
+  "register":{
+    "success":"__gamename__ の有効化に成功",
+    "owned":"This Steam account already owns the product(s) contained in this offer.",
+    "notavail":"この製品はお客様の居住国ではご利用いただけません。この製品コードの有効化は行われていません。",
+    "invalid":"入力した製品コードは無効です。入力したキーが正しいことを確認してください。",
+    "already":"入力された製品コードは別の Steam アカウントですでに有効になっている。",
+    "dlc":"入力された製品コードを有効化するには、ベースとなる別の製品を所有している必要があります。",
+    "wallet":"入力されたコードは Steam ギフトカードか Steam ウォレットコードです。",
+    "toomany":"このアカウントから、有効化を試みる回数が多すぎます。後ほど再度お試しください。",
+    "default":"予期しないエラーが発生したため、製品コードを有効化できませんでした。30 分お待ちいただいた後に、そのコードで再度お試しください。"
   }
 }

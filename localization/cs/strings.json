@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Odstranit vlastněné hry ze Seznamu přání",
   "donate":"Přispět",
   "close":"Zavřít",
+  "error":"Došlo k chybě",
   "go":"Přejít",
-  "activate":"Activate a product",
+  "activate":"Aktivovat produkt",
+  "activate_multiple_header":"Vložte aktivační klíče, jeden na řádek",
+  "activate_multiple":"Aktivovat více produktů",
+  "activate_products":"Aktivovat produkty",
   "coupon_application_note":"Kupón ve vašem inventáři bude automaticky aplikován při nákupu.",
   "hide":"Schovat",
   "cards_owned":"Vlastněno __owned__ z __possible__ karet",
@@ -97,8 +101,8 @@
   "package_info":"Informace o balíčku",
   "badge_completion_avg":"Prům. cena dokončení",
   "using_store":"Používáte Obchod Steam pro region __current__.",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"Množství: __sold__ kusů prodáno za posledních 24 hodin",
+  "sold_last_24":"Množství: __sold__ kusů prodáno za posledních 24 hodin",
   "homepage_sidebar":"Postranní panel",
   "drop_calc":"Klikněte zde pro spočítání zbývajících přídělů karet",
   "price":"Cena",
@@ -519,5 +523,16 @@
     "dont_show":"Příště nezobrazovat",
     "updated":"Enhanced Steam byl aktualizován na verzi __version__",
     "changes":"Tato aktualizace obsahuje následující změny"
+  },
+  "register":{
+    "success":"Hra __gamename__ úspěšně aktivována",
+    "owned":"Tento Steam účet již vlastní produkt(y) v této nabídce.",
+    "notavail":"Omlouváme se, ale tento produkt není k dispozici pro nákup v této zemi. Váš klíč nebyl použit.",
+    "invalid":"Zadaný klíč není platný. Zkontrolujte prosím, že jste jej zadali správně.",
+    "already":"Zadaný klíč už byl aktivován na jiném Steam účtu.",
+    "dlc":"Zadaný klíč vyžaduje před aktivací vlastnictví jiného produktu.",
+    "wallet":"Zadaný kód je z Steam Gift Card nebo Steam Wallet Code",
+    "toomany":"Proběhlo příliš mnoho pokusů o aktivaci z tohoto účtu. Počkejte prosím a zkuste to znovu později.",
+    "default":"Došlo k neočekávané chybě. Váš klíč nebyl použit. Počkejte prosím 30 minut a zkuste jej aktivovat znovu."
   }
 }

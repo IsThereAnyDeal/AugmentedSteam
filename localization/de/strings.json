@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Spiele, die du schon besitzt, von der Wunschliste entfernen",
   "donate":"Spenden",
   "close":"Schließen",
+  "error":"Ein Fehler ist aufgetreten",
   "go":"Los",
-  "activate":"Activate a product",
+  "activate":"Ein Produkt aktivieren",
+  "activate_multiple_header":"Geben Sie die Produktschlüssel unten ein, einen pro Zeile",
+  "activate_multiple":"Mehrere Produkte aktivieren",
+  "activate_products":"Produkt aktivieren",
   "coupon_application_note":"Ein Gutschein aus deinem Inventar wird automatisch im Warenkorb angewendet.",
   "hide":"Verbergen",
   "cards_owned":"__owned__ von __possible__ Karten im Besitz",
@@ -519,5 +523,16 @@
     "dont_show":"Nicht erneut zeigen",
     "updated":"Enhanced Steam wurde auf __version__ aktualisiert",
     "changes":"Diese Version enthält die folgenden Änderungen"
+  },
+  "register":{
+    "success":"__gamename__ erfolgreich aktiviert",
+    "owned":"Dieser Steam-Account besitzt bereits die in diesem Angebot enthaltenen Produkte.",
+    "notavail":"Entschuldigung, aber dieses Produkt ist in Ihrem Land derzeit nicht zum Kauf verfügbar.  Ihr Produktschlüssel wurde nicht aktiviert.",
+    "invalid":"Der von Ihnen eingegebene Produktschlüssel ist ungültig. Bitte überprüfen Sie, ob Sie den Produktschlüssel korrekt eingegeben haben.",
+    "already":"Der eingegeben Produktschlüssel wurde bereits auf einem anderen Steam-Account aktiviert.",
+    "dlc":"Um das Spiel mit dem eingegebenen Produktschlüssel zu aktivieren, müssen Sie ein weiteres Produkt besitzen.",
+    "wallet":"Der von Ihnen eingelöste Schlüssel stammt von einer Steam-Geschenkkarte oder einer Steam-Guthabenkarte",
+    "toomany":"Von diesem Account wurden kürzlich zu viele Aktivierungsversuche unternommen. Bitte warten Sie eine Weile, bevor Sie es erneut versuchen.",
+    "default":"Ein unerwarteter Fehler ist aufgetreten. Ihr Produktschlüssel konnte nicht aktiviert werden. Bitte waren Sie 30 Minuten und versuchen Sie es dann erneut."
   }
 }

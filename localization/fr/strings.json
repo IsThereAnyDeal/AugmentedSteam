@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Retirer les jeux possédés de la liste de souhaits",
   "donate":"Faire un don",
   "close":"Fermer",
+  "error":"Une erreur s'est produite",
   "go":"Aller",
-  "activate":"Activate a product",
+  "activate":"Activer un produit",
+  "activate_multiple_header":"Entrez les codes produit ci-dessous, un par ligne",
+  "activate_multiple":"Activer plusieurs produits",
+  "activate_products":"Activer les produits",
   "coupon_application_note":"Un coupon de votre inventaire sera utilisé automatiquement à l'achat.",
   "hide":"Masquer",
   "cards_owned":"__owned__ cartes sur __possible__ possédées",
@@ -519,5 +523,16 @@
     "dont_show":"Ne plus afficher",
     "updated":"Enhanced Steam a été mis à jour à la version __version__",
     "changes":"Cette version apporte les modifications suivantes"
+  },
+  "register":{
+    "success":"__gamename__ activé avec succès",
+    "owned":"Ce compte Steam a déjà fait l'acquisition du ou des produits couverts par cette offre.",
+    "notavail":"Désolé, mais ce produit n'est pas disponible à l'achat dans ce pays. Votre code produit n'a pas été activé.",
+    "invalid":"Le code produit que vous avez saisi n'est pas valide. Vérifiez que vous n'avez pas fait d'erreur en saisissant votre code.",
+    "already":"Le code produit que vous avez saisi est associé à un compte Steam différent.",
+    "dlc":"Le code produit que vous avez indiqué nécessite que vous disposiez d'un autre produit avant de pouvoir être activé.",
+    "wallet":"Le code que vous avez saisi est un code de porte-monnaie Steam ou d'une carte cadeau",
+    "toomany":"Trop de tentatives d'activation récentes depuis ce compte ont été effectuées. Veuillez patienter et réessayer d'activer votre code produit plus tard.",
+    "default":"Une erreur s'est produite. Votre code produit n'a pas été activé. Veuillez attendre 30 minutes et réessayer."
   }
 }

@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Fjern eide spill fra ønskeliste",
   "donate":"Donér",
   "close":"Lukk",
+  "error":"En feil har oppstått",
   "go":"Gå",
-  "activate":"Activate a product",
+  "activate":"Aktiver et produkt",
+  "activate_multiple_header":"Angi produktkoder nedenfor, én per linje",
+  "activate_multiple":"Aktiver Flere Produkter",
+  "activate_products":"Aktiver produkter",
   "coupon_application_note":"En kupong i lageret ditt vil bli brukt automatisk ved kassen.",
   "hide":"Gjem",
   "cards_owned":"__owned__ av __possible__ kort eid",
@@ -37,7 +41,7 @@
   "translation":"Oversettelse",
   "lowest":"Laveste",
   "lowest_price":"Nåværende laveste pris",
-  "view_badge_progress":"Vis_skilt_fremdrift",
+  "view_badge_progress":"Vis merkeframdrift",
   "badge_progress":"Vis merkeframgang",
   "sales_total":"Salgtotal",
   "hold_total":"Totalt på vent",
@@ -97,8 +101,8 @@
   "package_info":"Pakkeinfo",
   "badge_completion_avg":"Gj.snittlig pris for fullførelse",
   "using_store":"Du bruker Steam-butikken for __current__-regionen.",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"Volum: __sold__ solgt de siste 24 timene",
+  "sold_last_24":"__sold__ solgt de siste 24 timene",
   "homepage_sidebar":"Sidepanel",
   "drop_calc":"Klikk her for å kalkulere slipp som gjenstår",
   "price":"Pris",
@@ -233,7 +237,7 @@
   "join_group":"Bli med i gruppe",
   "chat":"Chat",
   "web_browser_chat":"Nettleser chat",
-  "steam_client_chat":"Steam-klient chat",
+  "steam_client_chat":"Steam-nettprat",
   "available":"Tilgjengelig",
   "set_as_background":"Bruk som bakgrunn",
   "preview_background":"Forhåndsvis bakgrunn",
@@ -412,12 +416,12 @@
     "homepage_default_tab_specials":"Tilbud",
     "wishlist":"Gjenstander på ønskelisten din",
     "add_another_region":"Legg til",
-    "skip_got_steam":"Hoppe vinduet \"Fikk Steam?\"",
-    "store_general_thirdparty":"Alternativer for informasjon fra 3dje parts nettsteder",
-    "purchase_dates":"Vis apps kjøpedatoen på butikk side",
-    "show_badge_progress":"Vis applikasjonens skilt fremdrift på butikk sider",
-    "show_wishlist_link":"Vis en ønskeliste link på profiler",
-    "show_wishlist_count":"Vis antall elementer i ønskelisten",
+    "skip_got_steam":"Hopp over \"Har du Steam?\"-vinduet",
+    "store_general_thirdparty":"Alternativer for informasjon fra tredjeparts-nettsteder",
+    "purchase_dates":"Vis app-kjøpedatoer på butikksider",
+    "show_badge_progress":"Vis app-merkeframdrift på butikksider",
+    "show_wishlist_link":"Vis en ønskeliste-lenke på profilsider",
+    "show_wishlist_count":"Vis antall elementer i ønskeliste",
     "lang":{
       "english":"Engelsk",
       "brazilian":"Brasiliansk portugisisk",
@@ -491,7 +495,7 @@
     "inv_gift":"Gave",
     "inv_guestpass":"Gjestepass",
     "owned":"Eid",
-    "notinterested":"Ikke Interesangt",
+    "notinterested":"Ikke Interessert",
     "friends_want":"<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ ønsker seg</a>"
   },
   "wallet":{
@@ -516,8 +520,19 @@
     "num_items":"__num__ elementer"
   },
   "update":{
-    "dont_show":"Ikke Vis igjen",
+    "dont_show":"Ikke vis igjen",
     "updated":"Enchanted Steam har blitt oppdatert til _version_",
-    "changes":"Denne utgivelsen inkluderer følgende endringer"
+    "changes":"Denne utgivelsen inneholder følgende endringer"
+  },
+  "register":{
+    "success":"Aktiveringen av __gamename__ gjennomført",
+    "owned":"Denne Steam-kontoen eier allerede produkt(er) i dette tilbudet.",
+    "notavail":"Beklager, men dette produktet er ikke tilgjengelig for kjøp i dette landet.  Din produktnøkkel har ikke blitt innløst.",
+    "invalid":"Produktkoden du har skrevet inn er ikke gyldig.  Vennligst se etter om du har skrevet koden feil.",
+    "already":"Produktkoden du har skrevet er allerede aktivert av en annen Steam-konto.",
+    "dlc":"Produktkoden du har angitt krever eierskap av et annet produkt før aktivering.",
+    "wallet":"Koden du har angitt er fra et Steam-gavekort eller en Steam-lommebokskode",
+    "toomany":"Det har vært for mange nylige aktiveringsforsøk fra denne kontoen. Vennligst vent og prøv igjen senere.",
+    "default":"Det oppstod en uventet feil. Din produktkode er ikke innløst. Vennligst vent 30 minutter og prøv å innløse koden igjen."
   }
 }

@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"A már megvett játékok törlése a kívánságlistáról",
   "donate":"Támogatás",
   "close":"Bezár",
+  "error":"An error occurred",
   "go":"Ugrás",
-  "activate":"Activate a product",
+  "activate":"Termék aktiválása",
+  "activate_multiple_header":"Enter product codes below, one per line",
+  "activate_multiple":"Activate Multiple Products",
+  "activate_products":"Activate products",
   "coupon_application_note":"A Raktáradban lévő kupon automatikusan érvénybe lép a pénztárnál.",
   "hide":"Elrejt",
   "cards_owned":"__owned__ db kártyád van a lehetséges __possible__ db-ból",
@@ -519,5 +523,16 @@
     "dont_show":"Ne Mutassa Újra",
     "updated":"Enhanced Steam frissítve lett a __version__ verzióra",
     "changes":"Ez a kiadás a következő változásokat tartalmazza"
+  },
+  "register":{
+    "success":"Successfully activated __gamename__",
+    "owned":"This Steam account already owns the product(s) contained in this offer.",
+    "notavail":"Sorry, but this product is not available for purchase in this country.  Your product key has not been redeemed.",
+    "invalid":"The product code you've entered is not valid.  Please double check to see if you've mistyped your key.",
+    "already":"The product code you've entered has already been activated by a different Steam account.",
+    "dlc":"The product code you've entered requires ownership of another product before activation.",
+    "wallet":"The code you have entered is from a Steam Gift Card or Steam Wallet Code",
+    "toomany":"There have been too many recent activation attempts from this account.  Please wait and try again later.",
+    "default":"An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
   }
 }

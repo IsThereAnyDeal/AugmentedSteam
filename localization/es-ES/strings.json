@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Eliminar juegos que ya tienes de la lista de deseados",
   "donate":"Donar",
   "close":"Cerrar",
+  "error":"Se ha producido un error.",
   "go":"Ir",
-  "activate":"Activate a product",
+  "activate":"Activar un producto",
+  "activate_multiple_header":"Introduce las claves de producto a continuación, una por línea.",
+  "activate_multiple":"Activar varios productos",
+  "activate_products":"Activar productos",
   "coupon_application_note":"Los cupones de tu inventario se aplicarán automáticamente a la hora de pagar.",
   "hide":"Ocultar",
   "cards_owned":"Tienes __owned__ de __possible__ cromos",
@@ -97,8 +101,8 @@
   "package_info":"Datos del paquete",
   "badge_completion_avg":"Coste de completado medio",
   "using_store":"Estás utilizando la tienda de Steam de la siguiente zona: __current__.",
-  "volume_sold_last_24":"Volumen: __sold__ vendido en las últimas 24 horas",
-  "sold_last_24":"__sold__ vendido en las últimas 24 horas",
+  "volume_sold_last_24":"Volumen: __sold__ venta(s) en las últimas 24 horas",
+  "sold_last_24":"__sold__ venta(s) en las últimas 24 horas",
   "homepage_sidebar":"Barra lateral",
   "drop_calc":"Haz clic aquí para calcular las obtención aleatorias restantes",
   "price":"Precio",
@@ -519,5 +523,16 @@
     "dont_show":"No mostrar de nuevo",
     "updated":"Enhanced Steam se ha actualizado a la versión __version__",
     "changes":"Esta versión incluye los siguientes cambios"
+  },
+  "register":{
+    "success":"__gamename__ se ha activado con éxito",
+    "owned":"Esta cuenta de Steam ya tiene productos contenidos en esta oferta.",
+    "notavail":"Lo sentimos, pero este producto no está disponible en este país. Tu clave no puede canjearse.",
+    "invalid":"La clave de producto que has introducido no es válida. Por favor, comprueba que no te hayas equivocado.",
+    "already":"La clave de producto que has introducido ya se ha activado en otra cuenta de Steam.",
+    "dlc":"La clave de producto que has introducido necesita que tengas otro producto base antes de su activación.",
+    "wallet":"La clave que has introducido pertenece a una tarjeta de regalo de Steam o saldo de la cartera.",
+    "toomany":"Han habido demasiados intentos de activación de este código recientemente. Por favor, espera e inténtalo más tarde.",
+    "default":"Se ha producido un error inesperado. Tu clave de producto no se ha canjeado. Por favor, espera 30 minutos y vuelve a intentarlo."
   }
 }

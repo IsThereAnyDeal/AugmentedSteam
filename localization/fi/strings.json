@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Poista omistetut pelit toivelistalta",
   "donate":"Lahjoita",
   "close":"Sulje",
+  "error":"Tapahtui virhe",
   "go":"Siirry",
-  "activate":"Activate a product",
+  "activate":"Aktivoi tuote",
+  "activate_multiple_header":"Syötä tuotekoodit alle, yksi riviä kohden",
+  "activate_multiple":"Aktivoi useampi tuote",
+  "activate_products":"Aktivoi tuotteita",
   "coupon_application_note":"Tavaraluettelossasi oleva kuponki käytetään automaattisesti kassalla.",
   "hide":"Piilota",
   "cards_owned":"__owned__ / __possible__ korttia kerätty",
@@ -97,8 +101,8 @@
   "package_info":"Paketin tiedot",
   "badge_completion_avg":"Viimeistelyn keskimääräinen hinta",
   "using_store":"Käytät alueen __current__ Steam-kauppaa",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"Määrä: __sold__ myyty viimeisen 24 tunnin sisällä",
+  "sold_last_24":"Määrä: __sold__ myyty viimeisen 24 tunnin sisällä",
   "homepage_sidebar":"Sivupalkki",
   "drop_calc":"Klikkaa tästä laskeaksesi jäljelläolevien droppien määrä",
   "price":"Hinta",
@@ -519,5 +523,16 @@
     "dont_show":"Älä näytä uudelleen",
     "updated":"Enhanced Steam on päivitetty versioon __version__",
     "changes":"Tämä julkaisu sisältää seuraavat muutokset"
+  },
+  "register":{
+    "success":"__gamename__ aktivoitu onnistuneesti",
+    "owned":"Tämä Steam-tili omistaa jo tähän tarjoukseen sisältyvät tuotteet.",
+    "notavail":"Pahoittelut. Kyseinen tuote ei ole myynnissä tässä maassa. Tuotetunnustasi ei ole lunastettu.",
+    "invalid":"The product code you've entered is not valid.  Please double check to see if you've mistyped your key.",
+    "already":"The product code you've entered has already been activated by a different Steam account.",
+    "dlc":"The product code you've entered requires ownership of another product before activation.",
+    "wallet":"The code you have entered is from a Steam Gift Card or Steam Wallet Code",
+    "toomany":"There have been too many recent activation attempts from this account.  Please wait and try again later.",
+    "default":"An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
   }
 }

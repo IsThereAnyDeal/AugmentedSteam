@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Ta bort alla ägda spel ifrån önskelistan",
   "donate":"Donera",
   "close":"Stäng",
+  "error":"Ett fel uppstod",
   "go":"Gå",
-  "activate":"Activate a product",
+  "activate":"Aktivera en produkt",
+  "activate_multiple_header":"Ange produktkoder nedan, endast en per rad",
+  "activate_multiple":"Aktivera fler produkter",
+  "activate_products":"Aktivera produkter",
   "coupon_application_note":"En kupong i ditt förråd kommer automatiskt appliceras i kassan",
   "hide":"Göm",
   "cards_owned":"__owned__ av __possible__ kort ägda",
@@ -97,8 +101,8 @@
   "package_info":"Paketinformation",
   "badge_completion_avg":"Genomsnittlig kostnad för att komplettera",
   "using_store":"Du använder Steam-butiken för __current__ regionen.",
-  "volume_sold_last_24":"Volym: __sold__ sålda de senaste 24 timmarna",
-  "sold_last_24":"__sold__ såld de senaste 24 timmarna",
+  "volume_sold_last_24":"Volym: __sold__ såld(a) de senaste 24 timmarna",
+  "sold_last_24":"__sold__ såld(a) de senaste 24 timmarna",
   "homepage_sidebar":"Sidopanel",
   "drop_calc":"Klicka här för att beräkna hur många hittade föremål kvarstår",
   "price":"Pris",
@@ -519,5 +523,16 @@
     "dont_show":"Visa inte igen",
     "updated":"Enhanced Steam har uppdaterats till __version__",
     "changes":"Den här versionen innehåller följande ändringar"
+  },
+  "register":{
+    "success":"Aktiveringen av __gamename__ lyckades",
+    "owned":"Detta Steam-kontot äger redan produkten/produkterna i erbjudandet.",
+    "notavail":"Beklagar, men denna produkt är inte tillgänglig att köpas i ditt land. Din produktnyckel har inte aktiverats.",
+    "invalid":"Produktkoden är inte giltig. Vänligen kontrollera om du har skrivit fel.",
+    "already":"Produktkoden har redan blivit aktiverad av ett annat Steam-konto.",
+    "dlc":"Produktkoden du har skrivit in kräver ägarskap av en annan produkt innan aktivering.",
+    "wallet":"Koden du har skrivit in är ett Steam-gåvorkort eller Steam-plånbokskod",
+    "toomany":"Det har varit för många nya aktiveringsförsök från detta/denna konto eller internetadress. Vänligen vänta och försök igen senare.",
+    "default":"Ett oväntat fel uppstod. Din produktkod har inte aktiverats. Vänligen vänta 30 minuter och försök igen."
   }
 }

@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"Remover jogos que você possui da lista de desejos",
   "donate":"Doar",
   "close":"Fechar",
+  "error":"Ocorreu um erro",
   "go":"Ir",
-  "activate":"Activate a product",
+  "activate":"Ativar um produto",
+  "activate_multiple_header":"Insira os códigos de produto abaixo, um por linha",
+  "activate_multiple":"Ativar vários produtos",
+  "activate_products":"Ativar produtos",
   "coupon_application_note":"Um cupom do seu inventário será aplicado automaticamente ao finalizar o pedido.",
   "hide":"Ocultar",
   "cards_owned":"__owned__ de __possible__ cartas adquiridas",
@@ -97,8 +101,8 @@
   "package_info":"Informações do pacote",
   "badge_completion_avg":"Custo aprox. para fabricar",
   "using_store":"Você está usando a loja Steam da região __current__.",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"Quantidade: __sold__ vendido(s) nas últimas 24 horas",
+  "sold_last_24":"__sold__ vendido(s) nas últimas 24 horas",
   "homepage_sidebar":"Barra lateral",
   "drop_calc":"Clique aqui para calcular a quantidade de cartas restantes",
   "price":"Preço",
@@ -519,5 +523,16 @@
     "dont_show":"Não exibir novamente",
     "updated":"O Enhanced Steam foi atualizado para a versão __version__",
     "changes":"Esta nova versão inclui as seguintes alterações"
+  },
+  "register":{
+    "success":"__gamename__ ativado com sucesso",
+    "owned":"Esta conta Steam já possui o(s) produto(s) contido(s) nesta oferta.",
+    "notavail":"Lamentamos, mas esse produto não está disponível para compra neste país. O código de produto não foi ativado.",
+    "invalid":"O código de produto inserido não é válido. Por favor, verifique se você o digitou corretamente.",
+    "already":"O código de produto inserido já foi ativado por uma outra conta Steam.",
+    "dlc":"O código de produto inserido requer que você tenha outro produto antes desta ativação.",
+    "wallet":"O código inserido é de um vale-presente Steam ou código da Carteira Steam.",
+    "toomany":"Houve muitas tentativas de ativação realizadas a partir desta conta ou endereço IP. Por favor, aguarde e tente usar o seu código de produto novamente mais tarde.",
+    "default":"Um erro inesperado ocorreu. O código de produto não foi ativado. Por favor, tente ativá-lo novamente daqui a 30 minutos."
   }
 }

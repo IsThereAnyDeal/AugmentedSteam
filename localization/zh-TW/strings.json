@@ -22,8 +22,12 @@
   "remove_owned_wishlist":"從願望清單中移除已擁有的遊戲",
   "donate":"捐獻",
   "close":"關閉",
+  "error":"發生錯誤",
   "go":"轉至",
-  "activate":"Activate a product",
+  "activate":"啟動產品",
+  "activate_multiple_header":"請在下面輸入產品序號，每行一個。",
+  "activate_multiple":"啟動多個產品",
+  "activate_products":"啟動產品",
   "coupon_application_note":"一張在你物品庫中的優惠券會在結帳時自動抵用。",
   "hide":"隱藏",
   "cards_owned":"在 __possible__張中已擁有__owned__張",
@@ -97,8 +101,8 @@
   "package_info":"包裝資訊",
   "badge_completion_avg":"平均完成徽章的要價",
   "using_store":"你現在正使用__current__地區的Steam",
-  "volume_sold_last_24":"Volume: __sold__ sold in the last 24 hours",
-  "sold_last_24":"__sold__ sold in the last 24 hours",
+  "volume_sold_last_24":"數量: 有 __sold__ 份在 24 小時內售出",
+  "sold_last_24":"有 __sold__ 份在 24 小時內售出",
   "homepage_sidebar":"側欄",
   "drop_calc":"點選此處以計算剩餘的卡片掉落數",
   "price":"價格",
@@ -275,7 +279,7 @@
     "peaktoday":"今日最高"
   },
   "hltb":{
-    "title":"How Long to Beat",
+    "title":"破關需時",
     "main_e":"主線加支線",
     "compl":"完美主義者",
     "submit":"送出你的時數",
@@ -519,5 +523,16 @@
     "dont_show":"不要再顯示",
     "updated":"Enhanced Steam 已經更新至 __version__",
     "changes":"這個發行版本包含下列的更動"
+  },
+  "register":{
+    "success":"成功啟動 __gamename__",
+    "owned":"此Steam帳戶已經擁有了這筆訂單中的一項或多項產品。",
+    "notavail":"抱歉，您的地區不可購買這個產品。您的產品序號沒有被兌換。",
+    "invalid":"你輸入的產品序號不正確。 請再檢查一遍是否輸入了錯誤的序號。",
+    "already":"你輸入的產品序號已經被其他的Steam帳戶啟用。",
+    "dlc":"The product code you've entered requires ownership of another product before activation.",
+    "wallet":"The code you have entered is from a Steam Gift Card or Steam Wallet Code",
+    "toomany":"There have been too many recent activation attempts from this account.  Please wait and try again later.",
+    "default":"An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
   }
 }
