@@ -150,7 +150,6 @@ var settings_defaults = {
 	"profile_custom_icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico",
 	"steamcardexchange": true,
 	"purchase_dates": true,
-	"add_wallet_balance": true,
 	"add_to_cart_wishlist": true,
 	"show_badge_progress": true,
 	"show_wishlist_link": true,

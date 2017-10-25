@@ -1,5 +1,6 @@
 ﻿v9.7
 -----
+- Removed option to show wallet balance in header as this was added to Steam by Valve
 
 
 v9.6
