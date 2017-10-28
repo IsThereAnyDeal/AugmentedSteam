@@ -497,9 +497,9 @@
         "notinterested": "Not Interested",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>"
     },
-    "money": {
-        "custom_wallet_amount": "Add custom amount",
-        "custom_wallet_amount_text": "Add any amount over __minamount__",
+    "wallet": {
+        "custom_amount": "Add custom amount",
+        "custom_amount_text": "Add any amount over __minamount__",
         "custom_giftcard_amount": "Select Custom Gift Card Over __minamount__"
     },
     "wsgf": {
