@@ -186,6 +186,12 @@ img.platform_small, .platform_img {
 	height: 18px;
 	padding: 2px 4px 3px 4px;
 }
+.es_text_input.money {
+	width: 54px;
+}
+.es_custom_money .giftcard_corner {
+	filter: hue-rotate(160deg);
+}
 input[type=checkbox].es_dlc_selection {
 	position: absolute; 
 	overflow: hidden; 
