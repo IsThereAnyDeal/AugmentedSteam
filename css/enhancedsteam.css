@@ -186,11 +186,21 @@ img.platform_small, .platform_img {
 	height: 18px;
 	padding: 2px 4px 3px 4px;
 }
-.es_text_input.money {
+#es_custom_money_amount {
 	width: 54px;
+}
+.giftcard_selection #es_custom_money_amount {
+	height: 15px;
+	vertical-align: middle;
+}
+.addfunds_area_purchase_game #es_custom_money_amount {
+        margin-top: -5px;
 }
 .es_custom_money .giftcard_corner {
 	filter: hue-rotate(160deg);
+}
+.es_custom_money .giftcard_text.small {
+	font-size: 22px !important;
 }
 input[type=checkbox].es_dlc_selection {
 	position: absolute; 
