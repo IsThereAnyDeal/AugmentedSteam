@@ -1,5 +1,7 @@
 ﻿v9.7
 -----
++ Added the ability to purchase custom gift cards for any amount over the minimum
++ Added support for additional currencies introduced by Valve
 - Removed option to show wallet balance in header as this was added to Steam by Valve
 
 

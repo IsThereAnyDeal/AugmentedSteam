@@ -277,6 +277,14 @@ var currency_format_info = {
 	"CLP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "CLP$ ", thousand: ".", decimal: ",", right: false },
 	"PEN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S/.", thousand: ",", decimal: ".", right: false },
 	"COP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "COL$ ", thousand: ".", decimal: ",", right: false },
+	"ARS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "ARS$ ", thousand: ".", decimal: ",", right: false },
+	"CRC": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₡", thousand: ".", decimal: ",", right: false },
+	"ILS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₪", thousand: ",", decimal: ".", right: false },
+	"KZT": { places: 2, hidePlacesWhenZero: true, symbolFormat: "₸ ", thousand: " ", decimal: ".", right: false },
+	"KWD": { places: 3, hidePlacesWhenZero: false, symbolFormat: " KD", thousand: ",", decimal: ".", right: true },
+	"PLN": { places: 2, hidePlacesWhenZero: false, symbolFormat: " zł", thousand: " ", decimal: ",", right: true },
+	"QAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: " QR", thousand: ",", decimal: ".", right: true },
+	"UYU": { places: 0, hidePlacesWhenZero: true, symbolFormat: "$U", thousand: ",", decimal: ".", right: false },
 	"USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
 };
 
@@ -373,13 +381,22 @@ function currency_symbol_to_type (currency_symbol) {
 		"CLP$": "CLP",
 		"S/.": "PEN",
 		"COL$": "COP",
-		"NZ$": "NZD"}[currency_symbol] || "USD";
+		"NZ$": "NZD",
+		"ARS$": "ARS",
+		"₡": "CRC",
+		"₪": "ILS",
+		"₸": "KZT",
+		"KD": "KWD",
+		"zł": "PLN",
+		"QR": "QAR",
+		"$U": "UYU"}[currency_symbol] || "USD";
 }
 
 function currency_type_to_number (currency_type) {
 	return {"RUB": 5,
 		"EUR": 3,
 		"GBP": 2,
+		"PLN": 6,
 		"BRL": 7,
 		"JPY": 8,
 		"NOK": 9,
@@ -405,13 +422,21 @@ function currency_type_to_number (currency_type) {
 		"HKD": 29,
 		"TWD": 30,
 		"SAR": 31,
-		"AED": 32}[currency_type] || 1;
+		"AED": 32,
+		"ARS": 34,
+		"ILS": 35,
+		"KZT": 37,
+		"KWD": 38,
+		"QAR": 39,
+		"CRC": 40,
+		"UYU": 41}[currency_type] || 1;
 }
 
 function currency_number_to_type (currency_number) {
 	return {5: "RUB",
 		3: "EUR",
 		2: "GBP",
+		6: "PLN",
 		7: "BRL",
 		8: "JPY",
 		9: "NOK",
@@ -437,11 +462,18 @@ function currency_number_to_type (currency_number) {
 		29: "HKD",
 		30: "TWD",
 		31: "SAR",
-		32: "AED"}[currency_number] || "USD";
+		32: "AED",
+		34: "ARS",
+		35: "ILS",
+		37: "KZT",
+		38: "KWD",
+		39: "QAR",
+		40: "CRC",
+		41: "UYU"}[currency_number] || "USD";
 }
 
 function currency_symbol_from_string (string_with_symbol) {
-	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP\$|S\/\.|COL\$|NZ\$)/;
+	var re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP\$|S\/\.|COL\$|NZ\$|ARS\$|₡|₪|₸|KD|zł|QR|\$U)/;
 	var match = string_with_symbol.match(re);
 	return match ? match[0] : '';
 }
