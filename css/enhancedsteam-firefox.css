@@ -16,3 +16,15 @@
 #es_progress.error::-moz-progress-bar {
 	background-color: #B31414;
 }
+span.platform_img.steamplay {
+  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png") !important;
+}
+span.platform_img.win {
+  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png")  !important;
+}
+span.platform_img.mac {
+  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png")  !important;
+}
+span.platform_img.linux {
+  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png") !important;
+}
