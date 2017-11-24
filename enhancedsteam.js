@@ -1452,7 +1452,7 @@ function add_wishlist_sorts() {
 					break;
 				case "price":
 					sort_wishlist(".price, .discount_final_price", sort_by, true, function(val){
-						return Number(val.replace(/\-/g, "0").replace(/[^0-9\.]+/g, "")) || 31337;
+						return Number(val.replace(/\-/g, "0").replace(/,/g, ".").replace(/[^0-9\.]+/g, "")) || 31337;
 					});
 					break;
 				case "score":
