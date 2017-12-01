@@ -1,3 +1,7 @@
+html {
+	min-height: 100%;
+}
+
 body {
 	background: #000000; /* fallback */
 	background: -webkit-linear-gradient(top,  #000000 0%,#0b1821 100%); /* Chrome10+,Safari5.1+ */
@@ -12,7 +16,7 @@ body {
 	text-align:center;
 	font-family:"Arial";
 	font-size:18px;
-	margin-top: 90px;
+	margin-top: 94px;
 	width: 170px;
 	top: 0px;
 	bottom: 0px;
@@ -96,7 +100,7 @@ body {
 }
 #footer {
 	position:fixed;
-	bottom: 0;
+	bottom: 10px;
 	text-align:right;
 	right:15px;
 }
