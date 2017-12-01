@@ -5513,6 +5513,9 @@ function activate_multiple_keys() {
 			$("#es_activate_input_text").hide();
 			$.each(lines, function(e) {
 				var attempt = String(this);
+				if (attempt === "") { // skip blank rows in the input dialog (including trailing newline)
+					return;
+				}
 				keys.push(attempt);
 				$("#es_activate_results").append("<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + chrome.extension.getURL("img/questionmark.png") + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
 			});
