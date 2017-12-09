@@ -1,9 +1,13 @@
-﻿v9.7
+﻿v9.8
+-----
+
+
+v9.7
 -----
 + Added the ability to purchase custom gift cards for any amount over the minimum
 + Added support for additional currencies introduced by Valve
 : Fixed a bug that caused platform icons not to show correctly in Firefox
-: Fixed a bug with multiple key activiations that resulted in an occassional error
+: Fixed a bug with multiple key activiations that resulted in an occasional error
 : Fixed a bug in the options page formatting validation in Firefox
 : Fixed a bug that caused wishlist sorts not to work correctly in some currencies
 - Removed option to show wallet balance in header as this was added to Steam by Valve
