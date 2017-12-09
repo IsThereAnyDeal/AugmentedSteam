@@ -8,7 +8,6 @@
 : Fixed a bug that caused wishlist sorts not to work correctly in some currencies
 - Removed option to show wallet balance in header as this was added to Steam by Valve
 
-
 v9.6
 -----
 + Added the ability to activate multiple product codes at once to product activation page
