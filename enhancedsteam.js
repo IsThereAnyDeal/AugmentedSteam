@@ -2497,7 +2497,7 @@ function display_coupon_message(appid) {
 			if (!($price_div.find(".game_purchase_discount").length > 0 && coupon_data["discount_doesnt_stack"])) {
 				// If not (existing discounts and coupon does not stack)
 
-				$price_div[0].innerHTML = ""+
+				$('#price_div:first').html($(""+
 					"<div class=\"game_purchase_action_bg\">" +
 					"    <div class=\"discount_block game_purchase_discount\">" +
 					"        <div class=\"discount_pct\">-" + coupon_data["discount"] + "%</div>" +
@@ -2509,7 +2509,7 @@ function display_coupon_message(appid) {
 					"<div class=\"btn_addtocart\">" +
 					"        <a class=\"btnv6_green_white_innerfade btn_medium\" href=\"javascript:addToCart( " + cart_id + ");\"><span>" + localized_strings.add_to_cart + "</span></a>" +
 					"    </div>" +
-					"</div>";
+					"</div>"));
 			}
 		}
 	});
