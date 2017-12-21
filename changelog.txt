@@ -1,5 +1,6 @@
 ﻿v9.8
 -----
++ Added application hover menus to wishlist pages that show screenshots, review info, and more
 
 
 v9.7
