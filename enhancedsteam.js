@@ -3335,10 +3335,14 @@ function add_wishlist_hover() {
 		var $row = $(this).addClass('es_hover_loading');
 		var id = get_appid_wishlist($row.attr("id"));
 
-		$.get(`${ protocol }//store.steampowered.com/apphover/${ id }&pagev6=true`).done(function(text) {
-			$row.toggleClass('es_hover_loaded es_hover_loading')
-				.append(hover_template.replace('__content__', text));
-		});
+		$.get(`${ protocol }//store.steampowered.com/apphover/${ id }&pagev6=true`)
+			.done(function(text) {
+				$row.addClass('es_hover_loaded')
+					.append(hover_template.replace('__content__', text));
+			})
+			.complete(function() {
+				$row.removeClass('es_hover_loading');
+			});
 	});
 }
 
