@@ -5067,22 +5067,24 @@ function inventory_market_prepare() {
 		if (event.data.type && (event.data.type === "es_sendmessage")) { inventory_market_helper(event.data.information); }
 		if (event.data.type && (event.data.type == "es_sendfee_" + assetID)) { 
 			var sell_price = event.data.information.amount - event.data.information.fees;
-			$.ajax({
-				url: "https://steamcommunity.com/market/sellitem/",
-				type: "POST",
-				data: {
-					"sessionid": event.data.sessionID,
-					"appid": event.data.global_id,
-					"contextid": event.data.contextID,
-					"assetid": event.data.assetID,
-					"amount": 1,
-					"price": sell_price
-				},
-				crossDomain: true,
-				xhrFields: { withCredentials: true }
-			}).complete(function(data){
+			var formdata = new URLSearchParams();
+			formdata.append('sessionid', event.data.sessionID);
+			formdata.append('appid', event.data.global_id);
+			formdata.append('contextid', event.data.contextID);
+			formdata.append('assetid', event.data.assetID);
+			formdata.append('amount', 1);
+			formdata.append('price', sell_price);
+			fetch('https://steamcommunity.com/market/sellitem/', {
+				method: 'POST',
+				mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
+				credentials: 'include',
+				body: formdata,
+				headers: { origin: window.location.origin },
+				referrer: window.location.origin + window.location.pathname
+			}).then(function(response) {
 				$("#es_instantsell" + event.data.assetID).parent().slideUp();
 				$("#" + event.data.global_id + "_" + event.data.contextID + "_" + event.data.assetID).addClass("btn_disabled activeInfo").css("pointer-events", "none");
+				return response.json();
 			});
 		}
 	}, false);
