@@ -243,7 +243,10 @@ String.prototype.contains = function(it) {
 // Returns first level text only
 $.fn.firstText = function(i) {
 	i = i || 0;
-	return this.contents().filter(function() { return this.nodeType === 3; })[i].data;
+	var text_nodes = this.contents().filter(function() { return this.nodeType === 3; });
+	if (text_nodes.length < i + 1)
+		return '';
+	return text_nodes[i].data;
 };
 
 var currency_format_info = {
