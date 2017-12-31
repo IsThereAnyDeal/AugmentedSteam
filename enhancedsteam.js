@@ -3325,29 +3325,29 @@ function change_wishlist_format() {
 }
 
 function add_wishlist_hover() {
-	$('head').append('<link rel="stylesheet" href="' + protocol + '//store.akamai.steamstatic.com/public/css/v6/store.css" type="text/css" />');
-	var hover_div = $("\t\t<div class=\"hover game_hover\" id=\"global_hover\" style=\"display: none; left: 0px; top: 0;\">\r\n\t\t\t<div class=\"game_hover_box hover_box\">\r\n\t\t\t\t<div class=\"content\" id=\"global_hover_content\">\r\n\t\t\t\t<\/div>\r\n\t\t\t<\/div>\r\n\t\t\t<div class=\"hover_arrow_left\" style=\"left: 6px;\"><\/div>\r\n\t\t\t<\/div>");
-	$(document.body).append( hover_div );
-	$(".wishlistRow").hover(function() {
-		var id = $(this).attr("id").replace("game_", "");
-		var top = $(this).position().top + 208;
-		var left = $("#wishlist_items").offset().left + 932;
-		if ($("#hover_app_" + id).length > 0) {
-			hover_div.find( '.content' ).children().hide();
-			hover_div.css("top", top).css("left", left);
-			$("#hover_app_" + id).show();
-			hover_div.show();
-		} else {
-			$.get(protocol + '//store.steampowered.com/apphover/' + id + "&pagev6=true").done(function(html) {
-				var content = $(html);
-				hover_div.find( '.content' ).children().hide();
-				hover_div.find( '.content' ).append( content );
-				hover_div.css("top", top).css("left", left);
-				hover_div.show();
+	var hover_template = `
+		<div class="hover game_hover">
+			<div class="game_hover_box hover_box">
+				<div class="content">__content__</div>
+			</div>
+			<div class="hover_arrow_left" style="left: 6px;"></div>
+		</div>
+	`;
+
+	$('head').append(`<link rel="stylesheet" href="${ protocol }//store.akamai.steamstatic.com/public/css/v6/store.css" type="text/css" />`);
+
+	$(document).on("mouseenter", ".wishlistRow:not(.es_hover_loaded, .es_hover_loading)", function() {
+		var $row = $(this).addClass('es_hover_loading');
+		var id = get_appid_wishlist($row.attr("id"));
+
+		$.get(`${ protocol }//store.steampowered.com/apphover/${ id }&pagev6=true`)
+			.done(function(text) {
+				$row.addClass('es_hover_loaded')
+					.append(hover_template.replace('__content__', text));
+			})
+			.complete(function() {
+				$row.removeClass('es_hover_loading');
 			});
-		}
-	}, function() {
-		hover_div.hide();
 	});
 }
 

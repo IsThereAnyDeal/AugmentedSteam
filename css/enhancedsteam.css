@@ -2488,3 +2488,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .market_section_title .es_sold_amount:after {
 	content: ")";
 }
+
+/***************************************
+ * Wishlist
+ * add_wishlist_hover()
+ **************************************/
+.wishlistRow .game_hover {
+	position: absolute;
+	right: -328px;
+	top: -12px;
+ 	left: auto;
+ 	display: none;
+}
+.wishlistRow:hover:not(.inDrag) .game_hover {
+	display: block;
+}
