@@ -1,6 +1,9 @@
 ﻿v9.8
 -----
 + Added application hover menus to wishlist pages that show screenshots, review info, and more
+: Fixed a bug that caused quick sell and instant sell functions to not work correctly in Firefox
+: Fixed a bug that caused wishlist price sorting not to work correctly for some currencies
+: Updated wishlist style to more closely resemble the store pages
 
 
 v9.7
