@@ -3197,11 +3197,13 @@ function wishlist_add_to_cart() {
 
 			$("div.gameListPriceData").each(function(i, node) {
 				if ($(node).find("div.discount_block").length || !$(node).find("div.price").text().trim().match(/(^$|Free( to play)?)/i)) {
-					$(node).parent().find("div.storepage_btn_ctn").prepend(`
+					$(node).addClass("es_has_cart_button").parent().find("div.storepage_btn_ctn").before(`
 						<button class="es_add_to_cart btnv6_green_white_innerfade btn_small">
 							<span>${ localized_strings.add_to_cart }</span>
 						</button>
 					`);
+				} else {
+					$(node).addClass("es_not_priced");
 				}
 			});
 
@@ -3210,7 +3212,7 @@ function wishlist_add_to_cart() {
 
 				if (!$(this).is(".es_loading_cart")) {
 					var thisBtn = $(this).addClass("es_loading_cart");
-					var appid = get_appid($(this).next("a").prop("href"));
+					var appid = get_appid($(this).next("div").find("a").prop("href"));
 					
 					$.when(get_store_session, get_app_subid(appid)).then(function(store_sessionid, subid) {
 						$.ajax({
@@ -3311,15 +3313,15 @@ function wishlist_add_ratings() {
 }
 
 function change_wishlist_format() {
-	$(".wishlistRowItem").each(function() {
-		var store_link = $(this).find("a").attr("href"),
-			game_name = $(this).find("h4").text();
+	var tooltip = localized_strings.view_in + ' ' + localized_strings.store;
 
-		$(this).find("h4").html("<a href='" + store_link + "'>" + game_name + "</a>");
-		$(this).find("a.btn_small").hide();
-		$(this).find("div.storepage_btn_ctn").insertBefore($(this).find(".gameListPriceData")).css("float", "right").css("margin-left", "15px");
-		$(this).parent().css("border-radius", "4px");
+	$('div.wishlistRow').each(function(){
+		$(this).find('h4').addClass('es_store_link').wrapInner(`
+			<a data-community-tooltip="${ tooltip }" href="//store.steampowered.com/app/${ get_appid_wishlist($(this).attr('id')) }" target="_blank" />
+		`);
 	});
+
+	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
 }
 
 function add_wishlist_hover() {

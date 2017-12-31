@@ -4,7 +4,9 @@
 	border-style: solid;
 	border-radius: 0.5em;
 }
-
+.wishlistRow {
+	border-radius: 4px;
+}
 .popup_menu .hr {
 	height: 1px;
 	background-color: #82807c;
@@ -1401,9 +1403,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	/* Fixes a bug with sortable rows where they are set a high z-index but don't reset back causing them to overlap other elements */
 	z-index: auto !important;
 }
-.es_lowest_price {
-	margin-top: 12px;
-}
 .es_wishlist_note {
 	display: block;
 	overflow: hidden;
@@ -1464,13 +1463,35 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Wishlist
+ * change_wishlist_format()
+ **************************************/
+.wishlistRow h4:not(.es_store_link),
+.wishlistRow h4 a {
+	display: inline-block;
+	position: relative;
+}
+.wishlistRow h4:not(.es_store_link)::after,
+.wishlistRow h4.es_store_link a::after {
+	content: "";
+	display: block;
+	position: relative;
+	float: right;
+	margin-left: 6px;
+	width: 18px;
+	height: 18px;
+	opacity: 0.4;
+	background: url("chrome-extension://__MSG_@@extension_id__/img/steam_store.svg") bottom right no-repeat;
+}
+
+/***************************************
+ * Wishlist
  * add_empty_wishlist_buttons()
  **************************************/
 #es_empty_wishlist {
 	width: auto;
 	display: inline-block;
 	padding: 0 5px 0 5px;
-	border-color: #af1900;
+	border: 1px solid rgb(175, 25, 0) !important;
 	color: #af1900;
 	float: right;
 }
@@ -1537,8 +1558,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #wishlist_sort_options .store_nav .tab.focus > span,
 #wishlist_sort_options .store_nav .tab.focus {
 	filter: none;
-    color: #ffffff;
-    background: -webkit-linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%); /* Chrome10+,Safari5.1+ */
+	color: #ffffff;
+	background: -webkit-linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%); /* Chrome10+,Safari5.1+ */
 }
 #wishlist_sort_options .store_nav .tab > span.pulldown {
 	padding-right: 7px;
@@ -1556,13 +1577,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	vertical-align: text-bottom;
 }
 #wishlist_sort_options .store_nav .tab:hover > span.pulldown > span {
-    background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png' );
+	background-image: url( '//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png' );
 }
 #wishlist_sort_options .popup_block_new .popup_body {
-    border: none !important;
-    position: relative;
-    background: #417A9B !important;
-    padding: 6px 0px;
+	border: none !important;
+	position: relative;
+	background: #417A9B !important;
+	padding: 6px 0px;
 }
 #wishlist_sort_options .popup_menu_item {
 	color: #e5e4dc;
@@ -1748,10 +1769,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_tags.es_tags_short span:first-letter {
 	font-size: 10px;
 }
-
 .wishlistRow .es_tags {
 	float: right;
-	margin-top: 3px;
+	margin-top: 6px;
+	clear: right;
 }
 .game_area_dlc_price .es_tags {
 	margin-top: -1px;
@@ -2016,13 +2037,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_input_text {
 	background-color: #2a3f5a;
-        color: #fff;
-    border: 1px solid #000;
-    border-radius: 3px;
-    box-shadow: 1px 1px 0px #45556c;
-    width: 200px;
-    padding: 5px;
-    margin: 5px;
+	color: #fff;
+	border: 1px solid #000;
+	border-radius: 3px;
+	box-shadow: 1px 1px 0px #45556c;
+	width: 200px;
+	padding: 5px;
+	margin: 5px;
 }
 .es_input_text.blur {
 	color:#62696e;
@@ -2266,12 +2287,66 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: 16px;
 	height: 16px;
 	vertical-align: middle;
-	margin: -1px -10px 0 4px;
+	margin: -1px -4px 0 4px;
 	filter: brightness(350%);
 	background-image: url('//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif');
 	background-size: 16px 16px;
 }
-
+.es_add_to_cart span {
+	padding: 2px 8px !important;
+	font-size: 12px !important;
+	line-height: 20px !important;
+}
+.wishlistRow .storepage_btn_ctn,
+.gameListPriceData.es_not_priced {
+	display: none;
+}
+.gameListPriceData {
+	background: #000;
+	padding: 2px 2px 2px 2px !important;
+	border-radius: 3px;
+}
+.gameListPriceData .discount_pct {
+	display: inline-block !important;
+	line-height: 22px;
+	font-size: 13px;
+	height: 24px;
+}
+.gameListPriceData .discount_pct .es_discountabs {
+	font-size: 11px;
+}
+.gameListPriceData .price {
+	display: inline-block !important;
+	font-size: 12px;
+	padding: 2px 4px;
+}
+.gameListPriceData .discount_prices {
+	display: inline-block;
+	margin-top: -5px;
+	line-height: 12px;
+	vertical-align: middle;
+}
+.gameListPriceData .discount_original_price {
+	float: right;
+	margin-bottom: -2px;
+}
+.gameListPriceData.es_has_cart_button {
+	height: 26px;
+}
+.gameListPriceData: .discount_original_price {
+	font-size: 11px;
+	float: right;
+	clear: both;
+}
+.gameListPriceData .discount_final_price {
+	font-size: 12px;
+	float: right;
+	display: block;
+	clear: right;
+}
+.es_lowest_price {
+	margin-top: 12px;
+}
 /***************************************
  * Store app pages
  * add_app_badge_progres()
