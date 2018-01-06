@@ -3347,16 +3347,16 @@ function add_wishlist_hover() {
 		</div>
 	`;
 
-	$('head').append(`<link rel="stylesheet" href="${ protocol }//store.akamai.steamstatic.com/public/css/v6/store.css" type="text/css" />`);
-
 	$(document).on("mouseenter", ".wishlistRow:not(.es_hover_loaded, .es_hover_loading)", function() {
 		var $row = $(this).addClass('es_hover_loading');
 		var id = get_appid_wishlist($row.attr("id"));
 
 		$.get(`${ protocol }//store.steampowered.com/apphover/${ id }&pagev6=true`)
 			.done(function(text) {
-				$row.addClass('es_hover_loaded')
-					.append(hover_template.replace('__content__', text));
+				$row.addClass('es_hover_loaded');
+				if (text) {
+					$row.append(hover_template.replace('__content__', text));
+				}
 			})
 			.complete(function() {
 				$row.removeClass('es_hover_loading');

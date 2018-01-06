@@ -218,5 +218,14 @@
                 "css/store.steampowered.com/store_front.css"
             ]
         }
+        ,
+        {
+            "matches": [
+                "*://steamcommunity.com/*/wishlist*"
+            ],
+            "css": [
+                "css/steamcommunity.com/steam_store_hover.css"
+            ]
+        }
     ]
 }

@@ -1465,13 +1465,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Wishlist
  * change_wishlist_format()
  **************************************/
-.wishlistRow h4:not(.es_store_link),
-.wishlistRow h4 a {
+.wishlistRowItem h4:not(.es_store_link),
+.wishlistRowItem h4 a {
 	display: inline-block;
 	position: relative;
 }
-.wishlistRow h4:not(.es_store_link)::after,
-.wishlistRow h4.es_store_link a::after {
+.wishlistRowItem h4:not(.es_store_link)::after,
+.wishlistRowItem h4.es_store_link a::after {
 	content: "";
 	display: block;
 	position: relative;

@@ -1,0 +1,274 @@
+/* GLOBAL TAG STYLES */
+
+.app_tag {
+	display: inline-block;
+	line-height: 19px;
+	padding: 0 7px;
+	color: #b0aeac;
+	background-color: #384959;
+
+	margin-right: 2px;
+	border-radius: 3px;
+
+	box-shadow: 1px 1px 0 0 #000000;
+	cursor: pointer;
+
+	margin-bottom: 3px;
+
+	max-width: 200px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.app_tag.not_browseable {
+	opacity: 0.6;
+	cursor: default;
+}
+
+/* HOVER */
+
+
+div.game_hover {
+	position: absolute;
+	z-index: 400;
+	top: 40px;
+	left: 400px;
+	padding: 5px 12px 0 12px;
+}
+
+.hover_box.game_hover_box {
+    background: rgb(227,234,239); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(227,234,239,1) 0%, rgba(199,213,224,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(227,234,239,1)), color-stop(100%,rgba(199,213,224,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(227,234,239,1) 0%,rgba(199,213,224,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(227,234,239,1) 0%,rgba(199,213,224,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(227,234,239,1) 0%,rgba(199,213,224,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(227,234,239,1) 0%,rgba(199,213,224,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3eaef', endColorstr='#c7d5e0',GradientType=0 ); /* IE6-9 */
+
+    width: 306px;
+
+	color: #30455a;
+	font-size: 12px;
+
+	overflow: hidden;
+
+	box-shadow: 0 0 12px #000000;
+}
+
+.game_hover_box .content {
+	padding: 16px;
+}
+
+.game_hover_box .hover_top_area {
+	margin-bottom: 8px;
+	font-size: 10px;
+	color: #82807C;
+}
+
+.hover_screenshots {
+	position: relative;
+	width: 274px;
+	height: 153px;
+	margin: 5px 0;
+}
+
+.hover_screenshots .screenshot {
+	position: absolute;
+	width: 100%; /* Redundant ?? */
+	height: 100%;
+	background-size: cover;
+	background-position: center center;
+	opacity: 0;
+	transition: opacity 300ms;
+	animation: screenshot_hover_fadein 4s linear;
+	animation-iteration-count:infinite;
+}
+
+.hover_screenshots .screenshot:nth-child(1) { animation-delay: 0s }
+.hover_screenshots .screenshot:nth-child(2) { animation-delay: 1s }
+.hover_screenshots .screenshot:nth-child(3) { animation-delay: 2s }
+.hover_screenshots .screenshot:nth-child(4) { animation-delay: 3s }
+
+@keyframes screenshot_hover_fadein {
+	0% {
+		opacity: 0;
+	}
+	3% {
+		opacity: 1;
+	}
+	28% {
+		opacity: 1;
+	}
+
+	31% {
+		opacity: 0;
+	}
+}
+
+#hover_screenshots .screenshot.active {
+	opacity: 1;
+}
+
+.hover_box.game_hover_box h4 {
+	color: #222d3d;
+	font-weight: normal;
+	font-size: 17px;
+	margin-bottom: 0;
+
+			font-family: "Motiva Sans", Sans-serif;
+		font-weight: normal; /* normal */
+
+		}
+
+.game_hover_box .hover_release {
+	font-size: 10px;
+}
+
+.game_hover_box p, .game_hover_box {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.game_hover_box .rule {
+}
+
+.game_hover .hover_arrow_left, .game_hover .hover_arrow_right {
+	width: 7px;
+	height: 15px;
+	background: url( 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAPCAYAAADUFP50AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJlJREFUeNqc0k0KgCAQBlCdI0SLlkEtu4DLTt6yC7SN2hX0cwWbCQvDMa0PBhN9EsxIrbXgMs57RWueJR13Di+ooboeCEILpaZYDC/oCoshgLwYIhCL5TBtMcjOilUT1OJH6FdLrOWDobslYIN7/FCRmO4oMmCmIwbf6NGOAH4gZwA82EFnO7ghx14VuLRm6yAvtLDgEOUQYADt6VgCZRDsZgAAAABJRU5ErkJggg==' ) no-repeat top;
+	position: absolute;
+	top: 48px;
+}
+
+.game_hover .hover_arrow_left {
+	background-position: left;
+
+	left: 5px;
+}
+
+.game_hover .hover_arrow_right {
+	background-position: right;
+
+	right: 5px;
+}
+
+.hover_body {
+	margin-bottom: 6px;
+}
+
+.hover_details_block, .hover_details_block_full {
+	display: block;
+	border-radius: 2px;
+	margin-right: 3px;
+	background-color: #96a3ae;
+	padding: 4px;
+
+	line-height: 20px;
+	height: 20px;
+}
+
+.hover_details_block {
+	float: left;
+}
+
+.hover_category_icon {
+	display: inline-block;
+	line-height: 20px;
+	height: 20px;
+	vertical-align: middle;
+}
+
+.hover_friends_blocks {
+	margin-bottom: 8px;
+}
+
+.hover_tag_row {
+	overflow: hidden;
+	height: 19px;
+    margin-top: 2px;
+}
+
+.hover_tag_row .app_tag {
+	background-color: #96a3ae;
+	color: #ffffff;
+	box-shadow: none;
+	padding: 0 4px;
+    font-size: 11px;
+    border-radius: 2px;
+}
+
+.hover_details_specs {
+	height: 26px;
+	margin-bottom: 2px;
+}
+
+.hover_details_specs .icon {
+	float: left;
+	left: 0px;
+	width: 30px;
+	height: 22px;
+	padding-top: 4px;
+	padding-left: 6px;
+	background-color: #6a8caa;
+}
+
+.hover_details_specs .name {
+	margin-left: 2px;
+	height: 22px;
+	padding-top: 4px;
+	padding-left: 8px;
+	background-color: #6a8caa;
+}
+
+.hover_body .hover_review_summary {
+	margin-bottom: 10px;
+	border-radius: 2px;
+	padding: 4px;
+	color: #c6d4df;
+	background-color: rgba( 38, 54, 69, 0.6);
+}
+
+.review_score_icon.positive {
+	background-image: url( '/public/images/v6/user_reviews_positive.png' );
+}
+
+.review_score_icon.mixed {
+	background-image: url( '/public/images/v6/user_reviews_mixed.png' );
+}
+
+.review_score_icon.negative {
+	background-image: url( '/public/images/v6/user_reviews_negative.png' );
+}
+
+
+.game_review_summary {
+	color: #A34C25;
+}
+.game_review_summary.mixed {
+	color: #B9A074;
+}
+.game_review_summary.positive {
+	color: #66C0F4;
+}
+.game_review_summary.no_reviews, .game_review_summary.not_enough_reviews {
+	color: #929396;
+}
+
+.friend_blocks_row {
+    margin-top: 2px;
+}
+
+.friend_blocks_row .playerAvatar {
+	float: left;
+	margin-right: 5px;
+}
+.friend_blocks_row .friend_block_holder {
+    width: 40px;
+    height: 40px;
+}
+.friend_blocks_row .friend_block_holder, .friend_blocks_row .playerAvatar {
+    float: left;
+    margin-right: 5px;
+}
