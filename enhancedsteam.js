@@ -3340,8 +3340,10 @@ function add_wishlist_hover() {
 
 		$.get(`${ protocol }//store.steampowered.com/apphover/${ id }&pagev6=true`)
 			.done(function(text) {
-				$row.addClass('es_hover_loaded')
-					.append(hover_template.replace('__content__', text));
+				$row.addClass('es_hover_loaded');
+				if (text) {
+					$row.append(hover_template.replace('__content__', text));
+				}
 			})
 			.complete(function() {
 				$row.removeClass('es_hover_loading');
