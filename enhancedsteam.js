@@ -1553,22 +1553,24 @@ function add_wishlist_sorts() {
 	}
 
 	function updateRankMode(sort_by) {
-		if (sort_by == "rank") {
-			runInPageContext(function() {
-				g_bRankMode = true;
-				Sortable.create($('wishlist_items'), {tag: 'div', scroll: window, onUpdate: UpdateWishlistOrdering, starteffect: function(e) {e.addClassName("inDrag")}, endeffect: function(e) {e.removeClassName("inDrag")}});
-				jQuery(".wishlistRow").each(function() {
-					Event.observe(this, "mousedown", BlurRanks);
-				}).addClass("sortableRow");
-			});
-		} else {
-			runInPageContext(function() {
-				g_bRankMode = false;
-				Sortable.destroy($('wishlist_items'));
-				jQuery(".wishlistRow").each(function() {
-					Event.stopObserving(this, "mousedown");
-				}).removeClass("sortableRow");
-			});
+		if ($('.save_actions_enabled').length) {
+			if (sort_by == "rank") {
+				runInPageContext(function() {
+					g_bRankMode = true;
+					Sortable.create($('wishlist_items'), {tag: 'div', scroll: window, onUpdate: UpdateWishlistOrdering, starteffect: function(e) {e.addClassName("inDrag")}, endeffect: function(e) {e.removeClassName("inDrag")}});
+					jQuery(".wishlistRow").each(function() {
+						Event.observe(this, "mousedown", BlurRanks);
+					}).addClass("sortableRow");
+				});
+			} else {
+				runInPageContext(function() {
+					g_bRankMode = false;
+					Sortable.destroy($('wishlist_items'));
+					jQuery(".wishlistRow").each(function() {
+						Event.stopObserving(this, "mousedown");
+					}).removeClass("sortableRow");
+				});
+			}
 		}
 	}
 }
