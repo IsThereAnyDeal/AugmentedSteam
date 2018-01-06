@@ -1819,33 +1819,32 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * get_http()
  **************************************/
 #es_progress {
-	display: block;
 	float: right;
 	position: relative;
 	margin-top: 55px;
-	height: 14px;
+	width: 100px;
+	min-width: 16px;
+	height: 16px;
 	box-sizing: content-box;
 	border-radius: 8px;
 	overflow: hidden;
-	border: none;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-	-webkit-appearance: none;
-	-webkit-transition: width 1s ease-in-out;
-	-moz-transition: width 1s ease-in-out;
-	-o-transition: width 1s ease-in-out;
-	transition: width 1s ease-in-out;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
 #es_progress.error,
 #es_progress.complete {
-	width: 14px;
+	width: 16px;
+}
+#es_progress,
+#es_progress .progress-value {
+	-webkit-transition: width 1s ease-in-out;
+	-moz-transition: width 1s ease-in-out;
+	transition: width 1s ease-in-out;
 }
 /* This prevents the black bleeding from "progress-bar" background
 	around the edges of "progress-value" to make it look smoother */
-#es_progress.error::-webkit-progress-value,
-#es_progress.complete::-webkit-progress-value {
-	width: calc(100% + 2px) !important;
-	height: 16px;
-	margin: -1px 0 0 -1px;
+#es_progress.error .progress-value,
+#es_progress.complete .progress-value {
+	width: calc(100% + 4px) !important;
 }
 #es_progress.complete {
 	animation: delayBoxShadowGreen linear 1s;
@@ -1860,7 +1859,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	display: block;
 	content: "!";
 	position: absolute;
-	top: 1px;
+	top: 2px;
 	right: 0;
 	left: 0;
 	line-height: 12px;
@@ -1870,19 +1869,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-family: Impact, Charcoal, sans-serif;
 	text-shadow: 0 0 1px black;
 }
-#es_progress::-webkit-progress-inner-element {
+#es_progress .progress-inner-element {
 	border-radius: 8px;
 }
-#es_progress::-webkit-progress-bar {
+#es_progress .progress-bar,
+#es_progress .progress-bar {
 	background-color: black; 
 	border-radius: 8px;
 }
-#es_progress::-webkit-progress-value {
+#es_progress .progress-value {
+	height: 16px;
+	margin-left: -2px;
 	background-color: #51771d;
 	border-radius: 8px;
 	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 5%, rgba(255, 255, 255, 0) 95%);
 }
-#es_progress.error::-webkit-progress-value {
+#es_progress.error .progress-value {
+	transition: unset;
 	background-color: #B31414;
 	border-radius: 8px;
 }
