@@ -583,9 +583,10 @@ function get_http(url, callback, settings) {
 	total_requests += 1;
 
 	if (localized_strings.ready) {
-		$("#es_progress").attr({"max": 100, "title": localized_strings.ready.loading});
+		$("#es_progress").attr({"title": localized_strings.ready.loading});
 	}
 	$("#es_progress").removeClass("complete");
+	$("#es_progress .progress-value").css("width", "18px");
 	
 	if (!settings) settings = {};
 	if (!settings.dataType) settings.dataType = "text";
@@ -596,7 +597,7 @@ function get_http(url, callback, settings) {
 		processed_requests += 1;
 		var complete_percentage = (processed_requests / total_requests) * 100;
 		
-		$("#es_progress").val(complete_percentage);
+		$("#es_progress .progress-value").css("width", complete_percentage);
 		if (complete_percentage == 100) {
 			$("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready);
 		}
@@ -605,7 +606,7 @@ function get_http(url, callback, settings) {
 	jqxhr.done(callback);
 	
 	jqxhr.fail(function(jqxhr, textStatus, errorThrown) {
-		$("#es_progress").val(100).addClass("error").attr({"title": "", "max": 1});
+		$("#es_progress").addClass("error").attr({"title": ""});
 
 		if (!$(".es_progress_error").length) {
 			$("#es_progress").after('<div class="es_progress_error">' + localized_strings.ready.failed + ':' + '<ul></ul></div>');
@@ -2258,7 +2259,17 @@ function add_enhanced_steam_options() {
 	});
 
 	// Add ES progress indicator
-	$('#global_actions').after(`<div class="es_progress_wrap"><progress id="es_progress" class="complete" value="1" max="1" title="${ localized_strings.ready.ready }"></progress></div>`);
+	$('#global_actions').after(`
+		<div class="es_progress_wrap">
+			<div id="es_progress" class="complete" title="${ localized_strings.ready.ready }">
+				<div class="progress-inner-element">
+					<div class="progress-bar">
+						<div class="progress-value" style="width: 18px"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`);
 }
 
 // Display warning if browsing using non-account region
