@@ -6274,25 +6274,14 @@ function process_early_access() {
 function init_hd_player() {
 	var playInHD = getValue("playback_hd");
 
+	var firstVideoIsPlaying = $("div.highlight_movie").first().find("video.highlight_movie");
+	if (firstVideoIsPlaying.length) add_hd_control(firstVideoIsPlaying[0]);
+
 	// Initiate the HD options
 	$("div.highlight_movie").each(function(i, node) {
 		setMutationHandler(node, "video.highlight_movie", function(nodes) {
-			playInHD = getValue("playback_hd");
-
-			setTimeout(function(){ // prevents a bug in Chrome which causes videos to stop playing after changing the src
-				// Add "HD" button and "sd-src" to the video and set definition
-				var videoControl = $(nodes)[0];
-
-				if ($(videoControl).data("hd-src")) {
-					$(videoControl).data("sd-src", videoControl.src);
-					$(videoControl).parent().find(".time").after('<div class="es_hd_toggle"><span>HD</span></div>');
-				}
-
-				// Override Valve's auto switch to HD when putting a video in fullscreen
-				$(videoControl).parent().find(".fullscreen_button").replaceWith( $(`<div class="fullscreen_button"></div>`).on("click", function(){ toggleFullscreen(videoControl) }) );
-
-				toggle_video_definition( videoControl, playInHD );
-			}, 150);
+			var videoControl = $(nodes)[0];
+			add_hd_control(videoControl);
 
 			this.disconnect();
 		});
@@ -6320,6 +6309,32 @@ function init_hd_player() {
 			setValue("playback_hd", true);
 		}
 	});
+
+	function add_hd_control(videoControl) {
+		playInHD = getValue("playback_hd");
+
+		setTimeout(function(){ // prevents a bug in Chrome which causes videos to stop playing after changing the src
+			// Add "HD" button and "sd-src" to the video and set definition
+			if ($(videoControl).data("hd-src")) {
+				$(videoControl).data("sd-src", videoControl.src);
+				$(videoControl).parent().find(".time").after('<div class="es_hd_toggle"><span>HD</span></div>');
+			}
+
+			// Override Valve's auto switch to HD when putting a video in fullscreen
+			$(videoControl).parent().find(".fullscreen_button").replaceWith(
+				$(`<div class="fullscreen_button"></div>`).on("click", function(){
+					toggleFullscreen(videoControl);
+				})
+			);
+
+			// Toggle fullscreen on video double click
+			$(videoControl).on("dblclick", function(){
+				toggleFullscreen(videoControl);
+			});
+
+			toggle_video_definition( videoControl, playInHD );
+		}, 150);
+	}
 
 	function toggleFullscreen(videoControl) {
 		var eleContainer = videoControl.parentNode;
@@ -6357,14 +6372,21 @@ function init_hd_player() {
 			playInHD = getValue("playback_hd") || $(videoControl).hasClass("es_video_hd");
 
 		if (videoIsVisible) {
-			var videoPosition = videoControl.currentTime,
+			var videoPosition = videoControl.currentTime || 0,
 				videoPaused = videoControl.paused;
 
 			videoControl.preload = "metadata";
 			
 			$(videoControl).on("loadedmetadata", function() {
 				this.currentTime = videoPosition;
-				if (!videoPaused) videoControl.play();
+
+				if (!videoPaused && videoControl.play) {
+					var playPromise = videoControl.play();
+
+					if (playPromise !== undefined) {
+						playPromise.catch(function(e) { });
+					}
+				} 
 
 				$(videoControl).off("loadedmetadata");
 			});
