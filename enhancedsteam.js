@@ -2901,7 +2901,7 @@ function add_community_profile_links() {
 				"name": "Backpack.tf",
 			},
 			"astatsnl": {
-				"link": `http://astats.astats.nl/astats/User_Info.php?steamID64=${ steamID }`,
+				"link": `//astats.astats.nl/astats/User_Info.php?steamID64=${ steamID }`,
 				"name": "AStats.nl",
 			}
 		};
