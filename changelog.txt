@@ -1,6 +1,7 @@
 ﻿v9.8
 -----
 + Added application hover menus to wishlist pages that show screenshots, review info, and more
++ Improved performance of inventory market total calculations
 : Fixed a bug that caused quick sell and instant sell functions to not work correctly in Firefox
 : Fixed a bug that caused wishlist price sorting not to work correctly for some currencies
 : Fixed a bug that caused "Activate a product" link to show up in language menu incorrectly

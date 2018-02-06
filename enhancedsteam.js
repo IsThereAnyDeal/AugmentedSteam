@@ -4644,7 +4644,7 @@ function add_market_total() {
 						if (loops) {
 							while ((start + count) < (total_count + count)) {
 								get_http(protocol + "//steamcommunity.com/market/myhistory/render/?query=&start=" + start + "&count=" + count, function (txt) {
-									txt = txt.replace(/[ ]src=/g," data-src=");
+									txt = txt.replace(/<img[^>]*>/g,"");
 									get_market_data(txt);
 									if (i == loops) { show_results(); }
 									i++;
