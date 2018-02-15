@@ -1625,21 +1625,6 @@ function add_wishlist_total(showTotal) {
 	}
 }
 
-function add_wishlist_ajaxremove() {
-	if (is_signed_in && $("a[onclick*=wishlist_remove]").length) {
-		// Remove "onclick"
-		runInPageContext(function(){ $J("a[onclick*=wishlist_remove]").removeAttr("onclick").addClass("es_wishlist_remove"); });
-
-		$(".es_wishlist_remove").on("click", function(e) {
-			e.preventDefault();
-
-			var appid = $(this).parent().parent().parent()[0].id.replace("game_", "");
-
-			wishlist_remove_app(appid, true);
-		});
-	}
-}
-
 // Removes all items from the user's wishlist
 function empty_wishlist() {
 	runInPageContext(`function(){
@@ -8951,12 +8936,11 @@ $(document).ready(function(){
 							show_regional_pricing("sale");
 							break;
 
-						case /^\/wishlist\/(?:id|profiles)\/.+\//.test(path):
+						case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
 							wishlist_highlight_apps();
 							fix_app_image_not_found();
 							add_empty_wishlist_buttons();
 							add_wishlist_total();
-							add_wishlist_ajaxremove();
 							add_wishlist_pricehistory();
 							add_wishlist_notes();
 							add_wishlist_sorts();
