@@ -1142,7 +1142,7 @@ function add_tag(node, tag) {
 			else if (node.classList.contains("game_area_dlc_row")) { // done
 				$(node).find(".game_area_dlc_price").prepend($tags);
 			}
-			else if (node.classList.contains("wishlistRow")) { // done
+			else if (node.classList.contains("wishlist_row")) { // done
 				$(node).find(".wishlist_added_on").after($tags);
 			}
 			else if (node.classList.contains("match")) { // done
@@ -1376,37 +1376,6 @@ function add_empty_wishlist_buttons() {
 	}
 }
 
-function add_wishlist_filter() {
-	var html  = "<span>" + localized_strings.show + " </span>";
-		html += '<div class="store_nav"><div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom"><span class="pulldown"><div id="es_filter_active" style="display: inline;">' + localized_strings.games_all + '</div><span></span></span></div></div>';
-		html += '<div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;"><div class="popup_body popup_menu">'
-		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="all">' + localized_strings.games_all + '</a>';
-		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="sale">' + localized_strings.games_discount + '</a>';
-		html += '<a class="popup_menu_item es_wl_filter" data-filter-by="coupon">' + localized_strings.games_coupon + '</a>';		
-		html += "</div></div>";
-
-	$("#wishlist_sort_options").append("<div class='es_wishlist_filter'>" + html + "</div>");
-
-	$(document).on("click", "a.es_wl_filter", function(e) {
-		e.preventDefault();
-		var filter_type = $(this).data("filter-by");
-
-		if (filter_type === "sale") {
-			$(".wishlistRow").hide();
-			$(".discount_block_inline").closest(".wishlistRow").show();
-		}
-		else if (filter_type === "coupon") {
-			$(".wishlistRow").hide();
-			$(".es_highlight_coupon").show();
-		}
-		else {
-			$(".wishlistRow").show();
-		}
-		$("#es_filter_active").text($(this).text());
-		$("#es_filter_flyout").fadeOut();
-	});
-}
-
 function add_wishlist_sorts() {
 	var sorts = ["rank", "added", "name", "price", "score", "discount", "discountabs"],
 		sorted = getCookie("wishlist_sort2") || "rank",
@@ -1524,7 +1493,7 @@ function add_wishlist_sorts() {
 		var T = asc === true ? 1 : -1,
 			F = asc === true ? -1 : 1;
 
-		var $rows = $(sel).closest(".wishlistRow");
+		var $rows = $(sel).closest(".wishlist_row");
 
 		$rows.sort(function(a, b){
 			a = fn($(a).find(sel).val() || $(a).find(sel).text().trim());
@@ -1558,7 +1527,7 @@ function add_wishlist_sorts() {
 				runInPageContext(function() {
 					g_bRankMode = true;
 					Sortable.create($('wishlist_items'), {tag: 'div', scroll: window, onUpdate: UpdateWishlistOrdering, starteffect: function(e) {e.addClassName("inDrag")}, endeffect: function(e) {e.removeClassName("inDrag")}});
-					jQuery(".wishlistRow").each(function() {
+					jQuery(".wishlist_row").each(function() {
 						Event.observe(this, "mousedown", BlurRanks);
 					}).addClass("sortableRow");
 				});
@@ -1566,7 +1535,7 @@ function add_wishlist_sorts() {
 				runInPageContext(function() {
 					g_bRankMode = false;
 					Sortable.destroy($('wishlist_items'));
-					jQuery(".wishlistRow").each(function() {
+					jQuery(".wishlist_row").each(function() {
 						Event.stopObserving(this, "mousedown");
 					}).removeClass("sortableRow");
 				});
@@ -1581,7 +1550,7 @@ function add_wishlist_discountabs() {
 
 	$(".discount_pct").not(".es_has_discountabs").each(function(){
 		var $this = $(this).addClass("es_has_discountabs"),
-			absolute_discount = absolute_discount_for_wishlist_row($this.closest(".wishlistRow"), price_cache);
+			absolute_discount = absolute_discount_for_wishlist_row($this.closest(".wishlist_row"), price_cache);
 
 		$this.append("<div class='es_discountabs'>(" + formatCurrency(absolute_discount) + ")</div><input class='es_discountabs_raw' type='hidden' value='" + absolute_discount + "' />");
 	});
@@ -1604,7 +1573,7 @@ function memoized_parse_currency(str, cache) {
 
 // Calculate total cost of all items on wishlist
 function add_wishlist_total(showTotal) {
-	if ($('.wishlistRow').length < 100 || showTotal) {
+	if ($('.wishlist_row').length < 100 || showTotal) {
 		var total = 0,
 			items = 0,
 			gamelist = "",
@@ -1621,7 +1590,7 @@ function add_wishlist_total(showTotal) {
 			}
 		}
 
-		$('.wishlistRow').each(function(){
+		$('.wishlist_row').each(function(){
 			var $this = $(this);
 
 			if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
@@ -1688,11 +1657,11 @@ function empty_wishlist() {
 
 		var q = 0;
 
-		$("div.wishlistRow").slice(0, 5).each(function(i, node){
+		$("div.wishlist_row").slice(0, 5).each(function(i, node){
 			var appid = get_appid_wishlist(node.id);
 
 			wishlist_remove_app(appid, usingApi).always(function(useApi) {
-				if (!$("div.wishlistRow").length) {
+				if (!$("div.wishlist_row").length) {
 					location.reload();
 				} else {
 					q--;
@@ -1748,7 +1717,7 @@ function wishlist_remove_app(appid, useApi, updateRanks) {
 			if (updateRanks) {
 				var currentRank = parseFloat($("#game_" + appid + " .wishlist_rank")[0].value);
 
-				for (var i = 0; i < $('.wishlistRow').length; i++) {
+				for (var i = 0; i < $('.wishlist_row').length; i++) {
 					if ($('.wishlist_rank')[i].value > currentRank) {
 						$('.wishlist_rank')[i].value = $('.wishlist_rank')[i].value - 1;	
 					}
@@ -1817,8 +1786,8 @@ function add_wishlist_pricehistory() {
 				var cc = getStoreRegionCountryCode();
 
 				function get_price_data(node, id) {
-					html = "<div class='es_lowest_price' id='es_price_" + id + "'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
-					$(node).append(html);
+					html = "<div class='es_lowest_price' id='es_price_" + id + "' style='float: right;'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
+					$(node).find(".platform_icons").append(html);
 
 					get_http("https://api.enhancedsteam.com/pricev3/?appid=" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 						var data = JSON.parse(txt);
@@ -1900,9 +1869,9 @@ function add_wishlist_pricehistory() {
 				}
 
 				var timeoutId;
-				$(".wishlistRow").hover(function() {
+				$(".wishlist_row").hover(function() {
 					var node = $(this);
-					var appid = node[0].id.replace("game_", "");
+					var appid = node.attr("data-app-id");
 					if (!timeoutId) {
 						timeoutId = window.setTimeout(function() {					
 							timeoutId = null;						
@@ -1985,7 +1954,7 @@ function add_wishlist_notes() {
 
 		// Insert the "add wishlist note" button only when necessary
 		$(document).on("click", ".pullup_item:not(.es_has_note_button)", function(){
-			var appRow = $(this).closest(".wishlistRow"),
+			var appRow = $(this).closest(".wishlist_row"),
 				appid = $(appRow).attr("id").replace("game_", "");
 
 			$(this).addClass("es_has_note_button");
@@ -3203,209 +3172,15 @@ var get_app_subid = function(appid) {
 	return deferred.promise();
 };
 
-function wishlist_add_to_cart() {
-	storage.get(function(settings){
-		if (settings.add_to_cart_wishlist === undefined) { settings.add_to_cart_wishlist = true; storage.set({'add_to_cart_wishlist': settings.add_to_cart_wishlist}); }
-		if (settings.add_to_cart_wishlist) {
-
-			$("div.gameListPriceData").each(function(i, node) {
-				if ($(node).find("div.discount_block").length || !$(node).find("div.price").text().trim().match(/(^$|Free( to play)?)/i)) {
-					$(node).addClass("es_has_cart_button").parent().find("div.storepage_btn_ctn").before(`
-						<button class="es_add_to_cart btnv6_green_white_innerfade btn_small">
-							<span>${ localized_strings.add_to_cart }</span>
-						</button>
-					`);
-				} else {
-					$(node).addClass("es_not_priced");
-				}
-			});
-
-			$("button.es_add_to_cart").on("click", function(e){
-				e.preventDefault();
-
-				if (!$(this).is(".es_loading_cart")) {
-					var thisBtn = $(this).addClass("es_loading_cart");
-					var appid = get_appid($(this).next("div").find("a").prop("href"));
-					
-					$.when(get_store_session, get_app_subid(appid)).then(function(store_sessionid, subid) {
-						$.ajax({
-							type: 'POST',
-							url: protocol + '//store.steampowered.com/cart/',
-							data: {
-								snr: '1_5_9__403',
-								action: 'add_to_cart',
-								sessionid: store_sessionid,
-								subid: subid
-							},
-							crossDomain: true,
-							xhrFields: { withCredentials: true }
-						}).done(function() {
-							$(thisBtn).addClass("btn_disabled").prop("disabled", true);
-						}).complete(function() {
-							$(thisBtn).removeClass("es_loading_cart");
-						});
-					}, function(){
-						$(thisBtn).removeClass("es_loading_cart");
-					});
-				}
-			});
-		}
-	});
-}
-
-function wishlist_add_ratings() {
-	var appsUpdateQueue = [];
-
-	$('a.btnv6_blue_hoverfade').each(function (index, node) {
-		var appid = get_appid(node.href);
-		var review_cache = getValue("reviewData_" + appid);
-
-		if (review_cache) {
-			var time_now = parseInt(Date.now() / 1000, 10);
-			var last_updated = review_cache["u"] || time_now - 1;
-
-			if (review_cache["s"])
-				build_review(appid, review_cache["s"]);
-
-			// Update valid data every 24 hours and invalid data every hour
-			if (last_updated < (time_now - 60 * 60 * 24) || !review_cache["s"] && last_updated < (time_now - 60 * 60))
-				appsUpdateQueue.push(appid);
-		} else {
-			appsUpdateQueue.push(appid);
-		}
-	});
-
-	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
-
-	// Update cache in background
-	if (appsUpdateQueue.length) {
-		var update_time = parseInt(Date.now() / 1000, 10);
-
-		get_http("https://api.enhancedsteam.com/reviews/", function(data) {
-			var review_data = JSON.parse(data);
-
-			$.each(review_data, function(appid, scores) {
-				build_review(appid, scores, 'update');
-				setValue("reviewData_" + appid, {
-					s: scores,
-					u: update_time
-				});
-				appsUpdateQueue.splice(appsUpdateQueue.indexOf(appid), 1);
-			});
-
-			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
-		}, {
-			method: "POST",
-			data: { "appids": appsUpdateQueue.join(",") }
-		});
-
-		$.each(appsUpdateQueue, function(index, appid) {
-			setValue("reviewData_" + appid, {
-				s: false,
-				u: update_time
-			});
-		});
-	}
-
-	function build_review(appid, scores, type) {
-		if (scores["t"] <= 0)
-			return;
-
-		var percent = ((Math.floor(100 * (scores["p"] / scores["t"])) / 100) * 100).toFixed(),
-			score = (percent >= 70 ? "positive" : (percent >= 40 ? "mixed" : "negative"));
-
-		var tooltip = localized_strings.review_summary
-						.replace("__percent__", percent + "%")
-						.replace("__num__", scores["t"].toLocaleString());
-
-		if (type === "update")
-			$("#game_" + appid).find("div.es_wishlist_score").remove();
-
-		$("#game_" + appid).find("div.wishlistRankCtn").append(`<div class="es_wishlist_score es_score_${ score }" data-community-tooltip="${ tooltip }">${ percent + `%` }</div>`);
-	}
-}
-
-function change_wishlist_format() {
-	var tooltip = localized_strings.view_in + ' ' + localized_strings.store;
-
-	$('div.wishlistRow').each(function(){
-		$(this).find('h4').addClass('es_store_link').wrapInner(`
-			<a data-community-tooltip="${ tooltip }" href="//store.steampowered.com/app/${ get_appid_wishlist($(this).attr('id')) }" target="_blank" />
-		`);
-	});
-
-	runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
-}
-
-function add_wishlist_hover() {
-	var hover_template = `
-		<div class="hover game_hover">
-			<div class="game_hover_box hover_box">
-				<div class="content">__content__</div>
-			</div>
-			<div class="hover_arrow_left" style="left: 6px;"></div>
-		</div>
-	`;
-
-	$(document).on("mouseenter", ".wishlistRow:not(.es_hover_loaded, .es_hover_loading)", function() {
-		var $row = $(this).addClass('es_hover_loading');
-		var id = get_appid_wishlist($row.attr("id"));
-
-		$.get(`${ protocol }//store.steampowered.com/apphover/${ id }&pagev6=true`)
-			.done(function(text) {
-				$row.addClass('es_hover_loaded');
-				if (text) {
-					$row.append(hover_template.replace('__content__', text));
-				}
-			})
-			.complete(function() {
-				$row.removeClass('es_hover_loading');
-			});
-	});
-}
-
-// TODO: Cache this data, but only the required entries! Store the data combined in one row
-// but update apps individually based on "release_date.coming_soon". Unreleased apps will be
-// updated at least once a day while others can be updated once a week. If more than three
-// subsequent API request errors occur when pulling or updating data delay the process for a while.
-function appdata_on_wishlist() {
-	if ($('a.btnv6_blue_hoverfade').length < 200) {
-		$('a.btnv6_blue_hoverfade').each(function (index, node) {
-			var app = get_appid(node.href);
-			get_http(protocol + '//store.steampowered.com/api/appdetails/?appids=' + app, function (data) {
-				var storefront_data = JSON.parse(data);
-				$.each(storefront_data, function(appid, app_data) {
-					if (app_data.success) {
-						// Add platform information
-						if (app_data.data.platforms) {
-							var htmlstring = "";
-							var platforms = 0;
-							if (app_data.data.platforms.windows) { htmlstring += "<span class='platform_img win'></span>"; platforms += 1; }
-							if (app_data.data.platforms.mac) { htmlstring += "<span class='platform_img mac'></span>"; platforms += 1; }
-							if (app_data.data.platforms.linux) { htmlstring += "<span class='platform_img linux'></span>"; platforms += 1; }
-							if (platforms > 1) { htmlstring = htmlstring + "<span class='platform_img steamplay'></span>"; }
-							$(node).parent().parent().parent().find(".bottom_controls").append('<span class="es_platform">' + htmlstring + '</span>');
-						}
-
-						// Add release date info to unreleased apps
-						if (app_data.data.release_date.coming_soon == true) {
-							$(node).parent().parent().parent().find(".wishlist_added_on").after('<div class="releasedate" style="float: right;">' + localized_strings.available + ': ' + app_data.data.release_date.date + '</div>');
-						}
-					}
-				});
-			});
-		});
-	}
-}
-
 function wishlist_highlight_apps() {
-	if (is_signed_in && ($(".profile_small_header_bg a:first").attr("href").replace(/\/$/, "") != $("#global_actions .playerAvatar:first").attr("href").replace(/\/$/, ""))) {
+	var uid = window.location.pathname.replace("/wishlist/profiles/", "").replace("/", "");
+	if (is_signed_in != uid) {
 		storage.get(function(settings) {
 			$.when.apply($, [dynamicstore_promise, get_store_session]).done(function(data, store_sessionid) {
 				var ownedapps = data.rgOwnedApps;
 				var wishlistapps = data.rgWishlist;
 				
-				$("div.wishlistRow").each(function(i, node) {
+				$("div.wishlist_row").each(function(i, node) {
 					var appid = Number(get_appid_wishlist(node.id)),
 						owned = ownedapps.indexOf(appid) != -1,
 						wishlisted = wishlistapps.indexOf(appid) != -1;
@@ -3439,7 +3214,7 @@ function wishlist_highlight_apps() {
 				// Bind actions to "Add to your wishlist" buttons
 				$("a.es_wishlist_add").on("click", function(){
 					var $el = $(this),
-						$wishlistRow = $(this).closest("div.wishlistRow");
+						$wishlistRow = $(this).closest("div.wishlist_row");
 
 					$.ajax({
 						type: "POST",
@@ -6159,24 +5934,6 @@ function check_early_access(node, selector_modifier) {
 			});
 		}
 	});
-}
-
-function add_wishlist_search() {
-	// Simply use Valve's function for filtering and we just provide the games list
-	runInPageContext(`function () {
-		$J("#tabs_basebg").prepend('<div class="es_games_filter">` + localized_strings.filter_games + ` <div class="gray_bevel for_text_input"><input type="text" id="gameFilter" name="gameFilter"></div></div>');
-		$J("#gameFilter").on("keyup", function () {
-			if (typeof rgGames === "undefined") {
-				rgGames = [];
-				$J(".wishlistRow").each(function (id, node) {
-					var appName = $J(node).find("h4.ellipsis").text(),
-						appId = node.id.replace("game_", "");
-					rgGames.push({"name": appName, "appid": appId});
-				});
-			}
-			filterApps();
-		});
-	}`);
 }
 
 // Add a blue banner to Early Access games
@@ -9194,6 +8951,22 @@ $(document).ready(function(){
 							show_regional_pricing("sale");
 							break;
 
+						case /^\/wishlist\/(?:id|profiles)\/.+\//.test(path):
+							wishlist_highlight_apps();
+							fix_app_image_not_found();
+							add_empty_wishlist_buttons();
+							add_wishlist_total();
+							add_wishlist_ajaxremove();
+							add_wishlist_pricehistory();
+							add_wishlist_notes();
+							add_wishlist_sorts();
+
+							// Wishlist highlights
+							load_inventory().done(function() {
+								start_highlights_and_tags();
+							});	
+							break;
+
 						// Storefront-front only
 						case /^\/$/.test(path):
 							add_popular_tab();
@@ -9225,30 +8998,6 @@ $(document).ready(function(){
 					}
 
 					switch (true) {
-						case /^\/(?:id|profiles)\/.+\/wishlist/.test(path):
-							change_wishlist_format();
-							add_wishlist_hover();
-							alternative_linux_icon();
-							appdata_on_wishlist();
-							wishlist_highlight_apps();
-							fix_app_image_not_found();
-							add_empty_wishlist_buttons();
-							add_wishlist_filter();
-							add_wishlist_total();
-							add_wishlist_ajaxremove();
-							add_wishlist_pricehistory();
-							add_wishlist_notes();
-							add_wishlist_search();
-							wishlist_add_to_cart();
-							wishlist_add_ratings();
-							add_wishlist_sorts();
-
-							// Wishlist highlights
-							load_inventory().done(function() {
-								start_highlights_and_tags();
-							});	
-							break;
-
 						case /^\/chat\//.test(path):
 							chat_dropdown_options(true);
 							break;
