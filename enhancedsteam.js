@@ -5327,6 +5327,11 @@ function activate_multiple_keys() {
 				$("#es_activate_results").append("<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + chrome.extension.getURL("img/questionmark.png") + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
 			});
 
+			// force recalculation of the modal's position so it doesn't extend off the bottom of the page
+			setTimeout(function(){
+				window.dispatchEvent(new Event("resize"));
+			}, 250);
+
 			// attempt to activate each key in sequence
 			var promises = [];
 
@@ -5390,6 +5395,7 @@ function activate_multiple_keys() {
 			$.when.apply(null, promises).done(function(){
 				$(".es_activate_modal_close").find("span").text(localized_strings.close);
 				$(".es_activate_modal_close").show();
+				window.dispatchEvent(new Event("resize"));
 			});
 		});
 	});
