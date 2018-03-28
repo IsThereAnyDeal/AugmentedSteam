@@ -1396,7 +1396,7 @@ function add_wishlist_total(showTotal) {
 			var parsed = parse_currency($node.find(search).text().trim());
 
 			if (parsed) {
-				gamelist += $node.find("h4").text().trim() + ", ";
+				gamelist += $node.find(".title").text().trim() + ", ";
 				total += parsed.value;
 				apps += get_appid($node.find(".btnv6_blue_hoverfade").attr("href")) + ",";
 				items ++;
@@ -1404,19 +1404,17 @@ function add_wishlist_total(showTotal) {
 		}
 
 		$('.wishlist_row').each(function(){
-			var $this = $(this);
+			if ($(this).find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
+				calculate_node($(this), "div[class='price']");
 
-			if ($this.find("div[class='price']").length != 0 && $this.find("div[class='price']").text().trim() != "")
-				calculate_node($this, "div[class='price']");
-
-			if ($this.find("div[class='discount_final_price']").length != 0)
-				calculate_node($this, "div[class='discount_final_price']");
+			if ($(this).find("div[class='discount_final_price']").length != 0)
+				calculate_node($(this), "div[class='discount_final_price']");
 		});
 		gamelist = gamelist.replace(/, $/, "");
 
 		total = formatCurrency(parseFloat(total));
 
-		$(".games_list").after(`
+		$("#wishlist_ctn").after(`
 			<div class='es_wishlist_total'>
 				<div class='game_area_purchase_game'>
 					<h1>` + localized_strings.wishlist + `</h1>
@@ -1430,7 +1428,7 @@ function add_wishlist_total(showTotal) {
 			</div>
 		`);
 	} else {
-		$(".games_list").after("<div class='es_show_wishlist_total btn_darkblue_white_innerfade'><span>" + localized_strings.show_wishlist_total + "<span></div>");
+		$("#wishlist_ctn").after("<div class='es_show_wishlist_total btn_darkblue_white_innerfade'><span>" + localized_strings.show_wishlist_total + "<span></div>");
 		$(document).on("click", ".es_show_wishlist_total", function(){
 			$(this).remove();
 			add_wishlist_total(true);
@@ -8735,10 +8733,12 @@ $(document).ready(function(){
 							break;
 
 						case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-							setTimeout(wishlist_highlight_apps, 1500);
+							setTimeout(function() {
+								wishlist_highlight_apps();
+								add_wishlist_total();
+							}, 1500);
 							fix_app_image_not_found();
 							add_empty_wishlist_buttons();
-							add_wishlist_total();
 							add_wishlist_pricehistory();
 							add_wishlist_notes();
 
