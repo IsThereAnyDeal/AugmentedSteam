@@ -8,7 +8,6 @@
 : Updated several wishlist-related functions to work with Steam's new page layout
 - Removed several wishlist-related functions that were added by Valve
 
-
 v9.7
 -----
 + Added the ability to purchase custom gift cards for any amount over the minimum
