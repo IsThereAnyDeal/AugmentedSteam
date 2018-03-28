@@ -1,6 +1,6 @@
 {
     "post_history": "Ver histórico de posts",
-    "add_nickname": "Adicionar Alcunha",
+    "add_nickname": "Adicionar alcunha",
     "total_size": "Tamanho Total",
     "dlc_details": "Detalhes do Conteúdo Descarregável",
     "badge_not_unlocked": "Não desbloqueada",
@@ -24,9 +24,9 @@
     "close": "Fechar",
     "error": "Ocorreu um erro",
     "go": "Ir",
-    "activate": "Activar um produto",
-    "activate_multiple_header": "Escreve os codigos de produto abaixo, um por linha",
-    "activate_multiple": "Ativar múltiplos produtos",
+    "activate": "Ativar um produto",
+    "activate_multiple_header": "Escreve os códigos de produto abaixo, um por linha",
+    "activate_multiple": "Ativar vários produtos",
     "activate_products": "Ativar produtos",
     "coupon_application_note": "Um cupão de desconto do teu inventário será aplicado automaticamente no fim da compra",
     "hide": "Esconder",
@@ -128,7 +128,7 @@
     "mixed_item": "Itens com avaliação mista",
     "negative_item": "Itens com avaliação negativa",
     "price_above": "Itens que custam mais de",
-    "price_above_tooltip": "Insira zero para itens gratuítos ou itens sem marcadores de preço; Deixe este campo vazio para desativar esta funcionalidade",
+    "price_above_tooltip": "Introduz zero para itens gratuítos ou itens sem marcadores de preço; Deixa este campo vazio para desativares esta funcionalidade",
     "news": "Notícias",
     "check_system": "Verifica o teu sistema",
     "viewinclient": "Ver na Steam",
@@ -184,7 +184,7 @@
     "mods": "Mods",
     "empty_wishlist": "Esvaziar lista de desejos",
     "empty_wishlist_confirm": "Tens a certeza que queres limpar a tua lista de desejos?\n\nEsta acção não pode ser desfeita!",
-    "empty_wishlist_loading": "Limpando a tua lista de desejos, por favor espere...",
+    "empty_wishlist_loading": "A limpar a tua lista de desejos, por favor aguarda...",
     "about": "Sobre",
     "never": "Nunca",
     "coupon_available": "Tens um cupão disponível!",
@@ -237,7 +237,7 @@
     "join_group": "Aderir a grupo",
     "chat": "Conversação",
     "web_browser_chat": "Conversação no navegador",
-    "steam_client_chat": "Conversação na Steam",
+    "steam_client_chat": "Conversação no Steam",
     "available": "Disponível",
     "set_as_background": "Definir como plano de fundo",
     "preview_background": "Pré-visualizar plano de fundo",
@@ -250,9 +250,9 @@
     "show_wishlist_total": "Ver lista completa",
     "tag_short": "Usar tags curtas para economizar espaço",
     "no_price_data": "Não há dados de preços disponíveis",
-    "exclude_tags": "Excluir tags",
-    "user_score": "Pontuação do utilizador",
-    "user_reviews": "Análises dos utilizadores",
+    "exclude_tags": "Excluir marcadores",
+    "user_score": "Pontuação de utilizadores",
+    "user_reviews": "Análises de utilizadores",
     "review_summary": "__percent__ de __num__ avaliações de jogadores para este jogo são positivas.",
     "market_popular_items_toggle": "Ativar update automatico para itens populares",
     "achievements": {
@@ -279,7 +279,7 @@
         "peaktoday": "pico de hoje"
     },
     "hltb": {
-        "title": "Quanto tempo para bater",
+        "title": "Quanto tempo para completar",
         "main_e": "História principal e Extras",
         "compl": "Completar tudo",
         "submit": "Submeter o teu tempo",
@@ -355,7 +355,7 @@
         "friends_rec": "Itens que os teus amigos analizaram",
         "lowestprice_header": "Informações de histórico de preços",
         "total_spent": "Mostrar total gasto na página da conta",
-        "add_wallet_balance": "Mostrar balanço da Carteira Steam no topo",
+        "add_wallet_balance": "Mostrar saldo da Carteira Steam no topo",
         "add_to_cart_wishlist": "Mostrar botão \"Adicionar ao carrinho\" na lista de desejos",
         "about_text": "<div class=\"header\">Sobre o <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam é uma extensão para Google Chrome que adiciona muitas funcionalidades novas ao site do Steam.<p>As funcionalidades incluem:<ul><li>Destacar jogos que já tens</li><li>Destacar jogos na tua lista de desejos</li><li>Cálculo correto do desconto de pacotes com base nos jogos que já tens</li><li>Mostrar quanto já gastaste no Steam desde a criação da tua conta</li><li>Destacar na página do jogo base os DLCs que já tens</li><li>Corrigir ícones \"Sem imagem disponível\" de jogos ou DLCs na tua lista de desejos</li><li>Indicar jogos com DRM de terceiros</li></ul><p>Se achares esta extensão útil, considera fazer um donativo.",
         "stores_all": "Comparar todas as lojas",
@@ -419,7 +419,7 @@
         "skip_got_steam": "Ignorar a janela 'Tens Steam?'",
         "store_general_thirdparty": "Opções para obter informações de sites de fterceiros",
         "purchase_dates": "Mostrar a data de compra do jogo na página da loja",
-        "show_badge_progress": "Mostrar progresso de insígnia nas páginas da loja",
+        "show_badge_progress": "Mostrar progresso de medalhas nas páginas da loja",
         "show_wishlist_link": "Mostrar um link para a lista de desejos em perfis",
         "show_wishlist_count": "Mostrar o número de itens na lista de desejos",
         "lang": {
@@ -495,7 +495,7 @@
         "inv_gift": "Presente",
         "inv_guestpass": "Convite",
         "owned": "Adquirido",
-        "notinterested": "Dispensado",
+        "notinterested": "Não estou interessado",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ desejam</a>"
     },
     "wallet": {
@@ -522,17 +522,17 @@
     "update": {
         "dont_show": "Não mostrar novamente",
         "updated": "Enhanced Steam foi atualizada para a versão __version__",
-        "changes": "Esta atualização contém as seguintes alterações"
+        "changes": "Esta nova versão inclui as seguintes alterações"
     },
     "register": {
         "success": "__gamename__ ativado com sucesso",
-        "owned": "Esta conta Steam ja possuí um(ns) produto(s) que contém na oferta.",
-        "notavail": "Desculpa, maa este produto não esta disponível para compra no seu pais. O seu produto-chave não foi consumido.",
-        "invalid": "O produto chave não é válido.\nPor favor volte a verificar para ver se não digitou mal a chave.",
-        "already": "O código que introduziu ja foi ativado numa conta de Steam diferente.",
-        "dlc": "O código que digitou requer a posse doutro produto antes da ativação.",
-        "wallet": "O código que digitou é dum Steam Gift Card ou um código de Steam Wallet",
-        "toomany": "Têm havido muitas tentativas de ativação recentes. Por favor espere e tente mais tarde.",
-        "default": "Ocorreu um erro inesperado. O teu código nao foi redimido. Por favor  em 30 minutos tenta redimir o codigo novamente."
+        "owned": "Esta conta Steam já possui o(s) produto(s) incluídos nesta oferta.",
+        "notavail": "Lamentamos, mas este produto não está disponível para compra neste país. O teu código de produto não foi ativado.",
+        "invalid": "O código de produto que introduziste não é válido. Verifica se escreveste corretamente o código.",
+        "already": "O código de produto que introduziste já foi ativado por uma conta Steam diferente.",
+        "dlc": "O código de produto que introduziste requer que tenhas outro produto específico antes da ativação.",
+        "wallet": "O código que introduziste é de um cartão-presente Steam ou um código para a Carteira Steam",
+        "toomany": "Ocorreram recentemente demasiadas tentativas de ativação a partir desta conta. Aguarda uns momentos ou tenta mais tarde.",
+        "default": "Ocorreu um erro inesperado. O teu código de produto não foi ativado. Por favor espera 30 minutos e tenta ativar o código novamente."
     }
 }

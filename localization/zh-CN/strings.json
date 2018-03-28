@@ -102,7 +102,7 @@
     "badge_completion_avg": "平均完成徽章的要价",
     "using_store": "正在__current__地区Steam商店",
     "volume_sold_last_24": "数量: 有 __sold__ 份在24小时内售出",
-    "sold_last_24": "数量: 有 __sold__ 份在24小时内售出",
+    "sold_last_24": "有 __sold__ 份在24小时内售出",
     "homepage_sidebar": "侧边栏",
     "drop_calc": "点击此处计算剩余掉落数",
     "price": "价格",
@@ -526,13 +526,13 @@
     },
     "register": {
         "success": "__gamename__已激活",
-        "owned": "该Steam账户已拥有订单中的一项或多项产品。",
+        "owned": "该Steam账户已拥有订单中的产品。",
         "notavail": "抱歉，该产品在当前国家未发售。您的密钥未兑换。",
-        "invalid": "你输入的产品代码无效。 请检查是否输入了错误代码。",
+        "invalid": "你输入的产品代码无效。 请检查输入是否有错误。",
         "already": "你输入的产品代码已经被另一个Steam帐户激活。",
         "dlc": "您输入的产品代码在激活之前需要先拥有另一个产品。",
         "wallet": "您所输入的代码来自 Steam 礼物卡或 Steam 钱包充值码。",
-        "toomany": "这个账户近期激活次数过多，请稍后重试",
+        "toomany": "此账户近期尝试激活次数过多，请稍后重试。",
         "default": "发生了一个意外错误。您的产品代码尚未兑换。 请在 30 分钟后重新兑换该代码。"
     }
 }
