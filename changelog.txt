@@ -1,4 +1,8 @@
-﻿v9.8
+﻿v9.9
+-----
+
+
+v9.8
 -----
 + Improved performance of inventory market total calculations
 : Fixed a bug that caused quick sell and instant sell functions to not work correctly in Firefox
