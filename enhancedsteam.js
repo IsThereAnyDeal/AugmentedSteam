@@ -1360,7 +1360,8 @@ function load_inventory() {
 }
 
 function add_empty_wishlist_buttons() {
-	if (is_signed_in && window.location.href.startsWith(profile_url)) {
+	var your_wishlist = profile_url.replace("steamcommunity.com/", "store.steampowered.com/wishlist/");
+	if (is_signed_in && window.location.href.startsWith(your_wishlist)) {
 		storage.get(function(settings) {
 			if (settings.showemptywishlist === undefined) { 
 				settings.showemptywishlist = true; 
@@ -1368,8 +1369,8 @@ function add_empty_wishlist_buttons() {
 			}
 
 			if (settings.showemptywishlist) {
-				var empty_buttons = $("<div class='btn_save' id='es_empty_wishlist'>" + localized_strings.empty_wishlist + "</div>");
-				$(".save_actions_enabled").filter(":last").after(empty_buttons);
+				var empty_buttons = $("<div id='es_empty_wishlist'>" + localized_strings.empty_wishlist + "</div><div style='clear: both;'></div>");
+				$("#wishlist_ctn").after(empty_buttons);
 				$("#es_empty_wishlist").click(empty_wishlist);
 			}
 		});

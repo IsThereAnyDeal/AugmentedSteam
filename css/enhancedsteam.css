@@ -1410,21 +1410,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_empty_wishlist {
 	width: auto;
 	display: inline-block;
-	padding: 0 5px 0 5px;
-	border: 1px solid rgb(175, 25, 0) !important;
+	padding: 10px;
+	border: 2px solid rgb(175, 25, 0) !important;
+	border-radius: 3px;
 	color: #af1900;
 	float: right;
-}
-#save_action_enabled_2 .btn_small {
-	float: left;
-}
-#save_action_enabled_2 .save_button_nag {
-	float: left;
-	margin: 3px 10px;
-}
-#save_action_enabled_2,
-#save_action_disabled_2 {
-	float: left;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 /***************************************
