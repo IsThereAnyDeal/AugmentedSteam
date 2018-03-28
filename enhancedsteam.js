@@ -1767,12 +1767,15 @@ function add_wishlist_pricehistory() {
 			});
 
 			if (storestring !== "") {
+				var hover_div = $("\t\t<div class=\"hover game_hover\" id=\"global_hover\" style=\"display: none; left: 0px; top: 0;\">\r\n\t\t\t<div class=\"game_hover_box hover_box\">\r\n\t\t\t\t<div class=\"content\" id=\"global_hover_content\">\r\n\t\t\t\t<\/div>\r\n\t\t\t<\/div>\r\n\t\t\t<div class=\"hover_arrow_left\" style=\"left: 6px;\"><\/div>\r\n\t\t\t<\/div>");
+				$(document.body).append( hover_div );
+
 				// Get country code from Steam cookie
 				var cc = getStoreRegionCountryCode();
 
 				function get_price_data(node, id) {
-					html = "<div class='es_lowest_price' id='es_price_" + id + "' style='float: right;'><div class='gift_icon' id='es_line_chart_" + id + "'><img src='" + chrome.extension.getURL("img/line_chart.png") + "'></div><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
-					$(node).find(".platform_icons").append(html);
+					html = "<div class='es_lowest_price' id='es_price_" + id + "' style='background-color: transparent; padding: 0px; min-height: 50px;'><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
+					$("#global_hover_content").append(html);
 
 					get_http("https://api.enhancedsteam.com/pricev3/?appid=" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
 						var data = JSON.parse(txt);
@@ -1841,14 +1844,14 @@ function add_wishlist_pricehistory() {
 								$("#es_price_loading_" + id).remove();
 								$("#es_price_" + id).append(line2 + line3);
 								$("#es_line_chart_" + id).css("top", (($("#es_price_" + id).outerHeight() - 20) / 2) + "px");
-								return;	
+								return;
 							}
 
-							if (data["lowest"] === null && data["price"] === null) {					
+							if (data["lowest"] === null && data["price"] === null) {
 								$("#es_price_loading_" + id).remove();
 								$("#es_price_" + id).append(localized_strings.no_results_found);
 								return;
-							}
+							}							
 						}
 					});
 				}
@@ -1857,12 +1860,23 @@ function add_wishlist_pricehistory() {
 				$(".wishlist_row").hover(function() {
 					var node = $(this);
 					var appid = node.attr("data-app-id");
+					var top = $(this).position().top + 290;
+					var left = $("#wishlist_ctn").offset().left + 936;
 					if (!timeoutId) {
-						timeoutId = window.setTimeout(function() {					
-							timeoutId = null;						
-							if ($("#es_price_" + appid).length == 0) {							
+						timeoutId = window.setTimeout(function() {
+							timeoutId = null;
+							if ($("#es_price_" + appid).length > 0) {
+								hover_div.find( '.content' ).children().hide();
+								hover_div.css("top", top).css("left", left);
+								$("#es_price_" + appid).show();
+								hover_div.show();
+							} else {
+								hover_div.find( '.content' ).children().hide();
+								hover_div.css("top", top).css("left", left);								
 								get_price_data(node, appid);
-							}	
+								$("#es_price_" + appid).show();
+								hover_div.show();
+							}
 						}, 1000);
 					}
 				},
