@@ -4,6 +4,8 @@
 : Fixed a bug that caused quick sell and instant sell functions to not work correctly in Firefox
 : Fixed a bug that caused wishlist price sorting not to work correctly for some currencies
 : Fixed a bug that caused "Activate a product" link to show up in language menu incorrectly
+: Fixed a bug that caused multiple product activations dialog to sometimes display incorrectly
+: Updated several wishlist-related functions to work with Steam's new page layout
 - Removed several wishlist-related functions that were added by Valve
 
 
