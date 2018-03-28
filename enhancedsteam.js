@@ -3003,15 +3003,9 @@ function add_wishlist_profile_link() {
 					`);
 
 					if (settings.show_wishlist_count) {
-						get_http(protocol + "//steamcommunity.com/profiles/" + steamID + "/wishlist", function(txt) {
-							var count = txt.match(/id="game_(\d+)"/g);
-
-							if (count) {
-								$("#es_wishlist_count").text(count.length.toLocaleString('en-US'));
-							} else {
-								$("#es_wishlist_link").remove();
-							}
-						});
+						if ($(".gamecollector_showcase").length > 0) {
+							$("#es_wishlist_count").text($(".gamecollector_showcase").find(".showcase_stat:last").find(".value").text());
+						}
 					}
 				}
 			}
