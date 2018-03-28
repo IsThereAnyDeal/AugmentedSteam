@@ -3023,9 +3023,9 @@ function add_supporter_badges() {
 
 			for (i=0; i < data["badges"].length; i++) {
 				if (data["badges"][i].link) {
-					html += '<div class="profile_badges_badge" data-community-tooltip="Enhanced Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img src="' + data["badges"][i].img + '"></a></div>';
+					html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img src="' + data["badges"][i].img + '"></a></div>';
 				} else {
-					html += '<div class="profile_badges_badge" data-community-tooltip="Enhanced Steam<br>' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></div>';
+					html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><img src="' + data["badges"][i].img + '"></div>';
 				}
 			}
 
@@ -3033,7 +3033,7 @@ function add_supporter_badges() {
 			$(".profile_badges").after(html);
 			$("#es_supporter_badges .profile_badges_badge:nth-child(4n+1)").addClass("last").css("margin-bottom", "16px");
 			$("#es_supporter_badges .profile_badges_badge:last").css("margin-bottom", "0px");
-			runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+			runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 		}
 	});
 }
