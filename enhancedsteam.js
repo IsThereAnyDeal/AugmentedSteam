@@ -2925,8 +2925,8 @@ function ingame_name_link() {
 	if ($ingameAppIdSel.length && $ingameAppIdSel.val()) {
 		var tooltip = localized_strings.view_in + ' ' + localized_strings.store;
 
-		$(".profile_in_game_name").wrapInner('<a data-community-tooltip="' + tooltip + '" href="' + protocol + '//store.steampowered.com/app/' + $ingameAppIdSel.val() + '" target="_blank" />');
-		runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+		$(".profile_in_game_name").wrapInner('<a data-tooltip-html="' + tooltip + '" href="' + protocol + '//store.steampowered.com/app/' + $ingameAppIdSel.val() + '" target="_blank" />');
+		runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 	}
 }
 
@@ -3035,7 +3035,7 @@ function load_search_results () {
 
 		$.ajax({
 			url: protocol + '//store.steampowered.com/search/results' + search + '&page=' + search_page + '&snr=es'
-		}).success(function(txt) {
+		}).done(function(txt) {
 			var html = $.parseHTML(txt);
 			html = $(html).find("a.search_result_row");
 
@@ -3051,11 +3051,11 @@ function load_search_results () {
 			var ripc = function () {
 				var added_date = jQuery('#search_result_container').attr('data-last-add-date');
 				GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + added_date + '"]'));
-				BindStoreTooltip(jQuery('.search_result_row[data-added-date="' + added_date + '"] [data-store-tooltip]'));
+				SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
 			};
 
 			runInPageContext(ripc);
-		}).error(function() {
+		}).fail(function() {
 			$(".LoadingWrapper").remove();
 			$(".search_pagination:last").before("<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + localized_strings.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + localized_strings.search_error_retry + ".</a></div>");
 
@@ -3885,11 +3885,11 @@ function add_opencritic_data(appid) {
 						var review_text = "";
 						$.each(data.reviews, function(key, reviewdata) {
 							var date = new Date(reviewdata.date);
-							review_text += "<p>\"" + reviewdata.snippet + "\"<br>" + reviewdata.dScore + " - <a href='" + reviewdata.rURL + "' target='_blank' data-store-tooltip='" + reviewdata.author + ", " + date.toLocaleDateString() + "'>" + reviewdata.name + "</a></p>";
+							review_text += "<p>\"" + reviewdata.snippet + "\"<br>" + reviewdata.dScore + " - <a href='" + reviewdata.rURL + "' target='_blank' data-tooltip-text='" + reviewdata.author + ", " + date.toLocaleDateString() + "'>" + reviewdata.name + "</a></p>";
 						});
 
 						$("#es_opencritic_reviews").append(review_text);
-						runInPageContext("function() {BindStoreTooltip(jQuery('#game_area_reviews [data-store-tooltip]')) }");
+						runInPageContext("function() { BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ); }");
 					}
 				}
 			});
@@ -4881,7 +4881,7 @@ function inventory_market_helper(response) {
 													$("#es_instantsell" + assetID).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(wallet_currency))) + "</span>").show().before("<br class='es-btn-spacer'>");
 												}
 											}
-										}).complete(function(){
+										}).done(function(){
 											$(thisItem).removeClass("es-loading");
 										});
 									}
@@ -5966,8 +5966,6 @@ function media_slider_expander(in_store) {
 						});
 					}
 				}
-
-				runInPageContext(function(){ BindStoreTooltip($J('[data-store-tooltip]')); });
 			}
 		}
 
@@ -7080,7 +7078,7 @@ function add_es_background_selection() {
 				var html = "<form id='es_profile_bg' method='POST' action='" + protocol + "//www.enhancedsteam.com/gamedata/profile_bg_save.php'><div class='group_content group_summary'>";
 				html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
 				html += "<input type='hidden' name='appid' id='appid'>";
-				html += "<div class='formRow'><div class='formRowTitle' style='overflow: visible;'>" + localized_strings.custom_background + ":<span class='formRowHint' data-community-tooltip='" + localized_strings.custom_background_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
+				html += "<div class='formRow'><div class='formRowTitle' style='overflow: visible;'>" + localized_strings.custom_background + ":<span class='formRowHint' data-tooltip-text='" + localized_strings.custom_background_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
 				html += "<img id='es_profile_background_current_image' src=''>";
 				html += "</div><div class='profile_background_current_description'><div id='es_profile_background_current_name'>";
 				html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + localized_strings.remove + "</span></span>&nbsp;<span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + localized_strings.save + "</span></span></div></div></div></div>";
@@ -7088,7 +7086,7 @@ function add_es_background_selection() {
 				html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
 				html += "</form>";
 				$(".group_content_bodytext").before(html);
-				runInPageContext(function() { BindCommunityTooltip( $J('.formRowHint') ); });
+				runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
 				get_http("https://api.enhancedsteam.com/profile-select-v2/?steam64=" + steam64, function (txt) {
 					var data = JSON.parse(txt);
@@ -7169,7 +7167,7 @@ function add_es_style_selection() {
 		var steam64 = $(document.body).html().match(/g_steamID = \"(.+)\";/)[1];
 		var html = "<form id='es_profile_style' method='POST' action='" + protocol + "//api.enhancedsteam.com/profile_style/profile_style_save.php'><div class='group_content group_summary'>";
 		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
-		html += "<div class='formRow'><div class='formRowTitle'>" + localized_strings.custom_style + ":<span class='formRowHint' data-community-tooltip='" + localized_strings.custom_style_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div id='es_style_loading'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
+		html += "<div class='formRow'><div class='formRowTitle'>" + localized_strings.custom_style + ":<span class='formRowHint' data-tooltip-text='" + localized_strings.custom_style_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div id='es_style_loading'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
 		html += "<img id='es_profile_style_current_image' src='' style='margin-bottom: 12px;'>";
 		html += "</div><div class='profile_style_current_description'><div id='es_profile_style_current_name'>";
 		html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + localized_strings.remove + "</span></span>&nbsp;<span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + localized_strings.save + "</span></span></div></div></div></div>";
@@ -7177,7 +7175,7 @@ function add_es_style_selection() {
 		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
 		html += "</form>";
 		$(".group_content_bodytext").before(html);
-		runInPageContext(function() { BindCommunityTooltip( $J('.formRowHint') ); });
+		runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
 		profileData.get("profile_style", function (data) {
 			var txt = data.style;
@@ -8173,10 +8171,10 @@ function add_total_drops_count() {
 function add_friends_that_play() {
 	var appid = window.location.pathname.match(/(?:id|profiles)\/.+\/friendsthatplay\/(\d+)/)[1];
 
-	$.get(protocol + '//store.steampowered.com/api/appuserdetails/?appids=' + appid).success(function(data) {
+	$.get(protocol + '//store.steampowered.com/api/appuserdetails/?appids=' + appid).done(function(data) {
 		if (data[appid].success && data[appid].data.friendsown && data[appid].data.friendsown.length > 0) {
 			// Steam Web API is awful, let's do it the easiest way.
-			$.get(protocol + '//steamcommunity.com/my/friends/').success(function(friends_html) {
+			$.get(protocol + '//steamcommunity.com/my/friends/').done(function(friends_html) {
 				friends_html = $(friends_html);
 
 				var friendsown = data[appid].data.friendsown;
@@ -8569,7 +8567,7 @@ function fix_menu_dropdown() {
 function market_popular_refresh_toggle() {
 	if (window.location.pathname.match(/^\/market\/$/)) {
 		$("#sellListings").find(".market_tab_well_tabs").append(`
-			<div class="es_popular_refresh_toggle btn_grey_black btn_small" data-community-tooltip="${ localized_strings.market_popular_items_toggle }"></div>
+			<div class="es_popular_refresh_toggle btn_grey_black btn_small" data-tooltip-text="${ localized_strings.market_popular_items_toggle }"></div>
 		`);
 
 		toggle_refresh(getValue("popular_refresh") || false);
@@ -8578,7 +8576,7 @@ function market_popular_refresh_toggle() {
 			toggle_refresh(!getValue("popular_refresh"));
 		});
 
-		runInPageContext(function() { BindCommunityTooltip( $J('[data-community-tooltip]') ); });
+		runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
 		function toggle_refresh(state) {
 			$(".es_popular_refresh_toggle").toggleClass("es_refresh_off", !state);
