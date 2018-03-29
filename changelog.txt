@@ -1,12 +1,15 @@
 ﻿v9.9
 -----
+
+
+v9.8.1
+-----
 + Updated jQuery library to v3.3.1
 + Added the ability to toggle video player fullscreen with double clicks
 : Fixed several bugs introduced by jQuery library update
 : Fixed multiple bugs caused by Valve retiring their BindTooltips functions
 : Fixed a bug that caused some options page elements not to localize correctly
 : Fixed a bug where the HD control wasn't added to videos in the store under some circumstances
-
 
 v9.8
 -----
