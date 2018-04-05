@@ -2228,7 +2228,7 @@ function add_custom_money_amount() {
 		var jsvalue = (+$("#es_custom_money_amount").val()).toFixed(2).replace(/[,.]/g, '');
 
 		if(giftcard) $(".es_custom_money .btn_medium").attr("href", "javascript:submitSelectGiftCard( " + jsvalue + " );")
-		else $(".es_custom_money .es_custom_button").attr("href", "javascript:submitAddFunds( " + jsvalue + " );")
+		else $(".es_custom_money .es_custom_button").attr("href", "javascript:submitAddFunds( " + jsvalue + " );").attr("data-amount", jsvalue)
 
 	});
 	$(".giftcard_selection #es_custom_money_amount").on("click", function(e) {
