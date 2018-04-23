@@ -2190,8 +2190,8 @@ function replace_account_name() {
 }
 
 function add_custom_money_amount() {
-	function get_string_with_currency_symbol(string, symbol, space) {
-		if(symbol == "€" || symbol == "pуб") return string + (space ? " " : "") + symbol;
+	function get_string_with_currency_symbol(string, right, symbol, space) {
+		if(right) return string + (space ? " " : "") + symbol;
 		else return symbol + (space ? " " : "") + string;
 	}
 
@@ -2209,21 +2209,20 @@ function add_custom_money_amount() {
 		$(newel).find(".giftcard_style").html(localized_strings.wallet.custom_giftcard_amount.replace("__minamount__", price).replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>"));
 	}
 
-	var currency_symbol = currency_symbol_from_string(price);
-	var minimum = +(price.replace(/(?:R\$|\$|€|¥|£|pуб)/, "").replace(/(.--|,--)/,""));
-	var inputel = $(newel).find((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
-	inputel.html(get_string_with_currency_symbol("<input type='number' id='es_custom_money_amount' class='es_text_input money'  min='" + minimum + "' step='.01' value='" + minimum +"'>", currency_symbol, true));
+	var currency = parse_currency(price);
+	var currency_info = currency_format_info[currency.currency_type];
+	var inputel = $(newel).find((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));	
+	inputel.html(get_string_with_currency_symbol("<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>", currency_info.right, currency.currency_symbol, true));
 
 	$((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game") + ":first").after(newel);
 	$("#es_custom_money_amount").on("input", function() {
 		var value = $("#es_custom_money_amount").val();
-		if(isNaN(value) || value == "") $("#es_custom_money_amount").val(minimum);
-	
+		if(isNaN(value) || value == "") $("#es_custom_money_amount").val(currency.value);
 		if(giftcard) {
 			if(value > 10) priceel.addClass("small");
 			else priceel.removeClass("small");
 
-			priceel.text(get_string_with_currency_symbol(value, currency_symbol, false));
+			priceel.text(get_string_with_currency_symbol(value, currency_info.right, currency.currency_symbol, false));
 		}
 		var jsvalue = (+$("#es_custom_money_amount").val()).toFixed(2).replace(/[,.]/g, '');
 
