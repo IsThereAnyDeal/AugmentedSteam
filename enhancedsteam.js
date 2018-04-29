@@ -1881,7 +1881,7 @@ function add_steamchart_info(appid) {
 				storePageData.get("charts", function(data) {
 					if (data["chart"]) {
 						var html = '<div id="steam-charts" class="game_area_description"><h2>' + localized_strings.charts.current + '</h2>';
-						html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="' + protocol + '//cdn.akamai.steamstatic.com/steam/apps/' + appid + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
+						html += '<div id="chart-heading" class="chart-content"><div id="chart-image"><img src="' + protocol + '//steamcdn-a.akamaihd.net/steam/apps/' + appid + '/capsule_184x69.jpg" width="184" height="69"></div><div class="chart-stat">';
 						html += '<span class="num">' + escapeHTML(data["chart"]["current"]) + '</span><br>' + localized_strings.charts.playing_now + '</div><div class="chart-stat">';
 						html += '<span class="num">' + escapeHTML(data["chart"]["peaktoday"]) + '</span><br>' + localized_strings.charts.peaktoday + '</div><div class="chart-stat">';
 						html += '<span class="num">' + escapeHTML(data["chart"]["peakall"]) + '</span><br>' + localized_strings.charts.peakall + '</div><span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span></div></div>';
@@ -3444,8 +3444,8 @@ function add_popular_tab() {
 						var game_name = $(this).find("a").text();
 						var currently = $(this).find(".currentServers:first").text();
 						var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, \"global_hover\", {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, \"global_hover\" )' id='tab_row_popular_" + appid + "'>";
-						html += "<a class='tab_item_overlay' href='" + protocol + "//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='" + protocol + "//store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-						html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='" + protocol + "//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
+						html += "<a class='tab_item_overlay' href='" + protocol + "//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'></a><div class='tab_item_overlay_hover'></div>";
+						html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='" + protocol + "//steamcdn-a.akamaihd.net/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
 						html += "<div class='tab_item_content'><div class='tab_item_name'>" + game_name + "</div><div class='tab_item_details'>" + currently + " " + localized_strings.charts.playing_now + "</div><br clear='all'></div>";
 
 						html += "</div>";
@@ -3479,8 +3479,8 @@ function add_allreleases_tab() {
 				var discount_pct = $(this).find(".search_discount span:last").text();
 				var price = $(this).find(".search_price").html();
 				var html = "<div class='tab_item app_impression_tracked' data-ds-appid='" + appid + "' onmouseover='GameHover( this, event, \"global_hover\", {\"type\":\"app\",\"id\":\"" + appid + "\",\"public\":0,\"v6\":1} );' onmouseout='HideGameHover( this, event, \"global_hover\" )' id='tab_row_popular_" + appid + "'>";
-				html += "<a class='tab_item_overlay' href='" + protocol + "//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'><img src='" + protocol + "//store.akamai.steamstatic.com/public/images/blank.gif'></a><div class='tab_item_overlay_hover'></div>";
-				html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='" + protocol + "//cdn.akamai.steamstatic.com/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
+				html += "<a class='tab_item_overlay' href='" + protocol + "//store.steampowered.com/app/" + appid + "/?snr=1_4_4__106'></a><div class='tab_item_overlay_hover'></div>";
+				html += "<div class='tab_item_cap'><img class='tab_item_cap_img' src='" + protocol + "//steamcdn-a.akamaihd.net/steam/apps/" + appid + "/capsule_184x69.jpg' /></div>";
 				// price info
 				if (discount_pct) {
 					html += "<div class='discount_block tab_item_discount'><div class='discount_pct'>" + discount_pct + "</div><div class='discount_prices'>" + price + "</div></div>";
