@@ -1920,10 +1920,10 @@ function add_steamspy_info(appid) {
 
 						var html = '<div id="steam-spy" class="game_area_description"><h2>' + localized_strings.spy.player_data + '</h2>';
 						html += "<div class='spy_details'>";
-						html += "<b>" + localized_strings.spy.owners + ":</b> " + owners1 + " - " + owners2;
-						html += "<br><b>" + localized_strings.spy.players_total + ":</b> " + players1 + " - " + players2 + " (" + playersp + "%)";
-						html += "<br><b>" + localized_strings.spy.players_2weeks + ":</b> " + players2weeks1 + " - " + players2weeks2 + " (" + players2weeksp + "%)";
-						html += "<br><b>" + localized_strings.spy.average_playtime + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours).replace("__minutes__", avg_minutes);
+						if (!isNaN(owners1) && !isNaN(owners2)) { html += "<b>" + localized_strings.spy.owners + ":</b> " + owners1 + " - " + owners2 + "<br>"; }
+						if (!isNaN(players1) && !isNaN(players2)) { html += "<b>" + localized_strings.spy.players_total + ":</b> " + players1 + " - " + players2 + " (" + playersp + "%)<br>"; }
+						if (!isNaN(players2weeks1) && !isNaN(players2weeks2)) { html += "<b>" + localized_strings.spy.players_2weeks + ":</b> " + players2weeks1 + " - " + players2weeks2 + " (" + players2weeksp + "%)<br>"; }
+						html += "<b>" + localized_strings.spy.average_playtime + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours).replace("__minutes__", avg_minutes);
 						html += "<br><b>" + localized_strings.spy.average_playtime_2weeks + ":</b> " + localized_strings.spy.formatted_time.replace("__hours__", avg_hours2).replace("__minutes__", avg_minutes2);
 						html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
 						html += "</div>";
