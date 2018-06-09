@@ -579,45 +579,57 @@ function matchAll(re, str) {
 	return r;
 }
 
-function get_http(url, callback, settings) {
+function get_http(url, callback, requestSettings) {
 	total_requests += 1;
 
-	if (localized_strings.ready) {
-		$("#es_progress").attr({"title": localized_strings.ready.loading});
-	}
-	$("#es_progress").removeClass("complete");
-	$("#es_progress .progress-value").css("width", "18px");
-	
-	if (!settings) settings = {};
-	if (!settings.dataType) settings.dataType = "text";
-	
-	var jqxhr = $.ajax(url, settings);
-	
+	storage.get(function(settings) {
+		if (settings.show_progressbar) {
+			if (localized_strings.ready) {
+				$("#es_progress").attr({"title": localized_strings.ready.loading});
+			}
+			$("#es_progress").removeClass("complete");
+			$("#es_progress .progress-value").css("width", "18px");
+		}
+	});
+
+	if (!requestSettings) requestSettings = {};
+	if (!requestSettings.dataType) requestSettings.dataType = "text";
+
+	var jqxhr = $.ajax(url, requestSettings);
+
 	jqxhr.done(function(){
 		processed_requests += 1;
 		var complete_percentage = (processed_requests / total_requests) * 100;
-		
-		$("#es_progress .progress-value").css("width", complete_percentage);
-		if (complete_percentage == 100) {
-			$("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready);
-		}
+
+		storage.get(function(settings) {
+			if (settings.show_progressbar) {
+				$("#es_progress .progress-value").css("width", complete_percentage);
+				if (complete_percentage == 100) {
+					$("#es_progress").addClass("complete").attr("title", localized_strings.ready.ready);
+				}
+			}
+		});
 	});
-	
+
 	jqxhr.done(callback);
-	
+
 	jqxhr.fail(function(jqxhr, textStatus, errorThrown) {
-		$("#es_progress").addClass("error").attr({"title": ""});
+		storage.get(function(settings) {
+			if (settings.show_progressbar) {
+				$("#es_progress").addClass("error").attr({"title": ""});
 
-		if (!$(".es_progress_error").length) {
-			$("#es_progress").after('<div class="es_progress_error">' + localized_strings.ready.failed + ':' + '<ul></ul></div>');
-		}
-		
-		if (!settings.errorMessage) {
-			settings.errorMessage = "<span>" + this.url + "</span>";
-			if (jqxhr.status) settings.errorMessage +=  " (" + jqxhr.status + ": " + errorThrown + ")";
-		}
+				if (!$(".es_progress_error").length) {
+					$("#es_progress").after('<div class="es_progress_error">' + localized_strings.ready.failed + ':' + '<ul></ul></div>');
+				}
+				
+				if (!requestSettings.errorMessage) {
+					requestSettings.errorMessage = "<span>" + this.url + "</span>";
+					if (jqxhr.status) requestSettings.errorMessage +=  " (" + jqxhr.status + ": " + errorThrown + ")";
+				}
 
-		$(".es_progress_error ul").append('<li>' + settings.errorMessage + '</li>');
+				$(".es_progress_error ul").append('<li>' + requestSettings.errorMessage + '</li>');
+			}
+		});
 	});
 
 	return jqxhr;
@@ -2040,18 +2052,22 @@ function add_enhanced_steam_options() {
 		location.reload();
 	});
 
-	// Add ES progress indicator
-	$('#global_actions').after(`
-		<div class="es_progress_wrap">
-			<div id="es_progress" class="complete" title="${ localized_strings.ready.ready }">
-				<div class="progress-inner-element">
-					<div class="progress-bar">
-						<div class="progress-value" style="width: 18px"></div>
+	storage.get(function(settings) {
+		// Add ES progress indicator
+		if (settings.show_progressbar) {
+			$('#global_actions').after(`
+				<div class="es_progress_wrap">
+					<div id="es_progress" class="complete" title="${ localized_strings.ready.ready }">
+						<div class="progress-inner-element">
+							<div class="progress-bar">
+								<div class="progress-value" style="width: 18px"></div>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	`);
+			`);
+		}
+	});
 }
 
 // Display warning if browsing using non-account region
