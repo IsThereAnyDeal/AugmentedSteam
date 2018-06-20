@@ -2,6 +2,7 @@
 -----
 : Fixed a bug that caused custom wallet amounts not to process correctly
 : Fixed numerous broken images that were the result of being served from domains with invalid SSL
+- Removed Enhanced Steam's "Account Total" feature replaced by a link to Valve's official stats
 
 
 v9.8.1
