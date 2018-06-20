@@ -8231,17 +8231,17 @@ function add_booster_prices() {
 
 function groups_leave_options() {
 	if (is_signed_in && !$('.error_ctn').length) {
-		var sessionID = $('#sessionID').val();
+		var sessionID = $("html").html().match(/g_sessionID = "(.*)";/)[1];
 
 		// Insert required data into the DOM
-		$('.sectionText').append(`
+		$('#search_text_box').after(`
 			<div class="es-leave-options">
 				<button class="es-group-leave-button es-leave-selected" disabled>` + localized_strings.leave_group_selected + `</button>
 				<button class="es-group-leave-button es-leave-all">` + localized_strings.leave_group_all + `</button>
-				<input type="checkbox" class="es-check-all es-select-checkbox" />
+				<input type="checkbox" class="es-check-all es-select-checkbox" style="margin-top: 0px;" />
 			</div>
 		`);
-		$('.groupLeftBlock').append('<input type="checkbox" class="es-leave-group es-select-checkbox" />').wrapInner('<span class="es-links-wrap" />');
+		$('.group_block').prepend('<input type="checkbox" class="es-leave-group es-select-checkbox" />');
 
 		// Bind actions to "leave" buttons
 		$('.es-leave-selected').on('click', function(){ leave_group(); });
@@ -8268,7 +8268,7 @@ function groups_leave_options() {
 
 		// Highlight group row when selected
 		$('.es-select-checkbox').change(function(e){
-			$(this).closest('.groupBlock').toggleClass('es-row-selected', $(this).prop('checked'));
+			$(this).closest('.group_block').toggleClass('es-row-selected', $(this).prop('checked'));
 			$(".es-leave-selected").prop("disabled", !$(".es-select-checkbox:checked").length > 0);
 		});
 
@@ -8293,24 +8293,25 @@ function groups_leave_options() {
 
 		// Leave group(s)
 		function leave_group(elSelector) {
-			var row = (elSelector === undefined ? $('div.es-row-selected').not('.es-inaction').first() : $(elSelector).closest('div.groupBlock').not('.es-inaction'));
+			var row = (elSelector === undefined ? $('div.es-row-selected').not('.es-inaction').first() : $(elSelector).closest('div.group_block').not('.es-inaction'));
 
 			// Check if there is any group selected
 			if ($(row).length && !$(row).hasClass('es-group-skipped')) {
-				var links		= $(row).find('.es-links-wrap .linkStandard'),
-					checkBox	= $(row).find('.es-links-wrap .es-select-checkbox'),
-					leaveLink	= $(links).last().attr('href'),
-					groupData	= leaveLink.match(/javascript:leaveGroupPrompt\('(\d+)','(.*)'\)/),
-					joinGroupEl	= $(row).find('.es-rejoin-group')[0] || $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: groupData[1]}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
+				var links = $(row).find('.actions .linkStandard'),
+					checkBox = $(row).find('.es-select-checkbox'),
+					leaveLink = $(links).last().attr('href'),
+					group_id = $(row).attr("id").replace("group_", ""),
+					group_name = $(row).find(".linkTitle").text(),
+					joinGroupEl = $(row).find('.es-rejoin-group')[0] || $(row).find('.linkTitle').clone().attr({class: 'es-rejoin-group', id: group_id}).html( localized_strings.join_group ).prependTo($(row).find('.groupLeftBlock'));
 
 				$(row).addClass('es-inaction');
 
 				// If the user is an Admin in this group confirmation before leaving is needed
-				if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", groupData[2]) )) {
+				if ($(links).length === 1 || window.confirm( localized_strings.leave_group_admin_confirm.replace("__groupname__", group_name) )) {
 					$.ajax({
 						method: 'POST',
 						url: profile_url + 'home_process',
-						data: { action: 'leaveGroup', groupId: groupData[1], sessionID: sessionID },
+						data: { action: 'leaveGroup', groupId: group_id, sessionID: sessionID },
 						beforeSend: function(){ $(row).addClass('es-progress'); }
 					}).done(function(){
 						$(row).addClass('es-complete es-group-left').animate({opacity: '.30'}, 500, function(){
