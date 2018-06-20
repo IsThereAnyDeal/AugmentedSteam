@@ -153,7 +153,8 @@ var settings_defaults = {
 	"add_to_cart_wishlist": true,
 	"show_badge_progress": true,
 	"show_wishlist_link": true,
-	"show_wishlist_count": true
+	"show_wishlist_count": true,
+	"show_progressbar": true
 };
 
 // Saves options to localStorage
