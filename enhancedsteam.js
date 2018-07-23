@@ -2169,7 +2169,7 @@ function remove_about_menu() {
 	storage.get(function(settings) {
 		if (settings.hideaboutmenu === undefined) { settings.hideaboutmenu = false; storage.set({'hideaboutmenu': settings.hideaboutmenu}); }
 		if (settings.hideaboutmenu) {
-			$(".menuitem[href$='http://store.steampowered.com/about/']").remove();
+			$(".menuitem[href$='https://store.steampowered.com/about/']").remove();
 		}
 	});
 }
@@ -2733,7 +2733,7 @@ function add_community_profile_links() {
 				<div id="es_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${ localized_strings.permalink }</span>
 					<div class="es_copy_wrap">
-						<input id="es_permalink" type="text" value="http://steamcommunity.com/profiles/${ steamID }" readonly />
+						<input id="es_permalink" type="text" value="https://steamcommunity.com/profiles/${ steamID }" readonly />
 						<button id="es_permalink_copy"><img src="${ chrome.extension.getURL(`img/clippy.svg`) }" /></button>
 					</div>
 				</div>

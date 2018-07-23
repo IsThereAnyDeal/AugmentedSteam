@@ -1,6 +1,9 @@
 ﻿v9.9
 -----
++ Added an option to toggle the display of the Enhanced Steam loading and status bar
 : Fixed a bug that caused custom wallet amounts not to process correctly
+: Fixed a bug where the about menu in the header wasn't being hidden properly
+: Fixed SteamSpy NaN errors from showing on store pages
 : Fixed numerous broken images that were the result of being served from domains with invalid SSL
 - Removed Enhanced Steam's "Account Total" feature replaced by a link to Valve's official stats
 
