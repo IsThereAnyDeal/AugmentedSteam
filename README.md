@@ -1,9 +1,11 @@
 Enhanced Steam
 ==============
 
-Enhanced Steam is an open-source Google Chrome browser extension.  Please fork and direct your pull requests to the :dev branch of this repository.
+Enhanced Steam is an open-source Google Chrome browser extension.  
 
-If you have issues with the Firefox version, please submit them to
+**Please note, development of this project has ended.  [You can read more about Enhanced Steam's end of life here.](http://www.enhancedsteam.com/blog/?p=256)**
+
+If you are looking for the Firefox version, you can find it here
 https://github.com/jshackles/Enhanced_Steam_Firefox.
 
 Features
@@ -43,4 +45,4 @@ Please head over to http://translation.enhancedsteam.com to help out with transl
 License
 -------
 
-Enhanced Steam is Copyright 2012-2016 Jason Shackles.  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License v3 or newer as published by the Free Software Foundation.  A copy of the GNU General Public License v3 can be found in [LICENSE](LICENSE) or at https://www.gnu.org/licenses/gpl-3.0.html.
+Enhanced Steam is Copyright 2012-2018 Jason Shackles.  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License v3 or newer as published by the Free Software Foundation.  A copy of the GNU General Public License v3 can be found in [LICENSE](LICENSE) or at https://www.gnu.org/licenses/gpl-3.0.html.

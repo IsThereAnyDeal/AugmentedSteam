@@ -8765,7 +8765,7 @@ $(document).ready(function(){
 							break;
 
 						case /^\/(?:id|profiles)\/.+\/groups/.test(path):
-							groups_leave_options();
+							//groups_leave_options();
 							break;
 
 						case /^\/(?:id|profiles)\/.+/.test(path):

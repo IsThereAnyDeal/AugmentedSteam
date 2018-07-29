@@ -7,7 +7,6 @@
 : Fixed numerous broken images that were the result of being served from domains with invalid SSL
 - Removed Enhanced Steam's "Account Total" feature replaced by a link to Valve's official stats
 
-
 v9.8.1
 -----
 + Updated jQuery library to v3.3.1
