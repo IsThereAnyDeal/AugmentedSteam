@@ -10,8 +10,7 @@ let Api = {
                 .join("&");
         }
 
-        console.log("Call "+ "//" + Config.ApiServerHost + "/" + endpoint + queryString);
-        return "//" + Config.ApiServerHost + "/" + endpoint + queryString;
+        return "//" + Config.ApiServerHost + "/" + endpoint + "/" + queryString;
     }
 
 };

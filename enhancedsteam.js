@@ -5555,6 +5555,10 @@ function add_achievement_completion_bar(appid) {
 	});
 }
 
+/**
+ * Early Access
+ */
+
 var ea_promise = (function() {
 	var deferred = new $.Deferred();
 
@@ -5600,7 +5604,7 @@ function check_early_access(node, selector_modifier) {
 							imgHeader = $(node).find("img" + (selector_modifier ? selector_modifier : "")),
 							appid = get_appid(href) || (imgHeader.length && /\/apps\/(\d+)\//.test(imgHeader[0].src) && imgHeader[0].src.match(/\/apps\/(\d+)\//)[1]);
 
-						if (appid && early_access_data["ea"].indexOf(appid) >= 0) {
+						if (appid && early_access_data.hasOwnProperty(appid) >= 0) {
 							var image_name = "img/overlay/early_access_banner_english.png";
 							if (["brazlian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"].indexOf(language) > -1) { image_name = "img/overlay/early_access_banner_" + language + ".png"; }
 							$(node).addClass("es_early_access");
@@ -5704,6 +5708,8 @@ function process_early_access() {
 		}
 	});
 }
+
+/***/
 
 function init_hd_player() {
 	var playInHD = getValue("playback_hd");
