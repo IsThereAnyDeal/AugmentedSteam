@@ -1,7 +1,7 @@
 {
-    "name": "Enhanced Steam",
-    "version": "9.9",
-    "description": "Enhances the Steam Experience",
+    "name": "Enhanced Steam, fork by IsThereAnyDeal",
+    "version": "1.0",
+    "description": "Continues to Enhance the Steam Experience",
     "icons": {
         "128": "img/enhancedsteam.png"
     },
@@ -49,6 +49,8 @@
             ],
             "js": [
                 "js/jQuery.min.js",
+                "js/config.js",
+                "js/api.js",
                 "enhancedsteam.js"
             ],
             "css": [

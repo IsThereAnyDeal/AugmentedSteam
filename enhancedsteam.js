@@ -492,7 +492,7 @@ var currencyConversion = (function() {
 		if (rates) {
 			deferred.resolveWith(rates);
 		} else {
-			var apiurl = "https://api.enhancedsteam.com/currencydata/?base=" + (currency || user_currency);
+			var apiurl = Api.getApiUrl("currencydata", {"base": (currency || user_currency)});
 			get_http(apiurl, function(txt) {
 				rates = JSON.parse(txt);
 				cache_set(currency || user_currency, rates);
@@ -647,7 +647,7 @@ var storePageData = (function() {
 			var all = parseInt($("#review_type_all").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
 				pos = parseInt($("#review_type_positive").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
 				stm = parseInt($("#purchase_type_steam").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, ""));
-			var apiurl = "https://api.enhancedsteam.com/storepagedata/?appid=" + appid;
+			var apiurl = Api.getApiUrl("storepagedata", {"appid": appid});
 			if (all && pos && stm) apiurl += "&r_all=" + all + "&r_pos=" + pos + "&r_stm=" + stm;
 			if (metalink) apiurl += "&mcurl=" + metalink;
 			
@@ -701,7 +701,7 @@ var storePageDataCN = (function() {
 		if (data) {
 			deferred.resolveWith(data);
 		} else {
-			var apiurl = "https://api.enhancedsteam.com/storepagedatacn/?appid=" + appid;
+			var apiurl = Api.getApiUrl("storepagedatacn", {appid: appid});
 			get_http(apiurl, function(txt) {
 				data = JSON.parse(txt);
 				cache_set(appid, data);
@@ -750,7 +750,7 @@ var profileData = (function() {
 		if (data) {
 			deferred.resolveWith(data);
 		} else if (steamid) {
-			var apiurl = "https://api.enhancedsteam.com/profiledata/?steam64=" + steamid;
+			var apiurl = Api.getApiUrl("profiledata", {steam64: steamid});
 			get_http(apiurl, function(txt) {
 				data = JSON.parse(txt);
 				cache_set(steamid, data);
@@ -1601,7 +1601,7 @@ function add_wishlist_pricehistory() {
 					html = "<div class='es_lowest_price' id='es_price_" + id + "' style='background-color: transparent; padding: 0px; min-height: 50px;'><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
 					$("#global_hover_content").append(html);
 
-					get_http("https://api.enhancedsteam.com/pricev3/?appid=" + id + "&stores=" + storestring + "&cc=" + cc + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
+					get_http(Api.getApiUrl("pricev3", {appid: id, stores: storestring, cc: cc, coupon: settings.showlowestpricecoupon}), function (txt) {
 						var data = JSON.parse(txt);
 						if (data) {
 							var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
@@ -2391,7 +2391,7 @@ function show_pricing_history(appid, type) {
 					subids += value.value + ",";
 				});
 
-				get_http("https://api.enhancedsteam.com/pricev3/?bundleid=" + bundleid + "&subs=" + subids + "&stores=" + storestring + "&cc=" + cc + "&appid=" + appid + "&coupon=" + settings.showlowestpricecoupon, function (txt) {
+				get_http(Api.getApiUrl("pricev3", {bundleid: bundledid, subs: subids, stores:storestring, cc: cc, appid: appid, coupon: settings.showlowestpricecoupon}), function (txt) {
 					var price_data = JSON.parse(txt);
 					if (price_data) {
 						var bundles = [];
@@ -2872,7 +2872,7 @@ function add_twitch_info() {
 		var twitch_id = $(search).attr("href").match(/twitch\.tv\/(.+)/)[1];
 		if (twitch_id) {
 			twitch_id = twitch_id.replace(/\//g, "");
-			get_http("https://api.enhancedsteam.com/twitch/?channel=" + twitch_id, function (txt) {
+			get_http(Api.getApiUrl("twitch", {channel: twitch_id}), function (txt) {
 				if (txt) {
 					var data = JSON.parse(txt);
 					if (data["streams"].length > 0) {
@@ -4663,7 +4663,7 @@ function inventory_market_helper(response) {
 					if (dataCardsPrice) {
 						$sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + dataCardsPrice + "<br>");
 					} else {
-						var api_url = "https://api.enhancedsteam.com/market_data/average_card_price/?appid=" + appid + "&cur=" + user_currency.toLowerCase();
+						var api_url = Api.getApiUrl("market_data/average_card_price", {appid: appid, cur: user_currency.toLowerCase()});
 
 						get_http(api_url, function(price_data) {
 							var booster_price = formatCurrency(parseFloat(price_data,10) * 3);
@@ -5236,7 +5236,7 @@ function dlc_data_from_site(appid) {
 	if ($("div.game_area_dlc_bubble").length > 0) {
 		var appname = $(".apphub_AppName").html();
 		appname = encodeURIComponent(appname);
-		get_http("https://api.enhancedsteam.com/gamedata/?appid=" + appid + "&appname=" + appname, function (txt) {
+		get_http(Api.getApiUrl("gamedata", {appid: appid, appname: appname}), function (txt) {
 			var data;
 			if (txt != "{\"dlc\":}}") {
 				data = JSON.parse(txt);
@@ -5339,7 +5339,7 @@ function dlc_data_for_dlc_page() {
 	window.setTimeout(function() {
 		$.each($("div.dlc_page_purchase_dlc"), function(j, node){
 			var appid = get_appid(node.href || $(node).find("a")[0].href) || get_appid_wishlist(node.id);
-			get_http("https://api.enhancedsteam.com/gamedata/?appid=" + appid, function (txt) {
+			get_http(Api.getApiUrl("gamedata", {appid: appid}), function (txt) {
 				var data;
 				if (txt != "{\"dlc\":}}") {
 					data = JSON.parse(txt);
@@ -5570,7 +5570,7 @@ var ea_promise = (function() {
 	// Update cache in the background
 	if (last_updated < expire_time) {
 		// If no cache exists, pull the data from the website
-		get_http("https://api.enhancedsteam.com/early_access/", function(early_access_data) {
+		get_http(Api.getApiUrl("early_access"), function(early_access_data) {
 			setValue("ea_appids", early_access_data);
 			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
 
@@ -7005,7 +7005,7 @@ function add_es_background_selection() {
 				$(".group_content_bodytext").before(html);
 				runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-				get_http("https://api.enhancedsteam.com/profile-select-v2/?steam64=" + steam64, function (txt) {
+				get_http(Api.getApiUrl("profile-select-v2", {steam64: steam64}), function (txt) {
 					var data = JSON.parse(txt);
 					var select_html = "<select name='es_background_gamename' id='es_background_gamename' class='gray_bevel dynInput'><option value='0' id='0'>" + localized_strings.noneselected + "</option>";
 					
@@ -7034,7 +7034,7 @@ function add_es_background_selection() {
 						} else {
 							$("#es_profile_background_current_name").after("<div class='es_loading'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>");							
 
-							get_http("https://api.enhancedsteam.com/profile-select-v2-game/?appid=" + appid + "&steam64=" + steam64, function (txt) {
+							get_http(Api.getApiUrl("profile-select-v2-game", {appid: appid, steam64: steam64}), function (txt) {
 								var bg_data = JSON.parse(txt);
 								$("#es_profile_background_current_name").after("<div id='es_background_selection'></div>");
 								select_html = "<select name='es_background' id='es_background' class='gray_bevel dynInput'>";
@@ -7082,13 +7082,13 @@ function add_es_background_selection() {
 function add_es_style_selection() {
 	if (window.location.pathname.indexOf("/settings") < 0) {
 		var steam64 = $(document.body).html().match(/g_steamID = \"(.+)\";/)[1];
-		var html = "<form id='es_profile_style' method='POST' action='" + protocol + "//api.enhancedsteam.com/profile_style/profile_style_save.php'><div class='group_content group_summary'>";
+		var html = "<form id='es_profile_style' method='POST' action='" + Api.getApiUrl("profile_style/profile_style_save.php") + "'><div class='group_content group_summary'>";
 		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
 		html += "<div class='formRow'><div class='formRowTitle'>" + localized_strings.custom_style + ":<span class='formRowHint' data-tooltip-text='" + localized_strings.custom_style_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div id='es_style_loading'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ localized_strings.loading +"</div>";
 		html += "<img id='es_profile_style_current_image' src='' style='margin-bottom: 12px;'>";
 		html += "</div><div class='profile_style_current_description'><div id='es_profile_style_current_name'>";
 		html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + localized_strings.remove + "</span></span>&nbsp;<span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + localized_strings.save + "</span></span></div></div></div></div>";
-		html += "</form><form id='es_style_remove' method='POST' action='" + protocol + "//api.enhancedsteam.com/profile_style/profile_style_remove.php'>";
+		html += "</form><form id='es_style_remove' method='POST' action='" + Api.getApiUrl("profile_style/profile_style_remove.php") + "'>";
 		html += "<input type='hidden' name='steam64' value='" + steam64 + "'>";
 		html += "</form>";
 		$(".group_content_bodytext").before(html);
@@ -7842,7 +7842,7 @@ function add_gamecard_market_links(game) {
 		foil = /border=1/i.test(document.URL),
 		price_type = "price" + (user_currency != "USD" ? "_" + user_currency.toLowerCase() : "");
 
-	get_http("https://api.enhancedsteam.com/market_data/card_prices/?appid=" + game, function(txt) {
+	get_http(Api.getApiUrl("market_data/card_prices", {appid: game}), function(txt) {
 		var data = JSON.parse(txt);
 
 		// Turn card names into keys, this way we no longer need to loop and search the data each and everytime
@@ -7916,7 +7916,7 @@ function add_badge_completion_cost() {
 
 			// Next, get the average card values
 			if (appids.length > 0) {
-				get_http("https://api.enhancedsteam.com/market_data/average_card_prices/?cur=" + user_currency.toLowerCase() + "&appids=" + appids.join(), function(json) {
+				get_http(Api.getApiUrl("market_data/average_card_prices", { cur: user_currency.toLowerCase(), appids: appids.join() }), function(json) {
 					var data = JSON.parse(json);
 					$.each(nodes, function(index, value) {
 						var appid = value[0],
@@ -7959,7 +7959,7 @@ function add_badge_completion_cost() {
 
 			// Finally, do the foils
 			if (foil_appids.length > 0) {
-				get_http("https://api.enhancedsteam.com/market_data/average_card_prices/?cur=" + user_currency.toLowerCase() + "&foil=true&appids=" + foil_appids.join(), function(json) {
+				get_http(Api.getApiUrl("market_data/average_card_prices", {cur: user_currency.toLowerCase(), foil: "true", appids: foil_appids.join()}), function(json) {
 					var foil_data = JSON.parse(json);
 					$.each(foil_nodes, function(index, value) {
 						var appid = value[0],
@@ -8174,7 +8174,7 @@ function add_birthday_celebration(in_store) {
 	var obj = {};
 	storage.get(function(settings) {
 		if (settings[setting_name] === undefined) {
-			get_http("https://api.enhancedsteam.com/steamapi/GetPlayerSummaries/?steamids=" + is_signed_in, function (txt) {
+			get_http(Api.getApiUrl("steamapi/GetPlayerSummaries", {steamids: is_signed_in}), function (txt) {
 				var data = JSON.parse(txt);
 				var timecreated = data["response"]["players"][0]["timecreated"];
 				obj[setting_name] = timecreated;
@@ -8357,7 +8357,7 @@ var owned_playable_promise = function() {
 
 	// Update cache if needed
 	if (last_updated < expire_time) {
-		get_http("https://api.enhancedsteam.com/steamapi/GetOwnedGames/?steamid=" + is_signed_in, function(txt) {
+		get_http(Api.getApiUrl("steamapi/GetOwnedGames", {steamid: is_signed_in}), function(txt) {
 			var data = JSON.parse(txt);
 			if (data && data.hasOwnProperty("response")) {
 				setValue("owned_apps", data);
