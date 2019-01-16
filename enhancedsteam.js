@@ -647,18 +647,35 @@ var storePageData = (function() {
 			var all = parseInt($("#review_type_all").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
 				pos = parseInt($("#review_type_positive").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, "")),
 				stm = parseInt($("#purchase_type_steam").next().find(".user_reviews_count").text().replace(/\(|\)|\,/g, ""));
-			var apiurl = Api.getApiUrl("storepagedata", {"appid": appid});
-			if (all && pos && stm) apiurl += "&r_all=" + all + "&r_pos=" + pos + "&r_stm=" + stm;
-			if (metalink) apiurl += "&mcurl=" + metalink;
-			
+
+
+			let apiparams = {
+				appid: appid
+			};
+			if (all && pos && stm) {
+				apiparams.r_all = all;
+				apiparams.r_pos = pos;
+				apiparams.r_stm = stm;
+			}
+			if (metalink) {
+				apiparams.mcurl = metalink;
+			}
+
 			storage.get(function(settings) {
 				if (settings.showoc === undefined) { settings.showoc = true; storage.set({'showoc': settings.showoc}); }
-				if (settings.showoc) { apiurl += "&oc"; }
 
-				get_http(apiurl, function(txt) {
+				if (settings.showoc) {
+					apiparams.oc = 1;
+				}
+
+				get_http(Api.getApiUrl("storepagedata", apiparams), function(txt) {
 					data = JSON.parse(txt);
-					cache_set(appid, data);
-					deferred.resolveWith(data);
+					if (data && data.result && data.result === "success") {
+						cache_set(appid, data.data);
+						deferred.resolveWith(data.data);
+					} else {
+						deferred.reject();
+					}
 				}).fail(deferred.reject);
 			});			
 		}
@@ -2391,7 +2408,7 @@ function show_pricing_history(appid, type) {
 					subids += value.value + ",";
 				});
 
-				get_http(Api.getApiUrl("pricev3", {bundleid: bundledid, subs: subids, stores:storestring, cc: cc, appid: appid, coupon: settings.showlowestpricecoupon}), function (txt) {
+				get_http(Api.getApiUrl("pricev3", {bundleid: bundleid, subs: subids, stores:storestring, cc: cc, appid: appid, coupon: settings.showlowestpricecoupon}), function (txt) {
 					var price_data = JSON.parse(txt);
 					if (price_data) {
 						var bundles = [];
