@@ -1619,8 +1619,9 @@ function add_wishlist_pricehistory() {
 					$("#global_hover_content").append(html);
 
 					get_http(Api.getApiUrl("pricev3", {appid: id, stores: storestring, cc: cc, coupon: settings.showlowestpricecoupon}), function (txt) {
-						var data = JSON.parse(txt);
-						if (data) {
+						var response = JSON.parse(txt);
+						if (response && response.result && response.result === "success") {
+							let data = response.data;
 							var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
 							var currency_type = data[".meta"]["currency"];
 							data = data["app/" + id];
@@ -2409,18 +2410,20 @@ function show_pricing_history(appid, type) {
 				});
 
 				get_http(Api.getApiUrl("pricev3", {bundleid: bundleid, subs: subids, stores:storestring, cc: cc, appid: appid, coupon: settings.showlowestpricecoupon}), function (txt) {
-					var price_data = JSON.parse(txt);
-					if (price_data) {
+					let response = JSON.parse(txt);
+					if (response && response.result && response.result === "success") {
+						let price_data = response.data;
+
 						var bundles = [];
 						var currency_type = price_data[".meta"]["currency"];
 						$.each(price_data, function(key, data) {
 							if (key != ".cached" && key != ".meta" && data) {
 								var subid = key.replace(/(bundle|sub|app)\//i, "");
-								
+								var node;
 								if (bundleid != "") {
-									var node = $(".game_area_purchase_game:first");
+									node = $(".game_area_purchase_game:first");
 								} else {
-									var node = $("input[name='subid'][value='" + subid + "']").parent().parent();
+									node = $("input[name='subid'][value='" + subid + "']").parent().parent();
 								}
 
 								var activates = "", line1 = "", line2 = "", line3 = "", html, recorded, lowest, lowesth;
