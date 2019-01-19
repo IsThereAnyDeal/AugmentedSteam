@@ -492,7 +492,7 @@ var currencyConversion = (function() {
 		if (rates) {
 			deferred.resolveWith(rates);
 		} else {
-			var apiurl = Api.getApiUrl("currencydata", {"base": (currency || user_currency)});
+			var apiurl = Api.getApiUrl("v01/rates", {"base": (currency || user_currency)});
 			get_http(apiurl, function(txt) {
 				rates = JSON.parse(txt);
 				cache_set(currency || user_currency, rates);
@@ -668,7 +668,7 @@ var storePageData = (function() {
 					apiparams.oc = 1;
 				}
 
-				get_http(Api.getApiUrl("storepagedata", apiparams), function(txt) {
+				get_http(Api.getApiUrl("v01/storepagedata", apiparams), function(txt) {
 					data = JSON.parse(txt);
 					if (data && data.result && data.result === "success") {
 						cache_set(appid, data.data);
@@ -1618,7 +1618,7 @@ function add_wishlist_pricehistory() {
 					html = "<div class='es_lowest_price' id='es_price_" + id + "' style='background-color: transparent; padding: 0px; min-height: 50px;'><span id='es_price_loading_" + id + "'>" + localized_strings.loading + "</span>";
 					$("#global_hover_content").append(html);
 
-					get_http(Api.getApiUrl("pricev3", {appid: id, stores: storestring, cc: cc, coupon: settings.showlowestpricecoupon}), function (txt) {
+					get_http(Api.getApiUrl("v01/prices", {appid: id, stores: storestring, cc: cc, coupon: settings.showlowestpricecoupon}), function (txt) {
 						var response = JSON.parse(txt);
 						if (response && response.result && response.result === "success") {
 							let data = response.data;
@@ -2409,7 +2409,7 @@ function show_pricing_history(appid, type) {
 					subids += value.value + ",";
 				});
 
-				get_http(Api.getApiUrl("pricev3", {bundleid: bundleid, subs: subids, stores:storestring, cc: cc, appid: appid, coupon: settings.showlowestpricecoupon}), function (txt) {
+				get_http(Api.getApiUrl("v01/prices", {bundleid: bundleid, subs: subids, stores:storestring, cc: cc, appid: appid, coupon: settings.showlowestpricecoupon}), function (txt) {
 					let response = JSON.parse(txt);
 					if (response && response.result && response.result === "success") {
 						let price_data = response.data;
@@ -5256,7 +5256,7 @@ function dlc_data_from_site(appid) {
 	if ($("div.game_area_dlc_bubble").length > 0) {
 		var appname = $(".apphub_AppName").html();
 		appname = encodeURIComponent(appname);
-		get_http(Api.getApiUrl("gamedata", {appid: appid, appname: appname}), function (txt) {
+		get_http(Api.getApiUrl("v01/dlcinfo", {appid: appid, appname: appname}), function (txt) {
 			var data;
 			if (txt != "{\"dlc\":}}") {
 				data = JSON.parse(txt);
@@ -5594,7 +5594,7 @@ var ea_promise = (function() {
 	// Update cache in the background
 	if (last_updated < expire_time) {
 		// If no cache exists, pull the data from the website
-		get_http(Api.getApiUrl("early_access"), function(early_access_data) {
+		get_http(Api.getApiUrl("v01/earlyaccess"), function(early_access_data) {
 			setValue("ea_appids", early_access_data);
 			setValue("ea_appids_time", parseInt(Date.now() / 1000, 10));
 
