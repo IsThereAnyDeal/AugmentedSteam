@@ -201,7 +201,228 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addPrices = function() {
+        if (!SyncedStorage.get("showlowestprice", true)) { return; }
 
+        let apiParams = {};
+
+        if (!SyncedStorage.get("showallstores", true) && SyncedStorage.get("stores", []).length > 0) {
+            apiParams.stores = SyncedStorage.get("stores", []).join(",");
+        }
+
+        let cc = User.getCountry();
+        if (cc) {
+            apiParams.cc = cc;
+        }
+
+        let subids = [];
+        let nodes = document.querySelectorAll("input[name=subid]");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            subids.push(node.value);
+        }
+        apiParams.subs = subids.join(",");
+
+        let bundleids = [];
+        nodes = document.querySelectorAll(".game_area_purchase_game_wrapper[data-ds-bundleid]");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            bundleids.push(node.dataset['dsBundleid']);
+        }
+        apiParams.bundleids = bundleids.join(",");
+
+        if (SyncedStorage.get("showlowestpricecoupon", true)) {
+            apiParams.coupon = true;
+        }
+
+        Request.getApi("v01/prices", apiParams).then(response => {
+            if (!response || response.result !== "success") { return; }
+
+            let bundles = [];
+
+            for (let gameid in response.data.data) {
+                if (!response.data.data.hasOwnProperty(gameid)) { continue; }
+
+                let a = gameid.split("/");
+                let type = a[0];
+                let id = a[1];
+                let meta = response.data['.meta'];
+                let info = response.data.data[gameid];
+
+                let activates = "";
+                let line1 = "";
+                let line2 = "";
+                let line3 = "";
+                let html;
+
+                // "Lowest Price"
+                if (info['price']) {
+                    if (info['price']['drm'] === "steam" && info['price']['store'] !== "Steam") {
+                        activates = "(<b>" + Localization.str.activates + "</b>)";
+                    }
+
+                    let infoUrl = BrowserHelper.escapeHTML(info["urls"]["info"].toString());
+                    let priceUrl = BrowserHelper.escapeHTML(info["price"]["url"].toString());
+                    let store = BrowserHelper.escapeHTML(info["price"]["store"].toString());
+
+                    let lowest;
+                    let voucherStr = "";
+                    if (SyncedStorage.get("showlowetpricecoupon", true) && info['price']['price_voucher']) {
+                        lowest = new Price(info['price']['price_voucher'], meta['currency']);
+                        let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
+                        voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
+                    } else {
+                        lowest = new Price(info['price']['price'], meta['currency']);
+                    }
+
+                    let lowestStr = Localization.str.lowest_price_format
+                        .replace("__price__", lowest.toString())
+                        .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`)
+
+                    line1 = `${Localization.str.lowest_price}: 
+                             ${lowestStr} ${voucherStr} ${activates}
+                             (<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>)`;
+                }
+
+                // "Historical Low"
+                if (info["lowest"]) {
+                    let historical = new Price(info['lowest']['price'], meta['currency']);
+                    let recorded = new Date(info["lowest"]["recorded"]*1000);
+
+                    let historicalStr = Localization.str.historical_low_format
+                        .replace("__price__", historical.toString())
+                        .replace("__store__", BrowserHelper.escapeHTML(info['lowest']['store']))
+                        .replace("__date__", recorded.toLocaleDateString());
+
+                    let url = BrowserHelper.escapeHTML(info['urls']['history']);
+
+                    line2 = `${Localization.str.historical_low}: ${historicalStr} <a href="${url}" target="_blank">${Localization.str.info}</a>`;
+                }
+
+                let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
+                html = `<div class='es_lowest_price' id='es_price_${id}'><div class='gift_icon' id='es_line_chart_${id}'><img src='${chartImg}'></div>`;
+
+                // "Number of times this game has been in a bundle"
+                if (info["bundles"]["count"] > 0) {
+                    line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
+                    let bundlesUrl = BrowserHelper.escapeHTML(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
+                    if (typeof bundles_url === "string" && bundles_url.length > 0) {
+                        line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
+                    }
+                }
+
+                if (line1 || line2) {
+                    let node;
+                    if (type === "sub") {
+                        node = document.querySelector("input[name=subid][value='"+id+"']").parentNode.parentNode.parentNode;
+                    } else if (type === "bundle") {
+                        node = document.querySelector(".game_area_purchase_game_wrapper[data-ds-bundleid='"+id+"']");
+                    }
+
+                    node.insertAdjacentHTML("afterbegin", html + "<div>" + line1 + "</div><div>" + line2 + "</div>" + line3);
+                    document.querySelector("#es_line_chart_"+id).style.top = ((document.querySelector("#es_price_"+id).offsetHeight - 20) / 2) + "px";
+                }
+
+                // add bundles
+                if (info["bundles"]["live"].length > 0) {
+                    let length = info["bundles"]["live"].length;
+                    for (let i = 0; i < length; i++) {
+                        let bundle = info["bundles"]["live"][i];
+                        let endDate;
+                        if (bundle["expiry"]) {
+                            endDate = new Date(bundle["expiry"]*1000);
+                        }
+
+                        let currentDate = new Date().getTime();
+                        if (endDate && currentDate > endDate) { continue; }
+
+                        let bundle_normalized = JSON.stringify({
+                            page:  bundle.page || "",
+                            title: bundle.title || "",
+                            url:   bundle.url || "",
+                            tiers: (function() {
+                                let tiers = [];
+                                for (let tier in bundle.tiers) {
+                                    tiers.push((bundle.tiers[tier].games || []).sort());
+                                }
+                                return tiers;
+                            })()
+                        });
+
+                        if (bundles.indexOf(bundle_normalized) >= 0) { continue; }
+                        bundles.push(bundle_normalized);
+
+                        let purchase = "";
+                        if (bundle.page) {
+                            let bundlePage = Localization.str.buy_package.replace("__package__", bundle.page + ' ' + bundle.title);
+                            purchase = `<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>${bundlePage}</h1>`;
+                        } else {
+                            let bundleTitle = Localization.str.buy_package.replace("__package__", bundle.title);
+                            purchase = `<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"></div><div class="game_area_purchase_platform"></div><h1>${bundleTitle}</h1>`;
+                        }
+
+                        if (endDate) {
+                            purchase += `<p class="game_purchase_discount_countdown">${Localization.str.bundle.offer_ends} ${endDate}</p>`;
+                        }
+
+                        purchase += '<p class="package_contents">';
+
+                        let bundlePrice;
+                        let appName = document.querySelector(".apphub_AppName").textContent;
+
+                        for (let t=0; t<bundle.tiers.length; t++) {
+                            let tier = bundle.tiers[t];
+                            let tierNum = t + 1;
+
+                            purchase += '<b>';
+                            if (bundle.tiers.length > 1) {
+                                let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
+                                let tierPrice = new Price(tier.price, meta['currency']).toString();
+
+                                purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
+                            } else {
+                                purchase += Localization.str.bundle.includes.replace("__num__", tier.games.length);
+                            }
+                            purchase += ':</b> ';
+
+                            let gameList = tier.games.join(", ");
+                            if (gameList.includes(appName)) {
+                                purchase += gameList.replace(appName, "<u>"+appName+"</u>");
+                                bundlePrice = tier.price;
+                            } else {
+                                purchase += gameList;
+                            }
+
+                            purchase += "<br>";
+                        }
+
+                        purchase += "</p>";
+                        purchase += `<div class="game_purchase_action">
+                                         <div class="game_purchase_action_bg">
+                                             <div class="btn_addtocart btn_packageinfo">
+                                                 <a class="btnv6_blue_blue_innerfade btn_medium" href="${bundle.details}" target="_blank">
+                                                     <span>${Localization.str.bundle.info}</span>
+                                                 </a>
+                                             </div>
+                                         </div>`;
+
+                        purchase += '<div class="game_purchase_action_bg">';
+                        if (bundlePrice && bundlePrice > 0) {
+                            purchase += '<div class="game_purchase_price price" itemprop="price">';
+                            purchase += (new Price(bundlePrice, meta['currency'])).toString();
+                        }
+                        purchase += '</div>';
+
+                        purchase += '<div class="btn_addtocart">';
+                        purchase += '<a class="btnv6_green_white_innerfade btn_medium" href="' + bundle["url"] + '" target="_blank">';
+                        purchase += '<span>' + Localization.str.buy + '</span>';
+                        purchase += '</a></div></div></div></div>';
+
+                        document.querySelector("#game_area_purchase")
+                            .insertAdjacentHTML("afterend", "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='http://store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>" + purchase);
+                    }
+                }
+            }
+        });
     };
 
     return AppPageClass;
@@ -249,7 +470,7 @@ let AppPageClass = (function(){
                         break;
 
                     case /^\/app\/.*/.test(path):
-                        let appPage = new AppPageClass(window.location.host + path)
+                        let appPage = new AppPageClass(window.location.host + path);
                         appPage.mediaSliderExpander();
                         appPage.initHdPlayer();
                         appPage.addWishlistRemove();
