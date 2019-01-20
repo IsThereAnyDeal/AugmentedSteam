@@ -86,7 +86,6 @@ let ExtensionLayer = (function() {
 })();
 
 let SyncedStorage = (function(){
-
     let storageAdapter = chrome.storage.sync || chrome.storage.local;
 
     let localCopy = {};
@@ -189,6 +188,10 @@ let Request = (function(){
             request.open(settings.method, url);
             request.send();
         });
+    };
+
+    self.getApi = function(api, query) {
+        return self.getJson(Api.getApiUrl(api, query));
     };
 
     return self;
@@ -376,9 +379,7 @@ let Currency = (function() {
             }
 
             let currencyCache = SyncedStorage.get("userCurrency");
-            let expireTime = parseInt(Date.now() / 1000, 10) - 60 * 60; // One hour ago
-
-            if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && currencyCache.userCurrency.updated >= expireTime) {
+            if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
                 self.userCurrency = currencyCache.userCurrency.currencyType;
                 resolve();
             } else {
@@ -472,6 +473,10 @@ let Language = (function(){
 
     self.getLanguageCode = function(language) {
         return self.languages[language] ? self.languages[language].toLowerCase() : "en";
+    };
+
+    self.isCurrentLanguageOneOf = function(array) {
+        return array.indexOf(self.getCurrentSteamLanguage()) != -1;
     };
 
     return self;
@@ -635,6 +640,221 @@ let EnhancedSteam = (function() {
         submenuUsername.insertAdjacentHTML("beforeend", `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
+
+    return self;
+})();
+
+
+let TimeHelper = (function(){
+
+    let self = {};
+
+    self.isExpired = function(updateTime, expiration) {
+        if (!updateTime) { return; }
+
+        let expireTime = parseInt(Date.now() / 1000, 10) - expiration;
+        return updateTime < expireTime;
+    };
+
+    self.timestamp = function() {
+        return parseInt(Date.now() / 1000, 10);
+    };
+
+    return self;
+});
+
+
+let GameId = (function(){
+    let self = {};
+
+    self.getAppid = function(text) {
+        if (!text) { return null; }
+
+        // app, market/listing
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
+        return m ? m[2] : null;
+    };
+
+    self.getAppidImgSrc = function(text) {
+        if (!text) { return null; }
+        let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+        return m ? m[1] : null;
+    };
+
+    return self;
+})();
+
+
+let DOMHelper = (function(){
+
+    let self = {};
+
+    self.wrap = function(container, node) {
+        let parent = node.parentNode;
+        parent.insertBefore(container, node);
+        parent.removeChild(node);
+        container.append(node);
+    };
+
+    return self;
+})();
+
+
+let EarlyAccess = (function(){
+
+    let self = {};
+
+    let cache = {};
+    let imageUrl;
+
+    function promise() {
+
+        let imageName = "img/overlay/early_access_banner_english.png";
+        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"])) {
+            imageName = "img/overlay/early_access_banner_" + language + ".png";
+        }
+        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+
+        return new Promise(function(resolve, reject) {
+            cache = LocalData.get("ea_appids");
+
+            if (cache) {
+                resolve();
+            }
+
+            let updateTime = LocalData.get("ea_appids_time");
+            if (!TimeHelper.isExpired(updateTime, 3600)) {
+                return;
+            }
+
+            Request.getApi("v01/earlyaccess").then(data => {
+                if (!data.result || data.result !== "success") {
+                    reject();
+                }
+
+                cache = data.data;
+                LocalData.set("ea_appids", cache);
+                LocalData.set("ea_appids_time", TimeHelper.timestamp());
+                resolve()
+            }, reject);
+        });
+    }
+
+    function checkNodes(selector, selectorModifier) {
+        selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+
+        let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
+        for (let i=0; i<nodes.length; i++) {
+            let node = nodes[i];
+            node.classList.add("es_ea_checked");
+
+            let linkNode = node.querySelector("a");
+            let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
+
+            if (appid && cache.hasOwnProperty(appid) >= 0) {
+                node.classList.add("es_early_access");
+
+                let container = document.createElement("span");
+                container.classList.add("es_overlay_container");
+                DOMHelper.wrap(container, imgHeader);
+
+                container.insertAdjacentHTML("afterbegin", `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+            }
+        }
+    }
+
+    function handleStore() {
+        switch (true) {
+            case /^\/app\/.*/.test(window.location.pathname):
+                checkNodes(".game_header_image_ctn, .small_cap");
+                break;
+            case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
+                checkNodes(`.tab_item,
+                           .special_tiny_cap,
+                           .cluster_capsule,
+                           .game_capsule,
+                           .browse_tag_game,
+                           .dq_item:not(:first-child),
+                           .discovery_queue:not(:first-child)`);
+                break;
+            case /^\/search\/.*/.test(window.location.pathname):
+                checkNodes(".search_result_row");
+                break;
+            case /^\/recommended/.test(window.location.pathname):
+                checkNodes(`.friendplaytime_appheader,
+                           .header_image,
+                           .appheader,
+                           .recommendation_carousel_item .carousel_cap,
+                           .game_capsule,
+                           .game_capsule_area,
+                           .similar_grid_capsule`);
+                break;
+            case /^\/tag\/.*/.test(window.location.pathname):
+                checkNodes(`.cluster_capsule,
+                           .tab_row,
+                           .browse_tag_game_cap`);
+                break;
+            case /^\/$/.test(window.location.pathname):
+                checkNodes(`.cap,
+                           .special,
+                           .game_capsule,
+                           .cluster_capsule,
+                           .recommended_spotlight_ctn,
+                           .curated_app_link,
+                           .dailydeal_ctn a,
+                           .tab_item:last-of-type`);
+
+                // Sales fields
+                checkNodes(".large_sale_caps a, .small_sale_caps a, .spotlight_img");
+                // checkNodes($(".sale_capsule_image").parent()); // TODO check/remove
+                break;
+        }
+    }
+
+    function handleCommunity() {
+        switch(true) {
+            // wishlist, games, and followedgames can be combined in one regex expresion
+            case /^\/(?:id|profiles)\/.+\/(wishlist|games|followedgames)/.test(window.location.pathname):
+                checkNodes(".gameListRowLogo");
+                break;
+            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+                checkNodes(".blotter_gamepurchase_content a");
+                break;
+            case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):
+                checkNodes(".leftcol");
+                break;
+            case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
+                checkNodes(`.game_info_cap,
+                           .showcase_gamecollector_game,
+                           .favoritegame_showcase_game`);
+                break;
+            case /^\/app\/.*/.test(window.location.pathname):
+                if (document.querySelector(".apphub_EarlyAccess_Title")) {
+                    let container = document.createElement("span");
+                    container.id = "es_ea_apphub";
+                    DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
+
+                    checkNodes("#es_ea_apphub");
+                }
+        }
+    }
+
+    self.showEarlyAccess = function() {
+        if (!SyncedStorage.get("show_early_access", true)) { return; }
+
+        promise().then(() => {
+            switch (window.location.host) {
+                case "store.steampowered.com":
+                    handleStore();
+                    break;
+                case "steamcommunity.com":
+                    handleCommunity();
+                    break;
+            }
+        });
+    };
 
     return self;
 })();
