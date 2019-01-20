@@ -616,5 +616,25 @@ let EnhancedSteam = (function() {
         });
     };
 
+    self.removeInstallSteamButton = function() {
+        if (!SyncedStorage.get("hideinstallsteambutton", false)) { return; }
+        document.querySelector("div.header_installsteam_btn").remove();
+    };
+
+    self.removeAboutMenu = function(){
+        // TODO is this still relevant?
+        if (!SyncedStorage.get("hideaboutmenu", true)) { return; }
+        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+    };
+
+    self.addHeaderLinks = function(){
+        if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
+
+        let submenuUsername = document.querySelector(".supernav_container .submenu_username");
+        submenuUsername.querySelector("a").insertAdjacentHTML("afterend", `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        submenuUsername.insertAdjacentHTML("beforeend", `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
+    };
+
+
     return self;
 })();
