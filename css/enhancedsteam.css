@@ -2001,7 +2001,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	display: inline-block;
 }
 #es_popup {
-	display: none;
+	visibility:hidden;
+	opacity:0;
+	transition:opacity 0.2s;
+}
+#es_popup.open {
+	visibility:visible;
+	opacity:1;
 }
 #es_pulldown {
 	vertical-align: middle;
@@ -2011,7 +2017,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 19px;
 }
 #es_pulldown.focus {
-	margin: 0px;
+	margin: 0;
 	border: 1px solid #82807C;
 	color: #ffffff;
 }
