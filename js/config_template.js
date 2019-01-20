@@ -7,6 +7,8 @@
 let Config = {
 
     ApiServerHost: "example.com"
+    CdnHost: "http://example.com"
+    PublicHost: "//example.com",
 
 };
 */

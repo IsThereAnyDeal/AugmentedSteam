@@ -36,7 +36,12 @@ let AppPageClass = (function(){
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
 
         this.data = this.storePageDataPromise();
+        this.appName = document.querySelector(".apphub_AppName").textContent;
     }
+
+    AppPageClass.prototype.isDlc = function() {
+        return document.querySelector("div.game_area_dlc_bubble") ? true : false;
+    };
 
     AppPageClass.prototype.mediaSliderExpander = function() {
         let detailsBuild = false;
@@ -295,7 +300,7 @@ let AppPageClass = (function(){
 
                     let url = BrowserHelper.escapeHTML(info['urls']['history']);
 
-                    line2 = `${Localization.str.historical_low}: ${historicalStr} <a href="${url}" target="_blank">${Localization.str.info}</a>`;
+                    line2 = `${Localization.str.historical_low}: ${historicalStr} (<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
                 }
 
                 let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
@@ -367,7 +372,7 @@ let AppPageClass = (function(){
                         purchase += '<p class="package_contents">';
 
                         let bundlePrice;
-                        let appName = document.querySelector(".apphub_AppName").textContent;
+                        let appName = this.appName;
 
                         for (let t=0; t<bundle.tiers.length; t++) {
                             let tier = bundle.tiers[t];
@@ -425,6 +430,31 @@ let AppPageClass = (function(){
         });
     };
 
+    AppPageClass.prototype.addDlcInfo = function() {
+        if (!this.isDlc()) { return; }
+
+        Request.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
+            console.log(response);
+            let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+
+            if (response && response.result === "success") {
+                for(let i=0, len=response.data.length; i<len; i++) {
+
+                    let item = response.data[i];
+                    let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
+                    let title = BrowserHelper.escapeHTML(item.desc);
+                    let name = BrowserHelper.escapeHTML(item.name);
+                    html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
+                }
+            }
+
+            let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
+            html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
+
+            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);
+        });
+    };
+
     return AppPageClass;
 })();
 
@@ -476,10 +506,9 @@ let AppPageClass = (function(){
                         appPage.addWishlistRemove();
                         appPage.addCoupon();
                         appPage.addPrices();
+                        appPage.addDlcInfo();
 
 /*
-                        display_coupon_message(appid);
-                        show_pricing_history(appid, "app");
                         dlc_data_from_site(appid);
 
                         drm_warnings("app");
