@@ -770,6 +770,11 @@ let GameId = (function(){
         return m ? m[1] : null;
     };
 
+    self.getAppids = function(text) {
+        let res = matchAll(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g, text);
+        return (res.length > 0) ? res : null;
+    };
+
     return self;
 })();
 
@@ -943,6 +948,161 @@ let EarlyAccess = (function(){
                     break;
             }
         });
+    };
+
+    return self;
+})();
+
+
+let Inventory = (function(){
+
+    let self = {};
+
+    let gifts = [];
+    let guestpasses = [];
+    let coupons = {};
+
+    // Context ID 1 is gifts and guest passes
+    function handleInventoryContext1(data) {
+        if (!data || !data.success) return;
+
+        LocalData.set("inventory_1", data);
+
+        for(let key in data.rgDescriptions) {
+            if (!data.rgDescriptions.hasOwnProperty(key)) { continue; }
+
+            let isPackage = false;
+            let obj = data.rgDescriptions[key];
+
+            if (obj.descriptions) {
+                for (let d = 0; d < obj.descriptions.length; d++) {
+                    if (obj.descriptions[d].type === "html") {
+                        let appids = GameId.getAppids(obj.descriptions[d].value);
+                        if (appids) {
+                            // Gift package with multiple apps
+                            isPackage = true;
+                            for (let j = 0; j < appids.length; j++) {
+                                if (appids[j]) {
+                                    if (obj.type === "Gift") {
+                                        gifts.push(appids[j]);
+                                    } else {
+                                        guestpasses.push(appids[j]);
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Single app
+            if (!isPackage && obj.actions) {
+                let appid = GameId.getAppid(obj.actions[0].link);
+                if (appid) {
+                    if (obj.type === "Gift") {
+                        gifts.push(appid);
+                    } else {
+                        guestpasses.push(appid);
+                    }
+                }
+            }
+
+        }
+    }
+
+    // Trading cards
+    function handleInventoryContext6(data) {
+        if (!data || !data.success) { return; }
+        LocalData.set("inventory_6", data);
+    }
+
+    // Coupons
+    function handleInventoryContext3(data) {
+        if (!data || !data.success) { return; }
+        LocalData.set("inventory_3", data);
+
+        for(let id in data.rgDescriptions) {
+            if (!data.rgDescriptions.hasOwnProperty(id)) {
+                continue;
+            }
+
+            let obj = data.rgDescriptions[id];
+            if (!obj.type || obj.type !== "Coupon") {
+                continue;
+            }
+            if (!obj.actions) {
+                continue;
+            }
+
+            let couponData = {
+                image_url: obj.icon_url,
+                title: obj.name,
+                discount: obj.name.match(/([1-9][0-9])%/)[1],
+                id: id
+            };
+
+            for (let i = 0; i < obj.descriptions.length; i++) {
+                if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
+                    Object.assign(couponData, {
+                        discount_note: obj.descriptions[i].value,
+                        discount_note_id: i,
+                        discount_doesnt_stack: true
+                    });
+                } else if (obj.descriptions[i].value.startsWith("(Valid")) {
+                    Object.assign(couponData, {
+                        valid_id: i,
+                        valid: obj.descriptions[i].value
+                    });
+                }
+            }
+
+            for (let j = 0; j < obj.actions.length; j++) {
+                let link = obj.actions[j].link;
+                let packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
+
+                if (!coupons[packageid] || coupons[packageid].discount < couponData.discount) {
+                    coupons[packageid] = couponData;
+                }
+            }
+        }
+
+        console.log(coupons);
+    }
+
+    self.promise = function() {
+        return new Promise(function(resolve, reject) {
+            if (!User.isSignedIn) {
+                resolve();
+            }
+
+            let lastUpdate = LocalData.get("inventory_update");
+            let inv1 = LocalData.get("inventory_1");
+            let inv3 = LocalData.get("inventory_3");
+            let inv6 = LocalData.get("inventory_6");
+
+            if (TimeHelper.isExpired(lastUpdate, 3600) || !inv1 || !inv3) {
+                LocalData.set("inventory_update", Date.now());
+
+                Promise.all([
+                    Request.getJson(User.profileUrl + "/inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
+                    Request.getJson(User.profileUrl + "/inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
+                    Request.getJson(User.profileUrl + "/inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
+                ]).then(resolve, reject);
+            }
+            else {
+                // No need to load anything, its all in localStorage.
+                handleInventoryContext1(inv1);
+                handleInventoryContext3(inv3);
+                handleInventoryContext6(inv6);
+
+                resolve();
+            }
+        });
+    };
+
+    self.getCoupon = function(subid) {
+        return coupons && coupons[subid];
     };
 
     return self;

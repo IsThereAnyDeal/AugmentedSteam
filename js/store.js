@@ -115,6 +115,7 @@ let AppPageClass = (function(){
         }
 
         let successNode = document.querySelector("#add_to_wishlist_area_success");
+        if (!successNode) { return; }
 
         let imgNode = successNode.querySelector("img:last-child");
         if (!imgNode) { return; }
@@ -159,6 +160,49 @@ let AppPageClass = (function(){
         */
     };
 
+    AppPageClass.prototype.getFirstSubid = function() {
+        let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
+        return node && node.value;
+    };
+
+    AppPageClass.prototype.addCoupon = function() {
+        let inst = this;
+        Inventory.promise().then(() => {
+
+            console.log(inst.getFirstSubid());
+
+            let coupon = Inventory.getCoupon(inst.getFirstSubid());
+            if (!coupon) { return; }
+
+            let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
+
+            let purchaseArea = document.querySelector("#game_area_purchase");
+            purchaseArea.insertAdjacentHTML("beforebegin", `
+<div class="early_access_header">
+    <div class="heading">
+        <h1 class="inset">${Localization.str.coupon_available}</h1>
+        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
+        <p>${Localization.str.coupon_learn_more}</p>
+    </div>
+    <div class="devnotes">
+        <div style="display:flex;padding-top:10px">
+            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
+            <div style="display:flex;flex-direction:column;margin-left:10px">
+                <h1>${coupon.title}</h1>
+                <div>${coupon.discount_note || ""}</div>
+                <div style="color:#a75124">${couponDate}</div>
+            </div>
+        </div>
+    </div>
+</div>`);
+
+            // TODO show price in purchase box
+        });
+    };
+
+    AppPageClass.prototype.addPrices = function() {
+
+    };
 
     return AppPageClass;
 })();
@@ -209,9 +253,10 @@ let AppPageClass = (function(){
                         appPage.mediaSliderExpander();
                         appPage.initHdPlayer();
                         appPage.addWishlistRemove();
+                        appPage.addCoupon();
+                        appPage.addPrices();
 
 /*
-                        add_app_page_wishlist_changes(appid);
                         display_coupon_message(appid);
                         show_pricing_history(appid, "app");
                         dlc_data_from_site(appid);
