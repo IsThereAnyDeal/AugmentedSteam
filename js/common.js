@@ -640,6 +640,66 @@ let EnhancedSteam = (function() {
         submenuUsername.insertAdjacentHTML("beforeend", `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
+    self.disableLinkFilter = function(){
+        if (!SyncedStorage.get("disablelinkfilter", false)) { return; }
+
+        removeLinksFilter();
+
+        let observer = new MutationObserver(removeLinksFilter);
+        observer.observe(document, {attributes: true, childList: true});
+
+        function removeLinksFilter() {
+            let nodes = document.querySelectorAll("a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                let node = nodes[i];
+                if (!node.hasAttribute("href")) { continue; }
+                node.setAttribute("href", node.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
+            }
+        }
+    };
+
+    self.addRedeemLink = function() {
+        document.querySelector("#account_dropdown .popup_menu_item:last-child:not(.tight)")
+            .insertAdjacentHTML("beforebegin", `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
+    };
+
+    self.replaceAccountName = function() {
+        if (!SyncedStorage.get("replaceaccountname", false)) { return; }
+
+        let accountNameNode = document.querySelector("#account_pulldown");
+        let accountName = accountNameNode.textContent.trim();
+        let communityName = document.querySelector("#global_header .username").textContent.trim();
+
+        accountNameNode.textContent = communityName;
+        document.title = document.title.replace(accountName, communityName);
+    };
+
+    self.launchRandomButton = function() {
+
+        document.querySelector("#es_popup .popup_menu")
+            .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+
+        document.querySelector("#es_random_game").addEventListener("click", function(){
+            // FIXME owned playable
+            /*
+            $.when(owned_playable_promise()).done(function(data) {
+                var games = data.response.games,
+                    rand = games[Math.floor(Math.random() * games.length)];
+
+                let playGameStr = Localization.str.play_game.replace("__gamename__", rand.name.replace("'", "").trim());
+                runInPageContext(
+                    "function() {\
+                        var prompt = ShowConfirmDialog('" + playGameStr + "', '<img src=//steamcdn-a.akamaihd.net/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + Localization.str.visit_store + "'); \
+					    prompt.done(function(result) {\
+						    if (result == 'OK') { window.location.assign('steam://run/" + rand.appid + "'); }\
+						    if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand.appid + "'); }\
+					});\
+				}"
+                );
+            });
+            */
+        });
+    };
 
     return self;
 })();
