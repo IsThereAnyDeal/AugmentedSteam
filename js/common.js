@@ -158,6 +158,7 @@ let Request = (function(){
         settings.withCredentials = settings.withCredentials || false;
         settings.type = settings.type || "text/html";
         settings.method = settings.method || "GET";
+        settings.body = settings.body || null;
 
         totalRequests += 1;
 
@@ -186,12 +187,30 @@ let Request = (function(){
             request.overrideMimeType(settings.type);
             request.withCredentials = settings.withCredentials;
             request.open(settings.method, url);
-            request.send();
+
+            if (settings.headers) {
+                for (let i=0; i<settings.headers.length; i++) {
+                    console.log("header", settings.headers[i][0], settings.headers[i][1]);
+                    request.setRequestHeader(settings.headers[i][0], settings.headers[i][1]);
+                }
+            }
+
+            request.send(settings.body);
         });
     };
 
     self.getApi = function(api, query) {
         return self.getJson(Api.getApiUrl(api, query));
+    };
+
+    self.post = function(url, data, settings) {
+        return self.getHttp(url, Object.assign(settings || {}, {
+            headers: [
+                ["Content-Type", "application/x-www-form-urlencoded"]
+            ],
+            method: "POST",
+            body: Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&')
+        }));
     };
 
     return self;
@@ -326,19 +345,18 @@ let User = (function(){
     self.steamId = null;
 
     self.promise = function() {
-        self.profileUrl = document.querySelector("#global_actions .playerAvatar").getAttribute("href");
+        let avatarNode = document.querySelector("#global_actions .playerAvatar");
+        self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
         self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
 
         return new Promise(function(resolve, reject) {
             if (self.profilePath) {
-
                 let userLogin = LocalData.get("userLogin");
                 if (userLogin && userLogin.profilePath === self.profilePath) {
                     self.isSignedIn = true;
                     self.steamId = userLogin.steamId;
                     resolve();
                 } else {
-
                     Request.getHttp("//steamcommunity.com/profiles/0/", {withCredentials: true})
                         .then(function(response) {
                             self.steamId = (response.match(/g_steamID = "(\d+)";/) || [])[1];
@@ -353,9 +371,20 @@ let User = (function(){
                 }
 
             } else {
-                reject();
+                resolve();
             }
         });
+    };
+
+    self.getSessionId = function() {
+        let nodes = document.querySelectorAll("script");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let m = nodes[i].textContent.match(/g_sessionID = "(.+)"/);
+            if (m) {
+                return m[1];
+            }
+        }
+        return null;
     };
 
     return self;
@@ -721,7 +750,7 @@ let TimeHelper = (function(){
     };
 
     return self;
-});
+})();
 
 
 let GameId = (function(){

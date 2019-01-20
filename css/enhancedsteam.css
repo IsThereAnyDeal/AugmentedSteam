@@ -862,6 +862,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-remove-wl {
 	display: inline !important;
 }
+.queue_actions_ctn.loading img {
+    display: none;
+}
+.queue_actions_ctn.loading #add_to_wishlist_area_success .es-loading-wl {
+    display: inline !important;
+}
 
 /***************************************
  * Groups page
