@@ -817,7 +817,125 @@ let AppPageClass = (function(){
                 LocalData.del("storePageData_" + this.appid);
             });
         });
-    }
+    };
+
+    AppPageClass.prototype.moveUsefulLinks = function() {
+        if (!this.isApp()) { return; }
+
+        let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
+        usefulLinks.classList.add("es_useful_link");
+
+        let sideDetails = document.querySelector(".es_side_details_wrap");
+        if (sideDetails) {
+            sideDetails.insertAdjacentElement("afterend", usefulLinks);
+        } else {
+            document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", usefulLinks);
+        }
+    };
+
+    AppPageClass.prototype.addLinks = function() {
+        let linkNode = document.querySelector("#ReportAppBtn").parentNode;
+
+        if (SyncedStorage.get("showclient", true)) {
+            let cls = "steam_client_btn";
+            let url = "steam://url/StoreAppPage/" + this.appid;
+            let str = Localization.str.viewinclient;
+
+            linkNode.insertAdjacentHTML("afterbegin",
+                `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+        }
+
+        if (SyncedStorage.get("showpcgw", true)) {
+            let cls = "pcgw_btn";
+            let url = "http://pcgamingwiki.com/api/appid.php?appid=" + this.appid;
+            let str = Localization.str.wiki_article.replace("__pcgw__","PCGamingWiki");
+
+            linkNode.insertAdjacentHTML("afterbegin",
+                `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+        }
+
+        if (SyncedStorage.get("showsteamcardexchange", true)) {
+            if (document.querySelector(".icon img[src$='/ico_cards.png'")) { // has trading cards
+                let cls = "cardexchange_btn";
+                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.appid;
+                let str = Localization.str.view_in + ' Steam Card Exchange';
+
+                linkNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            }
+        }
+    };
+
+    AppPageClass.prototype.addHighlights = function() {
+        if (!SyncedStorage.get("highlight_owned", true)) { return; }
+
+        if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
+            document.querySelector(".apphub_AppName").style.color = SyncedStorage.get("highlight_owned_color", "inherit");
+        }
+    };
+
+    AppPageClass.prototype.addSteamDb = function(type) {
+        if (!SyncedStorage.get("showsteamdb", true)) { return; }
+
+        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
+
+        // TODO this should be refactored elsewhere probably
+        switch (type) {
+            case "app": {
+                let cls = "steamdb_ico";
+                let url = "//steamdb.info/app/" + this.appid;
+                let str = Localization.str.view_in + ' Steam Database';
+
+                document.querySelector("#ReportAppBtn").parentNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            }
+                break;
+            case "sub": {
+                let cls = "steamdb_ico";
+                let url = "//steamdb.info/sub/" + this.appid;
+                let str = Localization.str.view_in + ' Steam Database';
+
+                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+                }
+                break;
+            case "bundle": {
+                let cls = "steamdb_ico";
+                let url = "//steamdb.info/bundle/" + this.appid;
+                let str = Localization.str.view_in + ' Steam Database';
+
+                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                            <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            }
+                break;
+            case "gamehub":
+                document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
+                    `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
+                break;
+            case "gamegroup":
+                document.querySelector("#rightActionBlock").insertAdjacentHTML("beforeend",
+                    `<div class="actionItemIcon"><img src="${bgUrl}" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="//steamdb.info/app/' + appid + '/">${Localization.str.view_in} Steam Database</a>`);
+                break;
+        }
+    };
+
+    AppPageClass.prototype.addFamilySharingWarning = function() {
+        if (!SyncedStorage.get("exfgls", true)) { return; }
+
+        this.data.then(result => {
+            if (!result.exfgls || !result.exfgls.excluded) { return; }
+
+            let str = Localization.str.family_sharing_notice;
+            document.querySelector("#game_area_purchase").insertAdjacentHTML("beforebegin",
+                `<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">${str}</div><div class="notice_box_bottom"></div></div>`);
+        });
+    };
 
     return AppPageClass;
 })();
@@ -880,17 +998,14 @@ let AppPageClass = (function(){
                         appPage.addWidescreenCertification();
 
                         appPage.addHltb();
-                        /*
 
+                        appPage.moveUsefulLinks();
+                        appPage.addLinks();
+                        appPage.addSteamDb("app");
+                        appPage.addHighlights();
+                        appPage.addFamilySharingWarning();
 
-                        add_hltb_info(appid);
-
-                        add_steam_client_link(appid);
-                        add_pcgamingwiki_link(appid);
-                        add_steamcardexchange_link(appid);
-                        add_app_page_highlights();
-                        add_steamdb_links(appid, "app");
-                        add_familysharing_warning(appid);
+/*
                         add_dlc_page_link(appid);
                         add_pack_breakdown();
                         add_package_info_button();
@@ -902,7 +1017,7 @@ let AppPageClass = (function(){
                         add_dlc_checkboxes();
                         add_astats_link(appid);
                         add_achievement_completion_bar(appid);
-
+/*
                         show_regional_pricing("app");
                         add_review_toggle_button();
 
