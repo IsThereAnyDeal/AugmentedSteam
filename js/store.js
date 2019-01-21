@@ -642,6 +642,183 @@ let AppPageClass = (function(){
         });
     };
 
+    AppPageClass.prototype.addWidescreenCertification = function() {
+        if (!SyncedStorage.get("showwsgf", true)) { return; }
+        if (this.isDlc()) { return; }
+
+        this.data.then(result => {
+            if (!result || result.wsgf) { return; }
+            let node = document.querySelector("game_details");
+
+            let data = result.wsgf;
+
+            let path = data["Path"];
+            let wsg = data["WideScreenGrade"];
+            let mmg = data["MultiMonitorGrade"];
+            let fkg = data["Grade4k"];
+            let uws = data["UltraWideScreenGrade"];
+            let wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
+            let fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
+
+            switch (wsg) {
+                case "A":
+                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-gold.png");
+                    wsg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Widescreen");
+                    break;
+                case "B":
+                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-silver.png");
+                    wsg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Widescreen");
+                    break;
+                case "C":
+                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-limited.png");
+                    wsg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Widescreen");
+                    break;
+                case "Incomplete":
+                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-incomplete.png");
+                    wsg_text = Localization.str.wsgf.incomplete;
+                    break;
+                case "Unsupported":
+                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-unsupported.png");
+                    wsg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Widescreen");
+                    break;
+            }
+
+            switch (mmg) {
+                case "A":
+                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-gold.png");
+                    mmg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
+                    break;
+                case "B":
+                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-silver.png");
+                    mmg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
+                    break;
+                case "C":
+                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-limited.png");
+                    mmg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
+                    break;
+                case "Incomplete":
+                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-incomplete.png");
+                    mmg_text = Localization.str.wsgf.incomplete;
+                    break;
+                case "Unsupported":
+                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-unsupported.png");
+                    mmg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
+                    break;
+            }
+
+            switch (uws) {
+                case "A":
+                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-gold.png");
+                    uws_text = Localization.str.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
+                    break;
+                case "B":
+                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-silver.png");
+                    uws_text = Localization.str.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
+                    break;
+                case "C":
+                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-limited.png");
+                    uws_text = Localization.str.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
+                    break;
+                case "Incomplete":
+                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-incomplete.png");
+                    uws_text = Localization.str.wsgf.incomplete;
+                    break;
+                case "Unsupported":
+                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-unsupported.png");
+                    uws_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
+                    break;
+            }
+
+            switch (fkg) {
+                case "A":
+                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-gold.png");
+                    fkg_text = Localization.str.wsgf.gold.replace(/__type__/g, "4k UHD");
+                    break;
+                case "B":
+                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-silver.png");
+                    fkg_text = Localization.str.wsgf.silver.replace(/__type__/g, "4k UHD");
+                    break;
+                case "C":
+                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-limited.png");
+                    fkg_text = Localization.str.wsgf.limited.replace(/__type__/g, "4k UHD");
+                    break;
+                case "Incomplete":
+                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-incomplete.png");
+                    fkg_text = Localization.str.wsgf.incomplete;
+                    break;
+                case "Unsupported":
+                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-unsupported.png");
+                    fkg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "4k UHD");
+                    break;
+            }
+
+
+            let wsgfUrl = BrowserHelper.escapeHTML(path);
+
+            let html = "<div class='block responsive_apppage_details_right heading'>"+Localization.str.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
+            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(wsg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(mmg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(uws_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(fkg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + wsgfUrl + "'>" + Localization.str.rating_details + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
+            html += "</div></div></div></div>";
+
+            node.insertAdjacentHTML("afterend", html);
+        });
+    };
+
+    AppPageClass.prototype.addHltb = function() {
+        if (!SyncedStorage.get("showhltb", true)) { return; }
+        if (this.isDlc()) { return; }
+
+        this.data.then(result => {
+            if (!result || !result.hltb) { return; }
+            let data = result.hltb;
+
+            let html = "";
+            if (data.success) {
+                html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.hltb.title}</div>
+                            <div class='block game_details underlined_links'>
+                            <div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+
+                if (data["main_story"]){
+                    let value = BrowserHelper.escapeHTML(data['main_story']);
+                    html += `<b>${Localization.str.hltb.main}:</b><span style='float: right;'>${value}</span><br>`;
+                }
+                if (data["main_extras"]){
+                    let value = BrowserHelper.escapeHTML(data['main_extras']);
+                    html += `<b>${Localization.str.hltb.main_e}:</b><span style='float: right;'>${value}</span><br>`;
+                }
+                if (data["comp"]) {
+                    let value = BrowserHelper.escapeHTML(data['comp']);
+                    html += `<b>${Localization.str.hltb.compl}:</b><span style='float: right;'>${value}</span><br>`;
+                }
+
+                let suggestUrl = Config.PublicHost + "/gamedata/hltb_link_suggest.php";
+
+                html += "</div>"
+                    + "<a class='linkbar' href='" + BrowserHelper.escapeHTML(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "<a class='linkbar' href='" + BrowserHelper.escapeHTML(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "<a class='linkbar' href='" + suggestUrl + "' id='suggest'>" + Localization.str.hltb.wrong + " - " + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "</div></div></div>";
+
+
+            } else {
+                html = "<div class='block game_details underlined_links'>"
+                    + "<div class='block_header'><h4>How Long to Beat</h4></div>"
+                    + "<div class='block_content'><div class='block_content_inner'><div class='details_block'>" + Localization.str.hltb.no_data + "</div>"
+                    + "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "</div></div></div>";
+            }
+
+            document.querySelector("div.game_details").insertAdjacentHTML("afterend", html);
+
+            document.querySelector("#suggest").addEventListener("click", function(){
+                LocalData.del("storePageData_" + this.appid);
+            });
+        });
+    }
+
     return AppPageClass;
 })();
 
@@ -700,44 +877,47 @@ let AppPageClass = (function(){
                         appPage.addOpenCritic();
                         appPage.displayPurchaseDate();
 
+                        appPage.addWidescreenCertification();
+
+                        appPage.addHltb();
                         /*
 
 
-                                                add_widescreen_certification(appid);
-                                                add_hltb_info(appid);
-                                                add_steam_client_link(appid);
-                                                add_pcgamingwiki_link(appid);
-                                                add_steamcardexchange_link(appid);
-                                                add_app_page_highlights();
-                                                add_steamdb_links(appid, "app");
-                                                add_familysharing_warning(appid);
-                                                add_dlc_page_link(appid);
-                                                add_pack_breakdown();
-                                                add_package_info_button();
-                                                add_steamchart_info(appid);
-                                                add_steamspy_info(appid);
-                                                survey_data_from_site(appid);
-                                                add_system_requirements_check(appid);
-                                                add_app_badge_progress(appid);
-                                                add_dlc_checkboxes();
-                                                add_astats_link(appid);
-                                                add_achievement_completion_bar(appid);
+                        add_hltb_info(appid);
 
-                                                show_regional_pricing("app");
-                                                add_review_toggle_button();
+                        add_steam_client_link(appid);
+                        add_pcgamingwiki_link(appid);
+                        add_steamcardexchange_link(appid);
+                        add_app_page_highlights();
+                        add_steamdb_links(appid, "app");
+                        add_familysharing_warning(appid);
+                        add_dlc_page_link(appid);
+                        add_pack_breakdown();
+                        add_package_info_button();
+                        add_steamchart_info(appid);
+                        add_steamspy_info(appid);
+                        survey_data_from_site(appid);
+                        add_system_requirements_check(appid);
+                        add_app_badge_progress(appid);
+                        add_dlc_checkboxes();
+                        add_astats_link(appid);
+                        add_achievement_completion_bar(appid);
 
-                                                customize_app_page(appid);
-                                                add_help_button(appid);
-                                                skip_got_steam();
+                        show_regional_pricing("app");
+                        add_review_toggle_button();
 
-                                                if (language == "schinese" || language == "tchinese") {
-                                                    storePageDataCN.load(appid);
-                                                    add_keylol_link();
-                                                    add_steamcn_mods();
-                                                    if (language == "schinese") add_chinese_name();
-                                                }
+                        customize_app_page(appid);
+                        add_help_button(appid);
+                        skip_got_steam();
 
-                                                */
+                        if (language == "schinese" || language == "tchinese") {
+                            storePageDataCN.load(appid);
+                            add_keylol_link();
+                            add_steamcn_mods();
+                            if (language == "schinese") add_chinese_name();
+                        }
+
+                        */
                         break;
                 }
 
