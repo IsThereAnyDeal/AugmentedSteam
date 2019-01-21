@@ -1105,13 +1105,6 @@ let AppPageClass = (function(){
         });
     };
 
-    AppPageClass.prototype.addSysReqCheck = function(){
-        if (false && !SyncedStorage.get("show_sysreqcheck", false)) { return; } // FIXME
-
-        var html = "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + this.appid + "'><span>" + Localization.str.check_system + "</span></a>";
-        document.querySelector(".sysreq_content:last-of-type").insertAdjacentHTML("afterend", html);
-    };
-
 
 
 
@@ -1192,7 +1185,6 @@ let AppPageClass = (function(){
 
                         appPage.addPackageInfoButton();
                         appPage.addStats();
-                        appPage.addSysReqCheck();
 
 /*
                         add_pack_breakdown();
