@@ -1105,15 +1105,113 @@ let AppPageClass = (function(){
         });
     };
 
+    AppPageClass.prototype.addDlcCheckboxes = function() {
+        let expandedNode = document.querySelector("#game_area_dlc_expanded");
 
+        if (expandedNode) {
+            expandedNode
+                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
 
+            document.querySelector(".game_area_dlc_section")
+                .insertAdjacentElement("<div style='clear: both;'></div>");
+        } else {
+            document.querySelector(".gameDlcBlocks")
+                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+        }
 
+        let form = document.createElement("form");
+        form.setAttribute("name", "add_selected_dlc_to_cart");
+        form.setAttribute("action", "/cart/");
+        form.setAttribute("method", "POST");
+        form.setAttribute("id", "es_selected_cart");
 
+        let button = document.querySelector("#es_selected_btn");
+        button.insertAdjacentElement("beforebegin", form);
+        button.addEventListener("click", function(){
+            document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
+        })
 
+        let nodes = document.querySelectorAll(".game_area_dlc_row");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
 
+            if (node.querySelector("input")) {
+                let value = node.querySelector("input").value;
 
+                node.querySelector(".game_area_dlc_name")
+                    .insertAdjacentHTML("afterbegin", "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
+            } else {
+                node.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
+            }
+        }
 
+        document.querySelector(".game_area_dlc_section .gradientbg")
+            .insertAdjacentHTML("afterend", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
+        document.querySelector("#es_dlc_option_panel")
+            .insertAdjacentHTML("afterbegin", `
+                <div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
+                <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
+                <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>
+            `);
+
+        document.querySelector("#unowned_dlc_check").addEventListener("click", function () {
+            let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                nodes[i].checked = true;
+            }
+        });
+
+        document.querySelector("#wl_dlc_check").addEventListener("click", function(){
+            let nodes = document.querySelectorAll(".game_area_dlc_section .ds_wishlist input:not(:checked)");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                nodes[i].checked = true;
+            }
+        });
+
+        document.querySelector("#no_dlc_check").addEventListener("click", function(){
+            let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row input:checked");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                nodes[i].checked = false;
+            }
+        });
+
+        document.querySelector(".game_area_dlc_section .gradientbg")
+            .insertAdjacentHTML("beforeend", "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
+
+        document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
+            document.querySelector("#es_dlc_option_panel")
+                .classList.toggle("esi-shown");
+
+            let button = document.querySelector("#es_dlc_option_button");
+
+            button.textContent = (button.textContent.match("▾")
+                ? Localization.str.thewordoptions + " ▴"
+                : Localization.str.thewordoptions + " ▾");
+        });
+
+        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e){
+            if (!e.target.classList.contains("es_dlc_selection")) { return; }
+
+            let cartNode = document.querySelector("#es_selected_cart");
+            cartNode.innerHTML = "<input type=\"hidden\" name=\"action\" value=\"add_to_cart\"><input type=\"hidden\" name=\"sessionid\" value=\"" + User.getSessionId() + "\">"
+
+            let nodes = document.querySelectorAll(".es_dlc_selection:checked");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                let node = nodes[i];
+
+                let input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "subid[]");
+                input.setAttribute("value", node.value);
+
+                cartNode.insertAdjacentElement("beforeend", input);
+            }
+
+            let button = document.querySelector("#es_selected_btn");
+            button.style.display = (nodes.length > 0 ? "block" : "none");
+        })
+    };
 
     return AppPageClass;
 })();
@@ -1186,6 +1284,7 @@ let AppPageClass = (function(){
                         appPage.addPackageInfoButton();
                         appPage.addStats();
 
+                        appPage.addDlcCheckboxes();
 /*
                         add_pack_breakdown();
                         add_app_badge_progress(appid);

@@ -2326,3 +2326,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .cardexchange_btn {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/steamcardexchange.png');
 }
+
+/* hide dlc flag due to checkboxes */
+.game_area_dlc_row:hover .ds_flag { display:none; }
+
+.esi-shown {
+	display:block !important;
+}
+.esi-hidden {
+	display:none !important;
+}
