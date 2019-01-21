@@ -41,10 +41,14 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.isApp = function() {
         return true;
-    }
+    };
 
     AppPageClass.prototype.isDlc = function() {
         return document.querySelector("div.game_area_dlc_bubble") ? true : false;
+    };
+
+    AppPageClass.prototype.isVideo = function() {
+        return document.querySelector(".game_area_purchase_game .streamingvideo") ? true : false;
     };
 
     AppPageClass.prototype.mediaSliderExpander = function() {
@@ -937,6 +941,187 @@ let AppPageClass = (function(){
         });
     };
 
+    AppPageClass.prototype.addPackageInfoButton = function() {
+        if (false && !SyncedStorage.get("show_package_info", false)) { return; } // FIXME
+
+        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            if (node.querySelector(".btn_packageinfo")) { continue; }
+
+            let subid = node.querySelector("input[name=subid].value");
+
+            node.querySelector(".game_purchase_action").insertAdjacentHTML("afterbegin",
+                `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
+                 <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
+                 ${Localization.str.package_info}</span></a></div></div>`);
+        }
+    };
+
+    function addSteamChart(result) {
+        if (!SyncedStorage.get("show_steamchart_info", true) || !result.charts || !result.charts.chart) { return; }
+
+        let appid = this.appid;
+        let chart = result.charts.chart;
+        let html = '<div id="steam-charts" class="game_area_description"><h2>' + Localization.str.charts.current + '</h2>';
+            html += '<div class="chart-content">';
+                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
+            html += '</div>';
+            html += '<span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span>';
+            html += '</div>';
+
+        document.querySelector(".sys_req").parentNode.insertAdjacentHTML("beforebegin", html);
+    }
+
+    function addSteamSpy(result) {
+        if (!SyncedStorage.get("steamspy", true) || !result.steamspy || !result.steamspy.owners) { return; }
+
+        function getTimeString(value) {
+
+            let days = Math.trunc(value / 1440);
+            value -= days * 1440;
+
+            let hours = Math.trunc(value / 60);
+            value -= hours * 60;
+
+            let minutes = value;
+
+            let result = "";
+            if (days > 0) { result += days+"d ";}
+            result += hours+"h "+minutes+"m";
+
+            return result;
+        }
+
+        let appid = this.appid;
+
+        let owners = result.steamspy.owners.split("..")
+        let owners_from = BrowserHelper.escapeHTML(owners[0].trim());
+        let owners_to = BrowserHelper.escapeHTML(owners[1].trim());
+        let averageTotal = getTimeString(result.steamspy.average_forever);
+        let average2weeks = getTimeString(result.steamspy.average_2weeks);
+
+        let html = '<div id="steam-spy" class="game_area_description"><h2>' + Localization.str.spy.player_data + '</h2>';
+            html += '<div class="chart-content">';
+                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
+            html += "</div>";
+            html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
+            html += "</div>";
+
+        document.querySelector(".sys_req").parentNode.insertAdjacentHTML("beforebegin", html);
+    }
+
+    function addSurveyData(result) {
+        if (!SyncedStorage.get("show_appage_surveys", true) || !result.survey) { return; }
+        if (this.isVideo()) { return; }
+
+        let survey = result.survey;
+        let appid = this.appid;
+
+        let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
+
+        if (survey.success) {
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
+            switch (survey["fr"]) {
+                case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
+                case "fi": html += "<span style='color: #e1c48a;'>" + Localization.str.survey.framerate_fi + "</span>"; break;
+                case "va": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.framerate_va + "</span>"; break;
+            }
+
+            html += "<br><b>" + Localization.str.survey.resolution + "</b>: " + Localization.str.survey.resolution_support + " "
+            switch (survey["mr"]) {
+                case "less": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.resolution_less.replace("__pixels__", "1920x1080") + "</span>"; break;
+                case "hd": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)") + "</span>"; break;
+                case "wqhd": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)") + "</span>"; break;
+                case "4k": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)") + "</span>"; break;
+            }
+
+            html += "<br><b>" + Localization.str.survey.graphics_settings + "</b>: ";
+            if (survey["gs"]) {
+                html += "<span style='color: #8BC53F;'>" + Localization.str.survey.gs_y + "</span></p>";
+            } else {
+                html += "<span style='color: #8f0e10;'>" + Localization.str.survey.gs_n + "</span></p>";
+            }
+
+            if (survey["nvidia"] !== undefined || survey["amd"] !== undefined || survey["intel"] !== undefined || survey["other"] !== undefined) {
+                html += "<p><b>" + Localization.str.survey.satisfaction + "</b>:";
+                html += "<div class='performance-graph'>";
+                if (survey["nvidia"] !== undefined) {
+                    if (survey["nvidia"] > 90 || survey["nvidia"] < 10) {
+                        html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(survey["nvidia"]).toString() + "%;'><span>Nvidia&nbsp;" + survey["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["nvidia"]) + "%;'></div></div>";
+                    } else {
+                        html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(survey["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-survey["nvidia"]) + "%;'><span>" + survey["nvidia"] + "%</span></div></div>";
+                    }
+                }
+                if (survey["amd"] !== undefined) {
+                    if (survey["amd"] > 90 || survey["amd"] < 10) {
+                        html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(survey["amd"]).toString() + "%;'><span>AMD&nbsp;" + survey["amd"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["amd"]) + "%'></div></div>";
+                    } else {
+                        html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(survey["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-survey["amd"]) + "%'><span>" + survey["amd"] + "%</span></div></div>";
+                    }
+                }
+                if (survey["intel"] !== undefined) {
+                    if (survey["intel"] > 90 || survey["intel"] < 10) {
+                        html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(survey["intel"]).toString() + "%;'><span>Intel&nbsp;" + survey["intel"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["intel"]) + "%'></div></div>";
+                    } else {
+                        html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(survey["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-survey["intel"]) + "%'><span>" + survey["intel"] + "%</span></div></div>";
+                    }
+                }
+                if (survey["other"] !== undefined) {
+                    if (survey["other"] > 90 || survey["other"] < 10) {
+                        html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(survey["other"]).toString() + "%;'><span>Other&nbsp;" + survey["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["other"]) + "%'></div></div>";
+                    } else {
+                        html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(survey["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-survey["other"]) + "%'><span>" + survey["other"] + "%</span></div></div>";
+                    }
+                }
+                html += "</div>";
+            }
+        } else {
+            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+        }
+
+        if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
+            html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + Localization.str.survey.take + "</span></a>";
+        }
+
+        html += "</div>";
+
+        document.querySelector(".sys_req").parentNode.insertAdjacentHTML("beforebegin", html);
+    }
+
+    AppPageClass.prototype.addStats = function(){
+        if (this.isDlc()) { return; }
+        this.data.then(result => {
+
+            addSteamChart.call(this, result);
+            addSteamSpy.call(this, result);
+            addSurveyData.call(this, result);
+
+        });
+    };
+
+    AppPageClass.prototype.addSysReqCheck = function(){
+        if (false && !SyncedStorage.get("show_sysreqcheck", false)) { return; } // FIXME
+
+        var html = "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='steam://checksysreqs/" + this.appid + "'><span>" + Localization.str.check_system + "</span></a>";
+        document.querySelector(".sysreq_content:last-of-type").insertAdjacentHTML("afterend", html);
+    };
+
+
+
+
+
+
+
+
+
+
+
     return AppPageClass;
 })();
 
@@ -1005,19 +1190,17 @@ let AppPageClass = (function(){
                         appPage.addHighlights();
                         appPage.addFamilySharingWarning();
 
+                        appPage.addPackageInfoButton();
+                        appPage.addStats();
+                        appPage.addSysReqCheck();
+
 /*
-                        add_dlc_page_link(appid);
                         add_pack_breakdown();
-                        add_package_info_button();
-                        add_steamchart_info(appid);
-                        add_steamspy_info(appid);
-                        survey_data_from_site(appid);
-                        add_system_requirements_check(appid);
                         add_app_badge_progress(appid);
                         add_dlc_checkboxes();
                         add_astats_link(appid);
                         add_achievement_completion_bar(appid);
-/*
+
                         show_regional_pricing("app");
                         add_review_toggle_button();
 
