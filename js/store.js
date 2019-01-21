@@ -39,6 +39,10 @@ let AppPageClass = (function(){
         this.appName = document.querySelector(".apphub_AppName").textContent;
     }
 
+    AppPageClass.prototype.isApp = function() {
+        return true;
+    }
+
     AppPageClass.prototype.isDlc = function() {
         return document.querySelector("div.game_area_dlc_bubble") ? true : false;
     };
@@ -455,6 +459,189 @@ let AppPageClass = (function(){
         });
     };
 
+    AppPageClass.prototype.addDrmWarnings = function() {
+        if (!SyncedStorage.get("showdrm", true)) { return; }
+
+        let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
+
+        let text = "";
+        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            text += node.innerHTML;
+        }
+
+        // Games for Windows Live detection
+        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
+        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
+        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
+        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
+        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
+        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
+
+        // Ubisoft Uplay detection
+        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
+
+        // Securom detection
+        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
+
+        // Tages detection
+        if (text.match(/\btages\b/i)) { tages = true; }
+        else if (text.match(/angebote des tages/i)) { tages = false; }
+        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
+
+        // Stardock account detection
+        if (text.indexOf("Stardock account") > 0) { stardock = true; }
+
+        // Rockstar social club detection
+        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
+        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
+
+        // Kalypso Launcher detection
+        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
+
+        // Denuvo Antitamper detection
+        if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
+
+        // Detect other DRM
+        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+        else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
+
+        let drmString = "(";
+        if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
+        if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
+        if (securom) { drmString += 'SecuROM, '; drm = true; }
+        if (tages) { drmString += 'Tages, '; drm = true; }
+        if (stardock) { drmString += 'Stardock Account Required, '; drm = true; }
+        if (rockstar) { drmString += 'Rockstar Social Club, '; drm = true; }
+        if (kalypso) { drmString += "Kalypso Launcher, "; drm = true; }
+        if (denuvo) { drmString += "Denuvo Anti-tamper, "; drm = true; }
+
+        if (drmString === "(") {
+            drmString = "";
+        } else {
+            drmString = drmString.substring(0, drmString.length - 2);
+            drmString += ")";
+        }
+
+        // Prevent false-positives
+        if (this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
+
+        if (drm) {
+            let stringType = this.isApp() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+
+            let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
+            if (node) {
+                node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
+            } else {
+                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
+            }
+        }
+    };
+
+    AppPageClass.prototype.addMetacriticUserScore = function() {
+        if (!SyncedStorage.get("showmcus", true)) { return; }
+
+        let node = document.querySelector("#game_area_metascore");
+        if (!node) { return; }
+
+        this.data.then(response => {
+            if (!response || !response.data || !response.data.userscore) { return; }
+
+            let metauserscore = response.data.userscore * 10;
+            if (!isNaN(metauserscore)) {
+                node.insertAdjacentHTML("afterend", "<div id='game_area_userscore'></div>");
+
+                let rating;
+                if (metauserscore >= 75) {
+                    rating = "high";
+                } else if (metauserscore >= 50) {
+                    rating = "medium";
+                } else {
+                    rating = "low";
+                }
+                document.querySelector("#game_area_userscore")
+                    .insertAdjacentHTML("beforeend", `<div class='score ${rating}'>${metauserscore}</div>
+                           <div class='logo'></div><div class='wordmark'><div class='metacritic'>${Localization.str.user_score}</div></div>`)
+            }
+        });
+    };
+
+    AppPageClass.prototype.addOpenCritic = function() {
+        if (!SyncedStorage.get("showoc", true)) { return; }
+
+        this.data.then(result => {
+            if (!result || !result || !result.oc) { return; }
+            let data = result.oc;
+
+            if (!data.url) { return; }
+
+            let node = document.querySelector(".rightcol .responsive_apppage_reviewblock");
+            if (!node) {
+                node = document.querySelector("#ReportAppBtn").parentNode;
+            }
+            node.parentNode.insertAdjacentHTML("afterend", "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
+
+            let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
+            let award = data.award || "NA";
+
+            document.querySelector("#game_area_opencritic")
+                .insertAdjacentHTML("beforeend",
+                    `<div class='score ${award.toLowerCase()}'>${data.score}</div>
+                           <div><img src='${opencriticImg}'></div>
+                           <div class='oc_text'>${award} - 
+                               <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
+                           </div>`);
+
+            // Add data to the review section in the left column, or create one if that block doesn't exist
+            if (data.reviews.length > 0) {
+                let reviewsNode = document.querySelector("#game_area_reviews");
+                if (reviewsNode) {
+                    reviewsNode.querySelector("p").insertAdjacentHTML("afterbegin", "<div id='es_opencritic_reviews'></div>");
+                    reviewsNode.querySelector("p").insertAdjacentHTML("beforeend", `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`);
+                } else {
+                    document.querySelector("#game_area_description")
+                        .insertAdjacentHTML("beforebegin",
+                            `<div id='game_area_reviews' class='game_area_description'>
+                                    <h2>${Localization.str.reviews}</h2>
+                                    <div id='es_opencritic_reviews'></div>
+                                    <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
+                                </div>`);
+
+                    if (!SyncedStorage.get("show_apppage_reviews", true)) {
+                        document.querySelector("#game_area_reviews").style.display = "none";
+                    }
+                }
+
+                let review_text = "";
+                for (let i=0, len=data.reviews.length; i<len; i++) {
+                    let review = data.reviews[i];
+                    let date = new Date(review.date);
+                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
+                }
+
+                document.querySelector("#es_opencritic_reviews").insertAdjacentHTML("beforeend", review_text);
+                ExtensionLayer.runInPageContext("function() { BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ); }");
+            }
+        });
+    };
+
+    AppPageClass.prototype.displayPurchaseDate = function() {
+        if (!SyncedStorage.get("purchase_dates", true)) { return; }
+
+        let node = document.querySelector(".game_area_already_owned");
+        if (!node) { return; }
+
+        let appname = this.appName.replace(":", "").trim();
+
+        User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
+            if (!date) { return; }
+            document.querySelector(".game_area_already_owned .already_in_library")
+                .insertAdjacentHTML("beforeend", ` ${Localization.str.purchase_date.replace("__date__", date)}`);
+        });
+    };
+
     return AppPageClass;
 })();
 
@@ -508,49 +695,49 @@ let AppPageClass = (function(){
                         appPage.addPrices();
                         appPage.addDlcInfo();
 
-/*
-                        dlc_data_from_site(appid);
+                        appPage.addDrmWarnings();
+                        appPage.addMetacriticUserScore();
+                        appPage.addOpenCritic();
+                        appPage.displayPurchaseDate();
 
-                        drm_warnings("app");
-                        add_metacritic_userscore();
-                        add_opencritic_data(appid);
-                        display_purchase_date();
+                        /*
 
-                        add_widescreen_certification(appid);
-                        add_hltb_info(appid);
-                        add_steam_client_link(appid);
-                        add_pcgamingwiki_link(appid);
-                        add_steamcardexchange_link(appid);
-                        add_app_page_highlights();
-                        add_steamdb_links(appid, "app");
-                        add_familysharing_warning(appid);
-                        add_dlc_page_link(appid);
-                        add_pack_breakdown();
-                        add_package_info_button();
-                        add_steamchart_info(appid);
-                        add_steamspy_info(appid);
-                        survey_data_from_site(appid);
-                        add_system_requirements_check(appid);
-                        add_app_badge_progress(appid);
-                        add_dlc_checkboxes();
-                        add_astats_link(appid);
-                        add_achievement_completion_bar(appid);
 
-                        show_regional_pricing("app");
-                        add_review_toggle_button();
+                                                add_widescreen_certification(appid);
+                                                add_hltb_info(appid);
+                                                add_steam_client_link(appid);
+                                                add_pcgamingwiki_link(appid);
+                                                add_steamcardexchange_link(appid);
+                                                add_app_page_highlights();
+                                                add_steamdb_links(appid, "app");
+                                                add_familysharing_warning(appid);
+                                                add_dlc_page_link(appid);
+                                                add_pack_breakdown();
+                                                add_package_info_button();
+                                                add_steamchart_info(appid);
+                                                add_steamspy_info(appid);
+                                                survey_data_from_site(appid);
+                                                add_system_requirements_check(appid);
+                                                add_app_badge_progress(appid);
+                                                add_dlc_checkboxes();
+                                                add_astats_link(appid);
+                                                add_achievement_completion_bar(appid);
 
-                        customize_app_page(appid);
-                        add_help_button(appid);
-                        skip_got_steam();
+                                                show_regional_pricing("app");
+                                                add_review_toggle_button();
 
-                        if (language == "schinese" || language == "tchinese") {
-                            storePageDataCN.load(appid);
-                            add_keylol_link();
-                            add_steamcn_mods();
-                            if (language == "schinese") add_chinese_name();
-                        }
+                                                customize_app_page(appid);
+                                                add_help_button(appid);
+                                                skip_got_steam();
 
-                        */
+                                                if (language == "schinese" || language == "tchinese") {
+                                                    storePageDataCN.load(appid);
+                                                    add_keylol_link();
+                                                    add_steamcn_mods();
+                                                    if (language == "schinese") add_chinese_name();
+                                                }
+
+                                                */
                         break;
                 }
 

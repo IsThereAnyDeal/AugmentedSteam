@@ -50,9 +50,9 @@ let LocalData = (function(){
         localStorage.setItem(key, JSON.stringify(value));
     };
 
-    self.get = function(key) {
+    self.get = function(key, defaultValue) {
         let v = localStorage.getItem(key);
-        if (!v) return v;
+        if (!v) return defaultValue;
         return JSON.parse(v);
     };
 
@@ -391,6 +391,86 @@ let User = (function(){
         let country = BrowserHelper.getCookie("steamCountry");
         if (!country) { return null; }
         return country.substr(0, 2);
+    };
+
+    self.getPurchaseDate = function(lang, appName) {
+        return new Promise(function(resolve, reject) {
+            let purchaseDates = LocalData.get("purchase_dates", {});
+
+            appName = StringUtils.clearSpecialSymbols(appName);
+
+            // Return date from cache
+            if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
+                resolve(purchaseDates[lang][appName]);
+            }
+
+            let lastUpdate = LocalData.get("purchase_dates_time", 0);
+
+            // Update cache if needed
+            if (!TimeHelper.isExpired(lastUpdate, 300)) {
+                resolve();
+                return;
+            }
+
+            Request.getHttp("https://store.steampowered.com/account/licenses/?l=" + lang).then(result => {
+                let replaceRegex = [
+                    /- Complete Pack/ig,
+                    /Standard Edition/ig,
+                    /Steam Store and Retail Key/ig,
+                    /- Hardware Survey/ig,
+                    /ComputerGamesRO -/ig,
+                    /Founder Edition/ig,
+                    /Retail( Key)?/ig,
+                    /Complete$/ig,
+                    /Launch$/ig,
+                    /Free$/ig,
+                    /(RoW)/ig,
+                    /ROW/ig,
+                    /:/ig,
+                ];
+
+                purchaseDates[lang] = {};
+
+                let dummy = document.createElement("html");
+                dummy.innerHTML = result;
+
+                let nodes = dummy.querySelectorAll("#main_content td.license_date_col");
+
+                for (let i=0, len=nodes.length; i<len; i++) {
+                    let node = nodes[i];
+
+                    let nameNode = node.nextElementSibling;
+                    let removeNode = nameNode.querySelector("div");
+                    if (removeNode) { removeNode.remove(); }
+
+                    // Clean game name
+                    let gameName = StringUtils.clearSpecialSymbols(nameNode.textContent.trim());
+
+                    replaceRegex.forEach(regex => {
+                        gameName = gameName.replace(regex, "");
+                    });
+
+                    purchaseDates[lang][gameName.trim()] = node.textContent;
+                }
+
+                LocalData.set("purchase_dates", purchaseDates);
+                LocalData.set("purchase_dates_time", TimeHelper.timestamp());
+
+                resolve(purchaseDates[lang][appName]);
+            }, reject);
+        });
+    };
+
+    return self;
+})();
+
+
+let StringUtils = (function(){
+
+    let self = {};
+
+    self.clearSpecialSymbols = function(string) {
+        return string.replace(/[\u00AE\u00A9\u2122]/g, "");
     };
 
     return self;
@@ -830,7 +910,7 @@ let TimeHelper = (function(){
     let self = {};
 
     self.isExpired = function(updateTime, expiration) {
-        if (!updateTime) { return; }
+        if (!updateTime) { return true; }
 
         let expireTime = parseInt(Date.now() / 1000, 10) - expiration;
         return updateTime < expireTime;
