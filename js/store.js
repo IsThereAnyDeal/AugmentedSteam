@@ -172,7 +172,7 @@ let StorePageClass = (function(){
         apiParams.subs = subids.join(",");
 
         let bundleids = [];
-        nodes = document.querySelectorAll(".game_area_purchase_game_wrapper[data-ds-bundleid]");
+        nodes = document.querySelectorAll("[data-ds-bundleid]");
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
             bundleids.push(node.dataset['dsBundleid']);
@@ -182,6 +182,8 @@ let StorePageClass = (function(){
         if (SyncedStorage.get("showlowestpricecoupon", true)) {
             apiParams.coupon = true;
         }
+
+        if (!apiParams.subs && !apiParams.bundleids) { return; }
 
         Request.getApi("v01/prices", apiParams).then(response => {
             if (!response || response.result !== "success") { return; }
@@ -261,13 +263,18 @@ let StorePageClass = (function(){
 
                 if (line1 || line2) {
                     let node;
+                    let placement = "afterbegin";
                     if (type === "sub") {
                         node = document.querySelector("input[name=subid][value='"+id+"']").parentNode.parentNode.parentNode;
                     } else if (type === "bundle") {
                         node = document.querySelector(".game_area_purchase_game_wrapper[data-ds-bundleid='"+id+"']");
+                        if (!node) {
+                            node = document.querySelector(".game_area_purchase_game[data-ds-bundleid='"+id+"']");
+                            placement = "beforebegin";
+                        }
                     }
 
-                    node.insertAdjacentHTML("afterbegin", html + "<div>" + line1 + "</div><div>" + line2 + "</div>" + line3);
+                    node.insertAdjacentHTML(placement, html + "<div>" + line1 + "</div><div>" + line2 + "</div>" + line3);
                     document.querySelector("#es_line_chart_"+id).style.top = ((document.querySelector("#es_price_"+id).offsetHeight - 20) / 2) + "px";
                 }
 
@@ -406,7 +413,11 @@ let StorePageClass = (function(){
                 let url = "//steamdb.info/bundle/" + this.appid;
                 let str = Localization.str.view_in + ' Steam Database';
 
-                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
+                let node = document.querySelector(".share");
+                if (!node) {
+                    node = document.querySelector(".rightcol .game_details");
+                }
+                node.parentNode.insertAdjacentHTML("afterbegin",
                     `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
                             <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
             }
@@ -532,7 +543,11 @@ let StorePageClass = (function(){
 
 let SubPageClass = (function() {
 
+    let Super = StorePageClass;
+
     function SubPageClass(url) {
+        Super.call(this);
+
         this.subid = GameId.getSubid(url);
 
         this.addDrmWarnings();
@@ -542,8 +557,7 @@ let SubPageClass = (function() {
         this.skipGotSteam();
         this.subscriptionSavingsCheck();
     }
-
-    SubPageClass.prototype = Object.create(StorePageClass.prototype);
+    SubPageClass.prototype = Object.create(Super.prototype);
     SubPageClass.prototype.constructor = SubPageClass;
 
     SubPageClass.prototype.subscriptionSavingsCheck = function() {
@@ -588,9 +602,34 @@ let SubPageClass = (function() {
 })();
 
 
+let BundlePageClass = (function(){
+
+    let Super = StorePageClass;
+
+    function BundlePageClass(url) {
+        Super.call(this);
+
+        this.bundleid = GameId.getSubid(url);
+
+        this.addDrmWarnings();
+        this.addPrices();
+        this.addSteamDb("bundle");
+    }
+
+    BundlePageClass.prototype = Object.create(Super.prototype);
+    BundlePageClass.prototype.constructor = SubPageClass;
+
+    return BundlePageClass;
+})();
+
+
 let AppPageClass = (function(){
 
+    let Super = StorePageClass;
+
     function AppPageClass(url) {
+        Super.call(this);
+
         this.appid = GameId.getAppid(url);
         let metalinkNode = document.querySelector("#game_area_metalink a");
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
@@ -598,7 +637,7 @@ let AppPageClass = (function(){
         this.data = this.storePageDataPromise();
         this.appName = document.querySelector(".apphub_AppName").textContent;
     }
-    AppPageClass.prototype = Object.create(StorePageClass.prototype);
+    AppPageClass.prototype = Object.create(Super.prototype);
     AppPageClass.prototype.constructor = AppPageClass;
 
     AppPageClass.prototype.mediaSliderExpander = function() {
@@ -1308,6 +1347,8 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addDlcCheckboxes = function() {
+        let nodes = document.querySelectorAll(".game_area_dlc_row");
+        if (nodes.length == 0) { return; }
         let expandedNode = document.querySelector("#game_area_dlc_expanded");
 
         if (expandedNode) {
@@ -1331,9 +1372,8 @@ let AppPageClass = (function(){
         button.insertAdjacentElement("beforebegin", form);
         button.addEventListener("click", function(){
             document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
-        })
+        });
 
-        let nodes = document.querySelectorAll(".game_area_dlc_row");
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
 
@@ -1639,7 +1679,10 @@ let AppPageClass = (function(){
         });
         addToggleHandler("show_apppage_sysreq", ".sys_req");
         addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
-        addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
+
+        if (document.querySelector("#recommended_block")) {
+            addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
+        }
         addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
         if (document.querySelector(".user_reviews_header")) {
             addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
@@ -1823,12 +1866,8 @@ let AppPageClass = (function(){
                         (new SubPageClass(window.location.host + path));
                         break;
 
-
                     case /^\/bundle\/.*/.test(path):
-                        var bundleid = get_subid(window.location.host + path);
-                        drm_warnings("sub");
-                        show_pricing_history(bundleid, "bundle");
-                        add_steamdb_links(bundleid, "bundle");
+                        (new BundlePageClass(window.location.host + path));
                         break;
 
                     case /^\/dlc\/.*/.test(path):
