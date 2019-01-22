@@ -2533,6 +2533,21 @@ let SearchPageClass = (function(){
                 }
 
 
+                // Alternative Linux icon
+//                alternative_linux_icon();
+
+                // Highlights & data fetching
+                Highlights.startHighlightsAndTags();
+
+                /*
+                // Storefront homepage tabs
+                bind_ajax_content_highlighting();
+                hide_trademark_symbols();
+                set_html5_video();
+                //get_store_session();
+                fix_menu_dropdown();
+*/
+
             })
     )
 
