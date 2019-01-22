@@ -28,34 +28,37 @@ let AgeCheck = (function(){
 })();
 
 
-let AppPageClass = (function(){
+let StorePageClass = (function(){
 
-    function AppPageClass(url) {
-        this.appid = GameId.getAppid(url);
-        let metalinkNode = document.querySelector("#game_area_metalink a");
-        this.metalink = metalinkNode && metalinkNode.getAttribute("href");
+    function StorePageClass() {
 
-        this.data = this.storePageDataPromise();
-        this.appName = document.querySelector(".apphub_AppName").textContent;
     }
 
-    AppPageClass.prototype.isApp = function() {
-        return true;
+    StorePageClass.prototype.isAppPage = function() {
+        return /^\/app\/\d+/.test(window.location.pathname);
     };
 
-    AppPageClass.prototype.isDlc = function() {
+    StorePageClass.prototype.isSubPage = function() {
+        return /^\/sub\/\d+/.test(window.location.pathname);
+    };
+
+    StorePageClass.prototype.isDlc = function() {
         return document.querySelector("div.game_area_dlc_bubble") ? true : false;
     };
 
-    AppPageClass.prototype.isVideo = function() {
+    StorePageClass.prototype.isVideo = function() {
         return document.querySelector(".game_area_purchase_game .streamingvideo") ? true : false;
     };
 
-    AppPageClass.prototype.hasCards = function() {
+    StorePageClass.prototype.hasCards = function() {
         return document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
     };
 
-    AppPageClass.prototype.getAllSubids = function() {
+    StorePageClass.prototype.hasAchievements = function(){
+        return document.querySelector("#achievement_block") ? true : false;
+    };
+
+    StorePageClass.prototype.getAllSubids = function() {
         let result = [];
         let nodes = document.querySelectorAll("input[name=subid]");
         for (let i=0, len=nodes.length; i<len; i++) {
@@ -64,169 +67,89 @@ let AppPageClass = (function(){
         return result;
     };
 
-    AppPageClass.prototype.mediaSliderExpander = function() {
-        let detailsBuild = false;
-        let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
 
-        if (details) {
-            document.querySelector("#highlight_player_area").insertAdjacentHTML("beforeend", `
-                <div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
-                    <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
-                    <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
-                </div>
-            `);
+    StorePageClass.prototype.addDrmWarnings = function() {
+        if (!SyncedStorage.get("showdrm", true)) { return; }
+
+        let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
+
+        let text = "";
+        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            text += node.innerHTML;
         }
 
-        // Initiate tooltip
-        ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+        // Games for Windows Live detection
+        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
+        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
+        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
+        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
+        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
+        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
 
-        // FIXME media slider not finished
-    };
+        // Ubisoft Uplay detection
+        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
+        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
 
-    AppPageClass.prototype.initHdPlayer = function() {
-        // FIXME
-    };
+        // Securom detection
+        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
 
-    AppPageClass.prototype.storePageDataPromise = function() {
-        let appid = this.appid;
-        return new Promise(function(resolve, reject) {
-            let cache = LocalData.get("storePageData_" + appid);
+        // Tages detection
+        if (text.match(/\btages\b/i)) { tages = true; }
+        else if (text.match(/angebote des tages/i)) { tages = false; }
+        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
 
-            if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
-                resolve(cache.data);
-                return;
-            }
+        // Stardock account detection
+        if (text.indexOf("Stardock account") > 0) { stardock = true; }
 
-            let apiparams = {
-                appid: appid
-            };
-            if (this.metalink) {
-                apiparams.mcurl = this.metalink;
-            }
-            if (SyncedStorage.get("showoc", true)) {
-                apiparams.oc = 1;
-            }
+        // Rockstar social club detection
+        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
+        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
 
-            Request.getApi("v01/storepagedata", apiparams)
-                .then(function(response) {
-                    if (response && response.result && response.result === "success") {
-                        LocalData.set("storePageData_" + appid, {
-                            data: response.data,
-                            updated: Date.now(),
-                        });
-                        resolve(response.data);
-                    } else {
-                        reject();
-                    }
-                }, reject);
-        });
-    };
+        // Kalypso Launcher detection
+        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
 
-    /**
-     *  Allows the user to intuitively remove an item from their wishlist on the app page
-     */
-    AppPageClass.prototype.addWishlistRemove = function() {
-        if (!User.isSignedIn) { return; }
-        let appid = this.appid;
+        // Denuvo Antitamper detection
+        if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
 
-        // there is no add to wishlist button and game is not purchased yet, add required nodes
-        if (!document.querySelector("#add_to_wishlist_area") && !document.querySelector(".game_area_already_owned")) {
-            let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            firstButton.insertAdjacentHTML("beforebegin", "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+        // Detect other DRM
+        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+        else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
-            let wishlistArea = document.querySelector("#add_to_wishlist_area_success");
-            DOMHelper.wrap(wishlistArea, firstButton);
-            wishlistArea.insertAdjacentHTML("beforebegin", `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
-            wishlistArea.insertAdjacentHTML("beforebegin", `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
+        let drmString = "(";
+        if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
+        if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
+        if (securom) { drmString += 'SecuROM, '; drm = true; }
+        if (tages) { drmString += 'Tages, '; drm = true; }
+        if (stardock) { drmString += 'Stardock Account Required, '; drm = true; }
+        if (rockstar) { drmString += 'Rockstar Social Club, '; drm = true; }
+        if (kalypso) { drmString += "Kalypso Launcher, "; drm = true; }
+        if (denuvo) { drmString += "Denuvo Anti-tamper, "; drm = true; }
+
+        if (drmString === "(") {
+            drmString = "";
+        } else {
+            drmString = drmString.substring(0, drmString.length - 2);
+            drmString += ")";
         }
 
-        let successNode = document.querySelector("#add_to_wishlist_area_success");
-        if (!successNode) { return; }
+        // Prevent false-positives
+        if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
 
-        let imgNode = successNode.querySelector("img:last-child");
-        if (!imgNode) { return; }
+        if (drm) {
+            let stringType = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
 
-        imgNode.classList.add("es-in-wl");
-        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />`);
-        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
-
-        successNode.addEventListener("click", function(e){
-            e.preventDefault();
-
-            let parent = successNode.parentNode;
-            if (!parent.classList.contains("loading")) {
-                parent.classList.add("loading");
-
-
-                Request.post("//store.steampowered.com/api/removefromwishlist", {
-                    sessionid: User.getSessionId(),
-                    appid: appid
-                }, {withCredentials: true}).then(response => {
-                    document.querySelector("#add_to_wishlist_area").style.display = "inline";
-                    document.querySelector("#add_to_wishlist_area_success").style.display = "none";
-
-                    // Clear dynamicstore cache
-                    /* // FIXME DynamicStore
-                    chrome.storage.local.remove("dynamicstore");
-                    */
-
-                    // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
-                }).finally(() => {
-                    parent.classList.remove("loading");
-                });
+            let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
+            if (node) {
+                node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
+            } else {
+                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
             }
-        });
-
-        /* // FIXME clear dynamic store
-        $("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore").on("click", function(){
-            // Clear dynamicstore cache
-            chrome.storage.local.remove("dynamicstore");
-        });
-        */
+        }
     };
 
-    AppPageClass.prototype.getFirstSubid = function() {
-        let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
-        return node && node.value;
-    };
-
-    AppPageClass.prototype.addCoupon = function() {
-        let inst = this;
-        Inventory.promise().then(() => {
-
-            console.log(inst.getFirstSubid());
-
-            let coupon = Inventory.getCoupon(inst.getFirstSubid());
-            if (!coupon) { return; }
-
-            let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
-
-            let purchaseArea = document.querySelector("#game_area_purchase");
-            purchaseArea.insertAdjacentHTML("beforebegin", `
-<div class="early_access_header">
-    <div class="heading">
-        <h1 class="inset">${Localization.str.coupon_available}</h1>
-        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
-        <p>${Localization.str.coupon_learn_more}</p>
-    </div>
-    <div class="devnotes">
-        <div style="display:flex;padding-top:10px">
-            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
-            <div style="display:flex;flex-direction:column;margin-left:10px">
-                <h1>${coupon.title}</h1>
-                <div>${coupon.discount_note || ""}</div>
-                <div style="color:#a75124">${couponDate}</div>
-            </div>
-        </div>
-    </div>
-</div>`);
-
-            // TODO show price in purchase box
-        });
-    };
-
-    AppPageClass.prototype.addPrices = function() {
+    StorePageClass.prototype.addPrices = function() {
         if (!SyncedStorage.get("showlowestprice", true)) { return; }
 
         let apiParams = {};
@@ -451,6 +374,395 @@ let AppPageClass = (function(){
         });
     };
 
+    StorePageClass.prototype.addSteamDb = function(type) {
+        if (!SyncedStorage.get("showsteamdb", true)) { return; }
+
+        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
+
+        // TODO this should be refactored elsewhere probably
+        switch (type) {
+            case "app": {
+                let cls = "steamdb_ico";
+                let url = "//steamdb.info/app/" + this.appid;
+                let str = Localization.str.view_in + ' Steam Database';
+
+                document.querySelector("#ReportAppBtn").parentNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            }
+                break;
+            case "sub": {
+                let cls = "steamdb_ico";
+                let url = "//steamdb.info/sub/" + this.appid;
+                let str = Localization.str.view_in + ' Steam Database';
+
+                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            }
+                break;
+            case "bundle": {
+                let cls = "steamdb_ico";
+                let url = "//steamdb.info/bundle/" + this.appid;
+                let str = Localization.str.view_in + ' Steam Database';
+
+                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
+                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                            <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            }
+                break;
+            case "gamehub":
+                document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
+                    `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
+                break;
+            case "gamegroup":
+                document.querySelector("#rightActionBlock").insertAdjacentHTML("beforeend",
+                    `<div class="actionItemIcon"><img src="${bgUrl}" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="//steamdb.info/app/' + appid + '/">${Localization.str.view_in} Steam Database</a>`);
+                break;
+        }
+    };
+
+    StorePageClass.prototype.showRegionalPricing = function(type) {
+        let showRegionalPrice = SyncedStorage.get("showregionalprice", "mouse");
+        if (showRegionalPrice === "off") { return; }
+
+        let countries = SyncedStorage.get("regional_countries", ["us", "gb", "fr", "ru", "br", "au", "jp"]);
+        if (!countries || countries.length === 0) { return; }
+
+        let localCountry = User.getCountry().toLowerCase();
+        if (countries.indexOf(localCountry) === -1) {
+            countries.push(localCountry);
+        }
+
+        let subids = this.getAllSubids();
+        subids.forEach(subid => {
+            if (!subid) { return; }
+            let promises = [];
+
+            let prices = {};
+
+            countries.forEach(country => {
+
+                let promise = Request.getJson("//store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
+                    if (!result || !result[subid] || !result[subid].success) { return; }
+                    prices[country] = result[subid].data.price;
+                });
+                promises.push(promise);
+            });
+
+            Promise.all(promises).then(result => {
+
+                let node = document.querySelector("input[name=subid][value='"+subid+"']")
+                    .closest(".game_area_purchase_game_wrapper,#game_area_purchase")
+                    .querySelector(".game_purchase_action");
+
+                let priceLocal = new Price(prices[User.getCountry().toLowerCase()].final / 100);
+
+                let pricingDiv = document.createElement("div");
+                pricingDiv.classList.add("es_regional_container");
+                pricingDiv.classList.add("es_regional_" + (type || "app"));
+
+                if (showRegionalPrice === "mouse") {
+                    pricingDiv.innerHTML += '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>';
+                }
+
+                countries.forEach(country => {
+                    let apiPrice = prices[country];
+                    let html = "";
+
+                    if (apiPrice) {
+                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency);
+                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
+
+                        let percentageIndicator = "equal";
+                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
+
+                        if (percentage < 0) {
+                            percentage = Math.abs(percentage);
+                            percentageIndicator = "lower";
+                        } else if (percentage > 0) {
+                            percentageIndicator = "higher";
+                        }
+
+                        html =
+                            `<div class="es_regional_price es_flag es_flag_${country}">
+                                ${priceRegion}
+                                <span class="es_regional_converted">(${priceUser})</span>
+                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
+                            </div>`;
+                    } else {
+                        html =
+                            `<div class="es_regional_price es_flag es_flag_${country}">
+                                <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
+                            </div>`;
+                    }
+
+                    pricingDiv.innerHTML += html;
+                });
+
+                let purchaseArea = node.closest(".game_area_purchase_game");
+                purchaseArea.classList.add("es_regional_prices");
+
+                if (showRegionalPrice === "always") {
+                    node.insertAdjacentElement("beforebegin", pricingDiv);
+                    purchaseArea.classList.add("es_regional_always");
+                } else {
+                    node.querySelector(".price").insertAdjacentElement("afterend", pricingDiv);
+                    purchaseArea.classList.add("es_regional_onmouse");
+
+                    if (!SyncedStorage.get("regional_hideworld", false)) {
+                        node.querySelector(".price").classList.add("es_regional_icon")
+                    }
+                }
+            })
+        });
+    };
+
+    StorePageClass.prototype.skipGotSteam = function() {
+        if (!SyncedStorage.get("skip_got_steam", false)) { return; }
+
+        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
+        if (!node) { return; }
+        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
+    };
+
+    return StorePageClass;
+})();
+
+
+let SubPageClass = (function() {
+
+    function SubPageClass(url) {
+        this.subid = GameId.getSubid(url);
+
+        this.addDrmWarnings();
+        this.addPrices();
+        this.addSteamDb("sub");
+        this.showRegionalPricing("sub");
+        this.skipGotSteam();
+        this.subscriptionSavingsCheck();
+    }
+
+    SubPageClass.prototype = Object.create(StorePageClass.prototype);
+    SubPageClass.prototype.constructor = SubPageClass;
+
+    SubPageClass.prototype.subscriptionSavingsCheck = function() {
+        setTimeout(function() {
+            let notOwnedTotalPrice = new Price(0);
+
+            let nodes = document.querySelectorAll(".tab_idem");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                let node = nodes[i];
+
+                let priceContainer = node.querySelector(".discount_final_price").textContent.trim();
+                if (!priceContainer) { continue; }
+
+                let price = Price.parseFromString(priceContainer, false);
+                if (price) {
+                    notOwnedTotalPrice.value += price.value;
+                }
+            }
+
+
+            let priceNodes = document.querySelectorAll(".package_totals_area .price");
+            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent);
+            if (!packagePrice) { return; }
+
+            notOwnedTotalPrice.value -= packagePrice.value;
+
+            if (!document.querySelector("#package_savings_bar")) {
+                document.querySelector(".package_totals_area")
+                    .insertAdjacentHTML("beforeend", "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+            }
+
+            let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
+            let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
+
+            let savingsNode = document.querySelector(".savings");
+            savingsNode.insertAdjacentHTML("beforebegin", html);
+            savingsNode.remove();
+        }, 500); // why is this here?
+    };
+
+    return SubPageClass;
+})();
+
+
+let AppPageClass = (function(){
+
+    function AppPageClass(url) {
+        this.appid = GameId.getAppid(url);
+        let metalinkNode = document.querySelector("#game_area_metalink a");
+        this.metalink = metalinkNode && metalinkNode.getAttribute("href");
+
+        this.data = this.storePageDataPromise();
+        this.appName = document.querySelector(".apphub_AppName").textContent;
+    }
+    AppPageClass.prototype = Object.create(StorePageClass.prototype);
+    AppPageClass.prototype.constructor = AppPageClass;
+
+    AppPageClass.prototype.mediaSliderExpander = function() {
+        let detailsBuild = false;
+        let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
+
+        if (details) {
+            document.querySelector("#highlight_player_area").insertAdjacentHTML("beforeend", `
+                <div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
+                    <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
+                    <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
+                </div>
+            `);
+        }
+
+        // Initiate tooltip
+        ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+
+        // FIXME media slider not finished
+    };
+
+    AppPageClass.prototype.initHdPlayer = function() {
+        // FIXME
+    };
+
+    AppPageClass.prototype.storePageDataPromise = function() {
+        let appid = this.appid;
+        return new Promise(function(resolve, reject) {
+            let cache = LocalData.get("storePageData_" + appid);
+
+            if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
+                resolve(cache.data);
+                return;
+            }
+
+            let apiparams = {
+                appid: appid
+            };
+            if (this.metalink) {
+                apiparams.mcurl = this.metalink;
+            }
+            if (SyncedStorage.get("showoc", true)) {
+                apiparams.oc = 1;
+            }
+
+            Request.getApi("v01/storepagedata", apiparams)
+                .then(function(response) {
+                    if (response && response.result && response.result === "success") {
+                        LocalData.set("storePageData_" + appid, {
+                            data: response.data,
+                            updated: Date.now(),
+                        });
+                        resolve(response.data);
+                    } else {
+                        reject();
+                    }
+                }, reject);
+        });
+    };
+
+    /**
+     *  Allows the user to intuitively remove an item from their wishlist on the app page
+     */
+    AppPageClass.prototype.addWishlistRemove = function() {
+        if (!User.isSignedIn) { return; }
+        let appid = this.appid;
+
+        // there is no add to wishlist button and game is not purchased yet, add required nodes
+        if (!document.querySelector("#add_to_wishlist_area") && !document.querySelector(".game_area_already_owned")) {
+            let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
+            firstButton.insertAdjacentHTML("beforebegin", "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+
+            let wishlistArea = document.querySelector("#add_to_wishlist_area_success");
+            DOMHelper.wrap(wishlistArea, firstButton);
+            wishlistArea.insertAdjacentHTML("beforebegin", `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
+            wishlistArea.insertAdjacentHTML("beforebegin", `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
+        }
+
+        let successNode = document.querySelector("#add_to_wishlist_area_success");
+        if (!successNode) { return; }
+
+        let imgNode = successNode.querySelector("img:last-child");
+        if (!imgNode) { return; }
+
+        imgNode.classList.add("es-in-wl");
+        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />`);
+        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
+
+        successNode.addEventListener("click", function(e){
+            e.preventDefault();
+
+            let parent = successNode.parentNode;
+            if (!parent.classList.contains("loading")) {
+                parent.classList.add("loading");
+
+
+                Request.post("//store.steampowered.com/api/removefromwishlist", {
+                    sessionid: User.getSessionId(),
+                    appid: appid
+                }, {withCredentials: true}).then(response => {
+                    document.querySelector("#add_to_wishlist_area").style.display = "inline";
+                    document.querySelector("#add_to_wishlist_area_success").style.display = "none";
+
+                    // Clear dynamicstore cache
+                    /* // FIXME DynamicStore
+                    chrome.storage.local.remove("dynamicstore");
+                    */
+
+                    // Invalidate dynamic store data cache
+                    ExtensionLayer.runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
+                }).finally(() => {
+                    parent.classList.remove("loading");
+                });
+            }
+        });
+
+        /* // FIXME clear dynamic store
+        $("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore").on("click", function(){
+            // Clear dynamicstore cache
+            chrome.storage.local.remove("dynamicstore");
+        });
+        */
+    };
+
+    AppPageClass.prototype.getFirstSubid = function() {
+        let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
+        return node && node.value;
+    };
+
+    AppPageClass.prototype.addCoupon = function() {
+        let inst = this;
+        Inventory.promise().then(() => {
+
+            console.log(inst.getFirstSubid());
+
+            let coupon = Inventory.getCoupon(inst.getFirstSubid());
+            if (!coupon) { return; }
+
+            let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
+
+            let purchaseArea = document.querySelector("#game_area_purchase");
+            purchaseArea.insertAdjacentHTML("beforebegin", `
+<div class="early_access_header">
+    <div class="heading">
+        <h1 class="inset">${Localization.str.coupon_available}</h1>
+        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
+        <p>${Localization.str.coupon_learn_more}</p>
+    </div>
+    <div class="devnotes">
+        <div style="display:flex;padding-top:10px">
+            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
+            <div style="display:flex;flex-direction:column;margin-left:10px">
+                <h1>${coupon.title}</h1>
+                <div>${coupon.discount_note || ""}</div>
+                <div style="color:#a75124">${couponDate}</div>
+            </div>
+        </div>
+    </div>
+</div>`);
+
+            // TODO show price in purchase box
+        });
+    };
+
     AppPageClass.prototype.addDlcInfo = function() {
         if (!this.isDlc()) { return; }
 
@@ -474,87 +786,6 @@ let AppPageClass = (function(){
 
             document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);
         });
-    };
-
-    AppPageClass.prototype.addDrmWarnings = function() {
-        if (!SyncedStorage.get("showdrm", true)) { return; }
-
-        let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
-
-        let text = "";
-        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            text += node.innerHTML;
-        }
-
-        // Games for Windows Live detection
-        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
-        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
-        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
-        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
-        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
-
-        // Ubisoft Uplay detection
-        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
-
-        // Securom detection
-        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
-
-        // Tages detection
-        if (text.match(/\btages\b/i)) { tages = true; }
-        else if (text.match(/angebote des tages/i)) { tages = false; }
-        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
-
-        // Stardock account detection
-        if (text.indexOf("Stardock account") > 0) { stardock = true; }
-
-        // Rockstar social club detection
-        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
-        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
-
-        // Kalypso Launcher detection
-        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
-
-        // Denuvo Antitamper detection
-        if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
-
-        // Detect other DRM
-        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
-        else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
-
-        let drmString = "(";
-        if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
-        if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
-        if (securom) { drmString += 'SecuROM, '; drm = true; }
-        if (tages) { drmString += 'Tages, '; drm = true; }
-        if (stardock) { drmString += 'Stardock Account Required, '; drm = true; }
-        if (rockstar) { drmString += 'Rockstar Social Club, '; drm = true; }
-        if (kalypso) { drmString += "Kalypso Launcher, "; drm = true; }
-        if (denuvo) { drmString += "Denuvo Anti-tamper, "; drm = true; }
-
-        if (drmString === "(") {
-            drmString = "";
-        } else {
-            drmString = drmString.substring(0, drmString.length - 2);
-            drmString += ")";
-        }
-
-        // Prevent false-positives
-        if (this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
-
-        if (drm) {
-            let stringType = this.isApp() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
-
-            let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
-            if (node) {
-                node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
-            } else {
-                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
-            }
-        }
     };
 
     AppPageClass.prototype.addMetacriticUserScore = function() {
@@ -668,6 +899,7 @@ let AppPageClass = (function(){
             let node = document.querySelector("game_details");
 
             let data = result.wsgf;
+            if (!data) { return; }
 
             let path = data["Path"];
             let wsg = data["WideScreenGrade"];
@@ -837,7 +1069,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.moveUsefulLinks = function() {
-        if (!this.isApp()) { return; }
+        if (!this.isAppPage()) { return; }
 
         let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
         usefulLinks.classList.add("es_useful_link");
@@ -894,54 +1126,6 @@ let AppPageClass = (function(){
         }
     };
 
-    AppPageClass.prototype.addSteamDb = function(type) {
-        if (!SyncedStorage.get("showsteamdb", true)) { return; }
-
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
-        // TODO this should be refactored elsewhere probably
-        switch (type) {
-            case "app": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/app/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector("#ReportAppBtn").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
-                break;
-            case "sub": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/sub/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-                }
-                break;
-            case "bundle": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/bundle/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                            <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
-                break;
-            case "gamehub":
-                document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
-                    `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
-                break;
-            case "gamegroup":
-                document.querySelector("#rightActionBlock").insertAdjacentHTML("beforeend",
-                    `<div class="actionItemIcon"><img src="${bgUrl}" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="//steamdb.info/app/' + appid + '/">${Localization.str.view_in} Steam Database</a>`);
-                break;
-        }
-    };
-
     AppPageClass.prototype.addFamilySharingWarning = function() {
         if (!SyncedStorage.get("exfgls", true)) { return; }
 
@@ -963,6 +1147,7 @@ let AppPageClass = (function(){
             if (node.querySelector(".btn_packageinfo")) { continue; }
 
             let subid = node.querySelector("input[name=subid]").value;
+            if (!subid) { continue; }
 
             node.querySelector(".game_purchase_action").insertAdjacentHTML("afterbegin",
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
@@ -1320,6 +1505,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addAstatsLink = function(){
         if (!SyncedStorage.get("showastatslink", true)) { return; }
+        if (!this.hasAchievements()) { return; }
 
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
         let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.appid;
@@ -1333,6 +1519,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addAchievementCompletionBar = function(){
         if (!SyncedStorage.get("showachinstore", true)) { return; }
+        if (!this.hasAchievements()) { return; }
 
         document.querySelector(".myactivity_block .details_block").insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
@@ -1358,104 +1545,6 @@ let AppPageClass = (function(){
             node.innerHTML = node.innerHTML.replace("::", ":");
         });
     };
-
-    AppPageClass.prototype.showRegionalPricing = function(type) { // FIXME type
-        let showRegionalPrice = SyncedStorage.get("showregionalprice", "mouse");
-        if (showRegionalPrice === "off") { return; }
-
-        let countries = SyncedStorage.get("regional_countries", ["us", "gb", "fr", "ru", "br", "au", "jp"]);
-        console.log("A");
-        if (!countries || countries.length === 0) { return; }
-        console.log("A");
-
-        let localCountry = User.getCountry().toLowerCase();
-        if (countries.indexOf(localCountry) === -1) {
-            countries.push(localCountry);
-        }
-
-        let subids = this.getAllSubids();
-        subids.forEach(subid => {
-            let promises = [];
-
-            let prices = {};
-
-            countries.forEach(country => {
-
-                let promise = Request.getJson("//store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
-                    if (!result || !result[subid] || !result[subid].success) { return; }
-                    prices[country] = result[subid].data.price;
-                });
-                promises.push(promise);
-            });
-
-            Promise.all(promises).then(result => {
-
-                let node = document.querySelector("input[name=subid][value='"+subid+"']")
-                    .closest(".game_area_purchase_game_wrapper")
-                    .querySelector(".game_purchase_action");
-
-                let priceLocal = new Price(prices[User.getCountry().toLowerCase()].final / 100);
-
-                let pricingDiv = document.createElement("div");
-                pricingDiv.classList.add("es_regional_container");
-                pricingDiv.classList.add("es_regional_" + (type || "app"));
-
-                if (showRegionalPrice === "mouse") {
-                    pricingDiv.innerHTML += '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>';
-                }
-
-                countries.forEach(country => {
-                    let apiPrice = prices[country];
-                    let html = "";
-
-                    if (apiPrice) {
-                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
-
-                        let percentageIndicator = "equal";
-                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
-
-                        if (percentage < 0) {
-                            percentage = Math.abs(percentage);
-                            percentageIndicator = "lower";
-                        } else if (percentage > 0) {
-                            percentageIndicator = "higher";
-                        }
-
-                        html =
-                            `<div class="es_regional_price es_flag es_flag_${country}">
-                                ${priceRegion}
-                                <span class="es_regional_converted">(${priceUser})</span>
-                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
-                            </div>`;
-                    } else {
-                        html =
-                            `<div class="es_regional_price es_flag es_flag_${country}">
-                                <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
-                            </div>`;
-                    }
-
-                    pricingDiv.innerHTML += html;
-                });
-
-                let purchaseArea = node.closest(".game_area_purchase_game");
-                purchaseArea.classList.add("es_regional_prices");
-
-                if (showRegionalPrice === "always") {
-                    node.insertAdjacentElement("beforebegin", pricingDiv);
-                    purchaseArea.classList.add("es_regional_always");
-                } else {
-                    node.querySelector(".price").insertAdjacentElement("afterend", pricingDiv);
-                    purchaseArea.classList.add("es_regional_onmouse");
-
-                    if (!SyncedStorage.get("regional_hideworld", false)) {
-                        node.querySelector(".price").classList.add("es_regional_icon")
-                    }
-                }
-            })
-        });
-    };
-
 
     AppPageClass.prototype.customizeAppPage = function(){
         let instance = this;
@@ -1559,6 +1648,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addReviewToggleButton = function() {
         let head = document.querySelector("#review_create h1");
+        if (!head) { return; }
         head.insertAdjacentHTML("beforeend", "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
 
         let reviewSectionNode = document.createElement("div");
@@ -1591,27 +1681,17 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addHelpButton = function() {
-        document.querySelector(".game_area_play_stats .already_owned_actions")
-            .insertAdjacentHTML("afterend", "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
-    };
-
-    AppPageClass.prototype.skipGotSteam = function() {
-        if (false && !SyncedStorage.get("skip_got_steam", false)) { return; } // FIXME
-
-        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
+        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
-        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
+        node.insertAdjacentHTML("afterend", "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
     };
 
     AppPageClass.prototype.addPackBreakdown = function() {
 
         function splitPack(node, ways) {
             let price_text = node.querySelector(".discount_final_price").innerHTML;
-            let at_end, comma, places = 2;
             if (price_text == null) { price_text = node.querySelector(".game_purchase_price").innerHTML; }
             if (price_text.match(/,\d\d(?!\d)/)) {
-                at_end = true;
-                comma = true;
                 price_text = price_text.replace(",", ".");
             }
             let price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
@@ -1737,6 +1817,77 @@ let AppPageClass = (function(){
                         appPage.addHelpButton();
                         appPage.skipGotSteam();
 
+                        break;
+
+                    case /^\/sub\/.*/.test(path):
+                        (new SubPageClass(window.location.host + path));
+                        break;
+
+
+                    case /^\/bundle\/.*/.test(path):
+                        var bundleid = get_subid(window.location.host + path);
+                        drm_warnings("sub");
+                        show_pricing_history(bundleid, "bundle");
+                        add_steamdb_links(bundleid, "bundle");
+                        break;
+
+                    case /^\/dlc\/.*/.test(path):
+                        dlc_data_for_dlc_page();
+                        break;
+
+                    case /^\/video\/.*/.test(path):
+                        skip_got_steam();
+                        break;
+
+                    case /^\/account\/registerkey(\/.*)?/.test(path):
+                        keep_ssa_checked();
+                        activate_multiple_keys();
+                        return;
+                        break;
+
+                    case /^\/account(\/.*)?/.test(path):
+                        account_total_spent();
+                        replace_account_name();
+                        return;
+                        break;
+
+                    case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+                        add_custom_money_amount();
+                        break;
+
+                    case /^\/search\/.*/.test(path):
+                        endless_scrolling();
+                        add_hide_buttons_to_search();
+                        add_exclude_tags_to_search();
+                        break;
+
+                    case /^\/sale\/.*/.test(path):
+                        show_regional_pricing("sale");
+                        break;
+
+                    case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
+                        setTimeout(function() {
+                            wishlist_highlight_apps();
+                            add_wishlist_total();
+                        }, 1500);
+                        fix_app_image_not_found();
+                        add_empty_wishlist_buttons();
+                        add_wishlist_pricehistory();
+                        add_wishlist_notes();
+
+                        // Wishlist highlights
+                        load_inventory().done(function() {
+                            start_highlights_and_tags();
+                        });
+                        break;
+
+                    // Storefront-front only
+                    case /^\/$/.test(path):
+                        add_popular_tab();
+                        add_allreleases_tab();
+                        set_homepage_tab();
+                        highlight_recommendations();
+                        customize_home_page();
                         break;
                 }
 

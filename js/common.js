@@ -482,6 +482,127 @@ let Currency = (function() {
     let self = {};
 
     self.userCurrency = "USD";
+    self.pageCurrency = null;
+
+    let currencySymbols = {
+        "pуб": "RUB",
+        "€": "EUR",
+        "£": "GBP",
+        "R$": "BRL",
+        "¥": "JPY",
+        "kr": "NOK",
+        "Rp": "IDR",
+        "RM": "MYR",
+        "P": "PHP",
+        "S$": "SGD",
+        "฿": "THB",
+        "₫": "VND",
+        "₩": "KRW",
+        "TL": "TRY",
+        "₴": "UAH",
+        "Mex$": "MXN",
+        "CDN$": "CAD",
+        "A$": "AUD",
+        "HK$": "HKD",
+        "NT$": "TWD",
+        "₹": "INR",
+        "SR": "SAR",
+        "R ": "ZAR",
+        "DH": "AED",
+        "CHF": "CHF",
+        "CLP$": "CLP",
+        "S/.": "PEN",
+        "COL$": "COP",
+        "NZ$": "NZD",
+        "ARS$": "ARS",
+        "₡": "CRC",
+        "₪": "ILS",
+        "₸": "KZT",
+        "KD": "KWD",
+        "zł": "PLN",
+        "QR": "QAR",
+        "$U": "UYU"
+    };
+
+    let typeToNumberMap = {
+        "RUB": 5,
+        "EUR": 3,
+        "GBP": 2,
+        "PLN": 6,
+        "BRL": 7,
+        "JPY": 8,
+        "NOK": 9,
+        "IDR": 10,
+        "MYR": 11,
+        "PHP": 12,
+        "SGD": 13,
+        "THB": 14,
+        "VND": 15,
+        "KRW": 16,
+        "TRY": 17,
+        "UAH": 18,
+        "MXN": 19,
+        "CAD": 20,
+        "AUD": 21,
+        "NZD": 22,
+        "CNY": 23,
+        "INR": 24,
+        "CLP": 25,
+        "PEN": 26,
+        "COP": 27,
+        "ZAR": 28,
+        "HKD": 29,
+        "TWD": 30,
+        "SAR": 31,
+        "AED": 32,
+        "ARS": 34,
+        "ILS": 35,
+        "KZT": 37,
+        "KWD": 38,
+        "QAR": 39,
+        "CRC": 40,
+        "UYU": 41
+    };
+
+    let numberToTypeMap = {
+        5: "RUB",
+        3: "EUR",
+        2: "GBP",
+        6: "PLN",
+        7: "BRL",
+        8: "JPY",
+        9: "NOK",
+        10: "IDR",
+        11: "MYR",
+        12: "PHP",
+        13: "SGD",
+        14: "THB",
+        15: "VND",
+        16: "KRW",
+        17: "TRY",
+        18: "UAH",
+        19: "MXN",
+        20: "CAD",
+        21: "AUD",
+        22: "NZD",
+        23: "CNY",
+        24: "INR",
+        25: "CLP",
+        26: "PEN",
+        27: "COP",
+        28: "ZAR",
+        29: "HKD",
+        30: "TWD",
+        31: "SAR",
+        32: "AED",
+        34: "ARS",
+        35: "ILS",
+        37: "KZT",
+        38: "KWD",
+        39: "QAR",
+        40: "CRC",
+        41: "UYU"
+    };
 
     self.promise = function() {
         return new Promise(function(resolve, reject) {
@@ -527,11 +648,42 @@ let Currency = (function() {
                     .finally(resolve);
             }
         });
+    };
 
-        self.convertFrom = function(price, currency) {
-            // FIXME
-            return price;
-        };
+    self.convertFrom = function(price, currency) {
+        // FIXME
+        return price;
+    };
+
+    self.getCurrencySymbolFromString = function(str) {
+        let re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP\$|S\/\.|COL\$|NZ\$|ARS\$|₡|₪|₸|KD|zł|QR|\$U)/;
+        let match = str.match(re);
+        return match ? match[0] : '';
+    };
+
+    self.getCurrencyFromDom = function () {
+        let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
+        if (currencyNode && currencyNode.hasAttribute("content")) return currencyNode.getAttribute("content");
+        return null;
+    };
+
+    self.getMemoizedCurrencyFromDom = function() {
+        if(!self.pageCurrency) {
+            self.pageCurrency = self.getCurrencyFromDom();
+        }
+        return self.pageCurrency;
+    };
+
+    self.currencySymbolToType = function(symbol) {
+        return currencySymbols[symbol] || "USD";
+    };
+
+    self.currencyTypeToNumber = function(type) {
+        return typeToNumberMap[type] || 1;
+    };
+
+    self.currencyNumberToType = function(number) {
+        return numberToTypeMap[number] || "USD";
     };
 
     return self;
@@ -610,6 +762,34 @@ let Price = (function() {
             ? formatted + info.symbolFormat
             : info.symbolFormat + formatted
     };
+
+    Price.parseFromString = function(str, convert) {
+        let currencySymbol = Currency.getCurrencySymbolFromString(str);
+        let currencyType = Currency.getMemoizedCurrencyFromDom() || Currency.currencySymbolToType(currencySymbol);
+
+        if (Currency.userCurrency && format[Currency.userCurrency].symbolFormat === format[currencyType].symbolFormat) {
+            currencyType = Currency.userCurrency;
+        }
+
+        // let currencyNumber = currencyTypeToNumber(currencyType);
+        let info = format[currencyType];
+
+        // remove thousand sep, replace decimal with dot, remove non-numeric
+        str = str
+            .replace(info.thousand, '')
+            .replace(info.decimal, '.')
+            .replace(/[^\d\.]/g, '')
+            .trim();
+
+        let value = parseFloat(str);
+
+        if (isNaN(value)) {
+            return null;
+        }
+
+        return new Price(value, currencyType, convert);
+    };
+
 
     return Price;
 })();
@@ -935,6 +1115,14 @@ let GameId = (function(){
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
         return m ? m[2] : null;
     };
+
+    self.getSubid = function(text) {
+        if (!text) { return null; }
+
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
+        return m ? m[2] : null;
+    };
+
 
     self.getAppidImgSrc = function(text) {
         if (!text) { return null; }
