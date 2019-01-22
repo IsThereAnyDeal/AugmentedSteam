@@ -2044,6 +2044,394 @@ let FundsPageClass = (function(){
     return FundsPageClass;
 })();
 
+
+let SearchPageClass = (function(){
+
+    function SearchPageClass() {
+        this.endlessScrolling();
+        this.addExcludeTagsToSearch();
+        this.addHideButtonsToSearch();
+    }
+
+    let processing = false;
+    let searchPage = 2;
+
+    function loadSearchResults () {
+        if (processing) { return; }
+        processing = true;
+
+        let search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
+        if (!document.querySelector(".LoadingWrapper")) {
+            let nodes = document.querySelectorAll(".search_pagination");
+            nodes[nodes.length-1].insertAdjacentHTML("beforebegin", '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + Localization.str.loading + '</div></div>');
+        }
+
+        if (search.substring(0,1) == "&") { search = "?" + search.substring(1, search.length); }
+        if (search.substring(0,1) != "?") { search = "?" + search; }
+
+        Request.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+            let dummy = document.createElement("html");
+            dummy.innerHTML = result;
+
+            let addedDate = Date.now();
+            document.querySelector('#search_result_container').dataset.lastAddDate = addedDate;
+
+            let lastNode = document.querySelector(".search_result_row:last-child");
+
+            let rows = dummy.querySelectorAll("a.search_result_row");
+            for (let i=0, len=rows.length; i<len; i++) {
+                let row = rows[i];
+                row.dataset.addedDate = addedDate;
+                lastNode.insertAdjacentElement("afterend", row);
+                lastNode = row;
+
+                row.removeAttribute("onmouseover");
+                row.removeAttribute("onmouseout");
+            }
+
+            document.querySelector(".LoadingWrapper").remove();
+
+            searchPage = searchPage + 1;
+            processing = false;
+
+            let inContext = function () {
+                let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
+                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
+            };
+
+            ExtensionLayer.runInPageContext(inContext);
+        }, failed => {
+            document.querySelector(".LoadingWrapper").remove();
+            document.querySelector(".search_pagination:last-child").insertAdjacentHTML("beforebegin", "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
+
+            $("#es_retry").click(function() {
+                processing = false;
+                $("#es_error_msg").remove();
+                loadSearchResults();
+            });
+        });
+    }
+
+    SearchPageClass.prototype.endlessScrolling = function() {
+        if (!SyncedStorage.get("contscroll", true)) { return; }
+
+        let result_count;
+        document.body.insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
+        document.querySelector(".search_pagination_right").style.display = "none";
+
+        let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
+        if (match) {
+            result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
+            document.querySelector(".search_pagination_left").textContent = Localization.str.results.replace("__num__", result_count);
+        }
+
+        searchPage = 2;
+
+        window.addEventListener("scroll", function () {
+            // if the pagination element is in the viewport, continue loading
+            if (BrowserHelper.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+                if (result_count > document.querySelectorAll(".search_result_row").length) {
+                    loadSearchResults();
+                } else {
+                    document.querySelector(".search_pagination_left").textContent = Localization.str.all_results.replace("__num__", result_count);
+                }
+            }
+        });
+    };
+
+    SearchPageClass.prototype.addExcludeTagsToSearch = function() {
+        let tarFilterDivs = document.querySelectorAll('#TagFilter_Container')[0].children;
+
+        document.querySelector("#TagFilter_Container").parentNode.parentNode.insertAdjacentHTML("afterend",
+            `<div class='block' id='es_tagfilter_exclude'>
+                <div class='block_header'>
+                    <div>${Localization.str.exclude_tags}</div>
+                 </div>
+                 <div class='block_content block_content_inner'>
+                    <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
+                    <input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">
+                </div>
+            </div>
+        `);
+
+        let excludeContainer = document.querySelector("#es_tagfilter_exclude_container");
+
+        //tag numbers from the URL are already in the element with id #tags
+        function getTags() {
+            let tagsValue = decodeURIComponent(document.querySelector("#tags").value);
+            return tagsValue ? tagsValue.split(',') : [];
+        }
+
+        for (let i=0, len=tarFilterDivs.length; i<len; i++) {
+            let val = tarFilterDivs[i];
+
+            let item_checked = getTags().indexOf("-"+val.dataset.value) > -1 ? "checked" : "";
+
+            let excludeItem = BrowserHelper.htmlToElement(
+                `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
+                    <div class="tab_filter_control_checkbox"></div>
+                    <span class="tab_filter_control_label">${val.dataset.loc}</span>
+                </div>`);
+
+            excludeItem.addEventListener("click", function(e) {
+                let control = e.target.closest(".tab_filter_control")
+
+                let rgValues = getTags();
+                let value = String(control.dataset.value);
+                if (!control.classList.contains("checked")) {
+
+                    if(!rgValues) {
+                        rgValues = [value];
+                    } else if (rgValues.indexOf(value) === -1) {
+                        rgValues.push(value);
+                    }
+
+                } else {
+
+                    if (rgValues.indexOf(value) !== -1) {
+                        rgValues.splice(rgValues.indexOf(value), 1);
+                    }
+                }
+
+                control.classList.toggle('checked');
+                document.querySelector("#tags").value = rgValues.join(',');
+                ExtensionLayer.runInPageContext(function() {AjaxSearchResults();});
+            });
+
+            excludeContainer.append(excludeItem);
+        }
+
+        ExtensionLayer.runInPageContext(function() {
+            $J('#es_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value });
+        });
+
+        let observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation){
+                if (!mutation["addedNodes"]) { return; }
+
+                let addedNodes = mutation["addedNodes"];
+                for (let i=0; i<addedNodes.length; i++) {
+                    let node = addedNodes[i].parentNode;
+                    if (node.classList.contains("tag_dynamic") && parseFloat(node.dataset['tag_value']) < 0) {
+                        node.querySelector(".label").textContent = Localization.str.not.replace("__tag__", node.textContent);
+                    }
+                }
+            });
+        });
+        observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
+        ExtensionLayer.runInPageContext(function() {UpdateTags()});
+    };
+
+
+    function applyPriceFilter(node) {
+        let hidePriceAbove = SyncedStorage.get("priceabove_value", false);
+        let priceAboveValue = SyncedStorage.get("priceabove_value", "");
+
+        if (hidePriceAbove
+            && priceAboveValue !== ""
+            && !(Number.isNaN(priceAboveValue))) {
+
+            let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
+            let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
+            let parsed = new Price(intern.trim());
+            if (parsed && parsed.value > priceAboveValue) {
+                node.style.display = "none";
+            }
+        }
+
+        if (BrowserHelper.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+            loadSearchResults();
+        }
+    }
+
+    function addHideButtonsToSearchClick() {
+        let nodes = document.querySelectorAll(".search_result_row");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+
+            node.style.display = "block";
+            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; }
+            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; }
+            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notinterested.checked")) { highlight_notinterested(node); } // FIXME
+            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
+        }
+    }
+
+    function validatePrice (priceText, e) {
+        if (e.key === "Enter") { return true; }
+        priceText += e.key;
+        let price = Number(priceText);
+        return !(Number.isNaN(price));
+    }
+
+    SearchPageClass.prototype.addHideButtonsToSearch = function() {
+
+        document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
+            <div class='block' id='es_hide_menu'>
+                <div class='block_header'><div>` + Localization.str.hide + `</div></div>
+                <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
+                    <div class='tab_filter_control' id='es_owned_games'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.options.owned + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_wishlist_games'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.options.wishlist + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_cart_games'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.options.cart + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_notdiscounted'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.notdiscounted + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_notinterested'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.notinterested + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_notmixed'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.mixed_item + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_notnegative'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.negative_item + `</span>
+                    </div>
+                    <div class='tab_filter_control' id='es_notpriceabove'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>` + Localization.str.price_above + `</span>
+                        <div>
+                            <input type="number" id='es_notpriceabove_val' class='es_input_number' step=0.01>
+                        </div>
+                    </div>
+                </div>
+                <a class="see_all_expander" href="#" id="es_hide_expander"></a>
+            </div>
+        `);
+
+        let expander = document.querySelector("#es_hide_expander");
+        expander.addEventListener("click", function(e) {
+            e.preventDefault();
+            ExtensionLayer.runInPageContext(function(){
+                ExpandOptions(document.querySelector("#es_hide_expander"), 'es_hide_options')
+            });
+        });
+
+        let all = document.querySelectorAll(".see_all_expander");
+        expander.textContent = all[all.length-1].textContent;
+
+        if (SyncedStorage.get("hide_owned", false)) {
+            document.querySelector("#es_owned_games").classList.add("checked");
+        }
+
+        if (SyncedStorage.get("hide_wishlist", false)) {
+            document.querySelector("#es_wishlist_games").classList.add("checked");
+        }
+
+        if (SyncedStorage.get("hide_cart", false)) {
+            document.querySelector("#es_cart_games").classList.add("checked");
+        }
+
+        if (SyncedStorage.get("hide_notdiscounted", false)) {
+            document.querySelector("#es_notdiscounted").classList.add("checked");
+        }
+
+        if (SyncedStorage.get("hide_notinterested", false)) {
+            document.querySelector("#es_notinterested").classList.add("checked");
+        }
+
+        if (SyncedStorage.get("hide_mixed", false)) {
+            document.querySelector("#es_notmixed").classList.add("checked");
+            document.querySelector("#es_hide_options").style.height="auto";
+            document.querySelector("#es_hide_expander").style.display="none";
+
+            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.mixed");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                nodes[i].closest(".search_result_row").style.display="none";
+            }
+        }
+
+        if (SyncedStorage.get("hide_negative", false)) {
+            document.querySelector("#es_notnegative").classList.add("checked");
+            document.querySelector("#es_hide_options").style.height = "auto";
+            document.querySelector("#es_hide_expander").style.display = "none";
+
+            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.negative");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                nodes[i].closest(".search_result_row").style.display="none";
+            }
+        }
+
+        if (SyncedStorage.get("hide_priceabove", false)) {
+            document.querySelector("#es_notpriceabove").classList.add("checked");
+            document.querySelector("#es_hide_options").style.height = "auto";
+            document.querySelector("#es_hide_expander").style.display = "none";
+
+            let nodes = document.querySelectorAll(".search_result_row");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                applyPriceFilter(nodes[i])
+            }
+        }
+
+        if (SyncedStorage.get("priceabove_value", "") ) {
+            document.querySelector("#es_notpriceabove_val").value = SyncedStorage.get("priceabove_value", "");
+        }
+
+        [
+            ["#es_owned_games", "hide_owned"],
+            ["#es_wishlist_games", "hide_wishlist"],
+            ["#es_cart_games", "hide_cart"],
+            ["#es_notdiscounted", "hide_notdiscounted"],
+            ["#es_notinterested", "hide_notinterested"],
+            ["#es_notmixed", "hide_mixed"],
+            ["#es_notnegative", "hide_negative"],
+            ["#es_notpriceabove", "hide_priceabove"],
+        ].forEach(a => {
+            document.querySelector(a[0]).addEventListener("click", function(e) {
+                let node = document.querySelector(a[0]);
+                let value = !node.classList.contains("checked");
+                node.classList.toggle("checked", value);
+                SyncedStorage.set(a[1], value);
+                addHideButtonsToSearchClick();
+            });
+        });
+
+        document.getElementById("es_notpriceabove").title = Localization.str.price_above_tooltip;
+
+        let elem = document.getElementById("es_notpriceabove_val");
+        if (elem !== undefined && elem !== null) {
+            elem.title = Localization.str.price_above_tooltip;
+            elem.addEventListener("click", function(e) {
+                e.stopPropagation()
+
+            });
+            elem.addEventListener("keypress", function(e){
+                return validatePrice(elem.value, e);
+            });
+            elem.addEventListener("change", function(e){
+                let price = '';
+                if(elem.value != ''){
+                    price = Number(elem.value);
+                    if(Number.isNaN(price)) {
+                        price = '';
+                    }
+                }
+                SyncedStorage.set({"priceabove_value": price });
+                addHideButtonsToSearchClick()
+            });
+        }
+    };
+
+    return SearchPageClass;
+})();
+
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -2107,13 +2495,11 @@ let FundsPageClass = (function(){
                         return;
 
                     case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
-                        (new new FundsPageClass());
+                        (new FundsPageClass());
                         break;
 
                     case /^\/search\/.*/.test(path):
-                        endless_scrolling();
-                        add_hide_buttons_to_search();
-                        add_exclude_tags_to_search();
+                        (new SearchPageClass());
                         break;
 
                     case /^\/sale\/.*/.test(path):

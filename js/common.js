@@ -871,6 +871,24 @@ let BrowserHelper = (function(){
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
     };
 
+    // only concerned with vertical at this point
+    self.isElementInViewport = function(elem) {
+        let elemTop = elem.offsetTop;
+        let elemBottom = elemTop + elem.getBoundingClientRect().height;
+        let viewportTop = window.scrollY;
+        let viewportBottom = window.innerHeight + viewportTop;
+
+        return (elemBottom <= viewportBottom && elemTop >= viewportTop);
+    };
+
+
+    self.htmlToElement = function(html) {
+        var template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+
     return self;
 })();
 
