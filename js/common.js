@@ -529,6 +529,7 @@ let Currency = (function() {
         });
 
         self.convertFrom = function(price, currency) {
+            // FIXME
             return price;
         };
     };
@@ -580,11 +581,11 @@ let Price = (function() {
         "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
     };
 
-    function Price(value, currency) {
+    function Price(value, currency, convert) {
         this.value = value || 0;
         this.currency = currency || Currency.userCurrency;
 
-        if (SyncedStorage.get("override_price", "auto") !== "auto") {
+        if (convert !== false && SyncedStorage.get("override_price", "auto") !== "auto") {
             this.value = Currency.convertFrom(this.value, this.currency);
             this.currency = Currency.userCurrency;
         }

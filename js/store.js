@@ -53,7 +53,16 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.hasCards = function() {
         return document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
-    }
+    };
+
+    AppPageClass.prototype.getAllSubids = function() {
+        let result = [];
+        let nodes = document.querySelectorAll("input[name=subid]");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            result.push(nodes[i].value);
+        }
+        return result;
+    };
 
     AppPageClass.prototype.mediaSliderExpander = function() {
         let detailsBuild = false;
@@ -953,7 +962,7 @@ let AppPageClass = (function(){
             let node = nodes[i];
             if (node.querySelector(".btn_packageinfo")) { continue; }
 
-            let subid = node.querySelector("input[name=subid].value");
+            let subid = node.querySelector("input[name=subid]").value;
 
             node.querySelector(".game_purchase_action").insertAdjacentHTML("afterbegin",
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
@@ -1346,7 +1355,165 @@ let AppPageClass = (function(){
         });
     };
 
-    
+    AppPageClass.prototype.showRegionalPricing = function(type) { // FIXME type
+        let showRegionalPrice = SyncedStorage.get("showregionalprice", "mouse");
+        if (showRegionalPrice === "off") { return; }
+
+        let countries = SyncedStorage.get("regional_countries", ["us", "gb", "fr", "ru", "br", "au", "jp"]);
+        console.log("A");
+        if (!countries || countries.length === 0) { return; }
+        console.log("A");
+
+        let localCountry = User.getCountry().toLowerCase();
+        if (countries.indexOf(localCountry) === -1) {
+            countries.push(localCountry);
+        }
+
+        let subids = this.getAllSubids();
+        subids.forEach(subid => {
+            let promises = [];
+
+            let prices = {};
+
+            countries.forEach(country => {
+
+                let promise = Request.getJson("//store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
+                    if (!result || !result[subid] || !result[subid].success) { return; }
+                    prices[country] = result[subid].data.price;
+                });
+                promises.push(promise);
+            });
+
+            Promise.all(promises).then(result => {
+
+                let node = document.querySelector("input[name=subid][value='"+subid+"']")
+                    .closest(".game_area_purchase_game_wrapper")
+                    .querySelector(".game_purchase_action");
+
+                let priceLocal = new Price(prices[User.getCountry().toLowerCase()].final / 100);
+
+                let pricingDiv = document.createElement("div");
+                pricingDiv.classList.add("es_regional_container");
+                pricingDiv.classList.add("es_regional_" + (type || "app"));
+
+                if (showRegionalPrice === "mouse") {
+                    pricingDiv.innerHTML += '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>';
+                }
+
+                countries.forEach(country => {
+                    let apiPrice = prices[country];
+                    let html = "";
+
+                    if (apiPrice) {
+                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency);
+                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
+
+                        let percentageIndicator = "equal";
+                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
+
+                        if (percentage < 0) {
+                            percentage = Math.abs(percentage);
+                            percentageIndicator = "lower";
+                        } else if (percentage > 0) {
+                            percentageIndicator = "higher";
+                        }
+
+                        html =
+                            `<div class="es_regional_price es_flag es_flag_${country}">
+                                ${priceRegion}
+                                <span class="es_regional_converted">(${priceUser})</span>
+                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
+                            </div>`;
+                    } else {
+                        html =
+                            `<div class="es_regional_price es_flag es_flag_${country}">
+                                <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
+                            </div>`;
+                    }
+
+                    pricingDiv.innerHTML += html;
+                });
+
+                let purchaseArea = node.closest(".game_area_purchase_game");
+                purchaseArea.classList.add("es_regional_prices");
+
+                if (showRegionalPrice === "always") {
+                    node.insertAdjacentElement("beforebegin", pricingDiv);
+                    purchaseArea.classList.add("es_regional_always");
+                } else {
+                    node.querySelector(".price").insertAdjacentElement("afterend", pricingDiv);
+                    purchaseArea.classList.add("es_regional_onmouse");
+
+                    if (!SyncedStorage.get("regional_hideworld", false)) {
+                        node.querySelector(".price").classList.add("es_regional_icon")
+                    }
+                }
+            })
+        });
+
+
+/*
+        if (subid_array.length) {
+
+            $.when.apply(null, currency_deferred).done(function(){
+                currencyConversion.load().done(function(){
+                    $.each(subid_info, function(index, subid) {
+                        if (subid["subid"] != 0) {
+                            var sub_formatted = [];
+                            var app_pricing_div = $(pricing_div).clone().attr("id", "es_pricing_" + subid["subid"].toString());
+
+                            // Format prices for each country
+                            $.each(countries, function(country_index, country) {
+                                if (country !== local_country) {
+                                    if (subid["prices"][country]) {
+                                        var country_currency = subid["prices"][country]["currency"].toString().toUpperCase();
+                                        var app_price = subid["prices"][country]["final"];
+                                        var converted_price = currencyConversion.convert(parseFloat(app_price), country_currency, user_currency);
+                                        var regional_price = formatPriceData(subid, country, converted_price);
+
+                                        sub_formatted.push(regional_price);
+                                    } else {
+                                        var regional_price = formatPriceData(subid, country);
+
+                                        sub_formatted.push(regional_price);
+                                    }
+                                }
+                            });
+
+                            $(app_pricing_div).append(sub_formatted);
+
+                            // Insert regional prices into the page
+                            var price_container;
+                            if (sale) {
+                                price_container = $(".sale_page_purchase_item").eq(index).addClass("es_regional_prices");
+
+                                if (settings.showregionalprice === "always") {
+                                    $(price_container).addClass("es_regional_always").prepend(app_pricing_div);
+                                } else {
+                                    $(price_container).addClass("es_regional_onmouse").find(".game_purchase_action_bg").last().append(app_pricing_div);
+                                }
+                            } else {
+                                price_container = $(".game_area_purchase_game").eq(index).addClass("es_regional_prices");
+
+                                if (settings.showregionalprice === "always") {
+                                    $(price_container).addClass("es_regional_always").find(".game_purchase_action").before(app_pricing_div);
+                                } else {
+                                    $(price_container).addClass("es_regional_onmouse").find(".game_purchase_action_bg").last().append(app_pricing_div);
+                                }
+                            }
+
+                            // Add the "globe" icon
+                            if (settings.showregionalprice === "mouse" && !(settings.regional_hideworld)) {
+                                $(price_container).find(".price, .discount_prices").addClass("es_regional_icon");
+                            }
+                        }
+                    });
+                });
+            });
+        };*/
+    };
+
+
 
     return AppPageClass;
 })();
@@ -1424,6 +1591,7 @@ let AppPageClass = (function(){
                         appPage.addAstatsLink();
                         appPage.addAchievementCompletionBar();
 
+                        appPage.showRegionalPricing("app");
 /*
                         add_pack_breakdown();
 
