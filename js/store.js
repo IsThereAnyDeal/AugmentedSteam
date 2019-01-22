@@ -972,6 +972,7 @@ let AppPageClass = (function(){
     };
 
     function addSteamChart(result) {
+        if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info", true) || !result.charts || !result.charts.chart) { return; }
 
         let appid = this.appid;
@@ -989,6 +990,8 @@ let AppPageClass = (function(){
     }
 
     function addSteamSpy(result) {
+        if (this.isDlc()) { return; }
+        if (!SyncedStorage.get("show_steamspy_info", true)) { return; } // customization setting
         if (!SyncedStorage.get("steamspy", true) || !result.steamspy || !result.steamspy.owners) { return; }
 
         function getTimeString(value) {
@@ -1029,8 +1032,9 @@ let AppPageClass = (function(){
     }
 
     function addSurveyData(result) {
-        if (!SyncedStorage.get("show_appage_surveys", true) || !result.survey) { return; }
+        if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
+        if (!SyncedStorage.get("show_apppage_surveys", true) || !result.survey) { return; }
 
         let survey = result.survey;
         let appid = this.appid;
@@ -1450,70 +1454,152 @@ let AppPageClass = (function(){
                 }
             })
         });
-
-
-/*
-        if (subid_array.length) {
-
-            $.when.apply(null, currency_deferred).done(function(){
-                currencyConversion.load().done(function(){
-                    $.each(subid_info, function(index, subid) {
-                        if (subid["subid"] != 0) {
-                            var sub_formatted = [];
-                            var app_pricing_div = $(pricing_div).clone().attr("id", "es_pricing_" + subid["subid"].toString());
-
-                            // Format prices for each country
-                            $.each(countries, function(country_index, country) {
-                                if (country !== local_country) {
-                                    if (subid["prices"][country]) {
-                                        var country_currency = subid["prices"][country]["currency"].toString().toUpperCase();
-                                        var app_price = subid["prices"][country]["final"];
-                                        var converted_price = currencyConversion.convert(parseFloat(app_price), country_currency, user_currency);
-                                        var regional_price = formatPriceData(subid, country, converted_price);
-
-                                        sub_formatted.push(regional_price);
-                                    } else {
-                                        var regional_price = formatPriceData(subid, country);
-
-                                        sub_formatted.push(regional_price);
-                                    }
-                                }
-                            });
-
-                            $(app_pricing_div).append(sub_formatted);
-
-                            // Insert regional prices into the page
-                            var price_container;
-                            if (sale) {
-                                price_container = $(".sale_page_purchase_item").eq(index).addClass("es_regional_prices");
-
-                                if (settings.showregionalprice === "always") {
-                                    $(price_container).addClass("es_regional_always").prepend(app_pricing_div);
-                                } else {
-                                    $(price_container).addClass("es_regional_onmouse").find(".game_purchase_action_bg").last().append(app_pricing_div);
-                                }
-                            } else {
-                                price_container = $(".game_area_purchase_game").eq(index).addClass("es_regional_prices");
-
-                                if (settings.showregionalprice === "always") {
-                                    $(price_container).addClass("es_regional_always").find(".game_purchase_action").before(app_pricing_div);
-                                } else {
-                                    $(price_container).addClass("es_regional_onmouse").find(".game_purchase_action_bg").last().append(app_pricing_div);
-                                }
-                            }
-
-                            // Add the "globe" icon
-                            if (settings.showregionalprice === "mouse" && !(settings.regional_hideworld)) {
-                                $(price_container).find(".price, .discount_prices").addClass("es_regional_icon");
-                            }
-                        }
-                    });
-                });
-            });
-        };*/
     };
 
 
+    AppPageClass.prototype.customizeAppPage = function(){
+        let instance = this;
+
+        let nodes = document.querySelectorAll(".purchase_area_spacer");
+        nodes[nodes.length-1].insertAdjacentHTML("beforeend",
+            `<link rel='stylesheet' type='text/css' href='//steamstore-a.akamaihd.net/public/css/v6/home.css'>
+            <style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style>
+            <div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
+                <div class="home_btn home_customize_btn" style="z-index: 13;">${ Localization.str.customize }</div>
+                <div class='home_viewsettings_popup'>
+                    <div class='home_viewsettings_instructions' style='font-size: 12px;'>${ Localization.str.apppage_sections }</div>
+                </div>
+            </div>
+            <div style="clear: both;"></div>`);
+
+        document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
+            e.target.classList.toggle("active");
+        });
+
+        document.querySelector("body").addEventListener("click", function(e){
+            if (e.target.closest("#es_customize_btn")) { return; }
+            document.querySelector("#es_customize_btn .home_customize_btn.active").classList.remove("active");
+        });
+
+        function firstText(node) {
+            for (node=node.firstChild;node;node=node.nextSibling){
+                if (node.nodeType === 3) { return node.textContent; }
+            }
+            return "";
+        }
+
+        function addToggleHandler(name, elSelector, text, forceShow, callback) {
+            let element = document.querySelector(elSelector);
+            if (!element && !forceShow) { return; }
+
+            let state = SyncedStorage.get(name, true);
+            text = (typeof text === "string" && text) || firstText(element.querySelector("h2")).toLowerCase();
+
+            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
+
+            if (element) {
+                element.classList.toggle("es_hide", !SyncedStorage.get(name, true));
+
+                if (element.classList.contains("es_hide")) {
+                    element.style.display = "none"; // TODO slideUp
+                }
+            }
+
+            document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
+                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name, true) ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>
+            `);
+
+            document.querySelector("#" + name).addEventListener("click", function(e) {
+                state = !state;
+
+                let el = document.querySelector(elSelector);
+                if (el) {
+                    el.classList.remove("es_show");
+                    el.classList.remove("es_hide");
+                    el.style.display = state ? "block" : "none";
+                }
+
+                e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+                document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
+
+                SyncedStorage.set(name, state);
+
+                if (callback) { callback(); }
+            });
+        }
+
+        addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
+        addToggleHandler("show_apppage_reviews", "#game_area_reviews");
+        addToggleHandler("show_apppage_about", "#game_area_description");
+        addToggleHandler("show_steamchart_info", "#steam-charts", Localization.str.charts.current, true, function(){
+            if (document.querySelector("#steam-charts")) { return; }
+            instance.data.then(result => addSteamChart.call(instance, result));
+        });
+        addToggleHandler("show_steamspy_info", "#steam-spy", Localization.str.spy.player_data, true, function(){
+            if (document.querySelector("#steam-spy")) { return; }
+            instance.data.then(result => addSteamSpy.call(instance, result));
+        });
+        addToggleHandler("show_apppage_surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
+            if (document.querySelector("#performance_survey")) { return; }
+            instance.data.then(result => addSurveyData.call(instance, result));
+        });
+        addToggleHandler("show_apppage_sysreq", ".sys_req");
+        addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
+        addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
+        addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
+        if (document.querySelector(".user_reviews_header")) {
+            addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
+        }
+    };
+
+    AppPageClass.prototype.addReviewToggleButton = function() {
+        let head = document.querySelector("#review_create h1");
+        head.insertAdjacentHTML("beforeend", "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
+
+        let reviewSectionNode = document.createElement("div");
+        reviewSectionNode.setAttribute("id", "es_review_section");
+
+        let nodes = document.querySelector("#review_container").querySelectorAll("p, .avatar_block, .content");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            reviewSectionNode.append(node);
+        }
+
+        head.insertAdjacentElement("afterend", reviewSectionNode);
+
+        function toggleReviews() {
+            if (LocalData.get("show_review_section")) {
+                document.querySelector("#es_review_toggle span").textContent = "▲";
+                document.querySelector("#es_review_section").style.maxHeight = null;
+            } else {
+                document.querySelector("#es_review_toggle span").textContent = "▼";
+                document.querySelector("#es_review_section").style.maxHeight = 0;
+            }
+        }
+
+        toggleReviews();
+
+        document.querySelector("#es_review_toggle").addEventListener("click", function() {
+            LocalData.set("show_review_section", !LocalData.get("show_review_section"))
+            toggleReviews();
+        });
+    };
+
+    AppPageClass.prototype.addHelpButton = function() {
+        document.querySelector(".game_area_play_stats .already_owned_actions")
+            .insertAdjacentHTML("afterend", "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
+    };
+
+    AppPageClass.prototype.skipGotSteam = function() {
+        if (false && !SyncedStorage.get("skip_got_steam", false)) { return; } // FIXME
+
+        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
+        if (!node) { return; }
+        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
+    };
 
     return AppPageClass;
 })();
@@ -1592,15 +1678,16 @@ let AppPageClass = (function(){
                         appPage.addAchievementCompletionBar();
 
                         appPage.showRegionalPricing("app");
+
+                        appPage.customizeAppPage();
+                        appPage.addReviewToggleButton();
+                        appPage.addHelpButton();
+                        appPage.skipGotSteam();
+
 /*
                         add_pack_breakdown();
 
-                        show_regional_pricing("app");
-                        add_review_toggle_button();
 
-                        customize_app_page(appid);
-                        add_help_button(appid);
-                        skip_got_steam();
 
                         if (language == "schinese" || language == "tchinese") {
                             storePageDataCN.load(appid);
