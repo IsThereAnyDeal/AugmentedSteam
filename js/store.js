@@ -51,6 +51,10 @@ let AppPageClass = (function(){
         return document.querySelector(".game_area_purchase_game .streamingvideo") ? true : false;
     };
 
+    AppPageClass.prototype.hasCards = function() {
+        return document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
+    }
+
     AppPageClass.prototype.mediaSliderExpander = function() {
         let detailsBuild = false;
         let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
@@ -1213,6 +1217,137 @@ let AppPageClass = (function(){
         })
     };
 
+    AppPageClass.prototype.addBadgeProgress = function(){
+        if (!User.isSignedIn) { return; }
+        if (!SyncedStorage.get("show_badge_progress", true)) { return; }
+        if (!this.hasCards()) { return; }
+
+        let appid = this.appid;
+
+        document.querySelector("head")
+            .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
+
+        document.querySelector("#category_block").insertAdjacentHTML("afterend", `
+					<div class="block responsive_apppage_details_right heading">
+						${Localization.str.badge_progress}
+					</div>
+					<div class="block">
+						<div class="block_content_inner es_badges_progress_block" style="display:none;">
+							<div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
+							<div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
+						</div>
+					</div>
+				`);
+
+        Request.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
+            loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
+        });
+
+        Request.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
+            loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
+        });
+
+        function loadBadgeContent(targetSelector, result, selector) {
+            let dummy = document.createElement("html");
+            dummy.innerHTML = result;
+            let badge = dummy.querySelector(selector);
+            if (badge) {
+                displayBadgeInfo(targetSelector, badge);
+            }
+        }
+
+        function displayBadgeInfo(targetSelector, badgeNode) {
+            let blockSel = document.querySelector(targetSelector);
+            blockSel.append(badgeNode);
+
+            if (!badgeNode.querySelector(".friendPlayerLevelNum")) {
+                let progress;
+                let card_num_owned = badgeNode.querySelectorAll(".badge_detail_tasks .owned").length;
+                let card_num_total = badgeNode.querySelectorAll(".badge_detail_tasks .badge_card_set_card").length;
+                let progress_text_length = (progress = badgeNode.querySelector(".gamecard_badge_progress")) ? progress.textContent.trim().length : 0;
+                let next_level_empty_badge = badgeNode.querySelectorAll(".gamecard_badge_progress .badge_info").length;
+                let badge_completed = (progress_text_length > 0 && next_level_empty_badge == 0);
+                let show_card_num = (card_num_owned > 0 && progress_text_length === 0) || (card_num_owned > 0 && !badge_completed);
+                let is_normal_badge = targetSelector === ".es_normal_badge_progress";
+
+                if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
+                    document.querySelector(".es_badges_progress_block").style.display='block';
+                    blockSel.style.display = "block";
+
+                    let progressBold = badgeNode.querySelector(".progress_info_bold");
+
+                    blockSel.insertAdjacentHTML("beforeend", `
+								<div class="es_cards_numbers">
+									<div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
+								</div>
+								<div class="game_area_details_specs">
+									<div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
+									<a href="//steamcommunity.com/my/gamecards/${ appid + (is_normal_badge ? `/` : `?border=1`) }" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
+								</div>
+							`);
+
+                    if (show_card_num) {
+                        blockSel.querySelector(".es_cards_numbers")
+                            .insertAdjacentHTML("beforeend", `
+									<div class="es_cards_owned">${Localization.str.cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total)}</div>
+								`);
+                    }
+
+                    let last = blockSel.querySelector(".badge_empty_right div:last-child");
+                    last.classList.add("badge_empty_name");
+                    last.style = "";
+                    last.textContent = Localization.str.badge_not_unlocked;
+                }
+            } else {
+                blockSel.remove();
+            }
+        }
+    };
+
+
+    AppPageClass.prototype.addAstatsLink = function(){
+        if (!SyncedStorage.get("showastatslink", true)) { return; }
+
+        let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
+        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.appid;
+
+        document.querySelector("#achievement_block").insertAdjacentHTML("beforeend",
+            `<div class='game_area_details_specs'>
+                      <div class='icon'><img src='${imgUrl}' style='margin-left: 4px; width: 16px;'></div>
+                      <a class='name' href='${url}' target='_blank'><span>${Localization.str.view_astats}</span></a>`
+            );
+    };
+
+    AppPageClass.prototype.addAchievementCompletionBar = function(){
+        if (!SyncedStorage.get("showachinstore", true)) { return; }
+
+        document.querySelector(".myactivity_block .details_block").insertAdjacentHTML("afterend",
+            "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
+
+        Request.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
+            let dummy = document.createElement("html");
+            dummy.innerHTML = response;
+
+            let node = document.querySelector("#es_ach_stats");
+            node.append(dummy.querySelector("#topSummaryAchievements"));
+
+            if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
+
+            let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+            let barEmpty = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+            barFull = barFull * .88;
+            barEmpty = barEmpty * .88;
+
+            console.log(node.innerHTML);
+
+            node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
+            node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
+            node.innerHTML = node.innerHTML.replace("::", ":");
+        });
+    };
+
+    
+
     return AppPageClass;
 })();
 
@@ -1285,12 +1420,12 @@ let AppPageClass = (function(){
                         appPage.addStats();
 
                         appPage.addDlcCheckboxes();
+                        appPage.addBadgeProgress();
+                        appPage.addAstatsLink();
+                        appPage.addAchievementCompletionBar();
+
 /*
                         add_pack_breakdown();
-                        add_app_badge_progress(appid);
-                        add_dlc_checkboxes();
-                        add_astats_link(appid);
-                        add_achievement_completion_bar(appid);
 
                         show_regional_pricing("app");
                         add_review_toggle_button();
