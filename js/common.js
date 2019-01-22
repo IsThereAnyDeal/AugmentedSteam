@@ -1082,6 +1082,26 @@ let EnhancedSteam = (function() {
         });
     };
 
+    self.skipGotSteam = function() {
+        if (!SyncedStorage.get("skip_got_steam", false)) { return; }
+
+        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
+        if (!node) { return; }
+        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
+    };
+
+    self.keepSteamSubscriberAgreementState = function() {
+        let nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buynow_dialog_accept_ssa,#accept_ssa");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            node.checked = SyncedStorage.get("keepssachecked", false);
+
+            node.addEventListener("click", function(){
+                SyncedStorage.set("keepssachecked", !SyncedStorage.get("keepssachecked"));
+            });
+        }
+    };
+
     return self;
 })();
 

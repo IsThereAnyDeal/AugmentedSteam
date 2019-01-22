@@ -529,14 +529,6 @@ let StorePageClass = (function(){
         });
     };
 
-    StorePageClass.prototype.skipGotSteam = function() {
-        if (!SyncedStorage.get("skip_got_steam", false)) { return; }
-
-        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
-        if (!node) { return; }
-        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
-    };
-
     return StorePageClass;
 })();
 
@@ -554,7 +546,6 @@ let SubPageClass = (function() {
         this.addPrices();
         this.addSteamDb("sub");
         this.showRegionalPricing("sub");
-        this.skipGotSteam();
         this.subscriptionSavingsCheck();
     }
     SubPageClass.prototype = Object.create(Super.prototype);
@@ -636,6 +627,43 @@ let AppPageClass = (function(){
 
         this.data = this.storePageDataPromise();
         this.appName = document.querySelector(".apphub_AppName").textContent;
+
+        // FIXME appPage.mediaSliderExpander();
+        // FIXME appPage.initHdPlayer();
+        this.addWishlistRemove();
+        this.addCoupon();
+        this.addPrices();
+        this.addDlcInfo();
+
+        this.addDrmWarnings();
+        this.addMetacriticUserScore();
+        this.addOpenCritic();
+        this.displayPurchaseDate();
+
+        this.addWidescreenCertification();
+
+        this.addHltb();
+
+        this.moveUsefulLinks();
+        this.addLinks();
+        this.addSteamDb("app");
+        this.addHighlights();
+        this.addFamilySharingWarning();
+
+        this.addPackageInfoButton();
+        this.addStats();
+
+        this.addDlcCheckboxes();
+        this.addBadgeProgress();
+        this.addAstatsLink();
+        this.addAchievementCompletionBar();
+
+        this.showRegionalPricing("app");
+
+        this.customizeAppPage();
+        this.addReviewToggleButton();
+        this.addHelpButton();
+
     }
     AppPageClass.prototype = Object.create(Super.prototype);
     AppPageClass.prototype.constructor = AppPageClass;
@@ -1781,6 +1809,139 @@ let AppPageClass = (function(){
 })();
 
 
+let RegisterKeyPageClass = (function(){
+
+    function RegisterKeyPageClass() {
+        this.activateMultipleKeys();
+    }
+
+    RegisterKeyPageClass.prototype.activateMultipleKeys = function() {
+        let activateModalTemplate = `<div id="es_activate_modal">
+                <div id="es_activate_modal_content">
+                    <div class="newmodal_prompt_with_textarea gray_bevel fullwidth" id="es_activate_input_text">
+                        <textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
+                    </div>
+                    <div class="es_activate_buttons" style="float: right">
+                        <div class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
+                            <span>${Localization.str.activate_products}</span>
+                        </div>
+                        <div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
+                            <span>${Localization.str.cancel}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        document.querySelector("#register_btn").addEventListener("click", function(e) {
+            if (document.querySelector("#product_key").value.indexOf(",") > 0) {
+                e.preventDefault();
+                ExtensionLayer.runInPageContext('function() { ShowDialog("' + Localization.str.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n")) + '\`); }');
+            }
+        });
+
+        // Show note input modal
+        document.addEventListener("click", function(e){
+            if (!e.target.closest("#es_activate_multiple")) { return; }
+            ExtensionLayer.runInPageContext('function() { ShowDialog("' + Localization.str.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n")) + '\`); }');
+        });
+
+        // Insert the "activate multiple products" button
+        document.querySelector("#registerkey_examples_text").insertAdjacentHTML("beforebegin",
+            "<a class='btnv6_blue_hoverfade btn_medium' id='es_activate_multiple' style='margin-bottom: 15px;'><span>" + Localization.str.activate_multiple + "</span></a><div style='clear: both;'></div>");
+
+        // Process activation
+
+        document.addEventListener("click", function(e) {
+            if (!e.target.closest(".es_activate_modal_submit")) { return; }
+
+            document.querySelector(".es_activate_modal_submit").style.display = "none";
+            document.querySelector(".es_activate_modal_close").style.display = "none";
+
+            let keys = [];
+
+            // turn textbox into table to display results
+            let lines = document.querySelector("#es_key_input").value.split("\n");
+            document.querySelector("#es_activate_input_text").insertAdjacentHTML("beforebegin", "<div id='es_activate_results'></div>");
+            document.querySelector("#es_activate_input_text").style.display = "none";
+
+            lines.forEach(line => {
+                let attempt = String(line);
+                if (attempt === "") { // skip blank rows in the input dialog (including trailing newline)
+                    return;
+                }
+                keys.push(attempt);
+
+                let url = ExtensionLayer.getLocalUrl("img/questionmark.png");
+
+                document.querySelector("#es_activate_results")
+                    .insertAdjacentHTML("beforeend", "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
+            });
+
+            // force recalculation of the modal's position so it doesn't extend off the bottom of the page
+            setTimeout(function(){
+                window.dispatchEvent(new Event("resize"));
+            }, 250);
+
+            // attempt to activate each key in sequence
+            let promises = [];
+
+            for (let i = 0; i < keys.length; i++) {
+                let current_key = keys[i];
+                let request = Request.post("//store.steampowered.com/account/ajaxregisterkey", {
+                    sessionid: User.getSessionId(),
+                    product_key: current_key
+                }).then(data => {
+
+                    let attempted = current_key;
+                    let message = Localization.str.register.default;
+                    if (data["success"] == 1) {
+                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
+                        if (data["purchase_receipt_info"]["line_items"].length > 0) {
+                            document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
+                            document.querySelector("#attempt_" + attempted + "_result").style.display = "block"; // TODO slideDown
+                        }
+                    } else {
+                        switch(data["purchase_result_details"]) {
+                            case 9: message = Localization.str.register.owned; break;
+                            case 13: message = Localization.str.register.notavail; break;
+                            case 14: message = Localization.str.register.invalid; break;
+                            case 15: message = Localization.str.register.already; break;
+                            case 24: message = Localization.str.register.dlc; break;
+                            case 50: message = Localization.str.register.wallet; break;
+                            case 53: message = Localization.str.register.toomany; break;
+                        }
+                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
+                        document.querySelector("#attempt_" + attempted + "_result").textContent = message;
+                        document.querySelector("#attempt_" + attempted + "_result").style.display="block"; // TODO slideDown
+                    }
+
+                }, () => {
+                    let attempted = current_key;
+                    document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
+                    document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.error;
+                    document.querySelector("#attempt_" + attempted + "_result").style.display = "block"; // TODO slideDown
+                });
+
+                promises.push(request);
+            }
+
+            Promise.all(promises).then(result => {
+                document.querySelector(".es_activate_modal_close span").textContent = Localization.str.close;
+                document.querySelector(".es_activate_modal_close").style.display = "block";
+                window.dispatchEvent(new Event("resize"));
+            });
+        });
+
+        // Bind the "Cancel" button to close the modal
+        document.addEventListener("click", function(e) {
+            if (!e.target.closest(".es_activate_modal_close")) { return; }
+            ExtensionLayer.runInPageContext(function(){ CModal.DismissActiveModal(); });
+        })
+    };
+
+    return RegisterKeyPageClass;
+})();
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -1802,6 +1963,8 @@ let AppPageClass = (function(){
                 EnhancedSteam.addHeaderLinks();
                 EarlyAccess.showEarlyAccess();
                 EnhancedSteam.disableLinkFilter();
+                EnhancedSteam.skipGotSteam();
+                EnhancedSteam.keepSteamSubscriberAgreementState();
 
                 if (User.isSignedIn) {
                     EnhancedSteam.addRedeemLink();
@@ -1822,44 +1985,7 @@ let AppPageClass = (function(){
                         break;
 
                     case /^\/app\/.*/.test(path):
-                        let appPage = new AppPageClass(window.location.host + path);
-                        // FIXME appPage.mediaSliderExpander();
-                        // FIXME appPage.initHdPlayer();
-                        appPage.addWishlistRemove();
-                        appPage.addCoupon();
-                        appPage.addPrices();
-                        appPage.addDlcInfo();
-
-                        appPage.addDrmWarnings();
-                        appPage.addMetacriticUserScore();
-                        appPage.addOpenCritic();
-                        appPage.displayPurchaseDate();
-
-                        appPage.addWidescreenCertification();
-
-                        appPage.addHltb();
-
-                        appPage.moveUsefulLinks();
-                        appPage.addLinks();
-                        appPage.addSteamDb("app");
-                        appPage.addHighlights();
-                        appPage.addFamilySharingWarning();
-
-                        appPage.addPackageInfoButton();
-                        appPage.addStats();
-
-                        appPage.addDlcCheckboxes();
-                        appPage.addBadgeProgress();
-                        appPage.addAstatsLink();
-                        appPage.addAchievementCompletionBar();
-
-                        appPage.showRegionalPricing("app");
-
-                        appPage.customizeAppPage();
-                        appPage.addReviewToggleButton();
-                        appPage.addHelpButton();
-                        appPage.skipGotSteam();
-
+                        (new AppPageClass(window.location.host + path));
                         break;
 
                     case /^\/sub\/.*/.test(path):
@@ -1870,19 +1996,9 @@ let AppPageClass = (function(){
                         (new BundlePageClass(window.location.host + path));
                         break;
 
-                    case /^\/dlc\/.*/.test(path):
-                        dlc_data_for_dlc_page();
-                        break;
-
-                    case /^\/video\/.*/.test(path):
-                        skip_got_steam();
-                        break;
-
                     case /^\/account\/registerkey(\/.*)?/.test(path):
-                        keep_ssa_checked();
-                        activate_multiple_keys();
+                        (new RegisterKeyPageClass());
                         return;
-                        break;
 
                     case /^\/account(\/.*)?/.test(path):
                         account_total_spent();
