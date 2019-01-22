@@ -1478,7 +1478,9 @@ let AppPageClass = (function(){
 
         document.querySelector("body").addEventListener("click", function(e){
             if (e.target.closest("#es_customize_btn")) { return; }
-            document.querySelector("#es_customize_btn .home_customize_btn.active").classList.remove("active");
+            let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
+            if (!node) { return; }
+            node.classList.remove("active");
         });
 
         function firstText(node) {
@@ -1601,6 +1603,57 @@ let AppPageClass = (function(){
         node.setAttribute("href", node.getAttribute("href").split("'")[1]);
     };
 
+    AppPageClass.prototype.addPackBreakdown = function() {
+
+        function splitPack(node, ways) {
+            let price_text = node.querySelector(".discount_final_price").innerHTML;
+            let at_end, comma, places = 2;
+            if (price_text == null) { price_text = node.querySelector(".game_purchase_price").innerHTML; }
+            if (price_text.match(/,\d\d(?!\d)/)) {
+                at_end = true;
+                comma = true;
+                price_text = price_text.replace(",", ".");
+            }
+            let price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
+            price = new Price(Math.ceil(price * 100) / 100);
+
+            let buttons = node.querySelectorAll(".btn_addtocart");
+            buttons[buttons.length-1].parentNode.insertAdjacentHTML("afterbegin", `
+                <div class="es_each_box">
+                    <div class="es_each_price">${price}</div>
+                    <div class="es_each">${Localization.str.each}</div>
+                </div>`);
+        }
+
+        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+
+            let title = node.querySelector("h1").textContent.trim();
+            title = title.toLowerCase().replace(/-/g, ' ');
+            if (!title || !title.contains('pack')) return;
+            if (title.contains('pack') && title.contains('season')) return;
+
+            if (title.contains(' 2 pack') && !title.contains('bioshock')) { splitPack.call(node, 2); }
+            else if (title.contains(' two pack')) { splitPack.call(node, 2); }
+            else if (title.contains('tower wars friend pack')) { splitPack.call(node, 2); }
+
+            else if (title.contains(' 3 pack') && !title.contains('doom 3')) { splitPack.call(node, 3); }
+            else if (title.contains(' three pack')) { splitPack.call(node, 3); }
+            else if (title.contains('tower wars team pack')) { splitPack.call(node, 3); }
+
+            else if (title.contains(' 4 pack')) { splitPack.call(node, 4); }
+            else if (title.contains(' four pack')) { splitPack.call(node, 4); }
+            else if (title.contains(' clan pack')) { splitPack.call(node, 4); }
+
+            else if (title.contains(' 5 pack')) { splitPack.call(node, 5); }
+            else if (title.contains(' five pack')) { splitPack.call(node, 5); }
+
+            else if (title.contains(' 6 pack')) { splitPack.call(node, 6); }
+            else if (title.contains(' six pack')) { splitPack.call(node, 6); }
+        }
+    };
+
     return AppPageClass;
 })();
 
@@ -1647,8 +1700,8 @@ let AppPageClass = (function(){
 
                     case /^\/app\/.*/.test(path):
                         let appPage = new AppPageClass(window.location.host + path);
-                        appPage.mediaSliderExpander();
-                        appPage.initHdPlayer();
+                        // FIXME appPage.mediaSliderExpander();
+                        // FIXME appPage.initHdPlayer();
                         appPage.addWishlistRemove();
                         appPage.addCoupon();
                         appPage.addPrices();
@@ -1684,19 +1737,6 @@ let AppPageClass = (function(){
                         appPage.addHelpButton();
                         appPage.skipGotSteam();
 
-/*
-                        add_pack_breakdown();
-
-
-
-                        if (language == "schinese" || language == "tchinese") {
-                            storePageDataCN.load(appid);
-                            add_keylol_link();
-                            add_steamcn_mods();
-                            if (language == "schinese") add_chinese_name();
-                        }
-
-                        */
                         break;
                 }
 
