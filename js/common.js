@@ -74,8 +74,6 @@ let ExtensionLayer = (function() {
     // FIXME this may be dangerous?
     // Run script in the context of the current tab
     self.runInPageContext = function(fun){
-        console.log(fun);
-
         let script  = document.createElement('script');
         script.textContent = '(' + fun + ')();';
         document.documentElement.appendChild(script);

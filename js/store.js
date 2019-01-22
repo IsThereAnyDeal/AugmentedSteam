@@ -1942,6 +1942,108 @@ let RegisterKeyPageClass = (function(){
     return RegisterKeyPageClass;
 })();
 
+
+let AccountPageClass = (function(){
+
+    function AccountPageClass() {
+        this.accountTotalSpent();
+    }
+
+    AccountPageClass.prototype.accountTotalSpent = function() {
+
+        let links = document.querySelector(".account_setting_block")
+            .querySelector(".account_setting_sub_block:nth-child(2)")
+            .querySelectorAll(".account_manage_link");
+
+        let lastLink = links[links.length-1];
+        lastLink.parentNode.insertAdjacentHTML("afterend",
+            `<div><a class='account_manage_link' href='https://help.steampowered.com/en/accountdata/AccountSpend'>${Localization.str.external_funds}</a></div>`);
+    };
+
+    return AccountPageClass;
+})();
+
+
+let FundsPageClass = (function(){
+
+    function FundsPageClass() {
+        this.addCustomMoneyAmount();
+    }
+
+    FundsPageClass.prototype.addCustomMoneyAmount = function() {
+        let giftcard = document.querySelector(".giftcard_amounts");
+
+        let newel = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game").cloneNode(true);
+        let priceel = newel.querySelector((giftcard ? ".giftcard_text" : ".price"));
+        let price = priceel.textContent.trim();
+
+        newel.classList.add("es_custom_money");
+        if(!giftcard) {
+            newel.querySelector(".btnv6_green_white_innerfade").classList.add("es_custom_button");
+            newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
+            newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
+        } else {
+            newel.querySelector(".giftcard_style")
+                .innerHTML = Localization.str.wallet.custom_giftcard_amount
+                    .replace("__minamount__", price)
+                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>");
+        }
+
+        let currency = Price.parseFromString(price);
+
+        let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
+        inputel.innerHTML = "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
+        // TODO currency symbol
+
+        document.querySelector((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game"))
+            .insertAdjacentElement("afterend", newel);
+
+        document.querySelector("#es_custom_money_amount").addEventListener("input", function() {
+            let value = document.querySelector("#es_custom_money_amount").value;
+
+            if(!isNaN(value) && value != "") {
+                currency.value = value;
+
+                if(giftcard) {
+                    priceel.classList.toggle("small", value > 10);
+                    priceel.textContent = currency;
+                }
+            }
+        });
+
+        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", function(e) {
+            e.preventDefault();
+
+            let jsvalue = (+document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
+
+            if (giftcard) {
+
+                if (e.target.closest(".giftcard_cont")) {
+                    ExtensionLayer.runInPageContext('function(){ submitSelectGiftCard(' + jsvalue + '); }');
+                }
+
+            } else {
+                let btn = document.querySelector(".es_custom_money .es_custom_button");
+                btn.href = "#";
+                btn.removeAttribute("onclick");
+                btn.dataset.amount = jsvalue;
+
+                ExtensionLayer.runInPageContext('function(){ submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); }');
+            }
+
+        });
+
+        let giftcardMoneyNode = document.querySelector(".giftcard_selection #es_custom_money_amount");
+        if (giftcardMoneyNode) {
+            giftcardMoneyNode.addEventListener("click", function(e) {
+                e.preventDefault();
+            });
+        }
+    };
+
+    return FundsPageClass;
+})();
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -2001,13 +2103,11 @@ let RegisterKeyPageClass = (function(){
                         return;
 
                     case /^\/account(\/.*)?/.test(path):
-                        account_total_spent();
-                        replace_account_name();
+                        (new AccountPageClass());
                         return;
-                        break;
 
                     case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
-                        add_custom_money_amount();
+                        (new new FundsPageClass());
                         break;
 
                     case /^\/search\/.*/.test(path):
