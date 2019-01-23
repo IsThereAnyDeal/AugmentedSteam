@@ -533,5 +533,11 @@
         "wallet": "The code you have entered is from a Steam Gift Card or Steam Wallet Code",
         "toomany": "There have been too many recent activation attempts from this account.  Please wait and try again later.",
         "default": "An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
+    },
+    "wl": {
+        "total_price": "current value",
+        "in_wishlist": "in wishlist",
+        "on_sale": "on sale",
+        "no_price": "without price"
     }
 }

@@ -2255,7 +2255,7 @@ let SearchPageClass = (function(){
             if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; }
             if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; }
             if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notinterested.checked")) { highlight_notinterested(node); } // FIXME
+            if (document.querySelector("#es_notinterested.checked")) { Highlights.highlightNotInterested(node); }
             if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; }
             if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; }
             if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
@@ -2432,6 +2432,120 @@ let SearchPageClass = (function(){
 })();
 
 
+let WishlistPageClass = (function(){
+
+    function WishlistPageClass() {
+
+        let instance = this;
+        let observer = new MutationObserver(function(){
+            instance.highlightApps();
+        });
+        observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
+
+        this.addWishlistTotal();
+
+        /*
+        fix_app_image_not_found();
+        add_empty_wishlist_buttons();
+        add_wishlist_pricehistory();
+        add_wishlist_notes();
+
+        // Wishlist highlights
+        load_inventory().done(function() {
+            start_highlights_and_tags();
+        });
+        */
+    }
+
+    WishlistPageClass.prototype.highlightApps = function() {
+        if (!User.isSignedIn) { return; }
+
+        let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
+        let userImage = document.querySelector(".wishlist_header img").getAttribute("src").replace("_full", "");
+        if (loginImage == userImage) { return; }
+
+        DynamicStore.promise().then(() => {
+
+            let nodes = document.querySelectorAll("div.wishlist_row");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                let node = nodes[i];
+
+                let appid = Number(node.dataset.appId);
+
+                if (DynamicStore.isOwned(appid)) {
+                    node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
+                    if (SyncedStorage.get("higlight_owned", true)) {
+                        Highlights.highlightOwned(node);
+                    } else {
+                        node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
+                    }
+                }
+
+                if (DynamicStore.isWishlisted(appid)) {
+                    node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
+
+                    if (SyncedStorage.get("higlight_wishlist", true)) {
+                        Highlights.highlightWishlist(node);
+                    } else {
+                        node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                    }
+                }
+            }
+        });
+    };
+
+    // Calculate total cost of all items on wishlist
+    WishlistPageClass.prototype.addWishlistTotal = function(showTotal) {
+
+        let wishlistData;
+        let nodes = document.querySelectorAll("script");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            let m = node.textContent.match(/g_rgAppInfo = (\{.+?\});/);
+            if (m) {
+                wishlistData = JSON.parse(m[1]);
+                break;
+            }
+        }
+
+        if (!wishlistData) { return; }
+
+        let totalPrice = new Price(0);
+        let totalCount = 0;
+        let totalOnSale = 0;
+        let totalNoPrice = 0;
+
+        for (let key in wishlistData) {
+            let game = wishlistData[key];
+            if (game.subs.length > 0) {
+                totalPrice.value += game.subs[0].price / 100;
+
+                if (game.subs[0].discount_pct > 0) {
+                    totalOnSale++;
+                }
+            } else {
+                totalNoPrice++;
+            }
+            totalCount++;
+        }
+
+        let html =
+            `<div class="esi-wishlist-chart-content">
+                <div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>
+            </div>`;
+
+        document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
+    };
+
+
+
+    return WishlistPageClass;
+})();
+
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -2449,7 +2563,6 @@ let SearchPageClass = (function(){
                 EnhancedSteam.addMenu();
                 EnhancedSteam.addLanguageWarning();
                 EnhancedSteam.removeInstallSteamButton();
-                EnhancedSteam.removeAboutMenu();
                 EnhancedSteam.addHeaderLinks();
                 EarlyAccess.showEarlyAccess();
                 EnhancedSteam.disableLinkFilter();
@@ -2503,23 +2616,11 @@ let SearchPageClass = (function(){
                         break;
 
                     case /^\/sale\/.*/.test(path):
-                        show_regional_pricing("sale");
+                        (new StorePageClass()).showRegionalPricing("sale");
                         break;
 
                     case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-                        setTimeout(function() {
-                            wishlist_highlight_apps();
-                            add_wishlist_total();
-                        }, 1500);
-                        fix_app_image_not_found();
-                        add_empty_wishlist_buttons();
-                        add_wishlist_pricehistory();
-                        add_wishlist_notes();
-
-                        // Wishlist highlights
-                        load_inventory().done(function() {
-                            start_highlights_and_tags();
-                        });
+                        (new WishlistPageClass());
                         break;
 
                     // Storefront-front only

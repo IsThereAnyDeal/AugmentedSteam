@@ -2347,3 +2347,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	overflow:hidden;
 	transition:max-height 0.2s ease-in-out;
 }
+
+.esi-wishlist-chart-content {
+	display:flex;
+	padding: 25px;
+	overflow: hidden;
+	justify-content: space-between;
+	align-items:center;
+	font-size:1.6em;
+}
+
+.esi-wishlist-stat {
+	text-align: center;
+	display:flex;
+	flex-direction:column;
+}
+.esi-wishlist-stat span {
+	font-size: 1.8em;
+	font-weight: 300;
+}
+

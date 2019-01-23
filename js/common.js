@@ -623,7 +623,7 @@ let Currency = (function() {
                 return;
             }
 
-            let currencyCache = SyncedStorage.get("userCurrency");
+            let currencyCache = SyncedStorage.get("userCurrency", {});
             if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
                 self.userCurrency = currencyCache.userCurrency.currencyType;
                 resolve();
@@ -1032,12 +1032,6 @@ let EnhancedSteam = (function() {
     self.removeInstallSteamButton = function() {
         if (!SyncedStorage.get("hideinstallsteambutton", false)) { return; }
         document.querySelector("div.header_installsteam_btn").remove();
-    };
-
-    self.removeAboutMenu = function(){
-        // TODO is this still relevant?
-        if (!SyncedStorage.get("hideaboutmenu", true)) { return; }
-        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
     };
 
     self.addHeaderLinks = function(){
@@ -1534,7 +1528,7 @@ let Highlights = (function(){
         "notinterested": "#4f4f4f"
     };
 
-    var highlightCssLoaded = false;
+    let highlightCssLoaded = false;
     let tagCssLoaded = false;
 
     function classChecker(node, classList) {
@@ -1622,7 +1616,7 @@ let Highlights = (function(){
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("wishlist_row")) {
-                node.querySelector(".wishlist_added_on").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".addedon").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("match")) {
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
@@ -1657,11 +1651,16 @@ let Highlights = (function(){
                 tags.style.float = "left";
                 root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
+
+            tags = [tags];
         }
 
         // Add the tag
-        if (!tags.querySelector(".es_tag_" + tag)) {
-            tags.insertAdjacentHTML("beforeend", '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+        for (let i=0,len=tags.length; i<len; i++) {
+            console.log(tags[i]);
+            if (!tags[i].querySelector(".es_tag_" + tag)) {
+                tags[i].insertAdjacentHTML("beforeend", '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+            }
         }
     }
 
@@ -1691,7 +1690,7 @@ let Highlights = (function(){
                 hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color", defaults[name]) + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
             });
 
-            document.querySelector("head").insertAdjacentHTML("afterend", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
+            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
         }
 
         // Carousel item
@@ -1856,7 +1855,8 @@ let Highlights = (function(){
                         self.highlightNonDiscounts(nodeToHighlight);
                     }
 
-                    let appid = GameId.getAppid(node.href || node.querySelector("a").href || GameId.getAppidWishlist(node.id));
+                    let aNode = node.querySelector("a");
+                    let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
                     if (appid) {
                         if (LocalData.get(appid + "guestpass")) {
                             self.highlightInvGuestpass(node);
@@ -1894,9 +1894,18 @@ let DynamicStore = (function(){
     };
 
     self.isIgnored = function(appid) {
-        console.log(_data);
-        let ignored = _data.rgIgnoredApps || [];
-        return ignored.indexOf(appid) !== -1;
+        let list = _data.rgIgnoredApps || [];
+        return list.indexOf(appid) !== -1;
+    };
+
+    self.isOwned = function(appid) {
+        let list = _data.rgOwnedApps || [];
+        return list.indexOf(appid) !== -1;
+    };
+
+    self.isWishlisted = function(appid) {
+        let list = _data.rgWishlistApps || [];
+        return list.indexOf(appid) !== -1;
     };
 
     self.promise = function(){
@@ -1904,7 +1913,7 @@ let DynamicStore = (function(){
         _promise = new Promise(function(resolve, reject){
             if (!User.isSignedIn) { reject(); return; }
 
-            let userdata = LocalData.get("dynamicstore", {});
+            let userdata = LocalData.get("dynamicstore");
             let userdataUpdate = LocalData.get("dynamicstore_update", TimeHelper.timestamp());
 
             if (userdata && !TimeHelper.isExpired(userdataUpdate, 15*60)) {
