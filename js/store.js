@@ -2443,6 +2443,8 @@ let WishlistPageClass = (function(){
         observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
 
         this.addWishlistTotal();
+        this.addEmptyWishlistButton();
+
 
         /*
         fix_app_image_not_found();
@@ -2457,12 +2459,20 @@ let WishlistPageClass = (function(){
         */
     }
 
+    function isMyWishlist() {
+        if (!User.isSignedIn) { return false; }
+
+        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/");
+        return window.location.href.startsWith(myWishlistUrl)
+            || window.location.href.contains("/profiles/" + User.steamId);
+    }
+
     WishlistPageClass.prototype.highlightApps = function() {
         if (!User.isSignedIn) { return; }
 
         let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
         let userImage = document.querySelector(".wishlist_header img").getAttribute("src").replace("_full", "");
-        if (loginImage == userImage) { return; }
+        if (loginImage === userImage) { return; }
 
         DynamicStore.promise().then(() => {
 
@@ -2495,7 +2505,7 @@ let WishlistPageClass = (function(){
     };
 
     // Calculate total cost of all items on wishlist
-    WishlistPageClass.prototype.addWishlistTotal = function(showTotal) {
+    WishlistPageClass.prototype.addWishlistTotal = function() {
 
         let wishlistData;
         let nodes = document.querySelectorAll("script");
@@ -2516,6 +2526,7 @@ let WishlistPageClass = (function(){
         let totalNoPrice = 0;
 
         for (let key in wishlistData) {
+            if (!wishlistData.hasOwnProperty(key)) { continue; }
             let game = wishlistData[key];
             if (game.subs.length > 0) {
                 totalPrice.value += game.subs[0].price / 100;
@@ -2540,7 +2551,59 @@ let WishlistPageClass = (function(){
         document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
     };
 
+    WishlistPageClass.prototype.addEmptyWishlistButton = function() {
+        if (!isMyWishlist()) { return; }
+        if (!SyncedStorage.get("showemptywishlist")) { return; }
 
+        document.querySelector("div.wishlist_header")
+            .insertAdjacentHTML("beforeend", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
+            emptyWishlist();
+        });
+    };
+
+    function emptyWishlist() {
+        ExtensionLayer.runInPageContext(`function(){
+            var prompt = ShowConfirmDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_confirm}\`);
+            prompt.done(function(result) {
+                if (result == 'OK') {
+                    window.postMessage({ type: 'es_empty_wishlist', information: [ true ] }, '*');
+                    ShowBlockingWaitDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_loading}\`);
+                }
+            });
+        }`);
+
+        function removeApp(appid) {
+            let url = "//store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
+            return Request.post(url, {
+                sessionid: User.getSessionId(),
+                appid: appid
+            }).then(() => {
+                let node = document.querySelector(".wishlist-row[data-app-id'"+appid+"']");
+                if (node) {
+                    node.remove();
+                }
+            });
+        }
+
+        window.addEventListener("message", function(event) {
+            if (event.source === window && event.data.type && event.data.type === "es_empty_wishlist") {
+                let wishlistData = BrowserHelper.getVariableFromDom("g_rgWishlistData", "array");
+                if (!wishlistData) { return; }
+
+                let promises = [];
+                for (let i=0; i<wishlistData.length; i++) {
+                    let appid = wishlistData[i].appid;
+                    promises.push(removeApp(appid));
+                }
+
+                Promise.all(promises).finally(() => {
+                    DynamicStore.clear();
+                    location.reload();
+                });
+            }
+        }, false);
+    }
 
     return WishlistPageClass;
 })();

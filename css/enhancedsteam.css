@@ -1409,6 +1409,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_empty_wishlist_buttons()
  **************************************/
 #es_empty_wishlist {
+	flex-grow:2;
+	align-self:center;
+	text-align:right;
+}
+#es_empty_wishlist div {
 	width: auto;
 	display: inline-block;
 	padding: 10px;

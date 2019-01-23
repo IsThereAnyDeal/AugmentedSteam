@@ -342,6 +342,9 @@ let User = (function(){
     self.profilePath = false;
     self.steamId = null;
 
+    let accountId = false;
+    let sessionId = false;
+
     self.promise = function() {
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
@@ -375,25 +378,17 @@ let User = (function(){
     };
 
     self.getAccountId = function(){
-        let nodes = document.querySelectorAll("script");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let m = nodes[i].textContent.match(/g_AccountID = "(.+)"/);
-            if (m) {
-                return m[1];
-            }
+        if (accountId === false) {
+            accountId = BrowserHelper.getVariableFromDom("g_AccountID", "value");
         }
-        return null;
+        return accountId;
     };
 
     self.getSessionId = function() {
-        let nodes = document.querySelectorAll("script");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let m = nodes[i].textContent.match(/g_sessionID = "(.+)"/);
-            if (m) {
-                return m[1];
-            }
+        if (sessionId === false) {
+            sessionId = BrowserHelper.getVariableFromDom("g_sessionID", "value");
         }
-        return null;
+        return sessionId;
     };
 
     self.getCountry = function() {
@@ -892,12 +887,40 @@ let BrowserHelper = (function(){
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     };
 
-
     self.htmlToElement = function(html) {
-        var template = document.createElement('template');
+        let template = document.createElement('template');
         html = html.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = html;
         return template.content.firstChild;
+    };
+
+    self.getVariableFromDom = function(variableName, type) {
+        let nodes = document.querySelectorAll("script");
+
+        let regex;
+        if (type === "object") {
+            regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
+        } else if (type === "array") { // otherwise array
+            regex = new RegExp(variableName+"\\s*=\\s*(\\[.+?\\]);");
+        } else if (type === "value") {
+            regex = new RegExp(variableName+"\\s*=\\s*\\\"(.+?)\\\";");
+        } else {
+            return null;
+        }
+
+        console.log(variableName+"\s*=\s*(\[.+?\]);");
+
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            let m = node.textContent.match(regex);
+            if (m) {
+                if (type === "value") {
+                    return m[1];
+                }
+                return JSON.parse(m[1]);
+            }
+        }
+        return null;
     };
 
     return self;
@@ -1889,8 +1912,8 @@ let DynamicStore = (function(){
     self.clear = function() {
         _data = {};
         _promise = null;
-        LocalData.remove("dynamicstore");
-        LocalData.remove("dynamicstore_update");
+        LocalData.del("dynamicstore");
+        LocalData.del("dynamicstore_update");
     };
 
     self.isIgnored = function(appid) {
