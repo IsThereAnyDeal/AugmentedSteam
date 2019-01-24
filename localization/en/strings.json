@@ -535,6 +535,7 @@
         "default": "An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
     },
     "wl": {
+        "compute": "Click to compute stats",
         "total_price": "current value",
         "in_wishlist": "in wishlist",
         "on_sale": "on sale",

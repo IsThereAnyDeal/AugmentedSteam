@@ -379,14 +379,14 @@ let User = (function(){
 
     self.getAccountId = function(){
         if (accountId === false) {
-            accountId = BrowserHelper.getVariableFromDom("g_AccountID", "value");
+            accountId = BrowserHelper.getVariableFromDom("g_AccountID", "int");
         }
         return accountId;
     };
 
     self.getSessionId = function() {
         if (sessionId === false) {
-            sessionId = BrowserHelper.getVariableFromDom("g_sessionID", "value");
+            sessionId = BrowserHelper.getVariableFromDom("g_sessionID", "string");
         }
         return sessionId;
     };
@@ -902,8 +902,10 @@ let BrowserHelper = (function(){
             regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
         } else if (type === "array") { // otherwise array
             regex = new RegExp(variableName+"\\s*=\\s*(\\[.+?\\]);");
-        } else if (type === "value") {
-            regex = new RegExp(variableName+"\\s*=\\s*\\\"(.+?)\\\";");
+        } else if (type === "int") {
+            regex = new RegExp(variableName+"\\s*=\\s*(.+?);");
+        } else if (type === "string") {
+            regex = new RegExp(variableName+"\\s*=\\s*(\\\".+?\\\");");
         } else {
             return null;
         }
@@ -914,8 +916,8 @@ let BrowserHelper = (function(){
             let node = nodes[i];
             let m = node.textContent.match(regex);
             if (m) {
-                if (type === "value") {
-                    return m[1];
+                if (type === "int") {
+                    return parseInt(m[1]);
                 }
                 return JSON.parse(m[1]);
             }

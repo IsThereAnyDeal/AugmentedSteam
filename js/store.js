@@ -2271,7 +2271,7 @@ let WishlistPageClass = (function(){
         });
         observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
 
-        this.addWishlistTotal();
+        this.addStatsArea();
         this.addEmptyWishlistButton();
         this.addWishlistNotesHandlers();
 
@@ -2336,51 +2336,75 @@ let WishlistPageClass = (function(){
         });
     };
 
-    // Calculate total cost of all items on wishlist
-    WishlistPageClass.prototype.addWishlistTotal = function() {
-
-        let wishlistData;
-        let nodes = document.querySelectorAll("script");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            let m = node.textContent.match(/g_rgAppInfo = (\{.+?\});/);
-            if (m) {
-                wishlistData = JSON.parse(m[1]);
-                break;
-            }
-        }
-
-        if (!wishlistData) { return; }
-
-        let totalPrice = new Price(0);
-        let totalCount = 0;
-        let totalOnSale = 0;
-        let totalNoPrice = 0;
-
-        for (let key in wishlistData) {
-            if (!wishlistData.hasOwnProperty(key)) { continue; }
-            let game = wishlistData[key];
-            if (game.subs.length > 0) {
-                totalPrice.value += game.subs[0].price / 100;
-
-                if (game.subs[0].discount_pct > 0) {
-                    totalOnSale++;
-                }
-            } else {
-                totalNoPrice++;
-            }
-            totalCount++;
-        }
-
+    WishlistPageClass.prototype.addStatsArea = function() {
         let html =
-            `<div class="esi-wishlist-chart-content">
-                <div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>
-            </div>`;
+            `<div id="esi-wishlist-chart-content">
+                <a>${Localization.str.wl.compute}</a>
+             </div>`;
 
         document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
+        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
+            e.target.parentNode.innerHTML = "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>";
+            loadStats();
+        });
+    };
+
+    // Calculate total cost of all items on wishlist
+    function loadStats() {
+
+        (new Promise(function(resolve, reject){
+            let wishlistData = BrowserHelper.getVariableFromDom("g_rgAppInfo", "object");
+            if (wishlistData && Object.keys(wishlistData).length != 0) {
+                resolve(wishlistData);
+            } else {
+                let pages = BrowserHelper.getVariableFromDom("g_nAdditionalPages", "int");
+                let baseUrl = BrowserHelper.getVariableFromDom("g_strWishlistBaseURL", "string");
+
+                if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
+                    reject();
+                    return;
+                }
+
+                wishlistData = {};
+                let promises = [];
+
+                for (let i=0; i<pages; i++) {
+                    promises.push(Request.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
+                        Object.assign(wishlistData, data);
+                    }));
+                }
+
+                Promise.all(promises).then(() => {
+                    resolve(wishlistData);
+                }, reject);
+            }
+        })).then(wishlistData => {
+            let totalPrice = new Price(0);
+            let totalCount = 0;
+            let totalOnSale = 0;
+            let totalNoPrice = 0;
+
+            for (let key in wishlistData) {
+                if (!wishlistData.hasOwnProperty(key)) { continue; }
+                let game = wishlistData[key];
+                if (game.subs.length > 0) {
+                    totalPrice.value += game.subs[0].price / 100;
+
+                    if (game.subs[0].discount_pct > 0) {
+                        totalOnSale++;
+                    }
+                } else {
+                    totalNoPrice++;
+                }
+                totalCount++;
+            }
+
+            document.querySelector("#esi-wishlist-chart-content").innerHTML
+                = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+                   <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+                   <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+                   <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
+        });
     };
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
