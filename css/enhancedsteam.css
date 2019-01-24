@@ -283,6 +283,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	color: #626366;
 	background-color: rgba( 0, 0, 0, 0.2 );
 }
+.wishlist_row {
+	overflow:visible !important;
+}
+.wishlist_row .es_lowest_price {
+	color:white;
+	width:100%;
+	position:absolute;
+	visibility:hidden;
+	left:0;
+	z-index:1000;
+	background-color:#303e4c;
+	opacity:0;
+	box-sizing:border-box;
+	transition:visibility,opacity 0.2s ease-in-out;
+}
+.wishlist_row:hover .es_lowest_price {
+	visibility:visible;
+	opacity:1;
+}
 
 .es_lowest_price a {
 	color: #b0aeac;
@@ -2372,3 +2391,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-weight: 300;
 }
 
+.esi-note {
+	font-size: 11px;
+	overflow: hidden;
+	height: 19px;
+	margin-top:5px;
+	flex-grow:2;
+	margin-right:5px;
+	cursor:pointer;
+}
