@@ -2255,17 +2255,18 @@ let SearchPageClass = (function(){
 let WishlistPageClass = (function(){
 
     let noteModalTemplate;
+    let cachedPrices = {};
 
     function WishlistPageClass() {
 
         this.notes = SyncedStorage.get("wishlist_notes", {});
 
         let instance = this;
-        let observer = new MutationObserver(function(mutationList, observer){
+        let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 instance.highlightApps(record.addedNodes);
                 instance.addWishlistNotes(record.addedNodes);
-                instance.addWishlistPrices(record.addedNodes);
+                instance.addPriceHandler(record.addedNodes);
             });
         });
         observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
@@ -2273,18 +2274,6 @@ let WishlistPageClass = (function(){
         this.addWishlistTotal();
         this.addEmptyWishlistButton();
         this.addWishlistNotesHandlers();
-
-        /*
-        fix_app_image_not_found();
-        add_empty_wishlist_buttons();
-        add_wishlist_pricehistory();
-        add_wishlist_notes();
-
-        // Wishlist highlights
-        load_inventory().done(function() {
-            start_highlights_and_tags();
-        });
-        */
 
         noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
             <div id="es_note_modal_content">
@@ -2400,7 +2389,7 @@ let WishlistPageClass = (function(){
 
         document.querySelector("div.wishlist_header")
             .insertAdjacentHTML("beforeend", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
-        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
             emptyWishlist();
         });
     };
@@ -2448,29 +2437,48 @@ let WishlistPageClass = (function(){
         }, false);
     }
 
-    WishlistPageClass.prototype.addWishlistPrices =  function(nodes) {
-        if (!SyncedStorage.get("showlowestprice_onwishlist", true)) { return; }
+    function addWishlistPrice(node) {
+        let appid = node.dataset.appId;
+
+        if (cachedPrices[appid]) {
+            addPriceNode(node,"app", appid, cachedPrices[appid]);
+            return;
+        }
 
         let prices = new Prices();
-        prices.appids = [];
+        prices.appids = [appid];
+        prices.priceCallback = function(type, id, html) { addPriceNode(node, type, id, html); }
+        prices.load();
+    }
+
+    function addPriceNode(node, type, id, html) {
+        if (node.querySelector(".es_lowest_price")) { return; }
+
+        cachedPrices[id] = html;
+
+        node.insertAdjacentHTML("beforeend", html);
+        let priceNode = node.querySelector(".es_lowest_price");
+        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+    }
+
+    function wishlistRowEnterHandler(e) {
+        addWishlistPrice(e.target);
+    }
+
+    WishlistPageClass.prototype.addPriceHandler = function(nodes){
+        if (!SyncedStorage.get("showlowestprice_onwishlist", true)) { return; }
 
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
-            prices.appids.push(node.dataset.appId);
-        }
+            if (!node.dataset.appId) { continue; }
 
-        prices.bundleCallback = null;
-        prices.priceCallback = function(type, id, html) {
-            let node = document.querySelector(".wishlist_row[data-app-id='"+id+"']");
-            if (node) {
-                node.insertAdjacentHTML("beforeend", html);
-                let priceNode = node.querySelector(".es_lowest_price");
-                priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+            node.removeEventListener("mouseenter", wishlistRowEnterHandler);
+            if (!node.querySelector(".es_lowest_price")) {
+                node.addEventListener("mouseenter", wishlistRowEnterHandler);
             }
-        };
-
-        prices.load();
+        }
     };
+
 
     WishlistPageClass.prototype.addWishlistNotes =  function(nodes) {
         if (!isMyWishlist()) { return; }
