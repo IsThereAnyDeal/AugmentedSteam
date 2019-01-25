@@ -151,7 +151,7 @@ let Request = (function(){
     let totalRequests = 0;
     let processedRequests = 0;
 
-    self.getHttp = function(url, settings) {
+    self.getHttp = function(url, settings, returnHtml) {
         settings = settings || {};
         settings.withCredentials = settings.withCredentials || false;
         settings.type = settings.type || "text/html";
@@ -173,7 +173,11 @@ let Request = (function(){
                 ProgressBar.progress((processedRequests / totalRequests) * 100);
 
                 if (state.status === 200) {
-                    resolve(state.responseText);
+                    if (returnHtml) {
+                        resolve(state.responseXML);
+                    } else {
+                        resolve(state.responseText);
+                    }
                 } else {
                     ProgressBar.failed(null, url, state.status, state.statusText);
                     reject(state.status);
@@ -909,8 +913,6 @@ let BrowserHelper = (function(){
         } else {
             return null;
         }
-
-        console.log(variableName+"\s*=\s*(\[.+?\]);");
 
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
@@ -1682,7 +1684,6 @@ let Highlights = (function(){
 
         // Add the tag
         for (let i=0,len=tags.length; i<len; i++) {
-            console.log(tags[i]);
             if (!tags[i].querySelector(".es_tag_" + tag)) {
                 tags[i].insertAdjacentHTML("beforeend", '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
             }
@@ -1803,7 +1804,7 @@ let Highlights = (function(){
     self.highlightNotInterested = function(node) {
         DynamicStore.promise().then(() => {
 
-            let aNode = node.querySelector("a")
+            let aNode = node.querySelector("a");
             let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
             if (!appid || !DynamicStore.isIgnored(appid)) { return; }
 
@@ -2201,4 +2202,61 @@ let Prices = (function(){
     };
 
     return Prices;
+})();
+
+let Customizer = (function(){
+    let self = {};
+
+    self.textValue = function(node) {
+        let str = "";
+        for (node=node.firstChild;node;node=node.nextSibling){
+            if (node.nodeType === 3) { str += node.textContent.trim(); }
+        }
+        return str;
+    }
+
+    self.addToggleHandler = function(name, target, text, forceShow, callback) {
+        let element = typeof target === "string" ? document.querySelector(target) : target;
+        if (!element && !forceShow) { return; }
+
+        let state = SyncedStorage.get(name, true);
+        text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
+        if (text === "") { return; }
+
+        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
+
+        if (element) {
+            element.classList.toggle("es_hide", !SyncedStorage.get(name, true));
+
+            if (element.classList.contains("es_hide")) {
+                element.style.display = "none"; // TODO slideUp
+            }
+        }
+
+        document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
+            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name, true) ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>
+            `);
+
+        document.querySelector("#" + name).addEventListener("click", function(e) {
+            state = !state;
+
+            if (element) {
+                element.classList.remove("es_show");
+                element.classList.remove("es_hide");
+                element.style.display = state ? "block" : "none";
+            }
+
+            e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
+
+            SyncedStorage.set(name, state);
+
+            if (callback) { callback(); }
+        });
+    };
+
+    return self;
 })();

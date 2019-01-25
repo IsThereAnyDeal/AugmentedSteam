@@ -1460,80 +1460,30 @@ let AppPageClass = (function(){
             node.classList.remove("active");
         });
 
-        function firstText(node) {
-            for (node=node.firstChild;node;node=node.nextSibling){
-                if (node.nodeType === 3) { return node.textContent; }
-            }
-            return "";
-        }
-
-        function addToggleHandler(name, elSelector, text, forceShow, callback) {
-            let element = document.querySelector(elSelector);
-            if (!element && !forceShow) { return; }
-
-            let state = SyncedStorage.get(name, true);
-            text = (typeof text === "string" && text) || firstText(element.querySelector("h2")).toLowerCase();
-
-            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
-
-            if (element) {
-                element.classList.toggle("es_hide", !SyncedStorage.get(name, true));
-
-                if (element.classList.contains("es_hide")) {
-                    element.style.display = "none"; // TODO slideUp
-                }
-            }
-
-            document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
-                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name, true) ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>
-            `);
-
-            document.querySelector("#" + name).addEventListener("click", function(e) {
-                state = !state;
-
-                let el = document.querySelector(elSelector);
-                if (el) {
-                    el.classList.remove("es_show");
-                    el.classList.remove("es_hide");
-                    el.style.display = state ? "block" : "none";
-                }
-
-                e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-                document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
-
-                SyncedStorage.set(name, state);
-
-                if (callback) { callback(); }
-            });
-        }
-
-        addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
-        addToggleHandler("show_apppage_reviews", "#game_area_reviews");
-        addToggleHandler("show_apppage_about", "#game_area_description");
-        addToggleHandler("show_steamchart_info", "#steam-charts", Localization.str.charts.current, true, function(){
+        Customizer.addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
+        Customizer.addToggleHandler("show_apppage_reviews", "#game_area_reviews");
+        Customizer.addToggleHandler("show_apppage_about", "#game_area_description");
+        Customizer.addToggleHandler("show_steamchart_info", "#steam-charts", Localization.str.charts.current, true, function(){
             if (document.querySelector("#steam-charts")) { return; }
             instance.data.then(result => addSteamChart.call(instance, result));
         });
-        addToggleHandler("show_steamspy_info", "#steam-spy", Localization.str.spy.player_data, true, function(){
+        Customizer.addToggleHandler("show_steamspy_info", "#steam-spy", Localization.str.spy.player_data, true, function(){
             if (document.querySelector("#steam-spy")) { return; }
             instance.data.then(result => addSteamSpy.call(instance, result));
         });
-        addToggleHandler("show_apppage_surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
+        Customizer.addToggleHandler("show_apppage_surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
             if (document.querySelector("#performance_survey")) { return; }
             instance.data.then(result => addSurveyData.call(instance, result));
         });
-        addToggleHandler("show_apppage_sysreq", ".sys_req");
-        addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
+        Customizer.addToggleHandler("show_apppage_sysreq", ".sys_req");
+        Customizer.addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
-            addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
+            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
         }
-        addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
+        Customizer.addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
         if (document.querySelector(".user_reviews_header")) {
-            addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
+            Customizer.addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
         }
     };
 
@@ -2561,6 +2511,115 @@ let WishlistPageClass = (function(){
 })();
 
 
+let StoreFrontPageClass = (function(){
+
+    function StoreFrontPageClass() {
+        this.setHomePageTab();
+        this.highlightRecommendations();
+        this.customizeHomePage();
+    }
+
+    StoreFrontPageClass.prototype.setHomePageTab = function(){
+        if (SyncedStorage.get("homepage_tab_selection", "remember") !== "remember") { return; }
+
+        document.querySelector(".home_tabs_row").addEventListener("click", function(e) {
+            let tab = e.closest(".tab_content");
+            if (!tab) { return; }
+            SyncedStorage.set("homepage_tab_last", tab.parentNode.id);
+        });
+
+        let last = SyncedStorage.get("homepage_tab_last");
+        if (!last) { return; }
+
+        let tab = document.querySelector(".home_tabs_row #"+last);
+        if (!tab) { return; }
+
+        tab.click();
+    };
+
+    // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
+    StoreFrontPageClass.prototype.highlightRecommendations = function() {
+        let contentNode = document.querySelector("#content_more");
+        if (!contentNode) { return; }
+
+        let observer = new MutationObserver(function(mutations){
+            mutations.forEach(mutation => {
+                if (!mutation["addedNodes"]) { return; }
+
+                let addedNodes = mutation["addedNodes"];
+                for (let i=0; i<addedNodes.length; i++) {
+                    let node = addedNodes[i];
+                    if (!node.querySelector) { continue; }
+
+                    let wishlistedNode = node.querySelector(".home_content_item.ds_wishlist");
+                    if (wishlistedNode) {
+                        Highlights.highlightWishlist(wishlistedNode);
+                        continue;
+                    }
+
+                    wishlistedNode = node.querySelector(".gamelink.ds_wishlist");
+                    if (wishlistedNode) {
+                        Highlights.highlightWishlist(wishlistedNode.parentNode);
+                        continue;
+                    }
+                }
+            });
+        });
+
+        observer.observe(contentNode, {childList:true, subtree: true});
+    };
+
+    StoreFrontPageClass.prototype.customizeHomePage = function(){
+
+        document.querySelector(".home_page_content").insertAdjacentHTML("beforeend",
+            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px;">
+                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
+                <div class='home_viewsettings_popup'>
+                    <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        `);
+
+        document.querySelector(".home_page_body_ctn").style.overflow = "visible";
+        document.querySelector("#es_customize_btn").addEventListener("click", function(e){
+            e.target.classList.toggle("active");
+        });
+
+        document.querySelector("body").addEventListener("click", function(e){
+            if (e.target.closest("#es_customize_btn")) { return; }
+            let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
+            if (!node) { return; }
+            node.classList.remove("active");
+        });
+
+        function homeCtnNode(selector) {
+            let node = document.querySelector(selector);
+            if (!node) { return null; }
+            return node.closest(".home_ctn");
+        }
+
+        let nodes = document.querySelectorAll(".home_page_body_ctn .home_ctn");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
+            if (headerNode) {
+                let option = Customizer.textValue(headerNode).toLowerCase().replace(/[^a-z]*/g, "");
+                if (option !== "") {
+                    Customizer.addToggleHandler("show_"+option, node);
+                }
+            }
+        }
+
+        // added by hand, those we couldn't get automatically
+        Customizer.addToggleHandler("show_es_discoveryqueue", document.querySelector(".discovery_queue_ctn"));
+        Customizer.addToggleHandler("show_es_homepagetabs", homeCtnNode(".home_tab_col"), Localization.str.homepage_tabs);
+        Customizer.addToggleHandler("show_es_homepagesidebar", document.querySelector(".home_page_gutter"), Localization.str.homepage_sidebar);
+    };
+
+    return StoreFrontPageClass;
+})();
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -2640,11 +2699,7 @@ let WishlistPageClass = (function(){
 
                     // Storefront-front only
                     case /^\/$/.test(path):
-                        add_popular_tab();
-                        add_allreleases_tab();
-                        set_homepage_tab();
-                        highlight_recommendations();
-                        customize_home_page();
+                        (new StoreFrontPageClass());
                         break;
                 }
 
@@ -2655,7 +2710,7 @@ let WishlistPageClass = (function(){
                 // Highlights & data fetching
                 Highlights.startHighlightsAndTags();
 
-                /*
+/*
                 // Storefront homepage tabs
                 bind_ajax_content_highlighting();
                 hide_trademark_symbols();
