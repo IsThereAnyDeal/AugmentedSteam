@@ -1179,24 +1179,34 @@ let EnhancedSteam = (function() {
             .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", function(){
-            // FIXME owned playable
-            /*
-            $.when(owned_playable_promise()).done(function(data) {
-                var games = data.response.games,
-                    rand = games[Math.floor(Math.random() * games.length)];
+            DynamicStore.promise().then(result => {
+                if (!result.rgOwnedApps) { return; }
+                let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-                let playGameStr = Localization.str.play_game.replace("__gamename__", rand.name.replace("'", "").trim());
-                runInPageContext(
-                    "function() {\
-                        var prompt = ShowConfirmDialog('" + playGameStr + "', '<img src=//steamcdn-a.akamaihd.net/steam/apps/" + rand.appid + "/header.jpg>', null, null, '" + Localization.str.visit_store + "'); \
-					    prompt.done(function(result) {\
-						    if (result == 'OK') { window.location.assign('steam://run/" + rand.appid + "'); }\
-						    if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/" + rand.appid + "'); }\
-					});\
-				}"
-                );
+                Request.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+                    if (!response || !response[appid] || !response[appid].success) { return; }
+                    let data = response[appid].data;
+
+                    let gameid = appid;
+                    let gamename;
+                    if (data.fullgame) {
+                        gameid = data.fullgame.appid;
+                        gamename = data.fullgame.name;
+                    } else {
+                        gamename = data.name;
+                    }
+
+                    let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
+                    ExtensionLayer.runInPageContext(
+                        `function() {
+                            var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
+                            prompt.done(function(result) {
+                                if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
+                                if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
+					        });
+				        }`);
+                });
             });
-            */
         });
     };
 
@@ -1642,9 +1652,9 @@ let Inventory = (function(){
                 LocalData.set("inventory_update", Date.now());
 
                 Promise.all([
-                    Request.getJson(User.profileUrl + "/inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
-                    Request.getJson(User.profileUrl + "/inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
-                    Request.getJson(User.profileUrl + "/inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
+                    Request.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
+                    Request.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
+                    Request.getJson(User.profileUrl + "inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
                 ]).then(resolve, reject);
             }
             else {
