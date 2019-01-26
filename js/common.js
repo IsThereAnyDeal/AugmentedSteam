@@ -1150,6 +1150,55 @@ let EnhancedSteam = (function() {
         }
     };
 
+    self.alternateLinuxIcon = function(){
+        if (!SyncedStorage.get("show_alternative_linux_icon", false)) { return; }
+        let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
+        document.querySelector("head")
+            .insertAdjacentHTML("beforeend", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
+    };
+
+    // Hide Trademark and Copyright symbols in game titles for Community pages
+    self.hideTrademarkSymbol = function(community) {
+        if (false && !SyncedStorage.get("hidetmsymbols", false)) { return; }
+
+        // TODO I would try to reduce number of selectors here
+        let selectors= "title, .apphub_AppName, .breadcrumbs, h1, h4";
+        if(community){
+            selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
+        } else {
+            selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
+        }
+
+        // Replaces "R", "C" and "TM" signs
+        function replaceSymbols(node){
+            // tfedor I don't trust this won't break any inline JS
+            node.innerHTML = node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, "")
+        }
+
+        let nodes = document.querySelectorAll(selectors);
+        for (let i=0, len=nodes.length; i<len; i++) {
+            replaceSymbols(nodes[i]);
+        }
+
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    replaceSymbols(node);
+                });
+            });
+        });
+
+        if (community){
+            observer.observe(document.querySelector("#game_select_suggestions"), {childList:true, subtree:true});
+        } else {
+            observer.observe(document.querySelector("#search_suggestion_contents"), {childList:true, subtree:true});
+
+            if (document.querySelector(".tab_content_ctn")) {
+                observer.observe(document.querySelector(".tab_content_ctn"), {childList:true, subtree:true});
+            }
+        }
+    };
+
     return self;
 })();
 
@@ -1823,7 +1872,7 @@ let Highlights = (function(){
         });
     };
 
-    self.startHighlightsAndTags = function() {
+    self.startHighlightsAndTags = function(parent) {
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
             "div.tab_row",					// Storefront rows
@@ -1850,10 +1899,12 @@ let Highlights = (function(){
             "a.summersale_dailydeal"		// Summer sale daily deal
         ];
 
+        parent = parent || document;
+
         setTimeout(function() {
             selectors.forEach(selector => {
                 
-                let nodes = document.querySelectorAll(selector+":not(.es_highlighted)");
+                let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
                 for (let i=0, len=nodes.length; i<len; i++) {
                     let node = nodes[i];
                     let nodeToHighlight = node;

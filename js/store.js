@@ -1821,6 +1821,7 @@ let SearchPageClass = (function(){
         this.endlessScrolling();
         this.addExcludeTagsToSearch();
         this.addHideButtonsToSearch();
+        this.observeChanges();
     }
 
     let processing = false;
@@ -1836,8 +1837,8 @@ let SearchPageClass = (function(){
             nodes[nodes.length-1].insertAdjacentHTML("beforebegin", '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + Localization.str.loading + '</div></div>');
         }
 
-        if (search.substring(0,1) == "&") { search = "?" + search.substring(1, search.length); }
-        if (search.substring(0,1) != "?") { search = "?" + search; }
+        if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
+        if (search.substring(0,1) !== "?") { search = "?" + search; }
 
         Request.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
             let dummy = document.createElement("html");
@@ -1871,13 +1872,13 @@ let SearchPageClass = (function(){
             };
 
             ExtensionLayer.runInPageContext(inContext);
-        }, failed => {
+        }, () => {
             document.querySelector(".LoadingWrapper").remove();
             document.querySelector(".search_pagination:last-child").insertAdjacentHTML("beforebegin", "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
 
-            $("#es_retry").click(function() {
+            document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
-                $("#es_error_msg").remove();
+                document.querySelector("#es_error_msg").remove();
                 loadSearchResults();
             });
         });
@@ -1992,7 +1993,6 @@ let SearchPageClass = (function(){
         observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
         ExtensionLayer.runInPageContext(function() {UpdateTags()});
     };
-
 
     function applyPriceFilter(node) {
         let hidePriceAbove = SyncedStorage.get("priceabove_value", false);
@@ -2196,6 +2196,30 @@ let SearchPageClass = (function(){
                 addHideButtonsToSearchClick()
             });
         }
+    };
+
+    SearchPageClass.prototype.observeChanges = function() {
+
+        let observer = new MutationObserver(mutations => {
+            console.log("search result");
+            Highlights.startHighlightsAndTags();
+            EarlyAccess.showEarlyAccess();
+
+            mutations.forEach(mutation => {
+
+                mutation.addedNodes.forEach(node => {
+
+                    if (node.classList && node.classList.contains("search_result_row")) {
+                        applyPriceFilter(node);
+                    }
+                });
+            });
+        });
+
+        observer.observe(
+            document.querySelector("#search_result_container"),
+            {childList: true, subtree: true}
+        );
     };
 
     return SearchPageClass;
@@ -2703,22 +2727,10 @@ let StoreFrontPageClass = (function(){
                         break;
                 }
 
-
-                // Alternative Linux icon
-//                alternative_linux_icon();
-
-                // Highlights & data fetching
+                // common for store pages
                 Highlights.startHighlightsAndTags();
-
-/*
-                // Storefront homepage tabs
-                bind_ajax_content_highlighting();
-                hide_trademark_symbols();
-                set_html5_video();
-                //get_store_session();
-                fix_menu_dropdown();
-*/
-
+                EnhancedSteam.alternateLinuxIcon();
+                EnhancedSteam.hideTrademarkSymbol();
             })
     )
 
