@@ -117,7 +117,7 @@ let SyncedStorage = (function(){
 })();
 
 
-let Request = (function(){
+let RequestData = (function(){
     let self = {};
 
     self.getJson = function(url) {
@@ -198,11 +198,8 @@ let Request = (function(){
         });
     };
 
-    self.getApi = function(api, query, blocking) {
+    self.getApi = function(api, query) {
         let apiUrl = Api.getApiUrl(api, query);
-        if (blocking) {
-            return self.getJsonBlocking(apiUrl);
-        }
         return self.getJson(apiUrl);
     };
 
@@ -214,28 +211,6 @@ let Request = (function(){
             method: "POST",
             body: Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&')
         }));
-    };
-
-    self.getJsonBlocking = function(url) {
-        let result;
-
-        function requestHandler(state) {
-            if (state.readyState !== 4) {
-                return;
-            }
-
-            if (state.status === 200) {
-                result = JSON.parse(state.responseText);
-            }
-        }
-
-        let request = new XMLHttpRequest();
-        request.onreadystatechange = function() { requestHandler(request); };
-        request.overrideMimeType("application/json");
-        request.open("GET", url, false);
-        request.send();
-
-        return result;
     };
 
     return self;
@@ -316,7 +291,7 @@ let Localization = (function(){
     self.str = {}; // translated strings
 
     self.loadLocalization = function(code) {
-        return Request.getLocalJson("/localization/" + code + "/strings.json");
+        return RequestData.getLocalJson("/localization/" + code + "/strings.json");
     };
 
     let _promise = null;
@@ -392,7 +367,7 @@ let User = (function(){
                     self.steamId = userLogin.steamId;
                     resolve();
                 } else {
-                    Request.getHttp("//steamcommunity.com/profiles/0/", {withCredentials: true})
+                    RequestData.getHttp("//steamcommunity.com/profiles/0/", {withCredentials: true})
                         .then(function(response) {
                             self.steamId = (response.match(/g_steamID = "(\d+)";/) || [])[1];
 
@@ -454,7 +429,7 @@ let User = (function(){
                 return;
             }
 
-            Request.getHttp("https://store.steampowered.com/account/licenses/?l=" + lang).then(result => {
+            RequestData.getHttp("https://store.steampowered.com/account/licenses/?l=" + lang).then(result => {
                 let replaceRegex = [
                     /- Complete Pack/ig,
                     /Standard Edition/ig,
@@ -669,7 +644,7 @@ let Currency = (function() {
                     self.userCurrency = currencyCache.userCurrency.currencyType;
                     resolve();
                 } else {
-                    Request.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
+                    RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
                         .then(
                             response => {
                                 let dummyHtml = document.createElement("html");
@@ -679,7 +654,7 @@ let Currency = (function() {
                                 SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
                             },
                             () => {
-                                Request
+                                RequestData
                                     .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
                                     .then(response => {
                                         let dummyHtml = document.createElement("html");
@@ -698,7 +673,7 @@ let Currency = (function() {
                         .finally(resolve);
                 }
             })).finally(() => {
-                Request.getApi("v01/rates", { to: self.userCurrency })
+                RequestData.getApi("v01/rates", { to: self.userCurrency })
                     .then(result => {
                         _rates = result.data;
                         resolve();
@@ -1009,7 +984,7 @@ let EnhancedSteam = (function() {
             return;
         }
 
-        Request.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
+        RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
             changelog => {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
                 let logo = ExtensionLayer.getLocalUrl("img/enhancedsteam.png");
@@ -1182,7 +1157,7 @@ let EnhancedSteam = (function() {
                 if (!result.rgOwnedApps) { return; }
                 let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-                Request.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+                RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
                     if (!response || !response[appid] || !response[appid].success) { return; }
                     let data = response[appid].data;
 
@@ -1395,7 +1370,7 @@ let EarlyAccess = (function(){
                 return;
             }
 
-            Request.getApi("v01/earlyaccess").then(data => {
+            RequestData.getApi("v01/earlyaccess").then(data => {
                 if (!data.result || data.result !== "success") {
                     reject();
                 }
@@ -1662,9 +1637,9 @@ let Inventory = (function(){
                 LocalData.set("inventory_update", Date.now());
 
                 Promise.all([
-                    Request.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
-                    Request.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
-                    Request.getJson(User.profileUrl + "inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
+                    RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
+                    RequestData.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
+                    RequestData.getJson(User.profileUrl + "inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
                 ]).then(resolve, reject);
             }
             else {
@@ -2095,7 +2070,7 @@ let DynamicStore = (function(){
                 return;
             }
 
-            Request.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true }).then(result => {
+            RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true }).then(result => {
                 if (!result || !result.rgOwnedApps) {
                     resolve();
                     return;
@@ -2333,7 +2308,7 @@ let Prices = (function(){
         let apiParams = this._getApiParams();
 
         if (!apiParams) { return; }
-        Request.getApi("v01/prices", apiParams).then(response => {
+        RequestData.getApi("v01/prices", apiParams).then(response => {
             if (!response || response.result !== "success") { return; }
 
             for (let gameid in response.data.data) {

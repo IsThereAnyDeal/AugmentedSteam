@@ -273,7 +273,7 @@ let StorePageClass = (function(){
 
             countries.forEach(country => {
 
-                let promise = Request.getJson("//store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
+                let promise = RequestData.getJson("//store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
                     if (!result || !result[subid] || !result[subid].success) { return; }
                     prices[country] = result[subid].data.price;
                 });
@@ -532,7 +532,7 @@ let AppPageClass = (function(){
                 apiparams.oc = 1;
             }
 
-            Request.getApi("v01/storepagedata", apiparams)
+            RequestData.getApi("v01/storepagedata", apiparams)
                 .then(function(response) {
                     if (response && response.result && response.result === "success") {
                         LocalData.set("storePageData_" + appid, {
@@ -583,7 +583,7 @@ let AppPageClass = (function(){
                 parent.classList.add("loading");
 
 
-                Request.post("//store.steampowered.com/api/removefromwishlist", {
+                RequestData.post("//store.steampowered.com/api/removefromwishlist", {
                     sessionid: User.getSessionId(),
                     appid: appid
                 }, {withCredentials: true}).then(response => {
@@ -648,7 +648,7 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addDlcInfo = function() {
         if (!this.isDlc()) { return; }
 
-        Request.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
+        RequestData.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
             console.log(response);
             let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
 
@@ -1320,11 +1320,11 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        Request.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
+        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
             loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
         });
 
-        Request.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
+        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
             loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
         });
 
@@ -1408,7 +1408,7 @@ let AppPageClass = (function(){
         document.querySelector(".myactivity_block .details_block").insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Request.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
+        RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
@@ -1653,7 +1653,7 @@ let RegisterKeyPageClass = (function(){
 
             for (let i = 0; i < keys.length; i++) {
                 let current_key = keys[i];
-                let request = Request.post("//store.steampowered.com/account/ajaxregisterkey", {
+                let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", {
                     sessionid: User.getSessionId(),
                     product_key: current_key
                 }).then(data => {
@@ -1836,7 +1836,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        Request.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
             let dummy = document.createElement("html");
             dummy.innerHTML = result;
 
@@ -2338,7 +2338,7 @@ let WishlistPageClass = (function(){
                 let promises = [];
 
                 for (let i=0; i<pages; i++) {
-                    promises.push(Request.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
+                    promises.push(RequestData.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
                         Object.assign(wishlistData, data);
                     }));
                 }
@@ -2400,7 +2400,7 @@ let WishlistPageClass = (function(){
 
         function removeApp(appid) {
             let url = "//store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
-            return Request.post(url, {
+            return RequestData.post(url, {
                 sessionid: User.getSessionId(),
                 appid: appid
             }).then(() => {
