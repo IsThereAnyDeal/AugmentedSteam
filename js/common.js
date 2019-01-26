@@ -1252,6 +1252,7 @@ let EnhancedSteam = (function() {
         // Replaces "R", "C" and "TM" signs
         function replaceSymbols(node){
             // tfedor I don't trust this won't break any inline JS
+            if (!node ||!node.innerHTML) { return; }
             node.innerHTML = node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, "")
         }
 
@@ -1324,7 +1325,7 @@ let GameId = (function(){
     self.getAppidImgSrc = function(text) {
         if (!text) { return null; }
         let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m ? m[1] : null;
+        return m ? m[2] : null;
     };
 
     self.getAppids = function(text) {
@@ -1401,29 +1402,31 @@ let EarlyAccess = (function(){
         return _promise;
     }
 
-    function checkNodes(selector, selectorModifier) {
+    function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
 
-        let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
-        for (let i=0; i<nodes.length; i++) {
-            let node = nodes[i];
-            node.classList.add("es_ea_checked");
+        selectors.forEach(selector => {
+            let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
+            for (let i=0; i<nodes.length; i++) {
+                let node = nodes[i];
+                node.classList.add("es_ea_checked");
 
-            let linkNode = node.querySelector("a");
-            let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
-            let imgHeader = node.querySelector("img" + selectorModifier);
-            let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
+                let linkNode = node.querySelector("a");
+                let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
+                let imgHeader = node.querySelector("img" + selectorModifier);
+                let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-            if (appid && cache.hasOwnProperty(appid) >= 0) {
-                node.classList.add("es_early_access");
+                if (appid && cache.hasOwnProperty(appid)) {
+                    node.classList.add("es_early_access");
 
-                let container = document.createElement("span");
-                container.classList.add("es_overlay_container");
-                DOMHelper.wrap(container, imgHeader);
+                    let container = document.createElement("span");
+                    container.classList.add("es_overlay_container");
+                    DOMHelper.wrap(container, imgHeader);
 
-                container.insertAdjacentHTML("afterbegin", `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+                    container.insertAdjacentHTML("afterbegin", `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+                }
             }
-        }
+        });
     }
 
     function handleStore() {
@@ -1432,40 +1435,40 @@ let EarlyAccess = (function(){
                 checkNodes(".game_header_image_ctn, .small_cap");
                 break;
             case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
-                checkNodes(`.tab_item,
-                           .special_tiny_cap,
-                           .cluster_capsule,
-                           .game_capsule,
-                           .browse_tag_game,
-                           .dq_item:not(:first-child),
-                           .discovery_queue:not(:first-child)`);
+                checkNodes([".tab_item",
+                           ".special_tiny_cap",
+                           ".cluster_capsule",
+                           ".game_capsule",
+                           ".browse_tag_game",
+                           ".dq_item:not(:first-child)",
+                           ".discovery_queue:not(:first-child)"]);
                 break;
             case /^\/search\/.*/.test(window.location.pathname):
-                checkNodes(".search_result_row");
+                checkNodes([".search_result_row"]);
                 break;
             case /^\/recommended/.test(window.location.pathname):
-                checkNodes(`.friendplaytime_appheader,
-                           .header_image,
-                           .appheader,
-                           .recommendation_carousel_item .carousel_cap,
-                           .game_capsule,
-                           .game_capsule_area,
-                           .similar_grid_capsule`);
+                checkNodes([".friendplaytime_appheader",
+                           ".header_image",
+                           ".appheader",
+                           ".recommendation_carousel_item .carousel_cap",
+                           ".game_capsule",
+                           ".game_capsule_area",
+                           ".similar_grid_capsule"]);
                 break;
             case /^\/tag\/.*/.test(window.location.pathname):
-                checkNodes(`.cluster_capsule,
-                           .tab_row,
-                           .browse_tag_game_cap`);
+                checkNodes([".cluster_capsule",
+                           ".tab_row",
+                           ".browse_tag_game_cap"]);
                 break;
             case /^\/$/.test(window.location.pathname):
-                checkNodes(`.cap,
-                           .special,
-                           .game_capsule,
-                           .cluster_capsule,
-                           .recommended_spotlight_ctn,
-                           .curated_app_link,
-                           .dailydeal_ctn a,
-                           .tab_item:last-of-type`);
+                checkNodes( [".cap",
+                           ".special",
+                           ".game_capsule",
+                           ".cluster_capsule",
+                           ".recommended_spotlight_ctn",
+                           ".curated_app_link",
+                           ".dailydeal_ctn a",
+                           ".tab_item:last-of-type"]);
 
                 // Sales fields
                 checkNodes(".large_sale_caps a, .small_sale_caps a, .spotlight_img");
@@ -1478,18 +1481,18 @@ let EarlyAccess = (function(){
         switch(true) {
             // wishlist, games, and followedgames can be combined in one regex expresion
             case /^\/(?:id|profiles)\/.+\/(wishlist|games|followedgames)/.test(window.location.pathname):
-                checkNodes(".gameListRowLogo");
+                checkNodes([".gameListRowLogo"]);
                 break;
             case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
-                checkNodes(".blotter_gamepurchase_content a");
+                checkNodes([".blotter_gamepurchase_content a"]);
                 break;
             case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):
-                checkNodes(".leftcol");
+                checkNodes([".leftcol"]);
                 break;
             case /^\/(?:id|profiles)\/.+/.test(window.location.pathname):
-                checkNodes(`.game_info_cap,
-                           .showcase_gamecollector_game,
-                           .favoritegame_showcase_game`);
+                checkNodes([".game_info_cap",
+                           ".showcase_gamecollector_game",
+                           ".favoritegame_showcase_game"]);
                 break;
             case /^\/app\/.*/.test(window.location.pathname):
                 if (document.querySelector(".apphub_EarlyAccess_Title")) {

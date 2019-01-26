@@ -2199,7 +2199,6 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.observeChanges = function() {
 
         let observer = new MutationObserver(mutations => {
-            console.log("search result");
             Highlights.startHighlightsAndTags();
             EarlyAccess.showEarlyAccess();
 
@@ -2642,6 +2641,25 @@ let StoreFrontPageClass = (function(){
     return StoreFrontPageClass;
 })();
 
+let TabAreaObserver = (function(){
+    let self = {};
+
+    self.observeChanges = function() {
+
+        let tabAreaNode = document.querySelector(".tabarea");
+        if (!tabAreaNode) { return; }
+
+        let observer = new MutationObserver(() => {
+            Highlights.startHighlightsAndTags();
+            EarlyAccess.showEarlyAccess();
+        });
+
+        observer.observe(tabAreaNode, {childList: true, subtree: true});
+    };
+
+    return self;
+})();
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -2726,6 +2744,8 @@ let StoreFrontPageClass = (function(){
                 Highlights.startHighlightsAndTags();
                 EnhancedSteam.alternateLinuxIcon();
                 EnhancedSteam.hideTrademarkSymbol();
+                TabAreaObserver.observeChanges();
+
             })
     )
 
