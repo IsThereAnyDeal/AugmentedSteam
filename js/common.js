@@ -1328,7 +1328,15 @@ let GameId = (function(){
     };
 
     self.getAppids = function(text) {
-        let res = matchAll(/(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g, text);
+        let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
+        let res = [];
+        let m;
+        do {
+            let m = regex.exec(text);
+            if (m) { res.push(m[1]); }
+        } while(m);
+        return res;
+
         return (res.length > 0) ? res : null;
     };
 

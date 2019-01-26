@@ -297,6 +297,7 @@ let StorePageClass = (function(){
                 }
 
                 countries.forEach(country => {
+                    if (country == localCountry) { return; }
                     let apiPrice = prices[country];
                     let html = "";
 
@@ -601,12 +602,9 @@ let AppPageClass = (function(){
             }
         });
 
-        /* // FIXME clear dynamic store
         $("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore").on("click", function(){
-            // Clear dynamicstore cache
-            chrome.storage.local.remove("dynamicstore");
+            DynamicStore.clear();
         });
-        */
     };
 
     AppPageClass.prototype.getFirstSubid = function() {
