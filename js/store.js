@@ -148,7 +148,7 @@ let StorePageClass = (function(){
             if (node) {
                 node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
             } else {
-                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
+                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
             }
         }
     };
@@ -617,8 +617,6 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addCoupon = function() {
         let inst = this;
         Inventory.promise().then(() => {
-
-            console.log(inst.getFirstSubid());
 
             let coupon = Inventory.getCoupon(inst.getFirstSubid());
             if (!coupon) { return; }
@@ -1203,7 +1201,7 @@ let AppPageClass = (function(){
                 .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
 
             document.querySelector(".game_area_dlc_section")
-                .insertAdjacentElement("<div style='clear: both;'></div>");
+                .insertAdjacentHTML("afterend", "<div style='clear: both;'></div>");
         } else {
             document.querySelector(".gameDlcBlocks")
                 .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
@@ -2672,13 +2670,10 @@ let StoreFrontPageClass = (function(){
                     EnhancedSteam.replaceAccountName();
                     EnhancedSteam.launchRandomButton();
                     // TODO add itad sync
+                    EnhancedSteam.bindLogout();
                 }
 
-                // FIXME this should have better check for log out, not just logout link click
-                // $('a[href$="javascript:Logout();"]').bind('click', clear_cache);
-
                 // end of common part
-
 
                 switch (true) {
                     case /\bagecheck\b/.test(path):

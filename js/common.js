@@ -28,20 +28,6 @@ let Api = (function(){
 })();
 
 
-let Settings = (function(){
-
-    let self = {};
-
-    // FIXME
-
-    self.get = function(name, defaultValue) {
-        return defaultValue;
-    };
-
-    return self;
-})();
-
-
 let LocalData = (function(){
 
     let self = {};
@@ -60,6 +46,10 @@ let LocalData = (function(){
         localStorage.removeItem(key);
     };
 
+    self.clear = function() {
+        localStorage.clear();
+    };
+
     return self;
 })();
 
@@ -71,7 +61,7 @@ let ExtensionLayer = (function() {
         return chrome.extension.getURL(url);
     };
 
-    // FIXME this may be dangerous?
+    // NOTE: use cautiously!
     // Run script in the context of the current tab
     self.runInPageContext = function(fun){
         let script  = document.createElement('script');
@@ -102,8 +92,16 @@ let SyncedStorage = (function(){
     };
 
     self.remove = function(key) {
-        // FIXME
+        if (localCopy[key]) {
+            delete localCopy[key];
+        }
+        storageAdapter.remove(key);
     };
+
+    self.clear = function() {
+        localCopy = {};
+        storageAdapter.clear();
+    }
 
     // load whole storage and make local copy
     self.load = function() {
@@ -192,7 +190,6 @@ let Request = (function(){
 
             if (settings.headers) {
                 for (let i=0; i<settings.headers.length; i++) {
-                    console.log("header", settings.headers[i][0], settings.headers[i][1]);
                     request.setRequestHeader(settings.headers[i][0], settings.headers[i][1]);
                 }
             }
@@ -201,8 +198,12 @@ let Request = (function(){
         });
     };
 
-    self.getApi = function(api, query) {
-        return self.getJson(Api.getApiUrl(api, query));
+    self.getApi = function(api, query, blocking) {
+        let apiUrl = Api.getApiUrl(api, query);
+        if (blocking) {
+            return self.getJsonBlocking(apiUrl);
+        }
+        return self.getJson(apiUrl);
     };
 
     self.post = function(url, data, settings) {
@@ -213,6 +214,28 @@ let Request = (function(){
             method: "POST",
             body: Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&')
         }));
+    };
+
+    self.getJsonBlocking = function(url) {
+        let result;
+
+        function requestHandler(state) {
+            if (state.readyState !== 4) {
+                return;
+            }
+
+            if (state.status === 200) {
+                result = JSON.parse(state.responseText);
+            }
+        }
+
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function() { requestHandler(request); };
+        request.overrideMimeType("application/json");
+        request.open("GET", url, false);
+        request.send();
+
+        return result;
     };
 
     return self;
@@ -296,11 +319,14 @@ let Localization = (function(){
         return Request.getLocalJson("/localization/" + code + "/strings.json");
     };
 
+    let _promise = null;
     self.promise = function(){
-        let lang = Settings.get("language");
+        if (_promise) { return _promise; }
+
+        let lang = SyncedStorage.get("language");
         let local = Language.getLanguageCode(lang);
 
-        return new Promise(function(resolve, reject) {
+        _promise = new Promise(function(resolve, reject) {
 
             let promises = [];
             promises[0] = self.loadLocalization("en");
@@ -331,6 +357,7 @@ let Localization = (function(){
                     resolve();
                 }, reject);
         });
+        return _promise;
     };
 
     return self;
@@ -349,12 +376,15 @@ let User = (function(){
     let accountId = false;
     let sessionId = false;
 
+    let _promise = null;
     self.promise = function() {
+        if (_promise) { return _promise; }
+
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
         self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
 
-        return new Promise(function(resolve, reject) {
+        _promise = new Promise(function(resolve, reject) {
             if (self.profilePath) {
                 let userLogin = LocalData.get("userLogin");
                 if (userLogin && userLogin.profilePath === self.profilePath) {
@@ -379,6 +409,7 @@ let User = (function(){
                 resolve();
             }
         });
+        return _promise;
     };
 
     self.getAccountId = function(){
@@ -401,8 +432,11 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
+    let _purchaseDataPromise = null;
     self.getPurchaseDate = function(lang, appName) {
-        return new Promise(function(resolve, reject) {
+        if (_purchaseDataPromise) { return _purchaseDataPromise; }
+
+        _purchaseDataPromise = new Promise(function(resolve, reject) {
             let purchaseDates = LocalData.get("purchase_dates", {});
 
             appName = StringUtils.clearSpecialSymbols(appName);
@@ -467,6 +501,7 @@ let User = (function(){
                 resolve(purchaseDates[lang][appName]);
             }, reject);
         });
+        return _purchaseDataPromise;
     };
 
     return self;
@@ -612,55 +647,76 @@ let Currency = (function() {
         41: "UYU"
     };
 
+    let _rates = {};
+    let _promise = null;
+
+    // load user currency
     self.promise = function() {
-        return new Promise(function(resolve, reject) {
-            let currencySetting = Settings.get("override_price", "auto");
+        if (_promise) { return _promise; }
 
-            if (currencySetting !== "auto") {
-                self.userCurrency = currencySetting;
-                resolve();
-                return;
-            }
+        _promise = new Promise(function(resolve, reject) {
+            (new Promise(function(resolve, reject) {
+                let currencySetting = SyncedStorage.get("override_price", "auto");
 
-            let currencyCache = SyncedStorage.get("userCurrency", {});
-            if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
-                self.userCurrency = currencyCache.userCurrency.currencyType;
-                resolve();
-            } else {
-                Request.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                    .then(
-                        response => {
-                            let dummyHtml = document.createElement("html");
-                            dummyHtml.innerHTML = response;
+                if (currencySetting !== "auto") {
+                    self.userCurrency = currencySetting;
+                    resolve();
+                    return;
+                }
 
-                            self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                            SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
-                        },
-                        () => {
-                            Request
-                                .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
-                                .then(response => {
-                                    let dummyHtml = document.createElement("html");
-                                    dummyHtml.innerHTML = response;
+                let currencyCache = SyncedStorage.get("userCurrency", {});
+                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
+                    self.userCurrency = currencyCache.userCurrency.currencyType;
+                    resolve();
+                } else {
+                    Request.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
+                        .then(
+                            response => {
+                                let dummyHtml = document.createElement("html");
+                                dummyHtml.innerHTML = response;
 
-                                    let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
-                                    if (!currency) {
-                                        throw new Error();
-                                    }
+                                self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
+                                SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                            },
+                            () => {
+                                Request
+                                    .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
+                                    .then(response => {
+                                        let dummyHtml = document.createElement("html");
+                                        dummyHtml.innerHTML = response;
 
-                                    self.userCurrency = currency;
-                                    SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
-                                });
-                        }
-                    )
-                    .finally(resolve);
-            }
+                                        let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
+                                        if (!currency) {
+                                            throw new Error();
+                                        }
+
+                                        self.userCurrency = currency;
+                                        SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                    });
+                            }
+                        )
+                        .finally(resolve);
+                }
+            })).finally(() => {
+                Request.getApi("v01/rates", { to: self.userCurrency })
+                    .then(result => {
+                        _rates = result.data;
+                        resolve();
+                    }, reject);
+            });
         });
+
+        return _promise;
     };
 
-    self.convertFrom = function(price, currency) {
-        // FIXME
-        return price;
+    self.getRate = function(from, to) {
+        if (from === to) { return 1; }
+
+        if (_rates[from] && _rates[from][to]) {
+            return _rates[from][to];
+        }
+
+        return null;
     };
 
     self.getCurrencySymbolFromString = function(str) {
@@ -745,9 +801,15 @@ let Price = (function() {
         this.value = value || 0;
         this.currency = currency || Currency.userCurrency;
 
-        if (convert !== false && SyncedStorage.get("override_price", "auto") !== "auto") {
-            this.value = Currency.convertFrom(this.value, this.currency);
-            this.currency = Currency.userCurrency;
+        if (convert !== false) {
+            let chosenCurrency = SyncedStorage.get("override_price", "auto");
+            if (chosenCurrency === "auto") { chosenCurrency = Currency.userCurrency; }
+            let rate = Currency.getRate(this.currency, chosenCurrency);
+
+            if (rate) {
+                this.value *= rate;
+                this.currency = chosenCurrency;
+            }
         }
     }
 
@@ -1025,10 +1087,18 @@ let EnhancedSteam = (function() {
     };
 
     self.clearCache = function() {
-        localStorage.clear(); // TODO
-        SyncedStorage.remove("user_currency"); // TODO local storage
-        SyncedStorage.remove("store_sessionid"); // TODO local storage
+        localStorage.clear();
+        SyncedStorage.remove("user_currency");
+        SyncedStorage.remove("store_sessionid");
         DynamicStore.clear();
+    };
+
+    self.bindLogout = function(){
+        // TODO there should be a better detection of logout, probably
+        let logoutNode = document.querySelector("a[href$='javascript:Logout();']");
+        logoutNode.addEventListener("click", function(e) {
+            self.clearCache();
+        });
     };
 
     /**
@@ -1284,7 +1354,10 @@ let EarlyAccess = (function(){
     let cache = {};
     let imageUrl;
 
+    let _promise = null;
+
     function promise() {
+        if (_promise) { return _promise; }
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"])) {
@@ -1292,7 +1365,7 @@ let EarlyAccess = (function(){
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
 
-        return new Promise(function(resolve, reject) {
+        _promise = new Promise(function(resolve, reject) {
             cache = LocalData.get("ea_appids");
 
             if (cache) {
@@ -1315,6 +1388,7 @@ let EarlyAccess = (function(){
                 resolve()
             }, reject);
         });
+        return _promise;
     }
 
     function checkNodes(selector, selectorModifier) {
@@ -1549,12 +1623,12 @@ let Inventory = (function(){
                 }
             }
         }
-
-        console.log(coupons);
     }
 
+    let _promise = null;
     self.promise = function() {
-        return new Promise(function(resolve, reject) {
+        if (_promise) { return _promise; }
+        _promise = new Promise(function(resolve, reject) {
             if (!User.isSignedIn) {
                 resolve();
             }
@@ -1582,6 +1656,7 @@ let Inventory = (function(){
                 resolve();
             }
         });
+        return _promise;
     };
 
     self.getCoupon = function(subid) {
@@ -1987,6 +2062,7 @@ let DynamicStore = (function(){
 
     self.promise = function(){
         if (_promise) { return _promise; }
+
         _promise = new Promise(function(resolve, reject){
             if (!User.isSignedIn) { reject(); return; }
 
