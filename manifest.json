@@ -3,7 +3,10 @@
     "version": "1.0",
     "description": "Continues to Enhance the Steam Experience",
     "icons": {
-        "128": "img/enhancedsteam.png"
+      "128": "img/es_128.png",
+      "96": "img/es_96.png",
+      "48": "img/es_48.png",
+      "32": "img/es_32.png"
     },
     "manifest_version": 2,
     "options_ui": {
@@ -12,7 +15,8 @@
     },
     "permissions": [
         "storage",
-        "http://*.steampowered.com/"
+        "http://*.steampowered.com/",
+        "https://*.steampowered.com/"
     ],
     "web_accessible_resources": [
         "img/*.png",
@@ -50,8 +54,8 @@
             "js": [
                 "js/jQuery.min.js",
                 "js/config.js",
-                "js/api.js",
-                "enhancedsteam.js"
+                "js/common.js",
+                "js/store.js"
             ],
             "css": [
                 "css/enhancedsteam.css"
