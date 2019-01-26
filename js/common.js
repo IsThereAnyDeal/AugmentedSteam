@@ -278,7 +278,7 @@ let ProgressBar = (function(){
     self.progress = function(value) {
         if (!node) { return; }
 
-        node.querySelector(".progress-value").style.width = value; // TODO "%"?
+        node.querySelector(".progress-value").style.width = value; // TODO verify this works, shouldn't there be "%"?
 
         if (value >= 100) {
             node.classList.add("complete");
@@ -1009,12 +1009,11 @@ let EnhancedSteam = (function() {
             return;
         }
 
-        // TODO
         Request.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
             changelog => {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
                 let logo = ExtensionLayer.getLocalUrl("img/enhancedsteam.png");
-                var dialog = "<div style=\"height:100%; display:flex; flex-direction:row;\"><div style=\"float: left; margin-right: 21px;\">"
+                let dialog = "<div style=\"height:100%; display:flex; flex-direction:row;\"><div style=\"float: left; margin-right: 21px;\">"
                     + "<img src=\""+ logo +"\"></div>"
                     + "<div style=\"float: right;\">" + Localization.str.update.changes.replace(/'/g, "\\'")
                     + ":<ul class=\"es_changelog\">" + changelog + "</ul></div>" +
@@ -1163,7 +1162,7 @@ let EnhancedSteam = (function() {
     };
 
     self.replaceAccountName = function() {
-        if (!SyncedStorage.get("replaceaccountname", false)) { return; }
+        if (!SyncedStorage.get("replaceaccountname", true)) { return; }
 
         let accountNameNode = document.querySelector("#account_pulldown");
         let accountName = accountNameNode.textContent.trim();
@@ -1432,7 +1431,7 @@ let EarlyAccess = (function(){
     function handleStore() {
         switch (true) {
             case /^\/app\/.*/.test(window.location.pathname):
-                checkNodes(".game_header_image_ctn, .small_cap");
+                checkNodes([".game_header_image_ctn", ".small_cap"]);
                 break;
             case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
                 checkNodes([".tab_item",
@@ -1471,7 +1470,7 @@ let EarlyAccess = (function(){
                            ".tab_item:last-of-type"]);
 
                 // Sales fields
-                checkNodes(".large_sale_caps a, .small_sale_caps a, .spotlight_img");
+                checkNodes([".large_sale_caps a", ".small_sale_caps a", ".spotlight_img"]);
                 // checkNodes($(".sale_capsule_image").parent()); // TODO check/remove
                 break;
         }
@@ -2369,7 +2368,7 @@ let Customizer = (function(){
             element.classList.toggle("es_hide", !SyncedStorage.get(name, true));
 
             if (element.classList.contains("es_hide")) {
-                element.style.display = "none"; // TODO slideUp
+                element.style.display = "none";
             }
         }
 

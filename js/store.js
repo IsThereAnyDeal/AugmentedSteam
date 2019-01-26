@@ -283,7 +283,7 @@ let StorePageClass = (function(){
             Promise.all(promises).then(result => {
 
                 let node = document.querySelector("input[name=subid][value='"+subid+"']")
-                    .closest(".game_area_purchase_game_wrapper,#game_area_purchase")
+                    .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                     .querySelector(".game_purchase_action");
 
                 let priceLocal = new Price(prices[User.getCountry().toLowerCase()].final / 100);
@@ -330,18 +330,19 @@ let StorePageClass = (function(){
                     pricingDiv.innerHTML += html;
                 });
 
-                let purchaseArea = node.closest(".game_area_purchase_game");
+                let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
                 purchaseArea.classList.add("es_regional_prices");
 
                 if (showRegionalPrice === "always") {
                     node.insertAdjacentElement("beforebegin", pricingDiv);
                     purchaseArea.classList.add("es_regional_always");
                 } else {
-                    node.querySelector(".price").insertAdjacentElement("afterend", pricingDiv);
-                    purchaseArea.classList.add("es_regional_onmouse");
+                    let priceNode = node.querySelector(".price,.discount_prices");
+                    priceNode.insertAdjacentElement("afterend", pricingDiv);
+                    priceNode.parentNode.classList.add("es_regional_onmouse");
 
                     if (!SyncedStorage.get("regional_hideworld", false)) {
-                        node.querySelector(".price").classList.add("es_regional_icon")
+                        node.querySelector(".price,.discount_prices").classList.add("es_regional_icon")
                     }
                 }
             })
@@ -589,9 +590,8 @@ let AppPageClass = (function(){
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
                     // Clear dynamicstore cache
-                    /* // FIXME DynamicStore
+                    DynamicStore.clear();
                     chrome.storage.local.remove("dynamicstore");
-                    */
 
                     // Invalidate dynamic store data cache
                     ExtensionLayer.runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
@@ -1023,7 +1023,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addPackageInfoButton = function() {
-        if (false && !SyncedStorage.get("show_package_info", false)) { return; } // FIXME
+        if (!SyncedStorage.get("show_package_info", false)) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
         for (let i=0, len=nodes.length; i<len; i++) {
@@ -1666,7 +1666,7 @@ let RegisterKeyPageClass = (function(){
                         document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
-                            document.querySelector("#attempt_" + attempted + "_result").style.display = "block"; // TODO slideDown
+                            document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
                         }
                     } else {
                         switch(data["purchase_result_details"]) {
@@ -1680,14 +1680,14 @@ let RegisterKeyPageClass = (function(){
                         }
                         document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
                         document.querySelector("#attempt_" + attempted + "_result").textContent = message;
-                        document.querySelector("#attempt_" + attempted + "_result").style.display="block"; // TODO slideDown
+                        document.querySelector("#attempt_" + attempted + "_result").style.display="block";
                     }
 
                 }, () => {
                     let attempted = current_key;
                     document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
                     document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.error;
-                    document.querySelector("#attempt_" + attempted + "_result").style.display = "block"; // TODO slideDown
+                    document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
                 });
 
                 promises.push(request);

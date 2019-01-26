@@ -1598,8 +1598,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_regional_always .es_regional_sale {
 	margin-bottom: 55px;
 }
-.es_regional_onmouse .game_purchase_price:hover ~ .es_regional_container,
-.es_regional_onmouse .game_purchase_discount:hover ~ .es_regional_container {
+.es_regional_onmouse:hover .es_regional_container {
 	display: block !important;
 }
 .es_regional_price {
