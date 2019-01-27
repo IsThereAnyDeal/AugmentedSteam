@@ -79,17 +79,6 @@
         },
         {
             "matches": [
-                "https://steamcommunity.com/tradeoffer/*"
-            ],
-            "js": [
-                "js/steamcommunity.com/tradeoffer.js"
-            ],
-            "css": [
-                "css/steamcommunity.com/tradeoffer.css"
-            ]
-        },
-        {
-            "matches": [
                 "*://steamcommunity.com/id/*",
                 "*://steamcommunity.com/profiles/*"
             ],
