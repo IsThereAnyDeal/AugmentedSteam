@@ -1416,12 +1416,14 @@ let AppPageClass = (function(){
             let node = document.querySelector("#es_ach_stats");
             node.append(dummy.querySelector("#topSummaryAchievements"));
 
+            document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
+
             if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
 
             let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-            let barEmpty = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-            barFull = barFull * .88;
-            barEmpty = barEmpty * .88;
+            let barEmpty = node.innerHTML.match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+            barFull = barFull * .75;
+            barEmpty = barEmpty * .75;
 
             node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
             node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
