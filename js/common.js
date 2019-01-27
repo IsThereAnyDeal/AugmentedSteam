@@ -1,6 +1,6 @@
 
 let Info = {
-    version: "1.0"
+    version: "0.9"
 };
 
 /**
