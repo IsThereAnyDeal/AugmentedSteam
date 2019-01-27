@@ -1155,7 +1155,6 @@ let EnhancedSteam = (function() {
     };
 
     self.addMenu = function() {
-        // FIXME options
         document.querySelector("#global_action_menu").insertAdjacentHTML("afterBegin", `
             <div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Enhanced Steam</span>
@@ -1164,13 +1163,12 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="//github.com/jshackles/Enhanced_Steam">${Localization.str.contribute}</a>
-                        <a class="popup_menu_item" target="_blank" href="//translation.enhancedsteam.com">${Localization.str.translate}</a>
-                        <a class="popup_menu_item" target="_blank" href="//github.com/jshackles/Enhanced_Steam/issues">${Localization.str.bug_feature}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam">${Localization.str.contribute}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam/issues">${Localization.str.bug_feature}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="//www.enhancedsteam.com">${Localization.str.website}</a>
-                        <a class="popup_menu_item" target="_blank" href="//${Localization.str.official_group_url}">${Localization.str.official_group}</a>
-                        <a class="popup_menu_item" target="_blank" href="//enhancedsteam.com/donate/">${Localization.str.donate}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://es.isthereanydeal.com/">${Localization.str.website}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
+                        <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
                     </div>
                 </div>
             </div>
