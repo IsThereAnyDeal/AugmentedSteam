@@ -541,5 +541,10 @@
         "in_wishlist": "in wishlist",
         "on_sale": "on sale",
         "no_price": "without price"
+    },
+    "coll": {
+        "in_collection": "In Collection",
+        "played": "Played",
+        "never_played": "Never Played"
     }
 }

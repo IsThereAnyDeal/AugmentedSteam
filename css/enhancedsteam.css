@@ -2371,7 +2371,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	transition:max-height 0.2s ease-in-out;
 }
 
-#esi-wishlist-chart-content {
+#esi-wishlist-chart-content,
+#esi-collection-chart-content {
 	display:flex;
 	padding: 25px;
 	overflow: hidden;
@@ -2379,18 +2380,21 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	align-items:center;
 	font-size:1.6em;
 }
-#esi-wishlist-chart-content a {
+#esi-wishlist-chart-content a,
+#esi-collection-chart-content a {
 	cursor:pointer;
 	text-align:center;
 	flex-grow:2;
 }
 
-.esi-wishlist-stat {
+.esi-wishlist-stat,
+.esi-collection-stat {
 	text-align: center;
 	display:flex;
 	flex-direction:column;
 }
-.esi-wishlist-stat span {
+.esi-wishlist-stat span,
+.esi-collection-stat span {
 	font-size: 1.8em;
 	font-weight: 300;
 }

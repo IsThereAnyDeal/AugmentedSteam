@@ -1061,6 +1061,12 @@ let BrowserHelper = (function(){
     // only concerned with vertical at this point
     self.isElementInViewport = function(elem) {
         let elemTop = elem.offsetTop;
+        let parent = elem.offsetParent;
+        while (parent) {
+            elemTop += parent.offsetTop;
+            parent = parent.offsetParent;
+        }
+
         let elemBottom = elemTop + elem.getBoundingClientRect().height;
         let viewportTop = window.scrollY;
         let viewportBottom = window.innerHeight + viewportTop;

@@ -85,9 +85,7 @@ let ProfileHomePageClass = (function(){
         this.addProfileStyle();
 
         /*
-        add_custom_profile_links();
         add_twitch_info();
-        fix_app_image_not_found();
         hide_spam_comments();
         chat_dropdown_options();
         */
@@ -449,6 +447,129 @@ let ProfileHomePageClass = (function(){
     return ProfileHomePageClass;
 })();
 
+let GamesPageClass = (function(){
+
+    function GamesPageClass() {
+
+        if (window.location.href.match(/\/games\/\?tab=all/)) {
+            this.computeStats();
+            this.addGamelistAchievements();
+        }
+
+        /*
+        add_gamelist_sort();
+        add_gamelist_filter();
+        add_gamelist_common();
+        */
+    }
+
+    // Display total time played for all games
+    GamesPageClass.prototype.computeStats = function() {
+        let games = BrowserHelper.getVariableFromDom("rgGames", "array");
+
+        let statsHtml = "";
+
+        let countTotal = games.length;
+        let countPlayed = 0;
+        let countNeverPlayed = 0;
+
+        let time = 0;
+        games.forEach(game => {
+            if (!game['hours_forever']) {
+                countNeverPlayed++;
+                return;
+            }
+
+            countPlayed++;
+            time += parseFloat(game['hours_forever'].replace(",",""));
+        });
+
+        let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
+
+        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
+        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
+        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
+        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
+
+        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
+
+        document.querySelector("#mainContents").insertAdjacentHTML("beforebegin", html);
+    };
+
+    let scrollTimeout = null;
+
+    GamesPageClass.prototype.addGamelistAchievements = function() {
+        if (!SyncedStorage.get("showallachievements", Defaults.showallachievements)) { return; }
+
+        let node = document.querySelector(".profile_small_header_texture a");
+        if (!node) { return; }
+        let statsLink = '//steamcommunity.com/my/stats/';
+
+        document.addEventListener("scroll", function(){
+            if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
+            scrollTimeout = window.setTimeout(addAchievements, 500);
+        });
+
+        addAchievements();
+
+        function addAchievements() {
+            // Only show stats on the "All Games" tab
+            let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
+            let hadNodesInView = false;
+            for (let i=0, len=nodes.length; i<len; i++) {
+                let node = nodes[i];
+
+                if (!BrowserHelper.isElementInViewport(node)) {
+                    if (hadNodesInView) { break; }
+                    continue;
+                }
+
+                hadNodesInView = true;
+
+                let appid = GameId.getAppidWishlist(node.id);
+                node.classList.add("es_achievements_checked");
+                if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
+                if (!node.querySelector("h5.hours_played")) { continue; }
+
+                // Copy achievement stats to row
+                node.querySelector(".gameListRowItemName")
+                    .insertAdjacentHTML("afterend", "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+
+                RequestData.getHttp(statsLink + appid).then(result => {
+                    let dummy = document.createElement("html");
+                    dummy.innerHTML = result;
+
+                    let node = document.querySelector("#es_app_" + appid);
+                    node.innerHTML = "";
+
+                    let achNode = dummy.querySelector("#topSummaryAchievements");
+
+                    if (!achNode) { return; }
+                    node.append(achNode);
+
+                    document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
+
+                    if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
+
+                    let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+                    let barEmpty = node.innerHTML.match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+                    barFull = barFull * .58;
+                    barEmpty = barEmpty * .58;
+
+                    node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
+                    node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
+                    node.innerHTML = node.innerHTML.replace("::", ":");
+                }, () => {
+                    let node = document.querySelector("#es_app_" + appid);
+                    node.innerHTML = "error";
+                });
+            }
+        }
+    };
+
+
+    return GamesPageClass;
+})();
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -463,6 +584,10 @@ let ProfileHomePageClass = (function(){
 
 
                 switch (true) {
+
+                    case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+                        (new GamesPageClass());
+                        break;
 
                     // TODO must be last of the profiel pages
                     case /^\/(?:id|profiles)\/.+/.test(path):
@@ -494,14 +619,6 @@ let ProfileHomePageClass = (function(){
                         add_inventory_gotopage();
                         break;
 
-                    case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
-                        total_time();
-                        total_size();
-                        add_gamelist_achievements();
-                        add_gamelist_sort();
-                        add_gamelist_filter();
-                        add_gamelist_common();
-                        break;
 
                     case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
                         add_badge_completion_cost();

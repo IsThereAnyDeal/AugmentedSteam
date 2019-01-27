@@ -2379,7 +2379,7 @@ let WishlistPageClass = (function(){
                    <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
                    <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
         });
-    };
+    }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!isMyWishlist()) { return; }
