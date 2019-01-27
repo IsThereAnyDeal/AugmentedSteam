@@ -2404,3 +2404,17 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-right:5px;
 	cursor:pointer;
 }
+
+#es_supporter_badges .profile_badges_badge:nth-child(4n) {
+	margin-right:0;
+}
+#es_supporter_badges .profile_badges_badge:nth-child(4n+1) {
+	margin-bottom:16px;
+}
+#es_supporter_badges .profile_count_link_preview {
+	display:flex;
+	flex-wrap:wrap;
+}
+#es_supporter_badges .profile_badges_badge {
+	float:none;
+}

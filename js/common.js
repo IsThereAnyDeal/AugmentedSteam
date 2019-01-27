@@ -1600,6 +1600,7 @@ let EarlyAccess = (function(){
     }
 
     function handleCommunity() {
+        return; // FIXME
         switch(true) {
             // wishlist, games, and followedgames can be combined in one regex expresion
             case /^\/(?:id|profiles)\/.+\/(wishlist|games|followedgames)/.test(window.location.pathname):

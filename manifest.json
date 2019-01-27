@@ -38,9 +38,7 @@
         {
             "matches": [
                 "http://*.steampowered.com/*",
-                "https://*.steampowered.com/*",
-                "http://steamcommunity.com/*",
-                "https://steamcommunity.com/*"
+                "https://*.steampowered.com/*"
             ],
             "exclude_matches": [
                 "*://store.steampowered.com/dynamicstore/*",
@@ -48,13 +46,30 @@
                 "*://store.steampowered.com/widget/*",
                 "*://store.steampowered.com/login/*",
                 "*://store.steampowered.com/join/*",
-                "*://store.steampowered.com/api/*",
-                "*://steamcommunity.com/login/*"
+                "*://store.steampowered.com/api/*"
             ],
             "js": [
                 "js/config.js",
                 "js/common.js",
                 "js/store.js"
+            ],
+            "css": [
+                "css/enhancedsteam.css",
+                "css/es_flags.css"
+            ]
+        },
+        {
+            "matches": [
+                "http://steamcommunity.com/*",
+                "https://steamcommunity.com/*"
+            ],
+            "exclude_matches": [
+                "*://steamcommunity.com/login/*"
+            ],
+            "js": [
+                "js/config.js",
+                "js/common.js",
+                "js/community.js"
             ],
             "css": [
                 "css/enhancedsteam.css",
