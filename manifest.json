@@ -52,7 +52,6 @@
                 "*://steamcommunity.com/login/*"
             ],
             "js": [
-                "js/jQuery.min.js",
                 "js/config.js",
                 "js/common.js",
                 "js/store.js"

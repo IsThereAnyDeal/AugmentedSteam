@@ -1,4 +1,4 @@
-{
+var CountryList = {
     "": "None",
     "af": "Afghanistan",
     "al": "Albania",
