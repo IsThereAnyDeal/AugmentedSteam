@@ -354,7 +354,6 @@
         "total_spent": "Ukázat celkem utracenou částku na stránce Účet",
         "add_wallet_balance": "Zobrazit zůstatek Steam peněženky v záhlaví",
         "add_to_cart_wishlist": "Zobrazit tlačítko \"Přidat do košíku\" na seznamu přání",
-        "about_text": "<div class=\"header\">O <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam je rozšíření pro Google Chrome, které přidává mnoho nových funkcí na webovou stránku Steamu.<p>Mezi jeho funkce patří:<ul><li>Zvýraznění již vlastněných her</li><li>Zvýraznění her na Vašem Seznamu přání</li><li>Přesné spočítaní slev u balíčků založené na hrách, které již vlastníte</li><li>Ukázání, kolik jste na Steamu utratili od založení Vašeho účtu</li><li>Zvýraznění DLC, které již vlastníte, na stránce hry</li><li>Oprava ikon \"No Image Available\" ve vašem Seznamu přání pro každou hru i DLC</li><li>Upozornění na hry s DRM třetí strany</li></ul><p>Pokud vám toto rozšíření přijde užitečné, prosím popřemýšlejte o příspěvku.",
         "stores_all": "Porovnat všechny obchody",
         "show_early_access_text": "Ukázat banner u her s Předběžným přístupem",
         "author_info": "autor: jshackles",

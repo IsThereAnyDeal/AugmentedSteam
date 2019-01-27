@@ -354,7 +354,6 @@
         "total_spent": "Hesap sayfasında toplam harcamayı göster",
         "add_wallet_balance": "Steam Cüzdan Bakiyesini başta göster",
         "add_to_cart_wishlist": "İstek Listesi'nde \"Sepete Ekle\" düğmesini göster",
-        "about_text": "<a href='http://www.enhancedsteam.com'>Enhanced Steam</a> hakkında:<p>Enhanced Steam, Steam web sitesine birçok özellik kazandıran bir Google Chrome uzantısıdır.<p>Bazı özellikler:<ul><li>Sahip olunan oyunları vurgulama</li><li>İstek listesindeki oyunları vurgulama</li><li>Sahip olduğunuz oyunlara göre bundle fiyatını doğru hesaplama</li><li>Steam'de şu ana kadar ne kadar para harcandığını gösterme</li><li>Oyun sayfasında sahip olunan DLC'leri vurgulama</li><li>İstek listesindeki herhangi bir oyun veya DLC ikonu için \"Görüntü bulunamadı\" hatasını düzeltme</li><li>3. parti DLC'ye sahip oyunları gösterme</li></ul><p>Eğer bu uzantıyı yararlı bulduysanız, lütfen bağış yapmayı düşünün.",
         "stores_all": "Bütün mağazaları karşılaştır",
         "show_early_access_text": "Erken Erişim simgesini göster",
         "author_info": "jshackles tarafından",

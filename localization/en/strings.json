@@ -356,7 +356,6 @@
         "lowestprice_header": "Price History Information",
         "total_spent": "Show total spent on account page",
         "add_to_cart_wishlist": "Show \"Add to Cart\" button on Wishlists",
-        "about_text": "<div class=\"header\">About <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam is an Extension for Google Chrome that adds many new features to the Steam website.<p>Features include:<ul><li>Highlighting games you already own</li><li>Highlighting games on your wishlist</li><li>Correctly calculating bundle discounts based on games you already own</li><li>Showing you how much money you've spent on Steam for the lifetime of your account</li><li>Highlighting DLC you own on a game page</li><li>Fixing \"No Image Available\" game icons on your wishlist for any game or DLC</li><li>Pointing out titles with 3rd-party DRM</li></ul><p>If you find this Extension useful, please consider donating.",
         "stores_all": "Compare all stores",
         "show_early_access_text": "Show Early Access image banners",
         "author_info": "by jshackles",

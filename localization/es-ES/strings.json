@@ -354,7 +354,6 @@
         "total_spent": "Mostrar \"Total gastado\" en los detalles de la cuenta",
         "add_wallet_balance": "Mostrar fondos de la cartera de Steam en la cabecera de la página",
         "add_to_cart_wishlist": "Mostrar el botón \"Añadir al carro\" en la lista de deseos",
-        "about_text": "<div class=\"header\">Acerca de <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam es una extensión para Google Chrome que añade un montón de características nuevas a la página de Steam.<p>Características incluidas:<ul><li>Resaltar juegos que ya tienes</li><li>Resaltar juegos de tu lista de deseados</li><li>Calcular el precio real de todos los juegos que tienes con sus descuentos correspondientes</li><li>Mostrar cuánto dinero has gastado en Steam en la vida de tu cuenta</li><li>Resaltar las DLC que ya tienes</li><li>Solucionar las imágenes no disponibles de juegos o DLC de tu lista de deseados</li><li>Advertirte de títulos con DRM de terceros</li></ul><p>Si esta extensión te parece útil, valora la opción de realizar una donación.",
         "stores_all": "Comparar todas las tiendas",
         "show_early_access_text": "Mostrar banners de Acceso Anticipado en las imágenes",
         "author_info": "por jshackles",

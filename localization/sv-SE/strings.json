@@ -354,7 +354,6 @@
         "total_spent": "Visa totalt spenderat i kontosidan",
         "add_wallet_balance": "Visa Steam-plånbok tillgångar i header",
         "add_to_cart_wishlist": "Visa \"Lägg till i varukorgen\" knappen på önskelistor",
-        "about_text": "<div class=\"header\">Om<a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam är ett tilläg till Google Chrome som lägger till många nya funktioner på Steam webbsidan<p>Funktioner som:<ul><li>Markera spel som du redan äger</li><li>Markera spel på din önskelista</li><li>Korrekt beräkna paket rabatten baserat på spel du redan äger</li><li>Visa hur mycket pengar du har spenderat på steam under ditt accounts livs tid</li><li>Markera DLC du redan äger på en spelsida</li><li>Fixar \"Ingen Bild Tillgänglig\" på din önskelista för alla spel och DLC</li><li>Pekar ut titlar med tredje parts DRM</li></ul><p>Om dy tycker det här tillägget är användbart, snälla fundera på att donera.",
         "stores_all": "Jämför med alla butiker",
         "show_early_access_text": "Visa Early Access bildbanner",
         "author_info": "av jshackles",

@@ -354,7 +354,6 @@
         "total_spent": "Vis totalsum brukt på kontoside",
         "add_wallet_balance": "Vis Steam-lommebok i header",
         "add_to_cart_wishlist": "Vis \"Legg til Handlevogn\"-knapp på Ønskelister",
-        "about_text": "<div class=\"header\">Om <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam er en utvidelse for Google Chrome som legger til mange nye funksjoner på Steam-nettstedet.<p>Funksjoner inkluderer:<ul><li>Utheving av spill du allerede eier</li><li>Utheving av spill du har på ønskelisten</li><li>Kalkulere korrekt pakkerabatt basert på spill du allerede eier</li><li>Vise deg hvor mye penger du har brukt på Steam så lenge kontoen din har eksistert</li><li>Utheve DLC du eier på en spillside</li><li>Fikser \"No Image Available\"-spillikoner på ønskelisten din for alle spill og DLC</li><li>Peker ut titler med tredjeparts-DRM</li></ul><p>Hvis du synes at denne utvidelsen er nyttig, bør du vurdere å donere.",
         "stores_all": "Sammenlign alle butikker",
         "show_early_access_text": "Vis Early Access-bildebannere",
         "author_info": "av jshackles",

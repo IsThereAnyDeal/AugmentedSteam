@@ -354,7 +354,6 @@
         "total_spent": "Näytä yhteensä käyttämäsi rahamäärä tilitiedoissa",
         "add_wallet_balance": "Näytä Steam-lompakon varat yläpalkissa",
         "add_to_cart_wishlist": "Näytä \"Lisää ostoskoriin\" painike toivelistassa",
-        "about_text": "<div class=\"header\">Tietoja <a href='http://www.enhancedsteam.com'>Enhanced Steamista</a>:</div><p>Enhanced Steam on laajennus Google Chromeen, joka lisää monia uusia toimintoja Steamin verkkosivulle.<p>Ominaisuuksiin kuuluvat:<ul><li>Omistamiesi pelien korostaminen</li><li>Toivelistallasi olevien pelien korostaminen</li><li>Pakettien alennusten oikein laskeminen omistamiesi pelien perusteella</li><li>Näyttää kuinka paljon rahaa olet käyttänyt Steam-tililläsi</li><li>Omistamasi lisäsisällön korostus pelin sivulla</li><li>Korjaa \"No Image Available\" kuvat toivelistassasi oleville peleille ja lisäsisällöille</li><li>Varoittaa kolmansien osapuolien DRM-suojauksista</li></ul><p>Jos tästä laajennuksesta on ollut sinulle hyötyä, harkitse lahjoittamista.",
         "stores_all": "Vertaile kaikkia kauppoja",
         "show_early_access_text": "Näytä Early Access -merkinnät",
         "author_info": "Tehnyt: jshackles",

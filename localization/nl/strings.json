@@ -354,7 +354,6 @@
         "total_spent": "Toon totaal uitgegeven op account pagina",
         "add_wallet_balance": "Geef Steam-Portemonnee saldo weer in de header",
         "add_to_cart_wishlist": "\"Voeg toe aan winkelwagen\"-knop op verlanglijsten tonen",
-        "about_text": "<div class=\"header\">Over Ons <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam is een expansie voor Google Chrome dat veel nieuwe functies toevoegt aan de Steam website.<p>Functies zoals:<ul><li>Highlight spellen die je al hebt</li><li>Highlight spellen op je wenslijst</li><li>Correct berekenen hoeveel bundel korting je krijgt op spellen die je al hebt</li><li>Toont hoeveel geld jij hebt uitgegeven op Steam vanaf het begin van jouw account</li><li>Highlight DLC die jij al hebt op het spel pagina</li><li>Maakt \"geen afbeelding beschikbaar\" iconen op je wenslijst voor elk spel en DLC</li><li>Laat zien welke spellen 3rde partij DRM hebben</li></ul><p>Als je deze extensie handig vindt, kun je overwegen om wat geld te doneren.",
         "stores_all": "Vergelijk alle winkels",
         "show_early_access_text": "Toon Early Access afbeelding banners",
         "author_info": "door jshackles",

@@ -354,7 +354,6 @@
         "total_spent": "Afișează total cheltuit pe pagina contului",
         "add_wallet_balance": "Afișează soldul Portofelului Steam în antet",
         "add_to_cart_wishlist": "Afișează butonul \"Adaugă în coș\" în listele de dorințe",
-        "about_text": "<div class=\"header\"> Despre <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam este o extensie pentru Google Chrome, care adaugă o serie de caracteristici noi pentru site-ul Steam.<p>Caracteristici incluse: <ul><li>Evidențierea jocurilor deja deținute</li> <li>Evidențierea jocurilor de pe lista ta de dorințe</li> <li>Calcularea corectă a reducerilor din pachete, luând in calcul și jocurile deja deținute</li> <li>Afișarea banilor cheltuiți pe Steam pe toată durata contului</li> <li>Evidențierea DLC-urile pe care le dețineți pe pagina jocului</li> <li>Rezolvă problema pictogramelor jocurilor sau a DLC-urilor ce afișau \"No Image Available\" pe lista dumneavoastră de dorințe</li> <li>Specifică ce jocuri folosesc un DRM independent Steam</li></ul> <p>Dacă considerați această extensie utilă, vă rugăm să luați în calcul efectuarea unei donații.",
         "stores_all": "Compară în toate magazinele",
         "show_early_access_text": "Afișează o bandieră pe jocurile cu Acces Timpuriu",
         "author_info": "de jshackles",

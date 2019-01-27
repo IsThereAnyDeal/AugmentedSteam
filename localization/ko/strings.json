@@ -354,7 +354,6 @@
         "total_spent": "계정 정보에서 총 사용 금액 보여주기",
         "add_wallet_balance": "헤더에 스팀 지갑 자금 표시",
         "add_to_cart_wishlist": "찜 목록에서 \"장바구니에 추가\" 버튼 보이기",
-        "about_text": "\"<div class=\"header\"><a href='http://www.enhancedsteam.com'>Enhanced Steam</a>에 대하여:</div><p>Enhanced Steam은 스팀 웹사이트에서 많은 새 기능을 추가한 구글 크롬의 확장프로그램입니다.<p>다음과 같은 특징이 있습니다 :<ul><li>이미 소유한 게임 강조</li><li>찜 목록에 있는 게임 강조</li><li>이미 가지고 있는 게임에 따라 번들 할인 계산</li><li>계정 정보에서 스팀에 얼마나 금액을 사용했는지 보여줌</li><li>게임 페이지에서 소유한 DLC 강조</li><li>찜목록에 있는 모든 게임 또는 DLC의 \"No Image Available(사용 가능한 이미지 없음)\" 게임 아이콘 수정</li><li>타사 DRM의 제목을 알림</li></ul><p>만약 이 확장프로그램이 유용하다면, 기부하는 것을 고려해 주세요!\"",
         "stores_all": "모든 상점 판매가 비교하기",
         "show_early_access_text": "앞서 해보기 게임을 배너에 표시",
         "author_info": "저작자 : jshackles",

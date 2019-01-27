@@ -354,7 +354,6 @@
         "total_spent": "アカウントページに合計消費額を表示",
         "add_wallet_balance": "ヘッダーにSteamウォレットの残高を表示する",
         "add_to_cart_wishlist": "ウィッシュリストに「カートに追加」ボタンを表示",
-        "about_text": "<div class=\"header\"><a href='http://www.enhancedsteam.com'>Enhanced Steam</a>について:Enhanced Steamは、Steamのウェブサイトに多くの新機能を追加するGoogle Chrome用拡張機能です。<p>含まれる機能:<ul><li>すでに所有しているゲームの強調表示</li><li>ウィッシュリストにあるゲームの強調表示</li><li>すでに所有しているゲームに基づいた正確なバンドル値引き額の算出</li><li>今までSteamで消費した額の表示</li><li>ゲームのページで所有しているDLCの強調表示</li><li>ウィッシュリストでいかなるゲームまたはDLCに対しての\"No Image Available\"画像の修正</li><li>サードパーティーのDRMがあるタイトルの指摘</li></ul><p>この拡張が便利だなと思ったら、寄付を検討していただけませんか。",
         "stores_all": "すべてのストアを比較",
         "show_early_access_text": "早期アクセスの画像バナーを表示",
         "author_info": "製作: jshackles",

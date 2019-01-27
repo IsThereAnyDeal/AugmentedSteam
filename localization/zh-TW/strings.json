@@ -354,7 +354,6 @@
         "total_spent": "在帳號頁面中顯示總共消費金額",
         "add_wallet_balance": "在標題欄顯示 Steam 錢包餘額",
         "add_to_cart_wishlist": "顯示 \"添加到購物籃\" 按鈕在願望清單上",
-        "about_text": "<div class=\"header\">About <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:</div><p>Enhanced Steam是個為Steam網站加入許多新功能的Google Chrome插件<p>功能包含:<ul><li>亮光顯示你已經擁有的遊戲</li><li>亮光顯示在你願望清單上的遊戲</li><li>正確計算遊戲組合包減價的正確金額</li><li>顯示你在Steam帳號中所花的累計金額</li><li>在遊戲頁面上亮光顯示你已經擁有的DLC</li><li>修復在你願望清單上沒有圖片的遊戲或DLC</li><li>指出有第三方DRM的遊戲</li></ul><p>如果你認為這項插件十分好用，請考慮捐獻",
         "stores_all": "與所有商店做比較",
         "show_early_access_text": "顯示搶先體驗圖片橫幅",
         "author_info": "由jshackles製作",

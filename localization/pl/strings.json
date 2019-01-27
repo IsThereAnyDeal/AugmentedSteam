@@ -354,7 +354,6 @@
         "total_spent": "Pokaż \"W sumie wydano:\" na stronie konta",
         "add_wallet_balance": "Pokaż fundusze Portfela Steam w nagłówku",
         "add_to_cart_wishlist": "Pokaż przycisk \"Dodaj do koszyka\" na liście życzeń",
-        "about_text": "O <a href='http://www.enhancedsteam.com'>Enhanced Steam</a>:<p>Enhanced Steam to rozszerzenie dla Google Chrome, które dodaje wiele usprawnień do strony Steam.<p>Wybrane możliwości:<ul><li>Podświetlanie posiadanych gier</li><li>Podświetlanie gier z listy życzeń</li><li>Prawidłowe obliczanie zniżek pakietów na podstawie posiadanych gier</li><li>Pokazywanie kwoty wydanej na Steam od założenia konta</li><li>Podświetlanie posiadanych DLC na stronie gry</li><li>Poprawka błędu \"Brak obrazu\" dla gier i DLC</li><li>Ostrzeganie o dodatkowych DRM</li></ul><p>Jeśli uważasz to rozszerzenie za przydatne, rozważ możliwość dotacji.",
         "stores_all": "Porównaj wszystkie sklepy",
         "show_early_access_text": "Pokaż banery wczesnego dostępu",
         "author_info": "Autor: jshackles",

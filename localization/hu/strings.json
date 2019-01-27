@@ -354,7 +354,6 @@
         "total_spent": "Összes eladás jelzése a profil oldalon",
         "add_wallet_balance": "Steam pénztárca egyenlege megjelenítése a fejlécben",
         "add_to_cart_wishlist": "Kosárhoz adás gomb megjelenítése a kívánságlistán",
-        "about_text": "<div class=\"header\"><a href='http://www.enhancedsteam.com'>Enhanced Steam</a> névjegye:</div><p>Az Enhanced Steam egy Google Chrome bővítmény, amely sok új funkciót ad a Steam honlapjához.<p>Funkciók:<ul><li>Könyvtáradban szereplő játékok kiemelése</li><li>Kívánságlistádon szereplő játékok kiemelése</li><li>Csomagkedvezmények helyes számítása a játékaid alapján</li><li>Megmutatja, mennyi pénzt költöttél eddig a Steamen</li><li>A könyvtáradban szereplő DLC-k kiemelése a játék oldalán</li><li>\"No Image Available\" játék ikon javítása a kívánságlistádban</li><li>Harmadik személytől származó DRM-mel rendelkező címek kiemelése</li></ul><p>Ha hasznosnak találod ezt a bővítményt, kérlek fontold meg a fejlesztők támogatását.",
         "stores_all": "Összehasonlítás az összes bolttal",
         "show_early_access_text": "Mutassa a Korai Hozzáférés jelzéseket",
         "author_info": "jshackles által",
