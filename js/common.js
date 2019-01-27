@@ -1116,7 +1116,7 @@ let EnhancedSteam = (function() {
 
         if (!version) {
             // new instalation detected
-            SyncedStorage.set("version", version);
+            SyncedStorage.set("version", Info.version);
             return;
         }
 
@@ -2476,7 +2476,7 @@ let Customizer = (function(){
             if (node.nodeType === 3) { str += node.textContent.trim(); }
         }
         return str;
-    }
+    };
 
     self.addToggleHandler = function(name, target, text, forceShow, callback) {
         let element = typeof target === "string" ? document.querySelector(target) : target;
@@ -2519,6 +2519,46 @@ let Customizer = (function(){
 
             if (callback) { callback(); }
         });
+    };
+
+    return self;
+})();
+
+let Common = (function(){
+
+    let self = {};
+
+    self.init = function() {
+
+        console.log.apply(console, [
+            "%c Enhanced %cSteam v" + Info.version + ", an IsThereAnyDeal fork %c https://es.isthereanydeal.com/",
+            "background: #000000;color:#046eb2",
+            "background: #000000;color: #ffffff",
+            "",
+        ]);
+
+        ProgressBar.create();
+        EnhancedSteam.checkVersion();
+        EnhancedSteam.addMenu();
+        EnhancedSteam.addLanguageWarning();
+        EnhancedSteam.removeInstallSteamButton();
+        EnhancedSteam.addHeaderLinks();
+        EarlyAccess.showEarlyAccess();
+        EnhancedSteam.disableLinkFilter();
+        EnhancedSteam.skipGotSteam();
+        EnhancedSteam.keepSteamSubscriberAgreementState();
+
+        if (User.isSignedIn) {
+            EnhancedSteam.addRedeemLink();
+            EnhancedSteam.replaceAccountName();
+            EnhancedSteam.launchRandomButton();
+            // TODO add itad sync
+            EnhancedSteam.bindLogout();
+        } else {
+            EnhancedSteam.removeAboutMenu();
+        }
+
+
     };
 
     return self;

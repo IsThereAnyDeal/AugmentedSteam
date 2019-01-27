@@ -2661,37 +2661,13 @@ let TabAreaObserver = (function(){
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    console.log("Running store");
-
     SyncedStorage
         .load()
         .finally(() => Promise
             .all([Localization.promise(), User.promise(), Currency.promise()])
             .then(function(values) {
-                console.log("ES loaded");
 
-                ProgressBar.create();
-                EnhancedSteam.checkVersion();
-                EnhancedSteam.addMenu();
-                EnhancedSteam.addLanguageWarning();
-                EnhancedSteam.removeInstallSteamButton();
-                EnhancedSteam.addHeaderLinks();
-                EarlyAccess.showEarlyAccess();
-                EnhancedSteam.disableLinkFilter();
-                EnhancedSteam.skipGotSteam();
-                EnhancedSteam.keepSteamSubscriberAgreementState();
-
-                if (User.isSignedIn) {
-                    EnhancedSteam.addRedeemLink();
-                    EnhancedSteam.replaceAccountName();
-                    EnhancedSteam.launchRandomButton();
-                    // TODO add itad sync
-                    EnhancedSteam.bindLogout();
-                } else {
-                    EnhancedSteam.removeAboutMenu();
-                }
-
-                // end of common part
+                Common.init();
 
                 switch (true) {
                     case /\bagecheck\b/.test(path):
