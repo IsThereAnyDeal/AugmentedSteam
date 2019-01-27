@@ -779,7 +779,7 @@ let Currency = (function() {
                     return;
                 }
 
-                let currencyCache = SyncedStorage.get("userCurrency", {});
+                let currencyCache = LocalData.get("user_currency", {});
                 if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
                     self.userCurrency = currencyCache.userCurrency.currencyType;
                     resolve();
@@ -791,7 +791,7 @@ let Currency = (function() {
                                 dummyHtml.innerHTML = response;
 
                                 self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
                             },
                             () => {
                                 RequestData
@@ -806,7 +806,7 @@ let Currency = (function() {
                                         }
 
                                         self.userCurrency = currency;
-                                        SyncedStorage.set("userCurrency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
                                     });
                             }
                         )
@@ -1118,11 +1118,11 @@ let EnhancedSteam = (function() {
     let self = {};
 
     self.checkVersion = function() {
-        let version = SyncedStorage.get("version");
+        let version = LocalData.get("version");
 
         if (!version) {
             // new instalation detected
-            SyncedStorage.set("version", Info.version);
+            LocalData.set("version", Info.version);
             return;
         }
 
@@ -1150,7 +1150,7 @@ let EnhancedSteam = (function() {
                 );
             }
         );
-        SyncedStorage.set("version", Info.version);
+        LocalData.set("version", Info.version);
 
         window.addEventListener("message", function(event) {
             if (event.source !== window) return;
@@ -1362,7 +1362,7 @@ let EnhancedSteam = (function() {
 
     // Hide Trademark and Copyright symbols in game titles for Community pages
     self.hideTrademarkSymbol = function(community) {
-        if (false && !SyncedStorage.get("hidetmsymbols", false)) { return; }
+        if (!SyncedStorage.get("hidetmsymbols", false)) { return; }
 
         // TODO I would try to reduce number of selectors here
         let selectors= "title, .apphub_AppName, .breadcrumbs, h1, h4";

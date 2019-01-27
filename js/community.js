@@ -33,7 +33,6 @@ let ProfileData = (function(){
 
         _promise = new Promise(function(resolve, reject){
             let steamId = SteamId.getSteamId();
-            console.log(steamId);
             if (!steamId) { reject(); }
 
             let localDataKey = getLocalDataKey(steamId);
