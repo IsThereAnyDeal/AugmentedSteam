@@ -1133,7 +1133,7 @@ let EnhancedSteam = (function() {
         RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
             changelog => {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionLayer.getLocalUrl("img/enhancedsteam.png");
+                let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
                 let dialog = "<div style=\"height:100%; display:flex; flex-direction:row;\"><div style=\"float: left; margin-right: 21px;\">"
                     + "<img src=\""+ logo +"\"></div>"
                     + "<div style=\"float: right;\">" + Localization.str.update.changes.replace(/'/g, "\\'")
@@ -1141,9 +1141,8 @@ let EnhancedSteam = (function() {
                     "</div>";
                 ExtensionLayer.runInPageContext(
                     "function() {\
-                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", version) + "\", '" + dialog + "' , '" + Localization.str.donate.replace(/'/g, "\\'") + "', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
+                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
 						prompt.done(function(result) {\
-							if (result == 'OK') { window.location.assign('//www.enhancedsteam.com/donate/'); }\
 							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
 						});\
 					}"
