@@ -592,7 +592,6 @@ let AppPageClass = (function(){
 
                     // Clear dynamicstore cache
                     DynamicStore.clear();
-                    chrome.storage.local.remove("dynamicstore");
 
                     // Invalidate dynamic store data cache
                     ExtensionLayer.runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
@@ -1511,10 +1510,14 @@ let AppPageClass = (function(){
 
         toggleReviews();
 
-        document.querySelector("#es_review_toggle").addEventListener("click", function() {
-            LocalData.set("show_review_section", !LocalData.get("show_review_section"))
-            toggleReviews();
-        });
+        let node = document.querySelector("#review_create");
+        if (node) {
+            node.addEventListener("click", function(e) {
+                if (!e.target.closest("#es_review_toggle")) { return; }
+                LocalData.set("show_review_section", LocalData.get("show_review_section", true) ? false : true);
+                toggleReviews();
+            });
+        }
     };
 
     AppPageClass.prototype.addHelpButton = function() {
