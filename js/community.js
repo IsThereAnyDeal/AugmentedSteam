@@ -82,13 +82,13 @@ let ProfileHomePageClass = (function(){
         this.addSteamRepApi();
         this.addPostHistoryLink();
         this.inGameNameLink();
+        this.addProfileStyle();
 
         /*
         add_custom_profile_links();
         add_twitch_info();
         fix_app_image_not_found();
         hide_spam_comments();
-        add_profile_style();
         chat_dropdown_options();
         */
     }
@@ -165,6 +165,36 @@ let ProfileHomePageClass = (function(){
 
         });
 
+        // custom profile link
+        if (SyncedStorage.get("profile_custom")
+            && SyncedStorage.get("profile_custom_url")
+            && SyncedStorage.get("profile_custom_icon")
+            && SyncedStorage.get("profile_custom_name")) {
+
+            let customUrl = SyncedStorage.get("profile_custom_url");
+            if (!customUrl.includes("[ID]")) {
+                customUrl += "[ID]";
+            }
+
+            let customName = SyncedStorage.get("profile_custom_name");
+            let customIcon = SyncedStorage.get("profile_custom_icon");
+
+            let name = customName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            let link = "//" + customUrl.replace("[ID]", steamId).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            let icon = "//" + customIcon.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+
+            htmlstr +=
+                `<div class="es_profile_link profile_count_link">
+                    <a class="es_sites_icons es_none es_${icon_type}" href="${link}" target="_blank">
+                    <span class="count_link_label">${name}</span>`;
+                    if (iconType !== "none") {
+                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
+                    }
+                    htmlstr += `</a>
+                </div>`;
+        }
+
+        // profile permalink
         if (SyncedStorage.get("profile_permalink")) {
             let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
             htmlstr +=
@@ -368,6 +398,51 @@ let ProfileHomePageClass = (function(){
         let node = document.querySelector(".profile_in_game_name");
         node.innerHTML = '<a data-tooltip-html="' + tooltip + '" href="//store.steampowered.com/app/' + ingameNode.value + '" target="_blank">' + node.textContent + '</a>';
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+    };
+
+    ProfileHomePageClass.prototype.addProfileStyle = function() {
+        if (document.querySelector("body.profile_page.private_profile")) { return; }
+
+        ProfileData.promise().then(data => {
+            if (!data || !data.style) { return; }
+
+            let style = data.style;
+            let availableStyles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
+            if (availableStyles.indexOf(style) === -1) { return; }
+
+            document.body.classList.add("es_profile_style");
+            switch (style) {
+                case "holiday2014":
+                    document.querySelector("head")
+                        .insertAdjacentHTML("beforeend", "<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
+
+                    document.querySelector(".profile_header_bg_texture").insertAdjacentHTML("beforeend", "<div class='holidayprofile_header_overlay'></div>");
+                    document.querySelector(".profile_page").classList.add("holidayprofile");
+
+                    let script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.src = "https://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js";
+                    document.body.append(script);
+
+                    script.addEventListener("load", function(){
+                        ExtensionLayer.runInPageContext("function() { StartAnimation(); }");
+                    });
+
+                    break;
+                case "clear":
+                    document.body.classList.add("es_style_clear");
+                    break;
+                default:
+                    let styleUrl = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/style.css");
+                    let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
+                    let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
+
+                    document.querySelector("head").insertAdjacentHTML("beforeend", "<link rel='stylesheet' type='text/css' href='" + styleUrl + "'>");
+                    document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
+                    document.querySelector(".profile_customization").style.backgroundImage = "url('" + showcase + "')";
+                    break;
+            }
+        });
     };
 
 
