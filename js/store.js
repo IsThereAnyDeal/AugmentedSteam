@@ -2687,6 +2687,8 @@ let TabAreaObserver = (function(){
                     EnhancedSteam.launchRandomButton();
                     // TODO add itad sync
                     EnhancedSteam.bindLogout();
+                } else {
+                    EnhancedSteam.removeAboutMenu();
                 }
 
                 // end of common part

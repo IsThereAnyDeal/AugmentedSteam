@@ -1243,6 +1243,11 @@ let EnhancedSteam = (function() {
         document.querySelector("div.header_installsteam_btn").remove();
     };
 
+    self.removeAboutMenu = function(){
+        if (!SyncedStorage.get("hideaboutmenu")) { return; }
+        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+    };
+
     self.addHeaderLinks = function(){
         if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
 
