@@ -1,46 +1,17 @@
-Enhanced Steam
+Enhanced Steam, an IsThereAnyDeal fork
 ==============
 
-Enhanced Steam is an open-source Google Chrome browser extension.  
+This is a fork of Enhanced Steam extension.
 
-**Please note, development of this project has ended.  [You can read more about Enhanced Steam's end of life here.](http://www.enhancedsteam.com/blog/?p=256)**
+We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
 
-If you are looking for the Firefox version, you can find it here
-https://github.com/jshackles/Enhanced_Steam_Firefox.
+Visit [extension's page](https://es.isthereanydeal.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info. 
 
-Features
-------------
-
-* Adding more wishlist sorting options
-* Displaying historically lowest prices
-* Highlighting games you already own or those on your wishlist
-* Correctly calculating bundle discounts
-* Showing total money spent on Steam
-* Highlighting DLCs you own on a game page
-* Fixing "No Image Available" game icons on your wishlist
-* And more!
-
-Installation
-------------
-
-##### Automatic
-Click [here](https://www.enhancedsteam.com/download/) and follow the instructions
-
-_(Not Working? Try [The Chrome Web Store](https://chrome.google.com/webstore/detail/enhanced-steam/okadibdjfemgnhjiembecghcbfknbfhg) and just click "Add to Chrome")_
-
-##### Manual
-1. Clone this repo to a folder. You can choose either the [master / stable](https://github.com/jshackles/Enhanced_Steam/tree/master) or [dev / unstable](https://github.com/jshackles/Enhanced_Steam/tree/dev) branch.
-2. Open the 'Extensions' tab in Chrome's Settings.
-3. Tick 'Developer Mode' in the top right corner of the screen.
-4. Click 'Load unpacked extension...' and navigate to the cloned repo.
-5. Enjoy using Enhanced Steam!
-
-Translators
+Current state
 -------
 
-Please head over to http://translation.enhancedsteam.com to help out with translations!
-
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/enhanced-steam/localized.svg)](http://translation.enhancedsteam.com)
+We have decided to rebuild the extension from the ground up, right now we are aiming to reach feature parity.
+Most of the store features should be done, community features are still in works.
 
 License
 -------
