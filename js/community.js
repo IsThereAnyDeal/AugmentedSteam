@@ -10,7 +10,7 @@ let SteamId = (function(){
         if (document.querySelector("#reportAbuseModal")) {
             _steamId = document.querySelector("input[name=abuseID]").value;
         } else {
-            _steamId = BrowserHelper.getVariableFromDom("g_steamId", "string");
+            _steamId = BrowserHelper.getVariableFromDom("g_steamID", "string");
         }
 
         return _steamId;
@@ -33,6 +33,7 @@ let ProfileData = (function(){
 
         _promise = new Promise(function(resolve, reject){
             let steamId = SteamId.getSteamId();
+            console.log(steamId);
             if (!steamId) { reject(); }
 
             let localDataKey = getLocalDataKey(steamId);
@@ -64,7 +65,7 @@ let ProfileData = (function(){
 
     self.clearOwn = function() {
         if (!User.isSignedIn) { return; }
-        LocalData.remove(getLocalDataKey(User.getSteamId()));
+        LocalData.del(getLocalDataKey(User.steamId));
     };
 
     return self;
@@ -456,11 +457,7 @@ let GamesPageClass = (function(){
             this.addGamelistAchievements();
         }
 
-        /*
-        add_gamelist_sort();
-        add_gamelist_filter();
         add_gamelist_common();
-        */
     }
 
     // Display total time played for all games
@@ -567,9 +564,140 @@ let GamesPageClass = (function(){
         }
     };
 
-
     return GamesPageClass;
 })();
+
+let ProfileEditPageClass = (function(){
+
+    function ProfileEditPageClass() {
+        return; // TODO
+        ProfileData.clearOwn();
+        ProfileData.promise();
+        // this.addBackgroundSelection();
+        // add_es_style_selection();
+    }
+
+    /* TODO
+    ProfileEditPageClass.prototype.addBackgroundSelection = function() {
+        if (!SyncedStorage.get("showesbg", Defaults.showesbg)) { return false; }
+        if (window.location.pathname.indexOf("/settings") >= 0) { return; }
+
+        let steamId = SteamId.getSteamId();
+
+        let saveUrl = Config.PublicHost + "/gamedata/profile_bg_save.php";
+        let removeUrl = Config.PublicHost + "/gamedata/profile_bg_remove.php";
+        let html = "<form id='es_profile_bg' method='POST' action='"+ saveUrl +"'><div class='group_content group_summary'>";
+            html += "<input type='hidden' name='steam64' value='" + steamId+ "'>";
+            html += "<input type='hidden' name='appid' id='appid'>";
+            html += "<div class='formRow'><div class='formRowTitle' style='overflow: visible;'>" + Localization.str.custom_background + ":<span class='formRowHint' data-tooltip-text='" + Localization.str.custom_background_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ Localization.str.loading +"</div>";
+            html += "<img id='es_profile_background_current_image' src=''>";
+            html += "</div><div class='profile_background_current_description'><div id='es_profile_background_current_name'>";
+            html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + Localization.str.remove + "</span></span>&nbsp;<span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + Localization.str.save + "</span></span></div></div></div></div>";
+            html += "</form><form id='es_profile_remove' method='POST' action='" + removeUrl + "'>";
+            html += "<input type='hidden' name='steam64' value='" + steamId + "'>";
+            html += "</form>";
+
+        document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
+        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+
+        RequestData.getApi("v01/profile/background/games", {profile: steamId}).then(response => {
+            if (!response || !response.data) { return; }
+
+            console.log(response);
+
+            let selected = false;
+            let games = response.data;
+
+            let selectHtml = "<select name='es_background_gamename' id='es_background_gamename' class='gray_bevel dynInput'><option value='0' id='0'>" + Localization.str.noneselected + "</option>";
+            games.forEach(game => {
+                let id = BrowserHelper.escapeHTML(game.id.toString());
+                if (game.sel) {
+                    selectHtml += "<option value='" + id + "' selected>" + BrowserHelper.escapeHTML(game.t) + "</option>";
+                    selected = true;
+                } else {
+                    selectHtml += "<option value='" + id + "'>" + BrowserHelper.escapeHTML(game.t) + "</option>";
+                }
+            });
+            selectHtml += "</select>";
+
+            document.querySelector(".es_loading").remove();
+            document.querySelector("#es_profile_background_current_name").innerHTML = selectHtml;
+
+            ProfileData.promise().then(data => {
+                let bg = data.bg.small ? BrowserHelper.escapeHTML(data.bg.small) : "";
+                document.querySelector("#es_profile_background_current_image").src = bg;
+            });
+
+            document.querySelector("#es_background_gamename").addEventListener("change", function () {
+                let appid = document.querySelector("#es_background_gamename").value;
+                document.querySelector("#appid").value = appid;
+
+                let selectionNode = document.querySelector("#es_background_selection");
+                if (selectionNode) {
+                    selectionNode.remove();
+                }
+
+                if (appid == 0) {
+                    document.querySelector("#es_profile_background_current_image").src = "";
+                } else {
+                    document.querySelector("#es_profile_background_current_name").insertAdjacentHTML("afterend", "<div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.loading + "</div>");
+
+                    RequestData.getApi("v01/profile/background/background", {
+                        appid: appid,
+                        profile: steamId
+                    }).then(result => {
+                        document.querySelector("#es_profile_background_current_name").insertAdjacentHTML("afterend", "<div id='es_background_selection'></div>");
+                        selectHtml = "<select name='es_background' id='es_background' class='gray_bevel dynInput'>";
+                        let i = 0;
+                        if (selected) {
+                            i = 1;
+                            selected = false;
+                        }
+
+                        result.data.forEach(value => {
+                            let index = BrowserHelper.escapeHTML(value["index"].toString());
+                            let name = BrowserHelper.escapeHTML(value["name"].toString());
+
+                            if (value["selected"]) {
+                                selectHtml += "<option value='" + index + "' selected>" + name + "</option>";
+                            } else {
+                                if (i === 0) {
+                                    document.querySelector("#es_profile_background_current_image").src = value["id"];
+                                    i = 1;
+                                }
+                                selectHtml += "<option value='" + index + "'>" + name + "</option>";
+                            }
+                        });
+                        selectHtml += "</select>";
+
+                        document.querySelector(".es_loading").remove();
+                        document.querySelector("#es_background_selection").innerHTML = selectHtml;
+
+                        document.querySelector("#es_background").addEventListener("change", function() {
+                            let img = document.querySelector("#es_background").value + "/252fx160f";
+                            document.querySelector("#es_profile_background_current_image").src = img;
+                        });
+                    });
+
+                    // Enable the "save" button
+                    document.querySelector("#es_background_save_btn").classList.remove("btn_disabled");
+                    document.querySelector("#es_background_save_btn").addEventListener("click", function() {
+                        ProfileData.clearOwn();
+                        document.querySelector("#es_profile_bg").submit();
+                    });
+                }
+            });
+
+            document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
+                ProfileData.clearOwn();
+                document.querySelector("#es_profile_remove").submit();
+            });
+        });
+    };
+*/
+    return ProfileEditPageClass;
+})();
+
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -578,10 +706,9 @@ let GamesPageClass = (function(){
         .load()
         .finally(() => Promise
             .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(function(values) {
+            .then(() => {
 
                 Common.init();
-
 
                 switch (true) {
 
@@ -589,126 +716,15 @@ let GamesPageClass = (function(){
                         (new GamesPageClass());
                         break;
 
-                    // TODO must be last of the profiel pages
-                    case /^\/(?:id|profiles)\/.+/.test(path):
+                    case /^\/(?:id|profiles)\/.+\/edit/.test(path):
+                        (new ProfileEditPageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
                         (new ProfileHomePageClass());
                         break;
-/*
-                    case /^\/chat\//.test(path):
-                        // chat_dropdown_options(true);
-                        break;
 
-                    case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b\/?$/.test(path):
-                        start_friend_activity_highlights();
-                        bind_ajax_content_highlighting();
-                        hide_activity_spam_comments();
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/edit/.test(path):
-                        profileData.clearOwn();
-                        profileData.load();
-                        add_es_background_selection();
-                        add_es_style_selection();
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
-                        bind_ajax_content_highlighting();
-                        inventory_market_prepare();
-                        hide_empty_inventory_tabs();
-                        keep_ssa_checked();
-                        add_inventory_gotopage();
-                        break;
-
-
-                    case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
-                        add_badge_completion_cost();
-                        add_total_drops_count();
-                        add_cardexchange_links();
-                        add_badge_sort();
-                        add_badge_filter();
-                        add_badge_view_options();
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-                        add_achievement_sort();
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-                        var gamecard = get_gamecard(path);
-                        add_cardexchange_links(gamecard);
-                        add_gamecard_market_links(gamecard);
-                        add_gamecard_foil_link();
-                        add_store_trade_forum_link(gamecard);
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
-                        add_friends_that_play();
-                        add_friends_playtime_sort();
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-                        add_friends_sort();
-                        break;
-
-                    case /^\/(?:id|profiles)\/.+\/tradeoffers/.test(path):
-                        add_decline_button();
-                        break;
-*/
-/*
-                    case /^\/sharedfiles\/.test(path):
-                        hide_spam_comments();
-                        media_slider_expander();
-                        break;
-
-                    case /^\/workshop\/.test(path):
-                        hide_spam_comments();
-                        break;
-
-                    case /^\/market\/listings\/.test(path):
-                        var appid = get_appid(window.location.host + path);
-                        add_sold_amount(appid);
-                        add_badge_page_link();
-                        add_background_preview_link(appid);
-
-                    case /^\/market\//.test(path):
-                        load_inventory().done(function() {
-                            highlight_market_items();
-                            bind_ajax_content_highlighting();
-                        });
-                        add_market_total();
-                        minimize_active_listings();
-                        add_lowest_market_price();
-                        keep_ssa_checked();
-                        add_market_sort();
-                        market_popular_refresh_toggle();
-                        break;
-
-                    // case /^\/app\/[^\/]* \/guides/.test(path):
-                        remove_guides_language_filter();
-
-                    // case /^\/app\/.* /.test(path):
-                        var appid = get_appid(window.location.host + path);
-                        add_app_page_wishlist(appid);
-                        hide_spam_comments();
-                        add_steamdb_links(appid, "gamehub");
-                        send_age_verification();
-                        break;
-
-                    // case /^\/games\/.* /.test(path):
-                        var appid = document.querySelector( 'a[href*="' + protocol + '//steamcommunity.com/app/"]' );
-                        appid = appid.href.match( /(\d)+/g );
-                        add_steamdb_links(appid, "gamegroup");
-                        break;
-
-                    // case /^\/tradingcards\/boostercreator/.test(path):
-                        add_booster_prices();
-                        break;
-
-                    // case /^\/$/.test(path):
-                        hide_spam_comments();
-                        hide_trademark_symbols(true);
-                        break;
-*/
+                    // TODO
                 }
             })
     )

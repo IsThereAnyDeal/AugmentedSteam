@@ -16,7 +16,8 @@
     "permissions": [
         "storage",
         "http://*.steampowered.com/",
-        "https://*.steampowered.com/"
+        "https://*.steampowered.com/",
+        "*://*.isthereanydeal.com/"
     ],
     "web_accessible_resources": [
         "img/*.png",
