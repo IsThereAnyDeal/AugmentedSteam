@@ -602,9 +602,10 @@ let AppPageClass = (function(){
             }
         });
 
-        $("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore").on("click", function(){
-            DynamicStore.clear();
-        });
+        let nodes = document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            nodes[i].addEventListener("click", DynamicStore.clear);
+        }
     };
 
     AppPageClass.prototype.getFirstSubid = function() {
@@ -649,7 +650,6 @@ let AppPageClass = (function(){
         if (!this.isDlc()) { return; }
 
         RequestData.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
-            console.log(response);
             let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
 
             if (response && response.result === "success") {
@@ -1375,9 +1375,11 @@ let AppPageClass = (function(){
                     }
 
                     let last = blockSel.querySelector(".badge_empty_right div:last-child");
-                    last.classList.add("badge_empty_name");
-                    last.style = "";
-                    last.textContent = Localization.str.badge_not_unlocked;
+                    if (last) {
+                        last.classList.add("badge_empty_name");
+                        last.style = "";
+                        last.textContent = Localization.str.badge_not_unlocked;
+                    }
                 }
             } else {
                 blockSel.remove();
@@ -1421,8 +1423,6 @@ let AppPageClass = (function(){
             let barEmpty = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
             barFull = barFull * .88;
             barEmpty = barEmpty * .88;
-
-            console.log(node.innerHTML);
 
             node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
             node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
@@ -2542,7 +2542,7 @@ let StoreFrontPageClass = (function(){
         if (SyncedStorage.get("homepage_tab_selection", "remember") !== "remember") { return; }
 
         document.querySelector(".home_tabs_row").addEventListener("click", function(e) {
-            let tab = e.closest(".tab_content");
+            let tab = e.target.closest(".tab_content");
             if (!tab) { return; }
             SyncedStorage.set("homepage_tab_last", tab.parentNode.id);
         });

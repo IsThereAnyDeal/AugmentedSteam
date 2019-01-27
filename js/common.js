@@ -41,6 +41,7 @@ let Defaults = (function() {
     self.tag_short = false;
 
     self.hide_owned = false;
+    self.hide_ignored = false;
     self.hidetmsymbols = false;
 
     self.showlowestprice = true;
@@ -77,7 +78,7 @@ let Defaults = (function() {
     self.hideaboutmenu = false;
     self.showemptywishlist = true;
     self.version_show = true;
-    self.replaceaccountname = false;
+    self.replaceaccountname = true;
     self.showfakeccwarning = true;
     self.showlanguagewarning = true;
     self.showlanguagewarninglanguage = "English";
@@ -142,7 +143,6 @@ let Api = (function(){
                 .join("&");
         }
 
-        console.log("//" + Config.ApiServerHost + "/" + endpoint + "/" + queryString);
         return "//" + Config.ApiServerHost + "/" + endpoint + "/" + queryString;
     };
 
@@ -210,7 +210,6 @@ let SyncedStorage = (function(){
 
         let newVal = {};
         newVal[key] = value;
-        console.log(newVal);
         storageAdapter.set(newVal);
     };
 
@@ -1383,15 +1382,12 @@ let EnhancedSteam = (function() {
                 });
             });
         });
+        
+        nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            observer.observe(node, {childList:true, subtree:true});
 
-        if (community){
-            observer.observe(document.querySelector("#game_select_suggestions"), {childList:true, subtree:true});
-        } else {
-            observer.observe(document.querySelector("#search_suggestion_contents"), {childList:true, subtree:true});
-
-            if (document.querySelector(".tab_content_ctn")) {
-                observer.observe(document.querySelector(".tab_content_ctn"), {childList:true, subtree:true});
-            }
         }
     };
 
@@ -2075,7 +2071,7 @@ let Highlights = (function(){
 
             node.classList.add("es_highlight_checked");
 
-            if (!SyncedStorage.get("hide_notinterested", false) && node.classList.contains("search_result_row")) {
+            if (SyncedStorage.get("hide_ignored", false) && node.closest(".search_result_row")) {
                 node.style.display = "none";
                 return;
             }
@@ -2183,8 +2179,8 @@ let DynamicStore = (function(){
     };
 
     self.isIgnored = function(appid) {
-        let list = _data.rgIgnoredApps || [];
-        return list.indexOf(appid) !== -1;
+        let list = _data.rgIgnoredApps || {};
+        return list.hasOwnProperty(appid);
     };
 
     self.isOwned = function(appid) {

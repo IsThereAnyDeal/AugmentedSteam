@@ -1,5 +1,5 @@
 {
-    "name": "Enhanced Steam, fork by IsThereAnyDeal",
+    "name": "Enhanced Steam, an IsThereAnyDeal fork",
     "version": "1.0",
     "description": "Continues to Enhance the Steam Experience",
     "icons": {
@@ -33,7 +33,7 @@
         "img/profile_styles/*/preview.png",
         "localization/*/strings.json"
     ],
-    "homepage_url": "http://www.EnhancedSteam.com/",
+    "homepage_url": "https://es.ithereanydeal.com/",
     "content_scripts": [
         {
             "matches": [
@@ -57,17 +57,7 @@
                 "js/store.js"
             ],
             "css": [
-                "css/enhancedsteam.css"
-            ]
-        },
-        {
-            "matches": [
-                "http://*.steampowered.com/app/*",
-                "http://*.steampowered.com/sub/*",
-                "http://*.steampowered.com/sale/*",
-                "http://*.steampowered.com/"
-            ],
-            "css": [
+                "css/enhancedsteam.css",
                 "css/es_flags.css"
             ]
         },
@@ -97,15 +87,6 @@
             ],
             "css": [
                 "css/store.steampowered.com/store_front.css"
-            ]
-        }
-        ,
-        {
-            "matches": [
-                "*://steamcommunity.com/*/wishlist*"
-            ],
-            "css": [
-                "css/steamcommunity.com/steam_store_hover.css"
             ]
         }
     ]

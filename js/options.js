@@ -7,7 +7,7 @@ let Options = (function(){
 			document.querySelector("#store_stores").style.display="none";
 		} else {
 			let node = document.querySelector("#store_stores");
-			node.style.display="block";
+			node.style.display="flex";
 
 			let stores = SyncedStorage.get("stores", []);
 
@@ -18,6 +18,25 @@ let Options = (function(){
 				node.checked = (stores.length == 0 || stores.indexOf(node.id) !== -1);
 			}
 		}
+	}
+
+	function loadStores() {
+		let cols = 4;
+		let node = document.querySelector("#store_stores");
+
+		let perCol = Math.ceil(StoreList.length / cols);
+
+		let html = "";
+		let i = 0;
+		for (let c=0; c<cols; c++) {
+			html += "<div class='store_col'>";
+			for (let len = Math.min(StoreList.length, (c+1)*perCol); i<len; i++) {
+				html += `<div><input type="checkbox" id="${StoreList[i].id}"><label for="steam">${StoreList[i].title}</label></div>`;
+			}
+			html += "</div>";
+		}
+
+		node.innerHTML = html;
 	}
 
 	function loadTranslation() {
@@ -106,7 +125,7 @@ let Options = (function(){
 		    node.style.display="block";
 		}
 
-//		document.querySelector("#profile_links").classList.toggle("es_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
+		// FIXME document.querySelector("#profile_links").classList.toggle("es_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
 
 		if (!SyncedStorage.get("show_profile_link_images")) {
 			let nodes = document.querySelectorAll(".es_sites_icons");
@@ -302,6 +321,7 @@ let Options = (function(){
 	self.init = function() {
 		SyncedStorage.load().finally(() => {
 
+			loadStores();
 			loadOptions();
 			loadProfileLinkImages();
 

@@ -1,608 +1,802 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<script src="js/jQuery.min.js"></script>
-	<script src="js/options.js"></script>
-	<link href="css/options.css" rel="stylesheet" type="text/css">
-	<link href="css/es_flags.css" rel="stylesheet" type="text/css">
-	<link href="css/es_sites_links.css" rel="stylesheet" type="text/css">
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<title>Enhanced Steam Options</title>
-	<base target="_blank">
+    <script src="js/countryList.js"></script>
+    <script src="js/storeList.js"></script>
+    <script src="js/options.js"></script>
+    <script src="js/common.js"></script>
+    <link href="css/options.css" rel="stylesheet" type="text/css">
+    <link href="css/es_flags.css" rel="stylesheet" type="text/css">
+    <link href="css/es_sites_links.css" rel="stylesheet" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Options - Enhanced Steam, an IsThereAnyDeal fork</title>
+    <base target="_blank">
 </head>
 <body>
 
-	<div id="header">
-		<div id="header_logo"><img src="img/logo.png"></div>
-		<span class="notification" id="saved" data-locale-text="options.saved_note">Options saved</span>
-		<span class="notification" id="reset_note" data-locale-text="options.reset_note">Options reset</span>
-	</div>
+<div id="header">
+    <div id="header_logo"><img src="img/logo.png"></div>
+    <span class="notification" id="saved" data-locale-text="options.saved_note">Options saved</span>
+    <span class="notification" id="reset_note" data-locale-text="options.reset_note">Options reset</span>
+</div>
 
-	<div id="side_bar">
-		<a class="tab_row selected" id="nav_store" data-locale-text="store" data-block-sel="#maincontent_store">Store</a>
-		<a class="tab_row" id="nav_price" data-locale-text="price" data-block-sel="#maincontent_price">Price</a>
-		<a class="tab_row" id="nav_community" data-locale-text="community" data-block-sel="#maincontent_community">Community</a>
-		<a class="tab_row" id="nav_news" data-locale-text="news" data-block-sel="#maincontent_news">News</a>
-		<a class="tab_row" id="nav_about" data-locale-text="about" data-block-sel="#maincontent_about">About</a>
-		<a class="tab_row" id="nav_credits" data-locale-text="credits" data-block-sel="#maincontent_credits">Credits</a>
-		<a class="tab_row" id="nav_donate" data-locale-text="donate" href="http://www.EnhancedSteam.com/donate/">Donate</a>
-	</div>
+<div id="page">
+    <div id="side_bar">
+        <a class="tab_row selected" id="nav_store" data-locale-text="store"
+           data-block-sel="#maincontent_store">Store</a>
+        <a class="tab_row" id="nav_price" data-locale-text="price" data-block-sel="#maincontent_price">Price</a>
+        <a class="tab_row" id="nav_community" data-locale-text="community" data-block-sel="#maincontent_community">Community</a>
+        <a class="tab_row" id="nav_news" data-locale-text="news" data-block-sel="#maincontent_news">News</a>
+        <a class="tab_row" id="nav_about" data-locale-text="about" data-block-sel="#maincontent_about">About</a>
+        <a class="tab_row" id="nav_credits" data-locale-text="credits" data-block-sel="#maincontent_credits">Credits</a>
+    </div>
 
-	<div id="contentwrapper">
-		<div id="maincontent_store" class="content">
-			<ul>
-				<li class="header" id="highlight_text" data-locale-text="highlight">Highlight</li>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_owned" data-setting="highlight_owned"><label for="highlight_owned" id="highlight_owned_text" data-locale-text="options.owned">Items you own</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="highlight_owned_color" data-setting="highlight_owned_color" class="colorbutton">
-						<button id="highlight_owned_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_wishlist" data-setting="highlight_wishlist"><label for="highlight_wishlist" id="highlight_wishlist_text" data-locale-text="options.wishlist">Items on your wishlist</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="highlight_wishlist_color" data-setting="highlight_wishlist_color" class="colorbutton">
-						<button id="highlight_wishlist_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_coupon" data-setting="highlight_coupon"><label for="highlight_coupon" id="highlight_coupon_text" data-locale-text="options.coupon">Items with coupons</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="highlight_coupon_color" data-setting="highlight_coupon_color" class="colorbutton">
-						<button id="highlight_coupon_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_inv_gift" data-setting="highlight_inv_gift"><label for="highlight_inv_gift" id="highlight_gift_text" data-locale-text="options.gift">Items stored as gift</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="highlight_inv_gift_color" data-setting="highlight_inv_gift_color" class="colorbutton">
-						<button id="highlight_inv_gift_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_inv_guestpass" data-setting="highlight_inv_guestpass"><label for="highlight_inv_guestpass" id="highlight_guest_text" data-locale-text="options.guest">Items you have a guest pass for</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="highlight_inv_guestpass_color" data-setting="highlight_inv_guestpass_color" class="colorbutton">
-						<button id="highlight_inv_guestpass_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_notinterested" data-setting="highlight_notinterested"><label for="highlight_notinterested" id="highlight_notinterested_text" data-locale-text="notinterested">Items marked not interested</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="highlight_notinterested_color" data-setting="highlight_notinterested_color" class="colorbutton">
-						<button id="highlight_notinterested_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="highlight_excludef2p" data-setting="highlight_excludef2p"><label for="highlight_excludef2p" id="highlight_excludef2p_text" data-locale-text="options.excludef2p">Exclude free to play games from highlighting</label>
-					</li>
-				</div>
-				<li class="header" id="tag_text" data-locale-text="options.tag">Tag</li>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_owned" data-setting="tag_owned"><label for="tag_owned" id="tag_owned_text" data-locale-text="options.owned">Items you own</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="tag_owned_color" data-setting="tag_owned_color" class="colorbutton">
-						<button id="tag_owned_color_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_wishlist" data-setting="tag_wishlist"><label for="tag_wishlist" id="tag_wishlist_text" data-locale-text="options.wishlist">Items on your wishlist</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="tag_wishlist_color" data-setting="tag_wishlist_color" class="colorbutton">
-						<button id="tag_wishlist_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_coupon" data-setting="tag_coupon"><label for="tag_coupon" id="tag_coupon_text" data-locale-text="options.coupon">Items with coupons</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="tag_coupon_color" data-setting="tag_coupon_color" class="colorbutton">
-						<button id="tag_coupon_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_inv_gift" data-setting="tag_inv_gift"><label for="tag_inv_gift" id="tag_gift_text" data-locale-text="options.gift">Items stored as gift</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="tag_inv_gift_color" data-setting="tag_inv_gift_color" class="colorbutton">
-						<button id="tag_inv_gift_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_inv_guestpass" data-setting="tag_inv_guestpass"><label for="tag_inv_guestpass" id="tag_guest_text" data-locale-text="options.guest">Items you have a guest pass for</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="tag_inv_guestpass_color" data-setting="tag_inv_guestpass_color" class="colorbutton">
-						<button id="tag_inv_guestpass_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_notinterested" data-setting="tag_notinterested"><label for="tag_notinterested" id="tag_notinterested_text" data-locale-text="notinterested">Items marked not interested</label>
-					</li>
-					<li class="settings_color">
-						<input type="color" id="tag_notinterested_color" data-setting="tag_notinterested_color" class="colorbutton">
-						<button id="tag_notinterested_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-				</div>
-				<div>
-					<li class="settings_check">
-						<input type="checkbox" id="tag_short" data-setting="tag_short"><label for="tag_short" id="tag_short_text" data-locale-text="options.tag_short">Use short tags to save space</label>
-					</li>
-				</div>
-				<li class="header" id="hide_text" data-locale-text="hide">Hide</li>
-				<li><input type="checkbox" id="hide_owned" data-setting="hide_owned"><label for="hide_owned" id="hide_owned_text" data-locale-text="options.hide_owned">Items you own in search results</label></li>
-				<li><input type="checkbox" id="hidetmsymbols" data-setting="hidetmsymbols"><label for="hidetmsymbols" id="hidetmsymbols_text" data-locale-text="options.hidetmsymbols">Trademark and Copyright symbols in game titles</label></li>
-				<li><input type="checkbox" id="hideinstallsteambutton" data-setting="hideinstallsteambutton"><label for="hideinstallsteambutton" id="store_hide_install_text" data-locale-text="options.hide_install">Hide "Install Steam" button</label></li>
-				<li><input type="checkbox" id="hideaboutmenu" data-setting="hideaboutmenu"><label for="hideaboutmenu" id="store_hide_about_menu" data-locale-text="options.hide_about">Hide "About" link</label></li>
-				<li class="header" id="language_text" data-locale-text="language">Language</li>
-				<li><input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning"><label for="showlanguagewarning" id="store_show_languagewarning_text" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
-					<select id="warning_language" data-setting="showlanguagewarninglanguage" data-locale-text="showlanguagewarninglanguage">
-						<option value="English">English</option>
-						<option value="Bulgarian">български</option>
-						<option value="Czech">čeština</option>
-						<option value="Danish">Dansk</option>
-						<option value="Dutch">Nederlands</option>
-						<option value="Finnish">Suomi</option>
-						<option value="French">Français</option>
-						<option value="Greek">Ελληνικά</option>
-						<option value="German">Deutsch</option>
-						<option value="Hungarian">Magyar</option>
-						<option value="Italian">Italiano</option>
-						<option value="Japanese">日本語</option>
-						<option value="Koreana">한국어</option>
-						<option value="Norwegian">Norsk</option>
-						<option value="Polish">Polski</option>
-						<option value="Portuguese">Português</option>
-						<option value="Brazilian">Português-Brasil</option>
-						<option value="Russian">Русский</option>
-						<option value="Romanian">Română</option>
-						<option value="Schinese">简体中文</option>
-						<option value="Spanish">Español</option>
-						<option value="Swedish">Svenska</option>
-						<option value="Tchinese">繁體中文</option>
-						<option value="Thai">ไทย</option>
-						<option value="Turkish">Türkçe</option>
-						<option value="Ukrainian">Українська</option>
-					</select>
-				</li>
-				<li class="header" id="homepage_text" data-locale-text="options.homepage">Homepage</li>
-				<li><label for="homepage_default_tab" id="homepage_default_tab_text" data-locale-text="options.homepage_default_tab">Default homepage tab</label>
-					<select id="homepage_tab_selection" data-setting="homepage_tab_selection">
-						<option value="remember" data-locale-text="options.homepage_default_tab_remember">Remember Previous</option>
-						<option value="tab_newreleases_content_trigger" data-locale-text="options.homepage_default_tab_newreleases">Popular New Releases</option>
-						<option value="es_allreleases" data-locale-text="options.homepage_default_tab_allreleases">All New Releases</option>
-						<option value="tab_topsellers_content_trigger" data-locale-text="options.homepage_default_tab_topsellers">Top Sellers</option>
-						<option value="tab_upcoming_content_trigger" data-locale-text="options.homepage_default_tab_upcoming">Upcoming</option>
-						<option value="tab_specials_content_trigger" data-locale-text="options.homepage_default_tab_specials">Specials</option>
-						<option value="es_popular" data-locale-text="popular">Popular</option>
-					</select>
-				</li>
-				<li class="header" id="store_general" data-locale-text="options.general">General</li>
-				<li><input type="checkbox" id="show_progressbar" data-setting="show_progressbar"><label for="show_progressbar" id="show_progressbar_text" data-locale-text="options.show_progressbar">Show Enhanced Steam progress and status bar</label></li>
-				<li><input type="checkbox" id="version_show" data-setting="version_show"><label for="version_show" id="version_show_text" data-locale-text="options.version_show">Show change log when Enhanced Steam updates</label></li>
-				<li><input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname"><label for="replaceaccountname" id="store_replace_account_name" data-locale-text="options.replace_account_name">Replace account name with community name</label></li>
-				<li><input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning"><label for="showfakeccwarning" id="header_showfakeccwarning_text" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label></li>
-				<li><input type="checkbox" id="showemptywishlist" data-setting="showemptywishlist"><label for="showemptywishlist" id="store_hide_empty_wishlist" data-locale-text="options.show_empty_wishlist">Show "Empty Wishlist" button</label></li>
-				<li><input type="checkbox" id="send_age_info" data-setting="send_age_info"><label for="send_age_info" id="send_age_info_text" data-locale-text="options.send_age_info">Automatically send age verification when requested</label></li>
-				<li><input type="checkbox" id="html5video" data-setting="html5video"><label for="html5video" id="html5video_text" data-locale-text="options.html5video">Show videos using HTML5 instead of Flash</label></li>
-				<li><input type="checkbox" id="contscroll" data-setting="contscroll"><label for="contscroll" id="contscroll_text" data-locale-text="options.contscroll">Enable continuous scrolling of search results</label></li>
-				<li><input type="checkbox" id="showdrm" data-setting="showdrm"><label for="showdrm" id="store_drm_text" data-locale-text="options.drm">Show 3rd party DRM warnings</label>
-				<li><input type="checkbox" id="showclient" data-setting="showclient"><label for="showclient" id="store_client_text" data-locale-text="options.showclient">Show Steam Client links</label></li>
-				<li><input type="checkbox" id="show_package_info" data-setting="show_package_info"><label for="show_package_info" id="store_package_info_text" data-locale-text="options.show_package_info">Show package info for all apps</label></li>
-				<li><input type="checkbox" id="show_sysreqcheck" data-setting="show_sysreqcheck"><label for="show_sysreqcheck" id="show_sysreqcheck_text" data-locale-text="options.show_sysreqcheck">Show button to check system requirements on app pages (Experimental!)</label></li>
-				<li><input type="checkbox" id="show_early_access" data-setting="show_early_access"><label for="show_early_access" id="show_early_access_text" data-locale-text="options.show_early_access_text">Show Early Access image banners</label>
-				<li><input type="checkbox" id="showachinstore" data-setting="showachinstore"><label for="showachinstore" id="showachinstore_text" data-locale-text="achievements.option">Show achievement completion on store pages</label>
-				<li><input type="checkbox" id="purchase_dates" data-setting="purchase_dates"><label for="purchase_dates" id="purchase_dates_text" data-locale-text="options.purchase_dates">Show apps purchase date on store pages</label>
-				<li><input type="checkbox" id="show_badge_progress" data-setting="show_badge_progress"><label for="show_badge_progress" id="show_badge_progress_text" data-locale-text="options.show_badge_progress">Show apps badge progress on store pages</label></li>
-				<li><input type="checkbox" id="show_alternative_linux_icon" data-setting="show_alternative_linux_icon"><label for="show_alternative_linux_icon" id="show_alternative_linux_icon_text" data-locale-text="options.show_alternative_linux_icon">Show alternative Linux icon</label>
-				<li><input type="checkbox" id="skip_got_steam" data-setting="skip_got_steam"><label for="skip_got_steam" id="skip_got_steam_text" data-locale-text="options.skip_got_steam">Skip the 'Got Steam?' window</label>
-				<li class="header" id="store_general_thirdparty" data-locale-text="options.store_general_thirdparty">Options for information from 3rd party sites</li>
-				<li><input type="checkbox" id="show_keylol_links" data-setting="show_keylol_links"><label for="show_keylol_links" id="store_keylol_text">Show Keylol links on app pages</label></li>
-				<li><input type="checkbox" id="showmcus" data-setting="showmcus"><label for="showmcus" id="store_metacritic_text" data-locale-text="options.metacritic">Show Metacritic user scores</label></li>
-				<li><input type="checkbox" id="showoc" data-setting="showoc"><label for="showoc" id="store_opencritic_text" data-locale-text="options.opencritic">Show Opencritic.com information</label></li>
-				<li><input type="checkbox" id="showhltb" data-setting="showhltb"><label for="showhltb" id="store_hltb_text" data-locale-text="options.hltb">Show HowLongToBeat.com information</label></li>
-				<li><input type="checkbox" id="showsteamdb" data-setting="showsteamdb"><label for="showsteamdb" id="store_steamdb_text" data-locale-text="options.steamdb">Show SteamDB links</label></li>
-				<li><input type="checkbox" id="showastatslink" data-setting="showastatslink"><label for="showastatslink" id="store_astatslink_text" data-locale-text="options.show_astatslink">Show AStats link on app pages</label></li>
-				<li><input type="checkbox" id="showpcgw" data-setting="showpcgw"><label for="showpcgw" id="store_pcgw_text" data-locale-text="options.pcgw">Show PCGamingWiki links</label></li>
-				<li><input type="checkbox" id="showwsgf" data-setting="showwsgf"><label for="showwsgf" id="store_wsgf_text" data-locale-text="options.wsgf">Show WSGF (Widescreen) info</label></li>
-				<li><input type="checkbox" id="showsteamcardexchange" data-setting="showsteamcardexchange"><label for="showsteamcardexchange" id="store_steamcards_text" data-locale-text="options.store_steamcards">Show SteamCardExchange links on store pages</label></li>
-				<li><input type="checkbox" id="show_steamchart_info" data-setting="show_steamchart_info"><label for="show_steamchart_info" id="store_steamchart_info_text" data-locale-text="options.show_steamchart_info">Show SteamCharts.com info</label></li>
-				<li><input type="checkbox" id="show_steamspy_info" data-setting="show_steamspy_info"><label for="show_steamspy_info" id="store_steamspy_info_text" data-locale-text="options.show_steamspy_info">Show steamspy.com info</label></li>
-				<li><input type="checkbox" id="show_itad_button" data-setting="show_itad_button"><label for="show_itad_button" id="show_itad_button_text" data-locale-text="itad.option">Show menu option to sync data to IsThereAnyDeal.com</label>
-				</ul>
-			</div>
+    <div id="contentwrapper">
+        <div id="maincontent_store" class="content settings selected">
 
-			<div id="maincontent_price" class="content" style="display: none">
-				<ul>
-					<li class="header" id="store_lowestprice_header" data-locale-text="options.lowestprice_header">Price History Information</li>
-					<li>
-						<input type="checkbox" id="showlowestprice" data-setting="showlowestprice"><label for="showlowestprice" id="store_lowestprice_text" data-locale-text="options.lowestprice">Show</label>
-					</li>
-					<li>
-						<input type="checkbox" id="showlowestprice_onwishlist" data-setting="showlowestprice_onwishlist"><label for="showlowestprice_onwishlist" id="store_lowestprice_onwishlist_text" data-locale-text="options.lowestprice_onwishlist">Show on Wishlist</label>
-					</li>
-					<li>
-						<input type="checkbox" id="showlowestpricecoupon" data-setting="showlowestpricecoupon"><label for="showlowestpricecoupon" id="store_lowestprice_coupon_text" data-locale-text="options.lowestprice_coupon">Include coupon codes in price comparison</label>
-					</li>
-					<li>
-						<input type="checkbox" id="stores_all" data-setting="showallstores"><label for="stores_all" id="lowestprice_stores_all_text" data-locale-text="options.stores_all">Compare all stores</label>
-					</li>
-					<table id="store_stores" style="display: none" border="0">
-						<tr>
-							<td><input type="checkbox" id="steam"><label for="steam">Steam</label></td>
-							<td><input type="checkbox" id="amazonus"><label for="amazonus">Amazon US</label></td>
-							<td><input type="checkbox" id="impulse"><label for="impulse">GameStop</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="newegg"><label for="newegg">Newegg</label></td>
-							<td><input type="checkbox" id="gamersgate"><label for="gamersgate">GamersGate</label></td>
-							<td><input type="checkbox" id="squenix"><label for="squenix">Square Enix</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="origin"><label for="origin">Origin</label></td>
-							<td><input type="checkbox" id="uplay"><label for="uplay">Uplay</label></td>
-							<td><input type="checkbox" id="indiegalastore"><label for="indiegalastore">IndieGala Store</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="gog"><label for="gog">GOG</label></td>
-							<td><input type="checkbox" id="humblestore"><label for="humblestore">Humble Store</label></td>
-							<td><input type="checkbox" id="humblewidgets"><label for="humblewidgets">Humble Widgets</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="wingamestore"><label for="wingamestore">WinGameStore</label></td>
-							<td><input type="checkbox" id="macgamestore"><label for="macgamestore">MacGameStore</label></td>
-							<td><input type="checkbox" id="bundlestars"><label for="bundlestars">Bundle Stars</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="direct2drive"><label for="direct2drive">Direct2Drive</label></td>
-							<td><input type="checkbox" id="nuuvem"><label for="nuuvem">Nuuvem</label></td>
-							<td><input type="checkbox" id="dlgamer"><label for="dlgamer">DLGamer</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="indiegamestand"><label for="indiegamestand">IndieGameStand</label></td>
-							<td><input type="checkbox" id="chrono"><label for="chrono">Chrono.gg</label></td>
-							<td><input type="checkbox" id="fireflower"><label for="fireflower">FireFlower</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="gamesplanet"><label for="gamesplanet">GamesPlanet</label></td>
-							<td><input type="checkbox" id="gamebillet"><label for="gamebillet">GameBillet</label></td>
-							<td><input type="checkbox" id="silagames"><label for="silagames">SilaGames</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="itchio"><label for="itchio">Itch.io</label></td>
-							<td><input type="checkbox" id="gamejolt"><label for="gamejolt">Game Jolt</label></td>
-							<td><input type="checkbox" id="paradox"><label for="paradox">Paradox Plaza</label></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="dreamgame"><label for="dreamgame">Dreamgame</label></td>
-							<td><input type="checkbox" id="savemi"><label for="savemi">Savemi</label></td>
-						</tr>
-					</table>
-					<li></li>
-					<table>
-						<tr>
-							<td>
-						<li id="view_price_li">
-						<label id="viewprice_text"><span data-locale-text="view_in">View in</span>:</label>
-						<select id="override_price" data-setting="override_price">
-							<option value="auto">Auto-detect</option>
-							<option value="USD">USD</option>
-							<option value="GBP">GBP</option>
-							<option value="EUR">EUR</option>
-							<option value="RUB">RUB</option>
-							<option value="BRL">BRL</option>
-							<option value="JPY">JPY</option>
-							<option value="NOK">NOK</option>
-							<option value="IDR">IDR</option>
-							<option value="MYR">MYR</option>
-							<option value="PHP">PHP</option>
-							<option value="SGD">SGD</option>
-							<option value="THB">THB</option>
-							<option value="VND">VND</option>
-							<option value="KRW">KRW</option>
-							<option value="TRY">TRY</option>
-							<option value="UAH">UAH</option>
-							<option value="MXN">MXN</option>
-							<option value="CAD">CAD</option>
-							<option value="AUD">AUD</option>
-							<option value="NZD">NZD</option>
-							<option value="INR">INR</option>
-							<option value="HKD">HKD</option>
-							<option value="TWD">TWD</option>
-							<option value="CNY">CNY</option>
-							<option value="SAR">SAR</option>
-							<option value="ZAR">ZAR</option>
-							<option value="AED">AED</option>
-							<option value="CHF">CHF</option>
-							<option value="CLP">CLP</option>
-							<option value="PEN">PEN</option>
-							<option value="COP">COP</option>
-							<option value="ARS">ARS</option>
-							<option value="CRC">CRC</option>
-							<option value="ILS">ILS</option>
-							<option value="KZT">KZT</option>
-							<option value="KWD">KWD</option>
-							<option value="PLN">PLN</option>
-							<option value="QAR">QAR</option>
-							<option value="UYU">UYU</option>
-						</select>
-						</li>
-							</td>
-						</tr>
-					</table>
-					<li class="header" id="store_regionalprice_header" data-locale-text="options.regional_price">Regional Price Comparison</li>
-					<li id="regional_price_li">
-						<label id="showregionalprice_text" data-locale-text="options.regional_price_on">Show regional price comparison</label>
-						<select id="regional_price_on" data-setting="showregionalprice">
-							<option value="mouse" data-locale-text="options.regional_price_mouse">on Price Mouseover</option>
-							<option value="always" data-locale-text="always">Always</option>
-							<option value="off" data-locale-text="never">Never</option>
-						</select>
-					</li>
-					<li id="regional_price_hideworld"><input type="checkbox" id="regional_hideworld" data-setting="regional_hideworld"><label for="regional_hideworld" id="regional_hideworld_text" data-locale-text="options.regional_hideworld">Hide globe indicator</label></li>
-					<div id='region_selects'>
-						<div style='margin-top: 15px; margin-left: 32px;'><button id="add_another_region" data-locale-text="options.add_another_region" class="btn">Add</button><button id="reset_countries" class="btn" data-locale-text="theworddefault">Default</button></div>
-					</div>
-				</ul>
-			</div>
+            <h2 id="highlight_text" data-locale-text="highlight">Highlight</h2>
+            <div>
+                <input type="checkbox" id="highlight_owned" data-setting="highlight_owned">
+                <label for="highlight_owned" id="highlight_owned_text" data-locale-text="options.owned">Items you own</label>
 
-			<div id="maincontent_community" class="content" style="display: none">
-				<ul>
-					<li class="header" id="community_market" data-locale-text="options.market">Market</li>
-					<li>
-						<input type="checkbox" id="showmarkettotal" data-setting="showmarkettotal"><label for="showmarkettotal" id="market_total_text" data-locale-text="options.market_total">Show transaction summary on Market</label>
-					</li>
-					<li>
-						<input type="checkbox" id="hideactivelistings" data-setting="hideactivelistings"><label for="hideactivelistings" id="hideactivelistings_text" data-locale-text="options.hideactivelistings">Hide all active listings on Market homepage by default</label>
-					</li>
-					<li class="header" id="community_inventory" data-locale-text="options.inventory">Inventory</li>
-					<li>
-						<input type="checkbox" id="quickinv" data-setting="quickinv"><label for="quickinv" id="quickinv_text" data-locale-text="options.quickinv">Show Quick Sale buttons on Steam Community items in inventory</label> (<a id="show_quickinv_diff" data-locale-text="customize">Customize</a>)
-					</li>
-					<li id="quickinv_opt">
-						<label for="quickinv_diff" id="quickinv_diff_text" data-locale-text="options.quickinv_diff">Quick Sale modifier:</label><input type="text" id="quickinv_diff" data-setting="quickinv_diff" class="textbox"><button id="quickinv_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-					<li>
-						<input type="checkbox" id="show1clickgoo" data-setting="show1clickgoo"><label for="show1clickgoo" id="show1clickgoo_text" data-locale-text="options.show1clickgoo">Show "1-Click turn into Gems..." button on applicable inventory items</label>
-					</li>
-					<li>
-						<input type="checkbox" id="showinvnav" data-setting="showinvnav"><label for="showinvnav" id="inventory_nav_text" data-locale-text="options.inventory_nav_text">Show advanced navigation on inventory page</label>
-					</li>
-					<li class="header" id="community_profile" data-locale-text="options.profile">Profile</li>
-					<li>
-						<input type="checkbox" id="show_wishlist_link" data-setting="show_wishlist_link" data-parent-of="#wishlist_link_group">
-						<label for="show_wishlist_link" id="show_wishlist_link_text" data-locale-text="options.show_wishlist_link">Show a Wishlist link on profiles</label>
-					</li>
-					<ul id="wishlist_link_group" class="has_master_toggle">
-						<li>
-							<input type="checkbox" id="show_wishlist_count" data-setting="show_wishlist_count">
-							<label for="show_wishlist_count" id="show_wishlist_count_text" data-locale-text="options.show_wishlist_count">Show the number of items on Wishlist</label>
-						</li>
-					</ul>
-					<li>
-						<input type="checkbox" id="showsteamrepapi" data-setting="showsteamrepapi"><label for="showsteamrepapi" id="steamrep_api_text" data-locale-text="options.steamrepapi">Show SteamRep status on profile pages</label>
-					</li>
-					<li>
-						<input type="checkbox" id="showesbg" data-setting="showesbg"><label for="showesbg" id="es_background_text" data-locale-text="options.es_bg">Set custom background on "Edit Profile" screen</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_permalink" data-setting="profile_permalink"><label for="profile_permalink" id="profile_permalink_text" data-locale-text="options.profile_permalink">Show permalink on profiles</label>
-					</li>
-				<div id="profile_link_text" data-locale-text="options.profile_links">Show profile links to</div>:
-				<ul id="profile_links">
-					<li>
-						<input type="checkbox" id="profile_steamrepcn" data-setting="profile_steamrepcn"><label for="profile_steamrepcn"><i class="es_sites_icons es_steamrepcn_icon"></i>SteamrepCN</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_steamrep" data-setting="profile_steamrep"><label for="profile_steamrep"><i class="es_sites_icons es_steamrep_icon"></i>SteamRep</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_steamdbcalc" data-setting="profile_steamdbcalc"><label for="profile_steamdbcalc"><i class="es_sites_icons es_steamdbcalc_icon"></i>SteamDB</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_steamgifts" data-setting="profile_steamgifts"><label for="profile_steamgifts"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_steamtrades" data-setting="profile_steamtrades"><label for="profile_steamtrades"><i class="es_sites_icons es_steamtrades_icon"></i>SteamTrades</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_astats" data-setting="profile_astats"><label for="profile_astats"><i class="es_sites_icons es_astats_icon"></i>Achievement Stats</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_backpacktf" data-setting="profile_backpacktf"><label for="profile_backpacktf"><i class="es_sites_icons es_backpacktf_icon"></i>Backpack.tf</label>
-					</li>
-					<li>
-						<input type="checkbox" id="profile_astatsnl" data-setting="profile_astatsnl"><label for="profile_astatsnl"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</label>
-					</li>
-					<li>
-						<button id="add_custom_link" data-locale-text="custom" class="btn">Custom</button><div id="es_custom_settings" style="display: none;"><input type="checkbox" id="profile_custom" data-setting="profile_custom"> <label data-locale-text="options.name">Name</label>:<input type="text" id="profile_custom_name" data-setting="profile_custom_name" maxlength="30" class="textbox"> URL:<input type="text" id="profile_custom_url" data-setting="profile_custom_url" class="textbox"> <label data-locale-text="options.icon">Icon</label>:<input type="text" id="profile_custom_icon" data-setting="profile_custom_icon" class="textbox"></div>
-					</li>
-				</ul>
-				<li>
-					<label id="show_profile_link_images_text" data-locale-text="options.profile_link_images">Profile link images</label>&nbsp;
-					<select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
-						<option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
-						<option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
-						<option value=false id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
-					</select>
-				</li>
-					<li class="header" id="community_general" data-locale-text="options.general">General</li>
-					<li>
-						<input type="checkbox" id="showallachievements" data-setting="showallachievements"><label for="showallachievements" id="allachievements_text" data-locale-text="options.showallachievements">Show achievement stats on "All Games" page</label>
-					</li>
-					<li>
-						<input type="checkbox" id="showcomparelinks" data-setting="showcomparelinks"><label for="showcomparelinks" id="showcomparelinks_text" data-locale-text="options.showcomparelinks">Show "Compare" links for achievements on friend activity feed</label>
-					</li>
-					<li>
-						<input type="checkbox" id="hidespamcomments" data-setting="hidespamcomments"><label for="hidespamcomments" id="hidespamcomments_text" data-locale-text="options.hidespamcomments">Hide spam comments from Workshop &amp; profiles</label> (<a id="show_spamcommentregex" data-locale-text="customize">Customize</a>)
-					</li>
-					<li id="spamcommentregex_list">
-						<label for="spamcommentregex" id="spamcommentregex_text" data-locale-text="options.spamcommentregex">Regular Expression string:</label><input type="text" id="spamcommentregex" data-setting="spamcommentregex" class="textbox"><button id="spamcommentregex_default" class="btn" data-locale-text="theworddefault">Default</button>
-					</li>
-					<li>
-						<input type="checkbox" id="steamcardexchange" data-setting="steamcardexchange"><label for="steamcardexchange" id="steamcardexchange_text" data-locale-text="options.steamcardexchange">Show SteamCardExchange links on badges</label>
-					</li>
-					<li>
-						<input type="checkbox" id="wlbuttoncommunityapp" data-setting="wlbuttoncommunityapp"><label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text" data-locale-text="options.wlbuttoncommunityapp">Show "Add to Wishlist" button on community app hubs</label>
-					</li>
-					<li>
-						<input type="checkbox" id="removeguideslanguagefilter" data-setting="removeguideslanguagefilter"><label for="removeguideslanguagefilter" id="removeguideslanguagefilter_text" data-locale-text="options.removeguideslanguagefilter">Don't automatically filter guides by user language</label>
-					</li>
-					<li>
-						<input type="checkbox" id="disablelinkfilter" data-setting="disablelinkfilter"><label for="disablelinkfilter" id="disablelinkfilter_text" data-locale-text="options.disablelinkfilter">Disable confirmation when accessing external sites</label>
-					</li>
-			</ul>
+                <div class="buttons">
+                    <input type="color" id="highlight_owned_color" data-setting="highlight_owned_color">
+                    <button id="highlight_owned_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
 
-		</div>
+            <div>
+                <input type="checkbox" id="highlight_wishlist" data-setting="highlight_wishlist">
+                <label for="highlight_wishlist" id="highlight_wishlist_text" data-locale-text="options.wishlist">Items on your wishlist</label>
 
-		<div id="maincontent_news" class="content" style="display: none">
-			<div id="changelog_text" class="header" data-locale-text="options.changelog">Changelog:</div>
-		</div>
+                <div class="buttons">
+                    <input type="color" id="highlight_wishlist_color" data-setting="highlight_wishlist_color">
+                    <button id="highlight_wishlist_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
 
-		<div id="maincontent_about" class="content" style="display: none">
-			<div id="es_about_text" data-locale-html="options.about_text"></div>
-		</div>
+            <div>
+                <input type="checkbox" id="highlight_coupon" data-setting="highlight_coupon">
+                <label for="highlight_coupon" id="highlight_coupon_text" data-locale-text="options.coupon">Items with coupons</label>
 
-		<div id="maincontent_credits" class="content" style="display: none">
-			<ul class="credits">
-				<li class="header" id="programming_text" data-locale-text="programming">Programming</li>
-				<li>Jason Shackles (<a href="http://steamcommunity.com/profiles/76561198040672342" id="jshackles_steam">jshackles</a>)</li>
-				<li>Dan C. (<a href="http://steamcommunity.com/profiles/76561198012785113" id="JoiNNN_steam">JoiNNN</a>)</li>
-				<li>Ben Williams (<a href="http://steamcommunity.com/profiles/76561198000198761" id="smashman_steam">smash.mn</a>)</li>				
-				<li></li>
-				<li><div id="view_all"><a href='https://github.com/jshackles/Enhanced_Steam/graphs/contributors' data-locale-text="view_all">VIEW ALL</a></div></li>
-			</ul>
-			<div class="header" id="translation_text" data-locale-text="translation">Translation</div>
-			<table class="translation">
-				<tr>
-					<td class="language brazilian">Portuguese-Brazil:</td>
-					<td>Berna, Mougevit, Ricci, Rubens Vinícius, Scopel, Titoncio, Yachagon, xAranda (NO AUDIO), 級 Happy</td>
-				</tr>
-				<tr>
-					<td class="language bulgarian">Bulgarian:</td>
-					<td>Castro Wilde, The Nominomicon, XepouH</td>
-				</tr>
-				<tr>
-					<td class="language czech">Czech:</td>
-					<td>Arcane, Bezdak, Martin005[CZ], benetti32|cz, chriss01cz, dapil, xXx_Pá$0v€cXVI_xXx</td>
-				</tr>
-				<tr>
-					<td class="language danish">Danish:</td>
-					<td>Cake!, Chreddy, Mig_Mikkel [⇄], Redzdaz, Saturate, SnoX, UltraSun, XDRosenheim, antim</td>
-				</tr>
-				<tr>
-					<td class="language dutch">Dutch:</td>
-					<td>AreUTalking2Meh, Bennievv, Boelens, Craven, Epicon, FooBar, HumanaSays, Justin, Nujj, Yeuxkes</td>
-				</tr>
-				<tr>
-					<td class="language finnish">Finnish:</td>
-					<td>3ventic, Elekton, Hilloh, Lumppari, Mairo vain..., Major Parsnip, Master Indigo, Nightmare_182, NikoDaGreat, Tumpo, frozen.aerocrane, mkfin</td>
-				</tr>
-				<tr>
-					<td class="language french">French:</td>
-					<td>Clockmaker, Nuator, Quaelor, Stumpokapow, Vardex, Yanuut, eucalyptux</td>
-				</tr>
-				<tr>
-					<td class="language german">German:</td>
-					<td>Darkbird |, Edward Cullen, FuriousFry, Gatse, Incredipede, Invisi, MAGIC, Phenom, Pilzsuppe, Schnitzelfee, Son of Thor, addicT*, chrisli, dochris.2, larry_ @ DUAS NIMMA HALTEN, red, |«ScReaM»|, À Cookie Jar</td>
-				</tr>
-				<tr>
-					<td class="language greek">Greek:</td>
-					<td>Coccinella, Pandorian, SeCTeen, Sub-Zero</td>
-				</tr>
-				<tr>
-					<td class="language hungarian">Hungarian:</td>
-					<td>DonRoland, Mohariczozo_HUN, Noarpe, Sirpi, [T-A!] Underyx x 6, atomcsikk, french_salad, nArrow, ๖VaHooK</td>
-				</tr>
-				<tr>
-					<td class="language italian">Italian:</td>
-					<td>Copons, Drake Fazuku, Rasin, Star1s3, Øktøber</td>
-				</tr>
-				<tr>
-					<td class="language japanese">Japanese:</td>
-					<td>aoisensi, k725, sumannnala</td>
-				</tr>
-				<tr>
-					<td class="language koreana">Korean:</td>
-					<td>CanNaJun, Daum, Hirano, LJreal, RaWouk, Rasin, [GF]meyoung, fivestar, sunk, À Cookie Jar, 하얀군주</td>
-				</tr>
-				<tr>
-					<td class="language norwegian">Norwegian:</td>
-					<td>KappaHD, Lazberg, Morten242, Stian, ⑨ ChocolateShuvuu</td>
-				</tr>
-				<tr>
-					<td class="language polish">Polish:</td>
-					<td>AciD, Bednar, Laserman//^^, Lordomus, Parseus, Xylo, Yobilat, Yocki, devLewy, mahon, skubi07</td>
-				</tr>
-				<tr>
-					<td class="language portuguese">Portuguese:</td>
-					<td>Dr. Costa, Ex0tic, Matias G. H., MrAltamente, Reckoner, Sim, SupSuper, TheScientist, The_Monk, TilenoL</td>
-				</tr>
-				<tr>
-					<td class="language romanian">Romanian:</td>
-					<td>Stormania</td>
-				</tr>
-				<tr>
-					<td class="language russian">Russian:</td>
-					<td>Engkariensis, Kosheyaka, M@gi$te® Y0d@, Mechanic, Memfys, MrFreemanBBQ, Robin, Sh1fter, ShawNexT, The Freak, TheMrKochan, delfin_00, dragonsigh</td>
-				</tr>
-				<tr>
-					<td class="language schinese">Simplified Chinese:</td>
-					<td>Aslike2, Deparsoul, FelinaeEbony, Gold, Iuy, M@nkey, Mr. Error, MyLittleWarhammer, Rabbitism Bomb, Rasin, [CN]Johnson, i7killpii, mjy, ssenkrad, yuccatoo</td>
-				</tr>
-				<tr>
-					<td class="language spanish">Spanish:</td>
-					<td>#SG# Sharkiller, 00HiZaM, Alien8, Digmin3, ItsMarukka, Kharn Nete, MλXX [PA-D], Profesor Pistacho, Robotnick, Silence, \Vince, giraam, kalprestito, kulapik, p0tat0, wasakakero, xGreg</td>
-				</tr>
-				<tr>
-					<td class="language swedish">Swedish:</td>
-					<td>Chainsawkitten, Death King, Deques, Lumppari, [MG] Rubiin, 전주 0x3 제</td>
-				</tr>
-				<tr>
-					<td class="language tchinese">Traditional Chinese:</td>
-					<td>Atraveller, JD OwO, Lex Song, MoDMeR, Mr. Error, NOKIA SE, Rasin, omylist, tonyli1357, 破曉之殤丶Revelation</td>
-				</tr>
-				<tr>
-					<td class="language thai">Thai:</td>
-					<td>Epicenter, Likecyber, Magnative, Radius, Rasin, [LPG] 7-elephant</td>
-				</tr>
-				<tr>
-					<td class="language turkish">Turkish:</td>
-					<td>Beedle, Dijkstra[TR], Eray, Gevanni, Grievous, Neadiatre[Trade] #SOMA, Sound of Night, Su1ciDe, eayurdaer, tyyaman, veteran, ÖŞEK YALANCI</td>
-				</tr>
-				<tr>
-					<td class="language ukrainian">Ukranian:</td>
-					<td>Anakin Skywalker, BlackSwan, Dorimi, Gentleneer, GreK™, MoDMeR, NutsUA, Peacefool Peopel, Smith M.D., Stakan, [BA]zekainhuman</td>
-				</tr>
-			</table>
-		</div>
+                <div class="buttons">
+                    <input type="color" id="highlight_coupon_color" data-setting="highlight_coupon_color">
+                    <button id="highlight_coupon_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
 
-		<div id="footer">
-			<div><a href="http://www.enhancedsteam.com" id="foot_link" data-locale-text="options.foot_link">Enhanced Steam Extension</a></div><span id="author_info" data-locale-text="options.author_info">by jshackles</span>
-			<div><button id="reset" class="btn" data-locale-text="options.reset">Reset options</button></div>
-		</div>
-	</div>
+            <div>
+                <input type="checkbox" id="highlight_inv_gift" data-setting="highlight_inv_gift">
+                <label for="highlight_inv_gift" id="highlight_gift_text" data-locale-text="options.gift">Items stored as gift</label>
+
+                <div class="buttons">
+                    <input type="color" id="highlight_inv_gift_color" data-setting="highlight_inv_gift_color">
+                    <button id="highlight_inv_gift_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="highlight_inv_guestpass" data-setting="highlight_inv_guestpass">
+                <label for="highlight_inv_guestpass" id="highlight_guest_text" data-locale-text="options.guest">Items you have a guest pass for</label>
+
+                <div class="buttons">
+                    <input type="color" id="highlight_inv_guestpass_color" data-setting="highlight_inv_guestpass_color">
+                    <button id="highlight_inv_guestpass_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="highlight_notinterested" data-setting="highlight_notinterested">
+                <label for="highlight_notinterested" id="highlight_notinterested_text" data-locale-text="notinterested">Items marked not interested</label>
+
+                <div class="buttons">
+                    <input type="color" id="highlight_notinterested_color" data-setting="highlight_notinterested_color">
+                    <button id="highlight_notinterested_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="highlight_excludef2p" data-setting="highlight_excludef2p">
+                <label for="highlight_excludef2p" id="highlight_excludef2p_text" data-locale-text="options.excludef2p">Exclude free to play games from highlighting</label>
+            </div>
+
+            <h2 id="tag_text" data-locale-text="options.tag">Tag</h2>
+            <div>
+                <input type="checkbox" id="tag_owned" data-setting="tag_owned">
+                <label for="tag_owned" id="tag_owned_text" data-locale-text="options.owned">Items you own</label>
+
+                <div class="buttons">
+                    <input type="color" id="tag_owned_color" data-setting="tag_owned_color">
+                    <button id="tag_owned_color_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="tag_wishlist" data-setting="tag_wishlist">
+                <label for="tag_wishlist" id="tag_wishlist_text" data-locale-text="options.wishlist">Items on your wishlist</label>
+
+                <div class="buttons">
+                    <input type="color" id="tag_wishlist_color" data-setting="tag_wishlist_color">
+                    <button id="tag_wishlist_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="tag_coupon" data-setting="tag_coupon">
+                <label for="tag_coupon" id="tag_coupon_text" data-locale-text="options.coupon">Items with coupons</label>
+
+                <div class="buttons">
+                    <input type="color" id="tag_coupon_color" data-setting="tag_coupon_color">
+                    <button id="tag_coupon_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="tag_inv_gift" data-setting="tag_inv_gift">
+                <label for="tag_inv_gift" id="tag_gift_text" data-locale-text="options.gift">Items stored as gift</label>
+
+                <div class="buttons">
+                    <input type="color" id="tag_inv_gift_color" data-setting="tag_inv_gift_color">
+                    <button id="tag_inv_gift_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="tag_inv_guestpass" data-setting="tag_inv_guestpass">
+                <label for="tag_inv_guestpass" id="tag_guest_text" data-locale-text="options.guest">Items you have a
+                    guest pass for</label>
+
+                <div class="buttons">
+                    <input type="color" id="tag_inv_guestpass_color" data-setting="tag_inv_guestpass_color">
+                    <button id="tag_inv_guestpass_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="tag_notinterested" data-setting="tag_notinterested">
+                <label for="tag_notinterested" id="tag_notinterested_text" data-locale-text="notinterested">Items marked not interested</label>
+
+                <div class="buttons">
+                    <input type="color" id="tag_notinterested_color" data-setting="tag_notinterested_color">
+                    <button id="tag_notinterested_default" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+            <div>
+                <input type="checkbox" id="tag_short" data-setting="tag_short">
+                <label for="tag_short" id="tag_short_text" data-locale-text="tag_short">Use short tags to save space</label>
+            </div>
+
+            <h2 id="hide_text" data-locale-text="hide">Hide</h2>
+            <div>
+                <input type="checkbox" id="hide_owned" data-setting="hide_owned">
+                <label for="hide_owned" id="hide_owned_text" data-locale-text="options.hide_owned">Items you own in search results</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hide_ignored" data-setting="hide_ignored">
+                <label for="hide_ignored" id="hide_ignored_text" data-locale-text="options.hide_ignored">Items you ignored in search results</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hidetmsymbols" data-setting="hidetmsymbols">
+                <label for="hidetmsymbols" id="hidetmsymbols_text" data-locale-text="options.hidetmsymbols">Trademark and Copyright symbols in game titles</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hideinstallsteambutton" data-setting="hideinstallsteambutton">
+                <label for="hideinstallsteambutton" id="store_hide_install_text" data-locale-text="options.hide_install">Hide "Install Steam" button</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hideaboutmenu" data-setting="hideaboutmenu">
+                <label for="hideaboutmenu" id="store_hide_about_menu" data-locale-text="options.hide_about">Hide "About" link</label>
+            </div>
+
+            <h2 id="language_text" data-locale-text="language">Language</h2>
+            <div>
+                <input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning">
+                <label for="showlanguagewarning" id="store_show_languagewarning_text" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
+                <select id="warning_language" data-setting="showlanguagewarninglanguage">
+                    <option value="English">English</option>
+                    <option value="Bulgarian">български</option>
+                    <option value="Czech">čeština</option>
+                    <option value="Danish">Dansk</option>
+                    <option value="Dutch">Nederlands</option>
+                    <option value="Finnish">Suomi</option>
+                    <option value="French">Français</option>
+                    <option value="Greek">Ελληνικά</option>
+                    <option value="German">Deutsch</option>
+                    <option value="Hungarian">Magyar</option>
+                    <option value="Italian">Italiano</option>
+                    <option value="Japanese">日本語</option>
+                    <option value="Koreana">한국어</option>
+                    <option value="Norwegian">Norsk</option>
+                    <option value="Polish">Polski</option>
+                    <option value="Portuguese">Português</option>
+                    <option value="Brazilian">Português-Brasil</option>
+                    <option value="Russian">Русский</option>
+                    <option value="Romanian">Română</option>
+                    <option value="Schinese">简体中文</option>
+                    <option value="Spanish">Español</option>
+                    <option value="Swedish">Svenska</option>
+                    <option value="Tchinese">繁體中文</option>
+                    <option value="Thai">ไทย</option>
+                    <option value="Turkish">Türkçe</option>
+                    <option value="Ukrainian">Українська</option>
+                </select>
+            </div>
+
+            <h2 id="homepage_text" data-locale-text="options.homepage">Homepage</h2>
+            <div>
+                <div>
+                    <label id="homepage_default_tab_text" data-locale-text="options.homepage_default_tab">Default homepage tab</label>
+                    <select id="homepage_tab_selection" data-setting="homepage_tab_selection">
+                        <option value="remember" data-locale-text="options.homepage_default_tab_remember">Remember Previous</option>
+                        <option value="tab_newreleases_content_trigger" data-locale-text="options.homepage_default_tab_newreleases">Popular New Releases</option>
+                        <option value="es_allreleases" data-locale-text="options.homepage_default_tab_allreleases">All New Releases</option>
+                        <option value="tab_topsellers_content_trigger" data-locale-text="options.homepage_default_tab_topsellers">Top Sellers</option>
+                        <option value="tab_upcoming_content_trigger" data-locale-text="options.homepage_default_tab_upcoming">Upcoming</option>
+                        <option value="tab_specials_content_trigger" data-locale-text="options.homepage_default_tab_specials">Specials</option>
+                        <option value="es_popular" data-locale-text="popular">Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            <h2 id="store_general" data-locale-text="options.general">General</h2>
+            <div>
+                <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
+                <label for="show_progressbar" id="show_progressbar_text" data-locale-text="show_progressbar">Show Enhanced Steam progress and status bar</label>
+            </div>
+            <div>
+                <input type="checkbox" id="version_show" data-setting="version_show">
+                <label for="version_show" id="version_show_text" data-locale-text="options.version_show">Show change log when Enhanced Steam updates</label>
+            </div>
+            <div>
+                <input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname">
+                <label for="replaceaccountname" id="store_replace_account_name" data-locale-text="options.replace_account_name">Replace account name with community name</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning">
+                <label for="showfakeccwarning" id="header_showfakeccwarning_text" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showemptywishlist" data-setting="showemptywishlist">
+                <label for="showemptywishlist" id="store_hide_empty_wishlist" data-locale-text="options.show_empty_wishlist">Show "Empty Wishlist" button</label>
+            </div>
+            <div>
+                <input type="checkbox" id="send_age_info" data-setting="send_age_info">
+                <label for="send_age_info" id="send_age_info_text" data-locale-text="options.send_age_info">Automatically send age verification when requested</label>
+            </div>
+            <div>
+                <input type="checkbox" id="html5video" data-setting="html5video">
+                <label for="html5video" id="html5video_text" data-locale-text="options.html5video">Show videos using HTML5 instead of Flash</label>
+            </div>
+            <div>
+                <input type="checkbox" id="contscroll" data-setting="contscroll">
+                <label for="contscroll" id="contscroll_text" data-locale-text="options.contscroll">Enable continuous scrolling of search results</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showdrm" data-setting="showdrm">
+                <label for="showdrm" id="store_drm_text" data-locale-text="options.drm">Show 3rd party DRM warnings</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showclient" data-setting="showclient">
+                <label for="showclient" id="store_client_text" data-locale-text="options.showclient">Show Steam Client links</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_package_info" data-setting="show_package_info">
+                <label for="show_package_info" id="store_package_info_text" data-locale-text="options.show_package_info">Show package info for all apps</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_sysreqcheck" data-setting="show_sysreqcheck">
+                <label for="show_sysreqcheck" id="show_sysreqcheck_text" data-locale-text="options.show_sysreqcheck">Show button to check system requirements on app pages (Experimental!)</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_early_access" data-setting="show_early_access">
+                <label for="show_early_access" id="show_early_access_text" data-locale-text="options.show_early_access_text">Show Early Access image banners</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showachinstore" data-setting="showachinstore">
+                <label for="showachinstore" id="showachinstore_text" data-locale-text="achievements.option">Show achievement completion on store pages</label>
+            </div>
+            <div>
+                <input type="checkbox" id="purchase_dates" data-setting="purchase_dates">
+                <label for="purchase_dates" id="purchase_dates_text" data-locale-text="options.purchase_dates">Show apps purchase date on store pages</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_badge_progress" data-setting="show_badge_progress">
+                <label for="show_badge_progress" id="show_badge_progress_text" data-locale-text="options.show_badge_progress">Show apps badge progress on store pages</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_alternative_linux_icon" data-setting="show_alternative_linux_icon">
+                <label for="show_alternative_linux_icon" id="show_alternative_linux_icon_text" data-locale-text="options.show_alternative_linux_icon">Show alternative Linux icon</label>
+            </div>
+            <div>
+                <input type="checkbox" id="skip_got_steam" data-setting="skip_got_steam">
+                <label for="skip_got_steam" id="skip_got_steam_text" data-locale-text="options.skip_got_steam">Skip the 'Got Steam?' window</label>
+            </div>
+
+            <h2 id="store_general_thirdparty" data-locale-text="options.store_general_thirdparty">Options for information from 3rd party sites</h2>
+
+            <!-- removed, we don't have api
+            <div>
+                <input type="checkbox" id="show_keylol_links" data-setting="show_keylol_links">
+                <label for="show_keylol_links" id="store_keylol_text">Show Keylol links on app pages</label>
+            </div>
+            -->
+            <div>
+                <input type="checkbox" id="showmcus" data-setting="showmcus">
+                <label for="showmcus" id="store_metacritic_text" data-locale-text="options.metacritic">Show Metacritic user scores</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showoc" data-setting="showoc">
+                <label for="showoc" id="store_opencritic_text" data-locale-text="options.opencritic">Show Opencritic.com information</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showhltb" data-setting="showhltb">
+                <label for="showhltb" id="store_hltb_text" data-locale-text="options.hltb">Show HowLongToBeat.com information</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showsteamdb" data-setting="showsteamdb">
+                <label for="showsteamdb" id="store_steamdb_text" data-locale-text="options.steamdb">Show SteamDB links</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showastatslink" data-setting="showastatslink">
+                <label for="showastatslink" id="store_astatslink_text" data-locale-text="options.show_astatslink">Show AStats link on app pages</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showpcgw" data-setting="showpcgw">
+                <label for="showpcgw" id="store_pcgw_text" data-locale-text="options.pcgw">Show PCGamingWiki links</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showwsgf" data-setting="showwsgf">
+                <label for="showwsgf" id="store_wsgf_text" data-locale-text="options.wsgf">Show WSGF (Widescreen) info</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showsteamcardexchange" data-setting="showsteamcardexchange">
+                <label for="showsteamcardexchange" id="store_steamcards_text" data-locale-text="options.store_steamcards">Show SteamCardExchange links on store pages</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_steamchart_info" data-setting="show_steamchart_info">
+                <label for="show_steamchart_info" id="store_steamchart_info_text" data-locale-text="options.show_steamchart_info">Show SteamCharts.com info</label>
+            </div>
+            <div>
+                <input type="checkbox" id="show_steamspy_info" data-setting="show_steamspy_info">
+                <label for="show_steamspy_info" id="store_steamspy_info_text" data-locale-text="options.show_steamspy_info">Show steamspy.com info</label>
+            </div>
+
+            <!--
+            <div>
+                <input type="checkbox" id="show_itad_button" data-setting="show_itad_button">
+                <label for="show_itad_button" id="show_itad_button_text" data-locale-text="itad.option">Show menu option to sync data to IsThereAnyDeal.com</label>
+            </div>
+            -->
+        </div>
+
+
+        <!-- Price -->
+        <div id="maincontent_price" class="content settings">
+            <h2 id="store_lowestprice_header" data-locale-text="options.lowestprice_header">Price History Information</h2>
+            <div>
+                <input type="checkbox" id="showlowestprice" data-setting="showlowestprice">
+                <label for="showlowestprice" id="store_lowestprice_text" data-locale-text="options.lowestprice">Show</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showlowestprice_onwishlist" data-setting="showlowestprice_onwishlist">
+                <label for="showlowestprice_onwishlist" id="store_lowestprice_onwishlist_text" data-locale-text="options.lowestprice_onwishlist">Show on Wishlist</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showlowestpricecoupon" data-setting="showlowestpricecoupon">
+                <label for="showlowestpricecoupon" id="store_lowestprice_coupon_text" data-locale-text="options.lowestprice_coupon">Include coupon codes in price comparison</label>
+            </div>
+            <div>
+                <input type="checkbox" id="stores_all" data-setting="showallstores">
+                <label for="stores_all" id="lowestprice_stores_all_text" data-locale-text="options.stores_all">Compare all stores</label>
+            </div>
+            <div id="store_stores" style="display:none"></div>
+
+            <div id="view_price_li">
+                <div>
+                    <label id="viewprice_text"><span data-locale-text="view_in">View in</span>:</label>
+                    <select id="override_price" data-setting="override_price">
+                        <option value="auto">Auto-detect</option>
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                        <option value="EUR">EUR</option>
+                        <option value="RUB">RUB</option>
+                        <option value="BRL">BRL</option>
+                        <option value="JPY">JPY</option>
+                        <option value="NOK">NOK</option>
+                        <option value="IDR">IDR</option>
+                        <option value="MYR">MYR</option>
+                        <option value="PHP">PHP</option>
+                        <option value="SGD">SGD</option>
+                        <option value="THB">THB</option>
+                        <option value="VND">VND</option>
+                        <option value="KRW">KRW</option>
+                        <option value="TRY">TRY</option>
+                        <option value="UAH">UAH</option>
+                        <option value="MXN">MXN</option>
+                        <option value="CAD">CAD</option>
+                        <option value="AUD">AUD</option>
+                        <option value="NZD">NZD</option>
+                        <option value="INR">INR</option>
+                        <option value="HKD">HKD</option>
+                        <option value="TWD">TWD</option>
+                        <option value="CNY">CNY</option>
+                        <option value="SAR">SAR</option>
+                        <option value="ZAR">ZAR</option>
+                        <option value="AED">AED</option>
+                        <option value="CHF">CHF</option>
+                        <option value="CLP">CLP</option>
+                        <option value="PEN">PEN</option>
+                        <option value="COP">COP</option>
+                        <option value="ARS">ARS</option>
+                        <option value="CRC">CRC</option>
+                        <option value="ILS">ILS</option>
+                        <option value="KZT">KZT</option>
+                        <option value="KWD">KWD</option>
+                        <option value="PLN">PLN</option>
+                        <option value="QAR">QAR</option>
+                        <option value="UYU">UYU</option>
+                    </select>
+                </div>
+            </div>
+
+            <h2 class="header" id="store_regionalprice_header" data-locale-text="options.regional_price">Regional Price Comparison </h2>
+            <div id="regional_price_li">
+                <div>
+                    <label id="showregionalprice_text" data-locale-text="options.regional_price_on">Show regional price comparison</label>
+                    <select id="regional_price_on" data-setting="showregionalprice">
+                        <option value="mouse" data-locale-text="options.regional_price_mouse">on Price Mouseover</option>
+                        <option value="always" data-locale-text="always">Always</option>
+                        <option value="off" data-locale-text="never">Never</option>
+                    </select>
+                </div>
+            </div>
+            <div id="regional_price_hideworld">
+                <input type="checkbox" id="regional_hideworld" data-setting="regional_hideworld">
+                <label for="regional_hideworld" id="regional_hideworld_text" data-locale-text="options.regional_hideworld">Hide globe indicator</label>
+            </div>
+            <div id='region_selects'>
+                <div style='margin-top: 15px; margin-left: 32px;'>
+                    <button id="add_another_region" data-locale-text="options.add_another_region">Add</button>
+                    <button id="reset_countries" data-locale-text="theworddefault">Default</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Community -->
+        <div id="maincontent_community" class="content settings">
+            <h2 id="community_market" data-locale-text="options.market">Market</h2>
+            <div>
+                <input type="checkbox" id="showmarkettotal" data-setting="showmarkettotal">
+                <label for="showmarkettotal" id="market_total_text" data-locale-text="options.market_total">Show transaction summary on Market</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hideactivelistings" data-setting="hideactivelistings">
+                <label for="hideactivelistings" id="hideactivelistings_text" data-locale-text="options.hideactivelistings">Hide all active listings on Market homepage by default</label>
+            </div>
+
+            <h2 id="community_inventory" data-locale-text="options.inventory">Inventory</h2>
+            <div>
+                <input type="checkbox" id="quickinv" data-setting="quickinv">
+                <label for="quickinv" id="quickinv_text" data-locale-text="options.quickinv">Show Quick Sale buttons on Steam Community items in inventory</label>
+                <button id="show_quickinv_diff" data-locale-text="customize">Customize</button>
+            </div>
+            <div id="quickinv_opt">
+                <label for="quickinv_diff" id="quickinv_diff_text" data-locale-text="options.quickinv_diff">Quick Sale modifier:</label><input type="text" id="quickinv_diff" data-setting="quickinv_diff" class="textbox">
+                <button id="quickinv_default" data-locale-text="theworddefault">Default</button>
+            </div>
+            <div>
+                <input type="checkbox" id="show1clickgoo" data-setting="show1clickgoo">
+                <label for="show1clickgoo" id="show1clickgoo_text" data-locale-text="options.show1clickgoo">Show "1-Click turn into Gems..." button on applicable inventory items</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showinvnav" data-setting="showinvnav">
+                <label for="showinvnav" id="inventory_nav_text" data-locale-text="options.inventory_nav_text">Show advanced navigation on inventory page</label>
+            </div>
+
+            <h2 id="community_profile" data-locale-text="options.profile">Profile</h2>
+            <div>
+                <input type="checkbox" id="show_wishlist_link" data-setting="show_wishlist_link" data-parent-of="#wishlist_link_group">
+                <label for="show_wishlist_link" id="show_wishlist_link_text" data-locale-text="options.show_wishlist_link">Show a Wishlist link on profiles</label>
+            </div>
+
+            <div id="wishlist_link_group">
+                <input type="checkbox" id="show_wishlist_count" data-setting="show_wishlist_count">
+                <label for="show_wishlist_count" id="show_wishlist_count_text" data-locale-text="options.show_wishlist_count">Show the number of items on Wishlist</label>
+            </div>
+
+            <div>
+                <input type="checkbox" id="showsteamrepapi" data-setting="showsteamrepapi">
+                <label for="showsteamrepapi" id="steamrep_api_text" data-locale-text="options.steamrepapi">Show SteamRep status on profile pages</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showesbg" data-setting="showesbg">
+                <label for="showesbg" id="es_background_text" data-locale-text="options.es_bg">Set custom background on "Edit Profile" screen</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_permalink" data-setting="profile_permalink">
+                <label for="profile_permalink" id="profile_permalink_text" data-locale-text="options.profile_permalink">Show permalink on profiles</label>
+            </div>
+
+            <h3 data-locale-text="options.profile_links">Show profile links to:</h3>
+
+            <!-- removed, we dont have api
+            <div>
+                <input type="checkbox" id="profile_steamrepcn" data-setting="profile_steamrepcn">
+                <label for="profile_steamrepcn"><i class="es_sites_icons es_steamrepcn_icon"></i>SteamrepCN</label>
+            </div>
+             -->
+            <div>
+                <input type="checkbox" id="profile_steamrep" data-setting="profile_steamrep">
+                <label for="profile_steamrep"><i class="es_sites_icons es_steamrep_icon"></i>SteamRep</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_steamdbcalc" data-setting="profile_steamdbcalc">
+                <label for="profile_steamdbcalc"><i class="es_sites_icons es_steamdbcalc_icon"></i>SteamDB</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_steamgifts" data-setting="profile_steamgifts">
+                <label for="profile_steamgifts"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_steamtrades" data-setting="profile_steamtrades">
+                <label for="profile_steamtrades"><i class="es_sites_icons es_steamtrades_icon"></i>SteamTrades</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_astats" data-setting="profile_astats">
+                <label for="profile_astats"><i class="es_sites_icons es_astats_icon"></i>Achievement Stats</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_backpacktf" data-setting="profile_backpacktf">
+                <label for="profile_backpacktf"><i class="es_sites_icons es_backpacktf_icon"></i>Backpack.tf</label>
+            </div>
+            <div>
+                <input type="checkbox" id="profile_astatsnl" data-setting="profile_astatsnl">
+                <label for="profile_astatsnl"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</label>
+            </div>
+            <div>
+                <button id="add_custom_link" data-locale-text="custom">Custom</button>
+                <div id="es_custom_settings" style="display: none;">
+                    <input type="checkbox" id="profile_custom" data-setting="profile_custom">
+                    <label data-locale-text="options.name">Name</label>:
+                    <input type="text" id="profile_custom_name" data-setting="profile_custom_name" maxlength="30" class="textbox">
+                    URL:
+                    <input type="text" id="profile_custom_url" data-setting="profile_custom_url" class="textbox">
+                    <label data-locale-text="options.icon">Icon</label>:
+                    <input type="text" id="profile_custom_icon" data-setting="profile_custom_icon" class="textbox">
+                </div>
+            </div>
+            <div>
+                <span>
+                    <label id="show_profile_link_images_text" data-locale-text="options.profile_link_images">Profile link images</label>&nbsp;
+                    <select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
+                        <option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
+                        <option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
+                        <option value=false id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
+                    </select>
+                </span>
+            </div>
+
+            <h2 id="community_general" data-locale-text="options.general">General</h2>
+            <div>
+                <input type="checkbox" id="showallachievements" data-setting="showallachievements">
+                <label for="showallachievements" id="allachievements_text" data-locale-text="options.showallachievements">Show achievement stats on "All Games" page</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showcomparelinks" data-setting="showcomparelinks">
+                <label for="showcomparelinks" id="showcomparelinks_text" data-locale-text="options.showcomparelinks">Show "Compare" links for achievements on friend activity feed</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hidespamcomments" data-setting="hidespamcomments">
+                <label for="hidespamcomments" id="hidespamcomments_text" data-locale-text="options.hidespamcomments">Hide spam comments from Workshop &amp; profiles</label>
+                <button id="show_spamcommentregex" data-locale-text="customize">Customize</button>
+            </div>
+            <div id="spamcommentregex_list">
+                <label for="spamcommentregex" id="spamcommentregex_text" data-locale-text="options.spamcommentregex">Regular Expression string:</label>
+                <input type="text" id="spamcommentregex" data-setting="spamcommentregex" class="textbox">
+                <button id="spamcommentregex_default" data-locale-text="theworddefault">Default</button>
+            </div>
+            <div>
+                <input type="checkbox" id="steamcardexchange" data-setting="steamcardexchange">
+                <label for="steamcardexchange" id="steamcardexchange_text" data-locale-text="options.steamcardexchange">Show SteamCardExchange linkson badges</label>
+            </div>
+            <div>
+                <input type="checkbox" id="wlbuttoncommunityapp" data-setting="wlbuttoncommunityapp">
+                <label for="wlbuttoncommunityapp" id="wlbuttoncommunityapp_text" data-locale-text="options.wlbuttoncommunityapp">Show "Add to Wishlist" button on community app hubs</label>
+            </div>
+            <div>
+                <input type="checkbox" id="removeguideslanguagefilter" data-setting="removeguideslanguagefilter">
+                <label for="removeguideslanguagefilter" id="removeguideslanguagefilter_text" data-locale-text="options.removeguideslanguagefilter">Don't automatically filter guides by user language</label>
+            </div>
+            <div>
+                <input type="checkbox" id="disablelinkfilter" data-setting="disablelinkfilter">
+                <label for="disablelinkfilter" id="disablelinkfilter_text" data-locale-text="options.disablelinkfilter">Disable confirmation when accessing external sites</label>
+            </div>
+
+        </div>
+
+        <div id="maincontent_news" class="content">
+            <h2 data-locale-text="options.changelog">Changelog</h2>
+            <div id="changelog_text"></div>
+        </div>
+
+        <div id="maincontent_about" class="content">
+            <div id="es_about_text" data-locale-html="options.about_text"></div>
+        </div>
+
+        <div id="maincontent_credits" class="content">
+            <ul class="credits">
+                <li class="header" id="programming_text" data-locale-text="programming">
+                    Programming
+                </li>
+                <li>Jason Shackles (<a href="http://steamcommunity.com/profiles/76561198040672342"
+                                       id="jshackles_steam">jshackles</a>)
+                </li>
+                <li>Dan C. (<a href="http://steamcommunity.com/profiles/76561198012785113"
+                               id="JoiNNN_steam">JoiNNN</a>)
+                </li>
+                <li>Ben Williams (<a href="http://steamcommunity.com/profiles/76561198000198761"
+                                     id="smashman_steam">smash.mn</a>)
+                </li>
+                <li></li>
+                <li>
+                    <div id="view_all"><a
+                            href='https://github.com/jshackles/Enhanced_Steam/graphs/contributors'
+                            data-locale-text="view_all">VIEW ALL</a></div>
+                </li>
+            </ul>
+            <div class="header" id="translation_text" data-locale-text="translation">Translation
+            </div>
+            <table class="translation">
+                <tr>
+                    <td class="language brazilian">Portuguese-Brazil:</td>
+                    <td>Berna, Mougevit, Ricci, Rubens Vinícius, Scopel, Titoncio, Yachagon, xAranda
+                        (NO AUDIO), 級 Happy
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language bulgarian">Bulgarian:</td>
+                    <td>Castro Wilde, The Nominomicon, XepouH</td>
+                </tr>
+                <tr>
+                    <td class="language czech">Czech:</td>
+                    <td>Arcane, Bezdak, Martin005[CZ], benetti32|cz, chriss01cz, dapil,
+                        xXx_Pá$0v€cXVI_xXx
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language danish">Danish:</td>
+                    <td>Cake!, Chreddy, Mig_Mikkel [⇄], Redzdaz, Saturate, SnoX, UltraSun,
+                        XDRosenheim, antim
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language dutch">Dutch:</td>
+                    <td>AreUTalking2Meh, Bennievv, Boelens, Craven, Epicon, FooBar, HumanaSays,
+                        Justin, Nujj, Yeuxkes
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language finnish">Finnish:</td>
+                    <td>3ventic, Elekton, Hilloh, Lumppari, Mairo vain..., Major Parsnip, Master
+                        Indigo, Nightmare_182, NikoDaGreat, Tumpo, frozen.aerocrane, mkfin
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language french">French:</td>
+                    <td>Clockmaker, Nuator, Quaelor, Stumpokapow, Vardex, Yanuut, eucalyptux</td>
+                </tr>
+                <tr>
+                    <td class="language german">German:</td>
+                    <td>Darkbird |, Edward Cullen, FuriousFry, Gatse, Incredipede, Invisi, MAGIC,
+                        Phenom, Pilzsuppe, Schnitzelfee, Son of Thor, addicT*, chrisli, dochris.2,
+                        larry_ @ DUAS NIMMA HALTEN, red, |«ScReaM»|, À Cookie Jar
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language greek">Greek:</td>
+                    <td>Coccinella, Pandorian, SeCTeen, Sub-Zero</td>
+                </tr>
+                <tr>
+                    <td class="language hungarian">Hungarian:</td>
+                    <td>DonRoland, Mohariczozo_HUN, Noarpe, Sirpi, [T-A!] Underyx x 6, atomcsikk,
+                        french_salad, nArrow, ๖VaHooK
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language italian">Italian:</td>
+                    <td>Copons, Drake Fazuku, Rasin, Star1s3, Øktøber</td>
+                </tr>
+                <tr>
+                    <td class="language japanese">Japanese:</td>
+                    <td>aoisensi, k725, sumannnala</td>
+                </tr>
+                <tr>
+                    <td class="language koreana">Korean:</td>
+                    <td>CanNaJun, Daum, Hirano, LJreal, RaWouk, Rasin, [GF]meyoung, fivestar, sunk,
+                        À Cookie Jar, 하얀군주
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language norwegian">Norwegian:</td>
+                    <td>KappaHD, Lazberg, Morten242, Stian, ⑨ ChocolateShuvuu</td>
+                </tr>
+                <tr>
+                    <td class="language polish">Polish:</td>
+                    <td>AciD, Bednar, Laserman//^^, Lordomus, Parseus, Xylo, Yobilat, Yocki,
+                        devLewy, mahon, skubi07
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language portuguese">Portuguese:</td>
+                    <td>Dr. Costa, Ex0tic, Matias G. H., MrAltamente, Reckoner, Sim, SupSuper,
+                        TheScientist, The_Monk, TilenoL
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language romanian">Romanian:</td>
+                    <td>Stormania</td>
+                </tr>
+                <tr>
+                    <td class="language russian">Russian:</td>
+                    <td>Engkariensis, Kosheyaka, M@gi$te® Y0d@, Mechanic, Memfys, MrFreemanBBQ,
+                        Robin, Sh1fter, ShawNexT, The Freak, TheMrKochan, delfin_00, dragonsigh
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language schinese">Simplified Chinese:</td>
+                    <td>Aslike2, Deparsoul, FelinaeEbony, Gold, Iuy, M@nkey, Mr. Error,
+                        MyLittleWarhammer, Rabbitism Bomb, Rasin, [CN]Johnson, i7killpii, mjy,
+                        ssenkrad, yuccatoo
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language spanish">Spanish:</td>
+                    <td>#SG# Sharkiller, 00HiZaM, Alien8, Digmin3, ItsMarukka, Kharn Nete, MλXX
+                        [PA-D], Profesor Pistacho, Robotnick, Silence, \Vince, giraam, kalprestito,
+                        kulapik, p0tat0, wasakakero, xGreg
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language swedish">Swedish:</td>
+                    <td>Chainsawkitten, Death King, Deques, Lumppari, [MG] Rubiin, 전주 0x3 제</td>
+                </tr>
+                <tr>
+                    <td class="language tchinese">Traditional Chinese:</td>
+                    <td>Atraveller, JD OwO, Lex Song, MoDMeR, Mr. Error, NOKIA SE, Rasin, omylist,
+                        tonyli1357, 破曉之殤丶Revelation
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language thai">Thai:</td>
+                    <td>Epicenter, Likecyber, Magnative, Radius, Rasin, [LPG] 7-elephant</td>
+                </tr>
+                <tr>
+                    <td class="language turkish">Turkish:</td>
+                    <td>Beedle, Dijkstra[TR], Eray, Gevanni, Grievous, Neadiatre[Trade] #SOMA, Sound
+                        of Night, Su1ciDe, eayurdaer, tyyaman, veteran, ÖŞEK YALANCI
+                    </td>
+                </tr>
+                <tr>
+                    <td class="language ukrainian">Ukranian:</td>
+                    <td>Anakin Skywalker, BlackSwan, Dorimi, Gentleneer, GreK™, MoDMeR, NutsUA,
+                        Peacefool Peopel, Smith M.D., Stakan, [BA]zekainhuman
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div id="footer">
+    <div>
+        <a href="http://www.enhancedsteam.com" id="foot_link">Enhanced Steam Extension</a>
+    </div>
+    <span id="author_info">a fork by IsThereAnyDeal<br />original author jshackles</span>
+    <div>
+        <button id="reset" data-locale-text="options.reset">Reset options</button>
+    </div>
+</div>
 </body>
 </html>

@@ -345,6 +345,7 @@
         "hltb": "Show HowLongToBeat.com information",
         "hidespamcomments": "Hide spam comments from Workshop & profiles",
         "hide_owned": "Items you own in search results and tag pages",
+        "hide_ignored": "Items you ignored in search results and tag pages",
         "reset": "Reset options",
         "api_key": "API Key",
         "gift": "Items stored as gift",
