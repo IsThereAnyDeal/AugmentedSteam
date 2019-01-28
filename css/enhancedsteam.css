@@ -822,10 +822,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	right: 2px;
 	z-index: 10;
 	opacity:0;
-	transition: opacity 0.2s ease-in-out;
+	visibility:hidden;
+	transition: visibility,opacity 0.2s ease-in-out;
 }
 #es_customize_btn .active + .home_viewsettings_popup {
 	opacity:1;
+	visibility:visible;
 }
 
 .home_page_body_ctn.has_takeover #es_customize_btn {
