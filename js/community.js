@@ -380,8 +380,9 @@ let ProfileHomePageClass = (function(){
     };
 
     ProfileHomePageClass.prototype.addPostHistoryLink = function() {
-        document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow")
-            .insertAdjacentHTML("afterend",
+        let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
+        if (!node) { return; }
+        node.insertAdjacentHTML("afterend",
                 "<a class='popup_menu_item' id='es_posthistory' href='" + window.location.pathname + "/posthistory'>" +
                 "<img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; " + Localization.str.post_history +
                 "</a>");
