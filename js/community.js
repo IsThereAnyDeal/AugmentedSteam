@@ -457,7 +457,7 @@ let GamesPageClass = (function(){
             this.addGamelistAchievements();
         }
 
-        add_gamelist_common();
+        // FIXME add_gamelist_common();
     }
 
     // Display total time played for all games
