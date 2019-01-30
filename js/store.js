@@ -446,7 +446,7 @@ let AppPageClass = (function(){
         let metalinkNode = document.querySelector("#game_area_metalink a");
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
 
-        this.data = this.storePageDataPromise();
+        this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
         // FIXME appPage.mediaSliderExpander();
@@ -512,39 +512,35 @@ let AppPageClass = (function(){
         // FIXME
     };
 
-    AppPageClass.prototype.storePageDataPromise = function() {
+    AppPageClass.prototype.storePageDataPromise = async function() {
         let appid = this.appid;
-        return new Promise(function(resolve, reject) {
-            let cache = LocalData.get("storePageData_" + appid);
+        let cache = LocalData.get("storePageData_" + appid);
 
-            if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
-                resolve(cache.data);
-                return;
-            }
+        if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
+            return cache.data;
+        }
 
-            let apiparams = {
-                appid: appid
-            };
-            if (this.metalink) {
-                apiparams.mcurl = this.metalink;
-            }
-            if (SyncedStorage.get("showoc", true)) {
-                apiparams.oc = 1;
-            }
+        let apiparams = {
+            appid: appid
+        };
+        if (this.metalink) {
+            apiparams.mcurl = this.metalink;
+        }
+        if (SyncedStorage.get("showoc", true)) {
+            apiparams.oc = 1;
+        }
 
-            RequestData.getApi("v01/storepagedata", apiparams)
-                .then(function(response) {
-                    if (response && response.result && response.result === "success") {
-                        LocalData.set("storePageData_" + appid, {
-                            data: response.data,
-                            updated: Date.now(),
-                        });
-                        resolve(response.data);
-                    } else {
-                        reject();
-                    }
-                }, reject);
-        });
+        return RequestData.getApi("v01/storepagedata", apiparams)
+            .then(function(response) {
+                if (response && response.result && response.result === "success") {
+                    LocalData.set("storePageData_" + appid, {
+                        data: response.data,
+                        updated: Date.now(),
+                    });
+                    return response.data;
+                }
+                throw "Network error: did not receive valid storepagedata.";
+            });
     };
 
     /**
@@ -2324,61 +2320,52 @@ let WishlistPageClass = (function(){
     };
 
     // Calculate total cost of all items on wishlist
-    function loadStats() {
+    async function loadStats() {
+        let wishlistData = BrowserHelper.getVariableFromDom("g_rgAppInfo", "object");
+        if (!wishlistData || Object.keys(wishlistData).length == 0) {
+            let pages = BrowserHelper.getVariableFromDom("g_nAdditionalPages", "int");
+            let baseUrl = BrowserHelper.getVariableFromDom("g_strWishlistBaseURL", "string");
 
-        (new Promise(function(resolve, reject){
-            let wishlistData = BrowserHelper.getVariableFromDom("g_rgAppInfo", "object");
-            if (wishlistData && Object.keys(wishlistData).length != 0) {
-                resolve(wishlistData);
+            if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
+                throw "loadStats() expected profile url";
+            }
+
+            wishlistData = {};
+            let promises = [];
+
+            for (let i=0; i<pages; i++) {
+                promises.push(RequestData.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
+                    Object.assign(wishlistData, data);
+                }));
+            }
+
+            await Promise.all(promises);
+        }
+        let totalPrice = new Price(0);
+        let totalCount = 0;
+        let totalOnSale = 0;
+        let totalNoPrice = 0;
+
+        for (let key in wishlistData) {
+            if (!wishlistData.hasOwnProperty(key)) { continue; }
+            let game = wishlistData[key];
+            if (game.subs.length > 0) {
+                totalPrice.value += game.subs[0].price / 100;
+
+                if (game.subs[0].discount_pct > 0) {
+                    totalOnSale++;
+                }
             } else {
-                let pages = BrowserHelper.getVariableFromDom("g_nAdditionalPages", "int");
-                let baseUrl = BrowserHelper.getVariableFromDom("g_strWishlistBaseURL", "string");
-
-                if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
-                    reject();
-                    return;
-                }
-
-                wishlistData = {};
-                let promises = [];
-
-                for (let i=0; i<pages; i++) {
-                    promises.push(RequestData.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
-                        Object.assign(wishlistData, data);
-                    }));
-                }
-
-                Promise.all(promises).then(() => {
-                    resolve(wishlistData);
-                }, reject);
+                totalNoPrice++;
             }
-        })).then(wishlistData => {
-            let totalPrice = new Price(0);
-            let totalCount = 0;
-            let totalOnSale = 0;
-            let totalNoPrice = 0;
+            totalCount++;
+        }
 
-            for (let key in wishlistData) {
-                if (!wishlistData.hasOwnProperty(key)) { continue; }
-                let game = wishlistData[key];
-                if (game.subs.length > 0) {
-                    totalPrice.value += game.subs[0].price / 100;
-
-                    if (game.subs[0].discount_pct > 0) {
-                        totalOnSale++;
-                    }
-                } else {
-                    totalNoPrice++;
-                }
-                totalCount++;
-            }
-
-            document.querySelector("#esi-wishlist-chart-content").innerHTML
-                = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-                   <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-                   <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-                   <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
-        });
+        document.querySelector("#esi-wishlist-chart-content").innerHTML
+            = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
