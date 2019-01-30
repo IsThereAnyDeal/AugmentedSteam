@@ -8,6 +8,11 @@
       "48": "img/es_48.png",
       "32": "img/es_32.png"
     },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{1be309c5-3e4f-4b99-927d-bb500eb4fa88}"
+        }
+    },
     "manifest_version": 2,
     "options_ui": {
         "page": "options.html",
@@ -17,6 +22,7 @@
         "storage",
         "http://*.steampowered.com/",
         "https://*.steampowered.com/",
+        "*://steamcommunity.com/",
         "*://*.isthereanydeal.com/"
     ],
     "web_accessible_resources": [
@@ -56,7 +62,9 @@
             ],
             "css": [
                 "css/enhancedsteam.css",
-                "css/es_flags.css"
+                "css/enhancedsteam-firefox.css",
+                "css/es_flags.css",
+                "css/es_flags-firefox.css"
             ]
         },
         {
@@ -74,7 +82,9 @@
             ],
             "css": [
                 "css/enhancedsteam.css",
-                "css/es_flags.css"
+                "css/enhancedsteam-firefox.css",
+                "css/es_flags.css",
+                "css/es_flags-firefox.css"
             ]
         },
         {
@@ -83,7 +93,8 @@
                 "*://steamcommunity.com/profiles/*"
             ],
             "css": [
-                "css/es_sites_links.css"
+                "css/es_sites_links.css",
+                "css/es_sites_links-firefox.css"
             ]
         },
         {
