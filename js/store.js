@@ -1553,26 +1553,26 @@ let AppPageClass = (function(){
 
             let title = node.querySelector("h1").textContent.trim();
             title = title.toLowerCase().replace(/-/g, ' ');
-            if (!title || !title.contains('pack')) return;
-            if (title.contains('pack') && title.contains('season')) return;
+            if (!title || !title.includes('pack')) return;
+            if (title.includes('pack') && title.includes('season')) return;
 
-            if (title.contains(' 2 pack') && !title.contains('bioshock')) { splitPack.call(node, 2); }
-            else if (title.contains(' two pack')) { splitPack.call(node, 2); }
-            else if (title.contains('tower wars friend pack')) { splitPack.call(node, 2); }
+            if (title.includes(' 2 pack') && !title.includes('bioshock')) { splitPack.call(node, 2); }
+            else if (title.includes(' two pack')) { splitPack.call(node, 2); }
+            else if (title.includes('tower wars friend pack')) { splitPack.call(node, 2); }
 
-            else if (title.contains(' 3 pack') && !title.contains('doom 3')) { splitPack.call(node, 3); }
-            else if (title.contains(' three pack')) { splitPack.call(node, 3); }
-            else if (title.contains('tower wars team pack')) { splitPack.call(node, 3); }
+            else if (title.includes(' 3 pack') && !title.includes('doom 3')) { splitPack.call(node, 3); }
+            else if (title.includes(' three pack')) { splitPack.call(node, 3); }
+            else if (title.includes('tower wars team pack')) { splitPack.call(node, 3); }
 
-            else if (title.contains(' 4 pack')) { splitPack.call(node, 4); }
-            else if (title.contains(' four pack')) { splitPack.call(node, 4); }
-            else if (title.contains(' clan pack')) { splitPack.call(node, 4); }
+            else if (title.includes(' 4 pack')) { splitPack.call(node, 4); }
+            else if (title.includes(' four pack')) { splitPack.call(node, 4); }
+            else if (title.includes(' clan pack')) { splitPack.call(node, 4); }
 
-            else if (title.contains(' 5 pack')) { splitPack.call(node, 5); }
-            else if (title.contains(' five pack')) { splitPack.call(node, 5); }
+            else if (title.includes(' 5 pack')) { splitPack.call(node, 5); }
+            else if (title.includes(' five pack')) { splitPack.call(node, 5); }
 
-            else if (title.contains(' 6 pack')) { splitPack.call(node, 6); }
-            else if (title.contains(' six pack')) { splitPack.call(node, 6); }
+            else if (title.includes(' 6 pack')) { splitPack.call(node, 6); }
+            else if (title.includes(' six pack')) { splitPack.call(node, 6); }
         }
     };
 
@@ -2271,7 +2271,7 @@ let WishlistPageClass = (function(){
 
         let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/");
         return window.location.href.startsWith(myWishlistUrl)
-            || window.location.href.contains("/profiles/" + User.steamId);
+            || window.location.href.includes("/profiles/" + User.steamId);
     }
 
     WishlistPageClass.prototype.highlightApps = function(nodes) {
