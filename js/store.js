@@ -2346,9 +2346,7 @@ let WishlistPageClass = (function(){
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
-        for (let key in wishlistData) {
-            if (!wishlistData.hasOwnProperty(key)) { continue; }
-            let game = wishlistData[key];
+        for (let [key, game] of Object.entries(wishlistData)) {
             if (game.subs.length > 0) {
                 totalPrice.value += game.subs[0].price / 100;
 
