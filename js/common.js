@@ -791,7 +791,7 @@ let Currency = (function() {
                                 dummyHtml.innerHTML = response;
 
                                 self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                             },
                             () => {
                                 RequestData
@@ -806,7 +806,7 @@ let Currency = (function() {
                                         }
 
                                         self.userCurrency = currency;
-                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                                     });
                             }
                         )
@@ -1410,12 +1410,12 @@ let TimeHelper = (function(){
     self.isExpired = function(updateTime, expiration) {
         if (!updateTime) { return true; }
 
-        let expireTime = parseInt(Date.now() / 1000, 10) - expiration;
+        let expireTime = Math.trunc(Date.now() / 1000) - expiration;
         return updateTime < expireTime;
     };
 
     self.timestamp = function() {
-        return parseInt(Date.now() / 1000, 10);
+        return Math.trunc(Date.now() / 1000);
     };
 
     return self;
