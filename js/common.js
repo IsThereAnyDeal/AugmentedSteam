@@ -150,6 +150,25 @@ let Api = (function(){
 })();
 
 
+let TimeHelper = (function(){
+
+    let self = {};
+
+    self.isExpired = function(updateTime, expiration) {
+        if (!updateTime) { return true; }
+
+        let expireTime = Math.trunc(Date.now() / 1000) - expiration;
+        return updateTime < expireTime;
+    };
+
+    self.timestamp = function() {
+        return Math.trunc(Date.now() / 1000);
+    };
+
+    return self;
+})();
+
+
 let LocalData = (function(){
 
     let self = {};
@@ -1397,25 +1416,6 @@ let EnhancedSteam = (function() {
             observer.observe(node, {childList:true, subtree:true});
 
         }
-    };
-
-    return self;
-})();
-
-
-let TimeHelper = (function(){
-
-    let self = {};
-
-    self.isExpired = function(updateTime, expiration) {
-        if (!updateTime) { return true; }
-
-        let expireTime = Math.trunc(Date.now() / 1000) - expiration;
-        return updateTime < expireTime;
-    };
-
-    self.timestamp = function() {
-        return Math.trunc(Date.now() / 1000);
     };
 
     return self;
