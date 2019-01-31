@@ -1709,12 +1709,7 @@ let Inventory = (function(){
         if (!data || !data.success) { return; }
         LocalData.set("inventory_3", data);
 
-        for(let id in data.rgDescriptions) {
-            if (!data.rgDescriptions.hasOwnProperty(id)) {
-                continue;
-            }
-
-            let obj = data.rgDescriptions[id];
+        for(let [id, obj] of Object.entries(data.rgDescriptions)) {
             if (!obj.type || obj.type !== "Coupon") {
                 continue;
             }
