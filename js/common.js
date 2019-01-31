@@ -2067,7 +2067,7 @@ let Highlights = (function(){
         node.style.display = "none";
     };
 
-    self.highlightNotInterested = function(node) {
+    self.highlightNotInterested = async function(node) {
         await DynamicStore;
 
         let aNode = node.querySelector("a");

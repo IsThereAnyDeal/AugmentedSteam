@@ -2270,7 +2270,7 @@ let WishlistPageClass = (function(){
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
-    WishlistPageClass.prototype.highlightApps = function(nodes) {
+    WishlistPageClass.prototype.highlightApps = async function(nodes) {
         if (!User.isSignedIn) { return; }
 
         let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
