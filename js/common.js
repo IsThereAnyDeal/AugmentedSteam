@@ -143,7 +143,7 @@ let Api = (function(){
                 .join("&");
         }
 
-        return "//" + Config.ApiServerHost + "/" + endpoint + "/" + queryString;
+        return Config.ApiServerHost + "/" + endpoint + "/" + queryString;
     };
 
     return self;
