@@ -2223,10 +2223,15 @@ let DynamicStore = (function(){
             if (!userdata || !userdata.rgOwnedApps) { return; }
             LocalData.set("dynamicstore", userdata);
             LocalData.set("dynamicstore_update", TimeHelper.timestamp());
+            // userdata keys are:
+            // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
+            // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
+            // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
+            // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
         }
         _data = userdata;
         _owned = new Set(_data.rgOwnedApps);
-        _wishlisted = new Set(_data.rgWishlistApps);
+        _wishlisted = new Set(_data.rgWishlist);
         return userdata;
     }
 
