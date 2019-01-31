@@ -2179,10 +2179,14 @@ let DynamicStore = (function(){
 
     let _data = {};
     let _promise = null;
+    let _owned = new Set();
+    let _wishlisted = new Set();
 
     self.clear = function() {
         _data = {};
         _promise = null;
+        _owned = new Set();
+        _wishlisted = new Set();
         LocalData.del("dynamicstore");
         LocalData.del("dynamicstore_update");
     };
@@ -2193,13 +2197,11 @@ let DynamicStore = (function(){
     };
 
     self.isOwned = function(appid) {
-        let list = _data.rgOwnedApps || [];
-        return list.indexOf(appid) !== -1;
+        return _owned.has(appid);
     };
 
     self.isWishlisted = function(appid) {
-        let list = _data.rgWishlistApps || [];
-        return list.indexOf(appid) !== -1;
+        return _wishlisted.has(appid);
     };
 
     self.promise = function(){
@@ -2212,6 +2214,8 @@ let DynamicStore = (function(){
 
         if (userdata && !TimeHelper.isExpired(userdataUpdate, 15*60)) {
             _data = userdata;
+            _owned = new Set(_data.rgOwnedApps);
+            _wishlisted = new Set(_data.rgWishlistApps);
             return _promise = Promise.resolve();
         }
 
@@ -2220,13 +2224,15 @@ let DynamicStore = (function(){
 
             LocalData.set("dynamicstore", result)
             _data = result;
+            _owned = new Set(_data.rgOwnedApps);
+            _wishlisted = new Set(_data.rgWishlistApps);
             return result;
         });
     };
 
     return self;
 })();
-
+    
 let Prices = (function(){
 
     function Prices() {
