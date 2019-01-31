@@ -2286,7 +2286,7 @@ let WishlistPageClass = (function(){
 
             if (DynamicStore.isOwned(appid)) {
                 node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-                if (SyncedStorage.get("higlight_owned", true)) {
+                if (SyncedStorage.get("highlight_owned", true)) {
                     Highlights.highlightOwned(node);
                 } else {
                     node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
@@ -2296,7 +2296,7 @@ let WishlistPageClass = (function(){
             if (DynamicStore.isWishlisted(appid)) {
                 node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
-                if (SyncedStorage.get("higlight_wishlist", true)) {
+                if (SyncedStorage.get("highlight_wishlist", true)) {
                     Highlights.highlightWishlist(node);
                 } else {
                     node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
