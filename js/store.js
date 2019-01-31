@@ -2270,40 +2270,39 @@ let WishlistPageClass = (function(){
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
-    WishlistPageClass.prototype.highlightApps = function(nodes) {
+    WishlistPageClass.prototype.highlightApps = async function(nodes) {
         if (!User.isSignedIn) { return; }
 
         let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
         let userImage = document.querySelector(".wishlist_header img").getAttribute("src").replace("_full", "");
         if (loginImage === userImage) { return; }
 
-        DynamicStore.promise().then(() => {
+        await DynamicStore;
 
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
 
-                let appid = Number(node.dataset.appId);
+            let appid = Number(node.dataset.appId);
 
-                if (DynamicStore.isOwned(appid)) {
-                    node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-                    if (SyncedStorage.get("higlight_owned", true)) {
-                        Highlights.highlightOwned(node);
-                    } else {
-                        node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
-                    }
-                }
-
-                if (DynamicStore.isWishlisted(appid)) {
-                    node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
-
-                    if (SyncedStorage.get("higlight_wishlist", true)) {
-                        Highlights.highlightWishlist(node);
-                    } else {
-                        node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
-                    }
+            if (DynamicStore.isOwned(appid)) {
+                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
+                if (SyncedStorage.get("highlight_owned", true)) {
+                    Highlights.highlightOwned(node);
+                } else {
+                    node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
                 }
             }
-        });
+
+            if (DynamicStore.isWishlisted(appid)) {
+                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
+
+                if (SyncedStorage.get("highlight_wishlist", true)) {
+                    Highlights.highlightWishlist(node);
+                } else {
+                    node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                }
+            }
+        }
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {

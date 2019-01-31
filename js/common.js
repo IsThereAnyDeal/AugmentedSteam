@@ -1319,35 +1319,35 @@ let EnhancedSteam = (function() {
         document.querySelector("#es_popup .popup_menu")
             .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
-        document.querySelector("#es_random_game").addEventListener("click", function(){
-            DynamicStore.promise().then(result => {
-                if (!result.rgOwnedApps) { return; }
-                let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
+        document.querySelector("#es_random_game").addEventListener("click", async function(){
+            let result = await DynamicStore;
+            if (!result.rgOwnedApps) { return; }
+            let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-                RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
-                    if (!response || !response[appid] || !response[appid].success) { return; }
-                    let data = response[appid].data;
+            RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+                if (!response || !response[appid] || !response[appid].success) { return; }
+                let data = response[appid].data;
 
-                    let gameid = appid;
-                    let gamename;
-                    if (data.fullgame) {
-                        gameid = data.fullgame.appid;
-                        gamename = data.fullgame.name;
-                    } else {
-                        gamename = data.name;
-                    }
+                let gameid = appid;
+                let gamename;
+                if (data.fullgame) {
+                    gameid = data.fullgame.appid;
+                    gamename = data.fullgame.name;
+                } else {
+                    gamename = data.name;
+                }
 
-                    let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
-                    ExtensionLayer.runInPageContext(
-                        `function() {
-                            var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
-                            prompt.done(function(result) {
-                                if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
-                                if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
-					        });
-				        }`);
-                });
+                let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
+                ExtensionLayer.runInPageContext(
+                    `function() {
+                        var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
+                        prompt.done(function(result) {
+                            if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
+                            if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
+                        });
+                    }`);
             });
+
         });
     };
 
@@ -2052,26 +2052,25 @@ let Highlights = (function(){
         node.style.display = "none";
     };
 
-    self.highlightNotInterested = function(node) {
-        DynamicStore.promise().then(() => {
+    self.highlightNotInterested = async function(node) {
+        await DynamicStore;
 
-            let aNode = node.querySelector("a");
-            let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
-            if (!appid || !DynamicStore.isIgnored(appid)) { return; }
+        let aNode = node.querySelector("a");
+        let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
+        if (!appid || !DynamicStore.isIgnored(appid)) { return; }
 
-            if (node.classList.contains("home_area_spotlight")) {
-                node = node.querySelector(".spotlight_content");
-            }
+        if (node.classList.contains("home_area_spotlight")) {
+            node = node.querySelector(".spotlight_content");
+        }
 
-            node.classList.add("es_highlight_checked");
+        node.classList.add("es_highlight_checked");
 
-            if (SyncedStorage.get("hide_ignored", false) && node.closest(".search_result_row")) {
-                node.style.display = "none";
-                return;
-            }
+        if (SyncedStorage.get("hide_ignored", false) && node.closest(".search_result_row")) {
+            node.style.display = "none";
+            return;
+        }
 
-            highlightItem(node, "notinterested");
-        });
+        highlightItem(node, "notinterested");
     };
 
     self.startHighlightsAndTags = function(parent) {
@@ -2163,11 +2162,15 @@ let DynamicStore = (function(){
     let self = {};
 
     let _data = {};
-    let _promise;
+    let _promise = null;
+    let _owned = new Set();
+    let _wishlisted = new Set();
 
     self.clear = function() {
         _data = {};
         _promise = null;
+        _owned = new Set();
+        _wishlisted = new Set();
         LocalData.del("dynamicstore");
         LocalData.del("dynamicstore_update");
     };
@@ -2178,49 +2181,55 @@ let DynamicStore = (function(){
     };
 
     self.isOwned = function(appid) {
-        let list = _data.rgOwnedApps || [];
-        return list.indexOf(appid) !== -1;
+        return _owned.has(appid);
     };
 
     self.isWishlisted = function(appid) {
-        let list = _data.rgWishlistApps || [];
-        return list.indexOf(appid) !== -1;
+        return _wishlisted.has(appid);
     };
 
-    self.promise = function(){
-        if (_promise) { return _promise; }
+    Object.defineProperty(self, 'wishlist', {
+        get() { return new Set(_wishlisted); },
+    });
 
-        _promise = new Promise(function(resolve, reject){
-            if (!User.isSignedIn) { reject(); return; }
+    /*
+     * _fetch() may resolve with an undefined value
+     * if Steam can't fulfill the API call
+     */
+    async function _fetch() {
+        if (!User.isSignedIn) {  throw "User is not signed in"; }
+    
+        let userdata = LocalData.get("dynamicstore");
+        let userdataUpdate = LocalData.get("dynamicstore_update", 0);
 
-            let userdata = LocalData.get("dynamicstore");
-            let userdataUpdate = LocalData.get("dynamicstore_update", TimeHelper.timestamp());
+        if (!userdata || TimeHelper.isExpired(userdataUpdate, 15*60)) {
+            // data is not cached, fetch
+            userdata = await RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true });
+            if (!userdata || !userdata.rgOwnedApps) { return; }
+            LocalData.set("dynamicstore", userdata);
+            LocalData.set("dynamicstore_update", TimeHelper.timestamp());
+            // userdata keys are:
+            // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
+            // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
+            // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
+            // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
+        }
+        _data = userdata;
+        _owned = new Set(_data.rgOwnedApps);
+        _wishlisted = new Set(_data.rgWishlist);
+        return userdata;
+    }
 
-            if (userdata && !TimeHelper.isExpired(userdataUpdate, 15*60)) {
-                _data = userdata;
-                resolve(userdata);
-                return;
-            }
-
-            RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true }).then(result => {
-                if (!result || !result.rgOwnedApps) {
-                    resolve();
-                    return;
-                }
-
-                LocalData.set("dynamicstore", result)
-                _data = result;
-                resolve(result);
-
-            }, reject);
-
-        });
-        return _promise;
-    };
+    self.then = function(onDone, onCatch) {
+        if (!_promise) {
+            _promise = _fetch();
+        }
+        return _promise.then(onDone, onCatch);
+    } 
 
     return self;
 })();
-
+    
 let Prices = (function(){
 
     function Prices() {
