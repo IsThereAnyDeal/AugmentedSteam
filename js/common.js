@@ -1450,14 +1450,10 @@ let GameId = (function(){
     self.getAppids = function(text) {
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
-        let m;
-        do {
-            let m = regex.exec(text);
-            if (m) { res.push(m[1]); }
-        } while(m);
+        for (let m = regex.exec(text); m; m = regex.exec(text)) {
+            res.push(m[1]);
+        }
         return res;
-
-        return (res.length > 0) ? res : null;
     };
 
     self.getAppidWishlist = function(text) {
@@ -1666,30 +1662,23 @@ let Inventory = (function(){
 
         LocalData.set("inventory_1", data);
 
-        for(let key in data.rgDescriptions) {
-            if (!data.rgDescriptions.hasOwnProperty(key)) { continue; }
-
+        for(let [key, obj] of Object.entries(data.rgDescriptions)) {
             let isPackage = false;
-            let obj = data.rgDescriptions[key];
-
             if (obj.descriptions) {
-                for (let d = 0; d < obj.descriptions.length; d++) {
-                    if (obj.descriptions[d].type === "html") {
-                        let appids = GameId.getAppids(obj.descriptions[d].value);
-                        if (appids) {
-                            // Gift package with multiple apps
-                            isPackage = true;
-                            for (let j = 0; j < appids.length; j++) {
-                                if (appids[j]) {
-                                    if (obj.type === "Gift") {
-                                        gifts.push(appids[j]);
-                                    } else {
-                                        guestpasses.push(appids[j]);
-                                    }
-                                }
+                for (let desc of obj.descriptions) {
+                    if (desc.type === "html") {
+                        let appids = GameId.getAppids(desc.value);
+                        // Gift package with multiple apps
+                        isPackage = true;
+                        for (let appid of appids) {
+                            if (!appid) { continue; }
+                            if (obj.type === "Gift") {
+                                gifts.push(appid);
+                            } else {
+                                guestpasses.push(appid);
                             }
-                            break;
                         }
+                        break;
                     }
                 }
             }
