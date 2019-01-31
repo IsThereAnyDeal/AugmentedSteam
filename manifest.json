@@ -15,8 +15,8 @@
     },
     "permissions": [
         "storage",
-        "http://*.steampowered.com/",
-        "https://*.steampowered.com/",
+        "*://*.steampowered.com/*",
+        "*://steamcommunity.com/*",
         "*://*.isthereanydeal.com/"
     ],
     "web_accessible_resources": [
@@ -34,12 +34,11 @@
         "img/profile_styles/*/preview.png",
         "localization/*/strings.json"
     ],
-    "homepage_url": "https://es.ithereanydeal.com/",
+    "homepage_url": "https://es.isthereanydeal.com/",
     "content_scripts": [
         {
             "matches": [
-                "http://*.steampowered.com/*",
-                "https://*.steampowered.com/*"
+                "*://*.steampowered.com/*"
             ],
             "exclude_matches": [
                 "*://store.steampowered.com/dynamicstore/*",
@@ -61,8 +60,7 @@
         },
         {
             "matches": [
-                "http://steamcommunity.com/*",
-                "https://steamcommunity.com/*"
+                "*://steamcommunity.com/*"
             ],
             "exclude_matches": [
                 "*://steamcommunity.com/login/*"
