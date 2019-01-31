@@ -143,7 +143,26 @@ let Api = (function(){
                 .join("&");
         }
 
-        return "//" + Config.ApiServerHost + "/" + endpoint + "/" + queryString;
+        return Config.ApiServerHost + "/" + endpoint + "/" + queryString;
+    };
+
+    return self;
+})();
+
+
+let TimeHelper = (function(){
+
+    let self = {};
+
+    self.isExpired = function(updateTime, expiration) {
+        if (!updateTime) { return true; }
+
+        let expireTime = Math.trunc(Date.now() / 1000) - expiration;
+        return updateTime < expireTime;
+    };
+
+    self.timestamp = function() {
+        return Math.trunc(Date.now() / 1000);
     };
 
     return self;
@@ -791,7 +810,7 @@ let Currency = (function() {
                                 dummyHtml.innerHTML = response;
 
                                 self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                             },
                             () => {
                                 RequestData
@@ -806,7 +825,7 @@ let Currency = (function() {
                                         }
 
                                         self.userCurrency = currency;
-                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                                     });
                             }
                         )
@@ -1403,25 +1422,6 @@ let EnhancedSteam = (function() {
 })();
 
 
-let TimeHelper = (function(){
-
-    let self = {};
-
-    self.isExpired = function(updateTime, expiration) {
-        if (!updateTime) { return true; }
-
-        let expireTime = parseInt(Date.now() / 1000, 10) - expiration;
-        return updateTime < expireTime;
-    };
-
-    self.timestamp = function() {
-        return parseInt(Date.now() / 1000, 10);
-    };
-
-    return self;
-})();
-
-
 let GameId = (function(){
     let self = {};
 
@@ -1451,13 +1451,10 @@ let GameId = (function(){
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
         let m;
-        do {
-            let m = regex.exec(text);
-            if (m) { res.push(m[1]); }
-        } while(m);
+        while (m = regex.exec(text)) {
+            res.push(m[1]);
+        }
         return res;
-
-        return (res.length > 0) ? res : null;
     };
 
     self.getAppidWishlist = function(text) {
@@ -1666,30 +1663,23 @@ let Inventory = (function(){
 
         LocalData.set("inventory_1", data);
 
-        for(let key in data.rgDescriptions) {
-            if (!data.rgDescriptions.hasOwnProperty(key)) { continue; }
-
+        for(let [key, obj] of Object.entries(data.rgDescriptions)) {
             let isPackage = false;
-            let obj = data.rgDescriptions[key];
-
             if (obj.descriptions) {
-                for (let d = 0; d < obj.descriptions.length; d++) {
-                    if (obj.descriptions[d].type === "html") {
-                        let appids = GameId.getAppids(obj.descriptions[d].value);
-                        if (appids) {
-                            // Gift package with multiple apps
-                            isPackage = true;
-                            for (let j = 0; j < appids.length; j++) {
-                                if (appids[j]) {
-                                    if (obj.type === "Gift") {
-                                        gifts.push(appids[j]);
-                                    } else {
-                                        guestpasses.push(appids[j]);
-                                    }
-                                }
+                for (let desc of obj.descriptions) {
+                    if (desc.type === "html") {
+                        let appids = GameId.getAppids(desc.value);
+                        // Gift package with multiple apps
+                        isPackage = true;
+                        for (let appid of appids) {
+                            if (!appid) { continue; }
+                            if (obj.type === "Gift") {
+                                gifts.push(appid);
+                            } else {
+                                guestpasses.push(appid);
                             }
-                            break;
                         }
+                        break;
                     }
                 }
             }
@@ -1720,12 +1710,7 @@ let Inventory = (function(){
         if (!data || !data.success) { return; }
         LocalData.set("inventory_3", data);
 
-        for(let id in data.rgDescriptions) {
-            if (!data.rgDescriptions.hasOwnProperty(id)) {
-                continue;
-            }
-
-            let obj = data.rgDescriptions[id];
+        for(let [id, obj] of Object.entries(data.rgDescriptions)) {
             if (!obj.type || obj.type !== "Coupon") {
                 continue;
             }
