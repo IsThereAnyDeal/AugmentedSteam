@@ -2178,7 +2178,7 @@ let DynamicStore = (function(){
     let self = {};
 
     let _data = {};
-    let _promise;
+    let _promise = null;
 
     self.clear = function() {
         _data = {};
@@ -2205,32 +2205,23 @@ let DynamicStore = (function(){
     self.promise = function(){
         if (_promise) { return _promise; }
 
-        _promise = new Promise(function(resolve, reject){
-            if (!User.isSignedIn) { reject(); return; }
+        if (!User.isSignedIn) { return _promise = Promise.reject("User is not signed in"); }
 
-            let userdata = LocalData.get("dynamicstore");
-            let userdataUpdate = LocalData.get("dynamicstore_update", TimeHelper.timestamp());
+        let userdata = LocalData.get("dynamicstore");
+        let userdataUpdate = LocalData.get("dynamicstore_update", TimeHelper.timestamp());
 
-            if (userdata && !TimeHelper.isExpired(userdataUpdate, 15*60)) {
-                _data = userdata;
-                resolve(userdata);
-                return;
-            }
+        if (userdata && !TimeHelper.isExpired(userdataUpdate, 15*60)) {
+            _data = userdata;
+            return _promise = Promise.resolve();
+        }
 
-            RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true }).then(result => {
-                if (!result || !result.rgOwnedApps) {
-                    resolve();
-                    return;
-                }
+        return _promise = RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true }).then(result => {
+            if (!result || !result.rgOwnedApps) { return; }
 
-                LocalData.set("dynamicstore", result)
-                _data = result;
-                resolve(result);
-
-            }, reject);
-
+            LocalData.set("dynamicstore", result)
+            _data = result;
+            return result;
         });
-        return _promise;
     };
 
     return self;
