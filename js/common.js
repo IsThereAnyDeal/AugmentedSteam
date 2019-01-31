@@ -2203,6 +2203,10 @@ let DynamicStore = (function(){
         return _wishlisted.has(appid);
     };
 
+    Object.defineProperty(self, 'wishlist', {
+        get() { return new Set(_wishlisted); },
+    });
+
     /*
      * _fetch() may resolve with an undefined value
      * if Steam can't fulfill the API call
