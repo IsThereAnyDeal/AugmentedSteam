@@ -150,6 +150,29 @@ let Api = (function(){
     return self;
 })();
 
+let Background = (function(){
+    let self = {};
+
+    self.action = async function(requested) {
+        return new Promise(function (resolve, reject) {
+            let message = { 'action': requested, };
+            chrome.runtime.sendMessage(message, function(response) {
+                if (!response) {
+                    reject("No response from extension background context.");
+                    return;
+                }
+                if (typeof response.error !== 'undefined') {
+                    reject(response.error);
+                    return;
+                }
+                resolve(response.response);
+            });
+        });
+    };
+
+    Object.freeze(self);
+    return self;
+})();
 
 let TimeHelper = (function(){
 
