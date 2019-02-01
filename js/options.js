@@ -246,6 +246,7 @@ let Options = (function(){
 	}
 
 	function saveOptionFromEvent(e) {
+		if (!e.target || !e.target.closest) return; // "blur" fires when the window loses focus
 		let node = e.target.closest("[data-setting]");
 		if (!node) {
 			if (e.target.closest("#store_stores")) {
