@@ -93,5 +93,8 @@
                 "css/store.steampowered.com/store_front.css"
             ]
         }
-    ]
+    ],
+    "background": {
+        "page": "background.html"
+    }
 }
