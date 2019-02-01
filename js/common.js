@@ -578,6 +578,7 @@ let User = (function(){
             // Return date from cache
             if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
                 resolve(purchaseDates[lang][appName]);
+                return;
             }
 
             let lastUpdate = LocalData.get("purchase_dates_time", 0);
@@ -1505,6 +1506,7 @@ let EarlyAccess = (function(){
 
             if (cache) {
                 resolve();
+                return;
             }
 
             let updateTime = LocalData.get("ea_appids_time");
@@ -1757,6 +1759,7 @@ let Inventory = (function(){
         _promise = new Promise(function(resolve, reject) {
             if (!User.isSignedIn) {
                 resolve();
+                return;
             }
 
             let lastUpdate = LocalData.get("inventory_update");
