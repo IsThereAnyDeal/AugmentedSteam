@@ -2338,7 +2338,7 @@ let Prices = (function(){
         if (info["bundles"]["count"] > 0) {
             line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
             let bundlesUrl = BrowserHelper.escapeHTML(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
-            if (typeof bundles_url === "string" && bundles_url.length > 0) {
+            if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
             }
         }
