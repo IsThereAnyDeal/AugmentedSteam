@@ -74,13 +74,6 @@ let SpamCommentHandler = (function(){
 
     let spamRegex = null;
 
-    function SpamCommentHandler() {
-
-        if (SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) {
-            spamRegex = new RegExp(SyncedStorage.get("spamcommentregex", Defaults.spamcommentregex), "i");
-        }
-    }
-
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
 
@@ -138,47 +131,38 @@ let SpamCommentHandler = (function(){
     }
 
     function handleAllCommentThreads(parent) {
-        let nodes = parent.querySelectorAll(".commentthread_comment_container");
+        let nodes = parent.querySelectorAll(".commentthread_comment_container:not(.esi_commentthread)");
         for (let node of nodes) {
             updateCommentThread(node);
             addCommentThreadObserver(node);
         }
     }
 
-    SpamCommentHandler.prototype.hideSpamComments = function() {
+    let self = {};
+
+    self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) { return; }
+
+        spamRegex = new RegExp(SyncedStorage.get("spamcommentregex", Defaults.spamcommentregex), "i");
 
         handleAllCommentThreads(document);
 
+        // modal content
+        // TODO(tomas.fedor) this should be handled in apphub page
+        let modalWait = document.querySelector("#modalContentWait");
+        if (!modalWait) { return; }
 
+        let observer = new MutationObserver(mutation => {
+            let modalContainer = document.querySelector("#modalContentFrameContainer");
+            if (!modalContainer) { return; }
 
-        /*
-        if($("#AppHubContent").html()) {
-            var modal_content_observer = new MutationObserver(function(mutations) {
-                var frame_comment_observer = new MutationObserver(function(mutations) {
-                    frame_check_hide_comments();
-                    for (var i=0; i<frames.length; i++) {
-                        var frame = frames[i].document;
-                        if($(frame).find(".commentthread_comments").html()) {
-                            frame_comment_observer.observe($(frame).find(".commentthread_comments")[0], {childList:true, subtree:true});
-                        }
-
-                        $(frame).on("click", ".es_bad_comment_num", function(){
-                            $(this).hide();
-                            $(frame).find(".commentthread_comment").show();
-                        });
-                    }
-                });
-                frame_comment_observer.observe($("#modalContentWait")[0], {attributes:true});
-            });
-            modal_content_observer.observe($("#modalContentFrameContainer")[0], {childList:true, subtree:true});
-        }
-        */
+            let latestFrame = window.frames[window.frames.length-1]; // tomas.fedor Only check latest added frame
+            handleAllCommentThreads(latestFrame.document);
+        });
+        observer.observe(modalWait, {attributes: true});
     };
 
-
-
-    return SpamCommentHandler;
+    return self;
 })();
 
 let ProfileActivityPageClass = (function(){
@@ -189,10 +173,6 @@ let ProfileActivityPageClass = (function(){
         // TODO this is called from Common, refactor Early Access so it
         // doesn't trying to resolve where we are at, instead page should tell it what nodes to check
         // EarlyAccess.showEarlyAccess();
-
-        /*
-        hide_activity_spam_comments();
-        */
 
         this.observeChanges();
     }
@@ -245,6 +225,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
+            SpamCommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -893,7 +874,7 @@ let ProfileEditPageClass = (function(){
 
                 Common.init();
 
-                (new SpamCommentHandler()).hideSpamComments(); // FIXME
+                SpamCommentHandler.hideSpamComments();
 
                 switch (true) {
 
