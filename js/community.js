@@ -70,6 +70,75 @@ let ProfileData = (function(){
     return self;
 })();
 
+let ProfileActivityPageClass = (function(){
+
+    function ProfileActivityPageClass() {
+        this.highlightFriendsActivity();
+        /*
+        hide_activity_spam_comments();
+        */
+
+        this.observeChanges();
+    }
+
+    ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
+        await DynamicStore;
+
+        // Get all appids and nodes from selectors
+        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        for (let node of nodes) {
+            node.classList.add("es_highlight_checked");
+
+            let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
+            for (let link of links) {
+                let appid = GameId.getAppid(link.href);
+                if (!appid) { continue; }
+
+                // TODO (tomas.fedor) refactor following checks to a class, this way we'll easily forget how exactly do we store them or where
+                if (LocalData.get(appid + "guestpass")) {
+                    Highlights.highlightInvGuestpass(link);
+                }
+                if (LocalData.get("couponData_" + appid)) {
+                    Highlights.highlightCoupon(link);
+                }
+                if (LocalData.get(appid + "gif")) {
+                    Highlights.highlightInvGift(link);
+                }
+
+                if (DynamicStore.isWishlisted(appid)) {
+                    Highlights.highlightWishlist(link);
+                }
+
+                if (DynamicStore.isOwned(appid)) {
+                    console.log("is owned", appid);
+                    Highlights.highlightOwned(link);
+
+                    if (link.closest(".blotter_daily_rollup_line")) {
+                        // FIXME (tomas.fedor) add_achievement_comparison_link($(node).parent(), appid);
+                    }
+                }
+
+                // TODO (tomas.fedor) this behaves differently than other highlights - check is being done in highlight method
+                Highlights.highlightNotInterested(link);
+            }
+
+        }
+    };
+
+    ProfileActivityPageClass.prototype.observeChanges = function() {
+        let that = this;
+        let observer = new MutationObserver(() => {
+
+            that.highlightFriendsActivity();
+            // FIXME that.processEarlyAccess();
+        });
+
+        observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
+    };
+
+    return ProfileActivityPageClass;
+})();
+
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
@@ -711,6 +780,10 @@ let ProfileEditPageClass = (function(){
                 Common.init();
 
                 switch (true) {
+
+                    case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+                        (new ProfileActivityPageClass());
+                        break;
 
                     case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
                         (new GamesPageClass());
