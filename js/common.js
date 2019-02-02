@@ -169,6 +169,51 @@ let TimeHelper = (function(){
 })();
 
 
+let DateParser = (function(){
+
+    let _locale;
+    let _monthShortNames;
+    let _dateRegex;
+    let _timeRegex;
+
+    function DateParser(locale) {
+        _locale = locale;
+
+        switch(locale) {
+            case "en":
+                _monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                _dateRegex = new RegExp("(\\d+)\\s+("+_monthShortNames.join("|")+")(?:,\\s+(\\d+))?");
+                _timeRegex = /(\d+):(\d+)([ap]m)/;
+                break;
+            // FIXME(tomas.fedor) other languages
+        }
+    }
+
+    DateParser.prototype.parseUnlockTime = function(datetime) {
+
+        switch(_locale) {
+            case "en":
+                let date = datetime.match(_dateRegex);
+                let time = datetime.match(_timeRegex);
+                if (!date || !time) { return 0; }
+
+                let year = date[3] ? parseInt(date[3]) : (new Date()).getFullYear();
+                let month = _monthShortNames.indexOf(date[2]);
+                let day = parseInt(date[1]);
+
+                let hour = time[3] === "am" ? parseInt(time[1]) : parseInt(time[1])+12;
+                let minutes = time[2];
+
+                return (new Date(year, month, day, hour, minutes)).getTime();
+        }
+        return 0;
+    };
+
+    return DateParser;
+})();
+
+
+
 let LocalData = (function(){
 
     let self = {};
@@ -1003,6 +1048,7 @@ let Language = (function(){
     let self = {};
 
     self.languages = {
+        "english": "en",
         "bulgarian": "bg",
         "czech": "cs",
         "danish": "da",
@@ -1057,7 +1103,7 @@ let Language = (function(){
     };
 
     self.isCurrentLanguageOneOf = function(array) {
-        return array.indexOf(self.getCurrentSteamLanguage()) != -1;
+        return array.indexOf(self.getCurrentSteamLanguage()) !== -1;
     };
 
     return self;
@@ -1508,7 +1554,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + language + ".png";
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
 

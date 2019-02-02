@@ -872,6 +872,89 @@ let ProfileEditPageClass = (function(){
     return ProfileEditPageClass;
 })();
 
+let StatsPageClass = (function(){
+
+    function StatsPageClass() {
+        this.addAchievementSort();
+    }
+
+    let _nodes = {
+        "default": [],
+        "time": []
+    };
+
+    function addSortMetaData(achievements) {
+        if (_nodes['default'].length !== 0) { return; }
+
+        let nodes = achievements.querySelectorAll(".achieveRow");
+
+        let language = Language.getLanguageCode(Language.getCurrentSteamLanguage());
+        let dateParser = new DateParser(language);
+
+        let sort = 0;
+        for (let node of nodes) {
+            _nodes['default'].push([sort++, node]);
+
+            let unlockTime = 0;
+            let unlockTimeNode = node.querySelector(".achieveUnlockTime");
+            if (unlockTimeNode) {
+                unlockTime = dateParser.parseUnlockTime(unlockTimeNode.textContent);
+            }
+            _nodes['time'].push([unlockTime, node]);
+
+            node.classList.add(unlockTime === 0 ? "esi_ach_locked" : "esi_ach_unlocked");
+        }
+
+        _nodes['time'] = _nodes['time'].sort(function(a, b) {
+            return b[0] - a[0]; // descending sort
+        });
+
+        let brs = achievements.querySelectorAll(":scope > br");
+        for (let br of brs) {
+            br.remove();
+        }
+    }
+
+    function sortBy(key, achievements) {
+        addSortMetaData(achievements);
+
+        for (let item of _nodes[key]) {
+            let node = item[1];
+            achievements.insertAdjacentElement("beforeend", node);
+        }
+    }
+
+    StatsPageClass.prototype.addAchievementSort = function() {
+        let personal = document.querySelector("#personalAchieve");
+        if (!personal) { return; }
+
+        document.querySelector("#tabs").insertAdjacentHTML("beforebegin",
+            `<div id='achievement_sort_options' class='sort_options'>
+                ${Localization.str.sort_by}
+                <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
+                <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
+            </div>`);
+
+        document.querySelector("#achievement_sort_default").addEventListener("click", function(e) {
+            document.querySelector("#achievement_sort_date").classList.add("es_achievement_sort_link");
+            e.target.classList.remove("es_achievement_sort_link");
+            sortBy("default", personal);
+        });
+
+        document.querySelector("#achievement_sort_date").addEventListener("click", function(e) {
+            document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
+            e.target.classList.remove("es_achievement_sort_link");
+            sortBy("time", personal);
+        });
+    };
+
+
+    return StatsPageClass;
+})();
+
+
+
+
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -910,6 +993,10 @@ let ProfileEditPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
                         (new ProfileHomePageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+                        (new StatsPageClass());
                         break;
 
                     // TODO

@@ -2447,3 +2447,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .esi_comment_hidden {
     display:none;
 }
+
+.esi_ach_unlocked + .esi_ach_locked {
+    margin-top:72px;
+}
