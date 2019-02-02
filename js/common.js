@@ -1425,34 +1425,46 @@ let EnhancedSteam = (function() {
 let GameId = (function(){
     let self = {};
 
+    function parseId(id) {
+        if (!id) { return null; }
+
+        let intId = parseInt(id);
+        if (!intId) { return null; }
+
+        return intId;
+    }
+
     self.getAppid = function(text) {
         if (!text) { return null; }
 
         // app, market/listing
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
     self.getSubid = function(text) {
         if (!text) { return null; }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
 
     self.getAppidImgSrc = function(text) {
         if (!text) { return null; }
         let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
     self.getAppids = function(text) {
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
         let m;
-        while (m = regex.exec(text)) {
-            res.push(m[1]);
+        while ((m = regex.exec(text)) != null) {
+            let id = parseId(m[1]);
+            if (id) {
+                res.push(id);
+            }
         }
         return res;
     };
@@ -1460,7 +1472,7 @@ let GameId = (function(){
     self.getAppidWishlist = function(text) {
         if (!text) { return null; }
         let m = text.match(/game_(\d+)/);
-        return m ? m[1] : null;
+        return m && parseId(m[1]);
     };
 
     return self;
@@ -2225,7 +2237,7 @@ let DynamicStore = (function(){
             _promise = _fetch();
         }
         return _promise.then(onDone, onCatch);
-    } 
+    };
 
     return self;
 })();
