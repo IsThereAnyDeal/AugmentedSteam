@@ -3,6 +3,8 @@ Enhanced Steam, an IsThereAnyDeal fork
 
 This is a fork of Enhanced Steam extension.
 
+This is an extension repository, find [server repository here](https://github.com/tfedor/Enhanced_Steam_API_Server).
+
 We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
 
 Visit [extension's page](https://es.isthereanydeal.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info. 
