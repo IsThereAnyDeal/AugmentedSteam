@@ -1719,7 +1719,7 @@ let AccountPageClass = (function(){
     AccountPageClass.prototype.accountTotalSpent = function() {
 
         let links = document.querySelectorAll(".account_setting_block:nth-child(2) .account_setting_sub_block:nth-child(2) .account_manage_link");
-        if (!links) return;
+        if (links.length < 1) return;
 
         let lastLink = links[links.length-1];
         lastLink.parentNode.insertAdjacentHTML("afterend",
