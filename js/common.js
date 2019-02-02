@@ -1566,6 +1566,7 @@ let EarlyAccess = (function(){
     }
 
     function handleStore() {
+        // TODO refactor these checks to appropriate page calls
         switch (true) {
             case /^\/app\/.*/.test(window.location.pathname):
                 checkNodes([".game_header_image_ctn", ".small_cap"]);
@@ -1614,13 +1615,13 @@ let EarlyAccess = (function(){
     }
 
     function handleCommunity() {
-        return; // FIXME
+        // TODO refactor these checks to appropriate page calls
         switch(true) {
             // wishlist, games, and followedgames can be combined in one regex expresion
             case /^\/(?:id|profiles)\/.+\/(wishlist|games|followedgames)/.test(window.location.pathname):
                 checkNodes([".gameListRowLogo"]);
                 break;
-            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity)\b/.test(window.location.pathname):
                 checkNodes([".blotter_gamepurchase_content a"]);
                 break;
             case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):

@@ -2424,3 +2424,26 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_supporter_badges .profile_badges_badge {
 	float:none;
 }
+
+/** spam comments */
+.esi_commentthread_button {
+    display:block;
+    text-align:center;
+    background-color:#490000;
+    color:white;
+    padding:0.8em 0;
+    border-radius:2px;
+    opacity:0.4;
+}
+.esi_commentthread_button:hover {
+    opacity:1;
+}
+.esi_commentthread--showspam .esi_comment_hidden {
+    display:block;
+}
+.esi_commentthread--showspam .esi_commentthread_button {
+    display:none;
+}
+.esi_comment_hidden {
+    display:none;
+}

@@ -70,10 +70,126 @@ let ProfileData = (function(){
     return self;
 })();
 
+let SpamCommentHandler = (function(){
+
+    let spamRegex = null;
+
+    function SpamCommentHandler() {
+
+        if (SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) {
+            spamRegex = new RegExp(SyncedStorage.get("spamcommentregex", Defaults.spamcommentregex), "i");
+        }
+    }
+
+    function toggleHiddenCommentsButton(threadNode, count) {
+        threadNode.classList.add("esi_commentthread");
+
+        let button = threadNode.querySelector(".esi_commentthread_button");
+
+        if (count === 0) {
+            if (button) {
+                button.classList.add("esi-hidden");
+            }
+            return;
+        }
+
+        if (!button) {
+            button = document.createElement("a");
+            button.classList.add("esi_commentthread_button");
+            threadNode.insertAdjacentElement("afterbegin", button);
+
+            button.addEventListener("click", function() {
+                threadNode.classList.add("esi_commentthread--showspam")
+            });
+        }
+
+        button.classList.remove("esi-hidden");
+        button.textContent = Localization.str.spam_comment_show.replace("__num__", count);
+        threadNode.classList.remove("esi_commentthread--showspam");
+    }
+
+    function addCommentThreadObserver(threadNode) {
+        if (threadNode.dataset.esiCommentObserver) { return; }
+        threadNode.dataset.esiCommentObserver = "1";
+
+        let observer = new MutationObserver(() => {
+            updateCommentThread(threadNode);
+        });
+        observer.observe(threadNode.querySelector(".commentthread_comments"), { childList: true });
+    }
+
+    function hideSpamComments(threadNode) {
+        let nodes = threadNode.querySelectorAll(".commentthread_comment .commentthread_comment_text");
+        let hiddenCount = 0;
+        for (let node of nodes) {
+            let commentText = node.textContent;
+            if (!spamRegex.test(commentText)) { continue; }
+
+            node.closest(".commentthread_comment").classList.add("esi_comment_hidden");
+            hiddenCount++;
+        }
+
+        return hiddenCount;
+    }
+
+    function updateCommentThread(node) {
+        let countHidden = hideSpamComments(node);
+        toggleHiddenCommentsButton(node, countHidden);
+    }
+
+    function handleAllCommentThreads(parent) {
+        let nodes = parent.querySelectorAll(".commentthread_comment_container");
+        for (let node of nodes) {
+            updateCommentThread(node);
+            addCommentThreadObserver(node);
+        }
+    }
+
+    SpamCommentHandler.prototype.hideSpamComments = function() {
+        if (!SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) { return; }
+
+        handleAllCommentThreads(document);
+
+
+
+        /*
+        if($("#AppHubContent").html()) {
+            var modal_content_observer = new MutationObserver(function(mutations) {
+                var frame_comment_observer = new MutationObserver(function(mutations) {
+                    frame_check_hide_comments();
+                    for (var i=0; i<frames.length; i++) {
+                        var frame = frames[i].document;
+                        if($(frame).find(".commentthread_comments").html()) {
+                            frame_comment_observer.observe($(frame).find(".commentthread_comments")[0], {childList:true, subtree:true});
+                        }
+
+                        $(frame).on("click", ".es_bad_comment_num", function(){
+                            $(this).hide();
+                            $(frame).find(".commentthread_comment").show();
+                        });
+                    }
+                });
+                frame_comment_observer.observe($("#modalContentWait")[0], {attributes:true});
+            });
+            modal_content_observer.observe($("#modalContentFrameContainer")[0], {childList:true, subtree:true});
+        }
+        */
+    };
+
+
+
+    return SpamCommentHandler;
+})();
+
 let ProfileActivityPageClass = (function(){
 
     function ProfileActivityPageClass() {
         this.highlightFriendsActivity();
+
+        // TODO this is called from Common, refactor Early Access so it
+        // doesn't trying to resolve where we are at, instead page should tell it what nodes to check
+        // EarlyAccess.showEarlyAccess();
+
         /*
         hide_activity_spam_comments();
         */
@@ -110,7 +226,6 @@ let ProfileActivityPageClass = (function(){
                 }
 
                 if (DynamicStore.isOwned(appid)) {
-                    console.log("is owned", appid);
                     Highlights.highlightOwned(link);
 
                     if (link.closest(".blotter_daily_rollup_line")) {
@@ -128,9 +243,8 @@ let ProfileActivityPageClass = (function(){
     ProfileActivityPageClass.prototype.observeChanges = function() {
         let that = this;
         let observer = new MutationObserver(() => {
-
             that.highlightFriendsActivity();
-            // FIXME that.processEarlyAccess();
+            EarlyAccess.showEarlyAccess();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -778,6 +892,8 @@ let ProfileEditPageClass = (function(){
             .then(() => {
 
                 Common.init();
+
+                (new SpamCommentHandler()).hideSpamComments(); // FIXME
 
                 switch (true) {
 
