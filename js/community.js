@@ -875,6 +875,15 @@ let ProfileEditPageClass = (function(){
 let StatsPageClass = (function(){
 
     function StatsPageClass() {
+
+        // handle compare redirect
+        if (window.location.hash === "#es-compare") {
+            window.location.hash = "";
+            if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(window.location.pathname)) { // redirect to compare page but only if we're not there yet
+                window.location = window.location.pathname.replace(/\/$/, "")+"/compare";
+            }
+        }
+
         this.addAchievementSort();
     }
 
@@ -948,7 +957,6 @@ let StatsPageClass = (function(){
         });
     };
 
-
     return StatsPageClass;
 })();
 
@@ -966,16 +974,7 @@ let StatsPageClass = (function(){
             .then(() => {
 
                 Common.init();
-
                 SpamCommentHandler.hideSpamComments();
-
-                // TODO(tomas.fedor) this should be handled on achievements page only
-                if (window.location.hash === "#es-compare") {
-                    window.location.hash = "";
-                    if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(path)) { // redirect to compare page but only if we're not there yet
-                        window.location = path.replace(/\/$/, "")+"/compare";
-                    }
-                }
 
                 switch (true) {
 
