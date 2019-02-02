@@ -208,17 +208,27 @@ let ProfileActivityPageClass = (function(){
                 if (DynamicStore.isOwned(appid)) {
                     Highlights.highlightOwned(link);
 
-                    if (link.closest(".blotter_daily_rollup_line")) {
-                        // FIXME (tomas.fedor) add_achievement_comparison_link($(node).parent(), appid);
-                    }
+                    addAchievementComparisonLink(link, appid);
                 }
 
                 // TODO (tomas.fedor) this behaves differently than other highlights - check is being done in highlight method
                 Highlights.highlightNotInterested(link);
             }
-
         }
     };
+
+    function addAchievementComparisonLink(node, appid) {
+        if (!SyncedStorage.get("showcomparelinks", Defaults.showcomparelinks)) { return; }
+        node.classList.add("es_achievements");
+
+        let blotter = node.closest(".blotter_daily_rollup_line");
+        if (!blotter) { return; }
+
+        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href;
+        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        node.parentNode.insertAdjacentHTML("beforeend",
+            `<br><a class='es_achievement_compare' href='${compareLink}' target='_blank'>${Localization.str.compare}</a>`);
+    }
 
     ProfileActivityPageClass.prototype.observeChanges = function() {
         let that = this;
@@ -875,6 +885,14 @@ let ProfileEditPageClass = (function(){
                 Common.init();
 
                 SpamCommentHandler.hideSpamComments();
+
+                // TODO(tomas.fedor) this should be handled on achievements page only
+                if (window.location.hash === "#es-compare") {
+                    window.location.hash = "";
+                    if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(path)) { // redirect to compare page but only if we're not there yet
+                        window.location = path.replace(/\/$/, "")+"/compare";
+                    }
+                }
 
                 switch (true) {
 
