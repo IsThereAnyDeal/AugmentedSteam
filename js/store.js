@@ -1658,7 +1658,7 @@ let RegisterKeyPageClass = (function(){
                     sessionid: User.getSessionId(),
                     product_key: current_key
                 }).then(data => {
-
+                    data = JSON.parse(data);
                     let attempted = current_key;
                     let message = Localization.str.register.default;
                     if (data["success"] == 1) {
