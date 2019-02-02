@@ -960,6 +960,468 @@ let StatsPageClass = (function(){
     return StatsPageClass;
 })();
 
+let InventoryPageClass = (function(){
+
+    function InventoryPageClass() {
+        // bind_ajax_content_highlighting();
+        inventory_market_prepare();
+        /*hide_empty_inventory_tabs();
+        keep_ssa_checked();
+        add_inventory_gotopage();*/
+    }
+
+    function setBackgroundOption(thisItem, assetId, sideActs) {
+        if (!document.querySelector(".inventory_links")) { return; }
+        if (sideActs.querySelector(".es_set_background")) { return; }
+
+        let viewFullBtn = sideActs.querySelector("a");
+
+        if (!/public\/images\/items/.test(viewFullBtn.href)) { return; }
+
+        let linkClass =  thisItem.classList.contains('es_isset_background') ? "btn_disabled" : "";
+        viewFullBtn.insertAdjacentHTML("afterend",
+            `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}"><span>${Localization.str.set_as_background}</span></a>
+                  <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
+
+        viewFullBtn.parentNode.querySelector(".es_set_background").addEventListener("click", async function(e) {
+            e.preventDefault();
+            let el = e.target.closest(".es_set_background");
+
+            if (el.classList.contains("btn_disabled")) { return; }
+
+            let loading = viewFullBtn.parentNode.querySelector(".es_background_loading");
+            if (loading.classList.contains("esi-shown")) { return;}
+
+            loading.classList.add("esi-shown");
+
+            // Do nothing if loading or already done
+            let setBackground = document.querySelector(".es_isset_background");
+            if (setBackground) {
+                setBackground.classList.remove("es_isset_background");
+            }
+            thisItem.classList.add("es_isset_background");
+
+            let result = await RequestData.getHttp(User.profileUrl + "/edit");
+
+            // Make sure the background we are trying to set is not set already
+            let m = result.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/i);
+            let currentBg = m ? m[1] : false;
+
+            if (currentBg !== assetId) {
+                let dom = BrowserHelper.htmlToDOM(result);
+
+                dom.querySelector("#profile_background").value = assetId;
+                let form = dom.querySelector("#editForm");
+                let formData = new FormData(form);
+
+                RequestData.post(User.profileUrl + "/edit", formData, {withCredentials: true}).then(result => {
+                    // Check if it was truly a succesful change
+                    if (/"saved_changes_msg"/i.test(result)) {
+                        el.classList.add("btn_disabled");
+                    }
+                }).catch(() => {
+                    console.error("Edit background failed");
+                }).finally(() => {
+                    loading.classList.remove("esi-shown");
+                });
+            } else {
+                el.classList.add("btn_disabled");
+                loading.classList.remove("esi-shown");
+            }
+        });
+    }
+
+    function inventory_market_helper(response) {
+        let item = response[0];
+        let marketable = response[1];
+        let globalId = response[2];
+        let hashName = response[3];
+        let appid = hashName.match(/^([0-9]+)-/)[1] || null;
+        let assetId = response[5];
+        let sessionId = response[6];
+        let contextId = response[7];
+        let walletCurrency = response[8];
+        let ownerSteamId = response[9];
+        let restriction = response[10];
+        let isGift = response[4] && /Gift/i.test(response[4]);
+        let isBooster = hashName && /Booster Pack/i.test(hashName);
+        let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
+
+        console.log(ownerSteamId, User.steamId);
+
+        let html = "";
+
+        let thisItem = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
+        let sideActs = document.querySelector("#iteminfo" + item + "_item_actions");
+        let sideMarketActs = document.querySelector("#iteminfo" + item + "_item_market_actions");
+
+        // Set as background option
+        if (ownsInventory) {
+            setBackgroundOption(thisItem, assetId, sideActs);
+        }
+
+        // Show prices for gifts
+
+        /*
+        if (isGift) {
+            $("#es_item" + item).remove();
+            if (sideActs.find("a").length > 0) {
+                var link = sideActs.find("a")[0].href;
+                var gift_appid = get_appid(link); // || get_subid(link);
+
+                // TODO: Add support for package(sub)
+                if (gift_appid) {
+                    get_http(protocol + "//store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
+                        var data = JSON.parse(txt);
+                        if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
+                            var currency = data[gift_appid]["data"]["price_overview"]["currency"];
+                            var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
+                            var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
+
+                            sideActs.css("height", "50px");
+                            if (discount > 0) {
+                                var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
+                                sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
+                            } else {
+                                sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
+                            }
+                        }
+                    });
+                }
+            }
+            return;
+        }
+*/
+
+        /*
+        if (ownsInventory) {
+            // If is a booster pack add the average price of three cards
+            if (isBooster) {
+                var $sideMarketActsDiv = sideMarketActs.find("div").last().css("margin-bottom", "8px"),
+                    dataCardsPrice = $(thisItem).data("cards-price");
+
+                $(`#iteminfo${ item }_item_owner_actions`).prepend(`
+                <a class="btn_small btn_grey_white_innerfade" href="` + protocol + `//steamcommunity.com/my/gamecards/${ appid }/"><span>${ localized_strings.view_badge_progress }</span></a>
+            `);
+
+                // Monitor for when the price and volume are added
+                setMutationHandler(document, ".item_market_actions div:last-child br:last-child", function(){
+                    if (dataCardsPrice) {
+                        $sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + dataCardsPrice + "<br>");
+                    } else {
+                        var api_url = Api.getApiUrl("market_data/average_card_price", {appid: appid, cur: user_currency.toLowerCase()});
+
+                        get_http(api_url, function(price_data) {
+                            var booster_price = formatCurrency(parseFloat(price_data,10) * 3);
+
+                            $(thisItem).data("cards-price", booster_price);
+                            $sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + booster_price + "<br>");
+                        });
+                    }
+
+                    this.disconnect();
+                });
+            }
+
+            storage.get(function(settings) {
+                // 1-Click turn into gems option
+                if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
+                if (settings.show1clickgoo) {
+                    var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
+
+                    $("#es_quickgrind").parent().remove();
+                    $("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "' assetid='" + assetId + "'><span>1-Click " + turn_word + "</span></div>");
+
+                    // TODO: Add prompt?
+                    $("#es_quickgrind").on("click", function() {
+                        runInPageContext(`function() {
+                        var rgAJAXParams = {
+                            sessionid: g_sessionID,
+                            appid: ` + $(this).attr("appid") + `,
+                            assetid: ` + $(this).attr("assetID") + `,
+                            contextid: 6
+                        };
+                        var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
+                        $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
+                            strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+                            rgAJAXParams.goo_value_expected = data.goo_value;
+                            $J.post( strActionURL, rgAJAXParams).done( function( data ) {
+                                ReloadCommunityInventory();
+                            });
+                        });
+                    }`);
+                    });
+                }
+
+                // Quick sell options
+                if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
+                if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
+                if (settings.quickinv) {
+                    if (marketable && contextId == 6 && globalId == 753) {
+                        // Restyle the existing "Sell" button
+                        sideMarketActs.find("a.item_market_action_button").removeClass().addClass("btn_small btn_green_white_innerfade es_market_btn").attr("id", "es_sell_" + item);
+                        $("#es_sell_" + item).find("span.item_market_action_button_left, span.item_market_action_button_right, span.item_market_action_button_preload").hide();
+                        $("#es_sell_" + item).find("span.item_market_action_button_contents").removeClass();
+
+                        if (!$(thisItem).hasClass("es-loading")) {
+                            var url = sideMarketActs.find("a")[0].href;
+
+                            $(thisItem).addClass("es-loading");
+
+                            // Add the links with no data, so we can bind actions to them, we add the data later
+                            sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + assetId + "'></a>");
+                            sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + assetId + "'></a>");
+
+                            // Check if price is stored in data
+                            if ($(thisItem).hasClass("es-price-loaded")) {
+                                var price_high = $(thisItem).data("price-high"),
+                                    price_low = $(thisItem).data("price-low");
+
+                                // Add Quick Sell button
+                                if (price_high) {
+                                    $("#es_quicksell" + assetId).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+                                }
+                                // Add Instant Sell button
+                                if (price_low) {
+                                    $("#es_instantsell" + assetId).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+                                }
+
+                                $(thisItem).removeClass("es-loading");
+                            } else {
+                                get_http(url, function(txt) {
+                                    var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
+
+                                    if (market_id) {
+                                        market_id = market_id[1];
+
+                                        get_http(protocol + "//steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + market_id, function(market_txt) {
+                                            var market = JSON.parse(market_txt),
+                                                price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff),
+                                                price_low = market.highest_buy_order / 100;
+
+                                            if (price_high < 0.03) price_high = 0.03;
+                                            price_high = parseFloat(price_high).toFixed(2);
+                                            price_low = parseFloat(price_low).toFixed(2);
+
+                                            // Store prices as data
+                                            if (price_high > price_low) {
+                                                $(thisItem).data("price-high", price_high);
+                                            }
+                                            if (market.highest_buy_order) {
+                                                $(thisItem).data("price-low", price_low);
+                                            }
+                                            // Fixes multiple buttons
+                                            if ($(".item.activeInfo").is($(thisItem))) {
+                                                $(thisItem).addClass("es-price-loaded");
+                                                // Add "Quick Sell" button
+                                                if (price_high > price_low) {
+                                                    $("#es_quicksell" + assetId).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+                                                }
+                                                // Add "Instant Sell" button
+                                                if (market.highest_buy_order) {
+                                                    $("#es_instantsell" + assetId).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
+                                                }
+                                            }
+                                        }).done(function(){
+                                            $(thisItem).removeClass("es-loading");
+                                        });
+                                    }
+                                });
+                            }
+                        }
+
+                        // Bind actions to "Quick Sell" and "Instant Sell" buttons
+                        $("#es_quicksell" + assetId + ", #es_instantsell" + assetId).on("click", function(e){
+                            e.preventDefault();
+
+                            var sell_price = $(this).attr("price") * 100;
+                            $("#es_sell, #es_quicksell" + assetId + ", #es_instantsell" + assetId).addClass("btn_disabled").css("pointer-events", "none");
+                            sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
+
+                            runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
+                        });
+                    }
+                }
+            });
+
+            // Item in user's inventory is not marketable due to market restriction
+            if (restriction > 0 && marketable == 0) {
+                var dataLowest = $(thisItem).data("lowest-price"),
+                    dataSold = $(thisItem).data("sold-volume");
+
+                sideMarketActs.show().html("<img class='es_loading' src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
+
+                // "View in market" link
+                html += '<div style="height: 24px;"><a href="' + protocol + '//steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + localized_strings.view_in_market + '</a></div>';
+
+                // Check if price is stored in data
+                if (dataLowest) {
+                    html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+                    if (dataLowest !== "nodata") {
+                        html += localized_strings.starting_at + ': ' + dataLowest;
+                        // Check if volume is stored in data
+                        if (dataSold) {
+                            html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", dataSold);
+                        }
+                    } else {
+                        html += localized_strings.no_price_data;
+                    }
+
+                    html += '</div>';
+
+                    sideMarketActs.html(html);
+                } else {
+                    get_http(protocol + "//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName), function(txt) {
+                        var data = JSON.parse(txt);
+
+                        html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+                        if (data && data.success) {
+                            $(thisItem).data("lowest-price", data.lowest_price || "nodata");
+                            if (data.lowest_price) {
+                                html += localized_strings.starting_at + ': ' + data.lowest_price;
+                                if (data.volume) {
+                                    $(thisItem).data("sold-volume", data.volume);
+                                    html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", data.volume);
+                                }
+                            } else {
+                                html += localized_strings.no_price_data;
+                            }
+                        } else {
+                            html += localized_strings.no_price_data;
+                        }
+
+                        html += '</div>';
+
+                        sideMarketActs.html(html);
+                    }).fail(function(){ // At least show the "View in Market" link
+                        sideMarketActs.html(html);
+                    });
+                }
+            }
+        }
+        // If is not own inventory but the item is marketable then we need to build the HTML for showing info
+        else if (marketable) {
+            var dataLowest = $(thisItem).data("lowest-price"),
+                dataSold = $(thisItem).data("sold-volume");
+
+            sideMarketActs.show().html("<img class='es_loading' src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
+
+            // "View in market" link
+            html += '<div style="height: 24px;"><a href="' + protocol + '//steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + localized_strings.view_in_market + '</a></div>';
+
+            // Check if price is stored in data
+            if (dataLowest) {
+                html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+                if (dataLowest !== "nodata") {
+                    html += localized_strings.starting_at + ': ' + dataLowest;
+                    // Check if volume is stored in data
+                    if (dataSold) {
+                        html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", dataSold);
+                    }
+                } else {
+                    html += localized_strings.no_price_data;
+                }
+
+                html += '</div>';
+
+                sideMarketActs.html(html);
+            } else {
+                get_http(protocol + "//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName), function(txt) {
+                    var data = JSON.parse(txt);
+
+                    html += '<div style="min-height: 3em; margin-left: 1em;">';
+
+                    if (data && data.success) {
+                        $(thisItem).data("lowest-price", data.lowest_price || "nodata");
+                        if (data.lowest_price) {
+                            html += localized_strings.starting_at + ': ' + data.lowest_price;
+                            if (data.volume) {
+                                $(thisItem).data("sold-volume", data.volume);
+                                html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", data.volume);
+                            }
+                        } else {
+                            html += localized_strings.no_price_data;
+                        }
+                    } else {
+                        html += localized_strings.no_price_data;
+                    }
+
+                    html += '</div>';
+
+                    sideMarketActs.html(html);
+                }).fail(function(){ // At least show the "View in Market" link
+                    sideMarketActs.html(html);
+                });
+            }
+        }
+        */
+    }
+
+    function inventory_market_prepare() {
+        ExtensionLayer.runInPageContext(`function(){
+            $J(document).on("click", ".inventory_item_link, .newitem", function(){
+                if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
+                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
+                }
+                window.postMessage({
+                    type: "es_sendmessage",
+                    information: [
+                        iActiveSelectView, 
+                        g_ActiveInventory.selectedItem.description.marketable,
+                        g_ActiveInventory.appid,
+                        g_ActiveInventory.selectedItem.description.market_hash_name,
+                        g_ActiveInventory.selectedItem.description.type,
+                        g_ActiveInventory.selectedItem.assetid,
+                        g_sessionID,
+                        g_ActiveInventory.selectedItem.contextid,
+                        g_rgWalletInfo.wallet_currency,
+                        g_ActiveInventory.m_owner.strSteamId,
+                        g_ActiveInventory.selectedItem.description.market_marketable_restriction
+                    ]
+                }, "*");
+            });
+	    }`);
+
+        window.addEventListener("message", function(e) {
+            console.log(event.data.information);
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+
+            if (event.data.type === "es_sendmessage") {
+                inventory_market_helper(event.data.information);
+            } else if (e.data.type === "es_sendfee_" + assetID) {
+                /* FIXME
+                var sell_price = event.data.information.amount - event.data.information.fees;
+                var formdata = new URLSearchParams();
+                formdata.append('sessionid', event.data.sessionID);
+                formdata.append('appid', event.data.global_id);
+                formdata.append('contextid', event.data.contextID);
+                formdata.append('assetid', event.data.assetID);
+                formdata.append('amount', 1);
+                formdata.append('price', sell_price);
+                fetch('https://steamcommunity.com/market/sellitem/', {
+                    method: 'POST',
+                    mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
+                    credentials: 'include',
+                    body: formdata,
+                    headers: { origin: window.location.origin },
+                    referrer: window.location.origin + window.location.pathname
+                }).then(function(response) {
+                    $("#es_instantsell" + event.data.assetID).parent().slideUp();
+                    $("#" + event.data.global_id + "_" + event.data.contextID + "_" + event.data.assetID).addClass("btn_disabled activeInfo").css("pointer-events", "none");
+                    return response.json();
+                });
+                */
+            }
+        }, false);
+    }
+
+    return InventoryPageClass;
+})();
+
 
 
 
@@ -988,6 +1450,10 @@ let StatsPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/.+\/edit/.test(path):
                         (new ProfileEditPageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+                        (new InventoryPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):

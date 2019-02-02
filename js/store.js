@@ -578,11 +578,11 @@ let AppPageClass = (function(){
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid)
 
-                RequestData.post("//store.steampowered.com/api/removefromwishlist", {
-                    sessionid: User.getSessionId(),
-                    appid: appid
-                }, {withCredentials: true}).then(response => {
+                RequestData.post("//store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true}).then(response => {
                     document.querySelector("#add_to_wishlist_area").style.display = "inline";
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
@@ -1654,14 +1654,15 @@ let RegisterKeyPageClass = (function(){
 
             for (let i = 0; i < keys.length; i++) {
                 let current_key = keys[i];
-                let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", {
-                    sessionid: User.getSessionId(),
-                    product_key: current_key
-                }).then(data => {
 
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("product_key", current_key);
+
+                let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
                     let attempted = current_key;
                     let message = Localization.str.register.default;
-                    if (data["success"] == 1) {
+                    if (data["success"]) {
                         document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
@@ -2388,11 +2389,13 @@ let WishlistPageClass = (function(){
         }`);
 
         function removeApp(appid) {
+
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("appid", appid);
+
             let url = "//store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
-            return RequestData.post(url, {
-                sessionid: User.getSessionId(),
-                appid: appid
-            }).then(() => {
+            return RequestData.post(url, formData).then(() => {
                 let node = document.querySelector(".wishlist-row[data-app-id'"+appid+"']");
                 if (node) {
                     node.remove();

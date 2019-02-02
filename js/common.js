@@ -391,13 +391,10 @@ let RequestData = (function(){
         return self.getJson(apiUrl);
     };
 
-    self.post = function(url, data, settings) {
+    self.post = function(url, formData, settings) {
         return self.getHttp(url, Object.assign(settings || {}, {
-            headers: [
-                ["Content-Type", "application/x-www-form-urlencoded"]
-            ],
             method: "POST",
-            body: Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&')
+            body: formData
         }));
     };
 
@@ -1139,11 +1136,16 @@ let BrowserHelper = (function(){
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     };
 
-    self.htmlToElement = function(html) {
+
+    self.htmlToDOM = function(html) {
         let template = document.createElement('template');
         html = html.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = html;
-        return template.content.firstChild;
+        return template.content;
+    };
+
+    self.htmlToElement = function(html) {
+        return self.htmlToDOM(html).firstElementChild;
     };
 
     self.getVariableFromDom = function(variableName, type) {
