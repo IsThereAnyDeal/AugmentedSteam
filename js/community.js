@@ -1222,65 +1222,72 @@ let InventoryPageClass = (function(){
         }
     }
 
-    async function showMarketOverview(thisItem, marketActions, globalId, hashName) {
-        let dataLowest = thisItem.dataset.lowestPrice;
-        let dataSold = thisItem.dataset.soldVolume;
+    function getMarketOverviewHtml(node) {
+        let html = '<div style="min-height:3em;margin-left:1em;">';
 
+        if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
+            html += Localization.str.starting_at + ': ' + node.dataset.lowestPrice;
+
+            if (node.dataset.dataSold) {
+                html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold);
+            }
+
+            if (node.dataset.cardsPrice) {
+                html += '<br>' + Localization.str.avg_price_3cards + ": " + node.dataset.cardsPrice;
+            }
+        } else {
+            html += Localization.str.no_price_data;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster) {
         marketActions.style.display = "block";
 
-        let html = "";
-
         // "View in market" link
-        html += '<div style="height:24px;"><a href="https://steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + Localization.str.view_in_market + '</a></div>';
+        let html = '<div style="height:24px;"><a href="https://steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + Localization.str.view_in_market + '</a></div>';
 
         // Check if price is stored in data
-        if (dataLowest) {
-            html += '<div style="min-height:3em;margin-left:1em;">';
-
-            if (dataLowest !== "nodata") {
-                html += Localization.str.starting_at + ': ' + dataLowest;
-
-                // Check if volume is stored in data
-                if (dataSold) {
-                    html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", dataSold);
-                }
-            } else {
-                html += Localization.str.no_price_data;
-            }
-
-            html += '</div>';
-
-            marketActions.innerHTML = html;
-        } else {
+        if (!thisItem.dataset.lowestPrice) {
             marketActions.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            try {
-                let data = await RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
 
-                html += '<div style="min-height:3em; margin-left:1em;">';
+            if (isBooster) {
+                thisItem.dataset.cardsPrice = "nodata";
 
-                if (data && data.success) {
-                    thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
-                    if (data.lowest_price) {
-                        html += Localization.str.starting_at + ': ' + data.lowest_price;
-                        if (data.volume) {
-                            thisItem.dataset.soldVolume = data.volume;
-                            html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", data.volume);
-                        }
-                    } else {
-                        html += Localization.str.no_price_data;
-                    }
-                } else {
-                    html += Localization.str.no_price_data;
+                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.userCurrency});
+                console.log(result);
+                if (result.result === "success") {
+                    thisItem.dataset.cardsPrice = new Price(result.data.average);
                 }
-
-                html += '</div>';
-            } catch {
-                console.error("Couldn't load price overview from market");
             }
 
-            marketActions.innerHTML = html;
+            try {
+                let data = await overviewPromise;
+
+                thisItem.dataset.lowestPrice = "nodata";
+                if (data && data.success) {
+                    thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
+                    thisItem.dataset.soldVolume = data.volume;
+                }
+            } catch {
+                console.error("Couldn't load price overview from market");
+                marketActions.innerHTML = html; // add market link anyway
+                return;
+            }
         }
+
+        html += getMarketOverviewHtml(thisItem);
+
+        marketActions.innerHTML = html;
+    }
+
+    async function addBoosterPackProgress(marketActions, item, appid) {
+        document.querySelector(`#iteminfo${item}_item_owner_actions`).insertAdjacentHTML("afterbegin",
+            `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
     function inventory_market_helper(response) {
@@ -1317,44 +1324,18 @@ let InventoryPageClass = (function(){
             return;
         }
 
-
         if (ownsInventory) {
             // If is a booster pack add the average price of three cards
-            /*
             if (isBooster) {
-                var $sideMarketActsDiv = sideMarketActs.find("div").last().css("margin-bottom", "8px"),
-                    dataCardsPrice = $(thisItem).data("cards-price");
-
-                $(`#iteminfo${ item }_item_owner_actions`).prepend(`
-                <a class="btn_small btn_grey_white_innerfade" href="` + protocol + `//steamcommunity.com/my/gamecards/${ appid }/"><span>${ localized_strings.view_badge_progress }</span></a>
-            `);
-
-                // Monitor for when the price and volume are added
-                setMutationHandler(document, ".item_market_actions div:last-child br:last-child", function(){
-                    if (dataCardsPrice) {
-                        $sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + dataCardsPrice + "<br>");
-                    } else {
-                        var api_url = Api.getApiUrl("market_data/average_card_price", {appid: appid, cur: user_currency.toLowerCase()});
-
-                        get_http(api_url, function(price_data) {
-                            var booster_price = formatCurrency(parseFloat(price_data,10) * 3);
-
-                            $(thisItem).data("cards-price", booster_price);
-                            $sideMarketActsDiv.append(localized_strings.avg_price_3cards + ": " + booster_price + "<br>");
-                        });
-                    }
-
-                    this.disconnect();
-                });
+                addBoosterPackProgress(marketActions, item, appid);
             }
-            */
 
             addOneClickGemsOption(item, appid, assetId);
             addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
         }
 
         if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
-            showMarketOverview(thisItem, marketActions, globalId, hashName);
+            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster);
         }
     }
 
