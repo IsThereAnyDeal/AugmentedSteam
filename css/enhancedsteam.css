@@ -2451,3 +2451,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .esi_ach_unlocked + .esi_ach_locked {
     margin-top:72px;
 }
+
+/* market action buttons */
+.item_market_actions {
+	display:flex;
+	flex-direction:column;
+}
+.item_market_action_button {
+	margin-bottom:4px;
+}

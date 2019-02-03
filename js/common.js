@@ -409,8 +409,8 @@ let ProgressBar = (function(){
     self.create = function() {
         if (!SyncedStorage.get("show_progressbar", true)) { return; }
 
-        document.querySelector("#global_actions").insertAdjacentHTML("afterend", `
-            <div class="es_progress_wrap">
+        document.querySelector("#global_actions").insertAdjacentHTML("afterend",
+            `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
                         <div class="progress-bar">
@@ -418,8 +418,7 @@ let ProgressBar = (function(){
                         </div>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
 
         node = document.querySelector("#es_progress");
     };

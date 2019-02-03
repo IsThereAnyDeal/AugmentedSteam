@@ -1089,6 +1089,9 @@ let InventoryPageClass = (function(){
         divs[divs.length-1].insertAdjacentHTML("beforebegin",
             "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
 
+        // FIXME verify appid assetid are set correctly when you have more items
+        // this can't be uinique per page, each item has to have it's own button, otherwise we'll break it
+
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(`function() {
@@ -1111,14 +1114,122 @@ let InventoryPageClass = (function(){
         });
     }
 
+    function makeMarketButton(id) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+                    <span class="item_market_action_button_edge item_market_action_button_left"></span>
+                    <span class="item_market_action_button_contents"></span>
+                    <span class="item_market_action_button_edge item_market_action_button_right"></span>
+                </a>`;
+    }
+
+    function updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency) {
+
+        // Add Quick Sell button
+        if (priceHighValue) {
+            let quickSell = document.querySelector("#es_quicksell" + assetId);
+            quickSell.dataset.price = priceHighValue;
+            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
+            quickSell.style.display = "block";
+        }
+
+        // Add Instant Sell button
+        if (priceLowValue) {
+            let instantSell = document.querySelector("#es_instantsell" + assetId);
+            instantSell.dataset.price = priceLowValue;
+            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
+            instantSell.style.display = "block";
+        }
+    }
+
+    async function addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {
+        if (!SyncedStorage.get("quickinv", Defaults.quickinv)) { return; }
+        if (!marketable) { return; }
+        if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
+
+        if (!thisItem.classList.contains("es-loading")) {
+            let url = marketActions.querySelector("a").href;
+
+            thisItem.classList.add("es-loading");
+
+            // Add the links with no data, so we can bind actions to them, we add the data later
+            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_quicksell" + assetId));
+            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_instantsell" + assetId));
+
+            // Check if price is stored in data
+            if (thisItem.classList.contains("es-price-loaded")) {
+                let priceHighValue = thisItem.dataset.priceHigh;
+                let priceLowValue = thisItem.dataset.priceLow;
+
+                updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency);
+
+                thisItem.classList.remove("es-loading");
+            } else {
+                let result = await RequestData.getHttp(url);
+
+                let m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
+
+                if (m) {
+                    let marketId = m[1];
+
+                    let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
+                    let market = await RequestData.getJson(marketUrl);
+
+                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff", Defaults.quickinv_diff)));
+                    let priceLow = new Price(market.highest_buy_order / 100);
+
+                    if (priceHigh.value < 0.03) priceHigh.value = 0.03;
+
+                    // Store prices as data
+                    if (priceHigh.value > priceLow.value) {
+                        thisItem.dataset.priceHigh = priceHigh.value;
+                    }
+                    if (market.highest_buy_order) {
+                        thisItem.dataset.priceLow = priceLow.value;
+                    }
+
+                    // Fixes multiple buttons
+                    if (document.querySelector(".item.activeInfo") === thisItem) {
+                        thisItem.classList.add("es-price-loaded");
+                        updateMarketButtons(assetId, priceHigh.value, priceLow.value, walletCurrency);
+                    }
+
+                    thisItem.classList.remove("es-loading");
+                }
+            }
+        }
+
+        // Bind actions to "Quick Sell" and "Instant Sell" buttons
+
+        let nodes = document.querySelectorAll("#es_quicksell" + assetId + ", #es_instantsell" + assetId);
+        for (let node of nodes) {
+            node.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                let buttonParent = e.target.closest(".item_market_action_button[data-price]");
+                if (!buttonParent) { return; }
+
+                let sellPrice = buttonParent.dataset.price * 100;
+
+                let buttons = document.querySelectorAll("#es_quicksell" + assetId + ", #es_instantsell" + assetId);
+                for (let button of buttons) {
+                    button.classList.add("btn_disabled");
+                    button.style.pointerEvents = "none";
+                }
+
+                marketActions.querySelector("div").innerHTML = "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>";
+                ExtensionLayer.runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sellPrice + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
+            });
+        }
+    }
+
     function inventory_market_helper(response) {
         let item = response[0];
         let marketable = response[1];
-        let globalId = response[2];
+        let globalId = parseInt(response[2]);
         let hashName = response[3];
         let assetId = response[5];
         let sessionId = response[6];
-        let contextId = response[7];
+        let contextId = parseInt(response[7]);
         let walletCurrency = response[8];
         let ownerSteamId = response[9];
         let restriction = response[10];
@@ -1129,13 +1240,11 @@ let InventoryPageClass = (function(){
         let hm;
         let appid = (hm = hashName.match(/^([0-9]+)-/)) ? hm[1] : null;
 
-        console.log(ownerSteamId, User.steamId);
-
         let html = "";
 
         let thisItem = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
         let itemActions = document.querySelector("#iteminfo" + item + "_item_actions");
-        let sideMarketActs = document.querySelector("#iteminfo" + item + "_item_market_actions");
+        let marketActions = document.querySelector("#iteminfo" + item + "_item_market_actions");
 
         // Set as background option
         if (ownsInventory) {
@@ -1182,107 +1291,14 @@ let InventoryPageClass = (function(){
             */
 
             addOneClickGemsOption(item, appid, assetId);
-
-/*
-            storage.get(function(settings) {
-
-                // Quick sell options
-                if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
-                if (settings.quickinv_diff === undefined) { settings.quickinv_diff = -0.01; storage.set({'quickinv_diff': settings.quickinv_diff}); }
-                if (settings.quickinv) {
-                    if (marketable && contextId == 6 && globalId == 753) {
-                        // Restyle the existing "Sell" button
-                        sideMarketActs.find("a.item_market_action_button").removeClass().addClass("btn_small btn_green_white_innerfade es_market_btn").attr("id", "es_sell_" + item);
-                        $("#es_sell_" + item).find("span.item_market_action_button_left, span.item_market_action_button_right, span.item_market_action_button_preload").hide();
-                        $("#es_sell_" + item).find("span.item_market_action_button_contents").removeClass();
-
-                        if (!$(thisItem).hasClass("es-loading")) {
-                            var url = sideMarketActs.find("a")[0].href;
-
-                            $(thisItem).addClass("es-loading");
-
-                            // Add the links with no data, so we can bind actions to them, we add the data later
-                            sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_quicksell" + assetId + "'></a>");
-                            sideMarketActs.append("<a style='display:none' class='btn_small btn_green_white_innerfade es_market_btn' id='es_instantsell" + assetId + "'></a>");
-
-                            // Check if price is stored in data
-                            if ($(thisItem).hasClass("es-price-loaded")) {
-                                var price_high = $(thisItem).data("price-high"),
-                                    price_low = $(thisItem).data("price-low");
-
-                                // Add Quick Sell button
-                                if (price_high) {
-                                    $("#es_quicksell" + assetId).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-                                }
-                                // Add Instant Sell button
-                                if (price_low) {
-                                    $("#es_instantsell" + assetId).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-                                }
-
-                                $(thisItem).removeClass("es-loading");
-                            } else {
-                                get_http(url, function(txt) {
-                                    var market_id = txt.match(/Market_LoadOrderSpread\( (\d+) \)/);
-
-                                    if (market_id) {
-                                        market_id = market_id[1];
-
-                                        get_http(protocol + "//steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + market_id, function(market_txt) {
-                                            var market = JSON.parse(market_txt),
-                                                price_high = parseFloat(market.lowest_sell_order / 100) + parseFloat(settings.quickinv_diff),
-                                                price_low = market.highest_buy_order / 100;
-
-                                            if (price_high < 0.03) price_high = 0.03;
-                                            price_high = parseFloat(price_high).toFixed(2);
-                                            price_low = parseFloat(price_low).toFixed(2);
-
-                                            // Store prices as data
-                                            if (price_high > price_low) {
-                                                $(thisItem).data("price-high", price_high);
-                                            }
-                                            if (market.highest_buy_order) {
-                                                $(thisItem).data("price-low", price_low);
-                                            }
-                                            // Fixes multiple buttons
-                                            if ($(".item.activeInfo").is($(thisItem))) {
-                                                $(thisItem).addClass("es-price-loaded");
-                                                // Add "Quick Sell" button
-                                                if (price_high > price_low) {
-                                                    $("#es_quicksell" + assetId).attr("price", price_high).html("<span>" + localized_strings.quick_sell.replace("__amount__", formatCurrency(price_high, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-                                                }
-                                                // Add "Instant Sell" button
-                                                if (market.highest_buy_order) {
-                                                    $("#es_instantsell" + assetId).attr("price", price_low).html("<span>" + localized_strings.instant_sell.replace("__amount__", formatCurrency(price_low, currency_number_to_type(walletCurrency))) + "</span>").show().before("<br class='es-btn-spacer'>");
-                                                }
-                                            }
-                                        }).done(function(){
-                                            $(thisItem).removeClass("es-loading");
-                                        });
-                                    }
-                                });
-                            }
-                        }
-
-                        // Bind actions to "Quick Sell" and "Instant Sell" buttons
-                        $("#es_quicksell" + assetId + ", #es_instantsell" + assetId).on("click", function(e){
-                            e.preventDefault();
-
-                            var sell_price = $(this).attr("price") * 100;
-                            $("#es_sell, #es_quicksell" + assetId + ", #es_instantsell" + assetId).addClass("btn_disabled").css("pointer-events", "none");
-                            sideMarketActs.find("div").first().html("<div class='es_loading' style='min-height: 66px;'><img src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + localized_strings.selling + "</div>");
-
-                            runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sell_price + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
-                        });
-                    }
-                }
-            });
+            addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
 
             // Item in user's inventory is not marketable due to market restriction
             if (restriction > 0 && marketable == 0) {
                 var dataLowest = $(thisItem).data("lowest-price"),
                     dataSold = $(thisItem).data("sold-volume");
 
-                sideMarketActs.show().html("<img class='es_loading' src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
+                marketActions.show().html("<img class='es_loading' src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
 
                 // "View in market" link
                 html += '<div style="height: 24px;"><a href="' + protocol + '//steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + localized_strings.view_in_market + '</a></div>';
@@ -1303,7 +1319,7 @@ let InventoryPageClass = (function(){
 
                     html += '</div>';
 
-                    sideMarketActs.html(html);
+                    marketActions.html(html);
                 } else {
                     get_http(protocol + "//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName), function(txt) {
                         var data = JSON.parse(txt);
@@ -1327,9 +1343,9 @@ let InventoryPageClass = (function(){
 
                         html += '</div>';
 
-                        sideMarketActs.html(html);
+                        marketActions.html(html);
                     }).fail(function(){ // At least show the "View in Market" link
-                        sideMarketActs.html(html);
+                        marketActions.html(html);
                     });
                 }
             }
