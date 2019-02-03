@@ -1312,13 +1312,18 @@ let InventoryPageClass = (function(){
 
     async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster) {
         marketActions.style.display = "block";
+        let firstDiv = marketActions.querySelector("div");
+        if (!firstDiv) {
+            firstDiv = document.createElement("div");
+            marketActions.insertAdjacentElement("afterbegin", firstDiv);
+        }
 
         // "View in market" link
         let html = '<div style="height:24px;"><a href="https://steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + Localization.str.view_in_market + '</a></div>';
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            marketActions.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
+            firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
             let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
 
@@ -1342,14 +1347,14 @@ let InventoryPageClass = (function(){
                 }
             } catch {
                 console.error("Couldn't load price overview from market");
-                marketActions.innerHTML = html; // add market link anyway
+                firstDiv.innerHTML = html; // add market link anyway
                 return;
             }
         }
 
         html += getMarketOverviewHtml(thisItem);
 
-        marketActions.innerHTML = html;
+        firstDiv.innerHTML = html;
     }
 
     async function addBoosterPackProgress(marketActions, item, appid) {
@@ -1378,6 +1383,7 @@ let InventoryPageClass = (function(){
         let thisItem = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
         let itemActions = document.querySelector("#iteminfo" + item + "_item_actions");
         let marketActions = document.querySelector("#iteminfo" + item + "_item_market_actions");
+        marketActions.style.overflow = "hidden";
 
         // Set as background option
         if (ownsInventory) {
@@ -1435,31 +1441,36 @@ let InventoryPageClass = (function(){
             if (e.source !== window) { return; }
             if (!e.data.type) { return; }
 
-            if (event.data.type === "es_sendmessage") {
-                inventoryMarketHelper(event.data.information);
-            } else if (e.data.type === "es_sendfee_" + assetID) {
-                /* FIXME
-                var sell_price = event.data.information.amount - event.data.information.fees;
-                var formdata = new URLSearchParams();
-                formdata.append('sessionid', event.data.sessionID);
-                formdata.append('appid', event.data.global_id);
-                formdata.append('contextid', event.data.contextID);
-                formdata.append('assetid', event.data.assetID);
-                formdata.append('amount', 1);
-                formdata.append('price', sell_price);
-                fetch('https://steamcommunity.com/market/sellitem/', {
-                    method: 'POST',
-                    mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
-                    credentials: 'include',
-                    body: formdata,
-                    headers: { origin: window.location.origin },
-                    referrer: window.location.origin + window.location.pathname
-                }).then(function(response) {
-                    $("#es_instantsell" + event.data.assetID).parent().slideUp();
-                    $("#" + event.data.global_id + "_" + event.data.contextID + "_" + event.data.assetID).addClass("btn_disabled activeInfo").css("pointer-events", "none");
-                    return response.json();
+            if (e.data.type === "es_sendmessage") {
+                inventoryMarketHelper(e.data.information);
+            } else if (e.data.type === "es_sendfee_" + e.data.assetID) {
+                let sellPrice = e.data.information.amount - e.data.information.fees;
+                let formData = new FormData();
+                formData.append('sessionid', e.data.sessionID);
+                formData.append('appid', e.data.global_id);
+                formData.append('contextid', e.data.contextID);
+                formData.append('assetid', e.data.assetID);
+                formData.append('amount', 1);
+                formData.append('price', sellPrice);
+
+                /*
+                 * TODO test what we need to send in request, this is original:
+                 * mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
+                 * credentials: 'include',
+                 * headers: { origin: window.location.origin },
+                 * referrer: window.location.origin + window.location.pathname
+                 */
+
+                RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
+                    withCredentials: true
+                }).then(() => {
+                    document.querySelector("#es_instantsell" + e.data.assetID).parentNode.style.display = "none";
+
+                    let id = e.data.global_id + "_" + e.data.contextID + "_" + e.data.assetID;
+                    let node = document.querySelector("[id='"+id+"']");
+                    node.classList.add("btn_disabled", "activeInfo");
+                    node.style.pointerEvents = "none";
                 });
-                */
             }
         }, false);
     }
