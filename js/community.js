@@ -1222,10 +1222,7 @@ let InventoryPageClass = (function(){
         }
     }
 
-    async function handleRestricted(restriction, marketable, thisItem, marketActions, globalId, hashName) {
-        if (restriction === 0) { return; }
-        if (marketable !== 0) { return; }
-
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName) {
         let dataLowest = thisItem.dataset.lowestPrice;
         let dataSold = thisItem.dataset.soldVolume;
 
@@ -1288,7 +1285,7 @@ let InventoryPageClass = (function(){
 
     function inventory_market_helper(response) {
         let item = response[0];
-        let marketable = response[1];
+        let marketable = parseInt(response[1]);
         let globalId = parseInt(response[2]);
         let hashName = response[3];
         let assetId = response[5];
@@ -1296,7 +1293,7 @@ let InventoryPageClass = (function(){
         let contextId = parseInt(response[7]);
         let walletCurrency = response[8];
         let ownerSteamId = response[9];
-        let restriction = response[10];
+        let restriction = parseInt(response[10]);
         let isGift = response[4] && /Gift/i.test(response[4]);
         let isBooster = hashName && /Booster Pack/i.test(hashName);
         let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
@@ -1354,65 +1351,11 @@ let InventoryPageClass = (function(){
 
             addOneClickGemsOption(item, appid, assetId);
             addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
-            handleRestricted(restriction, marketable, thisItem, marketActions, globalId, hashName);
         }
-        // If is not own inventory but the item is marketable then we need to build the HTML for showing info
-            /*
-        else if (marketable) {
-            var dataLowest = $(thisItem).data("lowest-price"),
-                dataSold = $(thisItem).data("sold-volume");
 
-            sideMarketActs.show().html("<img class='es_loading' src='" + protocol + "//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />");
-
-            // "View in market" link
-            html += '<div style="height: 24px;"><a href="' + protocol + '//steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + localized_strings.view_in_market + '</a></div>';
-
-            // Check if price is stored in data
-            if (dataLowest) {
-                html += '<div style="min-height: 3em; margin-left: 1em;">';
-
-                if (dataLowest !== "nodata") {
-                    html += localized_strings.starting_at + ': ' + dataLowest;
-                    // Check if volume is stored in data
-                    if (dataSold) {
-                        html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", dataSold);
-                    }
-                } else {
-                    html += localized_strings.no_price_data;
-                }
-
-                html += '</div>';
-
-                sideMarketActs.html(html);
-            } else {
-                get_http(protocol + "//steamcommunity.com/market/priceoverview/?currency=" + currency_type_to_number(user_currency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName), function(txt) {
-                    var data = JSON.parse(txt);
-
-                    html += '<div style="min-height: 3em; margin-left: 1em;">';
-
-                    if (data && data.success) {
-                        $(thisItem).data("lowest-price", data.lowest_price || "nodata");
-                        if (data.lowest_price) {
-                            html += localized_strings.starting_at + ': ' + data.lowest_price;
-                            if (data.volume) {
-                                $(thisItem).data("sold-volume", data.volume);
-                                html += '<br>' + localized_strings.volume_sold_last_24.replace("__sold__", data.volume);
-                            }
-                        } else {
-                            html += localized_strings.no_price_data;
-                        }
-                    } else {
-                        html += localized_strings.no_price_data;
-                    }
-
-                    html += '</div>';
-
-                    sideMarketActs.html(html);
-                }).fail(function(){ // At least show the "View in Market" link
-                    sideMarketActs.html(html);
-                });
-            }
-        }*/
+        if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
+            showMarketOverview(thisItem, marketActions, globalId, hashName);
+        }
     }
 
     function inventory_market_prepare() {
