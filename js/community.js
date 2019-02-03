@@ -1076,6 +1076,41 @@ let InventoryPageClass = (function(){
         }
     }
 
+    function addOneClickGemsOption(item, appid, assetId) {
+        if (!SyncedStorage.get("show1clickgoo", Defaults.show1clickgoo)) { return; }
+
+        let quickGrind = document.querySelector("#es_quickgrind");
+        if (quickGrind) { quickGrind.parentNode.remove(); }
+
+        let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
+        let turnWord = scrapActions.querySelector("span").textContent;
+
+        let divs = scrapActions.querySelectorAll("div");
+        divs[divs.length-1].insertAdjacentHTML("beforebegin",
+            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+
+        // TODO: Add prompt?
+        document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
+            ExtensionLayer.runInPageContext(`function() {
+                        var rgAJAXParams = {
+                            sessionid: g_sessionID,
+                            appid: ${appid},
+                            assetid: ${assetId},
+                            contextid: 6
+                        };
+                        
+                        var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
+                        $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
+                            strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+                            rgAJAXParams.goo_value_expected = data.goo_value;
+                            $J.post( strActionURL, rgAJAXParams).done( function( data ) {
+                                ReloadCommunityInventory();
+                            });
+                        });                        
+                    }`);
+        });
+    }
+
     function inventory_market_helper(response) {
         let item = response[0];
         let marketable = response[1];
@@ -1110,13 +1145,14 @@ let InventoryPageClass = (function(){
         // Show prices for gifts
 
         if (isGift) {
-            addPriceToGifts(itemActions)
+            addPriceToGifts(itemActions);
             return;
         }
 
-        /*
+
         if (ownsInventory) {
             // If is a booster pack add the average price of three cards
+            /*
             if (isBooster) {
                 var $sideMarketActsDiv = sideMarketActs.find("div").last().css("margin-bottom", "8px"),
                     dataCardsPrice = $(thisItem).data("cards-price");
@@ -1143,36 +1179,12 @@ let InventoryPageClass = (function(){
                     this.disconnect();
                 });
             }
+            */
 
+            addOneClickGemsOption(item, appid, assetId);
+
+/*
             storage.get(function(settings) {
-                // 1-Click turn into gems option
-                if (settings.show1clickgoo === undefined) { settings.show1clickgoo = true; storage.set({'show1clickgoo': settings.show1clickgoo}); }
-                if (settings.show1clickgoo) {
-                    var turn_word = $("#iteminfo" + item + "_item_scrap_link span").text();
-
-                    $("#es_quickgrind").parent().remove();
-                    $("#iteminfo" + item + "_item_scrap_actions").find("div:last").before("<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind' appid='" + appid + "' assetid='" + assetId + "'><span>1-Click " + turn_word + "</span></div>");
-
-                    // TODO: Add prompt?
-                    $("#es_quickgrind").on("click", function() {
-                        runInPageContext(`function() {
-                        var rgAJAXParams = {
-                            sessionid: g_sessionID,
-                            appid: ` + $(this).attr("appid") + `,
-                            assetid: ` + $(this).attr("assetID") + `,
-                            contextid: 6
-                        };
-                        var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
-                        $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
-                            strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
-                            rgAJAXParams.goo_value_expected = data.goo_value;
-                            $J.post( strActionURL, rgAJAXParams).done( function( data ) {
-                                ReloadCommunityInventory();
-                            });
-                        });
-                    }`);
-                    });
-                }
 
                 // Quick sell options
                 if (settings.quickinv === undefined) { settings.quickinv = true; storage.set({'quickinv': settings.quickinv}); }
@@ -1323,6 +1335,7 @@ let InventoryPageClass = (function(){
             }
         }
         // If is not own inventory but the item is marketable then we need to build the HTML for showing info
+            /*
         else if (marketable) {
             var dataLowest = $(thisItem).data("lowest-price"),
                 dataSold = $(thisItem).data("sold-volume");
@@ -1377,8 +1390,7 @@ let InventoryPageClass = (function(){
                     sideMarketActs.html(html);
                 });
             }
-        }
-        */
+        }*/
     }
 
     function inventory_market_prepare() {
