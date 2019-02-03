@@ -1089,9 +1089,6 @@ let InventoryPageClass = (function(){
         divs[divs.length-1].insertAdjacentHTML("beforebegin",
             "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
 
-        // FIXME verify appid assetid are set correctly when you have more items
-        // this can't be uinique per page, each item has to have it's own button, otherwise we'll break it
-
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(`function() {
