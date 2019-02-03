@@ -1537,6 +1537,12 @@ let DOMHelper = (function(){
         container.append(node);
     };
 
+    self.remove = function(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        node.remove();
+    };
+
     return self;
 })();
 

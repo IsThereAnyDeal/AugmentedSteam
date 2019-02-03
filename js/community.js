@@ -964,10 +964,9 @@ let InventoryPageClass = (function(){
 
     function InventoryPageClass() {
         // bind_ajax_content_highlighting();
-        inventory_market_prepare();
-        /*hide_empty_inventory_tabs();
-        keep_ssa_checked();
-        add_inventory_gotopage();*/
+        prepareMarketForInventory();
+        addInventoryGoToPage();
+        /* hide_empty_inventory_tabs(); */
     }
 
     function setBackgroundOption(thisItem, assetId, itemActions) {
@@ -1287,7 +1286,7 @@ let InventoryPageClass = (function(){
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
-    function inventory_market_helper(response) {
+    function inventoryMarketHelper(response) {
         let item = response[0];
         let marketable = parseInt(response[1]);
         let globalId = parseInt(response[2]);
@@ -1336,7 +1335,7 @@ let InventoryPageClass = (function(){
         }
     }
 
-    function inventory_market_prepare() {
+    function prepareMarketForInventory() {
         ExtensionLayer.runInPageContext(`function(){
             $J(document).on("click", ".inventory_item_link, .newitem", function(){
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
@@ -1366,7 +1365,7 @@ let InventoryPageClass = (function(){
             if (!e.data.type) { return; }
 
             if (event.data.type === "es_sendmessage") {
-                inventory_market_helper(event.data.information);
+                inventoryMarketHelper(event.data.information);
             } else if (e.data.type === "es_sendfee_" + assetID) {
                 /* FIXME
                 var sell_price = event.data.information.amount - event.data.information.fees;
@@ -1392,6 +1391,109 @@ let InventoryPageClass = (function(){
                 */
             }
         }, false);
+    }
+
+    function addInventoryGoToPage(){
+        if (!SyncedStorage.get("showinvnav", Defaults.showinvnav)) { return; }
+
+        DOMHelper.remove("#es_gotopage");
+        DOMHelper.remove("#pagebtn_first");
+        DOMHelper.remove("#pagebtn_last");
+        DOMHelper.remove("#es_pagego");
+
+        let es_gotopage = document.createElement("script");
+        es_gotopage.type = "text/javascript";
+        es_gotopage.id = "es_gotopage";
+        es_gotopage.textContent = `g_ActiveInventory.GoToPage = function(page){
+                  var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
+                	var iCurPage = this.m_iCurrentPage;
+                	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
+                  var iPages = this.m_cPages
+                  var _this = this;
+                  if (iCurPage < iNextPage) {
+                    if (iCurPage < iPages - 1) {
+                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                      this.m_$Inventory.css( 'left', '0' );
+                      this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                    }
+                  } else if (iCurPage > iNextPage) {
+                    if (iCurPage > 0) {
+                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                      this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
+                      this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                    }
+                  }
+                }
+                function InventoryLastPage(){
+                	g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
+                }
+                function InventoryFirstPage(){
+                	g_ActiveInventory.GoToPage(1);
+                }
+                function InventoryGoToPage(){
+                	var page = $('es_pagenumber').value;
+                	if (isNaN(page)) return;
+                	g_ActiveInventory.GoToPage(parseInt(page));
+                }`;
+
+        document.documentElement.appendChild(es_gotopage);
+
+        // Go to first page
+        document.querySelector("#pagebtn_previous").insertAdjacentHTML("afterend",
+            "<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled' style='margin:0 3px'>&lt;&lt;</a>");
+
+        // Go to last page
+        document.querySelector("#pagebtn_next").insertAdjacentHTML("beforebegin",
+            "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
+
+        let pageGo = document.createElement("div");
+        pageGo.id = "es_pagego";
+        pageGo.style.float = "left";
+
+        // Page number box
+        let pageNumber = document.createElement("input");
+        pageNumber.type = "number";
+        pageNumber.value="1";
+        pageNumber.classList.add("filter_search_box");
+        pageNumber.autocomplete = "off";
+        pageNumber.placeholder = "page #";
+        pageNumber.id = "es_pagenumber";
+        pageNumber.style.width = "50px";
+        pageNumber.min = 1;
+        pageNumber.max = document.querySelector("#pagecontrol_max").textContent;
+
+        pageGo.append(pageNumber);
+
+        let gotoButton = document.createElement("a");
+        gotoButton.textContent = Localization.str.go;
+        gotoButton.id = "gotopage_btn";
+        gotoButton.classList.add("pagebtn");
+        gotoButton.href = "javascript:InventoryGoToPage();";
+        gotoButton.style.width = "32px";
+        gotoButton.style.padding = "0";
+        gotoButton.style.margin = "0 6px";
+        gotoButton.style.textAlign = "center";
+
+        pageGo.append(gotoButton);
+
+        document.querySelector("#inventory_pagecontrols").insertAdjacentElement("beforebegin", pageGo);
+
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName !== "class") { return; }
+                if (!mutation.target.id) { return; }
+
+                let id = mutation.target.id;
+                if (id === "pagebtn_next") {
+                    document.querySelector("#pagebtn_last").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
+                } else if (id === "pagebtn_previous") {
+                    document.querySelector("#pagebtn_first").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
+                }
+
+            });
+        });
+        observer.observe(document.querySelector("#pagebtn_next"), { attributes: true });
+        observer.observe(document.querySelector("#pagebtn_previous"), { attributes: true });
     }
 
     return InventoryPageClass;
