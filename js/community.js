@@ -963,10 +963,16 @@ let StatsPageClass = (function(){
 let InventoryPageClass = (function(){
 
     function InventoryPageClass() {
-        // bind_ajax_content_highlighting();
         prepareMarketForInventory();
         addInventoryGoToPage();
         /* hide_empty_inventory_tabs(); */
+        
+        let observer = new MutationObserver(() => {
+            addInventoryGoToPage();
+        });
+
+        observer.observe(document.querySelector("div.games_list_tabs"), {subtree: true, attributes: true})
+
     }
 
     function setBackgroundOption(thisItem, assetId, itemActions) {
