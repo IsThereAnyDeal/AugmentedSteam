@@ -541,8 +541,8 @@
         "no_price": "无价格"
     },
     "coll": {
-        "in_collection": "在合集中",
+        "in_collection": "拥有数",
         "played": "已玩过",
-        "never_played": "尚未玩过"
+        "never_played": "未玩过"
     }
 }
