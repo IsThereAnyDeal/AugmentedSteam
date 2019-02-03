@@ -626,12 +626,13 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        if (window.location.href.match(/\/games\/\?tab=all/)) {
-            this.computeStats();
-            this.addGamelistAchievements();
+        if (!window.location.href.match(/\/games\/\?tab=all/)) {
+            return;
         }
 
-        // FIXME add_gamelist_common();
+        this.computeStats();
+        this.addGamelistAchievements();
+        this.handleCommonGames();
     }
 
     // Display total time played for all games
@@ -736,6 +737,70 @@ let GamesPageClass = (function(){
                 });
             }
         }
+    };
+
+    let _commonGames = null;
+
+    async function loadCommonGames() {
+        if (_commonGames != null) { return; }
+
+        let url = window.location.href;
+        let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
+        let data = await RequestData.getHttp(commonUrl);
+
+        let games = BrowserHelper.getVariableFromText(data, "rgGames", "array");;
+        _commonGames = new Set();
+        for (let game of games) {
+            _commonGames.add(parseInt(game.appid));
+        }
+        
+        let nodes = document.querySelectorAll(".gameListRow");
+        for (let node of nodes) {
+            let appid = parseInt(node.id.split("_")[1]);
+
+            if (_commonGames.has(appid)) {
+                node.classList.add("esi-common");
+            } else {
+                node.classList.add("esi-notcommon");
+            }
+        }
+    }
+
+    GamesPageClass.prototype.handleCommonGames = function() {
+        if (!User.isSignedIn) { return;}
+
+        let label = document.querySelector("label[for='show_common_games']");
+        if (!label) { return; }
+
+        function createCheckox(id, string) {
+            let checkboxEl = document.createElement("input");
+            checkboxEl.type = "checkbox";
+            checkboxEl.id = id;
+
+            let uncommonLabel = document.createElement("label");
+            uncommonLabel.append(checkboxEl);
+            uncommonLabel.append(document.createTextNode(string));
+
+            return checkboxEl;
+        }
+
+        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
+        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
+
+        label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
+        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
+        label.style.display = "none";
+        document.querySelector("#show_common_games").style.display = "none";
+
+        commonCheckbox.addEventListener("change", async function(e) {
+            await loadCommonGames();
+            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
+        });
+
+        notCommonCheckbox.addEventListener("change", async function(e) {
+            await loadCommonGames();
+            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+        });
     };
 
     return GamesPageClass;

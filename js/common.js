@@ -1147,9 +1147,7 @@ let BrowserHelper = (function(){
         return self.htmlToDOM(html).firstElementChild;
     };
 
-    self.getVariableFromDom = function(variableName, type) {
-        let nodes = document.querySelectorAll("script");
-
+    self.getVariableFromText = function(text, variableName, type) {
         let regex;
         if (type === "object") {
             regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
@@ -1163,17 +1161,25 @@ let BrowserHelper = (function(){
             return null;
         }
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            let m = node.textContent.match(regex);
+        let m = text.match(regex);
+        if (m) {
+            if (type === "int") {
+                return parseInt(m[1]);
+            }
+            return JSON.parse(m[1]);
+        }
+
+        return null;
+    };
+
+    self.getVariableFromDom = function(variableName, type) {
+        let nodes = document.querySelectorAll("script");
+        for (let node of nodes) {
+            let m = self.getVariableFromText(node.textContent, variableName, type)
             if (m) {
-                if (type === "int") {
-                    return parseInt(m[1]);
-                }
-                return JSON.parse(m[1]);
+                return m;
             }
         }
-        return null;
     };
 
     return self;

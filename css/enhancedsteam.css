@@ -2460,3 +2460,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .item_market_action_button {
 	margin-bottom:4px;
 }
+
+.esi-hide-common .esi-common { display:none; }
+.esi-hide-notcommon .esi-notcommon { display:none; }
