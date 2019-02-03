@@ -970,11 +970,12 @@ let InventoryPageClass = (function(){
         add_inventory_gotopage();*/
     }
 
-    function setBackgroundOption(thisItem, assetId, sideActs) {
+    function setBackgroundOption(thisItem, assetId, itemActions) {
         if (!document.querySelector(".inventory_links")) { return; }
-        if (sideActs.querySelector(".es_set_background")) { return; }
+        if (itemActions.querySelector(".es_set_background")) { return; }
 
-        let viewFullBtn = sideActs.querySelector("a");
+        let viewFullBtn = itemActions.querySelector("a");
+        if (!viewFullBtn) { return; }
 
         if (!/public\/images\/items/.test(viewFullBtn.href)) { return; }
 
@@ -1031,12 +1032,55 @@ let InventoryPageClass = (function(){
         });
     }
 
+    async function addPriceToGifts(itemActions) {
+        let action = itemActions.querySelector("a");
+        if (!action) { return; }
+
+        let giftAppid = GameId.getAppid(action.href);
+        if (!giftAppid) { return; }
+        // TODO: Add support for package(sub)
+
+        let result = await RequestData.getJson("https://store.steampowered.com/api/appdetails/?appids=" + giftAppid + "&filters=price_overview");
+        if (!result[giftAppid] || !result[giftAppid].success) { return; }
+        if (!result[giftAppid]['data']['price_overview']) { return; }
+
+        let overview = result[giftAppid]['data']['price_overview'];
+        let discount = overview["discount_percent"];
+        let price = new Price(overview['final'] / 100, overview['currency']);
+
+        itemActions.style.display = "flex";
+        itemActions.style.alignItems = "center";
+        itemActions.style.justifyContent = "space-between";
+
+        if (discount > 0) {
+            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
+            itemActions.insertAdjacentHTML("beforeend",
+                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
+                    <div class='es_game_purchase_action_bg'>
+                        <div class='es_discount_block es_game_purchase_discount'>
+                            <div class='es_discount_pct'>-${discount}%</div>
+                            <div class='es_discount_prices'>
+                                <div class='es_discount_original_price'>${originalPrice}</div>
+                                <div class='es_discount_final_price'>${price}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+        } else {
+            itemActions.insertAdjacentHTML("beforeend",
+                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
+                    <div class='es_game_purchase_action_bg'>
+                        <div class='es_game_purchase_price es_price'>${price}</div>
+                    </div>
+                </div>`);
+        }
+    }
+
     function inventory_market_helper(response) {
         let item = response[0];
         let marketable = response[1];
         let globalId = response[2];
         let hashName = response[3];
-        let appid = hashName.match(/^([0-9]+)-/)[1] || null;
         let assetId = response[5];
         let sessionId = response[6];
         let contextId = response[7];
@@ -1047,51 +1091,28 @@ let InventoryPageClass = (function(){
         let isBooster = hashName && /Booster Pack/i.test(hashName);
         let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
+        let hm;
+        let appid = (hm = hashName.match(/^([0-9]+)-/)) ? hm[1] : null;
+
         console.log(ownerSteamId, User.steamId);
 
         let html = "";
 
         let thisItem = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
-        let sideActs = document.querySelector("#iteminfo" + item + "_item_actions");
+        let itemActions = document.querySelector("#iteminfo" + item + "_item_actions");
         let sideMarketActs = document.querySelector("#iteminfo" + item + "_item_market_actions");
 
         // Set as background option
         if (ownsInventory) {
-            setBackgroundOption(thisItem, assetId, sideActs);
+            setBackgroundOption(thisItem, assetId, itemActions);
         }
 
         // Show prices for gifts
 
-        /*
         if (isGift) {
-            $("#es_item" + item).remove();
-            if (sideActs.find("a").length > 0) {
-                var link = sideActs.find("a")[0].href;
-                var gift_appid = get_appid(link); // || get_subid(link);
-
-                // TODO: Add support for package(sub)
-                if (gift_appid) {
-                    get_http(protocol + "//store.steampowered.com/api/appdetails/?appids=" + gift_appid + "&filters=price_overview", function(txt) {
-                        var data = JSON.parse(txt);
-                        if (data[gift_appid].success && data[gift_appid]["data"]["price_overview"]) {
-                            var currency = data[gift_appid]["data"]["price_overview"]["currency"];
-                            var discount = data[gift_appid]["data"]["price_overview"]["discount_percent"];
-                            var price = formatCurrency(data[gift_appid]["data"]["price_overview"]["final"] / 100, currency);
-
-                            sideActs.css("height", "50px");
-                            if (discount > 0) {
-                                var original_price = formatCurrency(data[gift_appid]["data"]["price_overview"]["initial"] / 100, currency);
-                                sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_discount_block es_game_purchase_discount'><div class='es_discount_pct'>-" + discount + "%</div><div class='es_discount_prices'><div class='es_discount_original_price'>" + original_price + "</div><div class='es_discount_final_price'>" + price + "</div></div></div></div>");
-                            } else {
-                                sideActs.append("<div class='es_game_purchase_action' style='float: right;'><div class='es_game_purchase_action_bg'><div class='es_game_purchase_price es_price'>" + price + "</div></div>");
-                            }
-                        }
-                    });
-                }
-            }
+            addPriceToGifts(itemActions)
             return;
         }
-*/
 
         /*
         if (ownsInventory) {
