@@ -1176,6 +1176,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	.es_side_details_wrap.es_expanded {
 		display: block;
 	}
+	.es_side_details_wrap {
+		transition: opacity 250ms ease 0s;
+		opacity: 0;
+	}
 	.es_side_details .game_header_image_full {
 		width: 276px !important;
 		height: auto !important;
