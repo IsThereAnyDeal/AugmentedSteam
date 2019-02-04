@@ -1967,9 +1967,8 @@ let AccountPageClass = (function(){
 
     AccountPageClass.prototype.accountTotalSpent = function() {
 
-        let links = document.querySelector(".account_setting_block")
-            .querySelector(".account_setting_sub_block:nth-child(2)")
-            .querySelectorAll(".account_manage_link");
+        let links = document.querySelectorAll(".account_setting_block:nth-child(2) .account_setting_sub_block:nth-child(2) .account_manage_link");
+        if (links.length < 1) return;
 
         let lastLink = links[links.length-1];
         lastLink.parentNode.insertAdjacentHTML("afterend",
@@ -2930,7 +2929,7 @@ let TabAreaObserver = (function(){
                         (new RegisterKeyPageClass());
                         return;
 
-                    case /^\/account(\/.*)?/.test(path):
+                    case /^\/account(\/)?/.test(path):
                         (new AccountPageClass());
                         return;
 
