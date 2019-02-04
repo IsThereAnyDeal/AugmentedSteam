@@ -451,9 +451,10 @@ let ProgressBar = (function(){
         node.classList.add("error");
         node.setAttribute("title", "");
 
-        let nodeError = node.querySelector(".es_progress_error");
+        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
             node.insertAdjacentHTML("afterend", "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            nodeError = node.nextElementSibling;
         }
 
         if (!message) {
