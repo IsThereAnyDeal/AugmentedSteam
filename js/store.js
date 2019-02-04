@@ -1907,6 +1907,7 @@ let RegisterKeyPageClass = (function(){
                 formData.append("product_key", current_key);
 
                 let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
+                    data = JSON.parse(data);
                     let attempted = current_key;
                     let message = Localization.str.register.default;
                     if (data["success"]) {
