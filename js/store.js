@@ -1183,9 +1183,12 @@ let AppPageClass = (function(){
 
             document.querySelector("div.game_details").insertAdjacentHTML("afterend", html);
 
-            document.querySelector("#suggest").addEventListener("click", function(){
-                LocalData.del("storePageData_" + this.appid);
-            });
+            let suggest = document.querySelector("#suggest");
+            if (suggest) { // FIXME consequence of the above FIXME
+                suggest.addEventListener("click", function(){
+                    LocalData.del("storePageData_" + this.appid);
+                });
+            }
         });
     };
 
