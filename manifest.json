@@ -27,7 +27,7 @@
         "css/*.css",
         "options.html",
         "changelog_new.html",
-        "img/*/*.png",        
+        "img/*/*.png",
         "img/profile_styles/*/header.jpg",
         "img/profile_styles/*/showcase.png",
         "img/profile_styles/*/style.css",
