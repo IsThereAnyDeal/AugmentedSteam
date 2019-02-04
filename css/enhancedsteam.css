@@ -1176,6 +1176,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	.es_side_details_wrap.es_expanded {
 		display: block;
 	}
+	.es_side_details_wrap {
+		transition: opacity 250ms ease 0s;
+		opacity: 0;
+	}
 	.es_side_details .game_header_image_full {
 		width: 276px !important;
 		height: auto !important;
@@ -2424,3 +2428,42 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_supporter_badges .profile_badges_badge {
 	float:none;
 }
+
+/** spam comments */
+.esi_commentthread_button {
+    display:block;
+    text-align:center;
+    background-color:#490000;
+    color:white;
+    padding:0.8em 0;
+    border-radius:2px;
+    opacity:0.4;
+}
+.esi_commentthread_button:hover {
+    opacity:1;
+}
+.esi_commentthread--showspam .esi_comment_hidden {
+    display:block;
+}
+.esi_commentthread--showspam .esi_commentthread_button {
+    display:none;
+}
+.esi_comment_hidden {
+    display:none;
+}
+
+.esi_ach_unlocked + .esi_ach_locked {
+    margin-top:72px;
+}
+
+/* market action buttons */
+.item_market_actions {
+	display:flex;
+	flex-direction:column;
+}
+.item_market_action_button {
+	margin-bottom:4px;
+}
+
+.esi-hide-common .esi-common { display:none; }
+.esi-hide-notcommon .esi-notcommon { display:none; }

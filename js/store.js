@@ -449,8 +449,8 @@ let AppPageClass = (function(){
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        // FIXME appPage.mediaSliderExpander();
-        // FIXME appPage.initHdPlayer();
+        this.mediaSliderExpander();
+        this.initHdPlayer();
         this.addWishlistRemove();
         this.addCoupon();
         this.addPrices();
@@ -490,7 +490,7 @@ let AppPageClass = (function(){
     AppPageClass.prototype.constructor = AppPageClass;
 
     AppPageClass.prototype.mediaSliderExpander = function() {
-        let detailsBuild = false;
+        let detailsBuilt = false;
         let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
 
         if (details) {
@@ -505,11 +505,255 @@ let AppPageClass = (function(){
         // Initiate tooltip
         ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
 
-        // FIXME media slider not finished
+        function buildSideDetails() {
+            if (detailsBuilt) return;
+            detailsBuilt = true;
+
+            let detailsClone = details.querySelector(".glance_ctn");
+            if (!detailsClone) return;
+            detailsClone = detailsClone.cloneNode(true);
+            detailsClone.classList.add("es_side_details", "block", "responsive_apppage_details_left");
+
+            for (let node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
+                // There are some issues with having duplicates of these on page when trying to add tags
+                node.remove();
+            }
+
+            let detailsWrap = document.createElement("div");
+            detailsWrap.classList.add("es_side_details_wrap");
+            detailsWrap.appendChild(detailsClone);
+            detailsWrap.style.display = 'none';
+            document.querySelector("div.rightcol.game_meta_data")
+                .insertAdjacentElement('afterbegin', detailsWrap);
+        }
+
+
+        var expandSlider = LocalData.get("expand_slider") || false;
+        if (expandSlider === true) {
+            buildSideDetails();
+
+            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+                node.classList.add("es_expanded");
+            }
+            for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+                node.style.display = null;
+            }
+
+            // Triggers the adjustment of the slider scroll bar
+            setTimeout(function(){
+                window.dispatchEvent(new Event("resize"));
+            }, 250);
+        }
+
+        document.querySelector(".es_slider_toggle").addEventListener("click", clickSliderToggle, false);
+        function clickSliderToggle(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            let el = ev.target.closest('.es_slider_toggle');
+            details.style.display = 'none';
+            buildSideDetails();
+
+            // Fade In/Out sideDetails
+            let sideDetails = document.querySelector(".es_side_details_wrap");
+            if (sideDetails) {
+                if (!el.classList.contains("es_expanded")) {
+                    // shrunk => expanded
+                    sideDetails.style.display = null;
+                    sideDetails.style.opacity = 1;
+                } else {
+                    // expanded => shrunk
+                    sideDetails.style.opacity = 0;
+                    setTimeout(function(){
+                        // Hide after transition completes
+                        if (!el.classList.contains("es_expanded"))
+                            sideDetails.style.display = 'none';
+                        }, 250);
+                }
+            }
+
+            // On every animation/transition end check the slider state
+            let container = document.querySelector('.highlight_ctn');
+            container.addEventListener('transitionend', saveSlider, false);
+            function saveSlider(ev) {
+                container.removeEventListener('transitionend', saveSlider, false);
+                // Save slider state
+                LocalData.set('expand_slider', el.classList.contains('es_expanded'));
+
+                // If slider was contracted show the extended details
+                if (!el.classList.contains('es_expanded')) {
+                    details.style.transition = "";
+                    details.style.opacity = "0";
+                    details.style.transition = "opacity 250ms";
+                    details.style.display = null;
+                    details.style.opacity = "1";
+                }
+
+                // Triggers the adjustment of the slider scroll bar
+                setTimeout(function(){
+                    window.dispatchEvent(new Event("resize"));
+                }, 250);
+            }
+
+            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+                node.classList.toggle("es_expanded");
+            }
+		}
     };
 
     AppPageClass.prototype.initHdPlayer = function() {
-        // FIXME
+        let playInHD = LocalData.get('playback_hd');
+        let firstVideoIsPlaying = document.querySelector('div.highlight_movie').querySelector('video.highlight_movie');
+
+        // Add HD Control to each video as it's added to the DOM
+        if (firstVideoIsPlaying)
+            addHDControl(firstVideoIsPlaying);
+        let observer = new MutationObserver(function(mutation_records){
+            for (let mr of mutation_records) {
+                // Array.from(mr.addedNodes).filter(n => n.matches && n.matches('video.highlight_movie')).forEach(n => addHDControl(n));
+                for (let node of mr.addedNodes) {
+                    if (!node.matches || !node.matches('video.highlight_movie')) continue;
+                    addHDControl(node);
+                }
+            }
+        });
+        document.querySelectorAll('div.highlight_movie').forEach(function(node, idx){
+            observer.observe(node, { 'childList': true, });
+        });
+
+        // When the "HD" button is clicked change the definition for all videos accordingly
+        document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
+        function clickHDControl(ev) {
+            if (!ev.target.matches || !ev.target.matches('.es_hd_toggle')) return;
+
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
+            let playInHD = toggleVideoDefinition(videoControl);
+
+            for (let n of document.querySelectorAll('video.highlight_movie')) {
+                if (n === videoControl) continue;
+                toggleVideoDefinition(n, playInHD);
+            }
+
+            LocalData.set('playback_hd', playInHD);
+        }
+
+        // When the slider is expanded first time after the page was loaded set videos definition to HD
+        for (let node of document.querySelectorAll('.es_slider_toggle')) {
+            node.addEventListener('click', clickInitialHD, false);
+        }
+        function clickInitialHD(ev) {
+            ev.currentTarget.removeEventListener('click', clickInitialHD, false);
+            if (!ev.target.classList.contains('es_expanded')) return;
+            for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
+                toggleVideoDefinition(node, true);
+            }
+            LocalData.set('playback_hd', true);
+        }
+
+        function addHDControl(videoControl) {
+            playInHD = LocalData.get('playback_hd');
+            
+            function _addHDControl() {
+                // Add "HD" button and "sd-src" to the video and set definition
+                if (videoControl.dataset['hd-src']) {
+                    videoControl.dataset['sd-src'] = videoControl.src;
+                    let node = videoControl.parentNode.querySelector('.time');
+                    if (node) {
+                        node.insertAdjacentHTML('afterend', `<div class="es_hd_toggle"><span>HD</span></div>`);
+                    }
+                }
+
+                // Override Valve's auto switch to HD when putting a video in fullscreen
+                let node = videoControl.parentNode.querySelector('.fullscreen_button');
+                if (node) {
+                    let newNode = document.createElement('div');
+                    newNode.addEventListener('click', (() => toggleFullscreen(videoControl)), false);
+                    node.replaceWith(newNode);
+                    node = null; // prevent memory leak
+                    newNode = null;
+                }
+
+                // Toggle fullscreen on video double click
+                videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
+
+                toggleVideoDefinition(videoControl, playInHD);
+            }
+            setTimeout(_addHDControl, 150);
+            // prevents a bug in Chrome which causes videos to stop playing after changing the src
+        }
+
+        function toggleFullscreen(videoControl) {
+            let fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
+            // Chrome unprefixed in v45
+            // Mozilla unprefixed in v64
+            if (!fullscreenAvailable) return;
+
+            let container = videoControl.parentNode;
+            let isFullscreen = document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement;
+            // Mozilla unprefixed in v64
+            // Chrome still prefixed
+
+            if (isFullscreen) {
+                if (document.exitFullscreen)
+                    document.exitFullscreen(); // Unprefixed in v64
+                else if (document.mozCancelFullScreen)
+                    document.mozCancelFullScreen(); // Unprefixed in v64
+            } else {
+                let response = null;
+                if (container.requestFullscreen)
+                    response = container.requestFullscreen();
+                else if (container.mozRequestFullScreen)
+                    response = container.mozRequestFullScreen(); // Unprefixed in v64
+                else if (container.webkitRequestFullscreen)
+                    container.webkitRequestFullscreen(); // no promise
+                // if response is a promise, catch any errors it throws
+                Promise.resolve(response).catch(err => console.error(err));
+            }
+        }
+ 
+        function toggleVideoDefinition(videoControl, setHD) {
+            let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
+                videoIsHD = false,
+                loadedSrc = videoControl.classList.contains("es_loaded_src"),
+                playInHD = LocalData.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+
+            let videoPosition = videoControl.currentTime || 0,
+                videoPaused = videoControl.paused;
+            if (videoIsVisible) {
+                videoControl.preload = "metadata";
+                videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
+            }
+            function onLoadedMetaData() {
+                this.currentTime = videoPosition;
+                if (!videoPaused && videoControl.play) {
+                    // if response is a promise, suppress any errors it throws
+                    Promise.resolve(videoControl.play()).catch(err => {});
+                } 
+                videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+            }
+
+            if (!playInHD && (typeof setHD === 'undefined' || setHD === true)) {
+                videoIsHD = true;
+                videoControl.src = videoControl.dataset["hd-src"];
+            } else if (loadedSrc) {
+                videoControl.src = videoControl.dataset["sd-src"];
+            }
+    
+            if (videoIsVisible && loadedSrc) {
+                videoControl.load();
+            }
+            
+            videoControl.classList.add("es_loaded_src");
+            videoControl.classList.toggle("es_video_sd", !videoIsHD);
+            videoControl.classList.toggle("es_video_hd", videoIsHD);
+            videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
+            videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
+    
+            return videoIsHD;
+        }
     };
 
     AppPageClass.prototype.storePageDataPromise = async function() {
@@ -578,11 +822,11 @@ let AppPageClass = (function(){
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid)
 
-                RequestData.post("//store.steampowered.com/api/removefromwishlist", {
-                    sessionid: User.getSessionId(),
-                    appid: appid
-                }, {withCredentials: true}).then(response => {
+                RequestData.post("//store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true}).then(response => {
                     document.querySelector("#add_to_wishlist_area").style.display = "inline";
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
@@ -939,9 +1183,12 @@ let AppPageClass = (function(){
 
             document.querySelector("div.game_details").insertAdjacentHTML("afterend", html);
 
-            document.querySelector("#suggest").addEventListener("click", function(){
-                LocalData.del("storePageData_" + this.appid);
-            });
+            let suggest = document.querySelector("#suggest");
+            if (suggest) { // FIXME consequence of the above FIXME
+                suggest.addEventListener("click", function(){
+                    LocalData.del("storePageData_" + this.appid);
+                });
+            }
         });
     };
 
@@ -1654,14 +1901,16 @@ let RegisterKeyPageClass = (function(){
 
             for (let i = 0; i < keys.length; i++) {
                 let current_key = keys[i];
-                let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", {
-                    sessionid: User.getSessionId(),
-                    product_key: current_key
-                }).then(data => {
+
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("product_key", current_key);
+
+                let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
                     data = JSON.parse(data);
                     let attempted = current_key;
                     let message = Localization.str.register.default;
-                    if (data["success"] == 1) {
+                    if (data["success"]) {
                         document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
@@ -2388,11 +2637,13 @@ let WishlistPageClass = (function(){
         }`);
 
         function removeApp(appid) {
+
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("appid", appid);
+
             let url = "//store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
-            return RequestData.post(url, {
-                sessionid: User.getSessionId(),
-                appid: appid
-            }).then(() => {
+            return RequestData.post(url, formData).then(() => {
                 let node = document.querySelector(".wishlist-row[data-app-id'"+appid+"']");
                 if (node) {
                     node.remove();

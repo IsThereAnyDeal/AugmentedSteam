@@ -169,6 +169,51 @@ let TimeHelper = (function(){
 })();
 
 
+let DateParser = (function(){
+
+    let _locale;
+    let _monthShortNames;
+    let _dateRegex;
+    let _timeRegex;
+
+    function DateParser(locale) {
+        _locale = locale;
+
+        switch(locale) {
+            case "en":
+                _monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                _dateRegex = new RegExp("(\\d+)\\s+("+_monthShortNames.join("|")+")(?:,\\s+(\\d+))?");
+                _timeRegex = /(\d+):(\d+)([ap]m)/;
+                break;
+            // FIXME(tomas.fedor) other languages
+        }
+    }
+
+    DateParser.prototype.parseUnlockTime = function(datetime) {
+
+        switch(_locale) {
+            case "en":
+                let date = datetime.match(_dateRegex);
+                let time = datetime.match(_timeRegex);
+                if (!date || !time) { return 0; }
+
+                let year = date[3] ? parseInt(date[3]) : (new Date()).getFullYear();
+                let month = _monthShortNames.indexOf(date[2]);
+                let day = parseInt(date[1]);
+
+                let hour = time[3] === "am" ? parseInt(time[1]) : parseInt(time[1])+12;
+                let minutes = time[2];
+
+                return (new Date(year, month, day, hour, minutes)).getTime();
+        }
+        return 0;
+    };
+
+    return DateParser;
+})();
+
+
+
 let LocalData = (function(){
 
     let self = {};
@@ -346,13 +391,10 @@ let RequestData = (function(){
         return self.getJson(apiUrl);
     };
 
-    self.post = function(url, data, settings) {
+    self.post = function(url, formData, settings) {
         return self.getHttp(url, Object.assign(settings || {}, {
-            headers: [
-                ["Content-Type", "application/x-www-form-urlencoded"]
-            ],
             method: "POST",
-            body: Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&')
+            body: formData
         }));
     };
 
@@ -367,8 +409,8 @@ let ProgressBar = (function(){
     self.create = function() {
         if (!SyncedStorage.get("show_progressbar", true)) { return; }
 
-        document.querySelector("#global_actions").insertAdjacentHTML("afterend", `
-            <div class="es_progress_wrap">
+        document.querySelector("#global_actions").insertAdjacentHTML("afterend",
+            `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
                         <div class="progress-bar">
@@ -376,8 +418,7 @@ let ProgressBar = (function(){
                         </div>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
 
         node = document.querySelector("#es_progress");
     };
@@ -410,9 +451,10 @@ let ProgressBar = (function(){
         node.classList.add("error");
         node.setAttribute("title", "");
 
-        let nodeError = node.querySelector(".es_progress_error");
+        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
             node.insertAdjacentHTML("afterend", "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            nodeError = node.nextElementSibling;
         }
 
         if (!message) {
@@ -578,6 +620,7 @@ let User = (function(){
             // Return date from cache
             if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
                 resolve(purchaseDates[lang][appName]);
+                return;
             }
 
             let lastUpdate = LocalData.get("purchase_dates_time", 0);
@@ -1003,6 +1046,7 @@ let Language = (function(){
     let self = {};
 
     self.languages = {
+        "english": "en",
         "bulgarian": "bg",
         "czech": "cs",
         "danish": "da",
@@ -1057,7 +1101,7 @@ let Language = (function(){
     };
 
     self.isCurrentLanguageOneOf = function(array) {
-        return array.indexOf(self.getCurrentSteamLanguage()) != -1;
+        return array.indexOf(self.getCurrentSteamLanguage()) !== -1;
     };
 
     return self;
@@ -1093,16 +1137,19 @@ let BrowserHelper = (function(){
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     };
 
-    self.htmlToElement = function(html) {
+
+    self.htmlToDOM = function(html) {
         let template = document.createElement('template');
         html = html.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = html;
-        return template.content.firstChild;
+        return template.content;
     };
 
-    self.getVariableFromDom = function(variableName, type) {
-        let nodes = document.querySelectorAll("script");
+    self.htmlToElement = function(html) {
+        return self.htmlToDOM(html).firstElementChild;
+    };
 
+    self.getVariableFromText = function(text, variableName, type) {
         let regex;
         if (type === "object") {
             regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
@@ -1116,17 +1163,25 @@ let BrowserHelper = (function(){
             return null;
         }
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            let m = node.textContent.match(regex);
+        let m = text.match(regex);
+        if (m) {
+            if (type === "int") {
+                return parseInt(m[1]);
+            }
+            return JSON.parse(m[1]);
+        }
+
+        return null;
+    };
+
+    self.getVariableFromDom = function(variableName, type) {
+        let nodes = document.querySelectorAll("script");
+        for (let node of nodes) {
+            let m = self.getVariableFromText(node.textContent, variableName, type)
             if (m) {
-                if (type === "int") {
-                    return parseInt(m[1]);
-                }
-                return JSON.parse(m[1]);
+                return m;
             }
         }
-        return null;
     };
 
     return self;
@@ -1425,34 +1480,46 @@ let EnhancedSteam = (function() {
 let GameId = (function(){
     let self = {};
 
+    function parseId(id) {
+        if (!id) { return null; }
+
+        let intId = parseInt(id);
+        if (!intId) { return null; }
+
+        return intId;
+    }
+
     self.getAppid = function(text) {
         if (!text) { return null; }
 
         // app, market/listing
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
     self.getSubid = function(text) {
         if (!text) { return null; }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
 
     self.getAppidImgSrc = function(text) {
         if (!text) { return null; }
         let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
     self.getAppids = function(text) {
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
         let m;
-        while (m = regex.exec(text)) {
-            res.push(m[1]);
+        while ((m = regex.exec(text)) != null) {
+            let id = parseId(m[1]);
+            if (id) {
+                res.push(id);
+            }
         }
         return res;
     };
@@ -1460,7 +1527,7 @@ let GameId = (function(){
     self.getAppidWishlist = function(text) {
         if (!text) { return null; }
         let m = text.match(/game_(\d+)/);
-        return m ? m[1] : null;
+        return m && parseId(m[1]);
     };
 
     return self;
@@ -1476,6 +1543,12 @@ let DOMHelper = (function(){
         parent.insertBefore(container, node);
         parent.removeChild(node);
         container.append(node);
+    };
+
+    self.remove = function(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        node.remove();
     };
 
     return self;
@@ -1496,7 +1569,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + language + ".png";
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
 
@@ -1505,6 +1578,7 @@ let EarlyAccess = (function(){
 
             if (cache) {
                 resolve();
+                return;
             }
 
             let updateTime = LocalData.get("ea_appids_time");
@@ -1554,6 +1628,7 @@ let EarlyAccess = (function(){
     }
 
     function handleStore() {
+        // TODO refactor these checks to appropriate page calls
         switch (true) {
             case /^\/app\/.*/.test(window.location.pathname):
                 checkNodes([".game_header_image_ctn", ".small_cap"]);
@@ -1602,13 +1677,13 @@ let EarlyAccess = (function(){
     }
 
     function handleCommunity() {
-        return; // FIXME
+        // TODO refactor these checks to appropriate page calls
         switch(true) {
             // wishlist, games, and followedgames can be combined in one regex expresion
             case /^\/(?:id|profiles)\/.+\/(wishlist|games|followedgames)/.test(window.location.pathname):
                 checkNodes([".gameListRowLogo"]);
                 break;
-            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity)\b/.test(window.location.pathname):
                 checkNodes([".blotter_gamepurchase_content a"]);
                 break;
             case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):
@@ -1757,6 +1832,7 @@ let Inventory = (function(){
         _promise = new Promise(function(resolve, reject) {
             if (!User.isSignedIn) {
                 resolve();
+                return;
             }
 
             let lastUpdate = LocalData.get("inventory_update");
@@ -2197,7 +2273,10 @@ let DynamicStore = (function(){
      * if Steam can't fulfill the API call
      */
     async function _fetch() {
-        if (!User.isSignedIn) {  throw "User is not signed in"; }
+        if (!User.isSignedIn) { 
+            self.clear();
+            return _data;
+        }
     
         let userdata = LocalData.get("dynamicstore");
         let userdataUpdate = LocalData.get("dynamicstore_update", 0);
@@ -2225,7 +2304,7 @@ let DynamicStore = (function(){
             _promise = _fetch();
         }
         return _promise.then(onDone, onCatch);
-    } 
+    };
 
     return self;
 })();
@@ -2332,7 +2411,7 @@ let Prices = (function(){
         if (info["bundles"]["count"] > 0) {
             line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
             let bundlesUrl = BrowserHelper.escapeHTML(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
-            if (typeof bundles_url === "string" && bundles_url.length > 0) {
+            if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
             }
         }
