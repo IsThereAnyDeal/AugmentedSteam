@@ -2272,7 +2272,10 @@ let DynamicStore = (function(){
      * if Steam can't fulfill the API call
      */
     async function _fetch() {
-        if (!User.isSignedIn) {  throw "User is not signed in"; }
+        if (!User.isSignedIn) { 
+            self.clear();
+            return _data;
+        }
     
         let userdata = LocalData.get("dynamicstore");
         let userdataUpdate = LocalData.get("dynamicstore_update", 0);
