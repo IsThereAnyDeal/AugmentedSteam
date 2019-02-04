@@ -246,6 +246,7 @@ let Options = (function(){
 	}
 
 	function saveOptionFromEvent(e) {
+		if (!e.target || !e.target.closest) return; // "blur" fires when the window loses focus
 		let node = e.target.closest("[data-setting]");
 		if (!node) {
 			if (e.target.closest("#store_stores")) {
@@ -367,7 +368,7 @@ let Options = (function(){
 			});
 
 			document.querySelector("#spamcommentregex_default").addEventListener("click", function(){
-				setValue("spamcommentregex", "[\\u2500-\\u25FF]");
+				setValue("#spamcommentregex", "[\\u2500-\\u25FF]");
 			});
 			document.querySelector("#quickinv_default").addEventListener("click", function() {
 				setValue("#quickinv_diff", "-0.01");
@@ -379,12 +380,8 @@ let Options = (function(){
 			});
 
 			document.querySelector("#show_spamcommentregex").addEventListener("click", function(e){
-				let listNode = e.target.closest("#spamcommentregex_list");
-				if (document.querySelector("#show_spamcommentregex").checked) {
-					listNode.style.display = "block";
-				} else {
-					listNode.style.display = "none";
-				}
+				let listNode = document.querySelector("#spamcommentregex_list");
+				listNode.classList.toggle("esi-hidden");
 			});
 			document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
 				let node = e.target.closest("#show_quckinv_diff");

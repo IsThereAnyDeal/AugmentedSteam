@@ -1,14 +1,12 @@
 /**
  * This is basic configuration for EnhancedSteam extension,
- * Uncomment this class, fill in your data and rename file to config.js
+ * Copy this file to config.js and fill in your data
  */
 
-/*
 let Config = {
 
-    ApiServerHost: "example.com"
-    CdnHost: "http://example.com"
+    ApiServerHost: "https://example.com",
+    CdnHost: "https://example.com",
     PublicHost: "//example.com",
 
 };
-*/

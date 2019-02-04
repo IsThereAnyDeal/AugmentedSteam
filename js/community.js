@@ -70,6 +70,180 @@ let ProfileData = (function(){
     return self;
 })();
 
+let SpamCommentHandler = (function(){
+
+    let spamRegex = null;
+
+    function toggleHiddenCommentsButton(threadNode, count) {
+        threadNode.classList.add("esi_commentthread");
+
+        let button = threadNode.querySelector(".esi_commentthread_button");
+
+        if (count === 0) {
+            if (button) {
+                button.classList.add("esi-hidden");
+            }
+            return;
+        }
+
+        if (!button) {
+            button = document.createElement("a");
+            button.classList.add("esi_commentthread_button");
+            threadNode.insertAdjacentElement("afterbegin", button);
+
+            button.addEventListener("click", function() {
+                threadNode.classList.add("esi_commentthread--showspam")
+            });
+        }
+
+        button.classList.remove("esi-hidden");
+        button.textContent = Localization.str.spam_comment_show.replace("__num__", count);
+        threadNode.classList.remove("esi_commentthread--showspam");
+    }
+
+    function addCommentThreadObserver(threadNode) {
+        if (threadNode.dataset.esiCommentObserver) { return; }
+        threadNode.dataset.esiCommentObserver = "1";
+
+        let observer = new MutationObserver(() => {
+            updateCommentThread(threadNode);
+        });
+        observer.observe(threadNode.querySelector(".commentthread_comments"), { childList: true });
+    }
+
+    function hideSpamComments(threadNode) {
+        let nodes = threadNode.querySelectorAll(".commentthread_comment .commentthread_comment_text");
+        let hiddenCount = 0;
+        for (let node of nodes) {
+            let commentText = node.textContent;
+            if (!spamRegex.test(commentText)) { continue; }
+
+            node.closest(".commentthread_comment").classList.add("esi_comment_hidden");
+            hiddenCount++;
+        }
+
+        return hiddenCount;
+    }
+
+    function updateCommentThread(node) {
+        let countHidden = hideSpamComments(node);
+        toggleHiddenCommentsButton(node, countHidden);
+    }
+
+    function handleAllCommentThreads(parent) {
+        let nodes = parent.querySelectorAll(".commentthread_comment_container:not(.esi_commentthread)");
+        for (let node of nodes) {
+            updateCommentThread(node);
+            addCommentThreadObserver(node);
+        }
+    }
+
+    let self = {};
+
+    self.hideSpamComments = function() {
+        if (!SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) { return; }
+
+        spamRegex = new RegExp(SyncedStorage.get("spamcommentregex", Defaults.spamcommentregex), "i");
+
+        handleAllCommentThreads(document);
+
+        // modal content
+        // TODO(tomas.fedor) this should be handled in apphub page
+        let modalWait = document.querySelector("#modalContentWait");
+        if (!modalWait) { return; }
+
+        let observer = new MutationObserver(mutation => {
+            let modalContainer = document.querySelector("#modalContentFrameContainer");
+            if (!modalContainer) { return; }
+
+            let latestFrame = window.frames[window.frames.length-1]; // tomas.fedor Only check latest added frame
+            handleAllCommentThreads(latestFrame.document);
+        });
+        observer.observe(modalWait, {attributes: true});
+    };
+
+    return self;
+})();
+
+let ProfileActivityPageClass = (function(){
+
+    function ProfileActivityPageClass() {
+        this.highlightFriendsActivity();
+
+        // TODO this is called from Common, refactor Early Access so it
+        // doesn't trying to resolve where we are at, instead page should tell it what nodes to check
+        // EarlyAccess.showEarlyAccess();
+
+        this.observeChanges();
+    }
+
+    ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
+        await DynamicStore;
+
+        // Get all appids and nodes from selectors
+        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        for (let node of nodes) {
+            node.classList.add("es_highlight_checked");
+
+            let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
+            for (let link of links) {
+                let appid = GameId.getAppid(link.href);
+                if (!appid) { continue; }
+
+                // TODO (tomas.fedor) refactor following checks to a class, this way we'll easily forget how exactly do we store them or where
+                if (LocalData.get(appid + "guestpass")) {
+                    Highlights.highlightInvGuestpass(link);
+                }
+                if (LocalData.get("couponData_" + appid)) {
+                    Highlights.highlightCoupon(link);
+                }
+                if (LocalData.get(appid + "gif")) {
+                    Highlights.highlightInvGift(link);
+                }
+
+                if (DynamicStore.isWishlisted(appid)) {
+                    Highlights.highlightWishlist(link);
+                }
+
+                if (DynamicStore.isOwned(appid)) {
+                    Highlights.highlightOwned(link);
+
+                    addAchievementComparisonLink(link, appid);
+                }
+
+                // TODO (tomas.fedor) this behaves differently than other highlights - check is being done in highlight method
+                Highlights.highlightNotInterested(link);
+            }
+        }
+    };
+
+    function addAchievementComparisonLink(node, appid) {
+        if (!SyncedStorage.get("showcomparelinks", Defaults.showcomparelinks)) { return; }
+        node.classList.add("es_achievements");
+
+        let blotter = node.closest(".blotter_daily_rollup_line");
+        if (!blotter) { return; }
+
+        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href;
+        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        node.parentNode.insertAdjacentHTML("beforeend",
+            `<br><a class='es_achievement_compare' href='${compareLink}' target='_blank'>${Localization.str.compare}</a>`);
+    }
+
+    ProfileActivityPageClass.prototype.observeChanges = function() {
+        let that = this;
+        let observer = new MutationObserver(() => {
+            that.highlightFriendsActivity();
+            EarlyAccess.showEarlyAccess();
+            SpamCommentHandler.hideSpamComments();
+        });
+
+        observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
+    };
+
+    return ProfileActivityPageClass;
+})();
+
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
@@ -452,12 +626,13 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        if (window.location.href.match(/\/games\/\?tab=all/)) {
-            this.computeStats();
-            this.addGamelistAchievements();
+        if (!window.location.href.match(/\/games\/\?tab=all/)) {
+            return;
         }
 
-        // FIXME add_gamelist_common();
+        this.computeStats();
+        this.addGamelistAchievements();
+        this.handleCommonGames();
     }
 
     // Display total time played for all games
@@ -562,6 +737,70 @@ let GamesPageClass = (function(){
                 });
             }
         }
+    };
+
+    let _commonGames = null;
+
+    async function loadCommonGames() {
+        if (_commonGames != null) { return; }
+
+        let url = window.location.href;
+        let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
+        let data = await RequestData.getHttp(commonUrl);
+
+        let games = BrowserHelper.getVariableFromText(data, "rgGames", "array");;
+        _commonGames = new Set();
+        for (let game of games) {
+            _commonGames.add(parseInt(game.appid));
+        }
+        
+        let nodes = document.querySelectorAll(".gameListRow");
+        for (let node of nodes) {
+            let appid = parseInt(node.id.split("_")[1]);
+
+            if (_commonGames.has(appid)) {
+                node.classList.add("esi-common");
+            } else {
+                node.classList.add("esi-notcommon");
+            }
+        }
+    }
+
+    GamesPageClass.prototype.handleCommonGames = function() {
+        if (!User.isSignedIn) { return;}
+
+        let label = document.querySelector("label[for='show_common_games']");
+        if (!label) { return; }
+
+        function createCheckox(id, string) {
+            let checkboxEl = document.createElement("input");
+            checkboxEl.type = "checkbox";
+            checkboxEl.id = id;
+
+            let uncommonLabel = document.createElement("label");
+            uncommonLabel.append(checkboxEl);
+            uncommonLabel.append(document.createTextNode(string));
+
+            return checkboxEl;
+        }
+
+        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
+        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
+
+        label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
+        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
+        label.style.display = "none";
+        document.querySelector("#show_common_games").style.display = "none";
+
+        commonCheckbox.addEventListener("change", async function(e) {
+            await loadCommonGames();
+            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
+        });
+
+        notCommonCheckbox.addEventListener("change", async function(e) {
+            await loadCommonGames();
+            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+        });
     };
 
     return GamesPageClass;
@@ -698,6 +937,653 @@ let ProfileEditPageClass = (function(){
     return ProfileEditPageClass;
 })();
 
+let StatsPageClass = (function(){
+
+    function StatsPageClass() {
+
+        // handle compare redirect
+        if (window.location.hash === "#es-compare") {
+            window.location.hash = "";
+            if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(window.location.pathname)) { // redirect to compare page but only if we're not there yet
+                window.location = window.location.pathname.replace(/\/$/, "")+"/compare";
+            }
+        }
+
+        this.addAchievementSort();
+    }
+
+    let _nodes = {
+        "default": [],
+        "time": []
+    };
+
+    function addSortMetaData(achievements) {
+        if (_nodes['default'].length !== 0) { return; }
+
+        let nodes = achievements.querySelectorAll(".achieveRow");
+
+        let language = Language.getLanguageCode(Language.getCurrentSteamLanguage());
+        let dateParser = new DateParser(language);
+
+        let sort = 0;
+        for (let node of nodes) {
+            _nodes['default'].push([sort++, node]);
+
+            let unlockTime = 0;
+            let unlockTimeNode = node.querySelector(".achieveUnlockTime");
+            if (unlockTimeNode) {
+                unlockTime = dateParser.parseUnlockTime(unlockTimeNode.textContent);
+            }
+            _nodes['time'].push([unlockTime, node]);
+
+            node.classList.add(unlockTime === 0 ? "esi_ach_locked" : "esi_ach_unlocked");
+        }
+
+        _nodes['time'] = _nodes['time'].sort(function(a, b) {
+            return b[0] - a[0]; // descending sort
+        });
+
+        let brs = achievements.querySelectorAll(":scope > br");
+        for (let br of brs) {
+            br.remove();
+        }
+    }
+
+    function sortBy(key, achievements) {
+        addSortMetaData(achievements);
+
+        for (let item of _nodes[key]) {
+            let node = item[1];
+            achievements.insertAdjacentElement("beforeend", node);
+        }
+    }
+
+    StatsPageClass.prototype.addAchievementSort = function() {
+        let personal = document.querySelector("#personalAchieve");
+        if (!personal) { return; }
+
+        document.querySelector("#tabs").insertAdjacentHTML("beforebegin",
+            `<div id='achievement_sort_options' class='sort_options'>
+                ${Localization.str.sort_by}
+                <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
+                <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
+            </div>`);
+
+        document.querySelector("#achievement_sort_default").addEventListener("click", function(e) {
+            document.querySelector("#achievement_sort_date").classList.add("es_achievement_sort_link");
+            e.target.classList.remove("es_achievement_sort_link");
+            sortBy("default", personal);
+        });
+
+        document.querySelector("#achievement_sort_date").addEventListener("click", function(e) {
+            document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
+            e.target.classList.remove("es_achievement_sort_link");
+            sortBy("time", personal);
+        });
+    };
+
+    return StatsPageClass;
+})();
+
+let InventoryPageClass = (function(){
+
+    function InventoryPageClass() {
+        prepareMarketForInventory();
+        addInventoryGoToPage();
+        /* hide_empty_inventory_tabs(); */
+        
+        let observer = new MutationObserver(() => {
+            addInventoryGoToPage();
+        });
+
+        observer.observe(document.querySelector("div.games_list_tabs"), {subtree: true, attributes: true})
+
+    }
+
+    function setBackgroundOption(thisItem, assetId, itemActions) {
+        if (!document.querySelector(".inventory_links")) { return; }
+        if (itemActions.querySelector(".es_set_background")) { return; }
+
+        let viewFullBtn = itemActions.querySelector("a");
+        if (!viewFullBtn) { return; }
+
+        if (!/public\/images\/items/.test(viewFullBtn.href)) { return; }
+
+        let linkClass =  thisItem.classList.contains('es_isset_background') ? "btn_disabled" : "";
+        viewFullBtn.insertAdjacentHTML("afterend",
+            `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}"><span>${Localization.str.set_as_background}</span></a>
+                  <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
+
+        viewFullBtn.parentNode.querySelector(".es_set_background").addEventListener("click", async function(e) {
+            e.preventDefault();
+            let el = e.target.closest(".es_set_background");
+
+            if (el.classList.contains("btn_disabled")) { return; }
+
+            let loading = viewFullBtn.parentNode.querySelector(".es_background_loading");
+            if (loading.classList.contains("esi-shown")) { return;}
+
+            loading.classList.add("esi-shown");
+
+            // Do nothing if loading or already done
+            let setBackground = document.querySelector(".es_isset_background");
+            if (setBackground) {
+                setBackground.classList.remove("es_isset_background");
+            }
+            thisItem.classList.add("es_isset_background");
+
+            let result = await RequestData.getHttp(User.profileUrl + "/edit");
+
+            // Make sure the background we are trying to set is not set already
+            let m = result.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/i);
+            let currentBg = m ? m[1] : false;
+
+            if (currentBg !== assetId) {
+                let dom = BrowserHelper.htmlToDOM(result);
+
+                dom.querySelector("#profile_background").value = assetId;
+                let form = dom.querySelector("#editForm");
+                let formData = new FormData(form);
+
+                RequestData.post(User.profileUrl + "/edit", formData, {withCredentials: true}).then(result => {
+                    // Check if it was truly a succesful change
+                    if (/"saved_changes_msg"/i.test(result)) {
+                        el.classList.add("btn_disabled");
+                    }
+                }).catch(() => {
+                    console.error("Edit background failed");
+                }).finally(() => {
+                    loading.classList.remove("esi-shown");
+                });
+            } else {
+                el.classList.add("btn_disabled");
+                loading.classList.remove("esi-shown");
+            }
+        });
+    }
+
+    async function addPriceToGifts(itemActions) {
+        let action = itemActions.querySelector("a");
+        if (!action) { return; }
+
+        let giftAppid = GameId.getAppid(action.href);
+        if (!giftAppid) { return; }
+        // TODO: Add support for package(sub)
+
+        let result = await RequestData.getJson("https://store.steampowered.com/api/appdetails/?appids=" + giftAppid + "&filters=price_overview");
+        if (!result[giftAppid] || !result[giftAppid].success) { return; }
+        if (!result[giftAppid]['data']['price_overview']) { return; }
+
+        let overview = result[giftAppid]['data']['price_overview'];
+        let discount = overview["discount_percent"];
+        let price = new Price(overview['final'] / 100, overview['currency']);
+
+        itemActions.style.display = "flex";
+        itemActions.style.alignItems = "center";
+        itemActions.style.justifyContent = "space-between";
+
+        if (discount > 0) {
+            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
+            itemActions.insertAdjacentHTML("beforeend",
+                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
+                    <div class='es_game_purchase_action_bg'>
+                        <div class='es_discount_block es_game_purchase_discount'>
+                            <div class='es_discount_pct'>-${discount}%</div>
+                            <div class='es_discount_prices'>
+                                <div class='es_discount_original_price'>${originalPrice}</div>
+                                <div class='es_discount_final_price'>${price}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+        } else {
+            itemActions.insertAdjacentHTML("beforeend",
+                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
+                    <div class='es_game_purchase_action_bg'>
+                        <div class='es_game_purchase_price es_price'>${price}</div>
+                    </div>
+                </div>`);
+        }
+    }
+
+    function addOneClickGemsOption(item, appid, assetId) {
+        if (!SyncedStorage.get("show1clickgoo", Defaults.show1clickgoo)) { return; }
+
+        let quickGrind = document.querySelector("#es_quickgrind");
+        if (quickGrind) { quickGrind.parentNode.remove(); }
+
+        let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
+        let turnWord = scrapActions.querySelector("a span").textContent;
+
+        let divs = scrapActions.querySelectorAll("div");
+        divs[divs.length-1].insertAdjacentHTML("beforebegin",
+            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+
+        // TODO: Add prompt?
+        document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
+            ExtensionLayer.runInPageContext(`function() {
+                        var rgAJAXParams = {
+                            sessionid: g_sessionID,
+                            appid: ${appid},
+                            assetid: ${assetId},
+                            contextid: 6
+                        };
+                        
+                        var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
+                        $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
+                            strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+                            rgAJAXParams.goo_value_expected = data.goo_value;
+                            $J.post( strActionURL, rgAJAXParams).done( function( data ) {
+                                ReloadCommunityInventory();
+                            });
+                        });                        
+                    }`);
+        });
+    }
+
+    function makeMarketButton(id) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+                    <span class="item_market_action_button_edge item_market_action_button_left"></span>
+                    <span class="item_market_action_button_contents"></span>
+                    <span class="item_market_action_button_edge item_market_action_button_right"></span>
+                </a>`;
+    }
+
+    function updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency) {
+
+        // Add Quick Sell button
+        if (priceHighValue) {
+            let quickSell = document.querySelector("#es_quicksell" + assetId);
+            quickSell.dataset.price = priceHighValue;
+            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
+            quickSell.style.display = "block";
+        }
+
+        // Add Instant Sell button
+        if (priceLowValue) {
+            let instantSell = document.querySelector("#es_instantsell" + assetId);
+            instantSell.dataset.price = priceLowValue;
+            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
+            instantSell.style.display = "block";
+        }
+    }
+
+    async function addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {
+        if (!SyncedStorage.get("quickinv", Defaults.quickinv)) { return; }
+        if (!marketable) { return; }
+        if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
+
+        if (!thisItem.classList.contains("es-loading")) {
+            let url = marketActions.querySelector("a").href;
+
+            thisItem.classList.add("es-loading");
+
+            // Add the links with no data, so we can bind actions to them, we add the data later
+            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_quicksell" + assetId));
+            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_instantsell" + assetId));
+
+            // Check if price is stored in data
+            if (thisItem.classList.contains("es-price-loaded")) {
+                let priceHighValue = thisItem.dataset.priceHigh;
+                let priceLowValue = thisItem.dataset.priceLow;
+
+                updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency);
+
+                thisItem.classList.remove("es-loading");
+            } else {
+                let result = await RequestData.getHttp(url);
+
+                let m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
+
+                if (m) {
+                    let marketId = m[1];
+
+                    let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
+                    let market = await RequestData.getJson(marketUrl);
+
+                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff", Defaults.quickinv_diff)));
+                    let priceLow = new Price(market.highest_buy_order / 100);
+
+                    if (priceHigh.value < 0.03) priceHigh.value = 0.03;
+
+                    // Store prices as data
+                    if (priceHigh.value > priceLow.value) {
+                        thisItem.dataset.priceHigh = priceHigh.value;
+                    }
+                    if (market.highest_buy_order) {
+                        thisItem.dataset.priceLow = priceLow.value;
+                    }
+
+                    // Fixes multiple buttons
+                    if (document.querySelector(".item.activeInfo") === thisItem) {
+                        thisItem.classList.add("es-price-loaded");
+                        updateMarketButtons(assetId, priceHigh.value, priceLow.value, walletCurrency);
+                    }
+
+                    thisItem.classList.remove("es-loading");
+                }
+            }
+        }
+
+        // Bind actions to "Quick Sell" and "Instant Sell" buttons
+
+        let nodes = document.querySelectorAll("#es_quicksell" + assetId + ", #es_instantsell" + assetId);
+        for (let node of nodes) {
+            node.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                let buttonParent = e.target.closest(".item_market_action_button[data-price]");
+                if (!buttonParent) { return; }
+
+                let sellPrice = buttonParent.dataset.price * 100;
+
+                let buttons = document.querySelectorAll("#es_quicksell" + assetId + ", #es_instantsell" + assetId);
+                for (let button of buttons) {
+                    button.classList.add("btn_disabled");
+                    button.style.pointerEvents = "none";
+                }
+
+                marketActions.querySelector("div").innerHTML = "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>";
+                ExtensionLayer.runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sellPrice + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
+            });
+        }
+    }
+
+    function getMarketOverviewHtml(node) {
+        let html = '<div style="min-height:3em;margin-left:1em;">';
+
+        if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
+            html += Localization.str.starting_at + ': ' + node.dataset.lowestPrice;
+
+            if (node.dataset.dataSold) {
+                html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold);
+            }
+
+            if (node.dataset.cardsPrice) {
+                html += '<br>' + Localization.str.avg_price_3cards + ": " + node.dataset.cardsPrice;
+            }
+        } else {
+            html += Localization.str.no_price_data;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster) {
+        marketActions.style.display = "block";
+        let firstDiv = marketActions.querySelector("div");
+        if (!firstDiv) {
+            firstDiv = document.createElement("div");
+            marketActions.insertAdjacentElement("afterbegin", firstDiv);
+        }
+
+        // "View in market" link
+        let html = '<div style="height:24px;"><a href="https://steamcommunity.com/market/listings/' + globalId + '/' + encodeURIComponent(hashName) + '">' + Localization.str.view_in_market + '</a></div>';
+
+        // Check if price is stored in data
+        if (!thisItem.dataset.lowestPrice) {
+            firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
+
+            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+
+            if (isBooster) {
+                thisItem.dataset.cardsPrice = "nodata";
+
+                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.userCurrency});
+                console.log(result);
+                if (result.result === "success") {
+                    thisItem.dataset.cardsPrice = new Price(result.data.average);
+                }
+            }
+
+            try {
+                let data = await overviewPromise;
+
+                thisItem.dataset.lowestPrice = "nodata";
+                if (data && data.success) {
+                    thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
+                    thisItem.dataset.soldVolume = data.volume;
+                }
+            } catch {
+                console.error("Couldn't load price overview from market");
+                firstDiv.innerHTML = html; // add market link anyway
+                return;
+            }
+        }
+
+        html += getMarketOverviewHtml(thisItem);
+
+        firstDiv.innerHTML = html;
+    }
+
+    async function addBoosterPackProgress(marketActions, item, appid) {
+        document.querySelector(`#iteminfo${item}_item_owner_actions`).insertAdjacentHTML("afterbegin",
+            `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
+    }
+
+    function inventoryMarketHelper(response) {
+        let item = response[0];
+        let marketable = parseInt(response[1]);
+        let globalId = parseInt(response[2]);
+        let hashName = response[3];
+        let assetId = response[5];
+        let sessionId = response[6];
+        let contextId = parseInt(response[7]);
+        let walletCurrency = response[8];
+        let ownerSteamId = response[9];
+        let restriction = parseInt(response[10]);
+        let isGift = response[4] && /Gift/i.test(response[4]);
+        let isBooster = hashName && /Booster Pack/i.test(hashName);
+        let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
+
+        let hm;
+        let appid = (hm = hashName.match(/^([0-9]+)-/)) ? hm[1] : null;
+
+        let thisItem = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
+        let itemActions = document.querySelector("#iteminfo" + item + "_item_actions");
+        let marketActions = document.querySelector("#iteminfo" + item + "_item_market_actions");
+        marketActions.style.overflow = "hidden";
+
+        // Set as background option
+        if (ownsInventory) {
+            setBackgroundOption(thisItem, assetId, itemActions);
+        }
+
+        // Show prices for gifts
+
+        if (isGift) {
+            addPriceToGifts(itemActions);
+            return;
+        }
+
+        if (ownsInventory) {
+            // If is a booster pack add the average price of three cards
+            if (isBooster) {
+                addBoosterPackProgress(marketActions, item, appid);
+            }
+
+            addOneClickGemsOption(item, appid, assetId);
+            addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
+        }
+
+        if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
+            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster);
+        }
+    }
+
+    function prepareMarketForInventory() {
+        ExtensionLayer.runInPageContext(`function(){
+            $J(document).on("click", ".inventory_item_link, .newitem", function(){
+                if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
+                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
+                }
+                window.postMessage({
+                    type: "es_sendmessage",
+                    information: [
+                        iActiveSelectView, 
+                        g_ActiveInventory.selectedItem.description.marketable,
+                        g_ActiveInventory.appid,
+                        g_ActiveInventory.selectedItem.description.market_hash_name,
+                        g_ActiveInventory.selectedItem.description.type,
+                        g_ActiveInventory.selectedItem.assetid,
+                        g_sessionID,
+                        g_ActiveInventory.selectedItem.contextid,
+                        g_rgWalletInfo.wallet_currency,
+                        g_ActiveInventory.m_owner.strSteamId,
+                        g_ActiveInventory.selectedItem.description.market_marketable_restriction
+                    ]
+                }, "*");
+            });
+	    }`);
+
+        window.addEventListener("message", function(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+
+            if (e.data.type === "es_sendmessage") {
+                inventoryMarketHelper(e.data.information);
+            } else if (e.data.type === "es_sendfee_" + e.data.assetID) {
+                let sellPrice = e.data.information.amount - e.data.information.fees;
+                let formData = new FormData();
+                formData.append('sessionid', e.data.sessionID);
+                formData.append('appid', e.data.global_id);
+                formData.append('contextid', e.data.contextID);
+                formData.append('assetid', e.data.assetID);
+                formData.append('amount', 1);
+                formData.append('price', sellPrice);
+
+                /*
+                 * TODO test what we need to send in request, this is original:
+                 * mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
+                 * credentials: 'include',
+                 * headers: { origin: window.location.origin },
+                 * referrer: window.location.origin + window.location.pathname
+                 */
+
+                RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
+                    withCredentials: true
+                }).then(() => {
+                    document.querySelector("#es_instantsell" + e.data.assetID).parentNode.style.display = "none";
+
+                    let id = e.data.global_id + "_" + e.data.contextID + "_" + e.data.assetID;
+                    let node = document.querySelector("[id='"+id+"']");
+                    node.classList.add("btn_disabled", "activeInfo");
+                    node.style.pointerEvents = "none";
+                });
+            }
+        }, false);
+    }
+
+    function addInventoryGoToPage(){
+        if (!SyncedStorage.get("showinvnav", Defaults.showinvnav)) { return; }
+
+        DOMHelper.remove("#es_gotopage");
+        DOMHelper.remove("#pagebtn_first");
+        DOMHelper.remove("#pagebtn_last");
+        DOMHelper.remove("#es_pagego");
+
+        let es_gotopage = document.createElement("script");
+        es_gotopage.type = "text/javascript";
+        es_gotopage.id = "es_gotopage";
+        es_gotopage.textContent = `g_ActiveInventory.GoToPage = function(page){
+                  var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
+                	var iCurPage = this.m_iCurrentPage;
+                	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
+                  var iPages = this.m_cPages
+                  var _this = this;
+                  if (iCurPage < iNextPage) {
+                    if (iCurPage < iPages - 1) {
+                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                      this.m_$Inventory.css( 'left', '0' );
+                      this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                    }
+                  } else if (iCurPage > iNextPage) {
+                    if (iCurPage > 0) {
+                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                      this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
+                      this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                    }
+                  }
+                }
+                function InventoryLastPage(){
+                	g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
+                }
+                function InventoryFirstPage(){
+                	g_ActiveInventory.GoToPage(1);
+                }
+                function InventoryGoToPage(){
+                	var page = $('es_pagenumber').value;
+                	if (isNaN(page)) return;
+                	g_ActiveInventory.GoToPage(parseInt(page));
+                }`;
+
+        document.documentElement.appendChild(es_gotopage);
+
+        // Go to first page
+        document.querySelector("#pagebtn_previous").insertAdjacentHTML("afterend",
+            "<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled' style='margin:0 3px'>&lt;&lt;</a>");
+
+        // Go to last page
+        document.querySelector("#pagebtn_next").insertAdjacentHTML("beforebegin",
+            "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
+
+        let pageGo = document.createElement("div");
+        pageGo.id = "es_pagego";
+        pageGo.style.float = "left";
+
+        // Page number box
+        let pageNumber = document.createElement("input");
+        pageNumber.type = "number";
+        pageNumber.value="1";
+        pageNumber.classList.add("filter_search_box");
+        pageNumber.autocomplete = "off";
+        pageNumber.placeholder = "page #";
+        pageNumber.id = "es_pagenumber";
+        pageNumber.style.width = "50px";
+        pageNumber.min = 1;
+        pageNumber.max = document.querySelector("#pagecontrol_max").textContent;
+
+        pageGo.append(pageNumber);
+
+        let gotoButton = document.createElement("a");
+        gotoButton.textContent = Localization.str.go;
+        gotoButton.id = "gotopage_btn";
+        gotoButton.classList.add("pagebtn");
+        gotoButton.href = "javascript:InventoryGoToPage();";
+        gotoButton.style.width = "32px";
+        gotoButton.style.padding = "0";
+        gotoButton.style.margin = "0 6px";
+        gotoButton.style.textAlign = "center";
+
+        pageGo.append(gotoButton);
+
+        document.querySelector("#inventory_pagecontrols").insertAdjacentElement("beforebegin", pageGo);
+
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName !== "class") { return; }
+                if (!mutation.target.id) { return; }
+
+                let id = mutation.target.id;
+                if (id === "pagebtn_next") {
+                    document.querySelector("#pagebtn_last").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
+                } else if (id === "pagebtn_previous") {
+                    document.querySelector("#pagebtn_first").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
+                }
+
+            });
+        });
+        observer.observe(document.querySelector("#pagebtn_next"), { attributes: true });
+        observer.observe(document.querySelector("#pagebtn_previous"), { attributes: true });
+    }
+
+    return InventoryPageClass;
+})();
+
+
+
+
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -709,8 +1595,13 @@ let ProfileEditPageClass = (function(){
             .then(() => {
 
                 Common.init();
+                SpamCommentHandler.hideSpamComments();
 
                 switch (true) {
+
+                    case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+                        (new ProfileActivityPageClass());
+                        break;
 
                     case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
                         (new GamesPageClass());
@@ -720,8 +1611,16 @@ let ProfileEditPageClass = (function(){
                         (new ProfileEditPageClass());
                         break;
 
+                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+                        (new InventoryPageClass());
+                        break;
+
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
                         (new ProfileHomePageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+                        (new StatsPageClass());
                         break;
 
                     // TODO
