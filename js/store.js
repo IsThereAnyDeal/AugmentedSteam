@@ -604,7 +604,9 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.initHdPlayer = function() {
         let playInHD = LocalData.get('playback_hd');
-        let firstVideoIsPlaying = document.querySelector('div.highlight_movie').querySelector('video.highlight_movie');
+        let firstVideoIsPlaying = document.querySelector('div.highlight_movie');
+        if (!firstVideoIsPlaying) return;
+        firstVideoIsPlaying = firstVideoIsPlaying.querySelector('video.highlight_movie');
 
         // Add HD Control to each video as it's added to the DOM
         if (firstVideoIsPlaying)
