@@ -126,6 +126,27 @@ let Defaults = (function() {
     return self;
 })();
 
+/**
+ * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it
+ * https://github.com/domenic/promises-unwrapping/issues/18#issuecomment-57801572
+ */
+if (typeof Promise.prototype.finally === 'undefined') {
+    Object.defineProperty(Promise.prototype, 'finally', {
+        'value': function(callback) {
+            var constructor = this.constructor;
+            return this.then(function(value) {
+                return constructor.resolve(callback()).then(function(){
+                    return value;
+                    });
+            }, function(reason) {
+                return constructor.resolve(callback()).then(function(){
+                    console.error(reason);
+                    throw reason;
+                    });
+            });
+        },
+    });
+}
 
 /**
  * Common functions that may be used on any pages
