@@ -716,6 +716,7 @@ let AppPageClass = (function(){
         }
  
         function toggleVideoDefinition(videoControl, setHD) {
+            return; // FIXME seems like SD videos won't play now, which will break whole video player
             let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
                 videoIsHD = false,
                 loadedSrc = videoControl.classList.contains("es_loaded_src"),
