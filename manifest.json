@@ -5,7 +5,8 @@
     "icons": {
       "128": "img/es_128.png",
       "96": "img/es_96.png",
-      "48": "img/es_48.png"
+      "48": "img/es_48.png",
+      "32": "img/es_32.png"
     },
     "manifest_version": 2,
     "options_ui": {
