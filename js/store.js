@@ -286,7 +286,8 @@ let StorePageClass = (function(){
                     .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                     .querySelector(".game_purchase_action");
 
-                let priceLocal = new Price(prices[User.getCountry().toLowerCase()].final / 100);
+                let apiPrice = prices[User.getCountry().toLowerCase()];
+                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -297,7 +298,7 @@ let StorePageClass = (function(){
                 }
 
                 countries.forEach(country => {
-                    if (country == localCountry) { return; }
+                    if (country === localCountry) { return; }
                     let apiPrice = prices[country];
                     let html = "";
 
