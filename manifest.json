@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Steam, an IsThereAnyDeal fork",
-    "version": "0.9.1",
+    "version": "0.9.2",
     "description": "Continues to Enhance the Steam Experience",
     "icons": {
       "128": "img/es_128.png",
@@ -20,9 +20,8 @@
     },
     "permissions": [
         "storage",
-        "http://*.steampowered.com/",
-        "https://*.steampowered.com/",
-        "*://steamcommunity.com/",
+        "*://*.steampowered.com/*",
+        "*://steamcommunity.com/*",
         "*://*.isthereanydeal.com/"
     ],
     "web_accessible_resources": [
@@ -33,19 +32,18 @@
         "css/*.css",
         "options.html",
         "changelog_new.html",
-        "img/*/*.png",        
+        "img/*/*.png",
         "img/profile_styles/*/header.jpg",
         "img/profile_styles/*/showcase.png",
         "img/profile_styles/*/style.css",
         "img/profile_styles/*/preview.png",
         "localization/*/strings.json"
     ],
-    "homepage_url": "https://es.ithereanydeal.com/",
+    "homepage_url": "https://es.isthereanydeal.com/",
     "content_scripts": [
         {
             "matches": [
-                "http://*.steampowered.com/*",
-                "https://*.steampowered.com/*"
+                "*://*.steampowered.com/*"
             ],
             "exclude_matches": [
                 "*://store.steampowered.com/dynamicstore/*",
@@ -69,11 +67,11 @@
         },
         {
             "matches": [
-                "http://steamcommunity.com/*",
-                "https://steamcommunity.com/*"
+                "*://steamcommunity.com/*"
             ],
             "exclude_matches": [
-                "*://steamcommunity.com/login/*"
+                "*://steamcommunity.com/login/*",
+                "*://steamcommunity.com/tradeoffer"
             ],
             "js": [
                 "js/config.js",

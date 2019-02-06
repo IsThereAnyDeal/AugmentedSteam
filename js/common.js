@@ -1,6 +1,6 @@
 
 let Info = {
-    version: "0.9.1"
+    version: "0.9.2"
 };
 
 /**
@@ -143,11 +143,75 @@ let Api = (function(){
                 .join("&");
         }
 
-        return "//" + Config.ApiServerHost + "/" + endpoint + "/" + queryString;
+        return Config.ApiServerHost + "/" + endpoint + "/" + queryString;
     };
 
     return self;
 })();
+
+
+let TimeHelper = (function(){
+
+    let self = {};
+
+    self.isExpired = function(updateTime, expiration) {
+        if (!updateTime) { return true; }
+
+        let expireTime = Math.trunc(Date.now() / 1000) - expiration;
+        return updateTime < expireTime;
+    };
+
+    self.timestamp = function() {
+        return Math.trunc(Date.now() / 1000);
+    };
+
+    return self;
+})();
+
+
+let DateParser = (function(){
+
+    let _locale;
+    let _monthShortNames;
+    let _dateRegex;
+    let _timeRegex;
+
+    function DateParser(locale) {
+        _locale = locale;
+
+        switch(locale) {
+            case "en":
+                _monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                _dateRegex = new RegExp("(\\d+)\\s+("+_monthShortNames.join("|")+")(?:,\\s+(\\d+))?");
+                _timeRegex = /(\d+):(\d+)([ap]m)/;
+                break;
+            // FIXME(tomas.fedor) other languages
+        }
+    }
+
+    DateParser.prototype.parseUnlockTime = function(datetime) {
+
+        switch(_locale) {
+            case "en":
+                let date = datetime.match(_dateRegex);
+                let time = datetime.match(_timeRegex);
+                if (!date || !time) { return 0; }
+
+                let year = date[3] ? parseInt(date[3]) : (new Date()).getFullYear();
+                let month = _monthShortNames.indexOf(date[2]);
+                let day = parseInt(date[1]);
+
+                let hour = time[3] === "am" ? parseInt(time[1]) : parseInt(time[1])+12;
+                let minutes = time[2];
+
+                return (new Date(year, month, day, hour, minutes)).getTime();
+        }
+        return 0;
+    };
+
+    return DateParser;
+})();
+
 
 
 let LocalData = (function(){
@@ -337,13 +401,10 @@ let RequestData = (function(){
         return self.getJson(apiUrl);
     };
 
-    self.post = function(url, data, settings) {
+    self.post = function(url, formData, settings) {
         return self.getHttp(url, Object.assign(settings || {}, {
-            headers: [
-                ["Content-Type", "application/x-www-form-urlencoded"]
-            ],
             method: "POST",
-            body: Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&')
+            body: formData
         }));
     };
 
@@ -358,8 +419,8 @@ let ProgressBar = (function(){
     self.create = function() {
         if (!SyncedStorage.get("show_progressbar", true)) { return; }
 
-        document.querySelector("#global_actions").insertAdjacentHTML("afterend", `
-            <div class="es_progress_wrap">
+        document.querySelector("#global_actions").insertAdjacentHTML("afterend",
+            `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
                         <div class="progress-bar">
@@ -367,8 +428,7 @@ let ProgressBar = (function(){
                         </div>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
 
         node = document.querySelector("#es_progress");
     };
@@ -401,9 +461,10 @@ let ProgressBar = (function(){
         node.classList.add("error");
         node.setAttribute("title", "");
 
-        let nodeError = node.querySelector(".es_progress_error");
+        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
             node.insertAdjacentHTML("afterend", "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            nodeError = node.nextElementSibling;
         }
 
         if (!message) {
@@ -569,6 +630,7 @@ let User = (function(){
             // Return date from cache
             if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
                 resolve(purchaseDates[lang][appName]);
+                return;
             }
 
             let lastUpdate = LocalData.get("purchase_dates_time", 0);
@@ -801,7 +863,7 @@ let Currency = (function() {
                                 dummyHtml.innerHTML = response;
 
                                 self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                             },
                             () => {
                                 RequestData
@@ -816,7 +878,7 @@ let Currency = (function() {
                                         }
 
                                         self.userCurrency = currency;
-                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: parseInt(Date.now() / 1000, 10)})
+                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                                     });
                             }
                         )
@@ -994,6 +1056,7 @@ let Language = (function(){
     let self = {};
 
     self.languages = {
+        "english": "en",
         "bulgarian": "bg",
         "czech": "cs",
         "danish": "da",
@@ -1048,7 +1111,7 @@ let Language = (function(){
     };
 
     self.isCurrentLanguageOneOf = function(array) {
-        return array.indexOf(self.getCurrentSteamLanguage()) != -1;
+        return array.indexOf(self.getCurrentSteamLanguage()) !== -1;
     };
 
     return self;
@@ -1084,16 +1147,19 @@ let BrowserHelper = (function(){
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     };
 
-    self.htmlToElement = function(html) {
+
+    self.htmlToDOM = function(html) {
         let template = document.createElement('template');
         html = html.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = html;
-        return template.content.firstChild;
+        return template.content;
     };
 
-    self.getVariableFromDom = function(variableName, type) {
-        let nodes = document.querySelectorAll("script");
+    self.htmlToElement = function(html) {
+        return self.htmlToDOM(html).firstElementChild;
+    };
 
+    self.getVariableFromText = function(text, variableName, type) {
         let regex;
         if (type === "object") {
             regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
@@ -1107,17 +1173,25 @@ let BrowserHelper = (function(){
             return null;
         }
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            let m = node.textContent.match(regex);
+        let m = text.match(regex);
+        if (m) {
+            if (type === "int") {
+                return parseInt(m[1]);
+            }
+            return JSON.parse(m[1]);
+        }
+
+        return null;
+    };
+
+    self.getVariableFromDom = function(variableName, type) {
+        let nodes = document.querySelectorAll("script");
+        for (let node of nodes) {
+            let m = self.getVariableFromText(node.textContent, variableName, type)
             if (m) {
-                if (type === "int") {
-                    return parseInt(m[1]);
-                }
-                return JSON.parse(m[1]);
+                return m;
             }
         }
-        return null;
     };
 
     return self;
@@ -1310,35 +1384,35 @@ let EnhancedSteam = (function() {
         document.querySelector("#es_popup .popup_menu")
             .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
-        document.querySelector("#es_random_game").addEventListener("click", function(){
-            DynamicStore.promise().then(result => {
-                if (!result.rgOwnedApps) { return; }
-                let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
+        document.querySelector("#es_random_game").addEventListener("click", async function(){
+            let result = await DynamicStore;
+            if (!result.rgOwnedApps) { return; }
+            let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-                RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
-                    if (!response || !response[appid] || !response[appid].success) { return; }
-                    let data = response[appid].data;
+            RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+                if (!response || !response[appid] || !response[appid].success) { return; }
+                let data = response[appid].data;
 
-                    let gameid = appid;
-                    let gamename;
-                    if (data.fullgame) {
-                        gameid = data.fullgame.appid;
-                        gamename = data.fullgame.name;
-                    } else {
-                        gamename = data.name;
-                    }
+                let gameid = appid;
+                let gamename;
+                if (data.fullgame) {
+                    gameid = data.fullgame.appid;
+                    gamename = data.fullgame.name;
+                } else {
+                    gamename = data.name;
+                }
 
-                    let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
-                    ExtensionLayer.runInPageContext(
-                        `function() {
-                            var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
-                            prompt.done(function(result) {
-                                if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
-                                if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
-					        });
-				        }`);
-                });
+                let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
+                ExtensionLayer.runInPageContext(
+                    `function() {
+                        var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
+                        prompt.done(function(result) {
+                            if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
+                            if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
+                        });
+                    }`);
             });
+
         });
     };
 
@@ -1413,67 +1487,57 @@ let EnhancedSteam = (function() {
 })();
 
 
-let TimeHelper = (function(){
-
-    let self = {};
-
-    self.isExpired = function(updateTime, expiration) {
-        if (!updateTime) { return true; }
-
-        let expireTime = parseInt(Date.now() / 1000, 10) - expiration;
-        return updateTime < expireTime;
-    };
-
-    self.timestamp = function() {
-        return parseInt(Date.now() / 1000, 10);
-    };
-
-    return self;
-})();
-
-
 let GameId = (function(){
     let self = {};
+
+    function parseId(id) {
+        if (!id) { return null; }
+
+        let intId = parseInt(id);
+        if (!intId) { return null; }
+
+        return intId;
+    }
 
     self.getAppid = function(text) {
         if (!text) { return null; }
 
         // app, market/listing
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
     self.getSubid = function(text) {
         if (!text) { return null; }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
 
     self.getAppidImgSrc = function(text) {
         if (!text) { return null; }
         let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m ? m[2] : null;
+        return m && parseId(m[2]);
     };
 
     self.getAppids = function(text) {
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
         let m;
-        do {
-            let m = regex.exec(text);
-            if (m) { res.push(m[1]); }
-        } while(m);
+        while ((m = regex.exec(text)) != null) {
+            let id = parseId(m[1]);
+            if (id) {
+                res.push(id);
+            }
+        }
         return res;
-
-        return (res.length > 0) ? res : null;
     };
 
     self.getAppidWishlist = function(text) {
         if (!text) { return null; }
         let m = text.match(/game_(\d+)/);
-        return m ? m[1] : null;
+        return m && parseId(m[1]);
     };
 
     return self;
@@ -1489,6 +1553,12 @@ let DOMHelper = (function(){
         parent.insertBefore(container, node);
         parent.removeChild(node);
         container.append(node);
+    };
+
+    self.remove = function(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        node.remove();
     };
 
     return self;
@@ -1509,7 +1579,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + language + ".png";
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
 
@@ -1518,6 +1588,7 @@ let EarlyAccess = (function(){
 
             if (cache) {
                 resolve();
+                return;
             }
 
             let updateTime = LocalData.get("ea_appids_time");
@@ -1567,6 +1638,7 @@ let EarlyAccess = (function(){
     }
 
     function handleStore() {
+        // TODO refactor these checks to appropriate page calls
         switch (true) {
             case /^\/app\/.*/.test(window.location.pathname):
                 checkNodes([".game_header_image_ctn", ".small_cap"]);
@@ -1615,13 +1687,13 @@ let EarlyAccess = (function(){
     }
 
     function handleCommunity() {
-        return; // FIXME
+        // TODO refactor these checks to appropriate page calls
         switch(true) {
             // wishlist, games, and followedgames can be combined in one regex expresion
             case /^\/(?:id|profiles)\/.+\/(wishlist|games|followedgames)/.test(window.location.pathname):
                 checkNodes([".gameListRowLogo"]);
                 break;
-            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity|status)\b/.test(window.location.pathname):
+            case /^\/(?:id|profiles)\/.+\/\b(home|myactivity)\b/.test(window.location.pathname):
                 checkNodes([".blotter_gamepurchase_content a"]);
                 break;
             case /^\/(?:id|profiles)\/.+\/\b(reviews|recommended)\b/.test(window.location.pathname):
@@ -1676,30 +1748,23 @@ let Inventory = (function(){
 
         LocalData.set("inventory_1", data);
 
-        for(let key in data.rgDescriptions) {
-            if (!data.rgDescriptions.hasOwnProperty(key)) { continue; }
-
+        for(let [key, obj] of Object.entries(data.rgDescriptions)) {
             let isPackage = false;
-            let obj = data.rgDescriptions[key];
-
             if (obj.descriptions) {
-                for (let d = 0; d < obj.descriptions.length; d++) {
-                    if (obj.descriptions[d].type === "html") {
-                        let appids = GameId.getAppids(obj.descriptions[d].value);
-                        if (appids) {
-                            // Gift package with multiple apps
-                            isPackage = true;
-                            for (let j = 0; j < appids.length; j++) {
-                                if (appids[j]) {
-                                    if (obj.type === "Gift") {
-                                        gifts.push(appids[j]);
-                                    } else {
-                                        guestpasses.push(appids[j]);
-                                    }
-                                }
+                for (let desc of obj.descriptions) {
+                    if (desc.type === "html") {
+                        let appids = GameId.getAppids(desc.value);
+                        // Gift package with multiple apps
+                        isPackage = true;
+                        for (let appid of appids) {
+                            if (!appid) { continue; }
+                            if (obj.type === "Gift") {
+                                gifts.push(appid);
+                            } else {
+                                guestpasses.push(appid);
                             }
-                            break;
                         }
+                        break;
                     }
                 }
             }
@@ -1730,12 +1795,7 @@ let Inventory = (function(){
         if (!data || !data.success) { return; }
         LocalData.set("inventory_3", data);
 
-        for(let id in data.rgDescriptions) {
-            if (!data.rgDescriptions.hasOwnProperty(id)) {
-                continue;
-            }
-
-            let obj = data.rgDescriptions[id];
+        for(let [id, obj] of Object.entries(data.rgDescriptions)) {
             if (!obj.type || obj.type !== "Coupon") {
                 continue;
             }
@@ -1782,6 +1842,7 @@ let Inventory = (function(){
         _promise = new Promise(function(resolve, reject) {
             if (!User.isSignedIn) {
                 resolve();
+                return;
             }
 
             let lastUpdate = LocalData.get("inventory_update");
@@ -2077,26 +2138,25 @@ let Highlights = (function(){
         node.style.display = "none";
     };
 
-    self.highlightNotInterested = function(node) {
-        DynamicStore.promise().then(() => {
+    self.highlightNotInterested = async function(node) {
+        await DynamicStore;
 
-            let aNode = node.querySelector("a");
-            let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
-            if (!appid || !DynamicStore.isIgnored(appid)) { return; }
+        let aNode = node.querySelector("a");
+        let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
+        if (!appid || !DynamicStore.isIgnored(appid)) { return; }
 
-            if (node.classList.contains("home_area_spotlight")) {
-                node = node.querySelector(".spotlight_content");
-            }
+        if (node.classList.contains("home_area_spotlight")) {
+            node = node.querySelector(".spotlight_content");
+        }
 
-            node.classList.add("es_highlight_checked");
+        node.classList.add("es_highlight_checked");
 
-            if (SyncedStorage.get("hide_ignored", false) && node.closest(".search_result_row")) {
-                node.style.display = "none";
-                return;
-            }
+        if (SyncedStorage.get("hide_ignored", false) && node.closest(".search_result_row")) {
+            node.style.display = "none";
+            return;
+        }
 
-            highlightItem(node, "notinterested");
-        });
+        highlightItem(node, "notinterested");
     };
 
     self.startHighlightsAndTags = function(parent) {
@@ -2188,11 +2248,15 @@ let DynamicStore = (function(){
     let self = {};
 
     let _data = {};
-    let _promise;
+    let _promise = null;
+    let _owned = new Set();
+    let _wishlisted = new Set();
 
     self.clear = function() {
         _data = {};
         _promise = null;
+        _owned = new Set();
+        _wishlisted = new Set();
         LocalData.del("dynamicstore");
         LocalData.del("dynamicstore_update");
     };
@@ -2203,49 +2267,58 @@ let DynamicStore = (function(){
     };
 
     self.isOwned = function(appid) {
-        let list = _data.rgOwnedApps || [];
-        return list.indexOf(appid) !== -1;
+        return _owned.has(appid);
     };
 
     self.isWishlisted = function(appid) {
-        let list = _data.rgWishlistApps || [];
-        return list.indexOf(appid) !== -1;
+        return _wishlisted.has(appid);
     };
 
-    self.promise = function(){
-        if (_promise) { return _promise; }
+    Object.defineProperty(self, 'wishlist', {
+        get() { return new Set(_wishlisted); },
+    });
 
-        _promise = new Promise(function(resolve, reject){
-            if (!User.isSignedIn) { reject(); return; }
+    /*
+     * _fetch() may resolve with an undefined value
+     * if Steam can't fulfill the API call
+     */
+    async function _fetch() {
+        if (!User.isSignedIn) { 
+            self.clear();
+            return _data;
+        }
+    
+        let userdata = LocalData.get("dynamicstore");
+        let userdataUpdate = LocalData.get("dynamicstore_update", 0);
 
-            let userdata = LocalData.get("dynamicstore");
-            let userdataUpdate = LocalData.get("dynamicstore_update", TimeHelper.timestamp());
+        if (!userdata || TimeHelper.isExpired(userdataUpdate, 15*60)) {
+            // data is not cached, fetch
+            userdata = await RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true });
+            if (!userdata || !userdata.rgOwnedApps) { return; }
+            LocalData.set("dynamicstore", userdata);
+            LocalData.set("dynamicstore_update", TimeHelper.timestamp());
+            // userdata keys are:
+            // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
+            // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
+            // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
+            // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
+        }
+        _data = userdata;
+        _owned = new Set(_data.rgOwnedApps);
+        _wishlisted = new Set(_data.rgWishlist);
+        return userdata;
+    }
 
-            if (userdata && !TimeHelper.isExpired(userdataUpdate, 15*60)) {
-                _data = userdata;
-                resolve(userdata);
-                return;
-            }
-
-            RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true }).then(result => {
-                if (!result || !result.rgOwnedApps) {
-                    resolve();
-                    return;
-                }
-
-                LocalData.set("dynamicstore", result)
-                _data = result;
-                resolve(result);
-
-            }, reject);
-
-        });
-        return _promise;
+    self.then = function(onDone, onCatch) {
+        if (!_promise) {
+            _promise = _fetch();
+        }
+        return _promise.then(onDone, onCatch);
     };
 
     return self;
 })();
-
+    
 let Prices = (function(){
 
     function Prices() {
@@ -2348,7 +2421,7 @@ let Prices = (function(){
         if (info["bundles"]["count"] > 0) {
             line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
             let bundlesUrl = BrowserHelper.escapeHTML(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
-            if (typeof bundles_url === "string" && bundles_url.length > 0) {
+            if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
             }
         }

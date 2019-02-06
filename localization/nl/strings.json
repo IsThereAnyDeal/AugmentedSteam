@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Niet nogmaals tonen",
-        "updated": "Enhanced Steam is vernieuwd naar __version__",
+        "updated": "Enhanced Steam is bijgewerkt naar __version__",
         "changes": "Deze release bevat de volgende wijzigingen"
     },
     "register": {
