@@ -1284,7 +1284,8 @@ let AppPageClass = (function(){
 
     function addSteamChart(result) {
         if (this.isDlc()) { return; }
-        if (!SyncedStorage.get("show_steamchart_info", true) || !result.charts || !result.charts.chart) { return; }
+        if (!SyncedStorage.get("show_steamchart_info", true)) { return; }
+	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
         let chart = result.charts.chart;
