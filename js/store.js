@@ -603,14 +603,17 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.initHdPlayer = function() {
+        let movieNode = document.querySelector('div.highlight_movie');
+        if (!movieNode) { return; }
+
         let playInHD = LocalData.get('playback_hd');
-        let firstVideoIsPlaying = document.querySelector('div.highlight_movie');
-        if (!firstVideoIsPlaying) return;
-        firstVideoIsPlaying = firstVideoIsPlaying.querySelector('video.highlight_movie');
 
         // Add HD Control to each video as it's added to the DOM
-        if (firstVideoIsPlaying)
+        let firstVideoIsPlaying = movieNode.querySelector('video.highlight_movie');
+        if (firstVideoIsPlaying) {
             addHDControl(firstVideoIsPlaying);
+        }
+
         let observer = new MutationObserver(function(mutation_records){
             for (let mr of mutation_records) {
                 // Array.from(mr.addedNodes).filter(n => n.matches && n.matches('video.highlight_movie')).forEach(n => addHDControl(n));
