@@ -63,7 +63,8 @@
                 "*://steamcommunity.com/*"
             ],
             "exclude_matches": [
-                "*://steamcommunity.com/login/*"
+                "*://steamcommunity.com/login/*",
+                "*://steamcommunity.com/tradeoffer"
             ],
             "js": [
                 "js/config.js",
