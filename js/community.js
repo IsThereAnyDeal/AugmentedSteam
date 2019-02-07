@@ -535,10 +535,7 @@ let ProfileHomePageClass = (function(){
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
-                for (let img in repimgs) {
-                    if (!repimgs.hasOwnProperty(img)) { continue; }
-
-                    let regex = repimgs[value];
+                for (let [img, regex] of Object.entries(repimgs)) {
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
