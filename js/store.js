@@ -630,7 +630,7 @@ let AppPageClass = (function(){
         // When the "HD" button is clicked change the definition for all videos accordingly
         document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
         function clickHDControl(ev) {
-            if (!ev.target.matches || !ev.target.matches('.es_hd_toggle')) return;
+            if (!ev.target.matches || !ev.target.closest('.es_hd_toggle')) return;
 
             ev.preventDefault();
             ev.stopPropagation();
@@ -664,8 +664,8 @@ let AppPageClass = (function(){
             
             function _addHDControl() {
                 // Add "HD" button and "sd-src" to the video and set definition
-                if (videoControl.dataset['hd-src']) {
-                    videoControl.dataset['sd-src'] = videoControl.src;
+                if (videoControl.dataset.hdSrc) {
+                    videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
                         node.insertAdjacentHTML('afterend', `<div class="es_hd_toggle"><span>HD</span></div>`);
@@ -744,9 +744,9 @@ let AppPageClass = (function(){
 
             if (!playInHD && (typeof setHD === 'undefined' || setHD === true)) {
                 videoIsHD = true;
-                videoControl.src = videoControl.dataset["hd-src"];
+                videoControl.src = videoControl.dataset.hdSrc;
             } else if (loadedSrc) {
-                videoControl.src = videoControl.dataset["sd-src"];
+                videoControl.src = videoControl.dataset.sdSrc;
             }
     
             if (videoIsVisible && loadedSrc) {
