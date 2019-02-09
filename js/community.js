@@ -1614,6 +1614,8 @@ let BadgesPageClass = (function(){
 
         CommunityCommon.addCardExchangeLinks();
 
+        this.addBadgeSort();
+
         /*
         add_badge_sort();
         add_badge_filter();
@@ -1711,7 +1713,8 @@ let BadgesPageClass = (function(){
                             totalWorth.value += worth.value;
 
                             let howToNode = node.querySelector(".how_to_get_card_drops");
-                            howToNode.insertAdjacentHTML("afterend", "<span class='es_card_drop_worth'>" + Localization.str.drops_worth_avg + " " + worth + "</span>");
+                            howToNode.insertAdjacentHTML("afterend",
+                                `<span class='es_card_drop_worth' data-es-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
                             howToNode.remove();
                         }
                     }
@@ -1729,6 +1732,31 @@ let BadgesPageClass = (function(){
 
         document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + totalWorth;
     };
+
+    async function eachBadgePage(callback) {
+        let baseUrl = "https://steamcommunity.com/" + window.location.pathname + "?p=";
+
+        let skip = 1;
+        let m = window.location.search.match("p=(\d+)");
+        if (m) {
+            skip = parseInt(m[1]);
+        }
+
+        let lastPage = parseInt(DOMHelper.selectLastNode(document, ".pagelink").textContent);
+        for (let p = 1; p <= lastPage; p++) { // doing one page at a time to prevent too many requests at once
+            if (p === skip) { continue; }
+            try {
+                let response = await RequestData.getHttp(baseUrl + p);
+
+                let dom = BrowserHelper.htmlToDOM(response);
+                callback(dom);
+
+            } catch (exception) {
+                console.log("Failed to load " + baseUrl + p + ": " + exception);
+                return;
+            }
+        }
+    }
 
     BadgesPageClass.prototype.addTotalDropsCount = function() {
         let dropsCount = 0;
@@ -1777,21 +1805,7 @@ let BadgesPageClass = (function(){
 
                 document.querySelector("#es_calculations").innerText = Localization.str.loading;
 
-                // Now, get the rest of the pages
-                let baseUrl = window.location.href + "?p=";
-                let lastPage = parseInt(DOMHelper.selectLastNode(document,".pagelink").textContent);
-                for (let p=2; p<=lastPage; p++) { // doing one page at a time to prevent too many requests at once
-                    try {
-                        let response = await RequestData.getHttp(baseUrl + p);
-
-                        let dom = BrowserHelper.htmlToDOM(response);
-                        countDropsFromDOM(dom);
-
-                    } catch (exception) {
-                        console.log("Failed to load " + baseUrl + p + ": " + exception);
-                        return;
-                    }
-                }
+                await eachBadgePage(countDropsFromDOM);
 
                 addDropsCount();
                 completed = true;
@@ -1803,6 +1817,136 @@ let BadgesPageClass = (function(){
 
             addDropsCount();
         }
+    };
+
+    function resetLazyLoader() {
+        ExtensionLayer.runInPageContext(function() {
+            // Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+            CScrollOffsetWatcher.sm_rgWatchers = [];
+
+            // Recreate registered image lazy loader watchers
+            $J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+                // LoadImageGroupOnScroll is found in shared_global.js
+                LoadImageGroupOnScroll(e.id, e.id.substr(19));
+            });
+        });
+    }
+
+    function sortBadgeRows(activeText, nodeValueCallback) {
+        let badgeRows = [];
+        let nodes = document.querySelectorAll(".badge_row");
+        for (let node of nodes) {
+            badgeRows.push([node.outerHTML, nodeValueCallback(node)]);
+            node.remove();
+        }
+
+        badgeRows.sort(function(a,b) {
+            return b[1] - a[1];
+        });
+
+        let sheetNode = document.querySelector(".badges_sheet");
+        for (let row of badgeRows) {
+            sheetNode.insertAdjacentHTML("beforeend", row[0]);
+        }
+
+        resetLazyLoader();
+        document.querySelector("#es_sort_active").textContent = activeText;
+        document.querySelector("#es_sort_flyout").style.display = "none"; // TODO fadeout
+    }
+
+    BadgesPageClass.prototype.addBadgeSort = function() {
+        let isOwnProfile = currentUserIsOwner();
+        let sorts = ["c", "a", "r"];
+
+        let sorted = document.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")
+            || (isOwnProfile ? "p": "c");
+
+        let linksHtml = "";
+
+        if (isOwnProfile) {
+            sorts.unshift("p");
+        }
+
+        // Build dropdown links HTML
+        let nodes = document.querySelectorAll(".profile_badges_sortoptions a");
+        let i=0;
+        for (let node of nodes) {
+            node.style.display = "none";
+            linksHtml += `<a class="badge_sort_option popup_menu_item by_${sorts[i]}" data-sort-by="${sorts[i]}" href="?sort=${sorts[i]}">${node.textContent.trim()}</a>`;
+            i++;
+        }
+        if (isOwnProfile) {
+            linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + Localization.str.most_drops + '</a>';
+            linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + Localization.str.drops_value + '</a>';
+        }
+
+        let container = document.createElement("span");
+        container.id = "wishlist_sort_options";
+        DOMHelper.wrap(container, document.querySelector(".profile_badges_sortoptions"));
+
+        // Insert dropdown options links
+        document.querySelector(".profile_badges_sortoptions").insertAdjacentHTML("beforeend",
+            `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+			    <div class="popup_body popup_menu">${linksHtml}</div>
+		    </div>`);
+        
+        // Insert dropdown button
+        document.querySelector(".profile_badges_sortoptions span").insertAdjacentHTML("afterend",
+            `<span id="wishlist_sort_options">
+                <div class="store_nav">
+                    <div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                        <span class="pulldown">
+                            <div id="es_sort_active" style="display: inline;">` + document.querySelector("#es_sort_flyout a.by_" + sorted).textContent + `</div>
+                            <span></span>
+                        </span>
+                    </div>
+                </div>
+            </span>`);
+
+        ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
+
+        let sortDropsDone = false;
+
+        // TODO sort drops right now loads all pages but value does not. Also images are not lazy loaded for other pages
+
+        document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
+
+            if (document.querySelector(".pagebtn") && !sortDropsDone) {
+                await eachBadgePage(function(dom){
+                    let nodes = dom.querySelectorAll(".badge_row");
+                    let sheetNode = document.querySelector(".badges_sheet");
+                    for (let node of nodes) {
+                        sheetNode.append(node);
+                    }
+                });
+
+                let nodes = document.querySelectorAll(".profile_paging");
+                for (let node of nodes) {
+                    node.style.display = "none";
+                }
+                sortDropsDone = true;
+            }
+
+            sortBadgeRows(e.target.textContent, (node) => {
+                let content = 0;
+                let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+                if (progressInfo) {
+                    content = parseInt(progressInfo[1])
+                }
+                return content;
+            })
+        });
+
+        document.querySelector("#es_badge_sort_value").addEventListener("click", function(e) {
+            sortBadgeRows(e.target.textContent, (node) => {
+                let content = 0;
+                let dropWorth = node.querySelector(".es_card_drop_worth");
+                if (dropWorth) {
+                    content = parseFloat(dropWorth.dataset.esCardWorth);
+                }
+                return content;
+            });
+        });
     };
 
 
