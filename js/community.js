@@ -1770,6 +1770,8 @@ let BadgesPageClass = (function(){
 
         let sheetNode = document.querySelector(".badges_sheet");
 
+        // let images = BrowserHelper.getVariableFromDom("g_rgDelayedLoadImages", "object");
+
         let that = this;
         await eachBadgePage(async function(dom){
             let nodes = dom.querySelectorAll(".badge_row");
@@ -1779,12 +1781,18 @@ let BadgesPageClass = (function(){
 
             CommunityCommon.addCardExchangeLinks();
             await that.addBadgeCompletionCost();
+
+            // images = Object.assign(images, BrowserHelper.getVariableFromDom("g_rgDelayedLoadImages", "object", dom));
         });
 
         let nodes = document.querySelectorAll(".profile_paging");
         for (let node of nodes) {
             node.style.display = "none";
         }
+
+        // TODO this doesn't seem to work, can't figure out why right now. Lazy loader doesn't see updated object?
+        // ExtensionLayer.runInPageContext("function(){g_rgDelayedLoadImages = " + JSON.stringify(images) + ";}");
+        // resetLazyLoader();
     };
 
     BadgesPageClass.prototype.addTotalDropsCount = function() {
@@ -1849,6 +1857,8 @@ let BadgesPageClass = (function(){
     };
 
     function resetLazyLoader() {
+        return; // FIXME this doesn't seem to work
+
         ExtensionLayer.runInPageContext(function() {
             // Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
             CScrollOffsetWatcher.sm_rgWatchers = [];

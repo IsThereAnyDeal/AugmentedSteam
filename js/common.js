@@ -1174,8 +1174,9 @@ let BrowserHelper = (function(){
         return null;
     };
 
-    self.getVariableFromDom = function(variableName, type) {
-        let nodes = document.querySelectorAll("script");
+    self.getVariableFromDom = function(variableName, type, dom) {
+        dom = dom || document;
+        let nodes = dom.querySelectorAll("script");
         for (let node of nodes) {
             let m = self.getVariableFromText(node.textContent, variableName, type)
             if (m) {
