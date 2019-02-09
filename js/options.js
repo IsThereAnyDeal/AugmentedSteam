@@ -42,7 +42,7 @@ let Options = (function(){
 	function loadTranslation() {
 		// When locale files are loaded changed text on page accordingly
 		Localization.promise().then(() => {
-			document.title = "Enhanced Steam " + Localization.str.thewordoptions;
+			document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
 			// Localize elements with text
 			let nodes = document.querySelectorAll("[data-locale-text]");

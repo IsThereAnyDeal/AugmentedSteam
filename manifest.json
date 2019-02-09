@@ -1,7 +1,7 @@
 {
-    "name": "Enhanced Steam, an IsThereAnyDeal fork",
-    "version": "0.9.2",
-    "description": "Continues to Enhance the Steam Experience",
+    "name": "Augmented Steam",
+    "version": "0.9.2a",
+    "description": "Augments your Steam Experience",
     "icons": {
       "128": "img/es_128.png",
       "96": "img/es_96.png",
