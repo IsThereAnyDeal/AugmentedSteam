@@ -168,6 +168,15 @@ let SpamCommentHandler = (function(){
 let CommunityCommon = (function() {
     let self = {};
 
+    self.currentUserIsOwner = function() {
+        if (!User.isSignedIn) { return false; }
+
+        let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
+        let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
+
+        return badgeOwnerLink === userProfileLink;
+    };
+
     self.addCardExchangeLinks = function(game) {
         if (!SyncedStorage.get("steamcardexchange", Defaults.steamcardexchange)) { return; }
 
@@ -1611,7 +1620,7 @@ let BadgesPageClass = (function(){
         this.hasAllPagesLoaded = false;
         this.totalWorth = new Price(0);
 
-        if (currentUserIsOwner()) {
+        if (CommunityCommon.currentUserIsOwner()) {
             this.updateHead();
             this.addBadgeCompletionCost();
             this.addTotalDropsCount();
@@ -1624,15 +1633,6 @@ let BadgesPageClass = (function(){
         this.addBadgeViewOptions();
     }
 
-    function currentUserIsOwner() {
-        if (!User.isSignedIn) { return false; }
-
-        let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
-        let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
-
-        return badgeOwnerLink === userProfileLink;
-    }
-
     BadgesPageClass.prototype.updateHead = async function() {
         // move faq to the middle
         let xpBlockRight = document.querySelector(".profile_xp_block_right");
@@ -1643,7 +1643,7 @@ let BadgesPageClass = (function(){
 
     // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
     BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
-        if (!currentUserIsOwner()) { return; }
+        if (!CommunityCommon.currentUserIsOwner()) { return; }
 
         let appids = [];
         let nodes = [];
@@ -1894,7 +1894,7 @@ let BadgesPageClass = (function(){
     }
 
     BadgesPageClass.prototype.addBadgeSort = function() {
-        let isOwnProfile = currentUserIsOwner();
+        let isOwnProfile = CommunityCommon.currentUserIsOwner();
         let sorts = ["c", "a", "r"];
 
         let sorted = document.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")
@@ -1979,7 +1979,7 @@ let BadgesPageClass = (function(){
     };
 
     BadgesPageClass.prototype.addBadgeFilter = function() {
-        if (!currentUserIsOwner()) { return; }
+        if (!CommunityCommon.currentUserIsOwner()) { return; }
 
         let html  = `<span>${Localization.str.show}</span>
             <div class="store_nav">
@@ -2121,6 +2121,112 @@ let BadgesPageClass = (function(){
     return BadgesPageClass;
 })();
 
+let GameCardPageClass = (function(){
+
+    function GameCardPageClass() {
+        this.appid = GameId.getAppidFromGameCard(window.location.pathname);
+
+        CommunityCommon.addCardExchangeLinks(this.appid);
+        this.addMarketLinks();
+        this.addFoilLink();
+        this.addStoreTradeForumLink();
+    }
+
+    GameCardPageClass.prototype.addMarketLinks = async function() {
+        let cost = new Price(0);
+        let isFoil = /border=1/i.test(document.URL);
+
+        let response;
+        try {
+            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.userCurrency});
+        } catch(exception) {
+            console.error("Failed to load card prices", exception);
+            return;
+        }
+
+        if (!response || response.result !== "success") {
+            return;
+        }
+        let data = response.data;
+
+        let nodes = document.querySelectorAll(".badge_card_set_card");
+        for (let node of nodes) {
+            let cardName = node
+                .querySelector(".badge_card_set_text").textContent
+                .replace(/&amp;/g, '&')
+                .replace(/\(\d+\)/g, '').trim();
+            let cardData = data[cardName] || data[cardName + " (Trading Card)"];
+            if (isFoil) {
+                cardData = data[cardName + " (Foil)"] || data[cardName + " (Foil Trading Card)"];
+            }
+
+            if (cardData) {
+                let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
+                let cardPrice = new Price(cardData.price);
+
+                if (node.classList.contains("unowned")) {
+                    cost.value += cardPrice.value;
+                }
+
+                if (marketLink && cardPrice) {
+                    node.insertAdjacentHTML("beforeend", `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price}: ${cardPrice}</a>`);
+                }
+            }
+        }
+
+        if (cost.value > 0 && CommunityCommon.currentUserIsOwner()) {
+            DOMHelper.selectLastNode(document, ".badge_empty_name")
+                .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
+
+            document.querySelector(".badge_empty_right").classList.add("esi-badge");
+        }
+    };
+
+    GameCardPageClass.prototype.addFoilLink = function() {
+        let urlSearch = window.location.search;
+        let urlParameters = urlSearch.replace("?","").split("&");
+        let foilIndex = urlParameters.indexOf("border=1");
+
+        let text;
+        let url = window.location.origin + window.location.pathname;
+
+        if (foilIndex !== -1) {
+
+            if (urlParameters.length > 1) {
+                url += "?" + urlParameters.splice(foilIndex, 1).join("&");
+            }
+
+            text = Localization.str.view_normal_badge;
+
+        } else {
+            let url = window.location.origin + window.location.pathname;
+
+            if (urlParameters[0] !== ""){
+                urlParameters.push("border=1");
+                url += "?" + urlParameters.join("&");
+            }
+
+            text = Localization.str.view_foil_badge;
+        }
+
+        document.querySelector(".gamecards_inventorylink")
+            .insertAdjacentHTML("beforeend", `<a class='btn_grey_grey btn_small_thin' href='${url}'><span>${text}</span></a>`);
+    };
+
+    GameCardPageClass.prototype.addStoreTradeForumLink = function() {
+        document.querySelector(".gamecards_inventorylink").insertAdjacentHTML("beforeend",
+            `<div style="float: right">
+                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
+    				<span>${Localization.str.visit_store}</span>
+    			</a>
+    			<a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
+    				<span>${Localization.str.visit_trade_forum}</span>
+    			</a>
+    		</div>`);
+    };
+
+    return GameCardPageClass
+})();
 
 
 (function(){
@@ -2151,6 +2257,10 @@ let BadgesPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
                         (new BadgesPageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+                        (new GameCardPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
