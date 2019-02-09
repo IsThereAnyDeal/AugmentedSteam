@@ -165,6 +165,29 @@ let SpamCommentHandler = (function(){
     return self;
 })();
 
+let CommunityCommon = (function() {
+    let self = {};
+
+    self.addCardExchangeLinks = function(game) {
+        if (!SyncedStorage.get("steamcardexchange", Defaults.steamcardexchange)) { return; }
+
+        let nodes = document.querySelectorAll(".badge_row");
+        for (let node of nodes) {
+            let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
+            if(!appid) { continue; }
+
+            node.insertAdjacentHTML("afterbegin",
+                `<div class="es_steamcardexchange_link">
+                    <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
+                        <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
+                    </a>
+                </div>`);
+        }
+    };
+
+    return self;
+})();
+
 let ProfileActivityPageClass = (function(){
 
     function ProfileActivityPageClass() {
@@ -1586,8 +1609,10 @@ let BadgesPageClass = (function(){
             this.addBadgeCompletionCost();
             this.addTotalDropsCount();
         }
-/*
-        add_cardexchange_links();
+
+        CommunityCommon.addCardExchangeLinks();
+
+        /*
         add_badge_sort();
         add_badge_filter();
         add_badge_view_options();
@@ -1777,6 +1802,7 @@ let BadgesPageClass = (function(){
             addDropsCount();
         }
     };
+
 
     return BadgesPageClass;
 })();

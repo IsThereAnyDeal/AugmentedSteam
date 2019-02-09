@@ -1530,6 +1530,12 @@ let GameId = (function(){
         return m && parseId(m[1]);
     };
 
+    self.getAppidFromGameCard = function(text) {
+        if (!text) { return null; }
+        let m = text.match(/\/gamecards\/(\d+)/);
+        return m && parseId(m[1]);
+    };
+
     return self;
 })();
 
