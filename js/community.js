@@ -1609,8 +1609,10 @@ let BadgesPageClass = (function(){
     function BadgesPageClass() {
         this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
         this.hasAllPagesLoaded = false;
+        this.totalWorth = new Price(0);
 
         if (currentUserIsOwner()) {
+            this.updateHead();
             this.addBadgeCompletionCost();
             this.addTotalDropsCount();
         }
@@ -1631,22 +1633,23 @@ let BadgesPageClass = (function(){
         return badgeOwnerLink === userProfileLink;
     }
 
-    // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
-    BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
+    BadgesPageClass.prototype.updateHead = async function() {
         // move faq to the middle
         let xpBlockRight = document.querySelector(".profile_xp_block_right");
 
         document.querySelector(".profile_xp_block_mid").insertAdjacentHTML("beforeend", "<div class='es_faq_cards'>" + xpBlockRight.innerHTML + "</div>");
         xpBlockRight.innerHTML = "<div id='es_cards_worth'></div>";
+    };
 
-        let totalWorth = new Price(0);
+    // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
+    BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
+        if (!currentUserIsOwner()) { return; }
 
-        // Gather appid info
         let appids = [];
         let nodes = [];
         let foilAppids = [];
 
-        let rows = document.querySelectorAll(".badge_row.is_link");
+        let rows = document.querySelectorAll(".badge_row.is_link:not(.esi-badge)");
         for (let node of rows) {
             let game = node.querySelector(".badge_row_overlay").href.match(/gamecards\/(\d+)\//);
             if (!game) { continue; }
@@ -1660,6 +1663,10 @@ let BadgesPageClass = (function(){
             } else {
                 appids.push(appid);
             }
+        }
+
+        if (appids.length === 0 && foilAppids.length === 0) {
+            return;
         }
 
         let response;
@@ -1709,7 +1716,7 @@ let BadgesPageClass = (function(){
                         let worth = new Price(drops[0] * averagePrice.value);
 
                         if (worth.value > 0) {
-                            totalWorth.value += worth.value;
+                            this.totalWorth.value += worth.value;
 
                             let howToNode = node.querySelector(".how_to_get_card_drops");
                             howToNode.insertAdjacentHTML("afterend",
@@ -1729,7 +1736,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + totalWorth;
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + this.totalWorth;
     };
 
     async function eachBadgePage(callback) {
@@ -1748,7 +1755,7 @@ let BadgesPageClass = (function(){
                 let response = await RequestData.getHttp(baseUrl + p);
 
                 let dom = BrowserHelper.htmlToDOM(response);
-                callback(dom);
+                await callback(dom);
 
             } catch (exception) {
                 console.log("Failed to load " + baseUrl + p + ": " + exception);
@@ -1763,19 +1770,21 @@ let BadgesPageClass = (function(){
 
         let sheetNode = document.querySelector(".badges_sheet");
 
-        await eachBadgePage(function(dom){
+        let that = this;
+        await eachBadgePage(async function(dom){
             let nodes = dom.querySelectorAll(".badge_row");
             for (let node of nodes) {
                 sheetNode.append(node);
             }
+
+            CommunityCommon.addCardExchangeLinks();
+            await that.addBadgeCompletionCost();
         });
 
         let nodes = document.querySelectorAll(".profile_paging");
         for (let node of nodes) {
             node.style.display = "none";
         }
-
-        CommunityCommon.addCardExchangeLinks();
     };
 
     BadgesPageClass.prototype.addTotalDropsCount = function() {
@@ -1925,8 +1934,6 @@ let BadgesPageClass = (function(){
 
         ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-        // TODO sort drops right now loads all pages but value does not. Also images are not lazy loaded for other pages
-
         let that = this;
         document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
 
@@ -1944,7 +1951,12 @@ let BadgesPageClass = (function(){
             })
         });
 
-        document.querySelector("#es_badge_sort_value").addEventListener("click", function(e) {
+        document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
+
+            if (that.hasMultiplePages) {
+                await that.loadAllPages();
+            }
+
             sortBadgeRows(e.target.textContent, (node) => {
                 let content = 0;
                 let dropWorth = node.querySelector(".es_card_drop_worth");
