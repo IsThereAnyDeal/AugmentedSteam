@@ -1554,8 +1554,8 @@ let DOMHelper = (function(){
     // TODO extend Node itself?
     self.selectLastNode = function(parent, selector) {
         let nodes = parent.querySelectorAll(selector);
-        return nodes.length != 0 ? nodes[nodes.length-1] : null;
-    }
+        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
+    };
 
     return self;
 })();

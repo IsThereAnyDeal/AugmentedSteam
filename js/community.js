@@ -1582,10 +1582,11 @@ let InventoryPageClass = (function(){
 let BadgesPageClass = (function(){
 
     function BadgesPageClass() {
-        this.addBadgeCompletionCost();
-
-        /*
-        add_total_drops_count();
+        if (currentUserIsOwner()) {
+            this.addBadgeCompletionCost();
+            this.addTotalDropsCount();
+        }
+/*
         add_cardexchange_links();
         add_badge_sort();
         add_badge_filter();
@@ -1593,14 +1594,17 @@ let BadgesPageClass = (function(){
         */
     }
 
-    // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
-    BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
-        if (!User.isSignedIn) { return; }
+    function currentUserIsOwner() {
+        if (!User.isSignedIn) { return false; }
 
         let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
         let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
-        if (badgeOwnerLink !== userProfileLink) { return; }
 
+        return badgeOwnerLink === userProfileLink;
+    }
+
+    // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
+    BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
         // move faq to the middle
         let xpBlockRight = document.querySelector(".profile_xp_block_right");
 
@@ -1697,6 +1701,81 @@ let BadgesPageClass = (function(){
         }
 
         document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + totalWorth;
+    };
+
+    BadgesPageClass.prototype.addTotalDropsCount = function() {
+        let dropsCount = 0;
+        let dropsGames = 0;
+        let completed = false;
+
+        function countDropsFromDOM(dom) {
+            let nodes = dom.querySelectorAll(".badge_title_stats_drops .progress_info_bold");
+            for (let node of nodes) {
+                let count = node.innerText.match(/(\d+)/);
+                if (!count) { continue; }
+
+                dropsGames++;
+                dropsCount += parseInt(count[1]);
+            }
+        }
+
+        async function addDropsCount() {
+            document.querySelector("#es_calculations")
+                .innerHTML = Localization.str.card_drops_remaining.replace("__drops__", dropsCount)
+                    + "<br>" + Localization.str.games_with_drops.replace("__dropsgames__", dropsGames);
+
+            let response;
+            try {
+                response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
+            } catch(exception) {
+                console.log("Failed to load booster eligibility", exception);
+                return;
+            }
+
+            let boosterGames = response.match(/class="booster_eligibility_game"/g);
+            let boosterCount = boosterGames && boosterGames.length || 0;
+
+            document.querySelector("#es_calculations")
+                .insertAdjacentHTML("beforeend", "<br>" + Localization.str.games_with_booster.replace("__boostergames__", boosterCount));
+        }
+
+        countDropsFromDOM(document);
+
+        if (document.querySelector(".pagebtn")) {
+            document.querySelector(".profile_xp_block_right").insertAdjacentHTML("afterbegin",
+                "<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
+
+            document.querySelector("#es_calculations").addEventListener("click", async function(e) {
+                if (completed) { return; }
+
+                document.querySelector("#es_calculations").innerText = Localization.str.loading;
+
+                // Now, get the rest of the pages
+                let baseUrl = window.location.href + "?p=";
+                let lastPage = parseInt(DOMHelper.selectLastNode(document,".pagelink").textContent);
+                for (let p=2; p<=lastPage; p++) { // doing one page at a time to prevent too many requests at once
+                    try {
+                        let response = await RequestData.getHttp(baseUrl + p);
+
+                        let dom = BrowserHelper.htmlToDOM(response);
+                        countDropsFromDOM(dom);
+
+                    } catch (exception) {
+                        console.log("Failed to load " + baseUrl + p + ": " + exception);
+                        return;
+                    }
+                }
+
+                addDropsCount();
+                completed = true;
+            });
+
+        } else {
+            document.querySelector(".profile_xp_block_right").insertAdjacentHTML("beforebegin",
+                "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
+
+            addDropsCount();
+        }
     };
 
     return BadgesPageClass;
