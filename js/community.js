@@ -1607,6 +1607,9 @@ let InventoryPageClass = (function(){
 let BadgesPageClass = (function(){
 
     function BadgesPageClass() {
+        this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
+        this.hasAllPagesLoaded = false;
+
         if (currentUserIsOwner()) {
             this.addBadgeCompletionCost();
             this.addTotalDropsCount();
@@ -1615,10 +1618,8 @@ let BadgesPageClass = (function(){
         CommunityCommon.addCardExchangeLinks();
 
         this.addBadgeSort();
-
+        this.addBadgeFilter();
         /*
-        add_badge_sort();
-        add_badge_filter();
         add_badge_view_options();
         */
     }
@@ -1758,6 +1759,25 @@ let BadgesPageClass = (function(){
         }
     }
 
+    BadgesPageClass.prototype.loadAllPages = async function() {
+        if (this.hasAllPagesLoaded) { return; }
+        this.hasAllPagesLoaded = true;
+
+        let sheetNode = document.querySelector(".badges_sheet");
+
+        await eachBadgePage(function(dom){
+            let nodes = dom.querySelectorAll(".badge_row");
+            for (let node of nodes) {
+                sheetNode.append(node);
+            }
+        });
+
+        let nodes = document.querySelectorAll(".profile_paging");
+        for (let node of nodes) {
+            node.style.display = "none";
+        }
+    };
+
     BadgesPageClass.prototype.addTotalDropsCount = function() {
         let dropsCount = 0;
         let dropsGames = 0;
@@ -1796,7 +1816,7 @@ let BadgesPageClass = (function(){
 
         countDropsFromDOM(document);
 
-        if (document.querySelector(".pagebtn")) {
+        if (this.hasMultiplePages) {
             document.querySelector(".profile_xp_block_right").insertAdjacentHTML("afterbegin",
                 "<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
 
@@ -1905,26 +1925,13 @@ let BadgesPageClass = (function(){
 
         ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-        let sortDropsDone = false;
-
         // TODO sort drops right now loads all pages but value does not. Also images are not lazy loaded for other pages
 
+        let that = this;
         document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
 
-            if (document.querySelector(".pagebtn") && !sortDropsDone) {
-                await eachBadgePage(function(dom){
-                    let nodes = dom.querySelectorAll(".badge_row");
-                    let sheetNode = document.querySelector(".badges_sheet");
-                    for (let node of nodes) {
-                        sheetNode.append(node);
-                    }
-                });
-
-                let nodes = document.querySelectorAll(".profile_paging");
-                for (let node of nodes) {
-                    node.style.display = "none";
-                }
-                sortDropsDone = true;
+            if (that.hasMultiplePages) {
+                await that.loadAllPages();
             }
 
             sortBadgeRows(e.target.textContent, (node) => {
@@ -1946,6 +1953,63 @@ let BadgesPageClass = (function(){
                 }
                 return content;
             });
+        });
+    };
+
+    BadgesPageClass.prototype.addBadgeFilter = function() {
+        if (!currentUserIsOwner()) { return; }
+
+        let html  = `<span>${Localization.str.show}</span>
+            <div class="store_nav">
+                <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                    <span class="pulldown">
+                        <div id="es_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
+                        <span></span>
+                    </span>
+                </div>
+            </div>
+            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+                <div class="popup_body popup_menu">
+                    <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
+                    <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
+                </div>
+            </div>`;
+
+        document.querySelector("#wishlist_sort_options")
+            .insertAdjacentHTML("afterbegin", "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
+
+        document.querySelector("#es_badge_all").addEventListener("click", function(e) {
+            document.querySelector(".is_link").style.display = "block";
+            document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
+            document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeout
+            resetLazyLoader();
+        });
+
+        let that = this;
+        document.querySelector("#es_badge_drops").addEventListener("click", async function(e) {
+            e.preventDefault();
+
+            // Load additinal badge sections if multiple pages are present
+            if (that.hasMultiplePages) {
+                await that.loadAllPages();
+            }
+
+            let nodes = document.querySelectorAll(".is_link");
+            for (let node of nodes) {
+                let progress = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+                if (!progress || parseInt(progress[1]) === 0) {
+                    node.style.display = "none";
+                } else if (node.innerHTML.match(/badge_info_unlocked/) && !node.innerHTML.match(/badge_current/)) {
+                    node.style.display = "none";
+                // Hide foil badges too
+                } else if (!node.innerHTML.match(/progress_info_bold/)) {
+                    node.style.display = "none";
+                }
+            }
+
+            document.querySelector("#es_filter_active").textContent = Localization.str.badges_drops;
+            document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeOut();
+            resetLazyLoader();
         });
     };
 
