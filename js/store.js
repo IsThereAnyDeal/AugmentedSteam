@@ -1657,7 +1657,9 @@ let AppPageClass = (function(){
         if (!this.hasAchievements()) { return; }
         if (!this.isOwned()) { return; }
 
-        document.querySelector(".myactivity_block .details_block").insertAdjacentHTML("afterend",
+        let details_block = document.querySelector(".myactivity_block .details_block");
+        if (!details_block) return;
+        details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
         RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
