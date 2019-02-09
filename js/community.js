@@ -171,7 +171,7 @@ let CommunityCommon = (function() {
     self.addCardExchangeLinks = function(game) {
         if (!SyncedStorage.get("steamcardexchange", Defaults.steamcardexchange)) { return; }
 
-        let nodes = document.querySelectorAll(".badge_row");
+        let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
         for (let node of nodes) {
             let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
             if(!appid) { continue; }
@@ -184,6 +184,7 @@ let CommunityCommon = (function() {
                 </div>`);
 
             node.querySelector(".badge_title_row").style.paddingRight = "44px";
+            node.classList.add("es-has-ce-link");
         }
     };
 
@@ -1603,7 +1604,6 @@ let InventoryPageClass = (function(){
     return InventoryPageClass;
 })();
 
-
 let BadgesPageClass = (function(){
 
     function BadgesPageClass() {
@@ -1774,6 +1774,8 @@ let BadgesPageClass = (function(){
         for (let node of nodes) {
             node.style.display = "none";
         }
+
+        CommunityCommon.addCardExchangeLinks();
     };
 
     BadgesPageClass.prototype.addTotalDropsCount = function() {
