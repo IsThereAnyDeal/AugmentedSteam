@@ -2610,7 +2610,7 @@ let Common = (function(){
     self.init = function() {
 
         console.log.apply(console, [
-            "%c Enhanced %cSteam v" + Info.version + ", an IsThereAnyDeal fork %c https://es.isthereanydeal.com/",
+            "%c Augmented %cSteam v" + Info.version + " %c https://es.isthereanydeal.com/",
             "background: #000000;color:#046eb2",
             "background: #000000;color: #ffffff",
             "",
