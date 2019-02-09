@@ -956,10 +956,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: 296px;
 }
 
-.esi-badge .badge_title_row {
-	padding-right:44px;
-}
-
 .es_steamcardexchange_link {
 	position: absolute;
 	z-index: 3;

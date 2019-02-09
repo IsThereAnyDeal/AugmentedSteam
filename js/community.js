@@ -182,6 +182,8 @@ let CommunityCommon = (function() {
                         <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
                     </a>
                 </div>`);
+
+            node.querySelector(".badge_title_row").style.paddingRight = "44px";
         }
     };
 
