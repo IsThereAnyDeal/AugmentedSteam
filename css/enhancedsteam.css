@@ -948,6 +948,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Badges page
  * add_badge_view_options()
  **************************************/
+
+.esi-badge .badge_empty_right {
+	margin-top:7px;
+}
+.esi-badge .gamecard_badge_progress .badge_info {
+	width: 296px;
+}
+
 .es_binder_view .badges_sheet {
 	overflow: hidden;
 }

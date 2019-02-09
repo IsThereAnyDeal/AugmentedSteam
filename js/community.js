@@ -1579,6 +1579,128 @@ let InventoryPageClass = (function(){
 })();
 
 
+let BadgesPageClass = (function(){
+
+    function BadgesPageClass() {
+        this.addBadgeCompletionCost();
+
+        /*
+        add_total_drops_count();
+        add_cardexchange_links();
+        add_badge_sort();
+        add_badge_filter();
+        add_badge_view_options();
+        */
+    }
+
+    // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
+    BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
+        if (!User.isSignedIn) { return; }
+
+        let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
+        let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
+        if (badgeOwnerLink !== userProfileLink) { return; }
+
+        // move faq to the middle
+        let xpBlockRight = document.querySelector(".profile_xp_block_right");
+
+        document.querySelector(".profile_xp_block_mid").insertAdjacentHTML("beforeend", "<div class='es_faq_cards'>" + xpBlockRight.innerHTML + "</div>");
+        xpBlockRight.innerHTML = "<div id='es_cards_worth'></div>";
+
+        let totalWorth = new Price(0);
+
+        // Gather appid info
+        let appids = [];
+        let nodes = [];
+        let foilAppids = [];
+
+        let rows = document.querySelectorAll(".badge_row.is_link");
+        for (let node of rows) {
+            let game = node.querySelector(".badge_row_overlay").href.match(/gamecards\/(\d+)\//);
+            if (!game) { continue; }
+            let appid = parseInt(game[1]);
+
+            let foil = /\?border=1/.test(node.querySelector("a:last-of-type").href);
+            nodes.push([appid, node, foil]);
+
+            if (foil) {
+                foilAppids.push(appid);
+            } else {
+                appids.push(appid);
+            }
+        }
+
+        let response;
+        try {
+            response = await RequestData.getApi("v01/market/averagecardprices", {
+                currency: Currency.userCurrency,
+                appids: appids.join(","),
+                foilappids: foilAppids.join(",")
+            });
+        } catch (exception) {
+            console.error("Couldn't retrieve average card prices", exception);
+            return;
+        }
+
+        if (!response.result || response.result !== "success") {
+            return;
+        }
+
+        let data = response.data;
+
+        // regular cards
+        for (let item of nodes) {
+            let appid = item[0];
+            let node = item[1];
+            let isFoil = item[2];
+
+            let key = isFoil ? "foil" : "regular";
+            if (!data[appid] || !data[appid][key]) { continue; }
+
+            let averagePrice = new Price(data[appid][key]['average']);
+
+            let cost;
+            let progressInfoNode = node.querySelector("div.badge_progress_info");
+            if (progressInfoNode) {
+                let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
+                if (card) {
+                    let need = card[2] - card[1];
+                    cost = new Price(averagePrice.value * need)
+                }
+            }
+
+            if (!isFoil) {
+                let progressBoldNode = node.querySelector(".progress_info_bold");
+                if (progressBoldNode) {
+                    let drops = progressBoldNode.textContent.match(/\d+/);
+                    if (drops) {
+                        let worth = new Price(drops[0] * averagePrice.value);
+
+                        if (worth.value > 0) {
+                            totalWorth.value += worth.value;
+
+                            let howToNode = node.querySelector(".how_to_get_card_drops");
+                            howToNode.insertAdjacentHTML("afterend", "<span class='es_card_drop_worth'>" + Localization.str.drops_worth_avg + " " + worth + "</span>");
+                            howToNode.remove();
+                        }
+                    }
+                }
+            }
+
+            if (cost) {
+                DOMHelper.selectLastNode(node, ".badge_empty_name")
+                    .insertAdjacentHTML("afterend", "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
+            }
+
+            // note CSS styles moved to .css instead of doing it in javascript
+            node.classList.add("esi-badge");
+        }
+
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + totalWorth;
+    };
+
+    return BadgesPageClass;
+})();
 
 
 
@@ -1606,6 +1728,10 @@ let InventoryPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/.+\/edit/.test(path):
                         (new ProfileEditPageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
+                        (new BadgesPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
