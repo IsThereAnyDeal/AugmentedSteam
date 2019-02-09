@@ -1619,9 +1619,7 @@ let BadgesPageClass = (function(){
 
         this.addBadgeSort();
         this.addBadgeFilter();
-        /*
-        add_badge_view_options();
-        */
+        this.addBadgeViewOptions();
     }
 
     function currentUserIsOwner() {
@@ -2013,6 +2011,88 @@ let BadgesPageClass = (function(){
         });
     };
 
+    BadgesPageClass.prototype.addBadgeViewOptions = function() {
+        let html = `<span>${Localization.str.view}</span>
+            <div class="store_nav">
+                <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                    <span class="pulldown">
+                        <div id="es_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
+                        <span></span>
+                    </span>
+                </div>
+            </div>
+            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+                <div class="popup_body popup_menu">
+                    <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
+                    <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
+                </div>
+            </div>`;
+
+        document.querySelector("#wishlist_sort_options")
+            .insertAdjacentHTML("afterbegin", "<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
+
+        // Change hash when selecting view
+        document.querySelector("#es_badgeview_flyout").addEventListener("click", function(e) {
+            let node = e.target.closest(".es_bg_view");
+            if (!node) { return; }
+            window.location.hash = node.dataset.view;
+        });
+
+        // Monitor for hash changes
+        window.addEventListener("hashchange", function(){
+            toggleBinderView();
+        });
+
+        toggleBinderView();
+
+        function toggleBinderView(state) {
+            if (window.location.hash === "#binderview" || state === true) {
+                document.querySelector("div.maincontent").classList.add("es_binder_view");
+
+                let mainNode = document.querySelector("div.maincontent");
+
+                // Don't attempt changes again if already loaded
+                if (!mainNode.classList.contains("es_binder_loaded")) {
+                    mainNode.classList.add("es_binder_loaded");
+
+                    let nodes = document.querySelectorAll("div.badge_row.is_link");
+                    for (let node of nodes) {
+                        let stats = node.querySelector("span.progress_info_bold");
+                        if (stats && stats.innerHTML.match(/\d+/)) {
+                            node.querySelector("div.badge_content")
+                                .insertAdjacentHTML("beforeend", "<span class='es_game_stats'>" + stats.outerHTML + "</span>");
+                        }
+
+                        let infoNode = node.querySelector("div.badge_progress_info");
+                        if (infoNode) {
+                            let card = infoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
+                            let text = (card) ? card[1] + " / " + card[2] : '';
+                            infoNode.insertAdjacentHTML("beforebegin", '<div class="es_badge_progress_info">' + text + '</div>');
+                        }
+                    }
+                }
+
+                // Add hash to pagination links
+                let nodes = document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn");
+                for (let node of nodes) {
+                    node.href = node.href + "#binderview";
+                }
+
+                // Triggers the loading of out-of-view badge images
+                window.dispatchEvent(new Event("resize"));
+                document.querySelector("#es_badgeview_active").textContent = Localization.str.binder_view;
+            } else {
+                document.querySelector("div.maincontent").classList.remove("es_binder_view");
+
+                let nodes = document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn");
+                for (let node of nodes) {
+                    node.href = node.href.replace("#binderview", "");
+                }
+
+                document.querySelector("#es_badgeview_active").textContent = Localization.str.theworddefault;
+            }
+        }
+    };
 
     return BadgesPageClass;
 })();
