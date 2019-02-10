@@ -2506,6 +2506,127 @@ let MarketListingPageClass = (function(){
     return MarketListingPageClass;
 })();
 
+let MarketPageClass = (function(){
+
+    function MarketPageClass() {
+        /*
+        load_inventory().done(function() {
+            highlight_market_items();
+            bind_ajax_content_highlighting();
+        });
+        */
+
+        this.addMarketStats();
+        minimize_active_listings();
+        add_lowest_market_price();
+        add_market_sort();
+        market_popular_refresh_toggle();
+    }
+
+    async function loadMarketStats() {
+
+        let purchaseTotal = new Price(0);
+        let saleTotal = new Price(0);
+
+        function updatePrices(dom) {
+
+            let nodes = dom.querySelectorAll(".market_listing_row");
+            for (let node of nodes) {
+                let type = node.querySelector(".market_listing_gainorloss").textContent;
+                let isPurchase;
+                if (type.includes("+")) {
+                    isPurchase = true;
+                } else if (type.includes("-")) {
+                    isPurchase = false;
+                } else {
+                    continue;
+                }
+
+                let priceNode = node.querySelector(".market_listing_price");
+                if (!priceNode) { continue; }
+
+                let price = Price.parseFromString(priceNode.textContent);
+
+                if (isPurchase) {
+                    purchaseTotal.value += price.value;
+                } else {
+                    saleTotal.value += price.value;
+                }
+            }
+
+            let net = new Price(saleTotal.value - purchaseTotal.value);
+            let color = "green";
+            let netText = Localization.str.net_gain;
+            if (net.value < 0) {
+                color = "red";
+                netText = Localization.str.net_spent;
+            }
+
+            document.querySelector("#es_market_summary").innerHTML =
+                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
+                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
+                <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`;
+        }
+
+        let pages = -1;
+        let p=0;
+        let pageSize = 100;
+
+        let progressNode = document.querySelector("#esi_market_stats_progress");
+
+        do {
+            let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory?start="+p+"&count="+pageSize);
+            if (pages < 0) {
+                let totalCount = data.total_count;
+                pageSize = data.pagesize; // update page size in case we can't do as much as we want to
+                pages = Math.ceil(totalCount / pageSize);
+            }
+
+            let dom = BrowserHelper.htmlToDOM(data.results_html);
+            updatePrices(dom);
+
+            p++;
+            progressNode.textContent = `${p}/${pages}`;
+        } while (p<pages);
+    }
+
+    // TODO: Redo this, and cache the data! Remember the last page requested and attempt updates from where we left off...
+    MarketPageClass.prototype.addMarketStats = async function() {
+        if (!User.isSignedIn) { return; }
+        if (!window.location.pathname.match(/^\/market\/$/)) { return; } // TODO shouldn't this be global? Do we want to run on other pages?
+
+        document.querySelector("#findItems")
+            .insertAdjacentHTML("beforebegin",
+                `<div id="es_summary">
+                    <div class="market_search_sidebar_contents">
+                        <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
+                        <div id="es_market_summary_status"></div>
+                        <div class="market_search_game_button_group" id="es_market_summary" style="display:none;"></div>
+                    </div>
+                </div>`);
+
+        let node = document.querySelector("#es_market_summary_status");
+        node.innerHTML = `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`
+
+        async function startLoadingStats() {
+            node.innerHTML = `<img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                                <span>${Localization.str.loading} <span id="esi_market_stats_progress"></span>
+                              </span>`;
+            document.querySelector("#es_market_summary").style.display="block";
+            await loadMarketStats();
+            document.querySelector("#es_market_summary_status").style.display = "none";
+        }
+
+        document.querySelector("#es_market_summary_button").addEventListener("click", startLoadingStats);
+
+        if (SyncedStorage.get("showmarkettotal", Defaults.showmarkettotal)) {
+            startLoadingStats();
+        }
+    };
+
+    return MarketPageClass;
+})();
+
 
 
 (function(){
@@ -2556,19 +2677,10 @@ let MarketListingPageClass = (function(){
 
                     case /^\/market\/listings\/.*/.test(path):
                         (new MarketListingPageClass());
-/*
-                    case /^\/market\/.* /.test(path):
-                        load_inventory().done(function() {
-                            highlight_market_items();
-                            bind_ajax_content_highlighting();
-                        });
-                        add_market_total();
-                        minimize_active_listings();
-                        add_lowest_market_price();
-                        keep_ssa_checked();
-                        add_market_sort();
-                        market_popular_refresh_toggle();
-                        */
+                        break;
+
+                    case /^\/market\/.*/.test(path):
+                        (new MarketPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):

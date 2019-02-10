@@ -443,6 +443,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 32px;
 	margin-left: 5px;
 }
+#es_market_summary_status {
+	display:flex;
+	align-items:center;
+}
+#es_market_summary_status img {
+	margin-right:10px;
+}
+
 .es_market_summary_item {
 	float: right;
 	line-height: inherit !important;
