@@ -2516,13 +2516,18 @@ let MarketPageClass = (function(){
         });
         */
 
-        this.addMarketStats();
-        minimize_active_listings();
+        // TODO shouldn't this be global? Do we want to run on other pages?
+        if (window.location.pathname.match(/^\/market\/$/)) {
+            this.addMarketStats();
+            this.minimizeActiveListings();
+        }
+
         add_lowest_market_price();
         add_market_sort();
         market_popular_refresh_toggle();
     }
 
+    // TODO cache data
     async function loadMarketStats() {
 
         let purchaseTotal = new Price(0);
@@ -2590,10 +2595,8 @@ let MarketPageClass = (function(){
         } while (p<pages);
     }
 
-    // TODO: Redo this, and cache the data! Remember the last page requested and attempt updates from where we left off...
     MarketPageClass.prototype.addMarketStats = async function() {
         if (!User.isSignedIn) { return; }
-        if (!window.location.pathname.match(/^\/market\/$/)) { return; } // TODO shouldn't this be global? Do we want to run on other pages?
 
         document.querySelector("#findItems")
             .insertAdjacentHTML("beforebegin",
@@ -2622,6 +2625,16 @@ let MarketPageClass = (function(){
         if (SyncedStorage.get("showmarkettotal", Defaults.showmarkettotal)) {
             startLoadingStats();
         }
+    };
+
+    // Hide active listings on Market homepage
+    MarketPageClass.prototype.minimizeActiveListings = function() {
+        if (!SyncedStorage.get("hideactivelistings", Defaults.hideactivelistings)) { return; }
+
+        document.querySelector("#tabContentsMyListings").style.display = "none";
+        let node = document.querySelector("#tabMyListings");
+        node.classList.remove("market_tab_well_tab_active");
+        node.classList.add("market_tab_well_tab_inactive");
     };
 
     return MarketPageClass;
