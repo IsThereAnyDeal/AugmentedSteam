@@ -1787,7 +1787,7 @@ let Inventory = (function(){
         }
     }
 
-    // Trading cards
+    // Community items?
     function handleInventoryContext6(data) {
         if (!data || !data.success) { return; }
         LocalData.set("inventory_6", data);
@@ -1876,6 +1876,22 @@ let Inventory = (function(){
 
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
+    };
+
+    let inv6set = null;
+
+    self.hasInInventory6 = function(marketHash) {
+        if (!inv6set) {
+            inv6set = new Set();
+            let inv6 = LocalData.get("inventory_6");
+            if (!inv6 || !inv6['rgDescriptions']) { return false; }
+
+            for (let [key,item] of Object.entries(inv6.rgDescriptions)) {
+                inv6set.add(item['market_hash_name']);
+            }
+        }
+
+        return inv6set.has(marketHash);
     };
 
     return self;

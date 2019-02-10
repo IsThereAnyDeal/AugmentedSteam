@@ -2508,12 +2508,30 @@ let MarketListingPageClass = (function(){
 let MarketPageClass = (function(){
 
     function MarketPageClass() {
-        /*
-        load_inventory().done(function() {
-            highlight_market_items();
-            bind_ajax_content_highlighting();
+
+        Inventory.promise().then(() => {
+            this.highlightMarketItems();
+
+            let that = this;
+            let observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    for (let node of mutation.addedNodes) {
+                        if (node.classList && node.classList.contains("market_listing_row_link")) {
+                            that.highlightMarketItems();
+                            return;
+                        }
+                    }
+                });
+            });
+
+            observer.observe(
+                document.querySelector("#mainContents"),
+                {childList: true, subtree: true}
+            );
+
+        }).catch(result => {
+            console.error("Failed to load inventory", result);
         });
-        */
 
         // TODO shouldn't this be global? Do we want to run on other pages?
         if (window.location.pathname.match(/^\/market\/$/)) {
@@ -2521,12 +2539,9 @@ let MarketPageClass = (function(){
             this.minimizeActiveListings();
             this.addSort();
             this.marketPopularRefreshToggle();
+            this.addLowestMarketPrice();
         }
 
-        this.addLowestMarketPrice();
-        /*
-        market_popular_refresh_toggle();
-        */
     }
 
     // TODO cache data
@@ -2874,6 +2889,20 @@ let MarketPageClass = (function(){
             document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
             LocalData.set("popular_refresh", state);
             ExtensionLayer.runInPageContext("function(){ g_bMarketWindowHidden = " + state +"; }");
+        }
+    };
+
+    MarketPageClass.prototype.highlightMarketItems = function() {
+        if (!SyncedStorage.get("highlight_owned", Defaults.highlight_owned)) { return; }
+
+        let nodes = document.querySelectorAll(".market_listing_row_link");
+        for (let node of nodes) {
+            let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
+            if (!m) { continue; }
+
+            if (Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
+                Highlights.highlightOwned(node.querySelector("div"));
+            }
         }
     };
 
