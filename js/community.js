@@ -2356,6 +2356,79 @@ let FriendsThatPlayPageClass = (function(){
     return FriendsThatPlayPageClass;
 })();
 
+let FriendsPageClass = (function(){
+
+    function FriendsPageClass() {
+        this.addSort();
+    }
+
+    FriendsPageClass.prototype.addSort = async function() {
+        let friends = document.querySelectorAll(".friend_block_v2.persona.offline");
+        if (friends.length === 0) { return; }
+
+        let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
+        let dom = BrowserHelper.htmlToElement(data);
+
+        let sorted = { default: [], lastonline: [] };
+
+        let nodes = dom.querySelectorAll(".friend_block_v2.persona.offline");
+        for (let node of nodes) {
+            let lastOnline = node.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+            if (lastOnline) {
+                let days = parseInt(lastOnline[1]) || 0;
+                let hours = parseInt(lastOnline[2]) || 0;
+                let minutes = parseInt(lastOnline[3]) || 0;
+                let downtime = (days * 24 + hours) * 60 + minutes;
+                sorted.lastonline.push([node, downtime]);
+            } else {
+                sorted.lastonline.push([node, Infinity]);
+            }
+
+            sorted.default.push([node]);
+        }
+
+        sorted.lastonline.sort(function(a, b) {
+            return b[1] - a[1];
+        });
+
+        function sortFriends(sortBy) {
+            sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
+
+            let options = document.querySelector("#friends_sort_options");
+            let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
+            if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
+
+            let nodes = options.querySelectorAll("span");
+            for (let node of nodes) {
+                node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
+            }
+
+            let offlineNode = document.querySelector("#state_offline");
+            for (let item of sorted[sortBy]) {
+                offlineNode.insertAdjacentElement("afterend", item[0]);
+            }
+
+            SyncedStorage.set("sortfriendsby", sortBy);
+        }
+
+        let sortOptions = `<div id="friends_sort_options">
+                            ${Localization.str.sort_by}
+                            <span data-esi-sort='default'>${Localization.str.theworddefault}</span>
+                            <span data-esi-sort='lastonline' class="es_friends_sort_link">${Localization.str.lastonline}</span>
+                          </div>`;
+        document.querySelector("#manage_friends_control").insertAdjacentHTML("beforebegin", sortOptions);
+
+        document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
+            if (!e.target.closest("[data-esi-sort]")) { return; }
+            sortFriends(e.target.dataset.esiSort);
+        });
+
+        sortFriends(SyncedStorage.get("sortfriendsby", Defaults.sortfriendsby));
+    };
+
+    return FriendsPageClass;
+})();
+
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -2393,6 +2466,10 @@ let FriendsThatPlayPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
                         (new FriendsThatPlayPageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+                        (new FriendsPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/.+\/inventory/.test(path):

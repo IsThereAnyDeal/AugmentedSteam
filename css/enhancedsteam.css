@@ -367,21 +367,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 #friends_sort_options {
 	text-align: right;
-	margin-bottom: 12px;
-	margin-right: 52px;
 	font-size: 14px;
-	color: #939393;
-}
-
-.manage_friends_header #friends_sort_options {
-	float: right;
-	margin-bottom: 0;
-	margin-right: 35px;
+	color: white;
+	flex-grow:2;
+	margin-right:10px;
 }
 
 #friends_sort_options span {
 	margin-left: 8px;
-	color: #B0AEAC;
+	color: white;
 }
 
 .es_friends_sort_link {
