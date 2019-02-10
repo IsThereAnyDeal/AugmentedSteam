@@ -2938,7 +2938,7 @@ let CommunityAppPageClass = (function(){
         // TODO remove from wishlist button
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
-            '<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
+            '<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-left: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
 
         let that = this;
         document.querySelector("#es_wishlist").addEventListener("click", async function(e) {
@@ -2970,6 +2970,44 @@ let CommunityAppPageClass = (function(){
 
     return CommunityAppPageClass;
 })();
+
+let GuidesPageClass = (function(){
+
+    let Super = CommunityAppPageClass;
+
+    function GuidesPageClass() {
+        Super.call(this);
+
+        this.removeGuidesLanguageFilter();
+    }
+
+    GuidesPageClass.prototype = Object.create(Super.prototype);
+    GuidesPageClass.prototype.constructor = GuidesPageClass;
+
+    GuidesPageClass.prototype.removeGuidesLanguageFilter = function() {
+        if (!SyncedStorage.get("removeguideslanguagefilter", Defaults.removeguideslanguagefilter)) { return; }
+
+        let language = Language.getCurrentSteamLanguage();
+        let regex = new RegExp(language, "i");
+        let nodes = document.querySelectorAll("#rightContents .browseOption");
+        for (let node of nodes) {
+            let onclick = node.getAttribute("onclick");
+
+            if (regex.test(onclick)) {
+                node.removeAttribute("onclick"); // remove onclick, we have link anyway, why do they do this?
+                // node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+&?/, ""))
+            }
+            
+            let linkNode = node.querySelector("a");
+            if (regex.test(linkNode.href)) {
+                linkNode.href = linkNode.href.replace(/requiredtags[^&]+&?/, "");
+            }
+        }
+    };
+
+    return GuidesPageClass;
+})();
+
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -3027,6 +3065,10 @@ let CommunityAppPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
                         (new ProfileHomePageClass());
+                        break;
+
+                    case /^\/app\/[^\/]*\/guides/.test(path):
+                        (new GuidesPageClass());
                         break;
 
                     case /^\/app\/.*/.test(path):
