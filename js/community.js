@@ -2450,7 +2450,6 @@ let MarketListingPageClass = (function(){
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
         let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
 
-        console.log(`https://steamcommunity.com/market/priceoverview/?appid=${this.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);
         let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);
         if (!data.success) { return; }
 
@@ -2522,9 +2521,11 @@ let MarketPageClass = (function(){
             this.minimizeActiveListings();
         }
 
-        add_lowest_market_price();
+        this.addLowestMarketPrice();
+        /*
         add_market_sort();
         market_popular_refresh_toggle();
+        */
     }
 
     // TODO cache data
@@ -2636,6 +2637,92 @@ let MarketPageClass = (function(){
         node.classList.remove("market_tab_well_tab_active");
         node.classList.add("market_tab_well_tab_inactive");
     };
+
+    // Show the lowest market price for items you're selling
+    MarketPageClass.prototype.addLowestMarketPrice = async function() {
+        if (!User.isSignedIn) { return; }
+
+        let country = User.getCountry();
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+
+        let loadedMarketPrices = {};
+
+        function insertPrice(node, data) {
+            node.classList.add("es_priced");
+
+            let lowestNode = node.querySelector(".market_listing_es_lowest");
+            lowestNode.textContent = data['lowest_price'];
+
+            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
+            let lowPrice = Price.parseFromString(data['lowest_price']);
+
+            if (myPrice.value <= lowPrice.value) {
+                lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
+            } else {
+                lowestNode.classList.add("es_percentage_higher"); // Our price is higher than the lowest price
+            }
+        }
+
+        let parentNode = document.querySelector("#tabContentsMyListings");
+
+        // update tables' headers
+        let nodes = parentNode.querySelectorAll("#my_market_listingsonhold_number,#my_market_selllistings_number");
+        for (let node of nodes) {
+            let listingNode = node.closest(".my_listing_section");
+            if (listingNode.classList.contains("es_selling")) { continue; }
+            listingNode.classList.add("es_selling");
+
+            let headerNode = listingNode.querySelector(".market_listing_table_header span");
+            if (!headerNode) { continue; }
+
+            headerNode.style.width = "200px"; // TODO do we still need to change width?
+            headerNode.insertAdjacentHTML("afterend",
+                    "<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + Localization.str.lowest + "</span></span>");
+        }
+
+        // update table rows
+        let rows = [];
+        nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
+        for (let node of nodes) {
+            let buttons = node.querySelector(".market_listing_edit_buttons");
+            buttons.style.width = "200px"; // TODO do we still need to change width?
+            if (node.querySelector(".market_listing_es_lowest")) { continue; }
+
+            node.querySelector(".market_listing_edit_buttons")
+                .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+
+            // we do this because of changed width, right?
+            let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
+            actualButtons.style.width = "inherit";
+            buttons.append(actualButtons);
+
+            rows.push(node);
+        }
+
+        for (let node of rows) {
+            let linkNode = node.querySelector(".market_listing_item_name_link");
+            if (!linkNode) { continue; }
+
+            let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
+            if (!m) { continue; }
+            let appid = parseInt(m[1]);
+            let marketHashName = m[2];
+
+            let priceData;
+            if (loadedMarketPrices[marketHashName]) {
+                priceData = loadedMarketPrices[marketHashName];
+            } else {
+                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
+                if (!data.success) { continue; }
+
+                loadedMarketPrices[marketHashName] = data;
+                priceData = data;
+            }
+
+            insertPrice(node, priceData);
+        }
+    };
+
 
     return MarketPageClass;
 })();
