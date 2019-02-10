@@ -2909,7 +2909,67 @@ let MarketPageClass = (function(){
     return MarketPageClass;
 })();
 
+let CommunityAppPageClass = (function(){
 
+    function CommunityAppPageClass() {
+        this.appid = GameId.getAppid(window.location.href);
+
+        this.addAppPageWishlist();
+        this.addSteamDbLink();
+        AgeCheck.sendVerification();
+    }
+
+    CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
+        if (!SyncedStorage.get("wlbuttoncommunityapp", Defaults.wlbuttoncommunityapp)) { return; }
+        await DynamicStore;
+
+        let nameNode = document.querySelector(".apphub_AppName");
+
+        if (DynamicStore.isOwned(this.appid)) {
+            nameNode.style.color = SyncedStorage.get("highlight_owned_color", Defaults.highlight_owned_color);
+            return;
+        }
+
+        if (DynamicStore.isWishlisted(this.appid)) {
+            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color", Defaults.highlight_wishlist_color);
+            return;
+        }
+
+        // TODO remove from wishlist button
+
+        document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
+            '<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-right: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
+
+        let that = this;
+        document.querySelector("#es_wishlist").addEventListener("click", async function(e) {
+            e.preventDefault();
+            if (e.target.classList.contains("btn_disabled")) { return; }
+
+            let formData = new FormData();
+            formData.append("sessionid", await User.getStoreSessionId());
+            formData.append("appid", that.appid);
+
+            await RequestData.post("https://store.steampowered.com/api/addtowishlist", formData, {withCredentials: true});
+
+            e.target.classList.add("btn_disabled");
+            e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
+
+            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color", Defaults.highlight_wishlist_color);
+
+            // Clear dynamicstore cache
+            DynamicStore.clear();
+        });
+    };
+
+    CommunityAppPageClass.prototype.addSteamDbLink = function() {
+        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
+
+        document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
+            `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
+    };
+
+    return CommunityAppPageClass;
+})();
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -2967,6 +3027,10 @@ let MarketPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
                         (new ProfileHomePageClass());
+                        break;
+
+                    case /^\/app\/.*/.test(path):
+                        (new CommunityAppPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/.+\/stats/.test(path):

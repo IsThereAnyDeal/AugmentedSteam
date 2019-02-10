@@ -1,33 +1,4 @@
 
-let AgeCheck = (function(){
-
-    let self = {};
-
-    self.sendVerification = function(){
-        if (!SyncedStorage.get("send_age_info", true)) { return; }
-
-        let ageYearNode = document.querySelector("#ageYear");
-        if (ageYearNode) {
-            let myYear = Math.floor(Math.random()*75)+10;
-            ageYearNode.value = "19" + myYear;
-            document.querySelector(".btnv6_blue_hoverfade").click();
-        } else {
-            let btn = document.querySelector(".agegate_text_container.btns a");
-            if (btn && btn.getAttribute("href") === "#") {
-                btn.click();
-            }
-        }
-
-        let continueNode = document.querySelector("#age_gate_btn_continue");
-        if (continueNode) {
-            continueNode.click();
-        }
-    };
-
-    return self;
-})();
-
-
 let StorePageClass = (function(){
 
     function StorePageClass() {
@@ -240,10 +211,6 @@ let StorePageClass = (function(){
                     `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
                             <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
             }
-                break;
-            case "gamehub":
-                document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
-                    `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
                 break;
             case "gamegroup":
                 document.querySelector("#rightActionBlock").insertAdjacentHTML("beforeend",

@@ -602,6 +602,12 @@ let User = (function(){
         return sessionId;
     };
 
+    self.getStoreSessionId = async function() {
+        // TODO what's the minimal page we can load here to get sessionId?
+        let storePage = await RequestData.getHttp("https://store.steampowered.com/news/");
+        return BrowserHelper.getVariableFromText(storePage, "g_sessionID", "string");
+    };
+
     self.getCountry = function() {
         let country = BrowserHelper.getCookie("steamCountry");
         if (!country) { return null; }
@@ -2627,6 +2633,34 @@ let Customizer = (function(){
 
             if (callback) { callback(); }
         });
+    };
+
+    return self;
+})();
+
+let AgeCheck = (function(){
+
+    let self = {};
+
+    self.sendVerification = function(){
+        if (!SyncedStorage.get("send_age_info", true)) { return; }
+
+        let ageYearNode = document.querySelector("#ageYear");
+        if (ageYearNode) {
+            let myYear = Math.floor(Math.random()*75)+10;
+            ageYearNode.value = "19" + myYear;
+            document.querySelector(".btnv6_blue_hoverfade").click();
+        } else {
+            let btn = document.querySelector(".agegate_text_container.btns a");
+            if (btn && btn.getAttribute("href") === "#") {
+                btn.click();
+            }
+        }
+
+        let continueNode = document.querySelector("#age_gate_btn_continue");
+        if (continueNode) {
+            continueNode.click();
+        }
     };
 
     return self;
