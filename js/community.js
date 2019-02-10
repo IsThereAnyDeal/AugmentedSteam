@@ -2520,6 +2520,7 @@ let MarketPageClass = (function(){
             this.addMarketStats();
             this.minimizeActiveListings();
             this.addSort();
+            this.marketPopularRefreshToggle();
         }
 
         this.addLowestMarketPrice();
@@ -2726,7 +2727,7 @@ let MarketPageClass = (function(){
     MarketPageClass.prototype.addSort = function() {
 
         let container = document.querySelector("#tabContentsMyActiveMarketListingsTable");
-        if (!container) { return; }
+        if (!container || !container.querySelector(".market_listing_table_header")) { return; }
 
         // Indicate default sort and add buttons to header
         function buildButtons() {
@@ -2855,6 +2856,25 @@ let MarketPageClass = (function(){
         let observer = new MutationObserver(buildButtons);
         observer.observe(document.querySelector("#tabContentsMyActiveMarketListingsTable"), {childList: true, subtree: true});
         */
+    };
+
+    MarketPageClass.prototype.marketPopularRefreshToggle = function() {
+        document.querySelector("#sellListings .market_tab_well_tabs").insertAdjacentHTML("beforeend",
+            `<div id="es_popular_refresh_toggle" class="btn_grey_black btn_small" data-tooltip-text="${Localization.str.market_popular_items_toggle}"></div>`);
+
+        document.querySelector("#es_popular_refresh_toggle").addEventListener("click", function(e) {
+            toggleRefresh(!LocalData.get("popular_refresh"));
+        });
+
+        toggleRefresh(LocalData.get("popular_refresh", false));
+
+        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+
+        function toggleRefresh(state) {
+            document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
+            LocalData.set("popular_refresh", state);
+            ExtensionLayer.runInPageContext("function(){ g_bMarketWindowHidden = " + state +"; }");
+        }
     };
 
     return MarketPageClass;

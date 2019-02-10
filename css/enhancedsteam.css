@@ -2282,7 +2282,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Market
  * market_popular_refresh_toggle()
  **************************************/
-.es_popular_refresh_toggle {
+#es_popular_refresh_toggle {
 	position: absolute;
 	right: 0;
 	width: 20px;
@@ -2293,11 +2293,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: 8px 8px 0 0;
 	border: 1px solid rgba(73, 193, 245, 0.25) !important;
 }
-.es_popular_refresh_toggle:after {
+#es_popular_refresh_toggle:after {
 	content: "▶";
 	display: inline-block;
 }
-.es_popular_refresh_toggle.es_refresh_off:after {
+#es_popular_refresh_toggle.es_refresh_off:after {
 	content: "❚❚";
 }
 
