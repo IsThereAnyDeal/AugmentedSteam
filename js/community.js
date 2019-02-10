@@ -2228,6 +2228,134 @@ let GameCardPageClass = (function(){
     return GameCardPageClass
 })();
 
+let FriendsThatPlayPageClass = (function(){
+
+    function FriendsThatPlayPageClass() {
+        this.appid = parseInt(window.location.pathname.match(/\/friendsthatplay\/(\d+)/)[1]);
+
+        this.addFriendsPlayTimeSort();
+        this.addFriendsThatPlay();
+    }
+
+    FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
+
+        let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
+        let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
+        if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
+            return;
+        }
+
+        let friendsData = await friendsPromise;
+        let friendsHtml = BrowserHelper.htmlToDOM(friendsData);
+
+        let friendsOwn = data[this.appid].data.friendsown;
+
+        let html = `<div class="mainSectionHeader friendListSectionHeader">
+                        ${Localization.str.all_friends_own.replace('__friendcount__', friendsOwn.length)}
+                        <span class="underScoreColor">_</span>
+                    </div>`;
+
+        html += '<div class="profile_friends" style="height: ' + (48 * friendsOwn.length / 3) + 'px;">';
+
+        for (let item of friendsOwn) {
+            let miniProfile = item.steamid.slice(4) - 1197960265728; // whaat?
+
+            let friendNode = friendsHtml.querySelector(".friend_block_v2[data-miniprofile='"+miniProfile+"']");
+            if (!friendNode) { continue; }
+
+            let profileName = friendNode.querySelector(".friend_block_content").firstChild.textContent;
+
+            let status = "";
+            if (friendNode.classList.contains("in-game")) { status = "in-game"; }
+            else if (friendNode.classList.contains("online")) { status = "online"; }
+
+            let profileLink = friendNode.querySelector("a.selectable_overlay").href;
+            let profileAvatar = friendNode.querySelector(".player_avatar img").src;
+            let playtimeTwoWeeks = Localization.str.hours_short.replace('__hours__', Math.round(item.playtime_twoweeks / 60 * 10) / 10);
+            let playtimeTotal = Localization.str.hours_short.replace('__hours__', Math.round(item.playtime_total / 60 * 10) / 10);
+            let statsLink = profileLink + '/stats/' + this.appid + '/compare';
+
+            html +=
+                `<div class="friendBlock persona ${status}" data-miniprofile="${miniProfile}">
+                    <a class="friendBlockLinkOverlay" href="${profileLink}"></a>
+                    <div class="playerAvatar ${status}">
+                        <img src="${profileAvatar}">
+                    </div>
+                    <div class="friendBlockContent">
+                        ${profileName}<br>
+                        <span class="friendSmallText">${playtimeTwoWeeks} / ${playtimeTotal}<br>
+                            <a class="whiteLink friendBlockInnerLink" href="${statsLink}">View stats</a>
+                        </span>
+                    </div>
+                </div>`;
+        }
+
+        html += '</div>';
+
+        document.querySelector(".friends_that_play_content").insertAdjacentHTML("beforeend", html);
+
+        // Reinitialize miniprofiles by injecting the function call.
+        ExtensionLayer.runInPageContext("function(){ InitMiniprofileHovers(); }");
+    };
+
+    FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
+        let memberList = document.querySelector("#memberList");
+
+        let section = memberList.querySelectorAll(".mainSectionHeader").length >= 4 ? 1 : 2;
+
+        memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")")
+            .insertAdjacentHTML("beforeend",
+                ` (<span id='es_default_sort' style='cursor: pointer;'>
+                    ${Localization.str.sort_by.replace(":", "")} ${Localization.str.theworddefault}
+                 </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
+                    ${Localization.str.sort_by.replace(":", "")} Playtime
+                </span>)`);
+
+        memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
+            .id = "es_friends_default";
+
+        let sorted = document.querySelector("#es_friends_default").cloneNode(true);
+        sorted.id = "es_friends_playtime";
+        sorted.style.display = "none";
+
+        let defaultNode = document.querySelector("#es_friends_default");
+        defaultNode.insertAdjacentElement("afterend", sorted);
+        defaultNode.insertAdjacentHTML("afterend", "<div style='clear: both'></div>");
+
+        document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
+            document.querySelector("#es_playtime_sort").style.textDecoration = "none";
+            document.querySelector("#es_default_sort").style.textDecoration = "underline";
+            document.querySelector("#es_friends_default").style.display = "none";
+            document.querySelector("#es_friends_playtime").style.display = "block";
+
+            let friendArray = [];
+            let nodes = document.querySelectorAll("#es_friends_playtime .friendBlock");
+            for (let node of nodes) {
+                friendArray.push([
+                    node,
+                    parseFloat(node.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
+                ]);
+            }
+
+            friendArray.sort(function(a,b) { return b[1] - a[1]; });
+
+            let playtimeNode = document.querySelector("#es_friends_playtime");
+            for (let item of friendArray) {
+                playtimeNode.append(item[0])
+            }
+        });
+
+        document.querySelector("#es_default_sort").addEventListener("click", function(e) {
+            document.querySelector("#es_default_sort").style.textDecoration = "none";
+            document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
+            document.querySelector("#es_friends_playtime").style.display = "none";
+            document.querySelector("#es_friends_default").style.display = "block";
+        });
+    };
+
+    return FriendsThatPlayPageClass;
+})();
+
 
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -2261,6 +2389,10 @@ let GameCardPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
                         (new GameCardPageClass());
+                        break;
+
+                    case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
+                        (new FriendsThatPlayPageClass());
                         break;
 
                     case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
