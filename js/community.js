@@ -496,7 +496,7 @@ let ProfileHomePageClass = (function(){
     };
 
     ProfileHomePageClass.prototype.changeUserBackground = function() {
-        let prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9\.]+)/i);
+        let prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
 
         if (prevHash) {
             let imgUrl = "//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2];
@@ -2430,6 +2430,84 @@ let FriendsPageClass = (function(){
 })();
 
 
+let MarketListingPageClass = (function(){
+
+    function MarketListingPageClass() {
+        this.appid = GameId.getAppid(window.location.href);
+
+        if (this.appid) {
+            this.addSoldAmountLastDay();
+            this.addBackgroundPreviewLink();
+        }
+
+        this.addBadgePageLink();
+    }
+
+    MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
+        let country = User.getCountry();
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+
+        let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
+        let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
+
+        console.log(`https://steamcommunity.com/market/priceoverview/?appid=${this.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);
+        let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);
+        if (!data.success) { return; }
+
+        let soldHtml =
+            `<div class="es_sold_amount">
+                ${Localization.str.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
+            </div>`;
+
+        document.querySelector(".market_commodity_orders_header, .jqplot-title, .market_section_title")
+            .insertAdjacentHTML("beforeend", soldHtml);
+
+        /* TODO where is this observer applied?
+        let observer = new MutationObserver(function(){
+            if (!document.querySelector("#pricehistory .es_sold_amount")) {
+                document.querySelector(".jqplot-title").insertAdjacentHTML("beforeend", soldHtml);
+            }
+            return true;
+        });
+        observer.observe(document, {}); // .jqplot-event-canvas
+        */
+    };
+
+    MarketListingPageClass.prototype.addBadgePageLink = function() {
+        let gameAppId = parseInt((document.URL.match("\/753\/([0-9]+)-") || [0, 0])[1]);
+        let cardType = document.URL.match("Foil(%20Trading%20Card)?%29") ? "?border=1" : "";
+        if (!gameAppId || gameAppId === 753) { return; }
+
+        document.querySelector("div.market_listing_nav").insertAdjacentHTML("beforeend",
+        `<a class="btn_grey_grey btn_medium" href="https://steamcommunity.com/my/gamecards/${gameAppId + cardType}" style="float: right; margin-top: -10px;" target="_blank">
+                <span>
+                    <img src="https://store.steampowered.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0;" width="24" height="16" border="0" align="top">
+                    ${Localization.str.view_badge}
+                </span>
+            </a>`);
+    };
+
+    MarketListingPageClass.prototype.addBackgroundPreviewLink = function() {
+        if (this.appid !== 753) { return; }
+
+        let viewFullLink = document.querySelector("#largeiteminfo_item_actions a");
+        if (!viewFullLink) { return; }
+
+        let bgLink = viewFullLink.href.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
+        if (bgLink) {
+            viewFullLink.insertAdjacentHTML("afterend",
+                `<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
+                    <span>${Localization.str.preview_background}</span>
+                </a>`);
+        }
+    };
+
+
+    return MarketListingPageClass;
+})();
+
+
+
 (function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -2474,6 +2552,23 @@ let FriendsPageClass = (function(){
 
                     case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
                         (new InventoryPageClass());
+                        break;
+
+                    case /^\/market\/listings\/.*/.test(path):
+                        (new MarketListingPageClass());
+/*
+                    case /^\/market\/.* /.test(path):
+                        load_inventory().done(function() {
+                            highlight_market_items();
+                            bind_ajax_content_highlighting();
+                        });
+                        add_market_total();
+                        minimize_active_listings();
+                        add_lowest_market_price();
+                        keep_ssa_checked();
+                        add_market_sort();
+                        market_popular_refresh_toggle();
+                        */
                         break;
 
                     case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
