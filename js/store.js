@@ -211,11 +211,7 @@ let StorePageClass = (function(){
                     `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
                             <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
             }
-                break;
-            case "gamegroup":
-                document.querySelector("#rightActionBlock").insertAdjacentHTML("beforeend",
-                    `<div class="actionItemIcon"><img src="${bgUrl}" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="//steamdb.info/app/' + appid + '/">${Localization.str.view_in} Steam Database</a>`);
-                break;
+            break;
         }
     };
 
@@ -2935,7 +2931,7 @@ let TabAreaObserver = (function(){
                 // common for store pages
                 Highlights.startHighlightsAndTags();
                 EnhancedSteam.alternateLinuxIcon();
-                EnhancedSteam.hideTrademarkSymbol();
+                EnhancedSteam.hideTrademarkSymbol(false);
                 TabAreaObserver.observeChanges();
 
             })

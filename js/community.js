@@ -3037,8 +3037,21 @@ let CommunityAppPageClass = (function(){
                         (new StatsPageClass());
                         break;
 
-                    // TODO
+                    case /^\/tradingcards\/boostercreator/.test(path):
+                        let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
+                            .textContent.trim().replace(/\d/g, "");
+
+                        ExtensionLayer.runInPageContext("function() { \
+                            $J('#booster_game_selector option').each(function(index) {\
+                                if ($J(this).val()) {\
+                                    $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
+                                }\
+                            });\
+                        }");
+                        break;
                 }
+
+                EnhancedSteam.hideTrademarkSymbol(true);
             })
     )
 
