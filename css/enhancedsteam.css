@@ -2485,3 +2485,47 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 .esi-hide-common .esi-common { display:none; }
 .esi-hide-notcommon .esi-notcommon { display:none; }
+
+
+.esi-stream {
+    position:relative;
+    display:block;
+    background: #396685;
+    margin:0 -10px -10px -10px;
+}
+
+.esi-stream__play {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    z-index: 2;
+}
+
+.esi-stream__live {
+    white-space: nowrap;
+    height: 13px;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+    padding: 3px 6px 3px 20px;
+    box-shadow: 0 0 7px #a94847;
+    background:black;
+}
+
+.esi-stream__twitch {
+    color:#4b367c;
+    font-weight:bold;
+}
+
+.esi-stream__title {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}

@@ -292,10 +292,9 @@ let ProfileHomePageClass = (function(){
         this.addPostHistoryLink();
         this.inGameNameLink();
         this.addProfileStyle();
+        this.addTwitchInfo();
 
         /*
-        add_twitch_info();
-        hide_spam_comments();
         chat_dropdown_options();
         */
     }
@@ -518,7 +517,7 @@ let ProfileHomePageClass = (function(){
         }
 
         ProfileData.promise().then("profile", function(data) {
-            if (!data.bg) { return; }
+            if (!data || !data.bg) { return; }
 
             document.querySelector(".no_header").style.backgroundImage = "url(" + BrowserHelper.escapeHTML(data.bg.img) + ")";
 
@@ -648,6 +647,45 @@ let ProfileHomePageClass = (function(){
                     break;
             }
         });
+    };
+
+    ProfileHomePageClass.prototype.addTwitchInfo = async function() {
+
+        let search = document.querySelector(".profile_summary a[href*='twitch.tv/']");
+        if (!search) { return; }
+
+        let m = search.href.match(/twitch\.tv\/(.+)/);
+        if (!m) { return; }
+
+        let twitchId = m[1].replace(/\//g, "");
+
+        let response = await RequestData.getApi("v01/twitch/stream", {channel: twitchId});
+        if (!response || response.result !== "success") { return; }
+        let data = response.data;
+
+        let channelUsername = data.user_name;
+        let channelUrl = search.href;
+        let channelGame = data.game;
+        let channelViewers = data.viewer_count;
+        let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
+
+        document.querySelector(".profile_leftcol").insertAdjacentHTML("afterbegin",
+            `<div class='profile_customization' id='es_twitch'>            
+                    <div class='profile_customization_header'>
+                        ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
+                    </div>
+                    <a class="esi-stream" href="${channelUrl}">
+                        <div class="esi-stream__preview">
+                            <img src="${previewUrl}">
+                            <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
+                            <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
+                        </div>
+                        <div class="esi-stream__title">
+                            <span class="live_stream_app">${channelGame}</span>
+                            <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
+                        </div>
+                    </a>
+                </div>`);
     };
 
 
