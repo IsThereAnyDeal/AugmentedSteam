@@ -500,7 +500,9 @@ let AppPageClass = (function(){
                 node.classList.add("es_expanded");
             }
             for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+                // shrunk => expanded
                 node.style.display = null;
+                node.style.opacity = 1;
             }
 
             // Triggers the adjustment of the slider scroll bar
