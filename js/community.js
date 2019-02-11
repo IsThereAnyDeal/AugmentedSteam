@@ -1728,8 +1728,10 @@ let BadgesPageClass = (function(){
             }
 
             if (cost) {
-                DOMHelper.selectLastNode(node, ".badge_empty_name")
-                    .insertAdjacentHTML("afterend", "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
+                let badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
+                if (badgeNameBox) {
+                    badgeNameBox.insertAdjacentHTML("afterend", "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
+                }
             }
 
             // note CSS styles moved to .css instead of doing it in javascript
