@@ -293,10 +293,7 @@ let ProfileHomePageClass = (function(){
         this.inGameNameLink();
         this.addProfileStyle();
         this.addTwitchInfo();
-
-        /*
-        chat_dropdown_options();
-        */
+        this.chatDropdownOptions();
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
@@ -688,6 +685,42 @@ let ProfileHomePageClass = (function(){
                 </div>`);
     };
 
+    ProfileHomePageClass.prototype.chatDropdownOptions = function() {
+        if (!User.isSignedIn) { return; }
+
+        let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
+        if (!sendButton) { return; }
+
+        let href = sendButton.href;
+
+        let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        if (!m) { return; }
+
+        let rgProfileData = BrowserHelper.getVariableFromDom("g_rgProfileData", "object");
+        let friendSteamId = rgProfileData.steamid;
+
+        sendButton.insertAdjacentHTML("beforebegin",
+            `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
+                <span>${sendButton.textContent}<img src="https://steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
+            </span>
+            <div class="popup_block" id="profile_chat_dropdown" style="visibility: visible; top: 168px; left: 679px; display: none; opacity: 1;">
+                <div class="popup_body popup_menu shadow_content" style="box-shadow: 0 0 12px #000">
+                    <a class="popup_menu_item webchat" href="${href}">
+                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">
+                        &nbsp; ${Localization.str.web_browser_chat}
+                    </a>
+                    <a class="popup_menu_item" href="steam://friends/message/${friendSteamId}">
+                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">
+                        &nbsp; ${Localization.str.steam_client_chat}
+                    </a>
+                </div>
+            </div>`);
+        sendButton.remove();
+
+        document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
+            ExtensionLayer.runInPageContext("function(){ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' )}");
+        });
+    };
 
     return ProfileHomePageClass;
 })();
