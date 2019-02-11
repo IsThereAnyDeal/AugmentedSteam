@@ -639,6 +639,7 @@ let AppPageClass = (function(){
                 let node = videoControl.parentNode.querySelector('.fullscreen_button');
                 if (node) {
                     let newNode = document.createElement('div');
+                    newNode.classList.add("fullscreen_button");
                     newNode.addEventListener('click', (() => toggleFullscreen(videoControl)), false);
                     node.replaceWith(newNode);
                     node = null; // prevent memory leak
