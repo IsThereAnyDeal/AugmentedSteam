@@ -409,7 +409,9 @@ let ProgressBar = (function(){
     self.create = function() {
         if (!SyncedStorage.get("show_progressbar", true)) { return; }
 
-        document.querySelector("#global_actions").insertAdjacentHTML("afterend",
+        let container = document.getElementById("global_actions");
+        if (!container) return;
+        container.insertAdjacentHTML("afterend",
             `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
