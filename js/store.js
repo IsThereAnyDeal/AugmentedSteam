@@ -164,7 +164,7 @@ let StorePageClass = (function(){
         prices.bundleCallback = function(html) {
 
             document.querySelector("#game_area_purchase")
-                .insertAdjacentHTML("afterend", "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='http://store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
+                .insertAdjacentHTML("afterend", "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
                     + html);
         };
 
