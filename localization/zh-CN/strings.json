@@ -498,7 +498,8 @@
     },
     "wallet": {
         "custom_amount": "充值自定义金额",
-        "custom_amount_text": "充值 __minamount__ 以上的任意金额"
+        "custom_amount_text": "充值任意大于 __minamount__ 的金额",
+        "custom_giftcard_amount": "选择 __input__ 自定义礼物卡（任意大于 __minamount__ 的金额）"
     },
     "wsgf": {
         "incomplete": "未完成",
