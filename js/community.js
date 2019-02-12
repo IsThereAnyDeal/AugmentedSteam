@@ -912,131 +912,158 @@ let GamesPageClass = (function(){
 let ProfileEditPageClass = (function(){
 
     function ProfileEditPageClass() {
-        return; // TODO
         ProfileData.clearOwn();
         ProfileData.promise();
-        // this.addBackgroundSelection();
+        this.addBackgroundSelection();
         // add_es_style_selection();
     }
 
-    /* TODO
-    ProfileEditPageClass.prototype.addBackgroundSelection = function() {
-        if (!SyncedStorage.get("showesbg", Defaults.showesbg)) { return false; }
+    ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
+        if (!SyncedStorage.get("showesbg", Defaults.showesbg)) { return; }
         if (window.location.pathname.indexOf("/settings") >= 0) { return; }
 
         let steamId = SteamId.getSteamId();
 
+        let selectedAppid = null;
+        let selectedImg = null;
+
         let saveUrl = Config.PublicHost + "/gamedata/profile_bg_save.php";
         let removeUrl = Config.PublicHost + "/gamedata/profile_bg_remove.php";
-        let html = "<form id='es_profile_bg' method='POST' action='"+ saveUrl +"'><div class='group_content group_summary'>";
-            html += "<input type='hidden' name='steam64' value='" + steamId+ "'>";
-            html += "<input type='hidden' name='appid' id='appid'>";
-            html += "<div class='formRow'><div class='formRowTitle' style='overflow: visible;'>" + Localization.str.custom_background + ":<span class='formRowHint' data-tooltip-text='" + Localization.str.custom_background_help + "'>(?)</span></div><div class='formRowFields'><div class='profile_background_current'><div class='profile_background_current_img_ctn'><div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>"+ Localization.str.loading +"</div>";
-            html += "<img id='es_profile_background_current_image' src=''>";
-            html += "</div><div class='profile_background_current_description'><div id='es_profile_background_current_name'>";
-            html += "</div></div><div style='clear: left;'></div><div class='background_selector_launch_area'></div></div><div class='background_selector_launch_area'>&nbsp;<div style='float: right;'><span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'><span>" + Localization.str.remove + "</span></span>&nbsp;<span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'><span>" + Localization.str.save + "</span></span></div></div></div></div>";
-            html += "</form><form id='es_profile_remove' method='POST' action='" + removeUrl + "'>";
-            html += "<input type='hidden' name='steam64' value='" + steamId + "'>";
-            html += "</form>";
+        let html =
+            `<div class='group_content group_summary'>
+                <div class='formRow'><div class='formRowTitle' style='overflow: visible;'>
+                    ${Localization.str.custom_background}:
+                    <span class='formRowHint' data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
+                </div>
+                <div class='formRowFields'>
+                    <div class='profile_background_current'>
+                        <div class='profile_background_current_img_ctn'>
+                            <div class='es_loading'>
+                                <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
+                                <span>${Localization.str.loading}</span>
+                            </div>
+                            <img id='es_profile_background_current_image' src=''>
+                        </div>
+                        <div class='profile_background_current_description'>
+                            <div id='es_profile_background_current_name'></div>
+                        </div>
+                        <div style='clear: left;'></div>
+                        <div class='background_selector_launch_area'></div>
+                    </div>
+                    <div class='background_selector_launch_area'>&nbsp;
+                        <div style='float: right;'>
+                            <span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'>
+                                <span>${Localization.str.remove}</span>
+                            </span>&nbsp;
+                            <span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
+                                <span>${Localization.str.save}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 
         document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-        RequestData.getApi("v01/profile/background/games", {profile: steamId}).then(response => {
-            if (!response || !response.data) { return; }
+        let response = await RequestData.getApi("v01/profile/background/games", {profile: steamId});
+        if (!response || !response.data) { return; }
 
-            console.log(response);
+        let selected = false;
+        let games = response.data;
 
-            let selected = false;
-            let games = response.data;
+        let selectHtml = "<select name='es_background_gamename' id='es_background_gamename' class='gray_bevel dynInput'><option value='0' id='0'>" + Localization.str.noneselected + "</option>";
+        for (let game of games) {
+            let id = BrowserHelper.escapeHTML(game.id.toString());
+            let title = BrowserHelper.escapeHTML(game.t);
 
-            let selectHtml = "<select name='es_background_gamename' id='es_background_gamename' class='gray_bevel dynInput'><option value='0' id='0'>" + Localization.str.noneselected + "</option>";
-            games.forEach(game => {
-                let id = BrowserHelper.escapeHTML(game.id.toString());
-                if (game.sel) {
-                    selectHtml += "<option value='" + id + "' selected>" + BrowserHelper.escapeHTML(game.t) + "</option>";
-                    selected = true;
-                } else {
-                    selectHtml += "<option value='" + id + "'>" + BrowserHelper.escapeHTML(game.t) + "</option>";
-                }
-            });
-            selectHtml += "</select>";
+            let selectedAttr = "";
+            if (game.sel) {
+                selectedAttr = " selected='selected'";
+                selected = true;
+            }
+            selected = selected || game.sel;
+            selectHtml += `<option value='${id}'${selectedAttr}>${title}</option>`;
+        }
+        selectHtml += "</select>";
 
-            document.querySelector(".es_loading").remove();
-            document.querySelector("#es_profile_background_current_name").innerHTML = selectHtml;
+        document.querySelector(".es_loading").remove();
+        document.querySelector("#es_profile_background_current_name").innerHTML = selectHtml;
 
-            ProfileData.promise().then(data => {
-                let bg = data.bg.small ? BrowserHelper.escapeHTML(data.bg.small) : "";
-                document.querySelector("#es_profile_background_current_image").src = bg;
-            });
+        ProfileData.promise().then(data => {
+            let bg = data.bg.small ? BrowserHelper.escapeHTML(data.bg.small) : "";
+            document.querySelector("#es_profile_background_current_image").src = bg;
+        });
 
-            document.querySelector("#es_background_gamename").addEventListener("change", function () {
-                let appid = document.querySelector("#es_background_gamename").value;
-                document.querySelector("#appid").value = appid;
+        document.querySelector("#es_background_gamename").addEventListener("change", function() {
+            selectedAppid = document.querySelector("#es_background_gamename").value;
 
-                let selectionNode = document.querySelector("#es_background_selection");
-                if (selectionNode) {
-                    selectionNode.remove();
-                }
+            let selectionNode = document.querySelector("#es_background_selection");
+            if (selectionNode) {
+                selectionNode.remove();
+            }
 
-                if (appid == 0) {
-                    document.querySelector("#es_profile_background_current_image").src = "";
-                } else {
-                    document.querySelector("#es_profile_background_current_name").insertAdjacentHTML("afterend", "<div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.loading + "</div>");
+            if (selectedAppid == 0) {
+                document.querySelector("#es_profile_background_current_image").src = "";
+            } else {
+                document.querySelector("#es_profile_background_current_name")
+                    .insertAdjacentHTML("afterend", "<div class='es_loading'><img src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.loading + "</div>");
 
-                    RequestData.getApi("v01/profile/background/background", {
-                        appid: appid,
-                        profile: steamId
-                    }).then(result => {
-                        document.querySelector("#es_profile_background_current_name").insertAdjacentHTML("afterend", "<div id='es_background_selection'></div>");
-                        selectHtml = "<select name='es_background' id='es_background' class='gray_bevel dynInput'>";
-                        let i = 0;
-                        if (selected) {
+                RequestData.getApi("v01/profile/background/background", {
+                    appid: selectedAppid,
+                    profile: steamId
+                }).then(result => {
+                    document.querySelector("#es_profile_background_current_name")
+                        .insertAdjacentHTML("afterend", "<div id='es_background_selection'></div>");
+                    selectHtml = "<select name='es_background' id='es_background' class='gray_bevel dynInput'>";
+
+                    let i = 0;
+                    if (selected) {
+                        i = 1;
+                        selected = false;
+                    }
+
+                    for (let value of result.data) {
+                        let index = BrowserHelper.escapeHTML(value["index"].toString());
+                        let name = BrowserHelper.escapeHTML(value["name"].toString());
+
+                        let selectedAttr = "";
+                        if (value["selected"]) {
+                            selectedAttr = " selected='selected'";
+                        } else if (i === 0) {
+                            document.querySelector("#es_profile_background_current_image").src = value["id"];
                             i = 1;
-                            selected = false;
                         }
+                        selectHtml += `<option value='${index}'${selectedAttr}>${name}</option>`;
+                    }
+                    selectHtml += "</select>";
 
-                        result.data.forEach(value => {
-                            let index = BrowserHelper.escapeHTML(value["index"].toString());
-                            let name = BrowserHelper.escapeHTML(value["name"].toString());
+                    document.querySelector(".es_loading").remove();
+                    document.querySelector("#es_background_selection").innerHTML = selectHtml;
 
-                            if (value["selected"]) {
-                                selectHtml += "<option value='" + index + "' selected>" + name + "</option>";
-                            } else {
-                                if (i === 0) {
-                                    document.querySelector("#es_profile_background_current_image").src = value["id"];
-                                    i = 1;
-                                }
-                                selectHtml += "<option value='" + index + "'>" + name + "</option>";
-                            }
-                        });
-                        selectHtml += "</select>";
-
-                        document.querySelector(".es_loading").remove();
-                        document.querySelector("#es_background_selection").innerHTML = selectHtml;
-
-                        document.querySelector("#es_background").addEventListener("change", function() {
-                            let img = document.querySelector("#es_background").value + "/252fx160f";
-                            document.querySelector("#es_profile_background_current_image").src = img;
-                        });
+                    document.querySelector("#es_background").addEventListener("change", function() {
+                        selectedImg = document.querySelector("#es_background").value;
+                        document.querySelector("#es_profile_background_current_image").src = selectedImg + "/252fx160f";
                     });
+                });
 
-                    // Enable the "save" button
-                    document.querySelector("#es_background_save_btn").classList.remove("btn_disabled");
-                    document.querySelector("#es_background_save_btn").addEventListener("click", function() {
-                        ProfileData.clearOwn();
-                        document.querySelector("#es_profile_bg").submit();
-                    });
-                }
-            });
+                // Enable the "save" button
+                document.querySelector("#es_background_save_btn").classList.remove("btn_disabled");
+                document.querySelector("#es_background_save_btn").addEventListener("click", function() {
+                    ProfileData.clearOwn();
 
-            document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
-                ProfileData.clearOwn();
-                document.querySelector("#es_profile_remove").submit();
-            });
+                    console.log("Save BG", selectedAppid, selectedImg);
+                    // FIXME document.querySelector("#es_profile_bg").submit();
+                });
+            }
+        });
+
+        document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
+            ProfileData.clearOwn();
+            // FIXME document.querySelector("#es_profile_remove").submit();
         });
     };
-*/
+
     return ProfileEditPageClass;
 })();
 
