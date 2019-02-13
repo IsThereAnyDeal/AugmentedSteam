@@ -2529,3 +2529,22 @@ input[type=checkbox].es_dlc_selection:checked + label {
     justify-content: space-between;
     padding: 5px 10px;
 }
+
+
+#es_bg {
+    margin-bottom:10px;
+}
+
+#es_bg select {
+    max-width:100%;
+}
+
+#es_bg_preview{
+    display:block;
+    margin:auto;
+}
+
+#es_bg_buttons {
+    margin-top:10px;
+    text-align:right;
+}
