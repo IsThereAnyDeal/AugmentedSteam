@@ -2076,9 +2076,6 @@ let SearchPageClass = (function(){
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
-
-                row.removeAttribute("onmouseover");
-                row.removeAttribute("onmouseout");
             }
 
             document.querySelector(".LoadingWrapper").remove();
