@@ -633,7 +633,7 @@ let User = (function(){
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            let country = LocalData.get("userCountry");
+            country = LocalData.get("userCountry");
             if (!country) {
                 country = BrowserHelper.getCookie("steamCountry");
             }
