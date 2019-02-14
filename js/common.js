@@ -61,6 +61,7 @@ let Defaults = (function() {
     self.showpcgw = true;
     self.showclient = true;
     self.showsteamcardexchange = false;
+    self.showitadlinks = true;
     self.showsteamdb = true;
     self.showastatslink = true;
     self.showwsgf = true;

@@ -178,47 +178,58 @@ let StorePageClass = (function(){
         prices.load();
     };
 
-    StorePageClass.prototype.addSteamDb = function(type) {
-        if (!SyncedStorage.get("showsteamdb", true)) { return; }
+    StorePageClass.prototype.getRightColLinkHtml = function(cls, url, str) {
+        return `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
+                </a>`;
+    };
 
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
+    // FIXME rename this to something sensible, maybe merge with addLinks?
+    StorePageClass.prototype.addSteamDbItad = function(type) {
+        if (!SyncedStorage.get("showsteamdb", Defaults.showsteamdb)
+         && !SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) { return; }
 
-        // TODO this should be refactored elsewhere probably
+        let gameid = null;
+        let node = null;
+
         switch (type) {
-            case "app": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/app/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector("#ReportAppBtn").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
+            case "app":
+                gameid = this.appid;
+                node = document.querySelector("#ReportAppBtn").parentNode;
                 break;
-            case "sub": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/sub/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
+            case "sub":
+                gameid = this.subid;
+                node = document.querySelector(".share").parentNode;
                 break;
-            case "bundle": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/bundle/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                let node = document.querySelector(".share");
+            case "bundle":
+                gameid = this.bundleid;
+                node = document.querySelector(".share");
                 if (!node) {
                     node = document.querySelector(".rightcol .game_details");
                 }
-                node.parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                            <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
-            break;
+                break;
+            default:
+                return;
+        }
+
+        if (!node) { return; }
+
+        if (SyncedStorage.get("showsteamdb", Defaults.showsteamdb)) {
+            node.insertAdjacentHTML("afterbegin",
+                this.getRightColLinkHtml(
+                    "steamdb_ico",
+                    `https://steamdb.info/${type}/${gameid}`,
+                    Localization.str.view_in + ' Steam Database')
+                );
+        }
+
+        if (SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) {
+            node.insertAdjacentHTML("afterbegin",
+                this.getRightColLinkHtml(
+                    "itad_ico",
+                    `https://isthereanydeal.com/steam/${type}/${gameid}`,
+                    Localization.str.view_on + ' IsThereAnyDeal')
+            );
         }
     };
 
@@ -336,7 +347,7 @@ let SubPageClass = (function() {
 
         this.addDrmWarnings();
         this.addPrices();
-        this.addSteamDb("sub");
+        this.addSteamDbItad("sub");
         this.showRegionalPricing("sub");
         this.subscriptionSavingsCheck();
     }
@@ -396,7 +407,7 @@ let BundlePageClass = (function(){
 
         this.addDrmWarnings();
         this.addPrices();
-        this.addSteamDb("bundle");
+        this.addSteamDbItad("bundle");
     }
 
     BundlePageClass.prototype = Object.create(Super.prototype);
@@ -438,7 +449,7 @@ let AppPageClass = (function(){
 
         this.moveUsefulLinks();
         this.addLinks();
-        this.addSteamDb("app");
+        this.addSteamDbItad("app");
         this.addHighlights();
         this.addFamilySharingWarning();
 
