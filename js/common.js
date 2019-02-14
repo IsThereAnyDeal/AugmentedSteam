@@ -611,7 +611,15 @@ let User = (function(){
     };
 
     self.getCountry = function() {
-        let country = BrowserHelper.getCookie("steamCountry");
+        let url = new URL(window.location.href);
+
+        let country;
+        if (url.searchParams && url.searchParams.has("cc")) {
+            country = url.searchParams.get("cc");
+        } else {
+            country = BrowserHelper.getCookie("steamCountry");
+        }
+
         if (!country) { return null; }
         return country.substr(0, 2);
     };
