@@ -2531,20 +2531,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 
-#es_bg {
+.es_profile_group {
     margin-bottom:10px;
 }
 
-#es_bg select {
+.es_profile_group select {
     max-width:100%;
 }
 
-#es_bg_preview{
+.es_profile_preview {
     display:block;
     margin:auto;
 }
 
-#es_bg_buttons {
+.es_profile_buttons {
     margin-top:10px;
     text-align:right;
 }

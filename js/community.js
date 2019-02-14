@@ -962,10 +962,13 @@ let ProfileEditPageClass = (function(){
     function ProfileEditPageClass() {
         ProfileData.clearOwn();
 
-        ProfileData.then(() => {
-            this.addBackgroundSelection();
-            // add_es_style_selection();
-        });
+
+        if (window.location.pathname.indexOf("/settings") < 0) {
+            ProfileData.then(() => {
+                this.addBackgroundSelection();
+                this.addStyleSelection();
+            });
+        }
     }
 
     function showBgFormLoading() {
@@ -1046,7 +1049,6 @@ let ProfileEditPageClass = (function(){
 
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
         if (!SyncedStorage.get("showesbg", Defaults.showesbg)) { return; }
-        if (window.location.pathname.indexOf("/settings") >= 0) { return; }
 
         let html =
             `<div class='group_content group_summary'>
@@ -1054,15 +1056,15 @@ let ProfileEditPageClass = (function(){
                     ${Localization.str.custom_background}:
                     <span class='formRowHint' data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
                 </div>
-                <div id="es_bg">                
+                <div id="es_bg" class="es_profile_group">
                     <div id='es_bg_game_select'><select name='es_bg_game' id='es_bg_game' class='gray_bevel dynInput' style="display:none"></select></div>
                     <div id='es_bg_img_select'><select name='es_bg_img' id='es_bg_img' class='gray_bevel dynInput' style="display:none"></select></div>
                     <div class='es_loading'>
                         <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
                         <span>${Localization.str.loading}</span>
                     </div>
-                    <img id='es_bg_preview' src=''>
-                    <div id="es_bg_buttons">
+                    <img id='es_bg_preview' class="es_profile_preview" src=''>
+                    <div id="es_bg_buttons" class="es_profile_buttons">
                         <span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'>
                             <span>${Localization.str.remove}</span>
                         </span>&nbsp;
@@ -1110,6 +1112,80 @@ let ProfileEditPageClass = (function(){
             let selectedAppid = encodeURIComponent(gameSelectNode.value);
             let selectedImg = encodeURIComponent(imgSelectNode.value);
             window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
+        });
+    };
+
+    ProfileEditPageClass.prototype.addStyleSelection = function() {
+        let html =
+            `<div class='group_content group_summary'>
+                <div class='formRow'>
+                    ${Localization.str.custom_style}:
+                    <span class='formRowHint' data-tooltip-text='${Localization.str.custom_style_help}'>(?)</span>
+                </div>
+                <div class="es_profile_group">                
+                    <div id='es_style_select'>
+                        <select name='es_style' id='es_style' class='gray_bevel dynInput'>
+                            <option id='remove' value='remove'>${Localization.str.noneselected}</option>
+                            <option id='blue' value='blue'>Blue Theme</option>
+                            <option id='clear' value='clear'>Clear Theme</option>
+                            <option id='green' value='green'>Green Theme</option>
+                            <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
+                            <option id='orange' value='orange'>Orange Theme</option
+                            <option id='pink' value='pink'>Pink Theme</option
+                            <option id='purple' value='purple'>Purple Theme</option>
+                            <option id='red' value='red'>Red Theme</option>
+                            <option id='teal' value='teal'>Teal Theme</option>
+                            <option id='yellow' value='yellow'>Yellow Theme</option>
+                        </select>
+                    </div>
+                    <img id='es_style_preview' class="es_profile_preview" src=''>
+                    <div id="es_style_buttons" class="es_profile_buttons">
+                        <span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'>
+                            <span>${Localization.str.remove}</span>
+                        </span>&nbsp;
+                        <span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
+                            <span>${Localization.str.save}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>`;
+
+        document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
+
+        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+
+        let styleSelectNode = document.querySelector("#es_style");
+
+        let currentStyle = ProfileData.getStyle();
+        if (currentStyle) {
+            styleSelectNode.value = currentStyle;
+            document.querySelector("#es_style_preview").src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+        }
+
+        styleSelectNode.addEventListener("change", function(){
+            let imgNode = document.querySelector("#es_style_preview");
+            if (styleSelectNode.value === "remove") {
+                imgNode.style.display = "none";
+            } else {
+                imgNode.style.display = "block";
+                imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+            }
+
+            // Enable the "save" button
+            document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
+        });
+
+        document.querySelector("#es_style_save_btn").addEventListener("click", function(e) {
+            if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
+            ProfileData.clearOwn();
+
+            let selectedStyle = encodeURIComponent(styleSelectNode.value);
+            window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
+        });
+
+        document.querySelector("#es_style_remove_btn").addEventListener("click", function(e) {
+            ProfileData.clearOwn();
+            window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
         });
     };
 
