@@ -1326,8 +1326,8 @@ let EnhancedSteam = (function() {
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             document.querySelector("#global_header").insertAdjacentHTML("afterend", `
-                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage]) + `
-                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage]) + `</a>
+                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
+                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>
             `);
 
