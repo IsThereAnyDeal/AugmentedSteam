@@ -1257,7 +1257,7 @@ let EnhancedSteam = (function() {
     self.addMenu = function() {
         document.querySelector("#global_action_menu").insertAdjacentHTML("afterBegin", `
             <div id="es_menu">
-                <span id="es_pulldown" class="pulldown global_action_link">Enhanced Steam</span>
+                <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
                         <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
@@ -2691,7 +2691,7 @@ let Common = (function(){
     self.init = function() {
 
         console.log.apply(console, [
-            "%c Enhanced %cSteam v" + Info.version + ", an IsThereAnyDeal fork %c https://es.isthereanydeal.com/",
+            "%c Augmented %cSteam v" + Info.version + " %c https://es.isthereanydeal.com/",
             "background: #000000;color:#046eb2",
             "background: #000000;color: #ffffff",
             "",
