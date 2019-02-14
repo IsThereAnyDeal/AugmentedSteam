@@ -225,7 +225,11 @@ let LocalData = (function(){
     self.get = function(key, defaultValue) {
         let v = localStorage.getItem(key);
         if (!v) return defaultValue;
-        return JSON.parse(v);
+        try {
+            return JSON.parse(v);
+        } catch (err) {
+            return defaultValue;
+        }
     };
 
     self.del = function(key) {
