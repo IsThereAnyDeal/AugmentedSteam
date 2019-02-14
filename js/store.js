@@ -153,6 +153,13 @@ let StorePageClass = (function(){
                 if (!node) {
                     node = document.querySelector(".game_area_purchase_game[data-ds-bundleid='"+id+"']");
                     placement = "beforebegin";
+                } else {
+                    // Move any "Complete your Collection!" banner out of the way
+                    let banner = node.querySelector('.ds_completetheset');
+                    let newParent = node.querySelector('.game_area_purchase_game');
+                    if (banner && newParent) {
+                        newParent.appendChild(banner);
+                    }
                 }
             }
 
