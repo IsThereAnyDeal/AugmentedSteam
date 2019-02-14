@@ -225,7 +225,11 @@ let LocalData = (function(){
     self.get = function(key, defaultValue) {
         let v = localStorage.getItem(key);
         if (!v) return defaultValue;
-        return JSON.parse(v);
+        try {
+            return JSON.parse(v);
+        } catch (err) {
+            return defaultValue;
+        }
     };
 
     self.del = function(key) {
@@ -1341,7 +1345,11 @@ let EnhancedSteam = (function() {
 
     self.removeAboutMenu = function(){
         if (!SyncedStorage.get("hideaboutmenu")) { return; }
-        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+		
+        let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
+        if (aboutMenu == null) { return; }
+		
+        aboutMenu.remove();
     };
 
     self.addHeaderLinks = function(){
