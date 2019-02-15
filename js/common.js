@@ -1345,11 +1345,7 @@ let EnhancedSteam = (function() {
 
     self.removeAboutMenu = function(){
         if (!SyncedStorage.get("hideaboutmenu")) { return; }
-		
-        let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
-        if (aboutMenu == null) { return; }
-		
-        aboutMenu.remove();
+        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
     };
 
     self.addHeaderLinks = function(){
