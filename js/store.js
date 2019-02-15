@@ -2769,15 +2769,17 @@ let StoreFrontPageClass = (function(){
     }
 
     StoreFrontPageClass.prototype.setHomePageTab = function(){
-        if (SyncedStorage.get("homepage_tab_selection", "remember") !== "remember") { return; }
-
         document.querySelector(".home_tabs_row").addEventListener("click", function(e) {
             let tab = e.target.closest(".tab_content");
             if (!tab) { return; }
             SyncedStorage.set("homepage_tab_last", tab.parentNode.id);
         });
 
-        let last = SyncedStorage.get("homepage_tab_last");
+        let setting = SyncedStorage.get("homepage_tab_selection", "remember");
+        let last = setting;
+        if (setting === "remember") {
+            last = SyncedStorage.get("homepage_tab_last");
+        }
         if (!last) { return; }
 
         let tab = document.querySelector(".home_tabs_row #"+last);
