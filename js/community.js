@@ -2526,7 +2526,9 @@ let FriendsThatPlayPageClass = (function(){
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
         let memberList = document.querySelector("#memberList");
 
-        let section = memberList.querySelectorAll(".mainSectionHeader").length >= 4 ? 1 : 2;
+        let section = memberList.querySelectorAll(".mainSectionHeader").length;
+        if (section < 3) return; // DLC and unreleased games with no playtime
+        section = section >= 4 ? 1 : 2;
 
         memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")")
             .insertAdjacentHTML("beforeend",
