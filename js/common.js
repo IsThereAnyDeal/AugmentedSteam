@@ -153,9 +153,8 @@ let Api = (function(){
 let Background = (function(){
     let self = {};
 
-    self.action = async function(requested) {
+    self.message = async function(message) {
         return new Promise(function (resolve, reject) {
-            let message = { 'action': requested, };
             chrome.runtime.sendMessage(message, function(response) {
                 if (!response) {
                     reject("No response from extension background context.");
@@ -168,6 +167,10 @@ let Background = (function(){
                 resolve(response.response);
             });
         });
+    };
+    
+    self.action = function(requested) {
+        return self.message({ 'action': requested, });
     };
 
     Object.freeze(self);
