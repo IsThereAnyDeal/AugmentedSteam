@@ -563,9 +563,9 @@ let User = (function(){
     let _promise = null;
 
     async function _fetch() {
-        let response = await RequestData.getHttp("https://steamcommunity.com/profiles/0/", {withCredentials: true});
+        let response = await RequestData.getHttp("https://steamcommunity.com/" + self.profilePath);
 
-        self.steamId = (response.match(/g_steamID = "(\d+)";/) || [])[1];
+        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
 
         if (self.steamId) {
             self.isSignedIn = true;
@@ -1362,11 +1362,7 @@ let EnhancedSteam = (function() {
 
     self.removeAboutMenu = function(){
         if (!SyncedStorage.get("hideaboutmenu")) { return; }
-		
-        let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
-        if (aboutMenu == null) { return; }
-		
-        aboutMenu.remove();
+        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
     };
 
     self.addHeaderLinks = function(){
