@@ -2463,7 +2463,8 @@ let FriendsThatPlayPageClass = (function(){
     }
 
     FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
-
+        if (!SyncedStorage.get("showallfriendsthatown", false)) return;
+        
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
         let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
         if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
