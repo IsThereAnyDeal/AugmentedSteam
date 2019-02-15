@@ -1362,7 +1362,11 @@ let EnhancedSteam = (function() {
 
     self.removeAboutMenu = function(){
         if (!SyncedStorage.get("hideaboutmenu")) { return; }
-        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+		
+        let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
+        if (aboutMenu == null) { return; }
+		
+        aboutMenu.remove();
     };
 
     self.addHeaderLinks = function(){
