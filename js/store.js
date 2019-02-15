@@ -2775,7 +2775,7 @@ let StoreFrontPageClass = (function(){
             SyncedStorage.set("homepage_tab_last", tab.parentNode.id);
         });
 
-        let setting = SyncedStorage.get("homepage_tab_selection", "remember");
+        let setting = SyncedStorage.get("homepage_tab_selection", Defaults.homepage_tab_selection);
         let last = setting;
         if (setting === "remember") {
             last = SyncedStorage.get("homepage_tab_last");
