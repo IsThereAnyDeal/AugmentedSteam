@@ -2368,6 +2368,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
 }
 
+.itad_ico i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
+}
+.itad_ico:hover i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
+}
+
 .steam_client_btn {
 	background-image:url('//store.steampowered.com/favicon.ico');
 }

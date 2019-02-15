@@ -61,6 +61,7 @@ let Defaults = (function() {
     self.showpcgw = true;
     self.showclient = true;
     self.showsteamcardexchange = false;
+    self.showitadlinks = true;
     self.showsteamdb = true;
     self.showastatslink = true;
     self.showwsgf = true;
@@ -559,38 +560,49 @@ let User = (function(){
     let sessionId = false;
 
     let _promise = null;
+
+    async function _fetch() {
+        let response = await RequestData.getHttp("https://steamcommunity.com/" + self.profilePath);
+
+        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
+
+        if (self.steamId) {
+            self.isSignedIn = true;
+            LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
+
+            // check user country
+            response = await RequestData.getHttp("https://store.steampowered.com/account/change_country/");
+            if (response) {
+                let node = BrowserHelper.htmlToDOM(response).querySelector("#dselect_user_country");
+                if (node && node.value) {
+                    LocalData.set("userCountry", node.value);
+                }
+            }
+        }
+    }
+
     self.promise = function() {
         if (_promise) { return _promise; }
 
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
+        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [null])[0];
 
-        _promise = new Promise(function(resolve, reject) {
-            if (self.profilePath) {
-                let userLogin = LocalData.get("userLogin");
-                if (userLogin && userLogin.profilePath === self.profilePath) {
-                    self.isSignedIn = true;
-                    self.steamId = userLogin.steamId;
-                    resolve();
-                } else {
-                    RequestData.getHttp("//steamcommunity.com" + self.profilePath)
-                        .then(function(response) {
-                            self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
+        if (!self.profilePath) {
+            _promise = Promise.resolve();
+            return _promise;
+        }
 
-                            if (self.steamId) {
-                                self.isSignedIn = true;
-                                LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
-                            }
+        let userLogin = LocalData.get("userLogin");
+        if (userLogin && userLogin.profilePath === self.profilePath) {
+            self.isSignedIn = true;
+            self.steamId = userLogin.steamId;
+            _promise = Promise.resolve();
+            return _promise;
+        }
 
-                            resolve();
-                        }, reject);
-                }
+        _promise = _fetch();
 
-            } else {
-                resolve();
-            }
-        });
         return _promise;
     };
 
@@ -621,7 +633,10 @@ let User = (function(){
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            country = BrowserHelper.getCookie("steamCountry");
+            country = LocalData.get("userCountry");
+            if (!country) {
+                country = BrowserHelper.getCookie("steamCountry");
+            }
         }
 
         if (!country) { return null; }
@@ -1326,8 +1341,8 @@ let EnhancedSteam = (function() {
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             document.querySelector("#global_header").insertAdjacentHTML("afterend", `
-                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage]) + `
-                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage]) + `</a>
+                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
+                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>
             `);
 

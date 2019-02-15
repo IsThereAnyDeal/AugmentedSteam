@@ -3141,7 +3141,16 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
+        this.addItadLink();
         AgeCheck.sendVerification();
+
+        let node = document.querySelector(".apphub_background");
+        if (node) {
+            let observer = new MutationObserver(() => {
+                AgeCheck.sendVerification();
+            });
+            observer.observe(node, {attributes: true}); // display changes to none if age gate is shown
+        }
     }
 
     CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
@@ -3187,10 +3196,19 @@ let CommunityAppPageClass = (function(){
     };
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
+        if (!SyncedStorage.get("showsteamdb", Defaults.showsteamdb)) { return; }
         let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
-            `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDb</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addItadLink = function() {
+        if (!SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) { return; }
+        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
+
+        document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
     };
 
     return CommunityAppPageClass;
