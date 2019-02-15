@@ -2458,12 +2458,28 @@ let FriendsThatPlayPageClass = (function(){
     function FriendsThatPlayPageClass() {
         this.appid = parseInt(window.location.pathname.match(/\/friendsthatplay\/(\d+)/)[1]);
 
+        this.addCountsOfFriends();
         this.addFriendsPlayTimeSort();
         this.addFriendsThatPlay();
     }
 
-    FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
+    FriendsThatPlayPageClass.prototype.addCountsOfFriends = async function() {
+        for (let header of document.querySelectorAll('.friendListSectionHeader')) {
+            let profileList = header.nextElementSibling;
+            let count = profileList.querySelectorAll('.persona').length;
+            let html = ` <span class='friendcount'>(${count})</span> `;
+            let underscore = header.querySelector('.underscoreColor');
+            if (underscore) {
+                underscore.insertAdjacentHTML('beforebegin', html);
+                continue;
+            }
+            header.insertAdjacentHTML('beforeend', html);
+        }
+    };
 
+    FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
+        if (!SyncedStorage.get("showallfriendsthatown", Defaults.showallfriendsthatown)) return;
+        
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
         let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
         if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
@@ -2526,7 +2542,9 @@ let FriendsThatPlayPageClass = (function(){
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
         let memberList = document.querySelector("#memberList");
 
-        let section = memberList.querySelectorAll(".mainSectionHeader").length >= 4 ? 1 : 2;
+        let section = memberList.querySelectorAll(".mainSectionHeader").length;
+        if (section < 3) return; // DLC and unreleased games with no playtime
+        section = section >= 4 ? 1 : 2;
 
         memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")")
             .insertAdjacentHTML("beforeend",

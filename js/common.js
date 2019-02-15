@@ -102,6 +102,7 @@ let Defaults = (function() {
     self.wlbuttoncommunityapp = true;
     self.removeguideslanguagefilter = false;
     self.disablelinkfilter = false;
+    self.showallfriendsthatown = false;
     self.show1clickgoo = true;
     self.show_profile_link_images = "gray";
     self.profile_steamrepcn = true;
