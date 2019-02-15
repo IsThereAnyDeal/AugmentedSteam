@@ -563,9 +563,9 @@ let User = (function(){
     let _promise = null;
 
     async function _fetch() {
-        let response = await RequestData.getHttp("https://steamcommunity.com/profiles/0/", {withCredentials: true});
+        let response = await RequestData.getHttp(self.profileUrl);
 
-        self.steamId = (response.match(/g_steamID = "(\d+)";/) || [])[1];
+        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
 
         if (self.steamId) {
             self.isSignedIn = true;
