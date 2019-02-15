@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Nu mai afișa",
-        "updated": "Enhanced Steam a fost actualizat la versiunea __version__",
+        "updated": "Augmented Steam a fost actualizat la versiunea __version__",
         "changes": "Această versiune include următoarele schimbări"
     },
     "register": {

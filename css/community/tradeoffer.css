@@ -1,0 +1,18 @@
+#your_slots_count,
+#their_slots_count {
+	padding-bottom: 6px;
+	display: none;
+	font-weight:bold;
+}
+
+.es_higher {
+	color: #48740a;
+}
+
+.es_same {
+	color: #e1e10f;
+}
+
+.es_lower {
+	color: #d93636;
+}

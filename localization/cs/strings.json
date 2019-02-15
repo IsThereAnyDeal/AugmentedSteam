@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Příště nezobrazovat",
-        "updated": "Enhanced Steam byl aktualizován na verzi __version__",
+        "updated": "Augmented Steam byl aktualizován na verzi __version__",
         "changes": "Tato aktualizace obsahuje následující změny"
     },
     "register": {

@@ -367,21 +367,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 #friends_sort_options {
 	text-align: right;
-	margin-bottom: 12px;
-	margin-right: 52px;
 	font-size: 14px;
-	color: #939393;
-}
-
-.manage_friends_header #friends_sort_options {
-	float: right;
-	margin-bottom: 0;
-	margin-right: 35px;
+	color: white;
+	flex-grow:2;
+	margin-right:10px;
 }
 
 #friends_sort_options span {
 	margin-left: 8px;
-	color: #B0AEAC;
+	color: white;
 }
 
 .es_friends_sort_link {
@@ -449,6 +443,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	line-height: 32px;
 	margin-left: 5px;
 }
+#es_market_summary_status {
+	display:flex;
+	align-items:center;
+}
+#es_market_summary_status img {
+	margin-right:10px;
+}
+
 .es_market_summary_item {
 	float: right;
 	line-height: inherit !important;
@@ -948,6 +950,21 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Badges page
  * add_badge_view_options()
  **************************************/
+
+.esi-badge .badge_empty_right {
+	margin-top:7px;
+}
+.esi-badge .gamecard_badge_progress .badge_info {
+	width: 296px;
+}
+
+.es_steamcardexchange_link {
+	position: absolute;
+	z-index: 3;
+	top: 12px;
+	right: 12px;
+}
+
 .es_binder_view .badges_sheet {
 	overflow: hidden;
 }
@@ -2265,7 +2282,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Market
  * market_popular_refresh_toggle()
  **************************************/
-.es_popular_refresh_toggle {
+#es_popular_refresh_toggle {
 	position: absolute;
 	right: 0;
 	width: 20px;
@@ -2276,11 +2293,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: 8px 8px 0 0;
 	border: 1px solid rgba(73, 193, 245, 0.25) !important;
 }
-.es_popular_refresh_toggle:after {
+#es_popular_refresh_toggle:after {
 	content: "▶";
 	display: inline-block;
 }
-.es_popular_refresh_toggle.es_refresh_off:after {
+#es_popular_refresh_toggle.es_refresh_off:after {
 	content: "❚❚";
 }
 
@@ -2349,6 +2366,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .steamdb_ico:hover i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
+}
+
+.itad_ico i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
+}
+.itad_ico:hover i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
 }
 
 .steam_client_btn {
@@ -2468,3 +2492,66 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 .esi-hide-common .esi-common { display:none; }
 .esi-hide-notcommon .esi-notcommon { display:none; }
+
+
+.esi-stream {
+    position:relative;
+    display:block;
+    background: #396685;
+    margin:0 -10px -10px -10px;
+}
+
+.esi-stream__play {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    z-index: 2;
+}
+
+.esi-stream__live {
+    white-space: nowrap;
+    height: 13px;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+    padding: 3px 6px 3px 20px;
+    box-shadow: 0 0 7px #a94847;
+    background:black;
+}
+
+.esi-stream__twitch {
+    color:#4b367c;
+    font-weight:bold;
+}
+
+.esi-stream__title {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+
+
+.es_profile_group {
+    margin-bottom:10px;
+}
+
+.es_profile_group select {
+    max-width:100%;
+}
+
+.es_profile_preview {
+    display:block;
+    margin:auto;
+}
+
+.es_profile_buttons {
+    margin-top:10px;
+    text-align:right;
+}

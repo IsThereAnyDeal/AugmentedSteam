@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "再び表示しない",
-        "updated": "Enhanced Steamは、__version__に更新されました",
+        "updated": "Augmented Steamは、__version__に更新されました",
         "changes": "このリリースには、以下の変更が含まれています"
     },
     "register": {

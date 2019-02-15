@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Більше не показувати",
-        "updated": "Enhanced Steam оновлено до __version__",
+        "updated": "Augmented Steam оновлено до __version__",
         "changes": "Ця версія містить наступні зміни"
     },
     "register": {

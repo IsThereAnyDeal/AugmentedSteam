@@ -1,33 +1,4 @@
 
-let AgeCheck = (function(){
-
-    let self = {};
-
-    self.sendVerification = function(){
-        if (!SyncedStorage.get("send_age_info", true)) { return; }
-
-        let ageYearNode = document.querySelector("#ageYear");
-        if (ageYearNode) {
-            let myYear = Math.floor(Math.random()*75)+10;
-            ageYearNode.value = "19" + myYear;
-            document.querySelector(".btnv6_blue_hoverfade").click();
-        } else {
-            let btn = document.querySelector(".agegate_text_container.btns a");
-            if (btn && btn.getAttribute("href") === "#") {
-                btn.click();
-            }
-        }
-
-        let continueNode = document.querySelector("#age_gate_btn_continue");
-        if (continueNode) {
-            continueNode.click();
-        }
-    };
-
-    return self;
-})();
-
-
 let StorePageClass = (function(){
 
     function StorePageClass() {
@@ -182,6 +153,13 @@ let StorePageClass = (function(){
                 if (!node) {
                     node = document.querySelector(".game_area_purchase_game[data-ds-bundleid='"+id+"']");
                     placement = "beforebegin";
+                } else {
+                    // Move any "Complete your Collection!" banner out of the way
+                    let banner = node.querySelector('.ds_completetheset');
+                    let newParent = node.querySelector('.game_area_purchase_game');
+                    if (banner && newParent) {
+                        newParent.appendChild(banner);
+                    }
                 }
             }
 
@@ -193,62 +171,65 @@ let StorePageClass = (function(){
         prices.bundleCallback = function(html) {
 
             document.querySelector("#game_area_purchase")
-                .insertAdjacentHTML("afterend", "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='http://store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
+                .insertAdjacentHTML("afterend", "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
                     + html);
         };
 
         prices.load();
     };
 
-    StorePageClass.prototype.addSteamDb = function(type) {
-        if (!SyncedStorage.get("showsteamdb", true)) { return; }
+    StorePageClass.prototype.getRightColLinkHtml = function(cls, url, str) {
+        return `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
+                </a>`;
+    };
 
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
+    // FIXME rename this to something sensible, maybe merge with addLinks?
+    StorePageClass.prototype.addSteamDbItad = function(type) {
+        if (!SyncedStorage.get("showsteamdb", Defaults.showsteamdb)
+         && !SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) { return; }
 
-        // TODO this should be refactored elsewhere probably
+        let gameid = null;
+        let node = null;
+
         switch (type) {
-            case "app": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/app/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector("#ReportAppBtn").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
+            case "app":
+                gameid = this.appid;
+                node = document.querySelector("#ReportAppBtn").parentNode;
                 break;
-            case "sub": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/sub/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                document.querySelector(".share").parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                        <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
+            case "sub":
+                gameid = this.subid;
+                node = document.querySelector(".share").parentNode;
                 break;
-            case "bundle": {
-                let cls = "steamdb_ico";
-                let url = "//steamdb.info/bundle/" + this.appid;
-                let str = Localization.str.view_in + ' Steam Database';
-
-                let node = document.querySelector(".share");
+            case "bundle":
+                gameid = this.bundleid;
+                node = document.querySelector(".share");
                 if (!node) {
                     node = document.querySelector(".rightcol .game_details");
                 }
-                node.parentNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                            <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
                 break;
-            case "gamehub":
-                document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
-                    `<a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="//steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Steam Database</span></a>`);
-                break;
-            case "gamegroup":
-                document.querySelector("#rightActionBlock").insertAdjacentHTML("beforeend",
-                    `<div class="actionItemIcon"><img src="${bgUrl}" width="16" height="16" alt=""></div><a class="linkActionMinor" target="_blank" href="//steamdb.info/app/' + appid + '/">${Localization.str.view_in} Steam Database</a>`);
-                break;
+            default:
+                return;
+        }
+
+        if (!node) { return; }
+
+        if (SyncedStorage.get("showsteamdb", Defaults.showsteamdb)) {
+            node.insertAdjacentHTML("afterbegin",
+                this.getRightColLinkHtml(
+                    "steamdb_ico",
+                    `https://steamdb.info/${type}/${gameid}`,
+                    Localization.str.view_in + ' Steam Database')
+                );
+        }
+
+        if (SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) {
+            node.insertAdjacentHTML("afterbegin",
+                this.getRightColLinkHtml(
+                    "itad_ico",
+                    `https://isthereanydeal.com/steam/${type}/${gameid}`,
+                    Localization.str.view_on + ' IsThereAnyDeal')
+            );
         }
     };
 
@@ -298,7 +279,6 @@ let StorePageClass = (function(){
                 }
 
                 countries.forEach(country => {
-                    if (country === localCountry) { return; }
                     let apiPrice = prices[country];
                     let html = "";
 
@@ -366,7 +346,7 @@ let SubPageClass = (function() {
 
         this.addDrmWarnings();
         this.addPrices();
-        this.addSteamDb("sub");
+        this.addSteamDbItad("sub");
         this.showRegionalPricing("sub");
         this.subscriptionSavingsCheck();
     }
@@ -426,7 +406,7 @@ let BundlePageClass = (function(){
 
         this.addDrmWarnings();
         this.addPrices();
-        this.addSteamDb("bundle");
+        this.addSteamDbItad("bundle");
     }
 
     BundlePageClass.prototype = Object.create(Super.prototype);
@@ -468,7 +448,7 @@ let AppPageClass = (function(){
 
         this.moveUsefulLinks();
         this.addLinks();
-        this.addSteamDb("app");
+        this.addSteamDbItad("app");
         this.addHighlights();
         this.addFamilySharingWarning();
 
@@ -537,7 +517,9 @@ let AppPageClass = (function(){
                 node.classList.add("es_expanded");
             }
             for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+                // shrunk => expanded
                 node.style.display = null;
+                node.style.opacity = 1;
             }
 
             // Triggers the adjustment of the slider scroll bar
@@ -630,7 +612,7 @@ let AppPageClass = (function(){
         // When the "HD" button is clicked change the definition for all videos accordingly
         document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
         function clickHDControl(ev) {
-            if (!ev.target.matches || !ev.target.matches('.es_hd_toggle')) return;
+            if (!ev.target.matches || !ev.target.closest('.es_hd_toggle')) return;
 
             ev.preventDefault();
             ev.stopPropagation();
@@ -664,8 +646,8 @@ let AppPageClass = (function(){
             
             function _addHDControl() {
                 // Add "HD" button and "sd-src" to the video and set definition
-                if (videoControl.dataset['hd-src']) {
-                    videoControl.dataset['sd-src'] = videoControl.src;
+                if (videoControl.dataset.hdSrc) {
+                    videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
                         node.insertAdjacentHTML('afterend', `<div class="es_hd_toggle"><span>HD</span></div>`);
@@ -676,6 +658,7 @@ let AppPageClass = (function(){
                 let node = videoControl.parentNode.querySelector('.fullscreen_button');
                 if (node) {
                     let newNode = document.createElement('div');
+                    newNode.classList.add("fullscreen_button");
                     newNode.addEventListener('click', (() => toggleFullscreen(videoControl)), false);
                     node.replaceWith(newNode);
                     node = null; // prevent memory leak
@@ -721,7 +704,6 @@ let AppPageClass = (function(){
         }
  
         function toggleVideoDefinition(videoControl, setHD) {
-            return; // FIXME seems like SD videos won't play now, which will break whole video player
             let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
                 videoIsHD = false,
                 loadedSrc = videoControl.classList.contains("es_loaded_src"),
@@ -744,9 +726,9 @@ let AppPageClass = (function(){
 
             if (!playInHD && (typeof setHD === 'undefined' || setHD === true)) {
                 videoIsHD = true;
-                videoControl.src = videoControl.dataset["hd-src"];
+                videoControl.src = videoControl.dataset.hdSrc;
             } else if (loadedSrc) {
-                videoControl.src = videoControl.dataset["sd-src"];
+                videoControl.src = videoControl.dataset.sdSrc;
             }
     
             if (videoIsVisible && loadedSrc) {
@@ -1657,7 +1639,9 @@ let AppPageClass = (function(){
         if (!this.hasAchievements()) { return; }
         if (!this.isOwned()) { return; }
 
-        document.querySelector(".myactivity_block .details_block").insertAdjacentHTML("afterend",
+        let details_block = document.querySelector(".myactivity_block .details_block");
+        if (!details_block) return;
+        details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
         RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
@@ -1727,7 +1711,7 @@ let AppPageClass = (function(){
         Customizer.addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
-            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
+            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
         Customizer.addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
         if (document.querySelector(".user_reviews_header")) {
@@ -2108,9 +2092,6 @@ let SearchPageClass = (function(){
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
-
-                row.removeAttribute("onmouseover");
-                row.removeAttribute("onmouseout");
             }
 
             document.querySelector(".LoadingWrapper").remove();
@@ -2786,15 +2767,17 @@ let StoreFrontPageClass = (function(){
     }
 
     StoreFrontPageClass.prototype.setHomePageTab = function(){
-        if (SyncedStorage.get("homepage_tab_selection", "remember") !== "remember") { return; }
-
         document.querySelector(".home_tabs_row").addEventListener("click", function(e) {
             let tab = e.target.closest(".tab_content");
             if (!tab) { return; }
             SyncedStorage.set("homepage_tab_last", tab.parentNode.id);
         });
 
-        let last = SyncedStorage.get("homepage_tab_last");
+        let setting = SyncedStorage.get("homepage_tab_selection", Defaults.homepage_tab_selection);
+        let last = setting;
+        if (setting === "remember") {
+            last = SyncedStorage.get("homepage_tab_last");
+        }
         if (!last) { return; }
 
         let tab = document.querySelector(".home_tabs_row #"+last);
@@ -2966,7 +2949,7 @@ let TabAreaObserver = (function(){
                 // common for store pages
                 Highlights.startHighlightsAndTags();
                 EnhancedSteam.alternateLinuxIcon();
-                EnhancedSteam.hideTrademarkSymbol();
+                EnhancedSteam.hideTrademarkSymbol(false);
                 TabAreaObserver.observeChanges();
 
             })

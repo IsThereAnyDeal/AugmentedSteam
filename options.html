@@ -12,7 +12,7 @@
     <link href="css/es_sites_links.css" rel="stylesheet" type="text/css">
     <link href="css/es_sites_links-firefox.css" rel="stylesheet" type="text/css">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>Options - Enhanced Steam, an IsThereAnyDeal fork</title>
+    <title>Options - Augmented Steam</title>
     <base target="_blank">
 </head>
 <body>
@@ -217,6 +217,7 @@
                     <option value="Romanian">Română</option>
                     <option value="Schinese">简体中文</option>
                     <option value="Spanish">Español</option>
+                    <option value="Latam">Español Latinoamericano</option>
                     <option value="Swedish">Svenska</option>
                     <option value="Tchinese">繁體中文</option>
                     <option value="Thai">ไทย</option>
@@ -232,11 +233,11 @@
                     <select id="homepage_tab_selection" data-setting="homepage_tab_selection">
                         <option value="remember" data-locale-text="options.homepage_default_tab_remember">Remember Previous</option>
                         <option value="tab_newreleases_content_trigger" data-locale-text="options.homepage_default_tab_newreleases">Popular New Releases</option>
-                        <option value="es_allreleases" data-locale-text="options.homepage_default_tab_allreleases">All New Releases</option>
+                        <!-- <option value="es_allreleases" data-locale-text="options.homepage_default_tab_allreleases">All New Releases</option> -->
                         <option value="tab_topsellers_content_trigger" data-locale-text="options.homepage_default_tab_topsellers">Top Sellers</option>
                         <option value="tab_upcoming_content_trigger" data-locale-text="options.homepage_default_tab_upcoming">Upcoming</option>
                         <option value="tab_specials_content_trigger" data-locale-text="options.homepage_default_tab_specials">Specials</option>
-                        <option value="es_popular" data-locale-text="popular">Popular</option>
+                        <!-- <option value="es_popular" data-locale-text="popular">Popular</option> -->
                     </select>
                 </div>
             </div>
@@ -244,11 +245,11 @@
             <h2 id="store_general" data-locale-text="options.general">General</h2>
             <div>
                 <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
-                <label for="show_progressbar" id="show_progressbar_text" data-locale-text="show_progressbar">Show Enhanced Steam progress and status bar</label>
+                <label for="show_progressbar" id="show_progressbar_text">Show progress and status bar of this extension</label>
             </div>
             <div>
                 <input type="checkbox" id="version_show" data-setting="version_show">
-                <label for="version_show" id="version_show_text" data-locale-text="options.version_show">Show change log when Enhanced Steam updates</label>
+                <label for="version_show" id="version_show_text">Show change log when this extension updates</label>
             </div>
             <div>
                 <input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname">
@@ -334,6 +335,10 @@
             <div>
                 <input type="checkbox" id="showhltb" data-setting="showhltb">
                 <label for="showhltb" id="store_hltb_text" data-locale-text="options.hltb">Show HowLongToBeat.com information</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showitadlinks" data-setting="showitadlinks">
+                <label for="showitadlinks" id="store_itadlinks_text" data-locale-text="options.itadlinks">Show IsThereAnyDeal links</label>
             </div>
             <div>
                 <input type="checkbox" id="showsteamdb" data-setting="showsteamdb">
@@ -615,6 +620,10 @@
                 <input type="checkbox" id="disablelinkfilter" data-setting="disablelinkfilter">
                 <label for="disablelinkfilter" id="disablelinkfilter_text" data-locale-text="options.disablelinkfilter">Disable confirmation when accessing external sites</label>
             </div>
+            <div>
+                <input type="checkbox" id="showallfriendsthatown" data-setting="showallfriendsthatown">
+                <label for="showallfriendsthatown" id="showallfriendsthatown_text" data-locale-text="options.showallfriendsthatown">Show "All friends that own"</label>
+            </div>
 
         </div>
 
@@ -628,9 +637,9 @@
                 <h2>About</h2>
                 <p>This is a fork of the Enhanced Steam extension.</p>
 
-                <p>We are committed to continuing its development after the original extension has ended its life.</p>
+                <p>We are committed to continuing its development after the <a href="https://github.com/jshackles/Enhanced_Steam">original extension</a> has ended its life.</p>
 
-                <p>Visit the extension's page or our Discord channel for more info.</p>
+                <p>Visit the <a href="https://es.isthereanydeal.com/">extension's page</a> or our <a href="https://discord.gg/yn57q7f">Discord channel</a> for more info.</p>
             </div>
         </div>
 
@@ -799,7 +808,7 @@
 
 <div id="footer">
     <div>
-        <a href="https://es.isthereanydeal.com" id="foot_link">Enhanced Steam Extension</a>
+        <a href="https://es.isthereanydeal.com" id="foot_link">Augmented Steam Extension</a>
     </div>
     <span id="author_info">a fork by IsThereAnyDeal<br />original author jshackles</span>
     <div>

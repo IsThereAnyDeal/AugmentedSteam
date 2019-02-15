@@ -1,6 +1,6 @@
 
 let Info = {
-    version: "0.9.2"
+    version: "0.9.3"
 };
 
 /**
@@ -61,6 +61,7 @@ let Defaults = (function() {
     self.showpcgw = true;
     self.showclient = true;
     self.showsteamcardexchange = false;
+    self.showitadlinks = true;
     self.showsteamdb = true;
     self.showastatslink = true;
     self.showwsgf = true;
@@ -101,6 +102,7 @@ let Defaults = (function() {
     self.wlbuttoncommunityapp = true;
     self.removeguideslanguagefilter = false;
     self.disablelinkfilter = false;
+    self.showallfriendsthatown = false;
     self.show1clickgoo = true;
     self.show_profile_link_images = "gray";
     self.profile_steamrepcn = true;
@@ -246,7 +248,11 @@ let LocalData = (function(){
     self.get = function(key, defaultValue) {
         let v = localStorage.getItem(key);
         if (!v) return defaultValue;
-        return JSON.parse(v);
+        try {
+            return JSON.parse(v);
+        } catch (err) {
+            return defaultValue;
+        }
     };
 
     self.del = function(key) {
@@ -440,7 +446,9 @@ let ProgressBar = (function(){
     self.create = function() {
         if (!SyncedStorage.get("show_progressbar", true)) { return; }
 
-        document.querySelector("#global_actions").insertAdjacentHTML("afterend",
+        let container = document.getElementById("global_actions");
+        if (!container) return;
+        container.insertAdjacentHTML("afterend",
             `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
@@ -584,38 +592,49 @@ let User = (function(){
     let sessionId = false;
 
     let _promise = null;
+
+    async function _fetch() {
+        let response = await RequestData.getHttp(self.profileUrl);
+
+        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
+
+        if (self.steamId) {
+            self.isSignedIn = true;
+            LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
+
+            // check user country
+            response = await RequestData.getHttp("https://store.steampowered.com/account/change_country/");
+            if (response) {
+                let node = BrowserHelper.htmlToDOM(response).querySelector("#dselect_user_country");
+                if (node && node.value) {
+                    LocalData.set("userCountry", node.value);
+                }
+            }
+        }
+    }
+
     self.promise = function() {
         if (_promise) { return _promise; }
 
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
+        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [null])[0];
 
-        _promise = new Promise(function(resolve, reject) {
-            if (self.profilePath) {
-                let userLogin = LocalData.get("userLogin");
-                if (userLogin && userLogin.profilePath === self.profilePath) {
-                    self.isSignedIn = true;
-                    self.steamId = userLogin.steamId;
-                    resolve();
-                } else {
-                    RequestData.getHttp("//steamcommunity.com/profiles/0/", {withCredentials: true})
-                        .then(function(response) {
-                            self.steamId = (response.match(/g_steamID = "(\d+)";/) || [])[1];
+        if (!self.profilePath) {
+            _promise = Promise.resolve();
+            return _promise;
+        }
 
-                            if (self.steamId) {
-                                self.isSignedIn = true;
-                                LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
-                            }
+        let userLogin = LocalData.get("userLogin");
+        if (userLogin && userLogin.profilePath === self.profilePath) {
+            self.isSignedIn = true;
+            self.steamId = userLogin.steamId;
+            _promise = Promise.resolve();
+            return _promise;
+        }
 
-                            resolve();
-                        }, reject);
-                }
+        _promise = _fetch();
 
-            } else {
-                resolve();
-            }
-        });
         return _promise;
     };
 
@@ -633,8 +652,25 @@ let User = (function(){
         return sessionId;
     };
 
+    self.getStoreSessionId = async function() {
+        // TODO what's the minimal page we can load here to get sessionId?
+        let storePage = await RequestData.getHttp("https://store.steampowered.com/news/");
+        return BrowserHelper.getVariableFromText(storePage, "g_sessionID", "string");
+    };
+
     self.getCountry = function() {
-        let country = BrowserHelper.getCookie("steamCountry");
+        let url = new URL(window.location.href);
+
+        let country;
+        if (url.searchParams && url.searchParams.has("cc")) {
+            country = url.searchParams.get("cc");
+        } else {
+            country = LocalData.get("userCountry");
+            if (!country) {
+                country = BrowserHelper.getCookie("steamCountry");
+            }
+        }
+
         if (!country) { return null; }
         return country.substr(0, 2);
     };
@@ -1098,6 +1134,7 @@ let Language = (function(){
         "romanian": "ro",
         "schinese": "zh-CN",
         "spanish": "es-ES",
+        "latam": "es-419",
         "swedish": "sv-SE",
         "tchinese": "zh-TW",
         "thai": "th",
@@ -1205,8 +1242,9 @@ let BrowserHelper = (function(){
         return null;
     };
 
-    self.getVariableFromDom = function(variableName, type) {
-        let nodes = document.querySelectorAll("script");
+    self.getVariableFromDom = function(variableName, type, dom) {
+        dom = dom || document;
+        let nodes = dom.querySelectorAll("script");
         for (let node of nodes) {
             let m = self.getVariableFromText(node.textContent, variableName, type)
             if (m) {
@@ -1267,7 +1305,7 @@ let EnhancedSteam = (function() {
     self.addMenu = function() {
         document.querySelector("#global_action_menu").insertAdjacentHTML("afterBegin", `
             <div id="es_menu">
-                <span id="es_pulldown" class="pulldown global_action_link">Enhanced Steam</span>
+                <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
                         <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
@@ -1336,8 +1374,8 @@ let EnhancedSteam = (function() {
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             document.querySelector("#global_header").insertAdjacentHTML("afterend", `
-                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage]) + `
-                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage]) + `</a>
+                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
+                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>
             `);
 
@@ -1355,7 +1393,11 @@ let EnhancedSteam = (function() {
 
     self.removeAboutMenu = function(){
         if (!SyncedStorage.get("hideaboutmenu")) { return; }
-        document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+		
+        let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
+        if (aboutMenu == null) { return; }
+		
+        aboutMenu.remove();
     };
 
     self.addHeaderLinks = function(){
@@ -1561,6 +1603,12 @@ let GameId = (function(){
         return m && parseId(m[1]);
     };
 
+    self.getAppidFromGameCard = function(text) {
+        if (!text) { return null; }
+        let m = text.match(/\/gamecards\/(\d+)/);
+        return m && parseId(m[1]);
+    };
+
     return self;
 })();
 
@@ -1582,6 +1630,12 @@ let DOMHelper = (function(){
         node.remove();
     };
 
+    // TODO extend Node itself?
+    self.selectLastNode = function(parent, selector) {
+        let nodes = parent.querySelectorAll(selector);
+        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
+    };
+
     return self;
 })();
 
@@ -1599,7 +1653,7 @@ let EarlyAccess = (function(){
         if (_promise) { return _promise; }
 
         let imageName = "img/overlay/early_access_banner_english.png";
-        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "tchinese", "thai"])) {
+        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
             imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
@@ -1805,7 +1859,7 @@ let Inventory = (function(){
         }
     }
 
-    // Trading cards
+    // Community items?
     function handleInventoryContext6(data) {
         if (!data || !data.success) { return; }
         LocalData.set("inventory_6", data);
@@ -1894,6 +1948,22 @@ let Inventory = (function(){
 
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
+    };
+
+    let inv6set = null;
+
+    self.hasInInventory6 = function(marketHash) {
+        if (!inv6set) {
+            inv6set = new Set();
+            let inv6 = LocalData.get("inventory_6");
+            if (!inv6 || !inv6['rgDescriptions']) { return false; }
+
+            for (let [key,item] of Object.entries(inv6.rgDescriptions)) {
+                inv6set.add(item['market_hash_name']);
+            }
+        }
+
+        return inv6set.has(marketHash);
     };
 
     return self;
@@ -2634,6 +2704,34 @@ let Customizer = (function(){
     return self;
 })();
 
+let AgeCheck = (function(){
+
+    let self = {};
+
+    self.sendVerification = function(){
+        if (!SyncedStorage.get("send_age_info", true)) { return; }
+
+        let ageYearNode = document.querySelector("#ageYear");
+        if (ageYearNode) {
+            let myYear = Math.floor(Math.random()*75)+10;
+            ageYearNode.value = "19" + myYear;
+            document.querySelector(".btnv6_blue_hoverfade").click();
+        } else {
+            let btn = document.querySelector(".agegate_text_container.btns a");
+            if (btn && btn.getAttribute("href") === "#") {
+                btn.click();
+            }
+        }
+
+        let continueNode = document.querySelector("#age_gate_btn_continue");
+        if (continueNode) {
+            continueNode.click();
+        }
+    };
+
+    return self;
+})();
+
 let Common = (function(){
 
     let self = {};
@@ -2641,7 +2739,7 @@ let Common = (function(){
     self.init = function() {
 
         console.log.apply(console, [
-            "%c Enhanced %cSteam v" + Info.version + ", an IsThereAnyDeal fork %c https://es.isthereanydeal.com/",
+            "%c Augmented %cSteam v" + Info.version + " %c https://es.isthereanydeal.com/",
             "background: #000000;color:#046eb2",
             "background: #000000;color: #ffffff",
             "",

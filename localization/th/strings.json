@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "ไม่ต้องแสดงอีก",
-        "updated": "Enhanced Steam ได้รับการอัปเดตเป็น __version__",
+        "updated": "Augmented Steam ได้รับการอัปเดตเป็น __version__",
         "changes": "รีลีสนี้ประกอบด้วยการเปลี่ยนแปลงต่อไปนี้"
     },
     "register": {
