@@ -71,7 +71,7 @@ const Steam = (function() {
             'credentials': 'include',
         };
         _dynamicstore.promise = fetch(url, p)
-            .then((response => { 'data': response.json(), 'timestamp': TimeHelper.timestamp(), }))
+            .then(response => response.json().then(data => ({ 'data': data, 'timestamp': TimeHelper.timestamp(), })))
             .then(function(dynamicstore) {
                 if (!dynamicstore.data.rgOwnedApps) {
                     throw "Could not fetch DynamicStore UserData";
