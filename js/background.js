@@ -107,6 +107,10 @@ const Steam = (function() {
     self.wishlist = async function() {
         return _dynamicstore().then(userdata => userdata.rgWishlist);        
     };
+    self.dynamicStore = async function() {
+        // FIXME, reduce dependence on whole object
+        return _dynamicstore();
+    };
     self.clearDynamicStore = async function() {
         LocalStorage.remove('dynamicstore');
         _dynamicstore.data = null;
@@ -124,6 +128,7 @@ let actionCallbacks = new Map([
     ['ignored', Steam.ignored],
     ['owned', Steam.owned],
     ['wishlist', Steam.wishlist],
+    ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
 
 ]);
