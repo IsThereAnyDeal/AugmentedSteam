@@ -38,6 +38,8 @@ let actionCallbacks = new Map([
     ['wishlist.clear', Steam.clearDynamicStore],
 
 ]);
+// new Map() for Map.prototype.get() in lieu of:
+// Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
 
 
 
@@ -45,10 +47,9 @@ let actionCallbacks = new Map([
 
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    if (!sender.tab) return false; // not from a tab, ignore
-    if (!message.action) return false; // no action requested, ignore
-
-    // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
+    if (!sender || !sender.tab) return false; // not from a tab, ignore
+    if (!message || !message.action) return false; // no action requested, ignore
+  
     let callback = actionCallbacks.get(message.action);
     if (!callback) {
         // requested action not recognized, reply with error immediately
@@ -56,7 +57,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         return false;
     }
 
-    callback(message)
+    Promise.resolve(callback(message))
         .then(response => sendResponse({ 'response': response, }))
         .catch(err => sendResponse({ 'error': err, }));
 
