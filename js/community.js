@@ -534,7 +534,10 @@ let ProfileHomePageClass = (function(){
             };
 
             // Build SteamRep section
-            document.querySelector("div.responsive_status_info").insertAdjacentHTML("beforeend", '<div id="es_steamrep"></div>');
+            let statusInfo = document.querySelector("div.responsive_status_info");
+            if (!statusInfo) return;
+            
+            statusInfo.insertAdjacentHTML("beforeend", '<div id="es_steamrep"></div>');
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
