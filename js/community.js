@@ -667,11 +667,51 @@ let ProfileHomePageClass = (function(){
             if (!data || !data.style) { return; }
 
             let style = ProfileData.getStyle();
-            let availableStyles = ["clear", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
+            let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
             if (availableStyles.indexOf(style) === -1) { return; }
 
             document.body.classList.add("es_profile_style");
             switch (style) {
+                case "goldenprofile":
+                    document.querySelector("head")
+                        .insertAdjacentHTML("beforeend", "<link rel='stylesheet' type='text/css' href='https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css'>");
+
+                    let container = document.createElement("div");
+                    container.classList.add("profile_lny_wrapper");
+
+                    let profilePageNode = document.querySelector(".responsive_page_template_content .profile_page");
+                    DOMHelper.wrap(container, profilePageNode);
+
+                    profilePageNode.classList.add("lnyprofile");
+
+                    profilePageNode.insertAdjacentHTML("afterbegin",
+                        `<div class="lny_sides_position">
+                            <div class="lny_side left">
+                                <div class="lny_side_background"></div>
+                                <div class="lny_top"></div>
+                                <div class="lny_pig"></div>
+                                <div class="lny_pendulum">
+                                    <div class="lny_strings"></div>
+                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
+                                </div>
+                            </div>
+                            <div class="lny_side right">
+                                <div class="lny_side_background"></div>
+                                <div class="lny_top"></div>
+                                <div class="lny_pig"></div>
+                                <div class="lny_pendulum">
+                                    <div class="lny_strings"></div>
+                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
+                                </div>
+                            </div>
+                        </div>`);
+
+                    document.querySelector(".profile_header").insertAdjacentHTML("beforebegin",
+                        `<div class="lny_header">
+                            <div class="lny_pig_center"></div>
+                        </div>`);
+                    
+                    break;
                 case "holiday2014":
                     document.querySelector("head")
                         .insertAdjacentHTML("beforeend", "<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
@@ -1137,10 +1177,11 @@ let ProfileEditPageClass = (function(){
                     <div id='es_style_select'>
                         <select name='es_style' id='es_style' class='gray_bevel dynInput'>
                             <option id='remove' value='remove'>${Localization.str.noneselected}</option>
+                            <option id='goldenprofile' value='goldenprofile'>Lunar Sale 2019</option>
+                            <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
                             <option id='blue' value='blue'>Blue Theme</option>
                             <option id='clear' value='clear'>Clear Theme</option>
                             <option id='green' value='green'>Green Theme</option>
-                            <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
                             <option id='orange' value='orange'>Orange Theme</option
                             <option id='pink' value='pink'>Pink Theme</option
                             <option id='purple' value='purple'>Purple Theme</option>
