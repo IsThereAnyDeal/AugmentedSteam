@@ -13,6 +13,11 @@ let SteamId = (function(){
             _steamId = BrowserHelper.getVariableFromDom("g_steamID", "string");
         }
 
+        if (!_steamId) {
+            let profileData = BrowserHelper.getVariableFromDom("g_rgProfileData", "object");
+            _steamId = profileData.steamid;
+        }
+
         return _steamId;
     };
 
