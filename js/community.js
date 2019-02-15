@@ -511,6 +511,9 @@ let ProfileHomePageClass = (function(){
 
             let badgeCount = data["badges"].length;
             if (badgeCount === 0) { return;}
+            
+            let profileBadges = document.querySelector(".profile_badges");
+            if (!profileBadges) { return; }
 
             let html =
                 `<div class="profile_badges" id="es_supporter_badges">
@@ -533,7 +536,7 @@ let ProfileHomePageClass = (function(){
 
             html += '</div></div>';
 
-            document.querySelector(".profile_badges").insertAdjacentHTML("afterend", html);
+            profileBadges.insertAdjacentHTML("afterend", html);
 
             ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
         });
@@ -610,7 +613,10 @@ let ProfileHomePageClass = (function(){
             };
 
             // Build SteamRep section
-            document.querySelector("div.responsive_status_info").insertAdjacentHTML("beforeend", '<div id="es_steamrep"></div>');
+            let statusInfo = document.querySelector("div.responsive_status_info");
+            if (!statusInfo) return;
+            
+            statusInfo.insertAdjacentHTML("beforeend", '<div id="es_steamrep"></div>');
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
