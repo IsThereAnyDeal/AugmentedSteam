@@ -139,7 +139,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
     Promise.resolve(callback(message))
         .then(response => sendResponse({ 'response': response, }))
-        .catch(err => sendResponse({ 'error': err, }));
+        .catch(function(err) {
+            console.error(err);
+            sendResponse({ 'error': "An error occurred in the background context.", }) // can't JSONify most exceptions
+        });
 
     // keep channel open until callback resolves
     return true;
