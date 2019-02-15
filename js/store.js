@@ -1712,7 +1712,7 @@ let AppPageClass = (function(){
         Customizer.addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
-            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h4").textContent);
+            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
         Customizer.addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
         if (document.querySelector(".user_reviews_header")) {
