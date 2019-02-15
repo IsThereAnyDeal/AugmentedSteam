@@ -64,7 +64,7 @@
             ],
             "exclude_matches": [
                 "*://steamcommunity.com/login/*",
-                "*://steamcommunity.com/tradeoffer"
+                "*://steamcommunity.com/tradeoffer/*"
             ],
             "js": [
                 "js/config.js",
@@ -84,6 +84,19 @@
             "css": [
                 "css/es_sites_links.css"
             ]
+        },
+        {
+          "matches": [
+            "*://steamcommunity.com/tradeoffer/*"
+          ],
+          "js": [
+            "js/config.js",
+            "js/common.js",
+            "js/tradeoffer.js"
+          ],
+          "css": [
+            "css/community/tradeoffer.css"
+          ]
         },
         {
             "matches": [
