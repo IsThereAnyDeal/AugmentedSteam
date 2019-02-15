@@ -55,8 +55,14 @@ const Steam = (function() {
         if (_dynamicstore.promise) { return _dynamicstore.promise; }
         
         // Get data from localStorage
-        { 'data': _dynamicstore.data, 'timestamp': _dynamicstore.timestamp, } = LocalStorage.get('dynamicstore');
-        if (_dynamicstore.data && !_dynamicstore.isExpired()) { return _dynamicstore.data; }
+        let dynamicstore = LocalStorage.get('dynamicstore');
+        if (dynamicstore) {
+            Object.assign(_dynamicstore, {
+                'data': dynamicstore.data,
+                'timestamp': dynamicstore.timestamp,
+            });
+            if (_dynamicstore.data && !_dynamicstore.isExpired()) { return _dynamicstore.data; }
+        }
 
         // Cache expired, need to fetch
         let url = "https://store.steampowered.com/dynamicstore/userdata/";
@@ -71,8 +77,11 @@ const Steam = (function() {
                     throw "Could not fetch DynamicStore UserData";
                 }
                 LocalStorage.set("dynamicstore", dynamicstore);
-                { 'data': _dynamicstore.data, 'timestamp': _dynamicstore.timestamp, } = dynamicstore;
-                _dynamicstore.promise = null; // no request in progress
+                Object.assign(_dynamicstore, {
+                    'data': dynamicstore.data,
+                    'timestamp': dynamicstore.timestamp,
+                    'promise': null, // no request in progress
+                });
                 return dynamicstore.data;
             })
             ;
