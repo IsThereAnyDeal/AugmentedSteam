@@ -3143,6 +3143,14 @@ let CommunityAppPageClass = (function(){
         this.addSteamDbLink();
         this.addItadLink();
         AgeCheck.sendVerification();
+
+        let node = document.querySelector(".apphub_background");
+        if (node) {
+            let observer = new MutationObserver(() => {
+                AgeCheck.sendVerification();
+            });
+            observer.observe(node, {attributes: true}); // display changes to none if age gate is shown
+        }
     }
 
     CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
