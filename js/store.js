@@ -279,7 +279,6 @@ let StorePageClass = (function(){
                 }
 
                 countries.forEach(country => {
-                    if (country === localCountry) { return; }
                     let apiPrice = prices[country];
                     let html = "";
 
