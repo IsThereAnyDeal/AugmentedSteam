@@ -1102,6 +1102,7 @@ let Language = (function(){
         "romanian": "ro",
         "schinese": "zh-CN",
         "spanish": "es-ES",
+        "latam": "es-419",
         "swedish": "sv-SE",
         "tchinese": "zh-TW",
         "thai": "th",
