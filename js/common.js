@@ -574,9 +574,9 @@ let User = (function(){
                     self.steamId = userLogin.steamId;
                     resolve();
                 } else {
-                    RequestData.getHttp("//steamcommunity.com/profiles/0/", {withCredentials: true})
+                    RequestData.getHttp("//steamcommunity.com" + self.profilePath)
                         .then(function(response) {
-                            self.steamId = (response.match(/g_steamID = "(\d+)";/) || [])[1];
+                            self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
 
                             if (self.steamId) {
                                 self.isSignedIn = true;
