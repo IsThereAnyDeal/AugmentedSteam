@@ -432,6 +432,9 @@ let ProfileHomePageClass = (function(){
 
             let badgeCount = data["badges"].length;
             if (badgeCount === 0) { return;}
+            
+            let profileBadges = document.querySelector(".profile_badges");
+            if (!profileBadges) { return; }
 
             let html =
                 `<div class="profile_badges" id="es_supporter_badges">
@@ -454,7 +457,7 @@ let ProfileHomePageClass = (function(){
 
             html += '</div></div>';
 
-            document.querySelector(".profile_badges").insertAdjacentHTML("afterend", html);
+            profileBadges.insertAdjacentHTML("afterend", html);
 
             ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
         });
