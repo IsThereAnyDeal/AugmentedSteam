@@ -11,6 +11,36 @@ const TimeHelper = {
 Object.freeze(TimeHelper);
 
 
+const LocalStorage = (function(){
+    let self = {};
+
+    self.get = function(key, defaultValue) {
+        let item = localStorage.getItem(key);
+        if (!item) return defaultValue;
+        try {
+            return JSON.parse(item);
+        } catch (err) {
+            return defaultValue;
+        }
+    };
+
+    self.set = function(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    };
+
+    self.remove = function(key) {
+        localStorage.removeItem(key);
+    };
+
+    self.clear = function() {
+        localStorage.clear();
+    };
+
+    Object.freeze(self);
+    return self;
+})();
+
+
 const Steam = (function() {
     let self = {};
 
