@@ -563,7 +563,7 @@ let User = (function(){
     let _promise = null;
 
     async function _fetch() {
-        let response = await RequestData.getHttp("https://steamcommunity.com/" + self.profilePath);
+        let response = await RequestData.getHttp(self.profileUrl);
 
         self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
 
