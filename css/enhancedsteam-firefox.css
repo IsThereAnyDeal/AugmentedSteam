@@ -28,3 +28,17 @@ span.platform_img.mac {
 span.platform_img.linux {
   background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png") !important;
 }
+
+.steamdb_ico i {
+	background-image:url('moz-extension://__MSG_@@extension_id__/img/steamdb_store.png');
+}
+.steamdb_ico:hover i {
+	background-image:url('moz-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
+}
+
+.itad_ico i {
+	background-image:url('moz-extension://__MSG_@@extension_id__/img/line_chart.png');
+}
+.itad_ico:hover i {
+	background-image:url('moz-extension://__MSG_@@extension_id__/img/line_chart.png');
+}
