@@ -520,7 +520,7 @@
     },
     "update": {
         "dont_show": "不再显示",
-        "updated": "Enhanced Steam 已更新至 __version__",
+        "updated": "Augmented Steam 已更新至 __version__",
         "changes": "此版本包括以下更改"
     },
     "register": {

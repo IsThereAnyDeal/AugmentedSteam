@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "不要再顯示",
-        "updated": "Enhanced Steam 已經更新至 __version__",
+        "updated": "Augmented Steam 已經更新至 __version__",
         "changes": "這個發行版本包含下列的更動"
     },
     "register": {

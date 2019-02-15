@@ -524,7 +524,7 @@
     },
     "update": {
         "dont_show": "Don't Show Again",
-        "updated": "Enhanced Steam has been updated to __version__",
+        "updated": "Augmented Steam has been updated to __version__",
         "changes": "This release includes the following changes"
     },
     "register": {

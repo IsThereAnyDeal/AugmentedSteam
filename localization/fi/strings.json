@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Älä näytä uudelleen",
-        "updated": "Enhanced Steam on päivitetty versioon __version__",
+        "updated": "Augmented Steam on päivitetty versioon __version__",
         "changes": "Tämä versio sisältää seuraavat muutokset"
     },
     "register": {

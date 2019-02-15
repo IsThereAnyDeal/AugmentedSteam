@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "다시 표시하지 않음",
-        "updated": "Enhanced Steam이 __version__ 버전으로 업데이트 되었습니다.",
+        "updated": "Augmented Steam이 __version__ 버전으로 업데이트 되었습니다.",
         "changes": "이 업데이트의 내용은 다음과 같습니다"
     },
     "register": {

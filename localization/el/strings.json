@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Να μην εμφανιστεί ξανά",
-        "updated": "Το Enhanced Steam έχει ενημερωθεί στην έκδοση __version__",
+        "updated": "Το Augmented Steam έχει ενημερωθεί στην έκδοση __version__",
         "changes": "Αυτή η έκδοση περιλαμβάνει τις ακόλουθες αλλαγές"
     },
     "register": {

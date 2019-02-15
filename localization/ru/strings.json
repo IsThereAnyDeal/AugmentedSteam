@@ -516,7 +516,7 @@
     },
     "update": {
         "dont_show": "Больше не показывать",
-        "updated": "Enhanced Steam был обновлён до версии __version__",
+        "updated": "Augmented Steam был обновлён до версии __version__",
         "changes": "Эта версия включает в себя следующие изменения"
     },
     "register": {

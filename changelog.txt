@@ -1,4 +1,41 @@
 ﻿
+v0.9.3
+-----
+First of all, we have changed the name of the extension to Augmented Steam across all browsers.
+
+In this release we are bringing back almost all community features from the Enhanced Steam.
+Also a lot of bug fixes. Thanks to, mainly, our contributors - thank you all!
+
+In upcoming releases we are going to focus on bug fixes. If we missed a feature from the original,
+or something isn't working, please let us know.
+
+Some of the most notable changes in this release:
+
+Profile
+- added option to edit profile background
+- added Lunar Sale style option
+
+Badge pages:
+- added badge completion cost
+- added drop counts
+- added card exchange links
+- added badge sort
+- added badge filter
+- added badge view options
+
+Market:
+- show lowest prices for active market listings
+- added market stats (which should now work also for large profiles)
+- added sort options for active market listings
+- added option to hide active listings
+
+Other:
+- added IsThereAnyDeal links (wherever SteamDB link is being shown)
+- fixed HD video on store
+- fixed age gates on community app pages
+- improved country detection (for prices and regional comparison)
+
+
 v0.9.2
 -----
 In this version we have focused on adding more features from the original extensions,
