@@ -103,7 +103,7 @@
                 "*://store.steampowered.com/"
             ],
             "css": [
-                "css/store.steampowered.com/store_front.css"
+                "css/store/store_front.css"
             ]
         }
     ]
