@@ -30,11 +30,6 @@ var StoreList = [
         "color": "#59c4c5"
     },
     {
-        "id": "cybermanta",
-        "title": "CyberManta",
-        "color": "#00b2ee"
-    },
-    {
         "id": "dlgamer",
         "title": "DLGamer",
         "color": "#f5fe94"
@@ -110,6 +105,11 @@ var StoreList = [
         "color": "#f6a740"
     },
     {
+        "id": "gamesplanetus",
+        "title": "GamesPlanet US",
+        "color": "#f6a740"
+    },
+    {
         "id": "gamesrepublic",
         "title": "GamesRepublic",
         "color": "#ef0e38"
@@ -178,6 +178,11 @@ var StoreList = [
         "id": "origin",
         "title": "Origin",
         "color": "#ddff1c"
+    },
+    {
+        "id": "playism",
+        "title": "Playism",
+        "color": "#b8934f"
     },
     {
         "id": "razer",
