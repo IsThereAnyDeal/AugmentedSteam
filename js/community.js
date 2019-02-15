@@ -2458,9 +2458,24 @@ let FriendsThatPlayPageClass = (function(){
     function FriendsThatPlayPageClass() {
         this.appid = parseInt(window.location.pathname.match(/\/friendsthatplay\/(\d+)/)[1]);
 
+        this.addCountsOfFriends();
         this.addFriendsPlayTimeSort();
         this.addFriendsThatPlay();
     }
+
+    FriendsThatPlayPageClass.prototype.addCountsOfFriends = async function() {
+        for (let header of document.querySelectorAll('.friendListSectionHeader')) {
+            let profileList = header.nextElementSibling;
+            let count = profileList.querySelectorAll('.persona').length;
+            let html = ` <span class='friendcount'>(${count})</span> `;
+            let underscore = header.querySelector('.underscoreColor');
+            if (underscore) {
+                underscore.insertAdjacentHTML('beforebegin', html);
+                continue;
+            }
+            header.insertAdjacentHTML('beforeend', html);
+        }
+    };
 
     FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
         if (!SyncedStorage.get("showallfriendsthatown", false)) return;
