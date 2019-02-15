@@ -1344,6 +1344,7 @@ let EnhancedSteam = (function() {
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
         DynamicStore.clear();
+        Background.action('dynamicstore.clear');
     };
 
     self.bindLogout = function(){
@@ -2362,35 +2363,15 @@ let DynamicStore = (function(){
         get() { return new Set(_wishlisted); },
     });
 
-    /*
-     * _fetch() may resolve with an undefined value
-     * if Steam can't fulfill the API call
-     */
     async function _fetch() {
         if (!User.isSignedIn) { 
             self.clear();
             return _data;
         }
-    
-        let userdata = LocalData.get("dynamicstore");
-        let userdataUpdate = LocalData.get("dynamicstore_update", 0);
-
-        if (!userdata || TimeHelper.isExpired(userdataUpdate, 15*60)) {
-            // data is not cached, fetch
-            userdata = await RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true });
-            if (!userdata || !userdata.rgOwnedApps) { return; }
-            LocalData.set("dynamicstore", userdata);
-            LocalData.set("dynamicstore_update", TimeHelper.timestamp());
-            // userdata keys are:
-            // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
-            // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
-            // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
-            // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-        }
-        _data = userdata;
+        _data = await Background.action('dynamicstore');
         _owned = new Set(_data.rgOwnedApps);
         _wishlisted = new Set(_data.rgWishlist);
-        return userdata;
+        return _data;
     }
 
     self.then = function(onDone, onCatch) {
