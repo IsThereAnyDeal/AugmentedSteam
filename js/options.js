@@ -9,7 +9,7 @@ let Options = (function(){
 			let node = document.querySelector("#store_stores");
 			node.style.display="flex";
 
-			let stores = SyncedStorage.get("stores", []);
+			let stores = SyncedStorage.get("stores");
 
 			node.classList.add("es_checks_loaded");
 			let nodes = node.querySelectorAll("input[type='checkbox']");
@@ -99,7 +99,7 @@ let Options = (function(){
 
 		self.populateRegionalSelects = function() {
 			let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
-			let countries = SyncedStorage.get("regional_countries", []);
+			let countries = SyncedStorage.get("regional_countries");
 			countries.forEach(country => {
 				addAnotherWrapper.insertAdjacentHTML("beforebegin", generateRegionSelect(country));
 			});

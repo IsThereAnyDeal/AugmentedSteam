@@ -44,7 +44,7 @@ let StorePageClass = (function(){
 
 
     StorePageClass.prototype.addDrmWarnings = function() {
-        if (!SyncedStorage.get("showdrm", true)) { return; }
+        if (!SyncedStorage.get("showdrm")) { return; }
 
         let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
 
@@ -125,7 +125,7 @@ let StorePageClass = (function(){
     };
 
     StorePageClass.prototype.addPrices = function() {
-        if (!SyncedStorage.get("showlowestprice", true)) { return; }
+        if (!SyncedStorage.get("showlowestprice")) { return; }
 
         let prices = new Prices();
 
@@ -186,8 +186,8 @@ let StorePageClass = (function(){
 
     // FIXME rename this to something sensible, maybe merge with addLinks?
     StorePageClass.prototype.addSteamDbItad = function(type) {
-        if (!SyncedStorage.get("showsteamdb", Defaults.showsteamdb)
-         && !SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) { return; }
+        if (!SyncedStorage.get("showsteamdb")
+         && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
         let node = null;
@@ -214,7 +214,7 @@ let StorePageClass = (function(){
 
         if (!node) { return; }
 
-        if (SyncedStorage.get("showsteamdb", Defaults.showsteamdb)) {
+        if (SyncedStorage.get("showsteamdb")) {
             node.insertAdjacentHTML("afterbegin",
                 this.getRightColLinkHtml(
                     "steamdb_ico",
@@ -223,7 +223,7 @@ let StorePageClass = (function(){
                 );
         }
 
-        if (SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) {
+        if (SyncedStorage.get("showitadlinks")) {
             node.insertAdjacentHTML("afterbegin",
                 this.getRightColLinkHtml(
                     "itad_ico",
@@ -234,10 +234,10 @@ let StorePageClass = (function(){
     };
 
     StorePageClass.prototype.showRegionalPricing = function(type) {
-        let showRegionalPrice = SyncedStorage.get("showregionalprice", "mouse");
+        let showRegionalPrice = SyncedStorage.get("showregionalprice");
         if (showRegionalPrice === "off") { return; }
 
-        let countries = SyncedStorage.get("regional_countries", ["us", "gb", "fr", "ru", "br", "au", "jp"]);
+        let countries = SyncedStorage.get("regional_countries");
         if (!countries || countries.length === 0) { return; }
 
         let localCountry = User.getCountry().toLowerCase();
@@ -323,7 +323,7 @@ let StorePageClass = (function(){
                     priceNode.insertAdjacentElement("afterend", pricingDiv);
                     priceNode.parentNode.classList.add("es_regional_onmouse");
 
-                    if (!SyncedStorage.get("regional_hideworld", false)) {
+                    if (!SyncedStorage.get("regional_hideworld")) {
                         node.querySelector(".price,.discount_prices").classList.add("es_regional_icon")
                     }
                 }
@@ -759,7 +759,7 @@ let AppPageClass = (function(){
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
         }
-        if (SyncedStorage.get("showoc", true)) {
+        if (SyncedStorage.get("showoc")) {
             apiparams.oc = 1;
         }
 
@@ -899,7 +899,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addMetacriticUserScore = function() {
-        if (!SyncedStorage.get("showmcus", true)) { return; }
+        if (!SyncedStorage.get("showmcus")) { return; }
 
         let node = document.querySelector("#game_area_metascore");
         if (!node) { return; }
@@ -927,7 +927,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addOpenCritic = function() {
-        if (!SyncedStorage.get("showoc", true)) { return; }
+        if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
             if (!result || !result || !result.oc) { return; }
@@ -967,7 +967,7 @@ let AppPageClass = (function(){
                                     <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
                                 </div>`);
 
-                    if (!SyncedStorage.get("show_apppage_reviews", true)) {
+                    if (!SyncedStorage.get("show_apppage_reviews")) {
                         document.querySelector("#game_area_reviews").style.display = "none";
                     }
                 }
@@ -986,7 +986,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.displayPurchaseDate = function() {
-        if (!SyncedStorage.get("purchase_dates", true)) { return; }
+        if (!SyncedStorage.get("purchase_dates")) { return; }
 
         let node = document.querySelector(".game_area_already_owned");
         if (!node) { return; }
@@ -1001,7 +1001,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addWidescreenCertification = function() {
-        if (!SyncedStorage.get("showwsgf", true)) { return; }
+        if (!SyncedStorage.get("showwsgf")) { return; }
         if (this.isDlc()) { return; }
 
         this.data.then(result => {
@@ -1127,7 +1127,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addHltb = function() {
-        if (!SyncedStorage.get("showhltb", true)) { return; }
+        if (!SyncedStorage.get("showhltb")) { return; }
         if (this.isDlc()) { return; }
 
         this.data.then(result => {
@@ -1198,7 +1198,7 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addLinks = function() {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
 
-        if (SyncedStorage.get("showclient", true)) {
+        if (SyncedStorage.get("showclient")) {
             let cls = "steam_client_btn";
             let url = "steam://url/StoreAppPage/" + this.appid;
             let str = Localization.str.viewinclient;
@@ -1208,7 +1208,7 @@ let AppPageClass = (function(){
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
 
-        if (SyncedStorage.get("showpcgw", true)) {
+        if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
             let url = "http://pcgamingwiki.com/api/appid.php?appid=" + this.appid;
             let str = Localization.str.wiki_article.replace("__pcgw__","PCGamingWiki");
@@ -1218,7 +1218,7 @@ let AppPageClass = (function(){
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
 
-        if (SyncedStorage.get("showsteamcardexchange", true)) {
+        if (SyncedStorage.get("showsteamcardexchange")) {
             if (document.querySelector(".icon img[src$='/ico_cards.png'")) { // has trading cards
                 let cls = "cardexchange_btn";
                 let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.appid;
@@ -1232,15 +1232,15 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addHighlights = function() {
-        if (!SyncedStorage.get("highlight_owned", true)) { return; }
+        if (!SyncedStorage.get("highlight_owned")) { return; }
 
         if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
-            document.querySelector(".apphub_AppName").style.color = SyncedStorage.get("highlight_owned_color", "inherit");
+            document.querySelector(".apphub_AppName").style.color = SyncedStorage.get("highlight_owned_color");
         }
     };
 
     AppPageClass.prototype.addFamilySharingWarning = function() {
-        if (!SyncedStorage.get("exfgls", true)) { return; }
+        if (!SyncedStorage.get("exfgls")) { return; }
 
         this.data.then(result => {
             if (!result.exfgls || !result.exfgls.excluded) { return; }
@@ -1252,7 +1252,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addPackageInfoButton = function() {
-        if (!SyncedStorage.get("show_package_info", false)) { return; }
+        if (!SyncedStorage.get("show_package_info")) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
         for (let i=0, len=nodes.length; i<len; i++) {
@@ -1271,7 +1271,7 @@ let AppPageClass = (function(){
 
     function addSteamChart(result) {
         if (this.isDlc()) { return; }
-        if (!SyncedStorage.get("show_steamchart_info", true)) { return; }
+        if (!SyncedStorage.get("show_steamchart_info")) { return; }
 	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
@@ -1290,8 +1290,7 @@ let AppPageClass = (function(){
 
     function addSteamSpy(result) {
         if (this.isDlc()) { return; }
-        if (!SyncedStorage.get("show_steamspy_info", true)) { return; } // customization setting
-        if (!SyncedStorage.get("steamspy", true) || !result.steamspy || !result.steamspy.owners) { return; }
+        if (!SyncedStorage.get("show_steamspy_info") || !result.steamspy || !result.steamspy.owners) { return; } // customization setting
 
         function getTimeString(value) {
 
@@ -1333,7 +1332,7 @@ let AppPageClass = (function(){
     function addSurveyData(result) {
         if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
-        if (!SyncedStorage.get("show_apppage_surveys", true) || !result.survey) { return; }
+        if (!SyncedStorage.get("show_apppage_surveys") || !result.survey) { return; }
 
         let survey = result.survey;
         let appid = this.appid;
@@ -1532,7 +1531,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addBadgeProgress = function(){
         if (!User.isSignedIn) { return; }
-        if (!SyncedStorage.get("show_badge_progress", true)) { return; }
+        if (!SyncedStorage.get("show_badge_progress")) { return; }
         if (!this.hasCards()) { return; }
 
         let appid = this.appid;
@@ -1621,7 +1620,7 @@ let AppPageClass = (function(){
 
 
     AppPageClass.prototype.addAstatsLink = function(){
-        if (!SyncedStorage.get("showastatslink", true)) { return; }
+        if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
@@ -1635,7 +1634,7 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addAchievementCompletionBar = function(){
-        if (!SyncedStorage.get("showachinstore", true)) { return; }
+        if (!SyncedStorage.get("showachinstore")) { return; }
         if (!this.hasAchievements()) { return; }
         if (!this.isOwned()) { return; }
 
@@ -2119,7 +2118,7 @@ let SearchPageClass = (function(){
     }
 
     SearchPageClass.prototype.endlessScrolling = function() {
-        if (!SyncedStorage.get("contscroll", true)) { return; }
+        if (!SyncedStorage.get("contscroll")) { return; }
 
         let result_count;
         document.body.insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
@@ -2229,8 +2228,8 @@ let SearchPageClass = (function(){
     };
 
     function applyPriceFilter(node) {
-        let hidePriceAbove = SyncedStorage.get("priceabove_value", false);
-        let priceAboveValue = SyncedStorage.get("priceabove_value", "");
+        let hidePriceAbove = SyncedStorage.get("hide_priceabove");
+        let priceAboveValue = SyncedStorage.get("priceabove_value");
 
         if (hidePriceAbove
             && priceAboveValue !== ""
@@ -2330,27 +2329,27 @@ let SearchPageClass = (function(){
         let all = document.querySelectorAll(".see_all_expander");
         expander.textContent = all[all.length-1].textContent;
 
-        if (SyncedStorage.get("hide_owned", false)) {
+        if (SyncedStorage.get("hide_owned")) {
             document.querySelector("#es_owned_games").classList.add("checked");
         }
 
-        if (SyncedStorage.get("hide_wishlist", false)) {
+        if (SyncedStorage.get("hide_wishlist")) {
             document.querySelector("#es_wishlist_games").classList.add("checked");
         }
 
-        if (SyncedStorage.get("hide_cart", false)) {
+        if (SyncedStorage.get("hide_cart")) {
             document.querySelector("#es_cart_games").classList.add("checked");
         }
 
-        if (SyncedStorage.get("hide_notdiscounted", false)) {
+        if (SyncedStorage.get("hide_notdiscounted")) {
             document.querySelector("#es_notdiscounted").classList.add("checked");
         }
 
-        if (SyncedStorage.get("hide_notinterested", false)) {
+        if (SyncedStorage.get("hide_ignored")) {
             document.querySelector("#es_notinterested").classList.add("checked");
         }
 
-        if (SyncedStorage.get("hide_mixed", false)) {
+        if (SyncedStorage.get("hide_mixed")) {
             document.querySelector("#es_notmixed").classList.add("checked");
             document.querySelector("#es_hide_options").style.height="auto";
             document.querySelector("#es_hide_expander").style.display="none";
@@ -2361,7 +2360,7 @@ let SearchPageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("hide_negative", false)) {
+        if (SyncedStorage.get("hide_negative")) {
             document.querySelector("#es_notnegative").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
@@ -2372,7 +2371,7 @@ let SearchPageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("hide_priceabove", false)) {
+        if (SyncedStorage.get("hide_priceabove")) {
             document.querySelector("#es_notpriceabove").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
@@ -2383,8 +2382,8 @@ let SearchPageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("priceabove_value", "") ) {
-            document.querySelector("#es_notpriceabove_val").value = SyncedStorage.get("priceabove_value", "");
+        if (SyncedStorage.get("priceabove_value")) {
+            document.querySelector("#es_notpriceabove_val").value = SyncedStorage.get("priceabove_value");
         }
 
         [
@@ -2466,7 +2465,7 @@ let WishlistPageClass = (function(){
 
     function WishlistPageClass() {
 
-        this.notes = SyncedStorage.get("wishlist_notes", {});
+        this.notes = SyncedStorage.get("wishlist_notes");
 
         let instance = this;
         let observer = new MutationObserver(function(mutationList){
@@ -2523,7 +2522,7 @@ let WishlistPageClass = (function(){
 
             if (DynamicStore.isOwned(appid)) {
                 node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-                if (SyncedStorage.get("highlight_owned", true)) {
+                if (SyncedStorage.get("highlight_owned")) {
                     Highlights.highlightOwned(node);
                 } else {
                     node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
@@ -2533,7 +2532,7 @@ let WishlistPageClass = (function(){
             if (DynamicStore.isWishlisted(appid)) {
                 node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
-                if (SyncedStorage.get("highlight_wishlist", true)) {
+                if (SyncedStorage.get("highlight_wishlist")) {
                     Highlights.highlightWishlist(node);
                 } else {
                     node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
@@ -2687,7 +2686,7 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(nodes){
-        if (!SyncedStorage.get("showlowestprice_onwishlist", true)) { return; }
+        if (!SyncedStorage.get("showlowestprice_onwishlist")) { return; }
 
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
@@ -2773,7 +2772,7 @@ let StoreFrontPageClass = (function(){
             SyncedStorage.set("homepage_tab_last", tab.parentNode.id);
         });
 
-        let setting = SyncedStorage.get("homepage_tab_selection", Defaults.homepage_tab_selection);
+        let setting = SyncedStorage.get("homepage_tab_selection");
         let last = setting;
         if (setting === "remember") {
             last = SyncedStorage.get("homepage_tab_last");

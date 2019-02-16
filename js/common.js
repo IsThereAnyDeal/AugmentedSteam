@@ -31,6 +31,7 @@ let Defaults = (function() {
     self.highlight_inv_guestpass = false;
     self.highlight_notinterested = false;
     self.highlight_excludef2p = false;
+    self.highlight_notdiscounted = false;
 
     self.tag_owned = false;
     self.tag_wishlist = false;
@@ -42,6 +43,14 @@ let Defaults = (function() {
 
     self.hide_owned = false;
     self.hide_ignored = false;
+    self.hide_dlcunownedgames = false;
+    self.hide_wishlist = false;
+    self.hide_cart = false;
+    self.hide_notdiscounted = false;
+    self.hide_mixed = false;
+    self.hide_negative = false;
+    self.hide_priceabove = false;
+    self.priceabove_value = "";
     self.hidetmsymbols = false;
 
     self.showlowestprice = true;
@@ -53,6 +62,21 @@ let Defaults = (function() {
     self.showregionalprice = "mouse";
     self.regional_countries = ["us", "gb", "eu1", "ru", "br", "au", "jp"];
 
+    self.show_featuredrecommended = true;
+    self.show_specialoffers = true;
+    self.show_trendingamongfriends = true;
+    self.show_browsesteam = true;
+    self.show_curators = true;
+    self.show_morecuratorrecommendations = true;
+    self.show_recentlyupdated = true;
+    self.show_fromdevelopersandpublishersthatyouknow = true;
+    self.show_popularvrgames = true;
+    self.show_gamesstreamingnow = true;
+    self.show_under = true;
+    self.show_updatesandoffers = true;
+    self.show_es_discoveryqueue = true;
+    self.show_es_homepagetabs = true;
+    self.show_es_homepagesidebar = true;
     self.showmarkettotal = false;
     self.showsteamrepapi = true;
     self.showmcus = true;
@@ -65,6 +89,15 @@ let Defaults = (function() {
     self.showsteamdb = true;
     self.showastatslink = true;
     self.showwsgf = true;
+    self.exfgls = true;
+    self.show_apppage_reviews = true;
+    self.show_apppage_about = true;
+    self.show_apppage_surveys = true;
+    self.show_apppage_sysreq = true;
+    self.show_apppage_legal = true;
+    self.show_apppage_morelikethis = true;
+    self.show_apppage_recommendedbycurators = true;
+    self.show_apppage_customerreviews = true;
     self.show_keylol_links = false;
     self.show_package_info = false;
     self.show_sysreqcheck = false;
@@ -77,7 +110,9 @@ let Defaults = (function() {
 
     self.hideinstallsteambutton = false;
     self.hideaboutmenu = false;
+    self.keepssachecked = false;
     self.showemptywishlist = true;
+    self.wishlist_notes = {};
     self.version_show = true;
     self.replaceaccountname = true;
     self.showfakeccwarning = true;
@@ -271,8 +306,8 @@ let SyncedStorage = (function(){
     let localCopy = {};
     let self = {};
 
-    self.get = function(key, defaultValue) { // FIXME remove default value, we're assiging defaults on load
-        return typeof localCopy[key] === "undefined" ? defaultValue : localCopy[key];
+    self.get = function(key) {
+        return typeof localCopy[key] === "undefined" ? Defaults[key] : localCopy[key];
     };
 
     self.set = function(key, value) {
@@ -413,7 +448,7 @@ let ProgressBar = (function(){
     let node = null;
 
     self.create = function() {
-        if (!SyncedStorage.get("show_progressbar", true)) { return; }
+        if (!SyncedStorage.get("show_progressbar")) { return; }
 
         let container = document.getElementById("global_actions");
         if (!container) return;
@@ -869,7 +904,7 @@ let Currency = (function() {
 
         _promise = new Promise(function(resolve, reject) {
             (new Promise(function(resolve, reject) {
-                let currencySetting = SyncedStorage.get("override_price", "auto");
+                let currencySetting = SyncedStorage.get("override_price");
 
                 if (currencySetting !== "auto") {
                     self.userCurrency = currencySetting;
@@ -1015,7 +1050,7 @@ let Price = (function() {
         this.currency = currency || Currency.userCurrency;
 
         if (convert !== false) {
-            let chosenCurrency = SyncedStorage.get("override_price", "auto");
+            let chosenCurrency = SyncedStorage.get("override_price");
             if (chosenCurrency === "auto") { chosenCurrency = Currency.userCurrency; }
             let rate = Currency.getRate(this.currency, chosenCurrency);
 
@@ -1238,7 +1273,7 @@ let EnhancedSteam = (function() {
             return;
         }
 
-        if (version === Info.version || !SyncedStorage.get("version_show", true)) {
+        if (version === Info.version || !SyncedStorage.get("version_show")) {
             return;
         }
 
@@ -1334,10 +1369,10 @@ let EnhancedSteam = (function() {
      * Display warning if browsing using a different language
      */
     self.addLanguageWarning = function() {
-        if (!SyncedStorage.get("showlanguagewarning", true)) { return; }
+        if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
         let currentLanguage = Language.getCurrentSteamLanguage().toLowerCase();
-        let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage", currentLanguage).toLowerCase();
+        let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage").toLowerCase();
 
         if (currentLanguage === warningLanguage) { return; }
 
@@ -1356,7 +1391,7 @@ let EnhancedSteam = (function() {
     };
 
     self.removeInstallSteamButton = function() {
-        if (!SyncedStorage.get("hideinstallsteambutton", false)) { return; }
+        if (!SyncedStorage.get("hideinstallsteambutton")) { return; }
         document.querySelector("div.header_installsteam_btn").remove();
     };
 
@@ -1378,7 +1413,7 @@ let EnhancedSteam = (function() {
     };
 
     self.disableLinkFilter = function(){
-        if (!SyncedStorage.get("disablelinkfilter", false)) { return; }
+        if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
         removeLinksFilter();
 
@@ -1401,7 +1436,7 @@ let EnhancedSteam = (function() {
     };
 
     self.replaceAccountName = function() {
-        if (!SyncedStorage.get("replaceaccountname", true)) { return; }
+        if (!SyncedStorage.get("replaceaccountname")) { return; }
 
         let accountNameNode = document.querySelector("#account_pulldown");
         let accountName = accountNameNode.textContent.trim();
@@ -1449,7 +1484,7 @@ let EnhancedSteam = (function() {
     };
 
     self.skipGotSteam = function() {
-        if (!SyncedStorage.get("skip_got_steam", false)) { return; }
+        if (!SyncedStorage.get("skip_got_steam")) { return; }
 
         let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
         if (!node) { return; }
@@ -1460,7 +1495,7 @@ let EnhancedSteam = (function() {
         let nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buynow_dialog_accept_ssa,#accept_ssa");
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
-            node.checked = SyncedStorage.get("keepssachecked", false);
+            node.checked = SyncedStorage.get("keepssachecked");
 
             node.addEventListener("click", function(){
                 SyncedStorage.set("keepssachecked", !SyncedStorage.get("keepssachecked"));
@@ -1469,7 +1504,7 @@ let EnhancedSteam = (function() {
     };
 
     self.alternateLinuxIcon = function(){
-        if (!SyncedStorage.get("show_alternative_linux_icon", false)) { return; }
+        if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
         let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
         document.querySelector("head")
             .insertAdjacentHTML("beforeend", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
@@ -1477,7 +1512,7 @@ let EnhancedSteam = (function() {
 
     // Hide Trademark and Copyright symbols in game titles for Community pages
     self.hideTrademarkSymbol = function(community) {
-        if (!SyncedStorage.get("hidetmsymbols", false)) { return; }
+        if (!SyncedStorage.get("hidetmsymbols")) { return; }
 
         // TODO I would try to reduce number of selectors here
         let selectors= "title, .apphub_AppName, .breadcrumbs, h1, h4";
@@ -1760,7 +1795,7 @@ let EarlyAccess = (function(){
     }
 
     self.showEarlyAccess = function() {
-        if (!SyncedStorage.get("show_early_access", true)) { return; }
+        if (!SyncedStorage.get("show_early_access")) { return; }
 
         promise().then(() => {
             switch (window.location.host) {
@@ -1942,16 +1977,6 @@ let Highlights = (function(){
 
     let self = {};
 
-    // FIXME defaults
-    let defaults = {
-        "owned": "#5c7836",
-        "wishlist": "#1c3788",
-        "coupon": "#a26426",
-        "inv_gift": "#800040",
-        "inv_guestpass": "#008080",
-        "notinterested": "#4f4f4f"
-    };
-
     let highlightCssLoaded = false;
     let tagCssLoaded = false;
 
@@ -1971,20 +1996,20 @@ let Highlights = (function(){
             node = node.parentNode;
         }
 
-        if (SyncedStorage.get("hide_owned", false)
+        if (SyncedStorage.get("hide_owned")
             && classChecker(node, ["search_result_row", "item", "cluster_capsule", "browse_tag_game"])) {
             node.style.display = "none";
         }
 
         // Hide DLC for unowned items
-        if (SyncedStorage.get("hide_dlcunownedgames", false)
+        if (SyncedStorage.get("hide_dlcunownedgames")
             && classChecker(node, ["search_result_row", "item", "game_area_dlc_row", "cluster_capsule"])) {
                 node.style.display = "none";
         }
     }
 
     function addTag(node, tag) {
-        let tagShort = SyncedStorage.get("tag_short", true);
+        let tagShort = SyncedStorage.get("tag_short");
 
         // Load the colors CSS for tags
         if (!tagCssLoaded) {
@@ -1992,7 +2017,7 @@ let Highlights = (function(){
 
             let tagCss = "";
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
-                tagCss += '.es_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color", defaults[name]) + ' }\n';
+                tagCss += '.es_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color") + ' }\n';
             });
             document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
         }
@@ -2088,7 +2113,7 @@ let Highlights = (function(){
     }
 
     function highlightNode(node) {
-        if (SyncedStorage.get("highlight_excludef2p", false)) {
+        if (SyncedStorage.get("highlight_excludef2p")) {
 
             if (node.innerHTML.match(/<div class="(tab_price|large_cap_price|col search_price|main_cap_price|price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i)) {
                 return;
@@ -2110,7 +2135,7 @@ let Highlights = (function(){
             let hlCss = "";
 
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
-                hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color", defaults[name]) + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
+                hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color") + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
             });
 
             document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
@@ -2140,12 +2165,12 @@ let Highlights = (function(){
     function highlightItem(node, name) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("highlight_"+name, true)) {
+        if (SyncedStorage.get("highlight_"+name)) {
             node.classList.add("es_highlighted", "es_highlighted_"+name);
             highlightNode(node);
         }
 
-        if (SyncedStorage.get("tag_" + name, false)) {
+        if (SyncedStorage.get("tag_" + name)) {
             addTag(node, name);
         }
     }
@@ -2153,7 +2178,7 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_owned", false)) {
+        if (SyncedStorage.get("hide_owned")) {
             hideNode(node);
             return;
         }
@@ -2164,7 +2189,7 @@ let Highlights = (function(){
     self.highlightWishlist = function(node) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_wishlist", false)) {
+        if (SyncedStorage.get("hide_wishlist")) {
             hideNode(node);
             return;
         }
@@ -2173,7 +2198,7 @@ let Highlights = (function(){
     };
 
     self.highlightCart = function(node) {
-        if (!SyncedStorage.get("hide_cart", false)) { return; }
+        if (!SyncedStorage.get("hide_cart")) { return; }
 
         node.classList.add("es_highlight_checked", "es_highlighted", "es_highlighted_hidden");
         hideNode(node);
@@ -2194,7 +2219,7 @@ let Highlights = (function(){
     };
 
     self.highlightNonDiscounts = function(node) {
-        if (!SyncedStorage.get("notdiscounted", false)) { return; }
+        if (!SyncedStorage.get("highlight_notdiscounted")) { return; }
         node.style.display = "none";
     };
 
@@ -2211,7 +2236,7 @@ let Highlights = (function(){
 
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_ignored", false) && node.closest(".search_result_row")) {
+        if (SyncedStorage.get("hide_ignored") && node.closest(".search_result_row")) {
             node.style.display = "none";
             return;
         }
@@ -2395,8 +2420,8 @@ let Prices = (function(){
     Prices.prototype._getApiParams = function() {
         let apiParams = {};
 
-        if (!SyncedStorage.get("showallstores", true) && SyncedStorage.get("stores", []).length > 0) {
-            apiParams.stores = SyncedStorage.get("stores", []).join(",");
+        if (!SyncedStorage.get("showallstores") && SyncedStorage.get("stores").length > 0) {
+            apiParams.stores = SyncedStorage.get("stores").join(",");
         }
 
         let cc = User.getCountry();
@@ -2408,7 +2433,7 @@ let Prices = (function(){
         apiParams.subids = this.subids.join(",");
         apiParams.bundleids = this.bundleids.join(",");
 
-        if (SyncedStorage.get("showlowestpricecoupon", true)) {
+        if (SyncedStorage.get("showlowestpricecoupon")) {
             apiParams.coupon = true;
         }
 
@@ -2442,7 +2467,7 @@ let Prices = (function(){
 
             let lowest;
             let voucherStr = "";
-            if (SyncedStorage.get("showlowetpricecoupon", true) && info['price']['price_voucher']) {
+            if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
                 lowest = new Price(info['price']['price_voucher'], meta['currency']);
                 let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
@@ -2631,14 +2656,14 @@ let Customizer = (function(){
         let element = typeof target === "string" ? document.querySelector(target) : target;
         if (!element && !forceShow) { return; }
 
-        let state = SyncedStorage.get(name, true);
+        let state = SyncedStorage.get(name);
         text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
         if (text === "") { return; }
 
         document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
 
         if (element) {
-            element.classList.toggle("es_hide", !SyncedStorage.get(name, true));
+            element.classList.toggle("es_hide", !SyncedStorage.get(name));
 
             if (element.classList.contains("es_hide")) {
                 element.style.display = "none";
@@ -2647,7 +2672,7 @@ let Customizer = (function(){
 
         document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
             `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name, true) ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name) ? `checked` : ``}"></div>
                     <div class="home_viewsettings_label">${text}</div>
                 </div>
             `);
@@ -2678,7 +2703,7 @@ let AgeCheck = (function(){
     let self = {};
 
     self.sendVerification = function(){
-        if (!SyncedStorage.get("send_age_info", true)) { return; }
+        if (!SyncedStorage.get("send_age_info")) { return; }
 
         let ageYearNode = document.querySelector("#ageYear");
         if (ageYearNode) {
