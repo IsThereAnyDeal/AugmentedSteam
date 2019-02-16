@@ -1977,16 +1977,6 @@ let Highlights = (function(){
 
     let self = {};
 
-    // FIXME defaults
-    let defaults = {
-        "owned": "#5c7836",
-        "wishlist": "#1c3788",
-        "coupon": "#a26426",
-        "inv_gift": "#800040",
-        "inv_guestpass": "#008080",
-        "notinterested": "#4f4f4f"
-    };
-
     let highlightCssLoaded = false;
     let tagCssLoaded = false;
 
