@@ -194,9 +194,9 @@ let SpamCommentHandler = (function(){
     let self = {};
 
     self.hideSpamComments = function() {
-        if (!SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) { return; }
+        if (!SyncedStorage.get("hidespamcomments")) { return; }
 
-        spamRegex = new RegExp(SyncedStorage.get("spamcommentregex", Defaults.spamcommentregex), "i");
+        spamRegex = new RegExp(SyncedStorage.get("spamcommentregex"), "i");
 
         handleAllCommentThreads(document);
 
@@ -231,7 +231,7 @@ let CommunityCommon = (function() {
     };
 
     self.addCardExchangeLinks = function(game) {
-        if (!SyncedStorage.get("steamcardexchange", Defaults.steamcardexchange)) { return; }
+        if (!SyncedStorage.get("steamcardexchange")) { return; }
 
         let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
         for (let node of nodes) {
@@ -306,7 +306,7 @@ let ProfileActivityPageClass = (function(){
     };
 
     function addAchievementComparisonLink(node, appid) {
-        if (!SyncedStorage.get("showcomparelinks", Defaults.showcomparelinks)) { return; }
+        if (!SyncedStorage.get("showcomparelinks")) { return; }
         node.classList.add("es_achievements");
 
         let blotter = node.closest(".blotter_daily_rollup_line");
@@ -488,7 +488,7 @@ let ProfileHomePageClass = (function(){
 
     ProfileHomePageClass.prototype.addWishlistProfileLink = function() {
         if (document.querySelector("body.profile_page.private_profile")) { return; }
-        if (!SyncedStorage.get("show_wishlist_link", Defaults.show_wishlist_link)) { return; }
+        if (!SyncedStorage.get("show_wishlist_link")) { return; }
         if (!document.querySelector(".profile_item_links")) { return; }
 
         let m = window.location.pathname.match(/(profiles|id)\/[^\/]+/);
@@ -502,7 +502,7 @@ let ProfileHomePageClass = (function(){
                 </a>
             </div>`);
 
-        if (SyncedStorage.get("show_wishlist_count", Defaults.show_wishlist_count)) {
+        if (SyncedStorage.get("show_wishlist_count")) {
             if (document.querySelector(".gamecollector_showcase")) {
                 let nodes = document.querySelectorAll(".gamecollector_showcase .showcase_stat");
                 document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent;
@@ -597,7 +597,7 @@ let ProfileHomePageClass = (function(){
     };
 
     ProfileHomePageClass.prototype.addSteamRepApi = function(){
-        if (!SyncedStorage.get("showsteamrepapi", Defaults.showsteamcardexchange)) { return; }
+        if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
         ProfileData.promise().then(data => {
             if (!data.steamrep) { return; }
@@ -873,7 +873,7 @@ let GamesPageClass = (function(){
     let scrollTimeout = null;
 
     GamesPageClass.prototype.addGamelistAchievements = function() {
-        if (!SyncedStorage.get("showallachievements", Defaults.showallachievements)) { return; }
+        if (!SyncedStorage.get("showallachievements")) { return; }
 
         let node = document.querySelector(".profile_small_header_texture a");
         if (!node) { return; }
@@ -1099,7 +1099,7 @@ let ProfileEditPageClass = (function(){
     }
 
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
-        if (!SyncedStorage.get("showesbg", Defaults.showesbg)) { return; }
+        if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
             `<div class='group_content group_summary'>
@@ -1454,7 +1454,7 @@ let InventoryPageClass = (function(){
     }
 
     function addOneClickGemsOption(item, appid, assetId) {
-        if (!SyncedStorage.get("show1clickgoo", Defaults.show1clickgoo)) { return; }
+        if (!SyncedStorage.get("show1clickgoo")) { return; }
 
         let quickGrind = document.querySelector("#es_quickgrind");
         if (quickGrind) { quickGrind.parentNode.remove(); }
@@ -1516,7 +1516,7 @@ let InventoryPageClass = (function(){
     }
 
     async function addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {
-        if (!SyncedStorage.get("quickinv", Defaults.quickinv)) { return; }
+        if (!SyncedStorage.get("quickinv")) { return; }
         if (!marketable) { return; }
         if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
 
@@ -1548,7 +1548,7 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff", Defaults.quickinv_diff)));
+                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff")));
                     let priceLow = new Price(market.highest_buy_order / 100);
 
                     if (priceHigh.value < 0.03) priceHigh.value = 0.03;
@@ -1783,7 +1783,7 @@ let InventoryPageClass = (function(){
     }
 
     function addInventoryGoToPage(){
-        if (!SyncedStorage.get("showinvnav", Defaults.showinvnav)) { return; }
+        if (!SyncedStorage.get("showinvnav")) { return; }
 
         DOMHelper.remove("#es_gotopage");
         DOMHelper.remove("#pagebtn_first");
@@ -2530,7 +2530,7 @@ let FriendsThatPlayPageClass = (function(){
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
-        if (!SyncedStorage.get("showallfriendsthatown", Defaults.showallfriendsthatown)) return;
+        if (!SyncedStorage.get("showallfriendsthatown")) return;
         
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
         let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
@@ -2718,7 +2718,7 @@ let FriendsPageClass = (function(){
             sortFriends(e.target.dataset.esiSort);
         });
 
-        sortFriends(SyncedStorage.get("sortfriendsby", Defaults.sortfriendsby));
+        sortFriends(SyncedStorage.get("sortfriendsby"));
     };
 
     return FriendsPageClass;
@@ -2934,14 +2934,14 @@ let MarketPageClass = (function(){
 
         document.querySelector("#es_market_summary_button").addEventListener("click", startLoadingStats);
 
-        if (SyncedStorage.get("showmarkettotal", Defaults.showmarkettotal)) {
+        if (SyncedStorage.get("showmarkettotal")) {
             startLoadingStats();
         }
     };
 
     // Hide active listings on Market homepage
     MarketPageClass.prototype.minimizeActiveListings = function() {
-        if (!SyncedStorage.get("hideactivelistings", Defaults.hideactivelistings)) { return; }
+        if (!SyncedStorage.get("hideactivelistings")) { return; }
 
         document.querySelector("#tabContentsMyListings").style.display = "none";
         let node = document.querySelector("#tabMyListings");
@@ -3188,7 +3188,7 @@ let MarketPageClass = (function(){
     };
 
     MarketPageClass.prototype.highlightMarketItems = function() {
-        if (!SyncedStorage.get("highlight_owned", Defaults.highlight_owned)) { return; }
+        if (!SyncedStorage.get("highlight_owned")) { return; }
 
         let nodes = document.querySelectorAll(".market_listing_row_link");
         for (let node of nodes) {
@@ -3224,18 +3224,18 @@ let CommunityAppPageClass = (function(){
     }
 
     CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
-        if (!SyncedStorage.get("wlbuttoncommunityapp", Defaults.wlbuttoncommunityapp)) { return; }
+        if (!SyncedStorage.get("wlbuttoncommunityapp")) { return; }
         await DynamicStore;
 
         let nameNode = document.querySelector(".apphub_AppName");
 
         if (DynamicStore.isOwned(this.appid)) {
-            nameNode.style.color = SyncedStorage.get("highlight_owned_color", Defaults.highlight_owned_color);
+            nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
 
         if (DynamicStore.isWishlisted(this.appid)) {
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color", Defaults.highlight_wishlist_color);
+            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
             return;
         }
 
@@ -3258,7 +3258,7 @@ let CommunityAppPageClass = (function(){
             e.target.classList.add("btn_disabled");
             e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
 
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color", Defaults.highlight_wishlist_color);
+            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
 
             // Clear dynamicstore cache
             DynamicStore.clear();
@@ -3266,7 +3266,7 @@ let CommunityAppPageClass = (function(){
     };
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
-        if (!SyncedStorage.get("showsteamdb", Defaults.showsteamdb)) { return; }
+        if (!SyncedStorage.get("showsteamdb")) { return; }
         let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
@@ -3274,7 +3274,7 @@ let CommunityAppPageClass = (function(){
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
-        if (!SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) { return; }
+        if (!SyncedStorage.get("showitadlinks")) { return; }
         let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
@@ -3298,7 +3298,7 @@ let GuidesPageClass = (function(){
     GuidesPageClass.prototype.constructor = GuidesPageClass;
 
     GuidesPageClass.prototype.removeGuidesLanguageFilter = function() {
-        if (!SyncedStorage.get("removeguideslanguagefilter", Defaults.removeguideslanguagefilter)) { return; }
+        if (!SyncedStorage.get("removeguideslanguagefilter")) { return; }
 
         let language = Language.getCurrentSteamLanguage();
         let regex = new RegExp(language, "i");
