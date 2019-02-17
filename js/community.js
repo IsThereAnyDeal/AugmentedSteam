@@ -128,35 +128,35 @@ let SpamCommentHandler = (function(){
     let spamRegex = null;
 
     function toggleHiddenCommentsButton(threadNode, count) {
-        threadNode.classList.add("esi_commentthread");
+        threadNode.classList.add("asi_commentthread");
 
-        let button = threadNode.querySelector(".esi_commentthread_button");
+        let button = threadNode.querySelector(".asi_commentthread_button");
 
         if (count === 0) {
             if (button) {
-                button.classList.add("esi-hidden");
+                button.classList.add("asi-hidden");
             }
             return;
         }
 
         if (!button) {
             button = document.createElement("a");
-            button.classList.add("esi_commentthread_button");
+            button.classList.add("asi_commentthread_button");
             threadNode.insertAdjacentElement("afterbegin", button);
 
             button.addEventListener("click", function() {
-                threadNode.classList.add("esi_commentthread--showspam")
+                threadNode.classList.add("asi_commentthread--showspam")
             });
         }
 
-        button.classList.remove("esi-hidden");
+        button.classList.remove("asi-hidden");
         button.textContent = Localization.str.spam_comment_show.replace("__num__", count);
-        threadNode.classList.remove("esi_commentthread--showspam");
+        threadNode.classList.remove("asi_commentthread--showspam");
     }
 
     function addCommentThreadObserver(threadNode) {
-        if (threadNode.dataset.esiCommentObserver) { return; }
-        threadNode.dataset.esiCommentObserver = "1";
+        if (threadNode.dataset.asiCommentObserver) { return; }
+        threadNode.dataset.asiCommentObserver = "1";
 
         let observer = new MutationObserver(() => {
             updateCommentThread(threadNode);
@@ -171,7 +171,7 @@ let SpamCommentHandler = (function(){
             let commentText = node.textContent;
             if (!spamRegex.test(commentText)) { continue; }
 
-            node.closest(".commentthread_comment").classList.add("esi_comment_hidden");
+            node.closest(".commentthread_comment").classList.add("asi_comment_hidden");
             hiddenCount++;
         }
 
@@ -184,7 +184,7 @@ let SpamCommentHandler = (function(){
     }
 
     function handleAllCommentThreads(parent) {
-        let nodes = parent.querySelectorAll(".commentthread_comment_container:not(.esi_commentthread)");
+        let nodes = parent.querySelectorAll(".commentthread_comment_container:not(.asi_commentthread)");
         for (let node of nodes) {
             updateCommentThread(node);
             addCommentThreadObserver(node);
@@ -233,20 +233,20 @@ let CommunityCommon = (function() {
     self.addCardExchangeLinks = function(game) {
         if (!SyncedStorage.get("steamcardexchange")) { return; }
 
-        let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
+        let nodes = document.querySelectorAll(".badge_row:not(.as-has-ce-link");
         for (let node of nodes) {
             let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
             if(!appid) { continue; }
 
             node.insertAdjacentHTML("afterbegin",
-                `<div class="es_steamcardexchange_link">
+                `<div class="as_steamcardexchange_link">
                     <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
                         <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
                     </a>
                 </div>`);
 
             node.querySelector(".badge_title_row").style.paddingRight = "44px";
-            node.classList.add("es-has-ce-link");
+            node.classList.add("as-has-ce-link");
         }
     };
 
@@ -269,9 +269,9 @@ let ProfileActivityPageClass = (function(){
         await DynamicStore;
 
         // Get all appids and nodes from selectors
-        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        let nodes = document.querySelectorAll(".blotter_block:not(.as_highlight_checked)");
         for (let node of nodes) {
-            node.classList.add("es_highlight_checked");
+            node.classList.add("as_highlight_checked");
 
             let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
             for (let link of links) {
@@ -307,15 +307,15 @@ let ProfileActivityPageClass = (function(){
 
     function addAchievementComparisonLink(node, appid) {
         if (!SyncedStorage.get("showcomparelinks")) { return; }
-        node.classList.add("es_achievements");
+        node.classList.add("as_achievements");
 
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
         let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href;
-        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#as-compare";
         node.parentNode.insertAdjacentHTML("beforeend",
-            `<br><a class='es_achievement_compare' href='${compareLink}' target='_blank'>${Localization.str.compare}</a>`);
+            `<br><a class='as_achievement_compare' href='${compareLink}' target='_blank'>${Localization.str.compare}</a>`);
     }
 
     ProfileActivityPageClass.prototype.observeChanges = function() {
@@ -413,8 +413,8 @@ let ProfileHomePageClass = (function(){
             if (!SyncedStorage.get("profile_" + link.id)) { return; }
 
             htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
+                `<div class="as_profile_link profile_count_link">
+                    <a class="as_sites_icons as_${link.id}_icon as_${iconType}" href="${link.link}" target="_blank">
                         <span class="count_link_label">${link.name}</span>
                     </a>
                 </div>`;
@@ -440,11 +440,11 @@ let ProfileHomePageClass = (function(){
             let icon = "//" + customIcon.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
             htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_${icon_type}" href="${link}" target="_blank">
+                `<div class="as_profile_link profile_count_link">
+                    <a class="as_sites_icons as_none as_${icon_type}" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
+                        htmlstr += `<i class="as_sites_custom_icon" style="background-image: url(${icon});"></i>`;
                     }
                     htmlstr += `</a>
                 </div>`;
@@ -454,11 +454,11 @@ let ProfileHomePageClass = (function(){
         if (SyncedStorage.get("profile_permalink")) {
             let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
             htmlstr +=
-                `<div id="es_permalink_div" class="profile_count_link">
+                `<div id="as_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${Localization.str.permalink}</span>
-					<div class="es_copy_wrap">
-						<input id="es_permalink" type="text" value="https://steamcommunity.com/profiles/${steamId}" readonly />
-						<button id="es_permalink_copy"><img src="${imgUrl}" /></button>
+					<div class="as_copy_wrap">
+						<input id="as_permalink" type="text" value="https://steamcommunity.com/profiles/${steamId}" readonly />
+						<button id="as_permalink_copy"><img src="${imgUrl}" /></button>
 					</div>
 				</div>`;
         }
@@ -476,11 +476,11 @@ let ProfileHomePageClass = (function(){
         }
 
         if (SyncedStorage.get("profile_permalink")) {
-            document.querySelector("#es_permalink").addEventListener("click", function(e) {
+            document.querySelector("#as_permalink").addEventListener("click", function(e) {
                 e.target.select();
             });
-            document.querySelector("#es_permalink_copy").addEventListener("click", function(e) {
-                document.querySelector("#es_permalink").select();
+            document.querySelector("#as_permalink_copy").addEventListener("click", function(e) {
+                document.querySelector("#as_permalink").select();
                 document.execCommand('copy');
             });
         }
@@ -495,17 +495,17 @@ let ProfileHomePageClass = (function(){
         if (!m) { return; }
 
         document.querySelector(".profile_item_links .profile_count_link").insertAdjacentHTML("afterend",
-            `<div id="es_wishlist_link" class="profile_count_link">
+            `<div id="as_wishlist_link" class="profile_count_link">
                 <a href="//store.steampowered.com/wishlist/${m[0]}">
                     <span class="count_link_label">${Localization.str.wishlist}</span>&nbsp;
-                    <span id="es_wishlist_count" class="profile_count_link_total"></span>
+                    <span id="as_wishlist_count" class="profile_count_link_total"></span>
                 </a>
             </div>`);
 
         if (SyncedStorage.get("show_wishlist_count")) {
             if (document.querySelector(".gamecollector_showcase")) {
                 let nodes = document.querySelectorAll(".gamecollector_showcase .showcase_stat");
-                document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent;
+                document.querySelector("#as_wishlist_count").textContent = nodes[nodes.length-1].textContent;
             }
         }
     };
@@ -521,10 +521,10 @@ let ProfileHomePageClass = (function(){
             if (!profileBadges) { return; }
 
             let html =
-                `<div class="profile_badges" id="es_supporter_badges">
+                `<div class="profile_badges" id="as_supporter_badges">
                     <div class="profile_count_link">
                         <a href="${Config.PublicHost}">
-                            <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
+                            <span class="count_link_label">${Localization.str.as_supporter}</span>&nbsp;
                             <span class="profile_count_link_total">${badgeCount}</span>
                         </a>
                     </div>
@@ -533,9 +533,9 @@ let ProfileHomePageClass = (function(){
 
             for (let i=0; i < badgeCount; i++) {
                 if (data["badges"][i].link) {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
+                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
                 } else {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
+                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
                 }
             }
 
@@ -553,14 +553,14 @@ let ProfileHomePageClass = (function(){
         if (prevHash) {
             let imgUrl = "//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2];
             // Make sure the url is for a valid background image
-            document.body.insertAdjacentHTML("beforeend", '<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
-            document.querySelector("img.es_bg_test").addEventListener("load", function() {
+            document.body.insertAdjacentHTML("beforeend", '<img class="as_bg_test" style="display: none" src="' + imgUrl + '" />');
+            document.querySelector("img.as_bg_test").addEventListener("load", function() {
                 let nodes = document.querySelectorAll(".no_header.profile_page, .profile_background_image_content");
                 for (let i=0, len=nodes.length; i<len; i++) {
                     let node = nodes[i];
                     node.style.backgroundImage = "url('"+imgUrl+"')";
                 }
-                document.querySelector(".es_bg_test").remove();
+                document.querySelector(".as_bg_test").remove();
             });
             return;
         }
@@ -621,7 +621,7 @@ let ProfileHomePageClass = (function(){
             let statusInfo = document.querySelector("div.responsive_status_info");
             if (!statusInfo) return;
             
-            statusInfo.insertAdjacentHTML("beforeend", '<div id="es_steamrep"></div>');
+            statusInfo.insertAdjacentHTML("beforeend", '<div id="as_steamrep"></div>');
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
@@ -629,7 +629,7 @@ let ProfileHomePageClass = (function(){
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    document.querySelector("#es_steamrep").insertAdjacentHTML("afterend",
+                    document.querySelector("#as_steamrep").insertAdjacentHTML("afterend",
                         `<div class="${img}">
                             <img src="${imgUrl}" /> 
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${ BrowserHelper.escapeHTML(value) }</a>
@@ -644,7 +644,7 @@ let ProfileHomePageClass = (function(){
         let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         if (!node) { return; }
         node.insertAdjacentHTML("afterend",
-                "<a class='popup_menu_item' id='es_posthistory' href='" + window.location.pathname + "/posthistory'>" +
+                "<a class='popup_menu_item' id='as_posthistory' href='" + window.location.pathname + "/posthistory'>" +
                 "<img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; " + Localization.str.post_history +
                 "</a>");
     };
@@ -670,7 +670,7 @@ let ProfileHomePageClass = (function(){
             let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
             if (availableStyles.indexOf(style) === -1) { return; }
 
-            document.body.classList.add("es_profile_style");
+            document.body.classList.add("as_profile_style");
             switch (style) {
                 case "goldenprofile":
                     document.querySelector("head")
@@ -730,7 +730,7 @@ let ProfileHomePageClass = (function(){
 
                     break;
                 case "clear":
-                    document.body.classList.add("es_style_clear");
+                    document.body.classList.add("as_style_clear");
                     break;
                 default:
                     let styleUrl = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/style.css");
@@ -766,17 +766,17 @@ let ProfileHomePageClass = (function(){
         let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
 
         document.querySelector(".profile_leftcol").insertAdjacentHTML("afterbegin",
-            `<div class='profile_customization' id='es_twitch'>            
+            `<div class='profile_customization' id='as_twitch'>            
                     <div class='profile_customization_header'>
                         ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
                     </div>
-                    <a class="esi-stream" href="${channelUrl}">
-                        <div class="esi-stream__preview">
+                    <a class="asi-stream" href="${channelUrl}">
+                        <div class="asi-stream__preview">
                             <img src="${previewUrl}">
-                            <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
-                            <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
+                            <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="asi-stream__play">
+                            <div class="asi-stream__live">Live on <span class="asi-stream__twitch">Twitch</span></div>
                         </div>
-                        <div class="esi-stream__title">
+                        <div class="asi-stream__title">
                             <span class="live_stream_app">${channelGame}</span>
                             <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
                         </div>
@@ -860,12 +860,12 @@ let GamesPageClass = (function(){
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
+        statsHtml += `<div class="asi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
+        statsHtml += `<div class="asi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
+        statsHtml += `<div class="asi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
+        statsHtml += `<div class="asi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
 
-        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
+        let html = `<div id="asi-collection-chart-content">${statsHtml}</div>`;
 
         document.querySelector("#mainContents").insertAdjacentHTML("beforebegin", html);
     };
@@ -888,7 +888,7 @@ let GamesPageClass = (function(){
 
         function addAchievements() {
             // Only show stats on the "All Games" tab
-            let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
+            let nodes = document.querySelectorAll(".gameListRow:not(.as_achievements_checked)");
             let hadNodesInView = false;
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
@@ -901,19 +901,19 @@ let GamesPageClass = (function(){
                 hadNodesInView = true;
 
                 let appid = GameId.getAppidWishlist(node.id);
-                node.classList.add("es_achievements_checked");
+                node.classList.add("as_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
                 if (!node.querySelector("h5.hours_played")) { continue; }
 
                 // Copy achievement stats to row
                 node.querySelector(".gameListRowItemName")
-                    .insertAdjacentHTML("afterend", "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+                    .insertAdjacentHTML("afterend", "<div class='as_recentAchievements' id='as_app_" + appid + "'>" + Localization.str.loading + "</div>");
 
                 RequestData.getHttp(statsLink + appid).then(result => {
                     let dummy = document.createElement("html");
                     dummy.innerHTML = result;
 
-                    let node = document.querySelector("#es_app_" + appid);
+                    let node = document.querySelector("#as_app_" + appid);
                     node.innerHTML = "";
 
                     let achNode = dummy.querySelector("#topSummaryAchievements");
@@ -934,7 +934,7 @@ let GamesPageClass = (function(){
                     node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
                     node.innerHTML = node.innerHTML.replace("::", ":");
                 }, () => {
-                    let node = document.querySelector("#es_app_" + appid);
+                    let node = document.querySelector("#as_app_" + appid);
                     node.innerHTML = "error";
                 });
             }
@@ -961,9 +961,9 @@ let GamesPageClass = (function(){
             let appid = parseInt(node.id.split("_")[1]);
 
             if (_commonGames.has(appid)) {
-                node.classList.add("esi-common");
+                node.classList.add("asi-common");
             } else {
-                node.classList.add("esi-notcommon");
+                node.classList.add("asi-notcommon");
             }
         }
     }
@@ -986,8 +986,8 @@ let GamesPageClass = (function(){
             return checkboxEl;
         }
 
-        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
-        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
+        let commonCheckbox = createCheckox("as_gl_show_common_games", Localization.str.common_label);
+        let notCommonCheckbox = createCheckox("as_gl_show_notcommon_games", Localization.str.notcommon_label);
 
         label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
         label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
@@ -996,12 +996,12 @@ let GamesPageClass = (function(){
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
+            document.querySelector("#games_list_rows").classList.toggle("asi-hide-notcommon", e.target.checked);
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            document.querySelector("#games_list_rows").classList.toggle("asi-hide-common", e.target.checked);
         });
     };
 
@@ -1023,11 +1023,11 @@ let ProfileEditPageClass = (function(){
     }
 
     function showBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="block";
+        document.querySelector("#as_bg .as_loading").style.display="block";
     }
 
     function hideBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="none";
+        document.querySelector("#as_bg .as_loading").style.display="none";
     }
 
     function getGameSelectOptions(games) {
@@ -1051,13 +1051,13 @@ let ProfileEditPageClass = (function(){
     }
 
     async function onGameSelected() {
-        let appid = parseInt(document.querySelector("#es_bg_game").value);
+        let appid = parseInt(document.querySelector("#as_bg_game").value);
 
-        let imgSelectNode = document.querySelector("#es_bg_img");
+        let imgSelectNode = document.querySelector("#as_bg_img");
         imgSelectNode.style.display = "none";
 
         if (appid === 0) {
-            document.querySelector("#es_bg_preview").src = "";
+            document.querySelector("#as_bg_preview").src = "";
             return
         }
 
@@ -1090,16 +1090,16 @@ let ProfileEditPageClass = (function(){
         onImgSelected();
 
         // Enable the "save" button
-        document.querySelector("#es_background_save_btn").classList.remove("btn_disabled");
+        document.querySelector("#as_background_save_btn").classList.remove("btn_disabled");
     }
 
     function onImgSelected() {
-        document.querySelector("#es_bg_preview").src
-            = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
+        document.querySelector("#as_bg_preview").src
+            = "https://steamcommunity.com/economy/image/" + document.querySelector("#as_bg_img").value + "/622x349";
     }
 
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
-        if (!SyncedStorage.get("showesbg")) { return; }
+        if (!SyncedStorage.get("showasbg")) { return; }
 
         let html =
             `<div class='group_content group_summary'>
@@ -1107,19 +1107,19 @@ let ProfileEditPageClass = (function(){
                     ${Localization.str.custom_background}:
                     <span class='formRowHint' data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
                 </div>
-                <div id="es_bg" class="es_profile_group">
-                    <div id='es_bg_game_select'><select name='es_bg_game' id='es_bg_game' class='gray_bevel dynInput' style="display:none"></select></div>
-                    <div id='es_bg_img_select'><select name='es_bg_img' id='es_bg_img' class='gray_bevel dynInput' style="display:none"></select></div>
-                    <div class='es_loading'>
+                <div id="as_bg" class="as_profile_group">
+                    <div id='as_bg_game_select'><select name='as_bg_game' id='as_bg_game' class='gray_bevel dynInput' style="display:none"></select></div>
+                    <div id='as_bg_img_select'><select name='as_bg_img' id='as_bg_img' class='gray_bevel dynInput' style="display:none"></select></div>
+                    <div class='as_loading'>
                         <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
                         <span>${Localization.str.loading}</span>
                     </div>
-                    <img id='es_bg_preview' class="es_profile_preview" src=''>
-                    <div id="es_bg_buttons" class="es_profile_buttons">
-                        <span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'>
+                    <img id='as_bg_preview' class="as_profile_preview" src=''>
+                    <div id="as_bg_buttons" class="as_profile_buttons">
+                        <span id='as_background_remove_btn' class='btn_grey_white_innerfade btn_small'>
                             <span>${Localization.str.remove}</span>
                         </span>&nbsp;
-                        <span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
+                        <span id='as_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
                             <span>${Localization.str.save}</span>
                         </span>
                     </div>
@@ -1132,8 +1132,8 @@ let ProfileEditPageClass = (function(){
         let response = await RequestData.getApi("v01/profile/background/games");
         if (!response || !response.data) { return; }
 
-        let gameSelectNode = document.querySelector("#es_bg_game");
-        let imgSelectNode = document.querySelector("#es_bg_img");
+        let gameSelectNode = document.querySelector("#as_bg_game");
+        let imgSelectNode = document.querySelector("#as_bg_img");
 
         let gameList = getGameSelectOptions(response.data);
         gameSelectNode.innerHTML = gameList[1];
@@ -1141,7 +1141,7 @@ let ProfileEditPageClass = (function(){
 
         let currentImg = ProfileData.getBgImgUrl(622,349);
         if (currentImg) {
-            document.querySelector("#es_bg_preview").src = currentImg;
+            document.querySelector("#as_bg_preview").src = currentImg;
             onGameSelected();
         }
 
@@ -1151,13 +1151,13 @@ let ProfileEditPageClass = (function(){
         gameSelectNode.addEventListener("change", onGameSelected);
         imgSelectNode.addEventListener("change", onImgSelected);
 
-        document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
+        document.querySelector("#as_background_remove_btn").addEventListener("click", function() {
             ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
         });
 
-        document.querySelector("#es_background_save_btn").addEventListener("click", function(e) {
-            if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
+        document.querySelector("#as_background_save_btn").addEventListener("click", function(e) {
+            if (e.target.closest("#as_background_save_btn").classList.contains("btn_disabled")) { return; }
             ProfileData.clearOwn();
 
             let selectedAppid = encodeURIComponent(gameSelectNode.value);
@@ -1173,9 +1173,9 @@ let ProfileEditPageClass = (function(){
                     ${Localization.str.custom_style}:
                     <span class='formRowHint' data-tooltip-text='${Localization.str.custom_style_help}'>(?)</span>
                 </div>
-                <div class="es_profile_group">                
-                    <div id='es_style_select'>
-                        <select name='es_style' id='es_style' class='gray_bevel dynInput'>
+                <div class="as_profile_group">                
+                    <div id='as_style_select'>
+                        <select name='as_style' id='as_style' class='gray_bevel dynInput'>
                             <option id='remove' value='remove'>${Localization.str.noneselected}</option>
                             <option id='goldenprofile' value='goldenprofile'>Lunar Sale 2019</option>
                             <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
@@ -1190,12 +1190,12 @@ let ProfileEditPageClass = (function(){
                             <option id='yellow' value='yellow'>Yellow Theme</option>
                         </select>
                     </div>
-                    <img id='es_style_preview' class="es_profile_preview" src=''>
-                    <div id="es_style_buttons" class="es_profile_buttons">
-                        <span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'>
+                    <img id='as_style_preview' class="as_profile_preview" src=''>
+                    <div id="as_style_buttons" class="as_profile_buttons">
+                        <span id='as_style_remove_btn' class='btn_grey_white_innerfade btn_small'>
                             <span>${Localization.str.remove}</span>
                         </span>&nbsp;
-                        <span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
+                        <span id='as_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
                             <span>${Localization.str.save}</span>
                         </span>
                     </div>
@@ -1206,16 +1206,16 @@ let ProfileEditPageClass = (function(){
 
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-        let styleSelectNode = document.querySelector("#es_style");
+        let styleSelectNode = document.querySelector("#as_style");
 
         let currentStyle = ProfileData.getStyle();
         if (currentStyle) {
             styleSelectNode.value = currentStyle;
-            document.querySelector("#es_style_preview").src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+            document.querySelector("#as_style_preview").src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
         }
 
         styleSelectNode.addEventListener("change", function(){
-            let imgNode = document.querySelector("#es_style_preview");
+            let imgNode = document.querySelector("#as_style_preview");
             if (styleSelectNode.value === "remove") {
                 imgNode.style.display = "none";
             } else {
@@ -1224,18 +1224,18 @@ let ProfileEditPageClass = (function(){
             }
 
             // Enable the "save" button
-            document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
+            document.querySelector("#as_style_save_btn").classList.remove("btn_disabled");
         });
 
-        document.querySelector("#es_style_save_btn").addEventListener("click", function(e) {
-            if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
+        document.querySelector("#as_style_save_btn").addEventListener("click", function(e) {
+            if (e.target.closest("#as_style_save_btn").classList.contains("btn_disabled")) { return; }
             ProfileData.clearOwn();
 
             let selectedStyle = encodeURIComponent(styleSelectNode.value);
             window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
         });
 
-        document.querySelector("#es_style_remove_btn").addEventListener("click", function(e) {
+        document.querySelector("#as_style_remove_btn").addEventListener("click", function(e) {
             ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
         });
@@ -1249,7 +1249,7 @@ let StatsPageClass = (function(){
     function StatsPageClass() {
 
         // handle compare redirect
-        if (window.location.hash === "#es-compare") {
+        if (window.location.hash === "#as-compare") {
             window.location.hash = "";
             if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(window.location.pathname)) { // redirect to compare page but only if we're not there yet
                 window.location = window.location.pathname.replace(/\/$/, "")+"/compare";
@@ -1283,7 +1283,7 @@ let StatsPageClass = (function(){
             }
             _nodes['time'].push([unlockTime, node]);
 
-            node.classList.add(unlockTime === 0 ? "esi_ach_locked" : "esi_ach_unlocked");
+            node.classList.add(unlockTime === 0 ? "asi_ach_locked" : "asi_ach_unlocked");
         }
 
         _nodes['time'] = _nodes['time'].sort(function(a, b) {
@@ -1313,18 +1313,18 @@ let StatsPageClass = (function(){
             `<div id='achievement_sort_options' class='sort_options'>
                 ${Localization.str.sort_by}
                 <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
-                <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
+                <span id='achievement_sort_date' class='as_achievement_sort_link'>${Localization.str.date_unlocked}</span>
             </div>`);
 
         document.querySelector("#achievement_sort_default").addEventListener("click", function(e) {
-            document.querySelector("#achievement_sort_date").classList.add("es_achievement_sort_link");
-            e.target.classList.remove("es_achievement_sort_link");
+            document.querySelector("#achievement_sort_date").classList.add("as_achievement_sort_link");
+            e.target.classList.remove("as_achievement_sort_link");
             sortBy("default", personal);
         });
 
         document.querySelector("#achievement_sort_date").addEventListener("click", function(e) {
-            document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
-            e.target.classList.remove("es_achievement_sort_link");
+            document.querySelector("#achievement_sort_default").classList.add("as_achievement_sort_link");
+            e.target.classList.remove("as_achievement_sort_link");
             sortBy("time", personal);
         });
     };
@@ -1349,35 +1349,35 @@ let InventoryPageClass = (function(){
 
     function setBackgroundOption(thisItem, assetId, itemActions) {
         if (!document.querySelector(".inventory_links")) { return; }
-        if (itemActions.querySelector(".es_set_background")) { return; }
+        if (itemActions.querySelector(".as_set_background")) { return; }
 
         let viewFullBtn = itemActions.querySelector("a");
         if (!viewFullBtn) { return; }
 
         if (!/public\/images\/items/.test(viewFullBtn.href)) { return; }
 
-        let linkClass =  thisItem.classList.contains('es_isset_background') ? "btn_disabled" : "";
+        let linkClass =  thisItem.classList.contains('as_isset_background') ? "btn_disabled" : "";
         viewFullBtn.insertAdjacentHTML("afterend",
-            `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}"><span>${Localization.str.set_as_background}</span></a>
-                  <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
+            `<a class="as_set_background btn_small btn_darkblue_white_innerfade ${linkClass}"><span>${Localization.str.set_as_background}</span></a>
+                  <img class="as_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
 
-        viewFullBtn.parentNode.querySelector(".es_set_background").addEventListener("click", async function(e) {
+        viewFullBtn.parentNode.querySelector(".as_set_background").addEventListener("click", async function(e) {
             e.preventDefault();
-            let el = e.target.closest(".es_set_background");
+            let el = e.target.closest(".as_set_background");
 
             if (el.classList.contains("btn_disabled")) { return; }
 
-            let loading = viewFullBtn.parentNode.querySelector(".es_background_loading");
-            if (loading.classList.contains("esi-shown")) { return;}
+            let loading = viewFullBtn.parentNode.querySelector(".as_background_loading");
+            if (loading.classList.contains("asi-shown")) { return;}
 
-            loading.classList.add("esi-shown");
+            loading.classList.add("asi-shown");
 
             // Do nothing if loading or already done
-            let setBackground = document.querySelector(".es_isset_background");
+            let setBackground = document.querySelector(".as_isset_background");
             if (setBackground) {
-                setBackground.classList.remove("es_isset_background");
+                setBackground.classList.remove("as_isset_background");
             }
-            thisItem.classList.add("es_isset_background");
+            thisItem.classList.add("as_isset_background");
 
             let result = await RequestData.getHttp(User.profileUrl + "/edit");
 
@@ -1400,11 +1400,11 @@ let InventoryPageClass = (function(){
                 }).catch(() => {
                     console.error("Edit background failed");
                 }).finally(() => {
-                    loading.classList.remove("esi-shown");
+                    loading.classList.remove("asi-shown");
                 });
             } else {
                 el.classList.add("btn_disabled");
-                loading.classList.remove("esi-shown");
+                loading.classList.remove("asi-shown");
             }
         });
     }
@@ -1432,22 +1432,22 @@ let InventoryPageClass = (function(){
         if (discount > 0) {
             let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
             itemActions.insertAdjacentHTML("beforeend",
-                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
-                    <div class='es_game_purchase_action_bg'>
-                        <div class='es_discount_block es_game_purchase_discount'>
-                            <div class='es_discount_pct'>-${discount}%</div>
-                            <div class='es_discount_prices'>
-                                <div class='es_discount_original_price'>${originalPrice}</div>
-                                <div class='es_discount_final_price'>${price}</div>
+                `<div class='as_game_purchase_action' style='margin-bottom:16px'>
+                    <div class='as_game_purchase_action_bg'>
+                        <div class='as_discount_block as_game_purchase_discount'>
+                            <div class='as_discount_pct'>-${discount}%</div>
+                            <div class='as_discount_prices'>
+                                <div class='as_discount_original_price'>${originalPrice}</div>
+                                <div class='as_discount_final_price'>${price}</div>
                             </div>
                         </div>
                     </div>
                 </div>`);
         } else {
             itemActions.insertAdjacentHTML("beforeend",
-                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
-                    <div class='es_game_purchase_action_bg'>
-                        <div class='es_game_purchase_price es_price'>${price}</div>
+                `<div class='as_game_purchase_action' style='margin-bottom:16px'>
+                    <div class='as_game_purchase_action_bg'>
+                        <div class='as_game_purchase_price as_price'>${price}</div>
                     </div>
                 </div>`);
         }
@@ -1456,7 +1456,7 @@ let InventoryPageClass = (function(){
     function addOneClickGemsOption(item, appid, assetId) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
-        let quickGrind = document.querySelector("#es_quickgrind");
+        let quickGrind = document.querySelector("#as_quickgrind");
         if (quickGrind) { quickGrind.parentNode.remove(); }
 
         let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
@@ -1464,10 +1464,10 @@ let InventoryPageClass = (function(){
 
         let divs = scrapActions.querySelectorAll("div");
         divs[divs.length-1].insertAdjacentHTML("beforebegin",
-            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+            "<div><a class='btn_small btn_green_white_innerfade' id='as_quickgrind'><span>1-Click " + turnWord + "</span></div>");
 
         // TODO: Add prompt?
-        document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
+        document.querySelector("#as_quickgrind").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(`function() {
                         var rgAJAXParams = {
                             sessionid: g_sessionID,
@@ -1500,7 +1500,7 @@ let InventoryPageClass = (function(){
 
         // Add Quick Sell button
         if (priceHighValue) {
-            let quickSell = document.querySelector("#es_quicksell" + assetId);
+            let quickSell = document.querySelector("#as_quicksell" + assetId);
             quickSell.dataset.price = priceHighValue;
             quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
             quickSell.style.display = "block";
@@ -1508,7 +1508,7 @@ let InventoryPageClass = (function(){
 
         // Add Instant Sell button
         if (priceLowValue) {
-            let instantSell = document.querySelector("#es_instantsell" + assetId);
+            let instantSell = document.querySelector("#as_instantsell" + assetId);
             instantSell.dataset.price = priceLowValue;
             instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
             instantSell.style.display = "block";
@@ -1520,23 +1520,23 @@ let InventoryPageClass = (function(){
         if (!marketable) { return; }
         if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
 
-        if (!thisItem.classList.contains("es-loading")) {
+        if (!thisItem.classList.contains("as-loading")) {
             let url = marketActions.querySelector("a").href;
 
-            thisItem.classList.add("es-loading");
+            thisItem.classList.add("as-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_quicksell" + assetId));
-            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_instantsell" + assetId));
+            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("as_quicksell" + assetId));
+            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("as_instantsell" + assetId));
 
             // Check if price is stored in data
-            if (thisItem.classList.contains("es-price-loaded")) {
+            if (thisItem.classList.contains("as-price-loaded")) {
                 let priceHighValue = thisItem.dataset.priceHigh;
                 let priceLowValue = thisItem.dataset.priceLow;
 
                 updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency);
 
-                thisItem.classList.remove("es-loading");
+                thisItem.classList.remove("as-loading");
             } else {
                 let result = await RequestData.getHttp(url);
 
@@ -1563,18 +1563,18 @@ let InventoryPageClass = (function(){
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
-                        thisItem.classList.add("es-price-loaded");
+                        thisItem.classList.add("as-price-loaded");
                         updateMarketButtons(assetId, priceHigh.value, priceLow.value, walletCurrency);
                     }
 
-                    thisItem.classList.remove("es-loading");
+                    thisItem.classList.remove("as-loading");
                 }
             }
         }
 
         // Bind actions to "Quick Sell" and "Instant Sell" buttons
 
-        let nodes = document.querySelectorAll("#es_quicksell" + assetId + ", #es_instantsell" + assetId);
+        let nodes = document.querySelectorAll("#as_quicksell" + assetId + ", #as_instantsell" + assetId);
         for (let node of nodes) {
             node.addEventListener("click", function(e) {
                 e.preventDefault();
@@ -1584,14 +1584,14 @@ let InventoryPageClass = (function(){
 
                 let sellPrice = buttonParent.dataset.price * 100;
 
-                let buttons = document.querySelectorAll("#es_quicksell" + assetId + ", #es_instantsell" + assetId);
+                let buttons = document.querySelectorAll("#as_quicksell" + assetId + ", #as_instantsell" + assetId);
                 for (let button of buttons) {
                     button.classList.add("btn_disabled");
                     button.style.pointerEvents = "none";
                 }
 
-                marketActions.querySelector("div").innerHTML = "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>";
-                ExtensionLayer.runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sellPrice + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
+                marketActions.querySelector("div").innerHTML = "<div class='as_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>";
+                ExtensionLayer.runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sellPrice + ", 0.10); window.postMessage({ type: 'as_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
             });
         }
     }
@@ -1630,7 +1630,7 @@ let InventoryPageClass = (function(){
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
+            firstDiv.innerHTML = "<img class='as_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
             let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
 
@@ -1726,7 +1726,7 @@ let InventoryPageClass = (function(){
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
                 }
                 window.postMessage({
-                    type: "es_sendmessage",
+                    type: "as_sendmessage",
                     information: [
                         iActiveSelectView, 
                         g_ActiveInventory.selectedItem.description.marketable,
@@ -1748,9 +1748,9 @@ let InventoryPageClass = (function(){
             if (e.source !== window) { return; }
             if (!e.data.type) { return; }
 
-            if (e.data.type === "es_sendmessage") {
+            if (e.data.type === "as_sendmessage") {
                 inventoryMarketHelper(e.data.information);
-            } else if (e.data.type === "es_sendfee_" + e.data.assetID) {
+            } else if (e.data.type === "as_sendfee_" + e.data.assetID) {
                 let sellPrice = e.data.information.amount - e.data.information.fees;
                 let formData = new FormData();
                 formData.append('sessionid', e.data.sessionID);
@@ -1771,7 +1771,7 @@ let InventoryPageClass = (function(){
                 RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
                     withCredentials: true
                 }).then(() => {
-                    document.querySelector("#es_instantsell" + e.data.assetID).parentNode.style.display = "none";
+                    document.querySelector("#as_instantsell" + e.data.assetID).parentNode.style.display = "none";
 
                     let id = e.data.global_id + "_" + e.data.contextID + "_" + e.data.assetID;
                     let node = document.querySelector("[id='"+id+"']");
@@ -1785,15 +1785,15 @@ let InventoryPageClass = (function(){
     function addInventoryGoToPage(){
         if (!SyncedStorage.get("showinvnav")) { return; }
 
-        DOMHelper.remove("#es_gotopage");
+        DOMHelper.remove("#as_gotopage");
         DOMHelper.remove("#pagebtn_first");
         DOMHelper.remove("#pagebtn_last");
-        DOMHelper.remove("#es_pagego");
+        DOMHelper.remove("#as_pagego");
 
-        let es_gotopage = document.createElement("script");
-        es_gotopage.type = "text/javascript";
-        es_gotopage.id = "es_gotopage";
-        es_gotopage.textContent = `g_ActiveInventory.GoToPage = function(page){
+        let as_gotopage = document.createElement("script");
+        as_gotopage.type = "text/javascript";
+        as_gotopage.id = "as_gotopage";
+        as_gotopage.textContent = `g_ActiveInventory.GoToPage = function(page){
                   var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
                 	var iCurPage = this.m_iCurrentPage;
                 	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
@@ -1820,12 +1820,12 @@ let InventoryPageClass = (function(){
                 	g_ActiveInventory.GoToPage(1);
                 }
                 function InventoryGoToPage(){
-                	var page = $('es_pagenumber').value;
+                	var page = $('as_pagenumber').value;
                 	if (isNaN(page)) return;
                 	g_ActiveInventory.GoToPage(parseInt(page));
                 }`;
 
-        document.documentElement.appendChild(es_gotopage);
+        document.documentElement.appendChild(as_gotopage);
 
         // Go to first page
         document.querySelector("#pagebtn_previous").insertAdjacentHTML("afterend",
@@ -1836,7 +1836,7 @@ let InventoryPageClass = (function(){
             "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
 
         let pageGo = document.createElement("div");
-        pageGo.id = "es_pagego";
+        pageGo.id = "as_pagego";
         pageGo.style.float = "left";
 
         // Page number box
@@ -1846,7 +1846,7 @@ let InventoryPageClass = (function(){
         pageNumber.classList.add("filter_search_box");
         pageNumber.autocomplete = "off";
         pageNumber.placeholder = "page #";
-        pageNumber.id = "es_pagenumber";
+        pageNumber.id = "as_pagenumber";
         pageNumber.style.width = "50px";
         pageNumber.min = 1;
         pageNumber.max = document.querySelector("#pagecontrol_max").textContent;
@@ -1912,8 +1912,8 @@ let BadgesPageClass = (function(){
         // move faq to the middle
         let xpBlockRight = document.querySelector(".profile_xp_block_right");
 
-        document.querySelector(".profile_xp_block_mid").insertAdjacentHTML("beforeend", "<div class='es_faq_cards'>" + xpBlockRight.innerHTML + "</div>");
-        xpBlockRight.innerHTML = "<div id='es_cards_worth'></div>";
+        document.querySelector(".profile_xp_block_mid").insertAdjacentHTML("beforeend", "<div class='as_faq_cards'>" + xpBlockRight.innerHTML + "</div>");
+        xpBlockRight.innerHTML = "<div id='as_cards_worth'></div>";
     };
 
     // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
@@ -1924,7 +1924,7 @@ let BadgesPageClass = (function(){
         let nodes = [];
         let foilAppids = [];
 
-        let rows = document.querySelectorAll(".badge_row.is_link:not(.esi-badge)");
+        let rows = document.querySelectorAll(".badge_row.is_link:not(.asi-badge)");
         for (let node of rows) {
             let game = node.querySelector(".badge_row_overlay").href.match(/gamecards\/(\d+)\//);
             if (!game) { continue; }
@@ -1995,7 +1995,7 @@ let BadgesPageClass = (function(){
 
                             let howToNode = node.querySelector(".how_to_get_card_drops");
                             howToNode.insertAdjacentHTML("afterend",
-                                `<span class='es_card_drop_worth' data-es-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
+                                `<span class='as_card_drop_worth' data-as-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
                             howToNode.remove();
                         }
                     }
@@ -2010,10 +2010,10 @@ let BadgesPageClass = (function(){
             }
 
             // note CSS styles moved to .css instead of doing it in javascript
-            node.classList.add("esi-badge");
+            node.classList.add("asi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + this.totalWorth;
+        document.querySelector("#as_cards_worth").innerText = Localization.str.drops_worth_avg + " " + this.totalWorth;
     };
 
     async function eachBadgePage(callback) {
@@ -2089,7 +2089,7 @@ let BadgesPageClass = (function(){
         }
 
         async function addDropsCount() {
-            document.querySelector("#es_calculations")
+            document.querySelector("#as_calculations")
                 .innerHTML = Localization.str.card_drops_remaining.replace("__drops__", dropsCount)
                     + "<br>" + Localization.str.games_with_drops.replace("__dropsgames__", dropsGames);
 
@@ -2104,7 +2104,7 @@ let BadgesPageClass = (function(){
             let boosterGames = response.match(/class="booster_eligibility_game"/g);
             let boosterCount = boosterGames && boosterGames.length || 0;
 
-            document.querySelector("#es_calculations")
+            document.querySelector("#as_calculations")
                 .insertAdjacentHTML("beforeend", "<br>" + Localization.str.games_with_booster.replace("__boostergames__", boosterCount));
         }
 
@@ -2112,12 +2112,12 @@ let BadgesPageClass = (function(){
 
         if (this.hasMultiplePages) {
             document.querySelector(".profile_xp_block_right").insertAdjacentHTML("afterbegin",
-                "<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
+                "<div id='as_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
 
-            document.querySelector("#es_calculations").addEventListener("click", async function(e) {
+            document.querySelector("#as_calculations").addEventListener("click", async function(e) {
                 if (completed) { return; }
 
-                document.querySelector("#es_calculations").innerText = Localization.str.loading;
+                document.querySelector("#as_calculations").innerText = Localization.str.loading;
 
                 await eachBadgePage(countDropsFromDOM);
 
@@ -2127,7 +2127,7 @@ let BadgesPageClass = (function(){
 
         } else {
             document.querySelector(".profile_xp_block_right").insertAdjacentHTML("beforebegin",
-                "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
+                "<div id='as_calculations'>" + Localization.str.drop_calc + "</div>");
 
             addDropsCount();
         }
@@ -2166,8 +2166,8 @@ let BadgesPageClass = (function(){
         }
 
         resetLazyLoader();
-        document.querySelector("#es_sort_active").textContent = activeText;
-        document.querySelector("#es_sort_flyout").style.display = "none"; // TODO fadeout
+        document.querySelector("#as_sort_active").textContent = activeText;
+        document.querySelector("#as_sort_flyout").style.display = "none"; // TODO fadeout
     }
 
     BadgesPageClass.prototype.addBadgeSort = function() {
@@ -2192,8 +2192,8 @@ let BadgesPageClass = (function(){
             i++;
         }
         if (isOwnProfile) {
-            linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + Localization.str.most_drops + '</a>';
-            linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + Localization.str.drops_value + '</a>';
+            linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="as_badge_sort_drops">' + Localization.str.most_drops + '</a>';
+            linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="as_badge_sort_value">' + Localization.str.drops_value + '</a>';
         }
 
         let container = document.createElement("span");
@@ -2202,7 +2202,7 @@ let BadgesPageClass = (function(){
 
         // Insert dropdown options links
         document.querySelector(".profile_badges_sortoptions").insertAdjacentHTML("beforeend",
-            `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+            `<div id="as_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
 			    <div class="popup_body popup_menu">${linksHtml}</div>
 		    </div>`);
         
@@ -2210,9 +2210,9 @@ let BadgesPageClass = (function(){
         document.querySelector(".profile_badges_sortoptions span").insertAdjacentHTML("afterend",
             `<span id="wishlist_sort_options">
                 <div class="store_nav">
-                    <div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                    <div class="tab flyout_tab" id="as_sort_tab" data-flyout="as_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_sort_active" style="display: inline;">` + document.querySelector("#es_sort_flyout a.by_" + sorted).textContent + `</div>
+                            <div id="as_sort_active" style="display: inline;">` + document.querySelector("#as_sort_flyout a.by_" + sorted).textContent + `</div>
                             <span></span>
                         </span>
                     </div>
@@ -2222,7 +2222,7 @@ let BadgesPageClass = (function(){
         ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
 
         let that = this;
-        document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
+        document.querySelector("#as_badge_sort_drops").addEventListener("click", async function(e) {
 
             if (that.hasMultiplePages) {
                 await that.loadAllPages();
@@ -2238,7 +2238,7 @@ let BadgesPageClass = (function(){
             })
         });
 
-        document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
+        document.querySelector("#as_badge_sort_value").addEventListener("click", async function(e) {
 
             if (that.hasMultiplePages) {
                 await that.loadAllPages();
@@ -2246,9 +2246,9 @@ let BadgesPageClass = (function(){
 
             sortBadgeRows(e.target.textContent, (node) => {
                 let content = 0;
-                let dropWorth = node.querySelector(".es_card_drop_worth");
+                let dropWorth = node.querySelector(".as_card_drop_worth");
                 if (dropWorth) {
-                    content = parseFloat(dropWorth.dataset.esCardWorth);
+                    content = parseFloat(dropWorth.dataset.asCardWorth);
                 }
                 return content;
             });
@@ -2260,32 +2260,32 @@ let BadgesPageClass = (function(){
 
         let html  = `<span>${Localization.str.show}</span>
             <div class="store_nav">
-                <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                <div class="tab flyout_tab" id="as_filter_tab" data-flyout="as_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                     <span class="pulldown">
-                        <div id="es_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
+                        <div id="as_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
                         <span></span>
                     </span>
                 </div>
             </div>
-            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="as_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
                 <div class="popup_body popup_menu">
-                    <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
-                    <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
+                    <a class="popup_menu_item as_bg_filter" id="as_badge_all">${Localization.str.badges_all}</a>
+                    <a class="popup_menu_item as_bg_filter" id="as_badge_drops">${Localization.str.badges_drops}</a>
                 </div>
             </div>`;
 
         document.querySelector("#wishlist_sort_options")
-            .insertAdjacentHTML("afterbegin", "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
+            .insertAdjacentHTML("afterbegin", "<div class='as_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
-        document.querySelector("#es_badge_all").addEventListener("click", function(e) {
+        document.querySelector("#as_badge_all").addEventListener("click", function(e) {
             document.querySelector(".is_link").style.display = "block";
-            document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
-            document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeout
+            document.querySelector("#as_filter_active").textContent = Localization.str.badges_all;
+            document.querySelector("#as_filter_flyout").style.display = "none"; // TODO fadeout
             resetLazyLoader();
         });
 
         let that = this;
-        document.querySelector("#es_badge_drops").addEventListener("click", async function(e) {
+        document.querySelector("#as_badge_drops").addEventListener("click", async function(e) {
             e.preventDefault();
 
             // Load additinal badge sections if multiple pages are present
@@ -2306,8 +2306,8 @@ let BadgesPageClass = (function(){
                 }
             }
 
-            document.querySelector("#es_filter_active").textContent = Localization.str.badges_drops;
-            document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeOut();
+            document.querySelector("#as_filter_active").textContent = Localization.str.badges_drops;
+            document.querySelector("#as_filter_flyout").style.display = "none"; // TODO fadeOut();
             resetLazyLoader();
         });
     };
@@ -2315,26 +2315,26 @@ let BadgesPageClass = (function(){
     BadgesPageClass.prototype.addBadgeViewOptions = function() {
         let html = `<span>${Localization.str.view}</span>
             <div class="store_nav">
-                <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                <div class="tab flyout_tab" id="as_badgeview_tab" data-flyout="as_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                     <span class="pulldown">
-                        <div id="es_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
+                        <div id="as_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
                         <span></span>
                     </span>
                 </div>
             </div>
-            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="as_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
                 <div class="popup_body popup_menu">
-                    <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
-                    <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
+                    <a class="popup_menu_item as_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
+                    <a class="popup_menu_item as_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
                 </div>
             </div>`;
 
         document.querySelector("#wishlist_sort_options")
-            .insertAdjacentHTML("afterbegin", "<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
+            .insertAdjacentHTML("afterbegin", "<div class='as_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
         // Change hash when selecting view
-        document.querySelector("#es_badgeview_flyout").addEventListener("click", function(e) {
-            let node = e.target.closest(".es_bg_view");
+        document.querySelector("#as_badgeview_flyout").addEventListener("click", function(e) {
+            let node = e.target.closest(".as_bg_view");
             if (!node) { return; }
             window.location.hash = node.dataset.view;
         });
@@ -2348,27 +2348,27 @@ let BadgesPageClass = (function(){
 
         function toggleBinderView(state) {
             if (window.location.hash === "#binderview" || state === true) {
-                document.querySelector("div.maincontent").classList.add("es_binder_view");
+                document.querySelector("div.maincontent").classList.add("as_binder_view");
 
                 let mainNode = document.querySelector("div.maincontent");
 
                 // Don't attempt changes again if already loaded
-                if (!mainNode.classList.contains("es_binder_loaded")) {
-                    mainNode.classList.add("es_binder_loaded");
+                if (!mainNode.classList.contains("as_binder_loaded")) {
+                    mainNode.classList.add("as_binder_loaded");
 
                     let nodes = document.querySelectorAll("div.badge_row.is_link");
                     for (let node of nodes) {
                         let stats = node.querySelector("span.progress_info_bold");
                         if (stats && stats.innerHTML.match(/\d+/)) {
                             node.querySelector("div.badge_content")
-                                .insertAdjacentHTML("beforeend", "<span class='es_game_stats'>" + stats.outerHTML + "</span>");
+                                .insertAdjacentHTML("beforeend", "<span class='as_game_stats'>" + stats.outerHTML + "</span>");
                         }
 
                         let infoNode = node.querySelector("div.badge_progress_info");
                         if (infoNode) {
                             let card = infoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                             let text = (card) ? card[1] + " / " + card[2] : '';
-                            infoNode.insertAdjacentHTML("beforebegin", '<div class="es_badge_progress_info">' + text + '</div>');
+                            infoNode.insertAdjacentHTML("beforebegin", '<div class="as_badge_progress_info">' + text + '</div>');
                         }
                     }
                 }
@@ -2381,16 +2381,16 @@ let BadgesPageClass = (function(){
 
                 // Triggers the loading of out-of-view badge images
                 window.dispatchEvent(new Event("resize"));
-                document.querySelector("#es_badgeview_active").textContent = Localization.str.binder_view;
+                document.querySelector("#as_badgeview_active").textContent = Localization.str.binder_view;
             } else {
-                document.querySelector("div.maincontent").classList.remove("es_binder_view");
+                document.querySelector("div.maincontent").classList.remove("as_binder_view");
 
                 let nodes = document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn");
                 for (let node of nodes) {
                     node.href = node.href.replace("#binderview", "");
                 }
 
-                document.querySelector("#es_badgeview_active").textContent = Localization.str.theworddefault;
+                document.querySelector("#as_badgeview_active").textContent = Localization.str.theworddefault;
             }
         }
     };
@@ -2446,7 +2446,7 @@ let GameCardPageClass = (function(){
                 }
 
                 if (marketLink && cardPrice) {
-                    node.insertAdjacentHTML("beforeend", `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price}: ${cardPrice}</a>`);
+                    node.insertAdjacentHTML("beforeend", `<a class="as_card_search" href="${marketLink}">${Localization.str.lowest_price}: ${cardPrice}</a>`);
                 }
             }
         }
@@ -2455,7 +2455,7 @@ let GameCardPageClass = (function(){
             DOMHelper.selectLastNode(document, ".badge_empty_name")
                 .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
 
-            document.querySelector(".badge_empty_right").classList.add("esi-badge");
+            document.querySelector(".badge_empty_right").classList.add("asi-badge");
         }
     };
 
@@ -2493,10 +2493,10 @@ let GameCardPageClass = (function(){
     GameCardPageClass.prototype.addStoreTradeForumLink = function() {
         document.querySelector(".gamecards_inventorylink").insertAdjacentHTML("beforeend",
             `<div style="float: right">
-                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
+                <a class="as_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
     				<span>${Localization.str.visit_store}</span>
     			</a>
-    			<a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
+    			<a class="as_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
     				<span>${Localization.str.visit_trade_forum}</span>
     			</a>
     		</div>`);
@@ -2600,31 +2600,31 @@ let FriendsThatPlayPageClass = (function(){
 
         memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")")
             .insertAdjacentHTML("beforeend",
-                ` (<span id='es_default_sort' style='cursor: pointer;'>
+                ` (<span id='as_default_sort' style='cursor: pointer;'>
                     ${Localization.str.sort_by.replace(":", "")} ${Localization.str.theworddefault}
-                 </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
+                 </span> | <span id='as_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
                     ${Localization.str.sort_by.replace(":", "")} Playtime
                 </span>)`);
 
         memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
-            .id = "es_friends_default";
+            .id = "as_friends_default";
 
-        let sorted = document.querySelector("#es_friends_default").cloneNode(true);
-        sorted.id = "es_friends_playtime";
+        let sorted = document.querySelector("#as_friends_default").cloneNode(true);
+        sorted.id = "as_friends_playtime";
         sorted.style.display = "none";
 
-        let defaultNode = document.querySelector("#es_friends_default");
+        let defaultNode = document.querySelector("#as_friends_default");
         defaultNode.insertAdjacentElement("afterend", sorted);
         defaultNode.insertAdjacentHTML("afterend", "<div style='clear: both'></div>");
 
-        document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_playtime_sort").style.textDecoration = "none";
-            document.querySelector("#es_default_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_default").style.display = "none";
-            document.querySelector("#es_friends_playtime").style.display = "block";
+        document.querySelector("#as_playtime_sort").addEventListener("click", function(e) {
+            document.querySelector("#as_playtime_sort").style.textDecoration = "none";
+            document.querySelector("#as_default_sort").style.textDecoration = "underline";
+            document.querySelector("#as_friends_default").style.display = "none";
+            document.querySelector("#as_friends_playtime").style.display = "block";
 
             let friendArray = [];
-            let nodes = document.querySelectorAll("#es_friends_playtime .friendBlock");
+            let nodes = document.querySelectorAll("#as_friends_playtime .friendBlock");
             for (let node of nodes) {
                 friendArray.push([
                     node,
@@ -2634,17 +2634,17 @@ let FriendsThatPlayPageClass = (function(){
 
             friendArray.sort(function(a,b) { return b[1] - a[1]; });
 
-            let playtimeNode = document.querySelector("#es_friends_playtime");
+            let playtimeNode = document.querySelector("#as_friends_playtime");
             for (let item of friendArray) {
                 playtimeNode.append(item[0])
             }
         });
 
-        document.querySelector("#es_default_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_default_sort").style.textDecoration = "none";
-            document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_playtime").style.display = "none";
-            document.querySelector("#es_friends_default").style.display = "block";
+        document.querySelector("#as_default_sort").addEventListener("click", function(e) {
+            document.querySelector("#as_default_sort").style.textDecoration = "none";
+            document.querySelector("#as_playtime_sort").style.textDecoration = "underline";
+            document.querySelector("#as_friends_playtime").style.display = "none";
+            document.querySelector("#as_friends_default").style.display = "block";
         });
     };
 
@@ -2690,12 +2690,12 @@ let FriendsPageClass = (function(){
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
             let options = document.querySelector("#friends_sort_options");
-            let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
-            if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
+            let linkNode = options.querySelector("span[data-asi-sort='"+sortBy+"']");
+            if (!linkNode.classList.contains("as_friends_sort_link")) { return; }
 
             let nodes = options.querySelectorAll("span");
             for (let node of nodes) {
-                node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
+                node.classList.toggle("as_friends_sort_link", node.dataset.asiSort !== sortBy);
             }
 
             let offlineNode = document.querySelector("#state_offline");
@@ -2708,14 +2708,14 @@ let FriendsPageClass = (function(){
 
         let sortOptions = `<div id="friends_sort_options">
                             ${Localization.str.sort_by}
-                            <span data-esi-sort='default'>${Localization.str.theworddefault}</span>
-                            <span data-esi-sort='lastonline' class="es_friends_sort_link">${Localization.str.lastonline}</span>
+                            <span data-asi-sort='default'>${Localization.str.theworddefault}</span>
+                            <span data-asi-sort='lastonline' class="as_friends_sort_link">${Localization.str.lastonline}</span>
                           </div>`;
         document.querySelector("#manage_friends_control").insertAdjacentHTML("beforebegin", sortOptions);
 
         document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
-            if (!e.target.closest("[data-esi-sort]")) { return; }
-            sortFriends(e.target.dataset.esiSort);
+            if (!e.target.closest("[data-asi-sort]")) { return; }
+            sortFriends(e.target.dataset.asiSort);
         });
 
         sortFriends(SyncedStorage.get("sortfriendsby"));
@@ -2749,7 +2749,7 @@ let MarketListingPageClass = (function(){
         if (!data.success) { return; }
 
         let soldHtml =
-            `<div class="es_sold_amount">
+            `<div class="as_sold_amount">
                 ${Localization.str.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
             </div>`;
 
@@ -2758,7 +2758,7 @@ let MarketListingPageClass = (function(){
 
         /* TODO where is this observer applied?
         let observer = new MutationObserver(function(){
-            if (!document.querySelector("#pricehistory .es_sold_amount")) {
+            if (!document.querySelector("#pricehistory .as_sold_amount")) {
                 document.querySelector(".jqplot-title").insertAdjacentHTML("beforeend", soldHtml);
             }
             return true;
@@ -2790,7 +2790,7 @@ let MarketListingPageClass = (function(){
         let bgLink = viewFullLink.href.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
         if (bgLink) {
             viewFullLink.insertAdjacentHTML("afterend",
-                `<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
+                `<a class="as_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
                     <span>${Localization.str.preview_background}</span>
                 </a>`);
         }
@@ -2879,17 +2879,17 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
-            document.querySelector("#es_market_summary").innerHTML =
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
-                <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`;
+            document.querySelector("#as_market_summary").innerHTML =
+                `<div>${Localization.str.purchase_total}: <span class='as_market_summary_item'>${purchaseTotal}</span></div>
+                <div>${Localization.str.sales_total}: <span class='as_market_summary_item'>${saleTotal}</span></div>
+                <div>${netText}: <span class='as_market_summary_item' style="color:${color}">${net}</span></div>`;
         }
 
         let pages = -1;
         let p=0;
         let pageSize = 100;
 
-        let progressNode = document.querySelector("#esi_market_stats_progress");
+        let progressNode = document.querySelector("#asi_market_stats_progress");
 
         do {
             let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory?start="+p+"&count="+pageSize);
@@ -2912,27 +2912,27 @@ let MarketPageClass = (function(){
 
         document.querySelector("#findItems")
             .insertAdjacentHTML("beforebegin",
-                `<div id="es_summary">
+                `<div id="as_summary">
                     <div class="market_search_sidebar_contents">
                         <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
-                        <div id="es_market_summary_status"></div>
-                        <div class="market_search_game_button_group" id="es_market_summary" style="display:none;"></div>
+                        <div id="as_market_summary_status"></div>
+                        <div class="market_search_game_button_group" id="as_market_summary" style="display:none;"></div>
                     </div>
                 </div>`);
 
-        let node = document.querySelector("#es_market_summary_status");
-        node.innerHTML = `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`
+        let node = document.querySelector("#as_market_summary_status");
+        node.innerHTML = `<a class="btnv6_grey_black ico_hover btn_small_thin" id="as_market_summary_button"><span>Load Market Stats</span></a>`
 
         async function startLoadingStats() {
             node.innerHTML = `<img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
-                                <span>${Localization.str.loading} <span id="esi_market_stats_progress"></span>
+                                <span>${Localization.str.loading} <span id="asi_market_stats_progress"></span>
                               </span>`;
-            document.querySelector("#es_market_summary").style.display="block";
+            document.querySelector("#as_market_summary").style.display="block";
             await loadMarketStats();
-            document.querySelector("#es_market_summary_status").style.display = "none";
+            document.querySelector("#as_market_summary_status").style.display = "none";
         }
 
-        document.querySelector("#es_market_summary_button").addEventListener("click", startLoadingStats);
+        document.querySelector("#as_market_summary_button").addEventListener("click", startLoadingStats);
 
         if (SyncedStorage.get("showmarkettotal")) {
             startLoadingStats();
@@ -2959,18 +2959,18 @@ let MarketPageClass = (function(){
         let loadedMarketPrices = {};
 
         function insertPrice(node, data) {
-            node.classList.add("es_priced");
+            node.classList.add("as_priced");
 
-            let lowestNode = node.querySelector(".market_listing_es_lowest");
+            let lowestNode = node.querySelector(".market_listing_as_lowest");
             lowestNode.textContent = data['lowest_price'];
 
             let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
             let lowPrice = Price.parseFromString(data['lowest_price']);
 
             if (myPrice.value <= lowPrice.value) {
-                lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
+                lowestNode.classList.add("as_percentage_lower"); // Ours matches the lowest price
             } else {
-                lowestNode.classList.add("es_percentage_higher"); // Our price is higher than the lowest price
+                lowestNode.classList.add("as_percentage_higher"); // Our price is higher than the lowest price
             }
         }
 
@@ -2980,27 +2980,27 @@ let MarketPageClass = (function(){
         let nodes = parentNode.querySelectorAll("#my_market_listingsonhold_number,#my_market_selllistings_number");
         for (let node of nodes) {
             let listingNode = node.closest(".my_listing_section");
-            if (listingNode.classList.contains("es_selling")) { continue; }
-            listingNode.classList.add("es_selling");
+            if (listingNode.classList.contains("as_selling")) { continue; }
+            listingNode.classList.add("as_selling");
 
             let headerNode = listingNode.querySelector(".market_listing_table_header span");
             if (!headerNode) { continue; }
 
             headerNode.style.width = "200px"; // TODO do we still need to change width?
             headerNode.insertAdjacentHTML("afterend",
-                    "<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + Localization.str.lowest + "</span></span>");
+                    "<span class='market_listing_right_cell market_listing_my_price'><span class='as_market_lowest_button'>" + Localization.str.lowest + "</span></span>");
         }
 
         // update table rows
         let rows = [];
-        nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
+        nodes = parentNode.querySelectorAll(".as_selling .market_listing_row");
         for (let node of nodes) {
             let buttons = node.querySelector(".market_listing_edit_buttons");
             buttons.style.width = "200px"; // TODO do we still need to change width?
-            if (node.querySelector(".market_listing_es_lowest")) { continue; }
+            if (node.querySelector(".market_listing_as_lowest")) { continue; }
 
             node.querySelector(".market_listing_edit_buttons")
-                .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+                .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_as_lowest'>&nbsp;</div>");
 
             // we do this because of changed width, right?
             let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
@@ -3041,11 +3041,11 @@ let MarketPageClass = (function(){
 
         // Indicate default sort and add buttons to header
         function buildButtons() {
-            if (document.querySelector(".es_marketsort")) { return; }
+            if (document.querySelector(".as_marketsort")) { return; }
 
             // name
             DOMHelper.wrap(
-                BrowserHelper.htmlToElement("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>"),
+                BrowserHelper.htmlToElement("<span id='as_marketsort_name' class='as_marketsort market_sortable_column'></span>"),
                 DOMHelper.selectLastNode(container, ".market_listing_table_header span").parentNode
             );
 
@@ -3054,7 +3054,7 @@ let MarketPageClass = (function(){
             node.classList.add("market_sortable_column");
 
             DOMHelper.wrap(
-                BrowserHelper.htmlToElement("<span id='es_marketsort_date' class='es_marketsort active asc'></span>"),
+                BrowserHelper.htmlToElement("<span id='as_marketsort_date' class='as_marketsort active asc'></span>"),
                 node
             );
 
@@ -3063,12 +3063,12 @@ let MarketPageClass = (function(){
             node.classList.add("market_sortable_column");
 
             DOMHelper.wrap(
-                BrowserHelper.htmlToElement("<span id='es_marketsort_price' class='es_marketsort'></span>"),
+                BrowserHelper.htmlToElement("<span id='as_marketsort_price' class='as_marketsort'></span>"),
                 node
             );
 
-            document.querySelector("#es_marketsort_name").insertAdjacentHTML("beforebegin",
-                "<span id='es_marketsort_game' class='es_marketsort market_sortable_column'><span>" + Localization.str.game_name.toUpperCase() + "</span></span>");
+            document.querySelector("#as_marketsort_name").insertAdjacentHTML("beforebegin",
+                "<span id='as_marketsort_game' class='as_marketsort market_sortable_column'><span>" + Localization.str.game_name.toUpperCase() + "</span></span>");
         }
 
         buildButtons();
@@ -3078,23 +3078,23 @@ let MarketPageClass = (function(){
         if (!tableHeader) { return; }
 
         tableHeader.addEventListener("click", function(e) {
-            let sortNode = e.target.closest(".es_marketsort");
+            let sortNode = e.target.closest(".as_marketsort");
             if (!sortNode) { return; }
 
             let isAsc = sortNode.classList.contains("asc");
 
-            document.querySelector(".es_marketsort.active").classList.remove("active");
+            document.querySelector(".as_marketsort.active").classList.remove("active");
 
             sortNode.classList.add("active");
             sortNode.classList.toggle("asc", !isAsc);
             sortNode.classList.toggle("desc", isAsc);
 
             // set default position
-            if (!container.querySelector(".market_listing_row[data-esi-default-position]")) {
+            if (!container.querySelector(".market_listing_row[data-asi-default-position]")) {
                 let nodes = container.querySelectorAll(".market_listing_row");
                 let i = 0;
                 for (let node of nodes) {
-                    node.dataset.esiDefaultPosition = i++;
+                    node.dataset.asiDefaultPosition = i++;
                 }
             }
 
@@ -3103,9 +3103,9 @@ let MarketPageClass = (function(){
 
         container.addEventListener("click", function(e) {
             if (!e.target.closest(".market_paging_controls span")) { return; }
-            document.querySelector(".es_marketsort.active").classList.remove("active");
+            document.querySelector(".as_marketsort.active").classList.remove("active");
 
-            let dateNode = document.querySelector("#es_marketsort_date");
+            let dateNode = document.querySelector("#as_marketsort_date");
             dateNode.classList.remove("desc");
             dateNode.classList.add("active asc")
         });
@@ -3115,17 +3115,17 @@ let MarketPageClass = (function(){
             let dataname;
             let isNumber = false;
             switch (sortBy) {
-                case "es_marketsort_name":
+                case "as_marketsort_name":
                     selector = ".market_listing_item_name";
                     break;
-                case "es_marketsort_date":
-                    dataname = "esiDefaultPosition";
+                case "as_marketsort_date":
+                    dataname = "asiDefaultPosition";
                     isNumber = true;
                     break;
-                case "es_marketsort_price":
+                case "as_marketsort_price":
                     selector = ".market_listing_price";
                     break;
-                case "es_marketsort_game":
+                case "as_marketsort_game":
                     selector = ".market_listing_game_name";
                     break;
             }
@@ -3170,9 +3170,9 @@ let MarketPageClass = (function(){
 
     MarketPageClass.prototype.marketPopularRefreshToggle = function() {
         document.querySelector("#sellListings .market_tab_well_tabs").insertAdjacentHTML("beforeend",
-            `<div id="es_popular_refresh_toggle" class="btn_grey_black btn_small" data-tooltip-text="${Localization.str.market_popular_items_toggle}"></div>`);
+            `<div id="as_popular_refresh_toggle" class="btn_grey_black btn_small" data-tooltip-text="${Localization.str.market_popular_items_toggle}"></div>`);
 
-        document.querySelector("#es_popular_refresh_toggle").addEventListener("click", function(e) {
+        document.querySelector("#as_popular_refresh_toggle").addEventListener("click", function(e) {
             toggleRefresh(!LocalData.get("popular_refresh"));
         });
 
@@ -3181,7 +3181,7 @@ let MarketPageClass = (function(){
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
         function toggleRefresh(state) {
-            document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
+            document.querySelector("#as_popular_refresh_toggle").classList.toggle("as_refresh_off", !state);
             LocalData.set("popular_refresh", state);
             ExtensionLayer.runInPageContext("function(){ g_bMarketWindowHidden = " + state +"; }");
         }
@@ -3242,10 +3242,10 @@ let CommunityAppPageClass = (function(){
         // TODO remove from wishlist button
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
-            '<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-left: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
+            '<a id="as_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-left: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
 
         let that = this;
-        document.querySelector("#es_wishlist").addEventListener("click", async function(e) {
+        document.querySelector("#as_wishlist").addEventListener("click", async function(e) {
             e.preventDefault();
             if (e.target.classList.contains("btn_disabled")) { return; }
 
@@ -3406,7 +3406,7 @@ let GuidesPageClass = (function(){
                         break;
                 }
 
-                EnhancedSteam.hideTrademarkSymbol(true);
+                AugmentedSteam.hideTrademarkSymbol(true);
             })
     )
 

@@ -39,14 +39,14 @@ let TradeOfferPageClass = (function(){
 					theirItemsCountNode.className = "";
 
 					if (yourItems === theirItems) {
-						yourItemsCountNode.classList.add("es_same");
-						theirItemsCountNode.classList.add("es_same");
+						yourItemsCountNode.classList.add("as_same");
+						theirItemsCountNode.classList.add("as_same");
 					} else if (yourItems > theirItems) {
-						yourItemsCountNode.classList.add("es_higher");
-						theirItemsCountNode.classList.add("es_lower");
+						yourItemsCountNode.classList.add("as_higher");
+						theirItemsCountNode.classList.add("as_lower");
 					} else {
-						yourItemsCountNode.classList.add("es_lower");
-						theirItemsCountNode.classList.add("es_higher");
+						yourItemsCountNode.classList.add("as_lower");
+						theirItemsCountNode.classList.add("as_higher");
 					}
 				}
 			});

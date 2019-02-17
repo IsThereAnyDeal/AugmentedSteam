@@ -1,19 +1,19 @@
-.es_wishlist_note:before {
+.as_wishlist_note:before {
 	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/pinn.png");
 }
-.es_birthday #logo_holder img {
+.as_birthday #logo_holder img {
 	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_logo_bg.gif") no-repeat;
 }
-.es_birthday.es_store_front #global_header:before {
+.as_birthday.as_store_front #global_header:before {
 	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_bg.png") repeat-x;
 }
-.es_regional_icon {
+.as_regional_icon {
 	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/flags/world.png") 8px 8px !important;
 }
-#es_progress::-moz-progress-bar {
+#as_progress::-moz-progress-bar {
 	background-color: #51771d;
 }
-#es_progress.error::-moz-progress-bar {
+#as_progress.error::-moz-progress-bar {
 	background-color: #B31414;
 }
 span.platform_img.steamplay {

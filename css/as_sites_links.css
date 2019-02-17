@@ -2,7 +2,7 @@
  * Users profiles
  * add_community_profile_links()
  **************************************/
-.es_sites_icons:not(.es_none):after, .es_sites_custom_icon {
+.as_sites_icons:not(.as_none):after, .as_sites_custom_icon {
 	content: "";
 	display: inline-block;
 	width: 16px;
@@ -18,32 +18,32 @@
 				0 0 0 1px rgba(193, 193, 193, 0.17);
 	vertical-align: top;
 }
-.es_sites_icons.es_gray,
-.es_gray .es_sites_icons {
+.as_sites_icons.as_gray,
+.as_gray .as_sites_icons {
 	filter: grayscale(100%);
 }
-.es_sites_icons.es_steamrepcn_icon:after {
+.as_sites_icons.as_steamrepcn_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/srcn.png");
 }
-.es_sites_icons.es_steamrep_icon:after {
+.as_sites_icons.as_steamrep_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamrep.png");
 	background-color: rgb(235, 235, 235);
 }
-.es_sites_icons.es_steamdbcalc_icon:after {
+.as_sites_icons.as_steamdbcalc_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamdb.png");
 }
-.es_sites_icons.es_steamgifts_icon:after {
+.as_sites_icons.as_steamgifts_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamgifts.png");
 }
-.es_sites_icons.es_steamtrades_icon:after {
+.as_sites_icons.as_steamtrades_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamtrades.png");
 }
-.es_sites_icons.es_astats_icon:after {
+.as_sites_icons.as_astats_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/achievementstats.png");
 }
-.es_sites_icons.es_backpacktf_icon:after {
+.as_sites_icons.as_backpacktf_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/backpacktf.png");
 }
-.es_sites_icons.es_astatsnl_icon:after {
+.as_sites_icons.as_astatsnl_icon:after {
 	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
 }

@@ -74,9 +74,9 @@ let Defaults = (function() {
     self.show_gamesstreamingnow = true;
     self.show_under = true;
     self.show_updatesandoffers = true;
-    self.show_es_discoveryqueue = true;
-    self.show_es_homepagetabs = true;
-    self.show_es_homepagesidebar = true;
+    self.show_as_discoveryqueue = true;
+    self.show_as_homepagetabs = true;
+    self.show_as_homepagesidebar = true;
     self.showmarkettotal = false;
     self.showsteamrepapi = true;
     self.showmcus = true;
@@ -125,7 +125,7 @@ let Defaults = (function() {
     self.showdrm = true;
     self.regional_hideworld = false;
     self.showinvnav = true;
-    self.showesbg = true;
+    self.showasbg = true;
     self.quickinv = true;
     self.quickinv_diff = -0.01;
     self.showallachievements = false;
@@ -453,8 +453,8 @@ let ProgressBar = (function(){
         let container = document.getElementById("global_actions");
         if (!container) return;
         container.insertAdjacentHTML("afterend",
-            `<div class="es_progress_wrap">
-                <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
+            `<div class="as_progress_wrap">
+                <div id="as_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
                         <div class="progress-bar">
                             <div class="progress-value" style="width: 18px"></div>
@@ -463,7 +463,7 @@ let ProgressBar = (function(){
                 </div>
             </div>`);
 
-        node = document.querySelector("#es_progress");
+        node = document.querySelector("#as_progress");
     };
 
     self.loading = function() {
@@ -494,9 +494,9 @@ let ProgressBar = (function(){
         node.classList.add("error");
         node.setAttribute("title", "");
 
-        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
+        let nodeError = node.closest('.as_progress_wrap').querySelector(".as_progress_error");
         if (!nodeError) {
-            node.insertAdjacentHTML("afterend", "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            node.insertAdjacentHTML("afterend", "<div class='as_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
             nodeError = node.nextElementSibling;
         }
 
@@ -1260,7 +1260,7 @@ let BrowserHelper = (function(){
     return self;
 })();
 
-let EnhancedSteam = (function() {
+let AugmentedSteam = (function() {
 
     let self = {};
 
@@ -1280,17 +1280,17 @@ let EnhancedSteam = (function() {
         RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
             changelog => {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
+                let logo = ExtensionLayer.getLocalUrl("img/as_128.png");
                 let dialog = "<div style=\"height:100%; display:flex; flex-direction:row;\"><div style=\"float: left; margin-right: 21px;\">"
                     + "<img src=\""+ logo +"\"></div>"
                     + "<div style=\"float: right;\">" + Localization.str.update.changes.replace(/'/g, "\\'")
-                    + ":<ul class=\"es_changelog\">" + changelog + "</ul></div>" +
+                    + ":<ul class=\"as_changelog\">" + changelog + "</ul></div>" +
                     "</div>";
                 ExtensionLayer.runInPageContext(
                     "function() {\
                         var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
 						prompt.done(function(result) {\
-							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
+							if (result == 'SECONDARY') { window.postMessage({ type: 'as_sendmessage_change', information: [ true ]}, '*'); }\
 						});\
 					}"
                 );
@@ -1300,7 +1300,7 @@ let EnhancedSteam = (function() {
 
         window.addEventListener("message", function(event) {
             if (event.source !== window) return;
-            if (event.data.type && (event.data.type === "es_sendmessage_change")) {
+            if (event.data.type && (event.data.type === "as_sendmessage_change")) {
                 SyncedStorage.set("version_show", false);
             }
         }, false);
@@ -1308,12 +1308,12 @@ let EnhancedSteam = (function() {
 
     self.addMenu = function() {
         document.querySelector("#global_action_menu").insertAdjacentHTML("afterBegin", `
-            <div id="es_menu">
-                <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
-                <div id="es_popup" class="popup_block_new">
+            <div id="as_menu">
+                <span id="as_pulldown" class="pulldown global_action_link">Augmented Steam</span>
+                <div id="as_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
                         <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
-                        <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
+                        <a class="popup_menu_item" id="as_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam">${Localization.str.contribute}</a>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam/issues">${Localization.str.bug_feature}</a>
@@ -1326,14 +1326,14 @@ let EnhancedSteam = (function() {
             </div>
         `);
 
-        let popup = document.querySelector("#es_popup");
-        document.querySelector("#es_pulldown").addEventListener("click", function(){
-            let width = document.querySelector("#es_pulldown").getBoundingClientRect().width - 19; // padding
+        let popup = document.querySelector("#as_popup");
+        document.querySelector("#as_pulldown").addEventListener("click", function(){
+            let width = document.querySelector("#as_pulldown").getBoundingClientRect().width - 19; // padding
             popup.style.left = "-" + width + "px";
             popup.classList.toggle("open");
         });
 
-        document.querySelector("#es_menu").addEventListener("click", function(e){
+        document.querySelector("#as_menu").addEventListener("click", function(e){
             e.stopPropagation();
         });
 
@@ -1341,7 +1341,7 @@ let EnhancedSteam = (function() {
             popup.classList.remove("open");
         });
 
-        document.querySelector("#es_clear_cache").addEventListener("click", function(e){
+        document.querySelector("#as_clear_cache").addEventListener("click", function(e){
             e.preventDefault();
 
             self.clearCache();
@@ -1378,12 +1378,12 @@ let EnhancedSteam = (function() {
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             document.querySelector("#global_header").insertAdjacentHTML("afterend", `
-                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
-                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
+                <div class="as_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
+                    <a href="#" id="as_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>
             `);
 
-            document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
+            document.querySelector("#as_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
                 ExtensionLayer.runInPageContext("function(){ ChangeLanguage( '" + warningLanguage + "' ); }");
             });
@@ -1448,10 +1448,10 @@ let EnhancedSteam = (function() {
 
     self.launchRandomButton = function() {
 
-        document.querySelector("#es_popup .popup_menu")
-            .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+        document.querySelector("#as_popup .popup_menu")
+            .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='as_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
-        document.querySelector("#es_random_game").addEventListener("click", async function(){
+        document.querySelector("#as_random_game").addEventListener("click", async function(){
             let result = await DynamicStore;
             if (!result.rgOwnedApps) { return; }
             let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
@@ -1693,10 +1693,10 @@ let EarlyAccess = (function(){
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
 
         selectors.forEach(selector => {
-            let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
+            let nodes = document.querySelectorAll(selector+":not(.as_ea_checked)");
             for (let i=0; i<nodes.length; i++) {
                 let node = nodes[i];
-                node.classList.add("es_ea_checked");
+                node.classList.add("as_ea_checked");
 
                 let linkNode = node.querySelector("a");
                 let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
@@ -1704,13 +1704,13 @@ let EarlyAccess = (function(){
                 let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
                 if (appid && cache.hasOwnProperty(appid)) {
-                    node.classList.add("es_early_access");
+                    node.classList.add("as_early_access");
 
                     let container = document.createElement("span");
-                    container.classList.add("es_overlay_container");
+                    container.classList.add("as_overlay_container");
                     DOMHelper.wrap(container, imgHeader);
 
-                    container.insertAdjacentHTML("afterbegin", `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+                    container.insertAdjacentHTML("afterbegin", `<span class="as_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
                 }
             }
         });
@@ -1786,10 +1786,10 @@ let EarlyAccess = (function(){
             case /^\/app\/.*/.test(window.location.pathname):
                 if (document.querySelector(".apphub_EarlyAccess_Title")) {
                     let container = document.createElement("span");
-                    container.id = "es_ea_apphub";
+                    container.id = "as_ea_apphub";
                     DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
 
-                    checkNodes("#es_ea_apphub");
+                    checkNodes("#as_ea_apphub");
                 }
         }
     }
@@ -2017,15 +2017,15 @@ let Highlights = (function(){
 
             let tagCss = "";
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
-                tagCss += '.es_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color") + ' }\n';
+                tagCss += '.as_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color") + ' }\n';
             });
-            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
+            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="as_tag_styles" type="text/css">' + tagCss + '</style>');
         }
 
         // Add the tags container if needed
-        let tags = node.querySelectorAll(".es_tags");
+        let tags = node.querySelectorAll(".as_tags");
         if (tags.length == 0) {
-            tags = BrowserHelper.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+            tags = BrowserHelper.htmlToElement('<div class="as_tags' + (tagShort ? ' as_tags_short' : '') + '" />');
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
@@ -2106,8 +2106,8 @@ let Highlights = (function(){
 
         // Add the tag
         for (let i=0,len=tags.length; i<len; i++) {
-            if (!tags[i].querySelector(".es_tag_" + tag)) {
-                tags[i].insertAdjacentHTML("beforeend", '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+            if (!tags[i].querySelector(".as_tag_" + tag)) {
+                tags[i].insertAdjacentHTML("beforeend", '<span class="as_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
             }
         }
     }
@@ -2135,10 +2135,10 @@ let Highlights = (function(){
             let hlCss = "";
 
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
-                hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color") + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
+                hlCss += '.as_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color") + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
             });
 
-            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
+            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="as_highlight_styles" type="text/css">' + hlCss + '</style>');
         }
 
         // Carousel item
@@ -2163,10 +2163,10 @@ let Highlights = (function(){
 
 
     function highlightItem(node, name) {
-        node.classList.add("es_highlight_checked");
+        node.classList.add("as_highlight_checked");
 
         if (SyncedStorage.get("highlight_"+name)) {
-            node.classList.add("es_highlighted", "es_highlighted_"+name);
+            node.classList.add("as_highlighted", "as_highlighted_"+name);
             highlightNode(node);
         }
 
@@ -2176,7 +2176,7 @@ let Highlights = (function(){
     }
 
     self.highlightOwned = function(node) {
-        node.classList.add("es_highlight_checked");
+        node.classList.add("as_highlight_checked");
 
         if (SyncedStorage.get("hide_owned")) {
             hideNode(node);
@@ -2187,7 +2187,7 @@ let Highlights = (function(){
     };
 
     self.highlightWishlist = function(node) {
-        node.classList.add("es_highlight_checked");
+        node.classList.add("as_highlight_checked");
 
         if (SyncedStorage.get("hide_wishlist")) {
             hideNode(node);
@@ -2200,7 +2200,7 @@ let Highlights = (function(){
     self.highlightCart = function(node) {
         if (!SyncedStorage.get("hide_cart")) { return; }
 
-        node.classList.add("es_highlight_checked", "es_highlighted", "es_highlighted_hidden");
+        node.classList.add("as_highlight_checked", "as_highlighted", "as_highlighted_hidden");
         hideNode(node);
     };
 
@@ -2234,7 +2234,7 @@ let Highlights = (function(){
             node = node.querySelector(".spotlight_content");
         }
 
-        node.classList.add("es_highlight_checked");
+        node.classList.add("as_highlight_checked");
 
         if (SyncedStorage.get("hide_ignored") && node.closest(".search_result_row")) {
             node.style.display = "none";
@@ -2276,7 +2276,7 @@ let Highlights = (function(){
         setTimeout(function() {
             selectors.forEach(selector => {
                 
-                let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
+                let nodes = parent.querySelectorAll(selector+":not(.as_highlighted)");
                 for (let i=0, len=nodes.length; i<len; i++) {
                     let node = nodes[i];
                     let nodeToHighlight = node;
@@ -2500,7 +2500,7 @@ let Prices = (function(){
         }
 
         let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
-        html = `<div class='es_lowest_price' id='es_price_${id}'><div class='gift_icon' id='es_line_chart_${id}'><img src='${chartImg}'></div>`;
+        html = `<div class='as_lowest_price' id='as_price_${id}'><div class='gift_icon' id='as_line_chart_${id}'><img src='${chartImg}'></div>`;
 
         // "Number of times this game has been in a bundle"
         if (info["bundles"]["count"] > 0) {
@@ -2660,17 +2660,17 @@ let Customizer = (function(){
         text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
         if (text === "") { return; }
 
-        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
+        document.querySelector("body").classList.toggle(name.replace("show_", "as_") + "_hidden", !SyncedStorage.get(name, true));
 
         if (element) {
-            element.classList.toggle("es_hide", !SyncedStorage.get(name));
+            element.classList.toggle("as_hide", !SyncedStorage.get(name));
 
-            if (element.classList.contains("es_hide")) {
+            if (element.classList.contains("as_hide")) {
                 element.style.display = "none";
             }
         }
 
-        document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
+        document.querySelector("#as_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
             `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
                     <div class="home_viewsettings_checkbox ${SyncedStorage.get(name) ? `checked` : ``}"></div>
                     <div class="home_viewsettings_label">${text}</div>
@@ -2681,13 +2681,13 @@ let Customizer = (function(){
             state = !state;
 
             if (element) {
-                element.classList.remove("es_show");
-                element.classList.remove("es_hide");
+                element.classList.remove("as_show");
+                element.classList.remove("as_hide");
                 element.style.display = state ? "block" : "none";
             }
 
             e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
+            document.querySelector("body").classList.toggle(name.replace("show_", "as_") + "_hidden", !state);
 
             SyncedStorage.set(name, state);
 
@@ -2740,24 +2740,24 @@ let Common = (function(){
         ]);
 
         ProgressBar.create();
-        EnhancedSteam.checkVersion();
-        EnhancedSteam.addMenu();
-        EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.removeInstallSteamButton();
-        EnhancedSteam.addHeaderLinks();
+        AugmentedSteam.checkVersion();
+        AugmentedSteam.addMenu();
+        AugmentedSteam.addLanguageWarning();
+        AugmentedSteam.removeInstallSteamButton();
+        AugmentedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
-        EnhancedSteam.disableLinkFilter();
-        EnhancedSteam.skipGotSteam();
-        EnhancedSteam.keepSteamSubscriberAgreementState();
+        AugmentedSteam.disableLinkFilter();
+        AugmentedSteam.skipGotSteam();
+        AugmentedSteam.keepSteamSubscriberAgreementState();
 
         if (User.isSignedIn) {
-            EnhancedSteam.addRedeemLink();
-            EnhancedSteam.replaceAccountName();
-            EnhancedSteam.launchRandomButton();
+            AugmentedSteam.addRedeemLink();
+            AugmentedSteam.replaceAccountName();
+            AugmentedSteam.launchRandomButton();
             // TODO add itad sync
-            EnhancedSteam.bindLogout();
+            AugmentedSteam.bindLogout();
         } else {
-            EnhancedSteam.removeAboutMenu();
+            AugmentedSteam.removeAboutMenu();
         }
 
 

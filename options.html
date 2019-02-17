@@ -5,10 +5,10 @@
     <script src="js/storeList.js"></script>
     <script src="js/options.js"></script>
     <script src="js/common.js"></script>
-    <link href="css/enhancedsteam.css" rel="stylesheet" type="text/css">
+    <link href="css/augmentedsteam.css" rel="stylesheet" type="text/css">
     <link href="css/options.css" rel="stylesheet" type="text/css">
-    <link href="css/es_flags.css" rel="stylesheet" type="text/css">
-    <link href="css/es_sites_links.css" rel="stylesheet" type="text/css">
+    <link href="css/as_flags.css" rel="stylesheet" type="text/css">
+    <link href="css/as_sites_links.css" rel="stylesheet" type="text/css">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Options - Augmented Steam</title>
     <base target="_blank">
@@ -231,11 +231,11 @@
                     <select id="homepage_tab_selection" data-setting="homepage_tab_selection">
                         <option value="remember" data-locale-text="options.homepage_default_tab_remember">Remember Previous</option>
                         <option value="tab_newreleases_content_trigger" data-locale-text="options.homepage_default_tab_newreleases">Popular New Releases</option>
-                        <!-- <option value="es_allreleases" data-locale-text="options.homepage_default_tab_allreleases">All New Releases</option> -->
+                        <!-- <option value="as_allreleases" data-locale-text="options.homepage_default_tab_allreleases">All New Releases</option> -->
                         <option value="tab_topsellers_content_trigger" data-locale-text="options.homepage_default_tab_topsellers">Top Sellers</option>
                         <option value="tab_upcoming_content_trigger" data-locale-text="options.homepage_default_tab_upcoming">Upcoming</option>
                         <option value="tab_specials_content_trigger" data-locale-text="options.homepage_default_tab_specials">Specials</option>
-                        <!-- <option value="es_popular" data-locale-text="popular">Popular</option> -->
+                        <!-- <option value="as_popular" data-locale-text="popular">Popular</option> -->
                     </select>
                 </div>
             </div>
@@ -516,8 +516,8 @@
                 <label for="showsteamrepapi" id="steamrep_api_text" data-locale-text="options.steamrepapi">Show SteamRep status on profile pages</label>
             </div>
             <div>
-                <input type="checkbox" id="showesbg" data-setting="showesbg">
-                <label for="showesbg" id="es_background_text" data-locale-text="options.es_bg">Set custom background on "Edit Profile" screen</label>
+                <input type="checkbox" id="showasbg" data-setting="showasbg">
+                <label for="showasbg" id="as_background_text" data-locale-text="options.as_bg">Set custom background on "Edit Profile" screen</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_permalink" data-setting="profile_permalink">
@@ -529,40 +529,40 @@
             <!-- removed, we dont have api
             <div>
                 <input type="checkbox" id="profile_steamrepcn" data-setting="profile_steamrepcn">
-                <label for="profile_steamrepcn"><i class="es_sites_icons es_steamrepcn_icon"></i>SteamrepCN</label>
+                <label for="profile_steamrepcn"><i class="as_sites_icons as_steamrepcn_icon"></i>SteamrepCN</label>
             </div>
              -->
             <div>
                 <input type="checkbox" id="profile_steamrep" data-setting="profile_steamrep">
-                <label for="profile_steamrep"><i class="es_sites_icons es_steamrep_icon"></i>SteamRep</label>
+                <label for="profile_steamrep"><i class="as_sites_icons as_steamrep_icon"></i>SteamRep</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_steamdbcalc" data-setting="profile_steamdbcalc">
-                <label for="profile_steamdbcalc"><i class="es_sites_icons es_steamdbcalc_icon"></i>SteamDB</label>
+                <label for="profile_steamdbcalc"><i class="as_sites_icons as_steamdbcalc_icon"></i>SteamDB</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_steamgifts" data-setting="profile_steamgifts">
-                <label for="profile_steamgifts"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</label>
+                <label for="profile_steamgifts"><i class="as_sites_icons as_steamgifts_icon"></i>SteamGifts</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_steamtrades" data-setting="profile_steamtrades">
-                <label for="profile_steamtrades"><i class="es_sites_icons es_steamtrades_icon"></i>SteamTrades</label>
+                <label for="profile_steamtrades"><i class="as_sites_icons as_steamtrades_icon"></i>SteamTrades</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_astats" data-setting="profile_astats">
-                <label for="profile_astats"><i class="es_sites_icons es_astats_icon"></i>Achievement Stats</label>
+                <label for="profile_astats"><i class="as_sites_icons as_astats_icon"></i>Achievement Stats</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_backpacktf" data-setting="profile_backpacktf">
-                <label for="profile_backpacktf"><i class="es_sites_icons es_backpacktf_icon"></i>Backpack.tf</label>
+                <label for="profile_backpacktf"><i class="as_sites_icons as_backpacktf_icon"></i>Backpack.tf</label>
             </div>
             <div>
                 <input type="checkbox" id="profile_astatsnl" data-setting="profile_astatsnl">
-                <label for="profile_astatsnl"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</label>
+                <label for="profile_astatsnl"><i class="as_sites_icons as_astatsnl_icon"></i>AStats.nl</label>
             </div>
             <div>
                 <button id="add_custom_link" data-locale-text="custom">Custom</button>
-                <div id="es_custom_settings" style="display: none;">
+                <div id="as_custom_settings" style="display: none;">
                     <input type="checkbox" id="profile_custom" data-setting="profile_custom">
                     <label data-locale-text="options.name">Name</label>:
                     <input type="text" id="profile_custom_name" data-setting="profile_custom_name" maxlength="30" class="textbox">
@@ -597,7 +597,7 @@
                 <label for="hidespamcomments" id="hidespamcomments_text" data-locale-text="options.hidespamcomments">Hide spam comments from Workshop &amp; profiles</label>
                 <button id="show_spamcommentregex" data-locale-text="customize">Customize</button>
             </div>
-            <div id="spamcommentregex_list" class="esi-hidden">
+            <div id="spamcommentregex_list" class="asi-hidden">
                 <label for="spamcommentregex" id="spamcommentregex_text" data-locale-text="options.spamcommentregex">Regular Expression string:</label>
                 <input type="text" id="spamcommentregex" data-setting="spamcommentregex" class="textbox">
                 <button id="spamcommentregex_default" data-locale-text="theworddefault">Default</button>
@@ -631,7 +631,7 @@
         </div>
 
         <div id="maincontent_about" class="content">
-            <div id="es_about_text">
+            <div id="as_about_text">
                 <h2>About</h2>
                 <p>This is a fork of the Enhanced Steam extension.</p>
 

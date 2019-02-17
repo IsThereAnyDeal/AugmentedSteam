@@ -3,10 +3,10 @@
     "version": "0.9.3",
     "description": "Augments your Steam Experience",
     "icons": {
-      "128": "img/es_128.png",
-      "96": "img/es_96.png",
-      "48": "img/es_48.png",
-      "32": "img/es_32.png"
+      "128": "img/as_128.png",
+      "96": "img/as_96.png",
+      "48": "img/as_48.png",
+      "32": "img/as_32.png"
     },
     "manifest_version": 2,
     "options_ui": {
@@ -54,8 +54,8 @@
                 "js/store.js"
             ],
             "css": [
-                "css/enhancedsteam.css",
-                "css/es_flags.css"
+                "css/augmentedsteam.css",
+                "css/as_flags.css"
             ]
         },
         {
@@ -72,8 +72,8 @@
                 "js/community.js"
             ],
             "css": [
-                "css/enhancedsteam.css",
-                "css/es_flags.css"
+                "css/augmentedsteam.css",
+                "css/as_flags.css"
             ]
         },
         {
@@ -82,7 +82,7 @@
                 "*://steamcommunity.com/profiles/*"
             ],
             "css": [
-                "css/es_sites_links.css"
+                "css/as_sites_links.css"
             ]
         },
         {
