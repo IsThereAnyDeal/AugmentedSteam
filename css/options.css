@@ -38,10 +38,13 @@ body {
 
 #page {
 	display:flex;
+	align-items: flex-start;
 	min-height:100vh;
 }
 
 #side_bar {
+	position: sticky;
+	top: 0;
 	text-align:left;
 	font-family: "Arial", sans-serif;
 	font-size:16px;
