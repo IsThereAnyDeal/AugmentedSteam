@@ -106,5 +106,8 @@
                 "css/store/store_front.css"
             ]
         }
-    ]
+    ],
+    "background": {
+        "page": "background.html"
+    }
 }
