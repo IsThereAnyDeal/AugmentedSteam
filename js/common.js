@@ -906,48 +906,45 @@ let Currency = (function() {
         if (_promise) { return _promise; }
 
         _promise = new Promise(function(resolve, reject) {
-            (new Promise(function(resolve, reject) {
-                let currencySetting = SyncedStorage.get("override_price");
+            let currencySetting = SyncedStorage.get("override_price");
 
-                if (currencySetting !== "auto") {
-                    self.userCurrency = currencySetting;
-                    resolve();
-                    return;
-                }
+            if (currencySetting !== "auto") {
+                self.userCurrency = currencySetting;
+                resolve();
+                return;
+            }
 
-                let currencyCache = LocalData.get("user_currency", {});
-                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
-                    self.userCurrency = currencyCache.userCurrency.currencyType;
-                    resolve();
-                } else {
-                    RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                        .then(
-                            response => {
-                                let dummyHtml = document.createElement("html");
-                                dummyHtml.innerHTML = response;
+            let currencyCache = LocalData.get("user_currency", {});
+            if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
+                self.userCurrency = currencyCache.userCurrency.currencyType;
+                resolve();
+            } else {
+                RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
+                    .then(
+                        response => {
+                            let dummyHtml = document.createElement("html");
+                            dummyHtml.innerHTML = response;
 
-                                self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                            },
-                            () => {
-                                Background.action('currency.from.app')
-                                    .then(currency => {
-                                        self.userCurrency = currency;
-                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                                    });
-                            }
-                        )
-                        .finally(resolve);
-                }
-            })).finally(() => {
-                RequestData.getApi("v01/rates", { to: self.userCurrency })
-                    .then(result => {
-                        _rates = result.data;
-                        resolve();
-                    }, reject);
-            });
+                            self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
+                            LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
+                        },
+                        () => {
+                            Background.action('currency.from.app')
+                                .then(currency => {
+                                    self.userCurrency = currency;
+                                    LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
+                                });
+                        }
+                    )
+                    .finally(resolve);
+            }
+
+        }).then(() => {
+            return RequestData.getApi("v01/rates", { to: self.userCurrency })
+                .then(result => {
+                    _rates = result.data;
+                });;
         });
-
         return _promise;
     };
 
