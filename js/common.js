@@ -527,6 +527,14 @@ let Localization = (function(){
         if (_promise) { return _promise; }
 
         let currentSteamLanguage = Language.getCurrentSteamLanguage();
+
+        if (currentSteamLanguage !== null) {
+            // TODO Check if value has been explicitly set, as a call to set() every time is probably too much since the user won't change their language very often
+            SyncedStorage.set("language", currentSteamLanguage);
+        } else {
+            currentSteamLanguage = SyncedStorage.get("language");
+        }
+
         let local = Language.getLanguageCode(currentSteamLanguage);
 
         _promise = new Promise(function(resolve, reject) {
@@ -1164,7 +1172,7 @@ let Language = (function(){
             }
         }
 
-        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || "english";
+        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || null;
         return currentSteamLanguage;
     };
 
