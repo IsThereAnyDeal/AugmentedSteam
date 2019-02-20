@@ -194,6 +194,11 @@ const Steam = (function() {
     self.earlyAccessAppIds = async function() {
         return _earlyAccessAppIds();    
     };
+
+    self.prices = async function({ 'params': params }) {
+        return AugmentedSteamApi.getEndpoint('v01/prices', params).then(r => r.data);
+    };
+
     Object.freeze(self);
     return self;
 })();
@@ -208,6 +213,7 @@ let actionCallbacks = new Map([
     ['dynamicstore.clear', Steam.clearDynamicStore],
 
     ['early_access_appids', Steam.earlyAccessAppIds],
+    ['prices', Steam.prices],
 
 ]);
 // new Map() for Map.prototype.get() in lieu of:

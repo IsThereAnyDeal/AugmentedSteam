@@ -2600,15 +2600,11 @@ let Prices = (function(){
         let apiParams = this._getApiParams();
 
         if (!apiParams) { return; }
-        RequestData.getApi("v01/prices", apiParams).then(response => {
-            if (!response || response.result !== "success") { return; }
 
-            for (let gameid in response.data.data) {
-                if (!response.data.data.hasOwnProperty(gameid)) { continue; }
-
-                let meta = response.data['.meta'];
-                let info = response.data.data[gameid];
-
+        Background.action('prices', apiParams).then(response => {
+            let meta = response['.meta'];
+            
+            for (let [gameid, info] of Object.entries(response.data)) {
                 that._processPrices(gameid, meta, info);
                 that._processBundles(gameid, meta, info);
             }
