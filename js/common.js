@@ -1398,7 +1398,7 @@ let EnhancedSteam = (function() {
             if (!result.rgOwnedApps) { return; }
             let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-            RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+            Background.action('appdetails', { 'appids': appid, }).then(response => {
                 if (!response || !response[appid] || !response[appid].success) { return; }
                 let data = response[appid].data;
 
