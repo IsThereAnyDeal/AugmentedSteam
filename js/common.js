@@ -903,21 +903,22 @@ let Currency = (function() {
 
     // load user currency
     self.promise = async function() {
+        if (_promise) { return _promise; }
+
         let currencySetting = SyncedStorage.get("override_price");
         if (currencySetting !== "auto") {
             self.userCurrency = currencySetting;
-            return;
+            return _promise = Background.action('rates', { 'to': self.userCurrency, }).then(result => _rates = result);
         }
 
         let cache = LocalData.get("user_currency", {});
         if (cache.userCurrency && cache.userCurrency.currencyType) {
             if (cache.userCurrency.updated && !TimeHelper.isExpired(cache.userCurrency.updated, 3600)) {
                 self.userCurrency = cache.userCurrency.currencyType;
-                return;
+                return _promise = Background.action('rates', { 'to': self.userCurrency, }).then(result => _rates = result);
             }
         }
 
-        if (_promise) { return _promise; }
         _promise = Background.action('currency.from.wallet')
             .catch(err => Background.action('currency.from.app'))
             .then(currency => {
@@ -925,9 +926,7 @@ let Currency = (function() {
                 LocalData.set("user_currency", { currencyType: self.userCurrency, updated: TimeHelper.timestamp(), } )
                 return Background.action('rates', { 'to': self.userCurrency, });
             })
-            .then(result => {
-                _rates = result.data;
-            });
+            .then(result => _rates = result);
         return _promise;
     };
 
