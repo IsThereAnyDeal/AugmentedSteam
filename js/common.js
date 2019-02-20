@@ -205,8 +205,10 @@ let Background = (function(){
         });
     };
     
-    self.action = function(requested) {
-        return self.message({ 'action': requested, });
+    self.action = function(requested, params) {
+        if (typeof params == 'undefined')
+            return self.message({ 'action': requested, });
+        return self.message({ 'action': requested, 'params': params, });
     };
 
     Object.freeze(self);
