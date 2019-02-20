@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Fehler beim Laden von Enchanced Steam-Daten",
+        "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
         "loading": "Augmented Steam lädt Daten...",
-        "ready": "Enchanced Steam ist bereit",
+        "ready": "Augmented Steam ist bereit",
         "failed": "Eine oder mehrere Anfragen sind gescheitert"
     },
     "twitch": {
