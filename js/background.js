@@ -50,7 +50,7 @@ const AugmentedSteamApi = (function() {
         let url = new URL(endpoint, Config.ApiServerHost);
         if (typeof query != 'undefined') {
             for (let [k, v] of Object.entries(query)) {
-                url.searchParams.add(k, v);
+                url.searchParams.append(k, v);
             }
         }
         let p = {
