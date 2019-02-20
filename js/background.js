@@ -138,6 +138,10 @@ const SteamStoreApi = (function() {
         ;
     };
 
+    self.appDetails = async function({ 'params': params, }) {
+        return self.getEndpoint("/api/appdetails/", params);
+    };
+
     self.appUserDetails = async function({ 'params': params, }) {
         return self.getEndpoint("/api/appuserdetails/", params);
     };
@@ -309,6 +313,7 @@ let actionCallbacks = new Map([
     ['market.averagecardprice', AugmentedSteamApi.endpointFactory('v01/market/averagecardprice')], // FIXME deprecated
     ['market.averagecardprices', AugmentedSteamApi.endpointFactory('v01/market/averagecardprices')],
 
+    ['appdetails', SteamStoreApi.appDetails],
     ['appuserdetails', SteamStoreApi.appUserDetails],
 ]);
 // new Map() for Map.prototype.get() in lieu of:

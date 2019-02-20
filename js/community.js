@@ -1379,7 +1379,7 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await RequestData.getJson("https://store.steampowered.com/api/appdetails/?appids=" + giftAppid + "&filters=price_overview");
+        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
         if (!result[giftAppid] || !result[giftAppid].success) { return; }
         if (!result[giftAppid]['data']['price_overview']) { return; }
 
