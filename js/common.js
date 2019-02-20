@@ -591,6 +591,10 @@ let Localization = (function(){
         return _promise;
     };
 
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
+    };
+
     self.getString = function(key) {
         // Source: http://stackoverflow.com/a/24221895
         let path = key.split('.').reverse();
@@ -668,6 +672,10 @@ let User = (function(){
         _promise = _fetch();
 
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getAccountId = function(){
@@ -918,14 +926,17 @@ let Currency = (function() {
                                 let dummyHtml = document.createElement("html");
                                 dummyHtml.innerHTML = response;
 
-                                return dummyHtml.querySelector("input[name=currency]").value;
+                                self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
+                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                             },
-                            () => Background.action('currency.from.app')
+                            () => {
+                                Background.action('currency.from.app')
+                                    .then(currency => {
+                                        self.userCurrency = currency;
+                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
+                                    });
+                            }
                         )
-                        .then(currency => {
-                            self.userCurrency = currency;
-                            LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()});
-                        })
                         .finally(resolve);
                 }
             })).finally(() => {
@@ -938,6 +949,10 @@ let Currency = (function() {
         });
 
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getRate = function(from, to) {
