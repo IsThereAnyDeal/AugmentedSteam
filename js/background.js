@@ -52,6 +52,7 @@ const LocalStorage = (function(){
 const AugmentedSteamApi = (function() {
     let self = {};
 
+    let progressingRequests = new Map();
     self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
         if (!endpoint.endsWith('/'))
             endpoint += '/';
@@ -94,16 +95,21 @@ const AugmentedSteamApi = (function() {
             if (typeof key == 'undefined') {
                 throw `Can't cache '${endpoint}' with undefined key`;
             }
+            if (progressingRequests.has(key)) {
+                return progressingRequests.get(key);
+            }
             let val = LocalStorage.get(key);
             if (val && val.timestamp && !TimeHelper.isExpired(val.timestamp, ttl)) {
                 return val.data;
             }
-            return self.getEndpoint(endpoint, params)
+            let req = self.getEndpoint(endpoint, params)
                 .then(function(result) {
                     LocalStorage.set(key, result);
+                    progressingRequests.delete(key);
                     return result.data;
                 });
-
+            progressingRequests.set(key, req);
+            return req;
         };
     };
 
@@ -116,6 +122,7 @@ const AugmentedSteamApi = (function() {
             if (typeof key == 'undefined') {
                 throw `Can't clear undefined key from cache`;
             }
+            progressingRequests.delete(key);
             LocalStorage.remove(key);
         };
     };
@@ -387,7 +394,7 @@ let actionCallbacks = new Map([
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
-    ['rates', AugmentedSteamApi.endpointFactory('v01/rates')],
+    ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 5*60, 'rates')],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
     ['profile.background', AugmentedSteamApi.endpointFactory('v01/profile/background/background')],
