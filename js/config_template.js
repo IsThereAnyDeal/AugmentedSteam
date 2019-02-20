@@ -1,5 +1,5 @@
 /**
- * This is basic configuration for AugmentedSteam extension,
+ * This is basic configuration for EnhancedSteam extension,
  * Copy this file to config.js and fill in your data
  */
 

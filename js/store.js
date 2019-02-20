@@ -117,9 +117,9 @@ let StorePageClass = (function(){
 
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned as_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
+                node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
             } else {
-                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="as_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
+                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
             }
         }
     };
@@ -164,7 +164,7 @@ let StorePageClass = (function(){
             }
 
             node.insertAdjacentHTML(placement, html);
-            document.querySelector("#as_line_chart_"+id).style.top = ((document.querySelector("#as_price_"+id).offsetHeight - 20) / 2) + "px";
+            document.querySelector("#es_line_chart_"+id).style.top = ((document.querySelector("#es_price_"+id).offsetHeight - 20) / 2) + "px";
 
         };
 
@@ -271,8 +271,8 @@ let StorePageClass = (function(){
                 let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency);
 
                 let pricingDiv = document.createElement("div");
-                pricingDiv.classList.add("as_regional_container");
-                pricingDiv.classList.add("as_regional_" + (type || "app"));
+                pricingDiv.classList.add("es_regional_container");
+                pricingDiv.classList.add("es_regional_" + (type || "app"));
 
                 if (showRegionalPrice === "mouse") {
                     pricingDiv.innerHTML += '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>';
@@ -297,15 +297,15 @@ let StorePageClass = (function(){
                         }
 
                         html =
-                            `<div class="as_regional_price as_flag as_flag_${country}">
+                            `<div class="es_regional_price es_flag es_flag_${country}">
                                 ${priceRegion}
-                                <span class="as_regional_converted">(${priceUser})</span>
-                                <span class="as_percentage as_percentage_${percentageIndicator}">${percentage}%</span>
+                                <span class="es_regional_converted">(${priceUser})</span>
+                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
                             </div>`;
                     } else {
                         html =
-                            `<div class="as_regional_price as_flag as_flag_${country}">
-                                <span class="as_regional_unavailable">${Localization.str.region_unavailable}</span>
+                            `<div class="es_regional_price es_flag es_flag_${country}">
+                                <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
                             </div>`;
                     }
 
@@ -313,18 +313,18 @@ let StorePageClass = (function(){
                 });
 
                 let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
-                purchaseArea.classList.add("as_regional_prices");
+                purchaseArea.classList.add("es_regional_prices");
 
                 if (showRegionalPrice === "always") {
                     node.insertAdjacentElement("beforebegin", pricingDiv);
-                    purchaseArea.classList.add("as_regional_always");
+                    purchaseArea.classList.add("es_regional_always");
                 } else {
                     let priceNode = node.querySelector(".price,.discount_prices");
                     priceNode.insertAdjacentElement("afterend", pricingDiv);
-                    priceNode.parentNode.classList.add("as_regional_onmouse");
+                    priceNode.parentNode.classList.add("es_regional_onmouse");
 
                     if (!SyncedStorage.get("regional_hideworld")) {
-                        node.querySelector(".price,.discount_prices").classList.add("as_regional_icon")
+                        node.querySelector(".price,.discount_prices").classList.add("es_regional_icon")
                     }
                 }
             })
@@ -476,9 +476,9 @@ let AppPageClass = (function(){
 
         if (details) {
             document.querySelector("#highlight_player_area").insertAdjacentHTML("beforeend", `
-                <div class="as_slider_toggle btnv6_blue_hoverfade btn_medium">
-                    <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="as_slider_expand"><i class="as_slider_toggle_icon"></i></div>
-                    <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="as_slider_contract"><i class="as_slider_toggle_icon"></i></div>
+                <div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
+                    <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
+                    <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
                 </div>
             `);
         }
@@ -493,7 +493,7 @@ let AppPageClass = (function(){
             let detailsClone = details.querySelector(".glance_ctn");
             if (!detailsClone) return;
             detailsClone = detailsClone.cloneNode(true);
-            detailsClone.classList.add("as_side_details", "block", "responsive_apppage_details_left");
+            detailsClone.classList.add("es_side_details", "block", "responsive_apppage_details_left");
 
             for (let node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
                 // There are some issues with having duplicates of these on page when trying to add tags
@@ -501,7 +501,7 @@ let AppPageClass = (function(){
             }
 
             let detailsWrap = document.createElement("div");
-            detailsWrap.classList.add("as_side_details_wrap");
+            detailsWrap.classList.add("es_side_details_wrap");
             detailsWrap.appendChild(detailsClone);
             detailsWrap.style.display = 'none';
             document.querySelector("div.rightcol.game_meta_data")
@@ -513,10 +513,10 @@ let AppPageClass = (function(){
         if (expandSlider === true) {
             buildSideDetails();
 
-            for (let node of document.querySelectorAll(".as_slider_toggle, #game_highlights, .workshop_item_header, .as_side_details, .as_side_details_wrap")) {
-                node.classList.add("as_expanded");
+            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+                node.classList.add("es_expanded");
             }
-            for (let node of document.querySelectorAll(".as_side_details_wrap, .as_side_details")) {
+            for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
                 // shrunk => expanded
                 node.style.display = null;
                 node.style.opacity = 1;
@@ -528,19 +528,19 @@ let AppPageClass = (function(){
             }, 250);
         }
 
-        document.querySelector(".as_slider_toggle").addEventListener("click", clickSliderToggle, false);
+        document.querySelector(".es_slider_toggle").addEventListener("click", clickSliderToggle, false);
         function clickSliderToggle(ev) {
             ev.preventDefault();
             ev.stopPropagation();
 
-            let el = ev.target.closest('.as_slider_toggle');
+            let el = ev.target.closest('.es_slider_toggle');
             details.style.display = 'none';
             buildSideDetails();
 
             // Fade In/Out sideDetails
-            let sideDetails = document.querySelector(".as_side_details_wrap");
+            let sideDetails = document.querySelector(".es_side_details_wrap");
             if (sideDetails) {
-                if (!el.classList.contains("as_expanded")) {
+                if (!el.classList.contains("es_expanded")) {
                     // shrunk => expanded
                     sideDetails.style.display = null;
                     sideDetails.style.opacity = 1;
@@ -549,7 +549,7 @@ let AppPageClass = (function(){
                     sideDetails.style.opacity = 0;
                     setTimeout(function(){
                         // Hide after transition completes
-                        if (!el.classList.contains("as_expanded"))
+                        if (!el.classList.contains("es_expanded"))
                             sideDetails.style.display = 'none';
                         }, 250);
                 }
@@ -561,10 +561,10 @@ let AppPageClass = (function(){
             function saveSlider(ev) {
                 container.removeEventListener('transitionend', saveSlider, false);
                 // Save slider state
-                LocalData.set('expand_slider', el.classList.contains('as_expanded'));
+                LocalData.set('expand_slider', el.classList.contains('es_expanded'));
 
                 // If slider was contracted show the extended details
-                if (!el.classList.contains('as_expanded')) {
+                if (!el.classList.contains('es_expanded')) {
                     details.style.transition = "";
                     details.style.opacity = "0";
                     details.style.transition = "opacity 250ms";
@@ -578,8 +578,8 @@ let AppPageClass = (function(){
                 }, 250);
             }
 
-            for (let node of document.querySelectorAll(".as_slider_toggle, #game_highlights, .workshop_item_header, .as_side_details, .as_side_details_wrap")) {
-                node.classList.toggle("as_expanded");
+            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+                node.classList.toggle("es_expanded");
             }
 		}
     };
@@ -612,7 +612,7 @@ let AppPageClass = (function(){
         // When the "HD" button is clicked change the definition for all videos accordingly
         document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
         function clickHDControl(ev) {
-            if (!ev.target.matches || !ev.target.closest('.as_hd_toggle')) return;
+            if (!ev.target.matches || !ev.target.closest('.es_hd_toggle')) return;
 
             ev.preventDefault();
             ev.stopPropagation();
@@ -629,13 +629,13 @@ let AppPageClass = (function(){
         }
 
         // When the slider is expanded first time after the page was loaded set videos definition to HD
-        for (let node of document.querySelectorAll('.as_slider_toggle')) {
+        for (let node of document.querySelectorAll('.es_slider_toggle')) {
             node.addEventListener('click', clickInitialHD, false);
         }
         function clickInitialHD(ev) {
             ev.currentTarget.removeEventListener('click', clickInitialHD, false);
-            if (!ev.target.classList.contains('as_expanded')) return;
-            for (let node of document.querySelectorAll('video.highlight_movie.as_video_sd')) {
+            if (!ev.target.classList.contains('es_expanded')) return;
+            for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
                 toggleVideoDefinition(node, true);
             }
             LocalData.set('playback_hd', true);
@@ -650,7 +650,7 @@ let AppPageClass = (function(){
                     videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
-                        node.insertAdjacentHTML('afterend', `<div class="as_hd_toggle"><span>HD</span></div>`);
+                        node.insertAdjacentHTML('afterend', `<div class="es_hd_toggle"><span>HD</span></div>`);
                     }
                 }
 
@@ -706,8 +706,8 @@ let AppPageClass = (function(){
         function toggleVideoDefinition(videoControl, setHD) {
             let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
                 videoIsHD = false,
-                loadedSrc = videoControl.classList.contains("as_loaded_src"),
-                playInHD = LocalData.get("playback_hd") || videoControl.classList.contains("as_video_hd");
+                loadedSrc = videoControl.classList.contains("es_loaded_src"),
+                playInHD = LocalData.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
             let videoPosition = videoControl.currentTime || 0,
                 videoPaused = videoControl.paused;
@@ -735,11 +735,11 @@ let AppPageClass = (function(){
                 videoControl.load();
             }
             
-            videoControl.classList.add("as_loaded_src");
-            videoControl.classList.toggle("as_video_sd", !videoIsHD);
-            videoControl.classList.toggle("as_video_hd", videoIsHD);
-            videoControl.parentNode.classList.toggle("as_playback_sd", !videoIsHD);
-            videoControl.parentNode.classList.toggle("as_playback_hd", videoIsHD);
+            videoControl.classList.add("es_loaded_src");
+            videoControl.classList.toggle("es_video_sd", !videoIsHD);
+            videoControl.classList.toggle("es_video_hd", videoIsHD);
+            videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
+            videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
     
             return videoIsHD;
         }
@@ -800,9 +800,9 @@ let AppPageClass = (function(){
         let imgNode = successNode.querySelector("img:last-child");
         if (!imgNode) { return; }
 
-        imgNode.classList.add("as-in-wl");
-        imgNode.insertAdjacentHTML("beforebegin", `<img class='as-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />`);
-        imgNode.insertAdjacentHTML("beforebegin", `<img class='as-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
+        imgNode.classList.add("es-in-wl");
+        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />`);
+        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
         successNode.addEventListener("click", function(e){
             e.preventDefault();
@@ -956,14 +956,14 @@ let AppPageClass = (function(){
             if (data.reviews.length > 0) {
                 let reviewsNode = document.querySelector("#game_area_reviews");
                 if (reviewsNode) {
-                    reviewsNode.querySelector("p").insertAdjacentHTML("afterbegin", "<div id='as_opencritic_reviews'></div>");
+                    reviewsNode.querySelector("p").insertAdjacentHTML("afterbegin", "<div id='es_opencritic_reviews'></div>");
                     reviewsNode.querySelector("p").insertAdjacentHTML("beforeend", `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`);
                 } else {
                     document.querySelector("#game_area_description")
                         .insertAdjacentHTML("beforebegin",
                             `<div id='game_area_reviews' class='game_area_description'>
                                     <h2>${Localization.str.reviews}</h2>
-                                    <div id='as_opencritic_reviews'></div>
+                                    <div id='es_opencritic_reviews'></div>
                                     <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
                                 </div>`);
 
@@ -979,7 +979,7 @@ let AppPageClass = (function(){
                     review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
                 }
 
-                document.querySelector("#as_opencritic_reviews").insertAdjacentHTML("beforeend", review_text);
+                document.querySelector("#es_opencritic_reviews").insertAdjacentHTML("beforeend", review_text);
                 ExtensionLayer.runInPageContext("function() { BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ); }");
             }
         });
@@ -1185,9 +1185,9 @@ let AppPageClass = (function(){
         if (!this.isAppPage()) { return; }
 
         let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
-        usefulLinks.classList.add("as_useful_link");
+        usefulLinks.classList.add("es_useful_link");
 
-        let sideDetails = document.querySelector(".as_side_details_wrap");
+        let sideDetails = document.querySelector(".es_side_details_wrap");
         if (sideDetails) {
             sideDetails.insertAdjacentElement("afterend", usefulLinks);
         } else {
@@ -1401,7 +1401,7 @@ let AppPageClass = (function(){
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
-            // FIXME html += "<a class='btnv6_blue_blue_innerfade btn_medium as_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + Localization.str.survey.take + "</span></a>";
+            // FIXME html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + Localization.str.survey.take + "</span></a>";
         }
 
         html += "</div>";
@@ -1427,22 +1427,22 @@ let AppPageClass = (function(){
 
         if (expandedNode) {
             expandedNode
-                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='as_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
 
             document.querySelector(".game_area_dlc_section")
                 .insertAdjacentHTML("afterend", "<div style='clear: both;'></div>");
         } else {
             document.querySelector(".gameDlcBlocks")
-                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='as_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
         }
 
         let form = document.createElement("form");
         form.setAttribute("name", "add_selected_dlc_to_cart");
         form.setAttribute("action", "/cart/");
         form.setAttribute("method", "POST");
-        form.setAttribute("id", "as_selected_cart");
+        form.setAttribute("id", "es_selected_cart");
 
-        let button = document.querySelector("#as_selected_btn");
+        let button = document.querySelector("#es_selected_btn");
         button.insertAdjacentElement("beforebegin", form);
         button.addEventListener("click", function(){
             document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
@@ -1455,20 +1455,20 @@ let AppPageClass = (function(){
                 let value = node.querySelector("input").value;
 
                 node.querySelector(".game_area_dlc_name")
-                    .insertAdjacentHTML("afterbegin", "<input type='checkbox' class='as_dlc_selection' style='cursor: default;' id='as_select_dlc_" + value + "' value='" + value + "'><label for='as_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
+                    .insertAdjacentHTML("afterbegin", "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
             } else {
                 node.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
         }
 
         document.querySelector(".game_area_dlc_section .gradientbg")
-            .insertAdjacentHTML("afterend", "<div style='height: 28px; padding-left: 15px; display: none;' id='as_dlc_option_panel'></div>");
+            .insertAdjacentHTML("afterend", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
-        document.querySelector("#as_dlc_option_panel")
+        document.querySelector("#es_dlc_option_panel")
             .insertAdjacentHTML("afterbegin", `
-                <div class='as_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
-                <div class='as_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
-                <div class='as_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>
+                <div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
+                <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
+                <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>
             `);
 
         document.querySelector("#unowned_dlc_check").addEventListener("click", function () {
@@ -1493,13 +1493,13 @@ let AppPageClass = (function(){
         });
 
         document.querySelector(".game_area_dlc_section .gradientbg")
-            .insertAdjacentHTML("beforeend", "<a id='as_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
+            .insertAdjacentHTML("beforeend", "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
 
-        document.querySelector("#as_dlc_option_button").addEventListener("click", function() {
-            document.querySelector("#as_dlc_option_panel")
-                .classList.toggle("asi-shown");
+        document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
+            document.querySelector("#es_dlc_option_panel")
+                .classList.toggle("esi-shown");
 
-            let button = document.querySelector("#as_dlc_option_button");
+            let button = document.querySelector("#es_dlc_option_button");
 
             button.textContent = (button.textContent.match("▾")
                 ? Localization.str.thewordoptions + " ▴"
@@ -1507,12 +1507,12 @@ let AppPageClass = (function(){
         });
 
         document.querySelector(".game_area_dlc_section").addEventListener("change", function(e){
-            if (!e.target.classList.contains("as_dlc_selection")) { return; }
+            if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
-            let cartNode = document.querySelector("#as_selected_cart");
+            let cartNode = document.querySelector("#es_selected_cart");
             cartNode.innerHTML = "<input type=\"hidden\" name=\"action\" value=\"add_to_cart\"><input type=\"hidden\" name=\"sessionid\" value=\"" + User.getSessionId() + "\">"
 
-            let nodes = document.querySelectorAll(".as_dlc_selection:checked");
+            let nodes = document.querySelectorAll(".es_dlc_selection:checked");
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
 
@@ -1524,7 +1524,7 @@ let AppPageClass = (function(){
                 cartNode.insertAdjacentElement("beforeend", input);
             }
 
-            let button = document.querySelector("#as_selected_btn");
+            let button = document.querySelector("#es_selected_btn");
             button.style.display = (nodes.length > 0 ? "block" : "none");
         })
     };
@@ -1544,19 +1544,19 @@ let AppPageClass = (function(){
 						${Localization.str.badge_progress}
 					</div>
 					<div class="block">
-						<div class="block_content_inner as_badges_progress_block" style="display:none;">
-							<div class="as_normal_badge_progress as_progress_block" style="display:none;"></div>
-							<div class="as_foil_badge_progress as_progress_block" style="display:none;"></div>
+						<div class="block_content_inner es_badges_progress_block" style="display:none;">
+							<div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
+							<div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
 						</div>
 					</div>
 				`);
 
         RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
-            loadBadgeContent(".as_normal_badge_progress", result, ".badge_current");
+            loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
         });
 
         RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
-            loadBadgeContent(".as_foil_badge_progress", result, ".badge_current");
+            loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
         });
 
         function loadBadgeContent(targetSelector, result, selector) {
@@ -1580,17 +1580,17 @@ let AppPageClass = (function(){
                 let next_level_empty_badge = badgeNode.querySelectorAll(".gamecard_badge_progress .badge_info").length;
                 let badge_completed = (progress_text_length > 0 && next_level_empty_badge == 0);
                 let show_card_num = (card_num_owned > 0 && progress_text_length === 0) || (card_num_owned > 0 && !badge_completed);
-                let is_normal_badge = targetSelector === ".as_normal_badge_progress";
+                let is_normal_badge = targetSelector === ".es_normal_badge_progress";
 
                 if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
-                    document.querySelector(".as_badges_progress_block").style.display='block';
+                    document.querySelector(".es_badges_progress_block").style.display='block';
                     blockSel.style.display = "block";
 
                     let progressBold = badgeNode.querySelector(".progress_info_bold");
 
                     blockSel.insertAdjacentHTML("beforeend", `
-								<div class="as_cards_numbers">
-									<div class="as_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
+								<div class="es_cards_numbers">
+									<div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
 								</div>
 								<div class="game_area_details_specs">
 									<div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
@@ -1599,9 +1599,9 @@ let AppPageClass = (function(){
 							`);
 
                     if (show_card_num) {
-                        blockSel.querySelector(".as_cards_numbers")
+                        blockSel.querySelector(".es_cards_numbers")
                             .insertAdjacentHTML("beforeend", `
-									<div class="as_cards_owned">${Localization.str.cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total)}</div>
+									<div class="es_cards_owned">${Localization.str.cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total)}</div>
 								`);
                     }
 
@@ -1641,13 +1641,13 @@ let AppPageClass = (function(){
         let details_block = document.querySelector(".myactivity_block .details_block");
         if (!details_block) return;
         details_block.insertAdjacentHTML("afterend",
-            "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='as_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
+            "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
         RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
-            let node = document.querySelector("#as_ach_stats");
+            let node = document.querySelector("#es_ach_stats");
             node.append(dummy.querySelector("#topSummaryAchievements"));
 
             document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
@@ -1672,7 +1672,7 @@ let AppPageClass = (function(){
         nodes[nodes.length-1].insertAdjacentHTML("beforeend",
             `<link rel='stylesheet' type='text/css' href='//steamstore-a.akamaihd.net/public/css/v6/home.css'>
             <style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style>
-            <div id="as_customize_btn" class="home_actions_ctn" style="margin: 0px;">
+            <div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${ Localization.str.customize }</div>
                 <div class='home_viewsettings_popup'>
                     <div class='home_viewsettings_instructions' style='font-size: 12px;'>${ Localization.str.apppage_sections }</div>
@@ -1680,13 +1680,13 @@ let AppPageClass = (function(){
             </div>
             <div style="clear: both;"></div>`);
 
-        document.querySelector("#as_customize_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
         });
 
         document.querySelector("body").addEventListener("click", function(e){
-            if (e.target.closest("#as_customize_btn")) { return; }
-            let node = document.querySelector("#as_customize_btn .home_customize_btn.active");
+            if (e.target.closest("#es_customize_btn")) { return; }
+            let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
             node.classList.remove("active");
         });
@@ -1721,10 +1721,10 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addReviewToggleButton = function() {
         let head = document.querySelector("#review_create h1");
         if (!head) { return; }
-        head.insertAdjacentHTML("beforeend", "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='as_review_toggle'><span>▲</span></a></div>");
+        head.insertAdjacentHTML("beforeend", "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
 
         let reviewSectionNode = document.createElement("div");
-        reviewSectionNode.setAttribute("id", "as_review_section");
+        reviewSectionNode.setAttribute("id", "es_review_section");
 
         let nodes = document.querySelector("#review_container").querySelectorAll("p, .avatar_block, .content");
         for (let i=0, len=nodes.length; i<len; i++) {
@@ -1736,11 +1736,11 @@ let AppPageClass = (function(){
 
         function toggleReviews() {
             if (LocalData.get("show_review_section")) {
-                document.querySelector("#as_review_toggle span").textContent = "▲";
-                document.querySelector("#as_review_section").style.maxHeight = null;
+                document.querySelector("#es_review_toggle span").textContent = "▲";
+                document.querySelector("#es_review_section").style.maxHeight = null;
             } else {
-                document.querySelector("#as_review_toggle span").textContent = "▼";
-                document.querySelector("#as_review_section").style.maxHeight = 0;
+                document.querySelector("#es_review_toggle span").textContent = "▼";
+                document.querySelector("#es_review_section").style.maxHeight = 0;
             }
         }
 
@@ -1749,7 +1749,7 @@ let AppPageClass = (function(){
         let node = document.querySelector("#review_create");
         if (node) {
             node.addEventListener("click", function(e) {
-                if (!e.target.closest("#as_review_toggle")) { return; }
+                if (!e.target.closest("#es_review_toggle")) { return; }
                 LocalData.set("show_review_section", LocalData.get("show_review_section", true) ? false : true);
                 toggleReviews();
             });
@@ -1775,9 +1775,9 @@ let AppPageClass = (function(){
 
             let buttons = node.querySelectorAll(".btn_addtocart");
             buttons[buttons.length-1].parentNode.insertAdjacentHTML("afterbegin", `
-                <div class="as_each_box">
-                    <div class="as_each_price">${price}</div>
-                    <div class="as_each">${Localization.str.each}</div>
+                <div class="es_each_box">
+                    <div class="es_each_price">${price}</div>
+                    <div class="es_each">${Localization.str.each}</div>
                 </div>`);
         }
 
@@ -1821,16 +1821,16 @@ let RegisterKeyPageClass = (function(){
     }
 
     RegisterKeyPageClass.prototype.activateMultipleKeys = function() {
-        let activateModalTemplate = `<div id="as_activate_modal">
-                <div id="as_activate_modal_content">
-                    <div class="newmodal_prompt_with_textarea gray_bevel fullwidth" id="as_activate_input_text">
-                        <textarea name="as_key_input" id="as_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
+        let activateModalTemplate = `<div id="es_activate_modal">
+                <div id="es_activate_modal_content">
+                    <div class="newmodal_prompt_with_textarea gray_bevel fullwidth" id="es_activate_input_text">
+                        <textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
                     </div>
-                    <div class="as_activate_buttons" style="float: right">
-                        <div class="btn_green_white_innerfade btn_medium as_activate_modal_submit">
+                    <div class="es_activate_buttons" style="float: right">
+                        <div class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
                             <span>${Localization.str.activate_products}</span>
                         </div>
-                        <div class="as_activate_modal_close btn_grey_white_innerfade btn_medium">
+                        <div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
                             <span>${Localization.str.cancel}</span>
                         </div>
                     </div>
@@ -1846,28 +1846,28 @@ let RegisterKeyPageClass = (function(){
 
         // Show note input modal
         document.addEventListener("click", function(e){
-            if (!e.target.closest("#as_activate_multiple")) { return; }
+            if (!e.target.closest("#es_activate_multiple")) { return; }
             ExtensionLayer.runInPageContext('function() { ShowDialog("' + Localization.str.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n")) + '\`); }');
         });
 
         // Insert the "activate multiple products" button
         document.querySelector("#registerkey_examples_text").insertAdjacentHTML("beforebegin",
-            "<a class='btnv6_blue_hoverfade btn_medium' id='as_activate_multiple' style='margin-bottom: 15px;'><span>" + Localization.str.activate_multiple + "</span></a><div style='clear: both;'></div>");
+            "<a class='btnv6_blue_hoverfade btn_medium' id='es_activate_multiple' style='margin-bottom: 15px;'><span>" + Localization.str.activate_multiple + "</span></a><div style='clear: both;'></div>");
 
         // Process activation
 
         document.addEventListener("click", function(e) {
-            if (!e.target.closest(".as_activate_modal_submit")) { return; }
+            if (!e.target.closest(".es_activate_modal_submit")) { return; }
 
-            document.querySelector(".as_activate_modal_submit").style.display = "none";
-            document.querySelector(".as_activate_modal_close").style.display = "none";
+            document.querySelector(".es_activate_modal_submit").style.display = "none";
+            document.querySelector(".es_activate_modal_close").style.display = "none";
 
             let keys = [];
 
             // turn textbox into table to display results
-            let lines = document.querySelector("#as_key_input").value.split("\n");
-            document.querySelector("#as_activate_input_text").insertAdjacentHTML("beforebegin", "<div id='as_activate_results'></div>");
-            document.querySelector("#as_activate_input_text").style.display = "none";
+            let lines = document.querySelector("#es_key_input").value.split("\n");
+            document.querySelector("#es_activate_input_text").insertAdjacentHTML("beforebegin", "<div id='es_activate_results'></div>");
+            document.querySelector("#es_activate_input_text").style.display = "none";
 
             lines.forEach(line => {
                 let attempt = String(line);
@@ -1878,7 +1878,7 @@ let RegisterKeyPageClass = (function(){
 
                 let url = ExtensionLayer.getLocalUrl("img/questionmark.png");
 
-                document.querySelector("#as_activate_results")
+                document.querySelector("#es_activate_results")
                     .insertAdjacentHTML("beforeend", "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
             });
 
@@ -1933,15 +1933,15 @@ let RegisterKeyPageClass = (function(){
             }
 
             Promise.all(promises).then(result => {
-                document.querySelector(".as_activate_modal_close span").textContent = Localization.str.close;
-                document.querySelector(".as_activate_modal_close").style.display = "block";
+                document.querySelector(".es_activate_modal_close span").textContent = Localization.str.close;
+                document.querySelector(".es_activate_modal_close").style.display = "block";
                 window.dispatchEvent(new Event("resize"));
             });
         });
 
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", function(e) {
-            if (!e.target.closest(".as_activate_modal_close")) { return; }
+            if (!e.target.closest(".es_activate_modal_close")) { return; }
             ExtensionLayer.runInPageContext(function(){ CModal.DismissActiveModal(); });
         })
     };
@@ -1983,29 +1983,29 @@ let FundsPageClass = (function(){
         let priceel = newel.querySelector((giftcard ? ".giftcard_text" : ".price"));
         let price = priceel.textContent.trim();
 
-        newel.classList.add("as_custom_money");
+        newel.classList.add("es_custom_money");
         if(!giftcard) {
-            newel.querySelector(".btnv6_green_white_innerfade").classList.add("as_custom_button");
+            newel.querySelector(".btnv6_green_white_innerfade").classList.add("es_custom_button");
             newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
             newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
         } else {
             newel.querySelector(".giftcard_style")
                 .innerHTML = Localization.str.wallet.custom_giftcard_amount
                     .replace("__minamount__", price)
-                    .replace("__input__", "<span id='as_custom_money_amount_wrapper'></span>");
+                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>");
         }
 
         let currency = Price.parseFromString(price);
 
-        let inputel = newel.querySelector((giftcard ? "#as_custom_money_amount_wrapper" : ".price"));
-        inputel.innerHTML = "<input type='number' id='as_custom_money_amount' class='as_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
+        let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
+        inputel.innerHTML = "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
         // TODO currency symbol
 
         document.querySelector((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game"))
             .insertAdjacentElement("afterend", newel);
 
-        document.querySelector("#as_custom_money_amount").addEventListener("input", function() {
-            let value = document.querySelector("#as_custom_money_amount").value;
+        document.querySelector("#es_custom_money_amount").addEventListener("input", function() {
+            let value = document.querySelector("#es_custom_money_amount").value;
 
             if(!isNaN(value) && value != "") {
                 currency.value = value;
@@ -2017,10 +2017,10 @@ let FundsPageClass = (function(){
             }
         });
 
-        newel.querySelector((giftcard ? ".as_custom_money a.btn_medium" : ".as_custom_button")).addEventListener("click", function(e) {
+        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", function(e) {
             e.preventDefault();
 
-            let jsvalue = (+document.querySelector("#as_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
+            let jsvalue = (+document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
 
             if (giftcard) {
 
@@ -2029,17 +2029,17 @@ let FundsPageClass = (function(){
                 }
 
             } else {
-                let btn = document.querySelector(".as_custom_money .as_custom_button");
+                let btn = document.querySelector(".es_custom_money .es_custom_button");
                 btn.href = "#";
                 btn.removeAttribute("onclick");
                 btn.dataset.amount = jsvalue;
 
-                ExtensionLayer.runInPageContext('function(){ submitAddFunds(document.querySelector(".as_custom_money .as_custom_button")); }');
+                ExtensionLayer.runInPageContext('function(){ submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); }');
             }
 
         });
 
-        let giftcardMoneyNode = document.querySelector(".giftcard_selection #as_custom_money_amount");
+        let giftcardMoneyNode = document.querySelector(".giftcard_selection #es_custom_money_amount");
         if (giftcardMoneyNode) {
             giftcardMoneyNode.addEventListener("click", function(e) {
                 e.preventDefault();
@@ -2107,11 +2107,11 @@ let SearchPageClass = (function(){
             ExtensionLayer.runInPageContext(inContext);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
-            document.querySelector(".search_pagination:last-child").insertAdjacentHTML("beforebegin", "<div style='text-align: center; margin-top: 16px;' id='as_error_msg'>" + Localization.str.search_error + ". <a id='as_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
+            document.querySelector(".search_pagination:last-child").insertAdjacentHTML("beforebegin", "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
 
-            document.querySelector("as_retry").addEventListener("click", function(e) {
+            document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
-                document.querySelector("#as_error_msg").remove();
+                document.querySelector("#es_error_msg").remove();
                 loadSearchResults();
             });
         });
@@ -2148,18 +2148,18 @@ let SearchPageClass = (function(){
         let tarFilterDivs = document.querySelectorAll('#TagFilter_Container')[0].children;
 
         document.querySelector("#TagFilter_Container").parentNode.parentNode.insertAdjacentHTML("afterend",
-            `<div class='block' id='as_tagfilter_exclude'>
+            `<div class='block' id='es_tagfilter_exclude'>
                 <div class='block_header'>
                     <div>${Localization.str.exclude_tags}</div>
                  </div>
                  <div class='block_content block_content_inner'>
-                    <div style='max-height: 150px; overflow: hidden;' id='as_tagfilter_exclude_container'></div>
-                    <input type="text" id="as_tagfilter_exclude_suggest" class="blur as_input_text">
+                    <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
+                    <input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">
                 </div>
             </div>
         `);
 
-        let excludeContainer = document.querySelector("#as_tagfilter_exclude_container");
+        let excludeContainer = document.querySelector("#es_tagfilter_exclude_container");
 
         //tag numbers from the URL are already in the element with id #tags
         function getTags() {
@@ -2207,7 +2207,7 @@ let SearchPageClass = (function(){
         }
 
         ExtensionLayer.runInPageContext(function() {
-            $J('#as_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#as_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value });
+            $J('#es_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value });
         });
 
         let observer = new MutationObserver(function(mutations) {
@@ -2254,14 +2254,14 @@ let SearchPageClass = (function(){
             let node = nodes[i];
 
             node.style.display = "block";
-            if (document.querySelector("#as_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; }
-            if (document.querySelector("#as_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; }
-            if (document.querySelector("#as_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; }
-            if (document.querySelector("#as_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; }
-            if (document.querySelector("#as_notinterested.checked")) { Highlights.highlightNotInterested(node); }
-            if (document.querySelector("#as_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; }
-            if (document.querySelector("#as_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; }
-            if (document.querySelector("#as_notpriceabove.checked")) { applyPriceFilter(node); }
+            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; }
+            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; }
+            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notinterested.checked")) { Highlights.highlightNotInterested(node); }
+            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; }
+            if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
         }
     }
 
@@ -2275,54 +2275,54 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
-            <div class='block' id='as_hide_menu'>
+            <div class='block' id='es_hide_menu'>
                 <div class='block_header'><div>` + Localization.str.hide + `</div></div>
-                <div class='block_content block_content_inner' style='height: 150px;' id='as_hide_options'>
-                    <div class='tab_filter_control' id='as_owned_games'>
+                <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
+                    <div class='tab_filter_control' id='es_owned_games'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.options.owned + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_wishlist_games'>
+                    <div class='tab_filter_control' id='es_wishlist_games'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.options.wishlist + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_cart_games'>
+                    <div class='tab_filter_control' id='es_cart_games'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.options.cart + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_notdiscounted'>
+                    <div class='tab_filter_control' id='es_notdiscounted'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.notdiscounted + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_notinterested'>
+                    <div class='tab_filter_control' id='es_notinterested'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.notinterested + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_notmixed'>
+                    <div class='tab_filter_control' id='es_notmixed'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.mixed_item + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_notnegative'>
+                    <div class='tab_filter_control' id='es_notnegative'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.negative_item + `</span>
                     </div>
-                    <div class='tab_filter_control' id='as_notpriceabove'>
+                    <div class='tab_filter_control' id='es_notpriceabove'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.price_above + `</span>
                         <div>
-                            <input type="number" id='as_notpriceabove_val' class='as_input_number' step=0.01>
+                            <input type="number" id='es_notpriceabove_val' class='es_input_number' step=0.01>
                         </div>
                     </div>
                 </div>
-                <a class="see_all_expander" href="#" id="as_hide_expander"></a>
+                <a class="see_all_expander" href="#" id="es_hide_expander"></a>
             </div>
         `);
 
-        let expander = document.querySelector("#as_hide_expander");
+        let expander = document.querySelector("#es_hide_expander");
         expander.addEventListener("click", function(e) {
             e.preventDefault();
             ExtensionLayer.runInPageContext(function(){
-                ExpandOptions(document.querySelector("#as_hide_expander"), 'as_hide_options')
+                ExpandOptions(document.querySelector("#es_hide_expander"), 'es_hide_options')
             });
         });
 
@@ -2330,29 +2330,29 @@ let SearchPageClass = (function(){
         expander.textContent = all[all.length-1].textContent;
 
         if (SyncedStorage.get("hide_owned")) {
-            document.querySelector("#as_owned_games").classList.add("checked");
+            document.querySelector("#es_owned_games").classList.add("checked");
         }
 
         if (SyncedStorage.get("hide_wishlist")) {
-            document.querySelector("#as_wishlist_games").classList.add("checked");
+            document.querySelector("#es_wishlist_games").classList.add("checked");
         }
 
         if (SyncedStorage.get("hide_cart")) {
-            document.querySelector("#as_cart_games").classList.add("checked");
+            document.querySelector("#es_cart_games").classList.add("checked");
         }
 
         if (SyncedStorage.get("hide_notdiscounted")) {
-            document.querySelector("#as_notdiscounted").classList.add("checked");
+            document.querySelector("#es_notdiscounted").classList.add("checked");
         }
 
         if (SyncedStorage.get("hide_ignored")) {
-            document.querySelector("#as_notinterested").classList.add("checked");
+            document.querySelector("#es_notinterested").classList.add("checked");
         }
 
         if (SyncedStorage.get("hide_mixed")) {
-            document.querySelector("#as_notmixed").classList.add("checked");
-            document.querySelector("#as_hide_options").style.height="auto";
-            document.querySelector("#as_hide_expander").style.display="none";
+            document.querySelector("#es_notmixed").classList.add("checked");
+            document.querySelector("#es_hide_options").style.height="auto";
+            document.querySelector("#es_hide_expander").style.display="none";
 
             let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.mixed");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -2361,9 +2361,9 @@ let SearchPageClass = (function(){
         }
 
         if (SyncedStorage.get("hide_negative")) {
-            document.querySelector("#as_notnegative").classList.add("checked");
-            document.querySelector("#as_hide_options").style.height = "auto";
-            document.querySelector("#as_hide_expander").style.display = "none";
+            document.querySelector("#es_notnegative").classList.add("checked");
+            document.querySelector("#es_hide_options").style.height = "auto";
+            document.querySelector("#es_hide_expander").style.display = "none";
 
             let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.negative");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -2372,9 +2372,9 @@ let SearchPageClass = (function(){
         }
 
         if (SyncedStorage.get("hide_priceabove")) {
-            document.querySelector("#as_notpriceabove").classList.add("checked");
-            document.querySelector("#as_hide_options").style.height = "auto";
-            document.querySelector("#as_hide_expander").style.display = "none";
+            document.querySelector("#es_notpriceabove").classList.add("checked");
+            document.querySelector("#es_hide_options").style.height = "auto";
+            document.querySelector("#es_hide_expander").style.display = "none";
 
             let nodes = document.querySelectorAll(".search_result_row");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -2383,18 +2383,18 @@ let SearchPageClass = (function(){
         }
 
         if (SyncedStorage.get("priceabove_value")) {
-            document.querySelector("#as_notpriceabove_val").value = SyncedStorage.get("priceabove_value");
+            document.querySelector("#es_notpriceabove_val").value = SyncedStorage.get("priceabove_value");
         }
 
         [
-            ["#as_owned_games", "hide_owned"],
-            ["#as_wishlist_games", "hide_wishlist"],
-            ["#as_cart_games", "hide_cart"],
-            ["#as_notdiscounted", "hide_notdiscounted"],
-            ["#as_notinterested", "hide_notinterested"],
-            ["#as_notmixed", "hide_mixed"],
-            ["#as_notnegative", "hide_negative"],
-            ["#as_notpriceabove", "hide_priceabove"],
+            ["#es_owned_games", "hide_owned"],
+            ["#es_wishlist_games", "hide_wishlist"],
+            ["#es_cart_games", "hide_cart"],
+            ["#es_notdiscounted", "hide_notdiscounted"],
+            ["#es_notinterested", "hide_notinterested"],
+            ["#es_notmixed", "hide_mixed"],
+            ["#es_notnegative", "hide_negative"],
+            ["#es_notpriceabove", "hide_priceabove"],
         ].forEach(a => {
             document.querySelector(a[0]).addEventListener("click", function(e) {
                 let node = document.querySelector(a[0]);
@@ -2405,9 +2405,9 @@ let SearchPageClass = (function(){
             });
         });
 
-        document.getElementById("as_notpriceabove").title = Localization.str.price_above_tooltip;
+        document.getElementById("es_notpriceabove").title = Localization.str.price_above_tooltip;
 
-        let elem = document.getElementById("as_notpriceabove_val");
+        let elem = document.getElementById("es_notpriceabove_val");
         if (elem !== undefined && elem !== null) {
             elem.title = Localization.str.price_above_tooltip;
             elem.addEventListener("click", function(e) {
@@ -2481,16 +2481,16 @@ let WishlistPageClass = (function(){
         this.addEmptyWishlistButton();
         this.addWishlistNotesHandlers();
 
-        noteModalTemplate = `<div id="as_note_modal" data-appid="__appid__">
-            <div id="as_note_modal_content">
+        noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
+            <div id="es_note_modal_content">
                 <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
-                    <textarea name="as_note_input" id="as_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+                    <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
                 </div>
-                <div class="as_note_buttons" style="float: right">
-                    <div class="as_note_modal_submit btn_green_white_innerfade btn_medium">
+                <div class="es_note_buttons" style="float: right">
+                    <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
                         <span>${Localization.str.save}</span>
                     </div>
-                    <div class="as_note_modal_close btn_grey_white_innerfade btn_medium">
+                    <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
                         <span>${Localization.str.cancel}</span>
                     </div>
                 </div>
@@ -2543,12 +2543,12 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.addStatsArea = function() {
         let html =
-            `<div id="asi-wishlist-chart-content">
+            `<div id="esi-wishlist-chart-content">
                 <a>${Localization.str.wl.compute}</a>
              </div>`;
 
         document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
-        document.querySelector("#asi-wishlist-chart-content a").addEventListener("click", function(e) {
+        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
             e.target.parentNode.innerHTML = "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>";
             loadStats();
         });
@@ -2594,11 +2594,11 @@ let WishlistPageClass = (function(){
             totalCount++;
         }
 
-        document.querySelector("#asi-wishlist-chart-content").innerHTML
-            = `<div class="asi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-                <div class="asi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-                <div class="asi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-                <div class="asi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
+        document.querySelector("#esi-wishlist-chart-content").innerHTML
+            = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
@@ -2606,8 +2606,8 @@ let WishlistPageClass = (function(){
         if (!SyncedStorage.get("showemptywishlist")) { return; }
 
         document.querySelector("div.wishlist_header")
-            .insertAdjacentHTML("beforeend", "<div id='as_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
-        document.querySelector("#as_empty_wishlist div").addEventListener("click", function(e) {
+            .insertAdjacentHTML("beforeend", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
             emptyWishlist();
         });
     };
@@ -2617,7 +2617,7 @@ let WishlistPageClass = (function(){
             var prompt = ShowConfirmDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_confirm}\`);
             prompt.done(function(result) {
                 if (result == 'OK') {
-                    window.postMessage({ type: 'as_empty_wishlist', information: [ true ] }, '*');
+                    window.postMessage({ type: 'es_empty_wishlist', information: [ true ] }, '*');
                     ShowBlockingWaitDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_loading}\`);
                 }
             });
@@ -2639,7 +2639,7 @@ let WishlistPageClass = (function(){
         }
 
         window.addEventListener("message", function(event) {
-            if (event.source === window && event.data.type && event.data.type === "as_empty_wishlist") {
+            if (event.source === window && event.data.type && event.data.type === "es_empty_wishlist") {
                 let wishlistData = BrowserHelper.getVariableFromDom("g_rgWishlistData", "array");
                 if (!wishlistData) { return; }
 
@@ -2672,12 +2672,12 @@ let WishlistPageClass = (function(){
     }
 
     function addPriceNode(node, type, id, html) {
-        if (node.querySelector(".as_lowest_price")) { return; }
+        if (node.querySelector(".es_lowest_price")) { return; }
 
         cachedPrices[id] = html;
 
         node.insertAdjacentHTML("beforeend", html);
-        let priceNode = node.querySelector(".as_lowest_price");
+        let priceNode = node.querySelector(".es_lowest_price");
         priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
     }
 
@@ -2693,7 +2693,7 @@ let WishlistPageClass = (function(){
             if (!node.dataset.appId) { continue; }
 
             node.removeEventListener("mouseenter", wishlistRowEnterHandler);
-            if (!node.querySelector(".as_lowest_price")) {
+            if (!node.querySelector(".es_lowest_price")) {
                 node.addEventListener("mouseenter", wishlistRowEnterHandler);
             }
         }
@@ -2705,7 +2705,7 @@ let WishlistPageClass = (function(){
 
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
-            if (node.classList.contains("asi-has-note")) { continue; }
+            if (node.classList.contains("esi-has-note")) { continue; }
 
             let noteText = "note";
             let appid = node.dataset.appId;
@@ -2714,8 +2714,8 @@ let WishlistPageClass = (function(){
             }
 
             node.querySelector(".lower_columns .addedon").insertAdjacentHTML("beforebegin",
-                "<div class='asi-note'>" + noteText + "</div>");
-            node.classList.add("asi-has-note");
+                "<div class='esi-note'>" + noteText + "</div>");
+            node.classList.add("esi-has-note");
         }
     };
 
@@ -2724,7 +2724,7 @@ let WishlistPageClass = (function(){
 
         let instance = this;
         document.addEventListener("click", function(e) {
-            if (!e.target.classList.contains("asi-note")) { return; }
+            if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
             let title = row.querySelector("a.title").textContent;
@@ -2735,19 +2735,19 @@ let WishlistPageClass = (function(){
         });
 
         document.addEventListener("click", function(e) {
-            if (e.target.closest(".as_note_modal_submit")) {
+            if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
 
-                let modal = e.target.closest("#as_note_modal");
+                let modal = e.target.closest("#es_note_modal");
                 let appid = modal.dataset.appid;
-                let note = BrowserHelper.escapeHTML(document.querySelector("#as_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
 
                 instance.notes[appid] = note;
                 SyncedStorage.set("wishlist_notes", instance.notes);
 
-                document.querySelector(".wishlist_row[data-app-id='"+appid+"'] div.asi-note").textContent = note;
+                document.querySelector(".wishlist_row[data-app-id='"+appid+"'] div.esi-note").textContent = note;
                 ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-            } else if (e.target.closest(".as_note_modal_close")) {
+            } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
             }
         });
@@ -2820,7 +2820,7 @@ let StoreFrontPageClass = (function(){
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
         document.querySelector(".home_page_content").insertAdjacentHTML("beforeend",
-            `<div id="as_customize_btn" class="home_actions_ctn" style="margin: -10px 0px;">
+            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px;">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
                     <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
@@ -2830,13 +2830,13 @@ let StoreFrontPageClass = (function(){
         `);
 
         document.querySelector(".home_page_body_ctn").style.overflow = "visible";
-        document.querySelector("#as_customize_btn").addEventListener("click", function(e){
+        document.querySelector("#es_customize_btn").addEventListener("click", function(e){
             e.target.classList.toggle("active");
         });
 
         document.querySelector("body").addEventListener("click", function(e){
-            if (e.target.closest("#as_customize_btn")) { return; }
-            let node = document.querySelector("#as_customize_btn .home_customize_btn.active");
+            if (e.target.closest("#es_customize_btn")) { return; }
+            let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
             node.classList.remove("active");
         });
@@ -2860,9 +2860,9 @@ let StoreFrontPageClass = (function(){
         }
 
         // added by hand, those we couldn't get automatically
-        Customizer.addToggleHandler("show_as_discoveryqueue", document.querySelector(".discovery_queue_ctn"));
-        Customizer.addToggleHandler("show_as_homepagetabs", homeCtnNode(".home_tab_col"), Localization.str.homepage_tabs);
-        Customizer.addToggleHandler("show_as_homepagesidebar", document.querySelector(".home_page_gutter"), Localization.str.homepage_sidebar);
+        Customizer.addToggleHandler("show_es_discoveryqueue", document.querySelector(".discovery_queue_ctn"));
+        Customizer.addToggleHandler("show_es_homepagetabs", homeCtnNode(".home_tab_col"), Localization.str.homepage_tabs);
+        Customizer.addToggleHandler("show_es_homepagesidebar", document.querySelector(".home_page_gutter"), Localization.str.homepage_sidebar);
     };
 
     return StoreFrontPageClass;
@@ -2947,8 +2947,8 @@ let TabAreaObserver = (function(){
 
                 // common for store pages
                 Highlights.startHighlightsAndTags();
-                AugmentedSteam.alternateLinuxIcon();
-                AugmentedSteam.hideTrademarkSymbol(false);
+                EnhancedSteam.alternateLinuxIcon();
+                EnhancedSteam.hideTrademarkSymbol(false);
                 TabAreaObserver.observeChanges();
 
             })

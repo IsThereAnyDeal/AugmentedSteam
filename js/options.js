@@ -11,7 +11,7 @@ let Options = (function(){
 
 			let stores = SyncedStorage.get("stores");
 
-			node.classList.add("as_checks_loaded");
+			node.classList.add("es_checks_loaded");
 			let nodes = node.querySelectorAll("input[type='checkbox']");
 			for (let i=0, len=nodes.length; i<len; i++) {
 			    let node = nodes[i];
@@ -87,11 +87,11 @@ let Options = (function(){
 
 			let countryClass = "";
 			if (country) {
-				countryClass = "as_flag_"+country;
+				countryClass = "es_flag_"+country;
 			}
 
 			return `<div class="country_parent">
-                    <span class='as_flag ${countryClass}'></span>
+                    <span class='es_flag ${countryClass}'></span>
                     <select class='regional_country'>${options}</select>
                     <a class="select2-search-choise-close remove_region"></a>
 				 </div>`;
@@ -119,16 +119,16 @@ let Options = (function(){
 		// SyncedStorage.set("show_profile_link_images", node.value); // TODO what were these two lines doing?
 		// node.value = SyncedStorage.set("show_profile_link_images", node.value);
 
-		let nodes = document.querySelectorAll(".as_sites_icons");
+		let nodes = document.querySelectorAll(".es_sites_icons");
 		for (let i=0, len=nodes.length; i<len; i++) {
 		    let node = nodes[i];
 		    node.style.display="block";
 		}
 
-		// FIXME document.querySelector("#profile_links").classList.toggle("as_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
+		// FIXME document.querySelector("#profile_links").classList.toggle("es_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
 
 		if (!SyncedStorage.get("show_profile_link_images")) {
-			let nodes = document.querySelectorAll(".as_sites_icons");
+			let nodes = document.querySelectorAll(".es_sites_icons");
 			for (let i=0, len=nodes.length; i<len; i++) {
 				let node = nodes[i];
 				node.style.display="none";
@@ -164,19 +164,19 @@ let Options = (function(){
 
 		document.querySelector("#add_custom_link").addEventListener("click", function(e) {
 			document.querySelector("#profile_custom").checked = true;
-			document.querySelector("#as_custom_settings").style.display="flex";
+			document.querySelector("#es_custom_settings").style.display="flex";
 			document.querySelector("#add_custom_link").style.display="none";
 			saveOption();
 		});
 
 		if (SyncedStorage.get("profile_custom")) {
-			document.querySelector("#as_custom_settings").style.display="flex";
+			document.querySelector("#es_custom_settings").style.display="flex";
 			document.querySelector("#add_custom_link").style.display="none";
 		}
 
 		document.querySelector("#profile_custom").addEventListener("click", function(e) {
 			if (!document.querySelector("#profile_custom").checked) {
-				document.querySelector("#as_custom_settings").style.display="none";
+				document.querySelector("#es_custom_settings").style.display="none";
 				document.querySelector("#add_custom_link").style.display="block";
 			}
 		});
@@ -307,7 +307,7 @@ let Options = (function(){
 
 	function changeFlag(node, selectnode) {
 		node.className = "";
-		node.classList.add("as_flag_" + selectnode.value, "as_flag");
+		node.classList.add("es_flag_" + selectnode.value, "es_flag");
 	}
 
 	function setValue(selector, value) {
@@ -381,7 +381,7 @@ let Options = (function(){
 
 			document.querySelector("#show_spamcommentregex").addEventListener("click", function(e){
 				let listNode = document.querySelector("#spamcommentregex_list");
-				listNode.classList.toggle("asi-hidden");
+				listNode.classList.toggle("esi-hidden");
 			});
 			document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
 				let node = e.target.closest("#show_quckinv_diff");
@@ -397,7 +397,7 @@ let Options = (function(){
 			document.querySelector('#region_selects').addEventListener('change', function(e) {
 				let node = e.target.closest(".country_parent");
 				if (node) {
-					changeFlag(node.querySelector('.as_flag'), e.target);
+					changeFlag(node.querySelector('.es_flag'), e.target);
 				}
 				saveOption("regional_countries");
 			});

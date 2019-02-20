@@ -1,24 +1,24 @@
-.as_sites_icons.as_steamrepcn_icon:after {
+.es_sites_icons.es_steamrepcn_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/srcn.png");
 }
-.as_sites_icons.as_steamrep_icon:after {
+.es_sites_icons.es_steamrep_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/steamrep.png");
 }
-.as_sites_icons.as_steamdbcalc_icon:after {
+.es_sites_icons.es_steamdbcalc_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/steamdb.png");
 }
-.as_sites_icons.as_steamgifts_icon:after {
+.es_sites_icons.es_steamgifts_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/steamgifts.png");
 }
-.as_sites_icons.as_steamtrades_icon:after {
-	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/steamtradas.png");
+.es_sites_icons.es_steamtrades_icon:after {
+	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/steamtrades.png");
 }
-.as_sites_icons.as_astats_icon:after {
+.es_sites_icons.es_astats_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/achievementstats.png");
 }
-.as_sites_icons.as_backpacktf_icon:after {
+.es_sites_icons.es_backpacktf_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/backpacktf.png");
 }
-.as_sites_icons.as_astatsnl_icon:after {
+.es_sites_icons.es_astatsnl_icon:after {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
 }

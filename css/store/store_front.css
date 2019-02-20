@@ -5,34 +5,34 @@
  /* Sidebar */
 @media (min-width: 1208px) {
 	div#global_header .content,
-	body.as_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_body_ctn .page_background_holder {
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_body_ctn .page_background_holder {
 		right: 0 !important;
 	}
-	body.as_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
 	.footer_content,
 	.hardware_ctn {
 		padding-left: 16px !important;
 	}
 }
 @media (min-width: 1208px) and (max-width: 1440px) {
-	body:not(.as_homepage_sidebar_hidden) div#global_header .content {
+	body:not(.es_homepage_sidebar_hidden) div#global_header .content {
 		right: -110px !important;
 	}
 }
 @media (min-width: 1442px) {
-	body.as_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
+	body.es_homepage_sidebar_hidden:not(.no_home_gutter) .home_page_content,
 	.footer_content,
 	.hardware_ctn {
 		padding-right: 16px !important;
 	}
 }
-body.as_homepage_sidebar_hidden .home_page_gutter {
+body.es_homepage_sidebar_hidden .home_page_gutter {
 	opacity: 0;
 }
 /* Carousel */
 div.home_cluster_ctn.home_ctn {
 	transition: padding 0.50s;
 }
-body.as_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
+body.es_homepage_carousel_hidden div.home_cluster_ctn.home_ctn {
 	padding: 0;
 }
