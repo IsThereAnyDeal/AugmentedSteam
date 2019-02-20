@@ -28,52 +28,20 @@ let ProfileData = (function(){
 
     let self = {};
 
-    function getLocalDataKey(steamId) {
-        return "profile_" + steamId;
-    }
-
     let _data = {};
     let _promise = null;
-    self.promise = function() {
-        if (_promise) { return _promise; }
-
-        _promise = new Promise(function(resolve, reject){
+    self.promise = async function() {
+        if (!_promise) {
             let steamId = SteamId.getSteamId();
-            if (!steamId) { reject(); }
 
-            let localDataKey = getLocalDataKey(steamId);
-            _data = LocalData.get(localDataKey);
-
-            /* FIXME
-            if (data && data.timestamp && !TimeHelper.isExpired(data.timestamp, 24*60*60)) {
-                resolve(data.data);
-                return;
-            }*/
-
-            RequestData.getApi("v01/profile/profile", {profile: steamId}).then(response => {
-                if (response && response.result && response.result === "success") {
-
-                    LocalData.set(localDataKey, {
-                        timestamp: TimeHelper.timestamp(),
-                        data: response.data
-                    });
-
-                    _data = response.data;
-                    resolve(response.data);
-                } else {
-                    reject();
-                }
-            }, reject);
-        });
-
+            _promise = Background.action('profile', { 'profile': steamId, } )
+                .then(response => { _data = response; return _data; });
+        }
         return _promise;
     };
 
     self.then = function(onDone, onCatch) {
-        if (!_promise) {
-            _promise = self.promise();
-        }
-        return _promise.then(onDone, onCatch);
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getBadges = function() {
@@ -113,11 +81,11 @@ let ProfileData = (function(){
         return _data.bg && _data.bg.appid ? parseInt(_data.bg.appid) : null;
     };
 
-    self.clearOwn = function() {
+    self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        LocalData.del(getLocalDataKey(User.steamId));
+        await Background.action('profile.clear', { 'profile': User.steamId, });
         _promise = null;
-        self.promise();
+        return self.promise();
     };
 
     return self;
@@ -1010,15 +978,12 @@ let GamesPageClass = (function(){
 
 let ProfileEditPageClass = (function(){
 
-    function ProfileEditPageClass() {
-        ProfileData.clearOwn();
-
+    async function ProfileEditPageClass() {
+        await ProfileData.clearOwn();
 
         if (window.location.pathname.indexOf("/settings") < 0) {
-            ProfileData.then(() => {
-                this.addBackgroundSelection();
-                this.addStyleSelection();
-            });
+            this.addBackgroundSelection();
+            this.addStyleSelection();
         }
     }
 
@@ -1098,7 +1063,7 @@ let ProfileEditPageClass = (function(){
             = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
     }
 
-    ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
+    ProfileEditPageClass.addBackgroundSelection = async function() {
         if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
@@ -1151,14 +1116,14 @@ let ProfileEditPageClass = (function(){
         gameSelectNode.addEventListener("change", onGameSelected);
         imgSelectNode.addEventListener("change", onImgSelected);
 
-        document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
-            ProfileData.clearOwn();
+        document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
         });
 
-        document.querySelector("#es_background_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedAppid = encodeURIComponent(gameSelectNode.value);
             let selectedImg = encodeURIComponent(imgSelectNode.value);
@@ -1166,7 +1131,7 @@ let ProfileEditPageClass = (function(){
         });
     };
 
-    ProfileEditPageClass.prototype.addStyleSelection = function() {
+    ProfileEditPageClass.addStyleSelection = function() {
         let html =
             `<div class='group_content group_summary'>
                 <div class='formRow'>
@@ -1227,16 +1192,16 @@ let ProfileEditPageClass = (function(){
             document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
         });
 
-        document.querySelector("#es_style_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedStyle = encodeURIComponent(styleSelectNode.value);
             window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
         });
 
-        document.querySelector("#es_style_remove_btn").addEventListener("click", function(e) {
-            ProfileData.clearOwn();
+        document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
         });
     };

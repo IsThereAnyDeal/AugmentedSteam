@@ -74,11 +74,11 @@ const AugmentedSteamApi = (function() {
      * };
      */
     self.endpointFactory = function(endpoint) {
-        return ({ 'params': params }) => self.getEndpoint(endpoint, params).then(result => result.data);
+        return async ({ 'params': params }) => self.getEndpoint(endpoint, params).then(result => result.data);
     };
 
     self.endpointFactoryCached = function(endpoint, ttl, keyfn) {
-        return function({ 'params': params }) {
+        return async function({ 'params': params }) {
             let key = keyfn;
             if (typeof keyfn == 'function') {
                 key = keyfn(params);
@@ -87,7 +87,7 @@ const AugmentedSteamApi = (function() {
                 throw `Can't cache '${endpoint}' with undefined key`;
             }
             let val = LocalStorage.get(key);
-            if (!TimeHelper.isExpired(val.timestamp, ttl)) {
+            if (val && val.timestamp && !TimeHelper.isExpired(val.timestamp, ttl)) {
                 return val.data;
             }
             return self.getEndpoint(endpoint, params)
@@ -96,8 +96,21 @@ const AugmentedSteamApi = (function() {
                     return result.data;
                 });
 
-        }
+        };
     };
+
+    self.clearEndpointCache = function(keyfn) {
+        return async function({ 'params': params }) {
+            let key = keyfn;
+            if (typeof keyfn == 'function') {
+                key = keyfn(params);
+            }
+            if (typeof key == 'undefined') {
+                throw `Can't clear undefined key from cache`;
+            }
+            LocalStorage.remove(key);
+        };
+    }
 
     Object.freeze(self);
     return self;
@@ -225,12 +238,12 @@ const Steam = (function() {
     self.earlyAccessAppIds = async function() {
         return _earlyAccessAppIds();    
     };
-
+   
     Object.freeze(self);
     return self;
 })();
 
-
+let profileCacheKey = (params => `profile_${params.profile}`);
 
 let actionCallbacks = new Map([
     ['ignored', Steam.ignored],
@@ -241,6 +254,8 @@ let actionCallbacks = new Map([
 
     ['early_access_appids', Steam.earlyAccessAppIds],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
+    ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
+    ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
 
 ]);
 // new Map() for Map.prototype.get() in lieu of:
