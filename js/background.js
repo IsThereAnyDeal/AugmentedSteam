@@ -259,6 +259,9 @@ let actionCallbacks = new Map([
     ['profile.background', AugmentedSteamApi.endpointFactory('v01/profile/background/background')],
     ['profile.background.games', AugmentedSteamApi.endpointFactory('v01/profile/background/games')],
     ['twitch.stream', AugmentedSteamApi.endpointFactory('v01/twitch/stream')],
+    ['market.cardprices', AugmentedSteamApi.endpointFactory('v01/market/cardprices')],
+    ['market.averagecardprice', AugmentedSteamApi.endpointFactory('v01/market/averagecardprice')], // FIXME deprecated
+    ['market.averagecardprices', AugmentedSteamApi.endpointFactory('v01/market/averagecardprices')],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)

@@ -1599,11 +1599,11 @@ let InventoryPageClass = (function(){
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
-                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.userCurrency});
-                console.log(result);
-                if (result.result === "success") {
-                    thisItem.dataset.cardsPrice = new Price(result.data.average);
-                }
+                try {
+                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': Currency.userCurrency, } );
+                    console.log(result);
+                    thisItem.dataset.cardsPrice = new Price(result.average);
+                } catch (err) { }
             }
 
             try {
@@ -1906,9 +1906,9 @@ let BadgesPageClass = (function(){
             return;
         }
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/averagecardprices", {
+            data = await Background.action("market.averagecardprices", {
                 currency: Currency.userCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
@@ -1917,12 +1917,6 @@ let BadgesPageClass = (function(){
             console.error("Couldn't retrieve average card prices", exception);
             return;
         }
-
-        if (!response.result || response.result !== "success") {
-            return;
-        }
-
-        let data = response.data;
 
         // regular cards
         for (let item of nodes) {
@@ -2375,18 +2369,13 @@ let GameCardPageClass = (function(){
         let cost = new Price(0);
         let isFoil = /border=1/i.test(document.URL);
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.userCurrency});
+            data = await Background.action("market.cardprices", {appid: this.appid, currency: Currency.userCurrency});
         } catch(exception) {
             console.error("Failed to load card prices", exception);
             return;
         }
-
-        if (!response || response.result !== "success") {
-            return;
-        }
-        let data = response.data;
 
         let nodes = document.querySelectorAll(".badge_card_set_card");
         for (let node of nodes) {
