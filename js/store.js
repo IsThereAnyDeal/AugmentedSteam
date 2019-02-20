@@ -877,24 +877,19 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addDlcInfo = function() {
         if (!this.isDlc()) { return; }
 
-        RequestData.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
-            let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
-
-            if (response && response.result === "success") {
-                for(let i=0, len=response.data.length; i<len; i++) {
-
-                    let item = response.data[i];
-                    let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
-                    let title = BrowserHelper.escapeHTML(item.desc);
-                    let name = BrowserHelper.escapeHTML(item.name);
-                    html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
-                }
+        let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+        Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
+            for(let item of response) {
+                let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
+                let title = BrowserHelper.escapeHTML(item.desc);
+                let name = BrowserHelper.escapeHTML(item.name);
+                html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
             }
-
+        }).finally(() => {
             let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
             html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
 
-            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);
+            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);            
         });
     };
 

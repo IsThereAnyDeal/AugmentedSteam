@@ -112,6 +112,54 @@ const AugmentedSteamApi = (function() {
         };
     }
 
+    function _earlyAccessAppIds() {
+        let that = _earlyAccessAppIds;
+        // Is data already in scope because of previous request?
+        if (that.data && !that.isExpired()) { return that.data; }
+        
+        // Is a request in progress?
+        if (that.promise) { return that.promise; }
+        
+        // Get data from localStorage
+        let appids = LocalStorage.get('early_access_appids');
+        if (appids) {
+            Object.assign(that, {
+                'data': appids.data,
+                'timestamp': appids.timestamp,
+            });
+            if (that.data && !that.isExpired()) { return that.data; }
+        }
+
+        // Cache expired, need to fetch
+        that.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
+            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': TimeHelper.timestamp(), })))
+            .then(function(appids) {
+                delete appids.response;
+                appids.data = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
+                LocalStorage.set("early_access_appids", appids);
+                Object.assign(that, {
+                    'data': appids.data,
+                    'timestamp': appids.timestamp,
+                    'promise': null, // no request in progress
+                });
+                return appids.data;
+            })
+            ;
+        return that.promise;
+    }
+    _earlyAccessAppIds.data = null;
+    _earlyAccessAppIds.timestamp = 0;
+    _earlyAccessAppIds.EXPIRY = 60 * 60; // appids expires after an hour
+    _earlyAccessAppIds.isExpired = function() { return TimeHelper.isExpired(this.timestamp, this.EXPIRY); };
+
+    self.earlyAccessAppIds = async function() {
+        return _earlyAccessAppIds();    
+    };
+
+    self.dlcInfo = async function({ 'params': params, }) {
+        return self.getEndpoint("v01/dlcinfo", params).then(result => result.data);
+    }
+
     Object.freeze(self);
     return self;
 })();
@@ -192,7 +240,7 @@ const SteamCommunity = (function() {
     self.stats = function({ 'params': params, }) {
         return self.getPage(`/my/stats/${params.appid}`);
     };
-    
+
     Object.freeze(self);
     return self;
 })();
@@ -275,50 +323,6 @@ const Steam = (function() {
         _dynamicstore.timestamp = 0;
         _dynamicstore.promise = null;
     };
-
-    function _earlyAccessAppIds() {
-        let that = _earlyAccessAppIds;
-        // Is data already in scope because of previous request?
-        if (that.data && !that.isExpired()) { return that.data; }
-        
-        // Is a request in progress?
-        if (that.promise) { return that.promise; }
-        
-        // Get data from localStorage
-        let appids = LocalStorage.get('early_access_appids');
-        if (appids) {
-            Object.assign(that, {
-                'data': appids.data,
-                'timestamp': appids.timestamp,
-            });
-            if (that.data && !that.isExpired()) { return that.data; }
-        }
-
-        // Cache expired, need to fetch
-        that.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
-            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': TimeHelper.timestamp(), })))
-            .then(function(appids) {
-                delete appids.response;
-                appids.data = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
-                LocalStorage.set("early_access_appids", appids);
-                Object.assign(that, {
-                    'data': appids.data,
-                    'timestamp': appids.timestamp,
-                    'promise': null, // no request in progress
-                });
-                return appids.data;
-            })
-            ;
-        return that.promise;
-    }
-    _earlyAccessAppIds.data = null;
-    _earlyAccessAppIds.timestamp = 0;
-    _earlyAccessAppIds.EXPIRY = 60 * 60; // appids expires after an hour
-    _earlyAccessAppIds.isExpired = function() { return TimeHelper.isExpired(this.timestamp, this.EXPIRY); };
-
-    self.earlyAccessAppIds = async function() {
-        return _earlyAccessAppIds();    
-    };
    
     Object.freeze(self);
     return self;
@@ -334,7 +338,8 @@ let actionCallbacks = new Map([
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
 
-    ['early_access_appids', Steam.earlyAccessAppIds],
+    ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
+    ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
@@ -353,10 +358,6 @@ let actionCallbacks = new Map([
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
-
-
-
-
 
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
