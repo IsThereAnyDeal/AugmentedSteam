@@ -2221,38 +2221,40 @@ let BadgesPageClass = (function(){
 
         ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-        let that = this;
-        document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
+        if (isOwnProfile) {
+            let that = this;
+            document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
 
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
-            }
-
-            sortBadgeRows(e.target.textContent, (node) => {
-                let content = 0;
-                let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
-                if (progressInfo) {
-                    content = parseInt(progressInfo[1])
+                if (that.hasMultiplePages) {
+                    await that.loadAllPages();
                 }
-                return content;
-            })
-        });
 
-        document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
-
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
-            }
-
-            sortBadgeRows(e.target.textContent, (node) => {
-                let content = 0;
-                let dropWorth = node.querySelector(".es_card_drop_worth");
-                if (dropWorth) {
-                    content = parseFloat(dropWorth.dataset.esCardWorth);
-                }
-                return content;
+                sortBadgeRows(e.target.textContent, (node) => {
+                    let content = 0;
+                    let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+                    if (progressInfo) {
+                        content = parseInt(progressInfo[1])
+                    }
+                    return content;
+                })
             });
-        });
+
+            document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
+
+                if (that.hasMultiplePages) {
+                    await that.loadAllPages();
+                }
+
+                sortBadgeRows(e.target.textContent, (node) => {
+                    let content = 0;
+                    let dropWorth = node.querySelector(".es_card_drop_worth");
+                    if (dropWorth) {
+                        content = parseFloat(dropWorth.dataset.esCardWorth);
+                    }
+                    return content;
+                });
+            });
+        }
     };
 
     BadgesPageClass.prototype.addBadgeFilter = function() {
