@@ -130,7 +130,8 @@ const SteamStoreApi = (function() {
             }
         }
         let p = {
-            'method': 'GET',            
+            'method': 'GET',
+            'credentials': 'include',
         };
         return fetch(url, p)
             .then(response => response.json())
@@ -140,7 +141,22 @@ const SteamStoreApi = (function() {
     self.appUserDetails = async function({ 'params': params, }) {
         return self.getEndpoint("/api/appuserdetails/", params);
     };
-    
+
+    self.wishlistAdd = async function({ 'params': params, }) {
+        let url = new URL("/api/addtowishlist", "https://store.steampowered.com/");
+        let formData = new FormData();
+        for (let [k, v] of Object.entries(params)) {
+            formData.append(k, v);
+        }
+        let p = {
+            'method': 'POST',
+            'credentials': 'include',
+            'body': formData,
+        }
+        return fetch(url, p)
+            .then(response => response.json());
+    }
+
     Object.freeze(self);
     return self;
 })();
@@ -278,6 +294,7 @@ let actionCallbacks = new Map([
     ['ignored', Steam.ignored],
     ['owned', Steam.owned],
     ['wishlist', Steam.wishlist],
+    ['wishlist.add', SteamStoreApi.wishlistAdd],
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
 

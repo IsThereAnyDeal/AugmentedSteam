@@ -3200,11 +3200,7 @@ let CommunityAppPageClass = (function(){
             e.preventDefault();
             if (e.target.classList.contains("btn_disabled")) { return; }
 
-            let formData = new FormData();
-            formData.append("sessionid", await User.getStoreSessionId());
-            formData.append("appid", that.appid);
-
-            await RequestData.post("https://store.steampowered.com/api/addtowishlist", formData, {withCredentials: true});
+            await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
 
             e.target.classList.add("btn_disabled");
             e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
