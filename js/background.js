@@ -68,6 +68,37 @@ const AugmentedSteamApi = (function() {
         ;
     };
 
+    /**
+     * self.prices = async function({ 'params': params }) {
+     *     return AugmentedSteamApi.getEndpoint('v01/prices', params).then(r => r.data);
+     * };
+     */
+    self.endpointFactory = function(endpoint) {
+        return ({ 'params': params }) => self.getEndpoint(endpoint, params).then(result => result.data);
+    };
+
+    self.endpointFactoryCached = function(endpoint, ttl, keyfn) {
+        return function({ 'params': params }) {
+            let key = keyfn;
+            if (typeof keyfn == 'function') {
+                key = keyfn(params);
+            }
+            if (typeof key == 'undefined') {
+                throw `Can't cache '${endpoint}' with undefined key`;
+            }
+            let val = LocalStorage.get(key);
+            if (!TimeHelper.isExpired(val.timestamp, ttl)) {
+                return val.data;
+            }
+            return self.getEndpoint(endpoint, params)
+                .then(function(result) {
+                    LocalStorage.set(key, result);
+                    return result.data;
+                });
+
+        }
+    };
+
     Object.freeze(self);
     return self;
 })();
@@ -195,10 +226,6 @@ const Steam = (function() {
         return _earlyAccessAppIds();    
     };
 
-    self.prices = async function({ 'params': params }) {
-        return AugmentedSteamApi.getEndpoint('v01/prices', params).then(r => r.data);
-    };
-
     Object.freeze(self);
     return self;
 })();
@@ -213,7 +240,7 @@ let actionCallbacks = new Map([
     ['dynamicstore.clear', Steam.clearDynamicStore],
 
     ['early_access_appids', Steam.earlyAccessAppIds],
-    ['prices', Steam.prices],
+    ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
 
 ]);
 // new Map() for Map.prototype.get() in lieu of:
