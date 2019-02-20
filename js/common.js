@@ -167,25 +167,6 @@ let Defaults = (function() {
 /**
  * Common functions that may be used on any pages
  */
-
-let Api = (function(){
-    let self = {};
-
-    self.getApiUrl = function(endpoint, query) {
-
-        let queryString = "";
-        if (query) {
-            queryString = "?" + Object.entries(query)
-                .map(pair => pair.map(encodeURIComponent).join("="))
-                .join("&");
-        }
-
-        return Config.ApiServerHost + "/" + endpoint + "/" + queryString;
-    };
-
-    return self;
-})();
-
 let Background = (function(){
     let self = {};
 
@@ -453,11 +434,6 @@ let RequestData = (function(){
 
             request.send(settings.body);
         });
-    };
-
-    self.getApi = function(api, query) {
-        let apiUrl = Api.getApiUrl(api, query);
-        return self.getJson(apiUrl);
     };
 
     self.post = function(url, formData, settings) {
