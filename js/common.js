@@ -902,43 +902,41 @@ let Currency = (function() {
     let _promise = null;
 
     // load user currency
-    self.promise = function() {
-        if (_promise) { return _promise; }
+    self.promise = async function() {
+        let currencySetting = SyncedStorage.get("override_price");
+        if (currencySetting !== "auto") {
+            self.userCurrency = currencySetting;
+            return;
+        }
 
-        _promise = new Promise(function(resolve, reject) {
-            let currencySetting = SyncedStorage.get("override_price");
-
-            if (currencySetting !== "auto") {
-                self.userCurrency = currencySetting;
-                resolve();
+        let cache = LocalData.get("user_currency", {});
+        if (cache.userCurrency && cache.userCurrency.currencyType) {
+            if (cache.userCurrency.updated && !TimeHelper.isExpired(cache.userCurrency.updated, 3600)) {
+                self.userCurrency = cache.userCurrency.currencyType;
                 return;
             }
+        }
 
-            let currencyCache = LocalData.get("user_currency", {});
-            if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
-                self.userCurrency = currencyCache.userCurrency.currencyType;
-                resolve();
-            } else {
-                RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                    .then(
-                        response => {
-                            let dummyHtml = document.createElement("html");
-                            dummyHtml.innerHTML = response;
+        if (_promise) { return _promise; }
+        _promise = new Promise(function(resolve, reject) {
+            RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
+                .then(
+                    response => {
+                        let dummyHtml = document.createElement("html");
+                        dummyHtml.innerHTML = response;
 
-                            self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                            LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                        },
-                        () => {
-                            Background.action('currency.from.app')
-                                .then(currency => {
-                                    self.userCurrency = currency;
-                                    LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                                });
-                        }
-                    )
-                    .finally(resolve);
-            }
-
+                        self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
+                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
+                    },
+                    () => {
+                        Background.action('currency.from.app')
+                            .then(currency => {
+                                self.userCurrency = currency;
+                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
+                            });
+                    }
+                )
+                .finally(resolve);
         }).then(() => {
             return RequestData.getApi("v01/rates", { to: self.userCurrency })
                 .then(result => {
