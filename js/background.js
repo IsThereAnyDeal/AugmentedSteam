@@ -49,6 +49,35 @@ const LocalStorage = (function(){
 })();
 
 
+const LocalStorageCache = (function(){
+    let self = {};
+    
+    self.get = function(key, ttl, defaultValue) {
+        if (!ttl) return defaultValue;
+        let item = localStorage.getItem(key);
+        if (!item) return defaultValue;
+        try {
+            item = JSON.parse(item);
+        } catch (err) {
+            return defaultValue;
+        }
+        if (!item.timestamp || TimeHelper.isExpired(item.timestamp, ttl)) return defaultValue;
+        return item.data;
+    };
+
+    self.set = function(key, value) {
+        localStorage.setItem(key, JSON.stringify({ 'data': value, 'timestamp': TimeHelper.timestamp(), }));
+    };
+
+    self.remove = function(key) {
+        localStorage.removeItem(key);
+    };
+
+    Object.freeze(self);
+    return self;    
+})();
+
+
 const AugmentedSteamApi = (function() {
     let self = {};
 
@@ -132,6 +161,7 @@ const AugmentedSteamApi = (function() {
         for (let key of keys) {
             LocalStorage.remove(key);
         }
+        LocalStorage.remove('currency');
     };
 
     function _earlyAccessAppIds() {
@@ -257,6 +287,16 @@ const SteamStore = (function() {
             throw "Store currency could not be determined from app 220";
         }
         return currency.getAttribute("content");
+    };
+
+    self.currency = async function() {
+        let cache = LocalStorageCache.get('currency', 3600);
+        if (cache) return cache;
+        let currency = await self.currencyFromWallet();
+        if (!currency) currency = await self.currencyFromApp();
+        if (!currency) throw "Could not retrieve store currency";
+        LocalStorageCache.set('currency', currency);
+        return currency;
     };
 
     Object.freeze(self);
@@ -395,7 +435,7 @@ let actionCallbacks = new Map([
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
-    ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 5*60, ratesCacheKey)],
+    ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 60*60, ratesCacheKey)],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
     ['profile.background', AugmentedSteamApi.endpointFactory('v01/profile/background/background')],
@@ -407,9 +447,8 @@ let actionCallbacks = new Map([
 
     ['appdetails', SteamStore.appDetails],
     ['appuserdetails', SteamStore.appUserDetails],
-    ['currency.from.app', SteamStore.currencyFromApp],
-    ['currency.from.wallet', SteamStore.currencyFromWallet],
-    
+    ['currency', SteamStore.currency],
+     
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],
 ]);

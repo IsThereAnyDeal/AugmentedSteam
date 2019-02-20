@@ -908,26 +908,13 @@ let Currency = (function() {
         let currencySetting = SyncedStorage.get("override_price");
         if (currencySetting !== "auto") {
             self.userCurrency = currencySetting;
-            return _promise = Background.action('rates', { 'to': self.userCurrency, }).then(result => _rates = result);
+            return _promise = Background.action('rates', { 'to': self.userCurrency, })
+                .then(result => _rates = result);
         }
-
-        let cache = LocalData.get("user_currency", {});
-        if (cache.userCurrency && cache.userCurrency.currencyType) {
-            if (cache.userCurrency.updated && !TimeHelper.isExpired(cache.userCurrency.updated, 3600)) {
-                self.userCurrency = cache.userCurrency.currencyType;
-                return _promise = Background.action('rates', { 'to': self.userCurrency, }).then(result => _rates = result);
-            }
-        }
-
-        _promise = Background.action('currency.from.wallet')
-            .catch(err => Background.action('currency.from.app'))
-            .then(currency => {
-                self.userCurrency = currency;
-                LocalData.set("user_currency", { currencyType: self.userCurrency, updated: TimeHelper.timestamp(), } )
-                return Background.action('rates', { 'to': self.userCurrency, });
-            })
+        return _promise = Background.action('currency')
+            .then(currency => self.userCurrency = currency)
+            .then(() => Background.action('rates', { 'to': self.userCurrency, }))
             .then(result => _rates = result);
-        return _promise;
     };
 
     self.then = function(onDone, onCatch) {
