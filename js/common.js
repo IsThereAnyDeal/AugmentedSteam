@@ -918,31 +918,16 @@ let Currency = (function() {
         }
 
         if (_promise) { return _promise; }
-        _promise = new Promise(function(resolve, reject) {
-            RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                .then(
-                    response => {
-                        let dummyHtml = document.createElement("html");
-                        dummyHtml.innerHTML = response;
-
-                        self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                    },
-                    () => {
-                        Background.action('currency.from.app')
-                            .then(currency => {
-                                self.userCurrency = currency;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                            });
-                    }
-                )
-                .finally(resolve);
-        }).then(() => {
-            return RequestData.getApi("v01/rates", { to: self.userCurrency })
-                .then(result => {
-                    _rates = result.data;
-                });;
-        });
+        _promise = Background.action('currency.from.wallet')
+            .catch(err => Background.action('currency.from.app'))
+            .then(currency => {
+                self.userCurrency = currency;
+                LocalData.set("user_currency", { currencyType: self.userCurrency, updated: TimeHelper.timestamp(), } )
+                return RequestData.getApi("v01/rates", { to: self.userCurrency });
+            })
+            .then(result => {
+                _rates = result.data;
+            });
         return _promise;
     };
 

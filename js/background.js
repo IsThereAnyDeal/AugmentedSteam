@@ -232,10 +232,18 @@ const SteamStore = (function() {
             .then(response => response.json());
     };
 
+    self.currencyFromWallet = async function() {
+        let html = await self.getPage("/steamaccount/addfunds");
+        let dummyPage = document.createElement('html');
+        dummyPage.innerHTML = html;
+
+        return dummyPage.querySelector("input[name=currency]").value;
+    };
+
     self.currencyFromApp = async function() {
         let html = await self.getPage("/app/220");
         let dummyPage = document.createElement('html');
-        dummyPage.innerHTML = response;
+        dummyPage.innerHTML = html;
 
         let currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
@@ -390,8 +398,9 @@ let actionCallbacks = new Map([
 
     ['appdetails', SteamStore.appDetails],
     ['appuserdetails', SteamStore.appUserDetails],
-    ['currency.from.app', SteamStore.currencyFromApp]
-
+    ['currency.from.app', SteamStore.currencyFromApp],
+    ['currency.from.wallet', SteamStore.currencyFromWallet],
+    
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],
 ]);
