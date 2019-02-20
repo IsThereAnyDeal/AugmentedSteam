@@ -1789,7 +1789,7 @@ let EarlyAccess = (function(){
                     container.id = "es_ea_apphub";
                     DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
 
-                    checkNodes("#es_ea_apphub");
+                    checkNodes(["#es_ea_apphub"]);
                 }
         }
     }
