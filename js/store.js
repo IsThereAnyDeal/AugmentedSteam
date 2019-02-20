@@ -2859,72 +2859,66 @@ let TabAreaObserver = (function(){
     return self;
 })();
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(function(values) {
+    await SyncedStorage.load();
+    await Promise.all([Localization.promise(), User.promise(), Currency.promise()]);
 
-                Common.init();
+    Common.init();
 
-                switch (true) {
-                    case /\bagecheck\b/.test(path):
-                        AgeCheck.sendVerification();
-                        break;
+    switch (true) {
+        case /\bagecheck\b/.test(path):
+            AgeCheck.sendVerification();
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new AppPageClass(window.location.host + path));
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new AppPageClass(window.location.host + path));
+            break;
 
-                    case /^\/sub\/.*/.test(path):
-                        (new SubPageClass(window.location.host + path));
-                        break;
+        case /^\/sub\/.*/.test(path):
+            (new SubPageClass(window.location.host + path));
+            break;
 
-                    case /^\/bundle\/.*/.test(path):
-                        (new BundlePageClass(window.location.host + path));
-                        break;
+        case /^\/bundle\/.*/.test(path):
+            (new BundlePageClass(window.location.host + path));
+            break;
 
-                    case /^\/account\/registerkey(\/.*)?/.test(path):
-                        (new RegisterKeyPageClass());
-                        return;
+        case /^\/account\/registerkey(\/.*)?/.test(path):
+            (new RegisterKeyPageClass());
+            return;
 
-                    case /^\/account(\/)?/.test(path):
-                        (new AccountPageClass());
-                        return;
+        case /^\/account(\/)?/.test(path):
+            (new AccountPageClass());
+            return;
 
-                    case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
-                        (new FundsPageClass());
-                        break;
+        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+            (new FundsPageClass());
+            break;
 
-                    case /^\/search\/.*/.test(path):
-                        (new SearchPageClass());
-                        break;
+        case /^\/search\/.*/.test(path):
+            (new SearchPageClass());
+            break;
 
-                    case /^\/sale\/.*/.test(path):
-                        (new StorePageClass()).showRegionalPricing("sale");
-                        break;
+        case /^\/sale\/.*/.test(path):
+            (new StorePageClass()).showRegionalPricing("sale");
+            break;
 
-                    case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-                        (new WishlistPageClass());
-                        break;
+        case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
+            (new WishlistPageClass());
+            break;
 
-                    // Storefront-front only
-                    case /^\/$/.test(path):
-                        (new StoreFrontPageClass());
-                        break;
-                }
+        // Storefront-front only
+        case /^\/$/.test(path):
+            (new StoreFrontPageClass());
+            break;
+    }
 
-                // common for store pages
-                Highlights.startHighlightsAndTags();
-                EnhancedSteam.alternateLinuxIcon();
-                EnhancedSteam.hideTrademarkSymbol(false);
-                TabAreaObserver.observeChanges();
-
-            })
-    )
+    // common for store pages
+    Highlights.startHighlightsAndTags();
+    EnhancedSteam.alternateLinuxIcon();
+    EnhancedSteam.hideTrademarkSymbol(false);
+    TabAreaObserver.observeChanges();
 
 })();
 
