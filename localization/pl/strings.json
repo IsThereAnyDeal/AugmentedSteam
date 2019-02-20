@@ -133,7 +133,7 @@
     "viewinclient": "Pokaż w kliencie Steam",
     "custom_background": "Własne tło",
     "custom_style": "Motyw Niestandardowy",
-    "custom_style_help": "Wszyscy użytkownicy Enhanced Steam zobaczą ten motyw na twoim profilu. Użytkownicy bez Enhanced Steam nie zobaczą żadnej zmiany.",
+    "custom_style_help": "Wszyscy użytkownicy Augmented Steam zobaczą ten motyw na twoim profilu. Użytkownicy bez Augmented Steam nie zobaczą żadnej zmiany.",
     "noneselected": "Brak Wyboru / Bez Zmian",
     "most_drops": "Liczba kart do uzyskania",
     "badge_foil_progress": "Pokaż postęp foliowanej odznaki",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Odwiedź forum handlu",
     "software": "Programy",
     "purchase_date": "(Zakupiono: __date__)",
-    "custom_background_help": "Wszyscy użytkownicy Enhanced Steam zobaczą to tło w twoim profilu. Pozostali zobaczą zwykle tło profilu.",
+    "custom_background_help": "Wszyscy użytkownicy Augmented Steam zobaczą to tło w twoim profilu. Pozostali zobaczą zwykle tło profilu.",
     "date_unlocked": "Data odblokowania",
     "view_badge_foil": "Pokaż foliowaną odznakę",
     "net_spent": "Strata",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Pokaż informacje z WSGF (dot. ekranów panoramicznych)",
-        "version_show": "Pokaż dziennik zmian po aktualizacji Enhanced Steam",
+        "version_show": "Pokaż dziennik zmian po aktualizacji Augmented Steam",
         "steamcardexchange": "Pokaż linki do SteamCardExchange na odznakach",
         "regional_price": "Porównanie cen regionalnych",
         "excludef2p": "Nie podświetlaj gier Free to Play",
@@ -334,7 +334,7 @@
         "drm": "Pokaż ostrzeżenia o DRM firm trzecich",
         "profile_permalink": "Pokazuj permalinki w profilach",
         "show_regionwarning": "Pokaż ostrzeżenie, jeśli przeglądasz region niewłaściwy dla Twojego konta",
-        "foot_link": "Rozszerzenie Enhanced Steam",
+        "foot_link": "Rozszerzenie Augmented Steam",
         "profile_link_images": "Graficzne linki w profilu",
         "library": "Pokaż przycisk „Biblioteka” w nagłówku",
         "show1clickgoo": "Pokaż przycisk \"Kliknij raz, by zmienić w klejnoty\" na odpowiednich przedmiotach z ekwipunku",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Błąd wczytywania danych Enhanced Steam",
-        "loading": "Wczytywanie danych Enhanced Steam...",
-        "ready": "Enhanced Steam jest gotowy",
+        "errormsg": "Błąd wczytywania danych Augmented Steam",
+        "loading": "Wczytywanie danych Augmented Steam...",
+        "ready": "Augmented Steam jest gotowy",
         "failed": "Jedno lub więcej żądań nie powiodło się"
     },
     "twitch": {
