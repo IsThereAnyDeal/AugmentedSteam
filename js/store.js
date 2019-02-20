@@ -1640,7 +1640,7 @@ let AppPageClass = (function(){
         details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
+        Background.action('stats', { 'appid': this.appid, } ).then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 

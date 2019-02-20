@@ -189,6 +189,10 @@ const SteamCommunity = (function() {
         return self.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
     };
 
+    self.stats = function({ 'params': params, }) {
+        return self.getPage(`/my/stats/${params.appid}`);
+    };
+    
     Object.freeze(self);
     return self;
 })();
@@ -345,6 +349,7 @@ let actionCallbacks = new Map([
     ['appuserdetails', SteamStoreApi.appUserDetails],
 
     ['cards', SteamCommunity.cards],
+    ['stats', SteamCommunity.stats],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
