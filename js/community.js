@@ -3269,93 +3269,88 @@ let GuidesPageClass = (function(){
 })();
 
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(() => {
+    await SyncedStorage.load().catch(err => console.error(err));
+    await Promise.all([Localization.promise(), User.promise(), Currency.promise()]);
 
-                Common.init();
-                SpamCommentHandler.hideSpamComments();
+    Common.init();
+    SpamCommentHandler.hideSpamComments();
 
-                switch (true) {
+    switch (true) {
 
-                    case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
-                        (new ProfileActivityPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+            (new ProfileActivityPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
-                        (new GamesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+            (new GamesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/edit/.test(path):
-                        (new ProfileEditPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/edit/.test(path):
+            (new ProfileEditPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
-                        (new BadgesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
+            (new BadgesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-                        (new GameCardPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+            (new GameCardPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
-                        (new FriendsThatPlayPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
+            (new FriendsThatPlayPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-                        (new FriendsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+            (new FriendsPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
-                        (new InventoryPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+            (new InventoryPageClass());
+            break;
 
-                    case /^\/market\/listings\/.*/.test(path):
-                        (new MarketListingPageClass());
-                        break;
+        case /^\/market\/listings\/.*/.test(path):
+            (new MarketListingPageClass());
+            break;
 
-                    case /^\/market\/.*/.test(path):
-                        (new MarketPageClass());
-                        break;
+        case /^\/market\/.*/.test(path):
+            (new MarketPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
-                        (new ProfileHomePageClass());
-                        break;
+        case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
+            (new ProfileHomePageClass());
+            break;
 
-                    case /^\/app\/[^\/]*\/guides/.test(path):
-                        (new GuidesPageClass());
-                        break;
+        case /^\/app\/[^\/]*\/guides/.test(path):
+            (new GuidesPageClass());
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new CommunityAppPageClass());
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new CommunityAppPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-                        (new StatsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+            (new StatsPageClass());
+            break;
 
-                    case /^\/tradingcards\/boostercreator/.test(path):
-                        let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                            .textContent.trim().replace(/\d/g, "");
+        case /^\/tradingcards\/boostercreator/.test(path):
+            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
+                .textContent.trim().replace(/\d/g, "");
 
-                        ExtensionLayer.runInPageContext("function() { \
-                            $J('#booster_game_selector option').each(function(index) {\
-                                if ($J(this).val()) {\
-                                    $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
-                                }\
-                            });\
-                        }");
-                        break;
-                }
+            ExtensionLayer.runInPageContext("function() { \
+                $J('#booster_game_selector option').each(function(index) {\
+                    if ($J(this).val()) {\
+                        $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
+                    }\
+                });\
+            }");
+            break;
+    }
 
-                EnhancedSteam.hideTrademarkSymbol(true);
-            })
-    )
+    EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
 

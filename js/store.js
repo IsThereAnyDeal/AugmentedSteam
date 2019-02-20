@@ -2862,7 +2862,7 @@ let TabAreaObserver = (function(){
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    await SyncedStorage.load();
+    await SyncedStorage.load().catch(err => console.error(err));
     await Promise.all([Localization.promise(), User.promise(), Currency.promise()]);
 
     Common.init();
