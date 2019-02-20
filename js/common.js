@@ -1384,6 +1384,7 @@ let EnhancedSteam = (function() {
         SyncedStorage.remove("store_sessionid");
         DynamicStore.clear();
         Background.action('dynamicstore.clear');
+        Background.action('api.cache.clear');
     };
 
     self.bindLogout = function(){

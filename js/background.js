@@ -32,6 +32,14 @@ const LocalStorage = (function(){
         localStorage.removeItem(key);
     };
 
+    self.keys = function() {
+        let result = [];
+        for (let i = localStorage.length - 1; i >= 0; --i) {
+            result.push(localStorage.key(i));
+        }
+        return result;
+    };
+
     self.clear = function() {
         localStorage.clear();
     };
@@ -110,7 +118,14 @@ const AugmentedSteamApi = (function() {
             }
             LocalStorage.remove(key);
         };
-    }
+    };
+
+    self.clear = function() {
+        let keys = LocalStorage.keys().filter(k => k.startsWith('app_') || k.startsWith('profile_'));
+        for (let key of keys) {
+            LocalStorage.remove(key);
+        }
+    };
 
     function _earlyAccessAppIds() {
         let that = _earlyAccessAppIds;
@@ -338,6 +353,7 @@ let actionCallbacks = new Map([
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
 
+    ['api.cache.clear', AugmentedSteamApi.clear],
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
