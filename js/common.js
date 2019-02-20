@@ -918,17 +918,14 @@ let Currency = (function() {
                                 let dummyHtml = document.createElement("html");
                                 dummyHtml.innerHTML = response;
 
-                                self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
+                                return dummyHtml.querySelector("input[name=currency]").value;
                             },
-                            () => {
-                                Background.action('currency.from.app')
-                                    .then(currency => {
-                                        self.userCurrency = currency;
-                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                                    });
-                            }
+                            () => Background.action('currency.from.app')
                         )
+                        .then(currency => {
+                            self.userCurrency = currency;
+                            LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()});
+                        })
                         .finally(resolve);
                 }
             })).finally(() => {
