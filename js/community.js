@@ -1026,7 +1026,7 @@ let ProfileEditPageClass = (function(){
 
         showBgFormLoading();
 
-        let result = await RequestData.getApi("v01/profile/background/background", {
+        let result = await Background.action("profile.background", {
             appid: appid,
             profile: SteamId.getSteamId()
         });
@@ -1034,7 +1034,7 @@ let ProfileEditPageClass = (function(){
         let selectedImg = ProfileData.getBgImg();
 
         let html = "";
-        for (let value of result.data) {
+        for (let value of result) {
             let img = BrowserHelper.escapeHTML(value[0].toString());
             let name = BrowserHelper.escapeHTML(value[1].toString());
 
@@ -1092,13 +1092,12 @@ let ProfileEditPageClass = (function(){
         document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-        let response = await RequestData.getApi("v01/profile/background/games");
-        if (!response || !response.data) { return; }
+        let response = await Background.action('profile.background.games');
 
         let gameSelectNode = document.querySelector("#es_bg_game");
         let imgSelectNode = document.querySelector("#es_bg_img");
 
-        let gameList = getGameSelectOptions(response.data);
+        let gameList = getGameSelectOptions(response);
         gameSelectNode.innerHTML = gameList[1];
         gameSelectNode.style.display = "block";
 

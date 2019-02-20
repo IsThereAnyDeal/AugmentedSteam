@@ -256,6 +256,8 @@ let actionCallbacks = new Map([
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
+    ['profile.background', AugmentedSteamApi.endpointFactory('v01/profile/background/background')],
+    ['profile.background.games', AugmentedSteamApi.endpointFactory('v01/profile/background/games')],
     ['twitch.stream', AugmentedSteamApi.endpointFactory('v01/twitch/stream')],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
