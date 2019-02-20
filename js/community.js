@@ -723,9 +723,7 @@ let ProfileHomePageClass = (function(){
 
         let twitchId = m[1].replace(/\//g, "");
 
-        let response = await RequestData.getApi("v01/twitch/stream", {channel: twitchId});
-        if (!response || response.result !== "success") { return; }
-        let data = response.data;
+        let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
 
         let channelUsername = data.user_name;
         let channelUrl = search.href;

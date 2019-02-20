@@ -256,7 +256,7 @@ let actionCallbacks = new Map([
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
-
+    ['twitch.stream', AugmentedSteamApi.endpointFactory('v01/twitch/stream')],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
