@@ -878,7 +878,7 @@ let Currency = (function() {
                 }
 
                 let currencyCache = LocalData.get("user_currency", {});
-                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
+                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && !TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
                     self.userCurrency = currencyCache.userCurrency.currencyType;
                     resolve();
                 } else {
