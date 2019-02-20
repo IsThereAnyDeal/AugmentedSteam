@@ -1551,13 +1551,10 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
-            loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
-        });
-
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
-            loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
-        });
+        Background.action('cards', { 'appid': this.appid, } )
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result, ".badge_current"));
+        Background.action('cards', { 'appid': this.appid, 'border': 1, } )
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result, ".badge_current"));
 
         function loadBadgeContent(targetSelector, result, selector) {
             let dummy = document.createElement("html");

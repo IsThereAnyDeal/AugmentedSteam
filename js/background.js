@@ -166,6 +166,34 @@ const SteamStoreApi = (function() {
 })();
 
 
+const SteamCommunity = (function() {
+    let self = {};
+
+    self.getPage = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        let url = new URL(endpoint, "https://steamcommunity.com/");
+        if (typeof query != 'undefined') {
+            for (let [k, v] of Object.entries(query)) {
+                url.searchParams.append(k, v);
+            }
+        }
+        let p = {
+            'method': 'GET',
+            'credentials': 'include',
+        };
+        return fetch(url, p)
+            .then(response => response.text())
+        ;
+    };
+
+    self.cards = function({ 'params': params, }) {
+        return self.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
+    };
+
+    Object.freeze(self);
+    return self;
+})();
+
+
 const Steam = (function() {
     let self = {};
 
@@ -315,6 +343,8 @@ let actionCallbacks = new Map([
 
     ['appdetails', SteamStoreApi.appDetails],
     ['appuserdetails', SteamStoreApi.appUserDetails],
+
+    ['cards', SteamCommunity.cards],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
