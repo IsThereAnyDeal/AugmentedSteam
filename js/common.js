@@ -923,7 +923,7 @@ let Currency = (function() {
             .then(currency => {
                 self.userCurrency = currency;
                 LocalData.set("user_currency", { currencyType: self.userCurrency, updated: TimeHelper.timestamp(), } )
-                return RequestData.getApi("v01/rates", { to: self.userCurrency });
+                return Background.action('rates', { 'to': self.userCurrency, });
             })
             .then(result => {
                 _rates = result.data;

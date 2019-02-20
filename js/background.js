@@ -387,6 +387,7 @@ let actionCallbacks = new Map([
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
+    ['rates', AugmentedSteamApi.endpointFactory('v01/rates')],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
     ['profile.background', AugmentedSteamApi.endpointFactory('v01/profile/background/background')],
