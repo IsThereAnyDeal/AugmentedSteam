@@ -1675,46 +1675,8 @@ let EarlyAccess = (function(){
 
     let self = {};
 
-    let cache = {};
+    let cache = new Set();
     let imageUrl;
-
-    let _promise = null;
-
-    function promise() {
-        if (_promise) { return _promise; }
-
-        let imageName = "img/overlay/early_access_banner_english.png";
-        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
-        }
-        imageUrl = ExtensionLayer.getLocalUrl(imageName);
-
-        _promise = new Promise(function(resolve, reject) {
-            cache = LocalData.get("ea_appids");
-
-            if (cache) {
-                resolve();
-                return;
-            }
-
-            let updateTime = LocalData.get("ea_appids_time");
-            if (!TimeHelper.isExpired(updateTime, 3600)) {
-                return;
-            }
-
-            RequestData.getApi("v01/earlyaccess").then(data => {
-                if (!data.result || data.result !== "success") {
-                    reject();
-                }
-
-                cache = data.data;
-                LocalData.set("ea_appids", cache);
-                LocalData.set("ea_appids_time", TimeHelper.timestamp());
-                resolve()
-            }, reject);
-        });
-        return _promise;
-    }
 
     function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
@@ -1730,7 +1692,7 @@ let EarlyAccess = (function(){
                 let imgHeader = node.querySelector("img" + selectorModifier);
                 let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && cache.hasOwnProperty(appid)) {
+                if (appid && cache.has(appid)) {
                     node.classList.add("es_early_access");
 
                     let container = document.createElement("span");
@@ -1816,24 +1778,30 @@ let EarlyAccess = (function(){
                     container.id = "es_ea_apphub";
                     DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
 
-                    checkNodes("#es_ea_apphub");
+                    checkNodes(["#es_ea_apphub"]);
                 }
         }
     }
 
-    self.showEarlyAccess = function() {
+    self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        promise().then(() => {
-            switch (window.location.host) {
-                case "store.steampowered.com":
-                    handleStore();
-                    break;
-                case "steamcommunity.com":
-                    handleCommunity();
-                    break;
-            }
-        });
+        cache = new Set(await Background.action('early_access_appids'));
+
+        let imageName = "img/overlay/early_access_banner_english.png";
+        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
+        }
+        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+    
+        switch (window.location.host) {
+            case "store.steampowered.com":
+                handleStore();
+                break;
+            case "steamcommunity.com":
+                handleCommunity();
+                break;
+        }
     };
 
     return self;

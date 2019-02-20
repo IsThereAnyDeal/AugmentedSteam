@@ -80,20 +80,21 @@ const Steam = (function() {
      * Requires user to be signed in, can we validate this from background?
      */
     async function _dynamicstore() {
+        let that = _dynamicstore;
         // Is data already in scope because of previous request?
-        if (_dynamicstore.data && !_dynamicstore.isExpired()) { return _dynamicstore.data; }
+        if (that.data && !that.isExpired()) { return that.data; }
 
         // Is a request in progress?
-        if (_dynamicstore.promise) { return _dynamicstore.promise; }
+        if (that.promise) { return that.promise; }
         
         // Get data from localStorage
         let dynamicstore = LocalStorage.get('dynamicstore');
         if (dynamicstore) {
-            Object.assign(_dynamicstore, {
+            Object.assign(that, {
                 'data': dynamicstore.data,
                 'timestamp': dynamicstore.timestamp,
             });
-            if (_dynamicstore.data && !_dynamicstore.isExpired()) { return _dynamicstore.data; }
+            if (that.data && !that.isExpired()) { return that.data; }
         }
 
         // Cache expired, need to fetch
@@ -102,7 +103,7 @@ const Steam = (function() {
             'method': 'GET',
             'credentials': 'include',
         };
-        _dynamicstore.promise = fetch(url, p)
+        that.promise = fetch(url, p)
             .then(response => response.json().then(data => ({ 'data': data, 'timestamp': TimeHelper.timestamp(), })))
             .then(function(dynamicstore) {
                 if (!dynamicstore.data.rgOwnedApps) {
@@ -117,7 +118,7 @@ const Steam = (function() {
                 return dynamicstore.data;
             })
             ;
-        return _dynamicstore.promise;
+        return that.promise;
     }       
     // _dynamicstore.data keys are:
     // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
@@ -150,6 +151,49 @@ const Steam = (function() {
         _dynamicstore.promise = null;
     };
 
+    function _earlyAccessAppIds() {
+        let that = _earlyAccessAppIds;
+        // Is data already in scope because of previous request?
+        if (that.data && !that.isExpired()) { return that.data; }
+        
+        // Is a request in progress?
+        if (that.promise) { return that.promise; }
+        
+        // Get data from localStorage
+        let appids = LocalStorage.get('early_access_appids');
+        if (appids) {
+            Object.assign(that, {
+                'data': appids.data,
+                'timestamp': appids.timestamp,
+            });
+            if (that.data && !that.isExpired()) { return that.data; }
+        }
+
+        // Cache expired, need to fetch
+        that.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
+            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': TimeHelper.timestamp(), })))
+            .then(function(appids) {
+                delete appids.response;
+                appids.data = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
+                LocalStorage.set("early_access_appids", appids);
+                Object.assign(that, {
+                    'data': appids.data,
+                    'timestamp': appids.timestamp,
+                    'promise': null, // no request in progress
+                });
+                return appids.data;
+            })
+            ;
+        return that.promise;
+    }
+    _earlyAccessAppIds.data = null;
+    _earlyAccessAppIds.timestamp = 0;
+    _earlyAccessAppIds.EXPIRY = 60 * 60; // appids expires after an hour
+    _earlyAccessAppIds.isExpired = function() { return TimeHelper.isExpired(this.timestamp, this.EXPIRY); };
+
+    self.earlyAccessAppIds = async function() {
+        return _earlyAccessAppIds();    
+    };
     Object.freeze(self);
     return self;
 })();
@@ -162,6 +206,8 @@ let actionCallbacks = new Map([
     ['wishlist', Steam.wishlist],
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
+
+    ['early_access_appids', Steam.earlyAccessAppIds],
 
 ]);
 // new Map() for Map.prototype.get() in lieu of:
