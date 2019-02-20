@@ -526,8 +526,8 @@ let Localization = (function(){
     self.promise = function(){
         if (_promise) { return _promise; }
 
-        let lang = SyncedStorage.get("language");
-        let local = Language.getLanguageCode(lang);
+        let currentSteamLanguage = Language.getCurrentSteamLanguage();
+        let local = Language.getLanguageCode(currentSteamLanguage);
 
         _promise = new Promise(function(resolve, reject) {
 
