@@ -180,12 +180,10 @@ const AugmentedSteamApi = (function() {
 })();
 
 
-const SteamStoreApi = (function() {
+const SteamStore = (function() {
     let self = {};
 
-    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        if (!endpoint.endsWith('/'))
-            endpoint += '/';
+    function _get(endpoint, query) {
         let url = new URL(endpoint, "https://store.steampowered.com/");
         if (typeof query != 'undefined') {
             for (let [k, v] of Object.entries(query)) {
@@ -196,8 +194,18 @@ const SteamStoreApi = (function() {
             'method': 'GET',
             'credentials': 'include',
         };
-        return fetch(url, p)
-            .then(response => response.json())
+        return fetch(url, p);
+    }
+
+    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        if (!endpoint.endsWith('/'))
+            endpoint += '/';
+        return _get(endpoint, query).then(response => response.json())
+        ;
+    };
+
+    self.getPage = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        return _get(endpoint, query).then(response => response.text())
         ;
     };
 
@@ -222,7 +230,19 @@ const SteamStoreApi = (function() {
         }
         return fetch(url, p)
             .then(response => response.json());
-    }
+    };
+
+    self.currencyFromApp = async function() {
+        let html = await self.getPage("/app/220");
+        let dummyPage = document.createElement('html');
+        dummyPage.innerHTML = response;
+
+        let currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
+        if (!currency || !currency.getAttribute("content")) {
+            throw "Store currency could not be determined from app 220";
+        }
+        return currency.getAttribute("content");
+    };
 
     Object.freeze(self);
     return self;
@@ -350,7 +370,7 @@ let actionCallbacks = new Map([
     ['ignored', Steam.ignored],
     ['owned', Steam.owned],
     ['wishlist', Steam.wishlist],
-    ['wishlist.add', SteamStoreApi.wishlistAdd],
+    ['wishlist.add', SteamStore.wishlistAdd],
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
 
@@ -368,8 +388,9 @@ let actionCallbacks = new Map([
     ['market.averagecardprice', AugmentedSteamApi.endpointFactory('v01/market/averagecardprice')], // FIXME deprecated
     ['market.averagecardprices', AugmentedSteamApi.endpointFactory('v01/market/averagecardprices')],
 
-    ['appdetails', SteamStoreApi.appDetails],
-    ['appuserdetails', SteamStoreApi.appUserDetails],
+    ['appdetails', SteamStore.appDetails],
+    ['appuserdetails', SteamStore.appUserDetails],
+    ['currency.from.app', SteamStore.currencyFromApp]
 
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],

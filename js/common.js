@@ -922,17 +922,8 @@ let Currency = (function() {
                                 LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                             },
                             () => {
-                                RequestData
-                                    .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
-                                    .then(response => {
-                                        let dummyHtml = document.createElement("html");
-                                        dummyHtml.innerHTML = response;
-
-                                        let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
-                                        if (!currency) {
-                                            throw new Error();
-                                        }
-
+                                Background.action('currency.from.app')
+                                    .then(currency => {
                                         self.userCurrency = currency;
                                         LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
                                     });
