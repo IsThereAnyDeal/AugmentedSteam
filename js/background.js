@@ -41,6 +41,38 @@ const LocalStorage = (function(){
 })();
 
 
+const AugmentedSteamApi = (function() {
+    let self = {};
+
+    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        if (!endpoint.endsWith('/'))
+            endpoint += '/';
+        let url = new URL(endpoint, Config.ApiServerHost);
+        if (typeof query != 'undefined') {
+            for (let [k, v] of Object.entries(query)) {
+                url.searchParams.add(k, v);
+            }
+        }
+        let p = {
+            'method': 'GET',            
+        };
+        return fetch(url, p)
+            .then(response => response.json()
+                .then(function(json) {
+                    if (!json.result || json.result !== "success")
+                        throw `Could not retrieve '${endpoint}'`;
+                    delete json.result;
+                    return Object.assign(json, { 'timestamp': TimeHelper.timestamp(), }); // 'response': response, 
+                })
+            )
+        ;
+    };
+
+    Object.freeze(self);
+    return self;
+})();
+
+
 const Steam = (function() {
     let self = {};
 
