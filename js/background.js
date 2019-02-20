@@ -117,6 +117,35 @@ const AugmentedSteamApi = (function() {
 })();
 
 
+const SteamStoreApi = (function() {
+    let self = {};
+
+    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        if (!endpoint.endsWith('/'))
+            endpoint += '/';
+        let url = new URL(endpoint, "https://store.steampowered.com/");
+        if (typeof query != 'undefined') {
+            for (let [k, v] of Object.entries(query)) {
+                url.searchParams.append(k, v);
+            }
+        }
+        let p = {
+            'method': 'GET',            
+        };
+        return fetch(url, p)
+            .then(response => response.json())
+        ;
+    };
+
+    self.appUserDetails = async function({ 'params': params, }) {
+        return self.getEndpoint("/api/appuserdetails/", params);
+    };
+    
+    Object.freeze(self);
+    return self;
+})();
+
+
 const Steam = (function() {
     let self = {};
 
@@ -262,6 +291,8 @@ let actionCallbacks = new Map([
     ['market.cardprices', AugmentedSteamApi.endpointFactory('v01/market/cardprices')],
     ['market.averagecardprice', AugmentedSteamApi.endpointFactory('v01/market/averagecardprice')], // FIXME deprecated
     ['market.averagecardprices', AugmentedSteamApi.endpointFactory('v01/market/averagecardprices')],
+
+    ['appuserdetails', SteamStoreApi.appUserDetails],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
