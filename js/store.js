@@ -746,34 +746,14 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.storePageDataPromise = async function() {
-        let appid = this.appid;
-        let cache = LocalData.get("storePageData_" + appid);
-
-        if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
-            return cache.data;
-        }
-
-        let apiparams = {
-            appid: appid
-        };
+        let apiparams = { 'appid': this.appid, };
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
         }
         if (SyncedStorage.get("showoc")) {
             apiparams.oc = 1;
         }
-
-        return RequestData.getApi("v01/storepagedata", apiparams)
-            .then(function(response) {
-                if (response && response.result && response.result === "success") {
-                    LocalData.set("storePageData_" + appid, {
-                        data: response.data,
-                        updated: Date.now(),
-                    });
-                    return response.data;
-                }
-                throw "Network error: did not receive valid storepagedata.";
-            });
+        return Background.action('storepagedata', apiparams);
     };
 
     /**

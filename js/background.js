@@ -344,6 +344,7 @@ const Steam = (function() {
 })();
 
 let profileCacheKey = (params => `profile_${params.profile}`);
+let appCacheKey = (params => `app_${params.appid}`);
 
 let actionCallbacks = new Map([
     ['ignored', Steam.ignored],
@@ -356,6 +357,7 @@ let actionCallbacks = new Map([
     ['api.cache.clear', AugmentedSteamApi.clear],
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
+    ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
     ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
