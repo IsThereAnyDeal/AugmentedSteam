@@ -482,7 +482,7 @@ const SteamCommunity = (function() {
 
         let coupons = LocalStorageCache.get('inventory_3', 3600);
         if (!coupons) {
-            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/3/?l=en`);
+            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/3/`, { 'l': 'en', });
             if (!data || !data.success) throw `Could not retrieve Inventory 753/3`;
             coupons = {};
 
@@ -532,7 +532,7 @@ const SteamCommunity = (function() {
         if (!value) {
             let gifts = [], passes = [];
 
-            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/1/?l=en`);
+            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/1/`, { 'l': 'en', });
             if (!data || !data.success) throw `Could not retrieve Inventory 753/1`;
 
             for(let [key, obj] of Object.entries(data.rgDescriptions)) {
@@ -583,7 +583,7 @@ const SteamCommunity = (function() {
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
         let inventory = LocalStorageCache.get('inventory_6', 3600);
         if (!inventory) {
-            inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/?l=en`);
+            inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/`, { 'l': 'en', });
             if (!inventory || !inventory.success) throw `Could not retrieve Inventory 753/6`;
 
             LocalStorageCache.set('inventory_6', inventory);
@@ -606,7 +606,7 @@ const SteamCommunity = (function() {
             throw `Could not interpret '${params.path}' as a profile`;
         }
         let login = LocalStorage.get('login');
-        if (login && login.path === params.path) {
+        if (login && login.profilePath === params.path) {
             // Profile path from the currently loading page matches existing login information, return cached steamId
             return login;
         }
