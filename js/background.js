@@ -207,6 +207,7 @@ const AugmentedSteamApi = (function() {
 const SteamStore = (function() {
     let self = {};
 
+    let progressingRequests = new Map();
     function _get(endpoint, query) {
         let url = new URL(endpoint, "https://store.steampowered.com/");
         if (typeof query != 'undefined') {
@@ -256,10 +257,39 @@ const SteamStore = (function() {
             .then(response => response.json());
     };
 
+    function clearSpecialSymbols(string) {
+        return string.replace(/[\u00AE\u00A9\u2122]/g, "");
+    };
+
     function htmlToDOM(html) {
         let template = document.createElement('template');
         template.innerHTML = html.trim();
         return template.content;
+    }
+
+    function getVariableFromText(text, name, type) {
+        let regex;
+        if (type === "object") {
+            regex = new RegExp(`${name}\\s*=\\s*(\\{.+?\\});`);
+        } else if (type === "array") { // otherwise array
+            regex = new RegExp(`${name}\\s*=\\s*(\\[.+?\\]);`);
+        } else if (type === "int") {
+            regex = new RegExp(`${name}\\s*=\\s*(.+?);`);
+        } else if (type === "string") {
+            regex = new RegExp(`${name}\\s*=\\s*(\\".+?\\");`);
+        } else {
+            return null;
+        }
+
+        let m = text.match(regex);
+        if (m) {
+            if (type === "int") {
+                return parseInt(m[1]);
+            }
+            return JSON.parse(m[1]);
+        }
+
+        return null;
     }
 
     self.currencyFromWallet = async function() {
@@ -298,6 +328,12 @@ const SteamStore = (function() {
         if (node && node.value)
             return node.value;
         throw "Could not retrieve country";
+    };
+
+    self.sessionId = async function() {
+        // TODO what's the minimal page we can load here to get sessionId?
+        let html = await self.getPage("/news/");
+        return getVariableFromText(html, "g_sessionID", "string");
     };
 
     Object.freeze(self);
@@ -424,6 +460,7 @@ let actionCallbacks = new Map([
     ['appuserdetails', SteamStore.appUserDetails],
     ['currency', SteamStore.currency],
     ['country', SteamStore.country],
+    ['sessionid', SteamStore.sessionId],
      
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],

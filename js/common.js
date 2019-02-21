@@ -666,9 +666,7 @@ let User = (function(){
     };
 
     self.getStoreSessionId = async function() {
-        // TODO what's the minimal page we can load here to get sessionId?
-        let storePage = await RequestData.getHttp("https://store.steampowered.com/news/");
-        return BrowserHelper.getVariableFromText(storePage, "g_sessionID", "string");
+        return Background.action('sessionid');
     };
 
     self.getCountry = function() {
