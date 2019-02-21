@@ -190,11 +190,6 @@ const AugmentedSteamApi = (function() {
         ;
     };
 
-    /**
-     * self.prices = async function({ 'params': params }) {
-     *     return AugmentedSteamApi.getEndpoint('v01/prices', params).then(r => r.data);
-     * };
-     */
     self.endpointFactory = function(endpoint) {
         return async ({ 'params': params }) => self.getEndpoint(endpoint, params).then(result => result.data);
     };
