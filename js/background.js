@@ -54,7 +54,7 @@ const LocalStorageCache = (function(){
     
     self.get = function(key, ttl, defaultValue) {
         if (!ttl) return defaultValue;
-        let item = localStorage.getItem(key);
+        let item = localStorage.getItem('cache_' + key);
         if (!item) return defaultValue;
         try {
             item = JSON.parse(item);
@@ -66,11 +66,24 @@ const LocalStorageCache = (function(){
     };
 
     self.set = function(key, value) {
-        localStorage.setItem(key, JSON.stringify({ 'data': value, 'timestamp': TimeHelper.timestamp(), }));
+        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': TimeHelper.timestamp(), }));
     };
 
     self.remove = function(key) {
-        localStorage.removeItem(key);
+        localStorage.removeItem('cache_' + key);
+    };
+
+    self.keys = function() {
+        return LocalStorage.keys()
+            .filter(k => k.startsWith('cache_'))
+            .map(k => k.substring(6)); // "cache_".length == 6
+    };
+
+    self.clear = function() {
+        let keys = self.keys();
+        for (let key of keys) {
+            self.remove(key);
+        }
     };
 
     Object.freeze(self);
