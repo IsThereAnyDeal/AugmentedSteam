@@ -1644,7 +1644,8 @@ let Inventory = (function(){
     let gifts = [];
     let guestpasses = [];
     let coupons = {};
-
+    let inv6set = new Set();
+    
     // Context ID 1 is gifts and guest passes
     function handleInventoryContext1(data) {
         if (!data || !data.success) return;
@@ -1685,12 +1686,6 @@ let Inventory = (function(){
             }
 
         }
-    }
-
-    // Community items?
-    function handleInventoryContext6(data) {
-        if (!data || !data.success) { return; }
-        LocalData.set("inventory_6", data);
     }
 
     // Coupons
@@ -1751,7 +1746,6 @@ let Inventory = (function(){
             let lastUpdate = LocalData.get("inventory_update");
             let inv1 = LocalData.get("inventory_1");
             let inv3 = LocalData.get("inventory_3");
-            let inv6 = LocalData.get("inventory_6");
 
             if (TimeHelper.isExpired(lastUpdate, 3600) || !inv1 || !inv3) {
                 LocalData.set("inventory_update", Date.now());
@@ -1759,16 +1753,16 @@ let Inventory = (function(){
                 Promise.all([
                     RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
                     RequestData.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
+                    Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
                 ]).then(resolve, reject);
             }
             else {
                 // No need to load anything, its all in localStorage.
                 handleInventoryContext1(inv1);
                 handleInventoryContext3(inv3);
-                handleInventoryContext6(inv6);
-
-                resolve();
+                Background.action('inventory.community')
+                    .then(inv6 => inv6set = new Set(inv6))
+                    .then(resolve);
             }
         });
         return _promise;
@@ -1778,19 +1772,8 @@ let Inventory = (function(){
         return coupons && coupons[subid];
     };
 
-    let inv6set = null;
 
     self.hasInInventory6 = function(marketHash) {
-        if (!inv6set) {
-            inv6set = new Set();
-            let inv6 = LocalData.get("inventory_6");
-            if (!inv6 || !inv6['rgDescriptions']) { return false; }
-
-            for (let [key,item] of Object.entries(inv6.rgDescriptions)) {
-                inv6set.add(item['market_hash_name']);
-            }
-        }
-
         return inv6set.has(marketHash);
     };
 

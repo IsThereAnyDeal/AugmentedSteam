@@ -439,6 +439,30 @@ const SteamCommunity = (function() {
     };
 
     /**
+     * Inventory functions, must be signed in to function correctly
+     */
+    self.coupons = function() { // context#3
+
+    };
+    self.gifts = function() { // context#1, gifts and guest passes
+        
+    };
+    self.items = async function() { // context#6, community items
+        // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
+        let inventory = LocalStorageCache('inventory_6', 3600);
+        if (!inventory) {
+            let login = LocalStorage.get('login');
+            if (!login) throw `Must be signed in to access Inventory`;
+
+            inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/?l=en`);
+            if (!inventory || !inventory.success) throw `Could not retrieve Inventory 753/6`;
+
+            LocalStorageCache.set('inventory_6', inventory);
+        }
+        return Object.values(inventory.rgDescriptions || {}).map(item => item['market_hash_name']);
+    };
+
+    /**
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
@@ -577,6 +601,9 @@ let actionCallbacks = new Map([
     ['logout', SteamCommunity.logout],
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],
+    ['inventory.coupons', SteamCommunity.coupons], // #3
+    ['inventory.gifts', SteamCommunity.gifts], // #1
+    ['inventory.community', SteamCommunity.items], // #6
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
