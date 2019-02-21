@@ -1647,21 +1647,24 @@ let Inventory = (function(){
     let inv6set = new Set();
     
     let _promise = null;
-    self.promise = function() {
+    self.promise = async function() {
         if (_promise) { return _promise; }
-        _promise = new Promise(function(resolve, reject) {
-            if (!User.isSignedIn) {
-                resolve();
-                return;
-            }
 
-            Promise.all([
-                Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
-                Background.action('inventory.coupons').then(data => coupons = data),
-                Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
-            ]).then(resolve, reject);
-        });
+        if (!User.isSignedIn) {
+            _promise = Promise.resolve();
+            return _promise;
+        }
+
+        _promise = Promise.all([
+            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
+            Background.action('inventory.coupons').then(data => coupons = data),
+            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
+            ]);
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getCoupon = function(subid) {
