@@ -686,77 +686,8 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    let _purchaseDataPromise = null;
     self.getPurchaseDate = function(lang, appName) {
-        if (_purchaseDataPromise) { return _purchaseDataPromise; }
-
-        _purchaseDataPromise = new Promise(function(resolve, reject) {
-            let purchaseDates = LocalData.get("purchase_dates", {});
-
-            appName = StringUtils.clearSpecialSymbols(appName);
-
-            // Return date from cache
-            if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
-                resolve(purchaseDates[lang][appName]);
-                return;
-            }
-
-            let lastUpdate = LocalData.get("purchase_dates_time", 0);
-
-            // Update cache if needed
-            if (!TimeHelper.isExpired(lastUpdate, 300)) {
-                resolve();
-                return;
-            }
-
-            RequestData.getHttp("https://store.steampowered.com/account/licenses/?l=" + lang).then(result => {
-                let replaceRegex = [
-                    /- Complete Pack/ig,
-                    /Standard Edition/ig,
-                    /Steam Store and Retail Key/ig,
-                    /- Hardware Survey/ig,
-                    /ComputerGamesRO -/ig,
-                    /Founder Edition/ig,
-                    /Retail( Key)?/ig,
-                    /Complete$/ig,
-                    /Launch$/ig,
-                    /Free$/ig,
-                    /(RoW)/ig,
-                    /ROW/ig,
-                    /:/ig,
-                ];
-
-                purchaseDates[lang] = {};
-
-                let dummy = document.createElement("html");
-                dummy.innerHTML = result;
-
-                let nodes = dummy.querySelectorAll("#main_content td.license_date_col");
-
-                for (let i=0, len=nodes.length; i<len; i++) {
-                    let node = nodes[i];
-
-                    let nameNode = node.nextElementSibling;
-                    let removeNode = nameNode.querySelector("div");
-                    if (removeNode) { removeNode.remove(); }
-
-                    // Clean game name
-                    let gameName = StringUtils.clearSpecialSymbols(nameNode.textContent.trim());
-
-                    replaceRegex.forEach(regex => {
-                        gameName = gameName.replace(regex, "");
-                    });
-
-                    purchaseDates[lang][gameName.trim()] = node.textContent;
-                }
-
-                LocalData.set("purchase_dates", purchaseDates);
-                LocalData.set("purchase_dates_time", TimeHelper.timestamp());
-
-                resolve(purchaseDates[lang][appName]);
-            }, reject);
-        });
-        return _purchaseDataPromise;
+        return Background.action('purchase', { 'lang': lang, 'appName': appName, });
     };
 
     return self;

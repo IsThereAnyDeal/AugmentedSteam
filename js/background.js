@@ -336,6 +336,75 @@ const SteamStore = (function() {
         return getVariableFromText(html, "g_sessionID", "string");
     };
 
+    async function _fetchPurchases(lang) {
+        let replaceRegex = [
+            /- Complete Pack/ig,
+            /Standard Edition/ig,
+            /Steam Store and Retail Key/ig,
+            /- Hardware Survey/ig,
+            /ComputerGamesRO -/ig,
+            /Founder Edition/ig,
+            /Retail( Key)?/ig,
+            /Complete$/ig,
+            /Launch$/ig,
+            /Free$/ig,
+            /(RoW)/ig,
+            /ROW/ig,
+            /:/ig,
+        ];
+        let purchases = {};
+
+        let html = await self.getPage("/account/licenses/", { 'l': lang, });
+        let dummyPage = htmlToDOM(html);
+        let nodes = dummyPage.querySelectorAll("#main_content td.license_date_col");
+        for (let node of nodes) {
+            let name = node.nextElementSibling;
+            let removeNode = nameNode.querySelector("div");
+            if (removeNode) { removeNode.remove(); }
+
+            let appName = clearSpecialSymbols(name.textContent.trim());
+            for (let re of replaceRegex) {
+                appName = appName.replace(regex, "");
+            }
+            appName = appName.trim();
+            purchases[appName] = node.textContent;
+        }
+
+        LocalStorageCache.set(key, purchases);
+        return purchases;
+    }
+    self.purchase = async function({ 'params': params, }) {
+        if (!params || !params.appName)
+            throw 'Purchases endpoint expects an appName';
+        if (!params || !params.lang)
+            throw 'Purchases endpoint requires language to be specified';
+        let lang = params.lang;
+        let key = `purchases_${lang}`;
+
+        let appName = clearSpecialSymbols(params.appName);
+        let purchases = LocalStorageCache.get(key, 5 * 60);
+        if (purchases) return purchases[appName];
+
+        // Purchase Data is more than 5 minutes old
+        purchases = LocalStorage.get(`cache_${key}`);
+        if (purchases && purchases.data[appName]) return purchases.data[appName];
+        // ... and doesn't include the title
+
+        // If a request is in flight, piggyback our response on that result
+        if (progressingRequests.has(key)) {
+            return progressingRequests.get(key).then(purchases => purchases[appName]);
+        }
+
+        // fetch updated Purchase Data
+        let promise = _fetchPurchases(lang)
+            .then(function(purchases) {
+                progressingRequests.delete(key);
+                return purchases;
+            });
+        progressingRequests.set(key, promise);
+        return promise.then(purchases => purchases[appName]);
+    };
+
     Object.freeze(self);
     return self;
 })();
@@ -461,6 +530,7 @@ let actionCallbacks = new Map([
     ['currency', SteamStore.currency],
     ['country', SteamStore.country],
     ['sessionid', SteamStore.sessionId],
+    ['purchase', SteamStore.purchase],
      
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],
