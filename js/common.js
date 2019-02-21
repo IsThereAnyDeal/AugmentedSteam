@@ -528,8 +528,7 @@ let Localization = (function(){
 
         let currentSteamLanguage = Language.getCurrentSteamLanguage();
 
-        if (currentSteamLanguage !== null) {
-            // TODO Check if value has been explicitly set, as a call to set() every time is probably too much since the user won't change their language very often
+        if (currentSteamLanguage !== null && currentSteamLanguage !== SyncedStorage.get("language")) {
             SyncedStorage.set("language", currentSteamLanguage);
         } else {
             currentSteamLanguage = SyncedStorage.get("language");
