@@ -1,3 +1,64 @@
+const GameId = (function(){
+    let self = {};
+
+    function parseId(id) {
+        if (!id) { return null; }
+
+        let intId = parseInt(id);
+        if (!intId) { return null; }
+
+        return intId;
+    }
+
+    self.getAppid = function(text) {
+        if (!text) { return null; }
+
+        // app, market/listing
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
+        return m && parseId(m[2]);
+    };
+
+    self.getSubid = function(text) {
+        if (!text) { return null; }
+
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
+        return m && parseId(m[2]);
+    };
+
+    self.getAppidImgSrc = function(text) {
+        if (!text) { return null; }
+        let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+        return m && parseId(m[2]);
+    };
+
+    self.getAppids = function(text) {
+        let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
+        let res = [];
+        let m;
+        while ((m = regex.exec(text)) != null) {
+            let id = parseId(m[1]);
+            if (id) {
+                res.push(id);
+            }
+        }
+        return res;
+    };
+
+    self.getAppidWishlist = function(text) {
+        if (!text) { return null; }
+        let m = text.match(/game_(\d+)/);
+        return m && parseId(m[1]);
+    };
+
+    self.getAppidFromGameCard = function(text) {
+        if (!text) { return null; }
+        let m = text.match(/\/gamecards\/(\d+)/);
+        return m && parseId(m[1]);
+    };
+
+    Object.freeze(self);
+    return self;
+})();
 
 
 const LocalStorage = (function(){
@@ -464,8 +525,57 @@ const SteamCommunity = (function() {
         return coupons;
     };
     self.gifts = async function() { // context#1, gifts and guest passes
-        
+        let login = LocalStorage.get('login');
+        if (!login) throw `Must be signed in to access Inventory`;
+
+        let value = LocalStorageCache.get('inventory_1', 3600);
+        if (!value) {
+            let gifts = [], passes = [];
+
+            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/1/?l=en`);
+            if (!data || !data.success) throw `Could not retrieve Inventory 753/1`;
+
+            for(let [key, obj] of Object.entries(data.rgDescriptions)) {
+                let isPackage = false;
+                if (obj.descriptions) {
+                    for (let desc of obj.descriptions) {
+                        if (desc.type === "html") {
+                            let appids = GameId.getAppids(desc.value);
+                            // Gift package with multiple apps
+                            isPackage = true;
+                            for (let appid of appids) {
+                                if (!appid) { continue; }
+                                if (obj.type === "Gift") {
+                                    gifts.push(appid);
+                                } else {
+                                    passes.push(appid);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Single app
+                if (!isPackage && obj.actions) {
+                    let appid = GameId.getAppid(obj.actions[0].link);
+                    if (appid) {
+                        if (obj.type === "Gift") {
+                            gifts.push(appid);
+                        } else {
+                            passes.push(appid);
+                        }
+                    }
+                }
+
+            }
+
+            value = { 'gifts': gifts, 'passes': passes, };
+            LocalStorageCache.set('inventory_1', value);
+        }
+        return value;
     };
+
     self.items = async function() { // context#6, community items
         let login = LocalStorage.get('login');
         if (!login) throw `Must be signed in to access Inventory`;

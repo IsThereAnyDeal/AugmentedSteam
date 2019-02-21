@@ -1641,53 +1641,11 @@ let Inventory = (function(){
 
     let self = {};
 
-    let gifts = [];
-    let guestpasses = [];
+    let gifts = new Set();
+    let guestpasses = new Set();
     let coupons = {};
     let inv6set = new Set();
     
-    // Context ID 1 is gifts and guest passes
-    function handleInventoryContext1(data) {
-        if (!data || !data.success) return;
-
-        LocalData.set("inventory_1", data);
-
-        for(let [key, obj] of Object.entries(data.rgDescriptions)) {
-            let isPackage = false;
-            if (obj.descriptions) {
-                for (let desc of obj.descriptions) {
-                    if (desc.type === "html") {
-                        let appids = GameId.getAppids(desc.value);
-                        // Gift package with multiple apps
-                        isPackage = true;
-                        for (let appid of appids) {
-                            if (!appid) { continue; }
-                            if (obj.type === "Gift") {
-                                gifts.push(appid);
-                            } else {
-                                guestpasses.push(appid);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // Single app
-            if (!isPackage && obj.actions) {
-                let appid = GameId.getAppid(obj.actions[0].link);
-                if (appid) {
-                    if (obj.type === "Gift") {
-                        gifts.push(appid);
-                    } else {
-                        guestpasses.push(appid);
-                    }
-                }
-            }
-
-        }
-    }
-
     let _promise = null;
     self.promise = function() {
         if (_promise) { return _promise; }
@@ -1697,10 +1655,8 @@ let Inventory = (function(){
                 return;
             }
 
-            let inv1 = LocalData.get("inventory_1");
-
             Promise.all([
-                RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
+                Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
                 Background.action('inventory.coupons').then(data => coupons = data),
                 Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
             ]).then(resolve, reject);
@@ -1710,6 +1666,14 @@ let Inventory = (function(){
 
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
+    };
+
+    self.hasGift = function(subid) {
+        return gifts.has(subid);
+    };
+
+    self.hasGuestPass = function(subid) {
+        return guestpasses.has(subid);
     };
 
     self.hasInInventory6 = function(marketHash) {
