@@ -1,15 +1,4 @@
 
-const TimeHelper = {
-    timestamp() {
-        return Math.trunc(Date.now() / 1000);
-    },
-    isExpired(updateTime, expiration) {
-        if (!updateTime) return true;
-        return updateTime < this.timestamp() - expiration;
-    }
-};
-Object.freeze(TimeHelper);
-
 
 const LocalStorage = (function(){
     let self = {};
@@ -51,7 +40,14 @@ const LocalStorage = (function(){
 
 const LocalStorageCache = (function(){
     let self = {};
-    
+
+    self.timestamp = () => Math.trunc(Date.now() / 1000);
+    self.isExpired = function(timestamp, ttl) {
+        if (!timestamp) return true;
+        if (typeof ttl != 'number' || ttl < 0) ttl = 0;
+        return timestamp + ttl <= this.timestamp();
+    };
+
     self.get = function(key, ttl, defaultValue) {
         if (!ttl) return defaultValue;
         let item = localStorage.getItem('cache_' + key);
@@ -61,12 +57,12 @@ const LocalStorageCache = (function(){
         } catch (err) {
             return defaultValue;
         }
-        if (!item.timestamp || TimeHelper.isExpired(item.timestamp, ttl)) return defaultValue;
+        if (!item.timestamp || self.isExpired(item.timestamp, ttl)) return defaultValue;
         return item.data;
     };
 
     self.set = function(key, value) {
-        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': TimeHelper.timestamp(), }));
+        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': self.timestamp(), }));
     };
 
     self.remove = function(key) {
@@ -113,7 +109,7 @@ const AugmentedSteamApi = (function() {
                     if (!json.result || json.result !== "success")
                         throw `Could not retrieve '${endpoint}'`;
                     delete json.result;
-                    return Object.assign(json, { 'timestamp': TimeHelper.timestamp(), }); // 'response': response, 
+                    return Object.assign(json, { 'timestamp': LocalStorageCache.timestamp(), }); // 'response': response, 
                 })
             )
         ;
@@ -140,13 +136,13 @@ const AugmentedSteamApi = (function() {
             if (progressingRequests.has(key)) {
                 return progressingRequests.get(key);
             }
-            let val = LocalStorage.get(key);
-            if (val && val.timestamp && !TimeHelper.isExpired(val.timestamp, ttl)) {
-                return val.data;
+            let val = LocalStorageCache.get(key, ttl);
+            if (typeof val !== 'undefined') {
+                return val;
             }
             let req = self.getEndpoint(endpoint, params)
                 .then(function(result) {
-                    LocalStorage.set(key, result);
+                    LocalStorageCache.set(key, result.data);
                     progressingRequests.delete(key);
                     return result.data;
                 });
@@ -165,57 +161,37 @@ const AugmentedSteamApi = (function() {
                 throw `Can't clear undefined key from cache`;
             }
             progressingRequests.delete(key);
-            LocalStorage.remove(key);
+            LocalStorageCache.remove(key);
         };
     };
 
     self.clear = function() {
-        let keys = LocalStorage.keys().filter(k => k.startsWith('app_') || k.startsWith('profile_') || k.startsWith('rates_'));
-        for (let key of keys) {
-            LocalStorage.remove(key);
-        }
-        LocalStorage.remove('currency');
+        LocalStorageCache.clear();
     };
 
     function _earlyAccessAppIds() {
         let that = _earlyAccessAppIds;
-        // Is data already in scope because of previous request?
-        if (that.data && !that.isExpired()) { return that.data; }
-        
+
         // Is a request in progress?
         if (that.promise) { return that.promise; }
         
         // Get data from localStorage
-        let appids = LocalStorage.get('early_access_appids');
-        if (appids) {
-            Object.assign(that, {
-                'data': appids.data,
-                'timestamp': appids.timestamp,
-            });
-            if (that.data && !that.isExpired()) { return that.data; }
-        }
+        let appids = LocalStorageCache.get('early_access_appids', 60 * 60); // appids expires after an hour
+        if (appids) { return appids; }
 
         // Cache expired, need to fetch
         that.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
-            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': TimeHelper.timestamp(), })))
+            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': LocalStorageCache.timestamp(), })))
             .then(function(appids) {
-                delete appids.response;
-                appids.data = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
-                LocalStorage.set("early_access_appids", appids);
-                Object.assign(that, {
-                    'data': appids.data,
-                    'timestamp': appids.timestamp,
-                    'promise': null, // no request in progress
-                });
-                return appids.data;
+                appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
+                LocalStorageCache.set("early_access_appids", appids);
+                that.promise = null; // no request in progress
+                return appids;
             })
             ;
         return that.promise;
     }
-    _earlyAccessAppIds.data = null;
-    _earlyAccessAppIds.timestamp = 0;
-    _earlyAccessAppIds.EXPIRY = 60 * 60; // appids expires after an hour
-    _earlyAccessAppIds.isExpired = function() { return TimeHelper.isExpired(this.timestamp, this.EXPIRY); };
+    _earlyAccessAppIds.promise = null;
 
     self.earlyAccessAppIds = async function() {
         return _earlyAccessAppIds();    
@@ -357,54 +333,38 @@ const Steam = (function() {
      */
     async function _dynamicstore() {
         let that = _dynamicstore;
-        // Is data already in scope because of previous request?
-        if (that.data && !that.isExpired()) { return that.data; }
 
         // Is a request in progress?
         if (that.promise) { return that.promise; }
         
         // Get data from localStorage
-        let dynamicstore = LocalStorage.get('dynamicstore');
-        if (dynamicstore) {
-            Object.assign(that, {
-                'data': dynamicstore.data,
-                'timestamp': dynamicstore.timestamp,
-            });
-            if (that.data && !that.isExpired()) { return that.data; }
-        }
+        let dynamicstore = LocalStorageCache.get('dynamicstore', 15 * 60); // dynamicstore userdata expires after 15 minutes
+        if (dynamicstore) { return dynamicstore; }
 
-        // Cache expired, need to fetch
+        // Cache miss, need to fetch
         let url = "https://store.steampowered.com/dynamicstore/userdata/";
         let p = {
             'method': 'GET',
             'credentials': 'include',
         };
         that.promise = fetch(url, p)
-            .then(response => response.json().then(data => ({ 'data': data, 'timestamp': TimeHelper.timestamp(), })))
+            .then(response => response.json())
             .then(function(dynamicstore) {
-                if (!dynamicstore.data.rgOwnedApps) {
+                if (!dynamicstore.rgOwnedApps) {
                     throw "Could not fetch DynamicStore UserData";
                 }
-                LocalStorage.set("dynamicstore", dynamicstore);
-                Object.assign(_dynamicstore, {
-                    'data': dynamicstore.data,
-                    'timestamp': dynamicstore.timestamp,
-                    'promise': null, // no request in progress
-                });
-                return dynamicstore.data;
+                LocalStorageCache.set("dynamicstore", dynamicstore);
+                that.promise = null; // no request in progress
+                return dynamicstore;
             })
             ;
         return that.promise;
     }       
-    // _dynamicstore.data keys are:
+    // dynamicstore keys are:
     // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
     // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
     // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
     // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-    _dynamicstore.data = null;
-    _dynamicstore.timestamp = 0;
-    _dynamicstore.EXPIRY = 15 * 60; // dynamicstore userdata expires after 15 minutes
-    _dynamicstore.isExpired = function() { return TimeHelper.isExpired(this.timestamp, this.EXPIRY); };
     _dynamicstore.promise = null;
 
     self.ignored = async function() {
@@ -421,9 +381,7 @@ const Steam = (function() {
         return _dynamicstore();
     };
     self.clearDynamicStore = async function() {
-        LocalStorage.remove('dynamicstore');
-        _dynamicstore.data = null;
-        _dynamicstore.timestamp = 0;
+        LocalStorageCache.remove('dynamicstore');
         _dynamicstore.promise = null;
     };
    
