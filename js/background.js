@@ -318,6 +318,9 @@ const SteamStore = (function() {
         return currency;
     };
 
+    /**
+     * Invoked if we were previously logged out and are now logged in
+     */
     self.country = async function() {
         let html = await self.getPage("/account/change_country/");
         let dummyPage = htmlToDOM(html);
@@ -435,6 +438,47 @@ const SteamCommunity = (function() {
         return self.getPage(`/my/stats/${params.appid}`);
     };
 
+    /**
+     * Invoked when the content script thinks the user is logged in
+     * If we don't know the user's steamId, fetch their community profile
+     */
+    self.login = async function({ 'params': params, }) {
+        if (!params || !params.path) {
+            self.logout();
+            throw "Login endpoint needs profile url";
+        }
+        let url = new URL(params.path, "https://steamcommunity.com/");
+        if (!params.path.startsWith('/id/') && !params.path.startsWith('/profiles/')) {
+            self.logout();
+            throw `Could not interpret '${params.path}' as a profile`;
+        }
+        let login = LocalStorage.get('login');
+        if (login && login.path === params.path) {
+            // Profile path from the currently loading page matches existing login information, return cached steamId
+            return login;
+        }
+
+        // New login; retrieve steamId from community profile
+        let html = await self.getPage(url);
+        let steamId = (html.match(/"steamid":"(\d+)"/) || [])[1];
+        if (!steamId) {
+            // Couldn't retrieve steamId, probably not logged in
+            self.logout();
+            return;
+        }
+
+        let value = { 'steamId': steamId, 'profilePath': params.path, };
+        LocalStorage.set('login', value);
+
+        // As this is a new login, also retrieve country information from store account page
+        value.userCountry = await (SteamStore.country().catch(err => undefined));
+        return value;
+    };
+
+    self.logout = function() {
+        LocalStorage.remove('login');
+    };
+
     Object.freeze(self);
     return self;
 })();
@@ -526,10 +570,11 @@ let actionCallbacks = new Map([
     ['appdetails', SteamStore.appDetails],
     ['appuserdetails', SteamStore.appUserDetails],
     ['currency', SteamStore.currency],
-    ['country', SteamStore.country],
     ['sessionid', SteamStore.sessionId],
     ['purchase', SteamStore.purchase],
-     
+
+    ['login', SteamCommunity.login],
+    ['logout', SteamCommunity.logout],
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],
 ]);

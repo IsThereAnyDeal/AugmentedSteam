@@ -605,44 +605,32 @@ let User = (function(){
 
     let _promise = null;
 
-    async function _fetch() {
-        let response = await RequestData.getHttp(self.profileUrl);
-
-        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
-
-        if (self.steamId) {
-            self.isSignedIn = true;
-            LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
-
-            // check user country
-            try {
-                let country = await Background.action('country');
-                LocalData.set("userCountry", node.country);
-            } catch (err) { }
-        }
-    }
-
     self.promise = function() {
         if (_promise) { return _promise; }
 
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [null])[0];
+        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
 
+        // If profilePath is not available, we're not logged in
         if (!self.profilePath) {
+            Background.action('logout');
             _promise = Promise.resolve();
             return _promise;
         }
 
-        let userLogin = LocalData.get("userLogin");
-        if (userLogin && userLogin.profilePath === self.profilePath) {
-            self.isSignedIn = true;
-            self.steamId = userLogin.steamId;
-            _promise = Promise.resolve();
-            return _promise;
-        }
-
-        _promise = _fetch();
+        _promise = Background.action('login', { 'path': self.profilePath, })
+            .then(function (login) {
+                if (!login) return;
+                self.isSignedIn = true;
+                self.steamId = login.steamId;
+                // If we're *newly* logged in, then login.userCountry will be set
+                if (login.userCountry) {
+                    LocalData.set("userCountry", login.userCountry);
+                }
+            })
+            .catch(err => console.error(err))
+            ;
 
         return _promise;
     };
