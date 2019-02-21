@@ -87,31 +87,45 @@ const LocalStorageCache = (function(){
 })();
 
 
-const AugmentedSteamApi = (function() {
-    let self = {};
-
-    let progressingRequests = new Map();
-    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+class Api {
+    constructor(origin, params={}) {
+        if (!origin) throw `Constructor requires an Origin`;
+        this.origin = origin;
+        this.params = params;
+    }
+    // withResponse? use a boolean to include Response object in result?
+    fetch(endpoint, query={}, params={}) {
+        let url = new URL(endpoint, this.origin);
+        for (let [k, v] of Object.entries(query)) {
+            url.searchParams.append(k, v);
+        }
+        params = Object.assign({}, this.params, params);
+        return fetch(url, params);
+    }
+    getEndpoint(endpoint, query) {
         if (!endpoint.endsWith('/'))
             endpoint += '/';
-        let url = new URL(endpoint, Config.ApiServerHost);
-        if (typeof query != 'undefined') {
-            for (let [k, v] of Object.entries(query)) {
-                url.searchParams.append(k, v);
-            }
-        }
-        let p = {
-            'method': 'GET',            
-        };
-        return fetch(url, p)
-            .then(response => response.json()
-                .then(function(json) {
-                    if (!json.result || json.result !== "success")
-                        throw `Could not retrieve '${endpoint}'`;
-                    delete json.result;
-                    return Object.assign(json, { 'timestamp': LocalStorageCache.timestamp(), }); // 'response': response, 
-                })
-            )
+        return this.fetch(endpoint, query, { 'method': 'GET', }).then(response => response.json());
+    }    
+    getPage(endpoint, query) {
+        return this.fetch(endpoint, query, { 'method': 'GET', }).then(response => response.text());
+    }
+}
+
+
+const AugmentedSteamApi = (function() {
+    let self = new Api(Config.ApiServerHost);
+
+    let progressingRequests = new Map();
+    self._getEndpoint = self.getEndpoint;
+    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        return self._getEndpoint(endpoint, query)
+            .then(function(json) {
+                if (!json.result || json.result !== "success")
+                    throw `Could not retrieve '${endpoint}'`;
+                delete json.result;
+                return json; // 'response': response, 
+            })
         ;
     };
 
@@ -205,33 +219,9 @@ const AugmentedSteamApi = (function() {
 
 
 const SteamStore = (function() {
-    let self = {};
-
+    let self = new Api("https://store.steampowered.com/", { 'credentials': 'include', });
     let progressingRequests = new Map();
-    function _get(endpoint, query) {
-        let url = new URL(endpoint, "https://store.steampowered.com/");
-        if (typeof query != 'undefined') {
-            for (let [k, v] of Object.entries(query)) {
-                url.searchParams.append(k, v);
-            }
-        }
-        let p = {
-            'method': 'GET',
-            'credentials': 'include',
-        };
-        return fetch(url, p);
-    }
-
-    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        if (!endpoint.endsWith('/'))
-            endpoint += '/';
-        return _get(endpoint, query).then(response => response.json());
-    };
-
-    self.getPage = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        return _get(endpoint, query).then(response => response.text());
-    };
-
+    
     self.appDetails = async function({ 'params': params, }) {
         return self.getEndpoint("/api/appdetails/", params);
     };
@@ -412,23 +402,7 @@ const SteamStore = (function() {
 
 
 const SteamCommunity = (function() {
-    let self = {};
-
-    self.getPage = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        let url = new URL(endpoint, "https://steamcommunity.com/");
-        if (typeof query != 'undefined') {
-            for (let [k, v] of Object.entries(query)) {
-                url.searchParams.append(k, v);
-            }
-        }
-        let p = {
-            'method': 'GET',
-            'credentials': 'include',
-        };
-        return fetch(url, p)
-            .then(response => response.text())
-        ;
-    };
+    let self = new Api("https://steamcommunity.com/", { 'credentials': 'include', });
 
     self.cards = function({ 'params': params, }) {
         return self.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
