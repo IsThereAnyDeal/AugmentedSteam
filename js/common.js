@@ -1957,7 +1957,9 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
-    self.startHighlightsAndTags = function(parent) {
+    self.startHighlightsAndTags = async function(parent) {
+        await Inventory;
+        
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
             "div.tab_row",					// Storefront rows

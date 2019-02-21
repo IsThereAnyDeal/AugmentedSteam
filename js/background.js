@@ -415,7 +415,7 @@ const SteamStore = (function() {
             if (removeNode) { removeNode.remove(); }
 
             let appName = clearSpecialSymbols(name.textContent.trim());
-            for (let re of replaceRegex) {
+            for (let regex of replaceRegex) {
                 appName = appName.replace(regex, "");
             }
             appName = appName.trim();
