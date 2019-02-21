@@ -170,10 +170,8 @@ const AugmentedSteamApi = (function() {
     };
 
     function _earlyAccessAppIds() {
-        let that = _earlyAccessAppIds;
-
         // Is a request in progress?
-        if (that.promise) { return that.promise; }
+        if (_earlyAccessAppIds.promise) { return _earlyAccessAppIds.promise; }
         
         // Get data from localStorage
         let appids = LocalStorageCache.get('early_access_appids', 60 * 60); // appids expires after an hour
@@ -185,11 +183,11 @@ const AugmentedSteamApi = (function() {
             .then(function(appids) {
                 appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
                 LocalStorageCache.set("early_access_appids", appids);
-                that.promise = null; // no request in progress
+                _earlyAccessAppIds.promise = null; // no request in progress
                 return appids;
             })
             ;
-        return that.promise;
+        return _earlyAccessAppIds.promise;
     }
     _earlyAccessAppIds.promise = null;
 
@@ -332,33 +330,25 @@ const Steam = (function() {
      * Requires user to be signed in, can we validate this from background?
      */
     async function _dynamicstore() {
-        let that = _dynamicstore;
-
         // Is a request in progress?
-        if (that.promise) { return that.promise; }
+        if (_dynamicstore.promise) { return _dynamicstore.promise; }
         
         // Get data from localStorage
         let dynamicstore = LocalStorageCache.get('dynamicstore', 15 * 60); // dynamicstore userdata expires after 15 minutes
         if (dynamicstore) { return dynamicstore; }
 
         // Cache miss, need to fetch
-        let url = "https://store.steampowered.com/dynamicstore/userdata/";
-        let p = {
-            'method': 'GET',
-            'credentials': 'include',
-        };
-        that.promise = fetch(url, p)
-            .then(response => response.json())
+        that.promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
             .then(function(dynamicstore) {
                 if (!dynamicstore.rgOwnedApps) {
                     throw "Could not fetch DynamicStore UserData";
                 }
                 LocalStorageCache.set("dynamicstore", dynamicstore);
-                that.promise = null; // no request in progress
+                _dynamicstore.promise = null; // no request in progress
                 return dynamicstore;
             })
             ;
-        return that.promise;
+        return _dynamicstore.promise;
     }       
     // dynamicstore keys are:
     // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
