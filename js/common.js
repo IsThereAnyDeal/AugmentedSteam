@@ -686,7 +686,7 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    self.getPurchaseDate = function(lang, appName) {
+    self.getPurchaseDate = async function(lang, appName) {
         return Background.action('purchase', { 'lang': lang, 'appName': appName, });
     };
 

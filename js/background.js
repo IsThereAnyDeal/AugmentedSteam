@@ -197,7 +197,7 @@ const AugmentedSteamApi = (function() {
 
     self.dlcInfo = async function({ 'params': params, }) {
         return self.getEndpoint("v01/dlcinfo", params).then(result => result.data);
-    }
+    };
 
     Object.freeze(self);
     return self;
@@ -225,13 +225,11 @@ const SteamStore = (function() {
     self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
         if (!endpoint.endsWith('/'))
             endpoint += '/';
-        return _get(endpoint, query).then(response => response.json())
-        ;
+        return _get(endpoint, query).then(response => response.json());
     };
 
     self.getPage = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        return _get(endpoint, query).then(response => response.text())
-        ;
+        return _get(endpoint, query).then(response => response.text());
     };
 
     self.appDetails = async function({ 'params': params, }) {
