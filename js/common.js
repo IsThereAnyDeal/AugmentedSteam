@@ -2020,13 +2020,13 @@ let Highlights = (function(){
                     let aNode = node.querySelector("a");
                     let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
                     if (appid) {
-                        if (LocalData.get(appid + "guestpass")) {
+                        if (Inventory.hasGuestPass(appid)) {
                             self.highlightInvGuestpass(node);
                         }
-                        if (LocalData.get("couponData_" + appid)) {
+                        if (Inventory.getCoupon(appid)) {
                             self.highlightCoupon(node);
                         }
-                        if (LocalData.get(appid + "gift")) {
+                        if (Inventory.hasGift(appid)) {
                             self.highlightInvGift(node);
                         }
                     }

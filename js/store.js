@@ -823,7 +823,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addCoupon = function() {
         let inst = this;
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
 
             let coupon = Inventory.getCoupon(inst.getFirstSubid());
             if (!coupon) { return; }

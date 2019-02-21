@@ -234,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await DynamicStore;
+        await Promise.all([DynamicStore, Inventory,]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -246,14 +246,13 @@ let ProfileActivityPageClass = (function(){
                 let appid = GameId.getAppid(link.href);
                 if (!appid) { continue; }
 
-                // TODO (tomas.fedor) refactor following checks to a class, this way we'll easily forget how exactly do we store them or where
-                if (LocalData.get(appid + "guestpass")) {
+                if (Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
                 }
-                if (LocalData.get("couponData_" + appid)) {
+                if (Inventory.getCoupon(appid)) {
                     Highlights.highlightCoupon(link);
                 }
-                if (LocalData.get(appid + "gif")) {
+                if (Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
                 }
 
@@ -2755,7 +2754,7 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
             this.highlightMarketItems();
 
             let that = this;

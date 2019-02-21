@@ -411,7 +411,7 @@ const SteamStore = (function() {
         let nodes = dummyPage.querySelectorAll("#main_content td.license_date_col");
         for (let node of nodes) {
             let name = node.nextElementSibling;
-            let removeNode = nameNode.querySelector("div");
+            let removeNode = name.querySelector("div");
             if (removeNode) { removeNode.remove(); }
 
             let appName = clearSpecialSymbols(name.textContent.trim());
@@ -499,13 +499,13 @@ const SteamCommunity = (function() {
                 for (let i = 0; i < obj.descriptions.length; i++) {
                     let value = obj.descriptions[i].value;
                     if (value.startsWith("Can't be applied with other discounts.")) {
-                        Object.assign(couponData, {
+                        Object.assign(coupon, {
                             'discount_note': value,
                             'discount_note_id': i,
                             'discount_doesnt_stack': true,
                         });
                     } else if (value.startsWith("(Valid")) {
-                        Object.assign(couponData, {
+                        Object.assign(coupon, {
                             'valid_id': i,
                             'valid': value,
                         });
