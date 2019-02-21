@@ -1688,52 +1688,6 @@ let Inventory = (function(){
         }
     }
 
-    // Coupons
-    function handleInventoryContext3(data) {
-        if (!data || !data.success) { return; }
-        LocalData.set("inventory_3", data);
-
-        for(let [id, obj] of Object.entries(data.rgDescriptions)) {
-            if (!obj.type || obj.type !== "Coupon") {
-                continue;
-            }
-            if (!obj.actions) {
-                continue;
-            }
-
-            let couponData = {
-                image_url: obj.icon_url,
-                title: obj.name,
-                discount: obj.name.match(/([1-9][0-9])%/)[1],
-                id: id
-            };
-
-            for (let i = 0; i < obj.descriptions.length; i++) {
-                if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
-                    Object.assign(couponData, {
-                        discount_note: obj.descriptions[i].value,
-                        discount_note_id: i,
-                        discount_doesnt_stack: true
-                    });
-                } else if (obj.descriptions[i].value.startsWith("(Valid")) {
-                    Object.assign(couponData, {
-                        valid_id: i,
-                        valid: obj.descriptions[i].value
-                    });
-                }
-            }
-
-            for (let j = 0; j < obj.actions.length; j++) {
-                let link = obj.actions[j].link;
-                let packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
-
-                if (!coupons[packageid] || coupons[packageid].discount < couponData.discount) {
-                    coupons[packageid] = couponData;
-                }
-            }
-        }
-    }
-
     let _promise = null;
     self.promise = function() {
         if (_promise) { return _promise; }
@@ -1743,27 +1697,13 @@ let Inventory = (function(){
                 return;
             }
 
-            let lastUpdate = LocalData.get("inventory_update");
             let inv1 = LocalData.get("inventory_1");
-            let inv3 = LocalData.get("inventory_3");
 
-            if (TimeHelper.isExpired(lastUpdate, 3600) || !inv1 || !inv3) {
-                LocalData.set("inventory_update", Date.now());
-
-                Promise.all([
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
-                    Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
-                ]).then(resolve, reject);
-            }
-            else {
-                // No need to load anything, its all in localStorage.
-                handleInventoryContext1(inv1);
-                handleInventoryContext3(inv3);
-                Background.action('inventory.community')
-                    .then(inv6 => inv6set = new Set(inv6))
-                    .then(resolve);
-            }
+            Promise.all([
+                RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
+                Background.action('inventory.coupons').then(data => coupons = data),
+                Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
+            ]).then(resolve, reject);
         });
         return _promise;
     };
@@ -1771,7 +1711,6 @@ let Inventory = (function(){
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
     };
-
 
     self.hasInInventory6 = function(marketHash) {
         return inv6set.has(marketHash);

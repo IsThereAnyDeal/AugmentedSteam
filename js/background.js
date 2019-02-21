@@ -415,19 +415,64 @@ const SteamCommunity = (function() {
     /**
      * Inventory functions, must be signed in to function correctly
      */
-    self.coupons = function() { // context#3
+    self.coupons = async function() { // context#3
+        let login = LocalStorage.get('login');
+        if (!login) throw `Must be signed in to access Inventory`;
 
+        let coupons = LocalStorageCache.get('inventory_3', 3600);
+        if (!coupons) {
+            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/3/?l=en`);
+            if (!data || !data.success) throw `Could not retrieve Inventory 753/3`;
+            coupons = {};
+
+            for(let [id, obj] of Object.entries(data.rgDescriptions)) {
+                if (!obj.type || obj.type !== "Coupon") { continue; }
+                if (!obj.actions) { continue; }
+
+                let coupon = {
+                    'image_url': obj.icon_url,
+                    'title': obj.name,
+                    'discount': obj.name.match(/([1-9][0-9])%/)[1],
+                    'id': id
+                };
+                for (let i = 0; i < obj.descriptions.length; i++) {
+                    let value = obj.descriptions[i].value;
+                    if (value.startsWith("Can't be applied with other discounts.")) {
+                        Object.assign(couponData, {
+                            'discount_note': value,
+                            'discount_note_id': i,
+                            'discount_doesnt_stack': true,
+                        });
+                    } else if (value.startsWith("(Valid")) {
+                        Object.assign(couponData, {
+                            'valid_id': i,
+                            'valid': value,
+                        });
+                    }
+                }
+                for (let action of obj.actions) {
+                    let packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(action.link)[1];
+    
+                    if (!coupons[packageid] || coupons[packageid].discount < coupon.discount) {
+                        coupons[packageid] = coupon;
+                    }
+                }
+            }
+
+            LocalStorageCache.set('inventory_3', coupons);
+        }
+        return coupons;
     };
-    self.gifts = function() { // context#1, gifts and guest passes
+    self.gifts = async function() { // context#1, gifts and guest passes
         
     };
     self.items = async function() { // context#6, community items
-        // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
-        let inventory = LocalStorageCache('inventory_6', 3600);
-        if (!inventory) {
-            let login = LocalStorage.get('login');
-            if (!login) throw `Must be signed in to access Inventory`;
+        let login = LocalStorage.get('login');
+        if (!login) throw `Must be signed in to access Inventory`;
 
+        // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
+        let inventory = LocalStorageCache.get('inventory_6', 3600);
+        if (!inventory) {
             inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/?l=en`);
             if (!inventory || !inventory.success) throw `Could not retrieve Inventory 753/6`;
 
