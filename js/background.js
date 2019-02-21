@@ -178,7 +178,7 @@ const AugmentedSteamApi = (function() {
         if (appids) { return appids; }
 
         // Cache expired, need to fetch
-        that.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
+        _earlyAccessAppIds.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
             //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': LocalStorageCache.timestamp(), })))
             .then(function(appids) {
                 appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
@@ -256,18 +256,22 @@ const SteamStore = (function() {
             .then(response => response.json());
     };
 
+    function htmlToDOM(html) {
+        let template = document.createElement('template');
+        template.innerHTML = html.trim();
+        return template.content;
+    }
+
     self.currencyFromWallet = async function() {
         let html = await self.getPage("/steamaccount/addfunds");
-        let dummyPage = document.createElement('html');
-        dummyPage.innerHTML = html;
+        let dummyPage = htmlToDOM(html);
 
         return dummyPage.querySelector("input[name=currency]").value;
     };
 
     self.currencyFromApp = async function() {
         let html = await self.getPage("/app/220");
-        let dummyPage = document.createElement('html');
-        dummyPage.innerHTML = html;
+        let dummyPage = htmlToDOM(html);
 
         let currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
@@ -284,6 +288,16 @@ const SteamStore = (function() {
         if (!currency) throw "Could not retrieve store currency";
         LocalStorageCache.set('currency', currency);
         return currency;
+    };
+
+    self.country = async function() {
+        let html = await self.getPage("/account/change_country/");
+        let dummyPage = htmlToDOM(html);
+
+        let node = dummyPage.querySelector("#dselect_user_country");
+        if (node && node.value)
+            return node.value;
+        throw "Could not retrieve country";
     };
 
     Object.freeze(self);
@@ -338,7 +352,7 @@ const Steam = (function() {
         if (dynamicstore) { return dynamicstore; }
 
         // Cache miss, need to fetch
-        that.promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
+        _dynamicstore.promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
             .then(function(dynamicstore) {
                 if (!dynamicstore.rgOwnedApps) {
                     throw "Could not fetch DynamicStore UserData";
@@ -409,6 +423,7 @@ let actionCallbacks = new Map([
     ['appdetails', SteamStore.appDetails],
     ['appuserdetails', SteamStore.appUserDetails],
     ['currency', SteamStore.currency],
+    ['country', SteamStore.country],
      
     ['cards', SteamCommunity.cards],
     ['stats', SteamCommunity.stats],

@@ -615,13 +615,10 @@ let User = (function(){
             LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
 
             // check user country
-            response = await RequestData.getHttp("https://store.steampowered.com/account/change_country/");
-            if (response) {
-                let node = BrowserHelper.htmlToDOM(response).querySelector("#dselect_user_country");
-                if (node && node.value) {
-                    LocalData.set("userCountry", node.value);
-                }
-            }
+            try {
+                let country = await Background.action('country');
+                LocalData.set("userCountry", node.country);
+            } catch (err) { }
         }
     }
 
