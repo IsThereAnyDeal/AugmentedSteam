@@ -384,12 +384,8 @@ let Options = (function(){
 				listNode.classList.toggle("esi-hidden");
 			});
 			document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
-				let node = e.target.closest("#show_quckinv_diff");
-				if (document.querySelector("#quickinv_opt").checked) {
-					node.style.display = "block";
-				} else {
-					node.style.display = "none";
-				}
+				let node = document.querySelector("#quickinv_opt");
+				node.classList.toggle("esi-hidden");
 			});
 			document.querySelector("#stores_all").addEventListener("change", toggleStores);
 			document.querySelector("#reset_countries").addEventListener("click", loadDefaultCountries);
