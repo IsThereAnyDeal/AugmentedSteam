@@ -747,7 +747,7 @@ let ProfileHomePageClass = (function(){
 
     ProfileHomePageClass.prototype.addTwitchInfo = async function() {
 
-        let search = document.querySelector(".profile_summary a[href*='twitch.tv/']");
+        let search = document.querySelector(".profile_summary a[href*='twitch.tv/'], .customtext_showcase a[href*='twitch.tv/']");
         if (!search) { return; }
 
         let m = search.href.match(/twitch\.tv\/(.+)/);
