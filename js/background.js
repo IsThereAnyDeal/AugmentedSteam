@@ -286,6 +286,59 @@ const SteamStore = (function() {
         return self.getEndpoint("/api/appuserdetails/", params);
     };
 
+    self.packageDetails = async function({ 'params': params, }) {
+        return self.getEndpoint("/api/packagedetails/", params);
+    };
+
+    self.addCouponAppIds = async function(coupons) {
+        // FIXME, Temporarily use LocalStorage for caching. This is ideal for IndexedDB
+        let packages = LocalStorage.get('known_packages', {});
+        // Expire cache
+        for (let [subid, details] of Object.entries(packages)) {
+            if (details.timestamp + 7 * 24 * 60 * 60 < LocalStorageCache.timestamp()) {
+                delete packages[subid];
+            }
+        }
+
+        let package_queue = [];
+        for (let [subid, coupon] of Object.entries(coupons)) {
+            let details = packages[subid];
+            if (!details) {
+                package_queue.push(subid);
+                continue;
+            }
+            coupon.appids = details.appids;
+        }
+
+        function addKnownPackage(data) {
+            for (let [subid, details] of Object.entries(data)) {
+                if (!details || !details.success) return;
+                details = details.data;
+                packages[subid] = { 'appids': details.apps, 'timestamp': LocalStorageCache.timestamp(), };
+                // .apps is an array of { 'id': ##, 'name': "", }, TODO check if we need to clearSpecialSymbols(name)
+                if (coupons[subid])
+                    coupons[subid].appids = packages[subid].appids;
+            }
+        }
+
+        let requests = [];
+        for (let subid of package_queue) {
+            requests.push(
+                self.getEndpoint("/api/packagedetails/", { 'packageids': subid, })
+                .then(addKnownPackage)
+                .catch(err => console.error(err))
+            );
+            // this used to be a CSV input, now needs 1 GET / package.
+            // rate limited to 200 requests / 5 min
+            // if a specific request fails, log it and move on
+        }
+
+        await Promise.all(requests);
+
+        LocalStorage.set('known_packages', packages);
+        return coupons;
+    };
+    
     self.wishlistAdd = async function({ 'params': params, }) {
         let url = new URL("/api/addtowishlist", "https://store.steampowered.com/");
         let formData = new FormData();
@@ -517,6 +570,7 @@ const SteamCommunity = (function() {
 
             LocalStorageCache.set('inventory_3', coupons);
         }
+        await SteamStore.addCouponAppIds(coupons);
         return coupons;
     };
     self.gifts = async function() { // context#1, gifts and guest passes

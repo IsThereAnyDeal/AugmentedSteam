@@ -249,7 +249,7 @@ let ProfileActivityPageClass = (function(){
                 if (Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
                 }
-                if (Inventory.getCoupon(appid)) {
+                if (Inventory.getCouponByAppId(appid)) {
                     Highlights.highlightCoupon(link);
                 }
                 if (Inventory.hasGift(appid)) {

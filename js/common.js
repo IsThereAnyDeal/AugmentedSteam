@@ -1645,6 +1645,7 @@ let Inventory = (function(){
     let guestpasses = new Set();
     let coupons = {};
     let inv6set = new Set();
+    let coupon_appids = new Map();
     
     let _promise = null;
     self.promise = async function() {
@@ -1655,9 +1656,17 @@ let Inventory = (function(){
             return _promise;
         }
 
+        function handleCoupons(data) {
+            coupons = data;
+            for (let [subid, details] of Object.entries(coupons)) {
+                for (let { 'id': appid, } of details.appids) {
+                    coupon_appids.set(appid, parseInt(subid, 10));
+                }
+            }
+        }
         _promise = Promise.all([
             Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
-            Background.action('inventory.coupons').then(data => coupons = data),
+            Background.action('inventory.coupons').then(handleCoupons),
             Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
             ]);
         return _promise;
@@ -1669,6 +1678,13 @@ let Inventory = (function(){
 
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
+    };
+
+    self.getCouponByAppId = function(appid) {
+        if (!coupon_appids.has(appid))
+            return false;
+        let subid = coupon_appids.get(appid);
+        return self.getCoupon(subid);
     };
 
     self.hasGift = function(subid) {
@@ -2025,7 +2041,7 @@ let Highlights = (function(){
                         if (Inventory.hasGuestPass(appid)) {
                             self.highlightInvGuestpass(node);
                         }
-                        if (Inventory.getCoupon(appid)) {
+                        if (Inventory.getCouponByAppId(appid)) {
                             self.highlightCoupon(node);
                         }
                         if (Inventory.hasGift(appid)) {
