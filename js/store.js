@@ -2237,7 +2237,7 @@ let SearchPageClass = (function(){
 
             let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
             let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-            let parsed = new Price(intern.trim());
+            let parsed = Price.parseFromString(intern.trim());
             if (parsed && parsed.value > priceAboveValue) {
                 node.style.display = "none";
             }
@@ -2266,7 +2266,6 @@ let SearchPageClass = (function(){
     }
 
     function validatePrice (priceText, e) {
-        if (e.key === "Enter") { return true; }
         priceText += e.key;
         let price = Number(priceText);
         return !(Number.isNaN(price));
@@ -2412,9 +2411,14 @@ let SearchPageClass = (function(){
             elem.title = Localization.str.price_above_tooltip;
             elem.addEventListener("click", function(e) {
                 e.stopPropagation()
-
             });
             elem.addEventListener("keypress", function(e){
+                // When pressing Enter the event was dispatched to the surrounding <form> and messed up the price filters
+                if (e.key === "Enter") {
+                    elem.dispatchEvent(new Event("change"));
+                    e.preventDefault();
+                    return true;
+                }
                 return validatePrice(elem.value, e);
             });
             elem.addEventListener("change", function(e){
@@ -2425,7 +2429,7 @@ let SearchPageClass = (function(){
                         price = '';
                     }
                 }
-                SyncedStorage.set({"priceabove_value": price });
+                SyncedStorage.set("priceabove_value", price);
                 addHideButtonsToSearchClick()
             });
         }
