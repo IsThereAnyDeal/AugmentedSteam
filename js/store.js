@@ -2265,13 +2265,21 @@ let SearchPageClass = (function(){
         }
     }
 
-    function validatePrice (priceText, e) {
-        priceText += e.key;
-        let price = Number(priceText);
-        return !(Number.isNaN(price));
-    }
-
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
+
+        let priceInfo = Price.getPriceInfo(Currency.userCurrency);
+
+        let inputPattern = (function() {
+            let placesRgx;
+            if (priceInfo.hidePlacesWhenZero) {
+                placesRgx = "";
+            } else {
+                placesRgx = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
+            }
+            let decimalRgx = priceInfo.decimal === '.' ? '\\.' : ',';
+            
+            return new RegExp("^\\d*(" + decimalRgx + placesRgx + '|)$');
+        })();
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
@@ -2309,7 +2317,7 @@ let SearchPageClass = (function(){
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.price_above + `</span>
                         <div>
-                            <input type="number" id='es_notpriceabove_val' class='es_input_number' step=0.01>
+                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='` + inputPattern.source + `' placeholder=` + new Price(0).toString().replace(/[^\d,\.]/, '') + `>
                         </div>
                     </div>
                 </div>
@@ -2381,8 +2389,17 @@ let SearchPageClass = (function(){
             }
         }
 
+        let position;
+        if (priceInfo.right) {
+            position = "afterend";
+        } else {
+            position = "beforebegin";
+        }
+
+        document.querySelector("#es_notpriceabove_val").insertAdjacentHTML(position, "<span id='priceabove_value_currency'>" + priceInfo.symbolFormat + "</span>");
+
         if (SyncedStorage.get("priceabove_value")) {
-            document.querySelector("#es_notpriceabove_val").value = SyncedStorage.get("priceabove_value");
+            document.querySelector("#es_notpriceabove_val").value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
         }
 
         [
@@ -2418,16 +2435,15 @@ let SearchPageClass = (function(){
                     e.preventDefault();
                 }
             });
-            elem.addEventListener("change", function(e){
-                let price = '';
-                if(elem.value != ''){
-                    price = Number(elem.value);
-                    if(Number.isNaN(price)) {
-                        price = '';
-                    }
+            elem.addEventListener("input", function(e){
+                if (inputPattern.test(elem.value)) {
+                    elem.setCustomValidity('');
+                    SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
+                    addHideButtonsToSearchClick();
+                } else {
+                    elem.setCustomValidity(Localization.str.price_above_tooltip);
                 }
-                SyncedStorage.set("priceabove_value", price);
-                addHideButtonsToSearchClick()
+                elem.reportValidity();
             });
         }
     };

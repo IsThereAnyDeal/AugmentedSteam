@@ -1108,6 +1108,9 @@ let Price = (function() {
         return new Price(value, currencyType, convert);
     };
 
+    Price.getPriceInfo = function(currencyCode) {
+        return format[currencyCode];
+    }
 
     return Price;
 })();
