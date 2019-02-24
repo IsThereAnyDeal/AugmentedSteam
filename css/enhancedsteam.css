@@ -1995,7 +1995,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	border: 1px solid #000;
 	border-radius: 3px;
 	box-shadow: 1px 1px 0px rgba( 103, 193, 245, 0.15 );
-	width: calc(100% - 10px);
+	width: calc(100% - 50px);
 	padding: 5px;
 }
 .es_input_text {
@@ -2010,6 +2010,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_input_text.blur {
 	color:#62696e;
+}
+
+#es_notpriceabove_val_currency {
+	margin: 5px;
 }
 
 /***************************************

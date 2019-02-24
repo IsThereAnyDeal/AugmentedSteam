@@ -2396,10 +2396,11 @@ let SearchPageClass = (function(){
             position = "beforebegin";
         }
 
-        document.querySelector("#es_notpriceabove_val").insertAdjacentHTML(position, "<span id='priceabove_value_currency'>" + priceInfo.symbolFormat + "</span>");
+        let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
+        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + priceInfo.symbolFormat.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
-            document.querySelector("#es_notpriceabove_val").value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
         }
 
         [
