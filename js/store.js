@@ -2412,14 +2412,11 @@ let SearchPageClass = (function(){
             elem.addEventListener("click", function(e) {
                 e.stopPropagation()
             });
-            elem.addEventListener("keypress", function(e){
-                // When pressing Enter the event was dispatched to the surrounding <form> and messed up the price filters
-                if (e.key === "Enter") {
-                    elem.dispatchEvent(new Event("change"));
+            elem.addEventListener("keydown", function(e){
+                if(e.key === "Enter") {
+                    // This would normally trigger a call to AjaxSearchResults() and reload the page, invalidating all AS filters
                     e.preventDefault();
-                    return true;
                 }
-                return validatePrice(elem.value, e);
             });
             elem.addEventListener("change", function(e){
                 let price = '';
