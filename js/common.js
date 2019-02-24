@@ -913,8 +913,8 @@ let Currency = (function() {
                 }
 
                 let currencyCache = LocalData.get("user_currency", {});
-                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
-                    self.userCurrency = currencyCache.userCurrency.currencyType;
+                if (currencyCache && currencyCache.currencyType && !TimeHelper.isExpired(currencyCache.updated, 3600)) {
+                    self.userCurrency = currencyCache.currencyType;
                     resolve();
                 } else {
                     RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
