@@ -250,6 +250,32 @@ let CommunityCommon = (function() {
         }
     };
 
+    let walletCurrency_promise = null;
+
+    self.getWalletCurrency = function() {
+        if (walletCurrency_promise != null) { return walletCurrency_promise; }
+
+        ExtensionLayer.runInPageContext(`function(){
+            window.postMessage({
+                type: "es_sendmessage",
+                wallet_currency: g_rgWalletInfo.wallet_currency
+            }, "*");
+        }`);
+
+        return new Promise(function(resolve, reject) {
+
+            window.addEventListener("message", function(e) {
+                if (e.source !== window) { return; }
+                if (!e.data.type) { return; }
+
+                if (e.data.type === "es_sendmessage") {
+                    resolve(e.data.wallet_currency);
+                }
+                reject();
+            }, false);
+        });
+    }
+
     return self;
 })();
 
@@ -2954,7 +2980,6 @@ let MarketPageClass = (function(){
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
 
         let loadedMarketPrices = {};
 
@@ -3023,7 +3048,7 @@ let MarketPageClass = (function(){
             if (loadedMarketPrices[marketHashName]) {
                 priceData = loadedMarketPrices[marketHashName];
             } else {
-                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
+                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${await CommunityCommon.getWalletCurrency()}&appid=${appid}&market_hash_name=${marketHashName}`);
                 if (!data.success) { continue; }
 
                 loadedMarketPrices[marketHashName] = data;
