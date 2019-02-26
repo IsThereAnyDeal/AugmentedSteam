@@ -1528,7 +1528,7 @@ let InventoryPageClass = (function(){
         if (priceHighValue) {
             let quickSell = document.querySelector("#es_quicksell" + assetId);
             quickSell.dataset.price = priceHighValue;
-            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
+            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency), false));
             quickSell.style.display = "block";
         }
 
@@ -1536,7 +1536,7 @@ let InventoryPageClass = (function(){
         if (priceLowValue) {
             let instantSell = document.querySelector("#es_instantsell" + assetId);
             instantSell.dataset.price = priceLowValue;
-            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
+            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency), false));
             instantSell.style.display = "block";
         }
     }
@@ -1643,7 +1643,7 @@ let InventoryPageClass = (function(){
         return html;
     }
 
-    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster) {
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency) {
         marketActions.style.display = "block";
         let firstDiv = marketActions.querySelector("div");
         if (!firstDiv) {
@@ -1658,12 +1658,12 @@ let InventoryPageClass = (function(){
         if (!thisItem.dataset.lowestPrice) {
             firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + walletCurrency + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
 
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
-                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.userCurrency});
+                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.currencyNumberToType(walletCurrency)});
                 console.log(result);
                 if (result.result === "success") {
                     thisItem.dataset.cardsPrice = new Price(result.data.average);
@@ -1741,7 +1741,7 @@ let InventoryPageClass = (function(){
         }
 
         if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
-            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster);
+            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
 
