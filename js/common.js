@@ -1748,6 +1748,12 @@ let EarlyAccess = (function(){
                            ".tab_row",
                            ".browse_tag_game_cap"]);
                 break;
+            case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
+                checkNodes( [
+                    "#curator_avatar_image",
+                    ".capsule",
+                ]);
+                break;
             case /^\/$/.test(window.location.pathname):
                 checkNodes( [".cap",
                            ".special",
