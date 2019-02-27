@@ -2519,11 +2519,11 @@ let Prices = (function(){
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency']);
+                lowest = new Price(info['price']['price_voucher'], meta['currency'], Currency.customCurrency);
                 let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
-                lowest = new Price(info['price']['price'], meta['currency']);
+                lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
             }
 
             let lowestStr = Localization.str.lowest_price_format
@@ -2537,7 +2537,7 @@ let Prices = (function(){
 
         // "Historical Low"
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency']);
+            let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
             let historicalStr = Localization.str.historical_low_format
@@ -2624,7 +2624,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency']).toString();
+                    let tierPrice = new Price(tier.price, meta['currency'], Currency.customCurrency).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2656,7 +2656,7 @@ let Prices = (function(){
             purchase += '<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (new Price(bundlePrice, meta['currency'])).toString();
+                    purchase += (new Price(bundlePrice, meta['currency'], Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 
