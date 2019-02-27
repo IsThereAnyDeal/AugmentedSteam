@@ -1002,9 +1002,7 @@ let Currency = (function() {
                         }, rejectTop);
                 }
 
-                
-            
-            }).catch(() => {
+            }, () => {
                 console.log("Failed to retrieve store currency, falling back to " + self.storeCurrency + '!');
                 self.customCurrency = self.storeCurrency;
 
