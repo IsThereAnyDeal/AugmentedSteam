@@ -2873,7 +2873,7 @@ let TabAreaObserver = (function(){
 
     self.observeChanges = function() {
 
-        let tabAreaNode = document.querySelector(".tabarea");
+        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
         if (!tabAreaNode) { return; }
 
         let observer = new MutationObserver(() => {
