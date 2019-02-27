@@ -2458,6 +2458,16 @@ let SearchPageClass = (function(){
 })();
 
 
+let CuratorPageClass = (function(){
+    function CuratorPageClass() {
+
+    }
+
+    
+    return CuratorPageClass;
+})();
+
+
 let WishlistPageClass = (function(){
 
     let noteModalTemplate;
@@ -2933,6 +2943,10 @@ let TabAreaObserver = (function(){
 
                     case /^\/sale\/.*/.test(path):
                         (new StorePageClass()).showRegionalPricing("sale");
+                        break;
+
+                    case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(path):
+                        (new CuratorPageClass());
                         break;
 
                     case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
