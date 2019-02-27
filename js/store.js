@@ -283,7 +283,7 @@ let StorePageClass = (function(){
                     let html = "";
 
                     if (apiPrice) {
-                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency);
+                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency, Currency.storeCurrency);
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
 
                         let percentageIndicator = "equal";
