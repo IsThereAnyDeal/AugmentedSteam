@@ -250,32 +250,6 @@ let CommunityCommon = (function() {
         }
     };
 
-    let walletCurrency_promise = null;
-
-    self.getWalletCurrency = function() {
-        if (walletCurrency_promise != null) { return walletCurrency_promise; }
-
-        ExtensionLayer.runInPageContext(`function(){
-            window.postMessage({
-                type: "es_sendmessage",
-                wallet_currency: g_rgWalletInfo.wallet_currency
-            }, "*");
-        }`);
-
-        return new Promise(function(resolve, reject) {
-
-            window.addEventListener("message", function(e) {
-                if (e.source !== window) { return; }
-                if (!e.data.type) { return; }
-
-                if (e.data.type === "es_sendmessage") {
-                    resolve(e.data.wallet_currency);
-                }
-                reject();
-            }, false);
-        });
-    }
-
     return self;
 })();
 
@@ -1973,7 +1947,7 @@ let BadgesPageClass = (function(){
         let response;
         try {
             response = await RequestData.getApi("v01/market/averagecardprices", {
-                currency: Currency.userCurrency,
+                currency: Currency.storeCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
             });
@@ -2441,7 +2415,7 @@ let GameCardPageClass = (function(){
 
         let response;
         try {
-            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.userCurrency});
+            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.storeCurrency});
         } catch(exception) {
             console.error("Failed to load card prices", exception);
             return;
@@ -2766,7 +2740,7 @@ let MarketListingPageClass = (function(){
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
         let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
@@ -3048,7 +3022,7 @@ let MarketPageClass = (function(){
             if (loadedMarketPrices[marketHashName]) {
                 priceData = loadedMarketPrices[marketHashName];
             } else {
-                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${await CommunityCommon.getWalletCurrency()}&appid=${appid}&market_hash_name=${marketHashName}`);
+                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`);
                 if (!data.success) { continue; }
 
                 loadedMarketPrices[marketHashName] = data;
