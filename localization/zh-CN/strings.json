@@ -71,7 +71,7 @@
     "games_installed": "已安装的游戏",
     "hours_short": "__hours__ 小时",
     "faqs": "常见问题",
-    "spam_comment_show": "本页有 __num__ 条垃圾评测被隐藏，点击这里显示。",
+    "spam_comment_show": "本页有 __num__ 条垃圾评论被隐藏，点击这里显示。",
     "dlc": "可下载内容（DLC）",
     "add_to_wishlist": "添加至愿望单",
     "language": "语言",
@@ -161,7 +161,7 @@
     "games_with_drops": "__dropsgames__ 个游戏可掉落卡牌",
     "binder_view": "活页夹视图",
     "view_stats": "查看统计资料",
-    "using_language": "您现在正在以 __current__ 浏览 Steam。",
+    "using_language": "您现在正在以__current__浏览 Steam，",
     "popular": "热门商品",
     "visit_trade_forum": "访问交易论坛",
     "software": "软件",
@@ -530,13 +530,13 @@
     "register": {
         "success": "成功激活 __gamename__",
         "owned": "该 Steam 帐户已拥有此订单中的产品。",
-        "notavail": "抱歉，该产品尚未在当前地区发售，您的产品序列号未被兑换。",
-        "invalid": "您输入的产品序列号无效，请检查输入是否有错误。",
-        "already": "您输入的产品序列号已经被另一个 Steam 帐户激活。",
-        "dlc": "您输入的产品序列号在激活之前需要先拥有另一个产品。",
-        "wallet": "您所输入的序列号来自 Steam 礼物卡或 Steam 钱包充值码。",
+        "notavail": "抱歉，该产品尚未在当前地区发售，您的产品代码未被兑换。",
+        "invalid": "您输入的产品代码无效，请检查输入是否有错误。",
+        "already": "您输入的产品代码已经被另一个 Steam 帐户激活。",
+        "dlc": "您输入的产品代码在激活之前需要先拥有另一个产品。",
+        "wallet": "您所输入的代码来自 Steam 礼物卡或 Steam 钱包充值码。",
         "toomany": "此帐户近期尝试激活次数过多，请稍后重试。",
-        "default": "发生了一个意外错误。您的产品序列号尚未被兑换。请在 30 分钟后重新尝试兑换该序列号。"
+        "default": "发生了一个意外错误。您的产品代码尚未被兑换。请在 30 分钟后重新尝试兑换该代码。"
     },
     "wl": {
         "compute": "点击计算统计资料",
