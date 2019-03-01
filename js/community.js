@@ -2957,6 +2957,7 @@ let MarketPageClass = (function(){
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let loadedMarketPrices = {};
 
