@@ -1669,12 +1669,12 @@ let InventoryPageClass = (function(){
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
-    function inventoryMarketHelper([item, marketable, globalId, hashName, assetName, assetId, sessionId, contextId, walletCurrency, ownerSteamId, restriction]) {
+    function inventoryMarketHelper([item, marketable, globalId, hashName, assetType, assetId, sessionId, contextId, walletCurrency, ownerSteamId, restriction, expired]) {
         marketable = parseInt(marketable);
         globalId = parseInt(globalId);
         contextId = parseInt(contextId);
         restriction = parseInt(restriction);
-        let isGift = assetName && /Gift/i.test(assetName);
+        let isGift = assetType && /Gift/i.test(assetType);
         let isBooster = hashName && /Booster Pack/i.test(hashName);
         let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
@@ -1708,7 +1708,7 @@ let InventoryPageClass = (function(){
             addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
         }
 
-        if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
+        if ((ownsInventory && restriction > 0 && !marketable && !expired && hashName !== "753-Gems") || marketable) {
             showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster);
         }
     }
@@ -1717,7 +1717,11 @@ let InventoryPageClass = (function(){
         ExtensionLayer.runInPageContext(`function(){
             $J(document).on("click", ".inventory_item_link, .newitem", function(){
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
-                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
+                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
+                }
+                let market_expired = false;
+                if (g_ActiveInventory.selectedItem.description) {
+                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
                 window.postMessage({
                     type: "es_sendmessage",
@@ -1732,7 +1736,8 @@ let InventoryPageClass = (function(){
                         g_ActiveInventory.selectedItem.contextid,
                         g_rgWalletInfo.wallet_currency,
                         g_ActiveInventory.m_owner.strSteamId,
-                        g_ActiveInventory.selectedItem.description.market_marketable_restriction
+                        g_ActiveInventory.selectedItem.description.market_marketable_restriction,
+                        market_expired
                     ]
                 }, "*");
             });
