@@ -2237,7 +2237,7 @@ let SearchPageClass = (function(){
 
             let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
             let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-            let parsed = new Price(intern.trim());
+            let parsed = Price.parseFromString(intern.trim());
             if (parsed && parsed.value > priceAboveValue) {
                 node.style.display = "none";
             }
@@ -2265,14 +2265,21 @@ let SearchPageClass = (function(){
         }
     }
 
-    function validatePrice (priceText, e) {
-        if (e.key === "Enter") { return true; }
-        priceText += e.key;
-        let price = Number(priceText);
-        return !(Number.isNaN(price));
-    }
-
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
+
+        let priceInfo = Price.getPriceInfo(Currency.userCurrency);
+
+        let inputPattern = (function() {
+            let placesRgx;
+            if (priceInfo.hidePlacesWhenZero) {
+                placesRgx = "";
+            } else {
+                placesRgx = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
+            }
+            let decimalRgx = priceInfo.decimal === '.' ? '\\.' : ',';
+            
+            return new RegExp("^\\d*(" + decimalRgx + placesRgx + '|)$');
+        })();
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
@@ -2310,7 +2317,7 @@ let SearchPageClass = (function(){
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>` + Localization.str.price_above + `</span>
                         <div>
-                            <input type="number" id='es_notpriceabove_val' class='es_input_number' step=0.01>
+                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='` + inputPattern.source + `' placeholder=` + new Price(0).toString().replace(/[^\d,\.]/, '') + `>
                         </div>
                     </div>
                 </div>
@@ -2382,8 +2389,18 @@ let SearchPageClass = (function(){
             }
         }
 
+        let position;
+        if (priceInfo.right) {
+            position = "afterend";
+        } else {
+            position = "beforebegin";
+        }
+
+        let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
+        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + priceInfo.symbolFormat.trim() + "</span>");
+
         if (SyncedStorage.get("priceabove_value")) {
-            document.querySelector("#es_notpriceabove_val").value = SyncedStorage.get("priceabove_value");
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
         }
 
         [
@@ -2412,21 +2429,22 @@ let SearchPageClass = (function(){
             elem.title = Localization.str.price_above_tooltip;
             elem.addEventListener("click", function(e) {
                 e.stopPropagation()
-
             });
-            elem.addEventListener("keypress", function(e){
-                return validatePrice(elem.value, e);
-            });
-            elem.addEventListener("change", function(e){
-                let price = '';
-                if(elem.value != ''){
-                    price = Number(elem.value);
-                    if(Number.isNaN(price)) {
-                        price = '';
-                    }
+            elem.addEventListener("keydown", function(e){
+                if(e.key === "Enter") {
+                    // This would normally trigger a call to AjaxSearchResults() and reload the page, invalidating all AS filters
+                    e.preventDefault();
                 }
-                SyncedStorage.set({"priceabove_value": price });
-                addHideButtonsToSearchClick()
+            });
+            elem.addEventListener("input", function(e){
+                if (inputPattern.test(elem.value)) {
+                    elem.setCustomValidity('');
+                    SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
+                    addHideButtonsToSearchClick();
+                } else {
+                    elem.setCustomValidity(Localization.str.price_above_tooltip);
+                }
+                elem.reportValidity();
             });
         }
     };
@@ -2455,6 +2473,16 @@ let SearchPageClass = (function(){
     };
 
     return SearchPageClass;
+})();
+
+
+let CuratorPageClass = (function(){
+    function CuratorPageClass() {
+
+    }
+
+    
+    return CuratorPageClass;
 })();
 
 
@@ -2873,7 +2901,7 @@ let TabAreaObserver = (function(){
 
     self.observeChanges = function() {
 
-        let tabAreaNode = document.querySelector(".tabarea");
+        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
         if (!tabAreaNode) { return; }
 
         let observer = new MutationObserver(() => {
@@ -2933,6 +2961,10 @@ let TabAreaObserver = (function(){
 
                     case /^\/sale\/.*/.test(path):
                         (new StorePageClass()).showRegionalPricing("sale");
+                        break;
+
+                    case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(path):
+                        (new CuratorPageClass());
                         break;
 
                     case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):

@@ -1671,18 +1671,12 @@ let InventoryPageClass = (function(){
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
-    function inventoryMarketHelper(response) {
-        let item = response[0];
-        let marketable = parseInt(response[1]);
-        let globalId = parseInt(response[2]);
-        let hashName = response[3];
-        let assetId = response[5];
-        let sessionId = response[6];
-        let contextId = parseInt(response[7]);
-        let walletCurrency = response[8];
-        let ownerSteamId = response[9];
-        let restriction = parseInt(response[10]);
-        let isGift = response[4] && /Gift/i.test(response[4]);
+    function inventoryMarketHelper([item, marketable, globalId, hashName, assetType, assetId, sessionId, contextId, walletCurrency, ownerSteamId, restriction, expired]) {
+        marketable = parseInt(marketable);
+        globalId = parseInt(globalId);
+        contextId = parseInt(contextId);
+        restriction = parseInt(restriction);
+        let isGift = assetType && /Gift/i.test(assetType);
         let isBooster = hashName && /Booster Pack/i.test(hashName);
         let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
@@ -1716,7 +1710,7 @@ let InventoryPageClass = (function(){
             addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
         }
 
-        if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
+        if ((ownsInventory && restriction > 0 && !marketable && !expired && hashName !== "753-Gems") || marketable) {
             showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
@@ -1725,7 +1719,11 @@ let InventoryPageClass = (function(){
         ExtensionLayer.runInPageContext(`function(){
             $J(document).on("click", ".inventory_item_link, .newitem", function(){
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
-                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
+                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
+                }
+                let market_expired = false;
+                if (g_ActiveInventory.selectedItem.description) {
+                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
                 window.postMessage({
                     type: "es_sendmessage",
@@ -1740,7 +1738,8 @@ let InventoryPageClass = (function(){
                         g_ActiveInventory.selectedItem.contextid,
                         g_rgWalletInfo.wallet_currency,
                         g_ActiveInventory.m_owner.strSteamId,
-                        g_ActiveInventory.selectedItem.description.market_marketable_restriction
+                        g_ActiveInventory.selectedItem.description.market_marketable_restriction,
+                        market_expired
                     ]
                 }, "*");
             });
@@ -2954,12 +2953,18 @@ let MarketPageClass = (function(){
     };
 
     // Show the lowest market price for items you're selling
-    MarketPageClass.prototype.addLowestMarketPrice = async function() {
+    MarketPageClass.prototype.addLowestMarketPrice = function() {
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
 
         let loadedMarketPrices = {};
+
+        let observer = new MutationObserver(function(){
+            insertPrices();
+        });
+
+        observer.observe(document.getElementById("tabContentsMyActiveMarketListingsRows"), {childList: true});
 
         function insertPrice(node, data) {
             node.classList.add("es_priced");
@@ -2994,47 +2999,53 @@ let MarketPageClass = (function(){
                     "<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + Localization.str.lowest + "</span></span>");
         }
 
-        // update table rows
-        let rows = [];
-        nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
-        for (let node of nodes) {
-            let buttons = node.querySelector(".market_listing_edit_buttons");
-            buttons.style.width = "200px"; // TODO do we still need to change width?
-            if (node.querySelector(".market_listing_es_lowest")) { continue; }
+        insertPrices();
 
-            node.querySelector(".market_listing_edit_buttons")
-                .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+        async function insertPrices() {
 
-            // we do this because of changed width, right?
-            let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
-            actualButtons.style.width = "inherit";
-            buttons.append(actualButtons);
+            // update table rows
+            let rows = [];
+            nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
+            for (let node of nodes) {
+                let buttons = node.querySelector(".market_listing_edit_buttons");
+                buttons.style.width = "200px"; // TODO do we still need to change width?
+                if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-            rows.push(node);
-        }
+                node.querySelector(".market_listing_edit_buttons")
+                    .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
-        for (let node of rows) {
-            let linkNode = node.querySelector(".market_listing_item_name_link");
-            if (!linkNode) { continue; }
+                // we do this because of changed width, right?
+                let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
+                actualButtons.style.width = "inherit";
+                buttons.append(actualButtons);
 
-            let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
-            if (!m) { continue; }
-            let appid = parseInt(m[1]);
-            let marketHashName = m[2];
-
-            let priceData;
-            if (loadedMarketPrices[marketHashName]) {
-                priceData = loadedMarketPrices[marketHashName];
-            } else {
-                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`);
-                if (!data.success) { continue; }
-
-                loadedMarketPrices[marketHashName] = data;
-                priceData = data;
+                rows.push(node);
             }
 
-            insertPrice(node, priceData);
-        }
+            for (let node of rows) {
+                let linkNode = node.querySelector(".market_listing_item_name_link");
+                if (!linkNode) { continue; }
+
+                let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
+                if (!m) { continue; }
+                let appid = parseInt(m[1]);
+                let marketHashName = m[2];
+
+                let priceData;
+                if (loadedMarketPrices[marketHashName]) {
+                    priceData = loadedMarketPrices[marketHashName];
+                } else {
+                    let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
+                    if (!data.success) { continue; }
+
+                    loadedMarketPrices[marketHashName] = data;
+                    priceData = data;
+                }
+
+                insertPrice(node, priceData);
+            }
+        };
+
     };
 
     MarketPageClass.prototype.addSort = function() {
