@@ -694,99 +694,62 @@ let StringUtils = (function(){
 })();
 
 
+let CurrencyRegistry = (function() {
+    let self = {};
+
+    let indices = {
+        'id': {},
+        'abbr': {},
+        'symbols': {},
+    };
+    let defaultCurrency = null;
+    let re = null;
+
+    self.fromSymbol = function(symbol) {
+        return indices.symbols[symbol] || defaultCurrency;
+    };
+
+    self.fromType = function(type) {
+        return indices.abbr[type] || defaultCurrency;
+    };
+
+    self.fromNumber = function(number) {
+        return indices.id[number] || defaultCurrency;
+    };
+
+    self.fromString = function(price) { 
+        let match = price.match(re);
+        if (!match)
+            return defaultCurrency;
+        return self.fromSymbol(match[0]);
+    };
+
+    self.promise = async function() {
+        let currencies = await Background.action('steam.currencies');
+        for (let currency of currencies) {
+            // currency = new SteamCurrency(currency);
+            indices.abbr[currency.abbr] = currency;
+            indices.id[currency.id] = currency;
+            if (currency.symbol) // CNY && JPY use the same symbol
+                indices.symbols[currency.symbol] = currency;
+        }
+        defaultCurrency = indices.id[1]; // USD
+        re = new RegExp(Object.keys(indices.symbols).join("|").replace("$", "\\$"));
+    };
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
+    };
+
+    return self;
+})();
+
+
 let Currency = (function() {
 
     let self = {};
 
     self.customCurrency = null;
     self.storeCurrency = "USD";
-
-    let currencySymbols = {
-        "pуб": "RUB",
-        "€": "EUR",
-        "£": "GBP",
-        "R$": "BRL",
-        "¥": "JPY",
-        "kr": "NOK",
-        "Rp": "IDR",
-        "RM": "MYR",
-        "P": "PHP",
-        "S$": "SGD",
-        "฿": "THB",
-        "₫": "VND",
-        "₩": "KRW",
-        "TL": "TRY",
-        "₴": "UAH",
-        "Mex$": "MXN",
-        "CDN$": "CAD",
-        "A$": "AUD",
-        "HK$": "HKD",
-        "NT$": "TWD",
-        "₹": "INR",
-        "SR": "SAR",
-        "R ": "ZAR",
-        "DH": "AED",
-        "CHF": "CHF",
-        "CLP$": "CLP",
-        "S/.": "PEN",
-        "COL$": "COP",
-        "NZ$": "NZD",
-        "ARS$": "ARS",
-        "₡": "CRC",
-        "₪": "ILS",
-        "₸": "KZT",
-        "KD": "KWD",
-        "zł": "PLN",
-        "QR": "QAR",
-        "$U": "UYU"
-    };
-
-    const typeToNumberMap = {
-        "RUB": 5,
-        "EUR": 3,
-        "GBP": 2,
-        "PLN": 6,
-        "BRL": 7,
-        "JPY": 8,
-        "NOK": 9,
-        "IDR": 10,
-        "MYR": 11,
-        "PHP": 12,
-        "SGD": 13,
-        "THB": 14,
-        "VND": 15,
-        "KRW": 16,
-        "TRY": 17,
-        "UAH": 18,
-        "MXN": 19,
-        "CAD": 20,
-        "AUD": 21,
-        "NZD": 22,
-        "CNY": 23,
-        "INR": 24,
-        "CLP": 25,
-        "PEN": 26,
-        "COP": 27,
-        "ZAR": 28,
-        "HKD": 29,
-        "TWD": 30,
-        "SAR": 31,
-        "AED": 32,
-        "ARS": 34,
-        "ILS": 35,
-        "KZT": 37,
-        "KWD": 38,
-        "QAR": 39,
-        "CRC": 40,
-        "UYU": 41
-    };
-    Object.freeze(typeToNumberMap);
-    
-    const numberToTypeMap = {};
-    for (let [abbr, num] of Object.entries(typeToNumberMap)) {
-        numberToTypeMap[num] = abbr;
-    }
-    Object.freeze(numberToTypeMap);
 
     let _rates = {};
     let _promise = null;
@@ -828,7 +791,8 @@ let Currency = (function() {
         if (currencySetting !== "auto") {
             self.customCurrency = currencySetting;
         }
-        return _promise = Background.action('currency')
+        return _promise = CurrencyRegistry
+            .then(() => Background.action('currency'))
             .then(currency => self.storeCurrency = currency)
             .then(_getRates);
     };
@@ -867,15 +831,15 @@ let Currency = (function() {
     };
 
     self.currencySymbolToType = function(symbol) {
-        return currencySymbols[symbol] || "USD";
+        return CurrencyRegistry.fromSymbol(symbol).abbr;
     };
 
     self.currencyTypeToNumber = function(type) {
-        return typeToNumberMap[type] || 1;
+        return CurrencyRegistry.fromType(type).id;
     };
 
     self.currencyNumberToType = function(number) {
-        return numberToTypeMap[number] || "USD";
+        return CurrencyRegistry.fromNumber(number).abbr;
     };
 
     return self;
