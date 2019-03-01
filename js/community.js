@@ -1909,7 +1909,7 @@ let BadgesPageClass = (function(){
         let data;
         try {
             data = await Background.action("market.averagecardprices", {
-                currency: Currency.customCurrency,
+                currency: Currency.storeCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
             });
@@ -2373,7 +2373,7 @@ let GameCardPageClass = (function(){
         try {
             data = await Background.action("market.cardprices", {
                 appid: this.appid,
-                currency: Currency.customCurrency,
+                currency: Currency.storeCurrency,
             });
         } catch(exception) {
             console.error("Failed to load card prices", exception);
@@ -2694,7 +2694,7 @@ let MarketListingPageClass = (function(){
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.customCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
         let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
@@ -2908,7 +2908,7 @@ let MarketPageClass = (function(){
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.customCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let loadedMarketPrices = {};
 
