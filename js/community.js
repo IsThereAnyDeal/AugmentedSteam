@@ -1593,13 +1593,13 @@ let InventoryPageClass = (function(){
         if (!thisItem.dataset.lowestPrice) {
             firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.customCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
 
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
                 try {
-                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': Currency.userCurrency, } );
+                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': Currency.customCurrency, } );
                     thisItem.dataset.cardsPrice = new Price(result.average);
                 } catch (err) { }
             }
@@ -1907,7 +1907,7 @@ let BadgesPageClass = (function(){
         let data;
         try {
             data = await Background.action("market.averagecardprices", {
-                currency: Currency.userCurrency,
+                currency: Currency.customCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
             });
@@ -2369,7 +2369,10 @@ let GameCardPageClass = (function(){
 
         let data;
         try {
-            data = await Background.action("market.cardprices", {appid: this.appid, currency: Currency.userCurrency});
+            data = await Background.action("market.cardprices", {
+                appid: this.appid,
+                currency: Currency.customCurrency,
+            });
         } catch(exception) {
             console.error("Failed to load card prices", exception);
             return;
@@ -2689,7 +2692,7 @@ let MarketListingPageClass = (function(){
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.customCurrency);
 
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
         let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
@@ -2903,7 +2906,7 @@ let MarketPageClass = (function(){
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.customCurrency);
 
         let loadedMarketPrices = {};
 

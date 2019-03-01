@@ -698,8 +698,8 @@ let Currency = (function() {
 
     let self = {};
 
-    self.userCurrency = "USD";
-    self.pageCurrency = null;
+    self.customCurrency = null;
+    self.storeCurrency = "USD";
 
     let currencySymbols = {
         "pуб": "RUB",
@@ -797,13 +797,13 @@ let Currency = (function() {
 
         let currencySetting = SyncedStorage.get("override_price");
         if (currencySetting !== "auto") {
-            self.userCurrency = currencySetting;
-            return _promise = Background.action('rates', { 'to': self.userCurrency, })
+            self.customCurrency = currencySetting;
+            return _promise = Background.action('rates', { 'to': self.customCurrency, })
                 .then(result => _rates = result);
         }
         return _promise = Background.action('currency')
-            .then(currency => self.userCurrency = currency)
-            .then(() => Background.action('rates', { 'to': self.userCurrency, }))
+            .then(currency => self.customCurrency = currency)
+            .then(() => Background.action('rates', { 'to': self.customCurrency, }))
             .then(result => _rates = result);
     };
 
@@ -834,10 +834,10 @@ let Currency = (function() {
     };
 
     self.getMemoizedCurrencyFromDom = function() {
-        if(!self.pageCurrency) {
-            self.pageCurrency = self.getCurrencyFromDom();
+        if(!self.storeCurrency) {
+            self.storeCurrency = self.getCurrencyFromDom();
         }
-        return self.pageCurrency;
+        return self.storeCurrency;
     };
 
     self.currencySymbolToType = function(symbol) {
@@ -901,11 +901,11 @@ let Price = (function() {
 
     function Price(value, currency, convert) {
         this.value = value || 0;
-        this.currency = currency || Currency.userCurrency;
+        this.currency = currency || Currency.customCurrency;
 
         if (convert !== false) {
             let chosenCurrency = SyncedStorage.get("override_price");
-            if (chosenCurrency === "auto") { chosenCurrency = Currency.userCurrency; }
+            if (chosenCurrency === "auto") { chosenCurrency = Currency.customCurrency; }
             let rate = Currency.getRate(this.currency, chosenCurrency);
 
             if (rate) {
@@ -939,8 +939,8 @@ let Price = (function() {
         let currencySymbol = Currency.getCurrencySymbolFromString(str);
         let currencyType = Currency.getMemoizedCurrencyFromDom() || Currency.currencySymbolToType(currencySymbol);
 
-        if (Currency.userCurrency && format[Currency.userCurrency].symbolFormat === format[currencyType].symbolFormat) {
-            currencyType = Currency.userCurrency;
+        if (Currency.customCurrency && format[Currency.customCurrency].symbolFormat === format[currencyType].symbolFormat) {
+            currencyType = Currency.customCurrency;
         }
 
         // let currencyNumber = currencyTypeToNumber(currencyType);
