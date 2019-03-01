@@ -1600,7 +1600,6 @@ let InventoryPageClass = (function(){
 
                 try {
                     let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': Currency.userCurrency, } );
-                    console.log(result);
                     thisItem.dataset.cardsPrice = new Price(result.average);
                 } catch (err) { }
             }
@@ -1990,7 +1989,7 @@ let BadgesPageClass = (function(){
                 await callback(dom);
 
             } catch (exception) {
-                console.log("Failed to load " + baseUrl + p + ": " + exception);
+                console.error("Failed to load " + baseUrl + p + ": " + exception);
                 return;
             }
         }
@@ -2052,7 +2051,7 @@ let BadgesPageClass = (function(){
             try {
                 response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
             } catch(exception) {
-                console.log("Failed to load booster eligibility", exception);
+                console.error("Failed to load booster eligibility", exception);
                 return;
             }
 
