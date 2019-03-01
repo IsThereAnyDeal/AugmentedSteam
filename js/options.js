@@ -166,7 +166,7 @@ let Options = (function(){
 			document.querySelector("#profile_custom").checked = true;
 			document.querySelector("#es_custom_settings").style.display="flex";
 			document.querySelector("#add_custom_link").style.display="none";
-			saveOption();
+			saveOption("profile_custom");
 		});
 
 		if (SyncedStorage.get("profile_custom")) {
