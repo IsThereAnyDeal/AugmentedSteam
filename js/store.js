@@ -1319,7 +1319,7 @@ let AppPageClass = (function(){
 
         let html = '<div id="steam-spy" class="game_area_description"><h2>' + Localization.str.spy.player_data + '</h2>';
             html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>-<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
             html += "</div>";

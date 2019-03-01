@@ -133,7 +133,7 @@
     "viewinclient": "Näytä Steam-ohjelmassa",
     "custom_background": "Mukautettu taustakuva",
     "custom_style": "Mukautettu Teema",
-    "custom_style_help": "Kaikki Enhanced Steam:in käyttäjät näkevät tämän teeman profiilissasi. Käyttäjät joilla ei ole Enhanced Steam:ia eivät näe täällä tehtyjä teeman muutoksia.",
+    "custom_style_help": "Kaikki Augmented Steam:in käyttäjät näkevät tämän teeman profiilissasi. Käyttäjät joilla ei ole Augmented Steam:ia eivät näe täällä tehtyjä teeman muutoksia.",
     "noneselected": "Ei valittu / Ei muutosta",
     "most_drops": "Eniten löydettäviä kortteja",
     "badge_foil_progress": "Näytä kiiltomerkin edistyminen",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Vieraile vaihtofoorumilla",
     "software": "Ohjelma",
     "purchase_date": "(Ostettu __date__)",
-    "custom_background_help": "Kaikki Enhanced Steamin käyttäjät näkevät tämän taustakuvan profiilissasi.  Muut käyttäjät näkevät tavallisen taustakuvasi.",
+    "custom_background_help": "Kaikki Augmented Steamin käyttäjät näkevät tämän taustakuvan profiilissasi.  Muut käyttäjät näkevät tavallisen taustakuvasi.",
     "date_unlocked": "Avattu",
     "view_badge_foil": "Näytä kiiltomerkki",
     "net_spent": "Nettomenot",
@@ -334,7 +334,7 @@
         "drm": "Näytä muun valmistajan DRM-suojaus varoitus",
         "profile_permalink": "Näytä pysyvä linkki profiileissa",
         "show_regionwarning": "Näytä varoitus selatessa muun kuin tilin alueen kauppaa",
-        "foot_link": "Enhanced Steam laajennus",
+        "foot_link": "Augmented Steam laajennus",
         "profile_link_images": "Linkkien ikonien väri",
         "library": "Näytä \"Kokoelma\"-nappula ylätunnisteessa",
         "show1clickgoo": "Näytä \"1-Click turn into Gems...\" nappi tavaraluettelossa",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Virhe ladatessa Enhanced Steamin tietoja",
-        "loading": "Enhanced Steam lataa tietoja...",
-        "ready": "Enhanced Steam on valmis",
+        "errormsg": "Virhe ladatessa Augmented Steamin tietoja",
+        "loading": "Augmented Steam lataa tietoja...",
+        "ready": "Augmented Steam on valmis",
         "failed": "Yksi tai useampi pyyntö epäonnistui"
     },
     "twitch": {

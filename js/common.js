@@ -526,8 +526,15 @@ let Localization = (function(){
     self.promise = function(){
         if (_promise) { return _promise; }
 
-        let lang = SyncedStorage.get("language");
-        let local = Language.getLanguageCode(lang);
+        let currentSteamLanguage = Language.getCurrentSteamLanguage();
+
+        if (currentSteamLanguage !== null && currentSteamLanguage !== SyncedStorage.get("language")) {
+            SyncedStorage.set("language", currentSteamLanguage);
+        } else {
+            currentSteamLanguage = SyncedStorage.get("language");
+        }
+
+        let local = Language.getLanguageCode(currentSteamLanguage);
 
         _promise = new Promise(function(resolve, reject) {
 
@@ -906,7 +913,7 @@ let Currency = (function() {
             (new Promise((resolveStoreCurrency, rejectStoreCurrency) => {
                 
                 let currencyCache = LocalData.get("user_currency", {});
-                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
+                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && !TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
                     resolveStoreCurrency(currencyCache.userCurrency.currencyType);
                 } else {
 
@@ -1213,7 +1220,7 @@ let Language = (function(){
             }
         }
 
-        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || "english";
+        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || null;
         return currentSteamLanguage;
     };
 
@@ -1838,7 +1845,7 @@ let EarlyAccess = (function(){
                     container.id = "es_ea_apphub";
                     DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
 
-                    checkNodes("#es_ea_apphub");
+                    checkNodes(["#es_ea_apphub"]);
                 }
         }
     }

@@ -441,7 +441,7 @@ let ProfileHomePageClass = (function(){
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_${icon_type}" href="${link}" target="_blank">
+                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
                         htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
@@ -533,9 +533,9 @@ let ProfileHomePageClass = (function(){
 
             for (let i=0; i < badgeCount; i++) {
                 if (data["badges"][i].link) {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
+                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
                 } else {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
+                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
                 }
             }
 
@@ -747,7 +747,7 @@ let ProfileHomePageClass = (function(){
 
     ProfileHomePageClass.prototype.addTwitchInfo = async function() {
 
-        let search = document.querySelector(".profile_summary a[href*='twitch.tv/']");
+        let search = document.querySelector(".profile_summary a[href*='twitch.tv/'], .customtext_showcase a[href*='twitch.tv/']");
         if (!search) { return; }
 
         let m = search.href.match(/twitch\.tv\/(.+)/);
@@ -1518,8 +1518,10 @@ let InventoryPageClass = (function(){
     async function addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {
         if (!SyncedStorage.get("quickinv")) { return; }
         if (!marketable) { return; }
-        if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
-
+        if (contextId !== 6 || globalId !== 753) { return; }
+        // 753 is the appid for "Steam" in the Steam Inventory
+        // 6 is the context used for "Community Items"; backgrounds, emoticons and trading cards
+        
         if (!thisItem.classList.contains("es-loading")) {
             let url = marketActions.querySelector("a").href;
 
@@ -1652,7 +1654,7 @@ let InventoryPageClass = (function(){
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
                     thisItem.dataset.soldVolume = data.volume;
                 }
-            } catch {
+            } catch (err) {
                 console.error("Couldn't load price overview from market");
                 firstDiv.innerHTML = html; // add market link anyway
                 return;
@@ -2221,38 +2223,40 @@ let BadgesPageClass = (function(){
 
         ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-        let that = this;
-        document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
+        if (isOwnProfile) {
+            let that = this;
+            document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
 
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
-            }
-
-            sortBadgeRows(e.target.textContent, (node) => {
-                let content = 0;
-                let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
-                if (progressInfo) {
-                    content = parseInt(progressInfo[1])
+                if (that.hasMultiplePages) {
+                    await that.loadAllPages();
                 }
-                return content;
-            })
-        });
 
-        document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
-
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
-            }
-
-            sortBadgeRows(e.target.textContent, (node) => {
-                let content = 0;
-                let dropWorth = node.querySelector(".es_card_drop_worth");
-                if (dropWorth) {
-                    content = parseFloat(dropWorth.dataset.esCardWorth);
-                }
-                return content;
+                sortBadgeRows(e.target.textContent, (node) => {
+                    let content = 0;
+                    let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+                    if (progressInfo) {
+                        content = parseInt(progressInfo[1])
+                    }
+                    return content;
+                })
             });
-        });
+
+            document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
+
+                if (that.hasMultiplePages) {
+                    await that.loadAllPages();
+                }
+
+                sortBadgeRows(e.target.textContent, (node) => {
+                    let content = 0;
+                    let dropWorth = node.querySelector(".es_card_drop_worth");
+                    if (dropWorth) {
+                        content = parseFloat(dropWorth.dataset.esCardWorth);
+                    }
+                    return content;
+                });
+            });
+        }
     };
 
     BadgesPageClass.prototype.addBadgeFilter = function() {
