@@ -1,4 +1,4 @@
-Enhanced Steam, an IsThereAnyDeal fork
+Augmented Steam, an IsThereAnyDeal fork
 ==============
 
 This is a fork of Enhanced Steam extension.
