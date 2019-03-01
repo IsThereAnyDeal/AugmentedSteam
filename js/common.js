@@ -817,7 +817,7 @@ let Currency = (function() {
         for (let currency of target) {
             promises.push(Background.action('rates', { 'to': currency, }));
         }
-        return Promises.all(promises).then(result => _rates = result.reduce(mergeRates, null));
+        return Promise.all(promises).then(result => _rates = result.reduce(mergeRates, null));
     }
 
     // load user currency
