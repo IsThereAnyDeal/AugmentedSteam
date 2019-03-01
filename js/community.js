@@ -28,52 +28,20 @@ let ProfileData = (function(){
 
     let self = {};
 
-    function getLocalDataKey(steamId) {
-        return "profile_" + steamId;
-    }
-
     let _data = {};
     let _promise = null;
-    self.promise = function() {
-        if (_promise) { return _promise; }
-
-        _promise = new Promise(function(resolve, reject){
+    self.promise = async function() {
+        if (!_promise) {
             let steamId = SteamId.getSteamId();
-            if (!steamId) { reject(); }
 
-            let localDataKey = getLocalDataKey(steamId);
-            _data = LocalData.get(localDataKey);
-
-            /* FIXME
-            if (data && data.timestamp && !TimeHelper.isExpired(data.timestamp, 24*60*60)) {
-                resolve(data.data);
-                return;
-            }*/
-
-            RequestData.getApi("v01/profile/profile", {profile: steamId}).then(response => {
-                if (response && response.result && response.result === "success") {
-
-                    LocalData.set(localDataKey, {
-                        timestamp: TimeHelper.timestamp(),
-                        data: response.data
-                    });
-
-                    _data = response.data;
-                    resolve(response.data);
-                } else {
-                    reject();
-                }
-            }, reject);
-        });
-
+            _promise = Background.action('profile', { 'profile': steamId, } )
+                .then(response => { _data = response; return _data; });
+        }
         return _promise;
     };
 
     self.then = function(onDone, onCatch) {
-        if (!_promise) {
-            _promise = self.promise();
-        }
-        return _promise.then(onDone, onCatch);
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getBadges = function() {
@@ -113,11 +81,11 @@ let ProfileData = (function(){
         return _data.bg && _data.bg.appid ? parseInt(_data.bg.appid) : null;
     };
 
-    self.clearOwn = function() {
+    self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        LocalData.del(getLocalDataKey(User.steamId));
+        await Background.action('profile.clear', { 'profile': User.steamId, });
         _promise = null;
-        self.promise();
+        return self.promise();
     };
 
     return self;
@@ -266,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await DynamicStore;
+        await Promise.all([DynamicStore, Inventory,]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -278,14 +246,13 @@ let ProfileActivityPageClass = (function(){
                 let appid = GameId.getAppid(link.href);
                 if (!appid) { continue; }
 
-                // TODO (tomas.fedor) refactor following checks to a class, this way we'll easily forget how exactly do we store them or where
-                if (LocalData.get(appid + "guestpass")) {
+                if (Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
                 }
-                if (LocalData.get("couponData_" + appid)) {
+                if (Inventory.getCouponByAppId(appid)) {
                     Highlights.highlightCoupon(link);
                 }
-                if (LocalData.get(appid + "gif")) {
+                if (Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
                 }
 
@@ -755,9 +722,7 @@ let ProfileHomePageClass = (function(){
 
         let twitchId = m[1].replace(/\//g, "");
 
-        let response = await RequestData.getApi("v01/twitch/stream", {channel: twitchId});
-        if (!response || response.result !== "success") { return; }
-        let data = response.data;
+        let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
 
         let channelUsername = data.user_name;
         let channelUrl = search.href;
@@ -1010,15 +975,12 @@ let GamesPageClass = (function(){
 
 let ProfileEditPageClass = (function(){
 
-    function ProfileEditPageClass() {
-        ProfileData.clearOwn();
-
+    async function ProfileEditPageClass() {
+        await ProfileData.clearOwn();
 
         if (window.location.pathname.indexOf("/settings") < 0) {
-            ProfileData.then(() => {
-                this.addBackgroundSelection();
-                this.addStyleSelection();
-            });
+            this.addBackgroundSelection();
+            this.addStyleSelection();
         }
     }
 
@@ -1063,7 +1025,7 @@ let ProfileEditPageClass = (function(){
 
         showBgFormLoading();
 
-        let result = await RequestData.getApi("v01/profile/background/background", {
+        let result = await Background.action("profile.background", {
             appid: appid,
             profile: SteamId.getSteamId()
         });
@@ -1071,7 +1033,7 @@ let ProfileEditPageClass = (function(){
         let selectedImg = ProfileData.getBgImg();
 
         let html = "";
-        for (let value of result.data) {
+        for (let value of result) {
             let img = BrowserHelper.escapeHTML(value[0].toString());
             let name = BrowserHelper.escapeHTML(value[1].toString());
 
@@ -1098,7 +1060,7 @@ let ProfileEditPageClass = (function(){
             = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
     }
 
-    ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
+    ProfileEditPageClass.addBackgroundSelection = async function() {
         if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
@@ -1129,13 +1091,12 @@ let ProfileEditPageClass = (function(){
         document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-        let response = await RequestData.getApi("v01/profile/background/games");
-        if (!response || !response.data) { return; }
+        let response = await Background.action('profile.background.games');
 
         let gameSelectNode = document.querySelector("#es_bg_game");
         let imgSelectNode = document.querySelector("#es_bg_img");
 
-        let gameList = getGameSelectOptions(response.data);
+        let gameList = getGameSelectOptions(response);
         gameSelectNode.innerHTML = gameList[1];
         gameSelectNode.style.display = "block";
 
@@ -1151,14 +1112,14 @@ let ProfileEditPageClass = (function(){
         gameSelectNode.addEventListener("change", onGameSelected);
         imgSelectNode.addEventListener("change", onImgSelected);
 
-        document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
-            ProfileData.clearOwn();
+        document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
         });
 
-        document.querySelector("#es_background_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedAppid = encodeURIComponent(gameSelectNode.value);
             let selectedImg = encodeURIComponent(imgSelectNode.value);
@@ -1166,7 +1127,7 @@ let ProfileEditPageClass = (function(){
         });
     };
 
-    ProfileEditPageClass.prototype.addStyleSelection = function() {
+    ProfileEditPageClass.addStyleSelection = function() {
         let html =
             `<div class='group_content group_summary'>
                 <div class='formRow'>
@@ -1227,16 +1188,16 @@ let ProfileEditPageClass = (function(){
             document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
         });
 
-        document.querySelector("#es_style_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedStyle = encodeURIComponent(styleSelectNode.value);
             window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
         });
 
-        document.querySelector("#es_style_remove_btn").addEventListener("click", function(e) {
-            ProfileData.clearOwn();
+        document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
         });
     };
@@ -1417,7 +1378,7 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await RequestData.getJson("https://store.steampowered.com/api/appdetails/?appids=" + giftAppid + "&filters=price_overview");
+        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
         if (!result[giftAppid] || !result[giftAppid].success) { return; }
         if (!result[giftAppid]['data']['price_overview']) { return; }
 
@@ -1637,11 +1598,10 @@ let InventoryPageClass = (function(){
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
-                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.userCurrency});
-                console.log(result);
-                if (result.result === "success") {
-                    thisItem.dataset.cardsPrice = new Price(result.data.average);
-                }
+                try {
+                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': Currency.userCurrency, } );
+                    thisItem.dataset.cardsPrice = new Price(result.average);
+                } catch (err) { }
             }
 
             try {
@@ -1944,9 +1904,9 @@ let BadgesPageClass = (function(){
             return;
         }
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/averagecardprices", {
+            data = await Background.action("market.averagecardprices", {
                 currency: Currency.userCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
@@ -1955,12 +1915,6 @@ let BadgesPageClass = (function(){
             console.error("Couldn't retrieve average card prices", exception);
             return;
         }
-
-        if (!response.result || response.result !== "success") {
-            return;
-        }
-
-        let data = response.data;
 
         // regular cards
         for (let item of nodes) {
@@ -2035,7 +1989,7 @@ let BadgesPageClass = (function(){
                 await callback(dom);
 
             } catch (exception) {
-                console.log("Failed to load " + baseUrl + p + ": " + exception);
+                console.error("Failed to load " + baseUrl + p + ": " + exception);
                 return;
             }
         }
@@ -2097,7 +2051,7 @@ let BadgesPageClass = (function(){
             try {
                 response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
             } catch(exception) {
-                console.log("Failed to load booster eligibility", exception);
+                console.error("Failed to load booster eligibility", exception);
                 return;
             }
 
@@ -2413,18 +2367,13 @@ let GameCardPageClass = (function(){
         let cost = new Price(0);
         let isFoil = /border=1/i.test(document.URL);
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.userCurrency});
+            data = await Background.action("market.cardprices", {appid: this.appid, currency: Currency.userCurrency});
         } catch(exception) {
             console.error("Failed to load card prices", exception);
             return;
         }
-
-        if (!response || response.result !== "success") {
-            return;
-        }
-        let data = response.data;
 
         let nodes = document.querySelectorAll(".badge_card_set_card");
         for (let node of nodes) {
@@ -2533,7 +2482,7 @@ let FriendsThatPlayPageClass = (function(){
         if (!SyncedStorage.get("showallfriendsthatown")) return;
         
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
+        let data = await Background.action('appuserdetails', { 'appids': this.appid, });
         if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
             return;
         }
@@ -2804,7 +2753,7 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
             this.highlightMarketItems();
 
             let that = this;
@@ -3249,11 +3198,7 @@ let CommunityAppPageClass = (function(){
             e.preventDefault();
             if (e.target.classList.contains("btn_disabled")) { return; }
 
-            let formData = new FormData();
-            formData.append("sessionid", await User.getStoreSessionId());
-            formData.append("appid", that.appid);
-
-            await RequestData.post("https://store.steampowered.com/api/addtowishlist", formData, {withCredentials: true});
+            await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
 
             e.target.classList.add("btn_disabled");
             e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
@@ -3322,93 +3267,88 @@ let GuidesPageClass = (function(){
 })();
 
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(() => {
+    await SyncedStorage.load().catch(err => console.error(err));
+    await Promise.all([Localization, User, Currency]);
 
-                Common.init();
-                SpamCommentHandler.hideSpamComments();
+    Common.init();
+    SpamCommentHandler.hideSpamComments();
 
-                switch (true) {
+    switch (true) {
 
-                    case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
-                        (new ProfileActivityPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+            (new ProfileActivityPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
-                        (new GamesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+            (new GamesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/edit/.test(path):
-                        (new ProfileEditPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/edit/.test(path):
+            (new ProfileEditPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
-                        (new BadgesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
+            (new BadgesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-                        (new GameCardPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+            (new GameCardPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
-                        (new FriendsThatPlayPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
+            (new FriendsThatPlayPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-                        (new FriendsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+            (new FriendsPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
-                        (new InventoryPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+            (new InventoryPageClass());
+            break;
 
-                    case /^\/market\/listings\/.*/.test(path):
-                        (new MarketListingPageClass());
-                        break;
+        case /^\/market\/listings\/.*/.test(path):
+            (new MarketListingPageClass());
+            break;
 
-                    case /^\/market\/.*/.test(path):
-                        (new MarketPageClass());
-                        break;
+        case /^\/market\/.*/.test(path):
+            (new MarketPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
-                        (new ProfileHomePageClass());
-                        break;
+        case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
+            (new ProfileHomePageClass());
+            break;
 
-                    case /^\/app\/[^\/]*\/guides/.test(path):
-                        (new GuidesPageClass());
-                        break;
+        case /^\/app\/[^\/]*\/guides/.test(path):
+            (new GuidesPageClass());
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new CommunityAppPageClass());
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new CommunityAppPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-                        (new StatsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+            (new StatsPageClass());
+            break;
 
-                    case /^\/tradingcards\/boostercreator/.test(path):
-                        let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                            .textContent.trim().replace(/\d/g, "");
+        case /^\/tradingcards\/boostercreator/.test(path):
+            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
+                .textContent.trim().replace(/\d/g, "");
 
-                        ExtensionLayer.runInPageContext("function() { \
-                            $J('#booster_game_selector option').each(function(index) {\
-                                if ($J(this).val()) {\
-                                    $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
-                                }\
-                            });\
-                        }");
-                        break;
-                }
+            ExtensionLayer.runInPageContext("function() { \
+                $J('#booster_game_selector option').each(function(index) {\
+                    if ($J(this).val()) {\
+                        $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
+                    }\
+                });\
+            }");
+            break;
+    }
 
-                EnhancedSteam.hideTrademarkSymbol(true);
-            })
-    )
+    EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
 

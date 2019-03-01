@@ -167,25 +167,6 @@ let Defaults = (function() {
 /**
  * Common functions that may be used on any pages
  */
-
-let Api = (function(){
-    let self = {};
-
-    self.getApiUrl = function(endpoint, query) {
-
-        let queryString = "";
-        if (query) {
-            queryString = "?" + Object.entries(query)
-                .map(pair => pair.map(encodeURIComponent).join("="))
-                .join("&");
-        }
-
-        return Config.ApiServerHost + "/" + endpoint + "/" + queryString;
-    };
-
-    return self;
-})();
-
 let Background = (function(){
     let self = {};
 
@@ -205,8 +186,10 @@ let Background = (function(){
         });
     };
     
-    self.action = function(requested) {
-        return self.message({ 'action': requested, });
+    self.action = function(requested, params) {
+        if (typeof params == 'undefined')
+            return self.message({ 'action': requested, });
+        return self.message({ 'action': requested, 'params': params, });
     };
 
     Object.freeze(self);
@@ -453,11 +436,6 @@ let RequestData = (function(){
         });
     };
 
-    self.getApi = function(api, query) {
-        let apiUrl = Api.getApiUrl(api, query);
-        return self.getJson(apiUrl);
-    };
-
     self.post = function(url, formData, settings) {
         return self.getHttp(url, Object.assign(settings || {}, {
             method: "POST",
@@ -589,6 +567,10 @@ let Localization = (function(){
         return _promise;
     };
 
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
+    };
+
     self.getString = function(key) {
         // Source: http://stackoverflow.com/a/24221895
         let path = key.split('.').reverse();
@@ -623,49 +605,38 @@ let User = (function(){
 
     let _promise = null;
 
-    async function _fetch() {
-        let response = await RequestData.getHttp(self.profileUrl);
-
-        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
-
-        if (self.steamId) {
-            self.isSignedIn = true;
-            LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
-
-            // check user country
-            response = await RequestData.getHttp("https://store.steampowered.com/account/change_country/");
-            if (response) {
-                let node = BrowserHelper.htmlToDOM(response).querySelector("#dselect_user_country");
-                if (node && node.value) {
-                    LocalData.set("userCountry", node.value);
-                }
-            }
-        }
-    }
-
     self.promise = function() {
         if (_promise) { return _promise; }
 
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [null])[0];
+        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
 
+        // If profilePath is not available, we're not logged in
         if (!self.profilePath) {
+            Background.action('logout');
             _promise = Promise.resolve();
             return _promise;
         }
 
-        let userLogin = LocalData.get("userLogin");
-        if (userLogin && userLogin.profilePath === self.profilePath) {
-            self.isSignedIn = true;
-            self.steamId = userLogin.steamId;
-            _promise = Promise.resolve();
-            return _promise;
-        }
-
-        _promise = _fetch();
+        _promise = Background.action('login', { 'path': self.profilePath, })
+            .then(function (login) {
+                if (!login) return;
+                self.isSignedIn = true;
+                self.steamId = login.steamId;
+                // If we're *newly* logged in, then login.userCountry will be set
+                if (login.userCountry) {
+                    LocalData.set("userCountry", login.userCountry);
+                }
+            })
+            .catch(err => console.error(err))
+            ;
 
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getAccountId = function(){
@@ -683,9 +654,7 @@ let User = (function(){
     };
 
     self.getStoreSessionId = async function() {
-        // TODO what's the minimal page we can load here to get sessionId?
-        let storePage = await RequestData.getHttp("https://store.steampowered.com/news/");
-        return BrowserHelper.getVariableFromText(storePage, "g_sessionID", "string");
+        return Background.action('sessionid');
     };
 
     self.getCountry = function() {
@@ -705,77 +674,8 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    let _purchaseDataPromise = null;
-    self.getPurchaseDate = function(lang, appName) {
-        if (_purchaseDataPromise) { return _purchaseDataPromise; }
-
-        _purchaseDataPromise = new Promise(function(resolve, reject) {
-            let purchaseDates = LocalData.get("purchase_dates", {});
-
-            appName = StringUtils.clearSpecialSymbols(appName);
-
-            // Return date from cache
-            if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
-                resolve(purchaseDates[lang][appName]);
-                return;
-            }
-
-            let lastUpdate = LocalData.get("purchase_dates_time", 0);
-
-            // Update cache if needed
-            if (!TimeHelper.isExpired(lastUpdate, 300)) {
-                resolve();
-                return;
-            }
-
-            RequestData.getHttp("https://store.steampowered.com/account/licenses/?l=" + lang).then(result => {
-                let replaceRegex = [
-                    /- Complete Pack/ig,
-                    /Standard Edition/ig,
-                    /Steam Store and Retail Key/ig,
-                    /- Hardware Survey/ig,
-                    /ComputerGamesRO -/ig,
-                    /Founder Edition/ig,
-                    /Retail( Key)?/ig,
-                    /Complete$/ig,
-                    /Launch$/ig,
-                    /Free$/ig,
-                    /(RoW)/ig,
-                    /ROW/ig,
-                    /:/ig,
-                ];
-
-                purchaseDates[lang] = {};
-
-                let dummy = document.createElement("html");
-                dummy.innerHTML = result;
-
-                let nodes = dummy.querySelectorAll("#main_content td.license_date_col");
-
-                for (let i=0, len=nodes.length; i<len; i++) {
-                    let node = nodes[i];
-
-                    let nameNode = node.nextElementSibling;
-                    let removeNode = nameNode.querySelector("div");
-                    if (removeNode) { removeNode.remove(); }
-
-                    // Clean game name
-                    let gameName = StringUtils.clearSpecialSymbols(nameNode.textContent.trim());
-
-                    replaceRegex.forEach(regex => {
-                        gameName = gameName.replace(regex, "");
-                    });
-
-                    purchaseDates[lang][gameName.trim()] = node.textContent;
-                }
-
-                LocalData.set("purchase_dates", purchaseDates);
-                LocalData.set("purchase_dates_time", TimeHelper.timestamp());
-
-                resolve(purchaseDates[lang][appName]);
-            }, reject);
-        });
-        return _purchaseDataPromise;
+    self.getPurchaseDate = async function(lang, appName) {
+        return Background.action('purchase', { 'lang': lang, 'appName': appName, });
     };
 
     return self;
@@ -841,7 +741,7 @@ let Currency = (function() {
         "$U": "UYU"
     };
 
-    let typeToNumberMap = {
+    const typeToNumberMap = {
         "RUB": 5,
         "EUR": 3,
         "GBP": 2,
@@ -880,107 +780,35 @@ let Currency = (function() {
         "CRC": 40,
         "UYU": 41
     };
-
-    let numberToTypeMap = {
-        5: "RUB",
-        3: "EUR",
-        2: "GBP",
-        6: "PLN",
-        7: "BRL",
-        8: "JPY",
-        9: "NOK",
-        10: "IDR",
-        11: "MYR",
-        12: "PHP",
-        13: "SGD",
-        14: "THB",
-        15: "VND",
-        16: "KRW",
-        17: "TRY",
-        18: "UAH",
-        19: "MXN",
-        20: "CAD",
-        21: "AUD",
-        22: "NZD",
-        23: "CNY",
-        24: "INR",
-        25: "CLP",
-        26: "PEN",
-        27: "COP",
-        28: "ZAR",
-        29: "HKD",
-        30: "TWD",
-        31: "SAR",
-        32: "AED",
-        34: "ARS",
-        35: "ILS",
-        37: "KZT",
-        38: "KWD",
-        39: "QAR",
-        40: "CRC",
-        41: "UYU"
-    };
+    Object.freeze(typeToNumberMap);
+    
+    const numberToTypeMap = {};
+    for (let [abbr, num] of Object.entries(typeToNumberMap)) {
+        numberToTypeMap[num] = abbr;
+    }
+    Object.freeze(numberToTypeMap);
 
     let _rates = {};
     let _promise = null;
 
     // load user currency
-    self.promise = function() {
+    self.promise = async function() {
         if (_promise) { return _promise; }
 
-        _promise = new Promise(function(resolve, reject) {
-            (new Promise(function(resolve, reject) {
-                let currencySetting = SyncedStorage.get("override_price");
+        let currencySetting = SyncedStorage.get("override_price");
+        if (currencySetting !== "auto") {
+            self.userCurrency = currencySetting;
+            return _promise = Background.action('rates', { 'to': self.userCurrency, })
+                .then(result => _rates = result);
+        }
+        return _promise = Background.action('currency')
+            .then(currency => self.userCurrency = currency)
+            .then(() => Background.action('rates', { 'to': self.userCurrency, }))
+            .then(result => _rates = result);
+    };
 
-                if (currencySetting !== "auto") {
-                    self.userCurrency = currencySetting;
-                    resolve();
-                    return;
-                }
-
-                let currencyCache = LocalData.get("user_currency", {});
-                if (currencyCache.userCurrency && currencyCache.userCurrency.currencyType && TimeHelper.isExpired(currencyCache.userCurrency.updated, 3600)) {
-                    self.userCurrency = currencyCache.userCurrency.currencyType;
-                    resolve();
-                } else {
-                    RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                        .then(
-                            response => {
-                                let dummyHtml = document.createElement("html");
-                                dummyHtml.innerHTML = response;
-
-                                self.userCurrency = dummyHtml.querySelector("input[name=currency]").value;
-                                LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                            },
-                            () => {
-                                RequestData
-                                    .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
-                                    .then(response => {
-                                        let dummyHtml = document.createElement("html");
-                                        dummyHtml.innerHTML = response;
-
-                                        let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
-                                        if (!currency) {
-                                            throw new Error();
-                                        }
-
-                                        self.userCurrency = currency;
-                                        LocalData.set("user_currency", {currencyType: self.userCurrency, updated: TimeHelper.timestamp()})
-                                    });
-                            }
-                        )
-                        .finally(resolve);
-                }
-            })).finally(() => {
-                RequestData.getApi("v01/rates", { to: self.userCurrency })
-                    .then(result => {
-                        _rates = result.data;
-                        resolve();
-                    }, reject);
-            });
-        });
-
-        return _promise;
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getRate = function(from, to) {
@@ -1382,6 +1210,7 @@ let EnhancedSteam = (function() {
         SyncedStorage.remove("store_sessionid");
         DynamicStore.clear();
         Background.action('dynamicstore.clear');
+        Background.action('api.cache.clear');
     };
 
     self.bindLogout = function(){
@@ -1483,7 +1312,7 @@ let EnhancedSteam = (function() {
             if (!result.rgOwnedApps) { return; }
             let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-            RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+            Background.action('appdetails', { 'appids': appid, }).then(response => {
                 if (!response || !response[appid] || !response[appid].success) { return; }
                 let data = response[appid].data;
 
@@ -1675,46 +1504,8 @@ let EarlyAccess = (function(){
 
     let self = {};
 
-    let cache = {};
+    let cache = new Set();
     let imageUrl;
-
-    let _promise = null;
-
-    function promise() {
-        if (_promise) { return _promise; }
-
-        let imageName = "img/overlay/early_access_banner_english.png";
-        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
-        }
-        imageUrl = ExtensionLayer.getLocalUrl(imageName);
-
-        _promise = new Promise(function(resolve, reject) {
-            cache = LocalData.get("ea_appids");
-
-            if (cache) {
-                resolve();
-                return;
-            }
-
-            let updateTime = LocalData.get("ea_appids_time");
-            if (!TimeHelper.isExpired(updateTime, 3600)) {
-                return;
-            }
-
-            RequestData.getApi("v01/earlyaccess").then(data => {
-                if (!data.result || data.result !== "success") {
-                    reject();
-                }
-
-                cache = data.data;
-                LocalData.set("ea_appids", cache);
-                LocalData.set("ea_appids_time", TimeHelper.timestamp());
-                resolve()
-            }, reject);
-        });
-        return _promise;
-    }
 
     function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
@@ -1730,7 +1521,7 @@ let EarlyAccess = (function(){
                 let imgHeader = node.querySelector("img" + selectorModifier);
                 let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && cache.hasOwnProperty(appid)) {
+                if (appid && cache.has(appid)) {
                     node.classList.add("es_early_access");
 
                     let container = document.createElement("span");
@@ -1816,24 +1607,30 @@ let EarlyAccess = (function(){
                     container.id = "es_ea_apphub";
                     DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
 
-                    checkNodes("#es_ea_apphub");
+                    checkNodes(["#es_ea_apphub"]);
                 }
         }
     }
 
-    self.showEarlyAccess = function() {
+    self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        promise().then(() => {
-            switch (window.location.host) {
-                case "store.steampowered.com":
-                    handleStore();
-                    break;
-                case "steamcommunity.com":
-                    handleCommunity();
-                    break;
-            }
-        });
+        cache = new Set(await Background.action('early_access_appids'));
+
+        let imageName = "img/overlay/early_access_banner_english.png";
+        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
+        }
+        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+    
+        switch (window.location.host) {
+            case "store.steampowered.com":
+                handleStore();
+                break;
+            case "steamcommunity.com":
+                handleCommunity();
+                break;
+        }
     };
 
     return self;
@@ -1844,156 +1641,61 @@ let Inventory = (function(){
 
     let self = {};
 
-    let gifts = [];
-    let guestpasses = [];
+    let gifts = new Set();
+    let guestpasses = new Set();
     let coupons = {};
-
-    // Context ID 1 is gifts and guest passes
-    function handleInventoryContext1(data) {
-        if (!data || !data.success) return;
-
-        LocalData.set("inventory_1", data);
-
-        for(let [key, obj] of Object.entries(data.rgDescriptions)) {
-            let isPackage = false;
-            if (obj.descriptions) {
-                for (let desc of obj.descriptions) {
-                    if (desc.type === "html") {
-                        let appids = GameId.getAppids(desc.value);
-                        // Gift package with multiple apps
-                        isPackage = true;
-                        for (let appid of appids) {
-                            if (!appid) { continue; }
-                            if (obj.type === "Gift") {
-                                gifts.push(appid);
-                            } else {
-                                guestpasses.push(appid);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // Single app
-            if (!isPackage && obj.actions) {
-                let appid = GameId.getAppid(obj.actions[0].link);
-                if (appid) {
-                    if (obj.type === "Gift") {
-                        gifts.push(appid);
-                    } else {
-                        guestpasses.push(appid);
-                    }
-                }
-            }
-
-        }
-    }
-
-    // Community items?
-    function handleInventoryContext6(data) {
-        if (!data || !data.success) { return; }
-        LocalData.set("inventory_6", data);
-    }
-
-    // Coupons
-    function handleInventoryContext3(data) {
-        if (!data || !data.success) { return; }
-        LocalData.set("inventory_3", data);
-
-        for(let [id, obj] of Object.entries(data.rgDescriptions)) {
-            if (!obj.type || obj.type !== "Coupon") {
-                continue;
-            }
-            if (!obj.actions) {
-                continue;
-            }
-
-            let couponData = {
-                image_url: obj.icon_url,
-                title: obj.name,
-                discount: obj.name.match(/([1-9][0-9])%/)[1],
-                id: id
-            };
-
-            for (let i = 0; i < obj.descriptions.length; i++) {
-                if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
-                    Object.assign(couponData, {
-                        discount_note: obj.descriptions[i].value,
-                        discount_note_id: i,
-                        discount_doesnt_stack: true
-                    });
-                } else if (obj.descriptions[i].value.startsWith("(Valid")) {
-                    Object.assign(couponData, {
-                        valid_id: i,
-                        valid: obj.descriptions[i].value
-                    });
-                }
-            }
-
-            for (let j = 0; j < obj.actions.length; j++) {
-                let link = obj.actions[j].link;
-                let packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
-
-                if (!coupons[packageid] || coupons[packageid].discount < couponData.discount) {
-                    coupons[packageid] = couponData;
-                }
-            }
-        }
-    }
-
+    let inv6set = new Set();
+    let coupon_appids = new Map();
+    
     let _promise = null;
-    self.promise = function() {
+    self.promise = async function() {
         if (_promise) { return _promise; }
-        _promise = new Promise(function(resolve, reject) {
-            if (!User.isSignedIn) {
-                resolve();
-                return;
+
+        if (!User.isSignedIn) {
+            _promise = Promise.resolve();
+            return _promise;
+        }
+
+        function handleCoupons(data) {
+            coupons = data;
+            for (let [subid, details] of Object.entries(coupons)) {
+                for (let { 'id': appid, } of details.appids) {
+                    coupon_appids.set(appid, parseInt(subid, 10));
+                }
             }
-
-            let lastUpdate = LocalData.get("inventory_update");
-            let inv1 = LocalData.get("inventory_1");
-            let inv3 = LocalData.get("inventory_3");
-            let inv6 = LocalData.get("inventory_6");
-
-            if (TimeHelper.isExpired(lastUpdate, 3600) || !inv1 || !inv3) {
-                LocalData.set("inventory_update", Date.now());
-
-                Promise.all([
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
-                ]).then(resolve, reject);
-            }
-            else {
-                // No need to load anything, its all in localStorage.
-                handleInventoryContext1(inv1);
-                handleInventoryContext3(inv3);
-                handleInventoryContext6(inv6);
-
-                resolve();
-            }
-        });
+        }
+        _promise = Promise.all([
+            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
+            Background.action('inventory.coupons').then(handleCoupons),
+            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
+            ]);
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
     };
 
-    let inv6set = null;
+    self.getCouponByAppId = function(appid) {
+        if (!coupon_appids.has(appid))
+            return false;
+        let subid = coupon_appids.get(appid);
+        return self.getCoupon(subid);
+    };
+
+    self.hasGift = function(subid) {
+        return gifts.has(subid);
+    };
+
+    self.hasGuestPass = function(subid) {
+        return guestpasses.has(subid);
+    };
 
     self.hasInInventory6 = function(marketHash) {
-        if (!inv6set) {
-            inv6set = new Set();
-            let inv6 = LocalData.get("inventory_6");
-            if (!inv6 || !inv6['rgDescriptions']) { return false; }
-
-            for (let [key,item] of Object.entries(inv6.rgDescriptions)) {
-                inv6set.add(item['market_hash_name']);
-            }
-        }
-
         return inv6set.has(marketHash);
     };
 
@@ -2271,7 +1973,9 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
-    self.startHighlightsAndTags = function(parent) {
+    self.startHighlightsAndTags = async function(parent) {
+        await Inventory;
+        
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
             "div.tab_row",					// Storefront rows
@@ -2334,13 +2038,13 @@ let Highlights = (function(){
                     let aNode = node.querySelector("a");
                     let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
                     if (appid) {
-                        if (LocalData.get(appid + "guestpass")) {
+                        if (Inventory.hasGuestPass(appid)) {
                             self.highlightInvGuestpass(node);
                         }
-                        if (LocalData.get("couponData_" + appid)) {
+                        if (Inventory.getCouponByAppId(appid)) {
                             self.highlightCoupon(node);
                         }
-                        if (LocalData.get(appid + "gift")) {
+                        if (Inventory.hasGift(appid)) {
                             self.highlightInvGift(node);
                         }
                     }
@@ -2630,15 +2334,11 @@ let Prices = (function(){
         let apiParams = this._getApiParams();
 
         if (!apiParams) { return; }
-        RequestData.getApi("v01/prices", apiParams).then(response => {
-            if (!response || response.result !== "success") { return; }
 
-            for (let gameid in response.data.data) {
-                if (!response.data.data.hasOwnProperty(gameid)) { continue; }
-
-                let meta = response.data['.meta'];
-                let info = response.data.data[gameid];
-
+        Background.action('prices', apiParams).then(response => {
+            let meta = response['.meta'];
+            
+            for (let [gameid, info] of Object.entries(response.data)) {
                 that._processPrices(gameid, meta, info);
                 that._processBundles(gameid, meta, info);
             }

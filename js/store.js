@@ -746,34 +746,14 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.storePageDataPromise = async function() {
-        let appid = this.appid;
-        let cache = LocalData.get("storePageData_" + appid);
-
-        if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
-            return cache.data;
-        }
-
-        let apiparams = {
-            appid: appid
-        };
+        let apiparams = { 'appid': this.appid, };
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
         }
         if (SyncedStorage.get("showoc")) {
             apiparams.oc = 1;
         }
-
-        return RequestData.getApi("v01/storepagedata", apiparams)
-            .then(function(response) {
-                if (response && response.result && response.result === "success") {
-                    LocalData.set("storePageData_" + appid, {
-                        data: response.data,
-                        updated: Date.now(),
-                    });
-                    return response.data;
-                }
-                throw "Network error: did not receive valid storepagedata.";
-            });
+        return Background.action('storepagedata', apiparams);
     };
 
     /**
@@ -843,7 +823,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addCoupon = function() {
         let inst = this;
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
 
             let coupon = Inventory.getCoupon(inst.getFirstSubid());
             if (!coupon) { return; }
@@ -877,24 +857,19 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addDlcInfo = function() {
         if (!this.isDlc()) { return; }
 
-        RequestData.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
-            let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
-
-            if (response && response.result === "success") {
-                for(let i=0, len=response.data.length; i<len; i++) {
-
-                    let item = response.data[i];
-                    let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
-                    let title = BrowserHelper.escapeHTML(item.desc);
-                    let name = BrowserHelper.escapeHTML(item.name);
-                    html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
-                }
+        let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+        Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
+            for(let item of response) {
+                let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
+                let title = BrowserHelper.escapeHTML(item.desc);
+                let name = BrowserHelper.escapeHTML(item.name);
+                html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
             }
-
+        }).finally(() => {
             let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
             html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
 
-            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);
+            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);            
         });
     };
 
@@ -1551,13 +1526,10 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
-            loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
-        });
-
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
-            loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
-        });
+        Background.action('cards', { 'appid': this.appid, } )
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result, ".badge_current"));
+        Background.action('cards', { 'appid': this.appid, 'border': 1, } )
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result, ".badge_current"));
 
         function loadBadgeContent(targetSelector, result, selector) {
             let dummy = document.createElement("html");
@@ -1643,7 +1615,7 @@ let AppPageClass = (function(){
         details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
+        Background.action('stats', { 'appid': this.appid, } ).then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
@@ -2887,72 +2859,66 @@ let TabAreaObserver = (function(){
     return self;
 })();
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(function(values) {
+    await SyncedStorage.load().catch(err => console.error(err));
+    await Promise.all([Localization, User, Currency]);
 
-                Common.init();
+    Common.init();
 
-                switch (true) {
-                    case /\bagecheck\b/.test(path):
-                        AgeCheck.sendVerification();
-                        break;
+    switch (true) {
+        case /\bagecheck\b/.test(path):
+            AgeCheck.sendVerification();
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new AppPageClass(window.location.host + path));
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new AppPageClass(window.location.host + path));
+            break;
 
-                    case /^\/sub\/.*/.test(path):
-                        (new SubPageClass(window.location.host + path));
-                        break;
+        case /^\/sub\/.*/.test(path):
+            (new SubPageClass(window.location.host + path));
+            break;
 
-                    case /^\/bundle\/.*/.test(path):
-                        (new BundlePageClass(window.location.host + path));
-                        break;
+        case /^\/bundle\/.*/.test(path):
+            (new BundlePageClass(window.location.host + path));
+            break;
 
-                    case /^\/account\/registerkey(\/.*)?/.test(path):
-                        (new RegisterKeyPageClass());
-                        return;
+        case /^\/account\/registerkey(\/.*)?/.test(path):
+            (new RegisterKeyPageClass());
+            return;
 
-                    case /^\/account(\/)?/.test(path):
-                        (new AccountPageClass());
-                        return;
+        case /^\/account(\/)?/.test(path):
+            (new AccountPageClass());
+            return;
 
-                    case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
-                        (new FundsPageClass());
-                        break;
+        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+            (new FundsPageClass());
+            break;
 
-                    case /^\/search\/.*/.test(path):
-                        (new SearchPageClass());
-                        break;
+        case /^\/search\/.*/.test(path):
+            (new SearchPageClass());
+            break;
 
-                    case /^\/sale\/.*/.test(path):
-                        (new StorePageClass()).showRegionalPricing("sale");
-                        break;
+        case /^\/sale\/.*/.test(path):
+            (new StorePageClass()).showRegionalPricing("sale");
+            break;
 
-                    case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-                        (new WishlistPageClass());
-                        break;
+        case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
+            (new WishlistPageClass());
+            break;
 
-                    // Storefront-front only
-                    case /^\/$/.test(path):
-                        (new StoreFrontPageClass());
-                        break;
-                }
+        // Storefront-front only
+        case /^\/$/.test(path):
+            (new StoreFrontPageClass());
+            break;
+    }
 
-                // common for store pages
-                Highlights.startHighlightsAndTags();
-                EnhancedSteam.alternateLinuxIcon();
-                EnhancedSteam.hideTrademarkSymbol(false);
-                TabAreaObserver.observeChanges();
-
-            })
-    )
+    // common for store pages
+    Highlights.startHighlightsAndTags();
+    EnhancedSteam.alternateLinuxIcon();
+    EnhancedSteam.hideTrademarkSymbol(false);
+    TabAreaObserver.observeChanges();
 
 })();
 
