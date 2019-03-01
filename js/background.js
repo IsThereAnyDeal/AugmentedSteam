@@ -737,7 +737,19 @@ const Steam = (function() {
         LocalStorageCache.remove('dynamicstore');
         _dynamicstore.promise = null;
     };
-   
+
+    let _supportedCurrencies = null;
+    self.fetchCurrencies = function() {
+        // https://partner.steamgames.com/doc/store/pricing/currencies
+        return fetch(chrome.extension.getURL('json/currency.json')).then(r => r.json());
+    };
+    self.currencies = async function() {
+        if (!_supportedCurrencies || _supportedCurrencies.length < 1) {
+            _supportedCurrencies = self.fetchCurrencies();
+        }
+        return _supportedCurrencies;
+    };
+
     Object.freeze(self);
     return self;
 })();
@@ -753,7 +765,8 @@ let actionCallbacks = new Map([
     ['wishlist.add', SteamStore.wishlistAdd],
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
-
+    ['steam.currencies', Steam.currencies],
+    
     ['api.cache.clear', AugmentedSteamApi.clear],
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
     ['dlcinfo', AugmentedSteamApi.dlcInfo],

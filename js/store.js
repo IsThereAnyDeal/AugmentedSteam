@@ -268,7 +268,7 @@ let StorePageClass = (function(){
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency);
+                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency, Currency.customCurrency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -283,7 +283,7 @@ let StorePageClass = (function(){
                     let html = "";
 
                     if (apiPrice) {
-                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency);
+                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency, Currency.customCurrency);
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
 
                         let percentageIndicator = "equal";
@@ -355,7 +355,7 @@ let SubPageClass = (function() {
 
     SubPageClass.prototype.subscriptionSavingsCheck = function() {
         setTimeout(function() {
-            let notOwnedTotalPrice = new Price(0);
+            let notOwnedTotalPrice = new Price(0, Currency.storeCurrency, false);
 
             let nodes = document.querySelectorAll(".tab_idem");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -364,7 +364,7 @@ let SubPageClass = (function() {
                 let priceContainer = node.querySelector(".discount_final_price").textContent.trim();
                 if (!priceContainer) { continue; }
 
-                let price = Price.parseFromString(priceContainer, false);
+                let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
                 if (price) {
                     notOwnedTotalPrice.value += price.value;
                 }
@@ -372,7 +372,7 @@ let SubPageClass = (function() {
 
 
             let priceNodes = document.querySelectorAll(".package_totals_area .price");
-            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent);
+            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
             if (!packagePrice) { return; }
 
             notOwnedTotalPrice.value -= packagePrice.value;
@@ -1743,7 +1743,7 @@ let AppPageClass = (function(){
                 price_text = price_text.replace(",", ".");
             }
             let price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100);
+            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency, false);
 
             let buttons = node.querySelectorAll(".btn_addtocart");
             buttons[buttons.length-1].parentNode.insertAdjacentHTML("afterbegin", `
@@ -1967,7 +1967,7 @@ let FundsPageClass = (function(){
                     .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>");
         }
 
-        let currency = Price.parseFromString(price);
+        let currency = Price.parseFromString(price, Currency.storeCurrency);
 
         let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
         inputel.innerHTML = "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
@@ -2209,7 +2209,7 @@ let SearchPageClass = (function(){
 
             let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
             let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-            let parsed = new Price(intern.trim());
+            let parsed = new Price(intern.trim(), Currency.storeCurrency, false);
             if (parsed && parsed.value > priceAboveValue) {
                 node.style.display = "none";
             }
@@ -2548,7 +2548,7 @@ let WishlistPageClass = (function(){
 
             await Promise.all(promises);
         }
-        let totalPrice = new Price(0);
+        let totalPrice = new Price(0, Currency.storeCurrency, false);
         let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;

@@ -694,102 +694,94 @@ let StringUtils = (function(){
 })();
 
 
+let CurrencyRegistry = (function() {
+    let self = {};
+
+    let indices = {
+        'id': {},
+        'abbr': {},
+        'symbols': {},
+    };
+    let defaultCurrency = null;
+    let re = null;
+
+    self.fromSymbol = function(symbol) {
+        return indices.symbols[symbol] || defaultCurrency;
+    };
+
+    self.fromType = function(type) {
+        return indices.abbr[type] || defaultCurrency;
+    };
+
+    self.fromNumber = function(number) {
+        return indices.id[number] || defaultCurrency;
+    };
+
+    self.fromString = function(price) { 
+        let match = price.match(re);
+        if (!match)
+            return defaultCurrency;
+        return self.fromSymbol(match[0]);
+    };
+
+    self.promise = async function() {
+        let currencies = await Background.action('steam.currencies');
+        for (let currency of currencies) {
+            // currency = new SteamCurrency(currency);
+            indices.abbr[currency.abbr] = currency;
+            indices.id[currency.id] = currency;
+            if (currency.symbol) // CNY && JPY use the same symbol
+                indices.symbols[currency.symbol] = currency;
+        }
+        defaultCurrency = indices.id[1]; // USD
+        re = new RegExp(Object.keys(indices.symbols).join("|").replace("$", "\\$"));
+    };
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
+    };
+
+    return self;
+})();
+
+
 let Currency = (function() {
 
     let self = {};
 
-    self.userCurrency = "USD";
-    self.pageCurrency = null;
-
-    let currencySymbols = {
-        "pуб": "RUB",
-        "€": "EUR",
-        "£": "GBP",
-        "R$": "BRL",
-        "¥": "JPY",
-        "kr": "NOK",
-        "Rp": "IDR",
-        "RM": "MYR",
-        "P": "PHP",
-        "S$": "SGD",
-        "฿": "THB",
-        "₫": "VND",
-        "₩": "KRW",
-        "TL": "TRY",
-        "₴": "UAH",
-        "Mex$": "MXN",
-        "CDN$": "CAD",
-        "A$": "AUD",
-        "HK$": "HKD",
-        "NT$": "TWD",
-        "₹": "INR",
-        "SR": "SAR",
-        "R ": "ZAR",
-        "DH": "AED",
-        "CHF": "CHF",
-        "CLP$": "CLP",
-        "S/.": "PEN",
-        "COL$": "COP",
-        "NZ$": "NZD",
-        "ARS$": "ARS",
-        "₡": "CRC",
-        "₪": "ILS",
-        "₸": "KZT",
-        "KD": "KWD",
-        "zł": "PLN",
-        "QR": "QAR",
-        "$U": "UYU"
-    };
-
-    const typeToNumberMap = {
-        "RUB": 5,
-        "EUR": 3,
-        "GBP": 2,
-        "PLN": 6,
-        "BRL": 7,
-        "JPY": 8,
-        "NOK": 9,
-        "IDR": 10,
-        "MYR": 11,
-        "PHP": 12,
-        "SGD": 13,
-        "THB": 14,
-        "VND": 15,
-        "KRW": 16,
-        "TRY": 17,
-        "UAH": 18,
-        "MXN": 19,
-        "CAD": 20,
-        "AUD": 21,
-        "NZD": 22,
-        "CNY": 23,
-        "INR": 24,
-        "CLP": 25,
-        "PEN": 26,
-        "COP": 27,
-        "ZAR": 28,
-        "HKD": 29,
-        "TWD": 30,
-        "SAR": 31,
-        "AED": 32,
-        "ARS": 34,
-        "ILS": 35,
-        "KZT": 37,
-        "KWD": 38,
-        "QAR": 39,
-        "CRC": 40,
-        "UYU": 41
-    };
-    Object.freeze(typeToNumberMap);
-    
-    const numberToTypeMap = {};
-    for (let [abbr, num] of Object.entries(typeToNumberMap)) {
-        numberToTypeMap[num] = abbr;
-    }
-    Object.freeze(numberToTypeMap);
+    self.customCurrency = null;
+    self.storeCurrency = "USD";
 
     let _rates = {};
     let _promise = null;
+
+    async function _getRates() {
+        let target = [self.storeCurrency,];
+        if (!self.customCurrency) { // configured to "auto"
+            self.customCurrency = self.storeCurrency;
+        } else if (self.customCurrency != self.storeCurrency) {
+            target.push(self.customCurrency);
+        }
+        // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
+
+        function mergeRates(acc, el) {
+            if (acc === null)
+                return el;
+            for (let [k, v] of Object.entries(el)) {
+                if (typeof acc[k] == 'undefined') {
+                    acc[k] = v;
+                    continue;
+                }
+                Object.assign(acc[k], v);
+            }
+            return acc;
+        }
+
+        let promises = [];
+        for (let currency of target) {
+            promises.push(Background.action('rates', { 'to': currency, }));
+        }
+        return Promise.all(promises).then(result => _rates = result.reduce(mergeRates, null));
+    }
 
     // load user currency
     self.promise = async function() {
@@ -797,14 +789,12 @@ let Currency = (function() {
 
         let currencySetting = SyncedStorage.get("override_price");
         if (currencySetting !== "auto") {
-            self.userCurrency = currencySetting;
-            return _promise = Background.action('rates', { 'to': self.userCurrency, })
-                .then(result => _rates = result);
+            self.customCurrency = currencySetting;
         }
-        return _promise = Background.action('currency')
-            .then(currency => self.userCurrency = currency)
-            .then(() => Background.action('rates', { 'to': self.userCurrency, }))
-            .then(result => _rates = result);
+        return _promise = CurrencyRegistry
+            .then(() => Background.action('currency'))
+            .then(currency => self.storeCurrency = currency)
+            .then(_getRates);
     };
 
     self.then = function(onDone, onCatch) {
@@ -834,22 +824,22 @@ let Currency = (function() {
     };
 
     self.getMemoizedCurrencyFromDom = function() {
-        if(!self.pageCurrency) {
-            self.pageCurrency = self.getCurrencyFromDom();
+        if(!self.storeCurrency) {
+            self.storeCurrency = self.getCurrencyFromDom();
         }
-        return self.pageCurrency;
+        return self.storeCurrency;
     };
 
     self.currencySymbolToType = function(symbol) {
-        return currencySymbols[symbol] || "USD";
+        return CurrencyRegistry.fromSymbol(symbol).abbr;
     };
 
     self.currencyTypeToNumber = function(type) {
-        return typeToNumberMap[type] || 1;
+        return CurrencyRegistry.fromType(type).id;
     };
 
     self.currencyNumberToType = function(number) {
-        return numberToTypeMap[number] || "USD";
+        return CurrencyRegistry.fromNumber(number).abbr;
     };
 
     return self;
@@ -899,19 +889,17 @@ let Price = (function() {
         "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
     };
 
-    function Price(value, currency, convert) {
+    function Price(value, currency, desiredCurrency=false) {
         this.value = value || 0;
-        this.currency = currency || Currency.userCurrency;
+        this.currency = currency || Currency.customCurrency;
 
-        if (convert !== false) {
-            let chosenCurrency = SyncedStorage.get("override_price");
-            if (chosenCurrency === "auto") { chosenCurrency = Currency.userCurrency; }
-            let rate = Currency.getRate(this.currency, chosenCurrency);
+        // If no conversion is requested, we can stop here
+        if (desiredCurrency === false || currency === desiredCurrency) return;
 
-            if (rate) {
-                this.value *= rate;
-                this.currency = chosenCurrency;
-            }
+        let rate = Currency.getRate(this.currency, desiredCurrency);
+        if (rate) {
+            this.value *= rate;
+            this.currency = desiredCurrency;
         }
     }
 
@@ -937,11 +925,7 @@ let Price = (function() {
 
     Price.parseFromString = function(str, convert) {
         let currencySymbol = Currency.getCurrencySymbolFromString(str);
-        let currencyType = Currency.getMemoizedCurrencyFromDom() || Currency.currencySymbolToType(currencySymbol);
-
-        if (Currency.userCurrency && format[Currency.userCurrency].symbolFormat === format[currencyType].symbolFormat) {
-            currencyType = Currency.userCurrency;
-        }
+        let currencyType = Currency.currencySymbolToType(currencySymbol);
 
         // let currencyNumber = currencyTypeToNumber(currencyType);
         let info = format[currencyType];
@@ -2179,11 +2163,11 @@ let Prices = (function(){
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency']);
+                lowest = new Price(info['price']['price_voucher'], meta['currency'], Currency.customCurrency);
                 let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
-                lowest = new Price(info['price']['price'], meta['currency']);
+                lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
             }
 
             let lowestStr = Localization.str.lowest_price_format
@@ -2197,7 +2181,7 @@ let Prices = (function(){
 
         // "Historical Low"
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency']);
+            let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
             let historicalStr = Localization.str.historical_low_format
@@ -2284,7 +2268,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency']).toString();
+                    let tierPrice = new Price(tier.price, meta['currency'], Currency.customCurrency).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2316,7 +2300,7 @@ let Prices = (function(){
             purchase += '<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (new Price(bundlePrice, meta['currency'])).toString();
+                    purchase += (new Price(bundlePrice, meta['currency'], Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 
