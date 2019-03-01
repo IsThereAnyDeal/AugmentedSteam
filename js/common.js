@@ -802,7 +802,7 @@ let Currency = (function() {
         let promises = [];
         let rates = null;
         for (let currency of target) {
-            let p = Background.action('rates', { 'to': self.currency, })
+            let p = Background.action('rates', { 'to': currency, })
             .then(function(result) {
                 if (rates === null) {
                     rates = result;
