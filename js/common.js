@@ -799,29 +799,25 @@ let Currency = (function() {
             target.push(self.customCurrency);
         }
         // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-        let promises = [];
-        let rates = null;
-        for (let currency of target) {
-            let p = Background.action('rates', { 'to': currency, })
-            .then(function(result) {
-                if (rates === null) {
-                    rates = result;
-                    return rates;
+
+        function mergeRates(acc, el) {
+            if (acc === null)
+                return el;
+            for (let [k, v] of Object.entries(el)) {
+                if (typeof acc[k] == 'undefined') {
+                    acc[k] = v;
+                    continue;
                 }
-                // weave new data into existing rates object
-                for (let [from_currency, from_rates] of Object.entries(result)) {
-                    let tmp = rates[from_currency];
-                    if (typeof tmp == 'undefined') {
-                        rates[from_currency] = from_rates;
-                        continue;
-                    }
-                    Object.assign(tmp, from_rates);
-                }
-                return rates;
-            });
-            promises.push(p);
+                Object.assign(acc[k], v);
+            }
+            return acc;
         }
-        return Promises.all(promises).then(() => _rates = rates);
+
+        let promises = [];
+        for (let currency of target) {
+            promises.push(Background.action('rates', { 'to': currency, }));
+        }
+        return Promises.all(promises).then(result => _rates = result.reduce(mergeRates, null));
     }
 
     // load user currency
