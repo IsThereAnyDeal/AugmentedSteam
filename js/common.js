@@ -526,8 +526,15 @@ let Localization = (function(){
     self.promise = function(){
         if (_promise) { return _promise; }
 
-        let lang = SyncedStorage.get("language");
-        let local = Language.getLanguageCode(lang);
+        let currentSteamLanguage = Language.getCurrentSteamLanguage();
+
+        if (currentSteamLanguage !== null && currentSteamLanguage !== SyncedStorage.get("language")) {
+            SyncedStorage.set("language", currentSteamLanguage);
+        } else {
+            currentSteamLanguage = SyncedStorage.get("language");
+        }
+
+        let local = Language.getLanguageCode(currentSteamLanguage);
 
         _promise = new Promise(function(resolve, reject) {
 
@@ -1164,7 +1171,7 @@ let Language = (function(){
             }
         }
 
-        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || "english";
+        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || null;
         return currentSteamLanguage;
     };
 
