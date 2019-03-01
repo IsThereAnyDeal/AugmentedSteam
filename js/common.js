@@ -791,6 +791,39 @@ let Currency = (function() {
     let _rates = {};
     let _promise = null;
 
+    async function _getRates() {
+        let target = [self.storeCurrency,];
+        if (!self.customCurrency) { // configured to "auto"
+            self.customCurrency = self.storeCurrency;
+        } else if (self.customCurrency != self.storeCurrency) {
+            target.push(self.customCurrency);
+        }
+        // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
+        let promises = [];
+        let rates = null;
+        for (let currency of target) {
+            let p = Background.action('rates', { 'to': self.currency, })
+            .then(function(result) {
+                if (rates === null) {
+                    rates = result;
+                    return rates;
+                }
+                // weave new data into existing rates object
+                for (let [from_currency, from_rates] of Object.entries(result)) {
+                    let tmp = rates[from_currency];
+                    if (typeof tmp == 'undefined') {
+                        rates[from_currency] = from_rates;
+                        continue;
+                    }
+                    Object.assign(tmp, from_rates);
+                }
+                return rates;
+            });
+            promises.push(p);
+        }
+        return Promises.all(promises).then(() => _rates = rates);
+    }
+
     // load user currency
     self.promise = async function() {
         if (_promise) { return _promise; }
@@ -798,13 +831,10 @@ let Currency = (function() {
         let currencySetting = SyncedStorage.get("override_price");
         if (currencySetting !== "auto") {
             self.customCurrency = currencySetting;
-            return _promise = Background.action('rates', { 'to': self.customCurrency, })
-                .then(result => _rates = result);
         }
         return _promise = Background.action('currency')
-            .then(currency => self.customCurrency = currency)
-            .then(() => Background.action('rates', { 'to': self.customCurrency, }))
-            .then(result => _rates = result);
+            .then(currency => self.storeCurrency = currency)
+            .then(_getRates);
     };
 
     self.then = function(onDone, onCatch) {
