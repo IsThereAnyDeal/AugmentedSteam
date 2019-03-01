@@ -1669,18 +1669,12 @@ let InventoryPageClass = (function(){
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
-    function inventoryMarketHelper(response) {
-        let item = response[0];
-        let marketable = parseInt(response[1]);
-        let globalId = parseInt(response[2]);
-        let hashName = response[3];
-        let assetId = response[5];
-        let sessionId = response[6];
-        let contextId = parseInt(response[7]);
-        let walletCurrency = response[8];
-        let ownerSteamId = response[9];
-        let restriction = parseInt(response[10]);
-        let isGift = response[4] && /Gift/i.test(response[4]);
+    function inventoryMarketHelper([item, marketable, globalId, hashName, assetName, assetId, sessionId, contextId, walletCurrency, ownerSteamId, restriction]) {
+        marketable = parseInt(marketable);
+        globalId = parseInt(globalId);
+        contextId = parseInt(contextId);
+        restriction = parseInt(restriction);
+        let isGift = assetName && /Gift/i.test(assetName);
         let isBooster = hashName && /Booster Pack/i.test(hashName);
         let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
