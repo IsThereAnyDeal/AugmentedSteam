@@ -2954,13 +2954,19 @@ let MarketPageClass = (function(){
     };
 
     // Show the lowest market price for items you're selling
-    MarketPageClass.prototype.addLowestMarketPrice = async function() {
+    MarketPageClass.prototype.addLowestMarketPrice = function() {
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
         let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
 
         let loadedMarketPrices = {};
+
+        let observer = new MutationObserver(function(){
+            insertPrices();
+        });
+
+        observer.observe(document.getElementById("tabContentsMyActiveMarketListingsRows"), {childList: true});
 
         function insertPrice(node, data) {
             node.classList.add("es_priced");
@@ -2995,47 +3001,53 @@ let MarketPageClass = (function(){
                     "<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + Localization.str.lowest + "</span></span>");
         }
 
-        // update table rows
-        let rows = [];
-        nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
-        for (let node of nodes) {
-            let buttons = node.querySelector(".market_listing_edit_buttons");
-            buttons.style.width = "200px"; // TODO do we still need to change width?
-            if (node.querySelector(".market_listing_es_lowest")) { continue; }
+        insertPrices();
 
-            node.querySelector(".market_listing_edit_buttons")
-                .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+        async function insertPrices() {
 
-            // we do this because of changed width, right?
-            let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
-            actualButtons.style.width = "inherit";
-            buttons.append(actualButtons);
+            // update table rows
+            let rows = [];
+            nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
+            for (let node of nodes) {
+                let buttons = node.querySelector(".market_listing_edit_buttons");
+                buttons.style.width = "200px"; // TODO do we still need to change width?
+                if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-            rows.push(node);
-        }
+                node.querySelector(".market_listing_edit_buttons")
+                    .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
-        for (let node of rows) {
-            let linkNode = node.querySelector(".market_listing_item_name_link");
-            if (!linkNode) { continue; }
+                // we do this because of changed width, right?
+                let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
+                actualButtons.style.width = "inherit";
+                buttons.append(actualButtons);
 
-            let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
-            if (!m) { continue; }
-            let appid = parseInt(m[1]);
-            let marketHashName = m[2];
-
-            let priceData;
-            if (loadedMarketPrices[marketHashName]) {
-                priceData = loadedMarketPrices[marketHashName];
-            } else {
-                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
-                if (!data.success) { continue; }
-
-                loadedMarketPrices[marketHashName] = data;
-                priceData = data;
+                rows.push(node);
             }
 
-            insertPrice(node, priceData);
-        }
+            for (let node of rows) {
+                let linkNode = node.querySelector(".market_listing_item_name_link");
+                if (!linkNode) { continue; }
+
+                let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
+                if (!m) { continue; }
+                let appid = parseInt(m[1]);
+                let marketHashName = m[2];
+
+                let priceData;
+                if (loadedMarketPrices[marketHashName]) {
+                    priceData = loadedMarketPrices[marketHashName];
+                } else {
+                    let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
+                    if (!data.success) { continue; }
+
+                    loadedMarketPrices[marketHashName] = data;
+                    priceData = data;
+                }
+
+                insertPrice(node, priceData);
+            }
+        };
+
     };
 
     MarketPageClass.prototype.addSort = function() {
