@@ -134,7 +134,7 @@
     "viewinclient": "在 Steam 客户端中查看",
     "custom_background": "自定义背景",
     "custom_style": "自定义主题",
-    "custom_style_help": "所有 Enhanced Steam 的用户都会在您的个人资料页面看到这个主题。非 Enhanced Steam 用户则不会看到任何主题变化。",
+    "custom_style_help": "所有 Augmented Steam 的用户都会在您的个人资料页面看到这个主题。非 Augmented Steam 用户则不会看到任何主题变化。",
     "noneselected": "未选择/不修改",
     "most_drops": "最多掉落",
     "badge_foil_progress": "查看闪亮徽章进度",
@@ -165,7 +165,7 @@
     "visit_trade_forum": "访问交易论坛",
     "software": "软件",
     "purchase_date": "（购买于 __date__）",
-    "custom_background_help": "所有 Enhanced Steam 用户将在您的个人资料页面看到自定义背景，非 Enhanced Steam 用户将看到常规背景。",
+    "custom_background_help": "所有 Augmented Steam 用户将在您的个人资料页面看到自定义背景，非 Augmented Steam 用户将看到常规背景。",
     "date_unlocked": "解锁日期",
     "view_badge_foil": "查看闪亮徽章",
     "net_spent": "净消费",
@@ -254,7 +254,7 @@
     "user_reviews": "用户评测",
     "review_summary": "__num__ 篇用户评测中有 __percent__ 为推荐。",
     "market_popular_items_toggle": "实时更新热销商品",
-    "show_progressbar": "显示 Enhanced Steam 进度条和状态栏",
+    "show_progressbar": "显示 Augmented Steam 进度条和状态栏",
     "achievements": {
         "option": "在商店页面显示成就",
         "achievements": "成就",
@@ -306,7 +306,7 @@
     },
     "options": {
         "wsgf": "显示 WSGF（宽屏支持）信息",
-        "version_show": "在 Enhanced Steam 更新时显示更新日志",
+        "version_show": "在 Augmented Steam 更新时显示更新日志",
         "steamcardexchange": "在徽章页面显示 SteamCardExchange 链接",
         "regional_price": "区域价格比较",
         "excludef2p": "不高亮显示免费游戏",
@@ -337,7 +337,7 @@
         "drm": "显示第三方 DRM 警告",
         "profile_permalink": "在个人资料中显示永久链接",
         "show_regionwarning": "跨区浏览时显示警告",
-        "foot_link": "Enhanced Steam 扩展程序",
+        "foot_link": "Augmented Steam 扩展程序",
         "profile_link_images": "个人资料链接图片",
         "library": "在顶部显示库按钮",
         "show1clickgoo": "在适用的库存物品上显示“一键转换成宝石”按钮",
@@ -450,9 +450,9 @@
         }
     },
     "ready": {
-        "errormsg": "Enhanced Steam 数据载入错误",
-        "loading": "Enhanced Steam 数据载入中……",
-        "ready": "Enhanced Steam 已就绪",
+        "errormsg": "Augmented Steam 数据载入错误",
+        "loading": "Augmented Steam 数据载入中……",
+        "ready": "Augmented Steam 已就绪",
         "failed": "一个或多个请求失败"
     },
     "twitch": {

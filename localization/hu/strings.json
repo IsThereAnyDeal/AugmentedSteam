@@ -163,7 +163,7 @@
     "visit_trade_forum": "Csere fórum meglátogatása",
     "software": "Szoftver",
     "purchase_date": "(Megvéve ekkor: __date__)",
-    "custom_background_help": "Az összes Enhanced Steam felhasználó ezt a hátteret fogja látni a profilodban. A nem Enhanced Steam felhasználók a hagyományos profilhátteredet fogják látni.",
+    "custom_background_help": "Az összes Augmented Steam felhasználó ezt a hátteret fogja látni a profilodban. A nem Augmented Steam felhasználók a hagyományos profilhátteredet fogják látni.",
     "date_unlocked": "Feloldás dátuma",
     "view_badge_foil": "Fóliás kitűző megtekintése",
     "net_spent": "Tiszta kiadás",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Mutassa a WSGF (Széles képernyő) infókat",
-        "version_show": "Változtatások mutatása, amikor az Enhanced Steam frissül",
+        "version_show": "Változtatások mutatása, amikor az Augmented Steam frissül",
         "steamcardexchange": "SteamCardExchange linkek mutatása a Kitűzőkőn",
         "regional_price": "Régiók árainak összehasonlítása",
         "excludef2p": "Az ingyenes játékok kizárása a kiemeléstől",
@@ -334,7 +334,7 @@
         "drm": "Mutassa a 3. fél általi DRM figyelmeztetéseket",
         "profile_permalink": "Mutassa a permalinkeket profilokon",
         "show_regionwarning": "Figyelmeztessen, ha nem a fiók régiójában történik a böngészés",
-        "foot_link": "Enhanced Steam kiterjesztés",
+        "foot_link": "Augmented Steam kiterjesztés",
         "profile_link_images": "Profil képek",
         "library": "Könyvtár gomb mutatása a fejrészben",
         "show1clickgoo": "Mutassa \"1 klikk cserélje drágakőre\" gomb az alkalmazható raktár tárgyakon.",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Hiba az Enhanced Steam adatbetöltése közben",
-        "loading": "Enhanced Steam betölti az adatokat...",
-        "ready": "Enhanced Steam kész",
+        "errormsg": "Hiba az Augmented Steam adatbetöltése közben",
+        "loading": "Augmented Steam betölti az adatokat...",
+        "ready": "Augmented Steam kész",
         "failed": "Egy vagy több lekérés sikertelen"
     },
     "twitch": {

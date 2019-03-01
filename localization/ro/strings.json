@@ -133,7 +133,7 @@
     "viewinclient": "Vezi în clientul Steam",
     "custom_background": "Imagine de fundal personalizată",
     "custom_style": "Stil particularizat",
-    "custom_style_help": "Toți utilizatorii Enhanced Steam vor vedea acestă temă pe profilul tău. Cei ce nu folosesc Enhanced Steam nu vor vedea vreo schimbare.",
+    "custom_style_help": "Toți utilizatorii Augmented Steam vor vedea acestă temă pe profilul tău. Cei ce nu folosesc Augmented Steam nu vor vedea vreo schimbare.",
     "noneselected": "Nicio temă",
     "most_drops": "Cele mai multe cărți de schimb obținute",
     "badge_foil_progress": "Vezi progres insignă înfoliată",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Vizitează forumul de schimb",
     "software": "Aplicații",
     "purchase_date": "(Cumpărat pe __date__)",
-    "custom_background_help": "Toți utilizatorii de Enhanced Steam vor vedea acest fundal pe profilul tău. Cei ce nu folosesc Enhanced Steam vor vedea fundalul obișnuit.",
+    "custom_background_help": "Toți utilizatorii de Augmented Steam vor vedea acest fundal pe profilul tău. Cei ce nu folosesc Augmented Steam vor vedea fundalul obișnuit.",
     "date_unlocked": "Deblocat pe",
     "view_badge_foil": "Vezi insignă înfoliată",
     "net_spent": "Cheltuit net",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Afișează informații WSGF (Panoramic)",
-        "version_show": "Afișează lista de modificări când Enhanced Steam se actualizează",
+        "version_show": "Afișează lista de modificări când Augmented Steam se actualizează",
         "steamcardexchange": "Afișează link-uri SteamCardExchange la insigne",
         "regional_price": "Compararea prețurilor pe regiuni",
         "excludef2p": "Exclude jocurile gratuite din evidenţiere",
@@ -334,7 +334,7 @@
         "drm": "Afișează avertismente pentru jocurile cu DRM terțe",
         "profile_permalink": "Afișează link permanent pe profil",
         "show_regionwarning": "Arată un avertisment dacă navighezi pe o regiune diferită",
-        "foot_link": "Extensia Enhanced Steam",
+        "foot_link": "Extensia Augmented Steam",
         "profile_link_images": "Imagini link profil",
         "library": "Arată butonul \"Colecție\" in meniul principal",
         "show1clickgoo": "Arată butonul \"1-Click Transformă în Nestemate...\" pe obiectele din inventar",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Eroare la încărcarea datelor Enhanced Steam",
-        "loading": "Enhanced Steam încarcă datele...",
-        "ready": "Enhanced Steam pregătit",
+        "errormsg": "Eroare la încărcarea datelor Augmented Steam",
+        "loading": "Augmented Steam încarcă datele...",
+        "ready": "Augmented Steam pregătit",
         "failed": "Una sau mai multe solicitări au eșuat"
     },
     "twitch": {

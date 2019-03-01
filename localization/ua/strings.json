@@ -163,7 +163,7 @@
     "visit_trade_forum": "Відвідати Торговий Форум",
     "software": "Забезпечення",
     "purchase_date": "(Придбано __date__)",
-    "custom_background_help": "Всі користувачі Enhanced Steam побачать цей фон у вашому профілі. Користувачі, у яких не встановлений Enhanced Steam, побачать обраний вами фон вище.",
+    "custom_background_help": "Всі користувачі Augmented Steam побачать цей фон у вашому профілі. Користувачі, у яких не встановлений Augmented Steam, побачать обраний вами фон вище.",
     "date_unlocked": "Дата розблокування",
     "view_badge_foil": "Переглянути металевий значок",
     "net_spent": "витрачено",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Відображати інформацію про підтримку широкоекранних моніторів (WSGF)",
-        "version_show": "Показувати список змін в оновленні Enhanced Steam",
+        "version_show": "Показувати список змін в оновленні Augmented Steam",
         "steamcardexchange": "Відображати посилання сайту SteamCardExchange на значках",
         "regional_price": "Порівняння цін в регіонах",
         "excludef2p": "Не підсвічувати безкоштовні ігри",
@@ -334,7 +334,7 @@
         "drm": "Відображати попередження про DRM-технології сторонніх розробників (GFWL, Uplay і т.д.)",
         "profile_permalink": "Відображати постійне посилання на профілях",
         "show_regionwarning": "Відображати попередження про невідповідність регіону",
-        "foot_link": "Додаток Enhanced Steam",
+        "foot_link": "Додаток Augmented Steam",
         "profile_link_images": "Іконки в профілі",
         "library": "Відображати кнопку «Бібліотека» в шапці",
         "show1clickgoo": "Показати «1-Click перетворитися дорогоцінні камені...» кнопки застосовних товарно-матеріальних",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Помилка завантаження даних Enhanced Steam",
-        "loading": "Enhanced Steam завантажує дані...",
-        "ready": "Enhanced Steam готовий",
+        "errormsg": "Помилка завантаження даних Augmented Steam",
+        "loading": "Augmented Steam завантажує дані...",
+        "ready": "Augmented Steam готовий",
         "failed": "Помилка одного або кількох запитів"
     },
     "twitch": {
