@@ -135,7 +135,7 @@
     "viewinclient": "在Steam用戶端上開啟",
     "custom_background": "自訂背景",
     "custom_style": "自訂主題",
-    "custom_style_help": "所有的 Enhanced Steam 使用者會在您的主頁看到這個主題，而非 Enhanced Steam 使用者不會看到任何主題變化。",
+    "custom_style_help": "所有的 Enhanced Steam 使用者會在您的主頁看到這個主題，而非 Augmented Steam 使用者不會看到任何主題變化。",
     "noneselected": "未作選擇/不作修改",
     "most_drops": "最多掉落",
     "badge_foil_progress": "檢視閃亮徽章進度",
@@ -166,7 +166,7 @@
     "visit_trade_forum": "訪問交易討論區",
     "software": "軟體",
     "purchase_date": "(於__date__購買)",
-    "custom_background_help": "所有的 Enhanced Steam 使用者會看到這個背景圖片，而非 Enhanced Steam 使用者會看到普通的背景圖片。",
+    "custom_background_help": "所有的 Augmented Steam 使用者會看到這個背景圖片，而非 Augmented Steam 使用者會看到普通的背景圖片。",
     "date_unlocked": "解鎖日期",
     "view_badge_foil": "檢視閃亮徽章",
     "net_spent": "淨支出",
@@ -307,7 +307,7 @@
     },
     "options": {
         "wsgf": "顯示 WSGF（寬螢幕支援）資訊",
-        "version_show": "在 Enhanced Steam 更新時顯示更新日誌",
+        "version_show": "在 Augmented Steam 更新時顯示更新日誌",
         "steamcardexchange": "在徽章頁面中顯示 SteamCardExchange 連結",
         "regional_price": "各地區價格比較",
         "excludef2p": "不亮光顯示免費遊戲",
@@ -339,7 +339,7 @@
         "drm": "顯示第三方 DRM 警告",
         "profile_permalink": "在個人檔案上顯示永久連結",
         "show_regionwarning": "在非帳戶區域瀏覽時顯示警告",
-        "foot_link": "Enhanced Steam 擴充套件",
+        "foot_link": "Augmented Steam 擴充套件",
         "profile_link_images": "個人檔案連結圖片",
         "library": "在頁首顯示遊戲庫按鈕",
         "show1clickgoo": "在適用的物品庫物品上顯示「一鍵轉換為寶珠」按鈕",
@@ -454,9 +454,9 @@
         }
     },
     "ready": {
-        "errormsg": "Enhanced Steam 資料載入錯誤",
-        "loading": "Enhanced Steam 資料載入中…",
-        "ready": "Enhanced Steam 就緒",
+        "errormsg": "Augmented Steam 資料載入錯誤",
+        "loading": "Augmented Steam 資料載入中…",
+        "ready": "Augmented Steam 就緒",
         "failed": "有一個或多個請求失敗"
     },
     "twitch": {

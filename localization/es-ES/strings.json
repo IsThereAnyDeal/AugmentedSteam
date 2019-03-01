@@ -133,7 +133,7 @@
     "viewinclient": "Ver en el cliente de Steam",
     "custom_background": "Fondo de perfil personalizado",
     "custom_style": "Tema personalizado",
-    "custom_style_help": "Todos los usuarios de Enhanced Steam podrán ver este tema en tu perfil.  Los que no tengan Enhanced Steam no verán ningún cambio aquí.",
+    "custom_style_help": "Todos los usuarios de Augmented Steam podrán ver este tema en tu perfil.  Los que no tengan Augmented Steam no verán ningún cambio aquí.",
     "noneselected": "Ninguno seleccionado / sin cambios",
     "most_drops": "Mayores obtenciones",
     "badge_foil_progress": "Ver Progreso de Insignia Reflectante",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Visitar foro de intercambio",
     "software": "Software",
     "purchase_date": "(Comprado el __date__)",
-    "custom_background_help": "Todos los usuarios de Enhanced Steam podrán ver este fondo en tu perfil.  Los que no tengan Enhanced Steam no verán ningún cambio aquí.",
+    "custom_background_help": "Todos los usuarios de Augmented Steam podrán ver este fondo en tu perfil.  Los que no tengan Augmented Steam no verán ningún cambio aquí.",
     "date_unlocked": "Fecha de desbloqueo",
     "view_badge_foil": "Ver Insignia Reflectante",
     "net_spent": "Gastos netos",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Mostrar información WSGF (panorámico)",
-        "version_show": "Mostrar registro de cambios al actualizar Enhanced Steam",
+        "version_show": "Mostrar registro de cambios al actualizar Augmented Steam",
         "steamcardexchange": "Mostrar enlaces a SteamCardExchange en las insignias",
         "regional_price": "Comparación de Precios Regionales",
         "excludef2p": "No destacar los juegos Free to Play",
@@ -334,7 +334,7 @@
         "drm": "Mostrar advertencias de DRM de terceros",
         "profile_permalink": "Mostrar link permanentes en los perfiles",
         "show_regionwarning": "Mostrar un aviso si estás en una región sin cuenta",
-        "foot_link": "Extensión Enhanced Steam",
+        "foot_link": "Extensión Augmented Steam",
         "profile_link_images": "Imagenes de los enlaces en el perfil",
         "library": "Motrar botón de \"Biblioteca\" en el encabezado (en beta)",
         "show1clickgoo": "Mostrar el botón \"Cambiar a gemas con 1 clic...\" en los artículos del inventario compatibles",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Error al cargar los datos de Enhanced Steam",
-        "loading": "Cargando datos de Enhanced Steam...",
-        "ready": "Enhanced Steam está listo",
+        "errormsg": "Error al cargar los datos de Augmented Steam",
+        "loading": "Cargando datos de Augmented Steam...",
+        "ready": "Augmented Steam está listo",
         "failed": "Error al realizar una o más solicitudes"
     },
     "twitch": {

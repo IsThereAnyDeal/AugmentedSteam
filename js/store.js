@@ -1319,7 +1319,7 @@ let AppPageClass = (function(){
 
         let html = '<div id="steam-spy" class="game_area_description"><h2>' + Localization.str.spy.player_data + '</h2>';
             html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>-<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
             html += "</div>";
@@ -2458,6 +2458,16 @@ let SearchPageClass = (function(){
 })();
 
 
+let CuratorPageClass = (function(){
+    function CuratorPageClass() {
+
+    }
+
+    
+    return CuratorPageClass;
+})();
+
+
 let WishlistPageClass = (function(){
 
     let noteModalTemplate;
@@ -2873,7 +2883,7 @@ let TabAreaObserver = (function(){
 
     self.observeChanges = function() {
 
-        let tabAreaNode = document.querySelector(".tabarea");
+        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
         if (!tabAreaNode) { return; }
 
         let observer = new MutationObserver(() => {
@@ -2933,6 +2943,10 @@ let TabAreaObserver = (function(){
 
                     case /^\/sale\/.*/.test(path):
                         (new StorePageClass()).showRegionalPricing("sale");
+                        break;
+
+                    case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(path):
+                        (new CuratorPageClass());
                         break;
 
                     case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):

@@ -133,7 +133,7 @@
     "viewinclient": "Vis i Steam-klienten",
     "custom_background": "Egendefinert bakgrunn",
     "custom_style": "Tilpasset tema",
-    "custom_style_help": "Alle brukere av Enhanced Steam vil se dette temaet i profilen din. Ikke-Enhanced Steam-brukere vil ikke se noen temaendringer som blir gjort her.",
+    "custom_style_help": "Alle brukere av Augmented Steam vil se dette temaet i profilen din. Ikke-Augmented Steam-brukere vil ikke se noen temaendringer som blir gjort her.",
     "noneselected": "Ingen valgt / Ingen endring",
     "most_drops": "Flest slipp",
     "badge_foil_progress": "Vis foliemerkeframgang",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Besøk bytteforum",
     "software": "Programvare",
     "purchase_date": "(Kjøpt __date__)",
-    "custom_background_help": "Alle som bruker Enhanced Steam vil se denne bakgrunnen på profilen din.  Brukere som ikke bruker Enhanced Steam vil se din normale profilbakgrunn.",
+    "custom_background_help": "Alle som bruker Augmented Steam vil se denne bakgrunnen på profilen din.  Brukere som ikke bruker Augmented Steam vil se din normale profilbakgrunn.",
     "date_unlocked": "Dato låst opp",
     "view_badge_foil": "Vis foliemerke",
     "net_spent": "Netto brukt",
@@ -334,7 +334,7 @@
         "drm": "Vis 3.parts-DRM-advarsler",
         "profile_permalink": "Vis permalenke på profiler",
         "show_regionwarning": "Vis advarsel ved surfing i område som ikke samsvarer med konto",
-        "foot_link": "Enhanced Steam-utvidelse",
+        "foot_link": "Augmented Steam-utvidelse",
         "profile_link_images": "Profillenkebilder",
         "library": "Vis bibliotekknapp i toppteksten",
         "show1clickgoo": "Vis \"1-klikk omgjør til juveler...\"-knapp på gyldige lagergjenstander",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Feil under lasting av Enhanced Steam-data",
-        "loading": "Enhanced Steam laster data...",
-        "ready": "Enhanced Steam klar",
+        "errormsg": "Feil under lasting av Augmented Steam-data",
+        "loading": "Augmented Steam laster data...",
+        "ready": "Augmented Steam klar",
         "failed": "En eller flere forespørsler mislyktes"
     },
     "twitch": {

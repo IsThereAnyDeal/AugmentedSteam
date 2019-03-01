@@ -2555,3 +2555,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
     margin-top:10px;
     text-align:right;
 }
+
+/***************************************
+ * Store curator pages
+ * 
+ **************************************/
+.capsule.smallcapsule .es_overlay_container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+	vertical-align: top;
+}
+.capsule.smallcapsule .es_overlay_container > img {
+	width: 100%;
+}

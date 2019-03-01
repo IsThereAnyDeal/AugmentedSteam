@@ -133,7 +133,7 @@
     "viewinclient": "Steamクライアントで表示する",
     "custom_background": "カスタム背景",
     "custom_style": "カスタムテーマ",
-    "custom_style_help": "Enhanced Steamを使用しているユーザーには、あなたのプロフィールがここで選択したテーマに変更されて表示されます。Enhanced Steamを使用していないユーザーには、ここでのテーマ変更は表示されません。",
+    "custom_style_help": "Augmented Steamを使用しているユーザーには、あなたのプロフィールがここで選択したテーマに変更されて表示されます。Augmented Steamを使用していないユーザーには、ここでのテーマ変更は表示されません。",
     "noneselected": "選択なし / 変更なし",
     "most_drops": "最大ドロップ数",
     "badge_foil_progress": "キラバッジの進捗状況を表示",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "トレードフォーラムを開く",
     "software": "ソフトウェア",
     "purchase_date": "(購入日： __date__)",
-    "custom_background_help": "Enhanced Steamのユーザーに対して、あなたのプロフィールにこの背景が表示されます。非Enhanced Steamのユーザーに対しては通常のプロフィール背景が表示されます。",
+    "custom_background_help": "Augmented Steamのユーザーに対して、あなたのプロフィールにこの背景が表示されます。非Augmented Steamのユーザーに対しては通常のプロフィール背景が表示されます。",
     "date_unlocked": "日時がアンロック",
     "view_badge_foil": "キラバッジを表示",
     "net_spent": "純支出",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "WSGF (ワイドスクリーン) 情報を表示",
-        "version_show": "Enhanced Steamのアップデート時に変更履歴を表示する",
+        "version_show": "Augmented Steamのアップデート時に変更履歴を表示する",
         "steamcardexchange": "バッジにSteamCardExchangeへのリンクを表示",
         "regional_price": "地域別価格比較",
         "excludef2p": "無料プレイのゲームを強調表示から除外",
@@ -334,7 +334,7 @@
         "drm": "サードパーティーDRMの警告を表示",
         "profile_permalink": "プロフィール上に固定リンクを表示",
         "show_regionwarning": "非アカウントのリージョンで閲覧している場合警告を表示する",
-        "foot_link": "Enhanced Steam 拡張機能",
+        "foot_link": "Augmented Steam 拡張機能",
         "profile_link_images": "プロフィールリンク画像",
         "library": "ヘッダーにライブラリボタンを表示",
         "show1clickgoo": "「1-click でジェムに変換」ボタンを適用可能なインベントリアイテムに表示",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Enhanced Steam のデータロードエラー",
-        "loading": "Enhanced Steam がデータをロード中……",
-        "ready": "Enhanced Steam 準備完了",
+        "errormsg": "Augmented Steam のデータロードエラー",
+        "loading": "Augmented Steam がデータをロード中……",
+        "ready": "Augmented Steam 準備完了",
         "failed": "1つ以上のリクエストが失敗しました"
     },
     "twitch": {
