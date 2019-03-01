@@ -1518,8 +1518,10 @@ let InventoryPageClass = (function(){
     async function addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {
         if (!SyncedStorage.get("quickinv")) { return; }
         if (!marketable) { return; }
-        if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
-
+        if (contextId !== 6 || globalId !== 753) { return; }
+        // 753 is the appid for "Steam" in the Steam Inventory
+        // 6 is the context used for "Community Items"; backgrounds, emoticons and trading cards
+        
         if (!thisItem.classList.contains("es-loading")) {
             let url = marketActions.querySelector("a").href;
 
