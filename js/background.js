@@ -470,7 +470,7 @@ const SteamStore = (function() {
             purchases[appName] = node.textContent;
         }
 
-        LocalStorageCache.set(key, purchases);
+        LocalStorageCache.set(`purchases_${lang}`, purchases);
         return purchases;
     }
     self.purchase = async function({ 'params': params, }) {
