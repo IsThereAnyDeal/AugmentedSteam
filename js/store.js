@@ -2267,7 +2267,7 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
-        let priceInfo = Price.getPriceInfo(Currency.userCurrency);
+        let priceInfo = Price.getPriceInfo(Currency.storeCurrency);
 
         let inputPattern = (function() {
             let placesRgx;
