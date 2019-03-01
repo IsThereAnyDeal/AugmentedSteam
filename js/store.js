@@ -2458,6 +2458,16 @@ let SearchPageClass = (function(){
 })();
 
 
+let CuratorPageClass = (function(){
+    function CuratorPageClass() {
+
+    }
+
+    
+    return CuratorPageClass;
+})();
+
+
 let WishlistPageClass = (function(){
 
     let noteModalTemplate;
@@ -2873,7 +2883,7 @@ let TabAreaObserver = (function(){
 
     self.observeChanges = function() {
 
-        let tabAreaNode = document.querySelector(".tabarea");
+        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
         if (!tabAreaNode) { return; }
 
         let observer = new MutationObserver(() => {
@@ -2933,6 +2943,10 @@ let TabAreaObserver = (function(){
 
                     case /^\/sale\/.*/.test(path):
                         (new StorePageClass()).showRegionalPricing("sale");
+                        break;
+
+                    case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(path):
+                        (new CuratorPageClass());
                         break;
 
                     case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):

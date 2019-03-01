@@ -1755,6 +1755,12 @@ let EarlyAccess = (function(){
                            ".tab_row",
                            ".browse_tag_game_cap"]);
                 break;
+            case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
+                checkNodes( [
+                    "#curator_avatar_image",
+                    ".capsule",
+                ]);
+                break;
             case /^\/$/.test(window.location.pathname):
                 checkNodes( [".cap",
                            ".special",
@@ -2266,6 +2272,9 @@ let Highlights = (function(){
             "div.recommendation_highlight",	// Recommendation pages
             "div.recommendation_carousel_item",	// Recommendation pages
             "div.friendplaytime_game",		// Recommendation pages
+            "div.recommendation",           // Curator pages and the new DLC pages
+            "div.carousel_items.curator_featured > div", // Carousel items on Curator pages
+            "div.item_ctn",                 // Curator list item
             "div.dlc_page_purchase_dlc",	// DLC page rows
             "div.sale_page_purchase_item",	// Sale pages
             "div.item",						// Sale pages / featured pages
