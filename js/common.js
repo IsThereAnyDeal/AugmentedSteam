@@ -929,19 +929,17 @@ let Price = (function() {
         "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
     };
 
-    function Price(value, currency, convert) {
+    function Price(value, currency, desiredCurrency=false) {
         this.value = value || 0;
         this.currency = currency || Currency.customCurrency;
 
-        if (convert !== false) {
-            let chosenCurrency = SyncedStorage.get("override_price");
-            if (chosenCurrency === "auto") { chosenCurrency = Currency.customCurrency; }
-            let rate = Currency.getRate(this.currency, chosenCurrency);
+        // If no conversion is requested, we can stop here
+        if (desiredCurrency === false || currency === desiredCurrency) return;
 
-            if (rate) {
-                this.value *= rate;
-                this.currency = chosenCurrency;
-            }
+        let rate = Currency.getRate(this.currency, desiredCurrency);
+        if (rate) {
+            this.value *= rate;
+            this.currency = desiredCurrency;
         }
     }
 
@@ -967,11 +965,7 @@ let Price = (function() {
 
     Price.parseFromString = function(str, convert) {
         let currencySymbol = Currency.getCurrencySymbolFromString(str);
-        let currencyType = Currency.getMemoizedCurrencyFromDom() || Currency.currencySymbolToType(currencySymbol);
-
-        if (Currency.customCurrency && format[Currency.customCurrency].symbolFormat === format[currencyType].symbolFormat) {
-            currencyType = Currency.customCurrency;
-        }
+        let currencyType = Currency.currencySymbolToType(currencySymbol);
 
         // let currencyNumber = currencyTypeToNumber(currencyType);
         let info = format[currencyType];
@@ -2209,11 +2203,11 @@ let Prices = (function(){
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency']);
+                lowest = new Price(info['price']['price_voucher'], meta['currency'], Currency.customCurrency);
                 let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
-                lowest = new Price(info['price']['price'], meta['currency']);
+                lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
             }
 
             let lowestStr = Localization.str.lowest_price_format
@@ -2227,7 +2221,7 @@ let Prices = (function(){
 
         // "Historical Low"
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency']);
+            let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
             let historicalStr = Localization.str.historical_low_format
@@ -2314,7 +2308,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency']).toString();
+                    let tierPrice = new Price(tier.price, meta['currency'], Currency.customCurrency).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2346,7 +2340,7 @@ let Prices = (function(){
             purchase += '<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (new Price(bundlePrice, meta['currency'])).toString();
+                    purchase += (new Price(bundlePrice, meta['currency'], Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 

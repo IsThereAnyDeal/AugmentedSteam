@@ -1384,14 +1384,14 @@ let InventoryPageClass = (function(){
 
         let overview = result[giftAppid]['data']['price_overview'];
         let discount = overview["discount_percent"];
-        let price = new Price(overview['final'] / 100, overview['currency']);
+        let price = new Price(overview['final'] / 100, overview['currency'], false);
 
         itemActions.style.display = "flex";
         itemActions.style.alignItems = "center";
         itemActions.style.justifyContent = "space-between";
 
         if (discount > 0) {
-            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
+            let originalPrice = new Price(overview['initial'] / 100, overview['currency'], false);
             itemActions.insertAdjacentHTML("beforeend",
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
@@ -1463,7 +1463,7 @@ let InventoryPageClass = (function(){
         if (priceHighValue) {
             let quickSell = document.querySelector("#es_quicksell" + assetId);
             quickSell.dataset.price = priceHighValue;
-            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
+            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency), false));
             quickSell.style.display = "block";
         }
 
@@ -1471,7 +1471,7 @@ let InventoryPageClass = (function(){
         if (priceLowValue) {
             let instantSell = document.querySelector("#es_instantsell" + assetId);
             instantSell.dataset.price = priceLowValue;
-            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
+            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency), false));
             instantSell.style.display = "block";
         }
     }
@@ -1511,6 +1511,7 @@ let InventoryPageClass = (function(){
 
                     let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff")));
                     let priceLow = new Price(market.highest_buy_order / 100);
+                    // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
                     if (priceHigh.value < 0.03) priceHigh.value = 0.03;
 
@@ -1578,7 +1579,7 @@ let InventoryPageClass = (function(){
         return html;
     }
 
-    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster) {
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrencyNumber) {
         marketActions.style.display = "block";
         let firstDiv = marketActions.querySelector("div");
         if (!firstDiv) {
@@ -1593,14 +1594,15 @@ let InventoryPageClass = (function(){
         if (!thisItem.dataset.lowestPrice) {
             firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.customCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+            let overviewPromise = RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`);
 
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
                 try {
-                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': Currency.customCurrency, } );
-                    thisItem.dataset.cardsPrice = new Price(result.average);
+                    let walletCurrency = Currency.currencyNumberToType(walletCurrencyNumber);
+                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': walletCurrency, } );
+                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency, false);
                 } catch (err) { }
             }
 
@@ -1675,7 +1677,7 @@ let InventoryPageClass = (function(){
         }
 
         if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
-            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster);
+            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
 
@@ -1853,7 +1855,7 @@ let BadgesPageClass = (function(){
     function BadgesPageClass() {
         this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
         this.hasAllPagesLoaded = false;
-        this.totalWorth = new Price(0);
+        this.totalWorth = new Price(0, Currency.storeCurrency, false);
 
         if (CommunityCommon.currentUserIsOwner()) {
             this.updateHead();
@@ -1925,7 +1927,7 @@ let BadgesPageClass = (function(){
             let key = isFoil ? "foil" : "regular";
             if (!data[appid] || !data[appid][key]) { continue; }
 
-            let averagePrice = new Price(data[appid][key]['average']);
+            let averagePrice = new Price(data[appid][key]['average'], Currency.storeCurrency, false);
 
             let cost;
             let progressInfoNode = node.querySelector("div.badge_progress_info");
@@ -1933,7 +1935,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice.value * need)
+                    cost = new Price(averagePrice.value * need, Currency.storeCurrency, false)
                 }
             }
 
@@ -1942,7 +1944,7 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice.value);
+                        let worth = new Price(drops[0] * averagePrice.value, Currency.storeCurrency, false);
 
                         if (worth.value > 0) {
                             this.totalWorth.value += worth.value;
@@ -2364,7 +2366,7 @@ let GameCardPageClass = (function(){
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
-        let cost = new Price(0);
+        let cost = new Price(0, Currency.storeCurrency, false);
         let isFoil = /border=1/i.test(document.URL);
 
         let data;
@@ -2391,7 +2393,7 @@ let GameCardPageClass = (function(){
 
             if (cardData) {
                 let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
-                let cardPrice = new Price(cardData.price);
+                let cardPrice = new Price(cardData.price, Currency.storeCurrency, false);
 
                 if (node.classList.contains("unowned")) {
                     cost.value += cardPrice.value;
@@ -2794,8 +2796,8 @@ let MarketPageClass = (function(){
     // TODO cache data
     async function loadMarketStats() {
 
-        let purchaseTotal = new Price(0);
-        let saleTotal = new Price(0);
+        let purchaseTotal = new Price(0, Currency.storeCurrency, false);
+        let saleTotal = new Price(0, Currency.storeCurrency, false);
 
         function updatePrices(dom) {
 
@@ -2814,7 +2816,7 @@ let MarketPageClass = (function(){
                 let priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent);
+                let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
 
                 if (isPurchase) {
                     purchaseTotal.value += price.value;
@@ -2823,7 +2825,7 @@ let MarketPageClass = (function(){
                 }
             }
 
-            let net = new Price(saleTotal.value - purchaseTotal.value);
+            let net = new Price(saleTotal.value - purchaseTotal.value, Currency.storeCurrency, false);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -2916,8 +2918,8 @@ let MarketPageClass = (function(){
             let lowestNode = node.querySelector(".market_listing_es_lowest");
             lowestNode.textContent = data['lowest_price'];
 
-            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
-            let lowPrice = Price.parseFromString(data['lowest_price']);
+            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
+            let lowPrice = Price.parseFromString(data['lowest_price'], Currency.storeCurrency);
 
             if (myPrice.value <= lowPrice.value) {
                 lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
