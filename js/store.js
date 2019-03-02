@@ -2735,10 +2735,12 @@ let WishlistPageClass = (function(){
             let node = nodes[i];
             if (node.classList.contains("esi-has-note")) { continue; }
 
-            let noteText = "note";
+            let noteText;
             let appid = node.dataset.appId;
             if (this.notes[appid]) {
                 noteText = this.notes[appid];
+            } else {
+                noteText = Localization.str.add_wishlist_note;
             }
 
             node.querySelector(".mid_container").insertAdjacentHTML("afterend",
