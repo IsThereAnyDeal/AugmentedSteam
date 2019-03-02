@@ -2204,8 +2204,14 @@ let Prices = (function(){
                 lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
             }
 
+            let prices = lowest.toString();
+            if (Currency.customCurrency != Currency.storeCurrency) {
+                let lowest_alt = new Price(lowest.value, lowest.currency, Currency.storeCurrency);
+                prices += ` (${lowest_alt.toString()})`;
+            }
+            
             let lowestStr = Localization.str.lowest_price_format
-                .replace("__price__", lowest.toString())
+                .replace("__price__", prices)
                 .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`)
 
             line1 = `${Localization.str.lowest_price}: 
@@ -2218,8 +2224,14 @@ let Prices = (function(){
             let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
+            let prices = historical.toString();
+            if (Currency.customCurrency != Currency.storeCurrency) {
+                let historical_alt = new Price(info['lowest']['price'], meta['currency'], Currency.storeCurrency);
+                prices += ` (${historical_alt.toString()})`;
+            }
+
             let historicalStr = Localization.str.historical_low_format
-                .replace("__price__", historical.toString())
+                .replace("__price__", prices)
                 .replace("__store__", BrowserHelper.escapeHTML(info['lowest']['store']))
                 .replace("__date__", recorded.toLocaleDateString());
 
