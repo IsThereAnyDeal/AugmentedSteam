@@ -2768,11 +2768,24 @@ let WishlistPageClass = (function(){
                 let modal = e.target.closest("#es_note_modal");
                 let appid = modal.dataset.appid;
                 let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                let node = document.querySelector(".wishlist_row[data-app-id='"+appid+"'] div.esi-note");
 
-                instance.notes[appid] = note;
+                if (note.length !== 0) {
+                    instance.notes[appid] = note;
+
+                    node.classList.remove("esi-empty-note");
+                    node.classList.add("esi-user-note");
+                    node.textContent = note;
+                } else {
+                    delete instance.notes[appid];
+
+                    node.classList.remove("esi-user-note");
+                    node.classList.add("esi-empty-note");
+                    node.textContent = Localization.str.add_wishlist_note;
+                }
+
                 SyncedStorage.set("wishlist_notes", instance.notes);
 
-                document.querySelector(".wishlist_row[data-app-id='"+appid+"'] div.esi-note").textContent = note;
                 ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
             } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
