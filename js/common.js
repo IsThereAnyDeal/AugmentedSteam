@@ -695,6 +695,49 @@ let StringUtils = (function(){
 
 
 let CurrencyRegistry = (function() {
+    //   { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
+    class SteamCurrency {
+        constructor({
+            'id': id,
+            'abbr': abbr="USD",
+            'symbol': symbol="$",
+            'hint': hint="Default Currency",
+            'multiplier': multiplier=100,
+            'unit': unit=1,
+            'format': {
+                'places': formatPlaces=2,
+                'hidePlacesWhenZero': formatHidePlaces=false,
+                'symbolFormat': formatSymbol="$",
+                'thousand': formatGroupSeparator=",",
+                'group': formatGroupSize=3,
+                'decimal': formatDecimalSeparator=".",
+                'right': formatPostfixSymbol=false,
+            },
+        }) {
+            // console.assert(id && Number.isInteger(id))
+            Object.assign(this, {
+                'id': id, // Steam Currency ID, integer, 1-41 (at time of writing)
+                'abbr': abbr, // TLA for the currency
+                'symbol': symbol, // Symbol used to represent/recognize the currency, this is NULL for CNY to avoid collision with JPY
+                'hint': hint, // English label for the currency to reduce mistakes editing the JSON
+                'multiplier': multiplier, // multiplier used by Steam when writing values
+                'unit': unit, // Minimum transactional unit required by Steam.
+                'format': {
+                    'decimalPlaces': formatPlaces, // How many decimal places does this currency have?
+                    'hidePlacesWhenZero': formatHidePlaces, // Does this currency show decimal places for a .0 value?
+                    'symbol': formatSymbol, // Symbol used when generating a string value of this currency
+                    'groupSeparator': formatGroupSeparator, // Thousands separator
+                    'groupSize': formatGroupSize, // Digits to a "thousand" for the thousands separator
+                    'decimalSeparator': formatDecimalSeparator,
+                    'postfix': formatPostfixSymbol, // Should format.symbol be post-fixed?
+                },
+            });
+            Object.freeze(this.format);
+            Object.freeze(this);
+        }
+    }
+
+
     let self = {};
 
     let indices = {
