@@ -929,6 +929,10 @@ let Price = (function() {
         return CurrencyRegistry.fromType(this.currency).stringify(this.value);
     };
 
+    Price.prototype.inCurrency = function(desiredCurrency) {
+        return new Price(this.value, this.currency, desiredCurrency);
+    };
+
     Price.parseFromString = function(str, desiredCurrency) {
         let currency = CurrencyRegistry.fromString(str);
         let value = currency.valueOf(str);
@@ -2162,7 +2166,7 @@ let Prices = (function(){
 
             let prices = lowest.toString();
             if (Currency.customCurrency != Currency.storeCurrency) {
-                let lowest_alt = new Price(lowest.value, lowest.currency, Currency.storeCurrency);
+                let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
             
@@ -2182,7 +2186,7 @@ let Prices = (function(){
 
             let prices = historical.toString();
             if (Currency.customCurrency != Currency.storeCurrency) {
-                let historical_alt = new Price(info['lowest']['price'], meta['currency'], Currency.storeCurrency);
+                let historical_alt = historical.inCurrency(Currency.storeCurrency);
                 prices += ` (${historical_alt.toString()})`;
             }
 
