@@ -749,6 +749,30 @@ let CurrencyRegistry = (function() {
                 return null;
             return value; // this.multiplier?
         }
+        stringify(value) {
+            let sign = value < 0 ? "-" : "";
+            value = Math.abs(value);
+            let s = value.toFixed(this.format.decimalPlaces), decimals;
+            [s, decimals] = s.split('.');
+            let g = [], j = s.length;
+            for (; j > this.format.groupSize; j -= this.format.groupSize) {
+                g.unshift(s.substring(j - this.format.groupSize, j));
+            }
+            g.unshift(s.substring(0, j));
+            s = [sign, g.join(this.format.groupSeparator)];
+            if (this.format.decimalPlaces > 0) {
+                if (!this.format.hidePlacesWhenZero || parseInt(decimals, 10) > 0) {
+                    s.push(this.format.decimalSeparator);
+                    s.push(decimals);
+                }
+            }
+            if (this.format.postfix) {
+                s.push(this.format.symbol);
+            } else {
+                s.unshift(this.format.symbol);
+            }
+            return s.join("");
+        }
     }
 
 
@@ -784,7 +808,7 @@ let CurrencyRegistry = (function() {
     self.promise = async function() {
         let currencies = await Background.action('steam.currencies');
         for (let currency of currencies) {
-            // currency = new SteamCurrency(currency);
+            currency = new SteamCurrency(currency);
             indices.abbr[currency.abbr] = currency;
             indices.id[currency.id] = currency;
             if (currency.symbol) // CNY && JPY use the same symbol
@@ -961,24 +985,7 @@ let Price = (function() {
     }
 
     Price.prototype.toString = function() {
-        let info = format[this.currency];
-        let places = info.places;
-        if (info.hidePlacesWhenZero && (this.value % 1 === 0)) {
-            places = 0;
-        }
-
-        let negative = this.value < 0 ? "-" : "";
-        let i = Math.trunc(Math.abs(this.value)).toFixed(0);
-        let j = i.length > 3 ? i.length % 3 : 0;
-
-        let formatted = negative;
-        if (j > 0) { formatted += i.substr(0, j) + info.thousand; }
-        formatted += i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + info.thousand);
-        formatted += (places ? info.decimal + Math.abs(this.value - parseInt(i)).toFixed(places).slice(2) : "");
-
-        return info.right
-            ? formatted + info.symbolFormat
-            : info.symbolFormat + formatted
+        return CurrencyRegistry.fromType(this.currency).stringify(this.value);
     };
 
     Price.parseFromString = function(str, desiredCurrency) {
