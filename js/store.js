@@ -2502,6 +2502,7 @@ let WishlistPageClass = (function(){
                 instance.addWishlistNotes(record.addedNodes);
                 instance.addPriceHandler(record.addedNodes);
             });
+            window.dispatchEvent(new Event("resize"));
         });
         observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
 
