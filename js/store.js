@@ -2734,7 +2734,7 @@ let WishlistPageClass = (function(){
         let appid = node.dataset.appId;
         let cssClass;
         if (this.notes[appid]) {
-            noteText = this.notes[appid];
+            noteText = '"' + this.notes[appid] + '"';
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2775,7 +2775,7 @@ let WishlistPageClass = (function(){
 
                     node.classList.remove("esi-empty-note");
                     node.classList.add("esi-user-note");
-                    node.textContent = note;
+                    node.textContent = '"' + note + '"';
                 } else {
                     delete instance.notes[appid];
 
