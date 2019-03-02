@@ -735,6 +735,20 @@ let CurrencyRegistry = (function() {
             Object.freeze(this.format);
             Object.freeze(this);
         }
+        valueOf(price) {
+            // remove separators
+            price = price.trim()
+                .replace(this.format.groupSeparator, "");
+            if (this.format.decimalSeparator != ".")
+                price = price.replace(this.format.decimalSeparator, ".") // as expected by parseFloat()
+            price = price.replace(/[^\d\.]/g, "");
+
+            let value = parseFloat(price);
+
+            if (Number.isNaN(value))
+                return null;
+            return value; // this.multiplier?
+        }
     }
 
 
@@ -966,27 +980,12 @@ let Price = (function() {
             : info.symbolFormat + formatted
     };
 
-    Price.parseFromString = function(str, convert) {
-        let currencySymbol = Currency.getCurrencySymbolFromString(str);
-        let currencyType = Currency.currencySymbolToType(currencySymbol);
-
-        // let currencyNumber = currencyTypeToNumber(currencyType);
-        let info = format[currencyType];
-
-        // remove thousand sep, replace decimal with dot, remove non-numeric
-        str = str
-            .replace(info.thousand, '')
-            .replace(info.decimal, '.')
-            .replace(/[^\d\.]/g, '')
-            .trim();
-
-        let value = parseFloat(str);
-
-        if (isNaN(value)) {
-            return null;
-        }
-
-        return new Price(value, currencyType, convert);
+    Price.parseFromString = function(str, desiredCurrency) {
+        let currency = CurrencyRegistry.fromString(str);
+        let value = currency.valueOf(str);
+        if (value !== null)
+            value = new Price(value, currency.abbr, desiredCurrency);
+        return value;
     };
 
 
