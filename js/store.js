@@ -2741,7 +2741,7 @@ let WishlistPageClass = (function(){
                 noteText = this.notes[appid];
             }
 
-            node.querySelector(".lower_columns .addedon").insertAdjacentHTML("beforebegin",
+            node.querySelector(".mid_container").insertAdjacentHTML("afterend",
                 "<div class='esi-note'>" + noteText + "</div>");
             node.classList.add("esi-has-note");
         }
