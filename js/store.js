@@ -433,6 +433,8 @@ let AppPageClass = (function(){
         this.mediaSliderExpander();
         this.initHdPlayer();
         this.addWishlistRemove();
+        this.addWishlistNote();
+        this.addWishlistNoteObserver();
         this.addCoupon();
         this.addPrices();
         this.addDlcInfo();
@@ -835,6 +837,104 @@ let AppPageClass = (function(){
             nodes[i].addEventListener("click", DynamicStore.clear);
         }
     };
+
+    AppPageClass.prototype.addWishlistNote = function() {
+        if (!User.isSignedIn) { return; }
+
+        if (document.getElementById("add_to_wishlist_area_success").style.display !== "none") {
+            _addWishlistNote();
+        }
+    }
+
+    AppPageClass.prototype.addWishlistNoteObserver = function() {
+        if (!User.isSignedIn) { return; }
+
+        let observer = new MutationObserver(record => {
+            let display = record[0].target.style.display;
+
+            if (display === "none") {
+                document.getElementById("esi-store-wishlist-note").remove();
+            } else {
+                _addWishlistNote();
+            }
+        });
+
+        observer.observe(document.getElementById("add_to_wishlist_area_success"), {attributes: true, attributeFilter: ["style"]});
+    }
+
+    let _addWishlistNote = function() {
+
+        let noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
+            <div id="es_note_modal_content">
+                <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
+                    <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+                </div>
+                <div class="es_note_buttons" style="float: right">
+                    <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
+                        <span>${Localization.str.save}</span>
+                    </div>
+                    <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
+                        <span>${Localization.str.cancel}</span>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+        let notes = SyncedStorage.get("wishlist_notes");
+        let appid = this.appid;
+        let noteText = notes[appid] || "";
+        let cssClass;
+
+        if (notes[appid]) {
+            noteText = '"' + notes[appid] + '"';
+            cssClass = "esi-user-note";
+        } else {
+            noteText = Localization.str.add_wishlist_note;
+            cssClass = "esi-empty-note";
+        }
+
+        document.getElementsByClassName("queue_control_button queue_btn_ignore")[0].insertAdjacentHTML("afterend",
+            "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
+
+        document.addEventListener("click", function(e) {
+            if (!e.target.classList.contains("esi-note")) { return; }
+
+            let title = document.getElementsByClassName("apphub_AppName")[0].textContent;
+            let note = notes[appid] || "";
+
+            ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + title + '`, \`' + noteModalTemplate.replace("__appid__", appid).replace("__note__", note) + '\`); }');
+        });
+
+        document.addEventListener("click", function(e) {
+            if (e.target.closest(".es_note_modal_submit")) {
+                e.preventDefault();
+
+                let modal = e.target.closest("#es_note_modal");
+                let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                let node = document.getElementById("esi-store-wishlist-note");
+
+                if (note.length !== 0) {
+                    notes[appid] = note;
+
+                    node.classList.remove("esi-empty-note");
+                    node.classList.add("esi-user-note");
+                    node.textContent = '"' + note + '"';
+                } else {
+                    delete notes[appid];
+
+                    node.classList.remove("esi-user-note");
+                    node.classList.add("esi-empty-note");
+                    node.textContent = Localization.str.add_wishlist_note;
+                }
+
+                SyncedStorage.set("wishlist_notes", notes);
+
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            } else if (e.target.closest(".es_note_modal_close")) {
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            }
+        });
+    }
 
     AppPageClass.prototype.getFirstSubid = function() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
