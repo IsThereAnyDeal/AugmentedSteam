@@ -745,7 +745,7 @@ const Steam = (function() {
     };
     self.currencies = async function() {
         if (!_supportedCurrencies || _supportedCurrencies.length < 1) {
-            _supportedCurrencies = self.fetchCurrencies();
+            _supportedCurrencies = await self.fetchCurrencies();
         }
         return _supportedCurrencies;
     };
