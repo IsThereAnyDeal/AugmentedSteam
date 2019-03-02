@@ -842,7 +842,7 @@ let AppPageClass = (function(){
         if (!User.isSignedIn) { return; }
 
         if (document.getElementById("add_to_wishlist_area_success").style.display !== "none") {
-            _addWishlistNote();
+            _addWishlistNote(this.appid);
         }
     }
 
@@ -854,15 +854,18 @@ let AppPageClass = (function(){
 
             if (display === "none") {
                 document.getElementById("esi-store-wishlist-note").remove();
+                let notes = SyncedStorage.get("wishlist_notes");
+                delete notes[this.appid];
+                SyncedStorage.set("wishlist_notes", notes);
             } else {
-                _addWishlistNote();
+                _addWishlistNote(this.appid);
             }
         });
 
         observer.observe(document.getElementById("add_to_wishlist_area_success"), {attributes: true, attributeFilter: ["style"]});
     }
 
-    let _addWishlistNote = function() {
+    let _addWishlistNote = function(appid) {
 
         let noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
             <div id="es_note_modal_content">
@@ -881,7 +884,6 @@ let AppPageClass = (function(){
         </div>`;
 
         let notes = SyncedStorage.get("wishlist_notes");
-        let appid = this.appid;
         let noteText = notes[appid] || "";
         let cssClass;
 
