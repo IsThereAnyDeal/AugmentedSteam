@@ -319,8 +319,28 @@ let Options = (function(){
         }
     }
     
-    self.init = function() {
-        SyncedStorage.load().finally(() => {
+    function addCurrencies(currencies) {
+        let select = document.getElementById('override_price');
+        currencies = currencies
+            .map(cu => cu.abbr)
+            .filter(cu => cu != 'USD') // already in HTML
+            .sort()
+            .forEach(currency => {
+                let el = document.createElement('option');
+                el.value = currency;
+                el.innerText = currency;
+                select.appendChild(el);
+            })
+            ;
+    }
+
+    self.init = async function() {
+        let settings = SyncedStorage.load();
+        let currency = fetch(chrome.extension.getURL('json/currency.json'))
+            .then(r => r.json())
+            .then(addCurrencies)
+            ;
+        Promise.all([settings, currency]).finally(() => {
             
             loadStores();
             loadOptions();
