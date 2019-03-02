@@ -835,7 +835,7 @@ let Currency = (function() {
     let _rates = {};
     let _promise = null;
 
-    async function _getRates() {
+    function _getRates() {
         let target = [self.storeCurrency,];
         if (!self.customCurrency) { // configured to "auto"
             self.customCurrency = self.storeCurrency;
@@ -843,25 +843,9 @@ let Currency = (function() {
             target.push(self.customCurrency);
         }
         // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-
-        function mergeRates(acc, el) {
-            if (acc === null)
-                return el;
-            for (let [k, v] of Object.entries(el)) {
-                if (typeof acc[k] == 'undefined') {
-                    acc[k] = v;
-                    continue;
-                }
-                Object.assign(acc[k], v);
-            }
-            return acc;
-        }
-
-        let promises = [];
-        for (let currency of target) {
-            promises.push(Background.action('rates', { 'to': currency, }));
-        }
-        return Promise.all(promises).then(result => _rates = result.reduce(mergeRates, null));
+        target.sort();
+        return Background.action('rates', { 'to': target.join(","), })
+            .then(rates => _rates = rates);
     }
 
     // load user currency
