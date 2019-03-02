@@ -2737,14 +2737,17 @@ let WishlistPageClass = (function(){
 
             let noteText;
             let appid = node.dataset.appId;
+            let cssClass;
             if (this.notes[appid]) {
                 noteText = this.notes[appid];
+                cssClass = "esi-user-note";
             } else {
                 noteText = Localization.str.add_wishlist_note;
+                cssClass = "esi-empty-note";
             }
 
             node.querySelector(".mid_container").insertAdjacentHTML("afterend",
-                "<div class='esi-note'>" + noteText + "</div>");
+                "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
             node.classList.add("esi-has-note");
         }
     };
