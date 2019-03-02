@@ -2601,10 +2601,12 @@ let WishlistPageClass = (function(){
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 if (record.addedNodes.length === 1) {
+                    if (isMyWishlist()) {
+                        instance.addWishlistNotes(record.addedNodes[0]);
+                        instance.addRemoveHandler(record.addedNodes[0]);
+                    }
                     instance.highlightApps(record.addedNodes[0]);
-                    instance.addWishlistNotes(record.addedNodes[0]);
                     instance.addPriceHandler(record.addedNodes[0]);
-                    instance.addRemoveHandler(record.addedNodes[0]);
                 }
             });
             window.dispatchEvent(new Event("resize"));
@@ -2829,8 +2831,6 @@ let WishlistPageClass = (function(){
 
 
     WishlistPageClass.prototype.addWishlistNotes =  function(node) {
-        if (!isMyWishlist()) { return; }
-
         if (node.classList.contains("esi-has-note")) { return; }
 
         let noteText;
@@ -2897,8 +2897,6 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addRemoveHandler = function(node) {
-        if (!isMyWishlist()) { return; }
-
         node.getElementsByClassName("delete")[0].addEventListener("click", () => {
             // The confirmation button will be created on a click on the "remove" button
             document.getElementsByClassName("btn_green_white_innerfade btn_medium")[0].addEventListener("click", () => {
