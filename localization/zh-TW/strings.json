@@ -135,7 +135,7 @@
     "viewinclient": "在Steam用戶端上開啟",
     "custom_background": "自訂背景",
     "custom_style": "自訂主題",
-    "custom_style_help": "所有的 Enhanced Steam 使用者會在您的主頁看到這個主題，而非 Augmented Steam 使用者不會看到任何主題變化。",
+    "custom_style_help": "所有的 Augmented Steam 使用者會在您的主頁看到這個主題，而非 Augmented Steam 使用者不會看到任何主題變化。",
     "noneselected": "未作選擇/不作修改",
     "most_drops": "最多掉落",
     "badge_foil_progress": "檢視閃亮徽章進度",
@@ -255,7 +255,7 @@
     "user_reviews": "使用者評論",
     "review_summary": "__num__ 篇用戶評論當中有 __percent__ 給予好評。",
     "market_popular_items_toggle": "切換熱門物品的即時更新",
-    "show_progressbar": "顯示 Enhanced Steam 進度和狀態欄",
+    "show_progressbar": "顯示 Augmented Steam 進度和狀態欄",
     "achievements": {
         "option": "在商店頁面中顯示成就",
         "achievements": "成就",
