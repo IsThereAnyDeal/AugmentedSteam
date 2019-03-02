@@ -2443,6 +2443,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor:pointer;
 }
 
+#esi-store-wishlist-note {
+	font-size: 13px;
+}
+
 .esi-empty-note {
 	font-style: italic;
 }
