@@ -2498,9 +2498,11 @@ let WishlistPageClass = (function(){
         let instance = this;
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
-                instance.highlightApps(record.addedNodes);
-                instance.addWishlistNotes(record.addedNodes);
-                instance.addPriceHandler(record.addedNodes);
+                if (record.addedNodes.length === 1) {
+                    instance.highlightApps(record.addedNodes[0]);
+                    instance.addWishlistNotes(record.addedNodes[0]);
+                    instance.addPriceHandler(record.addedNodes[0]);
+                }
             });
             window.dispatchEvent(new Event("resize"));
         });
@@ -2535,7 +2537,7 @@ let WishlistPageClass = (function(){
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
-    WishlistPageClass.prototype.highlightApps = async function(nodes) {
+    WishlistPageClass.prototype.highlightApps = async function(node) {
         if (!User.isSignedIn) { return; }
 
         let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
@@ -2544,30 +2546,27 @@ let WishlistPageClass = (function(){
 
         await DynamicStore;
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        let appid = Number(node.dataset.appId);
 
-            let appid = Number(node.dataset.appId);
-
-            if (DynamicStore.isOwned(appid)) {
-                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-                if (SyncedStorage.get("highlight_owned")) {
-                    Highlights.highlightOwned(node);
-                } else {
-                    node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
-                }
-            }
-
-            if (DynamicStore.isWishlisted(appid)) {
-                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
-
-                if (SyncedStorage.get("highlight_wishlist")) {
-                    Highlights.highlightWishlist(node);
-                } else {
-                    node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
-                }
+        if (DynamicStore.isOwned(appid)) {
+            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
+            if (SyncedStorage.get("highlight_owned")) {
+                Highlights.highlightOwned(node);
+            } else {
+                node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
+
+        if (DynamicStore.isWishlisted(appid)) {
+            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
+
+            if (SyncedStorage.get("highlight_wishlist")) {
+                Highlights.highlightWishlist(node);
+            } else {
+                node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+            }
+        }
+        
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
@@ -2714,43 +2713,37 @@ let WishlistPageClass = (function(){
         addWishlistPrice(e.target);
     }
 
-    WishlistPageClass.prototype.addPriceHandler = function(nodes){
+    WishlistPageClass.prototype.addPriceHandler = function(node){
         if (!SyncedStorage.get("showlowestprice_onwishlist")) { return; }
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (!node.dataset.appId) { continue; }
+        if (!node.dataset.appId) { return; }
 
-            node.removeEventListener("mouseenter", wishlistRowEnterHandler);
-            if (!node.querySelector(".es_lowest_price")) {
-                node.addEventListener("mouseenter", wishlistRowEnterHandler);
-            }
+        node.removeEventListener("mouseenter", wishlistRowEnterHandler);
+        if (!node.querySelector(".es_lowest_price")) {
+            node.addEventListener("mouseenter", wishlistRowEnterHandler);
         }
     };
 
 
-    WishlistPageClass.prototype.addWishlistNotes =  function(nodes) {
+    WishlistPageClass.prototype.addWishlistNotes =  function(node) {
         if (!isMyWishlist()) { return; }
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (node.classList.contains("esi-has-note")) { continue; }
+        if (node.classList.contains("esi-has-note")) { return; }
 
-            let noteText;
-            let appid = node.dataset.appId;
-            let cssClass;
-            if (this.notes[appid]) {
-                noteText = this.notes[appid];
-                cssClass = "esi-user-note";
-            } else {
-                noteText = Localization.str.add_wishlist_note;
-                cssClass = "esi-empty-note";
-            }
-
-            node.querySelector(".mid_container").insertAdjacentHTML("afterend",
-                "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
-            node.classList.add("esi-has-note");
+        let noteText;
+        let appid = node.dataset.appId;
+        let cssClass;
+        if (this.notes[appid]) {
+            noteText = this.notes[appid];
+            cssClass = "esi-user-note";
+        } else {
+            noteText = Localization.str.add_wishlist_note;
+            cssClass = "esi-empty-note";
         }
+
+        node.querySelector(".mid_container").insertAdjacentHTML("afterend",
+            "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
+        node.classList.add("esi-has-note");
     };
 
     WishlistPageClass.prototype.addWishlistNotesHandlers =  function() {
