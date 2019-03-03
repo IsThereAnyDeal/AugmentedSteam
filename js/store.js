@@ -2446,6 +2446,9 @@ let SearchPageClass = (function(){
                 elem.reportValidity();
             });
         }
+
+        addHideButtonsToSearchClick(document.querySelectorAll(".search_result_row"));
+
     };
 
     SearchPageClass.prototype.observeChanges = function() {
