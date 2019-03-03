@@ -2045,34 +2045,6 @@ let Highlights = (function(){
     let highlightCssLoaded = false;
     let tagCssLoaded = false;
 
-    function classChecker(node, classList) {
-        for (let i=0, len=classList.length; i < len; i++) {
-            if (node.classList.contains(classList[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function hideNode(node) {
-        let cls = node.classList;
-
-        if (cls.contains("info") || cls.contains("dailydeal") || cls.contains("spotlight_content") || cls.contains("browse_tag_game_cap")) {
-            node = node.parentNode;
-        }
-
-        if (SyncedStorage.get("hide_owned")
-            && classChecker(node, ["search_result_row", "item", "cluster_capsule", "browse_tag_game"])) {
-            node.style.display = "none";
-        }
-
-        // Hide DLC for unowned items
-        if (SyncedStorage.get("hide_dlcunownedgames")
-            && classChecker(node, ["search_result_row", "item", "game_area_dlc_row", "cluster_capsule"])) {
-                node.style.display = "none";
-        }
-    }
-
     function addTag(node, tag) {
         let tagShort = SyncedStorage.get("tag_short");
 
@@ -2243,30 +2215,13 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_owned")) {
-            hideNode(node);
-            return;
-        }
-
         highlightItem(node, "owned");
     };
 
     self.highlightWishlist = function(node) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_wishlist")) {
-            hideNode(node);
-            return;
-        }
-
         highlightItem(node, "wishlist");
-    };
-
-    self.highlightCart = function(node) {
-        if (!SyncedStorage.get("hide_cart")) { return; }
-
-        node.classList.add("es_highlight_checked", "es_highlighted", "es_highlighted_hidden");
-        hideNode(node);
     };
 
     self.highlightCoupon = function(node) {
@@ -2362,10 +2317,6 @@ let Highlights = (function(){
 
                     if (node.querySelector(".ds_wishlist_flag")) {
                         self.highlightWishlist(nodeToHighlight);
-                    }
-
-                    if (node.querySelector(".ds_incart_flag")) {
-                        self.highlightCart(nodeToHighlight);
                     }
 
                     if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
