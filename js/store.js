@@ -2359,11 +2359,6 @@ let SearchPageClass = (function(){
             document.querySelector("#es_notmixed").classList.add("checked");
             document.querySelector("#es_hide_options").style.height="auto";
             document.querySelector("#es_hide_expander").style.display="none";
-
-            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.mixed");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].closest(".search_result_row").style.display="none";
-            }
         }
 
         if (SyncedStorage.get("hide_negative")) {
