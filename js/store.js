@@ -2451,7 +2451,7 @@ let SearchPageClass = (function(){
                 if (SyncedStorage.get("hide_cart")) { document.querySelector("#es_cart_games").classList.add("checked"); }
                 if (SyncedStorage.get("hide_notdiscounted")) { document.querySelector("#es_notdiscounted").classList.add("checked"); }
                 if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
-                if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_es_notmixed").classList.add("checked"); }
+                if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
                 if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
                 if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
 
