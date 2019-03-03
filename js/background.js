@@ -178,9 +178,9 @@ const AugmentedSteamApi = (function() {
     let self = new Api(Config.ApiServerHost);
 
     let progressingRequests = new Map();
-    self._getEndpoint = self.getEndpoint;
+    self.baseGetEndpoint = self.getEndpoint;
     self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        return self._getEndpoint(endpoint, query)
+        return self.baseGetEndpoint(endpoint, query)
             .then(function(json) {
                 if (!json.result || json.result !== "success")
                     throw `Could not retrieve '${endpoint}'`;
