@@ -2270,54 +2270,56 @@ let SearchPageClass = (function(){
         let priceInfo = Price.getPriceInfo(Currency.userCurrency);
 
         let inputPattern = (function() {
-            let placesRgx;
+            let placesRegex;
             if (priceInfo.hidePlacesWhenZero) {
-                placesRgx = "";
+                placesRegex = "";
             } else {
-                placesRgx = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
+                placesRegex = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
             }
-            let decimalRgx = priceInfo.decimal === '.' ? '\\.' : ',';
-            
-            return new RegExp("^\\d*(" + decimalRgx + placesRgx + '|)$');
+            let decimalRegex = priceInfo.decimal.replace(".", "\\.");
+
+            return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
         })();
+
+        let pricePlaceholder = new Price(0, Currency.userCurrency).toString().replace(/[^\d,\.]/, '');
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
-                <div class='block_header'><div>` + Localization.str.hide + `</div></div>
+                <div class='block_header'><div>${Localization.str.hide}</div></div>
                 <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
                     <div class='tab_filter_control' id='es_owned_games'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.options.owned + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.options.owned}</span>
                     </div>
                     <div class='tab_filter_control' id='es_wishlist_games'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.options.wishlist + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.options.wishlist}</span>
                     </div>
                     <div class='tab_filter_control' id='es_cart_games'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.options.cart + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.options.cart}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notdiscounted'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.notdiscounted + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.notdiscounted}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notinterested'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.notinterested + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.notinterested}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notmixed'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.mixed_item + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.mixed_item}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notnegative'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.negative_item + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.negative_item}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notpriceabove'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.price_above + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='` + inputPattern.source + `' placeholder=` + new Price(0).toString().replace(/[^\d,\.]/, '') + `>
+                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='${inputPattern.source}' placeholder=${pricePlaceholder}>
                         </div>
                     </div>
                 </div>
@@ -2477,11 +2479,11 @@ let SearchPageClass = (function(){
 
 
 let CuratorPageClass = (function(){
-    function CuratorPageClass() {
 
+    function CuratorPageClass() {
+        // no page-specific handling
     }
 
-    
     return CuratorPageClass;
 })();
 

@@ -1167,7 +1167,7 @@ let Price = (function() {
 
     Price.getPriceInfo = function(currencyCode) {
         return format[currencyCode];
-    }
+    };
 
     return Price;
 })();

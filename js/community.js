@@ -1654,8 +1654,8 @@ let InventoryPageClass = (function(){
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
                     thisItem.dataset.soldVolume = data.volume;
                 }
-            } catch (err) {
-                console.error("Couldn't load price overview from market");
+            } catch (error) {
+                console.error("Couldn't load price overview from market", error);
                 firstDiv.innerHTML = html; // add market link anyway
                 return;
             }
