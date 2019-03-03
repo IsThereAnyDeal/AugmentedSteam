@@ -2439,8 +2439,12 @@ let SearchPageClass = (function(){
 
         filtersChanged();
 
+    };
+
+    SearchPageClass.prototype.observeChanges = function() {
         if (!SyncedStorage.get("contscroll")) {
-            let observer = new MutationObserver(mutations => {
+
+            let pageObserver = new MutationObserver(() => {
                 // When loading a new page, every element in the tab_filter_control class gets unchecked
                 if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
                 if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
@@ -2453,14 +2457,10 @@ let SearchPageClass = (function(){
 
                 Highlights.startHighlightsAndTags();
                 EarlyAccess.showEarlyAccess();
-                filtersChanged();                    
+                filtersChanged();
             });
-            observer.observe(document.getElementById("search_results"), {childList: true});
+            pageObserver.observe(document.getElementById("search_results"), {childList: true});
         }
-
-    };
-
-    SearchPageClass.prototype.observeChanges = function() {
 
         let observer = new MutationObserver(mutations => {
             Highlights.startHighlightsAndTags();
@@ -2470,11 +2470,7 @@ let SearchPageClass = (function(){
                 filtersChanged(mutation.addedNodes);
             });
         });
-
-        observer.observe(
-            document.querySelector("#search_result_container"),
-            {childList: true, subtree: true}
-        );
+        observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
     };
 
     return SearchPageClass;
