@@ -2785,6 +2785,59 @@ let WishlistPageClass = (function(){
     return WishlistPageClass;
 })();
 
+let TagPageClass = (function(){
+
+    let rows = [
+        "NewReleasesRows",
+        "TopSellersRows",
+        "ConcurrentUsersRows",
+        "ComingSoonRows"
+    ];
+
+    function TagPageClass() {
+        if (SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored")) {
+            this.addHiding();
+            this.observeChanges();
+        }
+    }
+
+    TagPageClass.prototype.addHiding = function() {
+        rows.forEach(row => {
+            for (let node of document.getElementById(row).children) {
+                hideNode(node);
+            }
+        });
+    }
+
+    TagPageClass.prototype.observeChanges = function() {
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeName === "A") {
+                        hideNode(node);
+                    }
+                })
+            });
+        });
+        
+        rows.forEach(row => {
+            observer.observe(document.getElementById(row), {childList: true});
+        })
+    }
+
+    function hideNode(node) {
+        if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
+            node.style.display = "none";
+        }
+        if (SyncedStorage.get("hide_ignored") && node.classList.contains("ds_ignored")) {
+            node.style.display = "none";
+        }
+    }
+
+    return TagPageClass;
+
+})();
+
 
 let StoreFrontPageClass = (function(){
 
@@ -2958,6 +3011,10 @@ let TabAreaObserver = (function(){
 
                     case /^\/search\/.*/.test(path):
                         (new SearchPageClass());
+                        break;
+
+                    case /^\/tags\//.test(path):
+                        (new TagPageClass());
                         break;
 
                     case /^\/sale\/.*/.test(path):
