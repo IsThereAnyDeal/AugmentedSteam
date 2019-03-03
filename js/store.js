@@ -1540,10 +1540,10 @@ let AppPageClass = (function(){
             .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
 
         document.querySelector("#category_block").insertAdjacentHTML("afterend", `
-					<div class="block responsive_apppage_details_right heading">
+					<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
 						${Localization.str.badge_progress}
 					</div>
-					<div class="block">
+					<div id="es_badge_progress_content" class="block">
 						<div class="block_content_inner es_badges_progress_block" style="display:none;">
 							<div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
 							<div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
@@ -1551,13 +1551,12 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
-            loadBadgeContent(".es_normal_badge_progress", result);
-        });
-
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
-            loadBadgeContent(".es_foil_badge_progress", result);
-        });
+        Promise.all([RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid),
+            RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1")])
+                .then(results => {
+                    loadBadgeContent(".es_normal_badge_progress", results[0]);
+                    loadBadgeContent(".es_foil_badge_progress", results[1]);
+                });
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = document.createElement("html");
@@ -1568,6 +1567,11 @@ let AppPageClass = (function(){
                 let badge = dummy.querySelector(".badge_current");
                 if (badge) {
                     displayBadgeInfo(targetSelector, badge);
+                }
+            } else {
+                if (document.getElementById("es_badge_progress")) {
+                    document.getElementById("es_badge_progress").remove();
+                    document.getElementById("es_badge_progress_content").remove();
                 }
             }
         }
