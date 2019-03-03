@@ -911,74 +911,65 @@ let Currency = (function() {
 
         _promise = new Promise((resolveTop, rejectTop) => {
             (new Promise((resolveStoreCurrency, rejectStoreCurrency) => {
-                
+
                 let currencyCache = LocalData.get("user_currency", {});
                 if (currencyCache && currencyCache.currencyType && !TimeHelper.isExpired(currencyCache.updated, 3600)) {
                     resolveStoreCurrency(currencyCache.currencyType);
-                } else {
-
-                    // Get currency from DOM
-                    let domCurrency = null;
-                    let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
-                    if (currencyNode && currencyNode.hasAttribute("content")) {
-                        domCurrency = currencyNode.getAttribute("content");
-                    }
-
-                    if (domCurrency === null) {
-
-                        // Get currency from addfunds page
-                        RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                        .then(
-                            response => {
-                                let dummyHtml = document.createElement("html");
-                                dummyHtml.innerHTML = response;
-
-                                resolveStoreCurrency(dummyHtml.querySelector("input[name=currency]").value);
-                            },
-                            () => {
-                                // Get currency from app page
-                                RequestData
-                                .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
-                                .then(response => {
-                                    let dummyHtml = document.createElement("html");
-                                    dummyHtml.innerHTML = response;
-
-                                    let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
-                                    if (!currency) {
-                                        // Get currency from page context
-                                        ExtensionLayer.runInPageContext(`function(){
-                                            window.postMessage({
-                                                type: "es_sendmessage",
-                                                wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
-                                            }, "*");
-                                        }`);
-
-                                        window.addEventListener("message", function(e) {
-                                            if (e.source !== window) { return; }
-                                            if (!e.data.type) { return; }
-                            
-                                            if (e.data.type === "es_sendmessage") {
-                                                if (e.data.wallet_currency !== null) {
-                                                    resolveStoreCurrency(e.data.wallet_currency)
-                                                } else {
-                                                    // If everything failed, the promise is rejected
-                                                    rejectStoreCurrency()
-                                                }
-                                            }
-                                        }, false);
-
-                                    } else {
-                                        resolveStoreCurrency(currency);
-                                    }                                            
-                                });
-                            }
-                        );
-                        
-                    } else {
-                        resolveStoreCurrency(domCurrency);
-                    }
-                    
+                    return;
                 }
+
+                // Get currency from DOM
+                let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
+                if (currencyNode && currencyNode.hasAttribute("content")) {
+                    let domCurrency = currencyNode.getAttribute("content");
+                    if (domCurrency)
+                    resolveStoreCurrency(domCurrency);
+                    return;
+                }
+
+                // Get currency from addfunds page
+                RequestData
+                    .getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
+                    .then(
+                    response => {
+                        let dummyHtml = document.createElement("html");
+                        dummyHtml.innerHTML = response;
+
+                        resolveStoreCurrency(dummyHtml.querySelector("input[name=currency]").value);
+                    }).catch(() => {
+                        // Get currency from app page
+                        RequestData
+                        .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
+                        .then(response => {
+                            let dummyHtml = BrowserHelper.htmlToDOM(response);
+                            let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
+                            if (currency) {
+                                resolveStoreCurrency(currency);
+                                return;
+                            }
+
+                            // Get currency from page context
+                            ExtensionLayer.runInPageContext(`function(){
+                                window.postMessage({
+                                    type: "es_sendmessage",
+                                    wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
+                                }, "*");
+                            }`);
+
+                            window.addEventListener("message", function(e) {
+                                if (e.source !== window) { return; }
+                                if (!e.data.type || e.data.type !== "es_sendmessage") { return; }
+
+                                if (e.data.wallet_currency !== null) {
+                                    resolveStoreCurrency(e.data.wallet_currency)
+                                } else {
+                                    // If everything failed, the promise is rejected
+                                    rejectStoreCurrency()
+                                }
+                            }, false);
+
+                        });
+                    });
 
             })).then(storeCurrency => {
 
@@ -1010,7 +1001,7 @@ let Currency = (function() {
                 }
 
             }, () => {
-                console.log("Failed to retrieve store currency, falling back to " + self.storeCurrency + '!');
+                console.error("Failed to retrieve store currency, falling back to " + self.storeCurrency + '!');
                 self.customCurrency = self.storeCurrency;
 
                 RequestData.getApi("v01/rates", { to: self.storeCurrency })
