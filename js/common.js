@@ -250,7 +250,7 @@ let ExtensionLayer = (function() {
     let self = {};
 
     self.getLocalUrl = function(url) {
-        return chrome.extension.getURL(url);
+        return chrome.runtime.getURL(url);
     };
 
     // NOTE: use cautiously!
