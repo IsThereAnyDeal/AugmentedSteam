@@ -155,7 +155,7 @@ class Api {
         this.params = params;
     }
     // withResponse? use a boolean to include Response object in result?
-    fetch(endpoint, query={}, params={}) {
+    _fetchWithDefaults(endpoint, query={}, params={}) {
         let url = new URL(endpoint, this.origin);
         for (let [k, v] of Object.entries(query)) {
             url.searchParams.append(k, v);
@@ -166,10 +166,10 @@ class Api {
     getEndpoint(endpoint, query) {
         if (!endpoint.endsWith('/'))
             endpoint += '/';
-        return this.fetch(endpoint, query, { 'method': 'GET', }).then(response => response.json());
+        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.json());
     }    
     getPage(endpoint, query) {
-        return this.fetch(endpoint, query, { 'method': 'GET', }).then(response => response.text());
+        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.text());
     }
 }
 
