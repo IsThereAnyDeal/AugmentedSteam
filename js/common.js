@@ -2213,7 +2213,7 @@ let Highlights = (function(){
 
         r = node.querySelector(".ds_flagged");
         if (r) {
-            r.classList.remove("ds_flagge");
+            r.classList.remove("ds_flagged");
         }
     }
 
