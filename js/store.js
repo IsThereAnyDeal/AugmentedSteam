@@ -2370,22 +2370,12 @@ let SearchPageClass = (function(){
             document.querySelector("#es_notnegative").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
-
-            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.negative");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].closest(".search_result_row").style.display="none";
-            }
         }
 
         if (SyncedStorage.get("hide_priceabove")) {
             document.querySelector("#es_notpriceabove").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
-
-            let nodes = document.querySelectorAll(".search_result_row");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                applyPriceFilter(nodes[i])
-            }
         }
 
         let position;
