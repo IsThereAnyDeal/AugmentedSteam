@@ -2424,7 +2424,8 @@ let SearchPageClass = (function(){
             });
         });
 
-        document.getElementById("es_notpriceabove").title = Localization.str.price_above_tooltip;
+        let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
+        priceFilterCheckbox.title = Localization.str.price_above_tooltip;
 
         let elem = document.getElementById("es_notpriceabove_val");
         if (elem !== undefined && elem !== null) {
@@ -2439,6 +2440,10 @@ let SearchPageClass = (function(){
                 }
             });
             elem.addEventListener("input", function(e){
+                let toggleValue = (elem.value !== "");
+                priceFilterCheckbox.classList.toggle("checked", toggleValue);
+                SyncedStorage.set("hide_priceabove", toggleValue);
+
                 if (inputPattern.test(elem.value)) {
                     elem.setCustomValidity('');
                     SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
@@ -2446,6 +2451,7 @@ let SearchPageClass = (function(){
                 } else {
                     elem.setCustomValidity(Localization.str.price_above_tooltip);
                 }
+
                 elem.reportValidity();
             });
         }
