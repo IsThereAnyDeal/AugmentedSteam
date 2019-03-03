@@ -2603,7 +2603,6 @@ let WishlistPageClass = (function(){
                 if (record.addedNodes.length === 1) {
                     if (isMyWishlist()) {
                         instance.addWishlistNotes(record.addedNodes[0]);
-                        instance.addRemoveHandler(record.addedNodes[0]);
                     }
                     instance.highlightApps(record.addedNodes[0]);
                     instance.addPriceHandler(record.addedNodes[0]);
@@ -2616,6 +2615,7 @@ let WishlistPageClass = (function(){
         this.addStatsArea();
         this.addEmptyWishlistButton();
         this.addWishlistNotesHandlers();
+        this.addRemoveHandler();
 
         noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
             <div id="es_note_modal_content">
@@ -2896,14 +2896,27 @@ let WishlistPageClass = (function(){
         });
     };
 
-    WishlistPageClass.prototype.addRemoveHandler = function(node) {
-        node.getElementsByClassName("delete")[0].addEventListener("click", () => {
-            // The confirmation button will be created on a click on the "remove" button
-            document.getElementsByClassName("btn_green_white_innerfade btn_medium")[0].addEventListener("click", () => {
+    WishlistPageClass.prototype.addRemoveHandler = function() {
+        ExtensionLayer.runInPageContext(function(){
+            $J(document).ajaxSuccess(function( event, xhr, settings ) {
+                if (settings.url.endsWith("/remove/")) {
+                    window.postMessage({
+                        type: "es_remove_wl_entry",
+                        removed_wl_entry: settings.data.match(/(?!appid=)\d+/)[0]
+                    }, "*");
+                }
+              });
+        });
+
+        window.addEventListener("message", function(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+
+            if (e.data.type === "es_remove_wl_entry") {
                 let notes = SyncedStorage.get("wishlist_notes");
-                delete notes[node.dataset.appId];
+                delete notes[e.data.removed_wl_entry];
                 SyncedStorage.set("wishlist_notes", notes);
-            });
+            }
         });
     }
 
