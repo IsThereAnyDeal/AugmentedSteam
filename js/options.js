@@ -336,7 +336,7 @@ let Options = (function(){
 
     self.init = async function() {
         let settings = SyncedStorage.load();
-        let currency = fetch(chrome.extension.getURL('json/currency.json'))
+        let currency = fetch(chrome.runtime.getURL('json/currency.json'))
             .then(r => r.json())
             .then(addCurrencies)
             ;

@@ -741,7 +741,7 @@ const Steam = (function() {
     let _supportedCurrencies = null;
     self.fetchCurrencies = function() {
         // https://partner.steamgames.com/doc/store/pricing/currencies
-        return fetch(chrome.extension.getURL('json/currency.json')).then(r => r.json());
+        return fetch(chrome.runtime.getURL('json/currency.json')).then(r => r.json());
     };
     self.currencies = async function() {
         if (!_supportedCurrencies || _supportedCurrencies.length < 1) {
