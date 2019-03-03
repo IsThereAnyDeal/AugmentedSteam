@@ -2248,7 +2248,7 @@ let SearchPageClass = (function(){
         }
     }
 
-    function addHideButtonsToSearchClick(nodes) {
+    function filtersChanged(nodes) {
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
 
@@ -2417,7 +2417,7 @@ let SearchPageClass = (function(){
                 let value = !node.classList.contains("checked");
                 node.classList.toggle("checked", value);
                 SyncedStorage.set(a[1], value);
-                addHideButtonsToSearchClick(document.querySelectorAll(".search_result_row"));
+                filtersChanged(document.querySelectorAll(".search_result_row"));
             });
         });
 
@@ -2439,7 +2439,7 @@ let SearchPageClass = (function(){
                 if (inputPattern.test(elem.value)) {
                     elem.setCustomValidity('');
                     SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
-                    addHideButtonsToSearchClick(document.querySelectorAll(".search_result_row"));
+                    filtersChanged(document.querySelectorAll(".search_result_row"));
                 } else {
                     elem.setCustomValidity(Localization.str.price_above_tooltip);
                 }
@@ -2447,7 +2447,7 @@ let SearchPageClass = (function(){
             });
         }
 
-        addHideButtonsToSearchClick(document.querySelectorAll(".search_result_row"));
+        filtersChanged(document.querySelectorAll(".search_result_row"));
 
     };
 
@@ -2458,7 +2458,7 @@ let SearchPageClass = (function(){
             EarlyAccess.showEarlyAccess();
 
             mutations.forEach(mutation => {
-                addHideButtonsToSearchClick(mutation.addedNodes);
+                filtersChanged(mutation.addedNodes);
             });
         });
 
