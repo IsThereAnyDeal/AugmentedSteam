@@ -916,13 +916,14 @@ let Price = (function() {
         this.currency = currency || Currency.customCurrency;
 
         // If no conversion is requested, we can stop here
-        if (desiredCurrency === false || currency === desiredCurrency) return;
-
-        let rate = Currency.getRate(this.currency, desiredCurrency);
-        if (rate) {
-            this.value *= rate;
-            this.currency = desiredCurrency;
+        if (desiredCurrency !== false && currency !== desiredCurrency) {
+            let rate = Currency.getRate(this.currency, desiredCurrency);
+            if (rate) {
+                this.value *= rate;
+                this.currency = desiredCurrency;
+            }
         }
+        Object.freeze(this);
     }
 
     Price.prototype.toString = function() {
