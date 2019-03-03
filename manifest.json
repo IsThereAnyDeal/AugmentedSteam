@@ -108,6 +108,10 @@
         }
     ],
     "background": {
-        "page": "background.html"
+        "scripts": [
+          "js/config.js",
+          "js/background.js"
+        ],
+        "persistent": false
     }
 }
