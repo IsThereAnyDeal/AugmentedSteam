@@ -1552,19 +1552,23 @@ let AppPageClass = (function(){
 				`);
 
         RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
-            loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
+            loadBadgeContent(".es_normal_badge_progress", result);
         });
 
         RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
-            loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
+            loadBadgeContent(".es_foil_badge_progress", result);
         });
 
-        function loadBadgeContent(targetSelector, result, selector) {
+        function loadBadgeContent(targetSelector, result) {
             let dummy = document.createElement("html");
             dummy.innerHTML = result;
-            let badge = dummy.querySelector(selector);
-            if (badge) {
-                displayBadgeInfo(targetSelector, badge);
+            
+            // The badges_sheet class only appears when the users badge for this game couldn't get found
+            if (!dummy.querySelector(".badges_sheet")) {
+                let badge = dummy.querySelector(".badge_current");
+                if (badge) {
+                    displayBadgeInfo(targetSelector, badge);
+                }
             }
         }
 
