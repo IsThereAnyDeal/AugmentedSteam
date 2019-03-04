@@ -355,7 +355,7 @@ let SubPageClass = (function() {
 
     SubPageClass.prototype.subscriptionSavingsCheck = function() {
         setTimeout(function() {
-            let notOwnedTotalPrice = new Price(0, Currency.storeCurrency, false);
+            let notOwnedTotalPrice = 0;
 
             let nodes = document.querySelectorAll(".tab_idem");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -366,7 +366,7 @@ let SubPageClass = (function() {
 
                 let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
                 if (price) {
-                    notOwnedTotalPrice.value += price.value;
+                    notOwnedTotalPrice += price.value;
                 }
             }
 
@@ -375,13 +375,14 @@ let SubPageClass = (function() {
             let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
             if (!packagePrice) { return; }
 
-            notOwnedTotalPrice.value -= packagePrice.value;
+            notOwnedTotalPrice -= packagePrice.value;
 
             if (!document.querySelector("#package_savings_bar")) {
                 document.querySelector(".package_totals_area")
                     .insertAdjacentHTML("beforeend", "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
             }
 
+            notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency, false)
             let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
             let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
 
@@ -1988,7 +1989,7 @@ let FundsPageClass = (function(){
             let value = document.querySelector("#es_custom_money_amount").value;
 
             if(!isNaN(value) && value != "") {
-                currency.value = value;
+                currency = new Price(value, Currency.storeCurrency, false);
 
                 if(giftcard) {
                     priceel.classList.toggle("small", value > 10);
@@ -2590,14 +2591,14 @@ let WishlistPageClass = (function(){
 
             await Promise.all(promises);
         }
-        let totalPrice = new Price(0, Currency.storeCurrency, false);
+        let totalPrice = 0;
         let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
         for (let [key, game] of Object.entries(wishlistData)) {
             if (game.subs.length > 0) {
-                totalPrice.value += game.subs[0].price / 100;
+                totalPrice += game.subs[0].price / 100;
 
                 if (game.subs[0].discount_pct > 0) {
                     totalOnSale++;
@@ -2607,6 +2608,7 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
+        totalPrice = new Price(totalPrice, Currency.storeCurrency, false)
 
         document.querySelector("#esi-wishlist-chart-content").innerHTML
             = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
