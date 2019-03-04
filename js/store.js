@@ -2355,7 +2355,7 @@ let SearchPageClass = (function(){
         notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.customCurrency).toString().replace(/[^\d,\.]/, '');
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
         }
 
         [
