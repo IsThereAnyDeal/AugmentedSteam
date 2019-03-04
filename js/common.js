@@ -781,15 +781,10 @@ let CurrencyRegistry = (function() {
             return s.join("");
         }
         placeholder() {
-            let s = (0).toFixed(this.format.decimalPlaces), decimals;
-            [s, decimals] = s.split('.');
-            if (this.format.decimalPlaces > 0) {
-                if (!this.format.hidePlacesWhenZero) {
-                    s.push(this.format.decimalSeparator);
-                    s.push(decimals);
-                }
+            if (this.format.decimalPlaces == 0 || this.format.hidePlacesWhenZero) {
+                return "0";
             }
-            return s.join("");
+            return (0).toFixed(this.format.decimalPlaces);
         }
         regExp() {
             let placesRegex;
