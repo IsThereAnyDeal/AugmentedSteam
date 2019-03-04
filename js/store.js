@@ -2585,11 +2585,11 @@ let WishlistPageClass = (function(){
                 <a>${Localization.str.wl.compute}</a>
             </div>`;
 
-	    document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
-	    document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
-	        e.target.parentNode.innerHTML = "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>";
-                loadStats();
-            });
+        document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
+        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
+        e.target.parentNode.innerHTML = "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>";
+            loadStats();
+        });
     };
 
     // Calculate total cost of all items on wishlist
