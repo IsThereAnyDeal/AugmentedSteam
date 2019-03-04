@@ -826,8 +826,8 @@ let CurrencyRegistry = (function() {
         return self.fromSymbol(match[0]);
     };
 
-    defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
-    defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
+    Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
+    Object.defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
     
     self.promise = async function() {
         let currencies = await Background.action('steam.currencies');
