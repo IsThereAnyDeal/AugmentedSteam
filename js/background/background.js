@@ -1,94 +1,3 @@
-class GameId {
-    static parseId(id) {
-        if (!id) { return null; }
-
-        let intId = parseInt(id);
-        if (!intId) { return null; }
-
-        return intId;
-    }
-
-    static getAppid(text) {
-        if (!text) { return null; }
-
-        // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
-    }
-
-    static getSubid(text) {
-        if (!text) { return null; }
-
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
-    }
-
-    static getAppidImgSrc(text) {
-        if (!text) { return null; }
-        let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m && GameId.parseId(m[2]);
-    }
-
-    static getAppids(text) {
-        let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
-        let res = [];
-        let m;
-        while ((m = regex.exec(text)) != null) {
-            let id = GameId.parseId(m[1]);
-            if (id) {
-                res.push(id);
-            }
-        }
-        return res;
-    }
-
-    static getAppidWishlist(text) {
-        if (!text) { return null; }
-        let m = text.match(/game_(\d+)/);
-        return m && GameId.parseId(m[1]);
-    }
-
-    static getAppidFromGameCard(text) {
-        if (!text) { return null; }
-        let m = text.match(/\/gamecards\/(\d+)/);
-        return m && GameId.parseId(m[1]);
-    }
-}
-
-
-class LocalStorage {
-    static get(key, defaultValue) {
-        let item = localStorage.getItem(key);
-        if (!item) return defaultValue;
-        try {
-            return JSON.parse(item);
-        } catch (err) {
-            return defaultValue;
-        }
-    }
-
-    static set(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
-    }
-
-    static remove(key) {
-        localStorage.removeItem(key);
-    }
-
-    static keys() {
-        let result = [];
-        for (let i = localStorage.length - 1; i >= 0; --i) {
-            result.push(localStorage.key(i));
-        }
-        return result;
-    }
-
-    static clear() {
-        localStorage.clear();
-    }
-}
-
-
 class CacheStorage {
     static timestamp() { return Math.trunc(Date.now() / 1000); }
     static isExpired (timestamp, ttl) {
@@ -338,51 +247,16 @@ class SteamStore extends Api {
             .then(response => response.json());
     }
 
-    static clearSpecialSymbols(string) {
-        return string.replace(/[\u00AE\u00A9\u2122]/g, "");
-    }
-
-    static htmlToDOM(html) {
-        let template = document.createElement('template');
-        template.innerHTML = html.trim();
-        return template.content;
-    }
-
-    static getVariableFromText(text, name, type) {
-        let regex;
-        if (type === "object") {
-            regex = new RegExp(`${name}\\s*=\\s*(\\{.+?\\});`);
-        } else if (type === "array") { // otherwise array
-            regex = new RegExp(`${name}\\s*=\\s*(\\[.+?\\]);`);
-        } else if (type === "int") {
-            regex = new RegExp(`${name}\\s*=\\s*(.+?);`);
-        } else if (type === "string") {
-            regex = new RegExp(`${name}\\s*=\\s*(\\".+?\\");`);
-        } else {
-            return null;
-        }
-
-        let m = text.match(regex);
-        if (m) {
-            if (type === "int") {
-                return parseInt(m[1]);
-            }
-            return JSON.parse(m[1]);
-        }
-
-        return null;
-    }
-
     static async currencyFromWallet() {
         let html = await SteamStore.getPage("/steamaccount/addfunds");
-        let dummyPage = SteamStore.htmlToDOM(html);
+        let dummyPage = HTMLParser.htmlToDOM(html);
 
         return dummyPage.querySelector("input[name=currency]").value;
     }
 
     static async currencyFromApp() {
         let html = await SteamStore.getPage("/app/220");
-        let dummyPage = SteamStore.htmlToDOM(html);
+        let dummyPage = HTMLParser.htmlToDOM(html);
 
         let currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
@@ -409,7 +283,7 @@ class SteamStore extends Api {
     static async country() {
         let self = SteamStore;
         let html = await self.getPage("/account/change_country/");
-        let dummyPage = self.htmlToDOM(html);
+        let dummyPage = HTMLParser.htmlToDOM(html);
 
         let node = dummyPage.querySelector("#dselect_user_country");
         if (node && node.value)
@@ -421,7 +295,7 @@ class SteamStore extends Api {
         let self = SteamStore;
         // TODO what's the minimal page we can load here to get sessionId?
         let html = await self.getPage("/news/");
-        return self.getVariableFromText(html, "g_sessionID", "string");
+        return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
     static async _fetchPurchases(lang) {
@@ -444,14 +318,14 @@ class SteamStore extends Api {
         let purchases = {};
 
         let html = await self.getPage("/account/licenses/", { 'l': lang, });
-        let dummyPage = self.htmlToDOM(html);
+        let dummyPage = HTMLParser.htmlToDOM(html);
         let nodes = dummyPage.querySelectorAll("#main_content td.license_date_col");
         for (let node of nodes) {
             let name = node.nextElementSibling;
             let removeNode = name.querySelector("div");
             if (removeNode) { removeNode.remove(); }
 
-            let appName = self.clearSpecialSymbols(name.textContent.trim());
+            let appName = HTMLParser.clearSpecialSymbols(name.textContent.trim());
             for (let regex of replaceRegex) {
                 appName = appName.replace(regex, "");
             }
@@ -473,7 +347,7 @@ class SteamStore extends Api {
         let lang = params.lang;
         let key = `purchases_${lang}`;
 
-        let appName = self.clearSpecialSymbols(params.appName);
+        let appName = HTMLParser.clearSpecialSymbols(params.appName);
         let purchases = CacheStorage.get(key, 5 * 60);
         if (purchases) return purchases[appName];
 
