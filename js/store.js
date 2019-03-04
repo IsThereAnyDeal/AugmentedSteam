@@ -268,7 +268,7 @@ let StorePageClass = (function(){
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency, Currency.customCurrency);
+                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -283,8 +283,8 @@ let StorePageClass = (function(){
                     let html = "";
 
                     if (apiPrice) {
-                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency, Currency.customCurrency);
-                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
+                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
 
                         let percentageIndicator = "equal";
                         let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
@@ -382,7 +382,7 @@ let SubPageClass = (function() {
                     .insertAdjacentHTML("beforeend", "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
             }
 
-            notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency, false)
+            notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency)
             let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
             let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
 
@@ -1752,7 +1752,7 @@ let AppPageClass = (function(){
                 price_text = price_text.replace(",", ".");
             }
             let price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency, false);
+            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
 
             let buttons = node.querySelectorAll(".btn_addtocart");
             buttons[buttons.length-1].parentNode.insertAdjacentHTML("afterbegin", `
@@ -1989,7 +1989,7 @@ let FundsPageClass = (function(){
             let value = document.querySelector("#es_custom_money_amount").value;
 
             if(!isNaN(value) && value != "") {
-                currency = new Price(value, Currency.storeCurrency, false);
+                currency = new Price(value, Currency.storeCurrency);
 
                 if(giftcard) {
                     priceel.classList.toggle("small", value > 10);
@@ -2261,7 +2261,7 @@ let SearchPageClass = (function(){
             return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
         })();
 
-        let pricePlaceholder = new Price(0, Currency.userCurrency).toString().replace(/[^\d,\.]/, '');
+        let pricePlaceholder = new Price(0, Currency.customCurrency).toString().replace(/[^\d,\.]/, '');
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
@@ -2367,7 +2367,7 @@ let SearchPageClass = (function(){
         notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + priceInfo.symbolFormat.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.customCurrency).toString().replace(/[^\d,\.]/, '');
         }
 
         [
@@ -2608,7 +2608,7 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
-        totalPrice = new Price(totalPrice, Currency.storeCurrency, false)
+        totalPrice = new Price(totalPrice, Currency.storeCurrency)
 
         document.querySelector("#esi-wishlist-chart-content").innerHTML
             = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>

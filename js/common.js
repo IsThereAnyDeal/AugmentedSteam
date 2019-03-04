@@ -963,18 +963,9 @@ let Currency = (function() {
 })();
 
 let Price = (function() {
-    function Price(value, currency, desiredCurrency=false) {
+    function Price(value, currency) {
         this.value = value || 0;
         this.currency = currency || Currency.customCurrency;
-
-        // If no conversion is requested, we can stop here
-        if (desiredCurrency !== false && currency !== desiredCurrency) {
-            let rate = Currency.getRate(this.currency, desiredCurrency);
-            if (rate) {
-                this.value *= rate;
-                this.currency = desiredCurrency;
-            }
-        }
         Object.freeze(this);
     }
 
@@ -982,8 +973,24 @@ let Price = (function() {
         return CurrencyRegistry.fromType(this.currency).stringify(this.value);
     };
 
+    // Not currently in use
+    // totalValue = totalValue.add(somePrice)
+    Price.prototype.add = function(otherPrice) {
+        if (otherPrice.currency !== this.currency) {
+            otherPrice = otherPrice.inCurrency(this.currency);
+        }
+        return new Price(this.value + otherPrice.value, this.currency);
+    };
+
     Price.prototype.inCurrency = function(desiredCurrency) {
-        return new Price(this.value, this.currency, desiredCurrency);
+        if (this.currency === desiredCurrency) {
+            return new Price(this.value, this.currency);
+        }
+        let rate = Currency.getRate(this.currency, desiredCurrency);
+        if (!rate) {
+            throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
+        }
+        return new Price(this.value * rate, desiredCurrency);
     };
 
     Price.getPriceInfo = function(currencyCode) {
@@ -993,8 +1000,12 @@ let Price = (function() {
     Price.parseFromString = function(str, desiredCurrency) {
         let currency = CurrencyRegistry.fromString(str);
         let value = currency.valueOf(str);
-        if (value !== null)
-            value = new Price(value, currency.abbr, desiredCurrency);
+        if (value !== null) {
+            value = new Price(value, currency.abbr);
+            if (currency.abbr !== desiredCurrency) {
+                value = value.inCurrency(desiredCurrency);
+            }
+        }
         return value;
     };
 
@@ -2174,11 +2185,11 @@ let Prices = (function(){
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency'], Currency.customCurrency);
+                lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
                 let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
-                lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
+                lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             }
 
             let prices = lowest.toString();
@@ -2198,7 +2209,7 @@ let Prices = (function(){
 
         // "Historical Low"
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
+            let historical = new Price(info['lowest']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
             let prices = historical.toString();
@@ -2291,7 +2302,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency'], Currency.customCurrency).toString();
+                    let tierPrice = new Price(tier.price, meta['currency']).inCurrency(Currency.customCurrency).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2323,7 +2334,7 @@ let Prices = (function(){
             purchase += '<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (new Price(bundlePrice, meta['currency'], Currency.customCurrency)).toString();
+                    purchase += new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency).toString();
                 purchase += '</div>';
             }
 
