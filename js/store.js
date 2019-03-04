@@ -2260,7 +2260,7 @@ let SearchPageClass = (function(){
             return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
         })();
 
-        let pricePlaceholder = new Price(0, Currency.userCurrency).toString().replace(/[^\d,\.]/, '');
+        let pricePlaceholder = new Price(0, Currency.customCurrency).toString().replace(/[^\d,\.]/, '');
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
