@@ -2435,11 +2435,9 @@ let GameCardPageClass = (function(){
             text = Localization.str.view_normal_badge;
 
         } else {
-            let url = window.location.origin + window.location.pathname;
-
-            if (urlParameters[0] !== ""){
-                urlParameters.push("border=1");
-                url += "?" + urlParameters.join("&");
+            
+            if (urlParameters[0] === ""){
+                url += "?" + "border=1";
             }
 
             text = Localization.str.view_foil_badge;

@@ -1515,10 +1515,10 @@ let AppPageClass = (function(){
             .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
 
         document.querySelector("#category_block").insertAdjacentHTML("afterend", `
-					<div class="block responsive_apppage_details_right heading">
+					<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
 						${Localization.str.badge_progress}
 					</div>
-					<div class="block">
+					<div id="es_badge_progress_content" class="block">
 						<div class="block_content_inner es_badges_progress_block" style="display:none;">
 							<div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
 							<div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
@@ -1527,16 +1527,24 @@ let AppPageClass = (function(){
 				`);
 
         Background.action('cards', { 'appid': this.appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result, ".badge_current"));
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action('cards', { 'appid': this.appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result, ".badge_current"));
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
-        function loadBadgeContent(targetSelector, result, selector) {
-            let dummy = document.createElement("html");
-            dummy.innerHTML = result;
-            let badge = dummy.querySelector(selector);
-            if (badge) {
-                displayBadgeInfo(targetSelector, badge);
+        function loadBadgeContent(targetSelector, result) {
+            let dummy = BrowserHelper.htmlToDOM(result);
+            
+            // The badges_sheet class only appears when the users badge for this game couldn't get found
+            if (!dummy.querySelector(".badges_sheet")) {
+                let badge = dummy.querySelector(".badge_current");
+                if (badge) {
+                    displayBadgeInfo(targetSelector, badge);
+                }
+            } else {
+                if (document.getElementById("es_badge_progress")) {
+                    document.getElementById("es_badge_progress").remove();
+                    document.getElementById("es_badge_progress_content").remove();
+                }
             }
         }
 
