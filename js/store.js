@@ -2247,9 +2247,21 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
-        let currency = CurrencyRegistry.storeCurrency;
-        let inputPattern = currency.regExp();
-        let pricePlaceholder = currency.placeholder();
+        let priceInfo = Price.getPriceInfo(Currency.storeCurrency);
+
+        let inputPattern = (function() {
+            let placesRegex;
+            if (priceInfo.hidePlacesWhenZero) {
+                placesRegex = "";
+            } else {
+                placesRegex = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
+            }
+            let decimalRegex = priceInfo.decimal.replace(".", "\\.");
+
+            return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
+        })();
+
+        let pricePlaceholder = new Price(0, Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
