@@ -50,8 +50,8 @@
             ],
             "js": [
                 "js/config.js",
-                "js/common.js",
-                "js/store.js"
+                "js/content/common.js",
+                "js/content/store.js"
             ],
             "css": [
                 "css/enhancedsteam.css",
@@ -68,8 +68,8 @@
             ],
             "js": [
                 "js/config.js",
-                "js/common.js",
-                "js/community.js"
+                "js/content/common.js",
+                "js/content/community.js"
             ],
             "css": [
                 "css/enhancedsteam.css",
@@ -91,8 +91,8 @@
           ],
           "js": [
             "js/config.js",
-            "js/common.js",
-            "js/tradeoffer.js"
+            "js/content/common.js",
+            "js/content/tradeoffer.js"
           ],
           "css": [
             "css/community/tradeoffer.css"
@@ -110,7 +110,7 @@
     "background": {
         "scripts": [
           "js/config.js",
-          "js/background.js"
+          "js/background/background.js"
         ],
         "persistent": false
     }
