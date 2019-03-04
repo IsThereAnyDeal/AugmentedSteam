@@ -2220,19 +2220,18 @@ let SearchPageClass = (function(){
         }
     }
 
-    function addHideButtonsToSearchClick() {
-        let nodes = document.querySelectorAll(".search_result_row");
+    function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
 
             node.style.display = "block";
-            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; }
-            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; }
-            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; }
+            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
         }
     }
@@ -2334,33 +2333,18 @@ let SearchPageClass = (function(){
             document.querySelector("#es_notmixed").classList.add("checked");
             document.querySelector("#es_hide_options").style.height="auto";
             document.querySelector("#es_hide_expander").style.display="none";
-
-            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.mixed");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].closest(".search_result_row").style.display="none";
-            }
         }
 
         if (SyncedStorage.get("hide_negative")) {
             document.querySelector("#es_notnegative").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
-
-            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.negative");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].closest(".search_result_row").style.display="none";
-            }
         }
 
         if (SyncedStorage.get("hide_priceabove")) {
             document.querySelector("#es_notpriceabove").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
-
-            let nodes = document.querySelectorAll(".search_result_row");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                applyPriceFilter(nodes[i])
-            }
         }
 
         let position;
@@ -2392,7 +2376,7 @@ let SearchPageClass = (function(){
                 let value = !node.classList.contains("checked");
                 node.classList.toggle("checked", value);
                 SyncedStorage.set(a[1], value);
-                addHideButtonsToSearchClick();
+                filtersChanged();
             });
         });
 
@@ -2419,7 +2403,7 @@ let SearchPageClass = (function(){
                 if (inputPattern.test(elem.value)) {
                     elem.setCustomValidity('');
                     SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
-                    addHideButtonsToSearchClick();
+                    filtersChanged();
                 } else {
                     elem.setCustomValidity(Localization.str.price_above_tooltip);
                 }
@@ -2427,29 +2411,41 @@ let SearchPageClass = (function(){
                 elem.reportValidity();
             });
         }
+
+        filtersChanged();
+
     };
 
     SearchPageClass.prototype.observeChanges = function() {
+        if (!SyncedStorage.get("contscroll")) {
+
+            let pageObserver = new MutationObserver(() => {
+                // When loading a new page, every element in the tab_filter_control class gets unchecked
+                if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
+                if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
+                if (SyncedStorage.get("hide_cart")) { document.querySelector("#es_cart_games").classList.add("checked"); }
+                if (SyncedStorage.get("hide_notdiscounted")) { document.querySelector("#es_notdiscounted").classList.add("checked"); }
+                if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
+                if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
+                if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
+                if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
+
+                Highlights.startHighlightsAndTags();
+                EarlyAccess.showEarlyAccess();
+                filtersChanged();
+            });
+            pageObserver.observe(document.getElementById("search_results"), {childList: true});
+        }
 
         let observer = new MutationObserver(mutations => {
             Highlights.startHighlightsAndTags();
             EarlyAccess.showEarlyAccess();
 
             mutations.forEach(mutation => {
-
-                mutation.addedNodes.forEach(node => {
-
-                    if (node.classList && node.classList.contains("search_result_row")) {
-                        applyPriceFilter(node);
-                    }
-                });
+                filtersChanged(mutation.addedNodes);
             });
         });
-
-        observer.observe(
-            document.querySelector("#search_result_container"),
-            {childList: true, subtree: true}
-        );
+        observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
     };
 
     return SearchPageClass;
@@ -2764,6 +2760,59 @@ let WishlistPageClass = (function(){
     return WishlistPageClass;
 })();
 
+let TagPageClass = (function(){
+
+    let rows = [
+        "NewReleasesRows",
+        "TopSellersRows",
+        "ConcurrentUsersRows",
+        "ComingSoonRows"
+    ];
+
+    function TagPageClass() {
+        if (SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored")) {
+            this.addHiding();
+            this.observeChanges();
+        }
+    }
+
+    TagPageClass.prototype.addHiding = function() {
+        rows.forEach(row => {
+            for (let node of document.getElementById(row).children) {
+                hideNode(node);
+            }
+        });
+    }
+
+    TagPageClass.prototype.observeChanges = function() {
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeName === "A") {
+                        hideNode(node);
+                    }
+                })
+            });
+        });
+        
+        rows.forEach(row => {
+            observer.observe(document.getElementById(row), {childList: true});
+        })
+    }
+
+    function hideNode(node) {
+        if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
+            node.style.display = "none";
+        }
+        if (SyncedStorage.get("hide_ignored") && node.classList.contains("ds_ignored")) {
+            node.style.display = "none";
+        }
+    }
+
+    return TagPageClass;
+
+})();
+
 
 let StoreFrontPageClass = (function(){
 
@@ -2934,6 +2983,10 @@ let TabAreaObserver = (function(){
 
         case /^\/search\/.*/.test(path):
             (new SearchPageClass());
+            break;
+
+        case /^\/tags\//.test(path):
+            (new TagPageClass());
             break;
 
         case /^\/(?:curator|developer|dlc|publisher|franchise)\/.*/.test(path):
