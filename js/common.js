@@ -702,6 +702,109 @@ let StringUtils = (function(){
 
 
 let CurrencyRegistry = (function() {
+    //   { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
+    class SteamCurrency {
+        constructor({
+            'id': id,
+            'abbr': abbr="USD",
+            'symbol': symbol="$",
+            'hint': hint="Default Currency",
+            'multiplier': multiplier=100,
+            'unit': unit=1,
+            'format': {
+                'places': formatPlaces=2,
+                'hidePlacesWhenZero': formatHidePlaces=false,
+                'symbolFormat': formatSymbol="$",
+                'thousand': formatGroupSeparator=",",
+                'group': formatGroupSize=3,
+                'decimal': formatDecimalSeparator=".",
+                'right': formatPostfixSymbol=false,
+            },
+        }) {
+            // console.assert(id && Number.isInteger(id))
+            Object.assign(this, {
+                'id': id, // Steam Currency ID, integer, 1-41 (at time of writing)
+                'abbr': abbr, // TLA for the currency
+                'symbol': symbol, // Symbol used to represent/recognize the currency, this is NULL for CNY to avoid collision with JPY
+                'hint': hint, // English label for the currency to reduce mistakes editing the JSON
+                'multiplier': multiplier, // multiplier used by Steam when writing values
+                'unit': unit, // Minimum transactional unit required by Steam.
+                'format': {
+                    'decimalPlaces': formatPlaces, // How many decimal places does this currency have?
+                    'hidePlacesWhenZero': formatHidePlaces, // Does this currency show decimal places for a .0 value?
+                    'symbol': formatSymbol, // Symbol used when generating a string value of this currency
+                    'groupSeparator': formatGroupSeparator, // Thousands separator
+                    'groupSize': formatGroupSize, // Digits to a "thousand" for the thousands separator
+                    'decimalSeparator': formatDecimalSeparator,
+                    'postfix': formatPostfixSymbol, // Should format.symbol be post-fixed?
+                },
+            });
+            Object.freeze(this.format);
+            Object.freeze(this);
+        }
+        valueOf(price) {
+            // remove separators
+            price = price.trim()
+                .replace(this.format.groupSeparator, "");
+            if (this.format.decimalSeparator != ".")
+                price = price.replace(this.format.decimalSeparator, ".") // as expected by parseFloat()
+            price = price.replace(/[^\d\.]/g, "");
+
+            let value = parseFloat(price);
+
+            if (Number.isNaN(value))
+                return null;
+            return value; // this.multiplier?
+        }
+        stringify(value, withSymbol=true) {
+            let sign = value < 0 ? "-" : "";
+            value = Math.abs(value);
+            let s = value.toFixed(this.format.decimalPlaces), decimals;
+            [s, decimals] = s.split('.');
+            let g = [], j = s.length;
+            for (; j > this.format.groupSize; j -= this.format.groupSize) {
+                g.unshift(s.substring(j - this.format.groupSize, j));
+            }
+            g.unshift(s.substring(0, j));
+            s = [sign, g.join(this.format.groupSeparator)];
+            if (this.format.decimalPlaces > 0) {
+                if (!this.format.hidePlacesWhenZero || parseInt(decimals, 10) > 0) {
+                    s.push(this.format.decimalSeparator);
+                    s.push(decimals);
+                }
+            }
+            if (withSymbol) {
+                if (this.format.postfix) {
+                    s.push(this.format.symbol);
+                } else {
+                    s.unshift(this.format.symbol);
+                }
+            }
+            return s.join("");
+        }
+        placeholder() {
+            if (this.format.decimalPlaces == 0 || this.format.hidePlacesWhenZero) {
+                return "0";
+            }
+            return (0).toFixed(this.format.decimalPlaces);
+        }
+        regExp() {
+            let regex = ["^("];
+            if (this.format.hidePlacesWhenZero) {
+                regex.push("0|[1-9]\\d*(");
+            } else {
+                regex.push("\\d*(");
+            }
+            regex.push(this.format.decimalSeparator.replace(".", "\\."));
+            if (this.format.decimalPlaces > 0) {
+                regex.push("\\d{0,", this.format.decimalPlaces, "}");
+            }
+            regex.push(")?)$")
+            return new RegExp(regex.join(""));
+        }
+    }
+
+
     let self = {};
 
     let indices = {
@@ -731,10 +834,13 @@ let CurrencyRegistry = (function() {
         return self.fromSymbol(match[0]);
     };
 
+    Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
+    Object.defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
+    
     self.promise = async function() {
         let currencies = await Background.action('steam.currencies');
         for (let currency of currencies) {
-            // currency = new SteamCurrency(currency);
+            currency = new SteamCurrency(currency);
             indices.abbr[currency.abbr] = currency;
             indices.id[currency.id] = currency;
             if (currency.symbol) // CNY && JPY use the same symbol
@@ -761,32 +867,15 @@ let Currency = (function() {
     let _rates = {};
     let _promise = null;
 
-    async function _getRates() {
+    function _getRates() {
         let target = [self.storeCurrency,];
         if (self.customCurrency !== self.storeCurrency) {
             target.push(self.customCurrency);
         }
         // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-
-        function mergeRates(acc, el) {
-            if (acc === null)
-                return el;
-            for (let [k, v] of Object.entries(el)) {
-                if (typeof acc[k] == 'undefined') {
-                    acc[k] = v;
-                    continue;
-                }
-                Object.assign(acc[k], v);
-            }
-            return acc;
-        }
-
-        let promises = [];
-        for (let currency of target) {
-            // TODO make only one request to get all currencies
-            promises.push(Background.action('rates', { 'to': currency, }));
-        }
-        return Promise.all(promises).then(result => _rates = result.reduce(mergeRates, null));
+        target.sort();
+        return Background.action('rates', { 'to': target.join(","), })
+            .then(rates => _rates = rates);
     }
 
     function getCurrencyFromDom() {
@@ -899,116 +988,39 @@ let Currency = (function() {
 })();
 
 let Price = (function() {
-
-    let format = {
-        "BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
-        "EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: " ", decimal: ",", right: true },
-        "GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
-        "RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
-        "JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
-        "CNY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
-        "MYR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "RM", thousand: ",", decimal: ".", right: false },
-        "NOK": { places: 2, hidePlacesWhenZero: false, symbolFormat: " kr", thousand: ".", decimal: ",", right: true },
-        "IDR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "Rp ", thousand: " ", decimal: ".", right: false },
-        "PHP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "P", thousand: ",", decimal: ".", right: false },
-        "SGD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S$", thousand: ",", decimal: ".", right: false },
-        "THB": { places: 2, hidePlacesWhenZero: false, symbolFormat: "฿", thousand: ",", decimal: ".", right: false },
-        "VND": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₫", thousand: ",", decimal: ".", right: false },
-        "KRW": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₩", thousand: ",", decimal: ".", right: false },
-        "TRY": { places: 2, hidePlacesWhenZero: false, symbolFormat: " TL", thousand: "", decimal: ",", right: true },
-        "UAH": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₴", thousand: "", decimal: ",", right: true },
-        "MXN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "Mex$ ", thousand: ",", decimal: ".", right: false },
-        "CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "CDN$ ", thousand: ",", decimal: ".", right: false },
-        "AUD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "A$ ", thousand: ",", decimal: ".", right: false },
-        "NZD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "NZ$ ", thousand: ",", decimal: ".", right: false },
-        "HKD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "HK$ ", thousand: ",", decimal: ".", right: false },
-        "TWD": { places: 0, hidePlacesWhenZero: false, symbolFormat: "NT$ ", thousand: ",", decimal: ".", right: false },
-        "INR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "₹ ", thousand: ",", decimal: ".", right: false },
-        "SAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: " SR", thousand: ",", decimal: ".", right: true },
-        "ZAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R ", thousand: " ", decimal: ".", right: false },
-        "AED": { places: 2, hidePlacesWhenZero: false, symbolFormat: " DH", thousand: ",", decimal: ".", right: true },
-        "CHF": { places: 2, hidePlacesWhenZero: false, symbolFormat: "CHF ", thousand: "'", decimal: ".", right: false },
-        "CLP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "CLP$ ", thousand: ".", decimal: ",", right: false },
-        "PEN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S/.", thousand: ",", decimal: ".", right: false },
-        "COP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "COL$ ", thousand: ".", decimal: ",", right: false },
-        "ARS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "ARS$ ", thousand: ".", decimal: ",", right: false },
-        "CRC": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₡", thousand: ".", decimal: ",", right: false },
-        "ILS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₪", thousand: ",", decimal: ".", right: false },
-        "KZT": { places: 2, hidePlacesWhenZero: true, symbolFormat: "₸ ", thousand: " ", decimal: ".", right: false },
-        "KWD": { places: 3, hidePlacesWhenZero: false, symbolFormat: " KD", thousand: ",", decimal: ".", right: true },
-        "PLN": { places: 2, hidePlacesWhenZero: false, symbolFormat: " zł", thousand: " ", decimal: ",", right: true },
-        "QAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: " QR", thousand: ",", decimal: ".", right: true },
-        "UYU": { places: 0, hidePlacesWhenZero: true, symbolFormat: "$U", thousand: ",", decimal: ".", right: false },
-        "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
-    };
-
-    // FIXME remove convert parameter
-    function Price(value, currency, convert=false) {
+    function Price(value, currency, desiredCurrency=false) {
         this.value = value || 0;
         this.currency = currency || Currency.customCurrency;
 
-        let chosenCurrency;
-
-        if (typeof convert === "string") {
-            chosenCurrency = convert;
-        } else if (typeof convert === "boolean" && convert) {
-            chosenCurrency = SyncedStorage.get("override_price");
-        } else { return; }
-
-        if (chosenCurrency === "auto") { chosenCurrency = Currency.customCurrency; }
-        let rate = Currency.getRate(this.currency, chosenCurrency);
-
-        if (rate) {
-            this.value *= rate;
-            this.currency = chosenCurrency;
+        // If no conversion is requested, we can stop here
+        if (desiredCurrency !== false && currency !== desiredCurrency) {
+            let rate = Currency.getRate(this.currency, desiredCurrency);
+            if (rate) {
+                this.value *= rate;
+                this.currency = desiredCurrency;
+            }
         }
+        Object.freeze(this);
     }
 
+    Price.prototype.formattedValue = function() {
+        return CurrencyRegistry.fromType(this.currency).stringify(this.value, false);
+    };
+
     Price.prototype.toString = function() {
-        let info = format[this.currency];
-        if (info.hidePlacesWhenZero && (this.value % 1 === 0)) {
-            info.places = 0;
-        }
-
-        let negative = this.value < 0 ? "-" : "";
-        let i = Math.trunc(Math.abs(this.value)).toFixed(0);
-        let j = i.length > 3 ? i.length % 3 : 0;
-
-        let formatted = negative;
-        if (j > 0) { formatted += i.substr(0, j) + info.thousand; }
-        formatted += i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + info.thousand);
-        formatted += (info.places ? info.decimal + Math.abs(this.value - parseInt(i)).toFixed(info.places).slice(2) : "");
-
-        return info.right
-            ? formatted + info.symbolFormat
-            : info.symbolFormat + formatted
+        return CurrencyRegistry.fromType(this.currency).stringify(this.value);
     };
 
-    Price.parseFromString = function(str, convert) {
-        let currencySymbol = Currency.getCurrencySymbolFromString(str);
-        let currencyType = Currency.currencySymbolToType(currencySymbol);
-
-        // let currencyNumber = currencyTypeToNumber(currencyType);
-        let info = format[currencyType];
-
-        // remove thousand sep, replace decimal with dot, remove non-numeric
-        str = str
-            .replace(info.thousand, '')
-            .replace(info.decimal, '.')
-            .replace(/[^\d\.]/g, '')
-            .trim();
-
-        let value = parseFloat(str);
-
-        if (isNaN(value)) {
-            return null;
-        }
-
-        return new Price(value, currencyType, convert);
+    Price.prototype.inCurrency = function(desiredCurrency) {
+        return new Price(this.value, this.currency, desiredCurrency);
     };
 
-    Price.getPriceInfo = function(currencyCode) {
-        return format[currencyCode];
+    Price.parseFromString = function(str, desiredCurrency) {
+        let currency = CurrencyRegistry.fromString(str);
+        let value = currency.valueOf(str);
+        if (value !== null)
+            value = new Price(value, currency.abbr, desiredCurrency);
+        return value;
     };
 
     return Price;
@@ -2194,8 +2206,14 @@ let Prices = (function(){
                 lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
             }
 
+            let prices = lowest.toString();
+            if (Currency.customCurrency != Currency.storeCurrency) {
+                let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
+                prices += ` (${lowest_alt.toString()})`;
+            }
+            
             let lowestStr = Localization.str.lowest_price_format
-                .replace("__price__", lowest.toString())
+                .replace("__price__", prices)
                 .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`)
 
             line1 = `${Localization.str.lowest_price}: 
@@ -2208,8 +2226,14 @@ let Prices = (function(){
             let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
+            let prices = historical.toString();
+            if (Currency.customCurrency != Currency.storeCurrency) {
+                let historical_alt = historical.inCurrency(Currency.storeCurrency);
+                prices += ` (${historical_alt.toString()})`;
+            }
+
             let historicalStr = Localization.str.historical_low_format
-                .replace("__price__", historical.toString())
+                .replace("__price__", prices)
                 .replace("__store__", BrowserHelper.escapeHTML(info['lowest']['store']))
                 .replace("__date__", recorded.toLocaleDateString());
 

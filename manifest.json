@@ -111,6 +111,7 @@
         "scripts": [
           "js/config.js",
           "js/background.js"
-        ]
+        ],
+        "persistent": false
     }
 }

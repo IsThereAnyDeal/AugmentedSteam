@@ -1,8 +1,5 @@
-
-const GameId = (function(){
-    let self = {};
-
-    function parseId(id) {
+class GameId {
+    static parseId(id) {
         if (!id) { return null; }
 
         let intId = parseInt(id);
@@ -11,61 +8,56 @@ const GameId = (function(){
         return intId;
     }
 
-    self.getAppid = function(text) {
+    static getAppid(text) {
         if (!text) { return null; }
 
         // app, market/listing
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && parseId(m[2]);
-    };
+        return m && GameId.parseId(m[2]);
+    }
 
-    self.getSubid = function(text) {
+    static getSubid(text) {
         if (!text) { return null; }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m && parseId(m[2]);
-    };
+        return m && GameId.parseId(m[2]);
+    }
 
-    self.getAppidImgSrc = function(text) {
+    static getAppidImgSrc(text) {
         if (!text) { return null; }
         let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m && parseId(m[2]);
-    };
+        return m && GameId.parseId(m[2]);
+    }
 
-    self.getAppids = function(text) {
+    static getAppids(text) {
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
         let m;
         while ((m = regex.exec(text)) != null) {
-            let id = parseId(m[1]);
+            let id = GameId.parseId(m[1]);
             if (id) {
                 res.push(id);
             }
         }
         return res;
-    };
+    }
 
-    self.getAppidWishlist = function(text) {
+    static getAppidWishlist(text) {
         if (!text) { return null; }
         let m = text.match(/game_(\d+)/);
-        return m && parseId(m[1]);
-    };
+        return m && GameId.parseId(m[1]);
+    }
 
-    self.getAppidFromGameCard = function(text) {
+    static getAppidFromGameCard(text) {
         if (!text) { return null; }
         let m = text.match(/\/gamecards\/(\d+)/);
-        return m && parseId(m[1]);
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+        return m && GameId.parseId(m[1]);
+    }
+}
 
 
-const LocalStorage = (function(){
-    let self = {};
-
-    self.get = function(key, defaultValue) {
+class LocalStorage {
+    static get(key, defaultValue) {
         let item = localStorage.getItem(key);
         if (!item) return defaultValue;
         try {
@@ -73,44 +65,39 @@ const LocalStorage = (function(){
         } catch (err) {
             return defaultValue;
         }
-    };
+    }
 
-    self.set = function(key, value) {
+    static set(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
-    };
+    }
 
-    self.remove = function(key) {
+    static remove(key) {
         localStorage.removeItem(key);
-    };
+    }
 
-    self.keys = function() {
+    static keys() {
         let result = [];
         for (let i = localStorage.length - 1; i >= 0; --i) {
             result.push(localStorage.key(i));
         }
         return result;
-    };
+    }
 
-    self.clear = function() {
+    static clear() {
         localStorage.clear();
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+    }
+}
 
 
-const CacheStorage = (function(){
-    let self = {};
-
-    self.timestamp = () => Math.trunc(Date.now() / 1000);
-    self.isExpired = function(timestamp, ttl) {
+class CacheStorage {
+    static timestamp() { return Math.trunc(Date.now() / 1000); }
+    static isExpired (timestamp, ttl) {
         if (!timestamp) return true;
         if (typeof ttl != 'number' || ttl < 0) ttl = 0;
-        return timestamp + ttl <= this.timestamp();
-    };
+        return timestamp + ttl <= CacheStorage.timestamp();
+    }
 
-    self.get = function(key, ttl, defaultValue) {
+    static get(key, ttl, defaultValue) {
         if (!ttl) return defaultValue;
         let item = localStorage.getItem('cache_' + key);
         if (!item) return defaultValue;
@@ -119,45 +106,38 @@ const CacheStorage = (function(){
         } catch (err) {
             return defaultValue;
         }
-        if (!item.timestamp || self.isExpired(item.timestamp, ttl)) return defaultValue;
+        if (!item.timestamp || CacheStorage.isExpired(item.timestamp, ttl)) return defaultValue;
         return item.data;
-    };
+    }
 
-    self.set = function(key, value) {
-        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': self.timestamp(), }));
-    };
+    static set (key, value) {
+        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': CacheStorage.timestamp(), }));
+    }
 
-    self.remove = function(key) {
+    static remove(key) {
         localStorage.removeItem('cache_' + key);
-    };
+    }
 
-    self.keys = function() {
+    static keys() {
         return LocalStorage.keys()
             .filter(k => k.startsWith('cache_'))
             .map(k => k.substring(6)); // "cache_".length == 6
-    };
+    }
 
-    self.clear = function() {
-        let keys = self.keys();
+    static clear() {
+        let keys = CacheStorage.keys();
         for (let key of keys) {
-            self.remove(key);
+            CacheStorage.remove(key);
         }
-    };
-
-    Object.freeze(self);
-    return self;    
-})();
+    }
+}
 
 
 class Api {
-    constructor(origin, params={}) {
-        if (!origin) throw `Constructor requires an Origin`;
-        this.origin = origin;
-        this.params = params;
-    }
-
+    // static origin; // this *must* be overridden
+    static params = {};
     // withResponse? use a boolean to include Response object in result?
-    fetch(endpoint, query={}, params={}) {
+    static _fetchWithDefaults(endpoint, query={}, params={}) {
         let url = new URL(endpoint, this.origin);
         for (let [k, v] of Object.entries(query)) {
             url.searchParams.append(k, v);
@@ -165,26 +145,24 @@ class Api {
         params = Object.assign({}, this.params, params);
         return fetch(url, params);
     }
-
-    getEndpoint(endpoint, query) {
+    static getEndpoint(endpoint, query) {
         if (!endpoint.endsWith('/'))
             endpoint += '/';
-        return this.fetch(endpoint, query, { 'method': 'GET', }).then(response => response.json());
-    }
-
-    getPage(endpoint, query) {
-        return this.fetch(endpoint, query, { 'method': 'GET', }).then(response => response.text());
+        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.json());
+    }    
+    static getPage(endpoint, query) {
+        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.text());
     }
 }
 
 
-const AugmentedSteamApi = (function() {
-    let self = new Api(Config.ApiServerHost);
-
-    let progressingRequests = new Map();
-    self.baseGetEndpoint = self.getEndpoint;
-    self.getEndpoint = function(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        return self.baseGetEndpoint(endpoint, query)
+class AugmentedSteamApi extends Api {
+    static origin = Config.ApiServerHost;
+    static _progressingRequests = new Map();
+    static _earlyAccessAppIds_promise = null;
+    
+    static getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        return super.getEndpoint(endpoint, query)
             .then(function(json) {
                 if (!json.result || json.result !== "success") {
                     throw `Could not retrieve '${endpoint}'`;
@@ -193,13 +171,14 @@ const AugmentedSteamApi = (function() {
                 return json; // 'response': response, 
             })
         ;
-    };
+    }
 
-    self.endpointFactory = function(endpoint) {
-        return async ({ 'params': params }) => self.getEndpoint(endpoint, params).then(result => result.data);
-    };
+    static endpointFactory(endpoint) {
+        return async ({ 'params': params }) => AugmentedSteamApi.getEndpoint(endpoint, params).then(result => result.data);
+    }
 
-    self.endpointFactoryCached = function(endpoint, ttl, keyfn) {
+    static endpointFactoryCached(endpoint, ttl, keyfn) {
+        let self = AugmentedSteamApi;
         return async function({ 'params': params }) {
             let key = keyfn;
             if (typeof keyfn == 'function') {
@@ -208,8 +187,8 @@ const AugmentedSteamApi = (function() {
             if (typeof key == 'undefined') {
                 throw `Can't cache '${endpoint}' with undefined key`;
             }
-            if (progressingRequests.has(key)) {
-                return progressingRequests.get(key);
+            if (self._progressingRequests.has(key)) {
+                return self._progressingRequests.get(key);
             }
             let val = CacheStorage.get(key, ttl);
             if (typeof val !== 'undefined') {
@@ -218,15 +197,16 @@ const AugmentedSteamApi = (function() {
             let req = self.getEndpoint(endpoint, params)
                 .then(function(result) {
                     CacheStorage.set(key, result.data);
-                    progressingRequests.delete(key);
+                    self._progressingRequests.delete(key);
                     return result.data;
                 });
-            progressingRequests.set(key, req);
+                self._progressingRequests.set(key, req);
             return req;
         };
-    };
+    }
 
-    self.clearEndpointCache = function(keyfn) {
+    static clearEndpointCache(keyfn) {
+        let self = AugmentedSteamApi;
         return async function({ 'params': params }) {
             let key = keyfn;
             if (typeof keyfn == 'function') {
@@ -235,67 +215,66 @@ const AugmentedSteamApi = (function() {
             if (typeof key == 'undefined') {
                 throw `Can't clear undefined key from cache`;
             }
-            progressingRequests.delete(key);
+            self._progressingRequests.delete(key);
             CacheStorage.remove(key);
         };
-    };
+    }
 
-    self.clear = function() {
+    static clear() {
         CacheStorage.clear();
-    };
+    }
 
-    function _earlyAccessAppIds() {
+    static _earlyAccessAppIds() {
+        let self = AugmentedSteamApi;
         // Is a request in progress?
-        if (_earlyAccessAppIds.promise) { return _earlyAccessAppIds.promise; }
+        if (self._earlyAccessAppIds_promise) { return self._earlyAccessAppIds_promise; }
         
         // Get data from localStorage
         let appids = CacheStorage.get('early_access_appids', 60 * 60); // appids expires after an hour
         if (appids) { return appids; }
 
         // Cache expired, need to fetch
-        _earlyAccessAppIds.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
+        self._earlyAccessAppIds_promise = self.getEndpoint("v01/earlyaccess")
             //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': CacheStorage.timestamp(), })))
             .then(function(appids) {
                 appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
                 CacheStorage.set("early_access_appids", appids);
-                _earlyAccessAppIds.promise = null; // no request in progress
+                self._earlyAccessAppIds_promise = null; // no request in progress
                 return appids;
             })
             ;
-        return _earlyAccessAppIds.promise;
+        return self._earlyAccessAppIds_promise;
     }
-    _earlyAccessAppIds.promise = null;
 
-    self.earlyAccessAppIds = async function() {
-        return _earlyAccessAppIds();    
-    };
+    static async earlyAccessAppIds() {
+        return AugmentedSteamApi._earlyAccessAppIds();    
+    }
 
-    self.dlcInfo = async function({ 'params': params, }) {
-        return self.getEndpoint("v01/dlcinfo", params).then(result => result.data);
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+    static async dlcInfo({ 'params': params, }) {
+        return AugmentedSteamApi.getEndpoint("v01/dlcinfo", params).then(result => result.data);
+    }
+}
 
 
-const SteamStore = (function() {
-    let self = new Api("https://store.steampowered.com/", { 'credentials': 'include', });
-    let progressingRequests = new Map();
+class SteamStore extends Api {
+    static origin = "https://store.steampowered.com/";
+    static params = { 'credentials': 'include', };
+    static _progressingRequests = new Map();
     
-    self.appDetails = async function({ 'params': params, }) {
-        return self.getEndpoint("/api/appdetails/", params);
-    };
+    static async appDetails({ 'params': params, }) {
+        return SteamStore.getEndpoint("/api/appdetails/", params);
+    }
 
-    self.appUserDetails = async function({ 'params': params, }) {
-        return self.getEndpoint("/api/appuserdetails/", params);
-    };
+    static async appUserDetails({ 'params': params, }) {
+        return SteamStore.getEndpoint("/api/appuserdetails/", params);
+    }
 
-    self.packageDetails = async function({ 'params': params, }) {
-        return self.getEndpoint("/api/packagedetails/", params);
-    };
+    static async packageDetails({ 'params': params, }) {
+        return SteamStore.getEndpoint("/api/packagedetails/", params);
+    }
 
-    self.addCouponAppIds = async function(coupons) {
+    static async addCouponAppIds(coupons) {
+        let self = SteamStore;
         // FIXME, Temporarily use LocalStorage for caching. This is ideal for IndexedDB
         let packages = LocalStorage.get('known_packages', {});
         // Expire cache
@@ -342,9 +321,9 @@ const SteamStore = (function() {
 
         LocalStorage.set('known_packages', packages);
         return coupons;
-    };
+    }
     
-    self.wishlistAdd = async function({ 'params': params, }) {
+    static async wishlistAdd({ 'params': params, }) {
         let url = new URL("/api/addtowishlist", "https://store.steampowered.com/");
         let formData = new FormData();
         for (let [k, v] of Object.entries(params)) {
@@ -357,19 +336,19 @@ const SteamStore = (function() {
         };
         return fetch(url, p)
             .then(response => response.json());
-    };
+    }
 
-    function clearSpecialSymbols(string) {
+    static clearSpecialSymbols(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");
     }
 
-    function htmlToDOM(html) {
+    static htmlToDOM(html) {
         let template = document.createElement('template');
         template.innerHTML = html.trim();
         return template.content;
     }
 
-    function getVariableFromText(text, name, type) {
+    static getVariableFromText(text, name, type) {
         let regex;
         if (type === "object") {
             regex = new RegExp(`${name}\\s*=\\s*(\\{.+?\\});`);
@@ -394,16 +373,16 @@ const SteamStore = (function() {
         return null;
     }
 
-    self.currencyFromWallet = async function() {
-        let html = await self.getPage("/steamaccount/addfunds");
-        let dummyPage = htmlToDOM(html);
+    static async currencyFromWallet() {
+        let html = await SteamStore.getPage("/steamaccount/addfunds");
+        let dummyPage = SteamStore.htmlToDOM(html);
 
         return dummyPage.querySelector("input[name=currency]").value;
-    };
+    }
 
-    self.currencyFromApp = async function() {
-        let html = await self.getPage("/app/220");
-        let dummyPage = htmlToDOM(html);
+    static async currencyFromApp() {
+        let html = await SteamStore.getPage("/app/220");
+        let dummyPage = SteamStore.htmlToDOM(html);
 
         let currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
@@ -411,38 +390,42 @@ const SteamStore = (function() {
         }
 
         return currency.getAttribute("content");
-    };
+    }
 
-    self.currency = async function() {
+    static async currency() {
+        let self = SteamStore;
         let cache = CacheStorage.get('currency', 3600);
-        if (cache) { return cache; }
+        if (cache) return cache;
         let currency = await self.currencyFromWallet();
         if (!currency) { currency = await self.currencyFromApp(); }
         if (!currency) { throw "Could not retrieve store currency"; }
         CacheStorage.set('currency', currency);
         return currency;
-    };
+    }
 
     /**
      * Invoked if we were previously logged out and are now logged in
      */
-    self.country = async function() {
+    static async country() {
+        let self = SteamStore;
         let html = await self.getPage("/account/change_country/");
-        let dummyPage = htmlToDOM(html);
+        let dummyPage = self.htmlToDOM(html);
 
         let node = dummyPage.querySelector("#dselect_user_country");
         if (node && node.value)
             return node.value;
         throw "Could not retrieve country";
-    };
+    }
 
-    self.sessionId = async function() {
+    static async sessionId() {
+        let self = SteamStore;
         // TODO what's the minimal page we can load here to get sessionId?
         let html = await self.getPage("/news/");
-        return getVariableFromText(html, "g_sessionID", "string");
-    };
+        return self.getVariableFromText(html, "g_sessionID", "string");
+    }
 
-    async function _fetchPurchases(lang) {
+    static async _fetchPurchases(lang) {
+        let self = SteamStore;
         let replaceRegex = [
             /- Complete Pack/ig,
             /Standard Edition/ig,
@@ -461,14 +444,14 @@ const SteamStore = (function() {
         let purchases = {};
 
         let html = await self.getPage("/account/licenses/", { 'l': lang, });
-        let dummyPage = htmlToDOM(html);
+        let dummyPage = self.htmlToDOM(html);
         let nodes = dummyPage.querySelectorAll("#main_content td.license_date_col");
         for (let node of nodes) {
             let name = node.nextElementSibling;
             let removeNode = name.querySelector("div");
             if (removeNode) { removeNode.remove(); }
 
-            let appName = clearSpecialSymbols(name.textContent.trim());
+            let appName = self.clearSpecialSymbols(name.textContent.trim());
             for (let regex of replaceRegex) {
                 appName = appName.replace(regex, "");
             }
@@ -479,7 +462,8 @@ const SteamStore = (function() {
         CacheStorage.set(`purchases_${lang}`, purchases);
         return purchases;
     }
-    self.purchase = async function({ 'params': params, }) {
+    static async purchase({ 'params': params, }) {
+        let self = SteamStore;
         if (!params || !params.appName) {
             throw 'Purchases endpoint expects an appName';
         }
@@ -489,7 +473,7 @@ const SteamStore = (function() {
         let lang = params.lang;
         let key = `purchases_${lang}`;
 
-        let appName = clearSpecialSymbols(params.appName);
+        let appName = self.clearSpecialSymbols(params.appName);
         let purchases = CacheStorage.get(key, 5 * 60);
         if (purchases) return purchases[appName];
 
@@ -499,40 +483,39 @@ const SteamStore = (function() {
         // ... and doesn't include the title
 
         // If a request is in flight, piggyback our response on that result
-        if (progressingRequests.has(key)) {
-            return progressingRequests.get(key).then(purchases => purchases[appName]);
+        if (self._progressingRequests.has(key)) {
+            return self._progressingRequests.get(key).then(purchases => purchases[appName]);
         }
 
         // fetch updated Purchase Data
-        let promise = _fetchPurchases(lang)
+        let promise = self._fetchPurchases(lang)
             .then(function(purchases) {
-                progressingRequests.delete(key);
+                self._progressingRequests.delete(key);
                 return purchases;
             });
-        progressingRequests.set(key, promise);
+        self._progressingRequests.set(key, promise);
         return promise.then(purchases => purchases[appName]);
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+    }
+}
 
 
-const SteamCommunity = (function() {
-    let self = new Api("https://steamcommunity.com/", { 'credentials': 'include', });
+class SteamCommunity extends Api {
+    static origin = "https://steamcommunity.com/";
+    static params = { 'credentials': 'include', };
 
-    self.cards = function({ 'params': params, }) {
-        return self.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
-    };
+    static cards({ 'params': params, }) {
+        return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
+    }
 
-    self.stats = function({ 'params': params, }) {
-        return self.getPage(`/my/stats/${params.appid}`);
-    };
+    static stats({ 'params': params, }) {
+        return SteamCommunity.getPage(`/my/stats/${params.appid}`);
+    }
 
     /**
      * Inventory functions, must be signed in to function correctly
      */
-    self.coupons = async function() { // context#3
+    static async coupons() { // context#3
+        let self = SteamCommunity;
         let login = LocalStorage.get('login');
         if (!login) throw `Must be signed in to access Inventory`;
 
@@ -580,8 +563,9 @@ const SteamCommunity = (function() {
         }
         await SteamStore.addCouponAppIds(coupons);
         return coupons;
-    };
-    self.gifts = async function() { // context#1, gifts and guest passes
+    }
+    static async gifts() { // context#1, gifts and guest passes
+        let self = SteamCommunity;
         let login = LocalStorage.get('login');
         if (!login) throw `Must be signed in to access Inventory`;
 
@@ -624,16 +608,16 @@ const SteamCommunity = (function() {
                         }
                     }
                 }
-
             }
 
             value = { 'gifts': gifts, 'passes': passes, };
             CacheStorage.set('inventory_1', value);
         }
         return value;
-    };
+    }
 
-    self.items = async function() { // context#6, community items
+    static async items() { // context#6, community items
+        let self = SteamCommunity;
         let login = LocalStorage.get('login');
         if (!login) throw `Must be signed in to access Inventory`;
 
@@ -646,13 +630,14 @@ const SteamCommunity = (function() {
             CacheStorage.set('inventory_6', inventory);
         }
         return Object.values(inventory.rgDescriptions || {}).map(item => item['market_hash_name']);
-    };
+    }
 
     /**
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
-    self.login = async function({ 'params': params, }) {
+    static async login({ 'params': params, }) {
+        let self = SteamCommunity;
         if (!params || !params.path) {
             self.logout();
             throw "Login endpoint needs profile url";
@@ -683,84 +668,79 @@ const SteamCommunity = (function() {
         // As this is a new login, also retrieve country information from store account page
         value.userCountry = await (SteamStore.country().catch(err => undefined));
         return value;
-    };
+    }
 
-    self.logout = function() {
+    static logout() {
         LocalStorage.remove('login');
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+    }
+}
 
 
-const Steam = (function() {
-    let self = {};
-
+class Steam {
+    static _dynamicstore_promise = null;
+    static _supportedCurrencies = null;
+    
     /**
      * Requires user to be signed in, can we validate this from background?
      */
-    async function _dynamicstore() {
+    static async _dynamicstore() {
+        let self = Steam;
         // Is a request in progress?
-        if (_dynamicstore.promise) { return _dynamicstore.promise; }
+        if (self._dynamicstore_promise) { return self._dynamicstore_promise; }
         
         // Get data from localStorage
         let dynamicstore = CacheStorage.get('dynamicstore', 15 * 60); // dynamicstore userdata expires after 15 minutes
         if (dynamicstore) { return dynamicstore; }
 
         // Cache miss, need to fetch
-        _dynamicstore.promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
+        self._dynamicstore_promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
             .then(function(dynamicstore) {
                 if (!dynamicstore.rgOwnedApps) {
                     throw "Could not fetch DynamicStore UserData";
                 }
                 CacheStorage.set("dynamicstore", dynamicstore);
-                _dynamicstore.promise = null; // no request in progress
+                self._dynamicstore_promise = null; // no request in progress
                 return dynamicstore;
             })
             ;
-        return _dynamicstore.promise;
+        return self._dynamicstore_promise;
     }       
     // dynamicstore keys are:
     // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
     // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
     // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
     // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-    _dynamicstore.promise = null;
 
-    self.ignored = async function() {
-        return _dynamicstore().then(userdata => Object.keys(userdata.rgIgnoredApps));
-    };
-    self.owned = async function() {
-        return _dynamicstore().then(userdata => userdata.rgOwnedApps);       
-    };
-    self.wishlist = async function() {
-        return _dynamicstore().then(userdata => userdata.rgWishlist);        
-    };
-    self.dynamicStore = async function() {
+    static async ignored() {
+        return Steam._dynamicstore().then(userdata => Object.keys(userdata.rgIgnoredApps));
+    }
+    static async owned() {
+        return Steam._dynamicstore().then(userdata => userdata.rgOwnedApps);       
+    }
+    static async wishlist() {
+        return Steam._dynamicstore().then(userdata => userdata.rgWishlist);        
+    }
+    static async dynamicStore() {
         // FIXME, reduce dependence on whole object
-        return _dynamicstore();
-    };
-    self.clearDynamicStore = async function() {
+        return Steam._dynamicstore();
+    }
+    static async clearDynamicStore() {
         CacheStorage.remove('dynamicstore');
-        _dynamicstore.promise = null;
-    };
+        Steam._dynamicstore_promise = null;
+    }
 
-    let _supportedCurrencies = null;
-    self.fetchCurrencies = function() {
+    static fetchCurrencies() {
         // https://partner.steamgames.com/doc/store/pricing/currencies
-        return fetch(chrome.extension.getURL('json/currency.json')).then(r => r.json());
-    };
-    self.currencies = async function() {
-        if (!_supportedCurrencies || _supportedCurrencies.length < 1) {
-            _supportedCurrencies = await self.fetchCurrencies();
+        return fetch(chrome.runtime.getURL('json/currency.json')).then(r => r.json());
+    }
+    static async currencies() {
+        let self = Steam;
+        if (!self._supportedCurrencies || self._supportedCurrencies.length < 1) {
+            self._supportedCurrencies = await self.fetchCurrencies();
         }
-        return _supportedCurrencies;
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+        return self._supportedCurrencies;
+    }
+}
 
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
