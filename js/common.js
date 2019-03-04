@@ -756,7 +756,7 @@ let CurrencyRegistry = (function() {
                 return null;
             return value; // this.multiplier?
         }
-        stringify(value) {
+        stringify(value, withSymbol=true) {
             let sign = value < 0 ? "-" : "";
             value = Math.abs(value);
             let s = value.toFixed(this.format.decimalPlaces), decimals;
@@ -773,10 +773,12 @@ let CurrencyRegistry = (function() {
                     s.push(decimals);
                 }
             }
-            if (this.format.postfix) {
-                s.push(this.format.symbol);
-            } else {
-                s.unshift(this.format.symbol);
+            if (withSymbol) {
+                if (this.format.postfix) {
+                    s.push(this.format.symbol);
+                } else {
+                    s.unshift(this.format.symbol);
+                }
             }
             return s.join("");
         }
@@ -1000,6 +1002,10 @@ let Price = (function() {
         }
         Object.freeze(this);
     }
+
+    Price.prototype.formattedValue = function() {
+        return CurrencyRegistry.fromType(this.currency).stringify(this.value, false);
+    };
 
     Price.prototype.toString = function() {
         return CurrencyRegistry.fromType(this.currency).stringify(this.value);
