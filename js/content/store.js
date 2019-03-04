@@ -2828,7 +2828,7 @@ let WishlistNotes = (function(){
 
         ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '') + '\`); }');
 
-        if (!listenerCreated) {
+        if (!this.listenerCreated) {
             let that = this;
             document.addEventListener("click", function(e) {
                 if (e.target.closest(".es_note_modal_submit")) {
