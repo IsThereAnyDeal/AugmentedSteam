@@ -415,13 +415,15 @@ let BundlePageClass = (function(){
     return BundlePageClass;
 })();
 
-
 let AppPageClass = (function(){
 
     let Super = StorePageClass;
+    let wishlistNotes;
 
     function AppPageClass(url) {
         Super.call(this);
+
+        wishlistNotes = new WishlistNotes();
 
         this.appid = GameId.getAppid(url);
         let metalinkNode = document.querySelector("#game_area_metalink a");
@@ -854,9 +856,7 @@ let AppPageClass = (function(){
 
             if (display === "none") {
                 document.getElementById("esi-store-wishlist-note").remove();
-                let notes = SyncedStorage.get("wishlist_notes");
-                delete notes[this.appid];
-                SyncedStorage.set("wishlist_notes", notes);
+                wishlistNotes.deleteNote(this.appid);
             } else {
                 _addWishlistNote(this.appid);
             }
@@ -867,28 +867,11 @@ let AppPageClass = (function(){
 
     let _addWishlistNote = function(appid) {
 
-        let noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
-            <div id="es_note_modal_content">
-                <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
-                    <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
-                </div>
-                <div class="es_note_buttons" style="float: right">
-                    <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
-                        <span>${Localization.str.save}</span>
-                    </div>
-                    <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
-                        <span>${Localization.str.cancel}</span>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-
-        let notes = SyncedStorage.get("wishlist_notes");
-        let noteText = notes[appid] || "";
+        let noteText;
         let cssClass;
 
-        if (notes[appid]) {
-            noteText = '"' + notes[appid] + '"';
+        if (wishlistNotes.exists(appid)) {
+            noteText = '"' + wishlistNotes.getNote(appid) + '"';
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -901,40 +884,7 @@ let AppPageClass = (function(){
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            let title = document.getElementsByClassName("apphub_AppName")[0].textContent;
-            let note = notes[appid] || "";
-
-            ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + title + '`, \`' + noteModalTemplate.replace("__appid__", appid).replace("__note__", note) + '\`); }');
-        });
-
-        document.addEventListener("click", function(e) {
-            if (e.target.closest(".es_note_modal_submit")) {
-                e.preventDefault();
-
-                let modal = e.target.closest("#es_note_modal");
-                let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                let node = document.getElementById("esi-store-wishlist-note");
-
-                if (note.length !== 0) {
-                    notes[appid] = note;
-
-                    node.classList.remove("esi-empty-note");
-                    node.classList.add("esi-user-note");
-                    node.textContent = '"' + note + '"';
-                } else {
-                    delete notes[appid];
-
-                    node.classList.remove("esi-user-note");
-                    node.classList.add("esi-empty-note");
-                    node.textContent = Localization.str.add_wishlist_note;
-                }
-
-                SyncedStorage.set("wishlist_notes", notes);
-
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-            } else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-            }
+            wishlistNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
         });
     }
 
@@ -2590,19 +2540,18 @@ let CuratorPageClass = (function(){
 
 let WishlistPageClass = (function(){
 
-    let noteModalTemplate;
     let cachedPrices = {};
+    let wishlistNotes;
 
     function WishlistPageClass() {
 
-        this.notes = SyncedStorage.get("wishlist_notes");
-
         let instance = this;
+        wishlistNotes = new WishlistNotes();
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 if (record.addedNodes.length === 1) {
                     if (isMyWishlist()) {
-                        instance.addWishlistNotes(record.addedNodes[0]);
+                        instance.addWishlistNote(record.addedNodes[0]);
                     }
                     instance.highlightApps(record.addedNodes[0]);
                     instance.addPriceHandler(record.addedNodes[0]);
@@ -2616,22 +2565,6 @@ let WishlistPageClass = (function(){
         this.addEmptyWishlistButton();
         this.addWishlistNotesHandlers();
         this.addRemoveHandler();
-
-        noteModalTemplate = `<div id="es_note_modal" data-appid="__appid__">
-            <div id="es_note_modal_content">
-                <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
-                    <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
-                </div>
-                <div class="es_note_buttons" style="float: right">
-                    <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
-                        <span>${Localization.str.save}</span>
-                    </div>
-                    <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
-                        <span>${Localization.str.cancel}</span>
-                    </div>
-                </div>
-            </div>
-        </div>`;
     }
 
     function isMyWishlist() {
@@ -2830,14 +2763,14 @@ let WishlistPageClass = (function(){
     };
 
 
-    WishlistPageClass.prototype.addWishlistNotes =  function(node) {
+    WishlistPageClass.prototype.addWishlistNote =  function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
 
-        let noteText;
         let appid = node.dataset.appId;
+        let noteText;
         let cssClass;
-        if (this.notes[appid]) {
-            noteText = '"' + this.notes[appid] + '"';
+        if (wishlistNotes.exists(appid)) {
+            noteText = '"' + wishlistNotes.getNote(appid) + '"';
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2857,42 +2790,8 @@ let WishlistPageClass = (function(){
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
-            let title = row.querySelector("a.title").textContent;
             let appid = row.dataset.appId;
-            let note = instance.notes[appid] || "";
-
-            ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + title + '`, \`' + noteModalTemplate.replace("__appid__", appid).replace("__note__", note) + '\`); }');
-        });
-
-        document.addEventListener("click", function(e) {
-            if (e.target.closest(".es_note_modal_submit")) {
-                e.preventDefault();
-
-                let modal = e.target.closest("#es_note_modal");
-                let appid = modal.dataset.appid;
-                let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                let node = document.querySelector(".wishlist_row[data-app-id='"+appid+"'] div.esi-note");
-
-                if (note.length !== 0) {
-                    instance.notes[appid] = note;
-
-                    node.classList.remove("esi-empty-note");
-                    node.classList.add("esi-user-note");
-                    node.textContent = '"' + note + '"';
-                } else {
-                    delete instance.notes[appid];
-
-                    node.classList.remove("esi-user-note");
-                    node.classList.add("esi-empty-note");
-                    node.textContent = Localization.str.add_wishlist_note;
-                }
-
-                SyncedStorage.set("wishlist_notes", instance.notes);
-
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-            } else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-            }
+            wishlistNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
         });
     };
 
@@ -2913,9 +2812,7 @@ let WishlistPageClass = (function(){
             if (!e.data.type) { return; }
 
             if (e.data.type === "es_remove_wl_entry") {
-                let notes = SyncedStorage.get("wishlist_notes");
-                delete notes[e.data.removed_wl_entry];
-                SyncedStorage.set("wishlist_notes", notes);
+                wishlistNotes.deleteNote(e.data.removed_wl_entry);
             }
         });
     }
@@ -2923,6 +2820,90 @@ let WishlistPageClass = (function(){
     return WishlistPageClass;
 })();
 
+let WishlistNotes = (function(){
+
+    let noteModalTemplate;
+    let notes;
+    let listenerCreated = false;
+
+    function WishlistNotes() {
+        this.noteModalTemplate = `
+                <div id="es_note_modal" data-appid="__appid__">
+                    <div id="es_note_modal_content">
+                        <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
+                            <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+                        </div>
+                        <div class="es_note_buttons" style="float: right">
+                            <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
+                                <span>${Localization.str.save}</span>
+                            </div>
+                            <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
+                                <span>${Localization.str.cancel}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        
+        this.notes = SyncedStorage.get("wishlist_notes");
+    }
+
+    WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
+
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '') + '\`); }');
+
+        if (!listenerCreated) {
+            let that = this;
+            document.addEventListener("click", function(e) {
+                if (e.target.closest(".es_note_modal_submit")) {
+                    e.preventDefault();
+
+                    let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                    let node = document.querySelector(nodeSelector);
+
+                    if (note.length !== 0) {
+                        that.setNote(appid, note);
+
+                        node.classList.remove("esi-empty-note");
+                        node.classList.add("esi-user-note");
+                        node.textContent = '"' + note + '"';
+                    } else {
+                        that.deleteNote(appid);
+
+                        node.classList.remove("esi-user-note");
+                        node.classList.add("esi-empty-note");
+                        node.textContent = Localization.str.add_wishlist_note;
+                    }
+
+                    ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                } else if (e.target.closest(".es_note_modal_close")) {
+                    ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                }
+            });
+            this.listenerCreated = true;
+        }
+    }
+
+    WishlistNotes.prototype.getNote = function(appid) {
+        return this.notes[appid];
+    }
+
+    WishlistNotes.prototype.setNote = function(appid, note) {
+        this.notes[appid] = note;
+        SyncedStorage.set("wishlist_notes", this.notes);
+    }
+
+    WishlistNotes.prototype.deleteNote = function(appid) {
+        delete this.notes[appid];
+        SyncedStorage.set("wishlist_notes", this.notes);
+    }
+
+    WishlistNotes.prototype.exists = function(appid) {
+        return (this.notes[appid] && (this.notes[appid] !== '')) ? true : false;
+    }
+
+    return WishlistNotes;
+
+})();
 
 let StoreFrontPageClass = (function(){
 
