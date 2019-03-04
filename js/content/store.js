@@ -268,7 +268,7 @@ let StorePageClass = (function(){
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency);
+                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -283,8 +283,9 @@ let StorePageClass = (function(){
                     let html = "";
 
                     if (apiPrice) {
-                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency, Currency.storeCurrency);
-                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency, false);
+                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
+                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
+
 
                         let percentageIndicator = "equal";
                         let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
@@ -355,7 +356,7 @@ let SubPageClass = (function() {
 
     SubPageClass.prototype.subscriptionSavingsCheck = function() {
         setTimeout(function() {
-            let notOwnedTotalPrice = new Price(0);
+            let notOwnedTotalPrice = 0;
 
             let nodes = document.querySelectorAll(".tab_idem");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -364,24 +365,25 @@ let SubPageClass = (function() {
                 let priceContainer = node.querySelector(".discount_final_price").textContent.trim();
                 if (!priceContainer) { continue; }
 
-                let price = Price.parseFromString(priceContainer, false);
+                let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
                 if (price) {
-                    notOwnedTotalPrice.value += price.value;
+                    notOwnedTotalPrice += price.value;
                 }
             }
 
 
             let priceNodes = document.querySelectorAll(".package_totals_area .price");
-            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent);
+            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
             if (!packagePrice) { return; }
 
-            notOwnedTotalPrice.value -= packagePrice.value;
+            notOwnedTotalPrice -= packagePrice.value;
 
             if (!document.querySelector("#package_savings_bar")) {
                 document.querySelector(".package_totals_area")
                     .insertAdjacentHTML("beforeend", "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
             }
 
+            notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency)
             let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
             let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
 
@@ -750,34 +752,14 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.storePageDataPromise = async function() {
-        let appid = this.appid;
-        let cache = LocalData.get("storePageData_" + appid);
-
-        if (cache && cache.data && !TimeHelper.isExpired(cache.updated, 3600)) {
-            return cache.data;
-        }
-
-        let apiparams = {
-            appid: appid
-        };
+        let apiparams = { 'appid': this.appid, };
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
         }
         if (SyncedStorage.get("showoc")) {
             apiparams.oc = 1;
         }
-
-        return RequestData.getApi("v01/storepagedata", apiparams)
-            .then(function(response) {
-                if (response && response.result && response.result === "success") {
-                    LocalData.set("storePageData_" + appid, {
-                        data: response.data,
-                        updated: Date.now(),
-                    });
-                    return response.data;
-                }
-                throw "Network error: did not receive valid storepagedata.";
-            });
+        return Background.action('storepagedata', apiparams);
     };
 
     /**
@@ -895,7 +877,7 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addCoupon = function() {
         let inst = this;
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
 
             let coupon = Inventory.getCoupon(inst.getFirstSubid());
             if (!coupon) { return; }
@@ -929,24 +911,19 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addDlcInfo = function() {
         if (!this.isDlc()) { return; }
 
-        RequestData.getApi("v01/dlcinfo", {appid: this.appid, appname: encodeURIComponent(this.appName)}).then(response => {
-            let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
-
-            if (response && response.result === "success") {
-                for(let i=0, len=response.data.length; i<len; i++) {
-
-                    let item = response.data[i];
-                    let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
-                    let title = BrowserHelper.escapeHTML(item.desc);
-                    let name = BrowserHelper.escapeHTML(item.name);
-                    html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
-                }
+        let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+        Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
+            for(let item of response) {
+                let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
+                let title = BrowserHelper.escapeHTML(item.desc);
+                let name = BrowserHelper.escapeHTML(item.name);
+                html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
             }
-
+        }).finally(() => {
             let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
             html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
 
-            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);
+            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);            
         });
     };
 
@@ -1592,10 +1569,10 @@ let AppPageClass = (function(){
             .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
 
         document.querySelector("#category_block").insertAdjacentHTML("afterend", `
-					<div class="block responsive_apppage_details_right heading">
+					<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
 						${Localization.str.badge_progress}
 					</div>
-					<div class="block">
+					<div id="es_badge_progress_content" class="block">
 						<div class="block_content_inner es_badges_progress_block" style="display:none;">
 							<div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
 							<div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
@@ -1603,20 +1580,25 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid).then(result => {
-            loadBadgeContent(".es_normal_badge_progress", result, ".badge_current");
-        });
+        Background.action('cards', { 'appid': this.appid, } )
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
+        Background.action('cards', { 'appid': this.appid, 'border': 1, } )
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
-        RequestData.getHttp("//steamcommunity.com/my/gamecards/" + this.appid + "?border=1").then(result => {
-            loadBadgeContent(".es_foil_badge_progress", result, ".badge_current");
-        });
-
-        function loadBadgeContent(targetSelector, result, selector) {
-            let dummy = document.createElement("html");
-            dummy.innerHTML = result;
-            let badge = dummy.querySelector(selector);
-            if (badge) {
-                displayBadgeInfo(targetSelector, badge);
+        function loadBadgeContent(targetSelector, result) {
+            let dummy = BrowserHelper.htmlToDOM(result);
+            
+            // The badges_sheet class only appears when the users badge for this game couldn't get found
+            if (!dummy.querySelector(".badges_sheet")) {
+                let badge = dummy.querySelector(".badge_current");
+                if (badge) {
+                    displayBadgeInfo(targetSelector, badge);
+                }
+            } else {
+                if (document.getElementById("es_badge_progress")) {
+                    document.getElementById("es_badge_progress").remove();
+                    document.getElementById("es_badge_progress_content").remove();
+                }
             }
         }
 
@@ -1695,7 +1677,7 @@ let AppPageClass = (function(){
         details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        RequestData.getHttp("//steamcommunity.com/my/stats/" + this.appid + "/").then(response => {
+        Background.action('stats', { 'appid': this.appid, } ).then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
@@ -1823,7 +1805,7 @@ let AppPageClass = (function(){
                 price_text = price_text.replace(",", ".");
             }
             let price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100);
+            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
 
             let buttons = node.querySelectorAll(".btn_addtocart");
             buttons[buttons.length-1].parentNode.insertAdjacentHTML("afterbegin", `
@@ -2047,7 +2029,7 @@ let FundsPageClass = (function(){
                     .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>");
         }
 
-        let currency = Price.parseFromString(price);
+        let currency = Price.parseFromString(price, Currency.storeCurrency);
 
         let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
         inputel.innerHTML = "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
@@ -2060,7 +2042,7 @@ let FundsPageClass = (function(){
             let value = document.querySelector("#es_custom_money_amount").value;
 
             if(!isNaN(value) && value != "") {
-                currency.value = value;
+                currency = new Price(value, Currency.storeCurrency);
 
                 if(giftcard) {
                     priceel.classList.toggle("small", value > 10);
@@ -2300,76 +2282,65 @@ let SearchPageClass = (function(){
         }
     }
 
-    function addHideButtonsToSearchClick() {
-        let nodes = document.querySelectorAll(".search_result_row");
+    function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
 
             node.style.display = "block";
-            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; }
-            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; }
-            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; }
-            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; }
+            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
         }
     }
 
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
-        let priceInfo = Price.getPriceInfo(Currency.storeCurrency);
-
-        let inputPattern = (function() {
-            let placesRgx;
-            if (priceInfo.hidePlacesWhenZero) {
-                placesRgx = "";
-            } else {
-                placesRgx = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
-            }
-            let decimalRgx = priceInfo.decimal === '.' ? '\\.' : ',';
-            
-            return new RegExp("^\\d*(" + decimalRgx + placesRgx + '|)$');
-        })();
+        let currency = CurrencyRegistry.storeCurrency;
+        let inputPattern = currency.regExp();
+        let pricePlaceholder = currency.placeholder();
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
-                <div class='block_header'><div>` + Localization.str.hide + `</div></div>
+                <div class='block_header'><div>${Localization.str.hide}</div></div>
                 <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
                     <div class='tab_filter_control' id='es_owned_games'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.options.owned + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.options.owned}</span>
                     </div>
                     <div class='tab_filter_control' id='es_wishlist_games'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.options.wishlist + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.options.wishlist}</span>
                     </div>
                     <div class='tab_filter_control' id='es_cart_games'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.options.cart + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.options.cart}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notdiscounted'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.notdiscounted + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.notdiscounted}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notinterested'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.notinterested + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.notinterested}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notmixed'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.mixed_item + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.mixed_item}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notnegative'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.negative_item + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.negative_item}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notpriceabove'>
                         <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>` + Localization.str.price_above + `</span>
+                        <span class='tab_filter_control_label'>${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='` + inputPattern.source + `' placeholder=` + new Price(0).toString().replace(/[^\d,\.]/, '') + `>
+                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='${inputPattern.source}' placeholder=${pricePlaceholder}>
                         </div>
                     </div>
                 </div>
@@ -2412,47 +2383,32 @@ let SearchPageClass = (function(){
             document.querySelector("#es_notmixed").classList.add("checked");
             document.querySelector("#es_hide_options").style.height="auto";
             document.querySelector("#es_hide_expander").style.display="none";
-
-            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.mixed");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].closest(".search_result_row").style.display="none";
-            }
         }
 
         if (SyncedStorage.get("hide_negative")) {
             document.querySelector("#es_notnegative").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
-
-            let nodes = document.querySelectorAll(".search_result_row span.search_review_summary.negative");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].closest(".search_result_row").style.display="none";
-            }
         }
 
         if (SyncedStorage.get("hide_priceabove")) {
             document.querySelector("#es_notpriceabove").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
             document.querySelector("#es_hide_expander").style.display = "none";
-
-            let nodes = document.querySelectorAll(".search_result_row");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                applyPriceFilter(nodes[i])
-            }
         }
 
         let position;
-        if (priceInfo.right) {
+        if (currency.format.right) {
             position = "afterend";
         } else {
             position = "beforebegin";
         }
 
         let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
-        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + priceInfo.symbolFormat.trim() + "</span>");
+        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
         }
 
         [
@@ -2470,11 +2426,12 @@ let SearchPageClass = (function(){
                 let value = !node.classList.contains("checked");
                 node.classList.toggle("checked", value);
                 SyncedStorage.set(a[1], value);
-                addHideButtonsToSearchClick();
+                filtersChanged();
             });
         });
 
-        document.getElementById("es_notpriceabove").title = Localization.str.price_above_tooltip;
+        let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
+        priceFilterCheckbox.title = Localization.str.price_above_tooltip;
 
         let elem = document.getElementById("es_notpriceabove_val");
         if (elem !== undefined && elem !== null) {
@@ -2489,39 +2446,56 @@ let SearchPageClass = (function(){
                 }
             });
             elem.addEventListener("input", function(e){
+                let toggleValue = (elem.value !== "");
+                priceFilterCheckbox.classList.toggle("checked", toggleValue);
+                SyncedStorage.set("hide_priceabove", toggleValue);
+
                 if (inputPattern.test(elem.value)) {
                     elem.setCustomValidity('');
                     SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
-                    addHideButtonsToSearchClick();
+                    filtersChanged();
                 } else {
                     elem.setCustomValidity(Localization.str.price_above_tooltip);
                 }
+
                 elem.reportValidity();
             });
         }
+
+        filtersChanged();
+
     };
 
     SearchPageClass.prototype.observeChanges = function() {
+        if (!SyncedStorage.get("contscroll")) {
+
+            let pageObserver = new MutationObserver(() => {
+                // When loading a new page, every element in the tab_filter_control class gets unchecked
+                if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
+                if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
+                if (SyncedStorage.get("hide_cart")) { document.querySelector("#es_cart_games").classList.add("checked"); }
+                if (SyncedStorage.get("hide_notdiscounted")) { document.querySelector("#es_notdiscounted").classList.add("checked"); }
+                if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
+                if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
+                if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
+                if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
+
+                Highlights.startHighlightsAndTags();
+                EarlyAccess.showEarlyAccess();
+                filtersChanged();
+            });
+            pageObserver.observe(document.getElementById("search_results"), {childList: true});
+        }
 
         let observer = new MutationObserver(mutations => {
             Highlights.startHighlightsAndTags();
             EarlyAccess.showEarlyAccess();
 
             mutations.forEach(mutation => {
-
-                mutation.addedNodes.forEach(node => {
-
-                    if (node.classList && node.classList.contains("search_result_row")) {
-                        applyPriceFilter(node);
-                    }
-                });
+                filtersChanged(mutation.addedNodes);
             });
         });
-
-        observer.observe(
-            document.querySelector("#search_result_container"),
-            {childList: true, subtree: true}
-        );
+        observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
     };
 
     return SearchPageClass;
@@ -2529,11 +2503,11 @@ let SearchPageClass = (function(){
 
 
 let CuratorPageClass = (function(){
-    function CuratorPageClass() {
 
+    function CuratorPageClass() {
+        // no page-specific handling
     }
 
-    
     return CuratorPageClass;
 })();
 
@@ -2608,6 +2582,8 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
+        if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
+        
         let html =
             `<div id="esi-wishlist-chart-content">
                 <a>${Localization.str.wl.compute}</a>
@@ -2642,14 +2618,14 @@ let WishlistPageClass = (function(){
 
             await Promise.all(promises);
         }
-        let totalPrice = new Price(0);
+        let totalPrice = 0;
         let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
         for (let [key, game] of Object.entries(wishlistData)) {
             if (game.subs.length > 0) {
-                totalPrice.value += game.subs[0].price / 100;
+                totalPrice += game.subs[0].price / 100;
 
                 if (game.subs[0].discount_pct > 0) {
                     totalOnSale++;
@@ -2659,6 +2635,7 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
+        totalPrice = new Price(totalPrice, Currency.storeCurrency)
 
         document.querySelector("#esi-wishlist-chart-content").innerHTML
             = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
@@ -2905,6 +2882,60 @@ let WishlistNotes = (function(){
 
 })();
 
+let TagPageClass = (function(){
+
+    let rows = [
+        "NewReleasesRows",
+        "TopSellersRows",
+        "ConcurrentUsersRows",
+        "ComingSoonRows"
+    ];
+
+    function TagPageClass() {
+        if (SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored")) {
+            this.addHiding();
+            this.observeChanges();
+        }
+    }
+
+    TagPageClass.prototype.addHiding = function() {
+        rows.forEach(row => {
+            for (let node of document.getElementById(row).children) {
+                hideNode(node);
+            }
+        });
+    }
+
+    TagPageClass.prototype.observeChanges = function() {
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeName === "A") {
+                        hideNode(node);
+                    }
+                })
+            });
+        });
+        
+        rows.forEach(row => {
+            observer.observe(document.getElementById(row), {childList: true});
+        })
+    }
+
+    function hideNode(node) {
+        if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
+            node.style.display = "none";
+        }
+        if (SyncedStorage.get("hide_ignored") && node.classList.contains("ds_ignored")) {
+            node.style.display = "none";
+        }
+    }
+
+    return TagPageClass;
+
+})();
+
+
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
@@ -3035,76 +3066,74 @@ let TabAreaObserver = (function(){
     return self;
 })();
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(function(values) {
+    await SyncedStorage.load().catch(err => console.error(err));
+    await Promise.all([Localization, User, Currency]);
 
-                Common.init();
+    Common.init();
 
-                switch (true) {
-                    case /\bagecheck\b/.test(path):
-                        AgeCheck.sendVerification();
-                        break;
+    switch (true) {
+        case /\bagecheck\b/.test(path):
+            AgeCheck.sendVerification();
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new AppPageClass(window.location.host + path));
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new AppPageClass(window.location.host + path));
+            break;
 
-                    case /^\/sub\/.*/.test(path):
-                        (new SubPageClass(window.location.host + path));
-                        break;
+        case /^\/sub\/.*/.test(path):
+            (new SubPageClass(window.location.host + path));
+            break;
 
-                    case /^\/bundle\/.*/.test(path):
-                        (new BundlePageClass(window.location.host + path));
-                        break;
+        case /^\/bundle\/.*/.test(path):
+            (new BundlePageClass(window.location.host + path));
+            break;
 
-                    case /^\/account\/registerkey(\/.*)?/.test(path):
-                        (new RegisterKeyPageClass());
-                        return;
+        case /^\/account\/registerkey(\/.*)?/.test(path):
+            (new RegisterKeyPageClass());
+            return;
 
-                    case /^\/account(\/)?/.test(path):
-                        (new AccountPageClass());
-                        return;
+        case /^\/account(\/)?/.test(path):
+            (new AccountPageClass());
+            return;
 
-                    case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
-                        (new FundsPageClass());
-                        break;
+        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+            (new FundsPageClass());
+            break;
 
-                    case /^\/search\/.*/.test(path):
-                        (new SearchPageClass());
-                        break;
+        case /^\/search\/.*/.test(path):
+            (new SearchPageClass());
+            break;
 
-                    case /^\/sale\/.*/.test(path):
-                        (new StorePageClass()).showRegionalPricing("sale");
-                        break;
+        case /^\/tags\//.test(path):
+            (new TagPageClass());
+            break;
 
-                    case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(path):
-                        (new CuratorPageClass());
-                        break;
+        case /^\/(?:curator|developer|dlc|publisher|franchise)\/.*/.test(path):
+            (new CuratorPageClass());
+            break;
 
-                    case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-                        (new WishlistPageClass());
-                        break;
+        case /^\/sale\/.*/.test(path):
+            (new StorePageClass()).showRegionalPricing("sale");
+            break;
 
-                    // Storefront-front only
-                    case /^\/$/.test(path):
-                        (new StoreFrontPageClass());
-                        break;
-                }
+        case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
+            (new WishlistPageClass());
+            break;
 
-                // common for store pages
-                Highlights.startHighlightsAndTags();
-                EnhancedSteam.alternateLinuxIcon();
-                EnhancedSteam.hideTrademarkSymbol(false);
-                TabAreaObserver.observeChanges();
+        // Storefront-front only
+        case /^\/$/.test(path):
+            (new StoreFrontPageClass());
+            break;
+    }
 
-            })
-    )
+    // common for store pages
+    Highlights.startHighlightsAndTags();
+    EnhancedSteam.alternateLinuxIcon();
+    EnhancedSteam.hideTrademarkSymbol(false);
+    TabAreaObserver.observeChanges();
 
 })();
 

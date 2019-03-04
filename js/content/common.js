@@ -167,25 +167,34 @@ let Defaults = (function() {
 /**
  * Common functions that may be used on any pages
  */
-
-let Api = (function(){
+let Background = (function(){
     let self = {};
 
-    self.getApiUrl = function(endpoint, query) {
-
-        let queryString = "";
-        if (query) {
-            queryString = "?" + Object.entries(query)
-                .map(pair => pair.map(encodeURIComponent).join("="))
-                .join("&");
-        }
-
-        return Config.ApiServerHost + "/" + endpoint + "/" + queryString;
+    self.message = async function(message) {
+        return new Promise(function (resolve, reject) {
+            chrome.runtime.sendMessage(message, function(response) {
+                if (!response) {
+                    reject("No response from extension background context.");
+                    return;
+                }
+                if (typeof response.error !== 'undefined') {
+                    reject(response.error);
+                    return;
+                }
+                resolve(response.response);
+            });
+        });
+    };
+    
+    self.action = function(requested, params) {
+        if (typeof params == 'undefined')
+            return self.message({ 'action': requested, });
+        return self.message({ 'action': requested, 'params': params, });
     };
 
+    Object.freeze(self);
     return self;
 })();
-
 
 let TimeHelper = (function(){
 
@@ -285,7 +294,7 @@ let ExtensionLayer = (function() {
     let self = {};
 
     self.getLocalUrl = function(url) {
-        return chrome.extension.getURL(url);
+        return chrome.runtime.getURL(url);
     };
 
     // NOTE: use cautiously!
@@ -427,11 +436,6 @@ let RequestData = (function(){
         });
     };
 
-    self.getApi = function(api, query) {
-        let apiUrl = Api.getApiUrl(api, query);
-        return self.getJson(apiUrl);
-    };
-
     self.post = function(url, formData, settings) {
         return self.getHttp(url, Object.assign(settings || {}, {
             method: "POST",
@@ -570,6 +574,10 @@ let Localization = (function(){
         return _promise;
     };
 
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
+    };
+
     self.getString = function(key) {
         // Source: http://stackoverflow.com/a/24221895
         let path = key.split('.').reverse();
@@ -604,49 +612,38 @@ let User = (function(){
 
     let _promise = null;
 
-    async function _fetch() {
-        let response = await RequestData.getHttp(self.profileUrl);
-
-        self.steamId = (response.match(/"steamid":"(\d+)"/) || [])[1];
-
-        if (self.steamId) {
-            self.isSignedIn = true;
-            LocalData.set("userLogin", {"steamId": self.steamId, "profilePath": self.profilePath});
-
-            // check user country
-            response = await RequestData.getHttp("https://store.steampowered.com/account/change_country/");
-            if (response) {
-                let node = BrowserHelper.htmlToDOM(response).querySelector("#dselect_user_country");
-                if (node && node.value) {
-                    LocalData.set("userCountry", node.value);
-                }
-            }
-        }
-    }
-
     self.promise = function() {
         if (_promise) { return _promise; }
 
         let avatarNode = document.querySelector("#global_actions .playerAvatar");
         self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [null])[0];
+        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
 
+        // If profilePath is not available, we're not logged in
         if (!self.profilePath) {
+            Background.action('logout');
             _promise = Promise.resolve();
             return _promise;
         }
 
-        let userLogin = LocalData.get("userLogin");
-        if (userLogin && userLogin.profilePath === self.profilePath) {
-            self.isSignedIn = true;
-            self.steamId = userLogin.steamId;
-            _promise = Promise.resolve();
-            return _promise;
-        }
-
-        _promise = _fetch();
+        _promise = Background.action('login', { 'path': self.profilePath, })
+            .then(function (login) {
+                if (!login) return;
+                self.isSignedIn = true;
+                self.steamId = login.steamId;
+                // If we're *newly* logged in, then login.userCountry will be set
+                if (login.userCountry) {
+                    LocalData.set("userCountry", login.userCountry);
+                }
+            })
+            .catch(err => console.error(err))
+            ;
 
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getAccountId = function(){
@@ -664,9 +661,7 @@ let User = (function(){
     };
 
     self.getStoreSessionId = async function() {
-        // TODO what's the minimal page we can load here to get sessionId?
-        let storePage = await RequestData.getHttp("https://store.steampowered.com/news/");
-        return BrowserHelper.getVariableFromText(storePage, "g_sessionID", "string");
+        return Background.action('sessionid');
     };
 
     self.getCountry = function() {
@@ -686,77 +681,8 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    let _purchaseDataPromise = null;
-    self.getPurchaseDate = function(lang, appName) {
-        if (_purchaseDataPromise) { return _purchaseDataPromise; }
-
-        _purchaseDataPromise = new Promise(function(resolve, reject) {
-            let purchaseDates = LocalData.get("purchase_dates", {});
-
-            appName = StringUtils.clearSpecialSymbols(appName);
-
-            // Return date from cache
-            if (purchaseDates && purchaseDates[lang] && purchaseDates[lang][appName]) {
-                resolve(purchaseDates[lang][appName]);
-                return;
-            }
-
-            let lastUpdate = LocalData.get("purchase_dates_time", 0);
-
-            // Update cache if needed
-            if (!TimeHelper.isExpired(lastUpdate, 300)) {
-                resolve();
-                return;
-            }
-
-            RequestData.getHttp("https://store.steampowered.com/account/licenses/?l=" + lang).then(result => {
-                let replaceRegex = [
-                    /- Complete Pack/ig,
-                    /Standard Edition/ig,
-                    /Steam Store and Retail Key/ig,
-                    /- Hardware Survey/ig,
-                    /ComputerGamesRO -/ig,
-                    /Founder Edition/ig,
-                    /Retail( Key)?/ig,
-                    /Complete$/ig,
-                    /Launch$/ig,
-                    /Free$/ig,
-                    /(RoW)/ig,
-                    /ROW/ig,
-                    /:/ig,
-                ];
-
-                purchaseDates[lang] = {};
-
-                let dummy = document.createElement("html");
-                dummy.innerHTML = result;
-
-                let nodes = dummy.querySelectorAll("#main_content td.license_date_col");
-
-                for (let i=0, len=nodes.length; i<len; i++) {
-                    let node = nodes[i];
-
-                    let nameNode = node.nextElementSibling;
-                    let removeNode = nameNode.querySelector("div");
-                    if (removeNode) { removeNode.remove(); }
-
-                    // Clean game name
-                    let gameName = StringUtils.clearSpecialSymbols(nameNode.textContent.trim());
-
-                    replaceRegex.forEach(regex => {
-                        gameName = gameName.replace(regex, "");
-                    });
-
-                    purchaseDates[lang][gameName.trim()] = node.textContent;
-                }
-
-                LocalData.set("purchase_dates", purchaseDates);
-                LocalData.set("purchase_dates_time", TimeHelper.timestamp());
-
-                resolve(purchaseDates[lang][appName]);
-            }, reject);
-        });
-        return _purchaseDataPromise;
+    self.getPurchaseDate = async function(lang, appName) {
+        return Background.action('purchase', { 'lang': lang, 'appName': appName, });
     };
 
     return self;
@@ -775,253 +701,263 @@ let StringUtils = (function(){
 })();
 
 
+let CurrencyRegistry = (function() {
+    //   { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
+    class SteamCurrency {
+        constructor({
+            'id': id,
+            'abbr': abbr="USD",
+            'symbol': symbol="$",
+            'hint': hint="Default Currency",
+            'multiplier': multiplier=100,
+            'unit': unit=1,
+            'format': {
+                'places': formatPlaces=2,
+                'hidePlacesWhenZero': formatHidePlaces=false,
+                'symbolFormat': formatSymbol="$",
+                'thousand': formatGroupSeparator=",",
+                'group': formatGroupSize=3,
+                'decimal': formatDecimalSeparator=".",
+                'right': formatPostfixSymbol=false,
+            },
+        }) {
+            // console.assert(id && Number.isInteger(id))
+            Object.assign(this, {
+                'id': id, // Steam Currency ID, integer, 1-41 (at time of writing)
+                'abbr': abbr, // TLA for the currency
+                'symbol': symbol, // Symbol used to represent/recognize the currency, this is NULL for CNY to avoid collision with JPY
+                'hint': hint, // English label for the currency to reduce mistakes editing the JSON
+                'multiplier': multiplier, // multiplier used by Steam when writing values
+                'unit': unit, // Minimum transactional unit required by Steam.
+                'format': {
+                    'decimalPlaces': formatPlaces, // How many decimal places does this currency have?
+                    'hidePlacesWhenZero': formatHidePlaces, // Does this currency show decimal places for a .0 value?
+                    'symbol': formatSymbol, // Symbol used when generating a string value of this currency
+                    'groupSeparator': formatGroupSeparator, // Thousands separator
+                    'groupSize': formatGroupSize, // Digits to a "thousand" for the thousands separator
+                    'decimalSeparator': formatDecimalSeparator,
+                    'postfix': formatPostfixSymbol, // Should format.symbol be post-fixed?
+                },
+            });
+            Object.freeze(this.format);
+            Object.freeze(this);
+        }
+        valueOf(price) {
+            // remove separators
+            price = price.trim()
+                .replace(this.format.groupSeparator, "");
+            if (this.format.decimalSeparator != ".")
+                price = price.replace(this.format.decimalSeparator, ".") // as expected by parseFloat()
+            price = price.replace(/[^\d\.]/g, "");
+
+            let value = parseFloat(price);
+
+            if (Number.isNaN(value))
+                return null;
+            return value; // this.multiplier?
+        }
+        stringify(value, withSymbol=true) {
+            let sign = value < 0 ? "-" : "";
+            value = Math.abs(value);
+            let s = value.toFixed(this.format.decimalPlaces), decimals;
+            [s, decimals] = s.split('.');
+            let g = [], j = s.length;
+            for (; j > this.format.groupSize; j -= this.format.groupSize) {
+                g.unshift(s.substring(j - this.format.groupSize, j));
+            }
+            g.unshift(s.substring(0, j));
+            s = [sign, g.join(this.format.groupSeparator)];
+            if (this.format.decimalPlaces > 0) {
+                if (!this.format.hidePlacesWhenZero || parseInt(decimals, 10) > 0) {
+                    s.push(this.format.decimalSeparator);
+                    s.push(decimals);
+                }
+            }
+            if (withSymbol) {
+                if (this.format.postfix) {
+                    s.push(this.format.symbol);
+                } else {
+                    s.unshift(this.format.symbol);
+                }
+            }
+            return s.join("");
+        }
+        placeholder() {
+            if (this.format.decimalPlaces == 0 || this.format.hidePlacesWhenZero) {
+                return "0";
+            }
+            return (0).toFixed(this.format.decimalPlaces);
+        }
+        regExp() {
+            let regex = ["^("];
+            if (this.format.hidePlacesWhenZero) {
+                regex.push("0|[1-9]\\d*(");
+            } else {
+                regex.push("\\d*(");
+            }
+            regex.push(this.format.decimalSeparator.replace(".", "\\."));
+            if (this.format.decimalPlaces > 0) {
+                regex.push("\\d{0,", this.format.decimalPlaces, "}");
+            }
+            regex.push(")?)$")
+            return new RegExp(regex.join(""));
+        }
+    }
+
+
+    let self = {};
+
+    let indices = {
+        'id': {},
+        'abbr': {},
+        'symbols': {},
+    };
+    let defaultCurrency = null;
+    let re = null;
+
+    self.fromSymbol = function(symbol) {
+        return indices.symbols[symbol] || defaultCurrency;
+    };
+
+    self.fromType = function(type) {
+        return indices.abbr[type] || defaultCurrency;
+    };
+
+    self.fromNumber = function(number) {
+        return indices.id[number] || defaultCurrency;
+    };
+
+    self.fromString = function(price) { 
+        let match = price.match(re);
+        if (!match)
+            return defaultCurrency;
+        return self.fromSymbol(match[0]);
+    };
+
+    Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
+    Object.defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
+    
+    self.promise = async function() {
+        let currencies = await Background.action('steam.currencies');
+        for (let currency of currencies) {
+            currency = new SteamCurrency(currency);
+            indices.abbr[currency.abbr] = currency;
+            indices.id[currency.id] = currency;
+            if (currency.symbol) // CNY && JPY use the same symbol
+                indices.symbols[currency.symbol] = currency;
+        }
+        defaultCurrency = indices.id[1]; // USD
+        re = new RegExp(Object.keys(indices.symbols).join("|").replace("$", "\\$"));
+    };
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
+    };
+
+    return self;
+})();
+
+
 let Currency = (function() {
 
     let self = {};
 
     self.customCurrency = null;
-    self.storeCurrency = "USD";
-
-    let currencySymbols = {
-        "pуб": "RUB",
-        "€": "EUR",
-        "£": "GBP",
-        "R$": "BRL",
-        "¥": "JPY",
-        "kr": "NOK",
-        "Rp": "IDR",
-        "RM": "MYR",
-        "P": "PHP",
-        "S$": "SGD",
-        "฿": "THB",
-        "₫": "VND",
-        "₩": "KRW",
-        "TL": "TRY",
-        "₴": "UAH",
-        "Mex$": "MXN",
-        "CDN$": "CAD",
-        "A$": "AUD",
-        "HK$": "HKD",
-        "NT$": "TWD",
-        "₹": "INR",
-        "SR": "SAR",
-        "R ": "ZAR",
-        "DH": "AED",
-        "CHF": "CHF",
-        "CLP$": "CLP",
-        "S/.": "PEN",
-        "COL$": "COP",
-        "NZ$": "NZD",
-        "ARS$": "ARS",
-        "₡": "CRC",
-        "₪": "ILS",
-        "₸": "KZT",
-        "KD": "KWD",
-        "zł": "PLN",
-        "QR": "QAR",
-        "$U": "UYU"
-    };
-
-    let typeToNumberMap = {
-        "RUB": 5,
-        "EUR": 3,
-        "GBP": 2,
-        "PLN": 6,
-        "BRL": 7,
-        "JPY": 8,
-        "NOK": 9,
-        "IDR": 10,
-        "MYR": 11,
-        "PHP": 12,
-        "SGD": 13,
-        "THB": 14,
-        "VND": 15,
-        "KRW": 16,
-        "TRY": 17,
-        "UAH": 18,
-        "MXN": 19,
-        "CAD": 20,
-        "AUD": 21,
-        "NZD": 22,
-        "CNY": 23,
-        "INR": 24,
-        "CLP": 25,
-        "PEN": 26,
-        "COP": 27,
-        "ZAR": 28,
-        "HKD": 29,
-        "TWD": 30,
-        "SAR": 31,
-        "AED": 32,
-        "ARS": 34,
-        "ILS": 35,
-        "KZT": 37,
-        "KWD": 38,
-        "QAR": 39,
-        "CRC": 40,
-        "UYU": 41
-    };
-
-    let numberToTypeMap = {
-        5: "RUB",
-        3: "EUR",
-        2: "GBP",
-        6: "PLN",
-        7: "BRL",
-        8: "JPY",
-        9: "NOK",
-        10: "IDR",
-        11: "MYR",
-        12: "PHP",
-        13: "SGD",
-        14: "THB",
-        15: "VND",
-        16: "KRW",
-        17: "TRY",
-        18: "UAH",
-        19: "MXN",
-        20: "CAD",
-        21: "AUD",
-        22: "NZD",
-        23: "CNY",
-        24: "INR",
-        25: "CLP",
-        26: "PEN",
-        27: "COP",
-        28: "ZAR",
-        29: "HKD",
-        30: "TWD",
-        31: "SAR",
-        32: "AED",
-        34: "ARS",
-        35: "ILS",
-        37: "KZT",
-        38: "KWD",
-        39: "QAR",
-        40: "CRC",
-        41: "UYU"
-    };
+    self.storeCurrency = null;
 
     let _rates = {};
     let _promise = null;
 
+    function _getRates() {
+        let target = [self.storeCurrency,];
+        if (self.customCurrency !== self.storeCurrency) {
+            target.push(self.customCurrency);
+        }
+        // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
+        target.sort();
+        return Background.action('rates', { 'to': target.join(","), })
+            .then(rates => _rates = rates);
+    }
+
+    function getCurrencyFromDom() {
+        let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
+        if (currencyNode && currencyNode.hasAttribute("content")) {
+            return currencyNode.getAttribute("content");
+        }
+        return null;
+    }
+
+    function getCurrencyFromWallet() {
+        return new Promise((resolve, reject) => {
+            ExtensionLayer.runInPageContext(
+                `function(){
+                    window.postMessage({
+                        type: "es_walletcurrency",
+                        wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
+                    }, "*");
+                }`);
+
+            function listener(e) {
+                if (e.source !== window) { return; }
+                if (!e.data.type || e.data.type !== "es_walletcurrency") { return; }
+
+                if (e.data.wallet_currency !== null) {
+                    resolve(Currency.currencyNumberToType(e.data.wallet_currency));
+                } else {
+                    reject();
+                }
+
+                window.removeEventListener("message", listener, false);
+            }
+
+            window.addEventListener("message", listener, false);
+        });
+    }
+
+    async function getStoreCurrency() {
+        let currency = getCurrencyFromDom();
+
+        if (!currency) {
+            try {
+                currency = await getCurrencyFromWallet();
+            } catch (error) {
+                // no action
+            }
+        }
+
+        if (!currency) {
+            try {
+                currency = await Background.action('currency');
+            } catch(error) {
+                console.error("Couldn't load currency" + error);
+            }
+        }
+
+        if (!currency) {
+            currency = "USD"; // fallback
+        }
+
+        return currency;
+    }
+
     // load user currency
-    self.promise = function() {
+    self.promise = async function() {
         if (_promise) { return _promise; }
 
-        _promise = new Promise((resolveTop, rejectTop) => {
-            (new Promise((resolveStoreCurrency, rejectStoreCurrency) => {
-                
-                let currencyCache = LocalData.get("user_currency", {});
-                if (currencyCache && currencyCache.currencyType && !TimeHelper.isExpired(currencyCache.updated, 3600)) {
-                    resolveStoreCurrency(currencyCache.currencyType);
-                } else {
+        self.storeCurrency = await getStoreCurrency();
 
-                    // Get currency from DOM
-                    let domCurrency = null;
-                    let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
-                    if (currencyNode && currencyNode.hasAttribute("content")) {
-                        domCurrency = currencyNode.getAttribute("content");
-                    }
+        let currencySetting = SyncedStorage.get("override_price");
+        if (currencySetting !== "auto") {
+            self.customCurrency = currencySetting;
+        } else {
+            self.customCurrency = self.storeCurrency;
+        }
 
-                    if (domCurrency === null) {
+        return _promise = CurrencyRegistry
+            .then(_getRates);
+    };
 
-                        // Get currency from addfunds page
-                        RequestData.getHttp("//store.steampowered.com/steamaccount/addfunds", { withCredentials: true })
-                        .then(
-                            response => {
-                                let dummyHtml = document.createElement("html");
-                                dummyHtml.innerHTML = response;
-
-                                resolveStoreCurrency(dummyHtml.querySelector("input[name=currency]").value);
-                            },
-                            () => {
-                                // Get currency from app page
-                                RequestData
-                                .getHttp("//store.steampowered.com/app/220", { withCredentials: true })
-                                .then(response => {
-                                    let dummyHtml = document.createElement("html");
-                                    dummyHtml.innerHTML = response;
-
-                                    let currency = dummyHtml.querySelector("meta[itemprop=priceCurrency]").getAttribute("content");
-                                    if (!currency) {
-                                        // Get currency from page context
-                                        ExtensionLayer.runInPageContext(`function(){
-                                            window.postMessage({
-                                                type: "es_sendmessage",
-                                                wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
-                                            }, "*");
-                                        }`);
-
-                                        window.addEventListener("message", function(e) {
-                                            if (e.source !== window) { return; }
-                                            if (!e.data.type) { return; }
-                            
-                                            if (e.data.type === "es_sendmessage") {
-                                                if (e.data.wallet_currency !== null) {
-                                                    resolveStoreCurrency(e.data.wallet_currency)
-                                                } else {
-                                                    // If everything failed, the promise is rejected
-                                                    rejectStoreCurrency()
-                                                }
-                                            }
-                                        }, false);
-
-                                    } else {
-                                        resolveStoreCurrency(currency);
-                                    }                                            
-                                });
-                            }
-                        );
-                        
-                    } else {
-                        resolveStoreCurrency(domCurrency);
-                    }
-                    
-                }
-
-            })).then(storeCurrency => {
-
-                self.storeCurrency = storeCurrency;
-                LocalData.set("user_currency", {currencyType: self.storeCurrency, updated: TimeHelper.timestamp()});
-
-                let currencySetting = SyncedStorage.get("override_price");
-                if (currencySetting !== "auto") {
-                    self.customCurrency = currencySetting;
-
-                    // We need the conversion rates for both the user preferred currency and the store currency
-                    Promise.all([RequestData.getApi("v01/rates", { to: self.customCurrency }),
-                    RequestData.getApi("v01/rates", { to: self.storeCurrency })])
-                        .then(results => {
-                            _rates = results[0].data;
-                            Object.entries(results[1].data).forEach(([key, value]) => {
-                                _rates[key][self.storeCurrency] = value[self.storeCurrency];
-                            });
-                            resolveTop();
-                        }, rejectTop);
-                } else {
-                    self.customCurrency = self.storeCurrency;
-
-                    RequestData.getApi("v01/rates", { to: self.storeCurrency })
-                        .then(result => {
-                            _rates = result.data;
-                            resolveTop();
-                        }, rejectTop);
-                }
-
-            }, () => {
-                console.log("Failed to retrieve store currency, falling back to " + self.storeCurrency + '!');
-                self.customCurrency = self.storeCurrency;
-
-                RequestData.getApi("v01/rates", { to: self.storeCurrency })
-                    .then(result => {
-                        _rates = result.data;
-                        resolveTop();
-                    }, rejectTop);
-            });
-        });
-
-        return _promise;
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getRate = function(from, to) {
@@ -1041,132 +977,66 @@ let Currency = (function() {
     };
 
     self.currencySymbolToType = function(symbol) {
-        return currencySymbols[symbol] || "USD";
+        return CurrencyRegistry.fromSymbol(symbol).abbr;
     };
 
     self.currencyTypeToNumber = function(type) {
-        return typeToNumberMap[type] || 1;
+        return CurrencyRegistry.fromType(type).id;
     };
 
     self.currencyNumberToType = function(number) {
-        return numberToTypeMap[number] || "USD";
+        return CurrencyRegistry.fromNumber(number).abbr;
     };
 
     return self;
 })();
 
 let Price = (function() {
-
-    let format = {
-        "BRL": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R$ ", thousand: ".", decimal: ",", right: false },
-        "EUR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "€", thousand: " ", decimal: ",", right: true },
-        "GBP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "£", thousand: ",", decimal: ".", right: false },
-        "RUB": { places: 2, hidePlacesWhenZero: true,  symbolFormat: " pуб.", thousand: "", decimal: ",", right: true },
-        "JPY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
-        "CNY": { places: 0, hidePlacesWhenZero: false, symbolFormat: "¥ ", thousand: ",", decimal: ".", right: false },
-        "MYR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "RM", thousand: ",", decimal: ".", right: false },
-        "NOK": { places: 2, hidePlacesWhenZero: false, symbolFormat: " kr", thousand: ".", decimal: ",", right: true },
-        "IDR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "Rp ", thousand: " ", decimal: ".", right: false },
-        "PHP": { places: 2, hidePlacesWhenZero: false, symbolFormat: "P", thousand: ",", decimal: ".", right: false },
-        "SGD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S$", thousand: ",", decimal: ".", right: false },
-        "THB": { places: 2, hidePlacesWhenZero: false, symbolFormat: "฿", thousand: ",", decimal: ".", right: false },
-        "VND": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₫", thousand: ",", decimal: ".", right: false },
-        "KRW": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₩", thousand: ",", decimal: ".", right: false },
-        "TRY": { places: 2, hidePlacesWhenZero: false, symbolFormat: " TL", thousand: "", decimal: ",", right: true },
-        "UAH": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₴", thousand: "", decimal: ",", right: true },
-        "MXN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "Mex$ ", thousand: ",", decimal: ".", right: false },
-        "CAD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "CDN$ ", thousand: ",", decimal: ".", right: false },
-        "AUD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "A$ ", thousand: ",", decimal: ".", right: false },
-        "NZD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "NZ$ ", thousand: ",", decimal: ".", right: false },
-        "HKD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "HK$ ", thousand: ",", decimal: ".", right: false },
-        "TWD": { places: 0, hidePlacesWhenZero: false, symbolFormat: "NT$ ", thousand: ",", decimal: ".", right: false },
-        "INR": { places: 0, hidePlacesWhenZero: false, symbolFormat: "₹ ", thousand: ",", decimal: ".", right: false },
-        "SAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: " SR", thousand: ",", decimal: ".", right: true },
-        "ZAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: "R ", thousand: " ", decimal: ".", right: false },
-        "AED": { places: 2, hidePlacesWhenZero: false, symbolFormat: " DH", thousand: ",", decimal: ".", right: true },
-        "CHF": { places: 2, hidePlacesWhenZero: false, symbolFormat: "CHF ", thousand: "'", decimal: ".", right: false },
-        "CLP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "CLP$ ", thousand: ".", decimal: ",", right: false },
-        "PEN": { places: 2, hidePlacesWhenZero: false, symbolFormat: "S/.", thousand: ",", decimal: ".", right: false },
-        "COP": { places: 0, hidePlacesWhenZero: true, symbolFormat: "COL$ ", thousand: ".", decimal: ",", right: false },
-        "ARS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "ARS$ ", thousand: ".", decimal: ",", right: false },
-        "CRC": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₡", thousand: ".", decimal: ",", right: false },
-        "ILS": { places: 2, hidePlacesWhenZero: false, symbolFormat: "₪", thousand: ",", decimal: ".", right: false },
-        "KZT": { places: 2, hidePlacesWhenZero: true, symbolFormat: "₸ ", thousand: " ", decimal: ".", right: false },
-        "KWD": { places: 3, hidePlacesWhenZero: false, symbolFormat: " KD", thousand: ",", decimal: ".", right: true },
-        "PLN": { places: 2, hidePlacesWhenZero: false, symbolFormat: " zł", thousand: " ", decimal: ",", right: true },
-        "QAR": { places: 2, hidePlacesWhenZero: false, symbolFormat: " QR", thousand: ",", decimal: ".", right: true },
-        "UYU": { places: 0, hidePlacesWhenZero: true, symbolFormat: "$U", thousand: ",", decimal: ".", right: false },
-        "USD": { places: 2, hidePlacesWhenZero: false, symbolFormat: "$", thousand: ",", decimal: ".", right: false }
-    };
-
-    function Price(value, currency, convert) {
+    function Price(value, currency) {
         this.value = value || 0;
         this.currency = currency || Currency.customCurrency;
-
-        let chosenCurrency;
-
-        if (typeof convert === "string") {
-            chosenCurrency = convert;
-        } else if (typeof convert === "boolean" && convert) {
-            chosenCurrency = SyncedStorage.get("override_price");
-        } else { return; }
-
-        if (chosenCurrency === "auto") { chosenCurrency = Currency.customCurrency; }
-        let rate = Currency.getRate(this.currency, chosenCurrency);
-
-        if (rate) {
-            this.value *= rate;
-            this.currency = chosenCurrency;
-        }
-
+        Object.freeze(this);
     }
+
+    Price.prototype.formattedValue = function() {
+        return CurrencyRegistry.fromType(this.currency).stringify(this.value, false);
+    };
 
     Price.prototype.toString = function() {
-        let info = format[this.currency];
-        if (info.hidePlacesWhenZero && (this.value % 1 === 0)) {
-            info.places = 0;
-        }
-
-        let negative = this.value < 0 ? "-" : "";
-        let i = Math.trunc(Math.abs(this.value)).toFixed(0);
-        let j = i.length > 3 ? i.length % 3 : 0;
-
-        let formatted = negative;
-        if (j > 0) { formatted += i.substr(0, j) + info.thousand; }
-        formatted += i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + info.thousand);
-        formatted += (info.places ? info.decimal + Math.abs(this.value - parseInt(i)).toFixed(info.places).slice(2) : "");
-
-        return info.right
-            ? formatted + info.symbolFormat
-            : info.symbolFormat + formatted
+        return CurrencyRegistry.fromType(this.currency).stringify(this.value);
     };
 
-    Price.parseFromString = function(str, convert) {
-        let currencySymbol = Currency.getCurrencySymbolFromString(str);
-        let currencyType = Currency.currencySymbolToType(currencySymbol);
-
-        // let currencyNumber = currencyTypeToNumber(currencyType);
-        let info = format[currencyType];
-
-        // remove thousand sep, replace decimal with dot, remove non-numeric
-        str = str
-            .replace(info.thousand, '')
-            .replace(info.decimal, '.')
-            .replace(/[^\d\.]/g, '')
-            .trim();
-
-        let value = parseFloat(str);
-
-        if (isNaN(value)) {
-            return null;
+    // Not currently in use
+    // totalValue = totalValue.add(somePrice)
+    Price.prototype.add = function(otherPrice) {
+        if (otherPrice.currency !== this.currency) {
+            otherPrice = otherPrice.inCurrency(this.currency);
         }
-
-        return new Price(value, currencyType, convert);
+        return new Price(this.value + otherPrice.value, this.currency);
     };
 
-    Price.getPriceInfo = function(currencyCode) {
-        return format[currencyCode];
-    }
+    Price.prototype.inCurrency = function(desiredCurrency) {
+        if (this.currency === desiredCurrency) {
+            return new Price(this.value, this.currency);
+        }
+        let rate = Currency.getRate(this.currency, desiredCurrency);
+        if (!rate) {
+            throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
+        }
+        return new Price(this.value * rate, desiredCurrency);
+    };
+
+    Price.parseFromString = function(str, desiredCurrency) {
+        let currency = CurrencyRegistry.fromString(str);
+        let value = currency.valueOf(str);
+        if (value !== null) {
+            value = new Price(value, currency.abbr);
+            if (currency.abbr !== desiredCurrency) {
+                value = value.inCurrency(desiredCurrency);
+            }
+        }
+        return value;
+    };
 
     return Price;
 })();
@@ -1414,6 +1284,8 @@ let EnhancedSteam = (function() {
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
         DynamicStore.clear();
+        Background.action('dynamicstore.clear');
+        Background.action('api.cache.clear');
     };
 
     self.bindLogout = function(){
@@ -1515,7 +1387,7 @@ let EnhancedSteam = (function() {
             if (!result.rgOwnedApps) { return; }
             let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-            RequestData.getJson("//store.steampowered.com/api/appdetails/?appids="+appid).then(response => {
+            Background.action('appdetails', { 'appids': appid, }).then(response => {
                 if (!response || !response[appid] || !response[appid].success) { return; }
                 let data = response[appid].data;
 
@@ -1707,46 +1579,8 @@ let EarlyAccess = (function(){
 
     let self = {};
 
-    let cache = {};
+    let cache = new Set();
     let imageUrl;
-
-    let _promise = null;
-
-    function promise() {
-        if (_promise) { return _promise; }
-
-        let imageName = "img/overlay/early_access_banner_english.png";
-        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
-        }
-        imageUrl = ExtensionLayer.getLocalUrl(imageName);
-
-        _promise = new Promise(function(resolve, reject) {
-            cache = LocalData.get("ea_appids");
-
-            if (cache) {
-                resolve();
-                return;
-            }
-
-            let updateTime = LocalData.get("ea_appids_time");
-            if (!TimeHelper.isExpired(updateTime, 3600)) {
-                return;
-            }
-
-            RequestData.getApi("v01/earlyaccess").then(data => {
-                if (!data.result || data.result !== "success") {
-                    reject();
-                }
-
-                cache = data.data;
-                LocalData.set("ea_appids", cache);
-                LocalData.set("ea_appids_time", TimeHelper.timestamp());
-                resolve()
-            }, reject);
-        });
-        return _promise;
-    }
 
     function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
@@ -1762,7 +1596,7 @@ let EarlyAccess = (function(){
                 let imgHeader = node.querySelector("img" + selectorModifier);
                 let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && cache.hasOwnProperty(appid)) {
+                if (appid && cache.has(appid)) {
                     node.classList.add("es_early_access");
 
                     let container = document.createElement("span");
@@ -1859,19 +1693,25 @@ let EarlyAccess = (function(){
         }
     }
 
-    self.showEarlyAccess = function() {
+    self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        promise().then(() => {
-            switch (window.location.host) {
-                case "store.steampowered.com":
-                    handleStore();
-                    break;
-                case "steamcommunity.com":
-                    handleCommunity();
-                    break;
-            }
-        });
+        cache = new Set(await Background.action('early_access_appids'));
+
+        let imageName = "img/overlay/early_access_banner_english.png";
+        if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
+        }
+        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+    
+        switch (window.location.host) {
+            case "store.steampowered.com":
+                handleStore();
+                break;
+            case "steamcommunity.com":
+                handleCommunity();
+                break;
+        }
     };
 
     return self;
@@ -1882,156 +1722,61 @@ let Inventory = (function(){
 
     let self = {};
 
-    let gifts = [];
-    let guestpasses = [];
+    let gifts = new Set();
+    let guestpasses = new Set();
     let coupons = {};
-
-    // Context ID 1 is gifts and guest passes
-    function handleInventoryContext1(data) {
-        if (!data || !data.success) return;
-
-        LocalData.set("inventory_1", data);
-
-        for(let [key, obj] of Object.entries(data.rgDescriptions)) {
-            let isPackage = false;
-            if (obj.descriptions) {
-                for (let desc of obj.descriptions) {
-                    if (desc.type === "html") {
-                        let appids = GameId.getAppids(desc.value);
-                        // Gift package with multiple apps
-                        isPackage = true;
-                        for (let appid of appids) {
-                            if (!appid) { continue; }
-                            if (obj.type === "Gift") {
-                                gifts.push(appid);
-                            } else {
-                                guestpasses.push(appid);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // Single app
-            if (!isPackage && obj.actions) {
-                let appid = GameId.getAppid(obj.actions[0].link);
-                if (appid) {
-                    if (obj.type === "Gift") {
-                        gifts.push(appid);
-                    } else {
-                        guestpasses.push(appid);
-                    }
-                }
-            }
-
-        }
-    }
-
-    // Community items?
-    function handleInventoryContext6(data) {
-        if (!data || !data.success) { return; }
-        LocalData.set("inventory_6", data);
-    }
-
-    // Coupons
-    function handleInventoryContext3(data) {
-        if (!data || !data.success) { return; }
-        LocalData.set("inventory_3", data);
-
-        for(let [id, obj] of Object.entries(data.rgDescriptions)) {
-            if (!obj.type || obj.type !== "Coupon") {
-                continue;
-            }
-            if (!obj.actions) {
-                continue;
-            }
-
-            let couponData = {
-                image_url: obj.icon_url,
-                title: obj.name,
-                discount: obj.name.match(/([1-9][0-9])%/)[1],
-                id: id
-            };
-
-            for (let i = 0; i < obj.descriptions.length; i++) {
-                if (obj.descriptions[i].value.startsWith("Can't be applied with other discounts.")) {
-                    Object.assign(couponData, {
-                        discount_note: obj.descriptions[i].value,
-                        discount_note_id: i,
-                        discount_doesnt_stack: true
-                    });
-                } else if (obj.descriptions[i].value.startsWith("(Valid")) {
-                    Object.assign(couponData, {
-                        valid_id: i,
-                        valid: obj.descriptions[i].value
-                    });
-                }
-            }
-
-            for (let j = 0; j < obj.actions.length; j++) {
-                let link = obj.actions[j].link;
-                let packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(link)[1];
-
-                if (!coupons[packageid] || coupons[packageid].discount < couponData.discount) {
-                    coupons[packageid] = couponData;
-                }
-            }
-        }
-    }
-
+    let inv6set = new Set();
+    let coupon_appids = new Map();
+    
     let _promise = null;
-    self.promise = function() {
+    self.promise = async function() {
         if (_promise) { return _promise; }
-        _promise = new Promise(function(resolve, reject) {
-            if (!User.isSignedIn) {
-                resolve();
-                return;
+
+        if (!User.isSignedIn) {
+            _promise = Promise.resolve();
+            return _promise;
+        }
+
+        function handleCoupons(data) {
+            coupons = data;
+            for (let [subid, details] of Object.entries(coupons)) {
+                for (let { 'id': appid, } of details.appids) {
+                    coupon_appids.set(appid, parseInt(subid, 10));
+                }
             }
-
-            let lastUpdate = LocalData.get("inventory_update");
-            let inv1 = LocalData.get("inventory_1");
-            let inv3 = LocalData.get("inventory_3");
-            let inv6 = LocalData.get("inventory_6");
-
-            if (TimeHelper.isExpired(lastUpdate, 3600) || !inv1 || !inv3) {
-                LocalData.set("inventory_update", Date.now());
-
-                Promise.all([
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/1/?l=en", { withCredentials: true }).then(handleInventoryContext1),
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/3/?l=en", { withCredentials: true }).then(handleInventoryContext3),
-                    RequestData.getJson(User.profileUrl + "inventory/json/753/6/?l=en", { withCredentials: true }).then(handleInventoryContext6),
-                ]).then(resolve, reject);
-            }
-            else {
-                // No need to load anything, its all in localStorage.
-                handleInventoryContext1(inv1);
-                handleInventoryContext3(inv3);
-                handleInventoryContext6(inv6);
-
-                resolve();
-            }
-        });
+        }
+        _promise = Promise.all([
+            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
+            Background.action('inventory.coupons').then(handleCoupons),
+            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
+            ]);
         return _promise;
+    };
+
+    self.then = function(onDone, onCatch) {
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getCoupon = function(subid) {
         return coupons && coupons[subid];
     };
 
-    let inv6set = null;
+    self.getCouponByAppId = function(appid) {
+        if (!coupon_appids.has(appid))
+            return false;
+        let subid = coupon_appids.get(appid);
+        return self.getCoupon(subid);
+    };
+
+    self.hasGift = function(subid) {
+        return gifts.has(subid);
+    };
+
+    self.hasGuestPass = function(subid) {
+        return guestpasses.has(subid);
+    };
 
     self.hasInInventory6 = function(marketHash) {
-        if (!inv6set) {
-            inv6set = new Set();
-            let inv6 = LocalData.get("inventory_6");
-            if (!inv6 || !inv6['rgDescriptions']) { return false; }
-
-            for (let [key,item] of Object.entries(inv6.rgDescriptions)) {
-                inv6set.add(item['market_hash_name']);
-            }
-        }
-
         return inv6set.has(marketHash);
     };
 
@@ -2044,34 +1789,6 @@ let Highlights = (function(){
 
     let highlightCssLoaded = false;
     let tagCssLoaded = false;
-
-    function classChecker(node, classList) {
-        for (let i=0, len=classList.length; i < len; i++) {
-            if (node.classList.contains(classList[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function hideNode(node) {
-        let cls = node.classList;
-
-        if (cls.contains("info") || cls.contains("dailydeal") || cls.contains("spotlight_content") || cls.contains("browse_tag_game_cap")) {
-            node = node.parentNode;
-        }
-
-        if (SyncedStorage.get("hide_owned")
-            && classChecker(node, ["search_result_row", "item", "cluster_capsule", "browse_tag_game"])) {
-            node.style.display = "none";
-        }
-
-        // Hide DLC for unowned items
-        if (SyncedStorage.get("hide_dlcunownedgames")
-            && classChecker(node, ["search_result_row", "item", "game_area_dlc_row", "cluster_capsule"])) {
-                node.style.display = "none";
-        }
-    }
 
     function addTag(node, tag) {
         let tagShort = SyncedStorage.get("tag_short");
@@ -2222,7 +1939,7 @@ let Highlights = (function(){
 
         r = node.querySelector(".ds_flagged");
         if (r) {
-            r.classList.remove("ds_flagge");
+            r.classList.remove("ds_flagged");
         }
     }
 
@@ -2243,30 +1960,13 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_owned")) {
-            hideNode(node);
-            return;
-        }
-
         highlightItem(node, "owned");
     };
 
     self.highlightWishlist = function(node) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_wishlist")) {
-            hideNode(node);
-            return;
-        }
-
         highlightItem(node, "wishlist");
-    };
-
-    self.highlightCart = function(node) {
-        if (!SyncedStorage.get("hide_cart")) { return; }
-
-        node.classList.add("es_highlight_checked", "es_highlighted", "es_highlighted_hidden");
-        hideNode(node);
     };
 
     self.highlightCoupon = function(node) {
@@ -2309,7 +2009,9 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
-    self.startHighlightsAndTags = function(parent) {
+    self.startHighlightsAndTags = async function(parent) {
+        await Inventory;
+        
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
             "div.tab_row",					// Storefront rows
@@ -2364,10 +2066,6 @@ let Highlights = (function(){
                         self.highlightWishlist(nodeToHighlight);
                     }
 
-                    if (node.querySelector(".ds_incart_flag")) {
-                        self.highlightCart(nodeToHighlight);
-                    }
-
                     if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                         self.highlightNonDiscounts(nodeToHighlight);
                     }
@@ -2375,13 +2073,13 @@ let Highlights = (function(){
                     let aNode = node.querySelector("a");
                     let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
                     if (appid) {
-                        if (LocalData.get(appid + "guestpass")) {
+                        if (Inventory.hasGuestPass(appid)) {
                             self.highlightInvGuestpass(node);
                         }
-                        if (LocalData.get("couponData_" + appid)) {
+                        if (Inventory.getCouponByAppId(appid)) {
                             self.highlightCoupon(node);
                         }
-                        if (LocalData.get(appid + "gift")) {
+                        if (Inventory.hasGift(appid)) {
                             self.highlightInvGift(node);
                         }
                     }
@@ -2431,35 +2129,15 @@ let DynamicStore = (function(){
         get() { return new Set(_wishlisted); },
     });
 
-    /*
-     * _fetch() may resolve with an undefined value
-     * if Steam can't fulfill the API call
-     */
     async function _fetch() {
         if (!User.isSignedIn) { 
             self.clear();
             return _data;
         }
-    
-        let userdata = LocalData.get("dynamicstore");
-        let userdataUpdate = LocalData.get("dynamicstore_update", 0);
-
-        if (!userdata || TimeHelper.isExpired(userdataUpdate, 15*60)) {
-            // data is not cached, fetch
-            userdata = await RequestData.getJson("//store.steampowered.com/dynamicstore/userdata/", { withCredentials: true });
-            if (!userdata || !userdata.rgOwnedApps) { return; }
-            LocalData.set("dynamicstore", userdata);
-            LocalData.set("dynamicstore_update", TimeHelper.timestamp());
-            // userdata keys are:
-            // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
-            // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
-            // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
-            // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-        }
-        _data = userdata;
+        _data = await Background.action('dynamicstore');
         _owned = new Set(_data.rgOwnedApps);
         _wishlisted = new Set(_data.rgWishlist);
-        return userdata;
+        return _data;
     }
 
     self.then = function(onDone, onCatch) {
@@ -2536,15 +2214,21 @@ let Prices = (function(){
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency'], Currency.customCurrency);
+                lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
                 let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
-                lowest = new Price(info['price']['price'], meta['currency'], Currency.customCurrency);
+                lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             }
 
+            let prices = lowest.toString();
+            if (Currency.customCurrency != Currency.storeCurrency) {
+                let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
+                prices += ` (${lowest_alt.toString()})`;
+            }
+            
             let lowestStr = Localization.str.lowest_price_format
-                .replace("__price__", lowest.toString())
+                .replace("__price__", prices)
                 .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`)
 
             line1 = `${Localization.str.lowest_price}: 
@@ -2554,11 +2238,17 @@ let Prices = (function(){
 
         // "Historical Low"
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency'], Currency.customCurrency);
+            let historical = new Price(info['lowest']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
+            let prices = historical.toString();
+            if (Currency.customCurrency != Currency.storeCurrency) {
+                let historical_alt = historical.inCurrency(Currency.storeCurrency);
+                prices += ` (${historical_alt.toString()})`;
+            }
+
             let historicalStr = Localization.str.historical_low_format
-                .replace("__price__", historical.toString())
+                .replace("__price__", prices)
                 .replace("__store__", BrowserHelper.escapeHTML(info['lowest']['store']))
                 .replace("__date__", recorded.toLocaleDateString());
 
@@ -2641,7 +2331,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency'], Currency.customCurrency).toString();
+                    let tierPrice = new Price(tier.price, meta['currency']).inCurrency(Currency.customCurrency).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2673,7 +2363,7 @@ let Prices = (function(){
             purchase += '<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (new Price(bundlePrice, meta['currency'], Currency.customCurrency)).toString();
+                    purchase += new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency).toString();
                 purchase += '</div>';
             }
 
@@ -2691,15 +2381,11 @@ let Prices = (function(){
         let apiParams = this._getApiParams();
 
         if (!apiParams) { return; }
-        RequestData.getApi("v01/prices", apiParams).then(response => {
-            if (!response || response.result !== "success") { return; }
 
-            for (let gameid in response.data.data) {
-                if (!response.data.data.hasOwnProperty(gameid)) { continue; }
-
-                let meta = response.data['.meta'];
-                let info = response.data.data[gameid];
-
+        Background.action('prices', apiParams).then(response => {
+            let meta = response['.meta'];
+            
+            for (let [gameid, info] of Object.entries(response.data)) {
                 that._processPrices(gameid, meta, info);
                 that._processBundles(gameid, meta, info);
             }

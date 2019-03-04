@@ -28,52 +28,20 @@ let ProfileData = (function(){
 
     let self = {};
 
-    function getLocalDataKey(steamId) {
-        return "profile_" + steamId;
-    }
-
     let _data = {};
     let _promise = null;
-    self.promise = function() {
-        if (_promise) { return _promise; }
-
-        _promise = new Promise(function(resolve, reject){
+    self.promise = async function() {
+        if (!_promise) {
             let steamId = SteamId.getSteamId();
-            if (!steamId) { reject(); }
 
-            let localDataKey = getLocalDataKey(steamId);
-            _data = LocalData.get(localDataKey);
-
-            /* FIXME
-            if (data && data.timestamp && !TimeHelper.isExpired(data.timestamp, 24*60*60)) {
-                resolve(data.data);
-                return;
-            }*/
-
-            RequestData.getApi("v01/profile/profile", {profile: steamId}).then(response => {
-                if (response && response.result && response.result === "success") {
-
-                    LocalData.set(localDataKey, {
-                        timestamp: TimeHelper.timestamp(),
-                        data: response.data
-                    });
-
-                    _data = response.data;
-                    resolve(response.data);
-                } else {
-                    reject();
-                }
-            }, reject);
-        });
-
+            _promise = Background.action('profile', { 'profile': steamId, } )
+                .then(response => { _data = response; return _data; });
+        }
         return _promise;
     };
 
     self.then = function(onDone, onCatch) {
-        if (!_promise) {
-            _promise = self.promise();
-        }
-        return _promise.then(onDone, onCatch);
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getBadges = function() {
@@ -113,11 +81,11 @@ let ProfileData = (function(){
         return _data.bg && _data.bg.appid ? parseInt(_data.bg.appid) : null;
     };
 
-    self.clearOwn = function() {
+    self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        LocalData.del(getLocalDataKey(User.steamId));
+        await Background.action('profile.clear', { 'profile': User.steamId, });
         _promise = null;
-        self.promise();
+        return self.promise();
     };
 
     return self;
@@ -266,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await DynamicStore;
+        await Promise.all([DynamicStore, Inventory,]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -278,14 +246,13 @@ let ProfileActivityPageClass = (function(){
                 let appid = GameId.getAppid(link.href);
                 if (!appid) { continue; }
 
-                // TODO (tomas.fedor) refactor following checks to a class, this way we'll easily forget how exactly do we store them or where
-                if (LocalData.get(appid + "guestpass")) {
+                if (Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
                 }
-                if (LocalData.get("couponData_" + appid)) {
+                if (Inventory.getCouponByAppId(appid)) {
                     Highlights.highlightCoupon(link);
                 }
-                if (LocalData.get(appid + "gif")) {
+                if (Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
                 }
 
@@ -755,9 +722,7 @@ let ProfileHomePageClass = (function(){
 
         let twitchId = m[1].replace(/\//g, "");
 
-        let response = await RequestData.getApi("v01/twitch/stream", {channel: twitchId});
-        if (!response || response.result !== "success") { return; }
-        let data = response.data;
+        let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
 
         let channelUsername = data.user_name;
         let channelUrl = search.href;
@@ -1010,15 +975,12 @@ let GamesPageClass = (function(){
 
 let ProfileEditPageClass = (function(){
 
-    function ProfileEditPageClass() {
-        ProfileData.clearOwn();
-
+    async function ProfileEditPageClass() {
+        await ProfileData.clearOwn();
 
         if (window.location.pathname.indexOf("/settings") < 0) {
-            ProfileData.then(() => {
-                this.addBackgroundSelection();
-                this.addStyleSelection();
-            });
+            this.addBackgroundSelection();
+            this.addStyleSelection();
         }
     }
 
@@ -1063,7 +1025,7 @@ let ProfileEditPageClass = (function(){
 
         showBgFormLoading();
 
-        let result = await RequestData.getApi("v01/profile/background/background", {
+        let result = await Background.action("profile.background", {
             appid: appid,
             profile: SteamId.getSteamId()
         });
@@ -1071,7 +1033,7 @@ let ProfileEditPageClass = (function(){
         let selectedImg = ProfileData.getBgImg();
 
         let html = "";
-        for (let value of result.data) {
+        for (let value of result) {
             let img = BrowserHelper.escapeHTML(value[0].toString());
             let name = BrowserHelper.escapeHTML(value[1].toString());
 
@@ -1098,7 +1060,7 @@ let ProfileEditPageClass = (function(){
             = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
     }
 
-    ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
+    ProfileEditPageClass.addBackgroundSelection = async function() {
         if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
@@ -1129,13 +1091,12 @@ let ProfileEditPageClass = (function(){
         document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-        let response = await RequestData.getApi("v01/profile/background/games");
-        if (!response || !response.data) { return; }
+        let response = await Background.action('profile.background.games');
 
         let gameSelectNode = document.querySelector("#es_bg_game");
         let imgSelectNode = document.querySelector("#es_bg_img");
 
-        let gameList = getGameSelectOptions(response.data);
+        let gameList = getGameSelectOptions(response);
         gameSelectNode.innerHTML = gameList[1];
         gameSelectNode.style.display = "block";
 
@@ -1151,14 +1112,14 @@ let ProfileEditPageClass = (function(){
         gameSelectNode.addEventListener("change", onGameSelected);
         imgSelectNode.addEventListener("change", onImgSelected);
 
-        document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
-            ProfileData.clearOwn();
+        document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
         });
 
-        document.querySelector("#es_background_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedAppid = encodeURIComponent(gameSelectNode.value);
             let selectedImg = encodeURIComponent(imgSelectNode.value);
@@ -1166,7 +1127,7 @@ let ProfileEditPageClass = (function(){
         });
     };
 
-    ProfileEditPageClass.prototype.addStyleSelection = function() {
+    ProfileEditPageClass.addStyleSelection = function() {
         let html =
             `<div class='group_content group_summary'>
                 <div class='formRow'>
@@ -1227,16 +1188,16 @@ let ProfileEditPageClass = (function(){
             document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
         });
 
-        document.querySelector("#es_style_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedStyle = encodeURIComponent(styleSelectNode.value);
             window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
         });
 
-        document.querySelector("#es_style_remove_btn").addEventListener("click", function(e) {
-            ProfileData.clearOwn();
+        document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
         });
     };
@@ -1417,7 +1378,7 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await RequestData.getJson("https://store.steampowered.com/api/appdetails/?appids=" + giftAppid + "&filters=price_overview");
+        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
         if (!result[giftAppid] || !result[giftAppid].success) { return; }
         if (!result[giftAppid]['data']['price_overview']) { return; }
 
@@ -1502,7 +1463,7 @@ let InventoryPageClass = (function(){
         if (priceHighValue) {
             let quickSell = document.querySelector("#es_quicksell" + assetId);
             quickSell.dataset.price = priceHighValue;
-            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency), false));
+            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
             quickSell.style.display = "block";
         }
 
@@ -1510,7 +1471,7 @@ let InventoryPageClass = (function(){
         if (priceLowValue) {
             let instantSell = document.querySelector("#es_instantsell" + assetId);
             instantSell.dataset.price = priceLowValue;
-            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency), false));
+            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
             instantSell.style.display = "block";
         }
     }
@@ -1550,23 +1511,24 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff")));
-                    let priceLow = new Price(market.highest_buy_order / 100);
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceLow = market.highest_buy_order / 100;
+                    // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
-                    if (priceHigh.value < 0.03) priceHigh.value = 0.03;
+                    if (priceHigh < 0.03) priceHigh = 0.03;
 
                     // Store prices as data
-                    if (priceHigh.value > priceLow.value) {
-                        thisItem.dataset.priceHigh = priceHigh.value;
+                    if (priceHigh > priceLow) {
+                        thisItem.dataset.priceHigh = priceHigh;
                     }
                     if (market.highest_buy_order) {
-                        thisItem.dataset.priceLow = priceLow.value;
+                        thisItem.dataset.priceLow = priceLow;
                     }
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
                         thisItem.classList.add("es-price-loaded");
-                        updateMarketButtons(assetId, priceHigh.value, priceLow.value, walletCurrency);
+                        updateMarketButtons(assetId, priceHigh, priceLow, walletCurrency);
                     }
 
                     thisItem.classList.remove("es-loading");
@@ -1619,7 +1581,7 @@ let InventoryPageClass = (function(){
         return html;
     }
 
-    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency) {
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrencyNumber) {
         marketActions.style.display = "block";
         let firstDiv = marketActions.querySelector("div");
         if (!firstDiv) {
@@ -1634,15 +1596,17 @@ let InventoryPageClass = (function(){
         if (!thisItem.dataset.lowestPrice) {
             firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + walletCurrency + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+            let overviewPromise = RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`);
 
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
-                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.currencyNumberToType(walletCurrency)});
-                console.log(result);
-                if (result.result === "success") {
-                    thisItem.dataset.cardsPrice = new Price(result.data.average);
+                try {
+                    let walletCurrency = Currency.currencyNumberToType(walletCurrencyNumber);
+                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': walletCurrency, } );
+                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency);
+                } catch (error) {
+                    console.error(error);
                 }
             }
 
@@ -1654,8 +1618,8 @@ let InventoryPageClass = (function(){
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
                     thisItem.dataset.soldVolume = data.volume;
                 }
-            } catch (err) {
-                console.error("Couldn't load price overview from market");
+            } catch (error) {
+                console.error("Couldn't load price overview from market", error);
                 firstDiv.innerHTML = html; // add market link anyway
                 return;
             }
@@ -1894,7 +1858,7 @@ let BadgesPageClass = (function(){
     function BadgesPageClass() {
         this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
         this.hasAllPagesLoaded = false;
-        this.totalWorth = new Price(0);
+        this.totalWorth = 0;
 
         if (CommunityCommon.currentUserIsOwner()) {
             this.updateHead();
@@ -1945,9 +1909,9 @@ let BadgesPageClass = (function(){
             return;
         }
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/averagecardprices", {
+            data = await Background.action("market.averagecardprices", {
                 currency: Currency.storeCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
@@ -1956,12 +1920,6 @@ let BadgesPageClass = (function(){
             console.error("Couldn't retrieve average card prices", exception);
             return;
         }
-
-        if (!response.result || response.result !== "success") {
-            return;
-        }
-
-        let data = response.data;
 
         // regular cards
         for (let item of nodes) {
@@ -1972,7 +1930,7 @@ let BadgesPageClass = (function(){
             let key = isFoil ? "foil" : "regular";
             if (!data[appid] || !data[appid][key]) { continue; }
 
-            let averagePrice = new Price(data[appid][key]['average']);
+            let averagePrice = data[appid][key]['average'];
 
             let cost;
             let progressInfoNode = node.querySelector("div.badge_progress_info");
@@ -1980,7 +1938,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice.value * need)
+                    cost = new Price(averagePrice * need, Currency.storeCurrency);
                 }
             }
 
@@ -1989,10 +1947,10 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice.value);
+                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency);
 
                         if (worth.value > 0) {
-                            this.totalWorth.value += worth.value;
+                            this.totalWorth += worth.value;
 
                             let howToNode = node.querySelector(".how_to_get_card_drops");
                             howToNode.insertAdjacentHTML("afterend",
@@ -2014,7 +1972,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + this.totalWorth;
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency);
     };
 
     async function eachBadgePage(callback) {
@@ -2036,7 +1994,7 @@ let BadgesPageClass = (function(){
                 await callback(dom);
 
             } catch (exception) {
-                console.log("Failed to load " + baseUrl + p + ": " + exception);
+                console.error("Failed to load " + baseUrl + p + ": " + exception);
                 return;
             }
         }
@@ -2098,7 +2056,7 @@ let BadgesPageClass = (function(){
             try {
                 response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
             } catch(exception) {
-                console.log("Failed to load booster eligibility", exception);
+                console.error("Failed to load booster eligibility", exception);
                 return;
             }
 
@@ -2413,21 +2371,19 @@ let GameCardPageClass = (function(){
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
-        let cost = new Price(0);
+        let cost = 0;
         let isFoil = /border=1/i.test(document.URL);
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.storeCurrency});
+            data = await Background.action("market.cardprices", {
+                appid: this.appid,
+                currency: Currency.storeCurrency,
+            });
         } catch(exception) {
             console.error("Failed to load card prices", exception);
             return;
         }
-
-        if (!response || response.result !== "success") {
-            return;
-        }
-        let data = response.data;
 
         let nodes = document.querySelectorAll(".badge_card_set_card");
         for (let node of nodes) {
@@ -2442,10 +2398,10 @@ let GameCardPageClass = (function(){
 
             if (cardData) {
                 let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
-                let cardPrice = new Price(cardData.price);
+                let cardPrice = new Price(cardData.price, Currency.storeCurrency);
 
                 if (node.classList.contains("unowned")) {
-                    cost.value += cardPrice.value;
+                    cost += cardPrice.value;
                 }
 
                 if (marketLink && cardPrice) {
@@ -2454,7 +2410,8 @@ let GameCardPageClass = (function(){
             }
         }
 
-        if (cost.value > 0 && CommunityCommon.currentUserIsOwner()) {
+        if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
+            cost = new Price(cost, Currency.storeCurrency)
             DOMHelper.selectLastNode(document, ".badge_empty_name")
                 .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
 
@@ -2479,11 +2436,9 @@ let GameCardPageClass = (function(){
             text = Localization.str.view_normal_badge;
 
         } else {
-            let url = window.location.origin + window.location.pathname;
-
-            if (urlParameters[0] !== ""){
-                urlParameters.push("border=1");
-                url += "?" + urlParameters.join("&");
+            
+            if (urlParameters[0] === ""){
+                url += "?" + "border=1";
             }
 
             text = Localization.str.view_foil_badge;
@@ -2536,7 +2491,7 @@ let FriendsThatPlayPageClass = (function(){
         if (!SyncedStorage.get("showallfriendsthatown")) return;
         
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
+        let data = await Background.action('appuserdetails', { 'appids': this.appid, });
         if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
             return;
         }
@@ -2807,7 +2762,7 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
             this.highlightMarketItems();
 
             let that = this;
@@ -2845,8 +2800,8 @@ let MarketPageClass = (function(){
     // TODO cache data
     async function loadMarketStats() {
 
-        let purchaseTotal = new Price(0);
-        let saleTotal = new Price(0);
+        let purchaseTotal = 0;
+        let saleTotal = 0;
 
         function updatePrices(dom) {
 
@@ -2865,16 +2820,16 @@ let MarketPageClass = (function(){
                 let priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent);
+                let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
 
                 if (isPurchase) {
-                    purchaseTotal.value += price.value;
+                    purchaseTotal += price.value;
                 } else {
-                    saleTotal.value += price.value;
+                    saleTotal += price.value;
                 }
             }
 
-            let net = new Price(saleTotal.value - purchaseTotal.value);
+            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency, false);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -2882,6 +2837,8 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
+            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency);
+            saleTotal = new Price(saleTotal, Currency.storeCurrency);
             document.querySelector("#es_market_summary").innerHTML =
                 `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
                 <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
@@ -2973,8 +2930,8 @@ let MarketPageClass = (function(){
             let lowestNode = node.querySelector(".market_listing_es_lowest");
             lowestNode.textContent = data['lowest_price'];
 
-            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
-            let lowPrice = Price.parseFromString(data['lowest_price']);
+            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
+            let lowPrice = Price.parseFromString(data['lowest_price'], Currency.storeCurrency);
 
             if (myPrice.value <= lowPrice.value) {
                 lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
@@ -3264,11 +3221,7 @@ let CommunityAppPageClass = (function(){
             e.preventDefault();
             if (e.target.classList.contains("btn_disabled")) { return; }
 
-            let formData = new FormData();
-            formData.append("sessionid", await User.getStoreSessionId());
-            formData.append("appid", that.appid);
-
-            await RequestData.post("https://store.steampowered.com/api/addtowishlist", formData, {withCredentials: true});
+            await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
 
             e.target.classList.add("btn_disabled");
             e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
@@ -3337,93 +3290,88 @@ let GuidesPageClass = (function(){
 })();
 
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(() => {
+    await SyncedStorage.load().catch(err => console.error(err));
+    await Promise.all([Localization, User, Currency]);
 
-                Common.init();
-                SpamCommentHandler.hideSpamComments();
+    Common.init();
+    SpamCommentHandler.hideSpamComments();
 
-                switch (true) {
+    switch (true) {
 
-                    case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
-                        (new ProfileActivityPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+            (new ProfileActivityPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
-                        (new GamesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+            (new GamesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/edit/.test(path):
-                        (new ProfileEditPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/edit/.test(path):
+            (new ProfileEditPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
-                        (new BadgesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
+            (new BadgesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-                        (new GameCardPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+            (new GameCardPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
-                        (new FriendsThatPlayPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
+            (new FriendsThatPlayPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-                        (new FriendsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+            (new FriendsPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
-                        (new InventoryPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+            (new InventoryPageClass());
+            break;
 
-                    case /^\/market\/listings\/.*/.test(path):
-                        (new MarketListingPageClass());
-                        break;
+        case /^\/market\/listings\/.*/.test(path):
+            (new MarketListingPageClass());
+            break;
 
-                    case /^\/market\/.*/.test(path):
-                        (new MarketPageClass());
-                        break;
+        case /^\/market\/.*/.test(path):
+            (new MarketPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
-                        (new ProfileHomePageClass());
-                        break;
+        case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
+            (new ProfileHomePageClass());
+            break;
 
-                    case /^\/app\/[^\/]*\/guides/.test(path):
-                        (new GuidesPageClass());
-                        break;
+        case /^\/app\/[^\/]*\/guides/.test(path):
+            (new GuidesPageClass());
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new CommunityAppPageClass());
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new CommunityAppPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-                        (new StatsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+            (new StatsPageClass());
+            break;
 
-                    case /^\/tradingcards\/boostercreator/.test(path):
-                        let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                            .textContent.trim().replace(/\d/g, "");
+        case /^\/tradingcards\/boostercreator/.test(path):
+            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
+                .textContent.trim().replace(/\d/g, "");
 
-                        ExtensionLayer.runInPageContext("function() { \
-                            $J('#booster_game_selector option').each(function(index) {\
-                                if ($J(this).val()) {\
-                                    $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
-                                }\
-                            });\
-                        }");
-                        break;
-                }
+            ExtensionLayer.runInPageContext("function() { \
+                $J('#booster_game_selector option').each(function(index) {\
+                    if ($J(this).val()) {\
+                        $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
+                    }\
+                });\
+            }");
+            break;
+    }
 
-                EnhancedSteam.hideTrademarkSymbol(true);
-            })
-    )
+    EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
 
