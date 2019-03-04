@@ -787,15 +787,18 @@ let CurrencyRegistry = (function() {
             return (0).toFixed(this.format.decimalPlaces);
         }
         regExp() {
-            let placesRegex;
-            if (this.format.hidePlacesWhenZero || this.format.decimalPlaces === 0) {
-                placesRegex = "";
+            let regex = ["^("];
+            if (this.format.hidePlacesWhenZero) {
+                regex.push("0|[1-9]\\d*(");
             } else {
-                placesRegex =  "\\d{0," + this.format.decimalPlaces + '}';
+                regex.push("\\d*(");
             }
-            let decimalRegex = this.format.decimalSeparator.replace(".", "\\.");
-
-            return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
+            regex.push(this.format.decimalSeparator.replace(".", "\\."));
+            if (this.format.decimalPlaces > 0) {
+                regex.push("\\d{0,", this.format.decimalPlaces, "}");
+            }
+            regex.push(")?)$")
+            return new RegExp(regex.join(""));
         }
     }
 
