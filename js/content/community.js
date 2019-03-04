@@ -1384,14 +1384,14 @@ let InventoryPageClass = (function(){
 
         let overview = result[giftAppid]['data']['price_overview'];
         let discount = overview["discount_percent"];
-        let price = new Price(overview['final'] / 100, overview['currency'], false);
+        let price = new Price(overview['final'] / 100, overview['currency']);
 
         itemActions.style.display = "flex";
         itemActions.style.alignItems = "center";
         itemActions.style.justifyContent = "space-between";
 
         if (discount > 0) {
-            let originalPrice = new Price(overview['initial'] / 100, overview['currency'], false);
+            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
             itemActions.insertAdjacentHTML("beforeend",
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
@@ -1463,7 +1463,7 @@ let InventoryPageClass = (function(){
         if (priceHighValue) {
             let quickSell = document.querySelector("#es_quicksell" + assetId);
             quickSell.dataset.price = priceHighValue;
-            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency), false));
+            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
             quickSell.style.display = "block";
         }
 
@@ -1471,7 +1471,7 @@ let InventoryPageClass = (function(){
         if (priceLowValue) {
             let instantSell = document.querySelector("#es_instantsell" + assetId);
             instantSell.dataset.price = priceLowValue;
-            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency), false));
+            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
             instantSell.style.display = "block";
         }
     }
@@ -1604,7 +1604,7 @@ let InventoryPageClass = (function(){
                 try {
                     let walletCurrency = Currency.currencyNumberToType(walletCurrencyNumber);
                     let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': walletCurrency, } );
-                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency, false);
+                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency);
                 } catch (error) {
                     console.error(error);
                 }
@@ -1938,7 +1938,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice * need, Currency.storeCurrency, false);
+                    cost = new Price(averagePrice * need, Currency.storeCurrency);
                 }
             }
 
@@ -1947,7 +1947,7 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency, false);
+                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency);
 
                         if (worth.value > 0) {
                             this.totalWorth += worth.value;
@@ -1972,7 +1972,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency, false);
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency);
     };
 
     async function eachBadgePage(callback) {
@@ -2398,7 +2398,7 @@ let GameCardPageClass = (function(){
 
             if (cardData) {
                 let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
-                let cardPrice = new Price(cardData.price, Currency.storeCurrency, false);
+                let cardPrice = new Price(cardData.price, Currency.storeCurrency);
 
                 if (node.classList.contains("unowned")) {
                     cost += cardPrice.value;
@@ -2411,7 +2411,7 @@ let GameCardPageClass = (function(){
         }
 
         if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
-            cost = new Price(cost, Currency.storeCurrency, false)
+            cost = new Price(cost, Currency.storeCurrency)
             DOMHelper.selectLastNode(document, ".badge_empty_name")
                 .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
 
@@ -2837,8 +2837,8 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
-            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency, false);
-            saleTotal = new Price(saleTotal, Currency.storeCurrency, false);
+            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency);
+            saleTotal = new Price(saleTotal, Currency.storeCurrency);
             document.querySelector("#es_market_summary").innerHTML =
                 `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
                 <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
