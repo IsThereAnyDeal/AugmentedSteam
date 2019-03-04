@@ -283,8 +283,9 @@ let StorePageClass = (function(){
                     let html = "";
 
                     if (apiPrice) {
-                        let priceUser = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
+                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
+
 
                         let percentageIndicator = "equal";
                         let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
