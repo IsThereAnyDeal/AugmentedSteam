@@ -1511,24 +1511,24 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff")));
-                    let priceLow = new Price(market.highest_buy_order / 100);
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceLow = market.highest_buy_order / 100;
                     // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
-                    if (priceHigh.value < 0.03) priceHigh.value = 0.03;
+                    if (priceHigh < 0.03) priceHigh = 0.03;
 
                     // Store prices as data
-                    if (priceHigh.value > priceLow.value) {
-                        thisItem.dataset.priceHigh = priceHigh.value;
+                    if (priceHigh > priceLow) {
+                        thisItem.dataset.priceHigh = priceHigh;
                     }
                     if (market.highest_buy_order) {
-                        thisItem.dataset.priceLow = priceLow.value;
+                        thisItem.dataset.priceLow = priceLow;
                     }
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
                         thisItem.classList.add("es-price-loaded");
-                        updateMarketButtons(assetId, priceHigh.value, priceLow.value, walletCurrency);
+                        updateMarketButtons(assetId, priceHigh, priceLow, walletCurrency);
                     }
 
                     thisItem.classList.remove("es-loading");
@@ -1858,7 +1858,7 @@ let BadgesPageClass = (function(){
     function BadgesPageClass() {
         this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
         this.hasAllPagesLoaded = false;
-        this.totalWorth = new Price(0, Currency.storeCurrency, false);
+        this.totalWorth = 0;
 
         if (CommunityCommon.currentUserIsOwner()) {
             this.updateHead();
@@ -1930,7 +1930,7 @@ let BadgesPageClass = (function(){
             let key = isFoil ? "foil" : "regular";
             if (!data[appid] || !data[appid][key]) { continue; }
 
-            let averagePrice = new Price(data[appid][key]['average'], Currency.storeCurrency, false);
+            let averagePrice = data[appid][key]['average'];
 
             let cost;
             let progressInfoNode = node.querySelector("div.badge_progress_info");
@@ -1938,7 +1938,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice.value * need, Currency.storeCurrency, false)
+                    cost = new Price(averagePrice * need, Currency.storeCurrency, false);
                 }
             }
 
@@ -1947,10 +1947,10 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice.value, Currency.storeCurrency, false);
+                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency, false);
 
                         if (worth.value > 0) {
-                            this.totalWorth.value += worth.value;
+                            this.totalWorth += worth.value;
 
                             let howToNode = node.querySelector(".how_to_get_card_drops");
                             howToNode.insertAdjacentHTML("afterend",
@@ -1972,7 +1972,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + this.totalWorth;
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency, false);
     };
 
     async function eachBadgePage(callback) {
@@ -2371,7 +2371,7 @@ let GameCardPageClass = (function(){
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
-        let cost = new Price(0, Currency.storeCurrency, false);
+        let cost = 0;
         let isFoil = /border=1/i.test(document.URL);
 
         let data;
@@ -2401,7 +2401,7 @@ let GameCardPageClass = (function(){
                 let cardPrice = new Price(cardData.price, Currency.storeCurrency, false);
 
                 if (node.classList.contains("unowned")) {
-                    cost.value += cardPrice.value;
+                    cost += cardPrice.value;
                 }
 
                 if (marketLink && cardPrice) {
@@ -2410,7 +2410,8 @@ let GameCardPageClass = (function(){
             }
         }
 
-        if (cost.value > 0 && CommunityCommon.currentUserIsOwner()) {
+        if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
+            cost = new Price(cost, Currency.storeCurrency, false)
             DOMHelper.selectLastNode(document, ".badge_empty_name")
                 .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
 
@@ -2799,8 +2800,8 @@ let MarketPageClass = (function(){
     // TODO cache data
     async function loadMarketStats() {
 
-        let purchaseTotal = new Price(0, Currency.storeCurrency, false);
-        let saleTotal = new Price(0, Currency.storeCurrency, false);
+        let purchaseTotal = 0;
+        let saleTotal = 0;
 
         function updatePrices(dom) {
 
@@ -2822,13 +2823,13 @@ let MarketPageClass = (function(){
                 let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
 
                 if (isPurchase) {
-                    purchaseTotal.value += price.value;
+                    purchaseTotal += price.value;
                 } else {
-                    saleTotal.value += price.value;
+                    saleTotal += price.value;
                 }
             }
 
-            let net = new Price(saleTotal.value - purchaseTotal.value, Currency.storeCurrency, false);
+            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency, false);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -2836,6 +2837,8 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
+            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency, false);
+            saleTotal = new Price(saleTotal, Currency.storeCurrency, false);
             document.querySelector("#es_market_summary").innerHTML =
                 `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
                 <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
