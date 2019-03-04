@@ -100,7 +100,7 @@ const LocalStorage = (function(){
 })();
 
 
-const LocalStorageCache = (function(){
+const CacheStorage = (function(){
     let self = {};
 
     self.timestamp = () => Math.trunc(Date.now() / 1000);
@@ -211,13 +211,13 @@ const AugmentedSteamApi = (function() {
             if (progressingRequests.has(key)) {
                 return progressingRequests.get(key);
             }
-            let val = LocalStorageCache.get(key, ttl);
+            let val = CacheStorage.get(key, ttl);
             if (typeof val !== 'undefined') {
                 return val;
             }
             let req = self.getEndpoint(endpoint, params)
                 .then(function(result) {
-                    LocalStorageCache.set(key, result.data);
+                    CacheStorage.set(key, result.data);
                     progressingRequests.delete(key);
                     return result.data;
                 });
@@ -236,12 +236,12 @@ const AugmentedSteamApi = (function() {
                 throw `Can't clear undefined key from cache`;
             }
             progressingRequests.delete(key);
-            LocalStorageCache.remove(key);
+            CacheStorage.remove(key);
         };
     };
 
     self.clear = function() {
-        LocalStorageCache.clear();
+        CacheStorage.clear();
     };
 
     function _earlyAccessAppIds() {
@@ -249,15 +249,15 @@ const AugmentedSteamApi = (function() {
         if (_earlyAccessAppIds.promise) { return _earlyAccessAppIds.promise; }
         
         // Get data from localStorage
-        let appids = LocalStorageCache.get('early_access_appids', 60 * 60); // appids expires after an hour
+        let appids = CacheStorage.get('early_access_appids', 60 * 60); // appids expires after an hour
         if (appids) { return appids; }
 
         // Cache expired, need to fetch
         _earlyAccessAppIds.promise = AugmentedSteamApi.getEndpoint("v01/earlyaccess")
-            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': LocalStorageCache.timestamp(), })))
+            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': CacheStorage.timestamp(), })))
             .then(function(appids) {
                 appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
-                LocalStorageCache.set("early_access_appids", appids);
+                CacheStorage.set("early_access_appids", appids);
                 _earlyAccessAppIds.promise = null; // no request in progress
                 return appids;
             })
@@ -300,7 +300,7 @@ const SteamStore = (function() {
         let packages = LocalStorage.get('known_packages', {});
         // Expire cache
         for (let [subid, details] of Object.entries(packages)) {
-            if (details.timestamp + 7 * 24 * 60 * 60 < LocalStorageCache.timestamp()) {
+            if (details.timestamp + 7 * 24 * 60 * 60 < CacheStorage.timestamp()) {
                 delete packages[subid];
             }
         }
@@ -319,7 +319,7 @@ const SteamStore = (function() {
             for (let [subid, details] of Object.entries(data)) {
                 if (!details || !details.success) return;
                 details = details.data;
-                packages[subid] = { 'appids': details.apps, 'timestamp': LocalStorageCache.timestamp(), };
+                packages[subid] = { 'appids': details.apps, 'timestamp': CacheStorage.timestamp(), };
                 // .apps is an array of { 'id': ##, 'name': "", }, TODO check if we need to clearSpecialSymbols(name)
                 if (coupons[subid])
                     coupons[subid].appids = packages[subid].appids;
@@ -414,12 +414,12 @@ const SteamStore = (function() {
     };
 
     self.currency = async function() {
-        let cache = LocalStorageCache.get('currency', 3600);
+        let cache = CacheStorage.get('currency', 3600);
         if (cache) { return cache; }
         let currency = await self.currencyFromWallet();
         if (!currency) { currency = await self.currencyFromApp(); }
         if (!currency) { throw "Could not retrieve store currency"; }
-        LocalStorageCache.set('currency', currency);
+        CacheStorage.set('currency', currency);
         return currency;
     };
 
@@ -476,7 +476,7 @@ const SteamStore = (function() {
             purchases[appName] = node.textContent;
         }
 
-        LocalStorageCache.set(`purchases_${lang}`, purchases);
+        CacheStorage.set(`purchases_${lang}`, purchases);
         return purchases;
     }
     self.purchase = async function({ 'params': params, }) {
@@ -490,7 +490,7 @@ const SteamStore = (function() {
         let key = `purchases_${lang}`;
 
         let appName = clearSpecialSymbols(params.appName);
-        let purchases = LocalStorageCache.get(key, 5 * 60);
+        let purchases = CacheStorage.get(key, 5 * 60);
         if (purchases) return purchases[appName];
 
         // Purchase Data is more than 5 minutes old
@@ -536,7 +536,7 @@ const SteamCommunity = (function() {
         let login = LocalStorage.get('login');
         if (!login) throw `Must be signed in to access Inventory`;
 
-        let coupons = LocalStorageCache.get('inventory_3', 3600);
+        let coupons = CacheStorage.get('inventory_3', 3600);
         if (!coupons) {
             let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/3/`, { 'l': 'en', });
             if (!data || !data.success) throw `Could not retrieve Inventory 753/3`;
@@ -576,7 +576,7 @@ const SteamCommunity = (function() {
                 }
             }
 
-            LocalStorageCache.set('inventory_3', coupons);
+            CacheStorage.set('inventory_3', coupons);
         }
         await SteamStore.addCouponAppIds(coupons);
         return coupons;
@@ -585,7 +585,7 @@ const SteamCommunity = (function() {
         let login = LocalStorage.get('login');
         if (!login) throw `Must be signed in to access Inventory`;
 
-        let value = LocalStorageCache.get('inventory_1', 3600);
+        let value = CacheStorage.get('inventory_1', 3600);
         if (!value) {
             let gifts = [], passes = [];
 
@@ -628,7 +628,7 @@ const SteamCommunity = (function() {
             }
 
             value = { 'gifts': gifts, 'passes': passes, };
-            LocalStorageCache.set('inventory_1', value);
+            CacheStorage.set('inventory_1', value);
         }
         return value;
     };
@@ -638,12 +638,12 @@ const SteamCommunity = (function() {
         if (!login) throw `Must be signed in to access Inventory`;
 
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
-        let inventory = LocalStorageCache.get('inventory_6', 3600);
+        let inventory = CacheStorage.get('inventory_6', 3600);
         if (!inventory) {
             inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/`, { 'l': 'en', });
             if (!inventory || !inventory.success) throw `Could not retrieve Inventory 753/6`;
 
-            LocalStorageCache.set('inventory_6', inventory);
+            CacheStorage.set('inventory_6', inventory);
         }
         return Object.values(inventory.rgDescriptions || {}).map(item => item['market_hash_name']);
     };
@@ -705,7 +705,7 @@ const Steam = (function() {
         if (_dynamicstore.promise) { return _dynamicstore.promise; }
         
         // Get data from localStorage
-        let dynamicstore = LocalStorageCache.get('dynamicstore', 15 * 60); // dynamicstore userdata expires after 15 minutes
+        let dynamicstore = CacheStorage.get('dynamicstore', 15 * 60); // dynamicstore userdata expires after 15 minutes
         if (dynamicstore) { return dynamicstore; }
 
         // Cache miss, need to fetch
@@ -714,7 +714,7 @@ const Steam = (function() {
                 if (!dynamicstore.rgOwnedApps) {
                     throw "Could not fetch DynamicStore UserData";
                 }
-                LocalStorageCache.set("dynamicstore", dynamicstore);
+                CacheStorage.set("dynamicstore", dynamicstore);
                 _dynamicstore.promise = null; // no request in progress
                 return dynamicstore;
             })
@@ -742,7 +742,7 @@ const Steam = (function() {
         return _dynamicstore();
     };
     self.clearDynamicStore = async function() {
-        LocalStorageCache.remove('dynamicstore');
+        CacheStorage.remove('dynamicstore');
         _dynamicstore.promise = null;
     };
 
