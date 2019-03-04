@@ -43,8 +43,9 @@ class CacheStorage {
 
 
 class Api {
+    // FF doesn't support static members
     // static origin; // this *must* be overridden
-    static params = {};
+    // static params = {};
     // withResponse? use a boolean to include Response object in result?
     static _fetchWithDefaults(endpoint, query={}, params={}) {
         let url = new URL(endpoint, this.origin);
@@ -63,12 +64,13 @@ class Api {
         return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.text());
     }
 }
+Api.params = {};
 
 
 class AugmentedSteamApi extends Api {
-    static origin = Config.ApiServerHost;
-    static _progressingRequests = new Map();
-    static _earlyAccessAppIds_promise = null;
+    // static origin = Config.ApiServerHost;
+    // static _progressingRequests = new Map();
+    // static _earlyAccessAppIds_promise = null;
     
     static getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
         return super.getEndpoint(endpoint, query)
@@ -163,12 +165,15 @@ class AugmentedSteamApi extends Api {
         return AugmentedSteamApi.getEndpoint("v01/dlcinfo", params).then(result => result.data);
     }
 }
+AugmentedSteamApi.origin = Config.ApiServerHost;
+AugmentedSteamApi._progressingRequests = new Map();
+AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 
 class SteamStore extends Api {
-    static origin = "https://store.steampowered.com/";
-    static params = { 'credentials': 'include', };
-    static _progressingRequests = new Map();
+    // static origin = "https://store.steampowered.com/";
+    // static params = { 'credentials': 'include', };
+    // static _progressingRequests = new Map();
     
     static async appDetails({ 'params': params, }) {
         return SteamStore.getEndpoint("/api/appdetails/", params);
@@ -371,11 +376,14 @@ class SteamStore extends Api {
         return promise.then(purchases => purchases[appName]);
     }
 }
+SteamStore.origin = "https://store.steampowered.com/";
+SteamStore.params = { 'credentials': 'include', };
+SteamStore._progressingRequests = new Map();
 
 
 class SteamCommunity extends Api {
-    static origin = "https://steamcommunity.com/";
-    static params = { 'credentials': 'include', };
+    // static origin = "https://steamcommunity.com/";
+    // static params = { 'credentials': 'include', };
 
     static cards({ 'params': params, }) {
         return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
@@ -548,11 +556,13 @@ class SteamCommunity extends Api {
         LocalStorage.remove('login');
     }
 }
+SteamCommunity.origin = "https://steamcommunity.com/";
+SteamCommunity.params = { 'credentials': 'include', };
 
 
 class Steam {
-    static _dynamicstore_promise = null;
-    static _supportedCurrencies = null;
+    // static _dynamicstore_promise = null;
+    // static _supportedCurrencies = null;
     
     /**
      * Requires user to be signed in, can we validate this from background?
@@ -615,6 +625,8 @@ class Steam {
         return self._supportedCurrencies;
     }
 }
+Steam._dynamicstore_promise = null;
+Steam._supportedCurrencies = null;
 
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
