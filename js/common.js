@@ -780,6 +780,20 @@ let CurrencyRegistry = (function() {
             }
             return s.join("");
         }
+        placeholder() {
+            return this.stringify(0).replace(/[^\d,\.]/, '');
+        }
+        regExp() {
+            let placesRegex;
+            if (this.format.hidePlacesWhenZero || this.format.decimalPlaces === 0) {
+                placesRegex = "";
+            } else {
+                placesRegex =  "\\d{0," + this.format.decimalPlaces + '}';
+            }
+            let decimalRegex = this.format.decimalSeparator.replace(".", "\\.");
+
+            return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
+        }
     }
 
 
@@ -812,6 +826,9 @@ let CurrencyRegistry = (function() {
         return self.fromSymbol(match[0]);
     };
 
+    defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
+    defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
+    
     self.promise = async function() {
         let currencies = await Background.action('steam.currencies');
         for (let currency of currencies) {
@@ -986,10 +1003,6 @@ let Price = (function() {
         return new Price(this.value, this.currency, desiredCurrency);
     };
 
-    Price.getPriceInfo = function(currencyCode) {
-        return format[currencyCode];
-    };
-    
     Price.parseFromString = function(str, desiredCurrency) {
         let currency = CurrencyRegistry.fromString(str);
         let value = currency.valueOf(str);

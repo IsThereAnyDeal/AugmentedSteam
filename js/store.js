@@ -2247,21 +2247,9 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
-        let priceInfo = Price.getPriceInfo(Currency.storeCurrency);
-
-        let inputPattern = (function() {
-            let placesRegex;
-            if (priceInfo.hidePlacesWhenZero) {
-                placesRegex = "";
-            } else {
-                placesRegex = priceInfo.places === 0 ? "" : "\\d{0," + priceInfo.places + '}';
-            }
-            let decimalRegex = priceInfo.decimal.replace(".", "\\.");
-
-            return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
-        })();
-
-        let pricePlaceholder = new Price(0, Currency.userCurrency).toString().replace(/[^\d,\.]/, '');
+        let currency = CurrencyRegistry.storeCurrency;
+        let inputPattern = currency.regExp();
+        let pricePlaceholder = currency.placeholder();
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
@@ -2357,17 +2345,17 @@ let SearchPageClass = (function(){
         }
 
         let position;
-        if (priceInfo.right) {
+        if (currency.format.right) {
             position = "afterend";
         } else {
             position = "beforebegin";
         }
 
         let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
-        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + priceInfo.symbolFormat.trim() + "</span>");
+        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + currency.format.symbolFormat.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.customCurrency).toString().replace(/[^\d,\.]/, '');
         }
 
         [
