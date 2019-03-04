@@ -620,7 +620,7 @@ let ProfileHomePageClass = (function(){
         let ingameNode = document.querySelector("input[name='ingameAppID']");
         if (!ingameNode || !ingameNode.value) { return; }
 
-        let tooltip = Localization.str.view_in + ' ' + Localization.str.store;
+        let tooltip = Localization.str.view_in_store;
 
         let node = document.querySelector(".profile_in_game_name");
         node.innerHTML = '<a data-tooltip-html="' + tooltip + '" href="//store.steampowered.com/app/' + ingameNode.value + '" target="_blank">' + node.textContent + '</a>';
