@@ -235,10 +235,10 @@ class AugmentedSteamApi extends Api {
 
         // Cache expired, need to fetch
         self._earlyAccessAppIds_promise = self.getEndpoint("v01/earlyaccess")
-            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': LocalStorageCache.timestamp(), })))
+            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': CacheStorage.timestamp(), })))
             .then(function(appids) {
                 appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
-                LocalStorageCache.set("early_access_appids", appids);
+                CacheStorage.set("early_access_appids", appids);
                 self._earlyAccessAppIds_promise = null; // no request in progress
                 return appids;
             })
@@ -394,7 +394,7 @@ class SteamStore extends Api {
 
     static async currency() {
         let self = SteamStore;
-        let cache = LocalStorageCache.get('currency', 3600);
+        let cache = CacheStorage.get('currency', 3600);
         if (cache) return cache;
         let currency = await self.currencyFromWallet();
         if (!currency) { currency = await self.currencyFromApp(); }
@@ -464,7 +464,7 @@ class SteamStore extends Api {
     }
     static async purchase({ 'params': params, }) {
         let self = SteamStore;
-        if (!params || !params.appName)
+        if (!params || !params.appName) {
             throw 'Purchases endpoint expects an appName';
         }
         if (!params || !params.lang) {
