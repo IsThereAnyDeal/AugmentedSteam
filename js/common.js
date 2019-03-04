@@ -802,21 +802,25 @@ let Currency = (function() {
             ExtensionLayer.runInPageContext(
                 `function(){
                     window.postMessage({
-                        type: "es_sendmessage",
+                        type: "es_walletcurrency",
                         wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
                     }, "*");
                 }`);
 
-            window.addEventListener("message", function(e) {
+            function listener(e) {
                 if (e.source !== window) { return; }
-                if (!e.data.type || e.data.type !== "es_sendmessage") { return; }
+                if (!e.data.type || e.data.type !== "es_walletcurrency") { return; }
 
                 if (e.data.wallet_currency !== null) {
-                    resolve(e.data.wallet_currency);
+                    resolve(Currency.currencyNumberToType(e.data.wallet_currency));
                 } else {
                     reject();
                 }
-            }, false);
+
+                window.removeEventListener("message", listener, false);
+            }
+
+            window.addEventListener("message", listener, false);
         });
     }
 
