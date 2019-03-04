@@ -2260,7 +2260,7 @@ let SearchPageClass = (function(){
             return new RegExp("^\\d*(" + decimalRegex + placesRegex + ')?$');
         })();
 
-        let pricePlaceholder = new Price(0, Currency.customCurrency).toString().replace(/[^\d,\.]/, '');
+        let pricePlaceholder = new Price(0, Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
 
         document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
             <div class='block' id='es_hide_menu'>
@@ -2366,7 +2366,7 @@ let SearchPageClass = (function(){
         notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + priceInfo.symbolFormat.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value")).toString().replace(/[^\d,\.]/, '');
+            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
         }
 
         [
