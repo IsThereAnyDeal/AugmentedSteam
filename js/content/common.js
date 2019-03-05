@@ -847,7 +847,7 @@ let CurrencyRegistry = (function() {
                 indices.symbols[currency.symbol] = currency;
         }
         defaultCurrency = indices.id[1]; // USD
-        re = new RegExp(Object.keys(indices.symbols).join("|").replace("$", "\\$"));
+        re = new RegExp(Object.keys(indices.symbols).join("|").replace(/\$/g, "\\$"));
     };
     self.then = function(onDone, onCatch) {
         return self.promise().then(onDone, onCatch);

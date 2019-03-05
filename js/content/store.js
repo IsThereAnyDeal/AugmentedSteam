@@ -1968,6 +1968,7 @@ let FundsPageClass = (function(){
         newel.classList.add("es_custom_money");
         if(!giftcard) {
             newel.querySelector(".btnv6_green_white_innerfade").classList.add("es_custom_button");
+            newel.querySelector(".btnv6_green_white_innerfade").removeAttribute("onclick");
             newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
             newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
         } else {
@@ -2019,7 +2020,7 @@ let FundsPageClass = (function(){
                 ExtensionLayer.runInPageContext('function(){ submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); }');
             }
 
-        });
+        }, true);
 
         let giftcardMoneyNode = document.querySelector(".giftcard_selection #es_custom_money_amount");
         if (giftcardMoneyNode) {
