@@ -2443,6 +2443,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor:pointer;
 }
 
+#esi-store-wishlist-note {
+	font-size: 13px;
+}
+
+.esi-empty-note {
+	font-style: italic;
+}
+
+.esi-user-note {
+	color: #5fafdd;
+}
+
 #es_supporter_badges .profile_badges_badge:nth-child(4n) {
 	margin-right:0;
 }
