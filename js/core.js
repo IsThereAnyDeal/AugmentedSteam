@@ -145,11 +145,11 @@ class SyncedStorage {
     }
 
     // load whole storage and make local copy
-    static async load() {
+    static async init() {
         let that = this;
         function onChange(changes, namespace) {
             let that = SyncedStorage;
-            for (let [key, val] of Object.entries(changes)) {
+            for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
                 that.cache[key] = val;
             }
         }
