@@ -158,6 +158,9 @@ class SyncedStorage {
         Object.assign(that.cache, storage);
         return that.cache;
     }
+    static then(onDone, onCatch) {
+        return this.init().then(onDone, onCatch);
+    }
 
     static async quota() {
         let that = this;
