@@ -128,6 +128,13 @@ class SyncedStorage {
     // load whole storage and make local copy
     static async load() {
         let that = this;
+        function onChange(changes, namespace) {
+            let that = SyncedStorage;
+            for (let [key, val] of Object.entries(changes)) {
+                that.cache[key] = val;
+            }
+        }
+        chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
         Object.assign(that.cache, storage);
         return that.cache;
