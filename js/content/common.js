@@ -837,7 +837,7 @@ let CurrencyRegistry = (function() {
     Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
     Object.defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
     
-    self.promise = async function() {
+    self.init = async function() {
         let currencies = await Background.action('steam.currencies');
         for (let currency of currencies) {
             currency = new SteamCurrency(currency);
@@ -850,7 +850,7 @@ let CurrencyRegistry = (function() {
         re = new RegExp(Object.keys(indices.symbols).join("|").replace(/\$/g, "\\$"));
     };
     self.then = function(onDone, onCatch) {
-        return self.promise().then(onDone, onCatch);
+        return self.init().then(onDone, onCatch);
     };
 
     return self;
@@ -939,25 +939,27 @@ let Currency = (function() {
         return currency;
     }
 
-    // load user currency
-    self.promise = async function() {
-        if (_promise) { return _promise; }
-
+    async function _getCurrency() {
         self.storeCurrency = await getStoreCurrency();
-
         let currencySetting = SyncedStorage.get("override_price");
         if (currencySetting !== "auto") {
             self.customCurrency = currencySetting;
         } else {
             self.customCurrency = self.storeCurrency;
         }
+    }
 
+    // load user currency
+    self.init = function() {
+        if (_promise) { return _promise; }
         return _promise = CurrencyRegistry
-            .then(_getRates);
+            .then(_getCurrency)
+            .then(_getRates)
+            ;
     };
 
     self.then = function(onDone, onCatch) {
-        return self.promise().then(onDone, onCatch);
+        return self.init().then(onDone, onCatch);
     };
 
     self.getRate = function(from, to) {
