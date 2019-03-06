@@ -1,4 +1,23 @@
 ﻿
+v0.9.4
+-----
+The main focus of this release is bugfixing and maintenance,
+to ensure that Augmented Steam will continue to work in Chrome 73.
+
+Big thanks to Isthiriel and Makk0, who did the majority of the work on this update.
+
+Notable changes:
+- Improved wishlist notes - you can now set them directly on games' pages
+- Fixed hiding games marked as "not interested"
+- Fixed language of the extension - should use the same language as Steam now
+- Fixed lowest price for market sell listings when changing page
+- Fixed coupon highlighting
+- Fixed customizing quick sell price
+- Improved currency detection
+- Fixed localization, referencing Enhanced Steam instead of Augmented Steam
+- Improved Twitch detection on community pages
+- (Firefox) Fixed custom wallet amount
+
 v0.9.3
 -----
 First of all, we have changed the name of the extension to Augmented Steam across all browsers.

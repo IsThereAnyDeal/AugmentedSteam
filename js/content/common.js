@@ -1212,11 +1212,7 @@ let EnhancedSteam = (function() {
             changelog => {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
                 let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
-                let dialog = "<div style=\"height:100%; display:flex; flex-direction:row;\"><div style=\"float: left; margin-right: 21px;\">"
-                    + "<img src=\""+ logo +"\"></div>"
-                    + "<div style=\"float: right;\">" + Localization.str.update.changes.replace(/'/g, "\\'")
-                    + ":<ul class=\"es_changelog\">" + changelog + "</ul></div>" +
-                    "</div>";
+                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
                 ExtensionLayer.runInPageContext(
                     "function() {\
                         var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
