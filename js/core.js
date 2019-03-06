@@ -1,3 +1,10 @@
+function checkError() {
+    if (!chrome.runtime.lastError) {
+        return;
+    }
+    throw chrome.runtime.lastError.message;
+}
+
 class GameId {
     static parseId(id) {
         if (!id) { return null; }
@@ -110,14 +117,16 @@ class SyncedStorage {
 
     static set(key, value) {
         this.cache[key] = value;
-        this.adapter.set({ [key]: value, });
+        this.adapter.set({ [key]: value, }, checkError);
+        // this will error if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
     static remove(key) {
         if (typeof this.cache[key]) {
             delete this.cache[key];
         }
-        this.adapter.remove(key);
+        this.adapter.remove(key, checkError);
+        // can error if MAX_WRITE* is exceeded
     }
 
     static clear() {
