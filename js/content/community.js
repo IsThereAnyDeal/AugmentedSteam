@@ -2445,7 +2445,7 @@ let GameCardPageClass = (function(){
         }
 
         document.querySelector(".gamecards_inventorylink")
-            .insertAdjacentHTML("beforeend", `<a class='btn_grey_grey btn_small_thin' href='${url}'><span>${text}</span></a>`);
+            .insertAdjacentHTML("beforeend", `<a class='btn_grey_grey btn_medium' href='${url}'><span>${text}</span></a>`);
     };
 
     GameCardPageClass.prototype.addStoreTradeForumLink = function() {
