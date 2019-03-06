@@ -2547,8 +2547,9 @@ let WishlistPageClass = (function(){
     function isMyWishlist() {
         if (!User.isSignedIn) { return false; }
 
-        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/");
-        return window.location.href.startsWith(myWishlistUrl)
+        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
+        let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
+        return myWishlistUrlRegex.test(window.location.href)
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
