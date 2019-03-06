@@ -139,6 +139,13 @@ class SyncedStorage {
         Object.assign(that.cache, storage);
         return that.cache;
     }
+
+    static async quota() {
+        let that = this;
+        let maxBytes = this.adapter.QUOTA_BYTES;
+        let bytes = await new Promise((resolve, reject) => that.adapter.getBytesInUse(bytes => resolve(bytes)));
+        return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
+    }
 }
 SyncedStorage.adapter = chrome.storage.sync || chrome.storage.local;
 SyncedStorage.cache = {};
