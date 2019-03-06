@@ -28,52 +28,20 @@ let ProfileData = (function(){
 
     let self = {};
 
-    function getLocalDataKey(steamId) {
-        return "profile_" + steamId;
-    }
-
     let _data = {};
     let _promise = null;
-    self.promise = function() {
-        if (_promise) { return _promise; }
-
-        _promise = new Promise(function(resolve, reject){
+    self.promise = async function() {
+        if (!_promise) {
             let steamId = SteamId.getSteamId();
-            if (!steamId) { reject(); }
 
-            let localDataKey = getLocalDataKey(steamId);
-            _data = LocalData.get(localDataKey);
-
-            /* FIXME
-            if (data && data.timestamp && !TimeHelper.isExpired(data.timestamp, 24*60*60)) {
-                resolve(data.data);
-                return;
-            }*/
-
-            RequestData.getApi("v01/profile/profile", {profile: steamId}).then(response => {
-                if (response && response.result && response.result === "success") {
-
-                    LocalData.set(localDataKey, {
-                        timestamp: TimeHelper.timestamp(),
-                        data: response.data
-                    });
-
-                    _data = response.data;
-                    resolve(response.data);
-                } else {
-                    reject();
-                }
-            }, reject);
-        });
-
+            _promise = Background.action('profile', { 'profile': steamId, } )
+                .then(response => { _data = response; return _data; });
+        }
         return _promise;
     };
 
     self.then = function(onDone, onCatch) {
-        if (!_promise) {
-            _promise = self.promise();
-        }
-        return _promise.then(onDone, onCatch);
+        return self.promise().then(onDone, onCatch);
     };
 
     self.getBadges = function() {
@@ -113,11 +81,11 @@ let ProfileData = (function(){
         return _data.bg && _data.bg.appid ? parseInt(_data.bg.appid) : null;
     };
 
-    self.clearOwn = function() {
+    self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        LocalData.del(getLocalDataKey(User.steamId));
+        await Background.action('profile.clear', { 'profile': User.steamId, });
         _promise = null;
-        self.promise();
+        return self.promise();
     };
 
     return self;
@@ -194,9 +162,9 @@ let SpamCommentHandler = (function(){
     let self = {};
 
     self.hideSpamComments = function() {
-        if (!SyncedStorage.get("hidespamcomments", Defaults.hidespamcomments)) { return; }
+        if (!SyncedStorage.get("hidespamcomments")) { return; }
 
-        spamRegex = new RegExp(SyncedStorage.get("spamcommentregex", Defaults.spamcommentregex), "i");
+        spamRegex = new RegExp(SyncedStorage.get("spamcommentregex"), "i");
 
         handleAllCommentThreads(document);
 
@@ -231,7 +199,7 @@ let CommunityCommon = (function() {
     };
 
     self.addCardExchangeLinks = function(game) {
-        if (!SyncedStorage.get("steamcardexchange", Defaults.steamcardexchange)) { return; }
+        if (!SyncedStorage.get("steamcardexchange")) { return; }
 
         let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
         for (let node of nodes) {
@@ -266,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await DynamicStore;
+        await Promise.all([DynamicStore, Inventory,]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -278,14 +246,13 @@ let ProfileActivityPageClass = (function(){
                 let appid = GameId.getAppid(link.href);
                 if (!appid) { continue; }
 
-                // TODO (tomas.fedor) refactor following checks to a class, this way we'll easily forget how exactly do we store them or where
-                if (LocalData.get(appid + "guestpass")) {
+                if (Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
                 }
-                if (LocalData.get("couponData_" + appid)) {
+                if (Inventory.getCouponByAppId(appid)) {
                     Highlights.highlightCoupon(link);
                 }
-                if (LocalData.get(appid + "gif")) {
+                if (Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
                 }
 
@@ -306,7 +273,7 @@ let ProfileActivityPageClass = (function(){
     };
 
     function addAchievementComparisonLink(node, appid) {
-        if (!SyncedStorage.get("showcomparelinks", Defaults.showcomparelinks)) { return; }
+        if (!SyncedStorage.get("showcomparelinks")) { return; }
         node.classList.add("es_achievements");
 
         let blotter = node.closest(".blotter_daily_rollup_line");
@@ -441,7 +408,7 @@ let ProfileHomePageClass = (function(){
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_${icon_type}" href="${link}" target="_blank">
+                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
                         htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
@@ -488,7 +455,7 @@ let ProfileHomePageClass = (function(){
 
     ProfileHomePageClass.prototype.addWishlistProfileLink = function() {
         if (document.querySelector("body.profile_page.private_profile")) { return; }
-        if (!SyncedStorage.get("show_wishlist_link", Defaults.show_wishlist_link)) { return; }
+        if (!SyncedStorage.get("show_wishlist_link")) { return; }
         if (!document.querySelector(".profile_item_links")) { return; }
 
         let m = window.location.pathname.match(/(profiles|id)\/[^\/]+/);
@@ -502,10 +469,10 @@ let ProfileHomePageClass = (function(){
                 </a>
             </div>`);
 
-        if (SyncedStorage.get("show_wishlist_count", Defaults.show_wishlist_count)) {
+        if (SyncedStorage.get("show_wishlist_count")) {
             if (document.querySelector(".gamecollector_showcase")) {
                 let nodes = document.querySelectorAll(".gamecollector_showcase .showcase_stat");
-                document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent;
+                document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent.match(/\d+/)[0];
             }
         }
     };
@@ -533,9 +500,9 @@ let ProfileHomePageClass = (function(){
 
             for (let i=0; i < badgeCount; i++) {
                 if (data["badges"][i].link) {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
+                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
                 } else {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Enhanced Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
+                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
                 }
             }
 
@@ -597,7 +564,7 @@ let ProfileHomePageClass = (function(){
     };
 
     ProfileHomePageClass.prototype.addSteamRepApi = function(){
-        if (!SyncedStorage.get("showsteamrepapi", Defaults.showsteamcardexchange)) { return; }
+        if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
         ProfileData.promise().then(data => {
             if (!data.steamrep) { return; }
@@ -747,7 +714,7 @@ let ProfileHomePageClass = (function(){
 
     ProfileHomePageClass.prototype.addTwitchInfo = async function() {
 
-        let search = document.querySelector(".profile_summary a[href*='twitch.tv/']");
+        let search = document.querySelector(".profile_summary a[href*='twitch.tv/'], .customtext_showcase a[href*='twitch.tv/']");
         if (!search) { return; }
 
         let m = search.href.match(/twitch\.tv\/(.+)/);
@@ -755,9 +722,7 @@ let ProfileHomePageClass = (function(){
 
         let twitchId = m[1].replace(/\//g, "");
 
-        let response = await RequestData.getApi("v01/twitch/stream", {channel: twitchId});
-        if (!response || response.result !== "success") { return; }
-        let data = response.data;
+        let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
 
         let channelUsername = data.user_name;
         let channelUrl = search.href;
@@ -873,7 +838,7 @@ let GamesPageClass = (function(){
     let scrollTimeout = null;
 
     GamesPageClass.prototype.addGamelistAchievements = function() {
-        if (!SyncedStorage.get("showallachievements", Defaults.showallachievements)) { return; }
+        if (!SyncedStorage.get("showallachievements")) { return; }
 
         let node = document.querySelector(".profile_small_header_texture a");
         if (!node) { return; }
@@ -1010,15 +975,12 @@ let GamesPageClass = (function(){
 
 let ProfileEditPageClass = (function(){
 
-    function ProfileEditPageClass() {
-        ProfileData.clearOwn();
-
+    async function ProfileEditPageClass() {
+        await ProfileData.clearOwn();
 
         if (window.location.pathname.indexOf("/settings") < 0) {
-            ProfileData.then(() => {
-                this.addBackgroundSelection();
-                this.addStyleSelection();
-            });
+            this.addBackgroundSelection();
+            this.addStyleSelection();
         }
     }
 
@@ -1063,7 +1025,7 @@ let ProfileEditPageClass = (function(){
 
         showBgFormLoading();
 
-        let result = await RequestData.getApi("v01/profile/background/background", {
+        let result = await Background.action("profile.background", {
             appid: appid,
             profile: SteamId.getSteamId()
         });
@@ -1071,7 +1033,7 @@ let ProfileEditPageClass = (function(){
         let selectedImg = ProfileData.getBgImg();
 
         let html = "";
-        for (let value of result.data) {
+        for (let value of result) {
             let img = BrowserHelper.escapeHTML(value[0].toString());
             let name = BrowserHelper.escapeHTML(value[1].toString());
 
@@ -1098,8 +1060,8 @@ let ProfileEditPageClass = (function(){
             = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
     }
 
-    ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
-        if (!SyncedStorage.get("showesbg", Defaults.showesbg)) { return; }
+    ProfileEditPageClass.addBackgroundSelection = async function() {
+        if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
             `<div class='group_content group_summary'>
@@ -1129,13 +1091,12 @@ let ProfileEditPageClass = (function(){
         document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
-        let response = await RequestData.getApi("v01/profile/background/games");
-        if (!response || !response.data) { return; }
+        let response = await Background.action('profile.background.games');
 
         let gameSelectNode = document.querySelector("#es_bg_game");
         let imgSelectNode = document.querySelector("#es_bg_img");
 
-        let gameList = getGameSelectOptions(response.data);
+        let gameList = getGameSelectOptions(response);
         gameSelectNode.innerHTML = gameList[1];
         gameSelectNode.style.display = "block";
 
@@ -1151,14 +1112,14 @@ let ProfileEditPageClass = (function(){
         gameSelectNode.addEventListener("change", onGameSelected);
         imgSelectNode.addEventListener("change", onImgSelected);
 
-        document.querySelector("#es_background_remove_btn").addEventListener("click", function() {
-            ProfileData.clearOwn();
+        document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
         });
 
-        document.querySelector("#es_background_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedAppid = encodeURIComponent(gameSelectNode.value);
             let selectedImg = encodeURIComponent(imgSelectNode.value);
@@ -1166,7 +1127,7 @@ let ProfileEditPageClass = (function(){
         });
     };
 
-    ProfileEditPageClass.prototype.addStyleSelection = function() {
+    ProfileEditPageClass.addStyleSelection = function() {
         let html =
             `<div class='group_content group_summary'>
                 <div class='formRow'>
@@ -1227,16 +1188,16 @@ let ProfileEditPageClass = (function(){
             document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
         });
 
-        document.querySelector("#es_style_save_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
             if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-            ProfileData.clearOwn();
+            await ProfileData.clearOwn();
 
             let selectedStyle = encodeURIComponent(styleSelectNode.value);
             window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
         });
 
-        document.querySelector("#es_style_remove_btn").addEventListener("click", function(e) {
-            ProfileData.clearOwn();
+        document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
+            await ProfileData.clearOwn();
             window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
         });
     };
@@ -1417,7 +1378,7 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await RequestData.getJson("https://store.steampowered.com/api/appdetails/?appids=" + giftAppid + "&filters=price_overview");
+        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
         if (!result[giftAppid] || !result[giftAppid].success) { return; }
         if (!result[giftAppid]['data']['price_overview']) { return; }
 
@@ -1454,7 +1415,7 @@ let InventoryPageClass = (function(){
     }
 
     function addOneClickGemsOption(item, appid, assetId) {
-        if (!SyncedStorage.get("show1clickgoo", Defaults.show1clickgoo)) { return; }
+        if (!SyncedStorage.get("show1clickgoo")) { return; }
 
         let quickGrind = document.querySelector("#es_quickgrind");
         if (quickGrind) { quickGrind.parentNode.remove(); }
@@ -1516,10 +1477,12 @@ let InventoryPageClass = (function(){
     }
 
     async function addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {
-        if (!SyncedStorage.get("quickinv", Defaults.quickinv)) { return; }
+        if (!SyncedStorage.get("quickinv")) { return; }
         if (!marketable) { return; }
-        if (contextId !== 6 || globalId !== 753) { return; } // what do these numbers mean?
-
+        if (contextId !== 6 || globalId !== 753) { return; }
+        // 753 is the appid for "Steam" in the Steam Inventory
+        // 6 is the context used for "Community Items"; backgrounds, emoticons and trading cards
+        
         if (!thisItem.classList.contains("es-loading")) {
             let url = marketActions.querySelector("a").href;
 
@@ -1548,23 +1511,24 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = new Price(parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff", Defaults.quickinv_diff)));
-                    let priceLow = new Price(market.highest_buy_order / 100);
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceLow = market.highest_buy_order / 100;
+                    // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
-                    if (priceHigh.value < 0.03) priceHigh.value = 0.03;
+                    if (priceHigh < 0.03) priceHigh = 0.03;
 
                     // Store prices as data
-                    if (priceHigh.value > priceLow.value) {
-                        thisItem.dataset.priceHigh = priceHigh.value;
+                    if (priceHigh > priceLow) {
+                        thisItem.dataset.priceHigh = priceHigh;
                     }
                     if (market.highest_buy_order) {
-                        thisItem.dataset.priceLow = priceLow.value;
+                        thisItem.dataset.priceLow = priceLow;
                     }
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
                         thisItem.classList.add("es-price-loaded");
-                        updateMarketButtons(assetId, priceHigh.value, priceLow.value, walletCurrency);
+                        updateMarketButtons(assetId, priceHigh, priceLow, walletCurrency);
                     }
 
                     thisItem.classList.remove("es-loading");
@@ -1617,7 +1581,7 @@ let InventoryPageClass = (function(){
         return html;
     }
 
-    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster) {
+    async function showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrencyNumber) {
         marketActions.style.display = "block";
         let firstDiv = marketActions.querySelector("div");
         if (!firstDiv) {
@@ -1632,15 +1596,17 @@ let InventoryPageClass = (function(){
         if (!thisItem.dataset.lowestPrice) {
             firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            let overviewPromise = RequestData.getJson("https://steamcommunity.com/market/priceoverview/?currency=" + Currency.currencyTypeToNumber(Currency.userCurrency) + "&appid=" + globalId + "&market_hash_name=" + encodeURIComponent(hashName));
+            let overviewPromise = RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`);
 
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
-                let result = await RequestData.getApi("v01/market/averagecardprice", {appid: appid, currency: Currency.userCurrency});
-                console.log(result);
-                if (result.result === "success") {
-                    thisItem.dataset.cardsPrice = new Price(result.data.average);
+                try {
+                    let walletCurrency = Currency.currencyNumberToType(walletCurrencyNumber);
+                    let result = await Background.action("market.averagecardprice", { 'appid': appid, 'currency': walletCurrency, } );
+                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency);
+                } catch (error) {
+                    console.error(error);
                 }
             }
 
@@ -1652,8 +1618,8 @@ let InventoryPageClass = (function(){
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
                     thisItem.dataset.soldVolume = data.volume;
                 }
-            } catch {
-                console.error("Couldn't load price overview from market");
+            } catch (error) {
+                console.error("Couldn't load price overview from market", error);
                 firstDiv.innerHTML = html; // add market link anyway
                 return;
             }
@@ -1669,18 +1635,12 @@ let InventoryPageClass = (function(){
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
-    function inventoryMarketHelper(response) {
-        let item = response[0];
-        let marketable = parseInt(response[1]);
-        let globalId = parseInt(response[2]);
-        let hashName = response[3];
-        let assetId = response[5];
-        let sessionId = response[6];
-        let contextId = parseInt(response[7]);
-        let walletCurrency = response[8];
-        let ownerSteamId = response[9];
-        let restriction = parseInt(response[10]);
-        let isGift = response[4] && /Gift/i.test(response[4]);
+    function inventoryMarketHelper([item, marketable, globalId, hashName, assetType, assetId, sessionId, contextId, walletCurrency, ownerSteamId, restriction, expired]) {
+        marketable = parseInt(marketable);
+        globalId = parseInt(globalId);
+        contextId = parseInt(contextId);
+        restriction = parseInt(restriction);
+        let isGift = assetType && /Gift/i.test(assetType);
         let isBooster = hashName && /Booster Pack/i.test(hashName);
         let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
@@ -1714,8 +1674,8 @@ let InventoryPageClass = (function(){
             addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
         }
 
-        if ((ownsInventory && restriction > 0 && !marketable) || marketable) {
-            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster);
+        if ((ownsInventory && restriction > 0 && !marketable && !expired && hashName !== "753-Gems") || marketable) {
+            showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
 
@@ -1723,7 +1683,11 @@ let InventoryPageClass = (function(){
         ExtensionLayer.runInPageContext(`function(){
             $J(document).on("click", ".inventory_item_link, .newitem", function(){
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
-                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name
+                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
+                }
+                let market_expired = false;
+                if (g_ActiveInventory.selectedItem.description) {
+                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
                 window.postMessage({
                     type: "es_sendmessage",
@@ -1738,7 +1702,8 @@ let InventoryPageClass = (function(){
                         g_ActiveInventory.selectedItem.contextid,
                         g_rgWalletInfo.wallet_currency,
                         g_ActiveInventory.m_owner.strSteamId,
-                        g_ActiveInventory.selectedItem.description.market_marketable_restriction
+                        g_ActiveInventory.selectedItem.description.market_marketable_restriction,
+                        market_expired
                     ]
                 }, "*");
             });
@@ -1783,7 +1748,7 @@ let InventoryPageClass = (function(){
     }
 
     function addInventoryGoToPage(){
-        if (!SyncedStorage.get("showinvnav", Defaults.showinvnav)) { return; }
+        if (!SyncedStorage.get("showinvnav")) { return; }
 
         DOMHelper.remove("#es_gotopage");
         DOMHelper.remove("#pagebtn_first");
@@ -1893,7 +1858,7 @@ let BadgesPageClass = (function(){
     function BadgesPageClass() {
         this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
         this.hasAllPagesLoaded = false;
-        this.totalWorth = new Price(0);
+        this.totalWorth = 0;
 
         if (CommunityCommon.currentUserIsOwner()) {
             this.updateHead();
@@ -1944,10 +1909,10 @@ let BadgesPageClass = (function(){
             return;
         }
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/averagecardprices", {
-                currency: Currency.userCurrency,
+            data = await Background.action("market.averagecardprices", {
+                currency: Currency.storeCurrency,
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
             });
@@ -1955,12 +1920,6 @@ let BadgesPageClass = (function(){
             console.error("Couldn't retrieve average card prices", exception);
             return;
         }
-
-        if (!response.result || response.result !== "success") {
-            return;
-        }
-
-        let data = response.data;
 
         // regular cards
         for (let item of nodes) {
@@ -1971,7 +1930,7 @@ let BadgesPageClass = (function(){
             let key = isFoil ? "foil" : "regular";
             if (!data[appid] || !data[appid][key]) { continue; }
 
-            let averagePrice = new Price(data[appid][key]['average']);
+            let averagePrice = data[appid][key]['average'];
 
             let cost;
             let progressInfoNode = node.querySelector("div.badge_progress_info");
@@ -1979,7 +1938,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice.value * need)
+                    cost = new Price(averagePrice * need, Currency.storeCurrency);
                 }
             }
 
@@ -1988,10 +1947,10 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice.value);
+                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency);
 
                         if (worth.value > 0) {
-                            this.totalWorth.value += worth.value;
+                            this.totalWorth += worth.value;
 
                             let howToNode = node.querySelector(".how_to_get_card_drops");
                             howToNode.insertAdjacentHTML("afterend",
@@ -2013,7 +1972,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + this.totalWorth;
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency);
     };
 
     async function eachBadgePage(callback) {
@@ -2035,7 +1994,7 @@ let BadgesPageClass = (function(){
                 await callback(dom);
 
             } catch (exception) {
-                console.log("Failed to load " + baseUrl + p + ": " + exception);
+                console.error("Failed to load " + baseUrl + p + ": " + exception);
                 return;
             }
         }
@@ -2097,7 +2056,7 @@ let BadgesPageClass = (function(){
             try {
                 response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
             } catch(exception) {
-                console.log("Failed to load booster eligibility", exception);
+                console.error("Failed to load booster eligibility", exception);
                 return;
             }
 
@@ -2221,38 +2180,40 @@ let BadgesPageClass = (function(){
 
         ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
 
-        let that = this;
-        document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
+        if (isOwnProfile) {
+            let that = this;
+            document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
 
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
-            }
-
-            sortBadgeRows(e.target.textContent, (node) => {
-                let content = 0;
-                let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
-                if (progressInfo) {
-                    content = parseInt(progressInfo[1])
+                if (that.hasMultiplePages) {
+                    await that.loadAllPages();
                 }
-                return content;
-            })
-        });
 
-        document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
-
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
-            }
-
-            sortBadgeRows(e.target.textContent, (node) => {
-                let content = 0;
-                let dropWorth = node.querySelector(".es_card_drop_worth");
-                if (dropWorth) {
-                    content = parseFloat(dropWorth.dataset.esCardWorth);
-                }
-                return content;
+                sortBadgeRows(e.target.textContent, (node) => {
+                    let content = 0;
+                    let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+                    if (progressInfo) {
+                        content = parseInt(progressInfo[1])
+                    }
+                    return content;
+                })
             });
-        });
+
+            document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
+
+                if (that.hasMultiplePages) {
+                    await that.loadAllPages();
+                }
+
+                sortBadgeRows(e.target.textContent, (node) => {
+                    let content = 0;
+                    let dropWorth = node.querySelector(".es_card_drop_worth");
+                    if (dropWorth) {
+                        content = parseFloat(dropWorth.dataset.esCardWorth);
+                    }
+                    return content;
+                });
+            });
+        }
     };
 
     BadgesPageClass.prototype.addBadgeFilter = function() {
@@ -2410,21 +2371,19 @@ let GameCardPageClass = (function(){
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
-        let cost = new Price(0);
+        let cost = 0;
         let isFoil = /border=1/i.test(document.URL);
 
-        let response;
+        let data;
         try {
-            response = await RequestData.getApi("v01/market/cardprices", {appid: this.appid, currency: Currency.userCurrency});
+            data = await Background.action("market.cardprices", {
+                appid: this.appid,
+                currency: Currency.storeCurrency,
+            });
         } catch(exception) {
             console.error("Failed to load card prices", exception);
             return;
         }
-
-        if (!response || response.result !== "success") {
-            return;
-        }
-        let data = response.data;
 
         let nodes = document.querySelectorAll(".badge_card_set_card");
         for (let node of nodes) {
@@ -2439,10 +2398,10 @@ let GameCardPageClass = (function(){
 
             if (cardData) {
                 let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
-                let cardPrice = new Price(cardData.price);
+                let cardPrice = new Price(cardData.price, Currency.storeCurrency);
 
                 if (node.classList.contains("unowned")) {
-                    cost.value += cardPrice.value;
+                    cost += cardPrice.value;
                 }
 
                 if (marketLink && cardPrice) {
@@ -2451,7 +2410,8 @@ let GameCardPageClass = (function(){
             }
         }
 
-        if (cost.value > 0 && CommunityCommon.currentUserIsOwner()) {
+        if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
+            cost = new Price(cost, Currency.storeCurrency)
             DOMHelper.selectLastNode(document, ".badge_empty_name")
                 .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
 
@@ -2476,11 +2436,9 @@ let GameCardPageClass = (function(){
             text = Localization.str.view_normal_badge;
 
         } else {
-            let url = window.location.origin + window.location.pathname;
-
-            if (urlParameters[0] !== ""){
-                urlParameters.push("border=1");
-                url += "?" + urlParameters.join("&");
+            
+            if (urlParameters[0] === ""){
+                url += "?" + "border=1";
             }
 
             text = Localization.str.view_foil_badge;
@@ -2530,10 +2488,10 @@ let FriendsThatPlayPageClass = (function(){
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
-        if (!SyncedStorage.get("showallfriendsthatown", Defaults.showallfriendsthatown)) return;
+        if (!SyncedStorage.get("showallfriendsthatown")) return;
         
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let data = await RequestData.getJson("https://store.steampowered.com/api/appuserdetails/?appids=" + this.appid);
+        let data = await Background.action('appuserdetails', { 'appids': this.appid, });
         if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
             return;
         }
@@ -2718,7 +2676,7 @@ let FriendsPageClass = (function(){
             sortFriends(e.target.dataset.esiSort);
         });
 
-        sortFriends(SyncedStorage.get("sortfriendsby", Defaults.sortfriendsby));
+        sortFriends(SyncedStorage.get("sortfriendsby"));
     };
 
     return FriendsPageClass;
@@ -2740,7 +2698,7 @@ let MarketListingPageClass = (function(){
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
         let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
@@ -2804,7 +2762,7 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.promise().then(() => {
+        Inventory.then(() => {
             this.highlightMarketItems();
 
             let that = this;
@@ -2842,8 +2800,8 @@ let MarketPageClass = (function(){
     // TODO cache data
     async function loadMarketStats() {
 
-        let purchaseTotal = new Price(0);
-        let saleTotal = new Price(0);
+        let purchaseTotal = 0;
+        let saleTotal = 0;
 
         function updatePrices(dom) {
 
@@ -2862,16 +2820,16 @@ let MarketPageClass = (function(){
                 let priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent);
+                let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
 
                 if (isPurchase) {
-                    purchaseTotal.value += price.value;
+                    purchaseTotal += price.value;
                 } else {
-                    saleTotal.value += price.value;
+                    saleTotal += price.value;
                 }
             }
 
-            let net = new Price(saleTotal.value - purchaseTotal.value);
+            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency, false);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -2879,6 +2837,8 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
+            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency);
+            saleTotal = new Price(saleTotal, Currency.storeCurrency);
             document.querySelector("#es_market_summary").innerHTML =
                 `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
                 <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
@@ -2934,14 +2894,14 @@ let MarketPageClass = (function(){
 
         document.querySelector("#es_market_summary_button").addEventListener("click", startLoadingStats);
 
-        if (SyncedStorage.get("showmarkettotal", Defaults.showmarkettotal)) {
+        if (SyncedStorage.get("showmarkettotal")) {
             startLoadingStats();
         }
     };
 
     // Hide active listings on Market homepage
     MarketPageClass.prototype.minimizeActiveListings = function() {
-        if (!SyncedStorage.get("hideactivelistings", Defaults.hideactivelistings)) { return; }
+        if (!SyncedStorage.get("hideactivelistings")) { return; }
 
         document.querySelector("#tabContentsMyListings").style.display = "none";
         let node = document.querySelector("#tabMyListings");
@@ -2950,13 +2910,19 @@ let MarketPageClass = (function(){
     };
 
     // Show the lowest market price for items you're selling
-    MarketPageClass.prototype.addLowestMarketPrice = async function() {
+    MarketPageClass.prototype.addLowestMarketPrice = function() {
         if (!User.isSignedIn) { return; }
 
         let country = User.getCountry();
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.userCurrency);
+        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let loadedMarketPrices = {};
+
+        let observer = new MutationObserver(function(){
+            insertPrices();
+        });
+
+        observer.observe(document.getElementById("tabContentsMyActiveMarketListingsRows"), {childList: true});
 
         function insertPrice(node, data) {
             node.classList.add("es_priced");
@@ -2964,8 +2930,8 @@ let MarketPageClass = (function(){
             let lowestNode = node.querySelector(".market_listing_es_lowest");
             lowestNode.textContent = data['lowest_price'];
 
-            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
-            let lowPrice = Price.parseFromString(data['lowest_price']);
+            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
+            let lowPrice = Price.parseFromString(data['lowest_price'], Currency.storeCurrency);
 
             if (myPrice.value <= lowPrice.value) {
                 lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
@@ -2991,47 +2957,53 @@ let MarketPageClass = (function(){
                     "<span class='market_listing_right_cell market_listing_my_price'><span class='es_market_lowest_button'>" + Localization.str.lowest + "</span></span>");
         }
 
-        // update table rows
-        let rows = [];
-        nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
-        for (let node of nodes) {
-            let buttons = node.querySelector(".market_listing_edit_buttons");
-            buttons.style.width = "200px"; // TODO do we still need to change width?
-            if (node.querySelector(".market_listing_es_lowest")) { continue; }
+        insertPrices();
 
-            node.querySelector(".market_listing_edit_buttons")
-                .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+        async function insertPrices() {
 
-            // we do this because of changed width, right?
-            let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
-            actualButtons.style.width = "inherit";
-            buttons.append(actualButtons);
+            // update table rows
+            let rows = [];
+            nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
+            for (let node of nodes) {
+                let buttons = node.querySelector(".market_listing_edit_buttons");
+                buttons.style.width = "200px"; // TODO do we still need to change width?
+                if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-            rows.push(node);
-        }
+                node.querySelector(".market_listing_edit_buttons")
+                    .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
-        for (let node of rows) {
-            let linkNode = node.querySelector(".market_listing_item_name_link");
-            if (!linkNode) { continue; }
+                // we do this because of changed width, right?
+                let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
+                actualButtons.style.width = "inherit";
+                buttons.append(actualButtons);
 
-            let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
-            if (!m) { continue; }
-            let appid = parseInt(m[1]);
-            let marketHashName = m[2];
-
-            let priceData;
-            if (loadedMarketPrices[marketHashName]) {
-                priceData = loadedMarketPrices[marketHashName];
-            } else {
-                let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
-                if (!data.success) { continue; }
-
-                loadedMarketPrices[marketHashName] = data;
-                priceData = data;
+                rows.push(node);
             }
 
-            insertPrice(node, priceData);
-        }
+            for (let node of rows) {
+                let linkNode = node.querySelector(".market_listing_item_name_link");
+                if (!linkNode) { continue; }
+
+                let m = linkNode.href.match(/\/(\d+)\/(.+)$/);
+                if (!m) { continue; }
+                let appid = parseInt(m[1]);
+                let marketHashName = m[2];
+
+                let priceData;
+                if (loadedMarketPrices[marketHashName]) {
+                    priceData = loadedMarketPrices[marketHashName];
+                } else {
+                    let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
+                    if (!data.success) { continue; }
+
+                    loadedMarketPrices[marketHashName] = data;
+                    priceData = data;
+                }
+
+                insertPrice(node, priceData);
+            }
+        };
+
     };
 
     MarketPageClass.prototype.addSort = function() {
@@ -3188,7 +3160,7 @@ let MarketPageClass = (function(){
     };
 
     MarketPageClass.prototype.highlightMarketItems = function() {
-        if (!SyncedStorage.get("highlight_owned", Defaults.highlight_owned)) { return; }
+        if (!SyncedStorage.get("highlight_owned")) { return; }
 
         let nodes = document.querySelectorAll(".market_listing_row_link");
         for (let node of nodes) {
@@ -3224,18 +3196,18 @@ let CommunityAppPageClass = (function(){
     }
 
     CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
-        if (!SyncedStorage.get("wlbuttoncommunityapp", Defaults.wlbuttoncommunityapp)) { return; }
+        if (!SyncedStorage.get("wlbuttoncommunityapp")) { return; }
         await DynamicStore;
 
         let nameNode = document.querySelector(".apphub_AppName");
 
         if (DynamicStore.isOwned(this.appid)) {
-            nameNode.style.color = SyncedStorage.get("highlight_owned_color", Defaults.highlight_owned_color);
+            nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
 
         if (DynamicStore.isWishlisted(this.appid)) {
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color", Defaults.highlight_wishlist_color);
+            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
             return;
         }
 
@@ -3249,16 +3221,12 @@ let CommunityAppPageClass = (function(){
             e.preventDefault();
             if (e.target.classList.contains("btn_disabled")) { return; }
 
-            let formData = new FormData();
-            formData.append("sessionid", await User.getStoreSessionId());
-            formData.append("appid", that.appid);
-
-            await RequestData.post("https://store.steampowered.com/api/addtowishlist", formData, {withCredentials: true});
+            await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
 
             e.target.classList.add("btn_disabled");
             e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
 
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color", Defaults.highlight_wishlist_color);
+            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
 
             // Clear dynamicstore cache
             DynamicStore.clear();
@@ -3266,7 +3234,7 @@ let CommunityAppPageClass = (function(){
     };
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
-        if (!SyncedStorage.get("showsteamdb", Defaults.showsteamdb)) { return; }
+        if (!SyncedStorage.get("showsteamdb")) { return; }
         let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
@@ -3274,7 +3242,7 @@ let CommunityAppPageClass = (function(){
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
-        if (!SyncedStorage.get("showitadlinks", Defaults.showitadlinks)) { return; }
+        if (!SyncedStorage.get("showitadlinks")) { return; }
         let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
 
         document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
@@ -3298,7 +3266,7 @@ let GuidesPageClass = (function(){
     GuidesPageClass.prototype.constructor = GuidesPageClass;
 
     GuidesPageClass.prototype.removeGuidesLanguageFilter = function() {
-        if (!SyncedStorage.get("removeguideslanguagefilter", Defaults.removeguideslanguagefilter)) { return; }
+        if (!SyncedStorage.get("removeguideslanguagefilter")) { return; }
 
         let language = Language.getCurrentSteamLanguage();
         let regex = new RegExp(language, "i");
@@ -3322,93 +3290,88 @@ let GuidesPageClass = (function(){
 })();
 
 
-(function(){
+(async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    SyncedStorage
-        .load()
-        .finally(() => Promise
-            .all([Localization.promise(), User.promise(), Currency.promise()])
-            .then(() => {
+    await SyncedStorage.load().catch(err => console.error(err));
+    await Promise.all([Localization, User, Currency]);
 
-                Common.init();
-                SpamCommentHandler.hideSpamComments();
+    Common.init();
+    SpamCommentHandler.hideSpamComments();
 
-                switch (true) {
+    switch (true) {
 
-                    case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
-                        (new ProfileActivityPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+            (new ProfileActivityPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
-                        (new GamesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+            (new GamesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/edit/.test(path):
-                        (new ProfileEditPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/edit/.test(path):
+            (new ProfileEditPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
-                        (new BadgesPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
+            (new BadgesPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-                        (new GameCardPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+            (new GameCardPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
-                        (new FriendsThatPlayPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
+            (new FriendsThatPlayPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-                        (new FriendsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+            (new FriendsPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
-                        (new InventoryPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+            (new InventoryPageClass());
+            break;
 
-                    case /^\/market\/listings\/.*/.test(path):
-                        (new MarketListingPageClass());
-                        break;
+        case /^\/market\/listings\/.*/.test(path):
+            (new MarketListingPageClass());
+            break;
 
-                    case /^\/market\/.*/.test(path):
-                        (new MarketPageClass());
-                        break;
+        case /^\/market\/.*/.test(path):
+            (new MarketPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
-                        (new ProfileHomePageClass());
-                        break;
+        case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
+            (new ProfileHomePageClass());
+            break;
 
-                    case /^\/app\/[^\/]*\/guides/.test(path):
-                        (new GuidesPageClass());
-                        break;
+        case /^\/app\/[^\/]*\/guides/.test(path):
+            (new GuidesPageClass());
+            break;
 
-                    case /^\/app\/.*/.test(path):
-                        (new CommunityAppPageClass());
-                        break;
+        case /^\/app\/.*/.test(path):
+            (new CommunityAppPageClass());
+            break;
 
-                    case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-                        (new StatsPageClass());
-                        break;
+        case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+            (new StatsPageClass());
+            break;
 
-                    case /^\/tradingcards\/boostercreator/.test(path):
-                        let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                            .textContent.trim().replace(/\d/g, "");
+        case /^\/tradingcards\/boostercreator/.test(path):
+            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
+                .textContent.trim().replace(/\d/g, "");
 
-                        ExtensionLayer.runInPageContext("function() { \
-                            $J('#booster_game_selector option').each(function(index) {\
-                                if ($J(this).val()) {\
-                                    $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
-                                }\
-                            });\
-                        }");
-                        break;
-                }
+            ExtensionLayer.runInPageContext("function() { \
+                $J('#booster_game_selector option').each(function(index) {\
+                    if ($J(this).val()) {\
+                        $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
+                    }\
+                });\
+            }");
+            break;
+    }
 
-                EnhancedSteam.hideTrademarkSymbol(true);
-            })
-    )
+    EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
 

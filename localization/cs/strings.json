@@ -133,7 +133,7 @@
     "viewinclient": "Zobrazit ve Steam aplikaci",
     "custom_background": "Vlastní pozadí",
     "custom_style": "Vlastní motiv",
-    "custom_style_help": "Všichni uživatelé Enhanced Steam uvidí toto téma na vašem profilu. Uživatelé bez Enhanced Steam neuvidí žádné změny.",
+    "custom_style_help": "Všichni uživatelé Augmented Steam uvidí toto téma na vašem profilu. Uživatelé bez Augmented Steam neuvidí žádné změny.",
     "noneselected": "Nevybrané / Beze Změny",
     "most_drops": "Nejvíce zbývajících přídělů karet",
     "badge_foil_progress": "Zobrazit postup foil odznaku",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Navštívit fórum Obchodování",
     "software": "Software",
     "purchase_date": "(Zakoupeno __date__)",
-    "custom_background_help": "Všichni uživatelé Enhanced Steam uvidí toto pozadí na vašem profilu. Uživatelé bez Enhanced Steam uvidí vaše normální pozadí profilu.",
+    "custom_background_help": "Všichni uživatelé Augmented Steam uvidí toto pozadí na vašem profilu. Uživatelé bez Augmented Steam uvidí vaše normální pozadí profilu.",
     "date_unlocked": "Datum odemknutí",
     "view_badge_foil": "Zobrazit foil odznak",
     "net_spent": "Utraceno",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Ukázat informace z WSGF (širokoúhlé hraní)",
-        "version_show": "Ukázat seznam změn při aktualizacích Enhanced Steamu",
+        "version_show": "Ukázat seznam změn při aktualizacích Augmented Steamu",
         "steamcardexchange": "Ukázat odkazy na SteamCardExchange u odznaků",
         "regional_price": "Srovnání cen v regionech",
         "excludef2p": "Vynechat Free To Play hry ze zvýrazňování",
@@ -334,7 +334,7 @@
         "drm": "Ukázat upozornění na DRM třetí strany",
         "profile_permalink": "Ukázat odkaz na profil",
         "show_regionwarning": "Ukázat varování, pokud je aktivní jiný region, než má účet",
-        "foot_link": "Rozšíření Enhanced Steam",
+        "foot_link": "Rozšíření Augmented Steam",
         "profile_link_images": "Obrázky odkazů na profily",
         "library": "Ukázat tlačítko Knihovna v hlavičce",
         "show1clickgoo": "Ukázat tlačítko \"1-Click Vyměnit za drahokamy...\" u vyhovujících položek v inventáři",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Chyba při načítání Enhanced Steam dat",
-        "loading": "Enhanced Steam načítá data...",
-        "ready": "Enhanced Steam je připravený.",
+        "errormsg": "Chyba při načítání Augmented Steam dat",
+        "loading": "Augmented Steam načítá data...",
+        "ready": "Augmented Steam je připravený.",
         "failed": "Jeden nebo více požadavků selhalo"
     },
     "twitch": {

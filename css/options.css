@@ -38,15 +38,19 @@ body {
 
 #page {
 	display:flex;
+	align-items: flex-start;
 	min-height:100vh;
 }
 
 #side_bar {
+	position: sticky;
+	top: 0;
 	text-align:left;
 	font-family: "Arial", sans-serif;
 	font-size:16px;
 	width: 200px;
 	background: #1a1c21;
+	min-height:100vh;
 }
 #side_bar a { color: white; text-decoration: none; }
 #side_bar a:hover { color: white; text-decoration: none; }
@@ -220,7 +224,6 @@ a:hover {
 #quickinv_opt {
 	margin-left:10px;
 	margin-bottom:5px;
-	display:none;
 }
 #quickinv_diff {
 	width: 100px;

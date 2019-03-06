@@ -133,7 +133,7 @@
     "viewinclient": "스팀 클라이언트에서 보기",
     "custom_background": "사용자 지정 배경",
     "custom_style": "커스텀 테마",
-    "custom_style_help": "Enhanced Steam을 사용하는  모든 사람들이 당신의 프로파일에서 이 테마를 볼 것입니다. Enhanced Steam을 사용하지 않는 사람에게는 여기에서의 테마변경이 보이지 않을 것입니다.",
+    "custom_style_help": "Augmented Steam을 사용하는  모든 사람들이 당신의 프로파일에서 이 테마를 볼 것입니다. Augmented Steam을 사용하지 않는 사람에게는 여기에서의 테마변경이 보이지 않을 것입니다.",
     "noneselected": "선택되지 않음/ 변경 없음",
     "most_drops": "획득 가능한 개수순",
     "badge_foil_progress": "은박 배지 진행상황 보기",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "거래 포럼 방문",
     "software": "소프트웨어",
     "purchase_date": "(__date__ 에 구매)",
-    "custom_background_help": "Enhanced Steam의 모든 사용자는 당신의 사용자 지정 배경을 볼 수 있습니다. Enhanced Steam을 사용하지 않는 이용자는 당신의 일반 프로필 배경을 볼 수 있습니다.",
+    "custom_background_help": "Augmented Steam의 모든 사용자는 당신의 사용자 지정 배경을 볼 수 있습니다. Augmented Steam을 사용하지 않는 이용자는 당신의 일반 프로필 배경을 볼 수 있습니다.",
     "date_unlocked": "날짜 잠금해제",
     "view_badge_foil": "은박 배지 표시",
     "net_spent": "순 소비 금액",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "WSGF (와이드 스크린) 정보를 표시",
-        "version_show": "Enhanced Steam이 업데이트 될 때 변경 내용 보이기",
+        "version_show": "Augmented Steam이 업데이트 될 때 변경 내용 보이기",
         "steamcardexchange": "배지에 SteamCardExchange에 대한 링크를 표시합니다.",
         "regional_price": "지역별 가격 비교",
         "excludef2p": "무료게임을 강조에서 제외",
@@ -334,7 +334,7 @@
         "drm": "3rd party DRM 경고를 보입니다.",
         "profile_permalink": "프로필에 고유 주소를 표시",
         "show_regionwarning": "비 계정 영역에서 로그인하는 경우 경고 표시",
-        "foot_link": "Enhanced Steam 홈페이지",
+        "foot_link": "Augmented Steam 홈페이지",
         "profile_link_images": "프로필 링크 이미지",
         "library": "상단에 라이브러리 버튼을 보입니다.",
         "show1clickgoo": "보관함 아이템에 적용되는 \"원클릭으로 젬 교환...\" 버튼 보여주기",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Enhanced Steam 데이터 로딩 오류",
-        "loading": "Enhanced Steam 데이터 로딩중...",
-        "ready": "Enhanced Steam 준비",
+        "errormsg": "Augmented Steam 데이터 로딩 오류",
+        "loading": "Augmented Steam 데이터 로딩중...",
+        "ready": "Augmented Steam 준비",
         "failed": "하나 이상의 요청이 실패함"
     },
     "twitch": {

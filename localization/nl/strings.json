@@ -133,7 +133,7 @@
     "viewinclient": "Bekijk in Steam Client",
     "custom_background": "Custom Achtergrond",
     "custom_style": "Aangepast Thema",
-    "custom_style_help": "Alle gebruikers van Enhanced Steam zullen dit thema zien op uw profiel. Niet-Enhanced Steam gebruikers zullen eventuele thema veranderingen hier niet zien.",
+    "custom_style_help": "Alle gebruikers van Augmented Steam zullen dit thema zien op uw profiel. Niet-Augmented Steam gebruikers zullen eventuele thema veranderingen hier niet zien.",
     "noneselected": "Niets geselecteerd / Geen wijziging",
     "most_drops": "Meeste Gevallen",
     "badge_foil_progress": "Bekijk Folie Badge Progressie",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Bezoek Ruil Forum",
     "software": "Software",
     "purchase_date": "(Gekocht op __date__)",
-    "custom_background_help": "Alle gebruikers van Enhanced Steam zullen deze achtergrond op jouw profiel zien. Niet Enhanced Steam gebruikers zullen jouw normale achtergrond zien.",
+    "custom_background_help": "Alle gebruikers van Augmented Steam zullen deze achtergrond op jouw profiel zien. Niet Augmented Steam gebruikers zullen jouw normale achtergrond zien.",
     "date_unlocked": "Datum Ontgrendelt",
     "view_badge_foil": "Bekijk Folie Badge",
     "net_spent": "Netto uitgegeven",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Laat WSGF (Widescreen) informatie zien",
-        "version_show": "Toon wijzigingslogboek wanneer Enhanced Steam bijgewerkt wordt",
+        "version_show": "Toon wijzigingslogboek wanneer Augmented Steam bijgewerkt wordt",
         "steamcardexchange": "Toon SteamCardExchange links bij badges",
         "regional_price": "Regionale prijs vergelijking",
         "excludef2p": "Sluit gratis om te spelen games uit van highlights",
@@ -334,7 +334,7 @@
         "drm": "Laat 3de partij DRM waarschuwingen zien",
         "profile_permalink": "Laat permalink op profielen zien",
         "show_regionwarning": "Toon waarschuwing tijdens browsen in een andere regio",
-        "foot_link": "Enhanced Steam Extensie",
+        "foot_link": "Augmented Steam Extensie",
         "profile_link_images": "Profiel link plaatjes",
         "library": "Toon Bibliotheek knop in header",
         "show1clickgoo": "Toon \"1-klik zet om in edelstenen...\" knop op in aanmerking komende inventaris artikelen",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Fout tijdens het laden van Enhanced Steam gegevens",
-        "loading": "Enhanced Steam is gegevens aan het laden...",
-        "ready": "Enhanced Steam gereed",
+        "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
+        "loading": "Augmented Steam is gegevens aan het laden...",
+        "ready": "Augmented Steam gereed",
         "failed": "Een of meer aanvragen mislukt"
     },
     "twitch": {

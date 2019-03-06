@@ -4,7 +4,7 @@
     <script src="js/countryList.js"></script>
     <script src="js/storeList.js"></script>
     <script src="js/options.js"></script>
-    <script src="js/common.js"></script>
+    <script src="js/content/common.js"></script>
     <link href="css/enhancedsteam.css" rel="stylesheet" type="text/css">
     <link href="css/options.css" rel="stylesheet" type="text/css">
     <link href="css/es_flags.css" rel="stylesheet" type="text/css">
@@ -215,11 +215,11 @@
                     <option value="Brazilian">Português-Brasil</option>
                     <option value="Russian">Русский</option>
                     <option value="Romanian">Română</option>
-                    <option value="Schinese">简体中文</option>
+                    <option value="Schinese">汉语（简体字）</option>
+                    <option value="Tchinese">漢語（繁體字）</option>
                     <option value="Spanish">Español</option>
                     <option value="Latam">Español Latinoamericano</option>
                     <option value="Swedish">Svenska</option>
-                    <option value="Tchinese">繁體中文</option>
                     <option value="Thai">ไทย</option>
                     <option value="Turkish">Türkçe</option>
                     <option value="Ukrainian">Українська</option>
@@ -405,44 +405,6 @@
                     <select id="override_price" data-setting="override_price">
                         <option value="auto">Auto-detect</option>
                         <option value="USD">USD</option>
-                        <option value="GBP">GBP</option>
-                        <option value="EUR">EUR</option>
-                        <option value="RUB">RUB</option>
-                        <option value="BRL">BRL</option>
-                        <option value="JPY">JPY</option>
-                        <option value="NOK">NOK</option>
-                        <option value="IDR">IDR</option>
-                        <option value="MYR">MYR</option>
-                        <option value="PHP">PHP</option>
-                        <option value="SGD">SGD</option>
-                        <option value="THB">THB</option>
-                        <option value="VND">VND</option>
-                        <option value="KRW">KRW</option>
-                        <option value="TRY">TRY</option>
-                        <option value="UAH">UAH</option>
-                        <option value="MXN">MXN</option>
-                        <option value="CAD">CAD</option>
-                        <option value="AUD">AUD</option>
-                        <option value="NZD">NZD</option>
-                        <option value="INR">INR</option>
-                        <option value="HKD">HKD</option>
-                        <option value="TWD">TWD</option>
-                        <option value="CNY">CNY</option>
-                        <option value="SAR">SAR</option>
-                        <option value="ZAR">ZAR</option>
-                        <option value="AED">AED</option>
-                        <option value="CHF">CHF</option>
-                        <option value="CLP">CLP</option>
-                        <option value="PEN">PEN</option>
-                        <option value="COP">COP</option>
-                        <option value="ARS">ARS</option>
-                        <option value="CRC">CRC</option>
-                        <option value="ILS">ILS</option>
-                        <option value="KZT">KZT</option>
-                        <option value="KWD">KWD</option>
-                        <option value="PLN">PLN</option>
-                        <option value="QAR">QAR</option>
-                        <option value="UYU">UYU</option>
                     </select>
                 </div>
             </div>
@@ -489,7 +451,7 @@
                 <label for="quickinv" id="quickinv_text" data-locale-text="options.quickinv">Show Quick Sale buttons on Steam Community items in inventory</label>
                 <button id="show_quickinv_diff" data-locale-text="customize">Customize</button>
             </div>
-            <div id="quickinv_opt">
+            <div id="quickinv_opt" class="esi-hidden">
                 <label for="quickinv_diff" id="quickinv_diff_text" data-locale-text="options.quickinv_diff">Quick Sale modifier:</label><input type="text" id="quickinv_diff" data-setting="quickinv_diff" class="textbox">
                 <button id="quickinv_default" data-locale-text="theworddefault">Default</button>
             </div>
@@ -649,8 +611,9 @@
 
             <h3 data-locale-text="programming">Programming</h3>
             <ul class="credits">
-                <li>Tomáš Fedor (<a href="https://steamcommunity.com/id/tomas3333">tomas3333</a>)
-                <li>Karl Castle (<a href="https://steamcommunity.com/id/isthiriel/">Isthiriel</a>)
+                <li>Tomáš Fedor (<a href="https://steamcommunity.com/id/tomas3333">tomas3333</a>)</li>
+                <li>Karl Castle (<a href="https://steamcommunity.com/id/isthiriel/">Isthiriel</a>)</li>
+                <li>MxtOUT (<a href="https://steamcommunity.com/id/makko2305/">Makk0</a>)</li>
             </ul>
 
             <h2>Original authors</h2>
@@ -764,7 +727,7 @@
                     <td class="language schinese">Simplified Chinese:</td>
                     <td>Aslike2, Deparsoul, FelinaeEbony, Gold, Iuy, M@nkey, Mr. Error,
                         MyLittleWarhammer, Rabbitism Bomb, Rasin, [CN]Johnson, i7killpii, mjy,
-                        ssenkrad, yuccatoo, deluxghost
+                        ssenkrad, yuccatoo, deluxghost, ghwjtcjj
                     </td>
                 </tr>
                 <tr>
@@ -781,7 +744,7 @@
                 <tr>
                     <td class="language tchinese">Traditional Chinese:</td>
                     <td>Atraveller, JD OwO, Lex Song, MoDMeR, Mr. Error, NOKIA SE, Rasin, omylist,
-                        tonyli1357, 破曉之殤丶Revelation
+                        tonyli1357, 破曉之殤丶Revelation, ghwjtcjj
                     </td>
                 </tr>
                 <tr>

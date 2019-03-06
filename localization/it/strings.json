@@ -133,7 +133,7 @@
     "viewinclient": "Mostra su Client Steam",
     "custom_background": "Sfondo personalizzato",
     "custom_style": "Tema personalizzato",
-    "custom_style_help": "Tutti gli utenti di Steam Enhanced vedranno questo tema sul tuo profilo. Gli altri invece non vedranno cambiamenti.",
+    "custom_style_help": "Tutti gli utenti di Steam Augmented vedranno questo tema sul tuo profilo. Gli altri invece non vedranno cambiamenti.",
     "noneselected": "Nessuno selezionato / Non cambiare",
     "most_drops": "Quantità",
     "badge_foil_progress": "Mostra progresso Medaglia Foil",
@@ -163,7 +163,7 @@
     "visit_trade_forum": "Visita il forum degli scambi",
     "software": "Software",
     "purchase_date": "(Acquistato il __date__)",
-    "custom_background_help": "Tutti gli utenti di Enhanced Steam vedranno questo sfondo sul tuo profilo. Gli altri vedranno il tuo sfondo normale.",
+    "custom_background_help": "Tutti gli utenti di Augmented Steam vedranno questo sfondo sul tuo profilo. Gli altri vedranno il tuo sfondo normale.",
     "date_unlocked": "Data di sblocco",
     "view_badge_foil": "Mostra Medaglia Foil",
     "net_spent": "Spese nette",
@@ -303,7 +303,7 @@
     },
     "options": {
         "wsgf": "Mostra informazioni WSGF (Widescreen)",
-        "version_show": "Mostra il Changelog quando Enhanced Steam si aggiorna",
+        "version_show": "Mostra il Changelog quando Augmented Steam si aggiorna",
         "steamcardexchange": "Mostra link di SteamCardExchange in \"Medaglie\"",
         "regional_price": "Comparazione dei prezzi regionali",
         "excludef2p": "Non evidenziare i giochi Free-to-Play",
@@ -334,7 +334,7 @@
         "drm": "Mostra avvisi per i DRM di terze parti",
         "profile_permalink": "Mostra permalink sui profili",
         "show_regionwarning": "Mostra un avviso quando si visita una regione diversa dello Store",
-        "foot_link": "Enhanced Steam",
+        "foot_link": "Augmented Steam",
         "profile_link_images": "Immagini dei link nel profilo",
         "library": "Mostra il pulsante \"Libreria\" nell'intestazione",
         "show1clickgoo": "Mostra \"1-Click Trasforma in gemme...\" sugli oggetti dell'inventario",
@@ -447,9 +447,9 @@
         }
     },
     "ready": {
-        "errormsg": "Errore nel caricamento di Enhanced Steam",
-        "loading": "Caricamento di Enhanced Steam in corso...",
-        "ready": "Enhanced Steam pronto",
+        "errormsg": "Errore nel caricamento di Augmented Steam",
+        "loading": "Caricamento di Augmented Steam in corso...",
+        "ready": "Augmented Steam pronto",
         "failed": "Una o più richieste sono fallite"
     },
     "twitch": {

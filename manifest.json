@@ -1,6 +1,6 @@
 {
     "name": "Augmented Steam",
-    "version": "0.9.3",
+    "version": "0.9.4",
     "description": "Augments your Steam Experience",
     "icons": {
       "128": "img/es_128.png",
@@ -56,8 +56,8 @@
             ],
             "js": [
                 "js/config.js",
-                "js/common.js",
-                "js/store.js"
+                "js/content/common.js",
+                "js/content/store.js"
             ],
             "css": [
                 "css/enhancedsteam.css",
@@ -76,8 +76,8 @@
             ],
             "js": [
                 "js/config.js",
-                "js/common.js",
-                "js/community.js"
+                "js/content/common.js",
+                "js/content/community.js"
             ],
             "css": [
                 "css/enhancedsteam.css",
@@ -102,8 +102,8 @@
           ],
           "js": [
             "js/config.js",
-            "js/common.js",
-            "js/tradeoffer.js"
+            "js/content/common.js",
+            "js/content/tradeoffer.js"
           ],
           "css": [
             "css/community/tradeoffer.css"
@@ -117,5 +117,13 @@
                 "css/store/store_front.css"
             ]
         }
-    ]
+    ],
+    "background": {
+        "scripts": [
+          "js/config.js",
+          "js/core.js",
+          "js/background/background.js"
+        ],
+        "persistent": false
+    }
 }
