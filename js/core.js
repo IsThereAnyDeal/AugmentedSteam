@@ -116,22 +116,32 @@ class SyncedStorage {
     }
 
     static set(key, value) {
-        this.cache[key] = value;
-        this.adapter.set({ [key]: value, }, checkError);
-        // this will error if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
+        let that = this;
+        that.cache[key] = value;
+        return new Promise((resolve, reject) => {
+            that.adapter.set({ [key]: value, }, () => { checkError(); resolve(true); });
+            // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
+        });
+        
     }
 
     static remove(key) {
-        if (typeof this.cache[key]) {
-            delete this.cache[key];
+        let that = this;
+        if (typeof that.cache[key]) {
+            delete that.cache[key];
         }
-        this.adapter.remove(key, checkError);
-        // can error if MAX_WRITE* is exceeded
+        return new Promise((resolve, reject) => {
+            that.adapter.remove(key, () => { checkError(); resolve(true); });
+            // can throw if MAX_WRITE* is exceeded
+        });
     }
 
     static clear() {
         this.cache = {};
-        this.adapter.clear();
+        return new Promise((resolve, reject) => {
+            this.adapter.clear(() => { checkError(); resolve(true); });
+            // can throw if MAX_WRITE* is exceeded
+        });
     }
 
     // load whole storage and make local copy
