@@ -60,12 +60,8 @@ let TradeOfferPageClass = (function(){
 
 (function(){
     SyncedStorage
-    .load()
-    .finally(() => Promise
-    .all([Localization.promise()])
-    .then(() => {
-        (new TradeOfferPageClass());
-    })
+        .then(Localization)
+        .then(() => { (new TradeOfferPageClass()); })
 )
 })();
 

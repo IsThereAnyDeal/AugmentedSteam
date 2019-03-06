@@ -136,6 +136,10 @@ class SyncedStorage {
         });
     }
 
+    static keys(prefix='') {
+        return Object.keys(this.cache).filter(k => k.startsWith(prefix));
+    }
+
     static clear() {
         this.cache = {};
         return new Promise((resolve, reject) => {

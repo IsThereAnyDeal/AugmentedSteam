@@ -226,14 +226,12 @@ let Options = (function(){
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
-        SyncedStorage.load().finally(() => {
-            loadOptions();
-        });
+        SyncedStorage.then(loadOptions);
         // FIXME $("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
     }
     
     function loadDefaultCountries() {
-        SyncedStorage.set("regional_countries", Defaults.regional_countries);
+        SyncedStorage.remove("regional_countries");
         
         let nodes = document.querySelectorAll("#region_selects div.country_parent");
         for (let i=0, len=nodes.length; i<len; i++) {
@@ -335,114 +333,97 @@ let Options = (function(){
     }
 
     self.init = async function() {
-        let settings = SyncedStorage.load();
+        let settings = SyncedStorage.init();
         let currency = fetch(chrome.runtime.getURL('json/currency.json'))
             .then(r => r.json())
             .then(addCurrencies)
             ;
-        Promise.all([settings, currency]).finally(() => {
-            
-            loadStores();
-            loadOptions();
-            loadProfileLinkImages();
-            
-            // document.querySelector("#language").addEventListener("change", loadTranslation);
-            document.querySelector("#profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
-            
-            document.querySelector("#highlight_owned_default").addEventListener("click", function(){
-                setValue("#highlight_owned_color", Defaults.highlight_owned_color);
-            });
-            document.querySelector("#highlight_wishlist_default").addEventListener("click", function(){
-                setValue("#highlight_wishlist_color", Defaults.highlight_wishlist_color);
-            });
-            document.querySelector("#highlight_coupon_default").addEventListener("click", function(){
-                setValue("#highlight_coupon_color", Defaults.highlight_coupon_color);
-            });
-            document.querySelector("#highlight_inv_gift_default").addEventListener("click", function(){
-                setValue("#highlight_inv_gift_color", Defaults.highlight_inv_gift_color);
-            });
-            document.querySelector("#highlight_inv_guestpass_default").addEventListener("click", function(){
-                setValue("#highlight_inv_guestpass_color", Defaults.highlight_inv_guestpass_color);
-            });
-            document.querySelector("#highlight_notinterested_default").addEventListener("click", function(){
-                setValue("#highlight_notinterested_color", Defaults.highlight_notinterested_color);
-            });
-            
-            document.querySelector("#tag_owned_color_default").addEventListener("click", function(){
-                setValue("#tag_owned_color", Defaults.tag_owned_color);
-            });
-            document.querySelector("#tag_wishlist_default").addEventListener("click", function(){
-                setValue("#tag_wishlist_color", Defaults.tag_wishlist_color);
-            });
-            document.querySelector("#tag_coupon_default").addEventListener("click", function(){
-                setValue("#tag_coupon_color", Defaults.tag_coupon_color);
-            });
-            document.querySelector("#tag_inv_gift_default").addEventListener("click", function(){
-                setValue("#tag_inv_gift_color", Defaults.tag_inv_gift_color);
-            });
-            document.querySelector("#tag_inv_guestpass_default").addEventListener("click", function(){
-                setValue("#tag_inv_guestpass_color", Defaults.tag_inv_guestpass_color);
-            });
-            document.querySelector("#tag_notinterested_default").addEventListener("click", function(){
-                setValue("#tag_notinterested_color", Defaults.tag_notinterested_color);
-            });
-            
-            document.querySelector("#spamcommentregex_default").addEventListener("click", function(){
-                setValue("#spamcommentregex", "[\\u2500-\\u25FF]");
-            });
-            document.querySelector("#quickinv_default").addEventListener("click", function() {
-                setValue("#quickinv_diff", "-0.01");
-            });
-            document.querySelector("#quickinv_diff").addEventListener("blur", function() {
-                if (isNaN(parseFloat(document.querySelector("#quickinv_diff").value))) {
-                    setValue("#quickinv_diff", "-0.01");
-                }
-            });
-            
-            document.querySelector("#show_spamcommentregex").addEventListener("click", function(e){
-                let listNode = document.querySelector("#spamcommentregex_list");
-                listNode.classList.toggle("esi-hidden");
-            });
-            document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
-                let node = document.querySelector("#quickinv_opt");
-                node.classList.toggle("esi-hidden");
-            });
-            document.querySelector("#stores_all").addEventListener("change", toggleStores);
-            document.querySelector("#reset_countries").addEventListener("click", loadDefaultCountries);
-            
-            document.querySelector('#region_selects').addEventListener('change', function(e) {
-                let node = e.target.closest(".country_parent");
-                if (node) {
-                    changeFlag(node.querySelector('.es_flag'), e.target);
-                }
-                saveOption("regional_countries");
-            });
-            document.querySelector('#add_another_region').addEventListener("click", Region.addRegionSelector);
-            
-            document.querySelector("#regional_price_on").addEventListener("change", function(e) {
-                let node = e.target.closest("#regional_price_on");
-                
-                document.querySelector("#region_selects").style.display = node.value === "off" ? "none" : "block";
-                document.querySelector("#regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
-            });
-            
-            // Toggle tabs content
-            document.querySelector("#side_bar").addEventListener("click", function(e){
-                let node = e.target.closest("a.tab_row");
-                if (!node) { return; }
-                let sel = node.dataset.blockSel;
-                document.querySelector("a.tab_row.selected").classList.remove("selected");
-                document.querySelector(".content.selected").classList.remove("selected");
-                document.querySelector(sel).classList.add("selected");
-                node.classList.add("selected");
-            });
-            
-            document.querySelector("#reset").addEventListener("click", clearSettings);
-            
-            document.addEventListener("change", saveOptionFromEvent);
-            document.addEventListener("blur", saveOptionFromEvent);
-            document.addEventListener("select", saveOptionFromEvent);
+        await Promise.all([settings, currency]);
+        let Defaults = SyncedStorage.defaults;
+
+        loadStores();
+        loadOptions();
+        loadProfileLinkImages();
+        
+        // document.querySelector("#language").addEventListener("change", loadTranslation);
+        document.querySelector("#profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
+        
+        let addHandlerToSetDefaultColor = (key) => {
+            document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
+        };
+        [
+            'highlight_owned',
+            'highlight_wishlist',
+            'highlight_coupon',
+            'highlight_inv_gift',
+            'highlight_inv_guestpass',
+            'highlight_notinterested',
+            'tag_wishlist',
+            'tag_coupon',
+            'tag_inv_gift',
+            'tag_inv_guestpass',
+            'tag_notinterested',
+        ].forEach(addHandlerToSetDefaultColor);
+
+        document.querySelector("#tag_owned_color_default").addEventListener("click", function(){
+            setValue("#tag_owned_color", Defaults.tag_owned_color);
         });
+
+        document.querySelector("#spamcommentregex_default").addEventListener("click", function(){
+            setValue("#spamcommentregex", "[\\u2500-\\u25FF]");
+        });
+        document.querySelector("#quickinv_default").addEventListener("click", function() {
+            setValue("#quickinv_diff", "-0.01");
+        });
+        document.querySelector("#quickinv_diff").addEventListener("blur", function() {
+            if (isNaN(parseFloat(document.querySelector("#quickinv_diff").value))) {
+                setValue("#quickinv_diff", "-0.01");
+            }
+        });
+        
+        document.querySelector("#show_spamcommentregex").addEventListener("click", function(e){
+            let listNode = document.querySelector("#spamcommentregex_list");
+            listNode.classList.toggle("esi-hidden");
+        });
+        document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
+            let node = document.querySelector("#quickinv_opt");
+            node.classList.toggle("esi-hidden");
+        });
+        document.querySelector("#stores_all").addEventListener("change", toggleStores);
+        document.querySelector("#reset_countries").addEventListener("click", loadDefaultCountries);
+        
+        document.querySelector('#region_selects').addEventListener('change', function(e) {
+            let node = e.target.closest(".country_parent");
+            if (node) {
+                changeFlag(node.querySelector('.es_flag'), e.target);
+            }
+            saveOption("regional_countries");
+        });
+        document.querySelector('#add_another_region').addEventListener("click", Region.addRegionSelector);
+        
+        document.querySelector("#regional_price_on").addEventListener("change", function(e) {
+            let node = e.target.closest("#regional_price_on");
+            
+            document.querySelector("#region_selects").style.display = node.value === "off" ? "none" : "block";
+            document.querySelector("#regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
+        });
+        
+        // Toggle tabs content
+        document.querySelector("#side_bar").addEventListener("click", function(e){
+            let node = e.target.closest("a.tab_row");
+            if (!node) { return; }
+            let sel = node.dataset.blockSel;
+            document.querySelector("a.tab_row.selected").classList.remove("selected");
+            document.querySelector(".content.selected").classList.remove("selected");
+            document.querySelector(sel).classList.add("selected");
+            node.classList.add("selected");
+        });
+        
+        document.querySelector("#reset").addEventListener("click", clearSettings);
+        
+        document.addEventListener("change", saveOptionFromEvent);
+        document.addEventListener("blur", saveOptionFromEvent);
+        document.addEventListener("select", saveOptionFromEvent);
     };
     
     return self;
