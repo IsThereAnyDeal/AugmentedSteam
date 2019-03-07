@@ -1,3 +1,7 @@
+const Info = {
+    'version': "0.9.3",
+};
+
 function checkError() {
     if (!chrome.runtime.lastError) {
         return;

@@ -1,8 +1,3 @@
-
-let Info = {
-    version: "0.9.3"
-};
-
 /**
  * Common functions that may be used on any pages
  */
