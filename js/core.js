@@ -1,5 +1,19 @@
 const Info = {
     'version': "0.9.4",
+    compareVersions(x, y) {
+        if (typeof y == 'undefined') { y = this.version; }
+        x = x.split('.');
+        y = y.split('.');
+        let len = Math.min(x.length, y.length);
+        for (let i = 0; i < len; ++i) {
+            let [a, b] = [x[i], y[i]];
+            if (a < b) { return -1; }
+            if (a > b) { return 1; }
+        }
+        if (x.length < y.length) { return -1; }
+        if (x.length > y.length) { return 1; }
+        return 0;
+    },
 };
 
 function checkError() {
@@ -196,6 +210,23 @@ class SyncedStorage {
         });
     }
 
+    static migrateSettings() {
+        let version = SyncedStorage.get("version");
+        if (!version) {
+            version = "0.9.4";
+        }
+        if (Info.compareVersions(version, "0.9.5") < 0) {
+            // Remove eu1 region
+            let priceRegions = SyncedStorage.get('regional_countries');
+            let i = priceRegions.includes('eu1');
+            if (i !== -1) {
+                priceRegions.splice(i, 1);
+                SyncedStorage.set('regional_countries', priceRegions);
+            }
+        }
+        SyncedStorage.set("version", Info.version);
+    }
+
     // load whole storage and make local copy
     static async init() {
         let that = this;
@@ -208,6 +239,7 @@ class SyncedStorage {
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
         Object.assign(that.cache, storage);
+        SyncedStorage.migrateSettings();
         return that.cache;
     }
     static then(onDone, onCatch) {
@@ -275,7 +307,7 @@ SyncedStorage.defaults = {
     'stores': [],
     'override_price': "auto",
     'showregionalprice': "mouse",
-    'regional_countries': ["us", "gb", "eu1", "ru", "br", "au", "jp"],
+    'regional_countries': ["us", "gb", "ru", "br", "au", "jp"],
 
     'show_featuredrecommended': true,
     'show_specialoffers': true,
