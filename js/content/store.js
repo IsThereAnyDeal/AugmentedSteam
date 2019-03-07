@@ -2864,7 +2864,7 @@ let WishlistNotes = (function(){
 
                         node.classList.remove("esi-empty-note");
                         node.classList.add("esi-user-note");
-                        node.textContent = '"' + note + '"';
+                        node.innerHTML = '"' + note + '"';
                     } else {
                         that.deleteNote(appid);
 
