@@ -66,7 +66,6 @@ var CountryList = {
     "er": "Eritrea",
     "ee": "Estonia",
     "et": "Ethiopia",
-    "eu1": "European Union",
     "fk": "Falkland Islands",
     "fo": "Faroe Islands",
     "fj": "Fiji",
