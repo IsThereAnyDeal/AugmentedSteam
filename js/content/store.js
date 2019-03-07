@@ -515,7 +515,7 @@ let AppPageClass = (function(){
         }
 
 
-        var expandSlider = LocalData.get("expand_slider") || false;
+        var expandSlider = LocalStorage.get("expand_slider", false);
         if (expandSlider === true) {
             buildSideDetails();
 
@@ -567,7 +567,7 @@ let AppPageClass = (function(){
             function saveSlider(ev) {
                 container.removeEventListener('transitionend', saveSlider, false);
                 // Save slider state
-                LocalData.set('expand_slider', el.classList.contains('es_expanded'));
+                LocalStorage.set('expand_slider', el.classList.contains('es_expanded'));
 
                 // If slider was contracted show the extended details
                 if (!el.classList.contains('es_expanded')) {
@@ -594,7 +594,7 @@ let AppPageClass = (function(){
         let movieNode = document.querySelector('div.highlight_movie');
         if (!movieNode) { return; }
 
-        let playInHD = LocalData.get('playback_hd');
+        let playInHD = LocalStorage.get('playback_hd');
 
         // Add HD Control to each video as it's added to the DOM
         let firstVideoIsPlaying = movieNode.querySelector('video.highlight_movie');
@@ -631,7 +631,7 @@ let AppPageClass = (function(){
                 toggleVideoDefinition(n, playInHD);
             }
 
-            LocalData.set('playback_hd', playInHD);
+            LocalStorage.set('playback_hd', playInHD);
         }
 
         // When the slider is expanded first time after the page was loaded set videos definition to HD
@@ -644,11 +644,11 @@ let AppPageClass = (function(){
             for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
                 toggleVideoDefinition(node, true);
             }
-            LocalData.set('playback_hd', true);
+            LocalStorage.set('playback_hd', true);
         }
 
         function addHDControl(videoControl) {
-            playInHD = LocalData.get('playback_hd');
+            playInHD = LocalStorage.get('playback_hd');
             
             function _addHDControl() {
                 // Add "HD" button and "sd-src" to the video and set definition
@@ -713,7 +713,7 @@ let AppPageClass = (function(){
             let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
                 videoIsHD = false,
                 loadedSrc = videoControl.classList.contains("es_loaded_src"),
-                playInHD = LocalData.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+                playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
             let videoPosition = videoControl.currentTime || 0,
                 videoPaused = videoControl.paused;
@@ -1206,7 +1206,8 @@ let AppPageClass = (function(){
             let suggest = document.querySelector("#suggest");
             if (suggest) { // FIXME consequence of the above FIXME
                 suggest.addEventListener("click", function(){
-                    LocalData.del("storePageData_" + this.appid);
+                    LocalStorage.remove("storePageData_" + this.appid);
+                    Background.action('storepagedata.expire', { 'appid': this.appid, });
                 });
             }
         });
@@ -1770,8 +1771,12 @@ let AppPageClass = (function(){
 
         head.insertAdjacentElement("afterend", reviewSectionNode);
 
-        function toggleReviews() {
-            if (LocalData.get("show_review_section")) {
+        function toggleReviews(state) {
+            if (typeof state == 'undefined') {
+                state = !LocalStorage.get("show_review_section", true);
+                LocalStorage.set("show_review_section", state);
+            }
+            if (state) {
                 document.querySelector("#es_review_toggle span").textContent = "▲";
                 document.querySelector("#es_review_section").style.maxHeight = null;
             } else {
@@ -1780,13 +1785,13 @@ let AppPageClass = (function(){
             }
         }
 
-        toggleReviews();
+        let showReviews = LocalStorage.get("show_review_section", true);
+        toggleReviews(showReviews);
 
         let node = document.querySelector("#review_create");
         if (node) {
             node.addEventListener("click", function(e) {
                 if (!e.target.closest("#es_review_toggle")) { return; }
-                LocalData.set("show_review_section", LocalData.get("show_review_section", true) ? false : true);
                 toggleReviews();
             });
         }
@@ -3073,7 +3078,7 @@ let TabAreaObserver = (function(){
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    await SyncedStorage.load().catch(err => console.error(err));
+    await SyncedStorage.init().catch(err => console.error(err));
     await Promise.all([Localization, User, Currency]);
 
     Common.init();

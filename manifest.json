@@ -50,6 +50,8 @@
             ],
             "js": [
                 "js/config.js",
+                "js/core.js",
+                "js/language.js",
                 "js/content/common.js",
                 "js/content/store.js"
             ],
@@ -68,6 +70,8 @@
             ],
             "js": [
                 "js/config.js",
+                "js/core.js",
+                "js/language.js",
                 "js/content/common.js",
                 "js/content/community.js"
             ],
@@ -91,6 +95,8 @@
           ],
           "js": [
             "js/config.js",
+            "js/core.js",
+            "js/language.js",
             "js/content/common.js",
             "js/content/tradeoffer.js"
           ],
