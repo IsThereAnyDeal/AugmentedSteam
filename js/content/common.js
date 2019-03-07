@@ -1958,14 +1958,14 @@ let Customizer = (function(){
         let element = typeof target === "string" ? document.querySelector(target) : target;
         if (!element && !forceShow) { return; }
 
-        let state = SyncedStorage.get(name);
+        let state = typeof SyncedStorage.get(name) === "undefined" ? true : SyncedStorage.get(name);
         text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
         if (text === "") { return; }
 
-        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
+        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
 
         if (element) {
-            element.classList.toggle("es_hide", !SyncedStorage.get(name));
+            element.classList.toggle("es_hide", !state);
 
             if (element.classList.contains("es_hide")) {
                 element.style.display = "none";
@@ -1974,7 +1974,7 @@ let Customizer = (function(){
 
         document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
             `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name) ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
                     <div class="home_viewsettings_label">${text}</div>
                 </div>
             `);
