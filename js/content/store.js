@@ -2524,19 +2524,41 @@ let WishlistPageClass = (function(){
 
         let instance = this;
         wishlistNotes = new WishlistNotes();
+        let myWishlist = isMyWishlist();
+        let container = document.querySelector("#wishlist_ctn");
+        let timeout = null, lastRequest = null;
+        let delayedWork = new Set();
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 if (record.addedNodes.length === 1) {
-                    if (isMyWishlist()) {
-                        instance.addWishlistNote(record.addedNodes[0]);
-                    }
-                    instance.highlightApps(record.addedNodes[0]);
-                    instance.addPriceHandler(record.addedNodes[0]);
+                    delayedWork.add(record.addedNodes[0])
                 }
             });
-            window.dispatchEvent(new Event("resize"));
+            lastRequest = window.performance.now();
+            if (timeout == null) {
+                timeout = window.setTimeout(function markWishlist() {
+                    if (window.performance.now() - lastRequest < 40) {
+                        timeout = window.setTimeout(markWishlist, 50);
+                        return;
+                    }
+                    timeout = null;
+                    for (let node of delayedWork) {
+                        delayedWork.delete(node);
+                        if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
+                            continue;
+                        }
+                        if (myWishlist) {
+                            instance.addWishlistNote(node);
+                        } else {
+                            instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
+                        }
+                        instance.addPriceHandler(node);
+                    }
+                    window.dispatchEvent(new Event("resize"))
+                }, 50);
+            }
         });
-        observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
+        observer.observe(container, { 'childList': true, });
 
         this.addStatsArea();
         this.addEmptyWishlistButton();
