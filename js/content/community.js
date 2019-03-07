@@ -2837,11 +2837,11 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
-            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency);
-            saleTotal = new Price(saleTotal, Currency.storeCurrency);
+            let purchaseTotalPrice = new Price(purchaseTotal, Currency.storeCurrency);
+            let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             document.querySelector("#es_market_summary").innerHTML =
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
+                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`;
         }
 
