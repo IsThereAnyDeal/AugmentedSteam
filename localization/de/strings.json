@@ -62,7 +62,7 @@
     "homepage_tabs": "Startseiten-Tabs",
     "store": "Shop",
     "view_in": "Zeige in",
-    "drm_third_party": "Achtung: Dieser Titel nutzt DRM von Dritten",
+    "drm_third_party": "Achtung: Dieser Titel nutzt DRM von Dritten __drmlist__.",
     "stores": "Shops",
     "game_transactions": "In-Game-Käufe",
     "after_coupon": "mit Gutschein",
@@ -207,7 +207,7 @@
     "relist_an_item": "Einen Artikel wiedereinstellen",
     "relist_text": "Möchtest du diesen Artikel zu einem günstigeren Preis wiedereinstellen?",
     "search_market": "Steam-Communitymarkt durchsuchen",
-    "drm_third_party_sub": "Achtung: Einer oder mehrere Titel in diesem Paket verwenden 3rd-Party-DRM",
+    "drm_third_party_sub": "Achtung: Einer oder mehrere Titel in diesem Paket verwenden 3rd-Party-DRM __drmlist__.",
     "customize": "Anpassen",
     "custom": "Benutzerdefiniert",
     "bundle_saving_text": "Das sparst du, wenn du dieses Bundle kaufst",
@@ -529,5 +529,8 @@
         "wallet": "Der von Ihnen eingelöste Schlüssel stammt von einer Steam-Geschenkkarte oder einer Steam-Guthabenkarte",
         "toomany": "Von diesem Account wurden kürzlich zu viele Aktivierungsversuche unternommen. Bitte warten Sie eine Weile, bevor Sie es erneut versuchen.",
         "default": "Ein unerwarteter Fehler ist aufgetreten. Ihr Produktschlüssel konnte nicht aktiviert werden. Bitte warten Sie 30 Minuten und versuchen Sie es dann erneut."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

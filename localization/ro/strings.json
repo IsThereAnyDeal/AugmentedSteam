@@ -62,7 +62,7 @@
     "homepage_tabs": "File pe pagina de pornire",
     "store": "Magazin",
     "view_in": "Vezi în",
-    "drm_third_party": "Avertisment: Acest titlu utilizează un DRM independent Steam",
+    "drm_third_party": "Avertisment: Acest titlu utilizează un DRM independent Steam __drmlist__.",
     "stores": "Magazine",
     "game_transactions": "Tranzacții în joc",
     "after_coupon": "după codul promoţional",
@@ -207,7 +207,7 @@
     "relist_an_item": "Relistează un obiect",
     "relist_text": "Dorești să relistezi obiectul la un preț mai mic?",
     "search_market": "Caută pe Piața Comunitară Steam",
-    "drm_third_party_sub": "ATENȚIE: Unul sau mai multe produse din acest pachet folosesc DRM terțe",
+    "drm_third_party_sub": "ATENȚIE: Unul sau mai multe produse din acest pachet folosesc DRM terțe __drmlist__.",
     "customize": "Personalizați",
     "custom": "Personalizat",
     "bundle_saving_text": "Uite cât economisești dacă cumperi acest pachet 'bundle'",
@@ -529,5 +529,8 @@
         "wallet": "Codul pe care l-ai introdus este de pe un Card Cadou Steam sau un cod pentru Portofelul Steam",
         "toomany": "Recent au avut loc prea multe tentative de activare de pe acest cont. Te rugăm să așteptați și să încerci din nou mai târziu.",
         "default": "A apărut o eroare neașteptată. Codul produsului tău nu a fost revendicat. Te rugăm să aștepți 30 de minute și să încerci din nou să revendici codul."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

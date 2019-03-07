@@ -62,7 +62,7 @@
     "homepage_tabs": "Kezdőlap",
     "store": "Áruház",
     "view_in": "Megtekintés a",
-    "drm_third_party": "Figyelem: A játék külső DRM-et tartalmaz",
+    "drm_third_party": "Figyelem: A játék külső DRM-et tartalmaz __drmlist__.",
     "stores": "Áruházak",
     "game_transactions": "Játék tranzakciók",
     "after_coupon": "kupon kód után",
@@ -207,7 +207,7 @@
     "relist_an_item": "Újralistáz egy tárgyat",
     "relist_text": "Szeretnéd újralistázni ezt a tárgyat olcsóbban?",
     "search_market": "Keresés a Steam Piacon",
-    "drm_third_party_sub": "Figyelem: Ez a csomag egy vagy több 3. féltől származó DRM címet tartalmaz",
+    "drm_third_party_sub": "Figyelem: Ez a csomag egy vagy több 3. féltől származó DRM címet tartalmaz __drmlist__.",
     "customize": "Testreszabás",
     "custom": "Egyéni",
     "bundle_saving_text": "Ennyit spórolsz a csomag megvásárlásával",
@@ -529,5 +529,8 @@
         "wallet": "A kód, amit beírtál egy Steam ajándékkártyáé vagy Steam Pénztárcakód",
         "toomany": "Túl sok aktiválási kísérlet történt a közelmúltban erről a felhasználói fiókról vagy IP-címről. Kérjük várj, és majd később próbáld újra a termékkódod.",
         "default": "Váratlan hiba történt. Termékkódod nem került beváltásra. Kérjük, várj 30 percet és próbáld meg újra beváltani a kódot."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

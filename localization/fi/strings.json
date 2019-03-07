@@ -62,7 +62,7 @@
     "homepage_tabs": "Kotisivu välilehdet",
     "store": "Kauppa",
     "view_in": "Katso",
-    "drm_third_party": "Varoitus: Tämä tuote käyttää kolmannen osapuolen DRM-suojausta!",
+    "drm_third_party": "Varoitus: Tämä tuote käyttää kolmannen osapuolen DRM-suojausta __drmlist__!",
     "stores": "Kaupat",
     "game_transactions": "Pelin ostotapahtumat",
     "after_coupon": "Säästöt kupongeista",
@@ -207,7 +207,7 @@
     "relist_an_item": "Listaa esine uudelleen",
     "relist_text": "Haluatko listata tämän tuotteen uudelleen matalempaan hintaan?",
     "search_market": "Etsi Steam-yhteisön kauppapaikalta",
-    "drm_third_party_sub": "Varoitus: Yksi tai useampi nimike tässä paketissa käyttää kolmannen osapuolen DRM:ää.",
+    "drm_third_party_sub": "Varoitus: Yksi tai useampi nimike tässä paketissa käyttää kolmannen osapuolen DRM:ää __drmlist__.",
     "customize": "Kustomointi",
     "custom": "Mukautettu",
     "bundle_saving_text": "Säästät tämän verran ostamalla paketissa",
@@ -529,5 +529,8 @@
         "wallet": "Antamasi koodi on Steam-lahjakortista tai Steam-lompakkokoodi",
         "toomany": "Liian monta aktivointiyritystä tältä tililtä. Odota ja yritä myöhemmin uudelleen.",
         "default": "Odottamaton virhe. Tuotekoodiasi ei lunastettu. Odota 30 minuuttia ja yritä lunastaa koodi uudestaan."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

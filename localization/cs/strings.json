@@ -62,7 +62,7 @@
     "homepage_tabs": "Záložky na hlavní stránce",
     "store": "Obchod",
     "view_in": "Ukázat v",
-    "drm_third_party": "Upozornění: Tento titul používá DRM třetí strany",
+    "drm_third_party": "Upozornění: Tento titul používá DRM třetí strany __drmlist__.",
     "stores": "Obchody",
     "game_transactions": "Transakce ve hrách",
     "after_coupon": "po kupónu",
@@ -207,7 +207,7 @@
     "relist_an_item": "Přeprodat položky",
     "relist_text": "Opravdu chceš přeprodat tuto položku za nejmenší cenu?",
     "search_market": "Prohledat Komunitní trh služby Steam",
-    "drm_third_party_sub": "Upozornění: Jeden nebo více titulů z tohoto balíčku používá DRM třetí strany",
+    "drm_third_party_sub": "Upozornění: Jeden nebo více titulů z tohoto balíčku používá DRM třetí strany __drmlist__.",
     "customize": "Upravit",
     "custom": "Vlastní",
     "bundle_saving_text": "Zakoupením tohoto balíčku ušetříte",
@@ -529,5 +529,8 @@
         "wallet": "Zadaný kód produktu patří k dárkovému kupónu nebo jde o kód pro Steam peněženku",
         "toomany": "Proběhlo příliš mnoho pokusů o aktivaci z tohoto účtu. Počkejte prosím a zkuste to znovu později.",
         "default": "Došlo k neočekávané chybě. Váš klíč nebyl použit. Počkejte prosím 30 minut a zkuste jej aktivovat znovu."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

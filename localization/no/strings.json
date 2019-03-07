@@ -62,7 +62,7 @@
     "homepage_tabs": "Hjemmesidefaner",
     "store": "Butikk",
     "view_in": "Vis i",
-    "drm_third_party": "Advarsel: Denne tittelen benytter tredjeparts-DRM",
+    "drm_third_party": "Advarsel: Denne tittelen benytter tredjeparts-DRM __drmlist__.",
     "stores": "Butikker",
     "game_transactions": "Spilltransaksjoner",
     "after_coupon": "etter kupongkode",
@@ -207,7 +207,7 @@
     "relist_an_item": "Legg en gjenstand ut på ny",
     "relist_text": "Vil du legge ut denne gjenstanden på ny til en lavere pris?",
     "search_market": "Søk i Steam-samfunnsmarkedet",
-    "drm_third_party_sub": "Advarsel: En eller flere titler i denne pakken bruker tredjeparts DRM",
+    "drm_third_party_sub": "Advarsel: En eller flere titler i denne pakken bruker tredjeparts DRM __drmlist__.",
     "customize": "Tilpass",
     "custom": "Tilpasset",
     "bundle_saving_text": "Her er det du sparer ved å kjøpe denne pakken",
@@ -529,5 +529,8 @@
         "wallet": "Koden du har angitt er fra et Steam-gavekort eller en Steam-lommebokskode",
         "toomany": "Det har vært for mange nylige aktiveringsforsøk fra denne kontoen. Vennligst vent og prøv igjen senere.",
         "default": "Det oppstod en uventet feil. Din produktkode er ikke innløst. Vennligst vent 30 minutter og prøv å innløse koden igjen."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

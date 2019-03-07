@@ -64,7 +64,7 @@
     "view_in": "檢視於",
     "view_in_store": "在商店中檢視",
     "view_on_website": "在 __website__ 上檢視",
-    "drm_third_party": "警告：這款遊戲使用第三方 DRM",
+    "drm_third_party": "警告：這款遊戲使用第三方 DRM__drmlist__。",
     "stores": "商店",
     "game_transactions": "遊戲內交易項目",
     "after_coupon": "抵用優惠券後",
@@ -210,7 +210,7 @@
     "relist_an_item": "重新上架一件物品",
     "relist_text": "您是否要以較低的價格重新上架該物品？",
     "search_market": "搜尋 Steam 社群市集",
-    "drm_third_party_sub": "警告：此遊戲包中有一份或以上的遊戲使用第三方 DRM",
+    "drm_third_party_sub": "警告：此遊戲包中有一份或以上的遊戲使用第三方 DRM__drmlist__。",
     "customize": "自訂",
     "custom": "自訂",
     "bundle_saving_text": "這是您購買此組合包可節省的金額",
@@ -550,5 +550,8 @@
         "in_collection": "擁有",
         "played": "已玩過",
         "never_played": "未玩過"
+    },
+    "punctuation": {
+        "parenthesis_with_content": "（__content__）"
     }
 }

@@ -62,7 +62,7 @@
     "homepage_tabs": "Startsidans flik",
     "store": "Butik",
     "view_in": "Visa i",
-    "drm_third_party": "Varning: Titeln använder tredjeparts DRM",
+    "drm_third_party": "Varning: Titeln använder tredjeparts DRM __drmlist__.",
     "stores": "Butiker",
     "game_transactions": "Speltransaktioner",
     "after_coupon": "efter kupongkod",
@@ -207,7 +207,7 @@
     "relist_an_item": "Återlista ett objekt",
     "relist_text": "Vill du återlista detta objekt till ett lägre pris?",
     "search_market": "Sök på Steams Gemenskapsmarknad",
-    "drm_third_party_sub": "Varning: En eller flera titlar i detta paket använder 3djeparts DRM",
+    "drm_third_party_sub": "Varning: En eller flera titlar i detta paket använder 3djeparts DRM __drmlist__.",
     "customize": "Anpassa",
     "custom": "Anpassa",
     "bundle_saving_text": "Detta sparar du genom att köpa detta paket",
@@ -529,5 +529,8 @@
         "wallet": "Koden du har skrivit in är ett Steam-gåvorkort eller Steam-plånbokskod",
         "toomany": "Det har varit för många senaste aktivering försök från detta konto.  Vänta och försök igen senare.",
         "default": "Ett oväntat fel uppstod. Din produktkod har inte aktiverats. Vänligen vänta 30 minuter och försök igen."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

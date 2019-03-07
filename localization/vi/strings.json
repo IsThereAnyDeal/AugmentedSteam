@@ -62,7 +62,7 @@
     "homepage_tabs": "Tab trang chủ",
     "store": "Cửa hàng",
     "view_in": "Xem ở",
-    "drm_third_party": "Cảnh báo: Sử dụng DRM bên thứ 3",
+    "drm_third_party": "Cảnh báo: Sử dụng DRM bên thứ 3 __drmlist__.",
     "stores": "Cửa hàng",
     "game_transactions": "Mua hàng trong ứng dụng",
     "after_coupon": "sau mã giảm giá",
@@ -207,7 +207,7 @@
     "relist_an_item": "Relist an item",
     "relist_text": "Would you like to relist this item at a lower price?",
     "search_market": "Search Steam Community Market",
-    "drm_third_party_sub": "Cảnh báo: trong gói này yêu cầu sử dụng DRM của bên thứ 3",
+    "drm_third_party_sub": "Cảnh báo: trong gói này yêu cầu sử dụng DRM của bên thứ 3 __drmlist__.",
     "customize": "Tùy chỉnh",
     "custom": "Tùy biến",
     "bundle_saving_text": "Here's what you save by buying this bundle",
@@ -529,5 +529,8 @@
         "wallet": "Key bạn nhập là từ thẻ Steam Gift hoặc là mã Steam Wallet",
         "toomany": "There have been too many recent activation attempts from this account.  Please wait and try again later.",
         "default": "An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

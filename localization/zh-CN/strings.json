@@ -64,7 +64,7 @@
     "view_in": "查看于",
     "view_in_store": "在商店中查看",
     "view_on_website": "在 __website__ 上查看",
-    "drm_third_party": "警告：本作使用第三方 DRM 验证",
+    "drm_third_party": "警告：本作使用第三方 DRM 验证__drmlist__。",
     "stores": "商店",
     "game_transactions": "游戏内消费",
     "after_coupon": "使用优惠券后",
@@ -210,7 +210,7 @@
     "relist_an_item": "重新上架一件物品",
     "relist_text": "您要以一个较低的价格重新上架该物品么？",
     "search_market": "搜索 Steam 社区市场",
-    "drm_third_party_sub": "警告：该包中有一个或多个项目使用第三方 DRM 验证",
+    "drm_third_party_sub": "警告：该包中有一个或多个项目使用第三方 DRM 验证__drmlist__。",
     "customize": "自定义",
     "custom": "自定义",
     "bundle_saving_text": "购买此捆绑包将为您节省",
@@ -550,5 +550,8 @@
         "in_collection": "拥有",
         "played": "已玩过",
         "never_played": "未玩过"
+    },
+    "punctuation": {
+        "parenthesis_with_content": "（__content__）"
     }
 }

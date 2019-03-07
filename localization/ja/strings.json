@@ -62,7 +62,7 @@
     "homepage_tabs": "ホームページタブ",
     "store": "ストア",
     "view_in": "次で表示",
-    "drm_third_party": "警告: このタイトルはサードパーティーのDRMを使用します",
+    "drm_third_party": "警告: このタイトルはサードパーティーのDRMを使用します__drmlist__。",
     "stores": "ストア",
     "game_transactions": "ゲームでの取引",
     "after_coupon": "クーポン適用後",
@@ -207,7 +207,7 @@
     "relist_an_item": "アイテムを再出品する",
     "relist_text": "価格をさらに低くして再出品しますか?",
     "search_market": "Steam コミュニティマーケットを検索",
-    "drm_third_party_sub": "警告: このパッケージ内の1つ以上のタイトルがサードパーティー製DRMを使用しています",
+    "drm_third_party_sub": "警告: このパッケージ内の1つ以上のタイトルがサードパーティー製DRMを使用しています__drmlist__。",
     "customize": "カスタマイズ",
     "custom": "カスタム",
     "bundle_saving_text": "このバンドルの購入でお得になる金額",
@@ -529,5 +529,8 @@
         "wallet": "入力されたコードは Steam ギフトカードか Steam ウォレットコードです。",
         "toomany": "このアカウントから、有効化を試みる回数が多すぎます。後でまたお試しください。",
         "default": "予期しないエラーが発生したため、製品コードを有効化できませんでした。30分後に再度お試しください。"
+    },
+    "punctuation": {
+        "parenthesis_with_content": "（__content__）"
     }
 }

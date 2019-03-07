@@ -62,7 +62,7 @@
     "homepage_tabs": "Onglets de la page d'accueil",
     "store": "Magasin",
     "view_in": "Voir sur",
-    "drm_third_party": "Attention : ce titre utilise le DRM d'un tiers",
+    "drm_third_party": "Attention : ce titre utilise le DRM d'un tiers __drmlist__.",
     "stores": "Magasins",
     "game_transactions": "Achats en jeu",
     "after_coupon": "après le code du coupon",
@@ -207,7 +207,7 @@
     "relist_an_item": "Remettre un objet en vente",
     "relist_text": "Voulez-vous remettre cet objet en vente à un prix inférieur ?",
     "search_market": "Chercher sur le Marché de la Communauté Steam",
-    "drm_third_party_sub": "Attention : un ou plusieurs titres dans ce package utilisent le DRM d'un tiers",
+    "drm_third_party_sub": "Attention : un ou plusieurs titres dans ce package utilisent le DRM d'un tiers __drmlist__.",
     "customize": "Personnaliser",
     "custom": "Personnalisé",
     "bundle_saving_text": "Voici ce que vous économisez en achetant ce pack",
@@ -529,5 +529,8 @@
         "wallet": "Le code que vous avez saisi est un code de porte-monnaie Steam ou d'une carte cadeau",
         "toomany": "Trop de tentatives d'activation récentes depuis ce compte ont été effectuées. Veuillez patienter et réessayer d'activer votre code produit plus tard.",
         "default": "Une erreur s'est produite. Votre code produit n'a pas été activé. Veuillez attendre 30 minutes et réessayer."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

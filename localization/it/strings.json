@@ -62,7 +62,7 @@
     "homepage_tabs": "Schede Homepage",
     "store": "Negozio",
     "view_in": "Mostra in",
-    "drm_third_party": "Attenzione: Questo titolo utilizza DRM di terze parti",
+    "drm_third_party": "Attenzione: Questo titolo utilizza DRM di terze parti __drmlist__.",
     "stores": "Negozi",
     "game_transactions": "Transazioni in-game",
     "after_coupon": "con il coupon",
@@ -207,7 +207,7 @@
     "relist_an_item": "Rimetti in vendita un oggetto",
     "relist_text": "Vuoi rimettere in vendita questo oggetto ad un prezzo inferiore?",
     "search_market": "Cerca nel Mercato della Comunità",
-    "drm_third_party_sub": "Attenzione: Uno o più titoli in questo pacchetto utilizzano DRM di terze parti",
+    "drm_third_party_sub": "Attenzione: Uno o più titoli in questo pacchetto utilizzano DRM di terze parti __drmlist__.",
     "customize": "Personalizza",
     "custom": "Personalizzato",
     "bundle_saving_text": "Ecco quanto risparmi acquistando questo bundle",
@@ -529,5 +529,8 @@
         "wallet": "Il codice inserito è relativo ad un buono regalo di Steam o ad un codice del Portafoglio di Steam",
         "toomany": "Sono stati effettuati troppi tentativi di attivazione da questo account. Attendi e riprova più tardi.",
         "default": "Si è verificato un errore inaspettato e il codice non è stato riscattato. Aspetta 30 minuti, quindi riprova a riscattare il codice."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }
