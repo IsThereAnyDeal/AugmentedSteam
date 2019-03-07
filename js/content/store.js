@@ -2804,7 +2804,6 @@ let WishlistPageClass = (function(){
 let WishlistNotes = (function(){
 
     let noteModalTemplate;
-    let notes;
     let listenerCreated = false;
 
     function WishlistNotes() {
