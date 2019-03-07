@@ -359,6 +359,7 @@ SyncedStorage.defaults = {
     'hideaboutmenu': false,
     'keepssachecked': false,
     'showemptywishlist': true,
+    'showwlnotes': true,
     'wishlist_notes': {},
     'version_show': true,
     'replaceaccountname': true,

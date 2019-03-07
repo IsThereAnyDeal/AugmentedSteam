@@ -2529,10 +2529,12 @@ let WishlistPageClass = (function(){
 
         let instance = this;
         wishlistNotes = new WishlistNotes();
+
+        let showNotes = SyncedStorage.get("showwlnotes");
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 if (record.addedNodes.length === 1) {
-                    if (isMyWishlist()) {
+                    if (isMyWishlist() && showNotes) {
                         instance.addWishlistNote(record.addedNodes[0]);
                     }
                     instance.highlightApps(record.addedNodes[0]);
