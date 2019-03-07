@@ -42,6 +42,20 @@ class CacheStorage {
 }
 
 
+class Extension {
+    static async version() {
+        return {
+            'cached': LocalStorage.get('version'),
+            'current': Info.version,
+        };
+    }
+
+    static async updateVersion() {
+        LocalStorage.set('version', Info.version);
+    }
+}
+
+
 class Api {
     // FF doesn't support static members
     // static origin; // this *must* be overridden
@@ -637,6 +651,8 @@ let appCacheKey = (params => `app_${params.appid}`);
 let ratesCacheKey = (params => `rates_${params.to}`);
 
 let actionCallbacks = new Map([
+    ['extension.version', Extension.version],
+    ['extension.version.update', Extension.updateVersion],
     ['ignored', Steam.ignored],
     ['owned', Steam.owned],
     ['wishlist', Steam.wishlist],
