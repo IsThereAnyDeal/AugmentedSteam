@@ -164,6 +164,10 @@ class AugmentedSteamApi extends Api {
     static async dlcInfo({ 'params': params, }) {
         return AugmentedSteamApi.getEndpoint("v01/dlcinfo", params).then(result => result.data);
     }
+
+    static async expireStorePageData({ 'params': params, }) {
+        CacheStorage.remove(`app_${params.appid}`);
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
@@ -645,6 +649,7 @@ let actionCallbacks = new Map([
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
+    ['storepagedata.expire', AugmentedSteamApi.expireStorePageData],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
     ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 60*60, ratesCacheKey)],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
