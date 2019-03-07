@@ -1,20 +1,53 @@
+/* FIXME
+class Version {
+
+    constructor(major, minor=0, patch=0) {
+        this.major = parseInt(major);
+        this.minor = parseInt(minor);
+        this.patch = parseInt(patch);
+    }
+
+    toString() {
+        return `${this.major}.${this.minor}.${this.patch}`;
+    }
+
+    isOlderOrSame(version) {
+        return this.major < version.major
+            || (this.major === version.major && this.minor < version.minor)
+            || (this.major === version.major && this.minor === version.minor && this.patch <= version.patch);
+    }
+}
+*/
+
 const Info = {
     'version': "0.9.4",
-    compareVersions(x, y) {
-        if (typeof y == 'undefined') { y = this.version; }
-        x = x.split('.');
-        y = y.split('.');
-        let len = Math.min(x.length, y.length);
-        for (let i = 0; i < len; ++i) {
-            let [a, b] = [x[i], y[i]];
-            if (a < b) { return -1; }
-            if (a > b) { return 1; }
-        }
-        if (x.length < y.length) { return -1; }
-        if (x.length > y.length) { return 1; }
-        return 0;
-    },
 };
+
+/* FIXME
+class VersionHandler {
+
+    static migrateSettings() {
+        let oldVersion = SyncedStorage.get("version");
+        if (!oldVersion) {
+            oldVersion = Info.version
+        }
+
+        if (oldVersion.isOlderOrSame(new Version(0,9, 4))) {
+
+            // Remove eu1 region
+            let priceRegions = SyncedStorage.get('regional_countries');
+            let i = priceRegions.includes('eu1');
+            if (i !== -1) {
+                priceRegions.splice(i, 1);
+                SyncedStorage.set('regional_countries', priceRegions);
+            }
+
+        }
+
+        SyncedStorage.set("version", Info.version);
+    }
+}
+*/
 
 function checkError() {
     if (!chrome.runtime.lastError) {
@@ -210,23 +243,6 @@ class SyncedStorage {
         });
     }
 
-    static migrateSettings() {
-        let version = SyncedStorage.get("version");
-        if (!version) {
-            version = "0.9.4";
-        }
-        if (Info.compareVersions(version, "0.9.5") < 0) {
-            // Remove eu1 region
-            let priceRegions = SyncedStorage.get('regional_countries');
-            let i = priceRegions.includes('eu1');
-            if (i !== -1) {
-                priceRegions.splice(i, 1);
-                SyncedStorage.set('regional_countries', priceRegions);
-            }
-        }
-        SyncedStorage.set("version", Info.version);
-    }
-
     // load whole storage and make local copy
     static async init() {
         let that = this;
@@ -239,7 +255,11 @@ class SyncedStorage {
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
         Object.assign(that.cache, storage);
-        SyncedStorage.migrateSettings();
+
+        // FIXME MigrateSettings shouldn't be handled from here, there's no point in running it each time we initiale this storage,
+        //       instead run it only when new version is detected
+        //  SyncedStorage.migrateSettings();
+
         return that.cache;
     }
     static then(onDone, onCatch) {
