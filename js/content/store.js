@@ -2737,9 +2737,8 @@ let WishlistPageClass = (function(){
 
         if (!node.dataset.appId) { return; }
 
-        node.removeEventListener("mouseenter", wishlistRowEnterHandler);
         if (!node.querySelector(".es_lowest_price")) {
-            node.addEventListener("mouseenter", wishlistRowEnterHandler);
+            node.addEventListener("mouseenter", (e) => addWishlistPrice(e.target), { 'capture': false, 'once': true, });
         }
     };
 
