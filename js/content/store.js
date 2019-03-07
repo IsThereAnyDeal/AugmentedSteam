@@ -2824,7 +2824,7 @@ let WishlistNotes = (function(){
 
     function WishlistNotes() {
         this.noteModalTemplate = `
-                <div id="es_note_modal" data-appid="__appid__">
+                <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
                         <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
                             <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
@@ -2845,7 +2845,7 @@ let WishlistNotes = (function(){
 
     WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '') + '\`); }');
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
         if (!this.listenerCreated) {
             let that = this;
@@ -2855,8 +2855,9 @@ let WishlistNotes = (function(){
 
                     let modal = document.querySelector('#es_note_modal');
                     let appid = modal.dataset.appid;
+                    let selector = decodeURIComponent(modal.dataset.selector);
                     let note = BrowserHelper.escapeHTML(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                    let node = document.querySelector(`.wishlist_row[data-app-id='${appid}'] div.esi-note`);
+                    let node = document.querySelector(selector);
 
                     if (note.length !== 0) {
                         that.setNote(appid, note);
