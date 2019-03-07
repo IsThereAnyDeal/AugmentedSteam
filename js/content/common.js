@@ -93,36 +93,6 @@ let DateParser = (function(){
 })();
 
 
-
-let LocalData = (function(){
-
-    let self = {};
-
-    self.set = function(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
-    };
-
-    self.get = function(key, defaultValue) {
-        let v = localStorage.getItem(key);
-        if (!v) return defaultValue;
-        try {
-            return JSON.parse(v);
-        } catch (err) {
-            return defaultValue;
-        }
-    };
-
-    self.del = function(key) {
-        localStorage.removeItem(key);
-    };
-
-    self.clear = function() {
-        localStorage.clear();
-    };
-
-    return self;
-})();
-
 let ExtensionLayer = (function() {
 
     let self = {};
@@ -422,7 +392,7 @@ let User = (function(){
                 self.steamId = login.steamId;
                 // If we're *newly* logged in, then login.userCountry will be set
                 if (login.userCountry) {
-                    LocalData.set("userCountry", login.userCountry);
+                    LocalStorage.set("userCountry", login.userCountry);
                 }
             })
             .catch(err => console.error(err))
@@ -460,7 +430,7 @@ let User = (function(){
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            country = LocalData.get("userCountry");
+            country = LocalStorage.get("userCountry");
             if (!country) {
                 country = BrowserHelper.getCookie("steamCountry");
             }
@@ -983,11 +953,11 @@ let EnhancedSteam = (function() {
     let self = {};
 
     self.checkVersion = function() {
-        let version = LocalData.get("version");
+        let version = LocalStorage.get("version");
 
         if (!version) {
             // new instalation detected
-            LocalData.set("version", Info.version);
+            LocalStorage.set("version", Info.version);
             return;
         }
 
@@ -1014,7 +984,7 @@ let EnhancedSteam = (function() {
                 );
             }
         );
-        LocalData.set("version", Info.version);
+        LocalStorage.set("version", Info.version);
 
         window.addEventListener("message", function(event) {
             if (event.source !== window) return;
@@ -1834,8 +1804,8 @@ let DynamicStore = (function(){
         _promise = null;
         _owned = new Set();
         _wishlisted = new Set();
-        LocalData.del("dynamicstore");
-        LocalData.del("dynamicstore_update");
+        LocalStorage.remove("dynamicstore");
+        LocalStorage.remove("dynamicstore_update");
     };
 
     self.isIgnored = function(appid) {

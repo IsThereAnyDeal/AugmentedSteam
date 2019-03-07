@@ -3145,16 +3145,16 @@ let MarketPageClass = (function(){
             `<div id="es_popular_refresh_toggle" class="btn_grey_black btn_small" data-tooltip-text="${Localization.str.market_popular_items_toggle}"></div>`);
 
         document.querySelector("#es_popular_refresh_toggle").addEventListener("click", function(e) {
-            toggleRefresh(!LocalData.get("popular_refresh"));
+            toggleRefresh(!LocalStorage.get("popular_refresh"));
         });
 
-        toggleRefresh(LocalData.get("popular_refresh", false));
+        toggleRefresh(LocalStorage.get("popular_refresh", false));
 
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
         function toggleRefresh(state) {
             document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
-            LocalData.set("popular_refresh", state);
+            LocalStorage.set("popular_refresh", state);
             ExtensionLayer.runInPageContext("function(){ g_bMarketWindowHidden = " + state +"; }");
         }
     };
