@@ -3024,28 +3024,48 @@ let StoreFrontPageClass = (function(){
             node.classList.remove("active");
         });
 
-        function homeCtnNode(selector) {
-            let node = document.querySelector(selector);
-            if (!node) { return null; }
-            return node.closest(".home_ctn");
-        }
+        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn"));
+        let staticNodes = [
+            // TODO Remove es prefix
+            ["show_featuredrecommended", ".home_cluster_ctn"],
+            ["show_specialoffers", document.querySelector(".special_offers").parentElement],
+            ["show_trendingamongfriends", ".friends_recently_purchased"],
+            ["show_es_discoveryqueue", ".discovery_queue_ctn"],
+            ["show_browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement],
+            ["show_curators", ".steam_curators_ctn"],
+            ["show_morecuratorrecommendations", ".apps_recommended_by_curators_ctn"],
+            ["show_recentlyupdated", document.querySelector(".recently_updated_block").parentElement],
+            ["show_fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn"],
+            ["show_popularvrgames", ".best_selling_vr_ctn"],
+            ["show_es_homepagetabs", ".tab_container", Localization.str.homepage_tabs],
+            ["show_gamesstreamingnow", ".live_streams_ctn"],
+            ["show_under", document.querySelector("[class*='specials_under']").parentElement.parentElement],
+            ["show_updatesandoffers", ".marketingmessage_area"],
+            ["show_es_homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar]
+        ].forEach(entry => {
+            if (typeof entry[1] === "string") {
+                entry[1] = document.querySelector(entry[1]);    
+            }
+            Customizer.addToggleHandler("show_" + entry[0], entry[1], entry[2]);
 
-        let nodes = document.querySelectorAll(".home_page_body_ctn .home_ctn");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
+            for (i = 0; i < dynamicNodes.length; ++i) {
+                if (dynamicNodes[i] === entry[1]) {
+                    dynamicNodes.splice(i, 1);
+                    break;
+                }
+            }
+        });
+
+        for (i = 0; i < dynamicNodes.length; ++i) {
+            let headerNode = dynamicNodes[i].querySelector(".home_page_content > h2,.carousel_container > h2");
             if (headerNode) {
+                console.warn("Node with textValue %s is not recognized!", Customizer.textValue(headerNode));
                 let option = Customizer.textValue(headerNode).toLowerCase().replace(/[^a-z]*/g, "");
                 if (option !== "") {
-                    Customizer.addToggleHandler("show_"+option, node);
+                    Customizer.addToggleHandler("show_" + option, dynamicNodes[i]);
                 }
             }
         }
-
-        // added by hand, those we couldn't get automatically
-        Customizer.addToggleHandler("show_es_discoveryqueue", document.querySelector(".discovery_queue_ctn"));
-        Customizer.addToggleHandler("show_es_homepagetabs", homeCtnNode(".home_tab_col"), Localization.str.homepage_tabs);
-        Customizer.addToggleHandler("show_es_homepagesidebar", document.querySelector(".home_page_gutter"), Localization.str.homepage_sidebar);
     };
 
     return StoreFrontPageClass;
