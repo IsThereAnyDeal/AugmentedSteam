@@ -41,7 +41,7 @@ let Options = (function(){
     
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        Localization.promise().then(() => {
+        Localization.then(() => {
             document.title = "Augmented Steam " + Localization.str.thewordoptions;
             
             // Localize elements with text
@@ -212,7 +212,8 @@ let Options = (function(){
         Region.populateRegionalSelects();
         
         if (!changelogLoaded) {
-            RequestData.getHttp('changelog.txt', {type: "text/plain"}).then(data => {
+            fetch(chrome.runtime.getURL('changelog.txt')).then(r => r.text())
+            .then(data => {
                 document.querySelector("#changelog_text").innerHTML = data.replace(/\n/g, "\n<br>");
             });
             changelogLoaded = true;
