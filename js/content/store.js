@@ -824,14 +824,16 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addWishlistNote = function() {
         if (!User.isSignedIn) { return; }
-
-        if (document.getElementById("add_to_wishlist_area_success").style.display !== "none") {
+        let wishlistarea = document.getElementById("add_to_wishlist_area_success");
+        if (wishlistarea && wishlistarea.style.display !== "none") {
             _addWishlistNote(this.appid);
         }
     }
 
     AppPageClass.prototype.addWishlistNoteObserver = function() {
         if (!User.isSignedIn) { return; }
+        let wishlistarea = document.getElementById("add_to_wishlist_area_success");
+        if (!wishlistarea) { return; }
 
         let observer = new MutationObserver(record => {
             let display = record[0].target.style.display;
@@ -844,7 +846,7 @@ let AppPageClass = (function(){
             }
         });
 
-        observer.observe(document.getElementById("add_to_wishlist_area_success"), {attributes: true, attributeFilter: ["style"]});
+        observer.observe(wishlistarea, {attributes: true, attributeFilter: ["style"]});
     }
 
     let _addWishlistNote = function(appid) {
@@ -2550,8 +2552,9 @@ let WishlistPageClass = (function(){
     function isMyWishlist() {
         if (!User.isSignedIn) { return false; }
 
-        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/");
-        return window.location.href.startsWith(myWishlistUrl)
+        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
+        let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
+        return myWishlistUrlRegex.test(window.location.href)
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
