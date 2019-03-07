@@ -2801,16 +2801,12 @@ let WishlistPageClass = (function(){
                 wishlistNotes.deleteNote(e.data.removed_wl_entry);
             }
         });
-    }
+    };
 
     return WishlistPageClass;
 })();
 
 let WishlistNotes = (function(){
-
-    let noteModalTemplate;
-    let notes;
-    let listenerCreated = false;
 
     function WishlistNotes() {
         this.noteModalTemplate = `
@@ -2867,25 +2863,25 @@ let WishlistNotes = (function(){
             });
             this.listenerCreated = true;
         }
-    }
+    };
 
     WishlistNotes.prototype.getNote = function(appid) {
         return this.notes[appid];
-    }
+    };
 
     WishlistNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
         SyncedStorage.set("wishlist_notes", this.notes);
-    }
+    };
 
     WishlistNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
         SyncedStorage.set("wishlist_notes", this.notes);
-    }
+    };
 
     WishlistNotes.prototype.exists = function(appid) {
-        return (this.notes[appid] && (this.notes[appid] !== '')) ? true : false;
-    }
+        return (this.notes[appid] && (this.notes[appid] !== ''));
+    };
 
     return WishlistNotes;
 
@@ -2913,7 +2909,7 @@ let TagPageClass = (function(){
                 hideNode(node);
             }
         });
-    }
+    };
 
     TagPageClass.prototype.observeChanges = function() {
         let observer = new MutationObserver(mutations => {
@@ -2929,7 +2925,7 @@ let TagPageClass = (function(){
         rows.forEach(row => {
             observer.observe(document.getElementById(row), {childList: true});
         })
-    }
+    };
 
     function hideNode(node) {
         if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
