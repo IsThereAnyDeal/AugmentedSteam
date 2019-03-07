@@ -2838,8 +2838,10 @@ let WishlistNotes = (function(){
                 if (e.target.closest(".es_note_modal_submit")) {
                     e.preventDefault();
 
-                    let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                    let node = document.querySelector(nodeSelector);
+                    let modal = document.querySelector('#es_note_modal');
+                    let appid = modal.dataset.appid;
+                    let note = BrowserHelper.escapeHTML(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                    let node = document.querySelector(`.wishlist_row[data-app-id='${appid}'] div.esi-note`);
 
                     if (note.length !== 0) {
                         that.setNote(appid, note);
