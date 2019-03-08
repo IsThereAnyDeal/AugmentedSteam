@@ -206,7 +206,7 @@ let CommunityCommon = (function() {
             let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
             if(!appid) { continue; }
 
-            node.insertAdjacentHTML("afterbegin",
+            HTML.afterBegin(node,
                 `<div class="es_steamcardexchange_link">
                     <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
                         <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
@@ -434,11 +434,11 @@ let ProfileHomePageClass = (function(){
         if (htmlstr) {
             let linksNode = document.querySelector(".profile_item_links");
             if (linksNode) {
-                linksNode.insertAdjacentHTML("beforeend", htmlstr + '<div style="clear: both;"></div>');
+                HTML.beforeEnd(linksNode,  htmlstr + '<div style="clear: both;"></div>');
             } else {
                 let rightColNode = document.querySelector(".profile_rightcol");
-                rightColNode.insertAdjacentHTML("beforeend", '<div class="profile_item_links">' + htmlstr + '</div>');
-                rightColNode.insertAdjacentHTML("afterend", '<div style="clear: both;"></div>');
+                HTML.beforeEnd(rightColNode, '<div class="profile_item_links">' + htmlstr + '</div>');
+                HTML.afterEnd(rightColNode, '<div style="clear: both;"></div>');
             }
         }
 
@@ -508,7 +508,7 @@ let ProfileHomePageClass = (function(){
 
             html += '</div></div>';
 
-            profileBadges.insertAdjacentHTML("afterend", html);
+            HTML.afterEnd(profileBadges, html);
 
             ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
         });
@@ -551,7 +551,7 @@ let ProfileHomePageClass = (function(){
         document.querySelector(".no_header").classList.add("has_profile_background");
         node = document.querySelector(".profile_content");
         node.classList.add("has_profile_background");
-        node.insertAdjacentHTML("afterbegin", '<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + bg + ');"></div></div></div>');
+        HTML.afterBegin(node, '<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + bg + ');"></div></div></div>');
     };
 
     ProfileHomePageClass.prototype.addProfileStoreLinks = function() {
@@ -587,8 +587,8 @@ let ProfileHomePageClass = (function(){
             // Build SteamRep section
             let statusInfo = document.querySelector("div.responsive_status_info");
             if (!statusInfo) return;
-            
-            statusInfo.insertAdjacentHTML("beforeend", '<div id="es_steamrep"></div>');
+
+            HTML.beforeEnd(statusInfo, '<div id="es_steamrep"></div>');
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
@@ -596,7 +596,7 @@ let ProfileHomePageClass = (function(){
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    document.querySelector("#es_steamrep").insertAdjacentHTML("afterend",
+                    HTML.afterEnd(document.querySelector("#es_steamrep"),
                         `<div class="${img}">
                             <img src="${imgUrl}" /> 
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${ BrowserHelper.escapeHTML(value) }</a>
@@ -640,8 +640,9 @@ let ProfileHomePageClass = (function(){
             document.body.classList.add("es_profile_style");
             switch (style) {
                 case "goldenprofile":
-                    document.querySelector("head")
-                        .insertAdjacentHTML("beforeend", "<link rel='stylesheet' type='text/css' href='https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css'>");
+                    HTML.beforeEnd(
+                        document.querySelector("head"),
+                        "<link rel='stylesheet' type='text/css' href='https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css'>");
 
                     let container = document.createElement("div");
                     container.classList.add("profile_lny_wrapper");
@@ -673,7 +674,8 @@ let ProfileHomePageClass = (function(){
                             </div>
                         </div>`);
 
-                    document.querySelector(".profile_header").insertAdjacentHTML("beforebegin",
+                    HTML.beforeBegin(
+                        document.querySelector(".profile_header"),
                         `<div class="lny_header">
                             <div class="lny_pig_center"></div>
                         </div>`);
@@ -683,7 +685,7 @@ let ProfileHomePageClass = (function(){
                     document.querySelector("head")
                         .insertAdjacentHTML("beforeend", "<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
 
-                    document.querySelector(".profile_header_bg_texture").insertAdjacentHTML("beforeend", "<div class='holidayprofile_header_overlay'></div>");
+                    HTML.beforeEnd(document.querySelector(".profile_header_bg_texture"), "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
                     let script = document.createElement("script");
@@ -730,7 +732,7 @@ let ProfileHomePageClass = (function(){
         let channelViewers = data.viewer_count;
         let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
 
-        document.querySelector(".profile_leftcol").insertAdjacentHTML("afterbegin",
+        HTML.afterBegin(document.querySelector(".profile_leftcol"),
             `<div class='profile_customization' id='es_twitch'>            
                     <div class='profile_customization_header'>
                         ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
@@ -832,7 +834,7 @@ let GamesPageClass = (function(){
 
         let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
 
-        document.querySelector("#mainContents").insertAdjacentHTML("beforebegin", html);
+        HTML.beforeBegin("#mainContents", html);
     };
 
     let scrollTimeout = null;
@@ -1090,7 +1092,7 @@ let ProfileEditPageClass = (function(){
                 </div>
             </div>`;
 
-        document.querySelector(".group_content_bodytext").insertAdjacentHTML("beforebegin", html);
+        HTML.beforeBegin(".group_content_bodytext", html);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
         let response = await Background.action('profile.background.games');
@@ -1272,7 +1274,7 @@ let StatsPageClass = (function(){
         let personal = document.querySelector("#personalAchieve");
         if (!personal) { return; }
 
-        document.querySelector("#tabs").insertAdjacentHTML("beforebegin",
+        HTML.beforeBegin("#tabs",
             `<div id='achievement_sort_options' class='sort_options'>
                 ${Localization.str.sort_by}
                 <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
@@ -1394,7 +1396,7 @@ let InventoryPageClass = (function(){
 
         if (discount > 0) {
             let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
-            itemActions.insertAdjacentHTML("beforeend",
+            HTML.beforeEnd(itemActions,
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
                         <div class='es_discount_block es_game_purchase_discount'>
@@ -1407,7 +1409,7 @@ let InventoryPageClass = (function(){
                     </div>
                 </div>`);
         } else {
-            itemActions.insertAdjacentHTML("beforeend",
+            HTML.beforeEnd(itemActions,
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
                         <div class='es_game_purchase_price es_price'>${price}</div>
@@ -1491,8 +1493,8 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_quicksell" + assetId));
-            marketActions.insertAdjacentHTML("beforeend", makeMarketButton("es_instantsell" + assetId));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1798,12 +1800,10 @@ let InventoryPageClass = (function(){
         document.documentElement.appendChild(es_gotopage);
 
         // Go to first page
-        document.querySelector("#pagebtn_previous").insertAdjacentHTML("afterend",
-            "<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled' style='margin:0 3px'>&lt;&lt;</a>");
+        HTML.afterEnd("#pagebtn_previous", "<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled' style='margin:0 3px'>&lt;&lt;</a>");
 
         // Go to last page
-        document.querySelector("#pagebtn_next").insertAdjacentHTML("beforebegin",
-            "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
+        HTML.beforeBegin("#pagebtn_next", "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
 
         let pageGo = document.createElement("div");
         pageGo.id = "es_pagego";
@@ -1972,7 +1972,7 @@ let BadgesPageClass = (function(){
             if (cost) {
                 let badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
                 if (badgeNameBox) {
-                    badgeNameBox.insertAdjacentHTML("afterend", "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
+                    HTML.afterEnd(badgeNameBox, "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
                 }
             }
 
@@ -2080,13 +2080,12 @@ let BadgesPageClass = (function(){
         countDropsFromDOM(document);
 
         if (this.hasMultiplePages) {
-            document.querySelector(".profile_xp_block_right").insertAdjacentHTML("afterbegin",
-                "<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
+            HTML.afterBegin(".profile_xp_block_right", "<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
 
             document.querySelector("#es_calculations").addEventListener("click", async function(e) {
                 if (completed) { return; }
 
-                document.querySelector("#es_calculations").innerText = Localization.str.loading;
+                document.querySelector("#es_calculations").textContent = Localization.str.loading;
 
                 await eachBadgePage(countDropsFromDOM);
 
@@ -2131,7 +2130,7 @@ let BadgesPageClass = (function(){
 
         let sheetNode = document.querySelector(".badges_sheet");
         for (let row of badgeRows) {
-            sheetNode.insertAdjacentHTML("beforeend", row[0]);
+            HTML.beforeEnd(sheetNode, row[0]);
         }
 
         resetLazyLoader();
@@ -2176,7 +2175,7 @@ let BadgesPageClass = (function(){
 		    </div>`);
         
         // Insert dropdown button
-        document.querySelector(".profile_badges_sortoptions span").insertAdjacentHTML("afterend",
+        HTML.afterEnd(".profile_badges_sortoptions span",
             `<span id="wishlist_sort_options">
                 <div class="store_nav">
                     <div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
@@ -2300,8 +2299,7 @@ let BadgesPageClass = (function(){
                 </div>
             </div>`;
 
-        document.querySelector("#wishlist_sort_options")
-            .insertAdjacentHTML("afterbegin", "<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
+        HTML.afterBegin("#wishlist_sort_options",  "<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
         // Change hash when selecting view
         document.querySelector("#es_badgeview_flyout").addEventListener("click", function(e) {
@@ -2339,7 +2337,7 @@ let BadgesPageClass = (function(){
                         if (infoNode) {
                             let card = infoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                             let text = (card) ? card[1] + " / " + card[2] : '';
-                            infoNode.insertAdjacentHTML("beforebegin", '<div class="es_badge_progress_info">' + text + '</div>');
+                            HTML.beforeBegin(infoNode,  '<div class="es_badge_progress_info">' + text + '</div>');
                         }
                     }
                 }
@@ -2421,9 +2419,10 @@ let GameCardPageClass = (function(){
         }
 
         if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
-            cost = new Price(cost, Currency.storeCurrency)
-            DOMHelper.selectLastNode(document, ".badge_empty_name")
-                .insertAdjacentHTML("afterend", `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
+            cost = new Price(cost, Currency.storeCurrency);
+            HTML.afterEnd(
+                DOMHelper.selectLastNode(document, ".badge_empty_name"),
+                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
 
             document.querySelector(".badge_empty_right").classList.add("esi-badge");
         }
@@ -2459,7 +2458,7 @@ let GameCardPageClass = (function(){
     };
 
     GameCardPageClass.prototype.addStoreTradeForumLink = function() {
-        document.querySelector(".gamecards_inventorylink").insertAdjacentHTML("beforeend",
+        HTML.beforeEnd(".gamecards_inventorylink",
             `<div style="float: right">
                 <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
     				<span>${Localization.str.visit_store}</span>
@@ -2493,7 +2492,7 @@ let FriendsThatPlayPageClass = (function(){
                 underscore.insertAdjacentHTML('beforebegin', html);
                 continue;
             }
-            header.insertAdjacentHTML('beforeend', html);
+            HTML.beforeEnd(header, html);
         }
     };
 
@@ -2566,9 +2565,9 @@ let FriendsThatPlayPageClass = (function(){
         if (section < 3) return; // DLC and unreleased games with no playtime
         section = section >= 4 ? 1 : 2;
 
-        memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")")
-            .insertAdjacentHTML("beforeend",
-                ` (<span id='es_default_sort' style='cursor: pointer;'>
+        HTML.beforeEnd(
+            memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
+            ` (<span id='es_default_sort' style='cursor: pointer;'>
                     ${Localization.str.sort_by.replace(":", "")} ${Localization.str.theworddefault}
                  </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
                     ${Localization.str.sort_by.replace(":", "")} Playtime
@@ -2679,7 +2678,8 @@ let FriendsPageClass = (function(){
                             <span data-esi-sort='default'>${Localization.str.theworddefault}</span>
                             <span data-esi-sort='lastonline' class="es_friends_sort_link">${Localization.str.lastonline}</span>
                           </div>`;
-        document.querySelector("#manage_friends_control").insertAdjacentHTML("beforebegin", sortOptions);
+
+        HTML.beforeBegin("#manage_friends_control", sortOptions);
 
         document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
             if (!e.target.closest("[data-esi-sort]")) { return; }
@@ -2740,7 +2740,7 @@ let MarketListingPageClass = (function(){
         let cardType = document.URL.match("Foil(%20Trading%20Card)?%29") ? "?border=1" : "";
         if (!gameAppId || gameAppId === 753) { return; }
 
-        document.querySelector("div.market_listing_nav").insertAdjacentHTML("beforeend",
+        HTML.beforeEnd("div.market_listing_nav",
         `<a class="btn_grey_grey btn_medium" href="https://steamcommunity.com/my/gamecards/${gameAppId + cardType}" style="float: right; margin-top: -10px;" target="_blank">
                 <span>
                     <img src="https://store.steampowered.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0;" width="24" height="16" border="0" align="top">
@@ -2882,8 +2882,7 @@ let MarketPageClass = (function(){
     MarketPageClass.prototype.addMarketStats = async function() {
         if (!User.isSignedIn) { return; }
 
-        document.querySelector("#findItems")
-            .insertAdjacentHTML("beforebegin",
+        HTML.beforeBegin("#findItems",
                 `<div id="es_summary">
                     <div class="market_search_sidebar_contents">
                         <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
@@ -2981,8 +2980,8 @@ let MarketPageClass = (function(){
                 buttons.style.width = "200px"; // TODO do we still need to change width?
                 if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-                node.querySelector(".market_listing_edit_buttons")
-                    .insertAdjacentHTML("afterend", "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
+                HTML.afterEnd(".market_listing_edit_buttons",
+                    "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
                 // we do this because of changed width, right?
                 let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
@@ -3153,7 +3152,7 @@ let MarketPageClass = (function(){
     };
 
     MarketPageClass.prototype.marketPopularRefreshToggle = function() {
-        document.querySelector("#sellListings .market_tab_well_tabs").insertAdjacentHTML("beforeend",
+        HTML.beforeEnd("#sellListings .market_tab_well_tabs",
             `<div id="es_popular_refresh_toggle" class="btn_grey_black btn_small" data-tooltip-text="${Localization.str.market_popular_items_toggle}"></div>`);
 
         document.querySelector("#es_popular_refresh_toggle").addEventListener("click", function(e) {
@@ -3249,7 +3248,7 @@ let CommunityAppPageClass = (function(){
         if (!SyncedStorage.get("showsteamdb")) { return; }
         let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
 
-        document.querySelector(".apphub_OtherSiteInfo").insertAdjacentHTML("beforeend",
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
             ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDb</span></a>`);
     };
 

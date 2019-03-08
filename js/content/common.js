@@ -253,7 +253,7 @@ let ProgressBar = (function(){
 
         let container = document.getElementById("global_actions");
         if (!container) return;
-        container.insertAdjacentHTML("afterend",
+        HTML.afterEnd(container,
             `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
@@ -308,7 +308,7 @@ let ProgressBar = (function(){
             }
         }
 
-        nodeError.querySelector("ul").insertAdjacentHTML("beforeend", "<li>" + message + "</li>");
+        HTML.beforeEnd(nodeError.querySelector("ul"), "<li>" + message + "</li>");
     };
 
     return self;
@@ -946,11 +946,10 @@ let EnhancedSteam = (function() {
         if (currentLanguage === warningLanguage) { return; }
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
-            document.querySelector("#global_header").insertAdjacentHTML("afterend", `
-                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
+            HTML.afterEnd(document.querySelector("#global_header"),
+                `<div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
                     <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
-                </div>
-            `);
+                </div>`);
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
@@ -977,8 +976,8 @@ let EnhancedSteam = (function() {
         if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
 
         let submenuUsername = document.querySelector(".supernav_container .submenu_username");
-        submenuUsername.querySelector("a").insertAdjacentHTML("afterend", `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
-        submenuUsername.insertAdjacentHTML("beforeend", `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
+        HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
     self.disableLinkFilter = function(){
@@ -1017,8 +1016,8 @@ let EnhancedSteam = (function() {
 
     self.launchRandomButton = function() {
 
-        document.querySelector("#es_popup .popup_menu")
-            .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+        HTML.beforeEnd(document.querySelector("#es_popup .popup_menu"),
+            `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
             let result = await DynamicStore;
@@ -1129,18 +1128,34 @@ class HTML {
     }
 
     static beforeBegin(node, html) {
+        if (typeof(node) === "string") {
+            node = document.querySelector(node);
+        }
+
         node.insertAdjacentHTML("beforebegin", DOMPurify.sanitize(html));
     }
 
     static afterBegin(node, html) {
+        if (typeof(node) === "string") {
+            node = document.querySelector(node);
+        }
+
         node.insertAdjacentHTML("afterbegin", DOMPurify.sanitize(html));
     }
 
     static beforeEnd(node, html) {
+        if (typeof(node) === "string") {
+            node = document.querySelector(node);
+        }
+
         node.insertAdjacentHTML("beforeend", DOMPurify.sanitize(html));
     }
 
     static afterEnd(node, html) {
+        if (typeof(node) === "string") {
+            node = document.querySelector(node);
+        }
+
         node.insertAdjacentHTML("afterend", DOMPurify.sanitize(html));
     }
 
@@ -1201,7 +1216,7 @@ let EarlyAccess = (function(){
                     container.classList.add("es_overlay_container");
                     DOMHelper.wrap(container, imgHeader);
 
-                    container.insertAdjacentHTML("afterbegin", `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+                    HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
                 }
             }
         });
@@ -1429,7 +1444,7 @@ let Highlights = (function(){
             else if (node.classList.contains("dailydeal")) { // can't find it
                 root = node.parentNode;
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
-                root.querySelector(".game_purchase_action").insertAdjacentHTML("beforebegin",  + '<div style="clear: right;"></div>');
+                HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
             else if (node.classList.contains("small_cap")) {
                 node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
@@ -1487,7 +1502,7 @@ let Highlights = (function(){
         // Add the tag
         for (let i=0,len=tags.length; i<len; i++) {
             if (!tags[i].querySelector(".es_tag_" + tag)) {
-                tags[i].insertAdjacentHTML("beforeend", '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+                HTML.beforeEnd(tags[i], '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
             }
         }
     }

@@ -101,13 +101,13 @@ let Options = (function(){
             let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
             let countries = SyncedStorage.get("regional_countries");
             countries.forEach(country => {
-                addAnotherWrapper.insertAdjacentHTML("beforebegin", generateRegionSelect(country));
+                HTML.beforeBegin(addAnotherWrapper, generateRegionSelect(country));
             });
         };
         
         self.addRegionSelector = function () {
             let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
-            addAnotherWrapper.insertAdjacentHTML("beforebegin", generateRegionSelect());
+            HTML.beforeBegin(addAnotherWrapper, generateRegionSelect());
         };
         
         return self;
