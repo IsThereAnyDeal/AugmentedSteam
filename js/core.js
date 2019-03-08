@@ -476,6 +476,7 @@ SyncedStorage.defaults = {
     'showlanguagewarning': true,
     'showlanguagewarninglanguage': "English",
     'homepage_tab_selection': "remember",
+    'homepage_tab_last': null,
     'send_age_info': true,
     'html5video': true,
     'contscroll': true,
