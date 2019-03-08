@@ -212,7 +212,7 @@ let Options = (function(){
         Region.populateRegionalSelects();
         
         if (!changelogLoaded) {
-            fetch(chrome.runtime.getURL('changelog.txt')).then(r => r.text())
+            ExtensionResources.getText('changelog.txt')
             .then(data => {
                 document.querySelector("#changelog_text").innerHTML = data.replace(/\n/g, "\n<br>");
             });
@@ -335,10 +335,7 @@ let Options = (function(){
 
     self.init = async function() {
         let settings = SyncedStorage.init();
-        let currency = fetch(chrome.runtime.getURL('json/currency.json'))
-            .then(r => r.json())
-            .then(addCurrencies)
-            ;
+        let currency = ExtensionResources.getJSON('json/currency.json').then(addCurrencies);
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
