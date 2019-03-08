@@ -9,7 +9,7 @@ class Customizer {
     _textValue(node) {
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
-            if (node.nodeType === 3) {
+            if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
