@@ -1,4 +1,90 @@
 
+class Customizer {
+
+    constructor(settingsName) {
+        this.settingsName = settingsName;
+        this.settings = SyncedStorage.get(settingsName);
+    }
+
+    _textValue(node) {
+        let str = "";
+        for (node = node.firstChild; node; node = node.nextSibling) {
+            if (node.nodeType === 3) {
+                str += node.textContent.trim();
+            }
+        }
+        return str;
+    };
+
+    _updateValue(name, value) {
+        this.settings[name] = value;
+        SyncedStorage.set(this.settingsName, this.settings);
+    }
+
+    _getValue(name) {
+        let value = this.settings[name];
+        return (typeof value === "undefined") || value;
+    }
+
+    add(name, target, text, forceShow, callback) {
+
+        let element = (typeof target === "string" ? document.querySelector(target) : target);
+        if (!element && !forceShow) {
+            return this;
+        }
+
+        text = (typeof text === "string" && text) || this._textValue(element.querySelector("h2")).toLowerCase();
+        if (text === "") {
+            return this;
+        }
+
+        let state = this._getValue(name);
+
+        if (element) {
+            element.classList.toggle("esi-shown", state);
+            element.classList.toggle("esi-hidden", !state);
+            element.classList.add("esi-customizer"); // for dynamic entries on home page
+        }
+
+        document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
+            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>`);
+
+        let that = this;
+        document.querySelector("#" + name).addEventListener("click", function(e) {
+            state = !state;
+
+            if (element) {
+                element.classList.toggle("esi-shown", state);
+                element.classList.toggle("esi-hidden", !state);
+            }
+
+            e.target.closest(".home_viewsettings_checkboxrow")
+                .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+
+            that._updateValue(name, state);
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        return this;
+    };
+
+    addDynamic(titleNode, targetNode) {
+        let textValue = this._textValue(titleNode);
+
+        console.warn("Node with textValue %s is not recognized!", textValue);
+        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
+        if (option === "") { return; }
+
+        this.add("dynamic_"+option, targetNode, textValue);
+    }
+}
+
 let StorePageClass = (function(){
 
     function StorePageClass() {
