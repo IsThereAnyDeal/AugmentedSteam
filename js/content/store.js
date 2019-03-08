@@ -1337,9 +1337,15 @@ let AppPageClass = (function(){
         }
 
         if (SyncedStorage.get("showsteamcardexchange")) {
-            if (document.querySelector(".icon img[src$='/ico_cards.png'")) { // has trading cards
+            if (this.hasCards()) { // has trading cards
+                // FIXME some dlc have card category yet no card
+                let appid = this.appid;
+                // fix for Total War: SHOGUN 2 - has different appid in store and community
+                if (this.appid === 201270) {
+                    appid = 34330;
+                }
                 let cls = "cardexchange_btn";
-                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.appid;
+                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + appid;
                 let str = Localization.str.view_in + ' Steam Card Exchange';
 
                 linkNode.insertAdjacentHTML("afterbegin",
@@ -1669,9 +1675,14 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        Background.action('cards', { 'appid': this.appid, } )
+        // fix for Total War: SHOGUN 2 - has different appid in store and community
+        if (this.appid === 201270) {
+            appid = 34330;
+        }
+
+        Background.action('cards', { 'appid': appid, } )
             .then(result => loadBadgeContent(".es_normal_badge_progress", result));
-        Background.action('cards', { 'appid': this.appid, 'border': 1, } )
+        Background.action('cards', { 'appid': appid, 'border': 1, } )
             .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
@@ -1747,8 +1758,14 @@ let AppPageClass = (function(){
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
+        let appid = this.appid;
+        // fix for Total War: SHOGUN 2 - has different appid in store and community
+        if (this.appid === 201270) {
+            appid = 34330;
+        }
+
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
-        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.appid;
+        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid;
 
         document.querySelector("#achievement_block").insertAdjacentHTML("beforeend",
             `<div class='game_area_details_specs'>
@@ -1767,7 +1784,13 @@ let AppPageClass = (function(){
         details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Background.action('stats', { 'appid': this.appid, } ).then(response => {
+        let appid = this.appid;
+        // fix for Total War: SHOGUN 2 - has different appid in store and community
+        if (this.appid === 201270) {
+            appid = 34330;
+        }
+
+        Background.action('stats', { 'appid': appid, } ).then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
