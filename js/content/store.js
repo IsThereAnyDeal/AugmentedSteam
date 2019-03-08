@@ -1670,7 +1670,7 @@ let AppPageClass = (function(){
             .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
-            let dummy = BrowserHelper.htmlToDOM(result);
+            let dummy = HTMLParser.htmlToDOM(result);
             
             // grap badge and game cards
             // when there is no badge (e.g. dlc), badge_gamecard_page class won't appear
@@ -1761,7 +1761,7 @@ let AppPageClass = (function(){
         HTML.afterEnd(details_block,"<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
         Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
-            let dummy = BrowserHelper.htmlToDOM(response);
+            let dummy = HTMLParser.htmlToDOM(response);
 
             let node = document.querySelector("#es_ach_stats");
             node.append(dummy.querySelector("#topSummaryAchievements"));
@@ -2219,7 +2219,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
         RequestData.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
-            let dummy = BrowserHelper.htmlToDOM(result);
+            let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
             document.querySelector('#search_result_container').dataset.lastAddDate = addedDate;
@@ -2313,7 +2313,7 @@ let SearchPageClass = (function(){
 
             let item_checked = getTags().indexOf("-"+val.dataset.value) > -1 ? "checked" : "";
 
-            let excludeItem = BrowserHelper.htmlToElement(
+            let excludeItem = HTMLParser.htmlToElement(
                 `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
                     <div class="tab_filter_control_checkbox"></div>
                     <span class="tab_filter_control_label">${val.dataset.loc}</span>
@@ -2729,10 +2729,10 @@ let WishlistPageClass = (function(){
 
     // Calculate total cost of all items on wishlist
     async function loadStats() {
-        let wishlistData = BrowserHelper.getVariableFromDom("g_rgAppInfo", "object");
+        let wishlistData = HTMLParser.getVariableFromDom("g_rgAppInfo", "object");
         if (!wishlistData || Object.keys(wishlistData).length == 0) {
-            let pages = BrowserHelper.getVariableFromDom("g_nAdditionalPages", "int");
-            let baseUrl = BrowserHelper.getVariableFromDom("g_strWishlistBaseURL", "string");
+            let pages = HTMLParser.getVariableFromDom("g_nAdditionalPages", "int");
+            let baseUrl = HTMLParser.getVariableFromDom("g_strWishlistBaseURL", "string");
 
             if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
                 throw "loadStats() expected profile url";
@@ -2814,7 +2814,7 @@ let WishlistPageClass = (function(){
 
         window.addEventListener("message", function(event) {
             if (event.source === window && event.data.type && event.data.type === "es_empty_wishlist") {
-                let wishlistData = BrowserHelper.getVariableFromDom("g_rgWishlistData", "array");
+                let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
                 if (!wishlistData) { return; }
 
                 let promises = [];

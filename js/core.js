@@ -547,7 +547,11 @@ class HTMLParser {
         HTML.inner(template, html);
         return template.content;
     }
-    
+
+    static htmlToElement(html) {
+        return HTMLParser.htmlToDOM(html).firstElementChild;
+    };
+
     static getVariableFromText(text, name, type) {
         let regex;
         if (type === "object") {
@@ -572,4 +576,15 @@ class HTMLParser {
         
         return null;
     }
+
+    static getVariableFromDom(variableName, type, dom) {
+        dom = dom || document;
+        let nodes = dom.querySelectorAll("script");
+        for (let node of nodes) {
+            let m = HTMLParser.getVariableFromText(node.textContent, variableName, type)
+            if (m) {
+                return m;
+            }
+        }
+    };
 }

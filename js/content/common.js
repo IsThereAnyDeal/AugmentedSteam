@@ -365,14 +365,14 @@ let User = (function(){
 
     self.getAccountId = function(){
         if (accountId === false) {
-            accountId = BrowserHelper.getVariableFromDom("g_AccountID", "int");
+            accountId = HTMLParser.getVariableFromDom("g_AccountID", "int");
         }
         return accountId;
     };
 
     self.getSessionId = function() {
         if (sessionId === false) {
-            sessionId = BrowserHelper.getVariableFromDom("g_sessionID", "string");
+            sessionId = HTMLParser.getVariableFromDom("g_sessionID", "string");
         }
         return sessionId;
     };
@@ -783,55 +783,6 @@ let BrowserHelper = (function(){
         let viewportBottom = window.innerHeight + viewportTop;
 
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
-    };
-
-    // FIXME move to DOMHelper
-
-    self.htmlToDOM = function(html) {
-        let template = document.createElement('template');
-        html = html.trim(); // Never return a text node of whitespace as the result
-        HTML.inner(template, html);
-        return template.content;
-    };
-
-    self.htmlToElement = function(html) {
-        return self.htmlToDOM(html).firstElementChild;
-    };
-
-    self.getVariableFromText = function(text, variableName, type) {
-        let regex;
-        if (type === "object") {
-            regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
-        } else if (type === "array") { // otherwise array
-            regex = new RegExp(variableName+"\\s*=\\s*(\\[.+?\\]);");
-        } else if (type === "int") {
-            regex = new RegExp(variableName+"\\s*=\\s*(.+?);");
-        } else if (type === "string") {
-            regex = new RegExp(variableName+"\\s*=\\s*(\\\".+?\\\");");
-        } else {
-            return null;
-        }
-
-        let m = text.match(regex);
-        if (m) {
-            if (type === "int") {
-                return parseInt(m[1]);
-            }
-            return JSON.parse(m[1]);
-        }
-
-        return null;
-    };
-
-    self.getVariableFromDom = function(variableName, type, dom) {
-        dom = dom || document;
-        let nodes = dom.querySelectorAll("script");
-        for (let node of nodes) {
-            let m = self.getVariableFromText(node.textContent, variableName, type)
-            if (m) {
-                return m;
-            }
-        }
     };
 
     return self;
@@ -1419,8 +1370,8 @@ let Highlights = (function(){
 
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
-        if (tags.length == 0) {
-            tags = BrowserHelper.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+        if (tags.length === 0) {
+            tags = HTMLParser.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it

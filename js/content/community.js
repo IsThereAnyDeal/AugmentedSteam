@@ -10,11 +10,11 @@ let SteamId = (function(){
         if (document.querySelector("#reportAbuseModal")) {
             _steamId = document.querySelector("input[name=abuseID]").value;
         } else {
-            _steamId = BrowserHelper.getVariableFromDom("g_steamID", "string");
+            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
         }
 
         if (!_steamId) {
-            let profileData = BrowserHelper.getVariableFromDom("g_rgProfileData", "object");
+            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
             _steamId = profileData.steamid;
         }
 
@@ -762,7 +762,7 @@ let ProfileHomePageClass = (function(){
         let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
 
-        let rgProfileData = BrowserHelper.getVariableFromDom("g_rgProfileData", "object");
+        let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
 
         sendButton.insertAdjacentHTML("beforebegin",
@@ -806,7 +806,7 @@ let GamesPageClass = (function(){
 
     // Display total time played for all games
     GamesPageClass.prototype.computeStats = function() {
-        let games = BrowserHelper.getVariableFromDom("rgGames", "array");
+        let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
         let statsHtml = "";
 
@@ -880,7 +880,7 @@ let GamesPageClass = (function(){
                     let node = document.querySelector("#es_app_" + appid);
                     node.innerHTML = "";
 
-                    let dummy = BrowserHelper.htmlToElement(result);
+                    let dummy = HTMLParser.htmlToDOM(result);
                     let achNode = dummy.querySelector("#topSummaryAchievements");
 
                     if (!achNode) { return; }
@@ -918,7 +918,7 @@ let GamesPageClass = (function(){
         let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
         let data = await RequestData.getHttp(commonUrl);
 
-        let games = BrowserHelper.getVariableFromText(data, "rgGames", "array");;
+        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");;
         _commonGames = new Set();
         for (let game of games) {
             _commonGames.add(parseInt(game.appid));
@@ -1351,7 +1351,7 @@ let InventoryPageClass = (function(){
             let currentBg = m ? m[1] : false;
 
             if (currentBg !== assetId) {
-                let dom = BrowserHelper.htmlToDOM(result);
+                let dom = HTMLParser.htmlToDOM(result);
 
                 dom.querySelector("#profile_background").value = assetId;
                 let form = dom.querySelector("#editForm");
@@ -1998,7 +1998,7 @@ let BadgesPageClass = (function(){
             try {
                 let response = await RequestData.getHttp(baseUrl + p);
 
-                let dom = BrowserHelper.htmlToDOM(response);
+                let dom = HTMLParser.htmlToDOM(response);
                 await callback(dom);
 
             } catch (exception) {
@@ -2506,7 +2506,7 @@ let FriendsThatPlayPageClass = (function(){
         }
 
         let friendsData = await friendsPromise;
-        let friendsHtml = BrowserHelper.htmlToDOM(friendsData);
+        let friendsHtml = HTMLParser.htmlToDOM(friendsData);
 
         let friendsOwn = data[this.appid].data.friendsown;
 
@@ -2629,7 +2629,7 @@ let FriendsPageClass = (function(){
         if (friends.length === 0) { return; }
 
         let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
-        let dom = BrowserHelper.htmlToElement(data);
+        let dom = HTMLParser.htmlToElement(data);
 
         let sorted = { default: [], lastonline: [] };
 
@@ -2871,7 +2871,7 @@ let MarketPageClass = (function(){
                 pages = Math.ceil(totalCount / pageSize);
             }
 
-            let dom = BrowserHelper.htmlToDOM(data.results_html);
+            let dom = HTMLParser.htmlToDOM(data.results_html);
             updatePrices(dom);
 
             p++;
@@ -3028,7 +3028,7 @@ let MarketPageClass = (function(){
 
             // name
             DOMHelper.wrap(
-                BrowserHelper.htmlToElement("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>"),
+                HTMLParser.htmlToElement("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>"),
                 DOMHelper.selectLastNode(container, ".market_listing_table_header span").parentNode
             );
 
@@ -3037,7 +3037,7 @@ let MarketPageClass = (function(){
             node.classList.add("market_sortable_column");
 
             DOMHelper.wrap(
-                BrowserHelper.htmlToElement("<span id='es_marketsort_date' class='es_marketsort active asc'></span>"),
+                HTMLParser.htmlToElement("<span id='es_marketsort_date' class='es_marketsort active asc'></span>"),
                 node
             );
 
@@ -3046,7 +3046,7 @@ let MarketPageClass = (function(){
             node.classList.add("market_sortable_column");
 
             DOMHelper.wrap(
-                BrowserHelper.htmlToElement("<span id='es_marketsort_price' class='es_marketsort'></span>"),
+                HTMLParser.htmlToElement("<span id='es_marketsort_price' class='es_marketsort'></span>"),
                 node
             );
 
