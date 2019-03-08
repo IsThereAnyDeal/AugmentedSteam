@@ -1,20 +1,80 @@
+/* FIXME
+class Version {
+
+    constructor(major, minor=0, patch=0) {
+        this.major = parseInt(major);
+        this.minor = parseInt(minor);
+        this.patch = parseInt(patch);
+    }
+
+    toString() {
+        return `${this.major}.${this.minor}.${this.patch}`;
+    }
+
+    isOlderOrSame(version) {
+        return this.major < version.major
+            || (this.major === version.major && this.minor < version.minor)
+            || (this.major === version.major && this.minor === version.minor && this.patch <= version.patch);
+    }
+}
+*/
+
 const Info = {
     'version': "0.9.4",
-    compareVersions(x, y) {
-        if (typeof y == 'undefined') { y = this.version; }
-        x = x.split('.');
-        y = y.split('.');
-        let len = Math.min(x.length, y.length);
-        for (let i = 0; i < len; ++i) {
-            let [a, b] = [x[i], y[i]];
-            if (a < b) { return -1; }
-            if (a > b) { return 1; }
-        }
-        if (x.length < y.length) { return -1; }
-        if (x.length > y.length) { return 1; }
-        return 0;
-    },
 };
+
+/* FIXME
+class VersionHandler {
+
+    static migrateSettings() {
+        let oldVersion = SyncedStorage.get("version");
+        if (!oldVersion) {
+            oldVersion = Info.version
+        }
+
+        if (oldVersion.isOlderOrSame(new Version(0,9, 4))) {
+
+            // Remove eu1 region
+            let priceRegions = SyncedStorage.get('regional_countries');
+            let i = priceRegions.includes('eu1');
+            if (i !== -1) {
+                priceRegions.splice(i, 1);
+                SyncedStorage.set('regional_countries', priceRegions);
+            }
+
+            // FIXME Convert home page customization settings into new customize_homepage
+            show_featuredrecommended
+            show_specialoffers
+            show_trendingamongfriends
+            show_es_discoveryqueu
+            show_browsesteam
+            show_curators
+            show_morecuratorrecommendations
+            show_recentlyupdated
+            show_fromdevelopersandpublishersthatyouknow
+            show_popularvrgames
+            show_es_homepagetab
+            show_gamesstreamingnow
+            show_under
+            show_updatesandoffers
+            show_es_homepagesidebar
+
+            // FIXME Convert app page customization settings into new customize_apppage
+            show_apppage_reviews
+            show_apppage_about
+            show_apppage_surveys
+            show_apppage_sysreq
+            show_apppage_legal
+            show_apppage_morelikethis
+            show_apppage_recommendedbycurators
+            show_apppage_customerreviews
+
+        }
+
+        SyncedStorage.set("version", Info.version);
+    }
+}
+*/
 
 function checkError() {
     if (!chrome.runtime.lastError) {
@@ -210,23 +270,6 @@ class SyncedStorage {
         });
     }
 
-    static migrateSettings() {
-        let version = SyncedStorage.get("version");
-        if (!version) {
-            version = "0.9.4";
-        }
-        if (Info.compareVersions(version, "0.9.5") < 0) {
-            // Remove eu1 region
-            let priceRegions = SyncedStorage.get('regional_countries');
-            let i = priceRegions.includes('eu1');
-            if (i !== -1) {
-                priceRegions.splice(i, 1);
-                SyncedStorage.set('regional_countries', priceRegions);
-            }
-        }
-        SyncedStorage.set("version", Info.version);
-    }
-
     // load whole storage and make local copy
     static async init() {
         let that = this;
@@ -239,7 +282,11 @@ class SyncedStorage {
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
         Object.assign(that.cache, storage);
-        SyncedStorage.migrateSettings();
+
+        // FIXME MigrateSettings shouldn't be handled from here, there's no point in running it each time we initiale this storage,
+        //       instead run it only when new version is detected
+        //  SyncedStorage.migrateSettings();
+
         return that.cache;
     }
     static then(onDone, onCatch) {
@@ -309,21 +356,7 @@ SyncedStorage.defaults = {
     'showregionalprice': "mouse",
     'regional_countries': ["us", "gb", "ru", "br", "au", "jp"],
 
-    'show_featuredrecommended': true,
-    'show_specialoffers': true,
-    'show_trendingamongfriends': true,
-    'show_browsesteam': true,
-    'show_curators': true,
-    'show_morecuratorrecommendations': true,
-    'show_recentlyupdated': true,
-    'show_fromdevelopersandpublishersthatyouknow': true,
-    'show_popularvrgames': true,
-    'show_gamesstreamingnow': true,
-    'show_under': true,
-    'show_updatesandoffers': true,
-    'show_es_discoveryqueue': true,
     'show_es_homepagetabs': true,
-    'show_es_homepagesidebar': true,
     'showmarkettotal': false,
     'showsteamrepapi': true,
     'showmcus': true,
@@ -337,14 +370,39 @@ SyncedStorage.defaults = {
     'showastatslink': true,
     'showwsgf': true,
     'exfgls': true,
-    'show_apppage_reviews': true,
-    'show_apppage_about': true,
-    'show_apppage_surveys': true,
-    'show_apppage_sysreq': true,
-    'show_apppage_legal': true,
-    'show_apppage_morelikethis': true,
-    'show_apppage_recommendedbycurators': true,
-    'show_apppage_customerreviews': true,
+
+    'customize_apppage': {
+        "recentupdates": true,
+        "reviews": true,
+        "about": true,
+        "steamchart": true,
+        "steamspy": true,
+        "surveys": true,
+        "sysreq": true,
+        "legal": true,
+        "morelikethis": true,
+        "recommendedbycurators": true,
+        "customierreviews": true
+    },
+
+    'customize_frontpage': {
+        "featuredrecommended": true,
+        "specialoffers": true,
+        "trendingamongfriends": true,
+        "discoveryqueue": true,
+        "browsesteam": true,
+        "curators": true,
+        "morecuratorrecommendations": true,
+        "recentlyupdated": true,
+        "fromdevelopersandpublishersthatyouknow": true,
+        "popularvrgames": true,
+        "es_homepagetabs": true,
+        "gamesstreamingnow": true,
+        "under": true,
+        "updatesandoffers": true,
+        "es_homepagesidebar": true
+    },
+
     'show_keylol_links': false,
     'show_package_info': false,
     'show_sysreqcheck': false,

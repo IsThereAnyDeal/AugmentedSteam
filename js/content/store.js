@@ -1,4 +1,90 @@
 
+class Customizer {
+
+    constructor(settingsName) {
+        this.settingsName = settingsName;
+        this.settings = SyncedStorage.get(settingsName);
+    }
+
+    _textValue(node) {
+        let str = "";
+        for (node = node.firstChild; node; node = node.nextSibling) {
+            if (node.nodeType === 3) {
+                str += node.textContent.trim();
+            }
+        }
+        return str;
+    };
+
+    _updateValue(name, value) {
+        this.settings[name] = value;
+        SyncedStorage.set(this.settingsName, this.settings);
+    }
+
+    _getValue(name) {
+        let value = this.settings[name];
+        return (typeof value === "undefined") || value;
+    }
+
+    add(name, target, text, forceShow, callback) {
+
+        let element = (typeof target === "string" ? document.querySelector(target) : target);
+        if (!element && !forceShow) {
+            return this;
+        }
+
+        text = (typeof text === "string" && text) || this._textValue(element.querySelector("h2")).toLowerCase();
+        if (text === "") {
+            return this;
+        }
+
+        let state = this._getValue(name);
+
+        if (element) {
+            element.classList.toggle("esi-shown", state);
+            element.classList.toggle("esi-hidden", !state);
+            element.classList.add("esi-customizer"); // for dynamic entries on home page
+        }
+
+        document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
+            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>`);
+
+        let that = this;
+        document.querySelector("#" + name).addEventListener("click", function(e) {
+            state = !state;
+
+            if (element) {
+                element.classList.toggle("esi-shown", state);
+                element.classList.toggle("esi-hidden", !state);
+            }
+
+            e.target.closest(".home_viewsettings_checkboxrow")
+                .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+
+            that._updateValue(name, state);
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        return this;
+    };
+
+    addDynamic(titleNode, targetNode) {
+        let textValue = this._textValue(titleNode);
+
+        console.warn("Node with textValue %s is not recognized!", textValue);
+        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
+        if (option === "") { return; }
+
+        this.add("dynamic_"+option, targetNode, textValue);
+    }
+}
+
 let StorePageClass = (function(){
 
     function StorePageClass() {
@@ -1728,30 +1814,37 @@ let AppPageClass = (function(){
             node.classList.remove("active");
         });
 
-        Customizer.addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
-        Customizer.addToggleHandler("show_apppage_reviews", "#game_area_reviews");
-        Customizer.addToggleHandler("show_apppage_about", "#game_area_description");
-        Customizer.addToggleHandler("show_steamchart_info", "#steam-charts", Localization.str.charts.current, true, function(){
+        let customizer = new Customizer("customize_apppage");
+        customizer.add("recentupdates", ".early_access_announcements");
+        customizer.add("reviews", "#game_area_reviews");
+        customizer.add("about", "#game_area_description");
+
+        customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
             if (document.querySelector("#steam-charts")) { return; }
             instance.data.then(result => addSteamChart.call(instance, result));
         });
-        Customizer.addToggleHandler("show_steamspy_info", "#steam-spy", Localization.str.spy.player_data, true, function(){
+        customizer.add("steamspy", "#steam-spy", Localization.str.spy.player_data, true, function(){
             if (document.querySelector("#steam-spy")) { return; }
             instance.data.then(result => addSteamSpy.call(instance, result));
         });
-        Customizer.addToggleHandler("show_apppage_surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
+        customizer.add("surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
             if (document.querySelector("#performance_survey")) { return; }
             instance.data.then(result => addSurveyData.call(instance, result));
         });
-        Customizer.addToggleHandler("show_apppage_sysreq", ".sys_req");
-        Customizer.addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
+        customizer.add("sysreq", ".sys_req");
+        customizer.add("legal", "#game_area_legal", Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
-            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
+            customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
-        Customizer.addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
+        customizer.add("recommendedbycurators", ".steam_curators_block");
+
         if (document.querySelector(".user_reviews_header")) {
-            Customizer.addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
+            customizer.add(
+                "customerreviews",
+                "#app_reviews_hash",
+                document.querySelector(".user_reviews_header").textContent
+            );
         }
     };
 
@@ -2530,20 +2623,41 @@ let WishlistPageClass = (function(){
         let instance = this;
         wishlistNotes = new WishlistNotes();
 
-        let showNotes = SyncedStorage.get("showwlnotes");
+        let myWishlist = isMyWishlist();
+        let container = document.querySelector("#wishlist_ctn");
+        let timeout = null, lastRequest = null;
+        let delayedWork = new Set();
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 if (record.addedNodes.length === 1) {
-                    if (isMyWishlist() && showNotes) {
-                        instance.addWishlistNote(record.addedNodes[0]);
-                    }
-                    instance.highlightApps(record.addedNodes[0]);
-                    instance.addPriceHandler(record.addedNodes[0]);
+                    delayedWork.add(record.addedNodes[0])
                 }
             });
-            window.dispatchEvent(new Event("resize"));
+            lastRequest = window.performance.now();
+            if (timeout == null) {
+                timeout = window.setTimeout(function markWishlist() {
+                    if (window.performance.now() - lastRequest < 40) {
+                        timeout = window.setTimeout(markWishlist, 50);
+                        return;
+                    }
+                    timeout = null;
+                    for (let node of delayedWork) {
+                        delayedWork.delete(node);
+                        if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
+                            continue;
+                        }
+                        if (myWishlist && SyncedStorage.get("showwlnotes")) {
+                            instance.addWishlistNote(node);
+                        } else {
+                            instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
+                        }
+                        instance.addPriceHandler(node);
+                    }
+                    window.dispatchEvent(new Event("resize"))
+                }, 50);
+            }
         });
-        observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
+        observer.observe(container, { 'childList': true, });
 
         this.addStatsArea();
         this.addEmptyWishlistButton();
@@ -2714,29 +2828,24 @@ let WishlistPageClass = (function(){
     function addWishlistPrice(node) {
         let appid = node.dataset.appId;
 
-        if (cachedPrices[appid]) {
-            addPriceNode(node,"app", appid, cachedPrices[appid]);
-            return;
+        if (typeof cachedPrices[appid] == 'undefined') {
+            cachedPrices[appid] = new Promise(function(resolve, reject) {
+                let prices = new Prices();
+                prices.appids = [appid,];
+                prices.priceCallback = function(type, id, html) {
+                    resolve(html);
+                };
+                prices.load();
+            });
         }
 
-        let prices = new Prices();
-        prices.appids = [appid];
-        prices.priceCallback = function(type, id, html) { addPriceNode(node, type, id, html); }
-        prices.load();
-    }
-
-    function addPriceNode(node, type, id, html) {
-        if (node.querySelector(".es_lowest_price")) { return; }
-
-        cachedPrices[id] = html;
-
-        node.insertAdjacentHTML("beforeend", html);
-        let priceNode = node.querySelector(".es_lowest_price");
-        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
-    }
-
-    function wishlistRowEnterHandler(e) {
-        addWishlistPrice(e.target);
+        cachedPrices[appid].then(function(html) {
+            if (node.querySelector(".es_lowest_price")) { return; }
+            node.insertAdjacentHTML("beforeend", html);
+            let priceNode = node.querySelector(".es_lowest_price");
+            priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+        });
+        return;
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node){
@@ -2744,9 +2853,8 @@ let WishlistPageClass = (function(){
 
         if (!node.dataset.appId) { return; }
 
-        node.removeEventListener("mouseenter", wishlistRowEnterHandler);
         if (!node.querySelector(".es_lowest_price")) {
-            node.addEventListener("mouseenter", wishlistRowEnterHandler);
+            node.addEventListener("mouseenter", (e) => addWishlistPrice(e.target), { 'capture': false, 'once': true, });
         }
     };
 
@@ -2803,20 +2911,16 @@ let WishlistPageClass = (function(){
                 wishlistNotes.deleteNote(e.data.removed_wl_entry);
             }
         });
-    }
+    };
 
     return WishlistPageClass;
 })();
 
 let WishlistNotes = (function(){
 
-    let noteModalTemplate;
-    let notes;
-    let listenerCreated = false;
-
     function WishlistNotes() {
         this.noteModalTemplate = `
-                <div id="es_note_modal" data-appid="__appid__">
+                <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
                         <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
                             <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
@@ -2837,7 +2941,7 @@ let WishlistNotes = (function(){
 
     WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '') + '\`); }');
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
         if (!this.listenerCreated) {
             let that = this;
@@ -2845,15 +2949,18 @@ let WishlistNotes = (function(){
                 if (e.target.closest(".es_note_modal_submit")) {
                     e.preventDefault();
 
-                    let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                    let node = document.querySelector(nodeSelector);
+                    let modal = document.querySelector('#es_note_modal');
+                    let appid = modal.dataset.appid;
+                    let selector = decodeURIComponent(modal.dataset.selector);
+                    let note = BrowserHelper.escapeHTML(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                    let node = document.querySelector(selector);
 
                     if (note.length !== 0) {
                         that.setNote(appid, note);
 
                         node.classList.remove("esi-empty-note");
                         node.classList.add("esi-user-note");
-                        node.textContent = '"' + note + '"';
+                        node.innerHTML = '"' + note + '"';
                     } else {
                         that.deleteNote(appid);
 
@@ -2869,25 +2976,25 @@ let WishlistNotes = (function(){
             });
             this.listenerCreated = true;
         }
-    }
+    };
 
     WishlistNotes.prototype.getNote = function(appid) {
         return this.notes[appid];
-    }
+    };
 
     WishlistNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
         SyncedStorage.set("wishlist_notes", this.notes);
-    }
+    };
 
     WishlistNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
         SyncedStorage.set("wishlist_notes", this.notes);
-    }
+    };
 
     WishlistNotes.prototype.exists = function(appid) {
-        return (this.notes[appid] && (this.notes[appid] !== '')) ? true : false;
-    }
+        return (this.notes[appid] && (this.notes[appid] !== ''));
+    };
 
     return WishlistNotes;
 
@@ -2915,7 +3022,7 @@ let TagPageClass = (function(){
                 hideNode(node);
             }
         });
-    }
+    };
 
     TagPageClass.prototype.observeChanges = function() {
         let observer = new MutationObserver(mutations => {
@@ -2931,7 +3038,7 @@ let TagPageClass = (function(){
         rows.forEach(row => {
             observer.observe(document.getElementById(row), {childList: true});
         })
-    }
+    };
 
     function hideNode(node) {
         if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
@@ -3031,28 +3138,35 @@ let StoreFrontPageClass = (function(){
             node.classList.remove("active");
         });
 
-        function homeCtnNode(selector) {
-            let node = document.querySelector(selector);
-            if (!node) { return null; }
-            return node.closest(".home_ctn");
-        }
+        let customizer = new Customizer("customize_frontpage");
+        customizer
+            .add("show_featuredrecommended", ".home_cluster_ctn")
+            .add("show_specialoffers", document.querySelector(".special_offers").parentElement)
+            .add("show_trendingamongfriends", ".friends_recently_purchased")
+            .add("show_es_discoveryqueue", ".discovery_queue_ctn")
+            .add("show_browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
+            .add("show_curators", ".steam_curators_ctn")
+            .add("show_morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+            .add("show_recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
+            .add("show_fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+            .add("show_popularvrgames", ".best_selling_vr_ctn")
+            .add("show_es_homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("show_gamesstreamingnow", ".live_streams_ctn")
+            .add("show_under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
+            .add("show_updatesandoffers", ".marketingmessage_area")
+            .add("show_es_homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
-        let nodes = document.querySelectorAll(".home_page_body_ctn .home_ctn");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
+        for (let i = 0; i < dynamicNodes.length; ++i) {
+            let node = dynamicNodes[i];
+            if (node.querySelector(".esi-customizer")) { continue; }
+
             let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-            if (headerNode) {
-                let option = Customizer.textValue(headerNode).toLowerCase().replace(/[^a-z]*/g, "");
-                if (option !== "") {
-                    Customizer.addToggleHandler("show_"+option, node);
-                }
-            }
-        }
+            if (!headerNode) { continue; }
 
-        // added by hand, those we couldn't get automatically
-        Customizer.addToggleHandler("show_es_discoveryqueue", document.querySelector(".discovery_queue_ctn"));
-        Customizer.addToggleHandler("show_es_homepagetabs", homeCtnNode(".home_tab_col"), Localization.str.homepage_tabs);
-        Customizer.addToggleHandler("show_es_homepagesidebar", document.querySelector(".home_page_gutter"), Localization.str.homepage_sidebar);
+            // TODO only visible? Problem with e.g. empty Curators
+            customizer.addDynamic(headerNode, node);
+        }
     };
 
     return StoreFrontPageClass;

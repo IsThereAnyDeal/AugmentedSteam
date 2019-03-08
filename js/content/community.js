@@ -975,13 +975,14 @@ let GamesPageClass = (function(){
 
 let ProfileEditPageClass = (function(){
 
-    async function ProfileEditPageClass() {
-        await ProfileData.clearOwn();
-
-        if (window.location.pathname.indexOf("/settings") < 0) {
-            this.addBackgroundSelection();
-            this.addStyleSelection();
-        }
+    function ProfileEditPageClass() {
+        let that = this;
+        ProfileData.clearOwn().then(() => {
+            if (window.location.pathname.indexOf("/settings") < 0) {
+                that.addBackgroundSelection();
+                that.addStyleSelection();
+            }
+        })
     }
 
     function showBgFormLoading() {
@@ -1060,7 +1061,7 @@ let ProfileEditPageClass = (function(){
             = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
     }
 
-    ProfileEditPageClass.addBackgroundSelection = async function() {
+    ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
         if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
@@ -1127,7 +1128,7 @@ let ProfileEditPageClass = (function(){
         });
     };
 
-    ProfileEditPageClass.addStyleSelection = function() {
+    ProfileEditPageClass.prototype.addStyleSelection = function() {
         let html =
             `<div class='group_content group_summary'>
                 <div class='formRow'>
@@ -2837,11 +2838,11 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
-            purchaseTotal = new Price(purchaseTotal, Currency.storeCurrency);
-            saleTotal = new Price(saleTotal, Currency.storeCurrency);
+            let purchaseTotalPrice = new Price(purchaseTotal, Currency.storeCurrency);
+            let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             document.querySelector("#es_market_summary").innerHTML =
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotal}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotal}</span></div>
+                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`;
         }
 
