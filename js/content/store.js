@@ -2276,7 +2276,7 @@ let SearchPageClass = (function(){
 
         window.addEventListener("scroll", function () {
             // if the pagination element is in the viewport, continue loading
-            if (BrowserHelper.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+            if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
                 if (result_count > document.querySelectorAll(".search_result_row").length) {
                     loadSearchResults();
                 } else {
@@ -2384,7 +2384,7 @@ let SearchPageClass = (function(){
             }
         }
 
-        if (BrowserHelper.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+        if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
             loadSearchResults();
         }
     }

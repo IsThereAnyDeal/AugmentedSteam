@@ -860,7 +860,7 @@ let GamesPageClass = (function(){
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
 
-                if (!BrowserHelper.isElementInViewport(node)) {
+                if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
                     continue;
                 }
@@ -2014,7 +2014,7 @@ let BadgesPageClass = (function(){
 
         let sheetNode = document.querySelector(".badges_sheet");
 
-        // let images = BrowserHelper.getVariableFromDom("g_rgDelayedLoadImages", "object");
+        // let images = Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object");
 
         let that = this;
         await eachBadgePage(async function(dom){
@@ -2026,7 +2026,7 @@ let BadgesPageClass = (function(){
             CommunityCommon.addCardExchangeLinks();
             await that.addBadgeCompletionCost();
 
-            // images = Object.assign(images, BrowserHelper.getVariableFromDom("g_rgDelayedLoadImages", "object", dom));
+            // images = Object.assign(images, Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object", dom));
         });
 
         let nodes = document.querySelectorAll(".profile_paging");

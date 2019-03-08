@@ -761,7 +761,7 @@ let Price = (function() {
 })();
 
 
-let BrowserHelper = (function(){
+let Viewport = (function(){
 
     let self = {};
 
