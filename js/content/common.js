@@ -114,6 +114,48 @@ let ExtensionLayer = (function() {
 })();
 
 
+class CookieStorage {
+    static get(name, defaultValue) {
+        if (CookieStorage.cache.size === 0) {
+            CookieStorage.init();
+        }
+        name = name.trim();
+        if (!CookieStorage.cache.has(name)) {
+            return defaultValue;
+        }
+        return CookieStorage.cache.get(name);
+    }
+
+    static set(name, val, ttl=60*60*24*365) {
+        if (CookieStorage.cache.size === 0) {
+            CookieStorage.init();
+        }
+        name = name.trim();
+        val = val.trim();
+        CookieStorage.cache.set(name, val);
+        name = encodeURIComponent(name);
+        val = encodeURIComponent(val);
+        document.cookie = `${name}=${val}; max-age=${ttl}`;
+    }
+
+    static remove(name) {
+        name = name.trim();
+        CookieStorage.cache.delete(name);
+        name = encodeURIComponent(name);
+        document.cookie = `${name}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    }
+
+    static init() {
+        CookieStorage.cache.clear();
+        for (let [key, val] of document.cookie.split(';').map(kv => kv.split('='))) {
+            key = key.trim();
+            CookieStorage.cache.set(key, decodeURIComponent(val));
+        }
+    }
+}
+CookieStorage.cache = new Map();
+
+
 let RequestData = (function(){
     let self = {};
 
@@ -352,7 +394,7 @@ let User = (function(){
         } else {
             country = LocalStorage.get("userCountry");
             if (!country) {
-                country = BrowserHelper.getCookie("steamCountry");
+                country = CookieStorage.get("steamCountry");
             }
         }
 
@@ -726,12 +768,6 @@ let Price = (function() {
 let BrowserHelper = (function(){
 
     let self = {};
-
-    self.getCookie = function(name) {
-        let re = new RegExp(name + "=([^;]+)");
-        let value = re.exec(document.cookie);
-        return (value != null) ? unescape(value[1]) : null;
-    };
 
     self.escapeHTML = function(str) {
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;

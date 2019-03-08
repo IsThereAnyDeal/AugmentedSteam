@@ -15,7 +15,11 @@ class Language {
             }
         }
 
-        this._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
+        // In a Content Context, we can check for a cookie
+        if (typeof CookieStorage != 'undefined') {
+            this._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
+        }
+
         return this._currentSteamLanguage;
     }
 
