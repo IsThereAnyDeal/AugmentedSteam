@@ -1825,8 +1825,8 @@ let AppPageClass = (function(){
         let customizer = new Customizer("customize_apppage");
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
-        customizer.add("about", `[data-parent-of="#game_area_description"]`);
-        customizer.add("contentwarning", `[data-parent-of="#game_area_content_descriptors"]`);
+        customizer.add("about", `[data-parent-of="#game_area_description"], #game_area_description`);
+        customizer.add("contentwarning", `[data-parent-of="#game_area_content_descriptors"], #game_area_content_descriptors`);
         
         customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
             if (document.querySelector("#steam-charts")) { return; }
@@ -1840,8 +1840,8 @@ let AppPageClass = (function(){
             if (document.querySelector("#performance_survey")) { return; }
             instance.data.then(result => addSurveyData.call(instance, result));
         });
-        customizer.add("sysreq", `[data-parent-of=".sys_req"]`);
-        customizer.add("legal", `[data-parent-of="#game_area_legal"]`, Localization.str.apppage_legal);
+        customizer.add("sysreq", `[data-parent-of=".sys_req"], .sys_req`);
+        customizer.add("legal", `[data-parent-of="#game_area_legal"], #game_area_legal`, Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
             customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
