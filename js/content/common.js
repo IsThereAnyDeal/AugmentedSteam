@@ -1943,62 +1943,91 @@ let Prices = (function(){
     return Prices;
 })();
 
-let Customizer = (function(){
-    let self = {};
+class Customizer {
 
-    self.textValue = function(node) {
+    constructor(settingsName) {
+        this.settingsName = settingsName;
+        this.settings = SyncedStorage.get(settingsName);
+    }
+
+    _textValue(node) {
         let str = "";
-        for (node=node.firstChild;node;node=node.nextSibling){
-            if (node.nodeType === 3) { str += node.textContent.trim(); }
+        for (node = node.firstChild; node; node = node.nextSibling) {
+            if (node.nodeType === 3) {
+                str += node.textContent.trim();
+            }
         }
         return str;
     };
 
-    self.addToggleHandler = function(name, target, text, forceShow, callback) {
-        let element = typeof target === "string" ? document.querySelector(target) : target;
-        if (!element && !forceShow) { return; }
+    _updateValue(name, value) {
+        this.settings[name] = value;
+        SyncedStorage.set(this.settingsName, this.settings);
+    }
 
-        let state = typeof SyncedStorage.get(name) === "undefined" ? true : SyncedStorage.get(name);
-        text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
-        if (text === "") { return; }
+    _getValue(name) {
+        let value = this.settings[name];
+        return (typeof value === "undefined") || value;
+    }
 
-        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
+    add(name, target, text, forceShow, callback) {
+
+        let element = (typeof target === "string" ? document.querySelector(target) : target);
+        if (!element && !forceShow) {
+            return this;
+        }
+
+        text = (typeof text === "string" && text) || this._textValue(element.querySelector("h2")).toLowerCase();
+        if (text === "") {
+            return this;
+        }
+
+        let state = this._getValue(name);
 
         if (element) {
-            element.classList.toggle("es_hide", !state);
-
-            if (element.classList.contains("es_hide")) {
-                element.style.display = "none";
-            }
+            element.classList.toggle("esi-shown", state);
+            element.classList.toggle("esi-hidden", !state);
+            element.classList.add("esi-customizer"); // for dynamic entries on home page
         }
 
         document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
             `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
                     <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
                     <div class="home_viewsettings_label">${text}</div>
-                </div>
-            `);
+                </div>`);
 
+        let that = this;
         document.querySelector("#" + name).addEventListener("click", function(e) {
             state = !state;
 
             if (element) {
-                element.classList.remove("es_show");
-                element.classList.remove("es_hide");
-                element.style.display = state ? "block" : "none";
+                element.classList.toggle("esi-shown", state);
+                element.classList.toggle("esi-hidden", !state);
             }
 
-            e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
+            e.target.closest(".home_viewsettings_checkboxrow")
+                .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
 
-            SyncedStorage.set(name, state);
+            that._updateValue(name, state);
 
-            if (callback) { callback(); }
+            if (callback) {
+                callback();
+            }
         });
+
+        return this;
     };
 
-    return self;
-})();
+    addDynamic(titleNode, targetNode) {
+        let textValue = this._textValue(titleNode);
+
+        console.warn("Node with textValue %s is not recognized!", textValue);
+        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
+        if (option === "") { return; }
+
+        this.add("dynamic_"+option, targetNode, textValue);
+    }
+}
 
 let AgeCheck = (function(){
 

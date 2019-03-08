@@ -1728,30 +1728,37 @@ let AppPageClass = (function(){
             node.classList.remove("active");
         });
 
-        Customizer.addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
-        Customizer.addToggleHandler("show_apppage_reviews", "#game_area_reviews");
-        Customizer.addToggleHandler("show_apppage_about", "#game_area_description");
-        Customizer.addToggleHandler("show_steamchart_info", "#steam-charts", Localization.str.charts.current, true, function(){
+        let customizer = new Customizer("customize_apppage");
+        customizer.add("recentupdates", ".early_access_announcements");
+        customizer.add("reviews", "#game_area_reviews");
+        customizer.add("about", "#game_area_description");
+
+        customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
             if (document.querySelector("#steam-charts")) { return; }
             instance.data.then(result => addSteamChart.call(instance, result));
         });
-        Customizer.addToggleHandler("show_steamspy_info", "#steam-spy", Localization.str.spy.player_data, true, function(){
+        customizer.add("steamspy", "#steam-spy", Localization.str.spy.player_data, true, function(){
             if (document.querySelector("#steam-spy")) { return; }
             instance.data.then(result => addSteamSpy.call(instance, result));
         });
-        Customizer.addToggleHandler("show_apppage_surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
+        customizer.add("surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
             if (document.querySelector("#performance_survey")) { return; }
             instance.data.then(result => addSurveyData.call(instance, result));
         });
-        Customizer.addToggleHandler("show_apppage_sysreq", ".sys_req");
-        Customizer.addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
+        customizer.add("sysreq", ".sys_req");
+        customizer.add("legal", "#game_area_legal", Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
-            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
+            customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
-        Customizer.addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
+        customizer.add("recommendedbycurators", ".steam_curators_block");
+
         if (document.querySelector(".user_reviews_header")) {
-            Customizer.addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
+            customizer.add(
+                "customerreviews",
+                "#app_reviews_hash",
+                document.querySelector(".user_reviews_header").textContent
+            );
         }
     };
 
@@ -3025,47 +3032,34 @@ let StoreFrontPageClass = (function(){
             node.classList.remove("active");
         });
 
-        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn"));
-        let staticNodes = [
-            // TODO Remove es prefix
-            ["show_featuredrecommended", ".home_cluster_ctn"],
-            ["show_specialoffers", document.querySelector(".special_offers").parentElement],
-            ["show_trendingamongfriends", ".friends_recently_purchased"],
-            ["show_es_discoveryqueue", ".discovery_queue_ctn"],
-            ["show_browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement],
-            ["show_curators", ".steam_curators_ctn"],
-            ["show_morecuratorrecommendations", ".apps_recommended_by_curators_ctn"],
-            ["show_recentlyupdated", document.querySelector(".recently_updated_block").parentElement],
-            ["show_fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn"],
-            ["show_popularvrgames", ".best_selling_vr_ctn"],
-            ["show_es_homepagetabs", ".tab_container", Localization.str.homepage_tabs],
-            ["show_gamesstreamingnow", ".live_streams_ctn"],
-            ["show_under", document.querySelector("[class*='specials_under']").parentElement.parentElement],
-            ["show_updatesandoffers", ".marketingmessage_area"],
-            ["show_es_homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar]
-        ].forEach(entry => {
-            if (typeof entry[1] === "string") {
-                entry[1] = document.querySelector(entry[1]);    
-            }
-            Customizer.addToggleHandler("show_" + entry[0], entry[1], entry[2]);
+        let customizer = new Customizer("customize_frontpage");
+        customizer
+            .add("show_featuredrecommended", ".home_cluster_ctn")
+            .add("show_specialoffers", document.querySelector(".special_offers").parentElement)
+            .add("show_trendingamongfriends", ".friends_recently_purchased")
+            .add("show_es_discoveryqueue", ".discovery_queue_ctn")
+            .add("show_browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
+            .add("show_curators", ".steam_curators_ctn")
+            .add("show_morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+            .add("show_recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
+            .add("show_fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+            .add("show_popularvrgames", ".best_selling_vr_ctn")
+            .add("show_es_homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("show_gamesstreamingnow", ".live_streams_ctn")
+            .add("show_under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
+            .add("show_updatesandoffers", ".marketingmessage_area")
+            .add("show_es_homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
-            for (i = 0; i < dynamicNodes.length; ++i) {
-                if (dynamicNodes[i] === entry[1]) {
-                    dynamicNodes.splice(i, 1);
-                    break;
-                }
-            }
-        });
+        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
+        for (let i = 0; i < dynamicNodes.length; ++i) {
+            let node = dynamicNodes[i];
+            if (node.querySelector(".esi-customizer")) { continue; }
 
-        for (i = 0; i < dynamicNodes.length; ++i) {
-            let headerNode = dynamicNodes[i].querySelector(".home_page_content > h2,.carousel_container > h2");
-            if (headerNode) {
-                console.warn("Node with textValue %s is not recognized!", Customizer.textValue(headerNode));
-                let option = Customizer.textValue(headerNode).toLowerCase().replace(/[^a-z]*/g, "");
-                if (option !== "") {
-                    Customizer.addToggleHandler("show_" + option, dynamicNodes[i]);
-                }
-            }
+            let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
+            if (!headerNode) { continue; }
+
+            // TODO only visible? Problem with e.g. empty Curators
+            customizer.addDynamic(headerNode, node);
         }
     };
 
