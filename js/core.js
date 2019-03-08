@@ -88,16 +88,17 @@ class Version {
 }
 
 
-/* FIXME
 class VersionHandler {
 
     static migrateSettings() {
-        let oldVersion = SyncedStorage.get("version");
-        if (!oldVersion) {
-            oldVersion = Info.version
+        let oldVersion = SyncedStorage.get("version"); // default is Info.version
+        oldVersion = Version.fromString(oldVersion);
+
+        if (oldVersion.isCurrent()) {
+            return;
         }
 
-        if (oldVersion.isOlderOrSame(new Version(0,9, 4))) {
+        if (oldVersion.isSameOrBefore("0.9.4")) {
 
             // Remove eu1 region
             let priceRegions = SyncedStorage.get('regional_countries');
@@ -107,39 +108,56 @@ class VersionHandler {
                 SyncedStorage.set('regional_countries', priceRegions);
             }
 
-            // FIXME Convert home page customization settings into new customize_homepage
-            show_featuredrecommended
-            show_specialoffers
-            show_trendingamongfriends
-            show_es_discoveryqueu
-            show_browsesteam
-            show_curators
-            show_morecuratorrecommendations
-            show_recentlyupdated
-            show_fromdevelopersandpublishersthatyouknow
-            show_popularvrgames
-            show_es_homepagetab
-            show_gamesstreamingnow
-            show_under
-            show_updatesandoffers
-            show_es_homepagesidebar
-
-            // FIXME Convert app page customization settings into new customize_apppage
-            show_apppage_reviews
-            show_apppage_about
-            show_apppage_surveys
-            show_apppage_sysreq
-            show_apppage_legal
-            show_apppage_morelikethis
-            show_apppage_recommendedbycurators
-            show_apppage_customerreviews
-
+            // Populate customize_frontpage
+            let mapping = {
+                'show_featuredrecommended': 'featuredrecommended',
+                'show_specialoffers': 'specialoffers',
+                'show_trendingamongfriends': 'trendingamongfriends',
+                'show_es_discoveryqueue': 'es_discoveryqueue',
+                'show_browsesteam': 'browsesteam',
+                'show_curators': 'curators',
+                'show_morecuratorrecommendations': 'morecuratorrecommendations',
+                'show_recentlyupdated': 'recentlyupdated',
+                'show_fromdevelopersandpublishersthatyouknow': 'fromdevelopersandpublishersthatyouknow',
+                'show_popularvrgames': 'popularvrgames',
+                'show_es_homepagetab': 'es_homepagetab',
+                'show_gamesstreamingnow': 'gamesstreamingnow',
+                'show_under': 'under',
+                'show_updatesandoffers': 'updatesandoffers',
+                'show_es_homepagesidebar': 'es_homepagesidebar',
+            };
+            let settings = SyncedStorage.get('customize_frontpage');
+            for (let [oldkey, newkey] of Object.entries(mapping)) {
+                if (!SyncedStorage.has(oldkey)) { continue; }
+                settings[newkey] = SyncedStorage.get(oldkey);
+                SyncedStorage.remove(oldkey);
+            }
+            SyncedStorage.set('customize_frontpage', settings);
+            
+            // Populate customize_apppage
+            mapping = {
+                'show_apppage_reviews': 'reviews',
+                'show_apppage_about': 'about',
+                'show_apppage_surveys': 'surveys',
+                'show_apppage_sysreq': 'sysreq',
+                'show_apppage_legal': 'legal',
+                'show_apppage_morelikethis': 'morelikethis',
+                'show_apppage_recommendedbycurators': 'recommendedbycurators',
+                'show_apppage_customerreviews': 'customerreviews',
+            };
+            settings = SyncedStorage.get('customize_apppage');
+            for (let [oldkey, newkey] of Object.entries(mapping)) {
+                if (!SyncedStorage.has(oldkey)) { continue; }
+                settings[newkey] = SyncedStorage.get(oldkey);
+                SyncedStorage.remove(oldkey);
+            }
+            SyncedStorage.set('customize_apppage', settings);
         }
 
         SyncedStorage.set("version", Info.version);
     }
 }
-*/
+
 
 function checkError() {
     if (!chrome.runtime.lastError) {
@@ -147,6 +165,7 @@ function checkError() {
     }
     throw chrome.runtime.lastError.message;
 }
+
 
 class GameId {
     static parseId(id) {
