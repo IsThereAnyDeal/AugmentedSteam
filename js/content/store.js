@@ -514,6 +514,12 @@ let AppPageClass = (function(){
         wishlistNotes = new WishlistNotes();
 
         this.appid = GameId.getAppid(url);
+        // Some games (e.g. 201270, 201271) have different appid in store page and community
+        let communityAppidSrc = document.querySelector(".apphub_AppIcon img").getAttribute("src");
+        this.communityAppid = GameId.getAppidImgSrc(communityAppidSrc);
+        if (!this.communityAppid) {
+            this.communityAppid = this.appid;
+        }
         let metalinkNode = document.querySelector("#game_area_metalink a");
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
 
@@ -1337,9 +1343,11 @@ let AppPageClass = (function(){
         }
 
         if (SyncedStorage.get("showsteamcardexchange")) {
-            if (document.querySelector(".icon img[src$='/ico_cards.png'")) { // has trading cards
+            if (this.hasCards()) { // has trading cards
+                // FIXME some dlc have card category yet no card
+                let appid = this.communityAppid
                 let cls = "cardexchange_btn";
-                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.appid;
+                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + appid;
                 let str = Localization.str.view_in + ' Steam Card Exchange';
 
                 linkNode.insertAdjacentHTML("afterbegin",
@@ -1652,7 +1660,7 @@ let AppPageClass = (function(){
         if (!SyncedStorage.get("show_badge_progress")) { return; }
         if (!this.hasCards()) { return; }
 
-        let appid = this.appid;
+        let appid = this.communityAppid;
 
         document.querySelector("head")
             .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
@@ -1669,9 +1677,9 @@ let AppPageClass = (function(){
 					</div>
 				`);
 
-        Background.action('cards', { 'appid': this.appid, } )
+        Background.action('cards', { 'appid': appid, } )
             .then(result => loadBadgeContent(".es_normal_badge_progress", result));
-        Background.action('cards', { 'appid': this.appid, 'border': 1, } )
+        Background.action('cards', { 'appid': appid, 'border': 1, } )
             .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
@@ -1746,8 +1754,10 @@ let AppPageClass = (function(){
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
+        let appid = this.communityAppid;
+
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
-        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.appid;
+        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid;
 
         document.querySelector("#achievement_block").insertAdjacentHTML("beforeend",
             `<div class='game_area_details_specs'>
@@ -1766,7 +1776,9 @@ let AppPageClass = (function(){
         details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Background.action('stats', { 'appid': this.appid, } ).then(response => {
+        let appid = this.communityAppid;
+
+        Background.action('stats', { 'appid': appid, } ).then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
