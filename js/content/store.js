@@ -88,9 +88,10 @@ class Customizer {
 let StorePageClass = (function(){
 
     function StorePageClass() {
-
+        this.hasCards = document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
     }
 
+    // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
     StorePageClass.prototype.isAppPage = function() {
         return /^\/app\/\d+/.test(window.location.pathname);
     };
@@ -109,10 +110,6 @@ let StorePageClass = (function(){
 
     StorePageClass.prototype.isOwned = function() {
         return document.querySelector(".game_area_already_owned") ? true :false;
-    };
-
-    StorePageClass.prototype.hasCards = function() {
-        return document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
     };
 
     StorePageClass.prototype.hasAchievements = function(){
@@ -514,12 +511,14 @@ let AppPageClass = (function(){
         wishlistNotes = new WishlistNotes();
 
         this.appid = GameId.getAppid(url);
+
         // Some games (e.g. 201270, 201271) have different appid in store page and community
         let communityAppidSrc = document.querySelector(".apphub_AppIcon img").getAttribute("src");
         this.communityAppid = GameId.getAppidImgSrc(communityAppidSrc);
         if (!this.communityAppid) {
             this.communityAppid = this.appid;
         }
+
         let metalinkNode = document.querySelector("#game_area_metalink a");
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
 
@@ -1342,18 +1341,15 @@ let AppPageClass = (function(){
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
 
-        if (SyncedStorage.get("showsteamcardexchange")) {
-            if (this.hasCards()) { // has trading cards
-                // FIXME some dlc have card category yet no card
-                let appid = this.communityAppid;
-                let cls = "cardexchange_btn";
-                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + appid;
-                let str = Localization.str.view_in + ' Steam Card Exchange';
+        if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
+            // FIXME some dlc have card category yet no card
+            let cls = "cardexchange_btn";
+            let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.communityAppid;
+            let str = Localization.str.view_in + ' Steam Card Exchange';
 
-                linkNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
+            linkNode.insertAdjacentHTML("afterbegin",
+                `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
     };
 
@@ -1656,11 +1652,9 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addBadgeProgress = function(){
+        if (!this.hasCards) { return; }
         if (!User.isSignedIn) { return; }
         if (!SyncedStorage.get("show_badge_progress")) { return; }
-        if (!this.hasCards()) { return; }
-
-        let appid = this.communityAppid;
 
         document.querySelector("head")
             .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
@@ -1676,6 +1670,8 @@ let AppPageClass = (function(){
 						</div>
 					</div>
 				`);
+
+        let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
             .then(result => loadBadgeContent(".es_normal_badge_progress", result));
@@ -1755,10 +1751,8 @@ let AppPageClass = (function(){
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
-        let appid = this.communityAppid;
-
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
-        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + appid;
+        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.communityAppid;
 
         document.querySelector("#achievement_block").insertAdjacentHTML("beforeend",
             `<div class='game_area_details_specs'>
@@ -1774,12 +1768,11 @@ let AppPageClass = (function(){
 
         let details_block = document.querySelector(".myactivity_block .details_block");
         if (!details_block) return;
+
         details_block.insertAdjacentHTML("afterend",
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        let appid = this.communityAppid;
-
-        Background.action('stats', { 'appid': appid, } ).then(response => {
+        Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
             let dummy = document.createElement("html");
             dummy.innerHTML = response;
 
