@@ -230,6 +230,9 @@ class SyncedStorage {
      * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
      * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
      */
+    static has(key) {
+        return Object.prototype.hasOwnProperty.call(this.cache, key);
+    }
     static get(key) {
         if (typeof this.cache[key] == 'undefined') {
             if (typeof this.defaults[key] == 'undefined') {
