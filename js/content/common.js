@@ -809,15 +809,10 @@ let EnhancedSteam = (function() {
     let self = {};
 
     self.checkVersion = async function() {
-        let version = await Background.action("extension.version");
+        let showMessage = SyncedStorage.get("version_updated");
+        SyncedStorage.set("version_updated", false);
 
-        if (!version || !version.cached) {
-            // new installation detected
-            Background.action("extension.version.update");
-            return;
-        }
-
-        if (version.cached === version.current || !SyncedStorage.get("version_show")) {
+        if (!showMessage || !SyncedStorage.get("version_show")) {
             return;
         }
 
@@ -836,7 +831,6 @@ let EnhancedSteam = (function() {
                 );
             }
         );
-        Background.action("extension.version.update");
 
         window.addEventListener("message", function(event) {
             if (event.source !== window) return;

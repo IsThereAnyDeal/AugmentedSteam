@@ -98,6 +98,10 @@ class VersionHandler {
             return;
         }
 
+        // last settings version was out of date
+        // show changelog on next page load
+        SyncedStorage.set("version_updated", true);
+
         if (oldVersion.isSameOrBefore("0.9.4")) {
 
             // Remove eu1 region
@@ -391,6 +395,10 @@ SyncedStorage.cache = {};
 SyncedStorage.defaults = {
     'version': Info.version,
     'language': "english",
+
+    'version_show': true,
+    'version_updated': false,
+
     'highlight_owned_color': "#598400",
     'highlight_wishlist_color': "#1483ad",
     'highlight_coupon_color': "#a26426",
@@ -505,7 +513,6 @@ SyncedStorage.defaults = {
     'keepssachecked': false,
     'showemptywishlist': true,
     'wishlist_notes': {},
-    'version_show': true,
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,
