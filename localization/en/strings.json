@@ -396,6 +396,7 @@
         "profile_link_images_color": "Colored",
         "hide_about": "Hide \"About\" link",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
+        "show_wl_notes": "Show wishlist notes on wishlist",
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "carousel_description": "Show app descriptions on storefront carousel",
         "market_total": "Show transaction summary on Market",

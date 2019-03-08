@@ -2622,6 +2622,7 @@ let WishlistPageClass = (function(){
 
         let instance = this;
         wishlistNotes = new WishlistNotes();
+
         let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
@@ -2645,7 +2646,7 @@ let WishlistPageClass = (function(){
                         if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
                             continue;
                         }
-                        if (myWishlist) {
+                        if (myWishlist && SyncedStorage.get("showwlnotes")) {
                             instance.addWishlistNote(node);
                         } else {
                             instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
