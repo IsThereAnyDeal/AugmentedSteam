@@ -303,6 +303,7 @@ class SyncedStorage {
 SyncedStorage.adapter = chrome.storage.sync || chrome.storage.local;
 SyncedStorage.cache = {};
 SyncedStorage.defaults = {
+    'version': Info.version,
     'language': "english",
     'highlight_owned_color': "#598400",
     'highlight_wishlist_color': "#1483ad",
