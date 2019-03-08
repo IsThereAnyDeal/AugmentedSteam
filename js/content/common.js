@@ -609,7 +609,7 @@ let Currency = (function() {
                 `function(){
                     window.postMessage({
                         type: "es_walletcurrency",
-                        wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
+                        wallet_currency: typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null
                     }, "*");
                 }`);
 
