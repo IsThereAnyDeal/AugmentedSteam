@@ -1826,7 +1826,8 @@ let AppPageClass = (function(){
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
         customizer.add("about", `[data-parent-of="#game_area_description"]`);
-
+        customizer.add("contentwarning", `[data-parent-of="#game_area_content_descriptors"]`);
+        
         customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
             if (document.querySelector("#steam-charts")) { return; }
             instance.data.then(result => addSteamChart.call(instance, result));

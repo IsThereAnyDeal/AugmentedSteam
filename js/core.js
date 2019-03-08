@@ -375,6 +375,7 @@ SyncedStorage.defaults = {
         "recentupdates": true,
         "reviews": true,
         "about": true,
+        "contentwarning": true,
         "steamchart": true,
         "steamspy": true,
         "surveys": true,
