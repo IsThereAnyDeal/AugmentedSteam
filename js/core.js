@@ -1,38 +1,108 @@
-/* FIXME
-class Version {
+const Info = {
+    'version': "0.9.4",
+};
 
+
+class Version {
     constructor(major, minor=0, patch=0) {
-        this.major = parseInt(major);
-        this.minor = parseInt(minor);
-        this.patch = parseInt(patch);
+        console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+    }
+
+    static from(version) {
+        if (version instanceof Version) {
+            return new Version(version.major, version.minor, version.patch);
+        }
+        if (typeof version == 'string') {
+            return Version.fromString(version);
+        }
+        if (Array.isArray(version)) {
+            return Version.fromArray(version);
+        }
+        throw `Could not construct a Version from ${version}`;
+    }
+    static fromArray(version) {
+        return new Version(...version.map(v => parseInt(v, 10)));
+    }
+    static fromString(version) {
+        return Version.fromArray(version.split('.'));
+    }
+    static coerce(version) {
+        if (version instanceof Version) {
+            return version;
+        }
+        return Version.from(version);
     }
 
     toString() {
         return `${this.major}.${this.minor}.${this.patch}`;
     }
+    toArray() {
+        return [this.major, this.minor, this.patch];
+    }
+    toJSON() {
+        return this.toString();
+    }
 
-    isOlderOrSame(version) {
-        return this.major < version.major
-            || (this.major === version.major && this.minor < version.minor)
-            || (this.major === version.major && this.minor === version.minor && this.patch <= version.patch);
+    isCurrent() {
+        return this.isSameOrAfter(Info.version);
+    }
+    isSame(version) {
+        version = Version.coerce(version);
+        return this.major === version.major
+            && this.minor === version.minor
+            && this.patch === version.patch;
+    }
+    isBefore(version) {
+        version = Version.coerce(version);
+        if (this.major < version.major) { return true; }
+        if (this.major > version.major) { return false; }
+        // this.major == version.major
+        if (this.minor < version.minor) { return true; }
+        if (this.minor > version.minor) { return false; }
+        // this.minor == version.minor
+        if (this.patch < version.patch) { return true; }
+        return false;
+    }
+    isSameOrBefore(version) {
+        version = Version.coerce(version);
+        if (this.major < version.major) { return true; }
+        if (this.major > version.major) { return false; }
+        // this.major == version.major
+        if (this.minor < version.minor) { return true; }
+        if (this.minor > version.minor) { return false; }
+        // this.minor == version.minor
+        if (this.patch > version.patch) { return false; }
+        return true;
+    }
+    isAfter(version) {
+        version = Version.coerce(version);
+        return version.isBefore(this);
+    }
+    isSameOrAfter(version) {
+        version = Version.coerce(version);
+        return version.isSameOrBefore(this);
     }
 }
-*/
 
-const Info = {
-    'version': "0.9.4",
-};
 
-/* FIXME
 class VersionHandler {
 
     static migrateSettings() {
-        let oldVersion = SyncedStorage.get("version");
-        if (!oldVersion) {
-            oldVersion = Info.version
+        let oldVersion = SyncedStorage.get("version"); // default is Info.version
+        oldVersion = Version.fromString(oldVersion);
+
+        if (oldVersion.isCurrent()) {
+            return;
         }
 
-        if (oldVersion.isOlderOrSame(new Version(0,9, 4))) {
+        // last settings version was out of date
+        // show changelog on next page load
+        SyncedStorage.set("version_updated", true);
+
+        if (oldVersion.isSameOrBefore("0.9.4")) {
 
             // Remove eu1 region
             let priceRegions = SyncedStorage.get('regional_countries');
@@ -42,39 +112,56 @@ class VersionHandler {
                 SyncedStorage.set('regional_countries', priceRegions);
             }
 
-            // FIXME Convert home page customization settings into new customize_homepage
-            show_featuredrecommended
-            show_specialoffers
-            show_trendingamongfriends
-            show_es_discoveryqueu
-            show_browsesteam
-            show_curators
-            show_morecuratorrecommendations
-            show_recentlyupdated
-            show_fromdevelopersandpublishersthatyouknow
-            show_popularvrgames
-            show_es_homepagetab
-            show_gamesstreamingnow
-            show_under
-            show_updatesandoffers
-            show_es_homepagesidebar
-
-            // FIXME Convert app page customization settings into new customize_apppage
-            show_apppage_reviews
-            show_apppage_about
-            show_apppage_surveys
-            show_apppage_sysreq
-            show_apppage_legal
-            show_apppage_morelikethis
-            show_apppage_recommendedbycurators
-            show_apppage_customerreviews
-
+            // Populate customize_frontpage
+            let mapping = {
+                'show_featuredrecommended': 'featuredrecommended',
+                'show_specialoffers': 'specialoffers',
+                'show_trendingamongfriends': 'trendingamongfriends',
+                'show_es_discoveryqueue': 'es_discoveryqueue',
+                'show_browsesteam': 'browsesteam',
+                'show_curators': 'curators',
+                'show_morecuratorrecommendations': 'morecuratorrecommendations',
+                'show_recentlyupdated': 'recentlyupdated',
+                'show_fromdevelopersandpublishersthatyouknow': 'fromdevelopersandpublishersthatyouknow',
+                'show_popularvrgames': 'popularvrgames',
+                'show_es_homepagetab': 'es_homepagetab',
+                'show_gamesstreamingnow': 'gamesstreamingnow',
+                'show_under': 'under',
+                'show_updatesandoffers': 'updatesandoffers',
+                'show_es_homepagesidebar': 'es_homepagesidebar',
+            };
+            let settings = SyncedStorage.get('customize_frontpage');
+            for (let [oldkey, newkey] of Object.entries(mapping)) {
+                if (!SyncedStorage.has(oldkey)) { continue; }
+                settings[newkey] = SyncedStorage.get(oldkey);
+                SyncedStorage.remove(oldkey);
+            }
+            SyncedStorage.set('customize_frontpage', settings);
+            
+            // Populate customize_apppage
+            mapping = {
+                'show_apppage_reviews': 'reviews',
+                'show_apppage_about': 'about',
+                'show_apppage_surveys': 'surveys',
+                'show_apppage_sysreq': 'sysreq',
+                'show_apppage_legal': 'legal',
+                'show_apppage_morelikethis': 'morelikethis',
+                'show_apppage_recommendedbycurators': 'recommendedbycurators',
+                'show_apppage_customerreviews': 'customerreviews',
+            };
+            settings = SyncedStorage.get('customize_apppage');
+            for (let [oldkey, newkey] of Object.entries(mapping)) {
+                if (!SyncedStorage.has(oldkey)) { continue; }
+                settings[newkey] = SyncedStorage.get(oldkey);
+                SyncedStorage.remove(oldkey);
+            }
+            SyncedStorage.set('customize_apppage', settings);
         }
 
         SyncedStorage.set("version", Info.version);
     }
 }
-*/
+
 
 function checkError() {
     if (!chrome.runtime.lastError) {
@@ -82,6 +169,7 @@ function checkError() {
     }
     throw chrome.runtime.lastError.message;
 }
+
 
 class GameId {
     static parseId(id) {
@@ -186,8 +274,14 @@ class SyncedStorage {
      * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
      * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
      */
+    static has(key) {
+        return Object.prototype.hasOwnProperty.call(this.cache, key);
+    }
     static get(key) {
         if (typeof this.cache[key] == 'undefined') {
+            if (typeof this.defaults[key] == 'undefined') {
+                console.warn(`Unrecognized SyncedStorage key '${key}'`);
+            }
             return this.defaults[key];
         }
         return this.cache[key];
@@ -239,10 +333,6 @@ class SyncedStorage {
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
         Object.assign(that.cache, storage);
 
-        // FIXME MigrateSettings shouldn't be handled from here, there's no point in running it each time we initiale this storage,
-        //       instead run it only when new version is detected
-        //  SyncedStorage.migrateSettings();
-
         return that.cache;
     }
     static then(onDone, onCatch) {
@@ -259,7 +349,12 @@ class SyncedStorage {
 SyncedStorage.adapter = chrome.storage.sync || chrome.storage.local;
 SyncedStorage.cache = {};
 SyncedStorage.defaults = {
+    'version': Info.version,
     'language': "english",
+
+    'version_show': true,
+    'version_updated': false,
+
     'highlight_owned_color': "#598400",
     'highlight_wishlist_color': "#1483ad",
     'highlight_coupon_color': "#a26426",
@@ -339,7 +434,7 @@ SyncedStorage.defaults = {
         "legal": true,
         "morelikethis": true,
         "recommendedbycurators": true,
-        "customierreviews": true
+        "customerreviews": true
     },
 
     'customize_frontpage': {
@@ -376,7 +471,6 @@ SyncedStorage.defaults = {
     'showemptywishlist': true,
     'showwlnotes': true,
     'wishlist_notes': {},
-    'version_show': true,
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,
