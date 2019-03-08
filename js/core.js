@@ -373,10 +373,6 @@ class SyncedStorage {
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
         Object.assign(that.cache, storage);
 
-        // FIXME MigrateSettings shouldn't be handled from here, there's no point in running it each time we initiale this storage,
-        //       instead run it only when new version is detected
-        //  SyncedStorage.migrateSettings();
-
         return that.cache;
     }
     static then(onDone, onCatch) {

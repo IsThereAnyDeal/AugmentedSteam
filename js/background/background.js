@@ -716,3 +716,5 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // keep channel open until callback resolves
     return true;
 });
+
+SyncedStorage.then(() => VersionHandler.migrateSettings());
