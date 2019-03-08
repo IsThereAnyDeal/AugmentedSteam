@@ -1068,54 +1068,6 @@ let EnhancedSteam = (function() {
     return self;
 })();
 
-class HTML {
-
-    static escape = function(str) {
-        // TODO there must be a better way
-        return str
-            .replace(/&/g, '&amp;')
-            .replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;') ;
-    };
-
-    static inner(node, html) {
-        node.innerHTML = DOMPurify.sanitize(html);
-    }
-
-    static beforeBegin(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("beforebegin", DOMPurify.sanitize(html));
-    }
-
-    static afterBegin(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("afterbegin", DOMPurify.sanitize(html));
-    }
-
-    static beforeEnd(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("beforeend", DOMPurify.sanitize(html));
-    }
-
-    static afterEnd(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("afterend", DOMPurify.sanitize(html));
-    }
-
-}
-
 let DOMHelper = (function(){
 
     let self = {};
