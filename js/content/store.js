@@ -1008,8 +1008,8 @@ let AppPageClass = (function(){
         Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
             for(let item of response) {
                 let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
-                let title = BrowserHelper.escapeHTML(item.desc);
-                let name = BrowserHelper.escapeHTML(item.name);
+                let title = HTML.escape(item.desc);
+                let name = HTML.escape(item.name);
                 html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
             }
         }).finally(() => {
@@ -1235,13 +1235,13 @@ let AppPageClass = (function(){
             }
 
 
-            let wsgfUrl = BrowserHelper.escapeHTML(path);
+            let wsgfUrl = HTML.escape(path);
 
             let html = "<div class='block responsive_apppage_details_right heading'>"+Localization.str.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
-            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(wsg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(mmg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(uws_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(fkg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(wsg_icon) + "' height='120' title='" + HTML.escape(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(mmg_icon) + "' height='120' title='" + HTML.escape(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(uws_icon) + "' height='120' title='" + HTML.escape(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(fkg_icon) + "' height='120' title='" + HTML.escape(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
             if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + wsgfUrl + "'>" + Localization.str.rating_details + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
             html += "</div></div></div></div>";
 
@@ -1264,23 +1264,23 @@ let AppPageClass = (function(){
                             <div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
 
                 if (data["main_story"]){
-                    let value = BrowserHelper.escapeHTML(data['main_story']);
+                    let value = HTML.escape(data['main_story']);
                     html += `<b>${Localization.str.hltb.main}:</b><span style='float: right;'>${value}</span><br>`;
                 }
                 if (data["main_extras"]){
-                    let value = BrowserHelper.escapeHTML(data['main_extras']);
+                    let value = HTML.escape(data['main_extras']);
                     html += `<b>${Localization.str.hltb.main_e}:</b><span style='float: right;'>${value}</span><br>`;
                 }
                 if (data["comp"]) {
-                    let value = BrowserHelper.escapeHTML(data['comp']);
+                    let value = HTML.escape(data['comp']);
                     html += `<b>${Localization.str.hltb.compl}:</b><span style='float: right;'>${value}</span><br>`;
                 }
 
                 let suggestUrl = Config.PublicHost + "/gamedata/hltb_link_suggest.php";
 
                 html += "</div>"
-                    + "<a class='linkbar' href='" + BrowserHelper.escapeHTML(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "<a class='linkbar' href='" + BrowserHelper.escapeHTML(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "<a class='linkbar' href='" + HTML.escape(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "<a class='linkbar' href='" + HTML.escape(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
                     + "<a class='linkbar' href='" + suggestUrl + "' id='suggest'>" + Localization.str.hltb.wrong + " - " + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
                     + "</div></div></div>";
 
@@ -1401,9 +1401,9 @@ let AppPageClass = (function(){
         let chart = result.charts.chart;
         let html = '<div id="steam-charts" class="game_area_description"><h2>' + Localization.str.charts.current + '</h2>';
             html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
             html += '</div>';
             html += '<span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span>';
             html += '</div>';
@@ -1435,8 +1435,8 @@ let AppPageClass = (function(){
         let appid = this.appid;
 
         let owners = result.steamspy.owners.split("..")
-        let owners_from = BrowserHelper.escapeHTML(owners[0].trim());
-        let owners_to = BrowserHelper.escapeHTML(owners[1].trim());
+        let owners_from = HTML.escape(owners[0].trim());
+        let owners_to = HTML.escape(owners[1].trim());
         let averageTotal = getTimeString(result.steamspy.average_forever);
         let average2weeks = getTimeString(result.steamspy.average_2weeks);
 
@@ -1776,8 +1776,8 @@ let AppPageClass = (function(){
             barEmpty = barEmpty * .75;
 
             let resultHtml = node.innerHTML
-                .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"")
-                .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"")
+                .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
+                .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
                 .replace("::", ":");
             HTML.inner(node, resultHtml);
         });
@@ -2958,7 +2958,7 @@ let WishlistNotes = (function(){
                     let modal = document.querySelector('#es_note_modal');
                     let appid = modal.dataset.appid;
                     let selector = decodeURIComponent(modal.dataset.selector);
-                    let note = BrowserHelper.escapeHTML(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                    let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
                     let node = document.querySelector(selector);
 
                     if (note.length !== 0) {

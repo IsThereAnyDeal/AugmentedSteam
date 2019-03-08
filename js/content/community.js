@@ -599,7 +599,7 @@ let ProfileHomePageClass = (function(){
                     HTML.afterEnd(document.querySelector("#es_steamrep"),
                         `<div class="${img}">
                             <img src="${imgUrl}" /> 
-                            <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${ BrowserHelper.escapeHTML(value) }</a>
+                            <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
                     return;
                 }
@@ -896,8 +896,8 @@ let GamesPageClass = (function(){
                     barEmpty = barEmpty * .58;
 
                     let resultHtml = node.innerHTML
-                        .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"")
-                        .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"")
+                        .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
+                        .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
                         .replace("::", ":");
                     HTML.inner(node, resultHtml);
 
@@ -1003,7 +1003,7 @@ let ProfileEditPageClass = (function(){
         let html = "<option value='0' id='0'>" + Localization.str.noneselected + "</option>";
         for (let game of games) {
             let id = parseInt(game[0]);
-            let title = BrowserHelper.escapeHTML(game[1]);
+            let title = HTML.escape(game[1]);
 
             let selectedAttr = "";
             if (selectedAppid === id) {
@@ -1038,8 +1038,8 @@ let ProfileEditPageClass = (function(){
 
         let html = "";
         for (let value of result) {
-            let img = BrowserHelper.escapeHTML(value[0].toString());
-            let name = BrowserHelper.escapeHTML(value[1].toString());
+            let img = HTML.escape(value[0].toString());
+            let name = HTML.escape(value[1].toString());
 
             let selectedAttr = "";
             if (img === selectedImg) {

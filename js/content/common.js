@@ -765,10 +765,6 @@ let BrowserHelper = (function(){
 
     let self = {};
 
-    self.escapeHTML = function(str) {
-        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
-    };
-
     // only concerned with vertical at this point
     self.isElementInViewport = function(elem) {
         let elemTop = elem.offsetTop;
@@ -1073,6 +1069,14 @@ let EnhancedSteam = (function() {
 })();
 
 class HTML {
+
+    static escape = function(str) {
+        // TODO there must be a better way
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;') ;
+    };
 
     static inner(node, html) {
         node.innerHTML = DOMPurify.sanitize(html);
@@ -1771,15 +1775,15 @@ let Prices = (function(){
                 activates = "(<b>" + Localization.str.activates + "</b>)";
             }
 
-            let infoUrl = BrowserHelper.escapeHTML(info["urls"]["info"].toString());
-            let priceUrl = BrowserHelper.escapeHTML(info["price"]["url"].toString());
-            let store = BrowserHelper.escapeHTML(info["price"]["store"].toString());
+            let infoUrl = HTML.escape(info["urls"]["info"].toString());
+            let priceUrl = HTML.escape(info["price"]["url"].toString());
+            let store = HTML.escape(info["price"]["store"].toString());
 
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
                 lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
-                let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
+                let voucher = HTML.escape(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
                 lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
@@ -1813,10 +1817,10 @@ let Prices = (function(){
 
             let historicalStr = Localization.str.historical_low_format
                 .replace("__price__", prices)
-                .replace("__store__", BrowserHelper.escapeHTML(info['lowest']['store']))
+                .replace("__store__", HTML.escape(info['lowest']['store']))
                 .replace("__date__", recorded.toLocaleDateString());
 
-            let url = BrowserHelper.escapeHTML(info['urls']['history']);
+            let url = HTML.escape(info['urls']['history']);
 
             line2 = `${Localization.str.historical_low}: ${historicalStr} (<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
         }
@@ -1827,7 +1831,7 @@ let Prices = (function(){
         // "Number of times this game has been in a bundle"
         if (info["bundles"]["count"] > 0) {
             line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
-            let bundlesUrl = BrowserHelper.escapeHTML(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
+            let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
             if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
             }
