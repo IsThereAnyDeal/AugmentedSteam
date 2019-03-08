@@ -1,27 +1,92 @@
-/* FIXME
-class Version {
+const Info = {
+    'version': "0.9.4",
+};
 
+
+class Version {
     constructor(major, minor=0, patch=0) {
-        this.major = parseInt(major);
-        this.minor = parseInt(minor);
-        this.patch = parseInt(patch);
+        console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+    }
+
+    static from(version) {
+        if (version instanceof Version) {
+            return new Version(version.major, version.minor, version.patch);
+        }
+        if (typeof version == 'string') {
+            return Version.fromString(version);
+        }
+        if (Array.isArray(version)) {
+            return Version.fromArray(version);
+        }
+        throw `Could not construct a Version from ${version}`;
+    }
+    static fromArray(version) {
+        return new Version(...version.map(v => parseInt(v, 10)));
+    }
+    static fromString(version) {
+        return Version.fromArray(version.split('.'));
+    }
+    static coerce(version) {
+        if (version instanceof Version) {
+            return version;
+        }
+        return Version.from(version);
     }
 
     toString() {
         return `${this.major}.${this.minor}.${this.patch}`;
     }
+    toArray() {
+        return [this.major, this.minor, this.patch];
+    }
+    toJSON() {
+        return this.toString();
+    }
 
-    isOlderOrSame(version) {
-        return this.major < version.major
-            || (this.major === version.major && this.minor < version.minor)
-            || (this.major === version.major && this.minor === version.minor && this.patch <= version.patch);
+    isCurrent() {
+        return this.isSame(Info.version);
+    }
+    isSame(version) {
+        version = Version.coerce(version);
+        return this.major === version.major
+            && this.minor === version.minor
+            && this.patch === version.patch;
+    }
+    isBefore(version) {
+        version = Version.coerce(version);
+        if (this.major < version.major) { return true; }
+        if (this.major > version.major) { return false; }
+        // this.major == version.major
+        if (this.minor < version.minor) { return true; }
+        if (this.minor > version.minor) { return false; }
+        // this.minor == version.minor
+        if (this.patch < version.patch) { return true; }
+        return false;
+    }
+    isSameOrBefore(version) {
+        version = Version.coerce(version);
+        if (this.major < version.major) { return true; }
+        if (this.major > version.major) { return false; }
+        // this.major == version.major
+        if (this.minor < version.minor) { return true; }
+        if (this.minor > version.minor) { return false; }
+        // this.minor == version.minor
+        if (this.patch > version.patch) { return false; }
+        return true;
+    }
+    isAfter(version) {
+        version = Version.coerce(version);
+        return version.isBefore(this);
+    }
+    isSameOrAfter(version) {
+        version = Version.coerce(version);
+        return version.isSameOrBefore(this);
     }
 }
-*/
 
-const Info = {
-    'version': "0.9.4",
-};
 
 /* FIXME
 class VersionHandler {
