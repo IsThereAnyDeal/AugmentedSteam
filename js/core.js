@@ -117,18 +117,18 @@ class VersionHandler {
                 'show_featuredrecommended': 'featuredrecommended',
                 'show_specialoffers': 'specialoffers',
                 'show_trendingamongfriends': 'trendingamongfriends',
-                'show_es_discoveryqueue': 'es_discoveryqueue',
+                'show_es_discoveryqueue': 'discoveryqueue',
                 'show_browsesteam': 'browsesteam',
                 'show_curators': 'curators',
                 'show_morecuratorrecommendations': 'morecuratorrecommendations',
                 'show_recentlyupdated': 'recentlyupdated',
                 'show_fromdevelopersandpublishersthatyouknow': 'fromdevelopersandpublishersthatyouknow',
                 'show_popularvrgames': 'popularvrgames',
-                'show_es_homepagetab': 'es_homepagetab',
+                'show_es_homepagetab': 'homepagetab',
                 'show_gamesstreamingnow': 'gamesstreamingnow',
                 'show_under': 'under',
                 'show_updatesandoffers': 'updatesandoffers',
-                'show_es_homepagesidebar': 'es_homepagesidebar',
+                'show_es_homepagesidebar': 'homepagesidebar',
             };
             let settings = SyncedStorage.get('customize_frontpage');
             for (let [oldkey, newkey] of Object.entries(mapping)) {
@@ -448,11 +448,11 @@ SyncedStorage.defaults = {
         "recentlyupdated": true,
         "fromdevelopersandpublishersthatyouknow": true,
         "popularvrgames": true,
-        "es_homepagetabs": true,
+        "homepagetabs": true,
         "gamesstreamingnow": true,
         "under": true,
         "updatesandoffers": true,
-        "es_homepagesidebar": true
+        "homepagesidebar": true
     },
 
     'show_keylol_links': false,
