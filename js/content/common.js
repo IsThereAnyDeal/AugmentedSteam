@@ -785,11 +785,12 @@ let BrowserHelper = (function(){
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     };
 
+    // FIXME move to DOMHelper
 
     self.htmlToDOM = function(html) {
         let template = document.createElement('template');
         html = html.trim(); // Never return a text node of whitespace as the result
-        template.innerHTML = html;
+        HTML.inner(template, html);
         return template.content;
     };
 
@@ -1094,7 +1095,7 @@ let EnhancedSteam = (function() {
         function replaceSymbols(node){
             // tfedor I don't trust this won't break any inline JS
             if (!node ||!node.innerHTML) { return; }
-            node.innerHTML = node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, "")
+            HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
         }
 
         let nodes = document.querySelectorAll(selectors);
@@ -1121,6 +1122,29 @@ let EnhancedSteam = (function() {
     return self;
 })();
 
+class HTML {
+
+    static inner(node, html) {
+        node.innerHTML = DOMPurify.sanitize(html);
+    }
+
+    static beforeBegin(node, html) {
+        node.insertAdjacentHTML("beforebegin", DOMPurify.sanitize(html));
+    }
+
+    static afterBegin(node, html) {
+        node.insertAdjacentHTML("afterbegin", DOMPurify.sanitize(html));
+    }
+
+    static beforeEnd(node, html) {
+        node.insertAdjacentHTML("beforeend", DOMPurify.sanitize(html));
+    }
+
+    static afterEnd(node, html) {
+        node.insertAdjacentHTML("afterend", DOMPurify.sanitize(html));
+    }
+
+}
 
 let DOMHelper = (function(){
 

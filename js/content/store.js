@@ -393,7 +393,7 @@ let StorePageClass = (function(){
                             </div>`;
                     }
 
-                    pricingDiv.innerHTML += html;
+                    HTML.inner(pricingDiv, pricingDiv.innerHTML + html);
                 });
 
                 let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
@@ -1632,7 +1632,7 @@ let AppPageClass = (function(){
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
             let cartNode = document.querySelector("#es_selected_cart");
-            cartNode.innerHTML = "<input type=\"hidden\" name=\"action\" value=\"add_to_cart\"><input type=\"hidden\" name=\"sessionid\" value=\"" + User.getSessionId() + "\">"
+            HTML.inner(cartNode, `<input type="hidden" name="action" value="add_to_cart"><input type="hidden" name="sessionid" value="${User.getSessionId()}">`);
 
             let nodes = document.querySelectorAll(".es_dlc_selection:checked");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -1773,8 +1773,7 @@ let AppPageClass = (function(){
             "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
         Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
-            let dummy = document.createElement("html");
-            dummy.innerHTML = response;
+            let dummy = BrowserHelper.htmlToDOM(response);
 
             let node = document.querySelector("#es_ach_stats");
             node.append(dummy.querySelector("#topSummaryAchievements"));
@@ -1788,9 +1787,11 @@ let AppPageClass = (function(){
             barFull = barFull * .75;
             barEmpty = barEmpty * .75;
 
-            node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
-            node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
-            node.innerHTML = node.innerHTML.replace("::", ":");
+            let resultHtml = node.innerHTML
+                .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"")
+                .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"")
+                .replace("::", ":");
+            HTML.inner(node, resultHtml);
         });
     };
 
@@ -2139,16 +2140,18 @@ let FundsPageClass = (function(){
             newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
             newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
         } else {
-            newel.querySelector(".giftcard_style")
-                .innerHTML = Localization.str.wallet.custom_giftcard_amount
+            HTML.inner(
+                newel.querySelector(".giftcard_style"),
+                Localization.str.wallet.custom_giftcard_amount
                     .replace("__minamount__", price)
-                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>");
+                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>")
+            );
         }
 
         let currency = Price.parseFromString(price, Currency.storeCurrency);
 
         let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
-        inputel.innerHTML = "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
+        HTML.inner(inputel, "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>");
         // TODO currency symbol
 
         document.querySelector((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game"))
@@ -2227,8 +2230,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
         RequestData.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
-            let dummy = document.createElement("html");
-            dummy.innerHTML = result;
+            let dummy = BrowserHelper.htmlToDOM(result);
 
             let addedDate = Date.now();
             document.querySelector('#search_result_container').dataset.lastAddDate = addedDate;
@@ -2731,7 +2733,7 @@ let WishlistPageClass = (function(){
 
         document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
         document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
-            e.target.parentNode.innerHTML = "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>";
+            HTML.inner(e.target.parentNode, "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>");
             loadStats();
         });
     };
@@ -2777,11 +2779,11 @@ let WishlistPageClass = (function(){
         }
         totalPrice = new Price(totalPrice, Currency.storeCurrency)
 
-        document.querySelector("#esi-wishlist-chart-content").innerHTML
-            = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
+        HTML.inner(document.querySelector("#esi-wishlist-chart-content"),
+            `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+            <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+            <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+            <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`);
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
@@ -2975,7 +2977,7 @@ let WishlistNotes = (function(){
 
                         node.classList.remove("esi-empty-note");
                         node.classList.add("esi-user-note");
-                        node.innerHTML = '"' + note + '"';
+                        HTML.inner(node, `"${note}"`);
                     } else {
                         that.deleteNote(appid);
 

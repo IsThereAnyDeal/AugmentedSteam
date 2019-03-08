@@ -35,8 +35,8 @@ let Options = (function(){
             }
             html += "</div>";
         }
-        
-        node.innerHTML = html;
+
+        HTML.inner(node, html);
     }
     
     function loadTranslation() {
@@ -54,7 +54,7 @@ let Options = (function(){
             nodes = document.querySelectorAll("[data-locale-html]");
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
-                node.innerHTML = Localization.getString(node.dataset.localeHtml);
+                HTML.inner(node, Localization.getString(node.dataset.localeHtml));
             }
             
             nodes = document.querySelectorAll("#warning_language option");
@@ -62,7 +62,7 @@ let Options = (function(){
                 let node = nodes[i];
                 let lang = node.textContent;
                 let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
-                if (lang != lang_trl) {
+                if (lang !== lang_trl) {
                     node.textContent = lang + " (" + lang_trl + ")";
                 }
             }
@@ -214,7 +214,10 @@ let Options = (function(){
         if (!changelogLoaded) {
             ExtensionResources.getText('changelog.txt')
             .then(data => {
-                document.querySelector("#changelog_text").innerHTML = data.replace(/\n/g, "\n<br>");
+                HTML.inner(
+                    document.querySelector("#changelog_text"),
+                    data.replace(/\n/g, "\n<br>")
+                );
             });
             changelogLoaded = true;
         }

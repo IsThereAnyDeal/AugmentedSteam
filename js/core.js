@@ -544,7 +544,7 @@ class HTMLParser {
     
     static htmlToDOM(html) {
         let template = document.createElement('template');
-        template.innerHTML = html.trim();
+        HTML.inner(template, html);
         return template.content;
     }
     

@@ -623,7 +623,7 @@ let ProfileHomePageClass = (function(){
         let tooltip = Localization.str.view_in + ' ' + Localization.str.store;
 
         let node = document.querySelector(".profile_in_game_name");
-        node.innerHTML = '<a data-tooltip-html="' + tooltip + '" href="//store.steampowered.com/app/' + ingameNode.value + '" target="_blank">' + node.textContent + '</a>';
+        HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
         ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
     };
 
@@ -875,12 +875,10 @@ let GamesPageClass = (function(){
                     .insertAdjacentHTML("afterend", "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
 
                 RequestData.getHttp(statsLink + appid).then(result => {
-                    let dummy = document.createElement("html");
-                    dummy.innerHTML = result;
-
                     let node = document.querySelector("#es_app_" + appid);
                     node.innerHTML = "";
 
+                    let dummy = BrowserHelper.htmlToElement(result);
                     let achNode = dummy.querySelector("#topSummaryAchievements");
 
                     if (!achNode) { return; }
@@ -895,9 +893,12 @@ let GamesPageClass = (function(){
                     barFull = barFull * .58;
                     barEmpty = barEmpty * .58;
 
-                    node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
-                    node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
-                    node.innerHTML = node.innerHTML.replace("::", ":");
+                    let resultHtml = node.innerHTML
+                        .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"")
+                        .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"")
+                        .replace("::", ":");
+                    HTML.inner(node, resultHtml);
+
                 }, () => {
                     let node = document.querySelector("#es_app_" + appid);
                     node.innerHTML = "error";
@@ -1046,7 +1047,7 @@ let ProfileEditPageClass = (function(){
             html += `<option value='${img}'${selectedAttr}>${name}</option>`;
         }
 
-        imgSelectNode.innerHTML = html;
+        HTML.inner(imgSelectNode, html);
         imgSelectNode.style.display="block";
         hideBgFormLoading();
 
@@ -1098,7 +1099,7 @@ let ProfileEditPageClass = (function(){
         let imgSelectNode = document.querySelector("#es_bg_img");
 
         let gameList = getGameSelectOptions(response);
-        gameSelectNode.innerHTML = gameList[1];
+        HTML.inner(gameSelectNode, gameList[1]);
         gameSelectNode.style.display = "block";
 
         let currentImg = ProfileData.getBgImgUrl(622,349);
@@ -1555,7 +1556,10 @@ let InventoryPageClass = (function(){
                     button.style.pointerEvents = "none";
                 }
 
-                marketActions.querySelector("div").innerHTML = "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>";
+                HTML.inner(
+                    marketActions.querySelector("div"),
+                    "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
+                );
                 ExtensionLayer.runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sellPrice + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
             });
         }
@@ -1621,14 +1625,14 @@ let InventoryPageClass = (function(){
                 }
             } catch (error) {
                 console.error("Couldn't load price overview from market", error);
-                firstDiv.innerHTML = html; // add market link anyway
+                HTML.inner(firstDiv, html); // add market link anyway
                 return;
             }
         }
 
         html += getMarketOverviewHtml(thisItem);
 
-        firstDiv.innerHTML = html;
+        HTML.inner(firstDiv, html);
     }
 
     async function addBoosterPackProgress(marketActions, item, appid) {
@@ -1878,7 +1882,10 @@ let BadgesPageClass = (function(){
         // move faq to the middle
         let xpBlockRight = document.querySelector(".profile_xp_block_right");
 
-        document.querySelector(".profile_xp_block_mid").insertAdjacentHTML("beforeend", "<div class='es_faq_cards'>" + xpBlockRight.innerHTML + "</div>");
+        HTML.beforeEnd(
+            document.querySelector(".profile_xp_block_mid"),
+            "<div class='es_faq_cards'>" + xpBlockRight.innerHTML + "</div>"
+        );
         xpBlockRight.innerHTML = "<div id='es_cards_worth'></div>";
     };
 
@@ -2049,9 +2056,11 @@ let BadgesPageClass = (function(){
         }
 
         async function addDropsCount() {
-            document.querySelector("#es_calculations")
-                .innerHTML = Localization.str.card_drops_remaining.replace("__drops__", dropsCount)
-                    + "<br>" + Localization.str.games_with_drops.replace("__dropsgames__", dropsGames);
+            HTML.inner(
+                document.querySelector("#es_calculations"),
+                Localization.str.card_drops_remaining.replace("__drops__", dropsCount)
+                    + "<br>" + Localization.str.games_with_drops.replace("__dropsgames__", dropsGames)
+            );
 
             let response;
             try {
@@ -2840,10 +2849,12 @@ let MarketPageClass = (function(){
 
             let purchaseTotalPrice = new Price(purchaseTotal, Currency.storeCurrency);
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
-            document.querySelector("#es_market_summary").innerHTML =
+            HTML.inner(
+                document.querySelector("#es_market_summary"),
                 `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
                 <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
-                <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`;
+                <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
+            );
         }
 
         let pages = -1;
@@ -2882,12 +2893,12 @@ let MarketPageClass = (function(){
                 </div>`);
 
         let node = document.querySelector("#es_market_summary_status");
-        node.innerHTML = `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`
+        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`);
 
         async function startLoadingStats() {
-            node.innerHTML = `<img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+            HTML.inner(node, `<img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
                                 <span>${Localization.str.loading} <span id="esi_market_stats_progress"></span>
-                              </span>`;
+                              </span>`);
             document.querySelector("#es_market_summary").style.display="block";
             await loadMarketStats();
             document.querySelector("#es_market_summary_status").style.display = "none";
@@ -3225,7 +3236,7 @@ let CommunityAppPageClass = (function(){
             await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
 
             e.target.classList.add("btn_disabled");
-            e.target.innerHTML = "<span>" + Localization.str.on_wishlist + "</span>";
+            HTML.inner(e.target, "<span>" + Localization.str.on_wishlist + "</span>");
 
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
 

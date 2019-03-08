@@ -1,15 +1,122 @@
-import * as TAGS from './tags';
-import * as ATTRS from './attrs';
-import { addToSet, clone } from './utils';
-import * as EXPRESSIONS from './regexp';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.DOMPurify = factory());
+}(this, (function () { 'use strict';
 
-let { apply } = typeof Reflect !== 'undefined' && Reflect;
-const { slice: arraySlice } = Array.prototype;
-const { freeze } = Object;
-const getGlobal = () => (typeof window === 'undefined' ? null : window);
+var freeze$1 = Object.freeze || function (x) {
+  return x;
+};
+
+var html = freeze$1(['a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd', 'decorator', 'del', 'details', 'dfn', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'img', 'input', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meter', 'nav', 'nobr', 'ol', 'optgroup', 'option', 'output', 'p', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'select', 'shadow', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr']);
+
+// SVG
+var svg = freeze$1(['svg', 'a', 'altglyph', 'altglyphdef', 'altglyphitem', 'animatecolor', 'animatemotion', 'animatetransform', 'audio', 'canvas', 'circle', 'clippath', 'defs', 'desc', 'ellipse', 'filter', 'font', 'g', 'glyph', 'glyphref', 'hkern', 'image', 'line', 'lineargradient', 'marker', 'mask', 'metadata', 'mpath', 'path', 'pattern', 'polygon', 'polyline', 'radialgradient', 'rect', 'stop', 'style', 'switch', 'symbol', 'text', 'textpath', 'title', 'tref', 'tspan', 'video', 'view', 'vkern']);
+
+var svgFilters = freeze$1(['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feDistantLight', 'feFlood', 'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR', 'feGaussianBlur', 'feMerge', 'feMergeNode', 'feMorphology', 'feOffset', 'fePointLight', 'feSpecularLighting', 'feSpotLight', 'feTile', 'feTurbulence']);
+
+var mathMl = freeze$1(['math', 'menclose', 'merror', 'mfenced', 'mfrac', 'mglyph', 'mi', 'mlabeledtr', 'mmultiscripts', 'mn', 'mo', 'mover', 'mpadded', 'mphantom', 'mroot', 'mrow', 'ms', 'mspace', 'msqrt', 'mstyle', 'msub', 'msup', 'msubsup', 'mtable', 'mtd', 'mtext', 'mtr', 'munder', 'munderover']);
+
+var text = freeze$1(['#text']);
+
+var freeze$2 = Object.freeze || function (x) {
+  return x;
+};
+
+var html$1 = freeze$2(['accept', 'action', 'align', 'alt', 'autocomplete', 'background', 'bgcolor', 'border', 'cellpadding', 'cellspacing', 'checked', 'cite', 'class', 'clear', 'color', 'cols', 'colspan', 'coords', 'crossorigin', 'datetime', 'default', 'dir', 'disabled', 'download', 'enctype', 'face', 'for', 'headers', 'height', 'hidden', 'high', 'href', 'hreflang', 'id', 'integrity', 'ismap', 'label', 'lang', 'list', 'loop', 'low', 'max', 'maxlength', 'media', 'method', 'min', 'multiple', 'name', 'noshade', 'novalidate', 'nowrap', 'open', 'optimum', 'pattern', 'placeholder', 'poster', 'preload', 'pubdate', 'radiogroup', 'readonly', 'rel', 'required', 'rev', 'reversed', 'role', 'rows', 'rowspan', 'spellcheck', 'scope', 'selected', 'shape', 'size', 'sizes', 'span', 'srclang', 'start', 'src', 'srcset', 'step', 'style', 'summary', 'tabindex', 'title', 'type', 'usemap', 'valign', 'value', 'width', 'xmlns']);
+
+var svg$1 = freeze$2(['accent-height', 'accumulate', 'additive', 'alignment-baseline', 'ascent', 'attributename', 'attributetype', 'azimuth', 'basefrequency', 'baseline-shift', 'begin', 'bias', 'by', 'class', 'clip', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cx', 'cy', 'd', 'dx', 'dy', 'diffuseconstant', 'direction', 'display', 'divisor', 'dur', 'edgemode', 'elevation', 'end', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'fx', 'fy', 'g1', 'g2', 'glyph-name', 'glyphref', 'gradientunits', 'gradienttransform', 'height', 'href', 'id', 'image-rendering', 'in', 'in2', 'k', 'k1', 'k2', 'k3', 'k4', 'kerning', 'keypoints', 'keysplines', 'keytimes', 'lang', 'lengthadjust', 'letter-spacing', 'kernelmatrix', 'kernelunitlength', 'lighting-color', 'local', 'marker-end', 'marker-mid', 'marker-start', 'markerheight', 'markerunits', 'markerwidth', 'maskcontentunits', 'maskunits', 'max', 'mask', 'media', 'method', 'mode', 'min', 'name', 'numoctaves', 'offset', 'operator', 'opacity', 'order', 'orient', 'orientation', 'origin', 'overflow', 'paint-order', 'path', 'pathlength', 'patterncontentunits', 'patterntransform', 'patternunits', 'points', 'preservealpha', 'preserveaspectratio', 'r', 'rx', 'ry', 'radius', 'refx', 'refy', 'repeatcount', 'repeatdur', 'restart', 'result', 'rotate', 'scale', 'seed', 'shape-rendering', 'specularconstant', 'specularexponent', 'spreadmethod', 'stddeviation', 'stitchtiles', 'stop-color', 'stop-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke', 'stroke-width', 'style', 'surfacescale', 'tabindex', 'targetx', 'targety', 'transform', 'text-anchor', 'text-decoration', 'text-rendering', 'textlength', 'type', 'u1', 'u2', 'unicode', 'values', 'viewbox', 'visibility', 'version', 'vert-adv-y', 'vert-origin-x', 'vert-origin-y', 'width', 'word-spacing', 'wrap', 'writing-mode', 'xchannelselector', 'ychannelselector', 'x', 'x1', 'x2', 'xmlns', 'y', 'y1', 'y2', 'z', 'zoomandpan']);
+
+var mathMl$1 = freeze$2(['accent', 'accentunder', 'align', 'bevelled', 'close', 'columnsalign', 'columnlines', 'columnspan', 'denomalign', 'depth', 'dir', 'display', 'displaystyle', 'fence', 'frame', 'height', 'href', 'id', 'largeop', 'length', 'linethickness', 'lspace', 'lquote', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'movablelimits', 'notation', 'numalign', 'open', 'rowalign', 'rowlines', 'rowspacing', 'rowspan', 'rspace', 'rquote', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier', 'selection', 'separator', 'separators', 'stretchy', 'subscriptshift', 'supscriptshift', 'symmetric', 'voffset', 'width', 'xmlns']);
+
+var xml = freeze$2(['xlink:href', 'xml:id', 'xlink:title', 'xml:space', 'xmlns:xlink']);
+
+var hasOwnProperty = Object.hasOwnProperty;
+var setPrototypeOf = Object.setPrototypeOf;
+
+var _ref$1 = typeof Reflect !== 'undefined' && Reflect;
+var apply$1 = _ref$1.apply;
+
+if (!apply$1) {
+  apply$1 = function apply(fun, thisValue, args) {
+    return fun.apply(thisValue, args);
+  };
+}
+
+/* Add properties to a lookup table */
+function addToSet(set, array) {
+  if (setPrototypeOf) {
+    // Make 'in' and truthy checks like Boolean(set.constructor)
+    // independent of any properties defined on Object.prototype.
+    // Prevent prototype setters from intercepting set as a this value.
+    setPrototypeOf(set, null);
+  }
+
+  var l = array.length;
+  while (l--) {
+    var element = array[l];
+    if (typeof element === 'string') {
+      var lcElement = element.toLowerCase();
+      if (lcElement !== element) {
+        // Config presets (e.g. tags.js, attrs.js) are immutable.
+        if (!Object.isFrozen(array)) {
+          array[l] = lcElement;
+        }
+
+        element = lcElement;
+      }
+    }
+
+    set[element] = true;
+  }
+
+  return set;
+}
+
+/* Shallow clone an object */
+function clone(object) {
+  var newObject = {};
+
+  var property = void 0;
+  for (property in object) {
+    if (apply$1(hasOwnProperty, object, [property])) {
+      newObject[property] = object[property];
+    }
+  }
+
+  return newObject;
+}
+
+var seal = Object.seal || function (x) {
+  return x;
+};
+
+var MUSTACHE_EXPR = seal(/\{\{[\s\S]*|[\s\S]*\}\}/gm); // Specify template detection regex for SAFE_FOR_TEMPLATES mode
+var ERB_EXPR = seal(/<%[\s\S]*|[\s\S]*%>/gm);
+var DATA_ATTR = seal(/^data-[\-\w.\u00B7-\uFFFF]/); // eslint-disable-line no-useless-escape
+var ARIA_ATTR = seal(/^aria-[\-\w]+$/); // eslint-disable-line no-useless-escape
+var IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i // eslint-disable-line no-useless-escape
+);
+var IS_SCRIPT_OR_DATA = seal(/^(?:\w+script|data):/i);
+var ATTR_WHITESPACE = seal(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205f\u3000]/g // eslint-disable-line no-control-regex
+);
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var _ref = typeof Reflect !== 'undefined' && Reflect;
+var apply = _ref.apply;
+
+var arraySlice = Array.prototype.slice;
+var freeze = Object.freeze;
+
+var getGlobal = function getGlobal() {
+  return typeof window === 'undefined' ? null : window;
+};
 
 if (!apply) {
-  apply = function(fun, thisValue, args) {
+  apply = function apply(fun, thisValue, args) {
     return fun.apply(thisValue, args);
   };
 }
@@ -22,53 +129,49 @@ if (!apply) {
  * @return {?TrustedTypePolicy} The policy created (or null, if Trusted Types
  * are not supported).
  */
-const _createTrustedTypesPolicy = function(trustedTypes, document) {
-  if (
-    typeof trustedTypes !== 'object' ||
-    typeof trustedTypes.createPolicy !== 'function'
-  ) {
+var _createTrustedTypesPolicy = function _createTrustedTypesPolicy(trustedTypes, document) {
+  if ((typeof trustedTypes === 'undefined' ? 'undefined' : _typeof(trustedTypes)) !== 'object' || typeof trustedTypes.createPolicy !== 'function') {
     return null;
   }
 
   // Allow the callers to control the unique policy name
   // by adding a data-tt-policy-suffix to the script element with the DOMPurify.
   // Policy creation with duplicate names throws in Trusted Types.
-  let suffix = null;
-  const ATTR_NAME = 'data-tt-policy-suffix';
-  if (
-    document.currentScript &&
-    document.currentScript.hasAttribute(ATTR_NAME)
-  ) {
+  var suffix = null;
+  var ATTR_NAME = 'data-tt-policy-suffix';
+  if (document.currentScript && document.currentScript.hasAttribute(ATTR_NAME)) {
     suffix = document.currentScript.getAttribute(ATTR_NAME);
   }
 
-  const policyName = 'dompurify' + (suffix ? '#' + suffix : '');
+  var policyName = 'dompurify' + (suffix ? '#' + suffix : '');
 
   try {
     return trustedTypes.createPolicy(policyName, {
-      createHTML(html) {
-        return html;
-      },
+      createHTML: function createHTML(html$$1) {
+        return html$$1;
+      }
     });
   } catch (error) {
     // Policy creation failed (most likely another DOMPurify script has
     // already run). Skip creating the policy, as this will only cause errors
     // if TT are enforced.
-    console.warn(
-      'TrustedTypes policy ' + policyName + ' could not be created.'
-    );
+    console.warn('TrustedTypes policy ' + policyName + ' could not be created.');
     return null;
   }
 };
 
-function createDOMPurify(window = getGlobal()) {
-  const DOMPurify = root => createDOMPurify(root);
+function createDOMPurify() {
+  var window = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getGlobal();
+
+  var DOMPurify = function DOMPurify(root) {
+    return createDOMPurify(root);
+  };
 
   /**
    * Version label, exposed for easier checks
    * if DOMPurify is up to date or not
    */
-  DOMPurify.version = VERSION;
+  DOMPurify.version = '1.0.10';
 
   /**
    * Array of elements that DOMPurify removed during sanitation.
@@ -84,22 +187,21 @@ function createDOMPurify(window = getGlobal()) {
     return DOMPurify;
   }
 
-  const originalDocument = window.document;
-  let useDOMParser = false;
-  let removeTitle = false;
+  var originalDocument = window.document;
+  var useDOMParser = false;
+  var removeTitle = false;
 
-  let { document } = window;
-  const {
-    DocumentFragment,
-    HTMLTemplateElement,
-    Node,
-    NodeFilter,
-    NamedNodeMap = window.NamedNodeMap || window.MozNamedAttrMap,
-    Text,
-    Comment,
-    DOMParser,
-    TrustedTypes,
-  } = window;
+  var document = window.document;
+  var DocumentFragment = window.DocumentFragment,
+      HTMLTemplateElement = window.HTMLTemplateElement,
+      Node = window.Node,
+      NodeFilter = window.NodeFilter,
+      _window$NamedNodeMap = window.NamedNodeMap,
+      NamedNodeMap = _window$NamedNodeMap === undefined ? window.NamedNodeMap || window.MozNamedAttrMap : _window$NamedNodeMap,
+      Text = window.Text,
+      Comment = window.Comment,
+      DOMParser = window.DOMParser,
+      TrustedTypes = window.TrustedTypes;
 
   // As per issue #47, the web-components registry is inherited by a
   // new document created via createHTMLDocument. As per the spec
@@ -107,178 +209,131 @@ function createDOMPurify(window = getGlobal()) {
   // a new empty registry is used when creating a template contents owner
   // document, so we use that as our parent document to ensure nothing
   // is inherited.
+
   if (typeof HTMLTemplateElement === 'function') {
-    const template = document.createElement('template');
+    var template = document.createElement('template');
     if (template.content && template.content.ownerDocument) {
       document = template.content.ownerDocument;
     }
   }
 
-  const trustedTypesPolicy = _createTrustedTypesPolicy(
-    TrustedTypes,
-    originalDocument
-  );
-  const emptyHTML = trustedTypesPolicy ? trustedTypesPolicy.createHTML('') : '';
+  var trustedTypesPolicy = _createTrustedTypesPolicy(TrustedTypes, originalDocument);
+  var emptyHTML = trustedTypesPolicy ? trustedTypesPolicy.createHTML('') : '';
 
-  const {
-    implementation,
-    createNodeIterator,
-    getElementsByTagName,
-    createDocumentFragment,
-  } = document;
-  const { importNode } = originalDocument;
+  var _document = document,
+      implementation = _document.implementation,
+      createNodeIterator = _document.createNodeIterator,
+      getElementsByTagName = _document.getElementsByTagName,
+      createDocumentFragment = _document.createDocumentFragment;
+  var importNode = originalDocument.importNode;
 
-  let hooks = {};
+
+  var hooks = {};
 
   /**
    * Expose whether this browser supports running the full DOMPurify.
    */
-  DOMPurify.isSupported =
-    implementation &&
-    typeof implementation.createHTMLDocument !== 'undefined' &&
-    document.documentMode !== 9;
+  DOMPurify.isSupported = implementation && typeof implementation.createHTMLDocument !== 'undefined' && document.documentMode !== 9;
 
-  const {
-    MUSTACHE_EXPR,
-    ERB_EXPR,
-    DATA_ATTR,
-    ARIA_ATTR,
-    IS_SCRIPT_OR_DATA,
-    ATTR_WHITESPACE,
-  } = EXPRESSIONS;
-
-  let { IS_ALLOWED_URI } = EXPRESSIONS;
+  var MUSTACHE_EXPR$$1 = MUSTACHE_EXPR,
+      ERB_EXPR$$1 = ERB_EXPR,
+      DATA_ATTR$$1 = DATA_ATTR,
+      ARIA_ATTR$$1 = ARIA_ATTR,
+      IS_SCRIPT_OR_DATA$$1 = IS_SCRIPT_OR_DATA,
+      ATTR_WHITESPACE$$1 = ATTR_WHITESPACE;
+  var IS_ALLOWED_URI$$1 = IS_ALLOWED_URI;
   /**
    * We consider the elements and attributes below to be safe. Ideally
    * don't add any new ones but feel free to remove unwanted ones.
    */
 
   /* allowed element names */
-  let ALLOWED_TAGS = null;
-  const DEFAULT_ALLOWED_TAGS = addToSet({}, [
-    ...TAGS.html,
-    ...TAGS.svg,
-    ...TAGS.svgFilters,
-    ...TAGS.mathMl,
-    ...TAGS.text,
-  ]);
+
+  var ALLOWED_TAGS = null;
+  var DEFAULT_ALLOWED_TAGS = addToSet({}, [].concat(_toConsumableArray(html), _toConsumableArray(svg), _toConsumableArray(svgFilters), _toConsumableArray(mathMl), _toConsumableArray(text)));
 
   /* Allowed attribute names */
-  let ALLOWED_ATTR = null;
-  const DEFAULT_ALLOWED_ATTR = addToSet({}, [
-    ...ATTRS.html,
-    ...ATTRS.svg,
-    ...ATTRS.mathMl,
-    ...ATTRS.xml,
-  ]);
+  var ALLOWED_ATTR = null;
+  var DEFAULT_ALLOWED_ATTR = addToSet({}, [].concat(_toConsumableArray(html$1), _toConsumableArray(svg$1), _toConsumableArray(mathMl$1), _toConsumableArray(xml)));
 
   /* Explicitly forbidden tags (overrides ALLOWED_TAGS/ADD_TAGS) */
-  let FORBID_TAGS = null;
+  var FORBID_TAGS = null;
 
   /* Explicitly forbidden attributes (overrides ALLOWED_ATTR/ADD_ATTR) */
-  let FORBID_ATTR = null;
+  var FORBID_ATTR = null;
 
   /* Decide if ARIA attributes are okay */
-  let ALLOW_ARIA_ATTR = true;
+  var ALLOW_ARIA_ATTR = true;
 
   /* Decide if custom data attributes are okay */
-  let ALLOW_DATA_ATTR = true;
+  var ALLOW_DATA_ATTR = true;
 
   /* Decide if unknown protocols are okay */
-  let ALLOW_UNKNOWN_PROTOCOLS = false;
+  var ALLOW_UNKNOWN_PROTOCOLS = false;
 
   /* Output should be safe for jQuery's $() factory? */
-  let SAFE_FOR_JQUERY = false;
+  var SAFE_FOR_JQUERY = false;
 
   /* Output should be safe for common template engines.
    * This means, DOMPurify removes data attributes, mustaches and ERB
    */
-  let SAFE_FOR_TEMPLATES = false;
+  var SAFE_FOR_TEMPLATES = false;
 
   /* Decide if document with <html>... should be returned */
-  let WHOLE_DOCUMENT = false;
+  var WHOLE_DOCUMENT = false;
 
   /* Track whether config is already set on this instance of DOMPurify. */
-  let SET_CONFIG = false;
+  var SET_CONFIG = false;
 
   /* Decide if all elements (e.g. style, script) must be children of
    * document.body. By default, browsers might move them to document.head */
-  let FORCE_BODY = false;
+  var FORCE_BODY = false;
 
   /* Decide if a DOM `HTMLBodyElement` should be returned, instead of a html
    * string (or a TrustedHTML object if Trusted Types are supported).
    * If `WHOLE_DOCUMENT` is enabled a `HTMLHtmlElement` will be returned instead
    */
-  let RETURN_DOM = false;
+  var RETURN_DOM = false;
 
   /* Decide if a DOM `DocumentFragment` should be returned, instead of a html
    * string  (or a TrustedHTML object if Trusted Types are supported) */
-  let RETURN_DOM_FRAGMENT = false;
+  var RETURN_DOM_FRAGMENT = false;
 
   /* If `RETURN_DOM` or `RETURN_DOM_FRAGMENT` is enabled, decide if the returned DOM
    * `Node` is imported into the current `Document`. If this flag is not enabled the
    * `Node` will belong (its ownerDocument) to a fresh `HTMLDocument`, created by
    * DOMPurify. */
-  let RETURN_DOM_IMPORT = false;
+  var RETURN_DOM_IMPORT = false;
 
   /* Output should be free from DOM clobbering attacks? */
-  let SANITIZE_DOM = true;
+  var SANITIZE_DOM = true;
 
   /* Keep element content when removing element? */
-  let KEEP_CONTENT = true;
+  var KEEP_CONTENT = true;
 
   /* If a `Node` is passed to sanitize(), then performs sanitization in-place instead
    * of importing it into a new Document and returning a sanitized copy */
-  let IN_PLACE = false;
+  var IN_PLACE = false;
 
   /* Allow usage of profiles like html, svg and mathMl */
-  let USE_PROFILES = {};
+  var USE_PROFILES = {};
 
   /* Tags to ignore content of when KEEP_CONTENT is true */
-  const FORBID_CONTENTS = addToSet({}, [
-    'audio',
-    'head',
-    'math',
-    'script',
-    'style',
-    'template',
-    'svg',
-    'video',
-  ]);
+  var FORBID_CONTENTS = addToSet({}, ['audio', 'head', 'math', 'script', 'style', 'template', 'svg', 'video']);
 
   /* Tags that are safe for data: URIs */
-  const DATA_URI_TAGS = addToSet({}, [
-    'audio',
-    'video',
-    'img',
-    'source',
-    'image',
-  ]);
+  var DATA_URI_TAGS = addToSet({}, ['audio', 'video', 'img', 'source', 'image']);
 
   /* Attributes safe for values like "javascript:" */
-  const URI_SAFE_ATTRIBUTES = addToSet({}, [
-    'alt',
-    'class',
-    'for',
-    'id',
-    'label',
-    'name',
-    'pattern',
-    'placeholder',
-    'summary',
-    'title',
-    'value',
-    'style',
-    'xmlns',
-  ]);
+  var URI_SAFE_ATTRIBUTES = addToSet({}, ['alt', 'class', 'for', 'id', 'label', 'name', 'pattern', 'placeholder', 'summary', 'title', 'value', 'style', 'xmlns']);
 
   /* Keep a reference to config to pass to hooks */
-  let CONFIG = null;
+  var CONFIG = null;
 
   /* Ideally, do not touch anything below this line */
   /* ______________________________________________ */
 
-  const formElement = document.createElement('form');
+  var formElement = document.createElement('form');
 
   /**
    * _parseConfig
@@ -286,25 +341,19 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {Object} cfg optional config literal
    */
   // eslint-disable-next-line complexity
-  const _parseConfig = function(cfg) {
+  var _parseConfig = function _parseConfig(cfg) {
     if (CONFIG && CONFIG === cfg) {
       return;
     }
 
     /* Shield configuration object from tampering */
-    if (!cfg || typeof cfg !== 'object') {
+    if (!cfg || (typeof cfg === 'undefined' ? 'undefined' : _typeof(cfg)) !== 'object') {
       cfg = {};
     }
 
     /* Set configuration parameters */
-    ALLOWED_TAGS =
-      'ALLOWED_TAGS' in cfg
-        ? addToSet({}, cfg.ALLOWED_TAGS)
-        : DEFAULT_ALLOWED_TAGS;
-    ALLOWED_ATTR =
-      'ALLOWED_ATTR' in cfg
-        ? addToSet({}, cfg.ALLOWED_ATTR)
-        : DEFAULT_ALLOWED_ATTR;
+    ALLOWED_TAGS = 'ALLOWED_TAGS' in cfg ? addToSet({}, cfg.ALLOWED_TAGS) : DEFAULT_ALLOWED_TAGS;
+    ALLOWED_ATTR = 'ALLOWED_ATTR' in cfg ? addToSet({}, cfg.ALLOWED_ATTR) : DEFAULT_ALLOWED_ATTR;
     FORBID_TAGS = 'FORBID_TAGS' in cfg ? addToSet({}, cfg.FORBID_TAGS) : {};
     FORBID_ATTR = 'FORBID_ATTR' in cfg ? addToSet({}, cfg.FORBID_ATTR) : {};
     USE_PROFILES = 'USE_PROFILES' in cfg ? cfg.USE_PROFILES : false;
@@ -322,7 +371,7 @@ function createDOMPurify(window = getGlobal()) {
     KEEP_CONTENT = cfg.KEEP_CONTENT !== false; // Default true
     IN_PLACE = cfg.IN_PLACE || false; // Default false
 
-    IS_ALLOWED_URI = cfg.ALLOWED_URI_REGEXP || IS_ALLOWED_URI;
+    IS_ALLOWED_URI$$1 = cfg.ALLOWED_URI_REGEXP || IS_ALLOWED_URI$$1;
 
     if (SAFE_FOR_TEMPLATES) {
       ALLOW_DATA_ATTR = false;
@@ -334,29 +383,29 @@ function createDOMPurify(window = getGlobal()) {
 
     /* Parse profile info */
     if (USE_PROFILES) {
-      ALLOWED_TAGS = addToSet({}, [...TAGS.text]);
+      ALLOWED_TAGS = addToSet({}, [].concat(_toConsumableArray(text)));
       ALLOWED_ATTR = [];
       if (USE_PROFILES.html === true) {
-        addToSet(ALLOWED_TAGS, TAGS.html);
-        addToSet(ALLOWED_ATTR, ATTRS.html);
+        addToSet(ALLOWED_TAGS, html);
+        addToSet(ALLOWED_ATTR, html$1);
       }
 
       if (USE_PROFILES.svg === true) {
-        addToSet(ALLOWED_TAGS, TAGS.svg);
-        addToSet(ALLOWED_ATTR, ATTRS.svg);
-        addToSet(ALLOWED_ATTR, ATTRS.xml);
+        addToSet(ALLOWED_TAGS, svg);
+        addToSet(ALLOWED_ATTR, svg$1);
+        addToSet(ALLOWED_ATTR, xml);
       }
 
       if (USE_PROFILES.svgFilters === true) {
-        addToSet(ALLOWED_TAGS, TAGS.svgFilters);
-        addToSet(ALLOWED_ATTR, ATTRS.svg);
-        addToSet(ALLOWED_ATTR, ATTRS.xml);
+        addToSet(ALLOWED_TAGS, svgFilters);
+        addToSet(ALLOWED_ATTR, svg$1);
+        addToSet(ALLOWED_ATTR, xml);
       }
 
       if (USE_PROFILES.mathMl === true) {
-        addToSet(ALLOWED_TAGS, TAGS.mathMl);
-        addToSet(ALLOWED_ATTR, ATTRS.mathMl);
-        addToSet(ALLOWED_ATTR, ATTRS.xml);
+        addToSet(ALLOWED_TAGS, mathMl);
+        addToSet(ALLOWED_ATTR, mathMl$1);
+        addToSet(ALLOWED_ATTR, xml);
       }
     }
 
@@ -410,7 +459,7 @@ function createDOMPurify(window = getGlobal()) {
    *
    * @param  {Node} node a DOM node
    */
-  const _forceRemove = function(node) {
+  var _forceRemove = function _forceRemove(node) {
     DOMPurify.removed.push({ element: node });
     try {
       node.parentNode.removeChild(node);
@@ -425,16 +474,16 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {String} name an Attribute name
    * @param  {Node} node a DOM node
    */
-  const _removeAttribute = function(name, node) {
+  var _removeAttribute = function _removeAttribute(name, node) {
     try {
       DOMPurify.removed.push({
         attribute: node.getAttributeNode(name),
-        from: node,
+        from: node
       });
     } catch (error) {
       DOMPurify.removed.push({
         attribute: null,
-        from: node,
+        from: node
       });
     }
 
@@ -447,16 +496,16 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {String} dirty a string of dirty markup
    * @return {Document} a DOM, filled with the dirty markup
    */
-  const _initDocument = function(dirty) {
+  var _initDocument = function _initDocument(dirty) {
     /* Create a HTML document */
-    let doc;
-    let leadingWhitespace;
+    var doc = void 0;
+    var leadingWhitespace = void 0;
 
     if (FORCE_BODY) {
       dirty = '<remove></remove>' + dirty;
     } else {
       /* If FORCE_BODY isn't used, leading whitespace needs to be preserved manually */
-      const matches = dirty.match(/^[\s]+/);
+      var matches = dirty.match(/^[\s]+/);
       leadingWhitespace = matches && matches[0];
       if (leadingWhitespace) {
         dirty = dirty.slice(leadingWhitespace.length);
@@ -479,18 +528,15 @@ function createDOMPurify(window = getGlobal()) {
     Safari (see comment below) */
     if (!doc || !doc.documentElement) {
       doc = implementation.createHTMLDocument('');
-      const { body } = doc;
+      var _doc = doc,
+          body = _doc.body;
+
       body.parentNode.removeChild(body.parentNode.firstElementChild);
-      body.outerHTML = trustedTypesPolicy
-        ? trustedTypesPolicy.createHTML(dirty)
-        : dirty;
+      body.outerHTML = trustedTypesPolicy ? trustedTypesPolicy.createHTML(dirty) : dirty;
     }
 
     if (leadingWhitespace) {
-      doc.body.insertBefore(
-        document.createTextNode(leadingWhitespace),
-        doc.body.childNodes[0] || null
-      );
+      doc.body.insertBefore(document.createTextNode(leadingWhitespace), doc.body.childNodes[0] || null);
     }
 
     /* Work on whole document or just its body */
@@ -507,20 +553,18 @@ function createDOMPurify(window = getGlobal()) {
   // MS Edge, in older versions, is affected by an mXSS behavior. The second
   // check tests for the behavior and fixes it if necessary.
   if (DOMPurify.isSupported) {
-    (function() {
+    (function () {
       try {
-        const doc = _initDocument(
-          '<svg><p><style><img src="</style><img src=x onerror=1//">'
-        );
+        var doc = _initDocument('<svg><p><style><img src="</style><img src=x onerror=1//">');
         if (doc.querySelector('svg img')) {
           useDOMParser = true;
         }
       } catch (error) {}
     })();
 
-    (function() {
+    (function () {
       try {
-        const doc = _initDocument('<x/><title>&lt;/title&gt;&lt;img&gt;');
+        var doc = _initDocument('<x/><title>&lt;/title&gt;&lt;img&gt;');
         if (doc.querySelector('title').innerHTML.match(/<\/title/)) {
           removeTitle = true;
         }
@@ -534,16 +578,10 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {Document} root document/fragment to create iterator for
    * @return {Iterator} iterator instance
    */
-  const _createIterator = function(root) {
-    return createNodeIterator.call(
-      root.ownerDocument || root,
-      root,
-      NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT,
-      () => {
-        return NodeFilter.FILTER_ACCEPT;
-      },
-      false
-    );
+  var _createIterator = function _createIterator(root) {
+    return createNodeIterator.call(root.ownerDocument || root, root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT, function () {
+      return NodeFilter.FILTER_ACCEPT;
+    }, false);
   };
 
   /**
@@ -552,19 +590,12 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {Node} elm element to check for clobbering attacks
    * @return {Boolean} true if clobbered, false if safe
    */
-  const _isClobbered = function(elm) {
+  var _isClobbered = function _isClobbered(elm) {
     if (elm instanceof Text || elm instanceof Comment) {
       return false;
     }
 
-    if (
-      typeof elm.nodeName !== 'string' ||
-      typeof elm.textContent !== 'string' ||
-      typeof elm.removeChild !== 'function' ||
-      !(elm.attributes instanceof NamedNodeMap) ||
-      typeof elm.removeAttribute !== 'function' ||
-      typeof elm.setAttribute !== 'function'
-    ) {
+    if (typeof elm.nodeName !== 'string' || typeof elm.textContent !== 'string' || typeof elm.removeChild !== 'function' || !(elm.attributes instanceof NamedNodeMap) || typeof elm.removeAttribute !== 'function' || typeof elm.setAttribute !== 'function') {
       return true;
     }
 
@@ -577,13 +608,8 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {Node} obj object to check whether it's a DOM node
    * @return {Boolean} true is object is a DOM node
    */
-  const _isNode = function(obj) {
-    return typeof Node === 'object'
-      ? obj instanceof Node
-      : obj &&
-          typeof obj === 'object' &&
-          typeof obj.nodeType === 'number' &&
-          typeof obj.nodeName === 'string';
+  var _isNode = function _isNode(obj) {
+    return (typeof Node === 'undefined' ? 'undefined' : _typeof(Node)) === 'object' ? obj instanceof Node : obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && typeof obj.nodeType === 'number' && typeof obj.nodeName === 'string';
   };
 
   /**
@@ -594,12 +620,12 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {Node} currentNode node to work on with the hook
    * @param  {Object} data additional hook parameters
    */
-  const _executeHook = function(entryPoint, currentNode, data) {
+  var _executeHook = function _executeHook(entryPoint, currentNode, data) {
     if (!hooks[entryPoint]) {
       return;
     }
 
-    hooks[entryPoint].forEach(hook => {
+    hooks[entryPoint].forEach(function (hook) {
       hook.call(DOMPurify, currentNode, data, CONFIG);
     });
   };
@@ -615,8 +641,8 @@ function createDOMPurify(window = getGlobal()) {
    * @return  {Boolean} true if node was killed, false if left alive
    */
   // eslint-disable-next-line complexity
-  const _sanitizeElements = function(currentNode) {
-    let content;
+  var _sanitizeElements = function _sanitizeElements(currentNode) {
+    var content = void 0;
 
     /* Execute a hook if present */
     _executeHook('beforeSanitizeElements', currentNode, null);
@@ -628,30 +654,21 @@ function createDOMPurify(window = getGlobal()) {
     }
 
     /* Now let's check the element's type and name */
-    const tagName = currentNode.nodeName.toLowerCase();
+    var tagName = currentNode.nodeName.toLowerCase();
 
     /* Execute a hook if present */
     _executeHook('uponSanitizeElement', currentNode, {
-      tagName,
-      allowedTags: ALLOWED_TAGS,
+      tagName: tagName,
+      allowedTags: ALLOWED_TAGS
     });
 
     /* Remove element if anything forbids its presence */
     if (!ALLOWED_TAGS[tagName] || FORBID_TAGS[tagName]) {
       /* Keep content except for black-listed elements */
-      if (
-        KEEP_CONTENT &&
-        !FORBID_CONTENTS[tagName] &&
-        typeof currentNode.insertAdjacentHTML === 'function'
-      ) {
+      if (KEEP_CONTENT && !FORBID_CONTENTS[tagName] && typeof currentNode.insertAdjacentHTML === 'function') {
         try {
-          const htmlToInsert = currentNode.innerHTML;
-          currentNode.insertAdjacentHTML(
-            'AfterEnd',
-            trustedTypesPolicy
-              ? trustedTypesPolicy.createHTML(htmlToInsert)
-              : htmlToInsert
-          );
+          var htmlToInsert = currentNode.innerHTML;
+          currentNode.insertAdjacentHTML('AfterEnd', trustedTypesPolicy ? trustedTypesPolicy.createHTML(htmlToInsert) : htmlToInsert);
         } catch (error) {}
       }
 
@@ -671,12 +688,7 @@ function createDOMPurify(window = getGlobal()) {
     }
 
     /* Convert markup to cover jQuery behavior */
-    if (
-      SAFE_FOR_JQUERY &&
-      !currentNode.firstElementChild &&
-      (!currentNode.content || !currentNode.content.firstElementChild) &&
-      /</g.test(currentNode.textContent)
-    ) {
+    if (SAFE_FOR_JQUERY && !currentNode.firstElementChild && (!currentNode.content || !currentNode.content.firstElementChild) && /</g.test(currentNode.textContent)) {
       DOMPurify.removed.push({ element: currentNode.cloneNode() });
       if (currentNode.innerHTML) {
         currentNode.innerHTML = currentNode.innerHTML.replace(/</g, '&lt;');
@@ -689,8 +701,8 @@ function createDOMPurify(window = getGlobal()) {
     if (SAFE_FOR_TEMPLATES && currentNode.nodeType === 3) {
       /* Get the element's text content */
       content = currentNode.textContent;
-      content = content.replace(MUSTACHE_EXPR, ' ');
-      content = content.replace(ERB_EXPR, ' ');
+      content = content.replace(MUSTACHE_EXPR$$1, ' ');
+      content = content.replace(ERB_EXPR$$1, ' ');
       if (currentNode.textContent !== content) {
         DOMPurify.removed.push({ element: currentNode.cloneNode() });
         currentNode.textContent = content;
@@ -712,13 +724,9 @@ function createDOMPurify(window = getGlobal()) {
    * @return {Boolean} Returns true if `value` is valid, otherwise false.
    */
   // eslint-disable-next-line complexity
-  const _isValidAttribute = function(lcTag, lcName, value) {
+  var _isValidAttribute = function _isValidAttribute(lcTag, lcName, value) {
     /* Make sure attribute cannot clobber */
-    if (
-      SANITIZE_DOM &&
-      (lcName === 'id' || lcName === 'name') &&
-      (value in document || value in formElement)
-    ) {
+    if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement)) {
       return false;
     }
 
@@ -726,9 +734,9 @@ function createDOMPurify(window = getGlobal()) {
         (https://html.spec.whatwg.org/multipage/dom.html#embedding-custom-non-visible-data-with-the-data-*-attributes)
         XML-compatible (https://html.spec.whatwg.org/multipage/infrastructure.html#xml-compatible and http://www.w3.org/TR/xml/#d0e804)
         We don't need to check the value; it's always URI safe. */
-    if (ALLOW_DATA_ATTR && DATA_ATTR.test(lcName)) {
+    if (ALLOW_DATA_ATTR && DATA_ATTR$$1.test(lcName)) {
       // This attribute is safe
-    } else if (ALLOW_ARIA_ATTR && ARIA_ATTR.test(lcName)) {
+    } else if (ALLOW_ARIA_ATTR && ARIA_ATTR$$1.test(lcName)) {
       // This attribute is safe
       /* Otherwise, check the name is permitted */
     } else if (!ALLOWED_ATTR[lcName] || FORBID_ATTR[lcName]) {
@@ -739,24 +747,16 @@ function createDOMPurify(window = getGlobal()) {
       // This attribute is safe
       /* Check no script, data or unknown possibly unsafe URI
         unless we know URI values are safe for that attribute */
-    } else if (IS_ALLOWED_URI.test(value.replace(ATTR_WHITESPACE, ''))) {
+    } else if (IS_ALLOWED_URI$$1.test(value.replace(ATTR_WHITESPACE$$1, ''))) {
       // This attribute is safe
       /* Keep image data URIs alive if src/xlink:href is allowed */
       /* Further prevent gadget XSS for dynamically built script tags */
-    } else if (
-      (lcName === 'src' || lcName === 'xlink:href') &&
-      lcTag !== 'script' &&
-      value.indexOf('data:') === 0 &&
-      DATA_URI_TAGS[lcTag]
-    ) {
+    } else if ((lcName === 'src' || lcName === 'xlink:href') && lcTag !== 'script' && value.indexOf('data:') === 0 && DATA_URI_TAGS[lcTag]) {
       // This attribute is safe
       /* Allow unknown protocols: This provides support for links that
         are handled by protocol handlers which may be unknown ahead of
         time, e.g. fb:, spotify: */
-    } else if (
-      ALLOW_UNKNOWN_PROTOCOLS &&
-      !IS_SCRIPT_OR_DATA.test(value.replace(ATTR_WHITESPACE, ''))
-    ) {
+    } else if (ALLOW_UNKNOWN_PROTOCOLS && !IS_SCRIPT_OR_DATA$$1.test(value.replace(ATTR_WHITESPACE$$1, ''))) {
       // This attribute is safe
       /* Check for binary attributes */
       // eslint-disable-next-line no-negated-condition
@@ -780,34 +780,38 @@ function createDOMPurify(window = getGlobal()) {
    *
    * @param  {Node} currentNode to sanitize
    */
-  const _sanitizeAttributes = function(currentNode) {
-    let attr;
-    let value;
-    let lcName;
-    let idAttr;
-    let l;
+  var _sanitizeAttributes = function _sanitizeAttributes(currentNode) {
+    var attr = void 0;
+    var value = void 0;
+    var lcName = void 0;
+    var idAttr = void 0;
+    var l = void 0;
     /* Execute a hook if present */
     _executeHook('beforeSanitizeAttributes', currentNode, null);
 
-    let { attributes } = currentNode;
+    var attributes = currentNode.attributes;
 
     /* Check if we have attributes; if not we might have a text node */
+
     if (!attributes) {
       return;
     }
 
-    const hookEvent = {
+    var hookEvent = {
       attrName: '',
       attrValue: '',
       keepAttr: true,
-      allowedAttributes: ALLOWED_ATTR,
+      allowedAttributes: ALLOWED_ATTR
     };
     l = attributes.length;
 
     /* Go backwards over all attributes; safely remove bad ones */
     while (l--) {
       attr = attributes[l];
-      const { name, namespaceURI } = attr;
+      var _attr = attr,
+          name = _attr.name,
+          namespaceURI = _attr.namespaceURI;
+
       value = attr.value.trim();
       lcName = name.toLowerCase();
 
@@ -822,11 +826,7 @@ function createDOMPurify(window = getGlobal()) {
       // Safari (iOS + Mac), last tested v8.0.5, crashes if you try to
       // remove a "name" attribute from an <img> tag that has an "id"
       // attribute at the time.
-      if (
-        lcName === 'name' &&
-        currentNode.nodeName === 'IMG' &&
-        attributes.id
-      ) {
+      if (lcName === 'name' && currentNode.nodeName === 'IMG' && attributes.id) {
         idAttr = attributes.id;
         attributes = apply(arraySlice, attributes, []);
         _removeAttribute('id', currentNode);
@@ -835,13 +835,9 @@ function createDOMPurify(window = getGlobal()) {
           currentNode.setAttribute('id', idAttr.value);
         }
       } else if (
-        // This works around a bug in Safari, where input[type=file]
-        // cannot be dynamically set after type has been removed
-        currentNode.nodeName === 'INPUT' &&
-        lcName === 'type' &&
-        value === 'file' &&
-        (ALLOWED_ATTR[lcName] || !FORBID_ATTR[lcName])
-      ) {
+      // This works around a bug in Safari, where input[type=file]
+      // cannot be dynamically set after type has been removed
+      currentNode.nodeName === 'INPUT' && lcName === 'type' && value === 'file' && (ALLOWED_ATTR[lcName] || !FORBID_ATTR[lcName])) {
         continue;
       } else {
         // This avoids a crash in Safari v9.0 with double-ids.
@@ -861,12 +857,12 @@ function createDOMPurify(window = getGlobal()) {
 
       /* Sanitize attribute content to be template-safe */
       if (SAFE_FOR_TEMPLATES) {
-        value = value.replace(MUSTACHE_EXPR, ' ');
-        value = value.replace(ERB_EXPR, ' ');
+        value = value.replace(MUSTACHE_EXPR$$1, ' ');
+        value = value.replace(ERB_EXPR$$1, ' ');
       }
 
       /* Is `value` valid for this attribute? */
-      const lcTag = currentNode.nodeName.toLowerCase();
+      var lcTag = currentNode.nodeName.toLowerCase();
       if (!_isValidAttribute(lcTag, lcName, value)) {
         continue;
       }
@@ -893,14 +889,14 @@ function createDOMPurify(window = getGlobal()) {
    *
    * @param  {DocumentFragment} fragment to iterate over recursively
    */
-  const _sanitizeShadowDOM = function(fragment) {
-    let shadowNode;
-    const shadowIterator = _createIterator(fragment);
+  var _sanitizeShadowDOM = function _sanitizeShadowDOM(fragment) {
+    var shadowNode = void 0;
+    var shadowIterator = _createIterator(fragment);
 
     /* Execute a hook if present */
     _executeHook('beforeSanitizeShadowDOM', fragment, null);
 
-    while ((shadowNode = shadowIterator.nextNode())) {
+    while (shadowNode = shadowIterator.nextNode()) {
       /* Execute a hook if present */
       _executeHook('uponSanitizeShadowNode', shadowNode, null);
 
@@ -930,12 +926,12 @@ function createDOMPurify(window = getGlobal()) {
    * @param {Object} configuration object
    */
   // eslint-disable-next-line complexity
-  DOMPurify.sanitize = function(dirty, cfg) {
-    let body;
-    let importedNode;
-    let currentNode;
-    let oldNode;
-    let returnNode;
+  DOMPurify.sanitize = function (dirty, cfg) {
+    var body = void 0;
+    var importedNode = void 0;
+    var currentNode = void 0;
+    var oldNode = void 0;
+    var returnNode = void 0;
     /* Make sure we have a string to sanitize.
       DO NOT return early, as this will return the wrong type if
       the user has requested a DOM object rather than a string */
@@ -958,10 +954,7 @@ function createDOMPurify(window = getGlobal()) {
 
     /* Check we can run. Otherwise fall back or ignore */
     if (!DOMPurify.isSupported) {
-      if (
-        typeof window.toStaticHTML === 'object' ||
-        typeof window.toStaticHTML === 'function'
-      ) {
+      if (_typeof(window.toStaticHTML) === 'object' || typeof window.toStaticHTML === 'function') {
         if (typeof dirty === 'string') {
           return window.toStaticHTML(dirty);
         }
@@ -1000,15 +993,8 @@ function createDOMPurify(window = getGlobal()) {
       }
     } else {
       /* Exit directly if we have nothing to do */
-      if (
-        !RETURN_DOM &&
-        !SAFE_FOR_TEMPLATES &&
-        !WHOLE_DOCUMENT &&
-        dirty.indexOf('<') === -1
-      ) {
-        return trustedTypesPolicy
-          ? trustedTypesPolicy.createHTML(dirty)
-          : dirty;
+      if (!RETURN_DOM && !SAFE_FOR_TEMPLATES && !WHOLE_DOCUMENT && dirty.indexOf('<') === -1) {
+        return trustedTypesPolicy ? trustedTypesPolicy.createHTML(dirty) : dirty;
       }
 
       /* Initialize the document to work on */
@@ -1026,10 +1012,10 @@ function createDOMPurify(window = getGlobal()) {
     }
 
     /* Get node iterator */
-    const nodeIterator = _createIterator(IN_PLACE ? dirty : body);
+    var nodeIterator = _createIterator(IN_PLACE ? dirty : body);
 
     /* Now start iterating over the created document */
-    while ((currentNode = nodeIterator.nextNode())) {
+    while (currentNode = nodeIterator.nextNode()) {
       /* Fix IE's strange behavior with manipulated textNodes #89 */
       if (currentNode.nodeType === 3 && currentNode === oldNode) {
         continue;
@@ -1083,17 +1069,15 @@ function createDOMPurify(window = getGlobal()) {
       return returnNode;
     }
 
-    let serializedHTML = WHOLE_DOCUMENT ? body.outerHTML : body.innerHTML;
+    var serializedHTML = WHOLE_DOCUMENT ? body.outerHTML : body.innerHTML;
 
     /* Sanitize final string template-safe */
     if (SAFE_FOR_TEMPLATES) {
-      serializedHTML = serializedHTML.replace(MUSTACHE_EXPR, ' ');
-      serializedHTML = serializedHTML.replace(ERB_EXPR, ' ');
+      serializedHTML = serializedHTML.replace(MUSTACHE_EXPR$$1, ' ');
+      serializedHTML = serializedHTML.replace(ERB_EXPR$$1, ' ');
     }
 
-    return trustedTypesPolicy
-      ? trustedTypesPolicy.createHTML(serializedHTML)
-      : serializedHTML;
+    return trustedTypesPolicy ? trustedTypesPolicy.createHTML(serializedHTML) : serializedHTML;
   };
 
   /**
@@ -1102,7 +1086,7 @@ function createDOMPurify(window = getGlobal()) {
    *
    * @param {Object} cfg configuration object
    */
-  DOMPurify.setConfig = function(cfg) {
+  DOMPurify.setConfig = function (cfg) {
     _parseConfig(cfg);
     SET_CONFIG = true;
   };
@@ -1112,7 +1096,7 @@ function createDOMPurify(window = getGlobal()) {
    * clearConfig
    *
    */
-  DOMPurify.clearConfig = function() {
+  DOMPurify.clearConfig = function () {
     CONFIG = null;
     SET_CONFIG = false;
   };
@@ -1127,14 +1111,14 @@ function createDOMPurify(window = getGlobal()) {
    * @param  {string} value Attribute value.
    * @return {Boolean} Returns true if `value` is valid. Otherwise, returns false.
    */
-  DOMPurify.isValidAttribute = function(tag, attr, value) {
+  DOMPurify.isValidAttribute = function (tag, attr, value) {
     /* Initialize shared config vars if necessary. */
     if (!CONFIG) {
       _parseConfig({});
     }
 
-    const lcTag = tag.toLowerCase();
-    const lcName = attr.toLowerCase();
+    var lcTag = tag.toLowerCase();
+    var lcName = attr.toLowerCase();
     return _isValidAttribute(lcTag, lcName, value);
   };
 
@@ -1145,7 +1129,7 @@ function createDOMPurify(window = getGlobal()) {
    * @param {String} entryPoint entry point for the hook to add
    * @param {Function} hookFunction function to execute
    */
-  DOMPurify.addHook = function(entryPoint, hookFunction) {
+  DOMPurify.addHook = function (entryPoint, hookFunction) {
     if (typeof hookFunction !== 'function') {
       return;
     }
@@ -1161,7 +1145,7 @@ function createDOMPurify(window = getGlobal()) {
    *
    * @param {String} entryPoint entry point for the hook to remove
    */
-  DOMPurify.removeHook = function(entryPoint) {
+  DOMPurify.removeHook = function (entryPoint) {
     if (hooks[entryPoint]) {
       hooks[entryPoint].pop();
     }
@@ -1173,7 +1157,7 @@ function createDOMPurify(window = getGlobal()) {
    *
    * @param  {String} entryPoint entry point for the hooks to remove
    */
-  DOMPurify.removeHooks = function(entryPoint) {
+  DOMPurify.removeHooks = function (entryPoint) {
     if (hooks[entryPoint]) {
       hooks[entryPoint] = [];
     }
@@ -1184,11 +1168,16 @@ function createDOMPurify(window = getGlobal()) {
    * Public method to remove all DOMPurify hooks
    *
    */
-  DOMPurify.removeAllHooks = function() {
+  DOMPurify.removeAllHooks = function () {
     hooks = {};
   };
 
   return DOMPurify;
 }
 
-export default createDOMPurify();
+var purify = createDOMPurify();
+
+return purify;
+
+})));
+//# sourceMappingURL=purify.js.map

@@ -49,7 +49,7 @@
         "*://store.steampowered.com/api/*"
       ],
       "js": [
-        "lib/DOMPurify/purify.js",
+        "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
         "js/language.js",
@@ -70,7 +70,7 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
-        "lib/DOMPurify/purify.js",
+        "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
         "js/language.js",
@@ -96,7 +96,7 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
-        "lib/DOMPurify/purify.js",
+        "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
         "js/language.js",
