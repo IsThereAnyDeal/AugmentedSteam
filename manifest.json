@@ -1,124 +1,127 @@
 {
-    "name": "Augmented Steam",
-    "version": "0.9.4",
-    "description": "Augments your Steam Experience",
-    "icons": {
-      "128": "img/es_128.png",
-      "96": "img/es_96.png",
-      "48": "img/es_48.png",
-      "32": "img/es_32.png"
+  "name": "Augmented Steam",
+  "version": "0.9.4",
+  "description": "Augments your Steam Experience",
+  "icons": {
+    "128": "img/es_128.png",
+    "96": "img/es_96.png",
+    "48": "img/es_48.png",
+    "32": "img/es_32.png"
+  },
+  "manifest_version": 2,
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "storage",
+    "*://*.steampowered.com/*",
+    "*://steamcommunity.com/*",
+    "*://*.isthereanydeal.com/"
+  ],
+  "web_accessible_resources": [
+    "img/*.png",
+    "img/*.gif",
+    "img/*.jpg",
+    "img/*.svg",
+    "css/*.css",
+    "options.html",
+    "changelog_new.html",
+    "img/*/*.png",
+    "img/profile_styles/*/header.jpg",
+    "img/profile_styles/*/showcase.png",
+    "img/profile_styles/*/style.css",
+    "img/profile_styles/*/preview.png",
+    "localization/*/strings.json"
+  ],
+  "homepage_url": "https://es.isthereanydeal.com/",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.steampowered.com/*"
+      ],
+      "exclude_matches": [
+        "*://store.steampowered.com/dynamicstore/*",
+        "*://store.steampowered.com/checkout/*",
+        "*://store.steampowered.com/widget/*",
+        "*://store.steampowered.com/login/*",
+        "*://store.steampowered.com/join/*",
+        "*://store.steampowered.com/api/*"
+      ],
+      "js": [
+        "lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/language.js",
+        "js/content/common.js",
+        "js/content/store.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/es_flags.css"
+      ]
     },
-    "manifest_version": 2,
-    "options_ui": {
-        "page": "options.html",
-        "open_in_tab": true
+    {
+      "matches": [
+        "*://steamcommunity.com/*"
+      ],
+      "exclude_matches": [
+        "*://steamcommunity.com/login/*",
+        "*://steamcommunity.com/tradeoffer/*"
+      ],
+      "js": [
+        "lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/language.js",
+        "js/content/common.js",
+        "js/content/community.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/es_flags.css"
+      ]
     },
-    "permissions": [
-        "storage",
-        "*://*.steampowered.com/*",
-        "*://steamcommunity.com/*",
-        "*://*.isthereanydeal.com/"
-    ],
-    "web_accessible_resources": [
-        "img/*.png",
-        "img/*.gif",
-        "img/*.jpg",
-        "img/*.svg",
-        "css/*.css",
-        "options.html",
-        "changelog_new.html",
-        "img/*/*.png",
-        "img/profile_styles/*/header.jpg",
-        "img/profile_styles/*/showcase.png",
-        "img/profile_styles/*/style.css",
-        "img/profile_styles/*/preview.png",
-        "localization/*/strings.json"
-    ],
-    "homepage_url": "https://es.isthereanydeal.com/",
-    "content_scripts": [
-        {
-            "matches": [
-                "*://*.steampowered.com/*"
-            ],
-            "exclude_matches": [
-                "*://store.steampowered.com/dynamicstore/*",
-                "*://store.steampowered.com/checkout/*",
-                "*://store.steampowered.com/widget/*",
-                "*://store.steampowered.com/login/*",
-                "*://store.steampowered.com/join/*",
-                "*://store.steampowered.com/api/*"
-            ],
-            "js": [
-                "js/config.js",
-                "js/core.js",
-                "js/language.js",
-                "js/content/common.js",
-                "js/content/store.js"
-            ],
-            "css": [
-                "css/enhancedsteam.css",
-                "css/es_flags.css"
-            ]
-        },
-        {
-            "matches": [
-                "*://steamcommunity.com/*"
-            ],
-            "exclude_matches": [
-                "*://steamcommunity.com/login/*",
-                "*://steamcommunity.com/tradeoffer/*"
-            ],
-            "js": [
-                "js/config.js",
-                "js/core.js",
-                "js/language.js",
-                "js/content/common.js",
-                "js/content/community.js"
-            ],
-            "css": [
-                "css/enhancedsteam.css",
-                "css/es_flags.css"
-            ]
-        },
-        {
-            "matches": [
-                "*://steamcommunity.com/id/*",
-                "*://steamcommunity.com/profiles/*"
-            ],
-            "css": [
-                "css/es_sites_links.css"
-            ]
-        },
-        {
-          "matches": [
-            "*://steamcommunity.com/tradeoffer/*"
-          ],
-          "js": [
-            "js/config.js",
-            "js/core.js",
-            "js/language.js",
-            "js/content/common.js",
-            "js/content/tradeoffer.js"
-          ],
-          "css": [
-            "css/community/tradeoffer.css"
-          ]
-        },
-        {
-            "matches": [
-                "*://store.steampowered.com/"
-            ],
-            "css": [
-                "css/store/store_front.css"
-            ]
-        }
-    ],
-    "background": {
-        "scripts": [
-          "js/config.js",
-          "js/core.js",
-          "js/background/background.js"
-        ],
-        "persistent": false
+    {
+      "matches": [
+        "*://steamcommunity.com/id/*",
+        "*://steamcommunity.com/profiles/*"
+      ],
+      "css": [
+        "css/es_sites_links.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/tradeoffer/*"
+      ],
+      "js": [
+        "lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/language.js",
+        "js/content/common.js",
+        "js/content/tradeoffer.js"
+      ],
+      "css": [
+        "css/community/tradeoffer.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://store.steampowered.com/"
+      ],
+      "css": [
+        "css/store/store_front.css"
+      ]
     }
+  ],
+  "background": {
+    "scripts": [
+      "js/config.js",
+      "js/core.js",
+      "js/background/background.js"
+    ],
+    "persistent": false
+  }
 }
