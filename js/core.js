@@ -47,7 +47,7 @@ class Version {
     }
 
     isCurrent() {
-        return this.isSame(Info.version);
+        return this.isSameOrAfter(Info.version);
     }
     isSame(version) {
         version = Version.coerce(version);
