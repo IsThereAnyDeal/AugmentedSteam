@@ -363,6 +363,7 @@
         "inventory_market_text": "Marktpreise im Inventar anzeigen",
         "send_age_info": "Alter automatisch senden, wenn Altersbestätigung angefordert wird",
         "pcgw": "PCGamingWiki-Links anzeigen",
+        "protondb": "ProtonDB-Links anzeigen",
         "store_steamcards": "SteamCardExchange-Links auf Store-Seiten zeigen",
         "spamcommentregex": "Regulärer Ausdruck",
         "hide_owned_homepage": "Titel, die du besitzt, auf der Startseite",

@@ -1341,6 +1341,16 @@ let AppPageClass = (function(){
                 `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
+        
+        if (SyncedStorage.get("showprotondb")) {
+            let cls = "protondb_btn";
+            let url = "https://www.protondb.com/app/" + this.appid;
+            let str = Localization.str.view_in + ' ProtonDB';
+
+            linkNode.insertAdjacentHTML("afterbegin",
+                `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+        }
 
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
