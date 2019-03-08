@@ -423,6 +423,24 @@ SyncedStorage.defaults = {
 };
 
 
+class ExtensionResources {
+    static getURL(pathname) {
+        return chrome.runtime.getURL(pathname);
+    }
+
+    static get(pathname) {
+        return fetch(ExtensionResources.getURL(pathname));
+    }
+
+    static getJSON(pathname) {
+        return ExtensionResources.get(pathname).then(r => r.json());
+    }
+    static getText(pathname) {
+        return ExtensionResources.get(pathname).then(r => r.text());
+    }
+}
+
+
 class HTMLParser {
     static clearSpecialSymbols(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");

@@ -65,9 +65,8 @@ Language.languages = {
 
   
 class Localization {
-    static async loadLocalization(code) {
-        let url = chrome.runtime.getURL(`/localization/${code}/strings.json`);
-        return fetch(url).then(r => r.json());
+    static loadLocalization(code) {
+        return ExtensionResources.getJSON(`/localization/${code}/strings.json`);
     }
 
     static init() {

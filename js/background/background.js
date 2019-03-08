@@ -633,7 +633,7 @@ class Steam {
 
     static fetchCurrencies() {
         // https://partner.steamgames.com/doc/store/pricing/currencies
-        return fetch(chrome.runtime.getURL('json/currency.json')).then(r => r.json());
+        return ExtensionResources.getJSON('json/currency.json');
     }
     static async currencies() {
         let self = Steam;

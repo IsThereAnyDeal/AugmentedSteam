@@ -181,10 +181,6 @@ let RequestData = (function(){
         });
     };
 
-    self.getLocalJson = function(url) {
-        return self.getJson(ExtensionLayer.getLocalUrl(url));
-    };
-
     let totalRequests = 0;
     let processedRequests = 0;
 
