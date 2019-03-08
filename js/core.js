@@ -460,6 +460,7 @@ SyncedStorage.defaults = {
     'show_sysreqcheck': false,
     'show_steamchart_info': true,
     'show_steamspy_info': true,
+    'show_apppage_surveys': true,
     'show_early_access': true,
     'show_alternative_linux_icon': false,
     'show_itad_button': false,
