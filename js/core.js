@@ -382,7 +382,7 @@ SyncedStorage.defaults = {
         "legal": true,
         "morelikethis": true,
         "recommendedbycurators": true,
-        "customierreviews": true
+        "customerreviews": true
     },
 
     'customize_frontpage': {
