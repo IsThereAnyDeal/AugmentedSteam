@@ -1345,7 +1345,7 @@ let AppPageClass = (function(){
         if (SyncedStorage.get("showsteamcardexchange")) {
             if (this.hasCards()) { // has trading cards
                 // FIXME some dlc have card category yet no card
-                let appid = this.communityAppid
+                let appid = this.communityAppid;
                 let cls = "cardexchange_btn";
                 let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + appid;
                 let str = Localization.str.view_in + ' Steam Card Exchange';
