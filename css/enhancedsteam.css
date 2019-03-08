@@ -2596,3 +2596,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .capsule.smallcapsule .es_overlay_container > img {
 	width: 100%;
 }
+
+/***************************************
+ * Layout around Customizer on App Pages
+ * 
+ **************************************/
+.game_page_autocollapse_ctn { margin-top: 30px; }
+.game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
