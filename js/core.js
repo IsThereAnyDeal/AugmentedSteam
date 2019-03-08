@@ -42,6 +42,33 @@ class VersionHandler {
                 SyncedStorage.set('regional_countries', priceRegions);
             }
 
+            // FIXME Convert home page customization settings into new customize_homepage
+            show_featuredrecommended
+            show_specialoffers
+            show_trendingamongfriends
+            show_es_discoveryqueu
+            show_browsesteam
+            show_curators
+            show_morecuratorrecommendations
+            show_recentlyupdated
+            show_fromdevelopersandpublishersthatyouknow
+            show_popularvrgames
+            show_es_homepagetab
+            show_gamesstreamingnow
+            show_under
+            show_updatesandoffers
+            show_es_homepagesidebar
+
+            // FIXME Convert app page customization settings into new customize_apppage
+            show_apppage_reviews
+            show_apppage_about
+            show_apppage_surveys
+            show_apppage_sysreq
+            show_apppage_legal
+            show_apppage_morelikethis
+            show_apppage_recommendedbycurators
+            show_apppage_customerreviews
+
         }
 
         SyncedStorage.set("version", Info.version);
@@ -329,21 +356,7 @@ SyncedStorage.defaults = {
     'showregionalprice': "mouse",
     'regional_countries': ["us", "gb", "ru", "br", "au", "jp"],
 
-    'show_featuredrecommended': true,
-    'show_specialoffers': true,
-    'show_trendingamongfriends': true,
-    'show_browsesteam': true,
-    'show_curators': true,
-    'show_morecuratorrecommendations': true,
-    'show_recentlyupdated': true,
-    'show_fromdevelopersandpublishersthatyouknow': true,
-    'show_popularvrgames': true,
-    'show_gamesstreamingnow': true,
-    'show_under': true,
-    'show_updatesandoffers': true,
-    'show_es_discoveryqueue': true,
     'show_es_homepagetabs': true,
-    'show_es_homepagesidebar': true,
     'showmarkettotal': false,
     'showsteamrepapi': true,
     'showmcus': true,
@@ -357,14 +370,39 @@ SyncedStorage.defaults = {
     'showastatslink': true,
     'showwsgf': true,
     'exfgls': true,
-    'show_apppage_reviews': true,
-    'show_apppage_about': true,
-    'show_apppage_surveys': true,
-    'show_apppage_sysreq': true,
-    'show_apppage_legal': true,
-    'show_apppage_morelikethis': true,
-    'show_apppage_recommendedbycurators': true,
-    'show_apppage_customerreviews': true,
+
+    'customize_apppage': {
+        "recentupdates": true,
+        "reviews": true,
+        "about": true,
+        "steamchart": true,
+        "steamspy": true,
+        "surveys": true,
+        "sysreq": true,
+        "legal": true,
+        "morelikethis": true,
+        "recommendedbycurators": true,
+        "customierreviews": true
+    },
+
+    'customize_frontpage': {
+        "featuredrecommended": true,
+        "specialoffers": true,
+        "trendingamongfriends": true,
+        "discoveryqueue": true,
+        "browsesteam": true,
+        "curators": true,
+        "morecuratorrecommendations": true,
+        "recentlyupdated": true,
+        "fromdevelopersandpublishersthatyouknow": true,
+        "popularvrgames": true,
+        "es_homepagetabs": true,
+        "gamesstreamingnow": true,
+        "under": true,
+        "updatesandoffers": true,
+        "es_homepagesidebar": true
+    },
+
     'show_keylol_links': false,
     'show_package_info': false,
     'show_sysreqcheck': false,

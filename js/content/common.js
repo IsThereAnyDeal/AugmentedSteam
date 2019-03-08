@@ -1943,63 +1943,6 @@ let Prices = (function(){
     return Prices;
 })();
 
-let Customizer = (function(){
-    let self = {};
-
-    self.textValue = function(node) {
-        let str = "";
-        for (node=node.firstChild;node;node=node.nextSibling){
-            if (node.nodeType === 3) { str += node.textContent.trim(); }
-        }
-        return str;
-    };
-
-    self.addToggleHandler = function(name, target, text, forceShow, callback) {
-        let element = typeof target === "string" ? document.querySelector(target) : target;
-        if (!element && !forceShow) { return; }
-
-        let state = SyncedStorage.get(name);
-        text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
-        if (text === "") { return; }
-
-        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
-
-        if (element) {
-            element.classList.toggle("es_hide", !SyncedStorage.get(name));
-
-            if (element.classList.contains("es_hide")) {
-                element.style.display = "none";
-            }
-        }
-
-        document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
-            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name) ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>
-            `);
-
-        document.querySelector("#" + name).addEventListener("click", function(e) {
-            state = !state;
-
-            if (element) {
-                element.classList.remove("es_show");
-                element.classList.remove("es_hide");
-                element.style.display = state ? "block" : "none";
-            }
-
-            e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
-
-            SyncedStorage.set(name, state);
-
-            if (callback) { callback(); }
-        });
-    };
-
-    return self;
-})();
-
 let AgeCheck = (function(){
 
     let self = {};
