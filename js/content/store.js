@@ -1650,7 +1650,7 @@ let AppPageClass = (function(){
         if (!User.isSignedIn) { return; }
         if (!SyncedStorage.get("show_badge_progress")) { return; }
 
-        HTML.beforeEnd(head, '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
+        HTML.beforeEnd("head", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
         HTML.afterEnd("#category_block",
             `<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
                 ${Localization.str.badge_progress}
