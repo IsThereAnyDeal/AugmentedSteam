@@ -173,11 +173,6 @@ let RequestData = (function(){
                 }
             }
 
-            // TODO (tfedor) this is a hack for firefox, update URLs to use protocol in master and remove this
-            if (url[0] === "/" && url[1] === "/") {
-                url = window.location.protocol + url;
-            }
-
             let request = new XMLHttpRequest();
             request.onreadystatechange = function() { requestHandler(request); };
             request.overrideMimeType("application/json");
@@ -220,11 +215,6 @@ let RequestData = (function(){
                     ProgressBar.failed(null, url, state.status, state.statusText);
                     reject(state.status);
                 }
-            }
-
-            // TODO (tfedor) this is a hack for firefox, update URLs to use protocol in master and remove this
-            if (url[0] === "/" && url[1] === "/") {
-                url = window.location.protocol + url;
             }
 
             let request = new XMLHttpRequest();
