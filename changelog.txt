@@ -1,4 +1,12 @@
 ﻿
+v0.9.5
+-----
+A hotfix release for version 0.9.4. We have fixed several issues, but also made the extension more safe
+(which admittedly may have broken some things, so please let us know if we missed something).
+
+We managed to snuck two minor features as well: ProtonDB links to app pages (turned off by default)
+and grey profile style for community pages.
+
 v0.9.4
 -----
 The main focus of this release is bugfixing and maintenance,

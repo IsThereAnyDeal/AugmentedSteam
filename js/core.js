@@ -1,5 +1,5 @@
 const Info = {
-    'version': "0.9.4",
+    'version': "0.9.5",
 };
 
 /**
@@ -109,19 +109,54 @@ class Version {
 }
 
 
-class VersionHandler {
+class UpdateHandler {
 
-    static migrateSettings() {
+    static checkVersion() {
+        let lastVersion = Version.fromString(SyncedStorage.get("version"));
+        let currentVersion = Version.fromString(Info.version);
+
+        if (!lastVersion.isSame(currentVersion)) {
+            if (SyncedStorage.get("version_show")) {
+                this._showChangelog();
+            }
+            this._migrateSettings();
+        }
+
+        SyncedStorage.set("version", Info.version);
+    };
+
+    static _showChangelog() {
+        RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
+            changelog => {
+                changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
+                let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
+                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+                ExtensionLayer.runInPageContext(
+                    "function() {\
+                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
+						prompt.done(function(result) {\
+							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
+						});\
+					}"
+                );
+            }
+        );
+
+        window.addEventListener("message", function(event) {
+            if (event.source !== window) return;
+            if (event.data.type && (event.data.type === "es_sendmessage_change")) {
+                SyncedStorage.set("version_show", false);
+            }
+        }, false);
+    }
+
+    static _migrateSettings() {
         let oldVersion = SyncedStorage.get("version"); // default is Info.version
         oldVersion = Version.fromString(oldVersion);
 
         if (oldVersion.isCurrent()) {
             return;
         }
-
-        // last settings version was out of date
-        // show changelog on next page load
-        SyncedStorage.set("version_updated", true);
 
         if (oldVersion.isSameOrBefore("0.9.4")) {
 
@@ -178,8 +213,6 @@ class VersionHandler {
             }
             SyncedStorage.set('customize_apppage', settings);
         }
-
-        SyncedStorage.set("version", Info.version);
     }
 }
 
@@ -374,7 +407,6 @@ SyncedStorage.defaults = {
     'language': "english",
 
     'version_show': true,
-    'version_updated': false,
 
     'highlight_owned_color': "#598400",
     'highlight_wishlist_color': "#1483ad",
