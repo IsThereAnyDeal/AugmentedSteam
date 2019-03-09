@@ -595,7 +595,7 @@ let ProfileHomePageClass = (function(){
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    HTML.afterEnd(document.querySelector("#es_steamrep"),
+                    HTML.afterEnd("#es_steamrep",
                         `<div class="${img}">
                             <img src="${imgUrl}" /> 
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
@@ -619,7 +619,7 @@ let ProfileHomePageClass = (function(){
         let ingameNode = document.querySelector("input[name='ingameAppID']");
         if (!ingameNode || !ingameNode.value) { return; }
 
-        let tooltip = Localization.str.view_in + ' ' + Localization.str.store;
+        let tooltip = Localization.str.view_in_store;
 
         let node = document.querySelector(".profile_in_game_name");
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
@@ -640,7 +640,7 @@ let ProfileHomePageClass = (function(){
             switch (style) {
                 case "goldenprofile":
                     HTML.beforeEnd(
-                        document.querySelector("head"),
+                        "head",
                         "<link rel='stylesheet' type='text/css' href='https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css'>");
 
                     let container = document.createElement("div");
@@ -674,7 +674,7 @@ let ProfileHomePageClass = (function(){
                         </div>`);
 
                     HTML.beforeBegin(
-                        document.querySelector(".profile_header"),
+                        ".profile_header",
                         `<div class="lny_header">
                             <div class="lny_pig_center"></div>
                         </div>`);
@@ -683,7 +683,7 @@ let ProfileHomePageClass = (function(){
                 case "holiday2014":
                     HTML.beforeEnd("head", "<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
 
-                    HTML.beforeEnd(document.querySelector(".profile_header_bg_texture"), "<div class='holidayprofile_header_overlay'></div>");
+                    HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
                     let script = document.createElement("script");
@@ -730,7 +730,7 @@ let ProfileHomePageClass = (function(){
         let channelViewers = data.viewer_count;
         let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
 
-        HTML.afterBegin(document.querySelector(".profile_leftcol"),
+        HTML.afterBegin(".profile_leftcol",
             `<div class='profile_customization' id='es_twitch'>            
                     <div class='profile_customization_header'>
                         ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
@@ -1575,14 +1575,14 @@ let InventoryPageClass = (function(){
         let html = '<div style="min-height:3em;margin-left:1em;">';
 
         if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
-            html += Localization.str.starting_at + ': ' + node.dataset.lowestPrice;
+            html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
 
             if (node.dataset.dataSold) {
                 html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold);
             }
 
             if (node.dataset.cardsPrice) {
-                html += '<br>' + Localization.str.avg_price_3cards + ": " + node.dataset.cardsPrice;
+                html += '<br>' + Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice);
             }
         } else {
             html += Localization.str.no_price_data;
@@ -1976,7 +1976,7 @@ let BadgesPageClass = (function(){
             if (cost) {
                 let badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
                 if (badgeNameBox) {
-                    HTML.afterEnd(badgeNameBox, "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
+                    HTML.afterEnd(badgeNameBox, "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg.replace("__cost__", cost) + "</div>");
                 }
             }
 
@@ -2417,7 +2417,7 @@ let GameCardPageClass = (function(){
                 }
 
                 if (marketLink && cardPrice) {
-                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price}: ${cardPrice}</a>`);
+                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price} ${cardPrice}</a>`);
                 }
             }
         }
@@ -2426,7 +2426,7 @@ let GameCardPageClass = (function(){
             cost = new Price(cost, Currency.storeCurrency);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
+                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`);
 
             document.querySelector(".badge_empty_right").classList.add("esi-badge");
         }
@@ -2568,13 +2568,13 @@ let FriendsThatPlayPageClass = (function(){
         let section = memberList.querySelectorAll(".mainSectionHeader").length;
         if (section < 3) return; // DLC and unreleased games with no playtime
         section = section >= 4 ? 1 : 2;
-
+        
         HTML.beforeEnd(
             memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
             ` (<span id='es_default_sort' style='cursor: pointer;'>
-                    ${Localization.str.sort_by.replace(":", "")} ${Localization.str.theworddefault}
+                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
                  </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by.replace(":", "")} Playtime
+                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)} 
                 </span>)`);
 
         memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
@@ -2856,7 +2856,7 @@ let MarketPageClass = (function(){
                 "#es_market_summary",
                 `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
                 <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
-                <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
+                <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
 
@@ -2983,7 +2983,7 @@ let MarketPageClass = (function(){
                 buttons.style.width = "200px"; // TODO do we still need to change width?
                 if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-                HTML.afterEnd(".market_listing_edit_buttons",
+                HTML.afterEnd(node.querySelector(".market_listing_edit_buttons"),
                     "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
                 // we do this because of changed width, right?
