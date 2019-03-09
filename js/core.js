@@ -559,6 +559,11 @@ class ExtensionResources {
     }
 }
 
+// Allow links to own extension (e.g. options.html)
+(function() {
+    DOMPurify.setConfig({ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i});
+})();
+
 class HTML {
 
     static escape = function(str) {
