@@ -559,7 +559,11 @@ class ExtensionResources {
     }
 }
 
-// Allow links to own extension (e.g. options.html)
+/**
+ * Allow links to own extension (e.g. options.html)
+ * @see https://github.com/cure53/DOMPurify
+ * Default RegExp: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i;
+ */
 (function() {
     DOMPurify.setConfig({ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i});
 })();
