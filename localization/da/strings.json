@@ -57,7 +57,7 @@
     "selling": "Sælger...",
     "quick_sell": "Quick sælg for __amount__",
     "instant_sell": "Sælg med det samme for __amount__",
-    "starting_at": "Starter fra",
+    "starting_at": "Starter fra: __price__",
     "hardwareads": "Hardware Reklame",
     "homepage_tabs": "Forside tabs",
     "store": "Butik",

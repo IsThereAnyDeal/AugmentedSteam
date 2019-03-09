@@ -57,7 +57,7 @@
     "selling": "Vendita in corso...",
     "quick_sell": "Vendita rapida a __amount__",
     "instant_sell": "Vendita istantanea a __amount__",
-    "starting_at": "A partire da",
+    "starting_at": "A partire da: __price__",
     "hardwareads": "Banner hardware",
     "homepage_tabs": "Schede Homepage",
     "store": "Negozio",

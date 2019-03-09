@@ -57,7 +57,7 @@
     "selling": "Satış...",
     "quick_sell": "__amount__'ye Hızlı Sat",
     "instant_sell": "__amount__'ye Anında Sat",
-    "starting_at": "Başlangıç",
+    "starting_at": "Başlangıç: __price__",
     "hardwareads": "Donanım Reklamı",
     "homepage_tabs": "Anasayfa Sekmeleri",
     "store": "Mağaza",

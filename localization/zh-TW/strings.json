@@ -57,7 +57,7 @@
     "selling": "販賣中…",
     "quick_sell": "以 __amount__ 快速販賣",
     "instant_sell": "以 __amount__ 即時販賣",
-    "starting_at": "起價",
+    "starting_at": "起價: __price__",
     "hardwareads": "硬體廣告",
     "homepage_tabs": "主頁標籤",
     "store": "商店",

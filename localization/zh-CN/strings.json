@@ -57,7 +57,7 @@
     "selling": "出售中……",
     "quick_sell": "以 __amount__ 快速出售",
     "instant_sell": "以 __amount__ 立刻出售",
-    "starting_at": "起价",
+    "starting_at": "起价: __price__",
     "hardwareads": "硬件广告",
     "homepage_tabs": "主页标签",
     "store": "商店",

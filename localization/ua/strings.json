@@ -57,7 +57,7 @@
     "selling": "Продається…",
     "quick_sell": "Швидко продати за __amount__",
     "instant_sell": "Миттєвий продаж за __amount__",
-    "starting_at": "починаючи з",
+    "starting_at": "починаючи з: __price__",
     "hardwareads": "Реклама обладнання",
     "homepage_tabs": "Вкладки головної сторінки",
     "store": "Крамниця",

@@ -57,7 +57,7 @@
     "selling": "販売中…",
     "quick_sell": "__amount__をクイック販売",
     "instant_sell": "__amount__個を今すぐ売却する",
-    "starting_at": "開始時刻:",
+    "starting_at": "開始時刻: __price__",
     "hardwareads": "ハードウェアの広告",
     "homepage_tabs": "ホームページタブ",
     "store": "ストア",

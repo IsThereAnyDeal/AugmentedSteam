@@ -57,7 +57,7 @@
     "selling": "Verkopen...",
     "quick_sell": "Snel verkopen voor __amount__",
     "instant_sell": "Direct verkopen voor __amount__",
-    "starting_at": "Vanaf",
+    "starting_at": "Vanaf: __price__",
     "hardwareads": "Hardware Advertenties",
     "homepage_tabs": "Thuispagina tabbladen",
     "store": "Winkel",

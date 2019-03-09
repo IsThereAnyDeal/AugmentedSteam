@@ -57,7 +57,7 @@
     "selling": "กำลังขาย...",
     "quick_sell": "ขายด่วน __amount__ รายการ",
     "instant_sell": "ขายทันที __amount__ รายการ",
-    "starting_at": "เริ่มต้นที่",
+    "starting_at": "เริ่มต้นที่: __price__",
     "hardwareads": "การโฆษณาฮาร์ดแวร์",
     "homepage_tabs": "แท็บหน้าหลัก",
     "store": "ร้านค้า",

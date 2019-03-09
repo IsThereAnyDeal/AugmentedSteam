@@ -57,7 +57,7 @@
     "selling": "Vânzare în curs...",
     "quick_sell": "Vinde repede pentru __amount__",
     "instant_sell": "Vinde imediat pentru __amount__",
-    "starting_at": "Începând cu",
+    "starting_at": "Începând cu: __price__",
     "hardwareads": "Publicitate Hardware",
     "homepage_tabs": "File pe pagina de pornire",
     "store": "Magazin",

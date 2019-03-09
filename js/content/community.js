@@ -1575,7 +1575,7 @@ let InventoryPageClass = (function(){
         let html = '<div style="min-height:3em;margin-left:1em;">';
 
         if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
-            html += Localization.str.starting_at + Localization.str.punctuation.colon + node.dataset.lowestPrice;
+            html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
 
             if (node.dataset.dataSold) {
                 html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold);

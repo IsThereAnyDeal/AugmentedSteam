@@ -57,7 +57,7 @@
     "selling": "Prodávání...",
     "quick_sell": "Rychle prodat za __amount__",
     "instant_sell": "Běžně prodat za __amount__",
-    "starting_at": "Začínají na",
+    "starting_at": "Začínají na: __price__",
     "hardwareads": "Reklamy na hardware",
     "homepage_tabs": "Záložky na hlavní stránce",
     "store": "Obchod",

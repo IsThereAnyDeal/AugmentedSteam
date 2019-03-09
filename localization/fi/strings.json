@@ -57,7 +57,7 @@
     "selling": "Myydään...",
     "quick_sell": "Myy nopeasti hintaan __amount__",
     "instant_sell": "Myy välittömästi hintaan __amount__",
-    "starting_at": "Alkaen",
+    "starting_at": "Alkaen: __price__",
     "hardwareads": "Laitteiston mainonta",
     "homepage_tabs": "Kotisivu välilehdet",
     "store": "Kauppa",

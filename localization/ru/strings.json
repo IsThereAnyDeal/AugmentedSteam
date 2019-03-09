@@ -57,7 +57,7 @@
     "selling": "Продажа ...",
     "quick_sell": "Быстро продать за __amount__",
     "instant_sell": "Мгновенно продать за __amount__",
-    "starting_at": "Начиная от",
+    "starting_at": "Начиная от: __price__",
     "hardwareads": "Реклама оборудования",
     "homepage_tabs": "Вкладки на главной странице",
     "store": "Магазин",

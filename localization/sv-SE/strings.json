@@ -57,7 +57,7 @@
     "selling": "Säljer...",
     "quick_sell": "Snabb sälja för __amount__",
     "instant_sell": "Sälj direkt för __amount__",
-    "starting_at": "Från",
+    "starting_at": "Från: __price__",
     "hardwareads": "Hårdvarureklam",
     "homepage_tabs": "Startsidans flik",
     "store": "Butik",

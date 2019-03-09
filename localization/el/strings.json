@@ -57,7 +57,7 @@
     "selling": "Πώληση...",
     "quick_sell": "Γρήγορη πώληση για __amount__",
     "instant_sell": "Άμεση πώληση για __amount__",
-    "starting_at": "Έναρξη απο",
+    "starting_at": "Έναρξη απο: __price__",
     "hardwareads": "Διαφήμιση υλικού",
     "homepage_tabs": "Καρτέλες Αρχική σελίδα",
     "store": "Κατάστημα",

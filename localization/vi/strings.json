@@ -57,7 +57,7 @@
     "selling": "Đang giao dịch...",
     "quick_sell": "Quick Sell for __amount__",
     "instant_sell": "Bán ngay lập tức cho __amount__",
-    "starting_at": "Bắt đầu từ",
+    "starting_at": "Bắt đầu từ: __price__",
     "hardwareads": "Quảng cáo phần cứng",
     "homepage_tabs": "Tab trang chủ",
     "store": "Cửa hàng",

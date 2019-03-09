@@ -57,7 +57,7 @@
     "selling": "Продажба...",
     "quick_sell": "Бърза продажба за __amount__",
     "instant_sell": "Незабавна продажба за __amount__",
-    "starting_at": "Започва от",
+    "starting_at": "Започва от: __price__",
     "hardwareads": "Рекламиране на хардуер",
     "homepage_tabs": "Разделите на началната страница",
     "store": "Магазин",

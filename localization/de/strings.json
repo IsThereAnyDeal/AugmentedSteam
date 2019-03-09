@@ -57,7 +57,7 @@
     "selling": "Verkaufe...",
     "quick_sell": "Schnellverkauf für __amount__",
     "instant_sell": "Sofortverkauf für __amount__",
-    "starting_at": "Ab",
+    "starting_at": "Ab: __price__",
     "hardwareads": "Hardware-Werbung",
     "homepage_tabs": "Startseiten-Tabs",
     "store": "Shop",

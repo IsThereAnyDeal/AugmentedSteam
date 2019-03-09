@@ -57,7 +57,7 @@
     "selling": "Eladás...",
     "quick_sell": "Gyors eladás __amount__-ért",
     "instant_sell": "Azonalli eladás __amount__-ért",
-    "starting_at": "Kezdődik",
+    "starting_at": "Kezdődik: __price__",
     "hardwareads": "Hardver reklámozás",
     "homepage_tabs": "Kezdőlap",
     "store": "Áruház",

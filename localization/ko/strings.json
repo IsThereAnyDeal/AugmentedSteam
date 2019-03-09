@@ -57,7 +57,7 @@
     "selling": "판매...",
     "quick_sell": "__amount__ 빠른 판매",
     "instant_sell": "__amount__즉시 판매",
-    "starting_at": "시작 시간 :",
+    "starting_at": "시작 시간 : __price__",
     "hardwareads": "하드웨어 광고",
     "homepage_tabs": "홈페이지 탭",
     "store": "상점",
