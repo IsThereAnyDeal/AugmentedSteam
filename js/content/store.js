@@ -305,7 +305,7 @@ let StorePageClass = (function(){
                 this.getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${type}/${gameid}`,
-                    Localization.str.view_in + ' Steam Database')
+                    Localization.str.view_on_website.replace("__website__", 'Steam Database'))
                 );
         }
 
@@ -314,7 +314,7 @@ let StorePageClass = (function(){
                 this.getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${type}/${gameid}`,
-                    Localization.str.view_on + ' IsThereAnyDeal')
+                    Localization.str.view_on_website.replace("__website__", 'IsThereAnyDeal'))
             );
         }
     };
@@ -1346,18 +1346,18 @@ let AppPageClass = (function(){
         if (SyncedStorage.get("showprotondb")) {
             let cls = "protondb_btn";
             let url = "https://www.protondb.com/app/" + this.appid;
-            let str = Localization.str.view_in + ' ProtonDB';
+            let str = Localization.str.view_on_website.replace("__website__", 'ProtonDB');
 
             HTML.afterBegin(linkNode,
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-
+        
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
             let cls = "cardexchange_btn";
             let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.communityAppid;
-            let str = Localization.str.view_in + ' Steam Card Exchange';
+            let str = Localization.str.view_on_website.replace("__website__", 'Steam Card Exchange');
 
             HTML.afterBegin(linkNode,
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">

@@ -61,7 +61,7 @@
     "hardwareads": "Laitteiston mainonta",
     "homepage_tabs": "Kotisivu välilehdet",
     "store": "Kauppa",
-    "view_in": "Katso",
+    "view_in_store": "Katso Kauppa",
     "drm_third_party": "Varoitus: Tämä tuote käyttää kolmannen osapuolen DRM-suojausta __drmlist__!",
     "stores": "Kaupat",
     "game_transactions": "Pelin ostotapahtumat",
