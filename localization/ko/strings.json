@@ -52,7 +52,7 @@
     "games": "게임",
     "total_time": "총 시간",
     "dlc_suggest": "새로운 카테고리를 제안",
-    "badge_completion_cost": "배지를 완성시키기 위한 비용",
+    "badge_completion_cost": "배지를 완성시키기 위한 비용: __cost__",
     "loading": "불러오는중...",
     "selling": "판매...",
     "quick_sell": "__amount__ 빠른 판매",

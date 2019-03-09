@@ -52,7 +52,7 @@
     "games": "Παιχνίδια",
     "total_time": "Συνολικός Χρόνος",
     "dlc_suggest": "Προτείνετε μια νέα κατηγορία",
-    "badge_completion_cost": "Κόστος ολοκλήρωσης σήματος",
+    "badge_completion_cost": "Κόστος ολοκλήρωσης σήματος: __cost__",
     "loading": "Φόρτωση...",
     "selling": "Πώληση...",
     "quick_sell": "Γρήγορη πώληση για __amount__",

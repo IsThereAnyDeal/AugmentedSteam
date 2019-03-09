@@ -52,7 +52,7 @@
     "games": "เกม",
     "total_time": "เวลารวม",
     "dlc_suggest": "แนะนำประเภทใหม่",
-    "badge_completion_cost": "ค่าใช้จ่ายในการสร้างเหรียญตรา",
+    "badge_completion_cost": "ค่าใช้จ่ายในการสร้างเหรียญตรา: __cost__",
     "loading": "กำลังโหลด...",
     "selling": "กำลังขาย...",
     "quick_sell": "ขายด่วน __amount__ รายการ",

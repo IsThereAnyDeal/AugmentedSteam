@@ -52,7 +52,7 @@
     "games": "Pelit",
     "total_time": "Aika yhteensä",
     "dlc_suggest": "Ehdota uutta kategoriaa",
-    "badge_completion_cost": "Merkin viimeistelyn hinta",
+    "badge_completion_cost": "Merkin viimeistelyn hinta: __cost__",
     "loading": "Ladataan...",
     "selling": "Myydään...",
     "quick_sell": "Myy nopeasti hintaan __amount__",

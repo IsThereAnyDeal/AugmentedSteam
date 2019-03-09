@@ -52,7 +52,7 @@
     "games": "Игры",
     "total_time": "Всего времени",
     "dlc_suggest": "Предложить новую категорию",
-    "badge_completion_cost": "Стоимость завершения значка",
+    "badge_completion_cost": "Стоимость завершения значка: __cost__",
     "loading": "Загрузка…",
     "selling": "Продажа ...",
     "quick_sell": "Быстро продать за __amount__",

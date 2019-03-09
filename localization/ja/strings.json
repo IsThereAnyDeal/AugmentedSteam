@@ -52,7 +52,7 @@
     "games": "ゲーム",
     "total_time": "合計時間",
     "dlc_suggest": "新しいカテゴリを提案",
-    "badge_completion_cost": "バッジ完成までのコスト",
+    "badge_completion_cost": "バッジ完成までのコスト: __cost__",
     "loading": "読み込み中...",
     "selling": "販売中…",
     "quick_sell": "__amount__をクイック販売",

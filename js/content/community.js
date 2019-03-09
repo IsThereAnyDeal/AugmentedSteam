@@ -2426,7 +2426,7 @@ let GameCardPageClass = (function(){
             cost = new Price(cost, Currency.storeCurrency);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}${Localization.str.punctuation.colon}${cost}</div>`);
+                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`);
 
             document.querySelector(".badge_empty_right").classList.add("esi-badge");
         }

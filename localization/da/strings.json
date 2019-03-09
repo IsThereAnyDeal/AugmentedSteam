@@ -52,7 +52,7 @@
     "games": "Spil",
     "total_time": "Total tid",
     "dlc_suggest": "Foreslå en ny kategori",
-    "badge_completion_cost": "Pris for at fuldføre skilt",
+    "badge_completion_cost": "Pris for at fuldføre skilt: __cost__",
     "loading": "Indlæser...",
     "selling": "Sælger...",
     "quick_sell": "Quick sælg for __amount__",

@@ -52,7 +52,7 @@
     "games": "Jeux",
     "total_time": "Durée totale",
     "dlc_suggest": "Suggérer une nouvelle catégorie",
-    "badge_completion_cost": "Coût pour compléter le badge",
+    "badge_completion_cost": "Coût pour compléter le badge: __cost__",
     "loading": "Chargement...",
     "selling": "Vente...",
     "quick_sell": "Vente rapide pour __amount__",

@@ -52,7 +52,7 @@
     "games": "Trò chơi",
     "total_time": "Tổng thời gian",
     "dlc_suggest": "Đề xuất thêm mục mới",
-    "badge_completion_cost": "Chi phí để hoàn thành huy hiệu",
+    "badge_completion_cost": "Chi phí để hoàn thành huy hiệu: __cost__",
     "loading": "Đang nạp...",
     "selling": "Đang giao dịch...",
     "quick_sell": "Quick Sell for __amount__",

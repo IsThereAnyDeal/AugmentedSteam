@@ -52,7 +52,7 @@
     "games": "Oyunlar",
     "total_time": "Toplam Süre",
     "dlc_suggest": "Yeni bir kategori öner",
-    "badge_completion_cost": "Rozeti tamamlama fiyatı",
+    "badge_completion_cost": "Rozeti tamamlama fiyatı: __cost__",
     "loading": "Yükleniyor...",
     "selling": "Satış...",
     "quick_sell": "__amount__'ye Hızlı Sat",

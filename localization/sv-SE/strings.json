@@ -52,7 +52,7 @@
     "games": "Spel",
     "total_time": "Total tid",
     "dlc_suggest": "Föreslå en ny kategori",
-    "badge_completion_cost": "Kostnaden för att komplettera märket",
+    "badge_completion_cost": "Kostnaden för att komplettera märket: __cost__",
     "loading": "Laddar...",
     "selling": "Säljer...",
     "quick_sell": "Snabb sälja för __amount__",

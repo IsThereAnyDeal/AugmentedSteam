@@ -52,7 +52,7 @@
     "games": "Hry",
     "total_time": "Celkový čas",
     "dlc_suggest": "Doporučit novou kategorii",
-    "badge_completion_cost": "Cena dokončení odznaku",
+    "badge_completion_cost": "Cena dokončení odznaku: __cost__",
     "loading": "Načítání...",
     "selling": "Prodávání...",
     "quick_sell": "Rychle prodat za __amount__",

@@ -52,7 +52,7 @@
     "games": "Játékok",
     "total_time": "Összes játékidő",
     "dlc_suggest": "Új kategória javasolása",
-    "badge_completion_cost": "A kitűző összeállításának költsége",
+    "badge_completion_cost": "A kitűző összeállításának költsége: __cost__",
     "loading": "Betöltés...",
     "selling": "Eladás...",
     "quick_sell": "Gyors eladás __amount__-ért",

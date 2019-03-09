@@ -52,7 +52,7 @@
     "games": "Spellen",
     "total_time": "Totale Tijd",
     "dlc_suggest": "Suggereer een nieuwe categorie ",
-    "badge_completion_cost": "Koste van de complete badge",
+    "badge_completion_cost": "Koste van de complete badge: __cost__",
     "loading": "Laden...",
     "selling": "Verkopen...",
     "quick_sell": "Snel verkopen voor __amount__",

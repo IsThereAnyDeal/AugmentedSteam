@@ -52,7 +52,7 @@
     "games": "游戏",
     "total_time": "总时长",
     "dlc_suggest": "建议一个新类别",
-    "badge_completion_cost": "完成徽章的花费",
+    "badge_completion_cost": "完成徽章的花费: __cost__",
     "loading": "载入中……",
     "selling": "出售中……",
     "quick_sell": "以 __amount__ 快速出售",

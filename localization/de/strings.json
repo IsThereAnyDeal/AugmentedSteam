@@ -52,7 +52,7 @@
     "games": "Spiele",
     "total_time": "Gesamtzeit",
     "dlc_suggest": "Neue Kategorie vorschlagen",
-    "badge_completion_cost": "Kosten um das Abzeichen zu vervollständigen",
+    "badge_completion_cost": "Kosten um das Abzeichen zu vervollständigen: __cost__",
     "loading": "Lade...",
     "selling": "Verkaufe...",
     "quick_sell": "Schnellverkauf für __amount__",

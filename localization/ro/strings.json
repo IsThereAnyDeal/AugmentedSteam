@@ -52,7 +52,7 @@
     "games": "Jocuri",
     "total_time": "Timp total",
     "dlc_suggest": "Sugerează o categorie nouă",
-    "badge_completion_cost": "Costul completării insignei",
+    "badge_completion_cost": "Costul completării insignei: __cost__",
     "loading": "Se încarcă...",
     "selling": "Vânzare în curs...",
     "quick_sell": "Vinde repede pentru __amount__",

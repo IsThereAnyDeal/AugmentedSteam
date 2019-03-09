@@ -52,7 +52,7 @@
     "games": "ігри",
     "total_time": "Загальний час",
     "dlc_suggest": "Запропонувати нову категорію",
-    "badge_completion_cost": "Вартість виготовлення значка",
+    "badge_completion_cost": "Вартість виготовлення значка: __cost__",
     "loading": "Завантаження…",
     "selling": "Продається…",
     "quick_sell": "Швидко продати за __amount__",

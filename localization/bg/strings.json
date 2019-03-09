@@ -52,7 +52,7 @@
     "games": "Игри",
     "total_time": "Общо време",
     "dlc_suggest": "Предложете нова категория",
-    "badge_completion_cost": "Цена за завършване на значаката",
+    "badge_completion_cost": "Цена за завършване на значаката: __cost__",
     "loading": "Зареждане...",
     "selling": "Продажба...",
     "quick_sell": "Бърза продажба за __amount__",

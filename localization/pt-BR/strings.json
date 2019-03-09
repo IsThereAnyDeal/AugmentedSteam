@@ -52,7 +52,7 @@
     "games": "Jogos",
     "total_time": "Tempo total",
     "dlc_suggest": "Sugerir uma nova categoria",
-    "badge_completion_cost": "Custo para fabricar insígnia",
+    "badge_completion_cost": "Custo para fabricar insígnia: __cost__",
     "loading": "Carregando...",
     "selling": "Vendendo...",
     "quick_sell": "Venda rápida por __amount__",

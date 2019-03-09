@@ -52,7 +52,7 @@
     "games": "Gry",
     "total_time": "Całkowity czas",
     "dlc_suggest": "Zasugeruj nową kategorię",
-    "badge_completion_cost": "Koszt wytworzenia odznaki",
+    "badge_completion_cost": "Koszt wytworzenia odznaki: __cost__",
     "loading": "Wczytywanie...",
     "selling": "Sprzedawanie...",
     "quick_sell": "Szybka Sprzedaż za __amount__",

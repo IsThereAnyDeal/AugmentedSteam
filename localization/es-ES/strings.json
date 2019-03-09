@@ -52,7 +52,7 @@
     "games": "Juegos",
     "total_time": "Tiempo total",
     "dlc_suggest": "Sugerir nueva categoría",
-    "badge_completion_cost": "Coste de completado de la insignia",
+    "badge_completion_cost": "Coste de completado de la insignia: __cost__",
     "loading": "Cargando...",
     "selling": "Vender...",
     "quick_sell": "Vender rápido por __amount__",
