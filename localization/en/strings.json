@@ -553,11 +553,5 @@
         "in_collection": "In Collection",
         "played": "Played",
         "never_played": "Never Played"
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)",
-        "quotation_with_content": "\"__content__\"",
-        "space_between_sentences": " ",
-        "colon": ": "
     }
 }

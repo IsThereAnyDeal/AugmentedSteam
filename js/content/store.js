@@ -948,7 +948,7 @@ let AppPageClass = (function(){
         let cssClass;
 
         if (wishlistNotes.exists(appid)) {
-            noteText = Localization.str.punctuation.quotation_with_content.replace("__content__", wishlistNotes.getNote(appid));
+            noteText = `"${wishlistNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2261,7 +2261,7 @@ let SearchPageClass = (function(){
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + Localization.str.punctuation.space_between_sentences + "<a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
@@ -2885,7 +2885,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (wishlistNotes.exists(appid)) {
-            noteText = Localization.str.punctuation.quotation_with_content.replace("__content__", wishlistNotes.getNote(appid));
+            noteText = `"${wishlistNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
