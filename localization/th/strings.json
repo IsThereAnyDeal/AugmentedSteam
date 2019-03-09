@@ -39,7 +39,7 @@
     "events": "กิจกรรม",
     "translation": "การแปลภาษา",
     "lowest": "ต่ำที่สุด",
-    "lowest_price": "ราคาถูกที่สุดในขณะนี้",
+    "lowest_price": "ราคาถูกที่สุดในขณะนี้:",
     "view_badge_progress": "ดูความคืบหน้าเหรียญตรา",
     "badge_progress": "ดูความคืบหน้าเหรียญตรา",
     "sales_total": "ยอดการขายรวม",
@@ -198,7 +198,7 @@
     "wiki_article": "ดูบทความ __pcgw__",
     "view_all": "ดูทั้งหมด",
     "programming": "การเขียนโปรแกรม",
-    "historical_low": "ราคาต่ำที่สุดในประวัติ",
+    "historical_low": "ราคาต่ำที่สุดในประวัติ:",
     "games_with_booster": "__boostergames__ เกม ที่มีสิทธิ์ได้รับบูสเตอร์แพ็ก",
     "sort_by": "เรียงตาม:",
     "sort_by_keyword": "เรียงตาม __keyword__",
@@ -268,7 +268,7 @@
         "tier": "ระดับ __num__",
         "header": "บันเดิลที่บรรจุเกมนี้อยู่",
         "info": "ข้อมูลบันเดิล",
-        "bundle_count": "จำนวนครั้งที่เกมนี้ได้เคยลงบันเดิล"
+        "bundle_count": "จำนวนครั้งที่เกมนี้ได้เคยลงบันเดิล: __count__"
     },
     "charts": {
         "peakall": "สูงสุดตลอดกาล",
@@ -451,7 +451,7 @@
         "errormsg": "พบข้อผิดพลาดในการโหลดข้อมูล Augmented Steam",
         "loading": "Augmented Steam กำลังโหลดข้อมูล...",
         "ready": "Augmented Steam พร้อมใช้งาน",
-        "failed": "คำร้องล้มเหลวหนึ่งคำร้องหรือมากกว่า"
+        "failed": "คำร้องล้มเหลวหนึ่งคำร้องหรือมากกว่า:"
     },
     "twitch": {
         "now_streaming": "__username__ กำลังสตรีมสดบน Twitch",

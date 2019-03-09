@@ -39,7 +39,7 @@
     "events": "Evenementen",
     "translation": "Vertaal",
     "lowest": "Laagste",
-    "lowest_price": "Huidige Laagste Prijs",
+    "lowest_price": "Huidige Laagste Prijs:",
     "view_badge_progress": "Bekijk badge voortgang",
     "badge_progress": "Badgevoortgang",
     "sales_total": "Verkoop totaal",
@@ -198,7 +198,7 @@
     "wiki_article": "Bekijk __pcgw_ Artikel",
     "view_all": "ALLES BEKIJKEN",
     "programming": "Programmeren",
-    "historical_low": "Historisch Laagste Prijs",
+    "historical_low": "Historisch Laagste Prijs:",
     "games_with_booster": "__boostergames__ spellen geschikt voor booster pakketen",
     "sort_by": "Sorteer op:",
     "sort_by_keyword": "Sorteer op __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Tier __num__",
         "header": "Bundels die dit spel hebben",
         "info": "Bundel Informatie",
-        "bundle_count": "Aantal keren dit spel in een bundel is geweest"
+        "bundle_count": "Aantal keren dit spel in een bundel is geweest: __count__"
     },
     "charts": {
         "peakall": "Piek van alle tijden",
@@ -451,7 +451,7 @@
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
         "loading": "Augmented Steam is gegevens aan het laden...",
         "ready": "Augmented Steam gereed",
-        "failed": "Een of meer aanvragen mislukt"
+        "failed": "Een of meer aanvragen mislukt:"
     },
     "twitch": {
         "now_streaming": "__username__ is aan het livestreamen op Twitch",

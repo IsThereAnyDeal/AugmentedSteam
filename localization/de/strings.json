@@ -39,7 +39,7 @@
     "events": "Events",
     "translation": "Übersetzung",
     "lowest": "niedrigste",
-    "lowest_price": "Aktuell niedrigster Preis",
+    "lowest_price": "Aktuell niedrigster Preis:",
     "view_badge_progress": "Abzeichen-Fortschritt anzeigen",
     "badge_progress": "Abzeichen-Fortschritt",
     "sales_total": "Gesamterträge ",
@@ -198,7 +198,7 @@
     "wiki_article": "__pcgw__-Artikel anzeigen",
     "view_all": "ALLE ANSEHEN",
     "programming": "Programmierung",
-    "historical_low": "Rekordtief",
+    "historical_low": "Rekordtief:",
     "games_with_booster": "__boostergames__ Spiele können Booster Packs erhalten",
     "sort_by": "Sortieren nach:",
     "sort_by_keyword": "Sortieren nach __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Stufe __num__",
         "header": "Bundles, in denen dieses Spiel enthalten ist",
         "info": "Bundle-Informationen",
-        "bundle_count": "Anzahl Bundles, in denen dieses Spiel angeboten wurde"
+        "bundle_count": "Anzahl Bundles, in denen dieses Spiel angeboten wurde: __count__"
     },
     "charts": {
         "peakall": "Historischer Höchststand ",
@@ -452,7 +452,7 @@
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
         "loading": "Augmented Steam lädt Daten...",
         "ready": "Augmented Steam ist bereit",
-        "failed": "Eine oder mehrere Anfragen sind gescheitert"
+        "failed": "Eine oder mehrere Anfragen sind gescheitert:"
     },
     "twitch": {
         "now_streaming": "__username__ ist live auf Twitch",

@@ -307,7 +307,7 @@ let ProgressBar = (function(){
 
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + Localization.str.punctuation.colon + "<ul></ul></div>");
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + "<ul></ul></div>");
             nodeError = node.nextElementSibling;
         }
 
@@ -1765,9 +1765,7 @@ let Prices = (function(){
             let infoStr = `<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>`;
             infoStr = Localization.str.punctuation.parenthesis_with_content.replace("__content__", infoStr);
 
-            line1 = `${Localization.str.lowest_price}${Localization.str.punctuation.colon}
-                             ${lowestStr} ${voucherStr} ${activates}
-                             ${infoStr}`;
+            line1 = `${Localization.str.lowest_price} ${lowestStr} ${voucherStr} ${activates} ${infoStr}`;
         }
 
         // "Historical Low"
@@ -1790,9 +1788,7 @@ let Prices = (function(){
 
             let infoStr2 = `<a href="${url}" target="_blank">${Localization.str.info}</a>`;
             infoStr2 = Localization.str.punctuation.parenthesis_with_content.replace("__content__", infoStr2);
-
-            line2 = `${Localization.str.historical_low}${Localization.str.punctuation.colon}
-                             ${historicalStr} ${infoStr2}`;
+            line2 = `${Localization.str.historical_low} ${historicalStr} ${infoStr2}`;
         }
 
         let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
@@ -1800,7 +1796,7 @@ let Prices = (function(){
 
         // "Number of times this game has been in a bundle"
         if (info["bundles"]["count"] > 0) {
-            line3 = Localization.str.bundle.bundle_count + Localization.str.punctuation.colon + info['bundles']['count'];
+            line3 = Localization.str.bundle.bundle_count.replace("__count__", info['bundles']['count']);
             let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
             if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 let infoStr3 = `<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>`;

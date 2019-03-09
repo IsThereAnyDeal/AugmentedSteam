@@ -39,7 +39,7 @@
     "events": "Events",
     "translation": "Fordítás",
     "lowest": "Legalacsonyabb",
-    "lowest_price": "A jelenlegi legalacsonyabb ár",
+    "lowest_price": "A jelenlegi legalacsonyabb ár:",
     "view_badge_progress": "Kitűző állapot megtekintése",
     "badge_progress": "Kitűzőállapot",
     "sales_total": "Eladás összesen",
@@ -198,7 +198,7 @@
     "wiki_article": "__pcgw__ cikk megtekintése",
     "view_all": "ÖSSZES MEGTEKINTÉS",
     "programming": "Programozás",
-    "historical_low": "A valaha volt legalacsonyabb ár",
+    "historical_low": "A valaha volt legalacsonyabb ár:",
     "games_with_booster": "__boostergames__ játékhoz vagy jogosult bónuszcsomagra",
     "sort_by": "Rendezési szempont:",
     "sort_by_keyword": "Rendezési szempont __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Szint __num__",
         "header": "Csomagok, amik tartalmazzák ezt a játékot",
         "info": "Csomaginfó",
-        "bundle_count": "A játékot tartalmazó csomagok száma mostanáig"
+        "bundle_count": "A játékot tartalmazó csomagok száma mostanáig: __count__"
     },
     "charts": {
         "peakall": "Eddigi csúcs",
@@ -451,7 +451,7 @@
         "errormsg": "Hiba az Augmented Steam adatbetöltése közben",
         "loading": "Augmented Steam betölti az adatokat...",
         "ready": "Augmented Steam kész",
-        "failed": "Egy vagy több lekérés sikertelen"
+        "failed": "Egy vagy több lekérés sikertelen:"
     },
     "twitch": {
         "now_streaming": "__username__ éppen közvetít a Twitch-en",

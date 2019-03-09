@@ -39,7 +39,7 @@
     "events": "Wydarzenia",
     "translation": "Tłumaczenie",
     "lowest": "Najniższy",
-    "lowest_price": "Aktualna najniższa cena",
+    "lowest_price": "Aktualna najniższa cena:",
     "view_badge_progress": "Pokaż postęp odznaki",
     "badge_progress": "Pokaż postęp odznaki",
     "sales_total": "Wartość sprzedaży",
@@ -198,7 +198,7 @@
     "wiki_article": "Pokaż artykuł na __pcgw__",
     "view_all": "POKAŻ WSZYSTKO",
     "programming": "Programowanie",
-    "historical_low": "Najniższa historyczna cena",
+    "historical_low": "Najniższa historyczna cena:",
     "games_with_booster": "__boostergames__ gier może wygenerować pakiety kart",
     "sort_by": "Sortuj wg:",
     "sort_by_keyword": "Sortuj wg __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Poziom __num__",
         "header": "Pakiety zawierające tę grę",
         "info": "Informacja o pakietach",
-        "bundle_count": "Liczba wystąpień gry w pakietach"
+        "bundle_count": "Liczba wystąpień gry w pakietach: __count__"
     },
     "charts": {
         "peakall": "Historyczne maksimum",
@@ -451,7 +451,7 @@
         "errormsg": "Błąd wczytywania danych Augmented Steam",
         "loading": "Wczytywanie danych Augmented Steam...",
         "ready": "Augmented Steam jest gotowy",
-        "failed": "Jedno lub więcej żądań nie powiodło się"
+        "failed": "Jedno lub więcej żądań nie powiodło się:"
     },
     "twitch": {
         "now_streaming": "__username__ streamuje teraz na Twitchu",

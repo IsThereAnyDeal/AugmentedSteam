@@ -39,7 +39,7 @@
     "events": "이벤트",
     "translation": "번역",
     "lowest": "최저",
-    "lowest_price": "현재 최저가",
+    "lowest_price": "현재 최저가:",
     "view_badge_progress": "배지 진행 상황 보기",
     "badge_progress": "배지 진행 상황 보기",
     "sales_total": "총 판매 금액",
@@ -198,7 +198,7 @@
     "wiki_article": "__pcgw__ 기사 보기",
     "view_all": "모두 보기",
     "programming": "프로그래밍",
-    "historical_low": "역대 최저가",
+    "historical_low": "역대 최저가:",
     "games_with_booster": "부스터팩 자격 : __boostergames__ 개",
     "sort_by": "정렬 순서",
     "sort_by_keyword": "정렬 순서 __keyword__",
@@ -268,7 +268,7 @@
         "tier": "__num__ 묶음",
         "header": "이 게임을 포함한 번들",
         "info": "번들 정보",
-        "bundle_count": "이 게임이 번들로 나온 횟수"
+        "bundle_count": "이 게임이 번들로 나온 횟수: __count__"
     },
     "charts": {
         "peakall": "역대 최고조",
@@ -451,7 +451,7 @@
         "errormsg": "Augmented Steam 데이터 로딩 오류",
         "loading": "Augmented Steam 데이터 로딩중...",
         "ready": "Augmented Steam 준비",
-        "failed": "하나 이상의 요청이 실패함"
+        "failed": "하나 이상의 요청이 실패함:"
     },
     "twitch": {
         "now_streaming": "__username__는 트위치에서 라이브 스트리밍 중",

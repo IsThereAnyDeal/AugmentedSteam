@@ -39,7 +39,7 @@
     "events": "Events",
     "translation": "Dịch",
     "lowest": "Thấp nhất",
-    "lowest_price": "Giá thấp nhất hiện tại",
+    "lowest_price": "Giá thấp nhất hiện tại:",
     "view_badge_progress": "Xem tiến độ huy hiệu",
     "badge_progress": "Tiến trình huy hiệu",
     "sales_total": "Tổng doanh số",
@@ -198,7 +198,7 @@
     "wiki_article": "Xem __pcgw__ bài viết",
     "view_all": "XEM TẤT CẢ",
     "programming": "Programming",
-    "historical_low": "Giá thấp nhất lịch sử",
+    "historical_low": "Giá thấp nhất lịch sử:",
     "games_with_booster": "__boostergames__ games eligible for booster packs",
     "sort_by": "Phân loại theo:",
     "sort_by_keyword": "Phân loại theo __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Tier __num__",
         "header": "Bundles that include this game",
         "info": "Bundle Info",
-        "bundle_count": "Number of times this game has been in a bundle"
+        "bundle_count": "Number of times this game has been in a bundle: __count__"
     },
     "charts": {
         "peakall": "all-time peak",
@@ -451,7 +451,7 @@
         "errormsg": "Error loading Augmented Steam data",
         "loading": "Augmented Steam đang tải dữ liệu...",
         "ready": "Augmented Steam sẵn sàng",
-        "failed": "Một hoặc nhiều yêu cầu thất bại"
+        "failed": "Một hoặc nhiều yêu cầu thất bại:"
     },
     "twitch": {
         "now_streaming": "__username__ đang phát sóng trực tiếp trên Twitch",

@@ -39,7 +39,7 @@
     "events": "イベント",
     "translation": "翻訳",
     "lowest": "最低",
-    "lowest_price": "現在の最安値",
+    "lowest_price": "現在の最安値:",
     "view_badge_progress": "バッジの進捗状況を表示",
     "badge_progress": "バッジの進捗状況",
     "sales_total": "販売合計",
@@ -198,7 +198,7 @@
     "wiki_article": "__pcgw__ の記事を表示",
     "view_all": "すべて表示",
     "programming": "プログラミング",
-    "historical_low": "史上最安値",
+    "historical_low": "史上最安値:",
     "games_with_booster": "__boostergames__本のゲームにブースターパックの受取資格があります",
     "sort_by": "ソート順:",
     "sort_by_keyword": "ソート順 __keyword__",
@@ -269,7 +269,7 @@
         "tier": "Tier __num__",
         "header": "このゲームを含むバンドル",
         "info": "バンドル情報",
-        "bundle_count": "このゲームがバンドル入りした回数"
+        "bundle_count": "このゲームがバンドル入りした回数: __count__"
     },
     "charts": {
         "peakall": "これまでの最大",
@@ -452,7 +452,7 @@
         "errormsg": "Augmented Steam のデータロードエラー",
         "loading": "Augmented Steam がデータをロード中……",
         "ready": "Augmented Steam 準備完了",
-        "failed": "1つ以上のリクエストが失敗しました"
+        "failed": "1つ以上のリクエストが失敗しました:"
     },
     "twitch": {
         "now_streaming": "__username__ はTwitchで配信中です",

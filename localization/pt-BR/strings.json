@@ -39,7 +39,7 @@
     "events": "Eventos",
     "translation": "Tradução",
     "lowest": "Mais baixo",
-    "lowest_price": "Menor preço atual",
+    "lowest_price": "Menor preço atual:",
     "view_badge_progress": "Ver progresso da insígnia",
     "badge_progress": "Progresso da insígnia",
     "sales_total": "Total de vendas",
@@ -198,7 +198,7 @@
     "wiki_article": "Ver artigo da __pcgw__",
     "view_all": "VER TODOS",
     "programming": "Programação",
-    "historical_low": "Menor preço registrado",
+    "historical_low": "Menor preço registrado:",
     "games_with_booster": "Apto a receber pacotes bônus de __boostergames__ jogos",
     "sort_by": "Ordenar por:",
     "sort_by_keyword": "Ordenar por __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Fila __num__",
         "header": "Pacotes que incluem este jogo",
         "info": "Informações do pacote",
-        "bundle_count": "Quantidade de pacotes que incluíam este jogo"
+        "bundle_count": "Quantidade de pacotes que incluíam este jogo: __count__"
     },
     "charts": {
         "peakall": "recorde",
@@ -451,7 +451,7 @@
         "errormsg": "Erro ao carregar dados do Augmented Steam",
         "loading": "Augmented Steam está carregando dados...",
         "ready": "Augmented Steam pronto",
-        "failed": "Uma ou mais solicitações falharam"
+        "failed": "Uma ou mais solicitações falharam:"
     },
     "twitch": {
         "now_streaming": "__username__ está transmitindo ao vivo na Twitch",

@@ -39,7 +39,7 @@
     "events": "События",
     "translation": "Перевод",
     "lowest": "Самый низкий",
-    "lowest_price": "Самая низкая цена",
+    "lowest_price": "Самая низкая цена:",
     "view_badge_progress": "Просмотреть прогресс значка",
     "badge_progress": "Просмотреть прогресс значка",
     "sales_total": "Суммарная цена продаваемых предметов",
@@ -198,7 +198,7 @@
     "wiki_article": "Просмотреть статью __pcgw__",
     "view_all": "ПРОСМОТРЕТЬ ВСЕ",
     "programming": "Программирование",
-    "historical_low": "Исторический минимум",
+    "historical_low": "Исторический минимум:",
     "games_with_booster": "Игр, у которых выпадет набор карточек: __boostergames__ ",
     "sort_by": "Сортировать по:",
     "sort_by_keyword": "Сортировать по __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Уровень __num__",
         "header": "Наборы, в которых есть эта игра",
         "info": "Информация о наборе",
-        "bundle_count": "Количество раз, когда эта игра была в наборе"
+        "bundle_count": "Количество раз, когда эта игра была в наборе: __count__"
     },
     "charts": {
         "peakall": "пик за всё время",
@@ -451,7 +451,7 @@
         "errormsg": "Ошибка загрузки данных Augmented Steam",
         "loading": "«Augmented Steam» загружается...",
         "ready": "\"Augmented Steam\" готов",
-        "failed": "Не удалось выполнить запрос(ы)"
+        "failed": "Не удалось выполнить запрос(ы):"
     },
     "twitch": {
         "now_streaming": "__username__ начал трансляцию на Twich",

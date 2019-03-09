@@ -39,7 +39,7 @@
     "events": "事件",
     "translation": "翻译",
     "lowest": "最低",
-    "lowest_price": "当前最低价",
+    "lowest_price": "当前最低价:",
     "view_badge_progress": "查看徽章进度",
     "badge_progress": "徽章进度",
     "sales_total": "出售总计",
@@ -200,7 +200,7 @@
     "wiki_article": "在 __pcgw__ 上查看维基文章",
     "view_all": "查看全部",
     "programming": "开发",
-    "historical_low": "历史最低价",
+    "historical_low": "历史最低价:",
     "games_with_booster": "__boostergames__ 个游戏有资格获得补充包",
     "sort_by": "排序依据：",
     "sort_by_keyword": "依__keyword__排序",
@@ -272,7 +272,7 @@
         "tier": "等级 __num__",
         "header": "包含此游戏的捆绑包",
         "info": "捆绑包信息",
-        "bundle_count": "此游戏出现在捆绑包中的次数"
+        "bundle_count": "此游戏出现在捆绑包中的次数: __count__"
     },
     "charts": {
         "peakall": "历史峰值",
@@ -461,7 +461,7 @@
         "errormsg": "Augmented Steam 数据载入错误",
         "loading": "Augmented Steam 数据载入中……",
         "ready": "Augmented Steam 已就绪",
-        "failed": "一个或多个请求失败"
+        "failed": "一个或多个请求失败:"
     },
     "twitch": {
         "now_streaming": "__username__ 正在 Twitch 上直播",

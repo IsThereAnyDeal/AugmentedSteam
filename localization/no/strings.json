@@ -39,7 +39,7 @@
     "events": "Hendelser",
     "translation": "Oversettelse",
     "lowest": "Laveste",
-    "lowest_price": "Nåværende laveste pris",
+    "lowest_price": "Nåværende laveste pris:",
     "view_badge_progress": "Vis merkeframdrift",
     "badge_progress": "Vis merkeframgang",
     "sales_total": "Salgtotal",
@@ -198,7 +198,7 @@
     "wiki_article": "Vis __pcgw__-artikkel",
     "view_all": "VIS ALLE",
     "programming": "Programmering",
-    "historical_low": "Historisk laveste pris",
+    "historical_low": "Historisk laveste pris:",
     "games_with_booster": "__boostergames__ spill kvalifisert for booster-pakker",
     "sort_by": "Sorter etter:",
     "sort_by_keyword": "Sorter etter __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Nivå __num__",
         "header": "Pakker som inkluderer dette spillet",
         "info": "Pakkeinfo",
-        "bundle_count": "Antall ganger dette spillet har vært med i en pakke"
+        "bundle_count": "Antall ganger dette spillet har vært med i en pakke: __count__"
     },
     "charts": {
         "peakall": "høyeste toppunkt noen sinne",
@@ -451,7 +451,7 @@
         "errormsg": "Feil under lasting av Augmented Steam-data",
         "loading": "Augmented Steam laster data...",
         "ready": "Augmented Steam klar",
-        "failed": "En eller flere forespørsler mislyktes"
+        "failed": "En eller flere forespørsler mislyktes:"
     },
     "twitch": {
         "now_streaming": "__username__ streamer på Twitch",

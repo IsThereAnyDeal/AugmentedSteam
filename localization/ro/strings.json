@@ -39,7 +39,7 @@
     "events": "Evenimente",
     "translation": "Traducere",
     "lowest": "Cel mai mic",
-    "lowest_price": "Cel mai mic preț actual",
+    "lowest_price": "Cel mai mic preț actual:",
     "view_badge_progress": "Vezi progresul insignei",
     "badge_progress": "Progres insignă",
     "sales_total": "Total vânzări",
@@ -198,7 +198,7 @@
     "wiki_article": "Vezi articol __pcgw__",
     "view_all": "VEZI TOATE",
     "programming": "Programare",
-    "historical_low": "Istoric cele mai mici prețuri",
+    "historical_low": "Istoric cele mai mici prețuri:",
     "games_with_booster": "__boostergames__ jocuri eligibile pentru pachete booster",
     "sort_by": "Sortează după:",
     "sort_by_keyword": "Sortează după __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Nivelul __num__",
         "header": "Pachete 'bundle' ce conțin acest joc",
         "info": "Info Pachet",
-        "bundle_count": "De câte ori acest joc a fost într-un pachet 'bundle'"
+        "bundle_count": "De câte ori acest joc a fost într-un pachet 'bundle': __count__"
     },
     "charts": {
         "peakall": "vârf all-time",
@@ -451,7 +451,7 @@
         "errormsg": "Eroare la încărcarea datelor Augmented Steam",
         "loading": "Augmented Steam încarcă datele...",
         "ready": "Augmented Steam pregătit",
-        "failed": "Una sau mai multe solicitări au eșuat"
+        "failed": "Una sau mai multe solicitări au eșuat:"
     },
     "twitch": {
         "now_streaming": "__username__ este live pe Twitch",

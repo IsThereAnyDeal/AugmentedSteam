@@ -39,7 +39,7 @@
     "events": "Tapahtumat",
     "translation": "Käännökset",
     "lowest": "Matalin",
-    "lowest_price": "Tämänhetkinen Alin Hinta",
+    "lowest_price": "Tämänhetkinen Alin Hinta:",
     "view_badge_progress": "Näytä merkin edistyminen",
     "badge_progress": "Näytä merkkien edistyminen",
     "sales_total": "Myyntitulot yhteensä",
@@ -198,7 +198,7 @@
     "wiki_article": "Näytä __pcgw__ -artikkeli",
     "view_all": "NÄYTÄ KAIKKI",
     "programming": "Ohjelmointi",
-    "historical_low": "Historian alin hinta",
+    "historical_low": "Historian alin hinta:",
     "games_with_booster": "__boostergames__ peliä, joihin voit saada lisäkorttipaketteja",
     "sort_by": "Lajitteluperuste:",
     "sort_by_keyword": "Lajitteluperuste __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Tuoteryhmä __num__",
         "header": "Paketit, jotka sisältävät tämän pelin",
         "info": "Paketin tiedot",
-        "bundle_count": "Kerrat, joina tämä peli on ollut paketissa"
+        "bundle_count": "Kerrat, joina tämä peli on ollut paketissa: __count__"
     },
     "charts": {
         "peakall": "kaikkien aikojen korkein",
@@ -451,7 +451,7 @@
         "errormsg": "Virhe ladatessa Augmented Steamin tietoja",
         "loading": "Augmented Steam lataa tietoja...",
         "ready": "Augmented Steam on valmis",
-        "failed": "Yksi tai useampi pyyntö epäonnistui"
+        "failed": "Yksi tai useampi pyyntö epäonnistui:"
     },
     "twitch": {
         "now_streaming": "__username__ on lähettämässä suoraa lähetystä Twitchissä",

@@ -39,7 +39,7 @@
     "events": "Evenemang",
     "translation": "Översättning",
     "lowest": "Lägst",
-    "lowest_price": "Lägsta pris just nu",
+    "lowest_price": "Lägsta pris just nu:",
     "view_badge_progress": "Visa emblem framsteg",
     "badge_progress": "Visa märkesframsteg",
     "sales_total": "Total försäljning",
@@ -198,7 +198,7 @@
     "wiki_article": "Visa __pcgw__ artikel",
     "view_all": "VISA ALLA",
     "programming": "Programmering",
-    "historical_low": "Historiskt lägsta pris",
+    "historical_low": "Historiskt lägsta pris:",
     "games_with_booster": "__boostergames__ spel som är berättigad till booster-paket",
     "sort_by": "Sortera efter:",
     "sort_by_keyword": "Sortera efter __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Nivå __num__",
         "header": "Antal paket som har detta spel",
         "info": "Paket information",
-        "bundle_count": "Antal gånger som detta spel har varit med i ett paket"
+        "bundle_count": "Antal gånger som detta spel har varit med i ett paket: __count__"
     },
     "charts": {
         "peakall": "Högsta antalet spelare någonsin",
@@ -451,7 +451,7 @@
         "errormsg": "Fel vid inläsning av Augmented Steams data",
         "loading": "Augmented Steam laddar data...",
         "ready": "Augmented Steam är redo",
-        "failed": "En eller flera förfrågningar misslyckades"
+        "failed": "En eller flera förfrågningar misslyckades:"
     },
     "twitch": {
         "now_streaming": "__username__ streamar live på Twitch",

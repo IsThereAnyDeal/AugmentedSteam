@@ -39,7 +39,7 @@
     "events": "Події",
     "translation": "Переклад",
     "lowest": "Найнижчі",
-    "lowest_price": "Найнижча ціна",
+    "lowest_price": "Найнижча ціна:",
     "view_badge_progress": "Переглянути хід здобуття значка",
     "badge_progress": "Хід здобуття значка",
     "sales_total": "Сума продажів",
@@ -198,7 +198,7 @@
     "wiki_article": "Переглянути статтю __pcgw__",
     "view_all": "ПЕРЕГЛЯНУТИ ВСЕ",
     "programming": "Програмування",
-    "historical_low": "Найнижча ціна за весь час",
+    "historical_low": "Найнижча ціна за весь час:",
     "games_with_booster": "Ігор, у яких випаде набір карток: __boostergames__",
     "sort_by": "Сортувати за:",
     "sort_by_keyword": "Сортувати за __keyword__",
@@ -268,7 +268,7 @@
         "tier": "__num__ рівень",
         "header": "Набори, в яких є ця гра",
         "info": "Інформація про набір",
-        "bundle_count": "Кількість разів, коли ця гра була в наборі"
+        "bundle_count": "Кількість разів, коли ця гра була в наборі: __count__"
     },
     "charts": {
         "peakall": "пік за весь час",
@@ -451,7 +451,7 @@
         "errormsg": "Помилка завантаження даних Augmented Steam",
         "loading": "Augmented Steam завантажує дані...",
         "ready": "Augmented Steam готовий",
-        "failed": "Помилка одного або кількох запитів"
+        "failed": "Помилка одного або кількох запитів:"
     },
     "twitch": {
         "now_streaming": "__username__ зараз віщає на каналі Twitch",

@@ -39,7 +39,7 @@
     "events": "Události",
     "translation": "Překlad",
     "lowest": "Nejnižší",
-    "lowest_price": "Aktuálně nejnižší cena",
+    "lowest_price": "Aktuálně nejnižší cena:",
     "view_badge_progress": "Zobrazit postup odznaku",
     "badge_progress": "Postup odznaku",
     "sales_total": "Prodeje celkem",
@@ -198,7 +198,7 @@
     "wiki_article": "Ukázat článek __pcgw__",
     "view_all": "ZOBRAZIT VŠE",
     "programming": "Programování",
-    "historical_low": "Historicky nejnižší cena",
+    "historical_low": "Historicky nejnižší cena:",
     "games_with_booster": "__boostergames__ her s nárokem na přídavné balíčky",
     "sort_by": "Seřadit podle:",
     "sort_by_keyword": "Seřadit podle __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Trída __num__",
         "header": "Balíčky obsahující tuto hru",
         "info": "Informace o balíčku",
-        "bundle_count": "Kolikrát byla tato hra v balíčku"
+        "bundle_count": "Kolikrát byla tato hra v balíčku: __count__"
     },
     "charts": {
         "peakall": "rekord",
@@ -451,7 +451,7 @@
         "errormsg": "Chyba při načítání Augmented Steam dat",
         "loading": "Augmented Steam načítá data...",
         "ready": "Augmented Steam je připravený.",
-        "failed": "Jeden nebo více požadavků selhalo"
+        "failed": "Jeden nebo více požadavků selhalo:"
     },
     "twitch": {
         "now_streaming": "__username__ živě steamuje na Twitch",

@@ -39,7 +39,7 @@
     "events": "Eventi",
     "translation": "Traduzione",
     "lowest": "Più basso",
-    "lowest_price": "Prezzo più basso",
+    "lowest_price": "Prezzo più basso:",
     "view_badge_progress": "Mostra progresso della medaglia",
     "badge_progress": "Progresso della medaglia",
     "sales_total": "Vendite totali",
@@ -198,7 +198,7 @@
     "wiki_article": "Mostra su __pcgw__",
     "view_all": "MOSTRA TUTTO",
     "programming": "Programmazione",
-    "historical_low": "Minimo storico",
+    "historical_low": "Minimo storico:",
     "games_with_booster": "__boostergames__ giochi idonei per i pacchetti di carte",
     "sort_by": "Ordina per:",
     "sort_by_keyword": "Ordina per __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Tier __num__",
         "header": "Bundle che includono questo gioco",
         "info": "Informazioni sul Bundle",
-        "bundle_count": "Numero di volte che questo gioco è stato in un bundle"
+        "bundle_count": "Numero di volte che questo gioco è stato in un bundle: __count__"
     },
     "charts": {
         "peakall": "massimo storico",
@@ -451,7 +451,7 @@
         "errormsg": "Errore nel caricamento di Augmented Steam",
         "loading": "Caricamento di Augmented Steam in corso...",
         "ready": "Augmented Steam pronto",
-        "failed": "Una o più richieste sono fallite"
+        "failed": "Una o più richieste sono fallite:"
     },
     "twitch": {
         "now_streaming": "__username__ è in diretta su Twitch",

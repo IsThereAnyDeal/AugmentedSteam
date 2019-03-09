@@ -39,7 +39,7 @@
     "events": "活動",
     "translation": "翻譯",
     "lowest": "最低",
-    "lowest_price": "目前最低價格",
+    "lowest_price": "目前最低價格:",
     "view_badge_progress": "檢視徽章進度",
     "badge_progress": "檢視徽章進度",
     "sales_total": "販賣總額",
@@ -200,7 +200,7 @@
     "wiki_article": "在 __pcgw__ 上檢視維基文章",
     "view_all": "檢視全部",
     "programming": "程式設計",
-    "historical_low": "歷史最低價格",
+    "historical_low": "歷史最低價格:",
     "games_with_booster": "__boostergames__ 個遊戲有資格獲得擴充包",
     "sort_by": "排序依據：",
     "sort_by_keyword": "依__keyword__排序",
@@ -272,7 +272,7 @@
         "tier": "__num__ 級",
         "header": "包含此遊戲的組合包",
         "info": "組合包資訊",
-        "bundle_count": "此遊戲在組合包中出現的次數"
+        "bundle_count": "此遊戲在組合包中出現的次數: __count__"
     },
     "charts": {
         "peakall": "全時間峰值",
@@ -461,7 +461,7 @@
         "errormsg": "Augmented Steam 資料載入錯誤",
         "loading": "Augmented Steam 資料載入中…",
         "ready": "Augmented Steam 就緒",
-        "failed": "有一個或多個請求失敗"
+        "failed": "有一個或多個請求失敗:"
     },
     "twitch": {
         "now_streaming": "__username__在 Twitch 上直播中",

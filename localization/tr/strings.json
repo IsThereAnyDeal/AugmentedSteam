@@ -39,7 +39,7 @@
     "events": "Etkinlikler",
     "translation": "Çeviri",
     "lowest": "En düşük\n",
-    "lowest_price": "Şu anki en düşük fiyat",
+    "lowest_price": "Şu anki en düşük fiyat:",
     "view_badge_progress": "Rozet ilerlemesini görüntüle",
     "badge_progress": "Rozet İlerlemesi",
     "sales_total": "Toplam satılan",
@@ -198,7 +198,7 @@
     "wiki_article": "__pcgw__ Makalesini Gör",
     "view_all": "TÜMÜNÜ GÖR",
     "programming": "Programlama",
-    "historical_low": "Şimdiye kadarki en düşük fiyat",
+    "historical_low": "Şimdiye kadarki en düşük fiyat:",
     "games_with_booster": "Hızlandırma Paketi düşürmeye uygun __boostergames__ oyun",
     "sort_by": "Şuna göre sırala:",
     "sort_by_keyword": "Şuna göre sırala __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Aşama __num__",
         "header": "Bu oyunu içeren paketler",
         "info": "Bundle Bilgisi",
-        "bundle_count": "Bu oyunun bir paket içerisinde bulunma sayısı"
+        "bundle_count": "Bu oyunun bir paket içerisinde bulunma sayısı: __count__"
     },
     "charts": {
         "peakall": "tüm zamanlardaki en yüksek zirve",
@@ -451,7 +451,7 @@
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
         "loading": "Augmented Steam verileri yüklüyor...",
         "ready": "Augmented Steam hazır",
-        "failed": "Bir veya daha fazla istek başarısız oldu"
+        "failed": "Bir veya daha fazla istek başarısız oldu:"
     },
     "twitch": {
         "now_streaming": "__username__ Twitch üzerinden canlı yayın yapıyor",

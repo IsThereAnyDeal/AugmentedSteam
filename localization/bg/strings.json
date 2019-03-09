@@ -39,7 +39,7 @@
     "events": "Events",
     "translation": "Превод",
     "lowest": "Най-ниско",
-    "lowest_price": "Текуща най-ниска цена",
+    "lowest_price": "Текуща най-ниска цена:",
     "view_badge_progress": "Вижте прогреса със значките",
     "badge_progress": "Покажи прогрес на значките",
     "sales_total": "Общо продажби",
@@ -198,7 +198,7 @@
     "wiki_article": "Прегледай __pcgw__ статията",
     "view_all": "ПРЕГЛЕД НА ВСИЧКИ",
     "programming": "Програмиране",
-    "historical_low": "Исторически най-ниската цена",
+    "historical_low": "Исторически най-ниската цена:",
     "games_with_booster": "__boostergames__ игри приемливи за буустър пакети",
     "sort_by": "Сортирай по:",
     "sort_by_keyword": "Сортирай по __keyword__",
@@ -268,7 +268,7 @@
         "tier": "Подреди __num__",
         "header": "Пакети, които включват тази игра",
         "info": "Пакет информация",
-        "bundle_count": "Пъти, в които играта е била в пакет"
+        "bundle_count": "Пъти, в които играта е била в пакет: __count__"
     },
     "charts": {
         "peakall": "абсолютен връх",
@@ -451,7 +451,7 @@
         "errormsg": "Грешка при зареждане на данните на Augmented Steam",
         "loading": "Зареждане на данните на Augmented Steam...",
         "ready": "Augmented Steam e готов",
-        "failed": "Една или повече заявки не успя"
+        "failed": "Една или повече заявки не успя:"
     },
     "twitch": {
         "now_streaming": "__username__ стриймва в Twitch",
