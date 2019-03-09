@@ -118,6 +118,7 @@
   ],
   "background": {
     "scripts": [
+      "js/lib/DOMPurify/purify.js",
       "js/config.js",
       "js/core.js",
       "js/background/background.js"
