@@ -903,7 +903,7 @@ let EnhancedSteam = (function() {
         if (currentLanguage === warningLanguage) { return; }
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
-            HTML.afterEnd(document.querySelector("#global_header"),
+            HTML.afterEnd("#global_header",
                 `<div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
                     <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>`);
@@ -973,7 +973,7 @@ let EnhancedSteam = (function() {
 
     self.launchRandomButton = function() {
 
-        HTML.beforeEnd(document.querySelector("#es_popup .popup_menu"),
+        HTML.beforeEnd("#es_popup .popup_menu",
             `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){

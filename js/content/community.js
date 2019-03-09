@@ -595,7 +595,7 @@ let ProfileHomePageClass = (function(){
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    HTML.afterEnd(document.querySelector("#es_steamrep"),
+                    HTML.afterEnd("#es_steamrep",
                         `<div class="${img}">
                             <img src="${imgUrl}" /> 
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
@@ -640,7 +640,7 @@ let ProfileHomePageClass = (function(){
             switch (style) {
                 case "goldenprofile":
                     HTML.beforeEnd(
-                        document.querySelector("head"),
+                        "head",
                         "<link rel='stylesheet' type='text/css' href='https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css'>");
 
                     let container = document.createElement("div");
@@ -674,7 +674,7 @@ let ProfileHomePageClass = (function(){
                         </div>`);
 
                     HTML.beforeBegin(
-                        document.querySelector(".profile_header"),
+                        ".profile_header",
                         `<div class="lny_header">
                             <div class="lny_pig_center"></div>
                         </div>`);
@@ -683,7 +683,7 @@ let ProfileHomePageClass = (function(){
                 case "holiday2014":
                     HTML.beforeEnd("head", "<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
 
-                    HTML.beforeEnd(document.querySelector(".profile_header_bg_texture"), "<div class='holidayprofile_header_overlay'></div>");
+                    HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
                     let script = document.createElement("script");
@@ -730,7 +730,7 @@ let ProfileHomePageClass = (function(){
         let channelViewers = data.viewer_count;
         let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
 
-        HTML.afterBegin(document.querySelector(".profile_leftcol"),
+        HTML.afterBegin(".profile_leftcol",
             `<div class='profile_customization' id='es_twitch'>            
                     <div class='profile_customization_header'>
                         ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
@@ -2983,7 +2983,7 @@ let MarketPageClass = (function(){
                 buttons.style.width = "200px"; // TODO do we still need to change width?
                 if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-                HTML.afterEnd(".market_listing_edit_buttons",
+                HTML.afterEnd(node.querySelector(".market_listing_edit_buttons"),
                     "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
                 // we do this because of changed width, right?
