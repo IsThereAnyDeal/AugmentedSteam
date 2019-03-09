@@ -175,7 +175,7 @@ let StorePageClass = (function(){
         if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
-        let drmString = "(";
+        let drmString = "("; // TODO localize DRM names
         if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
         if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
         if (securom) { drmString += 'SecuROM, '; drm = true; }
@@ -188,21 +188,22 @@ let StorePageClass = (function(){
         if (drmString === "(") {
             drmString = "";
         } else {
-            drmString = drmString.substring(0, drmString.length - 2);
-            drmString += ")";
+            drmString = drmString.substring(1, drmString.length - 2);
+            drmString = Localization.str.punctuation.parenthesis_with_content.replace("__content__", drmString);
         }
 
         // Prevent false-positives
         if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
 
         if (drm) {
-            let stringType = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            let warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            warnString = warnString.replace("__drmlist__", drmString);
 
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${stringType} ${drmString}</span></div>`)
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`)
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${stringType} ${drmString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
             }
         }
     };
