@@ -98,7 +98,7 @@
     "read_more_reviews": "Lire plus d'évaluations sur",
     "size": "Taille",
     "package_info": "Infos sur le package",
-    "badge_completion_avg": "Coût moyen de complétion",
+    "badge_completion_avg": "Coût moyen de complétion: __cost__",
     "using_store": "Vous utilisez le magasin Steam pour la région __current__.",
     "volume_sold_last_24": "Volume : __sold__ vendus dans les dernières 24 heures",
     "sold_last_24": "__sold__ vendu dans les dernières 24 heures",

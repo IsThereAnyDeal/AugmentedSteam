@@ -98,7 +98,7 @@
     "read_more_reviews": "Mehr Reviews lesen auf",
     "size": "Größe",
     "package_info": "Paketinformationen",
-    "badge_completion_avg": "Durchschnittliche Vervollständigungskosten",
+    "badge_completion_avg": "Durchschnittliche Vervollständigungskosten: __cost__",
     "using_store": "Du nutzt momentan den regionalen Steam-Shop für __current__.",
     "volume_sold_last_24": "Menge: __sold__ verkauft in den letzten 24 Stunden",
     "sold_last_24": "__sold__ verkauft in den letzten 24 Stunden",

@@ -98,7 +98,7 @@
     "read_more_reviews": "Více recenzí na",
     "size": "Velikost",
     "package_info": "Informace o balíčku",
-    "badge_completion_avg": "Prům. cena dokončení",
+    "badge_completion_avg": "Prům. cena dokončení: __cost__",
     "using_store": "Používáte Obchod Steam pro region __current__.",
     "volume_sold_last_24": "Množství: __sold__ kusů prodáno za posledních 24 hodin",
     "sold_last_24": "__sold__ kusů prodáno za posledních 24 hodin",

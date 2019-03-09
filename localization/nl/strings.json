@@ -98,7 +98,7 @@
     "read_more_reviews": "Lees meer recensies op",
     "size": "Grote",
     "package_info": "Pakket informatie",
-    "badge_completion_avg": "Gemiddelde kosten voor completen",
+    "badge_completion_avg": "Gemiddelde kosten voor completen: __cost__",
     "using_store": "Je gebruikt de Steam winkel nu voor de __current__ regio.",
     "volume_sold_last_24": "Hoeveelheid: __sold__ verkocht in de afgelopen 24 uur",
     "sold_last_24": "__sold__ verkocht in de afgelopen 24 uur",

@@ -98,7 +98,7 @@
     "read_more_reviews": "レビューをさらに読む",
     "size": "サイズ",
     "package_info": "パッケージ情報",
-    "badge_completion_avg": "完成までの平均コスト",
+    "badge_completion_avg": "完成までの平均コスト: __cost__",
     "using_store": "__current__ リージョンのSteamストアを利用しています。",
     "volume_sold_last_24": "売上数: 過去24時間で __sold__ 本売れました",
     "sold_last_24": "過去24時間で __sold__ 本売れました",

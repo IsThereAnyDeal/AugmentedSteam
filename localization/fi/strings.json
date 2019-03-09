@@ -98,7 +98,7 @@
     "read_more_reviews": "Lue lisää arvosteluja",
     "size": "Koko",
     "package_info": "Paketin tiedot",
-    "badge_completion_avg": "Viimeistelyn keskimääräinen hinta",
+    "badge_completion_avg": "Viimeistelyn keskimääräinen hinta: __cost__",
     "using_store": "Käytät alueen __current__ Steam-kauppaa",
     "volume_sold_last_24": "Määrä: __sold__ myyty viimeisen 24 tunnin sisällä",
     "sold_last_24": "__sold__ myyty viimeisen 24 tunnin sisällä",

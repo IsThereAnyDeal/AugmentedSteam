@@ -98,7 +98,7 @@
     "read_more_reviews": "Citește mai multe recenzii pe",
     "size": "Dimensiune",
     "package_info": "Informații pachet",
-    "badge_completion_avg": "Cost aproximativ de completare",
+    "badge_completion_avg": "Cost aproximativ de completare: __cost__",
     "using_store": "În prezent folosești pagina magazinului Steam pentru regiunea __current__.",
     "volume_sold_last_24": "Volum: __sold__ vândute în ultimele 24 de ore",
     "sold_last_24": "__sold__ vândute în ultimele 24 de ore",

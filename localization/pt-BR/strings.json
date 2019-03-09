@@ -98,7 +98,7 @@
     "read_more_reviews": "Ler mais análises em",
     "size": "Tamanho",
     "package_info": "Informações do pacote",
-    "badge_completion_avg": "Custo aprox. para fabricar",
+    "badge_completion_avg": "Custo aprox. para fabricar: __cost__",
     "using_store": "Você está usando a loja Steam da região __current__.",
     "volume_sold_last_24": "Quantidade: __sold__ vendido(s) nas últimas 24 horas",
     "sold_last_24": "__sold__ vendido(s) nas últimas 24 horas",

@@ -98,7 +98,7 @@
     "read_more_reviews": "에서 더 많은 리뷰 보기",
     "size": "크기",
     "package_info": "패키지 정보",
-    "badge_completion_avg": "배지 완성 평균 비용",
+    "badge_completion_avg": "배지 완성 평균 비용: __cost__",
     "using_store": "__current__ 지역의 Steam 상점을 이용하고 있습니다.",
     "volume_sold_last_24": "최근 24시간 동안 팔린 개수: __sold__ 개",
     "sold_last_24": "최근 24시간 동안 __sold__ 개 팔림",

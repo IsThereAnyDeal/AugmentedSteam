@@ -99,7 +99,7 @@
     "read_more_reviews": "Read more reviews at",
     "size": "Size",
     "package_info": "Package info",
-    "badge_completion_avg": "Avg cost of completion",
+    "badge_completion_avg": "Avg cost of completion: __cost__",
     "using_store": "You are using the Steam store for the __current__ region.",
     "volume_sold_last_24": "Volume: __sold__ sold in the last 24 hours",
     "sold_last_24": "__sold__ sold in the last 24 hours",

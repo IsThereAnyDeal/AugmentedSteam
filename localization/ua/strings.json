@@ -98,7 +98,7 @@
     "read_more_reviews": "Переглянути більше рецензій",
     "size": "Розмір",
     "package_info": "Інформація набору",
-    "badge_completion_avg": "Середня ціна завершення",
+    "badge_completion_avg": "Середня ціна завершення: __cost__",
     "using_store": "Зараз ви використовуєте магазин Steam для __current__ регіону.",
     "volume_sold_last_24": "Кількість: __sold__ продано за останні 24 год.",
     "sold_last_24": "__sold__ продано за останні 24 години",

@@ -98,7 +98,7 @@
     "read_more_reviews": "Daha fazla değerlendirme oku:",
     "size": "Boyut",
     "package_info": "Paket Bilgisi",
-    "badge_completion_avg": "Ortalama Tamamlama Tutarı",
+    "badge_completion_avg": "Ortalama Tamamlama Tutarı: __cost__",
     "using_store": "Steam mağazasını __current__ bölgesinde kullanıyorsunuz.",
     "volume_sold_last_24": "Miktar: Son 24 saatte __sold__ tane satıldı",
     "sold_last_24": "Son 24 saatte __sold__ tane satıldı",

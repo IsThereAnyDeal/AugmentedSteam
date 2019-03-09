@@ -99,7 +99,7 @@
     "read_more_reviews": "阅读更多评测于",
     "size": "大小",
     "package_info": "游戏包信息",
-    "badge_completion_avg": "完成徽章的平均花费",
+    "badge_completion_avg": "完成徽章的平均花费: __cost__",
     "using_store": "正在 __current__ 区域浏览 Steam 商店。",
     "volume_sold_last_24": "数量：有 __sold__ 份在 24 小时内售出",
     "sold_last_24": "有 __sold__ 份在 24 小时内售出",

@@ -98,7 +98,7 @@
     "read_more_reviews": "Les flere omtalelser hos",
     "size": "Størrelse",
     "package_info": "Pakkeinfo",
-    "badge_completion_avg": "Gj.snittlig pris for fullførelse",
+    "badge_completion_avg": "Gj.snittlig pris for fullførelse: __cost__",
     "using_store": "Du bruker Steam-butikken for __current__-regionen.",
     "volume_sold_last_24": "Volum: __sold__ solgt de siste 24 timene",
     "sold_last_24": "__sold__ solgt de siste 24 timene",

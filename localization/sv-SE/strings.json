@@ -98,7 +98,7 @@
     "read_more_reviews": "Läs fler omdömen på",
     "size": "Storlek",
     "package_info": "Paketinformation",
-    "badge_completion_avg": "Genomsnittlig kostnad för att komplettera",
+    "badge_completion_avg": "Genomsnittlig kostnad för att komplettera: __cost__",
     "using_store": "Du använder Steam-butiken för __current__ regionen.",
     "volume_sold_last_24": "Volym: __sold__ såld(a) de senaste 24 timmarna",
     "sold_last_24": "__sold__ såld(a) de senaste 24 timmarna",

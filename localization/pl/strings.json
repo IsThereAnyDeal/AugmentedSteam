@@ -98,7 +98,7 @@
     "read_more_reviews": "Przeczytaj więcej opinii",
     "size": "Rozmiar",
     "package_info": "Informacje o paczce",
-    "badge_completion_avg": "Śr. koszt wytworzenia odznaki",
+    "badge_completion_avg": "Śr. koszt wytworzenia odznaki: __cost__",
     "using_store": "Używasz sklepu Steam dla regionu __current__.",
     "volume_sold_last_24": "Nakład: Sprzedano __sold__ przez ostatnie 24 godziny",
     "sold_last_24": "Sprzedano przez ostatnie 24 godziny: __sold__",

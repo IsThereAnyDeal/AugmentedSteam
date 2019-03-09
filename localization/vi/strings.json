@@ -98,7 +98,7 @@
     "read_more_reviews": "Đọc thêm đánh giá tại",
     "size": "Kích thước",
     "package_info": "Thông tin gói hàng",
-    "badge_completion_avg": "Chi phí trung bình để hoàn thành",
+    "badge_completion_avg": "Chi phí trung bình để hoàn thành: __cost__",
     "using_store": "Bạn đang dùng Steam ở khu vực __current__.",
     "volume_sold_last_24": "Thị trường: __sold__ được bán trong 24 giờ qua",
     "sold_last_24": "__sold__ được bán trong 24 giờ qua",

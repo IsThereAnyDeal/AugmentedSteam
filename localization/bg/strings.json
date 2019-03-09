@@ -98,7 +98,7 @@
     "read_more_reviews": "Прочетете повечe ревюта на",
     "size": "Размер",
     "package_info": "Пакет информация",
-    "badge_completion_avg": "Средна цена за завършване",
+    "badge_completion_avg": "Средна цена за завършване: __cost__",
     "using_store": "Вие ползвате магазина на Steam в регион __current__.",
     "volume_sold_last_24": "Обем: __sold__ продадени през последните 24 часа",
     "sold_last_24": "__sold__ продадени през последните 24 часа",
