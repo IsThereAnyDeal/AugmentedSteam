@@ -66,7 +66,7 @@
     "drm_third_party": "警告：本作使用第三方 DRM 验证__drmlist__。",
     "stores": "商店",
     "game_transactions": "游戏内消费",
-    "after_coupon": "使用优惠券后",
+    "after_coupon": "使用优惠券 <b>__voucher__</b> 后",
     "games_installed": "已安装的游戏",
     "hours_short": "__hours__ 小时",
     "faqs": "常见问题",

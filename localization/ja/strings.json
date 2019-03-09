@@ -65,7 +65,7 @@
     "drm_third_party": "警告: このタイトルはサードパーティーのDRMを使用します__drmlist__。",
     "stores": "ストア",
     "game_transactions": "ゲームでの取引",
-    "after_coupon": "クーポン適用後",
+    "after_coupon": "クーポン <b>__voucher__</b> 適用後",
     "games_installed": "インストール済みのゲーム",
     "hours_short": "__hours__ 時間",
     "faqs": "よくある質問",

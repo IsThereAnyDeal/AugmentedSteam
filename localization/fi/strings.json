@@ -65,7 +65,7 @@
     "drm_third_party": "Varoitus: Tämä tuote käyttää kolmannen osapuolen DRM-suojausta __drmlist__!",
     "stores": "Kaupat",
     "game_transactions": "Pelin ostotapahtumat",
-    "after_coupon": "Säästöt kupongeista",
+    "after_coupon": "Säästöt kupongeista <b>__voucher__</b>",
     "games_installed": "Asennetut pelit",
     "hours_short": "__hours__ tuntia",
     "faqs": "Usein kysytyt kysymykset",

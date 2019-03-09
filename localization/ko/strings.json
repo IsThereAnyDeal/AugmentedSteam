@@ -65,7 +65,7 @@
     "drm_third_party": "경고 : 이 타이틀은 제 3자의 DRM을 사용합니다 __drmlist__.",
     "stores": "상점",
     "game_transactions": "게임 내 거래 금액",
-    "after_coupon": "쿠폰 코드 ",
+    "after_coupon": "쿠폰 코드 <b>__voucher__</b>",
     "games_installed": "설치된 게임",
     "hours_short": "__hours__ 시간",
     "faqs": "자주 묻는 질문",

@@ -65,7 +65,7 @@
     "drm_third_party": "Предупреждение: Този дял използва 3-та страна DRM __drmlist__.",
     "stores": "Магазини",
     "game_transactions": "Транзакции в игра",
-    "after_coupon": "След купон",
+    "after_coupon": "След купон <b>__voucher__</b>",
     "games_installed": "Инсталирани игри",
     "hours_short": "__hours__ часове",
     "faqs": "Често задавани въпроси",

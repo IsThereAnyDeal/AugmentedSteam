@@ -65,7 +65,7 @@
     "drm_third_party": "Avertisment: Acest titlu utilizează un DRM independent Steam __drmlist__.",
     "stores": "Magazine",
     "game_transactions": "Tranzacții în joc",
-    "after_coupon": "după codul promoţional",
+    "after_coupon": "după codul promoţional <b>__voucher__</b>",
     "games_installed": "Jocuri instalate",
     "hours_short": "__hours__ ore",
     "faqs": "Întrebări adresate frecvent",

@@ -65,7 +65,7 @@
     "drm_third_party": "Увага: ця гра використовує DRM-технологію сторонніх постачальників __drmlist__.",
     "stores": "Крамниці",
     "game_transactions": "Внутрішньоігрові покупки",
-    "after_coupon": "після купона",
+    "after_coupon": "після купона <b>__voucher__</b>",
     "games_installed": "Інстальовані ігри",
     "hours_short": "__hours__ год.",
     "faqs": "Часті питання",

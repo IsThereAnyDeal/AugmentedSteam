@@ -65,7 +65,7 @@
     "drm_third_party": "คำเตือน: รายการนี้ใช้งาน DRM ภายนอก __drmlist__.",
     "stores": "ร้านค้า",
     "game_transactions": "การทำรายการในเกม",
-    "after_coupon": "หลังจากใช้รหัสคูปอง",
+    "after_coupon": "หลังจากใช้รหัสคูปอง <b>__voucher__</b>",
     "games_installed": "เกมที่ติดตั้งแล้ว",
     "hours_short": "__hours__ ชม.",
     "faqs": "คำถามที่พบบ่อย",

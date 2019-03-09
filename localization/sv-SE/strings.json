@@ -65,7 +65,7 @@
     "drm_third_party": "Varning: Titeln använder tredjeparts DRM __drmlist__.",
     "stores": "Butiker",
     "game_transactions": "Speltransaktioner",
-    "after_coupon": "efter kupongkod",
+    "after_coupon": "efter kupongkod <b>__voucher__</b>",
     "games_installed": "Installerade spel",
     "hours_short": "__hours__ timmar",
     "faqs": "Vanliga frågor",
