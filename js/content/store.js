@@ -186,15 +186,15 @@ let StorePageClass = (function(){
         if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
         drm = drm || drmNames.length > 0;
 
-        let drmString = "";
-        if (drmNames.length > 0) {
-            drmString = Localization.str.punctuation.parenthesis_with_content.replace("__content__", drmNames.join(", "));
-        }
-
         // Prevent false-positives
         if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
 
         if (drm) {
+            let drmString = "";
+            if (drmNames.length > 0) {
+                drmString = "(" + drmNames.join(", ") + ")";
+            }
+
             let warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
             warnString = warnString.replace("__drmlist__", drmString);
 

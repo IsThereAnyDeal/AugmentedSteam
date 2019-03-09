@@ -1734,8 +1734,7 @@ let Prices = (function(){
         // "Lowest Price"
         if (info['price']) {
             if (info['price']['drm'] === "steam" && info['price']['store'] !== "Steam") {
-                activates = "<b>" + Localization.str.activates + "</b>";
-                activates = Localization.str.punctuation.parenthesis_with_content.replace("__content__", activates);
+                activates = `(<b>${Localization.str.activates}</b>)`;
             }
 
             let infoUrl = HTML.escape(info["urls"]["info"].toString());
@@ -1762,8 +1761,7 @@ let Prices = (function(){
                 .replace("__price__", prices)
                 .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`);
 
-            let infoStr = `<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>`;
-            infoStr = Localization.str.punctuation.parenthesis_with_content.replace("__content__", infoStr);
+            let infoStr = `(<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>)`;
 
             line1 = `${Localization.str.lowest_price} ${lowestStr} ${voucherStr} ${activates} ${infoStr}`;
         }
@@ -1786,8 +1784,7 @@ let Prices = (function(){
 
             let url = HTML.escape(info['urls']['history']);
 
-            let infoStr2 = `<a href="${url}" target="_blank">${Localization.str.info}</a>`;
-            infoStr2 = Localization.str.punctuation.parenthesis_with_content.replace("__content__", infoStr2);
+            let infoStr2 = `(<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
             line2 = `${Localization.str.historical_low} ${historicalStr} ${infoStr2}`;
         }
 
@@ -1799,9 +1796,7 @@ let Prices = (function(){
             line3 = Localization.str.bundle.bundle_count.replace("__count__", info['bundles']['count']);
             let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
             if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
-                let infoStr3 = `<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>`;
-                infoStr3 = Localization.str.punctuation.parenthesis_with_content.replace("__content__", infoStr3);
-                line3 += ` ${infoStr3}`;
+                line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
             }
         }
 
