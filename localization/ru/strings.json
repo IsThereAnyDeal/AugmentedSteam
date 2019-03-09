@@ -65,7 +65,7 @@
     "drm_third_party": "Внимание: эта игра использует DRM-технологию сторонних поставщиков __drmlist__.",
     "stores": "Магазины",
     "game_transactions": "Операции в играх",
-    "after_coupon": "после купона <b>__voucher__</b>",
+    "after_coupon": "после купона __voucher__",
     "games_installed": "Установленные игры",
     "hours_short": "__ч.__ ч.",
     "faqs": "Часто задаваемые вопросы",

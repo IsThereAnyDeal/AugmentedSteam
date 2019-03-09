@@ -65,7 +65,7 @@
     "drm_third_party": "Cảnh báo: Sử dụng DRM bên thứ 3 __drmlist__.",
     "stores": "Cửa hàng",
     "game_transactions": "Mua hàng trong ứng dụng",
-    "after_coupon": "sau mã giảm giá <b>__voucher__</b>",
+    "after_coupon": "sau mã giảm giá __voucher__",
     "games_installed": "Game đã được cài đặt",
     "hours_short": "__hours__ giờ",
     "faqs": "Những câu hỏi thường gặp",

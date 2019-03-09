@@ -65,7 +65,7 @@
     "drm_third_party": "Advarsel: Dette spil benytter 3. part DRM __drmlist__.",
     "stores": "Butikker",
     "game_transactions": "Spil transaktioner",
-    "after_coupon": "efter kupon code <b>__voucher__</b>",
+    "after_coupon": "efter kupon code __voucher__",
     "games_installed": "Installerede spil",
     "hours_short": "__hours__ timer",
     "faqs": "Ofte stillede spørgsmål",

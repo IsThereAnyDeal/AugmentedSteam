@@ -65,7 +65,7 @@
     "drm_third_party": "Advarsel: Denne tittelen benytter tredjeparts-DRM __drmlist__.",
     "stores": "Butikker",
     "game_transactions": "Spilltransaksjoner",
-    "after_coupon": "etter kupongkode <b>__voucher__</b>",
+    "after_coupon": "etter kupongkode __voucher__",
     "games_installed": "Installerte spill",
     "hours_short": "__hours__ t",
     "faqs": "Ofte stilte spørsmål",

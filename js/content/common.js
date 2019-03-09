@@ -1747,7 +1747,7 @@ let Prices = (function(){
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
                 lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
                 let voucher = HTML.escape(info['price']['voucher']);
-                voucherStr = Localization.str.after_coupon.replace("__voucher__", voucher);
+                voucherStr = Localization.str.after_coupon.replace("__voucher__", `<b>${voucher}</b>`);
             } else {
                 lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             }

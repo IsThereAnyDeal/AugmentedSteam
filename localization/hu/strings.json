@@ -65,7 +65,7 @@
     "drm_third_party": "Figyelem: A játék külső DRM-et tartalmaz __drmlist__.",
     "stores": "Áruházak",
     "game_transactions": "Játék tranzakciók",
-    "after_coupon": "kupon kód után <b>__voucher__</b>",
+    "after_coupon": "kupon kód után __voucher__",
     "games_installed": "Telepített játékok",
     "hours_short": "__hours__ óra",
     "faqs": "Gyakran ismételt kérdések",

@@ -65,7 +65,7 @@
     "drm_third_party": "Waarschuwing: Dit programma maakt gebruik van DRM van derden __drmlist__.",
     "stores": "Winkels",
     "game_transactions": "Spel Transacties",
-    "after_coupon": "na kortings-code <b>__voucher__</b>",
+    "after_coupon": "na kortings-code __voucher__",
     "games_installed": "Geïnstalleerde Spellen",
     "hours_short": "__hours__ uren",
     "faqs": "Veelgestelde vragen",

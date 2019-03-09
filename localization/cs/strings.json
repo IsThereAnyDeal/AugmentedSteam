@@ -65,7 +65,7 @@
     "drm_third_party": "Upozornění: Tento titul používá DRM třetí strany __drmlist__.",
     "stores": "Obchody",
     "game_transactions": "Transakce ve hrách",
-    "after_coupon": "po kupónu <b>__voucher__</b>",
+    "after_coupon": "po kupónu __voucher__",
     "games_installed": "Nainstalované hry",
     "hours_short": "__hours__ hod",
     "faqs": "Často kladené otázky",

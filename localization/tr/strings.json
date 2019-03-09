@@ -65,7 +65,7 @@
     "drm_third_party": "Uyarı: Bu oyun 3. parti DRM kullanıyor __drmlist__.",
     "stores": "Mağazalar",
     "game_transactions": "Oyun İçi Alımlar",
-    "after_coupon": "Şu kupon ile <b>__voucher__</b>",
+    "after_coupon": "Şu kupon ile __voucher__",
     "games_installed": "Yüklü Oyunlar",
     "hours_short": "__hours__ saat",
     "faqs": "Sıkça Sorulan Sorular",

@@ -65,7 +65,7 @@
     "drm_third_party": "Προειδοποίηση: Ο τίτλος αυτός χρησιμοποιεί DRM τρίτων __drmlist__.",
     "stores": "Καταστήματα",
     "game_transactions": "Συναλλαγές Παιχνιδιών",
-    "after_coupon": "μετά από το κωδικό κουπονιού <b>__voucher__</b>",
+    "after_coupon": "μετά από το κωδικό κουπονιού __voucher__",
     "games_installed": "Εγκατεστημένα Παιχνίδια",
     "hours_short": "__hours__ ώρες",
     "faqs": "Συχνές ερωτήσεις",

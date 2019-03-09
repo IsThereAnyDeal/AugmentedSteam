@@ -65,7 +65,7 @@
     "drm_third_party": "Attenzione: Questo titolo utilizza DRM di terze parti __drmlist__.",
     "stores": "Negozi",
     "game_transactions": "Transazioni in-game",
-    "after_coupon": "con il coupon <b>__voucher__</b>",
+    "after_coupon": "con il coupon __voucher__",
     "games_installed": "Giochi installati",
     "hours_short": "__hours__ ore",
     "faqs": "Domande frequenti",
