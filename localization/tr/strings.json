@@ -201,6 +201,7 @@
     "historical_low": "Şimdiye kadarki en düşük fiyat",
     "games_with_booster": "Hızlandırma Paketi düşürmeye uygun __boostergames__ oyun",
     "sort_by": "Şuna göre sırala:",
+    "sort_by_keyword": "Şuna göre sırala __keyword__",
     "lastonline": "Son Çevrimiçi",
     "edit_price": "Fiyatı Düzenle",
     "relist": "Yeniden listele",

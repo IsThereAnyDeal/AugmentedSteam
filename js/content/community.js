@@ -2568,13 +2568,13 @@ let FriendsThatPlayPageClass = (function(){
         let section = memberList.querySelectorAll(".mainSectionHeader").length;
         if (section < 3) return; // DLC and unreleased games with no playtime
         section = section >= 4 ? 1 : 2;
-
+        
         HTML.beforeEnd(
             memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
             ` (<span id='es_default_sort' style='cursor: pointer;'>
-                    ${Localization.str.sort_by.replace(":", "")} ${Localization.str.theworddefault}
+                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
                  </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by.replace(":", "")} Playtime
+                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)} 
                 </span>)`);
 
         memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")

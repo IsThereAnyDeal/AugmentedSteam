@@ -201,6 +201,7 @@
     "historical_low": "Historicky nejnižší cena",
     "games_with_booster": "__boostergames__ her s nárokem na přídavné balíčky",
     "sort_by": "Seřadit podle:",
+    "sort_by_keyword": "Seřadit podle __keyword__",
     "lastonline": "Naposledy Online",
     "edit_price": "Upravit cenu",
     "relist": "Přeprodat",

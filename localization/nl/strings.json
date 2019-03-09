@@ -201,6 +201,7 @@
     "historical_low": "Historisch Laagste Prijs",
     "games_with_booster": "__boostergames__ spellen geschikt voor booster pakketen",
     "sort_by": "Sorteer op:",
+    "sort_by_keyword": "Sorteer op __keyword__",
     "lastonline": "Laatst Online",
     "edit_price": "Prijs bewerken",
     "relist": "Opnieuw aanbieden",

@@ -201,6 +201,7 @@
     "historical_low": "Prix historiquement le plus bas",
     "games_with_booster": "__boostergames__ jeux éligibles pour des booster packs",
     "sort_by": "Trier par :",
+    "sort_by_keyword": "Trier par __keyword__",
     "lastonline": "Dernier en ligne",
     "edit_price": "Modifier le prix",
     "relist": "Remettre en vente",

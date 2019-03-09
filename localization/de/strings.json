@@ -201,6 +201,7 @@
     "historical_low": "Rekordtief",
     "games_with_booster": "__boostergames__ Spiele können Booster Packs erhalten",
     "sort_by": "Sortieren nach:",
+    "sort_by_keyword": "Sortieren nach __keyword__",
     "lastonline": "Zuletzt online",
     "edit_price": "Preis bearbeiten",
     "relist": "Wiedereinstellen",

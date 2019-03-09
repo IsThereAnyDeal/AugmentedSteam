@@ -201,6 +201,7 @@
     "historical_low": "Precio más bajo en el que estuvo",
     "games_with_booster": "__boostergames__ juegos elegibles para packs de refuerzo",
     "sort_by": "Ordenar por:",
+    "sort_by_keyword": "Ordenar por __keyword__",
     "lastonline": "Última conexión",
     "edit_price": "Editar precio",
     "relist": "Poner en venta",

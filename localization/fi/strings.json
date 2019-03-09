@@ -201,6 +201,7 @@
     "historical_low": "Historian alin hinta",
     "games_with_booster": "__boostergames__ peliä, joihin voit saada lisäkorttipaketteja",
     "sort_by": "Lajitteluperuste:",
+    "sort_by_keyword": "Lajitteluperuste __keyword__",
     "lastonline": "Viimeksi online-tilassa",
     "edit_price": "Muokkaa hintaa",
     "relist": "Listaa uudelleen",

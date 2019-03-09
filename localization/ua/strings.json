@@ -201,6 +201,7 @@
     "historical_low": "Найнижча ціна за весь час",
     "games_with_booster": "Ігор, у яких випаде набір карток: __boostergames__",
     "sort_by": "Сортувати за:",
+    "sort_by_keyword": "Сортувати за __keyword__",
     "lastonline": "Останній раз онлайн",
     "edit_price": "Редагувати ціну",
     "relist": "Виставити повторно",

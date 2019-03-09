@@ -201,6 +201,7 @@
     "historical_low": "A valaha volt legalacsonyabb ár",
     "games_with_booster": "__boostergames__ játékhoz vagy jogosult bónuszcsomagra",
     "sort_by": "Rendezési szempont:",
+    "sort_by_keyword": "Rendezési szempont __keyword__",
     "lastonline": "Legutoljára online",
     "edit_price": "Ár megváltoztatása",
     "relist": "Újralistáz",

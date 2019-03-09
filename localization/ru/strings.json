@@ -201,6 +201,7 @@
     "historical_low": "Исторический минимум",
     "games_with_booster": "Игр, у которых выпадет набор карточек: __boostergames__ ",
     "sort_by": "Сортировать по:",
+    "sort_by_keyword": "Сортировать по __keyword__",
     "lastonline": "Последний раз онлайн",
     "edit_price": "Редактировать цену",
     "relist": "Выставить на продажу",

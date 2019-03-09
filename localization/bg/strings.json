@@ -201,6 +201,7 @@
     "historical_low": "Исторически най-ниската цена",
     "games_with_booster": "__boostergames__ игри приемливи за буустър пакети",
     "sort_by": "Сортирай по:",
+    "sort_by_keyword": "Сортирай по __keyword__",
     "lastonline": "Последно на линия",
     "edit_price": "Редактирай цената",
     "relist": "Пусни наново",

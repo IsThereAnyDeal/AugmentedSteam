@@ -201,6 +201,7 @@
     "historical_low": "ราคาต่ำที่สุดในประวัติ",
     "games_with_booster": "__boostergames__ เกม ที่มีสิทธิ์ได้รับบูสเตอร์แพ็ก",
     "sort_by": "เรียงตาม:",
+    "sort_by_keyword": "เรียงตาม __keyword__",
     "lastonline": "ออนไลน์ล่าสุด",
     "edit_price": "แก้ไขราคา",
     "relist": "ตั้งรายการใหม่",

@@ -201,6 +201,7 @@
     "historical_low": "Historiskt lägsta pris",
     "games_with_booster": "__boostergames__ spel som är berättigad till booster-paket",
     "sort_by": "Sortera efter:",
+    "sort_by_keyword": "Sortera efter __keyword__",
     "lastonline": "Senast Online",
     "edit_price": "Redigera pris",
     "relist": "återlista",

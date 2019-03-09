@@ -201,6 +201,7 @@
     "historical_low": "Giá thấp nhất lịch sử",
     "games_with_booster": "__boostergames__ games eligible for booster packs",
     "sort_by": "Phân loại theo:",
+    "sort_by_keyword": "Phân loại theo __keyword__",
     "lastonline": "Lên mạng lần cuối",
     "edit_price": "Chỉnh sửa giá",
     "relist": "Relist",

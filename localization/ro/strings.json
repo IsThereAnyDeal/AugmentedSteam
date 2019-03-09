@@ -201,6 +201,7 @@
     "historical_low": "Istoric cele mai mici prețuri",
     "games_with_booster": "__boostergames__ jocuri eligibile pentru pachete booster",
     "sort_by": "Sortează după:",
+    "sort_by_keyword": "Sortează după __keyword__",
     "lastonline": "Ultima dată online",
     "edit_price": "Modifică preț",
     "relist": "Relistează",

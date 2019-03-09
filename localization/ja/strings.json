@@ -201,6 +201,8 @@
     "historical_low": "史上最安値",
     "games_with_booster": "__boostergames__本のゲームにブースターパックの受取資格があります",
     "sort_by": "ソート順:",
+    "sort_by_keyword": "ソート順 __keyword__",
+    "playtime": "プレイ時間",
     "lastonline": "最後のオンライン",
     "edit_price": "値段を編集",
     "relist": "再出品",

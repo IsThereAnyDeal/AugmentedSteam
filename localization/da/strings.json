@@ -201,6 +201,7 @@
     "historical_low": "Historisk laveste pris",
     "games_with_booster": "__boostergames__ spil som er brugbare overfor booster packs",
     "sort_by": "Sorter efter:",
+    "sort_by_keyword": "Sorter efter __keyword__",
     "lastonline": "Sidst Online",
     "edit_price": "Rediger pris",
     "relist": "Sæt på markedet igen",

@@ -201,6 +201,7 @@
     "historical_low": "Najniższa historyczna cena",
     "games_with_booster": "__boostergames__ gier może wygenerować pakiety kart",
     "sort_by": "Sortuj wg:",
+    "sort_by_keyword": "Sortuj wg __keyword__",
     "lastonline": "Ostatnio online",
     "edit_price": "Edytuj cenę",
     "relist": "Wystaw ponownie",

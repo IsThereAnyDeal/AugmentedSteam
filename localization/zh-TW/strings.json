@@ -203,6 +203,8 @@
     "historical_low": "歷史最低價格",
     "games_with_booster": "__boostergames__ 個遊戲有資格獲得擴充包",
     "sort_by": "排序依據：",
+    "sort_by_keyword": "依__keyword__排序",
+    "playtime": "遊戲時長",
     "lastonline": "最後上線時間",
     "edit_price": "編輯價格",
     "relist": "重新上架",

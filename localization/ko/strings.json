@@ -201,6 +201,7 @@
     "historical_low": "역대 최저가",
     "games_with_booster": "부스터팩 자격 : __boostergames__ 개",
     "sort_by": "정렬 순서",
+    "sort_by_keyword": "정렬 순서 __keyword__",
     "lastonline": "마지막 접속 후 지난 시간",
     "edit_price": "가격 수정",
     "relist": "재등록",
