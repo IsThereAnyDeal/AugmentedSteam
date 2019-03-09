@@ -177,7 +177,7 @@
     "games_discount": "Spil med rabatter",
     "region_unavailable": "Ikke tilgængelig i denne region",
     "item_type": "Elementtype",
-    "avg_price_3cards": "Gennemsnitspris af tre samlekort",
+    "avg_price_3cards": "Gennemsnitspris af tre samlekort: __price__",
     "mods": "Modifikationer (mods)",
     "empty_wishlist": "Tøm ønskeliste",
     "empty_wishlist_confirm": "Vil du sikker på at du vil tømme din ønskeliste? Denne handling kan ikke fortrydes!",

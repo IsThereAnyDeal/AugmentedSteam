@@ -177,7 +177,7 @@
     "games_discount": "Juegos con descuentos",
     "region_unavailable": "No disponible en tu región",
     "item_type": "Tipo de Objeto",
-    "avg_price_3cards": "Precio medio de tres cromos.",
+    "avg_price_3cards": "Precio medio de tres cromos: __price__",
     "mods": "Mods",
     "empty_wishlist": "Vacíar lista de deseados",
     "empty_wishlist_confirm": "¿Estás seguro que deseas vaciar tu lista de deseados?\n\n!Esta acción no se puede deshacer!",

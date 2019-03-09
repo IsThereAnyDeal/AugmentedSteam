@@ -177,7 +177,7 @@
     "games_discount": "Rabatterade spel",
     "region_unavailable": "Ej tillgänglig i denna region",
     "item_type": "Typ av föremål",
-    "avg_price_3cards": "Genomsnittspris för tre samlarkort",
+    "avg_price_3cards": "Genomsnittspris för tre samlarkort: __price__",
     "mods": "Modifikationer",
     "empty_wishlist": "Töm önskelistan",
     "empty_wishlist_confirm": "Är du säker på att du vill tömma din önskelista?\n\nÅtgärden kan inte ångras!",

@@ -177,7 +177,7 @@
     "games_discount": "Gry ze zniżkami",
     "region_unavailable": "Niedostępne w tym regionie",
     "item_type": "Typ",
-    "avg_price_3cards": "Śr. cena 3 kart kolekcjonerskich",
+    "avg_price_3cards": "Śr. cena 3 kart kolekcjonerskich: __price__",
     "mods": "Modyfikacje",
     "empty_wishlist": "Wyczyść listę życzeń.",
     "empty_wishlist_confirm": "Czy na pewno chcesz opróżnić swoją listę życzeń?\n\nTej akcji nie można cofnąć!",

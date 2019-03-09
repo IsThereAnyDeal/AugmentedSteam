@@ -179,7 +179,7 @@
     "games_discount": "Games With Discounts",
     "region_unavailable": "Not available in this region",
     "item_type": "Item Type",
-    "avg_price_3cards": "Average price of three trading cards",
+    "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
     "empty_wishlist": "Empty wishlist",
     "empty_wishlist_confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",

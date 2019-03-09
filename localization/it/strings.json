@@ -177,7 +177,7 @@
     "games_discount": "Giochi scontati",
     "region_unavailable": "Non disponibile in questa regione",
     "item_type": "Tipologia articolo",
-    "avg_price_3cards": "Prezzo medio di tre carte collezionabili",
+    "avg_price_3cards": "Prezzo medio di tre carte collezionabili: __price__",
     "mods": "Mod",
     "empty_wishlist": "Svuota lista dei desideri",
     "empty_wishlist_confirm": "Sei sicuro di voler svuotare la tua lista dei desideri?\n\nQuesta azione non può essere annullata!",

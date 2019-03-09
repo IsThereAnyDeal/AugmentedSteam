@@ -179,7 +179,7 @@
     "games_discount": "有折扣的游戏",
     "region_unavailable": "在该地区目前不提供",
     "item_type": "物品类型",
-    "avg_price_3cards": "三张交易卡牌的平均价格",
+    "avg_price_3cards": "三张交易卡牌的平均价格: __price__",
     "mods": "模组",
     "empty_wishlist": "清空愿望单",
     "empty_wishlist_confirm": "您确定要清空愿望单？\n\n此操作无法撤消！",

@@ -177,7 +177,7 @@
     "games_discount": "Kedvezményes játékok",
     "region_unavailable": "Nem elérhető ebben a régióban",
     "item_type": "Elem típusa",
-    "avg_price_3cards": "Három játékkártya átlagára",
+    "avg_price_3cards": "Három játékkártya átlagára: __price__",
     "mods": "Modok",
     "empty_wishlist": "Kívánságlista ürítése",
     "empty_wishlist_confirm": "Biztos vagy abban, hogy ki akarod üríteni a kívánságlistádat?\n\nEz a művelet visszavonhatatlan!",

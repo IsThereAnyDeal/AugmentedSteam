@@ -177,7 +177,7 @@
     "games_discount": "Alennuksessa olevat pelit",
     "region_unavailable": "Tämä tuote ei ole saatavilla alueellasi",
     "item_type": "Esinetyyppi",
-    "avg_price_3cards": "Kolmen keräilykortin keskiarvo",
+    "avg_price_3cards": "Kolmen keräilykortin keskiarvo: __price__",
     "mods": "Modit",
     "empty_wishlist": "Tyhjennä toivelista",
     "empty_wishlist_confirm": "Oletko varma että haluat tyhjentää toivelistasi?\n\nTätä toimintoa ei voi perua!",

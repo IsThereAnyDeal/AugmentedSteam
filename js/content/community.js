@@ -1582,7 +1582,7 @@ let InventoryPageClass = (function(){
             }
 
             if (node.dataset.cardsPrice) {
-                html += '<br>' + Localization.str.avg_price_3cards + Localization.str.punctuation.colon + node.dataset.cardsPrice;
+                html += '<br>' + Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice);
             }
         } else {
             html += Localization.str.no_price_data;

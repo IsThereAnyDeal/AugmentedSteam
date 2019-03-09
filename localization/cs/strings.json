@@ -177,7 +177,7 @@
     "games_discount": "Hry se slevami",
     "region_unavailable": "Nedostupné v tomto regionu",
     "item_type": "Typ předmětu",
-    "avg_price_3cards": "Průměrná cena 3 sběratelských karet",
+    "avg_price_3cards": "Průměrná cena 3 sběratelských karet: __price__",
     "mods": "Módy",
     "empty_wishlist": "Vyprázdnit Seznam přání",
     "empty_wishlist_confirm": "Jste si jistý, že chcete vymazat váš seznam přání?\n\nTato akce je nevratná!",

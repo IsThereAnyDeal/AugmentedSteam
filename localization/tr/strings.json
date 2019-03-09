@@ -177,7 +177,7 @@
     "games_discount": "İndirimde Olan Oyunlar",
     "region_unavailable": "Bu bölgede mevcut değil",
     "item_type": "Eşya Türü",
-    "avg_price_3cards": "3 takas kartı için en fazla fiyat",
+    "avg_price_3cards": "3 takas kartı için en fazla fiyat: __price__",
     "mods": "Modlar",
     "empty_wishlist": "İstek listesini temizle",
     "empty_wishlist_confirm": "İstek listeni boşaltmak istediğine emin misin?\nBu işlem geri alınamaz!",

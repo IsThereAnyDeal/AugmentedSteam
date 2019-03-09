@@ -177,7 +177,7 @@
     "games_discount": "割引されているゲーム",
     "region_unavailable": "この地域では利用できません",
     "item_type": "アイテム種別",
-    "avg_price_3cards": "3枚のトレーディングカードの平均価格",
+    "avg_price_3cards": "3枚のトレーディングカードの平均価格: __price__",
     "mods": "Mod",
     "empty_wishlist": "ウィッシュリストを空にする",
     "empty_wishlist_confirm": "本当にウィッシュリストを空にしてもよろしいですか？\n\nこの操作は元に戻せません！",

@@ -177,7 +177,7 @@
     "games_discount": "Jeux avec des remises",
     "region_unavailable": "Non disponible dans cette région",
     "item_type": "Type d'article",
-    "avg_price_3cards": "Prix moyen de 3 cartes à échanger",
+    "avg_price_3cards": "Prix moyen de 3 cartes à échanger: __price__",
     "mods": "Mods",
     "empty_wishlist": "Vider la liste de souhaits",
     "empty_wishlist_confirm": "Êtes-vous sûr de vouloir vider votre liste de souhaits ?\n\nCette action ne peut pas être annulée !",

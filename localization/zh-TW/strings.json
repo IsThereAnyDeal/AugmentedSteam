@@ -179,7 +179,7 @@
     "games_discount": "有特價的遊戲",
     "region_unavailable": "在該地區目前不提供",
     "item_type": "項目類別",
-    "avg_price_3cards": "三張交換卡片的平均價格",
+    "avg_price_3cards": "三張交換卡片的平均價格: __price__",
     "mods": "模組",
     "empty_wishlist": "清空願望清單",
     "empty_wishlist_confirm": "您確定要清空您的願望清單？\n該動作無法復原！",

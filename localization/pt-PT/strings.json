@@ -177,7 +177,7 @@
     "games_discount": "Jogos Com Descontos",
     "region_unavailable": "Indisponível nesta região",
     "item_type": "Tipo de Item",
-    "avg_price_3cards": "Preço médio de três cartas",
+    "avg_price_3cards": "Preço médio de três cartas: __price__",
     "mods": "Mods",
     "empty_wishlist": "Esvaziar lista de desejos",
     "empty_wishlist_confirm": "Tens a certeza que queres limpar a tua lista de desejos?\n\nEsta acção não pode ser desfeita!",

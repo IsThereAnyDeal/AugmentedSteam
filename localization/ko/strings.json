@@ -177,7 +177,7 @@
     "games_discount": "할인중인 게임들",
     "region_unavailable": "이 지역에서는 사용할 수 없습니다",
     "item_type": "아이템 종류",
-    "avg_price_3cards": "트레이딩 카드 3개의 평균 가격",
+    "avg_price_3cards": "트레이딩 카드 3개의 평균 가격: __price__",
     "mods": "모드",
     "empty_wishlist": "찜 목록 비우기",
     "empty_wishlist_confirm": "정말로 찜 목록을 비우시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!",
