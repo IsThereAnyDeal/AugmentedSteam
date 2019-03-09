@@ -115,12 +115,14 @@ class UpdateHandler {
         let lastVersion = Version.fromString(SyncedStorage.get("version"));
         let currentVersion = Version.fromString(Info.version);
 
-        if (lastVersion.isSame(currentVersion)) { return; }
-
-        if (SyncedStorage.get("version_show")) {
-            this._showChangelog();
+        if (!lastVersion.isSame(currentVersion)) {
+            if (SyncedStorage.get("version_show")) {
+                this._showChangelog();
+            }
+            this._migrateSettings();
         }
-        this._migrateSettings();
+
+        SyncedStorage.set("version", Info.version);
     };
 
     static _showChangelog() {
@@ -211,8 +213,6 @@ class UpdateHandler {
             }
             SyncedStorage.set('customize_apppage', settings);
         }
-
-        SyncedStorage.set("version", Info.version);
     }
 }
 
