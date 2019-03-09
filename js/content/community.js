@@ -842,7 +842,7 @@ let GamesPageClass = (function(){
 
         let node = document.querySelector(".profile_small_header_texture a");
         if (!node) { return; }
-        let statsLink = '//steamcommunity.com/my/stats/';
+        let statsLink = 'https://steamcommunity.com/my/stats/';
 
         document.addEventListener("scroll", function(){
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }

@@ -339,7 +339,7 @@ let StorePageClass = (function(){
 
             countries.forEach(country => {
 
-                let promise = RequestData.getJson("//store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
+                let promise = RequestData.getJson("https://store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
                     if (!result || !result[subid] || !result[subid].success) { return; }
                     prices[country] = result[subid].data.price;
                 });
@@ -894,7 +894,7 @@ let AppPageClass = (function(){
                 formData.append("sessionid", User.getSessionId());
                 formData.append("appid", appid)
 
-                RequestData.post("//store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true}).then(response => {
+                RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true}).then(response => {
                     document.querySelector("#add_to_wishlist_area").style.display = "inline";
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
@@ -2047,7 +2047,7 @@ let RegisterKeyPageClass = (function(){
                 formData.append("sessionid", User.getSessionId());
                 formData.append("product_key", current_key);
 
-                let request = RequestData.post("//store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
+                let request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
                     data = JSON.parse(data);
                     let attempted = current_key;
                     let message = Localization.str.register.default;
@@ -2230,7 +2230,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2814,7 +2814,7 @@ let WishlistPageClass = (function(){
             formData.append("sessionid", User.getSessionId());
             formData.append("appid", appid);
 
-            let url = "//store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
+            let url = "https://store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
             return RequestData.post(url, formData).then(() => {
                 let node = document.querySelector(".wishlist-row[data-app-id'"+appid+"']");
                 if (node) {
