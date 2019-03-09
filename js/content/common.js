@@ -173,6 +173,11 @@ let RequestData = (function(){
                 }
             }
 
+            if (url.startsWith("//")) { // TODO remove when not needed
+                url = window.location.protocol + url;
+                console.warn("Requesting URL without protocol, please update");
+            }
+
             let request = new XMLHttpRequest();
             request.onreadystatechange = function() { requestHandler(request); };
             request.overrideMimeType("application/json");
@@ -215,6 +220,11 @@ let RequestData = (function(){
                     ProgressBar.failed(null, url, state.status, state.statusText);
                     reject(state.status);
                 }
+            }
+
+            if (url.startsWith("//")) { // TODO remove when not needed
+                url = window.location.protocol + url;
+                console.warn("Requesting URL without protocol, please update");
             }
 
             let request = new XMLHttpRequest();
