@@ -955,7 +955,7 @@ let AppPageClass = (function(){
             cssClass = "esi-empty-note";
         }
 
-        HTML.afterEnd(document.getElementsByClassName("queue_control_button queue_btn_ignore")[0],
+        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
 
         document.addEventListener("click", function(e) {
