@@ -949,7 +949,7 @@ let AppPageClass = (function(){
         let cssClass;
 
         if (wishlistNotes.exists(appid)) {
-            noteText = '"' + wishlistNotes.getNote(appid) + '"';
+            noteText = Localization.str.punctuation.quotation_with_content.replace("__content__", wishlistNotes.getNote(appid));
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2886,7 +2886,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (wishlistNotes.exists(appid)) {
-            noteText = '"' + wishlistNotes.getNote(appid) + '"';
+            noteText = Localization.str.punctuation.quotation_with_content.replace("__content__", wishlistNotes.getNote(appid));
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2961,7 +2961,7 @@ let WishlistNotes = (function(){
 
     WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname) + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
         if (!this.listenerCreated) {
             let that = this;
