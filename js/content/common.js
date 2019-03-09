@@ -297,7 +297,7 @@ let ProgressBar = (function(){
 
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
-            node.insertAdjacentHTML("afterend", "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
             nodeError = node.nextElementSibling;
         }
 
@@ -821,8 +821,8 @@ let EnhancedSteam = (function() {
     };
 
     self.addMenu = function() {
-        document.querySelector("#global_action_menu").insertAdjacentHTML("afterBegin", `
-            <div id="es_menu">
+        HTML.afterBegin("#global_action_menu",
+            `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
@@ -946,8 +946,8 @@ let EnhancedSteam = (function() {
     };
 
     self.addRedeemLink = function() {
-        document.querySelector("#account_dropdown .popup_menu_item:last-child:not(.tight)")
-            .insertAdjacentHTML("beforebegin", `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
+        HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
+            `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
     };
 
     self.replaceAccountName = function() {
@@ -1021,8 +1021,7 @@ let EnhancedSteam = (function() {
     self.alternateLinuxIcon = function(){
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
         let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
-        document.querySelector("head")
-            .insertAdjacentHTML("beforeend", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
+        HTML.beforeEnd("head", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
     };
 
     // Hide Trademark and Copyright symbols in game titles for Community pages
@@ -1321,7 +1320,7 @@ let Highlights = (function(){
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
                 tagCss += '.es_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color") + ' }\n';
             });
-            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
+            HTML.beforeEnd("head", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
         }
 
         // Add the tags container if needed
@@ -1380,11 +1379,12 @@ let Highlights = (function(){
 
                 if (document.querySelector(".game_purchase_action")) {
                     tags.style.float = "left";
-                    root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
-                    root.querySelector(".game_purchase_action").insertAdjacentHTML("beforebegin",  + '<div style="clear: right;"></div>');
+                    let node = root.querySelector(".game_purchase_action");
+                    node.insertAdjacentElement("beforebegin", tags);
+                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
                 } else {
                     tags.style.fload = "right";
-                    root.querySelector(".price").parentNode.insertAdjacentElement("beforebegin", tags);
+                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
                 }
             }
             else if (node.classList.contains("similar_grid_item")) { // can't find it
@@ -1440,7 +1440,7 @@ let Highlights = (function(){
                 hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color") + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
             });
 
-            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
+            HTML.beforeEnd("head", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
         }
 
         // Carousel item

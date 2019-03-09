@@ -552,36 +552,28 @@ class HTML {
         node.innerHTML = DOMPurify.sanitize(html);
     }
 
-    static beforeBegin(node, html) {
+    static adjacent(node, position, html) {
         if (typeof(node) === "string") {
             node = document.querySelector(node);
         }
 
-        node.insertAdjacentHTML("beforebegin", DOMPurify.sanitize(html));
+        node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
+    }
+
+    static beforeBegin(node, html) {
+        HTML.adjacent(node, "beforebegin", html);
     }
 
     static afterBegin(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("afterbegin", DOMPurify.sanitize(html));
+        HTML.adjacent(node, "afterbegin", html);
     }
 
     static beforeEnd(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("beforeend", DOMPurify.sanitize(html));
+        HTML.adjacent(node, "beforeend", html);
     }
 
     static afterEnd(node, html) {
-        if (typeof(node) === "string") {
-            node = document.querySelector(node);
-        }
-
-        node.insertAdjacentHTML("afterend", DOMPurify.sanitize(html));
+        HTML.adjacent(node, "afterend", html);
     }
 
 }
