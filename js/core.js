@@ -570,6 +570,10 @@ class HTML {
     };
 
     static inner(node, html) {
+        if (typeof(node) === "string") {
+            node = document.querySelector(node);
+        }
+
         node.innerHTML = DOMPurify.sanitize(html);
     }
 

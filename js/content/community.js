@@ -2061,7 +2061,7 @@ let BadgesPageClass = (function(){
 
         async function addDropsCount() {
             HTML.inner(
-                document.querySelector("#es_calculations"),
+                "#es_calculations",
                 Localization.str.card_drops_remaining.replace("__drops__", dropsCount)
                     + "<br>" + Localization.str.games_with_drops.replace("__dropsgames__", dropsGames)
             );
@@ -2853,9 +2853,9 @@ let MarketPageClass = (function(){
             let purchaseTotalPrice = new Price(purchaseTotal, Currency.storeCurrency);
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
-                document.querySelector("#es_market_summary"),
-                `<div>${Localization.str.purchase_total}<span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}<span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                "#es_market_summary",
+                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }

@@ -2779,7 +2779,7 @@ let WishlistPageClass = (function(){
         }
         totalPrice = new Price(totalPrice, Currency.storeCurrency)
 
-        HTML.inner(document.querySelector("#esi-wishlist-chart-content"),
+        HTML.inner("#esi-wishlist-chart-content",
             `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
             <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
             <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
