@@ -2417,7 +2417,7 @@ let GameCardPageClass = (function(){
                 }
 
                 if (marketLink && cardPrice) {
-                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price}${Localization.str.punctuation.colon}${cardPrice}</a>`);
+                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price} ${cardPrice}</a>`);
                 }
             }
         }
@@ -2854,9 +2854,9 @@ let MarketPageClass = (function(){
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
                 document.querySelector("#es_market_summary"),
-                `<div>${Localization.str.purchase_total}${Localization.str.punctuation.colon}<span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}${Localization.str.punctuation.colon}<span class='es_market_summary_item'>${saleTotalPrice}</span></div>
-                <div>${netText}${Localization.str.punctuation.colon}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
+                `<div>${Localization.str.purchase_total}<span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total}<span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
 
