@@ -47,7 +47,7 @@
     "view_normal_badge": "普通のバッジの進捗状況を表示",
     "community_name_account_header": "__username__のアカウント",
     "apppage_sections": "このページに表示したいセクションを選択してください",
-    "search_error": "検索結果をロードする際にエラーが発生しました",
+    "search_error": "検索結果をロードする際にエラーが発生しました。",
     "website": "ウェブサイト",
     "games": "ゲーム",
     "total_time": "合計時間",
@@ -91,7 +91,7 @@
     "view_foil_badge": "キラバッジの進捗状況を表示",
     "view_astats": "AStats のページを表示",
     "apppage_purchase": "購入のオプション",
-    "search_error_retry": "クリックでリトライ",
+    "search_error_retry": "クリックでリトライ。",
     "contribute": "貢献する (GitHub)",
     "reviews": "レビュー",
     "read_reviews": "レビューを読む",
@@ -531,6 +531,7 @@
         "default": "予期しないエラーが発生したため、製品コードを有効化できませんでした。30分後に再度お試しください。"
     },
     "punctuation": {
-        "parenthesis_with_content": "（__content__）"
+        "parenthesis_with_content": "（__content__）",
+        "space_between_sentences": ""
     }
 }

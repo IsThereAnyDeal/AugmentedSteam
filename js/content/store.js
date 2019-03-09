@@ -2262,7 +2262,7 @@ let SearchPageClass = (function(){
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + Localization.str.punctuation.space_between_sentences + "<a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
@@ -2719,7 +2719,7 @@ let WishlistPageClass = (function(){
             if (SyncedStorage.get("highlight_wishlist")) {
                 Highlights.highlightWishlist(node);
             } else {
-                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
         
