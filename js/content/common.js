@@ -798,38 +798,6 @@ let EnhancedSteam = (function() {
 
     let self = {};
 
-    self.checkVersion = async function() {
-        let showMessage = SyncedStorage.get("version_updated");
-        SyncedStorage.set("version_updated", false);
-
-        if (!showMessage || !SyncedStorage.get("version_show")) {
-            return;
-        }
-
-        RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
-            changelog => {
-                changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
-                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-                ExtensionLayer.runInPageContext(
-                    "function() {\
-                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
-						prompt.done(function(result) {\
-							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
-						});\
-					}"
-                );
-            }
-        );
-
-        window.addEventListener("message", function(event) {
-            if (event.source !== window) return;
-            if (event.data.type && (event.data.type === "es_sendmessage_change")) {
-                SyncedStorage.set("version_show", false);
-            }
-        }, false);
-    };
-
     self.addMenu = function() {
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
@@ -1968,7 +1936,7 @@ let Common = (function(){
         ]);
 
         ProgressBar.create();
-        EnhancedSteam.checkVersion();
+        UpdateHandler.checkVersion();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeInstallSteamButton();
