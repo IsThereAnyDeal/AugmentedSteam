@@ -1,0 +1,16 @@
+.btn_profile_action {
+	background: linear-gradient( to bottom, #585858 5%, #272727 95%) !important;
+}
+.btn_profile_action > span {
+	background: linear-gradient( to bottom, #585858 5%, #272727 95%) !important;
+}
+.btn_profile_action:hover, .btn_profile_action.focus {
+	background: linear-gradient( to bottom, #6e6e6e 5%, #272727 95%) !important;
+}
+.btn_profile_action:hover > span, .btn_profile_action.focus > span {
+	background: linear-gradient( to bottom, #6e6e6e 5%, #272727 95%) !important;
+}
+.profile_header_badge {
+	background-color: rgba(22,22,22, 0.6) !important;
+	box-shadow: none !important;
+}

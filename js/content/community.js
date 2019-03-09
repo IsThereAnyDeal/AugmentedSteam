@@ -633,7 +633,7 @@ let ProfileHomePageClass = (function(){
             if (!data || !data.style) { return; }
 
             let style = ProfileData.getStyle();
-            let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue"];
+            let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue", "grey"];
             if (availableStyles.indexOf(style) === -1) { return; }
 
             document.body.classList.add("es_profile_style");
@@ -1150,6 +1150,7 @@ let ProfileEditPageClass = (function(){
                             <option id='red' value='red'>Red Theme</option>
                             <option id='teal' value='teal'>Teal Theme</option>
                             <option id='yellow' value='yellow'>Yellow Theme</option>
+                            <option id='grey' value='grey'>Grey Theme</option>
                         </select>
                     </div>
                     <img id='es_style_preview' class="es_profile_preview" src=''>
@@ -1173,7 +1174,13 @@ let ProfileEditPageClass = (function(){
         let currentStyle = ProfileData.getStyle();
         if (currentStyle) {
             styleSelectNode.value = currentStyle;
-            document.querySelector("#es_style_preview").src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+
+            let imgNode = document.querySelector("#es_style_preview");
+            imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+
+            if (currentStyle === "remove") {
+                imgNode.style.display = "none";
+            }
         }
 
         styleSelectNode.addEventListener("change", function(){
