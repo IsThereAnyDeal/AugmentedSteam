@@ -530,8 +530,5 @@
         "wallet": "Koden du har skrivit in är ett Steam-gåvorkort eller Steam-plånbokskod",
         "toomany": "Det har varit för många senaste aktivering försök från detta konto.  Vänta och försök igen senare.",
         "default": "Ett oväntat fel uppstod. Din produktkod har inte aktiverats. Vänligen vänta 30 minuter och försök igen."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }

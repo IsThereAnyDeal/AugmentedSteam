@@ -531,8 +531,5 @@
         "wallet": "Der von Ihnen eingelöste Schlüssel stammt von einer Steam-Geschenkkarte oder einer Steam-Guthabenkarte",
         "toomany": "Von diesem Account wurden kürzlich zu viele Aktivierungsversuche unternommen. Bitte warten Sie eine Weile, bevor Sie es erneut versuchen.",
         "default": "Ein unerwarteter Fehler ist aufgetreten. Ihr Produktschlüssel konnte nicht aktiviert werden. Bitte warten Sie 30 Minuten und versuchen Sie es dann erneut."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }

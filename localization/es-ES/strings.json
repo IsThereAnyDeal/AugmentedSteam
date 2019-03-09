@@ -530,8 +530,5 @@
         "wallet": "La clave que has introducido pertenece a una tarjeta de regalo de Steam o saldo de la cartera.",
         "toomany": "Han habido demasiados intentos de activación de este código recientemente. Por favor, espera e inténtalo más tarde.",
         "default": "Se ha producido un error inesperado. Tu clave de producto no se ha canjeado. Por favor, espera 30 minutos y vuelve a intentarlo."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }

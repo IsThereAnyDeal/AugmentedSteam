@@ -530,8 +530,5 @@
         "wallet": "De code die je hebt ingevuld is een Steam-cadeaukaart of Steam-portemonnee code",
         "toomany": "Er zijn recent teveel pogingen geweest om een product te activeren van dit account. Probeer het later opnieuw.",
         "default": "Er is een onverwachte fout opgetreden. De productcode is niet geactiveerd. Probeer het over 30 minuten opnieuw."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }

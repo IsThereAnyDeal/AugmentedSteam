@@ -530,8 +530,5 @@
         "wallet": "O código inserido é de um vale-presente Steam ou código da Carteira Steam.",
         "toomany": "Houve muitas tentativas de ativação realizadas a partir desta conta ou endereço IP. Por favor, aguarde e tente usar o seu código de produto novamente mais tarde.",
         "default": "Um erro inesperado ocorreu. O código de produto não foi ativado. Por favor, tente ativá-lo novamente daqui a 30 minutos."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }

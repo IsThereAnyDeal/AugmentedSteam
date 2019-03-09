@@ -530,8 +530,5 @@
         "wallet": "Antamasi koodi on Steam-lahjakortista tai Steam-lompakkokoodi",
         "toomany": "Liian monta aktivointiyritystä tältä tililtä. Odota ja yritä myöhemmin uudelleen.",
         "default": "Odottamaton virhe. Tuotekoodiasi ei lunastettu. Odota 30 minuuttia ja yritä lunastaa koodi uudestaan."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }

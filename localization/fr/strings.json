@@ -530,8 +530,5 @@
         "wallet": "Le code que vous avez saisi est un code de porte-monnaie Steam ou d'une carte cadeau",
         "toomany": "Trop de tentatives d'activation récentes depuis ce compte ont été effectuées. Veuillez patienter et réessayer d'activer votre code produit plus tard.",
         "default": "Une erreur s'est produite. Votre code produit n'a pas été activé. Veuillez attendre 30 minutes et réessayer."
-    },
-    "punctuation": {
-        "parenthesis_with_content": "(__content__)"
     }
 }
