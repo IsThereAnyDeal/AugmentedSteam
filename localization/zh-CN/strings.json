@@ -549,5 +549,11 @@
         "in_collection": "拥有",
         "played": "已玩过",
         "never_played": "未玩过"
+    },
+    "punctuation": {
+        "parenthesis_with_content": "（__content__）",
+        "quotation_with_content": "“__content__”",
+        "space_between_sentences": "",
+        "colon": "："
     }
 }

@@ -307,7 +307,7 @@ let ProgressBar = (function(){
 
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + Localization.str.punctuation.colon + "<ul></ul></div>");
             nodeError = node.nextElementSibling;
         }
 

@@ -529,5 +529,8 @@
         "wallet": "O código que introduziste é de um cartão-presente Steam ou um código para a Carteira Steam",
         "toomany": "Ocorreram recentemente demasiadas tentativas de ativação a partir desta conta. Aguarda uns momentos ou tenta mais tarde.",
         "default": "Ocorreu um erro inesperado. O teu código de produto não foi ativado. Por favor espera 30 minutos e tenta ativar o código novamente."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

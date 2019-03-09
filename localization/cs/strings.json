@@ -529,5 +529,8 @@
         "wallet": "Zadaný kód produktu patří k dárkovému kupónu nebo jde o kód pro Steam peněženku",
         "toomany": "Proběhlo příliš mnoho pokusů o aktivaci z tohoto účtu. Počkejte prosím a zkuste to znovu později.",
         "default": "Došlo k neočekávané chybě. Váš klíč nebyl použit. Počkejte prosím 30 minut a zkuste jej aktivovat znovu."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

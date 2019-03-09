@@ -529,5 +529,8 @@
         "wallet": "Il codice inserito è relativo ad un buono regalo di Steam o ad un codice del Portafoglio di Steam",
         "toomany": "Sono stati effettuati troppi tentativi di attivazione da questo account. Attendi e riprova più tardi.",
         "default": "Si è verificato un errore inaspettato e il codice non è stato riscattato. Aspetta 30 minuti, quindi riprova a riscattare il codice."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

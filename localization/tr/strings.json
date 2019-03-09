@@ -529,5 +529,8 @@
         "wallet": "Girdiğiniz kod bir Steam Hediye Kartı ya da Steam Cüzdan Kodu'na ait",
         "toomany": "Bu hesaptan çok fazla etkinleştirme denemesinde bulunuldu. Lütfen bekleyin ve daha sonra tekrar deneyin.",
         "default": "Beklenmeyen bir hata oluştu. Ürün kodunuz kullanılamadı. Lütfen 30 dakika bekleyip kodu kullanmayı tekrar deneyin."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

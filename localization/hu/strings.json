@@ -529,5 +529,8 @@
         "wallet": "A kód, amit beírtál egy Steam ajándékkártyáé vagy Steam Pénztárcakód",
         "toomany": "Túl sok aktiválási kísérlet történt a közelmúltban erről a felhasználói fiókról vagy IP-címről. Kérjük várj, és majd később próbáld újra a termékkódod.",
         "default": "Váratlan hiba történt. Termékkódod nem került beváltásra. Kérjük, várj 30 percet és próbáld meg újra beváltani a kódot."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

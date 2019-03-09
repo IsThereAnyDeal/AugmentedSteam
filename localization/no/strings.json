@@ -529,5 +529,8 @@
         "wallet": "Koden du har angitt er fra et Steam-gavekort eller en Steam-lommebokskode",
         "toomany": "Det har vært for mange nylige aktiveringsforsøk fra denne kontoen. Vennligst vent og prøv igjen senere.",
         "default": "Det oppstod en uventet feil. Din produktkode er ikke innløst. Vennligst vent 30 minutter og prøv å innløse koden igjen."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

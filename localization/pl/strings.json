@@ -529,5 +529,8 @@
         "wallet": "Wprowadzony kod pochodzi z karty podarunkowej Steam lub kodu Portfela Steam.",
         "toomany": "Odnotowaliśmy zbyt wiele prób aktywacji z tego konta w ostatnim czasie. Spróbuj użyć swojego klucza produktu później.",
         "default": "Wystąpił nieoczekiwany błąd. Twój klucz produktu nie został wykorzystany. Poczekaj 30 minut i spróbuj aktywować klucz ponownie."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

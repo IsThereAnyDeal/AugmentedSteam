@@ -529,5 +529,8 @@
         "wallet": "Codul pe care l-ai introdus este de pe un Card Cadou Steam sau un cod pentru Portofelul Steam",
         "toomany": "Recent au avut loc prea multe tentative de activare de pe acest cont. Te rugăm să așteptați și să încerci din nou mai târziu.",
         "default": "A apărut o eroare neașteptată. Codul produsului tău nu a fost revendicat. Te rugăm să aștepți 30 de minute și să încerci din nou să revendici codul."
+    },
+    "punctuation": {
+        "parenthesis_with_content": "(__content__)"
     }
 }

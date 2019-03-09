@@ -1575,14 +1575,14 @@ let InventoryPageClass = (function(){
         let html = '<div style="min-height:3em;margin-left:1em;">';
 
         if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
-            html += Localization.str.starting_at + ': ' + node.dataset.lowestPrice;
+            html += Localization.str.starting_at + Localization.str.punctuation.colon + node.dataset.lowestPrice;
 
             if (node.dataset.dataSold) {
                 html += '<br>' + Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold);
             }
 
             if (node.dataset.cardsPrice) {
-                html += '<br>' + Localization.str.avg_price_3cards + ": " + node.dataset.cardsPrice;
+                html += '<br>' + Localization.str.avg_price_3cards + Localization.str.punctuation.colon + node.dataset.cardsPrice;
             }
         } else {
             html += Localization.str.no_price_data;
@@ -1976,7 +1976,7 @@ let BadgesPageClass = (function(){
             if (cost) {
                 let badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
                 if (badgeNameBox) {
-                    HTML.afterEnd(badgeNameBox, "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + ": " + cost + "</div>");
+                    HTML.afterEnd(badgeNameBox, "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg + Localization.str.punctuation.colon + cost + "</div>");
                 }
             }
 
@@ -2417,7 +2417,7 @@ let GameCardPageClass = (function(){
                 }
 
                 if (marketLink && cardPrice) {
-                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price}: ${cardPrice}</a>`);
+                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price}${Localization.str.punctuation.colon}${cardPrice}</a>`);
                 }
             }
         }
@@ -2426,7 +2426,7 @@ let GameCardPageClass = (function(){
             cost = new Price(cost, Currency.storeCurrency);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}: ${cost}</div>`);
+                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost}${Localization.str.punctuation.colon}${cost}</div>`);
 
             document.querySelector(".badge_empty_right").classList.add("esi-badge");
         }
@@ -2854,9 +2854,9 @@ let MarketPageClass = (function(){
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
                 document.querySelector("#es_market_summary"),
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
-                <div>${netText}: <span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
+                `<div>${Localization.str.purchase_total}${Localization.str.punctuation.colon}<span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total}${Localization.str.punctuation.colon}<span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                <div>${netText}${Localization.str.punctuation.colon}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
 
