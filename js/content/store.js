@@ -175,21 +175,20 @@ let StorePageClass = (function(){
         if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
-        let drmString = "("; // TODO localize DRM names
-        if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
-        if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
-        if (securom) { drmString += 'SecuROM, '; drm = true; }
-        if (tages) { drmString += 'Tages, '; drm = true; }
-        if (stardock) { drmString += 'Stardock Account Required, '; drm = true; }
-        if (rockstar) { drmString += 'Rockstar Social Club, '; drm = true; }
-        if (kalypso) { drmString += "Kalypso Launcher, "; drm = true; }
-        if (denuvo) { drmString += "Denuvo Anti-tamper, "; drm = true; }
+        let drmNames = [];
+        if (gfwl) { drmNames.push('Games for Windows Live'); }
+        if (uplay) { drmNames.push('Ubisoft Uplay'); }
+        if (securom) { drmNames.push('SecuROM'); }
+        if (tages) { drmNames.push('Tages'); }
+        if (stardock) { drmNames.push('Stardock Account Required'); }
+        if (rockstar) { drmNames.push('Rockstar Social Club'); }
+        if (kalypso) { drmNames.push("Kalypso Launcher"); }
+        if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
+        drm = drm || drmNames.length > 0;
 
-        if (drmString === "(") {
-            drmString = "";
-        } else {
-            drmString = drmString.substring(1, drmString.length - 2);
-            drmString = Localization.str.punctuation.parenthesis_with_content.replace("__content__", drmString);
+        let drmString = "";
+        if (drmNames.length > 0) {
+            drmString = Localization.str.punctuation.parenthesis_with_content.replace("__content__", drmNames.join(", "));
         }
 
         // Prevent false-positives
