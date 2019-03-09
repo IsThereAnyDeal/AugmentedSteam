@@ -175,34 +175,34 @@ let StorePageClass = (function(){
         if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
-        let drmString = "(";
-        if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
-        if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
-        if (securom) { drmString += 'SecuROM, '; drm = true; }
-        if (tages) { drmString += 'Tages, '; drm = true; }
-        if (stardock) { drmString += 'Stardock Account Required, '; drm = true; }
-        if (rockstar) { drmString += 'Rockstar Social Club, '; drm = true; }
-        if (kalypso) { drmString += "Kalypso Launcher, "; drm = true; }
-        if (denuvo) { drmString += "Denuvo Anti-tamper, "; drm = true; }
-
-        if (drmString === "(") {
-            drmString = "";
-        } else {
-            drmString = drmString.substring(0, drmString.length - 2);
-            drmString += ")";
-        }
+        let drmNames = [];
+        if (gfwl) { drmNames.push('Games for Windows Live'); }
+        if (uplay) { drmNames.push('Ubisoft Uplay'); }
+        if (securom) { drmNames.push('SecuROM'); }
+        if (tages) { drmNames.push('Tages'); }
+        if (stardock) { drmNames.push('Stardock Account Required'); }
+        if (rockstar) { drmNames.push('Rockstar Social Club'); }
+        if (kalypso) { drmNames.push("Kalypso Launcher"); }
+        if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
+        drm = drm || drmNames.length > 0;
 
         // Prevent false-positives
         if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
 
         if (drm) {
-            let stringType = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            let drmString = "";
+            if (drmNames.length > 0) {
+                drmString = "(" + drmNames.join(", ") + ")";
+            }
+
+            let warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            warnString = warnString.replace("__drmlist__", drmString);
 
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${stringType} ${drmString}</span></div>`)
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`)
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${stringType} ${drmString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
             }
         }
     };
@@ -304,7 +304,7 @@ let StorePageClass = (function(){
                 this.getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${type}/${gameid}`,
-                    Localization.str.view_in + ' Steam Database')
+                    Localization.str.view_on_website.replace("__website__", 'Steam Database'))
                 );
         }
 
@@ -313,7 +313,7 @@ let StorePageClass = (function(){
                 this.getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${type}/${gameid}`,
-                    Localization.str.view_on + ' IsThereAnyDeal')
+                    Localization.str.view_on_website.replace("__website__", 'IsThereAnyDeal'))
             );
         }
     };
@@ -948,14 +948,14 @@ let AppPageClass = (function(){
         let cssClass;
 
         if (wishlistNotes.exists(appid)) {
-            noteText = '"' + wishlistNotes.getNote(appid) + '"';
+            noteText = `"${wishlistNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
             cssClass = "esi-empty-note";
         }
 
-        HTML.afterEnd(document.getElementsByClassName("queue_control_button queue_btn_ignore")[0],
+        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
 
         document.addEventListener("click", function(e) {
@@ -1345,18 +1345,18 @@ let AppPageClass = (function(){
         if (SyncedStorage.get("showprotondb")) {
             let cls = "protondb_btn";
             let url = "https://www.protondb.com/app/" + this.appid;
-            let str = Localization.str.view_in + ' ProtonDB';
+            let str = Localization.str.view_on_website.replace("__website__", 'ProtonDB');
 
             HTML.afterBegin(linkNode,
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-
+        
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
             let cls = "cardexchange_btn";
             let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.communityAppid;
-            let str = Localization.str.view_in + ' Steam Card Exchange';
+            let str = Localization.str.view_on_website.replace("__website__", 'Steam Card Exchange');
 
             HTML.afterBegin(linkNode,
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
@@ -2261,7 +2261,7 @@ let SearchPageClass = (function(){
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
@@ -2718,7 +2718,7 @@ let WishlistPageClass = (function(){
             if (SyncedStorage.get("highlight_wishlist")) {
                 Highlights.highlightWishlist(node);
             } else {
-                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
         
@@ -2779,7 +2779,7 @@ let WishlistPageClass = (function(){
         }
         totalPrice = new Price(totalPrice, Currency.storeCurrency)
 
-        HTML.inner(document.querySelector("#esi-wishlist-chart-content"),
+        HTML.inner("#esi-wishlist-chart-content",
             `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
             <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
             <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
@@ -2885,7 +2885,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (wishlistNotes.exists(appid)) {
-            noteText = '"' + wishlistNotes.getNote(appid) + '"';
+            noteText = `"${wishlistNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2960,7 +2960,7 @@ let WishlistNotes = (function(){
 
     WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname) + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
         if (!this.listenerCreated) {
             let that = this;

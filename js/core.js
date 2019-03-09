@@ -559,6 +559,15 @@ class ExtensionResources {
     }
 }
 
+/**
+ * Allow links to own extension (e.g. options.html)
+ * @see https://github.com/cure53/DOMPurify
+ * Default RegExp: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i;
+ */
+(function() {
+    DOMPurify.setConfig({ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i});
+})();
+
 class HTML {
 
     static escape = function(str) {
@@ -570,6 +579,10 @@ class HTML {
     };
 
     static inner(node, html) {
+        if (typeof(node) === "string") {
+            node = document.querySelector(node);
+        }
+
         node.innerHTML = DOMPurify.sanitize(html);
     }
 

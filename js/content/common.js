@@ -307,7 +307,7 @@ let ProgressBar = (function(){
 
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + "<ul></ul></div>");
             nodeError = node.nextElementSibling;
         }
 
@@ -903,7 +903,7 @@ let EnhancedSteam = (function() {
         if (currentLanguage === warningLanguage) { return; }
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
-            HTML.afterEnd(document.querySelector("#global_header"),
+            HTML.afterEnd("#global_header",
                 `<div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
                     <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>`);
@@ -973,7 +973,7 @@ let EnhancedSteam = (function() {
 
     self.launchRandomButton = function() {
 
-        HTML.beforeEnd(document.querySelector("#es_popup .popup_menu"),
+        HTML.beforeEnd("#es_popup .popup_menu",
             `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
@@ -1734,7 +1734,7 @@ let Prices = (function(){
         // "Lowest Price"
         if (info['price']) {
             if (info['price']['drm'] === "steam" && info['price']['store'] !== "Steam") {
-                activates = "(<b>" + Localization.str.activates + "</b>)";
+                activates = `(<b>${Localization.str.activates}</b>)`;
             }
 
             let infoUrl = HTML.escape(info["urls"]["info"].toString());
@@ -1746,7 +1746,7 @@ let Prices = (function(){
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
                 lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
                 let voucher = HTML.escape(info['price']['voucher']);
-                voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
+                voucherStr = Localization.str.after_coupon.replace("__voucher__", `<b>${voucher}</b>`);
             } else {
                 lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             }
@@ -1759,11 +1759,11 @@ let Prices = (function(){
             
             let lowestStr = Localization.str.lowest_price_format
                 .replace("__price__", prices)
-                .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`)
+                .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`);
 
-            line1 = `${Localization.str.lowest_price}: 
-                             ${lowestStr} ${voucherStr} ${activates}
-                             (<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>)`;
+            let infoStr = `(<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>)`;
+
+            line1 = `${Localization.str.lowest_price} ${lowestStr} ${voucherStr} ${activates} ${infoStr}`;
         }
 
         // "Historical Low"
@@ -1784,7 +1784,8 @@ let Prices = (function(){
 
             let url = HTML.escape(info['urls']['history']);
 
-            line2 = `${Localization.str.historical_low}: ${historicalStr} (<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
+            let infoStr2 = `(<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
+            line2 = `${Localization.str.historical_low} ${historicalStr} ${infoStr2}`;
         }
 
         let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
@@ -1792,7 +1793,7 @@ let Prices = (function(){
 
         // "Number of times this game has been in a bundle"
         if (info["bundles"]["count"] > 0) {
-            line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
+            line3 = Localization.str.bundle.bundle_count.replace("__count__", info['bundles']['count']);
             let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
             if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;

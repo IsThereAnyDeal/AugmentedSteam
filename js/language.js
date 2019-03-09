@@ -1,3 +1,4 @@
+
 class Language {
     static getCurrentSteamLanguage() {
         if (this._currentSteamLanguage != null) {
@@ -85,7 +86,7 @@ class Localization {
 
         function deepAssign(target, source) {
             // Object.assign() but deep-assigning objects recursively
-            for (let [key, val] in source) {
+            for (let [key, val] of Object.entries(source)) {
                 if (typeof val === "object") {
                     deepAssign(target[key], val);
                 } else {
