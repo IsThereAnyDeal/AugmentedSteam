@@ -1,190 +1,3 @@
-
-let Info = {
-    version: "0.9.4"
-};
-
-/**
- * Default settings
- */
-let Defaults = (function() {
-    let self = {};
-
-    self.language = "english";
-    self.highlight_owned_color = "#598400";
-    self.highlight_wishlist_color = "#1483ad";
-    self.highlight_coupon_color = "#a26426";
-    self.highlight_inv_gift_color = "#800040";
-    self.highlight_inv_guestpass_color = "#513c73";
-    self.highlight_notinterested_color = "#4f4f4f";
-
-    self.tag_owned_color = "#5c7836";
-    self.tag_wishlist_color = "#0d80bd";
-    self.tag_coupon_color = "#c27120";
-    self.tag_inv_gift_color = "#b10059";
-    self.tag_inv_guestpass_color = "#65449a";
-    self.tag_notinterested_color = "#4f4f4f";
-
-    self.highlight_owned = true;
-    self.highlight_wishlist = true;
-    self.highlight_coupon = false;
-    self.highlight_inv_gift = false;
-    self.highlight_inv_guestpass = false;
-    self.highlight_notinterested = false;
-    self.highlight_excludef2p = false;
-    self.highlight_notdiscounted = false;
-
-    self.tag_owned = false;
-    self.tag_wishlist = false;
-    self.tag_coupon = false;
-    self.tag_inv_gift = false;
-    self.tag_inv_guestpass = false;
-    self.tag_notinterested = true;
-    self.tag_short = false;
-
-    self.hide_owned = false;
-    self.hide_ignored = false;
-    self.hide_dlcunownedgames = false;
-    self.hide_wishlist = false;
-    self.hide_cart = false;
-    self.hide_notdiscounted = false;
-    self.hide_mixed = false;
-    self.hide_negative = false;
-    self.hide_priceabove = false;
-    self.priceabove_value = "";
-    self.hidetmsymbols = false;
-
-    self.showlowestprice = true;
-    self.showlowestprice_onwishlist = true;
-    self.showlowestpricecoupon = true;
-    self.showallstores = true;
-    self.stores = [];
-    self.override_price = "auto";
-    self.showregionalprice = "mouse";
-    self.regional_countries = ["us", "gb", "eu1", "ru", "br", "au", "jp"];
-
-    self.show_featuredrecommended = true;
-    self.show_specialoffers = true;
-    self.show_trendingamongfriends = true;
-    self.show_browsesteam = true;
-    self.show_curators = true;
-    self.show_morecuratorrecommendations = true;
-    self.show_recentlyupdated = true;
-    self.show_fromdevelopersandpublishersthatyouknow = true;
-    self.show_popularvrgames = true;
-    self.show_gamesstreamingnow = true;
-    self.show_under = true;
-    self.show_updatesandoffers = true;
-    self.show_es_discoveryqueue = true;
-    self.show_es_homepagetabs = true;
-    self.show_es_homepagesidebar = true;
-    self.showmarkettotal = false;
-    self.showsteamrepapi = true;
-    self.showmcus = true;
-    self.showoc = true;
-    self.showhltb = true;
-    self.showpcgw = true;
-    self.showclient = true;
-    self.showsteamcardexchange = false;
-    self.showitadlinks = true;
-    self.showsteamdb = true;
-    self.showastatslink = true;
-    self.showwsgf = true;
-    self.exfgls = true;
-    self.show_apppage_reviews = true;
-    self.show_apppage_about = true;
-    self.show_apppage_surveys = true;
-    self.show_apppage_sysreq = true;
-    self.show_apppage_legal = true;
-    self.show_apppage_morelikethis = true;
-    self.show_apppage_recommendedbycurators = true;
-    self.show_apppage_customerreviews = true;
-    self.show_keylol_links = false;
-    self.show_package_info = false;
-    self.show_sysreqcheck = false;
-    self.show_steamchart_info = true;
-    self.show_steamspy_info = true;
-    self.show_early_access = true;
-    self.show_alternative_linux_icon = false;
-    self.show_itad_button = false;
-    self.skip_got_steam = false;
-
-    self.hideinstallsteambutton = false;
-    self.hideaboutmenu = false;
-    self.keepssachecked = false;
-    self.showemptywishlist = true;
-    self.wishlist_notes = {};
-    self.version_show = true;
-    self.replaceaccountname = true;
-    self.showfakeccwarning = true;
-    self.showlanguagewarning = true;
-    self.showlanguagewarninglanguage = "English";
-    self.homepage_tab_selection = "remember";
-    self.send_age_info = true;
-    self.html5video = true;
-    self.contscroll = true;
-    self.showdrm = true;
-    self.regional_hideworld = false;
-    self.showinvnav = true;
-    self.showesbg = true;
-    self.quickinv = true;
-    self.quickinv_diff = -0.01;
-    self.showallachievements = false;
-    self.showachinstore = true;
-    self.showcomparelinks = false;
-    self.hideactivelistings = false;
-    self.hidespamcomments = false;
-    self.spamcommentregex = "[\\u2500-\\u25FF]";
-    self.wlbuttoncommunityapp = true;
-    self.removeguideslanguagefilter = false;
-    self.disablelinkfilter = false;
-    self.showallfriendsthatown = false;
-    self.show1clickgoo = true;
-    self.show_profile_link_images = "gray";
-    self.profile_steamrepcn = true;
-    self.profile_steamgifts = true;
-    self.profile_steamtrades = true;
-    self.profile_steamrep = true;
-    self.profile_steamdbcalc = true;
-    self.profile_astats = true;
-    self.profile_backpacktf = true;
-    self.profile_astatsnl = true;
-    self.profile_permalink = true;
-    self.profile_custom = false;
-    self.profile_custom_name = "Google";
-    self.profile_custom_url = "google.com/search?q=[ID]";
-    self.profile_custom_icon = "www.google.com/images/branding/product/ico/googleg_lodp.ico";
-    self.steamcardexchange = true;
-    self.purchase_dates = true;
-    self.show_badge_progress = true;
-    self.show_wishlist_link = true;
-    self.show_wishlist_count = true;
-    self.show_progressbar = true;
-
-    return self;
-})();
-
-/**
- * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it
- * https://github.com/domenic/promises-unwrapping/issues/18#issuecomment-57801572
- */
-if (typeof Promise.prototype.finally === 'undefined') {
-    Object.defineProperty(Promise.prototype, 'finally', {
-        'value': function(callback) {
-            var constructor = this.constructor;
-            return this.then(function(value) {
-                return constructor.resolve(callback()).then(function(){
-                    return value;
-                    });
-            }, function(reason) {
-                return constructor.resolve(callback()).then(function(){
-                    console.error(reason);
-                    throw reason;
-                    });
-            });
-        },
-    });
-}
-
 /**
  * Common functions that may be used on any pages
  */
@@ -280,36 +93,6 @@ let DateParser = (function(){
 })();
 
 
-
-let LocalData = (function(){
-
-    let self = {};
-
-    self.set = function(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
-    };
-
-    self.get = function(key, defaultValue) {
-        let v = localStorage.getItem(key);
-        if (!v) return defaultValue;
-        try {
-            return JSON.parse(v);
-        } catch (err) {
-            return defaultValue;
-        }
-    };
-
-    self.del = function(key) {
-        localStorage.removeItem(key);
-    };
-
-    self.clear = function() {
-        localStorage.clear();
-    };
-
-    return self;
-})();
-
 let ExtensionLayer = (function() {
 
     let self = {};
@@ -330,50 +113,47 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
-let SyncedStorage = (function(){
-    let storageAdapter = chrome.storage.sync || chrome.storage.local;
 
-    let localCopy = {};
-    let self = {};
-
-    self.get = function(key) {
-        return typeof localCopy[key] === "undefined" ? Defaults[key] : localCopy[key];
-    };
-
-    self.set = function(key, value) {
-        localCopy[key] = value;
-
-        let newVal = {};
-        newVal[key] = value;
-        storageAdapter.set(newVal);
-    };
-
-    self.remove = function(key) {
-        if (localCopy[key]) {
-            delete localCopy[key];
+class CookieStorage {
+    static get(name, defaultValue) {
+        if (CookieStorage.cache.size === 0) {
+            CookieStorage.init();
         }
-        storageAdapter.remove(key);
-    };
+        name = name.trim();
+        if (!CookieStorage.cache.has(name)) {
+            return defaultValue;
+        }
+        return CookieStorage.cache.get(name);
+    }
 
-    self.clear = function() {
-        localCopy = {};
-        storageAdapter.clear();
-    };
+    static set(name, val, ttl=60*60*24*365) {
+        if (CookieStorage.cache.size === 0) {
+            CookieStorage.init();
+        }
+        name = name.trim();
+        val = val.trim();
+        CookieStorage.cache.set(name, val);
+        name = encodeURIComponent(name);
+        val = encodeURIComponent(val);
+        document.cookie = `${name}=${val}; max-age=${ttl}`;
+    }
 
-    // load whole storage and make local copy
-    self.load = function() {
-        localCopy = Object.assign({}, Defaults);
+    static remove(name) {
+        name = name.trim();
+        CookieStorage.cache.delete(name);
+        name = encodeURIComponent(name);
+        document.cookie = `${name}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    }
 
-        return new Promise(function(resolve, reject) {
-            storageAdapter.get(function(result) {
-                localCopy = Object.assign(localCopy, result);
-                resolve();
-            })
-        });
-    };
-
-    return self;
-})();
+    static init() {
+        CookieStorage.cache.clear();
+        for (let [key, val] of document.cookie.split(';').map(kv => kv.split('='))) {
+            key = key.trim();
+            CookieStorage.cache.set(key, decodeURIComponent(val));
+        }
+    }
+}
+CookieStorage.cache = new Map();
 
 
 let RequestData = (function(){
@@ -404,10 +184,6 @@ let RequestData = (function(){
             request.open("GET", url);
             request.send();
         });
-    };
-
-    self.getLocalJson = function(url) {
-        return self.getJson(ExtensionLayer.getLocalUrl(url));
     };
 
     let totalRequests = 0;
@@ -487,7 +263,7 @@ let ProgressBar = (function(){
 
         let container = document.getElementById("global_actions");
         if (!container) return;
-        container.insertAdjacentHTML("afterend",
+        HTML.afterEnd(container,
             `<div class="es_progress_wrap">
                 <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
                     <div class="progress-inner-element">
@@ -531,7 +307,7 @@ let ProgressBar = (function(){
 
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
-            node.insertAdjacentHTML("afterend", "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + ": <ul></ul></div>");
             nodeError = node.nextElementSibling;
         }
 
@@ -542,87 +318,7 @@ let ProgressBar = (function(){
             }
         }
 
-        nodeError.querySelector("ul").insertAdjacentHTML("beforeend", "<li>" + message + "</li>");
-    };
-
-    return self;
-})();
-
-let Localization = (function(){
-    let self = {};
-
-    self.str = {}; // translated strings
-
-    self.loadLocalization = function(code) {
-        return RequestData.getLocalJson("/localization/" + code + "/strings.json");
-    };
-
-    let _promise = null;
-    self.promise = function(){
-        if (_promise) { return _promise; }
-
-        let currentSteamLanguage = Language.getCurrentSteamLanguage();
-
-        if (currentSteamLanguage !== null && currentSteamLanguage !== SyncedStorage.get("language")) {
-            SyncedStorage.set("language", currentSteamLanguage);
-        } else {
-            currentSteamLanguage = SyncedStorage.get("language");
-        }
-
-        let local = Language.getLanguageCode(currentSteamLanguage);
-
-        _promise = new Promise(function(resolve, reject) {
-
-            let promises = [];
-            promises[0] = self.loadLocalization("en");
-
-            if (local != null) {
-                promises[1] = self.loadLocalization(local);
-            }
-
-            Promise.all(promises)
-                .then(function(values){
-                    self.str = values[0];
-
-                    // merge local language to default
-                    if (values[1]) {
-                        function merge(target, other) {
-                            for (let key in other) {
-                                if (!other.hasOwnProperty(key)) { continue; }
-                                if (typeof other[key] === "object") {
-                                    merge(target[key], other[key]);
-                                } else {
-                                    target[key] = other[key];
-                                }
-                            }
-                        }
-                        merge(self.str, values[1]);
-                    }
-
-                    resolve();
-                }, reject);
-        });
-        return _promise;
-    };
-
-    self.then = function(onDone, onCatch) {
-        return self.promise().then(onDone, onCatch);
-    };
-
-    self.getString = function(key) {
-        // Source: http://stackoverflow.com/a/24221895
-        let path = key.split('.').reverse();
-        let current = self.str;
-
-        while (path.length) {
-            if (typeof current !== 'object') {
-                return undefined;
-            } else {
-                current = current[path.pop()];
-            }
-        }
-
-        return current;
+        HTML.beforeEnd(nodeError.querySelector("ul"), "<li>" + message + "</li>");
     };
 
     return self;
@@ -664,7 +360,7 @@ let User = (function(){
                 self.steamId = login.steamId;
                 // If we're *newly* logged in, then login.userCountry will be set
                 if (login.userCountry) {
-                    LocalData.set("userCountry", login.userCountry);
+                    LocalStorage.set("userCountry", login.userCountry);
                 }
             })
             .catch(err => console.error(err))
@@ -679,14 +375,14 @@ let User = (function(){
 
     self.getAccountId = function(){
         if (accountId === false) {
-            accountId = BrowserHelper.getVariableFromDom("g_AccountID", "int");
+            accountId = HTMLParser.getVariableFromDom("g_AccountID", "int");
         }
         return accountId;
     };
 
     self.getSessionId = function() {
         if (sessionId === false) {
-            sessionId = BrowserHelper.getVariableFromDom("g_sessionID", "string");
+            sessionId = HTMLParser.getVariableFromDom("g_sessionID", "string");
         }
         return sessionId;
     };
@@ -702,9 +398,9 @@ let User = (function(){
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            country = LocalData.get("userCountry");
+            country = LocalStorage.get("userCountry");
             if (!country) {
-                country = BrowserHelper.getCookie("steamCountry");
+                country = CookieStorage.get("steamCountry");
             }
         }
 
@@ -923,7 +619,7 @@ let Currency = (function() {
                 `function(){
                     window.postMessage({
                         type: "es_walletcurrency",
-                        wallet_currency: typeof g_rgWalletInfo !== 'undefined' ? g_rgWalletInfo.wallet_currency : null
+                        wallet_currency: typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null
                     }, "*");
                 }`);
 
@@ -1074,86 +770,10 @@ let Price = (function() {
     return Price;
 })();
 
-let Language = (function(){
+
+let Viewport = (function(){
 
     let self = {};
-
-    self.languages = {
-        "english": "en",
-        "bulgarian": "bg",
-        "czech": "cs",
-        "danish": "da",
-        "dutch": "nl",
-        "finnish": "fi",
-        "french": "fr",
-        "greek": "el",
-        "german": "de",
-        "hungarian": "hu",
-        "italian": "it",
-        "japanese": "ja",
-        "koreana": "ko",
-        "norwegian": "no",
-        "polish": "pl",
-        "portuguese": "pt-PT",
-        "brazilian": "pt-BR",
-        "russian": "ru",
-        "romanian": "ro",
-        "schinese": "zh-CN",
-        "spanish": "es-ES",
-        "latam": "es-419",
-        "swedish": "sv-SE",
-        "tchinese": "zh-TW",
-        "thai": "th",
-        "turkish": "tr",
-        "ukrainian": "ua"
-    };
-
-    let currentSteamLanguage = null;
-
-    self.getCurrentSteamLanguage = function() {
-        if (currentSteamLanguage != null) {
-            return currentSteamLanguage;
-        }
-
-        let nodes = document.querySelectorAll("script[src]");
-
-        for (let i=0; i<nodes.length; i++) {
-            let src = nodes[i].getAttribute("src");
-            let match = src.match(/(?:\?|&(?:amp;)?)l=([^&]+)/);
-            if (match) {
-                currentSteamLanguage = match[1];
-                return currentSteamLanguage;
-            }
-        }
-
-        currentSteamLanguage = BrowserHelper.getCookie("Steam_Language") || null;
-        return currentSteamLanguage;
-    };
-
-    self.getLanguageCode = function(language) {
-        return self.languages[language] ? self.languages[language].toLowerCase() : "en";
-    };
-
-    self.isCurrentLanguageOneOf = function(array) {
-        return array.indexOf(self.getCurrentSteamLanguage()) !== -1;
-    };
-
-    return self;
-})();
-
-let BrowserHelper = (function(){
-
-    let self = {};
-
-    self.getCookie = function(name) {
-        let re = new RegExp(name + "=([^;]+)");
-        let value = re.exec(document.cookie);
-        return (value != null) ? unescape(value[1]) : null;
-    };
-
-    self.escapeHTML = function(str) {
-        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') ;
-    };
 
     // only concerned with vertical at this point
     self.isElementInViewport = function(elem) {
@@ -1171,54 +791,6 @@ let BrowserHelper = (function(){
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     };
 
-
-    self.htmlToDOM = function(html) {
-        let template = document.createElement('template');
-        html = html.trim(); // Never return a text node of whitespace as the result
-        template.innerHTML = html;
-        return template.content;
-    };
-
-    self.htmlToElement = function(html) {
-        return self.htmlToDOM(html).firstElementChild;
-    };
-
-    self.getVariableFromText = function(text, variableName, type) {
-        let regex;
-        if (type === "object") {
-            regex = new RegExp(variableName+"\\s*=\\s*(\\{.+?\\});");
-        } else if (type === "array") { // otherwise array
-            regex = new RegExp(variableName+"\\s*=\\s*(\\[.+?\\]);");
-        } else if (type === "int") {
-            regex = new RegExp(variableName+"\\s*=\\s*(.+?);");
-        } else if (type === "string") {
-            regex = new RegExp(variableName+"\\s*=\\s*(\\\".+?\\\");");
-        } else {
-            return null;
-        }
-
-        let m = text.match(regex);
-        if (m) {
-            if (type === "int") {
-                return parseInt(m[1]);
-            }
-            return JSON.parse(m[1]);
-        }
-
-        return null;
-    };
-
-    self.getVariableFromDom = function(variableName, type, dom) {
-        dom = dom || document;
-        let nodes = dom.querySelectorAll("script");
-        for (let node of nodes) {
-            let m = self.getVariableFromText(node.textContent, variableName, type)
-            if (m) {
-                return m;
-            }
-        }
-    };
-
     return self;
 })();
 
@@ -1226,16 +798,11 @@ let EnhancedSteam = (function() {
 
     let self = {};
 
-    self.checkVersion = function() {
-        let version = LocalData.get("version");
+    self.checkVersion = async function() {
+        let showMessage = SyncedStorage.get("version_updated");
+        SyncedStorage.set("version_updated", false);
 
-        if (!version) {
-            // new instalation detected
-            LocalData.set("version", Info.version);
-            return;
-        }
-
-        if (version === Info.version || !SyncedStorage.get("version_show")) {
+        if (!showMessage || !SyncedStorage.get("version_show")) {
             return;
         }
 
@@ -1254,7 +821,6 @@ let EnhancedSteam = (function() {
                 );
             }
         );
-        LocalData.set("version", Info.version);
 
         window.addEventListener("message", function(event) {
             if (event.source !== window) return;
@@ -1265,8 +831,8 @@ let EnhancedSteam = (function() {
     };
 
     self.addMenu = function() {
-        document.querySelector("#global_action_menu").insertAdjacentHTML("afterBegin", `
-            <div id="es_menu">
+        HTML.afterBegin("#global_action_menu",
+            `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
@@ -1337,11 +903,10 @@ let EnhancedSteam = (function() {
         if (currentLanguage === warningLanguage) { return; }
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
-            document.querySelector("#global_header").insertAdjacentHTML("afterend", `
-                <div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
+            HTML.afterEnd(document.querySelector("#global_header"),
+                `<div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
                     <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
-                </div>
-            `);
+                </div>`);
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
@@ -1368,8 +933,8 @@ let EnhancedSteam = (function() {
         if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
 
         let submenuUsername = document.querySelector(".supernav_container .submenu_username");
-        submenuUsername.querySelector("a").insertAdjacentHTML("afterend", `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
-        submenuUsername.insertAdjacentHTML("beforeend", `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
+        HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
     self.disableLinkFilter = function(){
@@ -1391,8 +956,8 @@ let EnhancedSteam = (function() {
     };
 
     self.addRedeemLink = function() {
-        document.querySelector("#account_dropdown .popup_menu_item:last-child:not(.tight)")
-            .insertAdjacentHTML("beforebegin", `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
+        HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
+            `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
     };
 
     self.replaceAccountName = function() {
@@ -1408,8 +973,8 @@ let EnhancedSteam = (function() {
 
     self.launchRandomButton = function() {
 
-        document.querySelector("#es_popup .popup_menu")
-            .insertAdjacentHTML("beforeend", `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+        HTML.beforeEnd(document.querySelector("#es_popup .popup_menu"),
+            `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
             let result = await DynamicStore;
@@ -1466,8 +1031,7 @@ let EnhancedSteam = (function() {
     self.alternateLinuxIcon = function(){
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
         let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
-        document.querySelector("head")
-            .insertAdjacentHTML("beforeend", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
+        HTML.beforeEnd("head", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
     };
 
     // Hide Trademark and Copyright symbols in game titles for Community pages
@@ -1486,7 +1050,7 @@ let EnhancedSteam = (function() {
         function replaceSymbols(node){
             // tfedor I don't trust this won't break any inline JS
             if (!node ||!node.innerHTML) { return; }
-            node.innerHTML = node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, "")
+            HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
         }
 
         let nodes = document.querySelectorAll(selectors);
@@ -1512,70 +1076,6 @@ let EnhancedSteam = (function() {
 
     return self;
 })();
-
-
-let GameId = (function(){
-    let self = {};
-
-    function parseId(id) {
-        if (!id) { return null; }
-
-        let intId = parseInt(id);
-        if (!intId) { return null; }
-
-        return intId;
-    }
-
-    self.getAppid = function(text) {
-        if (!text) { return null; }
-
-        // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && parseId(m[2]);
-    };
-
-    self.getSubid = function(text) {
-        if (!text) { return null; }
-
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m && parseId(m[2]);
-    };
-
-
-    self.getAppidImgSrc = function(text) {
-        if (!text) { return null; }
-        let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m && parseId(m[2]);
-    };
-
-    self.getAppids = function(text) {
-        let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
-        let res = [];
-        let m;
-        while ((m = regex.exec(text)) != null) {
-            let id = parseId(m[1]);
-            if (id) {
-                res.push(id);
-            }
-        }
-        return res;
-    };
-
-    self.getAppidWishlist = function(text) {
-        if (!text) { return null; }
-        let m = text.match(/game_(\d+)/);
-        return m && parseId(m[1]);
-    };
-
-    self.getAppidFromGameCard = function(text) {
-        if (!text) { return null; }
-        let m = text.match(/\/gamecards\/(\d+)/);
-        return m && parseId(m[1]);
-    };
-
-    return self;
-})();
-
 
 let DOMHelper = (function(){
 
@@ -1632,7 +1132,7 @@ let EarlyAccess = (function(){
                     container.classList.add("es_overlay_container");
                     DOMHelper.wrap(container, imgHeader);
 
-                    container.insertAdjacentHTML("afterbegin", `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+                    HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
                 }
             }
         });
@@ -1830,13 +1330,13 @@ let Highlights = (function(){
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
                 tagCss += '.es_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color") + ' }\n';
             });
-            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
+            HTML.beforeEnd("head", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
         }
 
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
-        if (tags.length == 0) {
-            tags = BrowserHelper.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+        if (tags.length === 0) {
+            tags = HTMLParser.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
@@ -1860,7 +1360,7 @@ let Highlights = (function(){
             else if (node.classList.contains("dailydeal")) { // can't find it
                 root = node.parentNode;
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
-                root.querySelector(".game_purchase_action").insertAdjacentHTML("beforebegin",  + '<div style="clear: right;"></div>');
+                HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
             else if (node.classList.contains("small_cap")) {
                 node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
@@ -1889,11 +1389,12 @@ let Highlights = (function(){
 
                 if (document.querySelector(".game_purchase_action")) {
                     tags.style.float = "left";
-                    root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
-                    root.querySelector(".game_purchase_action").insertAdjacentHTML("beforebegin",  + '<div style="clear: right;"></div>');
+                    let node = root.querySelector(".game_purchase_action");
+                    node.insertAdjacentElement("beforebegin", tags);
+                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
                 } else {
                     tags.style.fload = "right";
-                    root.querySelector(".price").parentNode.insertAdjacentElement("beforebegin", tags);
+                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
                 }
             }
             else if (node.classList.contains("similar_grid_item")) { // can't find it
@@ -1918,7 +1419,7 @@ let Highlights = (function(){
         // Add the tag
         for (let i=0,len=tags.length; i<len; i++) {
             if (!tags[i].querySelector(".es_tag_" + tag)) {
-                tags[i].insertAdjacentHTML("beforeend", '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+                HTML.beforeEnd(tags[i], '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
             }
         }
     }
@@ -1949,7 +1450,7 @@ let Highlights = (function(){
                 hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color") + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
             });
 
-            document.querySelector("head").insertAdjacentHTML("beforeend", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
+            HTML.beforeEnd("head", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
         }
 
         // Carousel item
@@ -2137,8 +1638,8 @@ let DynamicStore = (function(){
         _promise = null;
         _owned = new Set();
         _wishlisted = new Set();
-        LocalData.del("dynamicstore");
-        LocalData.del("dynamicstore_update");
+        LocalStorage.remove("dynamicstore");
+        LocalStorage.remove("dynamicstore_update");
     };
 
     self.isIgnored = function(appid) {
@@ -2236,15 +1737,15 @@ let Prices = (function(){
                 activates = "(<b>" + Localization.str.activates + "</b>)";
             }
 
-            let infoUrl = BrowserHelper.escapeHTML(info["urls"]["info"].toString());
-            let priceUrl = BrowserHelper.escapeHTML(info["price"]["url"].toString());
-            let store = BrowserHelper.escapeHTML(info["price"]["store"].toString());
+            let infoUrl = HTML.escape(info["urls"]["info"].toString());
+            let priceUrl = HTML.escape(info["price"]["url"].toString());
+            let store = HTML.escape(info["price"]["store"].toString());
 
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
                 lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
-                let voucher = BrowserHelper.escapeHTML(info['price']['voucher']);
+                let voucher = HTML.escape(info['price']['voucher']);
                 voucherStr = `${Localization.str.after_coupon} <b>${voucher}</b>`;
             } else {
                 lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
@@ -2278,10 +1779,10 @@ let Prices = (function(){
 
             let historicalStr = Localization.str.historical_low_format
                 .replace("__price__", prices)
-                .replace("__store__", BrowserHelper.escapeHTML(info['lowest']['store']))
+                .replace("__store__", HTML.escape(info['lowest']['store']))
                 .replace("__date__", recorded.toLocaleDateString());
 
-            let url = BrowserHelper.escapeHTML(info['urls']['history']);
+            let url = HTML.escape(info['urls']['history']);
 
             line2 = `${Localization.str.historical_low}: ${historicalStr} (<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
         }
@@ -2292,7 +1793,7 @@ let Prices = (function(){
         // "Number of times this game has been in a bundle"
         if (info["bundles"]["count"] > 0) {
             line3 = `${Localization.str.bundle.bundle_count}: ${info['bundles']['count']}`;
-            let bundlesUrl = BrowserHelper.escapeHTML(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
+            let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
             if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
                 line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
             }
@@ -2422,63 +1923,6 @@ let Prices = (function(){
     };
 
     return Prices;
-})();
-
-let Customizer = (function(){
-    let self = {};
-
-    self.textValue = function(node) {
-        let str = "";
-        for (node=node.firstChild;node;node=node.nextSibling){
-            if (node.nodeType === 3) { str += node.textContent.trim(); }
-        }
-        return str;
-    };
-
-    self.addToggleHandler = function(name, target, text, forceShow, callback) {
-        let element = typeof target === "string" ? document.querySelector(target) : target;
-        if (!element && !forceShow) { return; }
-
-        let state = SyncedStorage.get(name);
-        text = (typeof text === "string" && text) || self.textValue(element.querySelector("h2")).toLowerCase();
-        if (text === "") { return; }
-
-        document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !SyncedStorage.get(name, true));
-
-        if (element) {
-            element.classList.toggle("es_hide", !SyncedStorage.get(name));
-
-            if (element.classList.contains("es_hide")) {
-                element.style.display = "none";
-            }
-        }
-
-        document.querySelector("#es_customize_btn .home_viewsettings_popup").insertAdjacentHTML("beforeend",
-            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${SyncedStorage.get(name) ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>
-            `);
-
-        document.querySelector("#" + name).addEventListener("click", function(e) {
-            state = !state;
-
-            if (element) {
-                element.classList.remove("es_show");
-                element.classList.remove("es_hide");
-                element.style.display = state ? "block" : "none";
-            }
-
-            e.target.closest(".home_viewsettings_checkboxrow").querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-            document.querySelector("body").classList.toggle(name.replace("show_", "es_") + "_hidden", !state);
-
-            SyncedStorage.set(name, state);
-
-            if (callback) { callback(); }
-        });
-    };
-
-    return self;
 })();
 
 let AgeCheck = (function(){

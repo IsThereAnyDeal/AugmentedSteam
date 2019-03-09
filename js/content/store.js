@@ -1,10 +1,97 @@
 
+class Customizer {
+
+    constructor(settingsName) {
+        this.settingsName = settingsName;
+        this.settings = SyncedStorage.get(settingsName);
+    }
+
+    _textValue(node) {
+        let str = "";
+        for (node = node.firstChild; node; node = node.nextSibling) {
+            if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
+                str += node.textContent.trim();
+            }
+        }
+        return str;
+    };
+
+    _updateValue(name, value) {
+        this.settings[name] = value;
+        SyncedStorage.set(this.settingsName, this.settings);
+    }
+
+    _getValue(name) {
+        let value = this.settings[name];
+        return (typeof value === "undefined") || value;
+    }
+
+    add(name, target, text, forceShow, callback) {
+
+        let element = (typeof target === "string" ? document.querySelector(target) : target);
+        if (!element && !forceShow) {
+            return this;
+        }
+
+        text = (typeof text === "string" && text) || this._textValue(element.querySelector("h2")).toLowerCase();
+        if (text === "") {
+            return this;
+        }
+
+        let state = this._getValue(name);
+
+        if (element) {
+            element.classList.toggle("esi-shown", state);
+            element.classList.toggle("esi-hidden", !state);
+            element.classList.add("esi-customizer"); // for dynamic entries on home page
+        }
+
+        HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
+            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>`);
+
+        let that = this;
+        document.querySelector("#" + name).addEventListener("click", function(e) {
+            state = !state;
+
+            if (element) {
+                element.classList.toggle("esi-shown", state);
+                element.classList.toggle("esi-hidden", !state);
+            }
+
+            e.target.closest(".home_viewsettings_checkboxrow")
+                .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+
+            that._updateValue(name, state);
+
+            if (callback) {
+                callback();
+            }
+        });
+
+        return this;
+    };
+
+    addDynamic(titleNode, targetNode) {
+        let textValue = this._textValue(titleNode);
+
+        console.warn("Node with textValue %s is not recognized!", textValue);
+        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
+        if (option === "") { return; }
+
+        this.add("dynamic_"+option, targetNode, textValue);
+    }
+}
+
 let StorePageClass = (function(){
 
     function StorePageClass() {
-
+        this.hasCards = document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
     }
 
+    // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
     StorePageClass.prototype.isAppPage = function() {
         return /^\/app\/\d+/.test(window.location.pathname);
     };
@@ -23,10 +110,6 @@ let StorePageClass = (function(){
 
     StorePageClass.prototype.isOwned = function() {
         return document.querySelector(".game_area_already_owned") ? true :false;
-    };
-
-    StorePageClass.prototype.hasCards = function() {
-        return document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
     };
 
     StorePageClass.prototype.hasAchievements = function(){
@@ -117,9 +200,9 @@ let StorePageClass = (function(){
 
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                node.insertAdjacentHTML("afterend", '<div class="game_area_already_owned es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>')
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${stringType} ${drmString}</span></div>`)
             } else {
-                document.querySelector("#game_area_purchase").insertAdjacentHTML("afterbegin", '<div class="es_drm_warning"><span>' + stringType + ' ' + drmString + '</span></div>');
+                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${stringType} ${drmString}</span></div>`);
             }
         }
     };
@@ -163,16 +246,18 @@ let StorePageClass = (function(){
                 }
             }
 
-            node.insertAdjacentHTML(placement, html);
-            document.querySelector("#es_line_chart_"+id).style.top = ((document.querySelector("#es_price_"+id).offsetHeight - 20) / 2) + "px";
+            HTML.adjacent(node, placement, html);
+
+            let height = (document.querySelector("#es_price_"+id).offsetHeight - 20) / 2;
+            document.querySelector("#es_line_chart_"+id).style.top = height + "px";
 
         };
 
         prices.bundleCallback = function(html) {
 
-            document.querySelector("#game_area_purchase")
-                .insertAdjacentHTML("afterend", "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
-                    + html);
+            HTML.afterEnd("#game_area_purchase",
+                "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
+                + html);
         };
 
         prices.load();
@@ -215,7 +300,7 @@ let StorePageClass = (function(){
         if (!node) { return; }
 
         if (SyncedStorage.get("showsteamdb")) {
-            node.insertAdjacentHTML("afterbegin",
+            HTML.afterBegin(node,
                 this.getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${type}/${gameid}`,
@@ -224,7 +309,7 @@ let StorePageClass = (function(){
         }
 
         if (SyncedStorage.get("showitadlinks")) {
-            node.insertAdjacentHTML("afterbegin",
+            HTML.afterBegin(node,
                 this.getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${type}/${gameid}`,
@@ -275,7 +360,7 @@ let StorePageClass = (function(){
                 pricingDiv.classList.add("es_regional_" + (type || "app"));
 
                 if (showRegionalPrice === "mouse") {
-                    pricingDiv.innerHTML += '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>';
+                    HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
                 }
 
                 countries.forEach(country => {
@@ -310,7 +395,7 @@ let StorePageClass = (function(){
                             </div>`;
                     }
 
-                    pricingDiv.innerHTML += html;
+                    HTML.inner(pricingDiv, pricingDiv.innerHTML + html);
                 });
 
                 let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
@@ -379,8 +464,8 @@ let SubPageClass = (function() {
             notOwnedTotalPrice -= packagePrice.value;
 
             if (!document.querySelector("#package_savings_bar")) {
-                document.querySelector(".package_totals_area")
-                    .insertAdjacentHTML("beforeend", "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                HTML.beforeEnd(".package_totals_area",
+                    "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
             }
 
             notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency)
@@ -388,7 +473,7 @@ let SubPageClass = (function() {
             let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
 
             let savingsNode = document.querySelector(".savings");
-            savingsNode.insertAdjacentHTML("beforebegin", html);
+            HTML.beforeBegin(savingsNode, html);
             savingsNode.remove();
         }, 500); // why is this here?
     };
@@ -428,6 +513,14 @@ let AppPageClass = (function(){
         wishlistNotes = new WishlistNotes();
 
         this.appid = GameId.getAppid(url);
+
+        // Some games (e.g. 201270, 201271) have different appid in store page and community
+        let communityAppidSrc = document.querySelector(".apphub_AppIcon img").getAttribute("src");
+        this.communityAppid = GameId.getAppidImgSrc(communityAppidSrc);
+        if (!this.communityAppid) {
+            this.communityAppid = this.appid;
+        }
+
         let metalinkNode = document.querySelector("#game_area_metalink a");
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
 
@@ -481,12 +574,11 @@ let AppPageClass = (function(){
         let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
 
         if (details) {
-            document.querySelector("#highlight_player_area").insertAdjacentHTML("beforeend", `
-                <div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
+            HTML.beforeEnd("#highlight_player_area",
+                `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
                     <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
                     <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
-                </div>
-            `);
+                </div>`);
         }
 
         // Initiate tooltip
@@ -515,7 +607,7 @@ let AppPageClass = (function(){
         }
 
 
-        var expandSlider = LocalData.get("expand_slider") || false;
+        var expandSlider = LocalStorage.get("expand_slider", false);
         if (expandSlider === true) {
             buildSideDetails();
 
@@ -567,7 +659,7 @@ let AppPageClass = (function(){
             function saveSlider(ev) {
                 container.removeEventListener('transitionend', saveSlider, false);
                 // Save slider state
-                LocalData.set('expand_slider', el.classList.contains('es_expanded'));
+                LocalStorage.set('expand_slider', el.classList.contains('es_expanded'));
 
                 // If slider was contracted show the extended details
                 if (!el.classList.contains('es_expanded')) {
@@ -594,7 +686,7 @@ let AppPageClass = (function(){
         let movieNode = document.querySelector('div.highlight_movie');
         if (!movieNode) { return; }
 
-        let playInHD = LocalData.get('playback_hd');
+        let playInHD = LocalStorage.get('playback_hd');
 
         // Add HD Control to each video as it's added to the DOM
         let firstVideoIsPlaying = movieNode.querySelector('video.highlight_movie');
@@ -631,7 +723,7 @@ let AppPageClass = (function(){
                 toggleVideoDefinition(n, playInHD);
             }
 
-            LocalData.set('playback_hd', playInHD);
+            LocalStorage.set('playback_hd', playInHD);
         }
 
         // When the slider is expanded first time after the page was loaded set videos definition to HD
@@ -644,11 +736,11 @@ let AppPageClass = (function(){
             for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
                 toggleVideoDefinition(node, true);
             }
-            LocalData.set('playback_hd', true);
+            LocalStorage.set('playback_hd', true);
         }
 
         function addHDControl(videoControl) {
-            playInHD = LocalData.get('playback_hd');
+            playInHD = LocalStorage.get('playback_hd');
             
             function _addHDControl() {
                 // Add "HD" button and "sd-src" to the video and set definition
@@ -656,7 +748,7 @@ let AppPageClass = (function(){
                     videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
-                        node.insertAdjacentHTML('afterend', `<div class="es_hd_toggle"><span>HD</span></div>`);
+                        HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
                     }
                 }
 
@@ -713,7 +805,7 @@ let AppPageClass = (function(){
             let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
                 videoIsHD = false,
                 loadedSrc = videoControl.classList.contains("es_loaded_src"),
-                playInHD = LocalData.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+                playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
             let videoPosition = videoControl.currentTime || 0,
                 videoPaused = videoControl.paused;
@@ -772,12 +864,12 @@ let AppPageClass = (function(){
         // there is no add to wishlist button and game is not purchased yet, add required nodes
         if (!document.querySelector("#add_to_wishlist_area") && !document.querySelector(".game_area_already_owned")) {
             let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            firstButton.insertAdjacentHTML("beforebegin", "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+            HTML.beforeEnd(firstButton, "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
 
             let wishlistArea = document.querySelector("#add_to_wishlist_area_success");
             DOMHelper.wrap(wishlistArea, firstButton);
-            wishlistArea.insertAdjacentHTML("beforebegin", `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
-            wishlistArea.insertAdjacentHTML("beforebegin", `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
+            HTML.beforeBegin(wishlistArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
+            HTML.beforeBegin(wishlistArea, `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
         }
 
         let successNode = document.querySelector("#add_to_wishlist_area_success");
@@ -787,8 +879,9 @@ let AppPageClass = (function(){
         if (!imgNode) { return; }
 
         imgNode.classList.add("es-in-wl");
-        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />`);
-        imgNode.insertAdjacentHTML("beforebegin", `<img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
+        HTML.beforeBegin(imgNode,
+            `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />
+             <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
         successNode.addEventListener("click", function(e){
             e.preventDefault();
@@ -828,7 +921,7 @@ let AppPageClass = (function(){
         if (wishlistarea && wishlistarea.style.display !== "none") {
             _addWishlistNote(this.appid);
         }
-    }
+    };
 
     AppPageClass.prototype.addWishlistNoteObserver = function() {
         if (!User.isSignedIn) { return; }
@@ -847,7 +940,7 @@ let AppPageClass = (function(){
         });
 
         observer.observe(wishlistarea, {attributes: true, attributeFilter: ["style"]});
-    }
+    };
 
     let _addWishlistNote = function(appid) {
 
@@ -862,7 +955,7 @@ let AppPageClass = (function(){
             cssClass = "esi-empty-note";
         }
 
-        document.getElementsByClassName("queue_control_button queue_btn_ignore")[0].insertAdjacentHTML("afterend",
+        HTML.afterEnd(document.getElementsByClassName("queue_control_button queue_btn_ignore")[0],
             "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
 
         document.addEventListener("click", function(e) {
@@ -870,7 +963,7 @@ let AppPageClass = (function(){
 
             wishlistNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
         });
-    }
+    };
 
     AppPageClass.prototype.getFirstSubid = function() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
@@ -886,25 +979,24 @@ let AppPageClass = (function(){
 
             let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
 
-            let purchaseArea = document.querySelector("#game_area_purchase");
-            purchaseArea.insertAdjacentHTML("beforebegin", `
-<div class="early_access_header">
-    <div class="heading">
-        <h1 class="inset">${Localization.str.coupon_available}</h1>
-        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
-        <p>${Localization.str.coupon_learn_more}</p>
-    </div>
-    <div class="devnotes">
-        <div style="display:flex;padding-top:10px">
-            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
-            <div style="display:flex;flex-direction:column;margin-left:10px">
-                <h1>${coupon.title}</h1>
-                <div>${coupon.discount_note || ""}</div>
-                <div style="color:#a75124">${couponDate}</div>
-            </div>
-        </div>
-    </div>
-</div>`);
+            HTML.beforeBegin("#game_area_purchase",
+                `<div class="early_access_header">
+                    <div class="heading">
+                        <h1 class="inset">${Localization.str.coupon_available}</h1>
+                        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
+                        <p>${Localization.str.coupon_learn_more}</p>
+                    </div>
+                    <div class="devnotes">
+                        <div style="display:flex;padding-top:10px">
+                            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
+                            <div style="display:flex;flex-direction:column;margin-left:10px">
+                                <h1>${coupon.title}</h1>
+                                <div>${coupon.discount_note || ""}</div>
+                                <div style="color:#a75124">${couponDate}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
 
             // TODO show price in purchase box
         });
@@ -917,15 +1009,15 @@ let AppPageClass = (function(){
         Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
             for(let item of response) {
                 let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
-                let title = BrowserHelper.escapeHTML(item.desc);
-                let name = BrowserHelper.escapeHTML(item.name);
+                let title = HTML.escape(item.desc);
+                let name = HTML.escape(item.name);
                 html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
             }
         }).finally(() => {
             let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
             html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
 
-            document.querySelector("#category_block").parentNode.insertAdjacentHTML("beforebegin", html);            
+            HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
         });
     };
 
@@ -940,7 +1032,7 @@ let AppPageClass = (function(){
 
             let metauserscore = response.data.userscore * 10;
             if (!isNaN(metauserscore)) {
-                node.insertAdjacentHTML("afterend", "<div id='game_area_userscore'></div>");
+                HTML.afterEnd(node, "<div id='game_area_userscore'></div>");
 
                 let rating;
                 if (metauserscore >= 75) {
@@ -950,9 +1042,10 @@ let AppPageClass = (function(){
                 } else {
                     rating = "low";
                 }
-                document.querySelector("#game_area_userscore")
-                    .insertAdjacentHTML("beforeend", `<div class='score ${rating}'>${metauserscore}</div>
-                           <div class='logo'></div><div class='wordmark'><div class='metacritic'>${Localization.str.user_score}</div></div>`)
+
+                HTML.beforeEnd("#game_area_userscore",
+                    `<div class='score ${rating}'>${metauserscore}</div>
+                    <div class='logo'></div><div class='wordmark'><div class='metacritic'>${Localization.str.user_score}</div></div>`)
             }
         });
     };
@@ -970,33 +1063,32 @@ let AppPageClass = (function(){
             if (!node) {
                 node = document.querySelector("#ReportAppBtn").parentNode;
             }
-            node.parentNode.insertAdjacentHTML("afterend", "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
+            HTML.afterEnd(node.parentNode,  "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
 
             let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
             let award = data.award || "NA";
 
-            document.querySelector("#game_area_opencritic")
-                .insertAdjacentHTML("beforeend",
-                    `<div class='score ${award.toLowerCase()}'>${data.score}</div>
-                           <div><img src='${opencriticImg}'></div>
-                           <div class='oc_text'>${award} - 
-                               <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                           </div>`);
+            HTML.beforeEnd("#game_area_opencritic",
+            `<div class='score ${award.toLowerCase()}'>${data.score}</div>
+                   <div><img src='${opencriticImg}'></div>
+                   <div class='oc_text'>${award} - 
+                       <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
+                   </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
                 let reviewsNode = document.querySelector("#game_area_reviews");
                 if (reviewsNode) {
-                    reviewsNode.querySelector("p").insertAdjacentHTML("afterbegin", "<div id='es_opencritic_reviews'></div>");
-                    reviewsNode.querySelector("p").insertAdjacentHTML("beforeend", `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`);
+                    let node = reviewsNode.querySelector("p");
+                    HTML.afterBegin(node, "<div id='es_opencritic_reviews'></div>");
+                    HTML.beforeEnd(node,  `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`);
                 } else {
-                    document.querySelector("#game_area_description")
-                        .insertAdjacentHTML("beforebegin",
-                            `<div id='game_area_reviews' class='game_area_description'>
-                                    <h2>${Localization.str.reviews}</h2>
-                                    <div id='es_opencritic_reviews'></div>
-                                    <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
-                                </div>`);
+                    HTML.beforeBegin("#game_area_description",
+                    `<div id='game_area_reviews' class='game_area_description'>
+                            <h2>${Localization.str.reviews}</h2>
+                            <div id='es_opencritic_reviews'></div>
+                            <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
+                          </div>`);
 
                     if (!SyncedStorage.get("show_apppage_reviews")) {
                         document.querySelector("#game_area_reviews").style.display = "none";
@@ -1010,7 +1102,7 @@ let AppPageClass = (function(){
                     review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
                 }
 
-                document.querySelector("#es_opencritic_reviews").insertAdjacentHTML("beforeend", review_text);
+                HTML.beforeEnd("#es_opencritic_reviews", review_text);
                 ExtensionLayer.runInPageContext("function() { BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ); }");
             }
         });
@@ -1026,8 +1118,8 @@ let AppPageClass = (function(){
 
         User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
             if (!date) { return; }
-            document.querySelector(".game_area_already_owned .already_in_library")
-                .insertAdjacentHTML("beforeend", ` ${Localization.str.purchase_date.replace("__date__", date)}`);
+            HTML.beforeEnd(".game_area_already_owned .already_in_library",
+                ` ${Localization.str.purchase_date.replace("__date__", date)}`);
         });
     };
 
@@ -1143,17 +1235,17 @@ let AppPageClass = (function(){
             }
 
 
-            let wsgfUrl = BrowserHelper.escapeHTML(path);
+            let wsgfUrl = HTML.escape(path);
 
             let html = "<div class='block responsive_apppage_details_right heading'>"+Localization.str.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
-            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(wsg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(mmg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(uws_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + BrowserHelper.escapeHTML(fkg_icon) + "' height='120' title='" + BrowserHelper.escapeHTML(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(wsg_icon) + "' height='120' title='" + HTML.escape(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(mmg_icon) + "' height='120' title='" + HTML.escape(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(uws_icon) + "' height='120' title='" + HTML.escape(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
+            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(fkg_icon) + "' height='120' title='" + HTML.escape(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
             if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + wsgfUrl + "'>" + Localization.str.rating_details + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
             html += "</div></div></div></div>";
 
-            node.insertAdjacentHTML("afterend", html);
+            HTML.afterEnd(node, html);
         });
     };
 
@@ -1172,23 +1264,23 @@ let AppPageClass = (function(){
                             <div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
 
                 if (data["main_story"]){
-                    let value = BrowserHelper.escapeHTML(data['main_story']);
+                    let value = HTML.escape(data['main_story']);
                     html += `<b>${Localization.str.hltb.main}:</b><span style='float: right;'>${value}</span><br>`;
                 }
                 if (data["main_extras"]){
-                    let value = BrowserHelper.escapeHTML(data['main_extras']);
+                    let value = HTML.escape(data['main_extras']);
                     html += `<b>${Localization.str.hltb.main_e}:</b><span style='float: right;'>${value}</span><br>`;
                 }
                 if (data["comp"]) {
-                    let value = BrowserHelper.escapeHTML(data['comp']);
+                    let value = HTML.escape(data['comp']);
                     html += `<b>${Localization.str.hltb.compl}:</b><span style='float: right;'>${value}</span><br>`;
                 }
 
                 let suggestUrl = Config.PublicHost + "/gamedata/hltb_link_suggest.php";
 
                 html += "</div>"
-                    + "<a class='linkbar' href='" + BrowserHelper.escapeHTML(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "<a class='linkbar' href='" + BrowserHelper.escapeHTML(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "<a class='linkbar' href='" + HTML.escape(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
+                    + "<a class='linkbar' href='" + HTML.escape(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
                     + "<a class='linkbar' href='" + suggestUrl + "' id='suggest'>" + Localization.str.hltb.wrong + " - " + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
                     + "</div></div></div>";
 
@@ -1201,12 +1293,13 @@ let AppPageClass = (function(){
                     + "</div></div></div>";
             }
 
-            document.querySelector("div.game_details").insertAdjacentHTML("afterend", html);
+            HTML.afterEnd("div.game_details", html);
 
             let suggest = document.querySelector("#suggest");
             if (suggest) { // FIXME consequence of the above FIXME
                 suggest.addEventListener("click", function(){
-                    LocalData.del("storePageData_" + this.appid);
+                    LocalStorage.remove("storePageData_" + this.appid);
+                    Background.action('storepagedata.expire', { 'appid': this.appid, });
                 });
             }
         });
@@ -1234,8 +1327,8 @@ let AppPageClass = (function(){
             let url = "steam://url/StoreAppPage/" + this.appid;
             let str = Localization.str.viewinclient;
 
-            linkNode.insertAdjacentHTML("afterbegin",
-                `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+            HTML.afterBegin(linkNode,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
 
@@ -1244,21 +1337,30 @@ let AppPageClass = (function(){
             let url = "http://pcgamingwiki.com/api/appid.php?appid=" + this.appid;
             let str = Localization.str.wiki_article.replace("__pcgw__","PCGamingWiki");
 
-            linkNode.insertAdjacentHTML("afterbegin",
-                `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+            HTML.afterBegin(linkNode,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+        }
+        
+        if (SyncedStorage.get("showprotondb")) {
+            let cls = "protondb_btn";
+            let url = "https://www.protondb.com/app/" + this.appid;
+            let str = Localization.str.view_in + ' ProtonDB';
+
+            HTML.afterBegin(linkNode,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
 
-        if (SyncedStorage.get("showsteamcardexchange")) {
-            if (document.querySelector(".icon img[src$='/ico_cards.png'")) { // has trading cards
-                let cls = "cardexchange_btn";
-                let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.appid;
-                let str = Localization.str.view_in + ' Steam Card Exchange';
+        if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
+            // FIXME some dlc have card category yet no card
+            let cls = "cardexchange_btn";
+            let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.communityAppid;
+            let str = Localization.str.view_in + ' Steam Card Exchange';
 
-                linkNode.insertAdjacentHTML("afterbegin",
-                    `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-            }
+            HTML.afterBegin(linkNode,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
+                <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
     };
 
@@ -1277,7 +1379,7 @@ let AppPageClass = (function(){
             if (!result.exfgls || !result.exfgls.excluded) { return; }
 
             let str = Localization.str.family_sharing_notice;
-            document.querySelector("#game_area_purchase").insertAdjacentHTML("beforebegin",
+            HTML.beforeBegin("#game_area_purchase",
                 `<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">${str}</div><div class="notice_box_bottom"></div></div>`);
         });
     };
@@ -1293,7 +1395,7 @@ let AppPageClass = (function(){
             let subid = node.querySelector("input[name=subid]").value;
             if (!subid) { continue; }
 
-            node.querySelector(".game_purchase_action").insertAdjacentHTML("afterbegin",
+            HTML.afterBegin(".game_purchase_action",
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
@@ -1309,14 +1411,14 @@ let AppPageClass = (function(){
         let chart = result.charts.chart;
         let html = '<div id="steam-charts" class="game_area_description"><h2>' + Localization.str.charts.current + '</h2>';
             html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + BrowserHelper.escapeHTML(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
+                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
             html += '</div>';
             html += '<span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span>';
             html += '</div>';
 
-        document.querySelector(".sys_req").parentNode.insertAdjacentHTML("beforebegin", html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
     }
 
     function addSteamSpy(result) {
@@ -1343,8 +1445,8 @@ let AppPageClass = (function(){
         let appid = this.appid;
 
         let owners = result.steamspy.owners.split("..")
-        let owners_from = BrowserHelper.escapeHTML(owners[0].trim());
-        let owners_to = BrowserHelper.escapeHTML(owners[1].trim());
+        let owners_from = HTML.escape(owners[0].trim());
+        let owners_to = HTML.escape(owners[1].trim());
         let averageTotal = getTimeString(result.steamspy.average_forever);
         let average2weeks = getTimeString(result.steamspy.average_2weeks);
 
@@ -1357,13 +1459,13 @@ let AppPageClass = (function(){
             html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
             html += "</div>";
 
-        document.querySelector(".sys_req").parentNode.insertAdjacentHTML("beforebegin", html);
+        HTML.beforeBegin(".sys_req", html);
     }
 
     function addSurveyData(result) {
         if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
-        if (!SyncedStorage.get("show_apppage_surveys") || !result.survey) { return; }
+        if (!result.survey) { return; }
 
         let survey = result.survey;
         let appid = this.appid;
@@ -1437,7 +1539,7 @@ let AppPageClass = (function(){
 
         html += "</div>";
 
-        document.querySelector(".sys_req").parentNode.insertAdjacentHTML("beforebegin", html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
     }
 
     AppPageClass.prototype.addStats = function(){
@@ -1453,18 +1555,14 @@ let AppPageClass = (function(){
 
     AppPageClass.prototype.addDlcCheckboxes = function() {
         let nodes = document.querySelectorAll(".game_area_dlc_row");
-        if (nodes.length == 0) { return; }
+        if (nodes.length === 0) { return; }
         let expandedNode = document.querySelector("#game_area_dlc_expanded");
 
         if (expandedNode) {
-            expandedNode
-                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
-
-            document.querySelector(".game_area_dlc_section")
-                .insertAdjacentHTML("afterend", "<div style='clear: both;'></div>");
+            HTML.afterEnd(expandedNode,  "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+            HTML.afterEnd(".game_area_dlc_section", "<div style='clear: both;'></div>");
         } else {
-            document.querySelector(".gameDlcBlocks")
-                .insertAdjacentHTML("afterend", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+            HTML.afterEnd(".gameDlcBlocks", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
         }
 
         let form = document.createElement("form");
@@ -1485,22 +1583,20 @@ let AppPageClass = (function(){
             if (node.querySelector("input")) {
                 let value = node.querySelector("input").value;
 
-                node.querySelector(".game_area_dlc_name")
-                    .insertAdjacentHTML("afterbegin", "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
+                HTML.afterBegin(
+                    node.querySelector(".game_area_dlc_name"),
+                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
             } else {
                 node.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
         }
 
-        document.querySelector(".game_area_dlc_section .gradientbg")
-            .insertAdjacentHTML("afterend", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
+        HTML.afterEnd(".game_area_dlc_section .gradientbg", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
-        document.querySelector("#es_dlc_option_panel")
-            .insertAdjacentHTML("afterbegin", `
-                <div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
-                <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
-                <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>
-            `);
+        HTML.afterBegin("#es_dlc_option_panel",
+            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
+             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
+             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>`);
 
         document.querySelector("#unowned_dlc_check").addEventListener("click", function () {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
@@ -1523,8 +1619,8 @@ let AppPageClass = (function(){
             }
         });
 
-        document.querySelector(".game_area_dlc_section .gradientbg")
-            .insertAdjacentHTML("beforeend", "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
+        HTML.beforeBegin(".game_area_dlc_section .gradientbg",
+            "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
 
         document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
             document.querySelector("#es_dlc_option_panel")
@@ -1541,7 +1637,7 @@ let AppPageClass = (function(){
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
             let cartNode = document.querySelector("#es_selected_cart");
-            cartNode.innerHTML = "<input type=\"hidden\" name=\"action\" value=\"add_to_cart\"><input type=\"hidden\" name=\"sessionid\" value=\"" + User.getSessionId() + "\">"
+            HTML.inner(cartNode, `<input type="hidden" name="action" value="add_to_cart"><input type="hidden" name="sessionid" value="${User.getSessionId()}">`);
 
             let nodes = document.querySelectorAll(".es_dlc_selection:checked");
             for (let i=0, len=nodes.length; i<len; i++) {
@@ -1561,41 +1657,37 @@ let AppPageClass = (function(){
     };
 
     AppPageClass.prototype.addBadgeProgress = function(){
+        if (!this.hasCards) { return; }
         if (!User.isSignedIn) { return; }
         if (!SyncedStorage.get("show_badge_progress")) { return; }
-        if (!this.hasCards()) { return; }
 
-        let appid = this.appid;
+        HTML.beforeEnd("head", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
+        HTML.afterEnd("#category_block",
+            `<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
+                ${Localization.str.badge_progress}
+            </div>
+            <div id="es_badge_progress_content" class="block responsive_apppage_details_right">
+                <div class="block_content_inner es_badges_progress_block" style="display:none;">
+                    <div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
+                    <div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
+                </div>
+            </div>`);
 
-        document.querySelector("head")
-            .insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
+        let appid = this.communityAppid;
 
-        document.querySelector("#category_block").insertAdjacentHTML("afterend", `
-					<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
-						${Localization.str.badge_progress}
-					</div>
-					<div id="es_badge_progress_content" class="block">
-						<div class="block_content_inner es_badges_progress_block" style="display:none;">
-							<div class="es_normal_badge_progress es_progress_block" style="display:none;"></div>
-							<div class="es_foil_badge_progress es_progress_block" style="display:none;"></div>
-						</div>
-					</div>
-				`);
-
-        Background.action('cards', { 'appid': this.appid, } )
+        Background.action('cards', { 'appid': appid, } )
             .then(result => loadBadgeContent(".es_normal_badge_progress", result));
-        Background.action('cards', { 'appid': this.appid, 'border': 1, } )
+        Background.action('cards', { 'appid': appid, 'border': 1, } )
             .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
-            let dummy = BrowserHelper.htmlToDOM(result);
+            let dummy = HTMLParser.htmlToDOM(result);
             
-            // The badges_sheet class only appears when the users badge for this game couldn't get found
-            if (!dummy.querySelector(".badges_sheet")) {
-                let badge = dummy.querySelector(".badge_current");
-                if (badge) {
-                    displayBadgeInfo(targetSelector, badge);
-                }
+            // grap badge and game cards
+            // when there is no badge (e.g. dlc), badge_gamecard_page class won't appear
+            let badge = dummy.querySelector(".badge_gamecard_page");
+            if (badge) {
+                displayBadgeInfo(targetSelector, badge);
             } else {
                 if (document.getElementById("es_badge_progress")) {
                     document.getElementById("es_badge_progress").remove();
@@ -1606,50 +1698,49 @@ let AppPageClass = (function(){
 
         function displayBadgeInfo(targetSelector, badgeNode) {
             let blockSel = document.querySelector(targetSelector);
-            blockSel.append(badgeNode);
 
-            if (!badgeNode.querySelector(".friendPlayerLevelNum")) {
-                let progress;
-                let card_num_owned = badgeNode.querySelectorAll(".badge_detail_tasks .owned").length;
-                let card_num_total = badgeNode.querySelectorAll(".badge_detail_tasks .badge_card_set_card").length;
-                let progress_text_length = (progress = badgeNode.querySelector(".gamecard_badge_progress")) ? progress.textContent.trim().length : 0;
-                let next_level_empty_badge = badgeNode.querySelectorAll(".gamecard_badge_progress .badge_info").length;
-                let badge_completed = (progress_text_length > 0 && next_level_empty_badge == 0);
-                let show_card_num = (card_num_owned > 0 && progress_text_length === 0) || (card_num_owned > 0 && !badge_completed);
-                let is_normal_badge = targetSelector === ".es_normal_badge_progress";
+            // show Steam badge info card
+            let badge = badgeNode.querySelector(".badge_current");
+            blockSel.append(badge);
 
-                if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
-                    document.querySelector(".es_badges_progress_block").style.display='block';
-                    blockSel.style.display = "block";
+            // count card
+            let card_num_owned = badgeNode.querySelectorAll(".badge_detail_tasks .owned").length;
+            let card_num_total = badgeNode.querySelectorAll(".badge_detail_tasks .badge_card_set_card").length;
+            // check if badge is completed
+            let progress;
+            let progress_text_length = (progress = badgeNode.querySelector(".gamecard_badge_progress")) ? progress.textContent.trim().length : 0;
+            let next_level_empty_badge = badgeNode.querySelectorAll(".gamecard_badge_progress .badge_info").length;
+            let badge_completed = (progress_text_length > 0 && next_level_empty_badge === 0);
 
-                    let progressBold = badgeNode.querySelector(".progress_info_bold");
+            let show_card_num = (card_num_owned > 0 && !badge_completed);
+            let is_normal_badge = targetSelector === ".es_normal_badge_progress";
+            
+            if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
+                document.querySelector(".es_badges_progress_block").style.display = 'block';
+                blockSel.style.display = "block";
 
-                    blockSel.insertAdjacentHTML("beforeend", `
-								<div class="es_cards_numbers">
-									<div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
-								</div>
-								<div class="game_area_details_specs">
-									<div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
-									<a href="//steamcommunity.com/my/gamecards/${ appid + (is_normal_badge ? `/` : `?border=1`) }" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
-								</div>
-							`);
+                let progressBold = badgeNode.querySelector(".progress_info_bold");
 
-                    if (show_card_num) {
-                        blockSel.querySelector(".es_cards_numbers")
-                            .insertAdjacentHTML("beforeend", `
-									<div class="es_cards_owned">${Localization.str.cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total)}</div>
-								`);
-                    }
+                HTML.beforeEnd(blockSel,
+                    `<div class="es_cards_numbers">
+                         <div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
+                     </div>
+                     <div class="game_area_details_specs">
+                         <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
+                         <a href="//steamcommunity.com/my/gamecards/${ appid + (is_normal_badge ? `/` : `?border=1`) }" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
+                     </div>`);
 
-                    let last = blockSel.querySelector(".badge_empty_right div:last-child");
-                    if (last) {
-                        last.classList.add("badge_empty_name");
-                        last.style = "";
-                        last.textContent = Localization.str.badge_not_unlocked;
-                    }
+                if (show_card_num) {
+                    HTML.beforeEnd(blockSel.querySelector(".es_cards_numbers"),
+                        `<div class="es_cards_owned">${Localization.str.cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total)}</div>`);
                 }
-            } else {
-                blockSel.remove();
+
+                let last = blockSel.querySelector(".badge_empty_right div:last-child");
+                if (last) {
+                    last.classList.add("badge_empty_name");
+                    last.style = "";
+                    last.textContent = Localization.str.badge_not_unlocked;
+                }
             }
         }
     };
@@ -1660,13 +1751,13 @@ let AppPageClass = (function(){
         if (!this.hasAchievements()) { return; }
 
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
-        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.appid;
+        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.communityAppid;
 
-        document.querySelector("#achievement_block").insertAdjacentHTML("beforeend",
-            `<div class='game_area_details_specs'>
-                      <div class='icon'><img src='${imgUrl}' style='margin-left: 4px; width: 16px;'></div>
-                      <a class='name' href='${url}' target='_blank'><span>${Localization.str.view_astats}</span></a>`
-            );
+        HTML.beforeEnd("#achievement_block",
+        `<div class='game_area_details_specs'>
+                  <div class='icon'><img src='${imgUrl}' style='margin-left: 4px; width: 16px;'></div>
+                  <a class='name' href='${url}' target='_blank'><span>${Localization.str.view_astats}</span></a>
+               </div>`);
     };
 
     AppPageClass.prototype.addAchievementCompletionBar = function(){
@@ -1676,12 +1767,11 @@ let AppPageClass = (function(){
 
         let details_block = document.querySelector(".myactivity_block .details_block");
         if (!details_block) return;
-        details_block.insertAdjacentHTML("afterend",
-            "<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Background.action('stats', { 'appid': this.appid, } ).then(response => {
-            let dummy = document.createElement("html");
-            dummy.innerHTML = response;
+        HTML.afterEnd(details_block,"<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
+
+        Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
+            let dummy = HTMLParser.htmlToDOM(response);
 
             let node = document.querySelector("#es_ach_stats");
             node.append(dummy.querySelector("#topSummaryAchievements"));
@@ -1695,9 +1785,11 @@ let AppPageClass = (function(){
             barFull = barFull * .75;
             barEmpty = barEmpty * .75;
 
-            node.innerHTML = node.innerHTML.replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + BrowserHelper.escapeHTML(barFull.toString()) + "\"");
-            node.innerHTML = node.innerHTML.replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + BrowserHelper.escapeHTML(barEmpty.toString()) + "\"");
-            node.innerHTML = node.innerHTML.replace("::", ":");
+            let resultHtml = node.innerHTML
+                .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
+                .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
+                .replace("::", ":");
+            HTML.inner(node, resultHtml);
         });
     };
 
@@ -1705,7 +1797,7 @@ let AppPageClass = (function(){
         let instance = this;
 
         let nodes = document.querySelectorAll(".purchase_area_spacer");
-        nodes[nodes.length-1].insertAdjacentHTML("beforeend",
+        HTML.beforeEnd(nodes[nodes.length-1],
             `<link rel='stylesheet' type='text/css' href='//steamstore-a.akamaihd.net/public/css/v6/home.css'>
             <style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style>
             <div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
@@ -1727,37 +1819,53 @@ let AppPageClass = (function(){
             node.classList.remove("active");
         });
 
-        Customizer.addToggleHandler("show_apppage_recentupdates", ".early_access_announcements");
-        Customizer.addToggleHandler("show_apppage_reviews", "#game_area_reviews");
-        Customizer.addToggleHandler("show_apppage_about", "#game_area_description");
-        Customizer.addToggleHandler("show_steamchart_info", "#steam-charts", Localization.str.charts.current, true, function(){
+        for (let sel of ['#game_area_description', '#game_area_content_descriptors', '.sys_req', '#game_area_legal']) {
+            let el = document.querySelector(sel);
+            if (!el) { continue; }
+            let parent = el.closest('.game_page_autocollapse_ctn');
+            if (!parent) { continue; }
+            parent.setAttribute('data-parent-of', sel);
+        }
+
+        let customizer = new Customizer("customize_apppage");
+        customizer.add("recentupdates", ".early_access_announcements");
+        customizer.add("reviews", "#game_area_reviews");
+        customizer.add("about", `[data-parent-of="#game_area_description"], #game_area_description`);
+        customizer.add("contentwarning", `[data-parent-of="#game_area_content_descriptors"], #game_area_content_descriptors`);
+        
+        customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
             if (document.querySelector("#steam-charts")) { return; }
             instance.data.then(result => addSteamChart.call(instance, result));
         });
-        Customizer.addToggleHandler("show_steamspy_info", "#steam-spy", Localization.str.spy.player_data, true, function(){
+        customizer.add("steamspy", "#steam-spy", Localization.str.spy.player_data, true, function(){
             if (document.querySelector("#steam-spy")) { return; }
             instance.data.then(result => addSteamSpy.call(instance, result));
         });
-        Customizer.addToggleHandler("show_apppage_surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
+        customizer.add("surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
             if (document.querySelector("#performance_survey")) { return; }
             instance.data.then(result => addSurveyData.call(instance, result));
         });
-        Customizer.addToggleHandler("show_apppage_sysreq", ".sys_req");
-        Customizer.addToggleHandler("show_apppage_legal", "#game_area_legal", Localization.str.apppage_legal);
+        customizer.add("sysreq", `[data-parent-of=".sys_req"], .sys_req`);
+        customizer.add("legal", `[data-parent-of="#game_area_legal"], #game_area_legal`, Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
-            Customizer.addToggleHandler("show_apppage_morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
+            customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
-        Customizer.addToggleHandler("show_apppage_recommendedbycurators", ".steam_curators_block");
+        customizer.add("recommendedbycurators", ".steam_curators_block");
+
         if (document.querySelector(".user_reviews_header")) {
-            Customizer.addToggleHandler("show_apppage_customerreviews", "#app_reviews_hash", document.querySelector(".user_reviews_header").textContent);
+            customizer.add(
+                "customerreviews",
+                "#app_reviews_hash",
+                document.querySelector(".user_reviews_header").textContent
+            );
         }
     };
 
     AppPageClass.prototype.addReviewToggleButton = function() {
         let head = document.querySelector("#review_create h1");
         if (!head) { return; }
-        head.insertAdjacentHTML("beforeend", "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
+        HTML.beforeEnd(head, "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
 
         let reviewSectionNode = document.createElement("div");
         reviewSectionNode.setAttribute("id", "es_review_section");
@@ -1770,8 +1878,12 @@ let AppPageClass = (function(){
 
         head.insertAdjacentElement("afterend", reviewSectionNode);
 
-        function toggleReviews() {
-            if (LocalData.get("show_review_section")) {
+        function toggleReviews(state) {
+            if (typeof state == 'undefined') {
+                state = !LocalStorage.get("show_review_section", true);
+                LocalStorage.set("show_review_section", state);
+            }
+            if (state) {
                 document.querySelector("#es_review_toggle span").textContent = "▲";
                 document.querySelector("#es_review_section").style.maxHeight = null;
             } else {
@@ -1780,13 +1892,13 @@ let AppPageClass = (function(){
             }
         }
 
-        toggleReviews();
+        let showReviews = LocalStorage.get("show_review_section", true);
+        toggleReviews(showReviews);
 
         let node = document.querySelector("#review_create");
         if (node) {
             node.addEventListener("click", function(e) {
                 if (!e.target.closest("#es_review_toggle")) { return; }
-                LocalData.set("show_review_section", LocalData.get("show_review_section", true) ? false : true);
                 toggleReviews();
             });
         }
@@ -1795,7 +1907,8 @@ let AppPageClass = (function(){
     AppPageClass.prototype.addHelpButton = function() {
         let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
-        node.insertAdjacentHTML("afterend", "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
+        HTML.afterEnd(node,
+            "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
     };
 
     AppPageClass.prototype.addPackBreakdown = function() {
@@ -1810,8 +1923,8 @@ let AppPageClass = (function(){
             price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
 
             let buttons = node.querySelectorAll(".btn_addtocart");
-            buttons[buttons.length-1].parentNode.insertAdjacentHTML("afterbegin", `
-                <div class="es_each_box">
+            HTML.afterBegin(buttons[buttons.length-1].parentNode,
+                `<div class="es_each_box">
                     <div class="es_each_price">${price}</div>
                     <div class="es_each">${Localization.str.each}</div>
                 </div>`);
@@ -1887,7 +2000,7 @@ let RegisterKeyPageClass = (function(){
         });
 
         // Insert the "activate multiple products" button
-        document.querySelector("#registerkey_examples_text").insertAdjacentHTML("beforebegin",
+        HTML.beforeBegin("#registerkey_examples_text",
             "<a class='btnv6_blue_hoverfade btn_medium' id='es_activate_multiple' style='margin-bottom: 15px;'><span>" + Localization.str.activate_multiple + "</span></a><div style='clear: both;'></div>");
 
         // Process activation
@@ -1902,8 +2015,9 @@ let RegisterKeyPageClass = (function(){
 
             // turn textbox into table to display results
             let lines = document.querySelector("#es_key_input").value.split("\n");
-            document.querySelector("#es_activate_input_text").insertAdjacentHTML("beforebegin", "<div id='es_activate_results'></div>");
-            document.querySelector("#es_activate_input_text").style.display = "none";
+            let node = document.querySelector("#es_activate_input_text");
+            HTML.beforeBegin(node, "<div id='es_activate_results'></div>");
+            node.style.display = "none";
 
             lines.forEach(line => {
                 let attempt = String(line);
@@ -1914,8 +2028,8 @@ let RegisterKeyPageClass = (function(){
 
                 let url = ExtensionLayer.getLocalUrl("img/questionmark.png");
 
-                document.querySelector("#es_activate_results")
-                    .insertAdjacentHTML("beforeend", "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
+                HTML.beforeEnd("#es_activate_results",
+                    "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
             });
 
             // force recalculation of the modal's position so it doesn't extend off the bottom of the page
@@ -1998,7 +2112,7 @@ let AccountPageClass = (function(){
         if (links.length < 1) return;
 
         let lastLink = links[links.length-1];
-        lastLink.parentNode.insertAdjacentHTML("afterend",
+        HTML.afterEnd(lastLink.parentNode,
             `<div><a class='account_manage_link' href='https://help.steampowered.com/en/accountdata/AccountSpend'>${Localization.str.external_funds}</a></div>`);
     };
 
@@ -2026,16 +2140,18 @@ let FundsPageClass = (function(){
             newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
             newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
         } else {
-            newel.querySelector(".giftcard_style")
-                .innerHTML = Localization.str.wallet.custom_giftcard_amount
+            HTML.inner(
+                newel.querySelector(".giftcard_style"),
+                Localization.str.wallet.custom_giftcard_amount
                     .replace("__minamount__", price)
-                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>");
+                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>")
+            );
         }
 
         let currency = Price.parseFromString(price, Currency.storeCurrency);
 
         let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
-        inputel.innerHTML = "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>";
+        HTML.inner(inputel, "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>");
         // TODO currency symbol
 
         document.querySelector((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game"))
@@ -2107,15 +2223,15 @@ let SearchPageClass = (function(){
         let search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
         if (!document.querySelector(".LoadingWrapper")) {
             let nodes = document.querySelectorAll(".search_pagination");
-            nodes[nodes.length-1].insertAdjacentHTML("beforebegin", '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + Localization.str.loading + '</div></div>');
+
+            HTML.beforeBegin(nodes[nodes.length-1], '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + Localization.str.loading + '</div></div>');
         }
 
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
         RequestData.getHttp("//store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
-            let dummy = document.createElement("html");
-            dummy.innerHTML = result;
+            let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
             document.querySelector('#search_result_container').dataset.lastAddDate = addedDate;
@@ -2144,7 +2260,8 @@ let SearchPageClass = (function(){
             ExtensionLayer.runInPageContext(inContext);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
-            document.querySelector(".search_pagination:last-child").insertAdjacentHTML("beforebegin", "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
+            HTML.beforeBegin(".search_pagination:last-child",
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
@@ -2158,7 +2275,7 @@ let SearchPageClass = (function(){
         if (!SyncedStorage.get("contscroll")) { return; }
 
         let result_count;
-        document.body.insertAdjacentHTML("beforeend", '<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
+        HTML.beforeEnd(document.body, '<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
         document.querySelector(".search_pagination_right").style.display = "none";
 
         let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
@@ -2171,7 +2288,7 @@ let SearchPageClass = (function(){
 
         window.addEventListener("scroll", function () {
             // if the pagination element is in the viewport, continue loading
-            if (BrowserHelper.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+            if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
                 if (result_count > document.querySelectorAll(".search_result_row").length) {
                     loadSearchResults();
                 } else {
@@ -2184,7 +2301,7 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.addExcludeTagsToSearch = function() {
         let tarFilterDivs = document.querySelectorAll('#TagFilter_Container')[0].children;
 
-        document.querySelector("#TagFilter_Container").parentNode.parentNode.insertAdjacentHTML("afterend",
+        HTML.afterEnd(document.querySelector("#TagFilter_Container").parentNode.parentNode,
             `<div class='block' id='es_tagfilter_exclude'>
                 <div class='block_header'>
                     <div>${Localization.str.exclude_tags}</div>
@@ -2193,8 +2310,7 @@ let SearchPageClass = (function(){
                     <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
                     <input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">
                 </div>
-            </div>
-        `);
+            </div>`);
 
         let excludeContainer = document.querySelector("#es_tagfilter_exclude_container");
 
@@ -2209,7 +2325,7 @@ let SearchPageClass = (function(){
 
             let item_checked = getTags().indexOf("-"+val.dataset.value) > -1 ? "checked" : "";
 
-            let excludeItem = BrowserHelper.htmlToElement(
+            let excludeItem = HTMLParser.htmlToElement(
                 `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
                     <div class="tab_filter_control_checkbox"></div>
                     <span class="tab_filter_control_label">${val.dataset.loc}</span>
@@ -2280,7 +2396,7 @@ let SearchPageClass = (function(){
             }
         }
 
-        if (BrowserHelper.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+        if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
             loadSearchResults();
         }
     }
@@ -2307,8 +2423,8 @@ let SearchPageClass = (function(){
         let inputPattern = currency.regExp();
         let pricePlaceholder = currency.placeholder();
 
-        document.querySelector("#advsearchform .rightcol").insertAdjacentHTML("afterbegin", `
-            <div class='block' id='es_hide_menu'>
+        HTML.afterBegin("#advsearchform .rightcol",
+            `<div class='block' id='es_hide_menu'>
                 <div class='block_header'><div>${Localization.str.hide}</div></div>
                 <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
                     <div class='tab_filter_control' id='es_owned_games'>
@@ -2400,15 +2516,15 @@ let SearchPageClass = (function(){
             document.querySelector("#es_hide_expander").style.display = "none";
         }
 
+        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol.trim() + "</span>";
+        let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
+
         let position;
         if (currency.format.right) {
-            position = "afterend";
+            HTML.afterEnd(notpriceabove_val, html);
         } else {
-            position = "beforebegin";
+            HTML.beforeBegin(notpriceabove_val, html);
         }
-
-        let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
-        notpriceabove_val.insertAdjacentHTML(position, "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol.trim() + "</span>");
 
         if (SyncedStorage.get("priceabove_value")) {
             notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
@@ -2524,19 +2640,42 @@ let WishlistPageClass = (function(){
 
         let instance = this;
         wishlistNotes = new WishlistNotes();
+
+        let myWishlist = isMyWishlist();
+        let container = document.querySelector("#wishlist_ctn");
+        let timeout = null, lastRequest = null;
+        let delayedWork = new Set();
         let observer = new MutationObserver(function(mutationList){
             mutationList.forEach(record => {
                 if (record.addedNodes.length === 1) {
-                    if (isMyWishlist()) {
-                        instance.addWishlistNote(record.addedNodes[0]);
-                    }
-                    instance.highlightApps(record.addedNodes[0]);
-                    instance.addPriceHandler(record.addedNodes[0]);
+                    delayedWork.add(record.addedNodes[0])
                 }
             });
-            window.dispatchEvent(new Event("resize"));
+            lastRequest = window.performance.now();
+            if (timeout == null) {
+                timeout = window.setTimeout(function markWishlist() {
+                    if (window.performance.now() - lastRequest < 40) {
+                        timeout = window.setTimeout(markWishlist, 50);
+                        return;
+                    }
+                    timeout = null;
+                    for (let node of delayedWork) {
+                        delayedWork.delete(node);
+                        if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
+                            continue;
+                        }
+                        if (myWishlist && SyncedStorage.get("showwlnotes")) {
+                            instance.addWishlistNote(node);
+                        } else {
+                            instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
+                        }
+                        instance.addPriceHandler(node);
+                    }
+                    window.dispatchEvent(new Event("resize"))
+                }, 50);
+            }
         });
-        observer.observe(document.querySelector("#wishlist_ctn"), { childList:true });
+        observer.observe(container, { 'childList': true, });
 
         this.addStatsArea();
         this.addEmptyWishlistButton();
@@ -2569,7 +2708,7 @@ let WishlistPageClass = (function(){
             if (SyncedStorage.get("highlight_owned")) {
                 Highlights.highlightOwned(node);
             } else {
-                node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node, '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
 
@@ -2579,7 +2718,7 @@ let WishlistPageClass = (function(){
             if (SyncedStorage.get("highlight_wishlist")) {
                 Highlights.highlightWishlist(node);
             } else {
-                node.insertAdjacentHTML("beforeend", '<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
         
@@ -2587,25 +2726,24 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.addStatsArea = function() {
         if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
-        
-        let html =
+
+        HTML.beforeBegin("#wishlist_ctn",
             `<div id="esi-wishlist-chart-content">
                 <a>${Localization.str.wl.compute}</a>
-             </div>`;
+             </div>`);
 
-        document.querySelector("#wishlist_ctn").insertAdjacentHTML("beforebegin", html);
         document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
-            e.target.parentNode.innerHTML = "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>";
+            HTML.inner(e.target.parentNode, "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>");
             loadStats();
         });
     };
 
     // Calculate total cost of all items on wishlist
     async function loadStats() {
-        let wishlistData = BrowserHelper.getVariableFromDom("g_rgAppInfo", "object");
+        let wishlistData = HTMLParser.getVariableFromDom("g_rgAppInfo", "object");
         if (!wishlistData || Object.keys(wishlistData).length == 0) {
-            let pages = BrowserHelper.getVariableFromDom("g_nAdditionalPages", "int");
-            let baseUrl = BrowserHelper.getVariableFromDom("g_strWishlistBaseURL", "string");
+            let pages = HTMLParser.getVariableFromDom("g_nAdditionalPages", "int");
+            let baseUrl = HTMLParser.getVariableFromDom("g_strWishlistBaseURL", "string");
 
             if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
                 throw "loadStats() expected profile url";
@@ -2641,19 +2779,19 @@ let WishlistPageClass = (function(){
         }
         totalPrice = new Price(totalPrice, Currency.storeCurrency)
 
-        document.querySelector("#esi-wishlist-chart-content").innerHTML
-            = `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`;
+        HTML.inner(document.querySelector("#esi-wishlist-chart-content"),
+            `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+            <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+            <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+            <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`);
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!isMyWishlist()) { return; }
         if (!SyncedStorage.get("showemptywishlist")) { return; }
 
-        document.querySelector("div.wishlist_header")
-            .insertAdjacentHTML("beforeend", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+
         document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
             emptyWishlist();
         });
@@ -2687,7 +2825,7 @@ let WishlistPageClass = (function(){
 
         window.addEventListener("message", function(event) {
             if (event.source === window && event.data.type && event.data.type === "es_empty_wishlist") {
-                let wishlistData = BrowserHelper.getVariableFromDom("g_rgWishlistData", "array");
+                let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
                 if (!wishlistData) { return; }
 
                 let promises = [];
@@ -2707,29 +2845,26 @@ let WishlistPageClass = (function(){
     function addWishlistPrice(node) {
         let appid = node.dataset.appId;
 
-        if (cachedPrices[appid]) {
-            addPriceNode(node,"app", appid, cachedPrices[appid]);
-            return;
+        if (typeof cachedPrices[appid] == 'undefined') {
+            cachedPrices[appid] = new Promise(function(resolve, reject) {
+                let prices = new Prices();
+                prices.appids = [appid,];
+                prices.priceCallback = function(type, id, html) {
+                    resolve(html);
+                };
+                prices.load();
+            });
         }
 
-        let prices = new Prices();
-        prices.appids = [appid];
-        prices.priceCallback = function(type, id, html) { addPriceNode(node, type, id, html); }
-        prices.load();
-    }
+        cachedPrices[appid].then(function(html) {
+            if (node.querySelector(".es_lowest_price")) { return; }
 
-    function addPriceNode(node, type, id, html) {
-        if (node.querySelector(".es_lowest_price")) { return; }
+            HTML.beforeEnd(node, html);
 
-        cachedPrices[id] = html;
-
-        node.insertAdjacentHTML("beforeend", html);
-        let priceNode = node.querySelector(".es_lowest_price");
-        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
-    }
-
-    function wishlistRowEnterHandler(e) {
-        addWishlistPrice(e.target);
+            let priceNode = node.querySelector(".es_lowest_price");
+            priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+        });
+        return;
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node){
@@ -2737,9 +2872,8 @@ let WishlistPageClass = (function(){
 
         if (!node.dataset.appId) { return; }
 
-        node.removeEventListener("mouseenter", wishlistRowEnterHandler);
         if (!node.querySelector(".es_lowest_price")) {
-            node.addEventListener("mouseenter", wishlistRowEnterHandler);
+            node.addEventListener("mouseenter", (e) => addWishlistPrice(e.target), { 'capture': false, 'once': true, });
         }
     };
 
@@ -2758,7 +2892,7 @@ let WishlistPageClass = (function(){
             cssClass = "esi-empty-note";
         }
 
-        node.querySelector(".mid_container").insertAdjacentHTML("afterend",
+        HTML.afterEnd(node.querySelector(".mid_container"),
             "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
         node.classList.add("esi-has-note");
     };
@@ -2796,20 +2930,16 @@ let WishlistPageClass = (function(){
                 wishlistNotes.deleteNote(e.data.removed_wl_entry);
             }
         });
-    }
+    };
 
     return WishlistPageClass;
 })();
 
 let WishlistNotes = (function(){
 
-    let noteModalTemplate;
-    let notes;
-    let listenerCreated = false;
-
     function WishlistNotes() {
         this.noteModalTemplate = `
-                <div id="es_note_modal" data-appid="__appid__">
+                <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
                         <div class="newmodal_prompt_with_textarea gray_bevel fullwidth">
                             <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
@@ -2830,7 +2960,7 @@ let WishlistNotes = (function(){
 
     WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '') + '\`); }');
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
         if (!this.listenerCreated) {
             let that = this;
@@ -2838,15 +2968,18 @@ let WishlistNotes = (function(){
                 if (e.target.closest(".es_note_modal_submit")) {
                     e.preventDefault();
 
-                    let note = BrowserHelper.escapeHTML(document.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                    let node = document.querySelector(nodeSelector);
+                    let modal = document.querySelector('#es_note_modal');
+                    let appid = modal.dataset.appid;
+                    let selector = decodeURIComponent(modal.dataset.selector);
+                    let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                    let node = document.querySelector(selector);
 
                     if (note.length !== 0) {
                         that.setNote(appid, note);
 
                         node.classList.remove("esi-empty-note");
                         node.classList.add("esi-user-note");
-                        node.textContent = '"' + note + '"';
+                        HTML.inner(node, `"${note}"`);
                     } else {
                         that.deleteNote(appid);
 
@@ -2862,25 +2995,25 @@ let WishlistNotes = (function(){
             });
             this.listenerCreated = true;
         }
-    }
+    };
 
     WishlistNotes.prototype.getNote = function(appid) {
         return this.notes[appid];
-    }
+    };
 
     WishlistNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
         SyncedStorage.set("wishlist_notes", this.notes);
-    }
+    };
 
     WishlistNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
         SyncedStorage.set("wishlist_notes", this.notes);
-    }
+    };
 
     WishlistNotes.prototype.exists = function(appid) {
-        return (this.notes[appid] && (this.notes[appid] !== '')) ? true : false;
-    }
+        return (this.notes[appid] && (this.notes[appid] !== ''));
+    };
 
     return WishlistNotes;
 
@@ -2908,7 +3041,7 @@ let TagPageClass = (function(){
                 hideNode(node);
             }
         });
-    }
+    };
 
     TagPageClass.prototype.observeChanges = function() {
         let observer = new MutationObserver(mutations => {
@@ -2924,7 +3057,7 @@ let TagPageClass = (function(){
         rows.forEach(row => {
             observer.observe(document.getElementById(row), {childList: true});
         })
-    }
+    };
 
     function hideNode(node) {
         if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
@@ -3002,15 +3135,14 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
-        document.querySelector(".home_page_content").insertAdjacentHTML("beforeend",
+        HTML.beforeEnd(".home_page_content",
             `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px;">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
                     <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
                 </div>
             </div>
-            <div style="clear: both;"></div>
-        `);
+            <div style="clear: both;"></div>`);
 
         document.querySelector(".home_page_body_ctn").style.overflow = "visible";
         document.querySelector("#es_customize_btn").addEventListener("click", function(e){
@@ -3024,28 +3156,35 @@ let StoreFrontPageClass = (function(){
             node.classList.remove("active");
         });
 
-        function homeCtnNode(selector) {
-            let node = document.querySelector(selector);
-            if (!node) { return null; }
-            return node.closest(".home_ctn");
-        }
+        let customizer = new Customizer("customize_frontpage");
+        customizer
+            .add("featuredrecommended", ".home_cluster_ctn")
+            .add("specialoffers", document.querySelector(".special_offers").parentElement)
+            .add("trendingamongfriends", ".friends_recently_purchased")
+            .add("discoveryqueue", ".discovery_queue_ctn")
+            .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
+            .add("curators", ".steam_curators_ctn")
+            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+            .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
+            .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+            .add("popularvrgames", ".best_selling_vr_ctn")
+            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("gamesstreamingnow", ".live_streams_ctn")
+            .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
+            .add("updatesandoffers", ".marketingmessage_area")
+            .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
-        let nodes = document.querySelectorAll(".home_page_body_ctn .home_ctn");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
+        for (let i = 0; i < dynamicNodes.length; ++i) {
+            let node = dynamicNodes[i];
+            if (node.querySelector(".esi-customizer")) { continue; }
+
             let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-            if (headerNode) {
-                let option = Customizer.textValue(headerNode).toLowerCase().replace(/[^a-z]*/g, "");
-                if (option !== "") {
-                    Customizer.addToggleHandler("show_"+option, node);
-                }
-            }
-        }
+            if (!headerNode) { continue; }
 
-        // added by hand, those we couldn't get automatically
-        Customizer.addToggleHandler("show_es_discoveryqueue", document.querySelector(".discovery_queue_ctn"));
-        Customizer.addToggleHandler("show_es_homepagetabs", homeCtnNode(".home_tab_col"), Localization.str.homepage_tabs);
-        Customizer.addToggleHandler("show_es_homepagesidebar", document.querySelector(".home_page_gutter"), Localization.str.homepage_sidebar);
+            // TODO only visible? Problem with e.g. empty Curators
+            customizer.addDynamic(headerNode, node);
+        }
     };
 
     return StoreFrontPageClass;
@@ -3073,7 +3212,7 @@ let TabAreaObserver = (function(){
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
-    await SyncedStorage.load().catch(err => console.error(err));
+    await SyncedStorage.init().catch(err => console.error(err));
     await Promise.all([Localization, User, Currency]);
 
     Common.init();

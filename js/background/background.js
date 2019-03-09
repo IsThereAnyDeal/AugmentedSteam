@@ -49,10 +49,18 @@ class Api {
     // withResponse? use a boolean to include Response object in result?
     static _fetchWithDefaults(endpoint, query={}, params={}) {
         let url = new URL(endpoint, this.origin);
-        for (let [k, v] of Object.entries(query)) {
-            url.searchParams.append(k, v);
-        }
         params = Object.assign({}, this.params, params);
+        if (params && params.method === 'POST' && !params.body) {
+            let formData = new FormData();
+            for (let [k, v] of Object.entries(query)) {
+                formData.append(k, v);
+            }
+            params.body = formData;
+        } else {
+            for (let [k, v] of Object.entries(query)) {
+                url.searchParams.append(k, v);
+            }
+        }
         return fetch(url, params);
     }
     static getEndpoint(endpoint, query) {
@@ -63,6 +71,11 @@ class Api {
     static getPage(endpoint, query) {
         return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.text());
     }
+    static postEndpoint(endpoint, query) {
+        if (!endpoint.endsWith('/'))
+            endpoint += '/';
+        return this._fetchWithDefaults(endpoint, query, { 'method': 'POST', }).then(response => response.json());
+    }    
 }
 Api.params = {};
 
@@ -164,6 +177,10 @@ class AugmentedSteamApi extends Api {
     static async dlcInfo({ 'params': params, }) {
         return AugmentedSteamApi.getEndpoint("v01/dlcinfo", params).then(result => result.data);
     }
+
+    static async expireStorePageData({ 'params': params, }) {
+        CacheStorage.remove(`app_${params.appid}`);
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
@@ -238,18 +255,7 @@ class SteamStore extends Api {
     }
     
     static async wishlistAdd({ 'params': params, }) {
-        let url = new URL("/api/addtowishlist", "https://store.steampowered.com/");
-        let formData = new FormData();
-        for (let [k, v] of Object.entries(params)) {
-            formData.append(k, v);
-        }
-        let p = {
-            'method': 'POST',
-            'credentials': 'include',
-            'body': formData,
-        };
-        return fetch(url, p)
-            .then(response => response.json());
+        return SteamStore.postEndpoint("/api/addtowishlist", params);
     }
 
     static async currencyFromWallet() {
@@ -615,7 +621,7 @@ class Steam {
 
     static fetchCurrencies() {
         // https://partner.steamgames.com/doc/store/pricing/currencies
-        return fetch(chrome.runtime.getURL('json/currency.json')).then(r => r.json());
+        return ExtensionResources.getJSON('json/currency.json');
     }
     static async currencies() {
         let self = Steam;
@@ -645,6 +651,7 @@ let actionCallbacks = new Map([
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
+    ['storepagedata.expire', AugmentedSteamApi.expireStorePageData],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
     ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 60*60, ratesCacheKey)],
     ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
@@ -695,3 +702,5 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // keep channel open until callback resolves
     return true;
 });
+
+SyncedStorage.then(() => VersionHandler.migrateSettings());

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <script src="js/countryList.js"></script>
-    <script src="js/storeList.js"></script>
-    <script src="js/options.js"></script>
-    <script src="js/content/common.js"></script>
+    <script src="js/lib/DOMPurify/purify.js"></script>
+    <script src="js/options/countryList.js"></script>
+    <script src="js/options/storeList.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/options/options.js"></script>
     <link href="css/enhancedsteam.css" rel="stylesheet" type="text/css">
     <link href="css/options.css" rel="stylesheet" type="text/css">
     <link href="css/es_flags.css" rel="stylesheet" type="text/css">
@@ -264,6 +266,10 @@
                 <label for="showemptywishlist" id="store_hide_empty_wishlist" data-locale-text="options.show_empty_wishlist">Show "Empty Wishlist" button</label>
             </div>
             <div>
+                <input type="checkbox" id="showwlnotes" data-setting="showwlnotes">
+                <label for="showwlnotes" id="store_show_wl_notes" data-locale-text="options.show_wl_notes">Show wishlist notes on wishlist</label>
+            </div>
+            <div>
                 <input type="checkbox" id="send_age_info" data-setting="send_age_info">
                 <label for="send_age_info" id="send_age_info_text" data-locale-text="options.send_age_info">Automatically send age verification when requested</label>
             </div>
@@ -351,6 +357,10 @@
             <div>
                 <input type="checkbox" id="showpcgw" data-setting="showpcgw">
                 <label for="showpcgw" id="store_pcgw_text" data-locale-text="options.pcgw">Show PCGamingWiki links</label>
+            </div>
+            <div>
+                <input type="checkbox" id="showprotondb" data-setting="showprotondb">
+                <label for="showprotondb" id="store_protondb_text" data-locale-text="options.protondb">Show ProtonDB links</label>
             </div>
             <div>
                 <input type="checkbox" id="showwsgf" data-setting="showwsgf">

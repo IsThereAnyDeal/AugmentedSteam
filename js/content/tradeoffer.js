@@ -6,8 +6,8 @@ let TradeOfferPageClass = (function(){
     }
     
     TradeOfferPageClass.prototype.countItems = function() {
-        document.querySelector("#your_slots").parentNode.insertAdjacentHTML("afterend", "<div id='your_slots_count' class='trade_item_box'><span id='your_items_count'></span></div>");
-        document.querySelector("#their_slots").parentNode.insertAdjacentHTML("afterend", "<div id='their_slots_count' class='trade_item_box'><span id='their_items_count'></span></div>");
+        HTML.afterEnd(document.querySelector("#your_slots").parentNode, "<div id='your_slots_count' class='trade_item_box'><span id='your_items_count'></span></div>");
+        HTML.afterEnd(document.querySelector("#their_slots").parentNode, "<div id='their_slots_count' class='trade_item_box'><span id='their_items_count'></span></div>");
         
         let observer = new MutationObserver(mutations => {
             mutations.forEach(function(mutation) {
@@ -60,12 +60,6 @@ let TradeOfferPageClass = (function(){
 
 (function(){
     SyncedStorage
-    .load()
-    .finally(() => Promise
-    .all([Localization.promise()])
-    .then(() => {
-        (new TradeOfferPageClass());
-    })
-)
+        .then(Localization)
+        .then(() => { (new TradeOfferPageClass()); })
 })();
-
