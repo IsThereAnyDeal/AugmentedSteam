@@ -2983,7 +2983,7 @@ let MarketPageClass = (function(){
                 buttons.style.width = "200px"; // TODO do we still need to change width?
                 if (node.querySelector(".market_listing_es_lowest")) { continue; }
 
-                HTML.afterEnd(".market_listing_edit_buttons",
+                HTML.afterEnd(node.querySelector(".market_listing_edit_buttons"),
                     "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
                 // we do this because of changed width, right?
