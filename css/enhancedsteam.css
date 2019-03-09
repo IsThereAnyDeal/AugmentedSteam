@@ -2389,7 +2389,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 .steam_client_btn i {
-	background-image:url('//steamcdn-a.akamaihd.net/store/about/icon-steamos.svg');
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon-steamos.png'); /* //steamcdn-a.akamaihd.net/store/about/icon-steamos.svg */
 }
 .pcgw_btn i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/pcgw.png');
