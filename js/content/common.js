@@ -655,7 +655,7 @@ let Currency = (function() {
             try {
                 currency = await Background.action('currency');
             } catch(error) {
-                console.error("Couldn't load currency" + error);
+                console.error("Couldn't load currency: " + error);
             }
         }
 
