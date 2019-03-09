@@ -1455,7 +1455,7 @@ let AppPageClass = (function(){
     function addSurveyData(result) {
         if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
-        if (!SyncedStorage.get("show_apppage_surveys") || !result.survey) { return; }
+        if (!result.survey) { return; }
 
         let survey = result.survey;
         let appid = this.appid;
