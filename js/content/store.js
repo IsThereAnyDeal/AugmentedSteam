@@ -175,7 +175,7 @@ let StorePageClass = (function(){
         if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
-        let drmString = "(";
+        let drmString = "("; // TODO localize DRM names
         if (gfwl) { drmString += 'Games for Windows Live, '; drm = true; }
         if (uplay) { drmString += 'Ubisoft Uplay, '; drm = true; }
         if (securom) { drmString += 'SecuROM, '; drm = true; }
@@ -188,21 +188,22 @@ let StorePageClass = (function(){
         if (drmString === "(") {
             drmString = "";
         } else {
-            drmString = drmString.substring(0, drmString.length - 2);
-            drmString += ")";
+            drmString = drmString.substring(1, drmString.length - 2);
+            drmString = Localization.str.punctuation.parenthesis_with_content.replace("__content__", drmString);
         }
 
         // Prevent false-positives
         if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
 
         if (drm) {
-            let stringType = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            let warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            warnString = warnString.replace("__drmlist__", drmString);
 
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${stringType} ${drmString}</span></div>`)
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`)
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${stringType} ${drmString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
             }
         }
     };
@@ -304,7 +305,7 @@ let StorePageClass = (function(){
                 this.getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${type}/${gameid}`,
-                    Localization.str.view_in + ' Steam Database')
+                    Localization.str.view_on_website.replace("__website__", 'Steam Database'))
                 );
         }
 
@@ -313,7 +314,7 @@ let StorePageClass = (function(){
                 this.getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${type}/${gameid}`,
-                    Localization.str.view_on + ' IsThereAnyDeal')
+                    Localization.str.view_on_website.replace("__website__", 'IsThereAnyDeal'))
             );
         }
     };
@@ -948,7 +949,7 @@ let AppPageClass = (function(){
         let cssClass;
 
         if (wishlistNotes.exists(appid)) {
-            noteText = '"' + wishlistNotes.getNote(appid) + '"';
+            noteText = Localization.str.punctuation.quotation_with_content.replace("__content__", wishlistNotes.getNote(appid));
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -1345,18 +1346,18 @@ let AppPageClass = (function(){
         if (SyncedStorage.get("showprotondb")) {
             let cls = "protondb_btn";
             let url = "https://www.protondb.com/app/" + this.appid;
-            let str = Localization.str.view_in + ' ProtonDB';
+            let str = Localization.str.view_on_website.replace("__website__", 'ProtonDB');
 
             HTML.afterBegin(linkNode,
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-
+        
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
             let cls = "cardexchange_btn";
             let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.communityAppid;
-            let str = Localization.str.view_in + ' Steam Card Exchange';
+            let str = Localization.str.view_on_website.replace("__website__", 'Steam Card Exchange');
 
             HTML.afterBegin(linkNode,
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
@@ -2261,7 +2262,7 @@ let SearchPageClass = (function(){
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + ". <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + ".</a></div>");
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + Localization.str.punctuation.space_between_sentences + "<a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
@@ -2718,7 +2719,7 @@ let WishlistPageClass = (function(){
             if (SyncedStorage.get("highlight_wishlist")) {
                 Highlights.highlightWishlist(node);
             } else {
-                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.library.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
         
@@ -2885,7 +2886,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (wishlistNotes.exists(appid)) {
-            noteText = '"' + wishlistNotes.getNote(appid) + '"';
+            noteText = Localization.str.punctuation.quotation_with_content.replace("__content__", wishlistNotes.getNote(appid));
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2960,7 +2961,7 @@ let WishlistNotes = (function(){
 
     WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.note_for + ' ' + appname + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
+        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname) + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
         if (!this.listenerCreated) {
             let that = this;
