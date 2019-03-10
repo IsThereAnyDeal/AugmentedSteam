@@ -602,7 +602,7 @@ class ExtensionResources {
 
 class HTML {
 
-    static escape = function(str) {
+    static escape(str) {
         // TODO there must be a better way
         return str
             .replace(/&/g, '&amp;')
