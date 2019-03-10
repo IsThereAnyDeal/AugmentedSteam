@@ -633,15 +633,15 @@ let ProfileHomePageClass = (function(){
             if (!data || !data.style) { return; }
 
             let style = ProfileData.getStyle();
+            let stylesheet = document.createElement('link');
+            stylesheet.rel = 'stylesheet';
+            stylesheet.type = 'text/css';
             let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue", "grey"];
             if (availableStyles.indexOf(style) === -1) { return; }
 
             document.body.classList.add("es_profile_style");
             switch (style) {
                 case "goldenprofile":
-                    let stylesheet = document.createElement('link');
-                    stylesheet.rel = 'stylesheet';
-                    stylesheet.type = 'text/css';
                     stylesheet.href = 'https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css';
                     document.head.appendChild(stylesheet);
 
@@ -683,9 +683,6 @@ let ProfileHomePageClass = (function(){
                     
                     break;
                 case "holiday2014":
-                    let stylesheet = document.createElement('link');
-                    stylesheet.rel = 'stylesheet';
-                    stylesheet.type = 'text/css';
                     stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css';
                     document.head.appendChild(stylesheet);
 
@@ -710,9 +707,6 @@ let ProfileHomePageClass = (function(){
                     let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
                     let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
 
-                    let stylesheet = document.createElement('link');
-                    stylesheet.rel = 'stylesheet';
-                    stylesheet.type = 'text/css';
                     stylesheet.href = styleUrl;
                     document.head.appendChild(stylesheet);
 
@@ -720,6 +714,7 @@ let ProfileHomePageClass = (function(){
                     document.querySelector(".profile_customization").style.backgroundImage = "url('" + showcase + "')";
                     break;
             }
+            stylesheet = null;
         });
     };
 
