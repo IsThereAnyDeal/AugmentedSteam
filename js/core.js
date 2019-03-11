@@ -615,7 +615,7 @@ class HTML {
             node = document.querySelector(node);
         }
 
-        node.innerHTML = DOMPurify.sanitize(html);
+        node.innerHTML = HTML._sanitize(html);
     }
 
     static adjacent(node, position, html) {
@@ -623,7 +623,7 @@ class HTML {
             node = document.querySelector(node);
         }
 
-        node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
+        node.insertAdjacentHTML(position, HTML._sanitize(html));
     }
 
     static beforeBegin(node, html) {
@@ -640,6 +640,15 @@ class HTML {
 
     static afterEnd(node, html) {
         HTML.adjacent(node, "afterend", html);
+    }
+
+    static _sanitize(html) {
+        // See https://github.com/cure53/DOMPurify/issues/37
+        if (/^<(?:style|link)/.test(html)) {
+            return DOMPurify.sanitize('1' + html).substring(1);
+        } else {
+            return DOMPurify.sanitize(html);
+        }
     }
 
 }
