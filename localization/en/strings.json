@@ -427,6 +427,9 @@
         "show_badge_progress": "Show apps badge progress on store pages",
         "show_wishlist_link": "Show a Wishlist link on profiles",
         "show_wishlist_count": "Show the number of items on Wishlist",
+        "profile_showcase_twitch": "Add a showcase for Twitch.tv if there is a link",
+        "profile_showcase_own_twitch": "... including your own profile",
+        "profile_showcase_twitch_profileonly": "... only if the link is in the Profile Summary",
         "lang": {
             "english": "English",
             "brazilian": "Portuguese-Brazil",
