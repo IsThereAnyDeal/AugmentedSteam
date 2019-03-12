@@ -2238,12 +2238,29 @@ let SearchPageClass = (function(){
 
             let lastNode = document.querySelector(".search_result_row:last-child");
 
+            // When you're not logged in, the constructed hover doesn't include friends info
+            let publicAttr = `,"public":1`;
+            if (User.isSignedIn) {
+                publicAttr = '';
+            }
+
             let rows = dummy.querySelectorAll("a.search_result_row");
             for (let i=0, len=rows.length; i<len; i++) {
                 let row = rows[i];
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
+
+                // Construct the hover that was just sanitized out of row
+                let subtype = "app";
+                let subid = lastNode.dataset.dsAppid;
+                if (lastNode.dataset.dsPackageid) {
+                    // this is a sub, not an app
+                    subtype = "sub";
+                    subid = lastNode.dataset.dsPackageid;
+                }
+                lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
+                lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
             }
 
             document.querySelector(".LoadingWrapper").remove();
