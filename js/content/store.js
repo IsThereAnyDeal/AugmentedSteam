@@ -2253,11 +2253,11 @@ let SearchPageClass = (function(){
 
                 // Construct the hover that was just sanitized out of row
                 let subtype = "app";
-                let subid = lastNode.dataset.dsAppid;
+                let subid = parseInt(lastNode.dataset.dsAppid, 10);
                 if (lastNode.dataset.dsPackageid) {
                     // this is a sub, not an app
                     subtype = "sub";
-                    subid = lastNode.dataset.dsPackageid;
+                    subid = parseInt(lastNode.dataset.dsPackageid, 10);
                 }
                 lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
                 lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
