@@ -597,7 +597,18 @@ class ExtensionResources {
  * Default RegExp: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i;
  */
 (function() {
-    DOMPurify.setConfig({ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i});
+    DOMPurify.setConfig({
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+        ADD_TAGS: ["link"]});
+
+    DOMPurify.addHook("uponSanitizeElement", (node, data) => {
+        if (data.tagName === "link") {
+            if (node.href && !/^(?:https:\/\/steamcommunity-a\.akamaihd\.net\/|(?:moz|chrome)-extension:\/\/)/.test(node.href)) {
+                console.warn("Removed potentially malicious <link> tag with href attribute %s!", node.href);
+                return node.remove();
+            }
+        }
+    });
 })();
 
 class HTML {
