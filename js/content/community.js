@@ -720,7 +720,20 @@ let ProfileHomePageClass = (function(){
 
     ProfileHomePageClass.prototype.addTwitchInfo = async function() {
 
-        let search = document.querySelector(".profile_summary a[href*='twitch.tv/'], .customtext_showcase a[href*='twitch.tv/']");
+        if (!SyncedStorage.get('profile_showcase_twitch')) { return; }
+
+        if (User.isSignedIn && !SyncedStorage.get('profile_showcase_own_twitch')) {
+            if (window.location.pathname == User.profilePath) {
+                // Don't show our Twitch.tv showcase on our own profile
+                return;
+            }
+        }
+
+        let selector = ".profile_summary a[href*='twitch.tv/']";
+        if (!SyncedStorage.get('profile_showcase_twitch_profileonly')) {
+            selector += ", .customtext_showcase a[href*='twitch.tv/']";
+        }
+        let search = document.querySelector(selector);
         if (!search) { return; }
 
         let m = search.href.match(/twitch\.tv\/(.+)/);
