@@ -999,7 +999,10 @@ let EnhancedSteam = (function() {
     self.alternateLinuxIcon = function(){
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
         let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
-        HTML.beforeEnd("head", "<style>span.platform_img.linux {background-image: url("+url+");}</style>")
+        let style = document.createElement('style');
+        style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
+        document.head.appendChild(style);
+        style = null;
     };
 
     // Hide Trademark and Copyright symbols in game titles for Community pages
@@ -1294,11 +1297,16 @@ let Highlights = (function(){
         if (!tagCssLoaded) {
             tagCssLoaded = true;
 
-            let tagCss = "";
+            let tagCss = [];
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
-                tagCss += '.es_tag_' + name + ' { background-color: ' + SyncedStorage.get("tag_"+name+"_color") + ' }\n';
+                let color = SyncedStorage.get(`tag_${name}_color`);
+                tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             });
-            HTML.beforeEnd("head", '<style id="es_tag_styles" type="text/css">' + tagCss + '</style>');
+            let style = document.createElement('style');
+            style.id = 'es_tag_styles';
+            style.textContent = tagCss.join("\n");
+            document.head.appendChild(style);
+            style = null;
         }
 
         // Add the tags container if needed
@@ -1412,13 +1420,18 @@ let Highlights = (function(){
         if (!highlightCssLoaded) {
             highlightCssLoaded = true;
 
-            let hlCss = "";
+            let hlCss = [];
 
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
-                hlCss += '.es_highlighted_' + name + ' { background: ' + SyncedStorage.get("highlight_" + name + "_color") + ' linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }\n';
+                let color = SyncedStorage.get(`highlight_${name}_color`);
+                hlCss.push(`.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }`);
             });
 
-            HTML.beforeEnd("head", '<style id="es_highlight_styles" type="text/css">' + hlCss + '</style>');
+            let style = document.createElement('style');
+            style.id = 'es_highlight_styles';
+            style.textContent = hlCss.join("\n");
+            document.head.appendChild(style);
+            style = null;
         }
 
         // Carousel item

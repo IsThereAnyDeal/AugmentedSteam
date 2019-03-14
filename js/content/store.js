@@ -1619,7 +1619,7 @@ let AppPageClass = (function(){
             }
         });
 
-        HTML.beforeBegin(".game_area_dlc_section .gradientbg",
+        HTML.beforeEnd(".game_area_dlc_section .gradientbg",
             "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
 
         document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
@@ -1661,7 +1661,12 @@ let AppPageClass = (function(){
         if (!User.isSignedIn) { return; }
         if (!SyncedStorage.get("show_badge_progress")) { return; }
 
-        HTML.beforeEnd("head", '<link rel="stylesheet" type="text/css" href="//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css">');
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css';
+        document.head.appendChild(stylesheet);
+
         HTML.afterEnd("#category_block",
             `<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
                 ${Localization.str.badge_progress}
@@ -1768,7 +1773,13 @@ let AppPageClass = (function(){
         let details_block = document.querySelector(".myactivity_block .details_block");
         if (!details_block) return;
 
-        HTML.afterEnd(details_block,"<link href='//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css' rel='stylesheet' type='text/css'><div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css';
+        document.head.appendChild(stylesheet);
+
+        HTML.afterEnd(details_block,"<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
         Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
             let dummy = HTMLParser.htmlToDOM(response);
@@ -1798,9 +1809,7 @@ let AppPageClass = (function(){
 
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
-            `<link rel='stylesheet' type='text/css' href='//steamstore-a.akamaihd.net/public/css/v6/home.css'>
-            <style type='text/css'>body.v6 h2 { letter-spacing: normal; text-transform: none; }</style>
-            <div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
+            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${ Localization.str.customize }</div>
                 <div class='home_viewsettings_popup'>
                     <div class='home_viewsettings_instructions' style='font-size: 12px;'>${ Localization.str.apppage_sections }</div>
@@ -1808,6 +1817,17 @@ let AppPageClass = (function(){
             </div>
             <div style="clear: both;"></div>`);
 
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
+        document.head.appendChild(stylesheet);
+
+        let style = document.createElement('style');
+        style.textContent = `body.v6 h2 { letter-spacing: normal; text-transform: none; }`;
+        document.head.appendChild(style);
+        style = null;
+    
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
         });
@@ -2274,8 +2294,13 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.endlessScrolling = function() {
         if (!SyncedStorage.get("contscroll")) { return; }
 
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
+        document.head.appendChild(stylesheet);
+
         let result_count;
-        HTML.beforeEnd(document.body, '<link rel="stylesheet" type="text/css" href="//steamstore-a.akamaihd.net/public/css/v6/home.css">');
         document.querySelector(".search_pagination_right").style.display = "none";
 
         let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);

@@ -633,15 +633,17 @@ let ProfileHomePageClass = (function(){
             if (!data || !data.style) { return; }
 
             let style = ProfileData.getStyle();
+            let stylesheet = document.createElement('link');
+            stylesheet.rel = 'stylesheet';
+            stylesheet.type = 'text/css';
             let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue", "grey"];
             if (availableStyles.indexOf(style) === -1) { return; }
 
             document.body.classList.add("es_profile_style");
             switch (style) {
                 case "goldenprofile":
-                    HTML.beforeEnd(
-                        "head",
-                        "<link rel='stylesheet' type='text/css' href='https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css'>");
+                    stylesheet.href = 'https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css';
+                    document.head.appendChild(stylesheet);
 
                     let container = document.createElement("div");
                     container.classList.add("profile_lny_wrapper");
@@ -681,7 +683,8 @@ let ProfileHomePageClass = (function(){
                     
                     break;
                 case "holiday2014":
-                    HTML.beforeEnd("head", "<link rel='stylesheet' type='text/css' href='//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css'>");
+                    stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css';
+                    document.head.appendChild(stylesheet);
 
                     HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
@@ -704,11 +707,14 @@ let ProfileHomePageClass = (function(){
                     let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
                     let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
 
-                    HTML.beforeEnd("head", "<link rel='stylesheet' type='text/css' href='" + styleUrl + "'>");
+                    stylesheet.href = styleUrl;
+                    document.head.appendChild(stylesheet);
+
                     document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
                     document.querySelector(".profile_customization").style.backgroundImage = "url('" + showcase + "')";
                     break;
             }
+            stylesheet = null;
         });
     };
 
