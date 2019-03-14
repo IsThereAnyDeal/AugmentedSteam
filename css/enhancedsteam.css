@@ -1426,6 +1426,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .wishlistRow:hover .es_wishlist_note:before {
 	opacity: 0.9;
 }
+.es_note_prompt {
+	width: auto !important;
+}
 #es_note_input {
 	height: 112px;
 	font-size: 14px !important;
