@@ -370,6 +370,7 @@
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification when requested",
         "pcgw": "Show PCGamingWiki links",
+        "completionistme": "Show Completionist.me links",
         "protondb": "Show ProtonDB links",
         "store_steamcards": "Show SteamCardExchange links on store pages",
         "spamcommentregex": "Regular Expression string:",

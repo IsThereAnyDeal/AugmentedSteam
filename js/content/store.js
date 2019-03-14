@@ -85,48 +85,47 @@ class Customizer {
     }
 }
 
-let StorePageClass = (function(){
-
-    function StorePageClass() {
+class StorePageClass {
+    constructor() {
         this.hasCards = document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
     }
 
     // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
-    StorePageClass.prototype.isAppPage = function() {
+    isAppPage() {
         return /^\/app\/\d+/.test(window.location.pathname);
-    };
+    }
 
-    StorePageClass.prototype.isSubPage = function() {
+    isSubPage() {
         return /^\/sub\/\d+/.test(window.location.pathname);
-    };
+    }
 
-    StorePageClass.prototype.isDlc = function() {
+    isDlc() {
         return document.querySelector("div.game_area_dlc_bubble") ? true : false;
-    };
+    }
 
-    StorePageClass.prototype.isVideo = function() {
+    isVideo() {
         return document.querySelector(".game_area_purchase_game .streamingvideo") ? true : false;
-    };
+    }
 
-    StorePageClass.prototype.isOwned = function() {
+    isOwned() {
         return document.querySelector(".game_area_already_owned") ? true :false;
-    };
+    }
 
-    StorePageClass.prototype.hasAchievements = function(){
+    hasAchievements() {
         return document.querySelector("#achievement_block") ? true : false;
-    };
+    }
 
-    StorePageClass.prototype.getAllSubids = function() {
+    getAllSubids() {
         let result = [];
         let nodes = document.querySelectorAll("input[name=subid]");
         for (let i=0, len=nodes.length; i<len; i++) {
             result.push(nodes[i].value);
         }
         return result;
-    };
+    }
 
 
-    StorePageClass.prototype.addDrmWarnings = function() {
+    addDrmWarnings() {
         if (!SyncedStorage.get("showdrm")) { return; }
 
         let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
@@ -205,9 +204,9 @@ let StorePageClass = (function(){
                 HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
             }
         }
-    };
+    }
 
-    StorePageClass.prototype.addPrices = function() {
+    addPrices() {
         if (!SyncedStorage.get("showlowestprice")) { return; }
 
         let prices = new Prices();
@@ -261,16 +260,15 @@ let StorePageClass = (function(){
         };
 
         prices.load();
-    };
+    }
 
-    StorePageClass.prototype.getRightColLinkHtml = function(cls, url, str) {
+    getRightColLinkHtml(cls, url, str) {
         return `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
                 </a>`;
-    };
+    }
 
-    // FIXME rename this to something sensible, maybe merge with addLinks?
-    StorePageClass.prototype.addSteamDbItad = function(type) {
+    addLinks(type) {
         if (!SyncedStorage.get("showsteamdb")
          && !SyncedStorage.get("showitadlinks")) { return; }
 
@@ -316,9 +314,9 @@ let StorePageClass = (function(){
                     Localization.str.view_on_website.replace("__website__", 'IsThereAnyDeal'))
             );
         }
-    };
+    }
 
-    StorePageClass.prototype.showRegionalPricing = function(type) {
+    showRegionalPricing(type) {
         let showRegionalPrice = SyncedStorage.get("showregionalprice");
         if (showRegionalPrice === "off") { return; }
 
@@ -415,31 +413,24 @@ let StorePageClass = (function(){
                 }
             })
         });
-    };
-
-    return StorePageClass;
-})();
+    }
+}
 
 
-let SubPageClass = (function() {
-
-    let Super = StorePageClass;
-
-    function SubPageClass(url) {
-        Super.call(this);
+class SubPageClass extends StorePageClass {
+    constructor(url) {
+        super();
 
         this.subid = GameId.getSubid(url);
 
         this.addDrmWarnings();
         this.addPrices();
-        this.addSteamDbItad("sub");
+        this.addLinks("sub");
         this.showRegionalPricing("sub");
         this.subscriptionSavingsCheck();
     }
-    SubPageClass.prototype = Object.create(Super.prototype);
-    SubPageClass.prototype.constructor = SubPageClass;
 
-    SubPageClass.prototype.subscriptionSavingsCheck = function() {
+    subscriptionSavingsCheck() {
         setTimeout(function() {
             let notOwnedTotalPrice = 0;
 
@@ -476,41 +467,27 @@ let SubPageClass = (function() {
             HTML.beforeBegin(savingsNode, html);
             savingsNode.remove();
         }, 500); // why is this here?
-    };
-
-    return SubPageClass;
-})();
+    }
+}
 
 
-let BundlePageClass = (function(){
-
-    let Super = StorePageClass;
-
-    function BundlePageClass(url) {
-        Super.call(this);
+class BundlePageClass extends StorePageClass {
+    constructor(url) {
+        super();
 
         this.bundleid = GameId.getSubid(url);
 
         this.addDrmWarnings();
         this.addPrices();
-        this.addSteamDbItad("bundle");
+        this.addLinks("bundle");
     }
+}
 
-    BundlePageClass.prototype = Object.create(Super.prototype);
-    BundlePageClass.prototype.constructor = SubPageClass;
+class AppPageClass extends StorePageClass {
+    constructor(url) {
+        super();
 
-    return BundlePageClass;
-})();
-
-let AppPageClass = (function(){
-
-    let Super = StorePageClass;
-    let wishlistNotes;
-
-    function AppPageClass(url) {
-        Super.call(this);
-
-        wishlistNotes = new WishlistNotes();
+        this.wishlistNotes = new WishlistNotes();
 
         this.appid = GameId.getAppid(url);
 
@@ -546,8 +523,7 @@ let AppPageClass = (function(){
         this.addHltb();
 
         this.moveUsefulLinks();
-        this.addLinks();
-        this.addSteamDbItad("app");
+        this.addLinks("app");
         this.addHighlights();
         this.addFamilySharingWarning();
 
@@ -566,10 +542,8 @@ let AppPageClass = (function(){
         this.addHelpButton();
 
     }
-    AppPageClass.prototype = Object.create(Super.prototype);
-    AppPageClass.prototype.constructor = AppPageClass;
 
-    AppPageClass.prototype.mediaSliderExpander = function() {
+    mediaSliderExpander() {
         let detailsBuilt = false;
         let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
 
@@ -680,9 +654,9 @@ let AppPageClass = (function(){
                 node.classList.toggle("es_expanded");
             }
 		}
-    };
+    }
 
-    AppPageClass.prototype.initHdPlayer = function() {
+    initHdPlayer() {
         let movieNode = document.querySelector('div.highlight_movie');
         if (!movieNode) { return; }
 
@@ -841,9 +815,9 @@ let AppPageClass = (function(){
     
             return videoIsHD;
         }
-    };
+    }
 
-    AppPageClass.prototype.storePageDataPromise = async function() {
+    async storePageDataPromise() {
         let apiparams = { 'appid': this.appid, };
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
@@ -852,12 +826,12 @@ let AppPageClass = (function(){
             apiparams.oc = 1;
         }
         return Background.action('storepagedata', apiparams);
-    };
+    }
 
     /**
      *  Allows the user to intuitively remove an item from their wishlist on the app page
      */
-    AppPageClass.prototype.addWishlistRemove = function() {
+    addWishlistRemove() {
         if (!User.isSignedIn) { return; }
         let appid = this.appid;
 
@@ -913,17 +887,17 @@ let AppPageClass = (function(){
         for (let i=0, len=nodes.length; i<len; i++) {
             nodes[i].addEventListener("click", DynamicStore.clear);
         }
-    };
+    }
 
-    AppPageClass.prototype.addWishlistNote = function() {
+    addWishlistNote() {
         if (!User.isSignedIn) { return; }
         let wishlistarea = document.getElementById("add_to_wishlist_area_success");
         if (wishlistarea && wishlistarea.style.display !== "none") {
-            _addWishlistNote(this.appid);
+            this._addWishlistNote(this.appid);
         }
-    };
+    }
 
-    AppPageClass.prototype.addWishlistNoteObserver = function() {
+    addWishlistNoteObserver() {
         if (!User.isSignedIn) { return; }
         let wishlistarea = document.getElementById("add_to_wishlist_area_success");
         if (!wishlistarea) { return; }
@@ -933,22 +907,22 @@ let AppPageClass = (function(){
 
             if (display === "none") {
                 document.getElementById("esi-store-wishlist-note").remove();
-                wishlistNotes.deleteNote(this.appid);
+                this.wishlistNotes.deleteNote(this.appid);
             } else {
-                _addWishlistNote(this.appid);
+                this._addWishlistNote(this.appid);
             }
         });
 
         observer.observe(wishlistarea, {attributes: true, attributeFilter: ["style"]});
-    };
+    }
 
-    let _addWishlistNote = function(appid) {
+    _addWishlistNote(appid) {
 
         let noteText;
         let cssClass;
 
-        if (wishlistNotes.exists(appid)) {
-            noteText = `"${wishlistNotes.getNote(appid)}"`;
+        if (this.wishlistNotes.exists(appid)) {
+            noteText = `"${this.wishlistNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -961,16 +935,16 @@ let AppPageClass = (function(){
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            wishlistNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
+            this.wishlistNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
         });
-    };
+    }
 
-    AppPageClass.prototype.getFirstSubid = function() {
+    getFirstSubid() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
         return node && node.value;
-    };
+    }
 
-    AppPageClass.prototype.addCoupon = function() {
+    addCoupon() {
         let inst = this;
         Inventory.then(() => {
 
@@ -1000,9 +974,9 @@ let AppPageClass = (function(){
 
             // TODO show price in purchase box
         });
-    };
+    }
 
-    AppPageClass.prototype.addDlcInfo = function() {
+    addDlcInfo() {
         if (!this.isDlc()) { return; }
 
         let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
@@ -1019,9 +993,9 @@ let AppPageClass = (function(){
 
             HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
         });
-    };
+    }
 
-    AppPageClass.prototype.addMetacriticUserScore = function() {
+    addMetacriticUserScore() {
         if (!SyncedStorage.get("showmcus")) { return; }
 
         let node = document.querySelector("#game_area_metascore");
@@ -1048,9 +1022,9 @@ let AppPageClass = (function(){
                     <div class='logo'></div><div class='wordmark'><div class='metacritic'>${Localization.str.user_score}</div></div>`)
             }
         });
-    };
+    }
 
-    AppPageClass.prototype.addOpenCritic = function() {
+    addOpenCritic() {
         if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
@@ -1106,9 +1080,9 @@ let AppPageClass = (function(){
                 ExtensionLayer.runInPageContext("function() { BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ); }");
             }
         });
-    };
+    }
 
-    AppPageClass.prototype.displayPurchaseDate = function() {
+    displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
         let node = document.querySelector(".game_area_already_owned");
@@ -1121,9 +1095,9 @@ let AppPageClass = (function(){
             HTML.beforeEnd(".game_area_already_owned .already_in_library",
                 ` ${Localization.str.purchase_date.replace("__date__", date)}`);
         });
-    };
+    }
 
-    AppPageClass.prototype.addWidescreenCertification = function() {
+    addWidescreenCertification() {
         if (!SyncedStorage.get("showwsgf")) { return; }
         if (this.isDlc()) { return; }
 
@@ -1247,9 +1221,9 @@ let AppPageClass = (function(){
 
             HTML.afterEnd(node, html);
         });
-    };
+    }
 
-    AppPageClass.prototype.addHltb = function() {
+    addHltb() {
         if (!SyncedStorage.get("showhltb")) { return; }
         if (this.isDlc()) { return; }
 
@@ -1303,9 +1277,9 @@ let AppPageClass = (function(){
                 });
             }
         });
-    };
+    }
 
-    AppPageClass.prototype.moveUsefulLinks = function() {
+    moveUsefulLinks() {
         if (!this.isAppPage()) { return; }
 
         let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
@@ -1317,9 +1291,9 @@ let AppPageClass = (function(){
         } else {
             document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", usefulLinks);
         }
-    };
+    }
 
-    AppPageClass.prototype.addLinks = function() {
+    addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
 
         if (SyncedStorage.get("showclient")) {
@@ -1342,6 +1316,16 @@ let AppPageClass = (function(){
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
         
+        if (SyncedStorage.get("showcompletionistme")) {
+            let cls = "completionistme_btn";
+            let url = "https://completionist.me/steam/app/" + this.appid;
+            let str = Localization.str.view_on_website.replace("__website__", 'Completionist.me');
+
+            HTML.afterBegin(linkNode,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+        }
+
         if (SyncedStorage.get("showprotondb")) {
             let cls = "protondb_btn";
             let url = "https://www.protondb.com/app/" + this.appid;
@@ -1362,17 +1346,19 @@ let AppPageClass = (function(){
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                 <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-    };
 
-    AppPageClass.prototype.addHighlights = function() {
+        super.addLinks(type);
+    }
+
+    addHighlights() {
         if (!SyncedStorage.get("highlight_owned")) { return; }
 
         if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
             document.querySelector(".apphub_AppName").style.color = SyncedStorage.get("highlight_owned_color");
         }
-    };
+    }
 
-    AppPageClass.prototype.addFamilySharingWarning = function() {
+    addFamilySharingWarning() {
         if (!SyncedStorage.get("exfgls")) { return; }
 
         this.data.then(result => {
@@ -1382,9 +1368,9 @@ let AppPageClass = (function(){
             HTML.beforeBegin("#game_area_purchase",
                 `<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">${str}</div><div class="notice_box_bottom"></div></div>`);
         });
-    };
+    }
 
-    AppPageClass.prototype.addPackageInfoButton = function() {
+    addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
@@ -1400,9 +1386,9 @@ let AppPageClass = (function(){
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
         }
-    };
+    }
 
-    function addSteamChart(result) {
+    addSteamChart(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
 	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
@@ -1421,7 +1407,7 @@ let AppPageClass = (function(){
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
     }
 
-    function addSteamSpy(result) {
+    addSteamSpy(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamspy_info") || !result.steamspy || !result.steamspy.owners) { return; } // customization setting
 
@@ -1462,7 +1448,7 @@ let AppPageClass = (function(){
         HTML.beforeBegin(".sys_req", html);
     }
 
-    function addSurveyData(result) {
+    addSurveyData(result) {
         if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
         if (!result.survey) { return; }
@@ -1542,18 +1528,19 @@ let AppPageClass = (function(){
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
     }
 
-    AppPageClass.prototype.addStats = function(){
+    addStats() {
+        let that = this;
         if (this.isDlc()) { return; }
         this.data.then(result => {
 
-            addSteamChart.call(this, result);
-            addSteamSpy.call(this, result);
-            addSurveyData.call(this, result);
+            that.addSteamChart(result);
+            that.addSteamSpy(result);
+            that.addSurveyData(result);
 
         });
-    };
+    }
 
-    AppPageClass.prototype.addDlcCheckboxes = function() {
+    addDlcCheckboxes() {
         let nodes = document.querySelectorAll(".game_area_dlc_row");
         if (nodes.length === 0) { return; }
         let expandedNode = document.querySelector("#game_area_dlc_expanded");
@@ -1654,9 +1641,9 @@ let AppPageClass = (function(){
             let button = document.querySelector("#es_selected_btn");
             button.style.display = (nodes.length > 0 ? "block" : "none");
         })
-    };
+    }
 
-    AppPageClass.prototype.addBadgeProgress = function(){
+    addBadgeProgress() {
         if (!this.hasCards) { return; }
         if (!User.isSignedIn) { return; }
         if (!SyncedStorage.get("show_badge_progress")) { return; }
@@ -1748,10 +1735,10 @@ let AppPageClass = (function(){
                 }
             }
         }
-    };
+    }
 
 
-    AppPageClass.prototype.addAstatsLink = function(){
+    addAstatsLink() {
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
@@ -1763,9 +1750,9 @@ let AppPageClass = (function(){
                   <div class='icon'><img src='${imgUrl}' style='margin-left: 4px; width: 16px;'></div>
                   <a class='name' href='${url}' target='_blank'><span>${Localization.str.view_astats}</span></a>
                </div>`);
-    };
+    }
 
-    AppPageClass.prototype.addAchievementCompletionBar = function(){
+    addAchievementCompletionBar() {
         if (!SyncedStorage.get("showachinstore")) { return; }
         if (!this.hasAchievements()) { return; }
         if (!this.isOwned()) { return; }
@@ -1802,9 +1789,9 @@ let AppPageClass = (function(){
                 .replace("::", ":");
             HTML.inner(node, resultHtml);
         });
-    };
+    }
 
-    AppPageClass.prototype.customizeAppPage = function(){
+    customizeAppPage() {
         let instance = this;
 
         let nodes = document.querySelectorAll(".purchase_area_spacer");
@@ -1880,9 +1867,9 @@ let AppPageClass = (function(){
                 document.querySelector(".user_reviews_header").textContent
             );
         }
-    };
+    }
 
-    AppPageClass.prototype.addReviewToggleButton = function() {
+    addReviewToggleButton() {
         let head = document.querySelector("#review_create h1");
         if (!head) { return; }
         HTML.beforeEnd(head, "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
@@ -1922,16 +1909,16 @@ let AppPageClass = (function(){
                 toggleReviews();
             });
         }
-    };
+    }
 
-    AppPageClass.prototype.addHelpButton = function() {
+    addHelpButton() {
         let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
         HTML.afterEnd(node,
             "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
-    };
+    }
 
-    AppPageClass.prototype.addPackBreakdown = function() {
+    addPackBreakdown() {
 
         function splitPack(node, ways) {
             let price_text = node.querySelector(".discount_final_price").innerHTML;
@@ -1977,10 +1964,8 @@ let AppPageClass = (function(){
             else if (title.includes(' 6 pack')) { splitPack.call(node, 6); }
             else if (title.includes(' six pack')) { splitPack.call(node, 6); }
         }
-    };
-
-    return AppPageClass;
-})();
+    }
+}
 
 
 let RegisterKeyPageClass = (function(){

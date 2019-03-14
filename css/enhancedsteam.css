@@ -2397,7 +2397,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .pcgw_btn i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/pcgw.png');
 }
-
+.completionistme_btn i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon-completionistme.png');
+}
 .protondb_btn i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon-protondb.png'); /* //www.protondb.com/images/protondb-logo.svg */
 }
