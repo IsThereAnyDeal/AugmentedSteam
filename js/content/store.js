@@ -1342,6 +1342,16 @@ let AppPageClass = (function(){
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
         
+        if (SyncedStorage.get("showcompletionistme")) {
+            let cls = "completionistme_btn";
+            let url = "https://completionist.me/steam/app/" + this.appid;
+            let str = Localization.str.view_on_website.replace("__website__", 'Completionist.me');
+
+            HTML.afterBegin(linkNode,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
+                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+        }
+
         if (SyncedStorage.get("showprotondb")) {
             let cls = "protondb_btn";
             let url = "https://www.protondb.com/app/" + this.appid;

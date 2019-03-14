@@ -467,6 +467,7 @@ SyncedStorage.defaults = {
     'showoc': true,
     'showhltb': true,
     'showpcgw': true,
+    'showcompletionistme': false,
     'showprotondb': false,
     'showclient': true,
     'showsteamcardexchange': false,
