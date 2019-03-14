@@ -1090,7 +1090,7 @@ let AppPageClass = (function(){
                             <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
                           </div>`);
 
-                    if (!SyncedStorage.get("show_apppage_reviews")) {
+                    if (!SyncedStorage.get("customize_apppage").reviews) {
                         document.querySelector("#game_area_reviews").style.display = "none";
                     }
                 }

@@ -550,6 +550,7 @@ SyncedStorage.defaults = {
     'removeguideslanguagefilter': false,
     'disablelinkfilter': false,
     'showallfriendsthatown': false,
+    'sortfriendsby': "default",
     'show1clickgoo': true,
     'show_profile_link_images': "gray",
     'profile_steamrepcn': true,
