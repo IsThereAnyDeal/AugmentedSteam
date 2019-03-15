@@ -487,7 +487,7 @@ class AppPageClass extends StorePageClass {
     constructor(url) {
         super();
 
-        this.wishlistNotes = new WishlistNotes();
+        this.userNotes = new UserNotes();
 
         this.appid = GameId.getAppid(url);
 
@@ -507,8 +507,8 @@ class AppPageClass extends StorePageClass {
         this.mediaSliderExpander();
         this.initHdPlayer();
         this.addWishlistRemove();
-        this.addWishlistNote();
-        this.addWishlistNoteObserver();
+        this.addUserNote();
+        this.addUserNoteObserver();
         this.addCoupon();
         this.addPrices();
         this.addDlcInfo();
@@ -889,15 +889,15 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    addWishlistNote() {
+    addUserNote() {
         if (!User.isSignedIn) { return; }
         let wishlistarea = document.getElementById("add_to_wishlist_area_success");
         if (wishlistarea && wishlistarea.style.display !== "none") {
-            this._addWishlistNote(this.appid);
+            this._addUserNote(this.appid);
         }
     }
 
-    addWishlistNoteObserver() {
+    addUserNoteObserver() {
         if (!User.isSignedIn) { return; }
         let wishlistarea = document.getElementById("add_to_wishlist_area_success");
         if (!wishlistarea) { return; }
@@ -907,22 +907,22 @@ class AppPageClass extends StorePageClass {
 
             if (display === "none") {
                 document.getElementById("esi-store-wishlist-note").remove();
-                this.wishlistNotes.deleteNote(this.appid);
+                this.userNotes.deleteNote(this.appid);
             } else {
-                this._addWishlistNote(this.appid);
+                this._addUserNote(this.appid);
             }
         });
 
         observer.observe(wishlistarea, {attributes: true, attributeFilter: ["style"]});
     }
 
-    _addWishlistNote(appid) {
+    _addUserNote(appid) {
 
         let noteText;
         let cssClass;
 
-        if (this.wishlistNotes.exists(appid)) {
-            noteText = `"${this.wishlistNotes.getNote(appid)}"`;
+        if (this.userNotes.exists(appid)) {
+            noteText = `"${this.userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -935,7 +935,7 @@ class AppPageClass extends StorePageClass {
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            this.wishlistNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
+            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
         });
     }
 
@@ -2661,12 +2661,12 @@ let CuratorPageClass = (function(){
 let WishlistPageClass = (function(){
 
     let cachedPrices = {};
-    let wishlistNotes;
+    let userNotes;
 
     function WishlistPageClass() {
 
         let instance = this;
-        wishlistNotes = new WishlistNotes();
+        userNotes = new UserNotes();
 
         let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
@@ -2911,8 +2911,8 @@ let WishlistPageClass = (function(){
         let appid = node.dataset.appId;
         let noteText;
         let cssClass;
-        if (wishlistNotes.exists(appid)) {
-            noteText = `"${wishlistNotes.getNote(appid)}"`;
+        if (userNotes.exists(appid)) {
+            noteText = `"${userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2933,7 +2933,7 @@ let WishlistPageClass = (function(){
 
             let row = e.target.closest(".wishlist_row");
             let appid = row.dataset.appId;
-            wishlistNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
+            userNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
         });
     };
 
@@ -2954,7 +2954,7 @@ let WishlistPageClass = (function(){
             if (!e.data.type) { return; }
 
             if (e.data.type === "es_remove_wl_entry") {
-                wishlistNotes.deleteNote(e.data.removed_wl_entry);
+                userNotes.deleteNote(e.data.removed_wl_entry);
             }
         });
     };
@@ -2962,9 +2962,9 @@ let WishlistPageClass = (function(){
     return WishlistPageClass;
 })();
 
-let WishlistNotes = (function(){
+let UserNotes = (function(){
 
-    function WishlistNotes() {
+    function UserNotes() {
         this.noteModalTemplate = `
                 <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
@@ -2985,7 +2985,7 @@ let WishlistNotes = (function(){
         this.notes = SyncedStorage.get("wishlist_notes");
     }
 
-    WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
+    UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
         ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname) + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
 
@@ -3024,25 +3024,25 @@ let WishlistNotes = (function(){
         }
     };
 
-    WishlistNotes.prototype.getNote = function(appid) {
+    UserNotes.prototype.getNote = function(appid) {
         return this.notes[appid];
     };
 
-    WishlistNotes.prototype.setNote = function(appid, note) {
+    UserNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
         SyncedStorage.set("wishlist_notes", this.notes);
     };
 
-    WishlistNotes.prototype.deleteNote = function(appid) {
+    UserNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
         SyncedStorage.set("wishlist_notes", this.notes);
     };
 
-    WishlistNotes.prototype.exists = function(appid) {
+    UserNotes.prototype.exists = function(appid) {
         return (this.notes[appid] && (this.notes[appid] !== ''));
     };
 
-    return WishlistNotes;
+    return UserNotes;
 
 })();
 
