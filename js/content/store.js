@@ -2964,6 +2964,7 @@ let UserNotes = (function(){
         ExtensionLayer.runInPageContext(
             `function() {
                 ShowDialog("${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}", \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`);
+                $J("#es_note_input")[0].setSelectionRange(0, $J("#es_note_input").val().length);
             }`);
 
         if (!this.listenerCreated) {
