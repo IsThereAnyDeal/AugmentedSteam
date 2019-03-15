@@ -2943,7 +2943,7 @@ let UserNotes = (function(){
                 <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
                         <div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
-                            <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512" autofocus=true>__note__</textarea>
+                            <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
                         </div>
                         <div class="es_note_buttons" style="float: right">
                             <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
@@ -2969,7 +2969,10 @@ let UserNotes = (function(){
                         type: "es_modal_dismissed"
                     }, "*");
                 });
-                $J("#es_note_input")[0].setSelectionRange(0, $J("#es_note_input").val().length);
+                
+                let note_input = document.getElementById("es_note_input");
+                note_input.focus();
+                note_input.setSelectionRange(0, note_input.textLength);
             }`);
 
         window.addEventListener("message", messageListener);
