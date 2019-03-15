@@ -932,10 +932,11 @@ class AppPageClass extends StorePageClass {
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
 
+        let that = this;
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
+            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
         });
     }
 
