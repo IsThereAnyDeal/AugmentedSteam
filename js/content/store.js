@@ -508,7 +508,6 @@ class AppPageClass extends StorePageClass {
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
-        this.addUserNoteObserver();
         this.addCoupon();
         this.addPrices();
         this.addDlcInfo();
@@ -891,38 +890,12 @@ class AppPageClass extends StorePageClass {
 
     addUserNote() {
         if (!User.isSignedIn) { return; }
-        let wishlistarea = document.getElementById("add_to_wishlist_area_success");
-        if (wishlistarea && wishlistarea.style.display !== "none") {
-            this._addUserNote(this.appid);
-        }
-    }
-
-    addUserNoteObserver() {
-        if (!User.isSignedIn) { return; }
-        let wishlistarea = document.getElementById("add_to_wishlist_area_success");
-        if (!wishlistarea) { return; }
-
-        let observer = new MutationObserver(record => {
-            let display = record[0].target.style.display;
-
-            if (display === "none") {
-                document.getElementById("esi-store-wishlist-note").remove();
-                this.userNotes.deleteNote(this.appid);
-            } else {
-                this._addUserNote(this.appid);
-            }
-        });
-
-        observer.observe(wishlistarea, {attributes: true, attributeFilter: ["style"]});
-    }
-
-    _addUserNote(appid) {
 
         let noteText;
         let cssClass;
 
-        if (this.userNotes.exists(appid)) {
-            noteText = `"${this.userNotes.getNote(appid)}"`;
+        if (this.userNotes.exists(this.appid)) {
+            noteText = `"${this.userNotes.getNote(this.appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -936,7 +909,7 @@ class AppPageClass extends StorePageClass {
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
+            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-wishlist-note");
         });
     }
 
