@@ -2963,42 +2963,58 @@ let UserNotes = (function(){
 
         ExtensionLayer.runInPageContext(
             `function() {
-                ShowDialog("${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}", \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`);
+                ShowDialog("${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}", \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`)
+                .OnDismiss(() => {
+                    window.postMessage({
+                        type: "es_modal_dismissed"
+                    }, "*");
+                });
                 $J("#es_note_input")[0].setSelectionRange(0, $J("#es_note_input").val().length);
             }`);
 
-        if (!this.listenerCreated) {
-            let that = this;
-            document.addEventListener("click", function(e) {
-                if (e.target.closest(".es_note_modal_submit")) {
-                    e.preventDefault();
+        window.addEventListener("message", messageListener);
+        document.addEventListener("click", clickListener);
 
-                    let modal = document.querySelector('#es_note_modal');
-                    let appid = modal.dataset.appid;
-                    let selector = decodeURIComponent(modal.dataset.selector);
-                    let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                    let node = document.querySelector(selector);
+        function messageListener(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
 
-                    if (note.length !== 0) {
-                        that.setNote(appid, note);
+            if (e.data.type === "es_modal_dismissed") {
+                document.removeEventListener("click", clickListener);
+                window.removeEventListener("message", messageListener);
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            }
+        }
 
-                        node.classList.remove("esi-empty-note");
-                        node.classList.add("esi-user-note");
-                        HTML.inner(node, `"${note}"`);
-                    } else {
-                        that.deleteNote(appid);
+        let that = this;
+        function clickListener(e) {
+            if (e.target.closest(".es_note_modal_submit")) {
+                e.preventDefault();
 
-                        node.classList.remove("esi-user-note");
-                        node.classList.add("esi-empty-note");
-                        node.textContent = Localization.str.add_wishlist_note;
-                    }
+                let modal = document.querySelector('#es_note_modal');
+                let appid = modal.dataset.appid;
+                let selector = decodeURIComponent(modal.dataset.selector);
+                let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+                let node = document.querySelector(selector);
 
-                    ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-                } else if (e.target.closest(".es_note_modal_close")) {
-                    ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                if (note.length !== 0) {
+                    that.setNote(appid, note);
+
+                    node.classList.remove("esi-empty-note");
+                    node.classList.add("esi-user-note");
+                    HTML.inner(node, `"${note}"`);
+                } else {
+                    that.deleteNote(appid);
+
+                    node.classList.remove("esi-user-note");
+                    node.classList.add("esi-empty-note");
+                    node.textContent = Localization.str.add_wishlist_note;
                 }
-            });
-            this.listenerCreated = true;
+
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            } else if (e.target.closest(".es_note_modal_close")) {
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            }
         }
     };
 
