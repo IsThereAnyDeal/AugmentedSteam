@@ -2056,7 +2056,7 @@ let RegisterKeyPageClass = (function(){
                     data = JSON.parse(data);
                     let attempted = current_key;
                     let message = Localization.str.register.default;
-                    if (data["success"]) {
+                    if (data["success"] === 1) {
                         document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
