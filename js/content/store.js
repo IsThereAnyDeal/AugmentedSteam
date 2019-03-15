@@ -2943,7 +2943,7 @@ let UserNotes = (function(){
                 <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
                         <div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
-                            <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+                            <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512" autofocus=true>__note__</textarea>
                         </div>
                         <div class="es_note_buttons" style="float: right">
                             <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
@@ -2961,7 +2961,10 @@ let UserNotes = (function(){
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname) + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
+        ExtensionLayer.runInPageContext(
+            `function() {
+                ShowDialog("${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}", \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`);
+            }`);
 
         if (!this.listenerCreated) {
             let that = this;
