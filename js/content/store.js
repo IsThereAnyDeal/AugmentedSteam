@@ -2996,9 +2996,8 @@ let UserNotes = (function(){
 
                 let modal = document.querySelector('#es_note_modal');
                 let appid = modal.dataset.appid;
-                let selector = decodeURIComponent(modal.dataset.selector);
                 let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                let node = document.querySelector(selector);
+                let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
 
                 if (note.length !== 0) {
                     that.setNote(appid, note);
