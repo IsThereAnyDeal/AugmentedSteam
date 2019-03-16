@@ -3006,6 +3006,8 @@ let UserNotes = (function(){
                 note_input.addEventListener("keydown", e => {
                     if (e.key === "Enter") {
                         $J(".es_note_modal_submit").click();
+                    } else if (e.key === "Escape") {
+                        Modal.Dismiss();
                     }
                 });
             }`);
