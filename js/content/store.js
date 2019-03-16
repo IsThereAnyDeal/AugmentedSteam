@@ -2963,12 +2963,42 @@ let UserNotes = (function(){
 
         ExtensionLayer.runInPageContext(
             `function() {
-                ShowDialog("${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}", \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`)
-                .OnDismiss(() => {
+                // Partly copied from shared_global.js
+                let deferred = new jQuery.Deferred();
+                let fnOK = () => deferred.resolve();
+
+                let Modal = _BuildDialog(
+                    "${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}",
+                    \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
+                    [], fnOK);
+                deferred.always(() => Modal.Dismiss());
+
+                Modal.OnDismiss(() => {
                     window.postMessage({
                         type: "es_modal_dismissed"
                     }, "*");
                 });
+                Modal.m_fnBackgroundClick = () => {
+                    function messageListener(e) {
+                        if (e.source !== window) { return; }
+                        if (!e.data.type) { return; }
+
+                        if (e.data.type === "es_note_saved") {
+                            Modal.Dismiss();
+                            window.removeEventListener("message", messageListener);
+                        }
+                    }
+                    window.addEventListener("message", messageListener);
+
+                    window.postMessage({
+                        type: "es_background_click"
+                    }, "*");
+                }
+
+                Modal.Show();
+
+                // attach the deferred's events to the modal
+                deferred.promise(Modal);
                 
                 let note_input = document.getElementById("es_note_input");
                 note_input.focus();
@@ -2990,38 +3020,55 @@ let UserNotes = (function(){
             if (e.data.type === "es_modal_dismissed") {
                 document.removeEventListener("click", clickListener);
                 window.removeEventListener("message", messageListener);
+            } else if (e.data.type === "es_background_click") {
+                saveNote();
+                window.postMessage({
+                    type: "es_note_saved"
+                }, "*");
+            }
+        }
+
+        function backgroundClickListener(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+
+            if (e.data.type === "es_modal_dismissed") {
+                document.removeEventListener("click", clickListener);
+                window.removeEventListener("message", messageListener);
+            }
+        }
+
+        function clickListener(e) {
+            if (e.target.closest(".es_note_modal_submit")) {
+                e.preventDefault();
+                saveNote();
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
             }
         }
 
         let that = this;
-        function clickListener(e) {
-            if (e.target.closest(".es_note_modal_submit")) {
-                e.preventDefault();
+        function saveNote() {
+            let modal = document.querySelector('#es_note_modal');
+            let appid = modal.dataset.appid;
+            let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+            let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
 
-                let modal = document.querySelector('#es_note_modal');
-                let appid = modal.dataset.appid;
-                let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
+            if (note.length !== 0) {
+                that.setNote(appid, note);
 
-                if (note.length !== 0) {
-                    that.setNote(appid, note);
+                node.classList.remove("esi-empty-note");
+                node.classList.add("esi-user-note");
+                HTML.inner(node, `"${note}"`);
+            } else {
+                that.deleteNote(appid);
 
-                    node.classList.remove("esi-empty-note");
-                    node.classList.add("esi-user-note");
-                    HTML.inner(node, `"${note}"`);
-                } else {
-                    that.deleteNote(appid);
-
-                    node.classList.remove("esi-user-note");
-                    node.classList.add("esi-empty-note");
-                    node.textContent = Localization.str.add_wishlist_note;
-                }
-
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-            } else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                node.classList.remove("esi-user-note");
+                node.classList.add("esi-empty-note");
+                node.textContent = Localization.str.add_wishlist_note;
             }
+
         }
     };
 
