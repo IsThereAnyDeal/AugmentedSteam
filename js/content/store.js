@@ -2973,6 +2973,11 @@ let UserNotes = (function(){
                 let note_input = document.getElementById("es_note_input");
                 note_input.focus();
                 note_input.setSelectionRange(0, note_input.textLength);
+                note_input.addEventListener("keydown", e => {
+                    if (e.key === "Enter") {
+                        $J(".es_note_modal_submit").click();
+                    }
+                });
             }`);
 
         window.addEventListener("message", messageListener);
