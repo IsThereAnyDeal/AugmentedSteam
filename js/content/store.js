@@ -2546,8 +2546,7 @@ let SearchPageClass = (function(){
         let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
         let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
 
-        let position;
-        if (currency.format.right) {
+        if (currency.format.postfix) {
             HTML.afterEnd(notpriceabove_val, html);
         } else {
             HTML.beforeBegin(notpriceabove_val, html);
