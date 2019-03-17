@@ -2543,11 +2543,10 @@ let SearchPageClass = (function(){
             document.querySelector("#es_hide_expander").style.display = "none";
         }
 
-        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol.trim() + "</span>";
+        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
         let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
 
-        let position;
-        if (currency.format.right) {
+        if (currency.format.postfix) {
             HTML.afterEnd(notpriceabove_val, html);
         } else {
             HTML.beforeBegin(notpriceabove_val, html);
