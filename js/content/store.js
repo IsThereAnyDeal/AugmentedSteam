@@ -2417,7 +2417,7 @@ let SearchPageClass = (function(){
 
             let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
             let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-            let parsed = Price.parseFromString(intern.trim());
+            let parsed = Price.parseFromString(intern.trim(), Currency.storeCurrency);
             if (parsed && parsed.value > priceAboveValue) {
                 node.style.display = "none";
             }
