@@ -2063,9 +2063,8 @@ class MediaPage {
 
             // On every animation/transition end check the slider state
             let container = document.querySelector('.highlight_ctn');
-            container.addEventListener('transitionend', saveSlider, false);
+            container.addEventListener('transitionend', saveSlider, { 'capture': false, 'once': false, });
             function saveSlider(ev) {
-                container.removeEventListener('transitionend', saveSlider, false);
                 // Save slider state
                 LocalStorage.set('expand_slider', el.classList.contains('es_expanded'));
 
