@@ -506,7 +506,7 @@ class AppPageClass extends StorePageClass {
 
         let media = new MediaPage();
         media.mediaSliderExpander();
-        media.initHdPlayer();
+        this.initHdPlayer();
         this.addWishlistRemove();
         this.addWishlistNote();
         this.addWishlistNoteObserver();
@@ -542,6 +542,167 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
 
+    }
+
+    initHdPlayer() {
+        let movieNode = document.querySelector('div.highlight_movie');
+        if (!movieNode) { return; }
+
+        let playInHD = LocalStorage.get('playback_hd');
+
+        // Add HD Control to each video as it's added to the DOM
+        let firstVideoIsPlaying = movieNode.querySelector('video.highlight_movie');
+        if (firstVideoIsPlaying) {
+            addHDControl(firstVideoIsPlaying);
+        }
+
+        let observer = new MutationObserver(function(mutation_records){
+            for (let mr of mutation_records) {
+                // Array.from(mr.addedNodes).filter(n => n.matches && n.matches('video.highlight_movie')).forEach(n => addHDControl(n));
+                for (let node of mr.addedNodes) {
+                    if (!node.matches || !node.matches('video.highlight_movie')) continue;
+                    addHDControl(node);
+                }
+            }
+        });
+        document.querySelectorAll('div.highlight_movie').forEach(function(node, idx){
+            observer.observe(node, { 'childList': true, });
+        });
+
+        // When the "HD" button is clicked change the definition for all videos accordingly
+        document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
+        function clickHDControl(ev) {
+            if (!ev.target.matches || !ev.target.closest('.es_hd_toggle')) return;
+
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
+            let playInHD = toggleVideoDefinition(videoControl);
+
+            for (let n of document.querySelectorAll('video.highlight_movie')) {
+                if (n === videoControl) continue;
+                toggleVideoDefinition(n, playInHD);
+            }
+
+            LocalStorage.set('playback_hd', playInHD);
+        }
+
+        // When the slider is expanded first time after the page was loaded set videos definition to HD
+        for (let node of document.querySelectorAll('.es_slider_toggle')) {
+            node.addEventListener('click', clickInitialHD, false);
+        }
+        function clickInitialHD(ev) {
+            ev.currentTarget.removeEventListener('click', clickInitialHD, false);
+            if (!ev.target.classList.contains('es_expanded')) return;
+            for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
+                toggleVideoDefinition(node, true);
+            }
+            LocalStorage.set('playback_hd', true);
+        }
+
+        function addHDControl(videoControl) {
+            playInHD = LocalStorage.get('playback_hd');
+
+            function _addHDControl() {
+                // Add "HD" button and "sd-src" to the video and set definition
+                if (videoControl.dataset.hdSrc) {
+                    videoControl.dataset.sdSrc = videoControl.src;
+                    let node = videoControl.parentNode.querySelector('.time');
+                    if (node) {
+                        HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
+                    }
+                }
+
+                // Override Valve's auto switch to HD when putting a video in fullscreen
+                let node = videoControl.parentNode.querySelector('.fullscreen_button');
+                if (node) {
+                    let newNode = document.createElement('div');
+                    newNode.classList.add("fullscreen_button");
+                    newNode.addEventListener('click', (() => toggleFullscreen(videoControl)), false);
+                    node.replaceWith(newNode);
+                    node = null; // prevent memory leak
+                    newNode = null;
+                }
+
+                // Toggle fullscreen on video double click
+                videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
+
+                toggleVideoDefinition(videoControl, playInHD);
+            }
+            setTimeout(_addHDControl, 150);
+            // prevents a bug in Chrome which causes videos to stop playing after changing the src
+        }
+
+        function toggleFullscreen(videoControl) {
+            let fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
+            // Chrome unprefixed in v45
+            // Mozilla unprefixed in v64
+            if (!fullscreenAvailable) return;
+
+            let container = videoControl.parentNode;
+            let isFullscreen = document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement;
+            // Mozilla unprefixed in v64
+            // Chrome still prefixed
+
+            if (isFullscreen) {
+                if (document.exitFullscreen)
+                    document.exitFullscreen(); // Unprefixed in v64
+                else if (document.mozCancelFullScreen)
+                    document.mozCancelFullScreen(); // Unprefixed in v64
+            } else {
+                let response = null;
+                if (container.requestFullscreen)
+                    response = container.requestFullscreen();
+                else if (container.mozRequestFullScreen)
+                    response = container.mozRequestFullScreen(); // Unprefixed in v64
+                else if (container.webkitRequestFullscreen)
+                    container.webkitRequestFullscreen(); // no promise
+                // if response is a promise, catch any errors it throws
+                Promise.resolve(response).catch(err => console.error(err));
+            }
+        }
+
+        function toggleVideoDefinition(videoControl, setHD) {
+            let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
+                videoIsHD = false,
+                loadedSrc = videoControl.classList.contains("es_loaded_src"),
+                playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+
+            let videoPosition = videoControl.currentTime || 0,
+                videoPaused = videoControl.paused;
+            if (videoIsVisible) {
+                videoControl.preload = "metadata";
+                videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
+            }
+            function onLoadedMetaData() {
+                this.currentTime = videoPosition;
+                if (!videoPaused && videoControl.play) {
+                    // if response is a promise, suppress any errors it throws
+                    Promise.resolve(videoControl.play()).catch(err => {});
+                }
+                videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+            }
+
+            if (!playInHD && (typeof setHD === 'undefined' || setHD === true)) {
+                videoIsHD = true;
+                videoControl.src = videoControl.dataset.hdSrc;
+            } else if (loadedSrc) {
+                videoControl.src = videoControl.dataset.sdSrc;
+            }
+
+            if (videoIsVisible && loadedSrc) {
+                videoControl.load();
+            }
+
+            videoControl.classList.add("es_loaded_src");
+            videoControl.classList.toggle("es_video_sd", !videoIsHD);
+            videoControl.classList.toggle("es_video_hd", videoIsHD);
+            videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
+            videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
+
+            return videoIsHD;
+        }
     }
 
     async storePageDataPromise() {
