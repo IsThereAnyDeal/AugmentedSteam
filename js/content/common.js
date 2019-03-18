@@ -253,12 +253,8 @@ let RequestData = (function(){
     return self;
 })();
 
-let ProgressBar = (function(){
-    let self = {};
-
-    let node = null;
-
-    self.create = function() {
+class ProgressBar {
+    static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
         let container = document.getElementById("global_actions");
@@ -273,11 +269,10 @@ let ProgressBar = (function(){
                     </div>
                 </div>
             </div>`);
+    }
 
-        node = document.querySelector("#es_progress");
-    };
-
-    self.loading = function() {
+    static loading() {
+        let node = document.getElementById('es_progress');
         if (!node) { return; }
 
         if (Localization.str.ready) {
@@ -286,9 +281,10 @@ let ProgressBar = (function(){
 
         node.classList.remove("complete");
         node.querySelector(".progress-value").style.width = "18px";
-    };
+    }
 
-    self.progress = function(value) {
+    static progress(value) {
+        let node = document.getElementById('es_progress');
         if (!node) { return; }
 
         node.querySelector(".progress-value").style.width = value; // TODO verify this works, shouldn't there be "%"?
@@ -297,9 +293,10 @@ let ProgressBar = (function(){
             node.classList.add("complete");
             node.setAttribute("title", Localization.str.ready.ready)
         }
-    };
+    }
 
-    self.failed = function(message, url, status, error) {
+    static failed(message, url, status, error) {
+        let node = document.getElementById('es_progress');
         if (!node) { return; }
 
         node.classList.add("error");
@@ -319,10 +316,8 @@ let ProgressBar = (function(){
         }
 
         HTML.beforeEnd(nodeError.querySelector("ul"), "<li>" + message + "</li>");
-    };
-
-    return self;
-})();
+    }
+}
 
 
 let User = (function(){
