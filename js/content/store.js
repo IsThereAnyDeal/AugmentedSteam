@@ -684,7 +684,7 @@ class AppPageClass extends StorePageClass {
                 videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
             }
 
-            if (!playInHD && (typeof setHD === 'undefined' || setHD === true)) {
+            if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
                 videoIsHD = true;
                 videoControl.src = videoControl.dataset.hdSrc;
             } else if (loadedSrc) {
