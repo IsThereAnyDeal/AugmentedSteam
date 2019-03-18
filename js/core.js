@@ -617,18 +617,34 @@ class HTML {
     };
 
     static inner(node, html) {
-        if (typeof(node) === "string") {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return false;
+        }
+        if (typeof node == "string") {
             node = document.querySelector(node);
         }
-
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return false;
+        }
+        
         node.innerHTML = DOMPurify.sanitize(html);
     }
 
     static adjacent(node, position, html) {
-        if (typeof(node) === "string") {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return false;
+        }
+        if (typeof node == "string") {
             node = document.querySelector(node);
         }
-
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return false;
+        }
+        
         node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
     }
 
