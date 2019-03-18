@@ -614,7 +614,17 @@ class HTML {
             .replace(/&/g, '&amp;')
             .replace(/</g,'&lt;')
             .replace(/>/g,'&gt;') ;
-    };
+    }
+
+    static fragment(html) {
+        let template = document.createElement('template');
+        template.innerHTML = DOMPurify.sanitize(html);
+        return template.content;
+    }
+
+    static element(html) {
+        return HTML.fragment(html).firstElementChild;
+    }
 
     static inner(node, html) {
         if (typeof node == 'undefined' || node === null) {
@@ -646,25 +656,9 @@ class HTML {
             return null;
         }
 
-        html = DOMPurify.sanitize(html);
-
-        let wrapper = null;
-        if (node.parentNode) {
-            node.insertAdjacentHTML('afterend', html);
-            wrapper = node.nextElementSibling;
-            wrapper.appendChild(node);
-        } else {
-            wrapper = document.createElement('div');
-            wrapper.innerHTML = html;
-            wrapper = wrapper.firstElementChild;
-            if (!wrapper) {
-                console.warn(`${html} did not resolve to an Element.`);
-                return null;
-            }
-            wrapper.remove();
-            wrapper.appendChild(node);
-        }
-
+        let wrapper = HTML.element(html);
+        node.replaceWith(wrapper);
+        wrapper.appendChild(node);
         return wrapper;
     }
 
@@ -709,13 +703,11 @@ class HTMLParser {
     }
     
     static htmlToDOM(html) {
-        let template = document.createElement('template');
-        HTML.inner(template, html);
-        return template.content;
+        return HTML.fragment(html);
     }
 
     static htmlToElement(html) {
-        return HTMLParser.htmlToDOM(html).firstElementChild;
+        return HTML.element(html);
     };
 
     static getVariableFromText(text, name, type) {
