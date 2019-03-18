@@ -619,33 +619,35 @@ class HTML {
     static inner(node, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
-            return false;
+            return null;
         }
         if (typeof node == "string") {
             node = document.querySelector(node);
         }
         if (!(node instanceof Element)) {
             console.warn(`${node} is not an Element.`);
-            return false;
+            return null;
         }
         
         node.innerHTML = DOMPurify.sanitize(html);
+        return node;
     }
 
     static adjacent(node, position, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
-            return false;
+            return null;
         }
         if (typeof node == "string") {
             node = document.querySelector(node);
         }
         if (!(node instanceof Element)) {
             console.warn(`${node} is not an Element.`);
-            return false;
+            return null;
         }
         
         node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
+        return node;
     }
 
     static beforeBegin(node, html) {
