@@ -58,9 +58,7 @@ class ProgressBar {
             value = 100;
         }
 
-        node.querySelector(".progress-value").style.width = value;
-        // TODO verify this works, shouldn't there be "%"?
-        // There's a min-width: 18px !important and "30" is interpreted as "30px"
+        node.querySelector(".progress-value").style.width = `${value}px`;
 
         if (value >= 100) {
             node.classList.add("complete");
