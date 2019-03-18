@@ -160,15 +160,20 @@ let RequestData = (function(){
     let self = {};
 
     self.getJson = function(url) {
+        ProgressBar.startRequest();
+
         return new Promise(function(resolve, reject) {
             function requestHandler(state) {
                 if (state.readyState !== 4) {
                     return;
                 }
 
+                ProgressBar.finishRequest();
+
                 if (state.status === 200) {
                     resolve(JSON.parse(state.responseText));
                 } else {
+                    ProgressBar.failed(null, url, state.status, state.statusText);
                     reject(state.status);
                 }
             }
@@ -186,9 +191,6 @@ let RequestData = (function(){
         });
     };
 
-    let totalRequests = 0;
-    let processedRequests = 0;
-
     self.getHttp = function(url, settings, returnHtml) {
         settings = settings || {};
         settings.withCredentials = settings.withCredentials || false;
@@ -196,9 +198,7 @@ let RequestData = (function(){
         settings.method = settings.method || "GET";
         settings.body = settings.body || null;
 
-        totalRequests += 1;
-
-        ProgressBar.loading();
+        ProgressBar.startRequest();
 
         return new Promise(function(resolve, reject) {
 
@@ -207,8 +207,7 @@ let RequestData = (function(){
                     return;
                 }
 
-                processedRequests += 1;
-                ProgressBar.progress((processedRequests / totalRequests) * 100);
+                ProgressBar.finishRequest();
 
                 if (state.status === 200) {
                     if (returnHtml) {
@@ -1972,6 +1971,7 @@ let Common = (function(){
         ]);
 
         ProgressBar.create();
+        ProgressBar.loading();
         UpdateHandler.checkVersion();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
