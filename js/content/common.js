@@ -253,6 +253,7 @@ let RequestData = (function(){
     return self;
 })();
 
+
 class ProgressBar {
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
@@ -275,23 +276,49 @@ class ProgressBar {
         let node = document.getElementById('es_progress');
         if (!node) { return; }
 
-        if (Localization.str.ready) {
+        if (Localization.str.ready) { // FIXME under what circumstance is this false? Should all the other members have the same check?
             node.setAttribute("title", Localization.str.ready.loading);
         }
 
+        ProgressBar.requests = { 'initiated': 0, 'completed': 0, };
         node.classList.remove("complete");
         node.querySelector(".progress-value").style.width = "18px";
+    }
+
+    static startRequest() {
+        if (!ProgressBar.requests) { return; }
+        ProgressBar.requests.initiated++;
+        ProgressBar.progress();
+    }
+
+    static finishRequest() {
+        if (!ProgressBar.requests) { return; }
+        ProgressBar.requests.completed++;        
+        ProgressBar.progress();
     }
 
     static progress(value) {
         let node = document.getElementById('es_progress');
         if (!node) { return; }
 
-        node.querySelector(".progress-value").style.width = value; // TODO verify this works, shouldn't there be "%"?
+        if (typeof value == 'undefined') {
+            if (!ProgressBar.requests) { return; }
+            if (ProgressBar.requests.initiated > 0) {
+                value = 100 * ProgressBar.requests.completed / ProgressBar.requests.initiated;
+            }
+        }
+        if (value >= 100) {
+            value = 100;
+        }
+
+        node.querySelector(".progress-value").style.width = value;
+        // TODO verify this works, shouldn't there be "%"?
+        // There's a min-width: 18px !important and "30" is interpreted as "30px"
 
         if (value >= 100) {
             node.classList.add("complete");
-            node.setAttribute("title", Localization.str.ready.ready)
+            node.setAttribute("title", Localization.str.ready.ready);
+            ProgressBar.requests = null;
         }
     }
 
@@ -301,7 +328,8 @@ class ProgressBar {
 
         node.classList.add("error");
         node.setAttribute("title", "");
-
+        ProgressBar.requests = null;
+        
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
         if (!nodeError) {
             HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + "<ul></ul></div>");
