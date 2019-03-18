@@ -646,18 +646,26 @@ class HTML {
             return null;
         }
 
-        // Have DOMPurify return a document fragment from this document so it can added to the document with appendChild() et al
-        html = DOMPurify.sanitize(html, { RETURN_DOM_FRAGMENT: true, RETURN_DOM_IMPORT: true, IN_PLACE: true, });
+        html = DOMPurify.sanitize(html);
 
-        if (!(html instanceof Element)) {
-            console.warn(`${html} is not an Element.`);
-            return null;
+        let wrapper = null;
+        if (node.parentNode) {
+            node.insertAdjacentHTML('afterend', html);
+            wrapper = node.nextElementSibling;
+            wrapper.appendChild(node);
+        } else {
+            wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+            wrapper = wrapper.firstElementChild;
+            if (!wrapper) {
+                console.warn(`${html} did not resolve to an Element.`);
+                return null;
+            }
+            wrapper.remove();
+            wrapper.appendChild(node);
         }
-        console.assert(!html.hasChildNodes(), `HTML.wrap() expects a single Element as the second parameter.`);
 
-        node.replaceWith(html);
-        html.appendChild(node);
-        return html;
+        return wrapper;
     }
 
     static adjacent(node, position, html) {
