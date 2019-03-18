@@ -633,6 +633,33 @@ class HTML {
         return node;
     }
 
+    static wrap(node, html) {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
+            node = document.querySelector(node);
+        }
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+
+        // Have DOMPurify return a document fragment from this document so it can added to the document with appendChild() et al
+        html = DOMPurify.sanitize(html, { RETURN_DOM_FRAGMENT: true, RETURN_DOM_IMPORT: true, IN_PLACE: true, });
+
+        if (!(html instanceof Element)) {
+            console.warn(`${html} is not an Element.`);
+            return null;
+        }
+        console.assert(!html.hasChildNodes(), `HTML.wrap() expects a single Element as the second parameter.`);
+
+        node.replaceWith(html);
+        html.appendChild(node);
+        return html;
+    }
+
     static adjacent(node, position, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
