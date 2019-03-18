@@ -3323,6 +3323,14 @@ let GuidesPageClass = (function(){
 })();
 
 
+class WorkshopPageClass {
+    constructor() {
+        let media = new MediaPage();
+        media.mediaSliderExpander();
+        //media.initHdPlayer();
+    }
+}
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3388,6 +3396,10 @@ let GuidesPageClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/stats/.test(path):
             (new StatsPageClass());
+            break;
+
+        case /^\/sharedfiles\/.*/.test(path):
+            (new WorkshopPageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

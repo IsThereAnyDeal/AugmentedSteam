@@ -2033,6 +2033,7 @@ class MediaPage {
                 }
 
                 // Don't overlap Sketchfab's "X"
+                // Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
                 target = document.querySelector('.highlight_sketchfab_model');
                 if (target) {
                     target = document.getElementById('highlight_player_area');
