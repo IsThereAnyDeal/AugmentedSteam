@@ -883,18 +883,16 @@ let EnhancedSteam = (function() {
         });
     };
 
-    self.removeInstallSteamButton = function() {
-        if (!SyncedStorage.get("hideinstallsteambutton")) { return; }
-        document.querySelector("div.header_installsteam_btn").remove();
-    };
+    self.removeAboutLinks = function() {
+        if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-    self.removeAboutMenu = function(){
-        if (!SyncedStorage.get("hideaboutmenu")) { return; }
-		
-        let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
-        if (aboutMenu == null) { return; }
-		
-        aboutMenu.remove();
+        document.querySelector("div.header_installsteam_btn").remove();
+
+        if (User.isSignedIn) {
+            document.querySelector(".submenuitem[href='https://store.steampowered.com/about/']").remove();
+        } else {
+            document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+        }
     };
 
     self.addHeaderLinks = function(){
@@ -1952,7 +1950,7 @@ let Common = (function(){
         UpdateHandler.checkVersion();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.removeInstallSteamButton();
+        EnhancedSteam.removeAboutLinks();
         EnhancedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
         EnhancedSteam.disableLinkFilter();
@@ -1965,11 +1963,7 @@ let Common = (function(){
             EnhancedSteam.launchRandomButton();
             // TODO add itad sync
             EnhancedSteam.bindLogout();
-        } else {
-            EnhancedSteam.removeAboutMenu();
         }
-
-
     };
 
     return self;
