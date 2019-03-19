@@ -2879,26 +2879,28 @@ let MarketPageClass = (function(){
             );
         }
 
+        const pageSize = 100;
         let pages = -1;
-        let p=0;
-        let pageSize = 100;
+        let currentPage = 0;
+        let currentCount = 0;
+        let totalCount;
 
         let progressNode = document.querySelector("#esi_market_stats_progress");
 
         do {
-            let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory?start="+p+"&count="+pageSize);
+            let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory?start="+ currentCount++ +"&count=" + pageSize);
             if (pages < 0) {
-                let totalCount = data.total_count;
-                pageSize = data.pagesize; // update page size in case we can't do as much as we want to
+                totalCount = data.total_count;
                 pages = Math.ceil(totalCount / pageSize);
             }
+
+            currentCount += data.pagesize;
 
             let dom = HTMLParser.htmlToDOM(data.results_html);
             updatePrices(dom);
 
-            p++;
-            progressNode.textContent = `${p}/${pages}`;
-        } while (p<pages);
+            progressNode.textContent = `${++currentPage}/${pages}`;
+        } while (currentCount < totalCount);
     }
 
     MarketPageClass.prototype.addMarketStats = async function() {
