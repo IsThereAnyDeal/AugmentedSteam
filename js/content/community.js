@@ -2888,7 +2888,7 @@ let MarketPageClass = (function(){
         let progressNode = document.querySelector("#esi_market_stats_progress");
 
         do {
-            let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory?start="+ currentCount++ +"&count=" + pageSize);
+            let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory/render/?start="+ currentCount++ +"&count=" + pageSize);
             if (pages < 0) {
                 totalCount = data.total_count;
                 pages = Math.ceil(totalCount / pageSize);
