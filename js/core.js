@@ -212,6 +212,13 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
+            
+        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+
+            SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
+            SyncedStorage.remove("hideinstallsteambutton");
+            SyncedStorage.remove("hideaboutmenu");
+
         }
     }
 }
