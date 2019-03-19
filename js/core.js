@@ -520,8 +520,7 @@ SyncedStorage.defaults = {
     'show_itad_button': false,
     'skip_got_steam': false,
 
-    'hideinstallsteambutton': false,
-    'hideaboutmenu': false,
+    'hideaboutlinks': false,
     'keepssachecked': false,
     'showemptywishlist': true,
     'showwlnotes': true,
