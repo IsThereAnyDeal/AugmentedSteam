@@ -2879,7 +2879,7 @@ let MarketPageClass = (function(){
             );
         }
 
-        const pageSize = 100;
+        const pageSize = 500;
         let pages = -1;
         let currentPage = 0;
         let currentCount = 0;
