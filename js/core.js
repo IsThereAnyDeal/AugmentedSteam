@@ -204,6 +204,8 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
+        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+            SyncedStorage.remove("version");
         }
     }
 }
