@@ -112,17 +112,14 @@ class Version {
 class UpdateHandler {
 
     static checkVersion() {
-        let lastVersion = Version.fromString(SyncedStorage.get("version"));
-        let currentVersion = Version.fromString(Info.version);
-
-        if (!lastVersion.isSame(currentVersion)) {
-            if (SyncedStorage.get("version_show")) {
-                this._showChangelog();
+        chrome.runtime.sendMessage("es_last_version", lastVersion => {
+            if (lastVersion && !Version.fromString(lastVersion).isCurrent()) {
+                if (SyncedStorage.get("version_show")) {
+                    this._showChangelog();
+                }
+                this._migrateSettings(lastVersion);
             }
-            this._migrateSettings();
-        }
-
-        SyncedStorage.set("version", Info.version);
+        });
     };
 
     static _showChangelog() {
@@ -150,13 +147,8 @@ class UpdateHandler {
         }, false);
     }
 
-    static _migrateSettings() {
-        let oldVersion = SyncedStorage.get("version"); // default is Info.version
-        oldVersion = Version.fromString(oldVersion);
-
-        if (oldVersion.isCurrent()) {
-            return;
-        }
+    static _migrateSettings(lastVersion) {
+        let oldVersion = Version.fromString(lastVersion);
 
         if (oldVersion.isSameOrBefore("0.9.4")) {
 

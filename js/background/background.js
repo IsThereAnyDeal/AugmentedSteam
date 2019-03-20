@@ -680,25 +680,35 @@ let actionCallbacks = new Map([
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
 
+let lastVersion = null;
+chrome.runtime.onInstalled.addListener(({reason, previousVersion}) => {
+    if (reason === "update") {
+        lastVersion = previousVersion;
+    }
+});
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (!sender || !sender.tab) { return false; } // not from a tab, ignore
-    if (!message || !message.action) { return false; } // no action requested, ignore
+    if (!message) { return false; }
   
-    let callback = actionCallbacks.get(message.action);
-    if (!callback) {
-        // requested action not recognized, reply with error immediately
-        sendResponse({ 'error': `Did not recognize '${message.action}' as an action.`, });
-        return false;
+    if (message.action) {
+        let callback = actionCallbacks.get(message.action);
+        if (!callback) {
+            // requested action not recognized, reply with error immediately
+            sendResponse({ 'error': `Did not recognize '${message.action}' as an action.`, });
+            return false;
+        }
+
+        Promise.resolve(callback(message))
+            .then(response => sendResponse({ 'response': response, }))
+            .catch(function(err) {
+                console.error(err);
+                sendResponse({ 'error': "An error occurred in the background context.", }) // can't JSONify most exceptions
+            });
+
+        // keep channel open until callback resolves
+        return true;
+    } else if (message === "es_last_version") {
+        sendResponse(lastVersion);
     }
-
-    Promise.resolve(callback(message))
-        .then(response => sendResponse({ 'response': response, }))
-        .catch(function(err) {
-            console.error(err);
-            sendResponse({ 'error': "An error occurred in the background context.", }) // can't JSONify most exceptions
-        });
-
-    // keep channel open until callback resolves
-    return true;
 });
