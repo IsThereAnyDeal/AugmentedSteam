@@ -710,5 +710,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         return true;
     } else if (message === "es_last_version") {
         sendResponse(lastVersion);
+        lastVersion = null;
     }
 });

@@ -115,13 +115,7 @@ class UpdateHandler {
         chrome.runtime.sendMessage("es_last_version", lastVersion => {
             if (lastVersion && !Version.fromString(lastVersion).isCurrent()) {
                 if (SyncedStorage.get("version_show")) {
-                    let changelog_version = SyncedStorage.get("changelog_version");
-                    debugger;
-                    if (changelog_version && Version.fromString(changelog_version).isBefore(Info.version)) {
-                        this._showChangelog();
-                    } else if (!changelog_version) {
-                        this._showChangelog();
-                    }
+                    this._showChangelog();
                 }
                 this._migrateSettings(lastVersion);
             }
@@ -136,26 +130,11 @@ class UpdateHandler {
                 let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
                 ExtensionLayer.runInPageContext(
                     "function() {\
-                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
-						prompt.done(function(result) {\
-                            if (result === 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', secondary: true}, '*'); }\
-                            else { window.postMessage({ type: 'es_sendmessage_change', secondary: false}, '*'); }\
-						});\
+                        ShowAlertDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "'); \
 					}"
                 );
             }
         );
-
-        window.addEventListener("message", function(event) {
-            if (event.source !== window) return;
-            if (event.data.type && (event.data.type === "es_sendmessage_change")) {
-                if (event.data.secondary) {
-                    SyncedStorage.set("version_show", false);
-                } else {
-                    SyncedStorage.set("changelog_version", Info.version);
-                }
-            }
-        }, false);
     }
 
     static _migrateSettings(lastVersion) {
@@ -411,7 +390,6 @@ SyncedStorage.defaults = {
     'language': "english",
 
     'version_show': true,
-    'changelog_version': null,
 
     'highlight_owned_color': "#598400",
     'highlight_wishlist_color': "#1483ad",
