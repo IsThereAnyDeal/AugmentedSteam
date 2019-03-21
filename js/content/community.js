@@ -1081,7 +1081,6 @@ let ProfileEditPageClass = (function(){
     }
 
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
-        if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
             `<div class='group_content group_summary'>

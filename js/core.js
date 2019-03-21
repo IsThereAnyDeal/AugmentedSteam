@@ -212,6 +212,8 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
+        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+            SyncedStorage.remove("showesbg");
         }
     }
 }
@@ -538,7 +540,6 @@ SyncedStorage.defaults = {
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
-    'showesbg': true,
     'quickinv': true,
     'quickinv_diff': -0.01,
     'showallachievements': false,
