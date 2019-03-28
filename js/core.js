@@ -112,14 +112,16 @@ class Version {
 class UpdateHandler {
 
     static checkVersion() {
-        chrome.runtime.sendMessage("es_last_version", lastVersion => {
-            if (lastVersion && !Version.fromString(lastVersion).isCurrent()) {
-                if (SyncedStorage.get("version_show")) {
-                    this._showChangelog();
+        Background.action("version.previous").then(
+            previousVersion => {
+                if (previousVersion && !Version.fromString(previousVersion).isCurrent()) {
+                    if (SyncedStorage.get("version_show")) {
+                        this._showChangelog();
+                    }
+                    this._migrateSettings(previousVersion);
                 }
-                this._migrateSettings(lastVersion);
             }
-        });
+        )
     };
 
     static _showChangelog() {

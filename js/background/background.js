@@ -634,6 +634,13 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
+class ASVersion {
+    static previous() {
+        return ASVersion._previous;
+    }
+}
+ASVersion._previous = null;
+
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
 let ratesCacheKey = (params => `rates_${params.to}`);
@@ -676,40 +683,36 @@ let actionCallbacks = new Map([
     ['inventory.coupons', SteamCommunity.coupons], // #3
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
+
+    ['version.previous', ASVersion.previous]
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
 
-let lastVersion = null;
 chrome.runtime.onInstalled.addListener(({reason, previousVersion}) => {
     if (reason === "update") {
-        lastVersion = previousVersion;
+        ASVersion._previous = previousVersion;
     }
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (!sender || !sender.tab) { return false; } // not from a tab, ignore
-    if (!message) { return false; }
+    if (!message || !message.action) { return false; }
   
-    if (message.action) {
-        let callback = actionCallbacks.get(message.action);
-        if (!callback) {
-            // requested action not recognized, reply with error immediately
-            sendResponse({ 'error': `Did not recognize '${message.action}' as an action.`, });
-            return false;
-        }
-
-        Promise.resolve(callback(message))
-            .then(response => sendResponse({ 'response': response, }))
-            .catch(function(err) {
-                console.error(err);
-                sendResponse({ 'error': "An error occurred in the background context.", }) // can't JSONify most exceptions
-            });
-
-        // keep channel open until callback resolves
-        return true;
-    } else if (message === "es_last_version") {
-        sendResponse(lastVersion);
-        lastVersion = null;
+    let callback = actionCallbacks.get(message.action);
+    if (!callback) {
+        // requested action not recognized, reply with error immediately
+        sendResponse({ 'error': `Did not recognize '${message.action}' as an action.`, });
+        return false;
     }
+
+    Promise.resolve(callback(message))
+        .then(response => sendResponse({ 'response': response, }))
+        .catch(function(err) {
+            console.error(err);
+            sendResponse({ 'error': "An error occurred in the background context.", }) // can't JSONify most exceptions
+        });
+
+    // keep channel open until callback resolves
+    return true;
 });
