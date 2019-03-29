@@ -114,7 +114,7 @@ let Options = (function(){
     })();
     
     function loadProfileLinkImages() {
-        let node = document.querySelector("#profile_link_images_dropdown");
+        // let node = document.querySelector("#profile_link_images_dropdown");
         
         // SyncedStorage.set("show_profile_link_images", node.value); // TODO what were these two lines doing?
         // node.value = SyncedStorage.set("show_profile_link_images", node.value);
@@ -232,6 +232,13 @@ let Options = (function(){
         SyncedStorage.clear();
         SyncedStorage.then(loadOptions);
         // FIXME $("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
+        let node = document.getElementById('reset_note');
+        if (node) {
+            HTML.fadeIn(node)
+                .then(() => sleep(600))
+                .then(() => HTML.fadeOut(node))
+                ;
+        }
     }
     
     function loadDefaultCountries() {
@@ -245,6 +252,13 @@ let Options = (function(){
         Region.populateRegionalSelects();
         
         // FIXME $("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
+        let node = document.getElementById('saved');
+        if (node) {
+            HTML.fadeIn(node)
+                .then(() => sleep(600))
+                .then(() => HTML.fadeOut(node))
+                ;
+        }
     }
     
     function saveOptionFromEvent(e) {
@@ -305,6 +319,13 @@ let Options = (function(){
         SyncedStorage.set(option, value);
         
         // FIXME $("#saved").stop(true, true).fadeIn().delay(600).fadeOut();
+        let node = document.getElementById('saved');
+        if (node) {
+            HTML.fadeIn(node)
+                .then(() => sleep(600))
+                .then(() => HTML.fadeOut(node))
+                ;
+        }
     }
     
     function changeFlag(node, selectnode) {
