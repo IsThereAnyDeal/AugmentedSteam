@@ -4,17 +4,15 @@ let Options = (function(){
     
     function toggleStores() {
         if (document.querySelector("#stores_all").checked) {
-            document.querySelector("#store_stores").style.display="none";
+            document.querySelector("#store_stores").style.display = "none";
         } else {
-            let node = document.querySelector("#store_stores");
-            node.style.display="flex";
+            let store_stores = document.querySelector("#store_stores");
+            store_stores.style.display = "flex";
+            store_stores.classList.add("es_checks_loaded");
             
             let stores = SyncedStorage.get("stores");
-            
-            node.classList.add("es_checks_loaded");
-            let nodes = node.querySelectorAll("input[type='checkbox']");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            let nodes = store_stores.querySelectorAll("input[type='checkbox']");
+            for (let node of nodes) {
                 node.checked = (stores.length == 0 || stores.indexOf(node.id) !== -1);
             }
         }
@@ -46,20 +44,17 @@ let Options = (function(){
             
             // Localize elements with text
             let nodes = document.querySelectorAll("[data-locale-text]");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
                 node.textContent = Localization.getString(node.dataset.localeText);
             }
             
             nodes = document.querySelectorAll("[data-locale-html]");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
                 HTML.inner(node, Localization.getString(node.dataset.localeHtml));
             }
             
             nodes = document.querySelectorAll("#warning_language option");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
                 let lang = node.textContent;
                 let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
                 if (lang !== lang_trl) {
@@ -120,18 +115,16 @@ let Options = (function(){
         // node.value = SyncedStorage.set("show_profile_link_images", node.value);
         
         let nodes = document.querySelectorAll(".es_sites_icons");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            node.style.display="block";
+        for (let node of nodes) {
+            node.style.display = "block";
         }
         
         // FIXME document.querySelector("#profile_links").classList.toggle("es_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
         
         if (!SyncedStorage.get("show_profile_link_images")) {
             let nodes = document.querySelectorAll(".es_sites_icons");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
-                node.style.display="none";
+            for (let node of nodes) {
+                node.style.display = "none";
             }
         }
     }
@@ -144,8 +137,7 @@ let Options = (function(){
         groupNode.classList.toggle("disabled", state);
         
         let nodes = groupNode.querySelectorAll("input,select");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             node.disabled = state;
         }
     }
@@ -155,8 +147,7 @@ let Options = (function(){
     
     function loadOptions() {
         let nodes = document.querySelectorAll("[data-parent-of]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             node.addEventListener("change", function(){
                 initParentOf(node);
             })
@@ -183,8 +174,7 @@ let Options = (function(){
         
         // Set the value or state for each input
         nodes = document.querySelectorAll("[data-setting]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             let setting = node.dataset.setting;
             let value = SyncedStorage.get(setting);
             
@@ -245,7 +235,7 @@ let Options = (function(){
         SyncedStorage.remove("regional_countries");
         
         let nodes = document.querySelectorAll("#region_selects div.country_parent");
-        for (let i=0, len=nodes.length; i<len; i++) {
+        for (let node of nodes) {
             nodes[i].remove();
         }
         
@@ -280,8 +270,7 @@ let Options = (function(){
             
             value = [];
             let nodes = document.querySelectorAll(".regional_country");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
                 if (node.value && node.value != "") {
                     value.push(node.value);
                 } else {
@@ -293,8 +282,7 @@ let Options = (function(){
             
             value = [];
             let nodes = document.querySelectorAll("#store_stores input[type=checkbox]");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
                 if (node.checked) {
                     value.push(node.id);
                 }
