@@ -364,7 +364,7 @@ let ProfileHomePageClass = (function(){
 
         // Add "SteamRepCN"
         let language = Language.getCurrentSteamLanguage();
-        if (language === "schinese" || language === "tchinese") {
+        if ((language === "schinese" || language === "tchinese") && SyncedStorage.get('profile_steamrepcn')) {
             links.push({
                 "id": "steamrepcn",
                 "link": `//steamrepcn.com/profiles/${steamId}`,
