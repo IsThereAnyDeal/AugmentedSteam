@@ -14,6 +14,18 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Options - Augmented Steam</title>
     <base target="_blank">
+    <template id='add_custom_profile_link'>
+        <div class="es_custom_link">
+            <input type="checkbox" name="profile_custom_enabled" />
+            <label data-locale-text="options.name">Name</label>:
+            <input type="text" name="profile_custom_name" maxlength="30" class="textbox">
+            <label>URL</label>:
+            <input type="text" name="profile_custom_url" class="textbox">
+            <label data-locale-text="options.icon">Icon</label>:
+            <input type="text" name="profile_custom_icon" class="textbox">
+            <input type="button" name="profile_custom_remove" class="close_button">
+        </div>
+    </template>
 </head>
 <body>
 
@@ -548,18 +560,7 @@
                 <input type="checkbox" id="profile_astatsnl" data-setting="profile_astatsnl">
                 <label for="profile_astatsnl"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</label>
             </div>
-            <div>
-                <button id="add_custom_link" data-locale-text="custom">Custom</button>
-                <div id="es_custom_settings" style="display: none;">
-                    <input type="checkbox" id="profile_custom" data-setting="profile_custom">
-                    <label data-locale-text="options.name">Name</label>:
-                    <input type="text" id="profile_custom_name" data-setting="profile_custom_name" maxlength="30" class="textbox">
-                    URL:
-                    <input type="text" id="profile_custom_url" data-setting="profile_custom_url" class="textbox">
-                    <label data-locale-text="options.icon">Icon</label>:
-                    <input type="text" id="profile_custom_icon" data-setting="profile_custom_icon" class="textbox">
-                </div>
-            </div>
+            <!-- <div id='custom_profile_links'></div> -->
             <div>
                 <span>
                     <label id="show_profile_link_images_text" data-locale-text="options.profile_link_images">Profile link images</label>&nbsp;

@@ -213,6 +213,22 @@ class UpdateHandler {
             }
             SyncedStorage.set('customize_apppage', settings);
         }
+
+        if (oldVersion.isSameOrBefore("0.9.5")) {
+            // Update structure for custom profile links to allow multiple
+            let custom_link = {
+                'enabled': SyncedStorage.get('profile_custom'),
+                'name': SyncedStorage.get('profile_custom_name'),
+                'url': SyncedStorage.get('profile_custom_url'),
+                'icon':  SyncedStorage.get('profile_custom_icon'),
+            };
+            SyncedStorage.set('profile_custom_link', [custom_link,]);
+            SyncedStorage.remove('profile_custom');
+            SyncedStorage.remove('profile_custom_name');
+            SyncedStorage.remove('profile_custom_url');
+            SyncedStorage.remove('profile_custom_icon');
+    }
+    
     }
 }
 
@@ -563,10 +579,9 @@ SyncedStorage.defaults = {
     'profile_backpacktf': true,
     'profile_astatsnl': true,
     'profile_permalink': true,
-    'profile_custom': false,
-    'profile_custom_name': "Google",
-    'profile_custom_url': "google.com/search?q=[ID]",
-    'profile_custom_icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico",
+    'profile_custom_link': [
+        { 'enabled': false, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
+    ],
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,
