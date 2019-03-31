@@ -212,13 +212,11 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
-            
         } else if (oldVersion.isSameOrBefore("0.9.5")) {
-
+            SyncedStorage.remove("showesbg");
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
             SyncedStorage.remove("hideinstallsteambutton");
             SyncedStorage.remove("hideaboutmenu");
-
         }
     }
 }
@@ -544,7 +542,6 @@ SyncedStorage.defaults = {
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
-    'showesbg': true,
     'quickinv': true,
     'quickinv_diff': -0.01,
     'showallachievements': false,
