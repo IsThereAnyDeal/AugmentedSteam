@@ -487,7 +487,7 @@ class AppPageClass extends StorePageClass {
     constructor(url) {
         super();
 
-        this.wishlistNotes = new WishlistNotes();
+        this.userNotes = new UserNotes();
 
         this.appid = GameId.getAppid(url);
 
@@ -507,8 +507,7 @@ class AppPageClass extends StorePageClass {
         this.mediaSliderExpander();
         this.initHdPlayer();
         this.addWishlistRemove();
-        this.addWishlistNote();
-        this.addWishlistNoteObserver();
+        this.addUserNote();
         this.addCoupon();
         this.addPrices();
         this.addDlcInfo();
@@ -889,40 +888,14 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    addWishlistNote() {
+    addUserNote() {
         if (!User.isSignedIn) { return; }
-        let wishlistarea = document.getElementById("add_to_wishlist_area_success");
-        if (wishlistarea && wishlistarea.style.display !== "none") {
-            this._addWishlistNote(this.appid);
-        }
-    }
-
-    addWishlistNoteObserver() {
-        if (!User.isSignedIn) { return; }
-        let wishlistarea = document.getElementById("add_to_wishlist_area_success");
-        if (!wishlistarea) { return; }
-
-        let observer = new MutationObserver(record => {
-            let display = record[0].target.style.display;
-
-            if (display === "none") {
-                document.getElementById("esi-store-wishlist-note").remove();
-                this.wishlistNotes.deleteNote(this.appid);
-            } else {
-                this._addWishlistNote(this.appid);
-            }
-        });
-
-        observer.observe(wishlistarea, {attributes: true, attributeFilter: ["style"]});
-    }
-
-    _addWishlistNote(appid) {
 
         let noteText;
         let cssClass;
 
-        if (this.wishlistNotes.exists(appid)) {
-            noteText = `"${this.wishlistNotes.getNote(appid)}"`;
+        if (this.userNotes.exists(this.appid)) {
+            noteText = `"${this.userNotes.getNote(this.appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -936,7 +909,7 @@ class AppPageClass extends StorePageClass {
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            that.wishlistNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, appid, "#esi-store-wishlist-note");
+            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-wishlist-note");
         });
     }
 
@@ -2057,7 +2030,7 @@ let RegisterKeyPageClass = (function(){
                     data = JSON.parse(data);
                     let attempted = current_key;
                     let message = Localization.str.register.default;
-                    if (data["success"]) {
+                    if (data["success"] === 1) {
                         document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
@@ -2661,12 +2634,12 @@ let CuratorPageClass = (function(){
 let WishlistPageClass = (function(){
 
     let cachedPrices = {};
-    let wishlistNotes;
+    let userNotes;
 
     function WishlistPageClass() {
 
         let instance = this;
-        wishlistNotes = new WishlistNotes();
+        userNotes = new UserNotes();
 
         let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
@@ -2911,8 +2884,8 @@ let WishlistPageClass = (function(){
         let appid = node.dataset.appId;
         let noteText;
         let cssClass;
-        if (wishlistNotes.exists(appid)) {
-            noteText = `"${wishlistNotes.getNote(appid)}"`;
+        if (userNotes.exists(appid)) {
+            noteText = `"${userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.add_wishlist_note;
@@ -2933,7 +2906,7 @@ let WishlistPageClass = (function(){
 
             let row = e.target.closest(".wishlist_row");
             let appid = row.dataset.appId;
-            wishlistNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
+            userNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
         });
     };
 
@@ -2954,7 +2927,7 @@ let WishlistPageClass = (function(){
             if (!e.data.type) { return; }
 
             if (e.data.type === "es_remove_wl_entry") {
-                wishlistNotes.deleteNote(e.data.removed_wl_entry);
+                userNotes.deleteNote(e.data.removed_wl_entry);
             }
         });
     };
@@ -2962,9 +2935,9 @@ let WishlistPageClass = (function(){
     return WishlistPageClass;
 })();
 
-let WishlistNotes = (function(){
+let UserNotes = (function(){
 
-    function WishlistNotes() {
+    function UserNotes() {
         this.noteModalTemplate = `
                 <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                     <div id="es_note_modal_content">
@@ -2985,64 +2958,140 @@ let WishlistNotes = (function(){
         this.notes = SyncedStorage.get("wishlist_notes");
     }
 
-    WishlistNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
+    UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext('function() { ShowDialog(`' + Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname) + '`, \`' + this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector)) + '\`); }');
+        ExtensionLayer.runInPageContext(
+            `function() {
+                // Partly copied from shared_global.js
+                let deferred = new jQuery.Deferred();
+                let fnOK = () => deferred.resolve();
 
-        if (!this.listenerCreated) {
-            let that = this;
-            document.addEventListener("click", function(e) {
-                if (e.target.closest(".es_note_modal_submit")) {
-                    e.preventDefault();
+                let Modal = _BuildDialog(
+                    "${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}",
+                    \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
+                    [], fnOK);
+                deferred.always(() => Modal.Dismiss());
 
-                    let modal = document.querySelector('#es_note_modal');
-                    let appid = modal.dataset.appid;
-                    let selector = decodeURIComponent(modal.dataset.selector);
-                    let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                    let node = document.querySelector(selector);
+                Modal.OnDismiss(() => {
+                    window.postMessage({
+                        type: "es_modal_dismissed"
+                    }, "*");
+                });
+                Modal.m_fnBackgroundClick = () => {
+                    function messageListener(e) {
+                        if (e.source !== window) { return; }
+                        if (!e.data.type) { return; }
 
-                    if (note.length !== 0) {
-                        that.setNote(appid, note);
-
-                        node.classList.remove("esi-empty-note");
-                        node.classList.add("esi-user-note");
-                        HTML.inner(node, `"${note}"`);
-                    } else {
-                        that.deleteNote(appid);
-
-                        node.classList.remove("esi-user-note");
-                        node.classList.add("esi-empty-note");
-                        node.textContent = Localization.str.add_wishlist_note;
+                        if (e.data.type === "es_note_saved") {
+                            Modal.Dismiss();
+                            window.removeEventListener("message", messageListener);
+                        }
                     }
+                    window.addEventListener("message", messageListener);
 
-                    ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
-                } else if (e.target.closest(".es_note_modal_close")) {
-                    ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                    window.postMessage({
+                        type: "es_background_click"
+                    }, "*");
                 }
-            });
-            this.listenerCreated = true;
+
+                Modal.Show();
+
+                // attach the deferred's events to the modal
+                deferred.promise(Modal);
+                
+                let note_input = document.getElementById("es_note_input");
+                note_input.focus();
+                note_input.setSelectionRange(0, note_input.textLength);
+                note_input.addEventListener("keydown", e => {
+                    if (e.key === "Enter") {
+                        $J(".es_note_modal_submit").click();
+                    } else if (e.key === "Escape") {
+                        Modal.Dismiss();
+                    }
+                });
+            }`);
+
+        window.addEventListener("message", messageListener);
+        document.addEventListener("click", clickListener);
+
+        function messageListener(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+
+            if (e.data.type === "es_modal_dismissed") {
+                document.removeEventListener("click", clickListener);
+                window.removeEventListener("message", messageListener);
+            } else if (e.data.type === "es_background_click") {
+                saveNote();
+                window.postMessage({
+                    type: "es_note_saved"
+                }, "*");
+            }
+        }
+
+        function backgroundClickListener(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+
+            if (e.data.type === "es_modal_dismissed") {
+                document.removeEventListener("click", clickListener);
+                window.removeEventListener("message", messageListener);
+            }
+        }
+
+        function clickListener(e) {
+            if (e.target.closest(".es_note_modal_submit")) {
+                e.preventDefault();
+                saveNote();
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            } else if (e.target.closest(".es_note_modal_close")) {
+                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+            }
+        }
+
+        let that = this;
+        function saveNote() {
+            let modal = document.querySelector('#es_note_modal');
+            let appid = modal.dataset.appid;
+            let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+            let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
+
+            if (note.length !== 0) {
+                that.setNote(appid, note);
+
+                node.classList.remove("esi-empty-note");
+                node.classList.add("esi-user-note");
+                HTML.inner(node, `"${note}"`);
+            } else {
+                that.deleteNote(appid);
+
+                node.classList.remove("esi-user-note");
+                node.classList.add("esi-empty-note");
+                node.textContent = Localization.str.add_wishlist_note;
+            }
+
         }
     };
 
-    WishlistNotes.prototype.getNote = function(appid) {
+    UserNotes.prototype.getNote = function(appid) {
         return this.notes[appid];
     };
 
-    WishlistNotes.prototype.setNote = function(appid, note) {
+    UserNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
         SyncedStorage.set("wishlist_notes", this.notes);
     };
 
-    WishlistNotes.prototype.deleteNote = function(appid) {
+    UserNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
         SyncedStorage.set("wishlist_notes", this.notes);
     };
 
-    WishlistNotes.prototype.exists = function(appid) {
+    UserNotes.prototype.exists = function(appid) {
         return (this.notes[appid] && (this.notes[appid] !== ''));
     };
 
-    return WishlistNotes;
+    return UserNotes;
 
 })();
 
