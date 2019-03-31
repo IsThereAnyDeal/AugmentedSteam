@@ -515,7 +515,7 @@ SyncedStorage.defaults = {
         "homepagesidebar": true
     },
 
-    'show_keylol_links': false,
+    //'show_keylol_links': false, // not in use, option is commented out
     'show_package_info': false,
     'show_sysreqcheck': false,
     'show_steamchart_info': true,
