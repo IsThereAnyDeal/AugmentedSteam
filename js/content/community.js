@@ -743,6 +743,9 @@ let ProfileHomePageClass = (function(){
 
         let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
 
+        // If the channel is not streaming, the response is: {"result":"success","data":[]}
+        if (Array.isArray(data)) { return; }
+        
         let channelUsername = data.user_name;
         let channelUrl = search.href;
         let channelGame = data.game;
