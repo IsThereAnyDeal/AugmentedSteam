@@ -1,34 +1,127 @@
 /**
  * Common functions that may be used on any pages
  */
-let Background = (function(){
-    let self = {};
+class ProgressBar {
+    static create() {
+        if (!SyncedStorage.get("show_progressbar")) { return; }
 
-    self.message = async function(message) {
+        let container = document.getElementById("global_actions");
+        if (!container) return;
+        HTML.afterEnd(container,
+            `<div class="es_progress_wrap">
+                <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
+                    <div class="progress-inner-element">
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 18px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+    }
+
+    static loading() {
+        let node = document.getElementById('es_progress');
+        if (!node) { return; }
+
+        if (Localization.str.ready) { // FIXME under what circumstance is this false? Should all the other members have the same check?
+            node.setAttribute("title", Localization.str.ready.loading);
+        }
+
+        ProgressBar.requests = { 'initiated': 0, 'completed': 0, };
+        node.classList.remove("complete");
+        node.querySelector(".progress-value").style.width = "18px";
+    }
+
+    static startRequest() {
+        if (!ProgressBar.requests) { return; }
+        ProgressBar.requests.initiated++;
+        ProgressBar.progress();
+    }
+
+    static finishRequest() {
+        if (!ProgressBar.requests) { return; }
+        ProgressBar.requests.completed++;        
+        ProgressBar.progress();
+    }
+
+    static progress(value) {
+        let node = document.getElementById('es_progress');
+        if (!node) { return; }
+
+        if (typeof value == 'undefined') {
+            if (!ProgressBar.requests) { return; }
+            if (ProgressBar.requests.initiated > 0) {
+                value = 100 * ProgressBar.requests.completed / ProgressBar.requests.initiated;
+            }
+        }
+        if (value >= 100) {
+            value = 100;
+        }
+
+        node.querySelector(".progress-value").style.width = `${value}px`;
+
+        if (value >= 100) {
+            node.classList.add("complete");
+            node.setAttribute("title", Localization.str.ready.ready);
+            ProgressBar.requests = null;
+        }
+    }
+
+    static failed(message, url, status, error) {
+        let node = document.getElementById('es_progress');
+        if (!node) { return; }
+
+        node.classList.add("error");
+        node.setAttribute("title", "");
+        ProgressBar.requests = null;
+        
+        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
+        if (!nodeError) {
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + "<ul></ul></div>");
+            nodeError = node.nextElementSibling;
+        }
+
+        if (!message) {
+            message = "<span>" + url + "</span>";
+            if (status) {
+                message += "(" + status +": "+ error +")";
+            }
+        }
+
+        HTML.beforeEnd(nodeError.querySelector("ul"), "<li>" + message + "</li>");
+    }
+}
+
+
+class Background {
+    static async message(message) {
+        ProgressBar.startRequest();
+
         return new Promise(function (resolve, reject) {
             chrome.runtime.sendMessage(message, function(response) {
+                ProgressBar.finishRequest();
+
                 if (!response) {
+                    ProgressBar.failed("No response from extension background context.");
                     reject("No response from extension background context.");
                     return;
                 }
                 if (typeof response.error !== 'undefined') {
+                    ProgressBar.failed(response.error);
                     reject(response.error);
                     return;
                 }
                 resolve(response.response);
             });
         });
-    };
-
-    self.action = function(requested, params) {
+    }
+    
+    static action(requested, params) {
         if (typeof params == 'undefined')
-            return self.message({ 'action': requested, });
-        return self.message({ 'action': requested, 'params': params, });
-    };
-
-    Object.freeze(self);
-    return self;
-})();
+            return Background.message({ 'action': requested, });
+        return Background.message({ 'action': requested, 'params': params, });
+    }
+}
 
 let TimeHelper = (function(){
 
@@ -160,15 +253,20 @@ let RequestData = (function(){
     let self = {};
 
     self.getJson = function(url) {
+        ProgressBar.startRequest();
+
         return new Promise(function(resolve, reject) {
             function requestHandler(state) {
                 if (state.readyState !== 4) {
                     return;
                 }
 
+                ProgressBar.finishRequest();
+
                 if (state.status === 200) {
                     resolve(JSON.parse(state.responseText));
                 } else {
+                    ProgressBar.failed(null, url, state.status, state.statusText);
                     reject(state.status);
                 }
             }
@@ -186,9 +284,6 @@ let RequestData = (function(){
         });
     };
 
-    let totalRequests = 0;
-    let processedRequests = 0;
-
     self.getHttp = function(url, settings, returnHtml) {
         settings = settings || {};
         settings.withCredentials = settings.withCredentials || false;
@@ -196,9 +291,7 @@ let RequestData = (function(){
         settings.method = settings.method || "GET";
         settings.body = settings.body || null;
 
-        totalRequests += 1;
-
-        ProgressBar.loading();
+        ProgressBar.startRequest();
 
         return new Promise(function(resolve, reject) {
 
@@ -207,8 +300,7 @@ let RequestData = (function(){
                     return;
                 }
 
-                processedRequests += 1;
-                ProgressBar.progress((processedRequests / totalRequests) * 100);
+                ProgressBar.finishRequest();
 
                 if (state.status === 200) {
                     if (returnHtml) {
@@ -248,77 +340,6 @@ let RequestData = (function(){
             method: "POST",
             body: formData
         }));
-    };
-
-    return self;
-})();
-
-let ProgressBar = (function(){
-    let self = {};
-
-    let node = null;
-
-    self.create = function() {
-        if (!SyncedStorage.get("show_progressbar")) { return; }
-
-        let container = document.getElementById("global_actions");
-        if (!container) return;
-        HTML.afterEnd(container,
-            `<div class="es_progress_wrap">
-                <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
-                    <div class="progress-inner-element">
-                        <div class="progress-bar">
-                            <div class="progress-value" style="width: 18px"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>`);
-
-        node = document.querySelector("#es_progress");
-    };
-
-    self.loading = function() {
-        if (!node) { return; }
-
-        if (Localization.str.ready) {
-            node.setAttribute("title", Localization.str.ready.loading);
-        }
-
-        node.classList.remove("complete");
-        node.querySelector(".progress-value").style.width = "18px";
-    };
-
-    self.progress = function(value) {
-        if (!node) { return; }
-
-        node.querySelector(".progress-value").style.width = value; // TODO verify this works, shouldn't there be "%"?
-
-        if (value >= 100) {
-            node.classList.add("complete");
-            node.setAttribute("title", Localization.str.ready.ready)
-        }
-    };
-
-    self.failed = function(message, url, status, error) {
-        if (!node) { return; }
-
-        node.classList.add("error");
-        node.setAttribute("title", "");
-
-        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
-        if (!nodeError) {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + "<ul></ul></div>");
-            nodeError = node.nextElementSibling;
-        }
-
-        if (!message) {
-            message = "<span>" + url + "</span>";
-            if (status) {
-                message += "(" + status +": "+ error +")";
-            }
-        }
-
-        HTML.beforeEnd(nodeError.querySelector("ul"), "<li>" + message + "</li>");
     };
 
     return self;
@@ -1949,6 +1970,7 @@ let Common = (function(){
         ]);
 
         ProgressBar.create();
+        ProgressBar.loading();
         UpdateHandler.checkVersion();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
