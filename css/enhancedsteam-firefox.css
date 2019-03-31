@@ -56,3 +56,7 @@ span.platform_img.linux {
 .cardexchange_btn i {
 	background-image:url('moz-extension://__MSG_@@extension_id__/img/steamcardexchange.png');
 }
+
+.es_overlay {
+	max-width: 50%;
+}
