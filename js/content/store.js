@@ -526,6 +526,7 @@ class AppPageClass extends StorePageClass {
         this.addLinks("app");
         this.addHighlights();
         this.addFamilySharingWarning();
+        this.removeAboutLink();
 
         this.addPackageInfoButton();
         this.addStats();
@@ -1230,6 +1231,14 @@ class AppPageClass extends StorePageClass {
             HTML.beforeBegin("#game_area_purchase",
                 `<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">${str}</div><div class="notice_box_bottom"></div></div>`);
         });
+    }
+
+    removeAboutLink() {
+        if (!SyncedStorage.get("hideaboutlinks")) { return; }
+
+        if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
+            document.querySelector(".game_area_already_owned_btn > [href='https://store.steampowered.com/about/']").remove();
+        }
     }
 
     addPackageInfoButton() {

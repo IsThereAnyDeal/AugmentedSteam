@@ -212,6 +212,13 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
+            
+        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+
+            SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
+            SyncedStorage.remove("hideinstallsteambutton");
+            SyncedStorage.remove("hideaboutmenu");
+
         }
     }
 }
@@ -520,8 +527,7 @@ SyncedStorage.defaults = {
     'show_itad_button': false,
     'skip_got_steam': false,
 
-    'hideinstallsteambutton': false,
-    'hideaboutmenu': false,
+    'hideaboutlinks': false,
     'keepssachecked': false,
     'showemptywishlist': true,
     'showwlnotes': true,
