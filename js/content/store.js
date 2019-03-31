@@ -504,7 +504,8 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.mediaSliderExpander();
+        let media = new MediaPage();
+        media.mediaSliderExpander();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -540,119 +541,6 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
 
-    }
-
-    mediaSliderExpander() {
-        let detailsBuilt = false;
-        let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
-
-        if (details) {
-            HTML.beforeEnd("#highlight_player_area",
-                `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
-                    <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
-                    <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
-                </div>`);
-        }
-
-        // Initiate tooltip
-        ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
-
-        function buildSideDetails() {
-            if (detailsBuilt) return;
-            detailsBuilt = true;
-
-            let detailsClone = details.querySelector(".glance_ctn");
-            if (!detailsClone) return;
-            detailsClone = detailsClone.cloneNode(true);
-            detailsClone.classList.add("es_side_details", "block", "responsive_apppage_details_left");
-
-            for (let node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
-                // There are some issues with having duplicates of these on page when trying to add tags
-                node.remove();
-            }
-
-            let detailsWrap = document.createElement("div");
-            detailsWrap.classList.add("es_side_details_wrap");
-            detailsWrap.appendChild(detailsClone);
-            detailsWrap.style.display = 'none';
-            document.querySelector("div.rightcol.game_meta_data")
-                .insertAdjacentElement('afterbegin', detailsWrap);
-        }
-
-
-        var expandSlider = LocalStorage.get("expand_slider", false);
-        if (expandSlider === true) {
-            buildSideDetails();
-
-            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
-                node.classList.add("es_expanded");
-            }
-            for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
-                // shrunk => expanded
-                node.style.display = null;
-                node.style.opacity = 1;
-            }
-
-            // Triggers the adjustment of the slider scroll bar
-            setTimeout(function(){
-                window.dispatchEvent(new Event("resize"));
-            }, 250);
-        }
-
-        document.querySelector(".es_slider_toggle").addEventListener("click", clickSliderToggle, false);
-        function clickSliderToggle(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            let el = ev.target.closest('.es_slider_toggle');
-            details.style.display = 'none';
-            buildSideDetails();
-
-            // Fade In/Out sideDetails
-            let sideDetails = document.querySelector(".es_side_details_wrap");
-            if (sideDetails) {
-                if (!el.classList.contains("es_expanded")) {
-                    // shrunk => expanded
-                    sideDetails.style.display = null;
-                    sideDetails.style.opacity = 1;
-                } else {
-                    // expanded => shrunk
-                    sideDetails.style.opacity = 0;
-                    setTimeout(function(){
-                        // Hide after transition completes
-                        if (!el.classList.contains("es_expanded"))
-                            sideDetails.style.display = 'none';
-                        }, 250);
-                }
-            }
-
-            // On every animation/transition end check the slider state
-            let container = document.querySelector('.highlight_ctn');
-            container.addEventListener('transitionend', saveSlider, false);
-            function saveSlider(ev) {
-                container.removeEventListener('transitionend', saveSlider, false);
-                // Save slider state
-                LocalStorage.set('expand_slider', el.classList.contains('es_expanded'));
-
-                // If slider was contracted show the extended details
-                if (!el.classList.contains('es_expanded')) {
-                    details.style.transition = "";
-                    details.style.opacity = "0";
-                    details.style.transition = "opacity 250ms";
-                    details.style.display = null;
-                    details.style.opacity = "1";
-                }
-
-                // Triggers the adjustment of the slider scroll bar
-                setTimeout(function(){
-                    window.dispatchEvent(new Event("resize"));
-                }, 250);
-            }
-
-            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
-                node.classList.toggle("es_expanded");
-            }
-		}
     }
 
     initHdPlayer() {
@@ -714,7 +602,7 @@ class AppPageClass extends StorePageClass {
 
         function addHDControl(videoControl) {
             playInHD = LocalStorage.get('playback_hd');
-            
+
             function _addHDControl() {
                 // Add "HD" button and "sd-src" to the video and set definition
                 if (videoControl.dataset.hdSrc) {
@@ -773,7 +661,7 @@ class AppPageClass extends StorePageClass {
                 Promise.resolve(response).catch(err => console.error(err));
             }
         }
- 
+
         function toggleVideoDefinition(videoControl, setHD) {
             let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
                 videoIsHD = false,
@@ -791,27 +679,27 @@ class AppPageClass extends StorePageClass {
                 if (!videoPaused && videoControl.play) {
                     // if response is a promise, suppress any errors it throws
                     Promise.resolve(videoControl.play()).catch(err => {});
-                } 
+                }
                 videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
             }
 
-            if (!playInHD && (typeof setHD === 'undefined' || setHD === true)) {
+            if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
                 videoIsHD = true;
                 videoControl.src = videoControl.dataset.hdSrc;
             } else if (loadedSrc) {
                 videoControl.src = videoControl.dataset.sdSrc;
             }
-    
+
             if (videoIsVisible && loadedSrc) {
                 videoControl.load();
             }
-            
+
             videoControl.classList.add("es_loaded_src");
             videoControl.classList.toggle("es_video_sd", !videoIsHD);
             videoControl.classList.toggle("es_video_hd", videoIsHD);
             videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
             videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
-    
+
             return videoIsHD;
         }
     }

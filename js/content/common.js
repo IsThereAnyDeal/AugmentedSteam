@@ -575,7 +575,7 @@ let CurrencyRegistry = (function() {
         return indices.id[number] || defaultCurrency;
     };
 
-    self.fromString = function(price) { 
+    self.fromString = function(price) {
         let match = price.match(re);
         if (!match)
             return defaultCurrency;
@@ -584,7 +584,7 @@ let CurrencyRegistry = (function() {
 
     Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
     Object.defineProperty(self, 'customCurrency', { get() { return CurrencyRegistry.fromType(Currency.customCurrency); }});
-    
+
     self.init = async function() {
         let currencies = await Background.action('steam.currencies');
         for (let currency of currencies) {
@@ -911,10 +911,10 @@ let EnhancedSteam = (function() {
 
     self.removeAboutMenu = function(){
         if (!SyncedStorage.get("hideaboutmenu")) { return; }
-		
+
         let aboutMenu = document.querySelector(".menuitem[href='https://store.steampowered.com/about/']");
         if (aboutMenu == null) { return; }
-		
+
         aboutMenu.remove();
     };
 
@@ -1057,7 +1057,7 @@ let EnhancedSteam = (function() {
                 });
             });
         });
-        
+
         nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
@@ -1224,7 +1224,7 @@ let EarlyAccess = (function(){
             imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
-    
+
         switch (window.location.host) {
             case "store.steampowered.com":
                 handleStore();
@@ -1248,7 +1248,7 @@ let Inventory = (function(){
     let coupons = {};
     let inv6set = new Set();
     let coupon_appids = new Map();
-    
+
     let _promise = null;
     self.promise = async function() {
         if (_promise) { return _promise; }
@@ -1543,7 +1543,7 @@ let Highlights = (function(){
 
     self.startHighlightsAndTags = async function(parent) {
         await Inventory;
-        
+
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
             "div.tab_row",					// Storefront rows
@@ -1577,7 +1577,7 @@ let Highlights = (function(){
 
         setTimeout(function() {
             selectors.forEach(selector => {
-                
+
                 let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
                 for (let i=0, len=nodes.length; i<len; i++) {
                     let node = nodes[i];
@@ -1662,7 +1662,7 @@ let DynamicStore = (function(){
     });
 
     async function _fetch() {
-        if (!User.isSignedIn) { 
+        if (!User.isSignedIn) {
             self.clear();
             return _data;
         }
@@ -1681,7 +1681,7 @@ let DynamicStore = (function(){
 
     return self;
 })();
-    
+
 let Prices = (function(){
 
     function Prices() {
@@ -1758,7 +1758,7 @@ let Prices = (function(){
                 let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
-            
+
             let lowestStr = Localization.str.lowest_price_format
                 .replace("__price__", prices)
                 .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`);
@@ -1917,7 +1917,7 @@ let Prices = (function(){
 
         Background.action('prices', apiParams).then(response => {
             let meta = response['.meta'];
-            
+
             for (let [gameid, info] of Object.entries(response.data)) {
                 that._processPrices(gameid, meta, info);
                 that._processBundles(gameid, meta, info);
@@ -1996,3 +1996,158 @@ let Common = (function(){
 
     return self;
 })();
+
+
+class MediaPage {
+    mediaSliderExpander() {
+        let detailsBuilt = false;
+        let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
+
+        if (!details) { return; }
+        // If we can't identify a details block to move out of the way, not much point to the rest of this function.
+
+        HTML.beforeEnd("#highlight_player_area",
+            `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
+                <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
+                <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
+            </div>`);
+
+        // Initiate tooltip
+        ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+
+        function buildSideDetails() {
+            if (detailsBuilt) { return; }
+            detailsBuilt = true;
+
+            if (!details) { return; }
+
+            if (details.matches(".rightcol")) {
+                // Clone details on a store page
+                let detailsClone = details.querySelector(".glance_ctn");
+                if (!detailsClone) return;
+                detailsClone = detailsClone.cloneNode(true);
+                detailsClone.classList.add("es_side_details", "block", "responsive_apppage_details_left");
+
+                for (let node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
+                    // There are some issues with having duplicates of these on page when trying to add tags
+                    node.remove();
+                }
+
+                let detailsWrap = HTML.wrap(detailsClone, `<div class='es_side_details_wrap'></div>`);
+                detailsWrap.style.display = 'none';
+                let target = document.querySelector("div.rightcol.game_meta_data");
+                if (target) {
+                    target.insertAdjacentElement('afterbegin', detailsWrap);
+                }
+            } else {
+                // Clone details in the workshop
+                let detailsClone = details.cloneNode(true);
+                detailsClone.style.display = 'none';
+                detailsClone.setAttribute("class", "panel es_side_details");
+                HTML.adjacent(detailsClone, "afterbegin", `<div class="title">${Localization.str.details}</div><div class="hr padded"></div>`);
+                let target = document.querySelector('.sidebar');
+                if (target) {
+                    target.insertAdjacentElement('afterbegin', detailsClone);
+                }
+
+                target = document.querySelector('.highlight_ctn');
+                if (target) {
+                    HTML.wrap(target, `<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;" />`);
+                }
+
+                // Don't overlap Sketchfab's "X"
+                // Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
+                target = document.querySelector('.highlight_sketchfab_model');
+                if (target) {
+                    target = document.getElementById('highlight_player_area');
+                    target.addEventListener('mouseenter', function() {
+                        let el = this.querySelector('.highlight_sketchfab_model');
+                        if (!el) { return; }
+                        if (el.style.display == 'none') { return; }
+                        el = document.querySelector('.es_slider_toggle');
+                        if (!el) { return; }
+                        el.style.top = '32px';
+                    }, false);
+                    target.addEventListener('mouseleave', function() {
+                        let el = document.querySelector('.es_slider_toggle');
+                        if (!el) { return; }
+                        el.style.top = null;
+                    }, false);
+                }
+            }
+        }
+
+        var expandSlider = LocalStorage.get("expand_slider", false);
+        if (expandSlider === true) {
+            buildSideDetails();
+
+            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+                node.classList.add("es_expanded");
+            }
+            for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+                // shrunk => expanded
+                node.style.display = null;
+                node.style.opacity = 1;
+            }
+
+            // Triggers the adjustment of the slider scroll bar
+            setTimeout(function(){
+                window.dispatchEvent(new Event("resize"));
+            }, 250);
+        }
+
+        document.querySelector(".es_slider_toggle").addEventListener("click", clickSliderToggle, false);
+        function clickSliderToggle(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            let el = ev.target.closest('.es_slider_toggle');
+            details.style.display = 'none';
+            buildSideDetails();
+
+            // Fade In/Out sideDetails
+            let sideDetails = document.querySelector(".es_side_details_wrap, .es_side_details");
+            if (sideDetails) {
+                if (!el.classList.contains("es_expanded")) {
+                    // shrunk => expanded
+                    sideDetails.style.display = null;
+                    sideDetails.style.opacity = 1;
+                } else {
+                    // expanded => shrunk
+                    sideDetails.style.opacity = 0;
+                    setTimeout(function(){
+                        // Hide after transition completes
+                        if (!el.classList.contains("es_expanded"))
+                            sideDetails.style.display = 'none';
+                        }, 250);
+                }
+            }
+
+            // On every animation/transition end check the slider state
+            let container = document.querySelector('.highlight_ctn');
+            container.addEventListener('transitionend', saveSlider, { 'capture': false, 'once': false, });
+            function saveSlider(ev) {
+                // Save slider state
+                LocalStorage.set('expand_slider', el.classList.contains('es_expanded'));
+
+                // If slider was contracted show the extended details
+                if (!el.classList.contains('es_expanded')) {
+                    details.style.transition = "";
+                    details.style.opacity = "0";
+                    details.style.transition = "opacity 250ms";
+                    details.style.display = null;
+                    details.style.opacity = "1";
+                }
+
+                // Triggers the adjustment of the slider scroll bar
+                setTimeout(function(){
+                    window.dispatchEvent(new Event("resize"));
+                }, 250);
+            }
+
+            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+                node.classList.toggle("es_expanded");
+            }
+        }
+    }
+}
