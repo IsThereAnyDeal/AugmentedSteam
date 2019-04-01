@@ -2858,11 +2858,15 @@ let MarketPageClass = (function(){
 
         let purchaseTotal = 0;
         let saleTotal = 0;
+        let transactions = new Set();
 
         function updatePrices(dom) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
             for (let node of nodes) {
+                if (node.id) {
+                    transactions.add(node);
+                }
                 let type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
                 if (type.includes("+")) {
@@ -2910,9 +2914,12 @@ let MarketPageClass = (function(){
         let totalCount;
 
         let progressNode = document.querySelector("#esi_market_stats_progress");
+        let url = new URL("/market/myhistory/render/", "https://steamcommunity.com/");
+        url.searchParams.set('count', pageSize);
 
         do {
-            let data = await RequestData.getJson(`https://steamcommunity.com/market/myhistory/render/?start=${currentCount}&count=${pageSize}`);
+            url.searchParams.set('start', currentCount);
+            let data = await RequestData.getJson(url.toString());
             if (pages < 0) {
                 totalCount = data.total_count;
                 pages = Math.ceil(totalCount / pageSize);
@@ -2923,8 +2930,9 @@ let MarketPageClass = (function(){
             let dom = HTMLParser.htmlToDOM(data.results_html);
             updatePrices(dom);
 
-            progressNode.textContent = `${++currentPage}/${pages}`;
+            progressNode.textContent = `${++currentPage}/${pages} (${transactions.size}/${totalCount})`;
         } while (currentCount < totalCount);
+        console.log(`Retrieved ${transactions.size} of ${totalCount} transactions.`);
     }
 
     MarketPageClass.prototype.addMarketStats = async function() {
