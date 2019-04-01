@@ -364,7 +364,7 @@ let ProfileHomePageClass = (function(){
 
         // Add "SteamRepCN"
         let language = Language.getCurrentSteamLanguage();
-        if (language === "schinese" || language === "tchinese") {
+        if ((language === "schinese" || language === "tchinese") && SyncedStorage.get('profile_steamrepcn')) {
             links.push({
                 "id": "steamrepcn",
                 "link": `//steamrepcn.com/profiles/${steamId}`,
@@ -479,7 +479,7 @@ let ProfileHomePageClass = (function(){
 
             let badgeCount = data["badges"].length;
             if (badgeCount === 0) { return;}
-            
+
             let profileBadges = document.querySelector(".profile_badges");
             if (!profileBadges) { return; }
 
@@ -594,7 +594,7 @@ let ProfileHomePageClass = (function(){
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
                     HTML.afterEnd("#es_steamrep",
                         `<div class="${img}">
-                            <img src="${imgUrl}" /> 
+                            <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
                     return;
@@ -677,7 +677,7 @@ let ProfileHomePageClass = (function(){
                         `<div class="lny_header">
                             <div class="lny_pig_center"></div>
                         </div>`);
-                    
+
                     break;
                 case "holiday2014":
                     stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css';
@@ -740,6 +740,9 @@ let ProfileHomePageClass = (function(){
 
         let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
 
+        // If the channel is not streaming, the response is: {"result":"success","data":[]}
+        if (Array.isArray(data)) { return; }
+        
         let channelUsername = data.user_name;
         let channelUrl = search.href;
         let channelGame = data.game;
@@ -747,7 +750,7 @@ let ProfileHomePageClass = (function(){
         let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
 
         HTML.afterBegin(".profile_leftcol",
-            `<div class='profile_customization' id='es_twitch'>            
+            `<div class='profile_customization' id='es_twitch'>
                     <div class='profile_customization_header'>
                         ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
                     </div>
@@ -936,7 +939,7 @@ let GamesPageClass = (function(){
         for (let game of games) {
             _commonGames.add(parseInt(game.appid));
         }
-        
+
         let nodes = document.querySelectorAll(".gameListRow");
         for (let node of nodes) {
             let appid = parseInt(node.id.split("_")[1]);
@@ -1078,7 +1081,6 @@ let ProfileEditPageClass = (function(){
     }
 
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
-        if (!SyncedStorage.get("showesbg")) { return; }
 
         let html =
             `<div class='group_content group_summary'>
@@ -1151,7 +1153,7 @@ let ProfileEditPageClass = (function(){
                     ${Localization.str.custom_style}:
                     <span class='formRowHint' data-tooltip-text='${Localization.str.custom_style_help}'>(?)</span>
                 </div>
-                <div class="es_profile_group">                
+                <div class="es_profile_group">
                     <div id='es_style_select'>
                         <select name='es_style' id='es_style' class='gray_bevel dynInput'>
                             <option id='remove' value='remove'>${Localization.str.noneselected}</option>
@@ -1323,7 +1325,7 @@ let InventoryPageClass = (function(){
         prepareMarketForInventory();
         addInventoryGoToPage();
         /* hide_empty_inventory_tabs(); */
-        
+
         let observer = new MutationObserver(() => {
             addInventoryGoToPage();
         });
@@ -1460,7 +1462,7 @@ let InventoryPageClass = (function(){
                             assetid: ${assetId},
                             contextid: 6
                         };
-                        
+
                         var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
                         $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
                             strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
@@ -1468,7 +1470,7 @@ let InventoryPageClass = (function(){
                             $J.post( strActionURL, rgAJAXParams).done( function( data ) {
                                 ReloadCommunityInventory();
                             });
-                        });                        
+                        });
                     }`);
         });
     }
@@ -1506,7 +1508,7 @@ let InventoryPageClass = (function(){
         if (contextId !== 6 || globalId !== 753) { return; }
         // 753 is the appid for "Steam" in the Steam Inventory
         // 6 is the context used for "Community Items"; backgrounds, emoticons and trading cards
-        
+
         if (!thisItem.classList.contains("es-loading")) {
             let url = marketActions.querySelector("a").href;
 
@@ -1719,7 +1721,7 @@ let InventoryPageClass = (function(){
                 window.postMessage({
                     type: "es_sendmessage",
                     information: [
-                        iActiveSelectView, 
+                        iActiveSelectView,
                         g_ActiveInventory.selectedItem.description.marketable,
                         g_ActiveInventory.appid,
                         g_ActiveInventory.selectedItem.description.market_hash_name,
@@ -2193,7 +2195,7 @@ let BadgesPageClass = (function(){
             `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
 			    <div class="popup_body popup_menu">${linksHtml}</div>
 		    </div>`);
-        
+
         // Insert dropdown button
         HTML.afterEnd(".profile_badges_sortoptions span",
             `<span id="wishlist_sort_options">
@@ -2465,7 +2467,7 @@ let GameCardPageClass = (function(){
             text = Localization.str.view_normal_badge;
 
         } else {
-            
+
             if (urlParameters[0] === ""){
                 url += "?" + "border=1";
             }
@@ -2518,7 +2520,7 @@ let FriendsThatPlayPageClass = (function(){
 
     FriendsThatPlayPageClass.prototype.addFriendsThatPlay = async function() {
         if (!SyncedStorage.get("showallfriendsthatown")) return;
-        
+
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
         let data = await Background.action('appuserdetails', { 'appids': this.appid, });
         if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
@@ -2584,13 +2586,13 @@ let FriendsThatPlayPageClass = (function(){
         let section = memberList.querySelectorAll(".mainSectionHeader").length;
         if (section < 3) return; // DLC and unreleased games with no playtime
         section = section >= 4 ? 1 : 2;
-        
+
         HTML.beforeEnd(
             memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
             ` (<span id='es_default_sort' style='cursor: pointer;'>
                     ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
                  </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)} 
+                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)}
                 </span>)`);
 
         memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
@@ -2876,26 +2878,28 @@ let MarketPageClass = (function(){
             );
         }
 
+        const pageSize = 500;
         let pages = -1;
-        let p=0;
-        let pageSize = 100;
+        let currentPage = 0;
+        let currentCount = 0;
+        let totalCount;
 
         let progressNode = document.querySelector("#esi_market_stats_progress");
 
         do {
-            let data = await RequestData.getJson("https://steamcommunity.com/market/myhistory?start="+p+"&count="+pageSize);
+            let data = await RequestData.getJson(`https://steamcommunity.com/market/myhistory/render/?start=${currentCount}&count=${pageSize}`);
             if (pages < 0) {
-                let totalCount = data.total_count;
-                pageSize = data.pagesize; // update page size in case we can't do as much as we want to
+                totalCount = data.total_count;
                 pages = Math.ceil(totalCount / pageSize);
             }
+
+            currentCount += data.pagesize + 1;
 
             let dom = HTMLParser.htmlToDOM(data.results_html);
             updatePrices(dom);
 
-            p++;
-            progressNode.textContent = `${p}/${pages}`;
-        } while (p<pages);
+            progressNode.textContent = `${++currentPage}/${pages}`;
+        } while (currentCount < totalCount);
     }
 
     MarketPageClass.prototype.addMarketStats = async function() {
@@ -3308,7 +3312,7 @@ let GuidesPageClass = (function(){
                 node.removeAttribute("onclick"); // remove onclick, we have link anyway, why do they do this?
                 // node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+&?/, ""))
             }
-            
+
             let linkNode = node.querySelector("a");
             if (regex.test(linkNode.href)) {
                 linkNode.href = linkNode.href.replace(/requiredtags[^&]+&?/, "");
@@ -3319,6 +3323,14 @@ let GuidesPageClass = (function(){
     return GuidesPageClass;
 })();
 
+
+class WorkshopPageClass {
+    constructor() {
+        let media = new MediaPage();
+        media.mediaSliderExpander();
+        //media.initHdPlayer();
+    }
+}
 
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -3385,6 +3397,10 @@ let GuidesPageClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/stats/.test(path):
             (new StatsPageClass());
+            break;
+
+        case /^\/sharedfiles\/.*/.test(path):
+            (new WorkshopPageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

@@ -269,6 +269,15 @@ let Options = (function(){
             document.querySelector("#regional_price_hideworld").style.display = "block";
         }
 
+        let language = Language.getCurrentSteamLanguage();
+        if (language !== "schinese" && language !== "tchinese") {
+            let n = document.getElementById('profile_steamrepcn');
+            if (n) {
+                // Hide SteamRepCN option if language isn't Chinese
+                n.parentNode.style.display = 'none';
+            }
+        }
+
         toggleStores();
         Region.populateRegionalSelects();
 
