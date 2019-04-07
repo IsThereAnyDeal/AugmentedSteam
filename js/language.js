@@ -26,7 +26,7 @@ class Language {
 
     static getLanguageCode(language) {
         let code = Language.languages[language];
-        return code ? code.toLowerCase() : "en";
+        return code ? code : "en";
     }
 
     static isCurrentLanguageOneOf(array) {
@@ -68,6 +68,7 @@ Language.languages = {
 class Localization {
     static loadLocalization(code) {
         return ExtensionResources.getJSON(`/localization/${code}/strings.json`);
+        //${code} only has small letter,but some path has big letter.
     }
 
     static init() {
