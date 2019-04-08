@@ -1574,8 +1574,18 @@ let Highlights = (function(){
         parent = parent || document;
 
         selectors.forEach(selector => {
+            highlight(parent.querySelectorAll(selector+":not(.es_highlighted)"));
+        });
 
-            let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
+        let searchBoxContents = parent.getElementById("search_suggestion_contents");
+        if (searchBoxContents) {
+            let observer = new MutationObserver(records => {
+                highlight(records[0].addedNodes);
+            });
+            observer.observe(searchBoxContents, {childList: true});
+        }
+
+        function highlight(nodes) {
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
                 let nodeToHighlight = node;
@@ -1615,7 +1625,7 @@ let Highlights = (function(){
 
                 self.highlightNotInterested(node);
             }
-        });
+        }
     };
 
     return self;
