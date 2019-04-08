@@ -1487,10 +1487,6 @@ let Highlights = (function(){
         }
     }
 
-    self.highlightOwned = function(node) {
-        highlightItem(node, "owned");
-    };
-
     self.highlightWishlist = function(node) {
         highlightItem(node, "wishlist");
     };
@@ -1514,26 +1510,65 @@ let Highlights = (function(){
         node.style.display = "none";
     };
 
-    self.highlightNotInterested = async function(node) {
-        await DynamicStore;
-
-        let aNode = node.querySelector("a");
-        let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
-        if (!appid || !DynamicStore.isIgnored(appid)) { return; }
-
-        if (node.classList.contains("home_area_spotlight")) {
-            node = node.querySelector(".spotlight_content");
-        }
-
-        node.classList.add("es_highlight_checked");
-
-        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest("#search_suggestion_contents"))) {
+    self.highlightOwned = function(node) {
+        if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest("#search_suggestion_contents") || node.closest(".tab_item"))) {
             node.style.display = "none";
-            return;
+        } else {
+            highlightItem(node, "owned");
         }
-
-        highlightItem(node, "notinterested");
     };
+
+    self.highlightNotInterested = function(node) {
+        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest("#search_suggestion_contents") || node.closest(".tab_item"))) {
+            node.style.display = "none";
+        } else {
+            highlightItem(node, "notinterested");
+        }
+    };
+
+    self.highlightAndTag = function(nodes) {
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            let nodeToHighlight = node;
+
+            if (node.classList.contains("item")) {
+                nodeToHighlight = node.querySelector(".info");
+            }
+            if (node.classList.contains("home_area_spotlight")) {
+                nodeToHighlight = node.querySelector(".spotlight_content");
+            }
+
+            if (node.classList.contains("ds_owned")) {
+                self.highlightOwned(nodeToHighlight);
+            }
+
+            if (node.classList.contains("ds_wishlist")) {
+                self.highlightWishlist(nodeToHighlight);
+            }
+
+            if (node.classList.contains("ds_ignored")) {
+                self.highlightNotInterested(nodeToHighlight);
+            }
+
+            if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
+                self.highlightNonDiscounts(nodeToHighlight);
+            }
+
+            let aNode = node.querySelector("a");
+            let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
+            if (appid) {
+                if (Inventory.hasGuestPass(appid)) {
+                    self.highlightInvGuestpass(node);
+                }
+                if (Inventory.getCouponByAppId(appid)) {
+                    self.highlightCoupon(node);
+                }
+                if (Inventory.hasGift(appid)) {
+                    self.highlightInvGift(node);
+                }
+            }
+        }
+    }
 
     self.startHighlightsAndTags = async function(parent) {
         await Inventory;
@@ -1570,57 +1605,15 @@ let Highlights = (function(){
         parent = parent || document;
 
         selectors.forEach(selector => {
-            highlight(parent.querySelectorAll(selector+":not(.es_highlighted)"));
+            self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
         });
 
         let searchBoxContents = parent.getElementById("search_suggestion_contents");
         if (searchBoxContents) {
             let observer = new MutationObserver(records => {
-                highlight(records[0].addedNodes);
+                self.highlightAndTag(records[0].addedNodes);
             });
             observer.observe(searchBoxContents, {childList: true});
-        }
-
-        function highlight(nodes) {
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
-                let nodeToHighlight = node;
-
-                if (node.classList.contains("item")) {
-                    nodeToHighlight = node.querySelector(".info");
-                }
-                if (node.classList.contains("home_area_spotlight")) {
-                    nodeToHighlight = node.querySelector(".spotlight_content");
-                }
-
-                if (node.querySelector(".ds_owned_flag")) {
-                    self.highlightOwned(nodeToHighlight);
-                }
-
-                if (node.querySelector(".ds_wishlist_flag")) {
-                    self.highlightWishlist(nodeToHighlight);
-                }
-
-                if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
-                    self.highlightNonDiscounts(nodeToHighlight);
-                }
-
-                let aNode = node.querySelector("a");
-                let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
-                if (appid) {
-                    if (Inventory.hasGuestPass(appid)) {
-                        self.highlightInvGuestpass(node);
-                    }
-                    if (Inventory.getCouponByAppId(appid)) {
-                        self.highlightCoupon(node);
-                    }
-                    if (Inventory.hasGift(appid)) {
-                        self.highlightInvGift(node);
-                    }
-                }
-
-                self.highlightNotInterested(node);
-            }
         }
     };
 

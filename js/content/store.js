@@ -2484,8 +2484,7 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.observeChanges = function() {
         if (!SyncedStorage.get("contscroll")) {
-
-            let pageObserver = new MutationObserver(() => {
+            let observer = new MutationObserver(() => {
                 // When loading a new page, every element in the tab_filter_control class gets unchecked
                 if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
                 if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
@@ -2496,22 +2495,22 @@ let SearchPageClass = (function(){
                 if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
                 if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
 
-                Highlights.startHighlightsAndTags();
+                Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
                 EarlyAccess.showEarlyAccess();
                 filtersChanged();
             });
-            pageObserver.observe(document.getElementById("search_results"), {childList: true});
-        }
-
-        let observer = new MutationObserver(mutations => {
-            Highlights.startHighlightsAndTags();
-            EarlyAccess.showEarlyAccess();
-
-            mutations.forEach(mutation => {
-                filtersChanged(mutation.addedNodes);
+            observer.observe(document.getElementById("search_results"), {childList: true});
+        } else {
+            let observer = new MutationObserver(mutations => {
+                EarlyAccess.showEarlyAccess();
+    
+                mutations.forEach(mutation => {
+                    Highlights.highlightAndTag(mutation.addedNodes);
+                    filtersChanged(mutation.addedNodes);
+                });
             });
-        });
-        observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+            observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        }
     };
 
     return SearchPageClass;
@@ -3003,27 +3002,14 @@ let TagPageClass = (function(){
 
     function TagPageClass() {
         if (SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored")) {
-            this.addHiding();
             this.observeChanges();
         }
     }
 
-    TagPageClass.prototype.addHiding = function() {
-        rows.forEach(row => {
-            for (let node of document.getElementById(row).children) {
-                hideNode(node);
-            }
-        });
-    };
-
     TagPageClass.prototype.observeChanges = function() {
         let observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeName === "A") {
-                        hideNode(node);
-                    }
-                })
+                Highlights.highlightAndTag(Array.from(mutation.addedNodes).filter(node => node.nodeName === "A"));
             });
         });
         
@@ -3031,15 +3017,6 @@ let TagPageClass = (function(){
             observer.observe(document.getElementById(row), {childList: true});
         })
     };
-
-    function hideNode(node) {
-        if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
-            node.style.display = "none";
-        }
-        if (SyncedStorage.get("hide_ignored") && node.classList.contains("ds_ignored")) {
-            node.style.display = "none";
-        }
-    }
 
     return TagPageClass;
 
