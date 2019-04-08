@@ -1527,7 +1527,7 @@ let Highlights = (function(){
 
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("hide_ignored") && node.closest(".search_result_row")) {
+        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest("#search_suggestion_contents"))) {
             node.style.display = "none";
             return;
         }
