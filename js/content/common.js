@@ -1488,14 +1488,10 @@ let Highlights = (function(){
     }
 
     self.highlightOwned = function(node) {
-        node.classList.add("es_highlight_checked");
-
         highlightItem(node, "owned");
     };
 
     self.highlightWishlist = function(node) {
-        node.classList.add("es_highlight_checked");
-
         highlightItem(node, "wishlist");
     };
 
