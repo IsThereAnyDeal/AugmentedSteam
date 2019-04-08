@@ -3001,9 +3001,7 @@ let TagPageClass = (function(){
     ];
 
     function TagPageClass() {
-        if (SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored")) {
-            this.observeChanges();
-        }
+        this.observeChanges();
     }
 
     TagPageClass.prototype.observeChanges = function() {
@@ -3140,25 +3138,6 @@ let StoreFrontPageClass = (function(){
     return StoreFrontPageClass;
 })();
 
-let TabAreaObserver = (function(){
-    let self = {};
-
-    self.observeChanges = function() {
-
-        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
-        if (!tabAreaNode) { return; }
-
-        let observer = new MutationObserver(() => {
-            Highlights.startHighlightsAndTags();
-            EarlyAccess.showEarlyAccess();
-        });
-
-        observer.observe(tabAreaNode, {childList: true, subtree: true});
-    };
-
-    return self;
-})();
-
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3200,7 +3179,7 @@ let TabAreaObserver = (function(){
             (new SearchPageClass());
             break;
 
-        case /^\/tags\//.test(path):
+        case /^\/(tags|genre)\//.test(path):
             (new TagPageClass());
             break;
 
@@ -3226,7 +3205,5 @@ let TabAreaObserver = (function(){
     Highlights.startHighlightsAndTags();
     EnhancedSteam.alternateLinuxIcon();
     EnhancedSteam.hideTrademarkSymbol(false);
-    TabAreaObserver.observeChanges();
 
 })();
-
