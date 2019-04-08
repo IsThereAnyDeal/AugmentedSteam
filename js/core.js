@@ -131,14 +131,12 @@ class UpdateHandler {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
                 let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
                 let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-                ExtensionLayer.runInPageContext(
-                    "function() {\
-                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
-						prompt.done(function(result) {\
-							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
-						});\
-					}"
-                );
+                ExtensionLayer.runInPageContext(`function() {
+                    var prompt = ShowConfirmDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", "${dialog}", "OK", "${Localization.str.close.replace(/'/g, "\\'")}", "${Localization.str.update.dont_show.replace(/'/g, "\\'")}");
+                    prompt.done(function(result) {
+                        if (result == "SECONDARY") { window.postMessage({ type: "es_sendmessage_change", information: [ true ]}, '*'); }
+                    });
+                }`);
             }
         );
 

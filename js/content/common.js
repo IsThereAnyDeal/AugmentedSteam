@@ -636,13 +636,12 @@ let Currency = (function() {
 
     function getCurrencyFromWallet() {
         return new Promise((resolve, reject) => {
-            ExtensionLayer.runInPageContext(
-                `function(){
-                    window.postMessage({
-                        type: "es_walletcurrency",
-                        wallet_currency: typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null
-                    }, "*");
-                }`);
+            ExtensionLayer.runInPageContext(() =>
+                window.postMessage({
+                    type: "es_walletcurrency",
+                    wallet_currency: typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null
+                }, "*")
+            );
 
             function listener(e) {
                 if (e.source !== window) { return; }
@@ -899,7 +898,7 @@ let EnhancedSteam = (function() {
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
-                ExtensionLayer.runInPageContext("function(){ ChangeLanguage( '" + warningLanguage + "' ); }");
+                ExtensionLayer.runInPageContext(`() => ChangeLanguage("${warningLanguage}")`);
             });
         });
     };
