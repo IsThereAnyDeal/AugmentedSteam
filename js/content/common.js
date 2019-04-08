@@ -1573,51 +1573,49 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        setTimeout(function() {
-            selectors.forEach(selector => {
+        selectors.forEach(selector => {
 
-                let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
-                for (let i=0, len=nodes.length; i<len; i++) {
-                    let node = nodes[i];
-                    let nodeToHighlight = node;
+            let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
+            for (let i=0, len=nodes.length; i<len; i++) {
+                let node = nodes[i];
+                let nodeToHighlight = node;
 
-                    if (node.classList.contains("item")) {
-                        nodeToHighlight = node.querySelector(".info");
-                    }
-                    if (node.classList.contains("home_area_spotlight")) {
-                        nodeToHighlight = node.querySelector(".spotlight_content");
-                    }
-
-                    if (node.querySelector(".ds_owned_flag")) {
-                        self.highlightOwned(nodeToHighlight);
-                    }
-
-                    if (node.querySelector(".ds_wishlist_flag")) {
-                        self.highlightWishlist(nodeToHighlight);
-                    }
-
-                    if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
-                        self.highlightNonDiscounts(nodeToHighlight);
-                    }
-
-                    let aNode = node.querySelector("a");
-                    let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
-                    if (appid) {
-                        if (Inventory.hasGuestPass(appid)) {
-                            self.highlightInvGuestpass(node);
-                        }
-                        if (Inventory.getCouponByAppId(appid)) {
-                            self.highlightCoupon(node);
-                        }
-                        if (Inventory.hasGift(appid)) {
-                            self.highlightInvGift(node);
-                        }
-                    }
-
-                    self.highlightNotInterested(node);
+                if (node.classList.contains("item")) {
+                    nodeToHighlight = node.querySelector(".info");
                 }
-            });
-        }, 500);
+                if (node.classList.contains("home_area_spotlight")) {
+                    nodeToHighlight = node.querySelector(".spotlight_content");
+                }
+
+                if (node.querySelector(".ds_owned_flag")) {
+                    self.highlightOwned(nodeToHighlight);
+                }
+
+                if (node.querySelector(".ds_wishlist_flag")) {
+                    self.highlightWishlist(nodeToHighlight);
+                }
+
+                if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
+                    self.highlightNonDiscounts(nodeToHighlight);
+                }
+
+                let aNode = node.querySelector("a");
+                let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
+                if (appid) {
+                    if (Inventory.hasGuestPass(appid)) {
+                        self.highlightInvGuestpass(node);
+                    }
+                    if (Inventory.getCouponByAppId(appid)) {
+                        self.highlightCoupon(node);
+                    }
+                    if (Inventory.hasGift(appid)) {
+                        self.highlightInvGift(node);
+                    }
+                }
+
+                self.highlightNotInterested(node);
+            }
+        });
     };
 
     return self;
