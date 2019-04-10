@@ -217,6 +217,9 @@ class UpdateHandler {
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
             SyncedStorage.remove("hideinstallsteambutton");
             SyncedStorage.remove("hideaboutmenu");
+
+            SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
+            SyncedStorage.remove("wishlist_notes");
         }
     }
 }
@@ -529,7 +532,7 @@ SyncedStorage.defaults = {
     'keepssachecked': false,
     'showemptywishlist': true,
     'showwlnotes': true,
-    'wishlist_notes': {},
+    'user_notes': {},
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,

@@ -787,18 +787,18 @@ class AppPageClass extends StorePageClass {
             noteText = `"${this.userNotes.getNote(this.appid)}"`;
             cssClass = "esi-user-note";
         } else {
-            noteText = Localization.str.add_wishlist_note;
+            noteText = Localization.str.add_user_note;
             cssClass = "esi-empty-note";
         }
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
+            "<div id='esi-store-user-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
 
         let that = this;
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
-            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-wishlist-note");
+            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-user-note");
         });
     }
 
@@ -2562,7 +2562,7 @@ let WishlistPageClass = (function(){
                             continue;
                         }
                         if (myWishlist && SyncedStorage.get("showwlnotes")) {
-                            instance.addWishlistNote(node);
+                            instance.addUserNote(node);
                         } else {
                             instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
                         }
@@ -2576,7 +2576,7 @@ let WishlistPageClass = (function(){
 
         this.addStatsArea();
         this.addEmptyWishlistButton();
-        this.addWishlistNotesHandlers();
+        this.addUserNotesHandlers();
         this.addRemoveHandler();
     }
 
@@ -2775,7 +2775,7 @@ let WishlistPageClass = (function(){
     };
 
 
-    WishlistPageClass.prototype.addWishlistNote =  function(node) {
+    WishlistPageClass.prototype.addUserNote =  function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
 
         let appid = node.dataset.appId;
@@ -2785,7 +2785,7 @@ let WishlistPageClass = (function(){
             noteText = `"${userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
-            noteText = Localization.str.add_wishlist_note;
+            noteText = Localization.str.add_user_note;
             cssClass = "esi-empty-note";
         }
 
@@ -2794,7 +2794,7 @@ let WishlistPageClass = (function(){
         node.classList.add("esi-has-note");
     };
 
-    WishlistPageClass.prototype.addWishlistNotesHandlers =  function() {
+    WishlistPageClass.prototype.addUserNotesHandlers =  function() {
         if (!isMyWishlist()) { return; }
 
         let instance = this;
@@ -2852,7 +2852,7 @@ let UserNotes = (function(){
                     </div>
                 </div>`;
         
-        this.notes = SyncedStorage.get("wishlist_notes");
+        this.notes = SyncedStorage.get("user_notes");
     }
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
@@ -2864,7 +2864,7 @@ let UserNotes = (function(){
                 let fnOK = () => deferred.resolve();
 
                 let Modal = _BuildDialog(
-                    "${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}",
+                    "${Localization.str.add_user_note_for_game.replace("__gamename__", appname)}",
                     \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
                     [], fnOK);
                 deferred.always(() => Modal.Dismiss());
@@ -2964,7 +2964,7 @@ let UserNotes = (function(){
 
                 node.classList.remove("esi-user-note");
                 node.classList.add("esi-empty-note");
-                node.textContent = Localization.str.add_wishlist_note;
+                node.textContent = Localization.str.add_user_note;
             }
 
         }
@@ -2976,12 +2976,12 @@ let UserNotes = (function(){
 
     UserNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
-        SyncedStorage.set("wishlist_notes", this.notes);
+        SyncedStorage.set("user_notes", this.notes);
     };
 
     UserNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
-        SyncedStorage.set("wishlist_notes", this.notes);
+        SyncedStorage.set("user_notes", this.notes);
     };
 
     UserNotes.prototype.exists = function(appid) {
