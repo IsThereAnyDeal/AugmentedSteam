@@ -2797,13 +2797,12 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.addUserNotesHandlers =  function() {
         if (!isMyWishlist()) { return; }
 
-        let instance = this;
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
             let appid = row.dataset.appId;
-            userNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
+            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
         });
     };
 
