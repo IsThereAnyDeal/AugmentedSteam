@@ -1511,7 +1511,7 @@ let Highlights = (function(){
     };
 
     self.highlightOwned = function(node) {
-        if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest("#search_suggestion_contents") || node.closest(".tab_item"))) {
+        if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
         } else {
             highlightItem(node, "owned");
@@ -1519,7 +1519,7 @@ let Highlights = (function(){
     };
 
     self.highlightNotInterested = function(node) {
-        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest("#search_suggestion_contents") || node.closest(".tab_item"))) {
+        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
         } else {
             highlightItem(node, "notinterested");
