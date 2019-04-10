@@ -383,10 +383,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor: pointer;
 }
 
-.browse_tag_game_cap img {
-	margin-left: 8px;
-}
-
 .browse_tag_game_name {
 	margin-left: 8px;
 }

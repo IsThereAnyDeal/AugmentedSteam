@@ -198,6 +198,10 @@ class UpdateHandler {
             SyncedStorage.set('customize_apppage', settings);
         } else if (oldVersion.isSameOrBefore("0.9.5")) {
             SyncedStorage.remove("version");
+            SyncedStorage.remove("showesbg");
+            SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
+            SyncedStorage.remove("hideinstallsteambutton");
+            SyncedStorage.remove("hideaboutmenu");
         }
     }
 }
@@ -495,7 +499,7 @@ SyncedStorage.defaults = {
         "homepagesidebar": true
     },
 
-    'show_keylol_links': false,
+    //'show_keylol_links': false, // not in use, option is commented out
     'show_package_info': false,
     'show_sysreqcheck': false,
     'show_steamchart_info': true,
@@ -505,8 +509,7 @@ SyncedStorage.defaults = {
     'show_itad_button': false,
     'skip_got_steam': false,
 
-    'hideinstallsteambutton': false,
-    'hideaboutmenu': false,
+    'hideaboutlinks': false,
     'keepssachecked': false,
     'showemptywishlist': true,
     'showwlnotes': true,
@@ -523,7 +526,6 @@ SyncedStorage.defaults = {
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
-    'showesbg': true,
     'quickinv': true,
     'quickinv_diff': -0.01,
     'showallachievements': false,
@@ -599,22 +601,69 @@ class HTML {
             .replace(/&/g, '&amp;')
             .replace(/</g,'&lt;')
             .replace(/>/g,'&gt;') ;
-    };
+    }
+
+    static fragment(html) {
+        let template = document.createElement('template');
+        template.innerHTML = DOMPurify.sanitize(html);
+        return template.content;
+    }
+
+    static element(html) {
+        return HTML.fragment(html).firstElementChild;
+    }
 
     static inner(node, html) {
-        if (typeof(node) === "string") {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
             node = document.querySelector(node);
         }
-
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        
         node.innerHTML = DOMPurify.sanitize(html);
+        return node;
+    }
+
+    static wrap(node, html) {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
+            node = document.querySelector(node);
+        }
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+
+        let wrapper = HTML.element(html);
+        node.replaceWith(wrapper);
+        wrapper.appendChild(node);
+        return wrapper;
     }
 
     static adjacent(node, position, html) {
-        if (typeof(node) === "string") {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
             node = document.querySelector(node);
         }
-
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        
         node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
+        return node;
     }
 
     static beforeBegin(node, html) {
@@ -641,13 +690,11 @@ class HTMLParser {
     }
     
     static htmlToDOM(html) {
-        let template = document.createElement('template');
-        HTML.inner(template, html);
-        return template.content;
+        return HTML.fragment(html);
     }
 
     static htmlToElement(html) {
-        return HTMLParser.htmlToDOM(html).firstElementChild;
+        return HTML.element(html);
     };
 
     static getVariableFromText(text, name, type) {
