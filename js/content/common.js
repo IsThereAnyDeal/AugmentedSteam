@@ -1538,15 +1538,15 @@ let Highlights = (function(){
                 nodeToHighlight = node.querySelector(".spotlight_content");
             }
 
-            if (node.classList.contains("ds_owned")) {
+            if (node.querySelector(".ds_owned_flag")) {
                 self.highlightOwned(nodeToHighlight);
             }
 
-            if (node.classList.contains("ds_wishlist")) {
+            if (node.querySelector(".ds_wishlist_flag")) {
                 self.highlightWishlist(nodeToHighlight);
             }
 
-            if (node.classList.contains("ds_ignored")) {
+            if (node.querySelector(".ds_ignored_flag")) {
                 self.highlightNotInterested(nodeToHighlight);
             }
 
