@@ -3386,7 +3386,7 @@ class WorkshopPageClass {
             (new MarketPageClass());
             break;
 
-        case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
+        case /^\/(?:id|profiles)\/[^\/]+?\/?$/.test(path):
             (new ProfileHomePageClass());
             break;
 
