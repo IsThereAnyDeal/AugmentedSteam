@@ -1586,34 +1586,35 @@ let Highlights = (function(){
 
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
-            "div.tab_row",					// Storefront rows
+            "div.tab_row",					                // Storefront rows
             "div.dailydeal_ctn",
-            "div.wishlistRow",				// Wishlist rows
-            "a.game_area_dlc_row",			// DLC on app pages
-            "a.small_cap",					// Featured storefront items and "recommended" section on app pages
+            ".store_main_capsule",                          // "Featured & Recommended"
+            "div.wishlistRow",				                // Wishlist rows
+            "a.game_area_dlc_row",			                // DLC on app pages
+            "a.small_cap",					                // Featured storefront items and "recommended" section on app pages
             "a.home_smallcap",
-            ".home_content_item",           // Small items under "Keep scrolling for more recommendations"
-            ".home_content.single",         // Big items under "Keep scrolling for more recommendations"
-            "a.search_result_row",			// Search result rows
-            "a.match",						// Search suggestions rows
-            "a.cluster_capsule",			// Carousel items
-            "div.recommendation_highlight",	// Recommendation pages
-            "div.recommendation_carousel_item",	// Recommendation pages
-            "div.friendplaytime_game",		// Recommendation pages
-            "div.recommendation",           // Curator pages and the new DLC pages
-            "div.carousel_items.curator_featured > div", // Carousel items on Curator pages
-            ".carousel_items .store_capsule",
-            "div.item_ctn",                 // Curator list item
-            "div.dlc_page_purchase_dlc",	// DLC page rows
-            "div.sale_page_purchase_item",	// Sale pages
-            "div.item",						// Sale pages / featured pages
-            "div.home_area_spotlight",		// Midweek and weekend deals
-            "div.browse_tag_game",			// Tagged games
-            "div.similar_grid_item",		// Items on the "Similarly tagged" pages
-            ".tab_item",					// Items on new homepage
-            "a.special",					// new homepage specials
-            "div.curated_app_item",			// curated app items!
-            "a.summersale_dailydeal"		// Summer sale daily deal
+            ".home_content_item",                           // Small items under "Keep scrolling for more recommendations"
+            ".home_content.single",                         // Big items under "Keep scrolling for more recommendations"
+            "a.search_result_row",			                // Search result rows
+            "a.match",						                // Search suggestions rows
+            "a.cluster_capsule",			                // Carousel items
+            "div.recommendation_highlight",	                // Recommendation pages
+            "div.recommendation_carousel_item",             // Recommendation pages
+            "div.friendplaytime_game",		                // Recommendation pages
+            "div.recommendation",                           // Curator pages and the new DLC pages
+            "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
+            ".carousel_items .store_capsule",               // Various carousel items
+            "div.item_ctn",                                 // Curator list item
+            "div.dlc_page_purchase_dlc",	                // DLC page rows
+            "div.sale_page_purchase_item",	                // Sale pages
+            "div.item",						                // Sale pages / featured pages
+            "div.home_area_spotlight",		                // Midweek and weekend deals
+            "div.browse_tag_game",			                // Tagged games
+            "div.similar_grid_item",		                // Items on the "Similarly tagged" pages
+            ".tab_item",					                // Items on new homepage
+            "a.special",					                // new homepage specials
+            "div.curated_app_item",			                // curated app items!
+            "a.summersale_dailydeal"		                // Summer sale daily deal
         ];
 
         parent = parent || document;
