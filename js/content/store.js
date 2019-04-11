@@ -3035,24 +3035,18 @@ let StoreFrontPageClass = (function(){
 
         let observer = new MutationObserver(function(mutations){
             mutations.forEach(mutation => {
-                if (!mutation["addedNodes"]) { return; }
+                if (!mutation.addedNodes) { return; }
 
-                let addedNodes = mutation["addedNodes"];
-                for (let i=0; i<addedNodes.length; i++) {
-                    let node = addedNodes[i];
+                for (let i=0; i < mutation.addedNodes.length; i++) {
+                    let node = mutation.addedNodes[i];
                     if (!node.querySelector) { continue; }
 
-                    let wishlistedNode = node.querySelector(".home_content_item.ds_wishlist");
-                    if (wishlistedNode) {
+                    node.querySelectorAll(".home_content_item.ds_wishlist").forEach(wishlistedNode => {
                         Highlights.highlightWishlist(wishlistedNode);
-                        continue;
-                    }
-
-                    wishlistedNode = node.querySelector(".gamelink.ds_wishlist");
-                    if (wishlistedNode) {
+                    });
+                    node.querySelectorAll(".gamelink.ds_wishlist").forEach(wishlistedNode => {
                         Highlights.highlightWishlist(wishlistedNode.parentNode);
-                        continue;
-                    }
+                    });
                 }
             });
         });

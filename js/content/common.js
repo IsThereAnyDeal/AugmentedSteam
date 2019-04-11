@@ -1465,14 +1465,23 @@ let Highlights = (function(){
             node = node.querySelector(".large_cap_content");
         }
 
-        node.classList.remove("ds_flagged");
-        let r = node.querySelector(".ds_flag");
-        if (r) { r.remove(); }
-
-        r = node.querySelector(".ds_flagged");
-        if (r) {
-            r.classList.remove("ds_flagged");
+        // Recommendations on front page when scrolling down
+        if (node.classList.contains("single")) {
+            node = node.querySelector(".gamelink");
+            let r = node.querySelectorAll(".ds_flag");
+            r.forEach(node => node.remove());
+            r = node.querySelectorAll(".ds_flagged");
+            r.forEach(node => node.classList.remove("ds_flagged"));
+        } else {
+            let r = node.querySelector(".ds_flag");
+            if (r) { r.remove(); }
+            r = node.querySelector(".ds_flagged");
+            if (r) {
+                r.classList.remove("ds_flagged");
+            }
         }
+
+        node.classList.remove("ds_flagged");
     }
 
 
@@ -1583,6 +1592,8 @@ let Highlights = (function(){
             "a.game_area_dlc_row",			// DLC on app pages
             "a.small_cap",					// Featured storefront items and "recommended" section on app pages
             "a.home_smallcap",
+            ".home_content_item",           // Small items under "Keep scrolling for more recommendations"
+            ".home_content.single",         // Big items under "Keep scrolling for more recommendations"
             "a.search_result_row",			// Search result rows
             "a.match",						// Search suggestions rows
             "a.cluster_capsule",			// Carousel items
