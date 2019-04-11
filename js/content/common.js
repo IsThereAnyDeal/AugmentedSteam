@@ -1443,7 +1443,9 @@ let Highlights = (function(){
 
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
-                hlCss.push(`.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }`);
+                hlCss.push(
+                   `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
+                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }`);
             });
 
             let style = document.createElement('style');
@@ -1589,6 +1591,7 @@ let Highlights = (function(){
             "div.friendplaytime_game",		// Recommendation pages
             "div.recommendation",           // Curator pages and the new DLC pages
             "div.carousel_items.curator_featured > div", // Carousel items on Curator pages
+            ".carousel_items .store_capsule",
             "div.item_ctn",                 // Curator list item
             "div.dlc_page_purchase_dlc",	// DLC page rows
             "div.sale_page_purchase_item",	// Sale pages
