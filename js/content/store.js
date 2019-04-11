@@ -2997,6 +2997,7 @@ let TagPageClass = (function(){
         
     }
 
+    return TagPageClass;
 })();
 
 
