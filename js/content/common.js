@@ -1595,6 +1595,7 @@ let Highlights = (function(){
             "a.home_smallcap",
             ".home_content_item",                           // Small items under "Keep scrolling for more recommendations"
             ".home_content.single",                         // Big items under "Keep scrolling for more recommendations"
+            ".home_area_spotlight",                         // "Special offers" big items
             "a.search_result_row",			                // Search result rows
             "a.match",						                // Search suggestions rows
             "a.cluster_capsule",			                // Carousel items
