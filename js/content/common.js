@@ -1465,20 +1465,28 @@ let Highlights = (function(){
             node = node.querySelector(".large_cap_content");
         }
 
-        // Recommendations on front page when scrolling down
-        if (node.classList.contains("single")) {
-            node = node.querySelector(".gamelink");
-            let r = node.querySelectorAll(".ds_flag");
-            r.forEach(node => node.remove());
-            r = node.querySelectorAll(".ds_flagged");
-            r.forEach(node => node.classList.remove("ds_flagged"));
-        } else {
-            let r = node.querySelector(".ds_flag");
-            if (r) { r.remove(); }
-            r = node.querySelector(".ds_flagged");
-            if (r) {
-                r.classList.remove("ds_flagged");
+        switch(true) {
+            // Recommendations on front page when scrolling down
+            case node.classList.contains("single"):
+                node = node.querySelector(".gamelink");
+
+            case node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
+                let r = node.querySelectorAll(".ds_flag");
+                r.forEach(node => node.remove());
+                r = node.querySelectorAll(".ds_flagged");
+                r.forEach(node => node.classList.remove("ds_flagged"));
+                break;
             }
+
+            default: {
+                let r = node.querySelector(".ds_flag");
+                if (r) { r.remove(); }
+                r = node.querySelector(".ds_flagged");
+                if (r) {
+                    r.classList.remove("ds_flagged");
+                }
+            }
+            
         }
 
         node.classList.remove("ds_flagged");
@@ -1607,7 +1615,8 @@ let Highlights = (function(){
             ".friend_game_block",                           // "Friends recently bought"
             "div.recommendation",                           // Curator pages and the new DLC pages
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
-            ".carousel_items .store_capsule",               // Various carousel items
+            ".store_capsule",                               // All sorts of items on almost every page
+            ".home_marketing_message",                      // "Updates and offers"
             "div.item_ctn",                                 // Curator list item
             "div.dlc_page_purchase_dlc",	                // DLC page rows
             "div.sale_page_purchase_item",	                // Sale pages
