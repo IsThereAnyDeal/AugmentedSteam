@@ -2993,30 +2993,9 @@ let UserNotes = (function(){
 
 let TagPageClass = (function(){
 
-    let rows = [
-        "NewReleasesRows",
-        "TopSellersRows",
-        "ConcurrentUsersRows",
-        "ComingSoonRows"
-    ];
-
     function TagPageClass() {
-        this.observeChanges();
-    }
-
-    TagPageClass.prototype.observeChanges = function() {
-        let observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                Highlights.highlightAndTag(Array.from(mutation.addedNodes).filter(node => node.nodeName === "A"));
-            });
-        });
         
-        rows.forEach(row => {
-            observer.observe(document.getElementById(row), {childList: true});
-        })
-    };
-
-    return TagPageClass;
+    }
 
 })();
 
@@ -3138,6 +3117,25 @@ let StoreFrontPageClass = (function(){
     return StoreFrontPageClass;
 })();
 
+let TabAreaObserver = (function(){
+    let self = {};
+
+    self.observeChanges = function() {
+
+        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
+        if (!tabAreaNode) { return; }
+
+        let observer = new MutationObserver(() => {
+            Highlights.startHighlightsAndTags();
+            EarlyAccess.showEarlyAccess();
+        });
+
+        observer.observe(tabAreaNode, {childList: true, subtree: true});
+    };
+
+    return self;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3205,5 +3203,6 @@ let StoreFrontPageClass = (function(){
     Highlights.startHighlightsAndTags();
     EnhancedSteam.alternateLinuxIcon();
     EnhancedSteam.hideTrademarkSymbol(false);
+    TabAreaObserver.observeChanges();
 
 })();
