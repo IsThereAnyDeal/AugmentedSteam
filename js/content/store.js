@@ -3034,21 +3034,12 @@ let StoreFrontPageClass = (function(){
         if (!contentNode) { return; }
 
         let observer = new MutationObserver(function(mutations){
-            mutations.forEach(mutation => {
-                if (!mutation.addedNodes) { return; }
-
-                for (let i=0; i < mutation.addedNodes.length; i++) {
-                    let node = mutation.addedNodes[i];
-                    if (!node.querySelector) { continue; }
-
-                    node.querySelectorAll(".home_content_item.ds_wishlist").forEach(wishlistedNode => {
-                        Highlights.highlightWishlist(wishlistedNode);
-                    });
-                    node.querySelectorAll(".gamelink.ds_wishlist").forEach(wishlistedNode => {
-                        Highlights.highlightWishlist(wishlistedNode.parentNode);
-                    });
-                }
-            });
+            mutations.forEach(mutation =>
+                mutation.addedNodes.forEach(node => {
+                    if (!node.querySelectorAll) { return; }
+                    Highlights.highlightAndTag(node.querySelectorAll(".home_content_item, .home_content.single"));
+                })
+            );
         });
 
         observer.observe(contentNode, {childList:true, subtree: true});
