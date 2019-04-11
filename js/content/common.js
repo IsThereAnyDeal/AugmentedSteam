@@ -1458,11 +1458,11 @@ let Highlights = (function(){
         // Carousel item
         if (node.classList.contains("cluster_capsule")) {
             node = node.querySelector(".main_cap_content").parentNode;
-        }
-
-        // Genre Carousel items
-        if (node.classList.contains("large_cap")) {
+        } else if (node.classList.contains("large_cap")) {
+            // Genre Carousel items
             node = node.querySelector(".large_cap_content");
+        } else if (node.parentNode.classList.contains("steam_curator_recommendation") && node.parentNode.classList.contains("big")) {
+            node = node.previousElementSibling;
         }
 
         switch(true) {
@@ -1552,9 +1552,12 @@ let Highlights = (function(){
 
             if (node.classList.contains("item")) {
                 nodeToHighlight = node.querySelector(".info");
-            }
-            if (node.classList.contains("home_area_spotlight")) {
+            } else if (node.classList.contains("home_area_spotlight")) {
                 nodeToHighlight = node.querySelector(".spotlight_content");
+            } else if (node.parentNode.classList.contains("steam_curator_recommendation") && node.parentNode.classList.contains("big")) {
+                nodeToHighlight = node.nextElementSibling;
+            } else if (node.parentNode.parentNode.classList.contains("curations")) {
+                nodeToHighlight = node.parentNode;
             }
 
             if (node.querySelector(".ds_owned_flag")) {
@@ -1606,6 +1609,7 @@ let Highlights = (function(){
             ".home_area_spotlight",                         // "Special offers" big items
             "a.search_result_row",			                // Search result rows
             "a.match",						                // Search suggestions rows
+            ".highlighted_app",                             // For example "Recently Recommended" on curators page
             "a.cluster_capsule",			                // Carousel items
             "div.recommendation_highlight",	                // Recommendation pages
             "div.recommendation_carousel_item",             // Recommendation pages
