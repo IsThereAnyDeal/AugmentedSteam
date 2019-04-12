@@ -815,17 +815,22 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        let page = window.location.href.match(/\/games\/?(?:\?tab=(all|recent))?/);
-        if (!page) {
-            return;
-        }
+        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(?:\?tab=(all|recent))?/);
 
-        if (page[1] === "all") {
-            this.computeStats();
-            this.handleCommonGames();
-        }
-
-        this.addGamelistAchievements();
+        switch(page[2]) {
+            case "recent":
+            case undefined:
+                User.then(() => {
+                    if (User.profilePath === page[1]) {
+                        this.addGamelistAchievements(page[1]);
+                    }
+                });
+                break;
+            case "all":
+                this.computeStats();
+                this.handleCommonGames();
+                this.addGamelistAchievements(page[1]);
+        }        
     }
 
     // Display total time played for all games
@@ -863,12 +868,12 @@ let GamesPageClass = (function(){
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function() {
+    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
         let node = document.querySelector(".profile_small_header_texture a");
         if (!node) { return; }
-        let statsLink = 'https://steamcommunity.com/my/stats/';
+        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
 
         document.addEventListener("scroll", function(){
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
@@ -3353,7 +3358,7 @@ class WorkshopPageClass {
             (new ProfileActivityPageClass());
             break;
 
-        case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+        case /^\/(?:id|profiles)\/.+\/games/.test(path):
             (new GamesPageClass());
             break;
 
