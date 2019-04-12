@@ -893,7 +893,7 @@ let GamesPageClass = (function(){
                 if (!node.querySelector("h5.hours_played")) { continue; }
 
                 // Copy achievement stats to row
-                HTML.afterEnd(".gameListRowItemName", "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
 
                 RequestData.getHttp(statsLink + appid).then(result => {
                     let node = document.querySelector("#es_app_" + appid);
