@@ -815,13 +815,17 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        if (!window.location.href.match(/\/games\/\?tab=all/)) {
+        let page = window.location.href.match(/\/games\/?\?tab=(all|recent)/);
+        if (!page) {
             return;
         }
 
-        this.computeStats();
+        if (page[1] === "all") {
+            this.computeStats();
+            this.handleCommonGames();
+        }
+
         this.addGamelistAchievements();
-        this.handleCommonGames();
     }
 
     // Display total time played for all games
@@ -907,16 +911,17 @@ let GamesPageClass = (function(){
 
                     document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
 
-                    if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
+                    // The size of the achievement bars for games without leaderboards/other stats is fine, return
+                    if (!node.innerHTML.includes("achieveBarFull.gif")) { return; }
 
-                    let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-                    let barEmpty = node.innerHTML.match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+                    let barFull = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/)[1];
+                    let barEmpty = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/)[1];
                     barFull = barFull * .58;
                     barEmpty = barEmpty * .58;
 
                     let resultHtml = node.innerHTML
-                        .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
-                        .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
+                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/, "width=\"" + HTML.escape(barFull.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarFull.gif")
+                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/, "width=\"" + HTML.escape(barEmpty.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarEmpty.gif")
                         .replace("::", ":");
                     HTML.inner(node, resultHtml);
 
