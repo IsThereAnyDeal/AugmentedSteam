@@ -906,7 +906,7 @@ class AppPageClass extends StorePageClass {
             let award = data.award || "NA";
 
             HTML.beforeEnd("#game_area_opencritic",
-            `<div class='score ${award.toLowerCase()}'>${data.score}</div>
+            `<div class='score ${award.toLowerCase()}'>${data.score ? null : "--"}</div>
                    <div><img src='${opencriticImg}'></div>
                    <div class='oc_text'>${award} - 
                        <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
