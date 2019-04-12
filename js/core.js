@@ -414,7 +414,7 @@ SyncedStorage.defaults = {
     'version_show': true,
 
     'highlight_owned_color': "#598400",
-    'highlight_wishlist_color': "#1483ad",
+    'highlight_wishlist_color': "#0939a7",
     'highlight_coupon_color': "#a26426",
     'highlight_inv_gift_color': "#800040",
     'highlight_inv_guestpass_color': "#513c73",
