@@ -983,8 +983,6 @@ let GamesPageClass = (function(){
 
         label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
         label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
-        label.style.display = "none";
-        document.querySelector("#show_common_games").style.display = "none";
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
