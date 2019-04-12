@@ -3127,15 +3127,15 @@ let TabAreaObserver = (function(){
 
     self.observeChanges = function() {
 
-        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
-        if (!tabAreaNode) { return; }
+        let tabAreaNodes = document.querySelectorAll(".tag_browse_ctn, .tabarea, .browse_ctn_background");
+        if (!tabAreaNodes) { return; }
 
         let observer = new MutationObserver(() => {
             Highlights.startHighlightsAndTags();
             EarlyAccess.showEarlyAccess();
         });
 
-        observer.observe(tabAreaNode, {childList: true, subtree: true});
+        tabAreaNodes.forEach(tabAreaNode => observer.observe(tabAreaNode, {childList: true, subtree: true}));
     };
 
     return self;
