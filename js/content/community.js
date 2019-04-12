@@ -234,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, Inventory,]);
+        await Promise.all([DynamicStore, Inventory, User]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -271,14 +271,19 @@ let ProfileActivityPageClass = (function(){
 
     function addAchievementComparisonLink(node, appid) {
         if (!SyncedStorage.get("showcomparelinks")) { return; }
-        node.classList.add("es_achievements");
 
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
-        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href;
+        if (node.parentNode.nextElementSibling.tagName !== "IMG") { return; }
+
+        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href + '/';
+        if (friendProfileUrl === User.profileUrl) { return; }
+
+        node.classList.add("es_achievements");
+
         let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
-        HTML.beforeEnd(node, `<br><a class='es_achievement_compare' href='${compareLink}' target='_blank'>${Localization.str.compare}</a>`);
+        HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
     }
 
     ProfileActivityPageClass.prototype.observeChanges = function() {
