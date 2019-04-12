@@ -266,8 +266,9 @@ let ProfileActivityPageClass = (function(){
                     addAchievementComparisonLink(link, appid);
                 }
 
-                // TODO (tomas.fedor) this behaves differently than other highlights - check is being done in highlight method
-                Highlights.highlightNotInterested(link);
+                if (DynamicStore.isIgnored(appid)) {
+                    Highlights.highlightNotInterested(link);
+                }
             }
         }
     };
