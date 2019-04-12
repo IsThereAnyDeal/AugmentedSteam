@@ -815,7 +815,7 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        let page = window.location.href.match(/\/games\/?\?tab=(all|recent)/);
+        let page = window.location.href.match(/\/games\/?(?:\?tab=(all|recent))?/);
         if (!page) {
             return;
         }
