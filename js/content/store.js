@@ -2483,8 +2483,40 @@ let SearchPageClass = (function(){
     };
 
     SearchPageClass.prototype.observeChanges = function() {
-        if (!SyncedStorage.get("contscroll")) {
-            let observer = new MutationObserver(() => {
+
+        let contscrollObserver;
+        if (SyncedStorage.get("contscroll")) {
+            contscrollObserver = new MutationObserver(mutations => {
+                EarlyAccess.showEarlyAccess();
+                mutations.forEach(mutation => {
+                    Highlights.highlightAndTag(mutation.addedNodes);
+                    filtersChanged(mutation.addedNodes);
+                });
+            });
+            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        }
+        
+        let observer = new MutationObserver(mutations => {
+            if (SyncedStorage.get("contscroll")) {
+                mutations.forEach(mutation => {
+                    for (let node of mutation.removedNodes) {
+                        // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                        if (node.id && node.id === "search_result_container") {
+                            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+                            break;
+                        }
+                    }
+                })
+            }
+            
+            EarlyAccess.showEarlyAccess();
+            Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
+
+            /*if (SyncedStorage.get("contscroll")) {
+                if (mutations[0].addedNodes[0].classList.contains("Loading"))
+            }*/
+
+            if (!SyncedStorage.get("contscroll")) {
                 // When loading a new page, every element in the tab_filter_control class gets unchecked
                 if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
                 if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
@@ -2494,23 +2526,10 @@ let SearchPageClass = (function(){
                 if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
                 if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
                 if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
-
-                Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-                EarlyAccess.showEarlyAccess();
-                filtersChanged();
-            });
-            observer.observe(document.getElementById("search_results"), {childList: true});
-        } else {
-            let observer = new MutationObserver(mutations => {
-                EarlyAccess.showEarlyAccess();
-    
-                mutations.forEach(mutation => {
-                    Highlights.highlightAndTag(mutation.addedNodes);
-                    filtersChanged(mutation.addedNodes);
-                });
-            });
-            observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
-        }
+            }
+            filtersChanged();
+        });
+        observer.observe(document.getElementById("search_results"), {childList: true});
     };
 
     return SearchPageClass;

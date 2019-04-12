@@ -1532,17 +1532,15 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
-        } else {
-            highlightItem(node, "owned");
-        }
+        } 
+        highlightItem(node, "owned");
     };
 
     self.highlightNotInterested = function(node) {
         if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
-        } else {
-            highlightItem(node, "notinterested");
         }
+        highlightItem(node, "notinterested");
     };
 
     self.highlightAndTag = function(nodes) {
