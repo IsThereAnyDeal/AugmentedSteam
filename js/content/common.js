@@ -1634,17 +1634,19 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        selectors.forEach(selector => {
-            self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
-        });
-
-        let searchBoxContents = parent.getElementById("search_suggestion_contents");
-        if (searchBoxContents) {
-            let observer = new MutationObserver(records => {
-                self.highlightAndTag(records[0].addedNodes);
+        setTimeout(() => {
+            selectors.forEach(selector => {
+                self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
             });
-            observer.observe(searchBoxContents, {childList: true});
-        }
+    
+            let searchBoxContents = parent.getElementById("search_suggestion_contents");
+            if (searchBoxContents) {
+                let observer = new MutationObserver(records => {
+                    self.highlightAndTag(records[0].addedNodes);
+                });
+                observer.observe(searchBoxContents, {childList: true});
+            }
+        }, 500);
     };
 
     return self;
