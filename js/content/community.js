@@ -246,29 +246,25 @@ let ProfileActivityPageClass = (function(){
                 let appid = GameId.getAppid(link.href);
                 if (!appid) { continue; }
 
-                if (Inventory.hasGuestPass(appid)) {
-                    Highlights.highlightInvGuestpass(link);
-                }
-                if (Inventory.getCouponByAppId(appid)) {
-                    Highlights.highlightCoupon(link);
-                }
-                if (Inventory.hasGift(appid)) {
-                    Highlights.highlightInvGift(link);
-                }
-
-                if (DynamicStore.isWishlisted(appid)) {
-                    Highlights.highlightWishlist(link);
-                }
-
                 if (DynamicStore.isOwned(appid)) {
                     Highlights.highlightOwned(link);
 
                     addAchievementComparisonLink(link, appid);
+                } else if (Inventory.hasGuestPass(appid)) {
+                    Highlights.highlightInvGuestpass(link);
+                } else if (Inventory.getCouponByAppId(appid)) {
+                    Highlights.highlightCoupon(link);
+                } else if (Inventory.hasGift(appid)) {
+                    Highlights.highlightInvGift(link);
+                } else if (DynamicStore.isWishlisted(appid)) {
+                    Highlights.highlightWishlist(link);
+                } else if (DynamicStore.isIgnored(appid)) {
+                    Highlights.highlightNotInterested(link);
+                } else {
+                    continue;
                 }
 
-                if (DynamicStore.isIgnored(appid)) {
-                    Highlights.highlightNotInterested(link);
-                }
+                link.style = "border-radius: 5px";
             }
         }
     };
