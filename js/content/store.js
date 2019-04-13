@@ -3150,12 +3150,11 @@ let StoreFrontPageClass = (function(){
         let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
         for (let i = 0; i < dynamicNodes.length; ++i) {
             let node = dynamicNodes[i];
-            if (node.querySelector(".esi-customizer")) { continue; }
+            if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
 
             let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
             if (!headerNode) { continue; }
 
-            // TODO only visible? Problem with e.g. empty Curators
             customizer.addDynamic(headerNode, node);
         }
     };
