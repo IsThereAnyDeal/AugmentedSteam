@@ -3129,34 +3129,36 @@ let StoreFrontPageClass = (function(){
             node.classList.remove("active");
         });
 
-        let customizer = new Customizer("customize_frontpage");
-        customizer
-            .add("featuredrecommended", ".home_cluster_ctn")
-            .add("specialoffers", document.querySelector(".special_offers").parentElement)
-            .add("trendingamongfriends", ".friends_recently_purchased")
-            .add("discoveryqueue", ".discovery_queue_ctn")
-            .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
-            .add("curators", ".steam_curators_ctn")
-            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
-            .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
-            .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
-            .add("popularvrgames", ".best_selling_vr_ctn")
-            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-            .add("gamesstreamingnow", ".live_streams_ctn")
-            .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
-            .add("updatesandoffers", ".marketingmessage_area")
-            .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+        setTimeout(() => {
+            let customizer = new Customizer("customize_frontpage");
+            customizer
+                .add("featuredrecommended", ".home_cluster_ctn")
+                .add("specialoffers", document.querySelector(".special_offers").parentElement)
+                .add("trendingamongfriends", ".friends_recently_purchased")
+                .add("discoveryqueue", ".discovery_queue_ctn")
+                .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
+                .add("curators", ".steam_curators_ctn")
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+                .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
+                .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+                .add("popularvrgames", ".best_selling_vr_ctn")
+                .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+                .add("gamesstreamingnow", ".live_streams_ctn")
+                .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
+                .add("updatesandoffers", ".marketingmessage_area")
+                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
-        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
-        for (let i = 0; i < dynamicNodes.length; ++i) {
-            let node = dynamicNodes[i];
-            if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
+            let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
+            for (let i = 0; i < dynamicNodes.length; ++i) {
+                let node = dynamicNodes[i];
+                if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
 
-            let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-            if (!headerNode) { continue; }
+                let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
+                if (!headerNode) { continue; }
 
-            customizer.addDynamic(headerNode, node);
-        }
+                customizer.addDynamic(headerNode, node);
+            }
+        }, 1000);
     };
 
     return StoreFrontPageClass;
