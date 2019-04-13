@@ -3023,8 +3023,12 @@ let TagPageClass = (function(){
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
+        User.then(() => {
+            if (User.isSignedIn) {
+                this.highlightDelayed();
+            }
+        });
         this.setHomePageTab();
-        this.highlightRecommendations();
         this.customizeHomePage();
     }
 
@@ -3048,21 +3052,33 @@ let StoreFrontPageClass = (function(){
         tab.click();
     };
 
-    // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
-    StoreFrontPageClass.prototype.highlightRecommendations = function() {
+    StoreFrontPageClass.prototype.highlightDelayed = function() {
+        
+        // The "Recently updated" section will only get loaded once the user scrolls down
+        let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
+        if (recentlyUpdatedNode) {
+            let observer = new MutationObserver(mutations => {
+                if (mutations[0].oldValue === "display: none") {
+                    Highlights.highlightAndTag(recentlyUpdatedNode.querySelectorAll(".store_capsule"));
+                }
+            });
+            observer.observe(recentlyUpdatedNode, {attributes: true, attributeFilter: ["style"], attributeOldValue: true});
+        }
+
+        // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
         let contentNode = document.querySelector("#content_more");
-        if (!contentNode) { return; }
-
-        let observer = new MutationObserver(function(mutations){
-            mutations.forEach(mutation =>
-                mutation.addedNodes.forEach(node => {
-                    if (!node.querySelectorAll) { return; }
-                    Highlights.highlightAndTag(node.querySelectorAll(".home_content_item, .home_content.single"));
-                })
-            );
-        });
-
-        observer.observe(contentNode, {childList:true, subtree: true});
+        if (contentNode) {
+            let observer = new MutationObserver(function(mutations){
+                mutations.forEach(mutation =>
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType !== Node.ELEMENT_NODE) { return; }
+                        Highlights.highlightAndTag(node.querySelectorAll(".home_content_item, .home_content.single"));
+                    })
+                );
+            });
+    
+            observer.observe(contentNode, {childList:true, subtree: true});
+        }
     };
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
