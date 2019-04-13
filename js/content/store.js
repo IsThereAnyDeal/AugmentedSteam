@@ -1662,8 +1662,6 @@ class AppPageClass extends StorePageClass {
     }
 
     customizeAppPage() {
-        let instance = this;
-
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
             `<div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
@@ -1731,6 +1729,8 @@ class AppPageClass extends StorePageClass {
                 document.querySelector(".user_reviews_header").textContent
             );
         }
+
+        document.querySelector(".purchase_area_spacer").style.height = "auto";
     }
 
     addReviewToggleButton() {
