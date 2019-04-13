@@ -3033,12 +3033,12 @@ let MarketPageClass = (function(){
                     priceData = loadedMarketPrices[marketHashName];
                 } else {
                     do {
+                        function sleep(ms) {
+                            return new Promise(resolve => setTimeout(resolve, ms));
+                        }
                         try {
                             let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
 
-                            function sleep(ms) {
-                                return new Promise(resolve => setTimeout(resolve, ms));
-                            }
                             await sleep(1000);
 
                             done = true;
@@ -3047,6 +3047,7 @@ let MarketPageClass = (function(){
                         } catch(errorCode) {
                             // Too Many Requests
                             if (errorCode === 429) {
+                                await sleep(30000);
                                 if (node) {
                                     done = false;
                                 } else {
