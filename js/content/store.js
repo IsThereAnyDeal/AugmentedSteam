@@ -29,7 +29,7 @@ class Customizer {
     add(name, target, text, forceShow, callback) {
 
         let element = (typeof target === "string" ? document.querySelector(target) : target);
-        if (!element && !forceShow) {
+        if ((!element || element.style.display === "none") && !forceShow) {
             return this;
         }
 
