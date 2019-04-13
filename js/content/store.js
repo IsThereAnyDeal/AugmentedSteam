@@ -529,7 +529,7 @@ class AppPageClass extends StorePageClass {
         this.removeAboutLink();
 
         this.addPackageInfoButton();
-        this.addStats();
+        this.addStats().then(() => this.customizeAppPage());
 
         this.addDlcCheckboxes();
         this.addBadgeProgress();
@@ -538,7 +538,6 @@ class AppPageClass extends StorePageClass {
 
         this.showRegionalPricing("app");
 
-        this.customizeAppPage();
         this.addReviewToggleButton();
         this.addHelpButton();
 
@@ -1402,7 +1401,7 @@ class AppPageClass extends StorePageClass {
     addStats() {
         let that = this;
         if (this.isDlc()) { return; }
-        this.data.then(result => {
+        return this.data.then(result => {
 
             that.addSteamChart(result);
             that.addSteamSpy(result);
@@ -1706,30 +1705,21 @@ class AppPageClass extends StorePageClass {
         }
 
         let customizer = new Customizer("customize_apppage");
+        customizer.add("recommendedbycurators", ".steam_curators_block");
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
-        customizer.add("about", `[data-parent-of="#game_area_description"], #game_area_description`);
-        customizer.add("contentwarning", `[data-parent-of="#game_area_content_descriptors"], #game_area_content_descriptors`);
+        customizer.add("about", "#game_area_description");
+        customizer.add("contentwarning", "#game_area_content_descriptors");
         
-        customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
-            if (document.querySelector("#steam-charts")) { return; }
-            instance.data.then(result => addSteamChart.call(instance, result));
-        });
-        customizer.add("steamspy", "#steam-spy", Localization.str.spy.player_data, true, function(){
-            if (document.querySelector("#steam-spy")) { return; }
-            instance.data.then(result => addSteamSpy.call(instance, result));
-        });
-        customizer.add("surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
-            if (document.querySelector("#performance_survey")) { return; }
-            instance.data.then(result => addSurveyData.call(instance, result));
-        });
-        customizer.add("sysreq", `[data-parent-of=".sys_req"], .sys_req`);
-        customizer.add("legal", `[data-parent-of="#game_area_legal"], #game_area_legal`, Localization.str.apppage_legal);
+        customizer.add("steamchart", "#steam-charts");
+        customizer.add("surveys", "#performance_survey");
+        customizer.add("steamspy", "#steam-spy");
+        customizer.add("sysreq", ".sys_req");
+        customizer.add("legal", "#game_area_legal", Localization.str.apppage_legal);
 
         if (document.querySelector("#recommended_block")) {
             customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
-        customizer.add("recommendedbycurators", ".steam_curators_block");
 
         if (document.querySelector(".user_reviews_header")) {
             customizer.add(
