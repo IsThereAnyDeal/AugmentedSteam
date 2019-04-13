@@ -1646,7 +1646,7 @@ let Highlights = (function(){
                 });
                 observer.observe(searchBoxContents, {childList: true});
             }
-        }, 500);
+        }, 1000);
     };
 
     return self;
