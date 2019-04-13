@@ -1717,6 +1717,9 @@ class AppPageClass extends StorePageClass {
         customizer.add("sysreq", ".sys_req");
         customizer.add("legal", "#game_area_legal", Localization.str.apppage_legal);
 
+        if (document.querySelector("#franchise_block")) {
+            customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
+        }
         if (document.querySelector("#recommended_block")) {
             customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
