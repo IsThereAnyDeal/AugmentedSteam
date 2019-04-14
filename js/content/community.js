@@ -388,22 +388,19 @@ let ProfileHomePageClass = (function(){
         });
 
         // custom profile link
-        if (SyncedStorage.get("profile_custom")
-            && SyncedStorage.get("profile_custom_url")
-            && SyncedStorage.get("profile_custom_icon")
-            && SyncedStorage.get("profile_custom_name")) {
+        for (let custom_link of SyncedStorage.get('profile_custom_link')) {
+            if (!custom_link || !custom_link.enabled) {
+                continue;
+            }
 
-            let customUrl = SyncedStorage.get("profile_custom_url");
+            let customUrl = custom_link.url;
             if (!customUrl.includes("[ID]")) {
                 customUrl += "[ID]";
             }
 
-            let customName = SyncedStorage.get("profile_custom_name");
-            let customIcon = SyncedStorage.get("profile_custom_icon");
-
-            let name = customName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            let name = custom_link.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
             let link = "//" + customUrl.replace("[ID]", steamId).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
-            let icon = "//" + customIcon.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            let icon = "//" + custom_link.icon.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
