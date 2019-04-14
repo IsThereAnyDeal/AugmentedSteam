@@ -2411,6 +2411,7 @@ let GameCardPageClass = (function(){
         this.addMarketLinks();
         this.addFoilLink();
         this.addStoreTradeForumLink();
+        applyLinkButtonsLayout();
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
@@ -2503,6 +2504,18 @@ let GameCardPageClass = (function(){
     			</a>
     		</div>`);
     };
+
+    // Layout for the case when zoomed in (and the buttons are wrapped)
+    function applyLinkButtonsLayout() {
+        let linksDiv = document.querySelector(".gamecards_inventorylink");
+        linksDiv.style.overflow = "auto";
+        // Default is 14px => 14-5 = 9
+        linksDiv.style.marginBottom = "9px";
+
+        linksDiv.querySelectorAll("a").forEach(button => {
+            button.style.marginBottom = "5px";
+        });
+    }
 
     return GameCardPageClass
 })();
