@@ -2459,10 +2459,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor:pointer;
 }
 
-#esi-store-user-note {
-	font-size: 13px;
-}
-
 .esi-empty-note {
 	font-style: italic;
 }
@@ -2472,7 +2468,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 .esi-note--store {
-
+	font-size: 1.4em;
+	font-style: italic;
+	margin-top: 20px;
 }
 
 .esi-note--hidden {

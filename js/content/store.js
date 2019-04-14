@@ -794,7 +794,7 @@ class AppPageClass extends StorePageClass {
         }
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            `<div id='esi-store-user-note' class='esi-note esi-user-note esi-note--store ${cssClass}'>${noteText}</div>`);
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             ` <div class="queue_control_button js-user-note-button">
