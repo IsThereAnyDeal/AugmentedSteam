@@ -26,7 +26,7 @@ class Language {
 
     static getLanguageCode(language) {
         let code = Language.languages[language];
-        return code ? code.toLowerCase() : "en";
+        return code ? code : "en";
     }
 
     static isCurrentLanguageOneOf(array) {
