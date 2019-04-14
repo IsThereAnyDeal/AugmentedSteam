@@ -611,11 +611,16 @@ class ExtensionResources {
 class HTML {
 
     static escape(str) {
-        // TODO there must be a better way
-        return str
-            .replace(/&/g, '&amp;')
-            .replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;') ;
+        // @see https://stackoverflow.com/a/4835406
+        let map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return str.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
 
     static fragment(html) {
