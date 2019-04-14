@@ -780,7 +780,7 @@ class AppPageClass extends StorePageClass {
         if (!User.isSignedIn) { return; }
 
         let noteText = "";
-        let cssClass = "esi-user-note--empty";
+        let cssClass = "esi-note--hidden";
 
         let inactiveStyle = "";
         let activeStyle = "display:none;";
@@ -794,7 +794,7 @@ class AppPageClass extends StorePageClass {
         }
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            `<div id='esi-store-user-note' class='esi-note esi-user-note ${cssClass}'>${noteText}</div>`);
+            `<div id='esi-store-user-note' class='esi-note esi-user-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             ` <div class="queue_control_button js-user-note-button">
@@ -806,10 +806,22 @@ class AppPageClass extends StorePageClass {
                 </div>
             </div>`);
 
+        function toggleState(node, active) {
+            let button = document.querySelector(".js-user-note-button");
+            button.querySelector(".queue_btn_inactive").style.display = active ? "none" : null;
+            button.querySelector(".queue_btn_active").style.display = active ? null : "none";
+
+            node.classList.toggle("esi-note--hidden", !active);
+        }
+
         let that = this;
-        document.querySelector(".js-user-note-button").addEventListener("click", function() {
-            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-user-note");
-        });
+
+        let handler = function() {
+            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-user-note", toggleState);
+        };
+
+        document.querySelector(".js-user-note-button").addEventListener("click", handler);
+        document.querySelector("#esi-store-user-note").addEventListener("click", handler);
     }
 
     getFirstSubid() {
@@ -2805,8 +2817,8 @@ let WishlistPageClass = (function(){
             noteText = `"${userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
-            noteText = Localization.str.add_user_note;
-            cssClass = "esi-user-note esi-user-note--empty";
+            noteText = Localization.str.user_note.add;
+            cssClass = "esi-empty-note";
         }
 
         HTML.afterEnd(node.querySelector(".mid_container"),
@@ -2817,12 +2829,22 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.addUserNotesHandlers =  function() {
         if (!isMyWishlist()) { return; }
 
+        let stateHandler = function(node, active) {
+            if (active) {
+                node.classList.remove("esi-empty-note");
+                node.classList.add("esi-user-note");
+            } else {
+                node.classList.remove("esi-user-note");
+                node.classList.add("esi-empty-note");
+            }
+        };
+
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
             let appid = row.dataset.appId;
-            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
+            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
         });
     };
 
@@ -2874,7 +2896,7 @@ let UserNotes = (function(){
         this.notes = SyncedStorage.get("user_notes");
     }
 
-    UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
+    UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector, onNoteUpdate) {
 
         ExtensionLayer.runInPageContext(`function() {
             // Partly copied from shared_global.js
@@ -2937,7 +2959,7 @@ let UserNotes = (function(){
                 document.removeEventListener("click", clickListener);
                 window.removeEventListener("message", messageListener);
             } else if (e.data.type === "es_background_click") {
-                saveNote();
+                onNoteUpdate.apply(null, saveNote());
                 window.postMessage({
                     type: "es_note_saved"
                 }, "*");
@@ -2957,7 +2979,7 @@ let UserNotes = (function(){
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
-                saveNote();
+                onNoteUpdate.apply(null, saveNote());
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
@@ -2973,21 +2995,14 @@ let UserNotes = (function(){
 
             if (note.length !== 0) {
                 that.setNote(appid, note);
-                node.classList.remove("esi-user-note--empty");
                 HTML.inner(node, `"${note}"`);
+                return [node, true];
             } else {
                 that.deleteNote(appid);
-                node.classList.add("esi-user-note--empty");
-                node.textContent = "";
+                node.textContent = Localization.str.user_note.add;
+                return [node, false];
             }
-
         }
-    };
-
-    UserNotes.prototype.toggleButton = function(active) {
-        let button = document.querySelector(".js-user-note-button");
-        button.querySelector(".queue_btn_inactive").style.display = active ? "none" : null;
-        button.querySelector(".queue_btn_active").style.display = active ? null : "none";
     };
 
     UserNotes.prototype.getNote = function(appid) {
@@ -2997,13 +3012,11 @@ let UserNotes = (function(){
     UserNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
         SyncedStorage.set("user_notes", this.notes);
-        this.toggleButton(true);
     };
 
     UserNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
         SyncedStorage.set("user_notes", this.notes);
-        this.toggleButton(false);
     };
 
     UserNotes.prototype.exists = function(appid) {

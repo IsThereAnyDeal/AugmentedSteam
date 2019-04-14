@@ -2463,11 +2463,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-size: 13px;
 }
 
+.esi-empty-note {
+	font-style: italic;
+}
+
 .esi-user-note {
 	color: #5fafdd;
 }
 
-.esi-user-note--empty {
+.esi-note--store {
+
+}
+
+.esi-note--hidden {
 	display: none;
 }
 
