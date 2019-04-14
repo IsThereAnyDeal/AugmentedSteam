@@ -3027,7 +3027,6 @@ let MarketPageClass = (function(){
                 rows.push(node);
             }
 
-            rowIteration:
             for (let node of rows) {
                 let linkNode = node.querySelector(".market_listing_item_name_link");
                 if (!linkNode) { continue; }
@@ -3037,15 +3036,14 @@ let MarketPageClass = (function(){
                 let appid = parseInt(m[1]);
                 let marketHashName = m[2];
 
+                let allowInsert = true;
+
                 let priceData;
                 let done;
                 if (loadedMarketPrices[marketHashName]) {
                     priceData = loadedMarketPrices[marketHashName];
                 } else {
                     do {
-                        function sleep(ms) {
-                            return new Promise(resolve => setTimeout(resolve, ms));
-                        }
                         try {
                             let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
 
@@ -3065,17 +3063,19 @@ let MarketPageClass = (function(){
                                 }
                             } else {
                                 console.error("Failed to retrieve price overview for item %s!", marketHashName);
-                                continue rowIteration;
+                                allowInsert = false;
+                                break;
                             }
                             
                         }
                     } while (!done);
                 }
 
-                insertPrice(node, priceData);
-                
+                if (allowInsert) {
+                    insertPrice(node, priceData);
+                }
             }
-        };
+        }
 
     };
 
