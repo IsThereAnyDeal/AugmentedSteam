@@ -29,7 +29,7 @@ class Customizer {
     add(name, target, text, forceShow, callback) {
 
         let element = (typeof target === "string" ? document.querySelector(target) : target);
-        if (!element && !forceShow) {
+        if ((!element || element.style.display === "none") && !forceShow) {
             return this;
         }
 
@@ -529,7 +529,7 @@ class AppPageClass extends StorePageClass {
         this.removeAboutLink();
 
         this.addPackageInfoButton();
-        this.addStats();
+        this.addStats().then(() => this.customizeAppPage());
 
         this.addDlcCheckboxes();
         this.addBadgeProgress();
@@ -538,7 +538,6 @@ class AppPageClass extends StorePageClass {
 
         this.showRegionalPricing("app");
 
-        this.customizeAppPage();
         this.addReviewToggleButton();
         this.addHelpButton();
 
@@ -1402,7 +1401,7 @@ class AppPageClass extends StorePageClass {
     addStats() {
         let that = this;
         if (this.isDlc()) { return; }
-        this.data.then(result => {
+        return this.data.then(result => {
 
             that.addSteamChart(result);
             that.addSteamSpy(result);
@@ -1663,8 +1662,6 @@ class AppPageClass extends StorePageClass {
     }
 
     customizeAppPage() {
-        let instance = this;
-
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
             `<div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
@@ -1706,30 +1703,24 @@ class AppPageClass extends StorePageClass {
         }
 
         let customizer = new Customizer("customize_apppage");
+        customizer.add("recommendedbycurators", ".steam_curators_block");
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
-        customizer.add("about", `[data-parent-of="#game_area_description"], #game_area_description`);
-        customizer.add("contentwarning", `[data-parent-of="#game_area_content_descriptors"], #game_area_content_descriptors`);
+        customizer.add("about", "#game_area_description");
+        customizer.add("contentwarning", "#game_area_content_descriptors");
         
-        customizer.add("steamchart", "#steam-charts", Localization.str.charts.current, true, function(){
-            if (document.querySelector("#steam-charts")) { return; }
-            instance.data.then(result => addSteamChart.call(instance, result));
-        });
-        customizer.add("steamspy", "#steam-spy", Localization.str.spy.player_data, true, function(){
-            if (document.querySelector("#steam-spy")) { return; }
-            instance.data.then(result => addSteamSpy.call(instance, result));
-        });
-        customizer.add("surveys", "#performance_survey", Localization.str.survey.performance_survey, true, function(){
-            if (document.querySelector("#performance_survey")) { return; }
-            instance.data.then(result => addSurveyData.call(instance, result));
-        });
-        customizer.add("sysreq", `[data-parent-of=".sys_req"], .sys_req`);
-        customizer.add("legal", `[data-parent-of="#game_area_legal"], #game_area_legal`, Localization.str.apppage_legal);
+        customizer.add("steamchart", "#steam-charts");
+        customizer.add("surveys", "#performance_survey");
+        customizer.add("steamspy", "#steam-spy");
+        customizer.add("sysreq", ".sys_req");
+        customizer.add("legal", "#game_area_legal", Localization.str.apppage_legal);
 
+        if (document.querySelector("#franchise_block")) {
+            customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
+        }
         if (document.querySelector("#recommended_block")) {
             customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
         }
-        customizer.add("recommendedbycurators", ".steam_curators_block");
 
         if (document.querySelector(".user_reviews_header")) {
             customizer.add(
@@ -1738,6 +1729,8 @@ class AppPageClass extends StorePageClass {
                 document.querySelector(".user_reviews_header").textContent
             );
         }
+
+        document.querySelector(".purchase_area_spacer").style.height = "auto";
     }
 
     addReviewToggleButton() {
@@ -3081,7 +3074,7 @@ let StoreFrontPageClass = (function(){
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
         HTML.beforeEnd(".home_page_content",
-            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px;">
+            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px 10px">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
                     <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
@@ -3101,35 +3094,36 @@ let StoreFrontPageClass = (function(){
             node.classList.remove("active");
         });
 
-        let customizer = new Customizer("customize_frontpage");
-        customizer
-            .add("featuredrecommended", ".home_cluster_ctn")
-            .add("specialoffers", document.querySelector(".special_offers").parentElement)
-            .add("trendingamongfriends", ".friends_recently_purchased")
-            .add("discoveryqueue", ".discovery_queue_ctn")
-            .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
-            .add("curators", ".steam_curators_ctn")
-            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
-            .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
-            .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
-            .add("popularvrgames", ".best_selling_vr_ctn")
-            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-            .add("gamesstreamingnow", ".live_streams_ctn")
-            .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
-            .add("updatesandoffers", ".marketingmessage_area")
-            .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+        setTimeout(() => {
+            let customizer = new Customizer("customize_frontpage");
+            customizer
+                .add("featuredrecommended", ".home_cluster_ctn")
+                .add("specialoffers", document.querySelector(".special_offers").parentElement)
+                .add("trendingamongfriends", ".friends_recently_purchased")
+                .add("discoveryqueue", ".discovery_queue_ctn")
+                .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
+                .add("curators", ".steam_curators_ctn")
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+                .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
+                .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+                .add("popularvrgames", ".best_selling_vr_ctn")
+                .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+                .add("gamesstreamingnow", ".live_streams_ctn")
+                .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
+                .add("updatesandoffers", ".marketingmessage_area")
+                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
-        let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
-        for (let i = 0; i < dynamicNodes.length; ++i) {
-            let node = dynamicNodes[i];
-            if (node.querySelector(".esi-customizer")) { continue; }
+            let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
+            for (let i = 0; i < dynamicNodes.length; ++i) {
+                let node = dynamicNodes[i];
+                if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
 
-            let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-            if (!headerNode) { continue; }
+                let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
+                if (!headerNode) { continue; }
 
-            // TODO only visible? Problem with e.g. empty Curators
-            customizer.addDynamic(headerNode, node);
-        }
+                customizer.addDynamic(headerNode, node);
+            }
+        }, 1000);
     };
 
     return StoreFrontPageClass;
