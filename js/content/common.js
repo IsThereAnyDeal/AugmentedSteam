@@ -1469,6 +1469,7 @@ let Highlights = (function(){
             // Recommendations on front page when scrolling down
             case node.classList.contains("single"):
                 node = node.querySelector(".gamelink");
+                // don't break
 
             case node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
                 let r = node.querySelectorAll(".ds_flag");
@@ -1485,6 +1486,7 @@ let Highlights = (function(){
                 if (r) {
                     r.classList.remove("ds_flagged");
                 }
+                break;
             }
             
         }
