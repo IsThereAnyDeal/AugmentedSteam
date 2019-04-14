@@ -2329,17 +2329,18 @@ let SearchPageClass = (function(){
         }
     }
 
-    SearchPageClass.prototype.addHideButtonsToSearch = function() {
+    SearchPageClass.prototype.addHideButtonsToSearch = async function() {
 
         let currency = CurrencyRegistry.storeCurrency;
         let inputPattern = currency.regExp();
         let pricePlaceholder = currency.placeholder();
 
+        await User;
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class='block' id='es_hide_menu'>
                 <div class='block_header'><div>${Localization.str.hide}</div></div>
                 <div class='block_content block_content_inner' id='es_hide_options'>
-                    <div class='tab_filter_control' id='es_owned_games'>
+                    ${User.isSignedIn ? `<div class='tab_filter_control' id='es_owned_games'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>${Localization.str.options.owned}</span>
                     </div>
@@ -2347,6 +2348,10 @@ let SearchPageClass = (function(){
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>${Localization.str.options.wishlist}</span>
                     </div>
+                    <div class='tab_filter_control' id='es_notinterested'>
+                        <div class='tab_filter_control_checkbox'></div>
+                        <span class='tab_filter_control_label'>${Localization.str.notinterested}</span>
+                    </div>` : ""}
                     <div class='tab_filter_control' id='es_cart_games'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>${Localization.str.options.cart}</span>
@@ -2354,10 +2359,6 @@ let SearchPageClass = (function(){
                     <div class='tab_filter_control' id='es_notdiscounted'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>${Localization.str.notdiscounted}</span>
-                    </div>
-                    <div class='tab_filter_control' id='es_notinterested'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.notinterested}</span>
                     </div>
                     <div class='tab_filter_control' id='es_notmixed'>
                         <div class='tab_filter_control_checkbox'></div>
@@ -2378,12 +2379,18 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        if (SyncedStorage.get("hide_owned")) {
-            document.querySelector("#es_owned_games").classList.add("checked");
-        }
-
-        if (SyncedStorage.get("hide_wishlist")) {
-            document.querySelector("#es_wishlist_games").classList.add("checked");
+        if (User.isSignedIn) {
+            if (SyncedStorage.get("hide_owned")) {
+                document.querySelector("#es_owned_games").classList.add("checked");
+            }
+    
+            if (SyncedStorage.get("hide_wishlist")) {
+                document.querySelector("#es_wishlist_games").classList.add("checked");
+            }
+    
+            if (SyncedStorage.get("hide_ignored")) {
+                document.querySelector("#es_notinterested").classList.add("checked");
+            }
         }
 
         if (SyncedStorage.get("hide_cart")) {
@@ -2392,10 +2399,6 @@ let SearchPageClass = (function(){
 
         if (SyncedStorage.get("hide_notdiscounted")) {
             document.querySelector("#es_notdiscounted").classList.add("checked");
-        }
-
-        if (SyncedStorage.get("hide_ignored")) {
-            document.querySelector("#es_notinterested").classList.add("checked");
         }
 
         if (SyncedStorage.get("hide_mixed")) {
@@ -2426,24 +2429,29 @@ let SearchPageClass = (function(){
             notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
         }
 
-        [
-            ["#es_owned_games", "hide_owned"],
-            ["#es_wishlist_games", "hide_wishlist"],
-            ["#es_cart_games", "hide_cart"],
-            ["#es_notdiscounted", "hide_notdiscounted"],
-            ["#es_notinterested", "hide_notinterested"],
-            ["#es_notmixed", "hide_mixed"],
-            ["#es_notnegative", "hide_negative"],
-            ["#es_notpriceabove", "hide_priceabove"],
-        ].forEach(a => {
-            document.querySelector(a[0]).addEventListener("click", function(e) {
-                let node = document.querySelector(a[0]);
-                let value = !node.classList.contains("checked");
-                node.classList.toggle("checked", value);
-                SyncedStorage.set(a[1], value);
+        let map = new Map([
+            ["es_cart_games", "hide_cart"],
+            ["es_notdiscounted", "hide_notdiscounted"],
+            ["es_notmixed", "hide_mixed"],
+            ["es_notnegative", "hide_negative"],
+            ["es_notpriceabove", "hide_priceabove"]
+        ]);
+
+        if (User.isSignedIn) {
+            map.set("es_owned_games", "hide_owned");
+            map.set("es_wishlist_games", "hide_wishlist");
+            map.set("es_notinterested", "hide_notinterested");
+        }
+
+        for (let [id, setting] of map) {
+            let option = document.getElementById(id);
+            option.addEventListener("click", () => {
+                let state = !option.classList.contains("checked");
+                option.classList.toggle("checked", state);
+                SyncedStorage.set(setting, state);
                 filtersChanged();
             });
-        });
+        }
 
         let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
         priceFilterCheckbox.title = Localization.str.price_above_tooltip;
@@ -2512,11 +2520,13 @@ let SearchPageClass = (function(){
 
             if (!SyncedStorage.get("contscroll")) {
                 // When loading a new page, every element in the tab_filter_control class gets unchecked
-                if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
-                if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
+                if (User.isSignedIn) {
+                    if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
+                    if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
+                    if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
+                }
                 if (SyncedStorage.get("hide_cart")) { document.querySelector("#es_cart_games").classList.add("checked"); }
                 if (SyncedStorage.get("hide_notdiscounted")) { document.querySelector("#es_notdiscounted").classList.add("checked"); }
-                if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
                 if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
                 if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
                 if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
