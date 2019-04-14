@@ -814,13 +814,22 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        if (!window.location.href.match(/\/games\/\?tab=all/)) {
-            return;
-        }
+        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(?:\?tab=(all|recent))?/);
 
-        this.computeStats();
-        this.addGamelistAchievements();
-        this.handleCommonGames();
+        switch(page[2]) {
+            case "recent":
+            case undefined:
+                User.then(() => {
+                    if (User.profilePath === page[1]) {
+                        this.addGamelistAchievements(page[1]);
+                    }
+                });
+                break;
+            case "all":
+                this.computeStats();
+                this.handleCommonGames();
+                this.addGamelistAchievements(page[1]);
+        }        
     }
 
     // Display total time played for all games
@@ -858,12 +867,12 @@ let GamesPageClass = (function(){
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function() {
+    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
         let node = document.querySelector(".profile_small_header_texture a");
         if (!node) { return; }
-        let statsLink = 'https://steamcommunity.com/my/stats/';
+        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
 
         document.addEventListener("scroll", function(){
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
@@ -892,7 +901,7 @@ let GamesPageClass = (function(){
                 if (!node.querySelector("h5.hours_played")) { continue; }
 
                 // Copy achievement stats to row
-                HTML.afterEnd(".gameListRowItemName", "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
 
                 RequestData.getHttp(statsLink + appid).then(result => {
                     let node = document.querySelector("#es_app_" + appid);
@@ -906,16 +915,17 @@ let GamesPageClass = (function(){
 
                     document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
 
-                    if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
+                    // The size of the achievement bars for games without leaderboards/other stats is fine, return
+                    if (!node.innerHTML.includes("achieveBarFull.gif")) { return; }
 
-                    let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-                    let barEmpty = node.innerHTML.match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
+                    let barFull = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/)[1];
+                    let barEmpty = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/)[1];
                     barFull = barFull * .58;
                     barEmpty = barEmpty * .58;
 
                     let resultHtml = node.innerHTML
-                        .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
-                        .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
+                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/, "width=\"" + HTML.escape(barFull.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarFull.gif")
+                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/, "width=\"" + HTML.escape(barEmpty.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarEmpty.gif")
                         .replace("::", ":");
                     HTML.inner(node, resultHtml);
 
@@ -977,8 +987,6 @@ let GamesPageClass = (function(){
 
         label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
         label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
-        label.style.display = "none";
-        document.querySelector("#show_common_games").style.display = "none";
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
@@ -3352,7 +3360,7 @@ class WorkshopPageClass {
             (new ProfileActivityPageClass());
             break;
 
-        case /^\/(?:id|profiles)\/(.+)\/games/.test(path):
+        case /^\/(?:id|profiles)\/.+\/games/.test(path):
             (new GamesPageClass());
             break;
 
