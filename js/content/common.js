@@ -561,9 +561,13 @@ let CurrencyRegistry = (function() {
         }
         placeholder() {
             if (this.format.decimalPlaces == 0 || this.format.hidePlacesWhenZero) {
-                return "0";
+                return '0';
             }
-            return (0).toFixed(this.format.decimalPlaces);
+            let placeholder = '0' + this.format.decimalSeparator;
+            for (let i = 0; i < this.format.decimalPlaces; ++i) {
+                placeholder += '0';
+            }
+            return placeholder;
         }
         regExp() {
             let regex = ["^("];

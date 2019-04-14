@@ -2463,34 +2463,29 @@ let SearchPageClass = (function(){
         let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
         priceFilterCheckbox.title = Localization.str.price_above_tooltip;
 
-        let elem = document.getElementById("es_notpriceabove_val");
-        if (elem !== undefined && elem !== null) {
-            elem.title = Localization.str.price_above_tooltip;
-            elem.addEventListener("click", function(e) {
-                e.stopPropagation()
-            });
-            elem.addEventListener("keydown", function(e){
-                if(e.key === "Enter") {
-                    // This would normally trigger a call to AjaxSearchResults() and reload the page, invalidating all AS filters
-                    e.preventDefault();
-                }
-            });
-            elem.addEventListener("input", function(e){
-                let toggleValue = (elem.value !== "");
-                priceFilterCheckbox.classList.toggle("checked", toggleValue);
-                SyncedStorage.set("hide_priceabove", toggleValue);
+        notpriceabove_val.title = Localization.str.price_above_tooltip;
+        notpriceabove_val.addEventListener("click", e => e.stopPropagation());
+        notpriceabove_val.addEventListener("keydown", e => {
+            if(e.key === "Enter") {
+                // This would normally trigger a call to AjaxSearchResults() and reload the page, invalidating all AS filters
+                e.preventDefault();
+            }
+        });
+        notpriceabove_val.addEventListener("input", () => {
+            let toggleValue = (notpriceabove_val.value !== "");
+            priceFilterCheckbox.classList.toggle("checked", toggleValue);
+            SyncedStorage.set("hide_priceabove", toggleValue);
 
-                if (inputPattern.test(elem.value)) {
-                    elem.setCustomValidity('');
-                    SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
-                    filtersChanged();
-                } else {
-                    elem.setCustomValidity(Localization.str.price_above_tooltip);
-                }
+            if (inputPattern.test(notpriceabove_val.value)) {
+                notpriceabove_val.setCustomValidity('');
+                SyncedStorage.set("priceabove_value", notpriceabove_val.value.replace(',', '.'));
+                filtersChanged();
+            } else {
+                notpriceabove_val.setCustomValidity(Localization.str.price_above_tooltip);
+            }
 
-                elem.reportValidity();
-            });
-        }
+            notpriceabove_val.reportValidity();
+        });
 
         filtersChanged();
 
