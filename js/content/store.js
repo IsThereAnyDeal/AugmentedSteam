@@ -2220,7 +2220,7 @@ let SearchPageClass = (function(){
                  </div>
                  <div class='block_content block_content_inner'>
                     <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
-                    <input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">
+                    <input type="text" id="es_tagfilter_exclude_suggest" class="es_input">
                 </div>
             </div>`);
 
@@ -2272,7 +2272,7 @@ let SearchPageClass = (function(){
         }
 
         ExtensionLayer.runInPageContext(() =>
-            $J('#es_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value })
+            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value")})
         );
 
         let observer = new MutationObserver(function(mutations) {
@@ -2371,7 +2371,7 @@ let SearchPageClass = (function(){
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='${inputPattern.source}' placeholder=${pricePlaceholder}>
+                            <input type="text" id='es_notpriceabove_val' class='es_input' pattern='${inputPattern.source}' placeholder=${pricePlaceholder}>
                         </div>
                     </div>
                 </div>
