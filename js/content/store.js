@@ -2338,7 +2338,7 @@ let SearchPageClass = (function(){
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class='block' id='es_hide_menu'>
                 <div class='block_header'><div>${Localization.str.hide}</div></div>
-                <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
+                <div class='block_content block_content_inner' id='es_hide_options'>
                     <div class='tab_filter_control' id='es_owned_games'>
                         <div class='tab_filter_control_checkbox'></div>
                         <span class='tab_filter_control_label'>${Localization.str.options.owned}</span>
@@ -2375,20 +2375,8 @@ let SearchPageClass = (function(){
                         </div>
                     </div>
                 </div>
-                <a class="see_all_expander" href="#" id="es_hide_expander"></a>
             </div>
         `);
-
-        let expander = document.querySelector("#es_hide_expander");
-        expander.addEventListener("click", function(e) {
-            e.preventDefault();
-            ExtensionLayer.runInPageContext(() =>
-                ExpandOptions(document.querySelector("#es_hide_expander"), 'es_hide_options')
-            );
-        });
-
-        let all = document.querySelectorAll(".see_all_expander");
-        expander.textContent = all[all.length-1].textContent;
 
         if (SyncedStorage.get("hide_owned")) {
             document.querySelector("#es_owned_games").classList.add("checked");
@@ -2413,19 +2401,16 @@ let SearchPageClass = (function(){
         if (SyncedStorage.get("hide_mixed")) {
             document.querySelector("#es_notmixed").classList.add("checked");
             document.querySelector("#es_hide_options").style.height="auto";
-            document.querySelector("#es_hide_expander").style.display="none";
         }
 
         if (SyncedStorage.get("hide_negative")) {
             document.querySelector("#es_notnegative").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
-            document.querySelector("#es_hide_expander").style.display = "none";
         }
 
         if (SyncedStorage.get("hide_priceabove")) {
             document.querySelector("#es_notpriceabove").classList.add("checked");
             document.querySelector("#es_hide_options").style.height = "auto";
-            document.querySelector("#es_hide_expander").style.display = "none";
         }
 
         let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
