@@ -220,11 +220,6 @@
     "concepts": "Concepts",
     "collections": "Collections",
     "discussions": "Discussions",
-    "add_wishlist_note": "Add a wishlist note",
-    "update_wishlist_note": "Update wishlist note",
-    "add_wishlist_note_prompt": "Enter your wishlist note",
-    "update_wishlist_note_prompt": "Update your wishlist note",
-    "add_wishlist_note_for_game": "Note for __gamename__",
     "results": "__num__ Results",
     "all_results": "All __num__ results displayed",
     "see_more": "See more",
@@ -402,7 +397,7 @@
         "profile_link_images_color": "Colored",
         "hide_about_links": "Hide \"Install Steam\" button / \"About\" link",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
-        "show_wl_notes": "Show wishlist notes on wishlist",
+        "show_wl_notes": "Show notes on wishlist",
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "carousel_description": "Show app descriptions on storefront carousel",
         "market_total": "Show transaction summary on Market",
@@ -558,5 +553,12 @@
         "in_collection": "In Collection",
         "played": "Played",
         "never_played": "Never Played"
+    },
+    "user_note": {
+        "add": "Add a note",
+        "update": "Update note",
+        "add_prompt": "Enter your note",
+        "update_prompt": "Update your note",
+        "add_for_game": "Note for __gamename__"
     }
 }

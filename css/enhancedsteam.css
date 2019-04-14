@@ -1354,7 +1354,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Wishlist
- * add_wishlist_notes()
+ * add_user_notes()
  **************************************/
 .wishlistRow h4,
 .wishlistRankCtn {
@@ -1381,7 +1381,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .pullup_item {
 	margin-bottom: 0;
 }
-.es_wishlist_note {
+.es_user_note {
 	display: block;
 	overflow: hidden;
 	font-style: italic;
@@ -1394,14 +1394,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	white-space: nowrap;
 	position: relative;
 }
-.es_wishlist_note span {
+.es_user_note span {
 	display: block;
 	font-size: 12px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	padding: 4px 10px 6px 26px;
 }
-.es_wishlist_note:before {
+.es_user_note:before {
 	display: block;
 	content: "";
 	width: 18px;
@@ -1412,11 +1412,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	left: 4px;
 	background: no-repeat url("chrome-extension://__MSG_@@extension_id__/img/pinn.png");
 }
-.wishlistRow:hover .es_wishlist_note {
+.wishlistRow:hover .es_user_note {
 	color: #EEEEEE;
 	background-color: rgba(0, 0, 0, 0.35);
 }
-.wishlistRow:hover .es_wishlist_note:before {
+.wishlistRow:hover .es_user_note:before {
 	opacity: 0.9;
 }
 .es_note_prompt {
@@ -1426,10 +1426,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 112px;
 	font-size: 14px !important;
 }
-.es_add_wishlist_note {
+.es_add_user_note {
 	border-top: 1px solid #555;
 }
-.es_wishlist_note:hover {
+.es_user_note:hover {
 	cursor: auto !important;
 	/* Triggering "white-space: normal" immediatly on each hover can make the page laggy, so we do it only if the user is commited to it */
 	animation: delayWhiteSpace linear .15s;
@@ -2459,16 +2459,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	cursor:pointer;
 }
 
-#esi-store-wishlist-note {
+#esi-store-user-note {
 	font-size: 13px;
-}
-
-.esi-empty-note {
-	font-style: italic;
 }
 
 .esi-user-note {
 	color: #5fafdd;
+}
+
+.esi-user-note--empty {
+	display: none;
 }
 
 #es_supporter_badges .profile_badges_badge:nth-child(4n) {

@@ -779,25 +779,36 @@ class AppPageClass extends StorePageClass {
     addUserNote() {
         if (!User.isSignedIn) { return; }
 
-        let noteText;
-        let cssClass;
+        let noteText = "";
+        let cssClass = "esi-user-note--empty";
+
+        let inactiveStyle = "";
+        let activeStyle = "display:none;";
 
         if (this.userNotes.exists(this.appid)) {
             noteText = `"${this.userNotes.getNote(this.appid)}"`;
-            cssClass = "esi-user-note";
-        } else {
-            noteText = Localization.str.add_wishlist_note;
-            cssClass = "esi-empty-note";
+            cssClass = "";
+
+            inactiveStyle = "display:none;";
+            activeStyle = "";
         }
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            "<div id='esi-store-wishlist-note' class='esi-note " + cssClass + "'>" + noteText + "</div>");
+            `<div id='esi-store-user-note' class='esi-note esi-user-note ${cssClass}'>${noteText}</div>`);
+
+        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
+            ` <div class="queue_control_button js-user-note-button">
+                <div class="btnv6_blue_hoverfade  btn_medium queue_btn_inactive" style="${inactiveStyle}">
+                    <span>${Localization.str.user_note.add}</span>
+                </div>
+                <div class="btnv6_blue_hoverfade  btn_medium queue_btn_active" style="${activeStyle}">
+                    <span>${Localization.str.user_note.update}</span>
+                </div>
+            </div>`);
 
         let that = this;
-        document.addEventListener("click", function(e) {
-            if (!e.target.classList.contains("esi-note")) { return; }
-
-            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-wishlist-note");
+        document.querySelector(".js-user-note-button").addEventListener("click", function() {
+            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-user-note");
         });
     }
 
@@ -2571,7 +2582,7 @@ let WishlistPageClass = (function(){
                             continue;
                         }
                         if (myWishlist && SyncedStorage.get("showwlnotes")) {
-                            instance.addWishlistNote(node);
+                            instance.addUserNote(node);
                         } else {
                             instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
                         }
@@ -2585,7 +2596,7 @@ let WishlistPageClass = (function(){
 
         this.addStatsArea();
         this.addEmptyWishlistButton();
-        this.addWishlistNotesHandlers();
+        this.addUserNotesHandlers();
         this.addRemoveHandler();
     }
 
@@ -2784,7 +2795,7 @@ let WishlistPageClass = (function(){
     };
 
 
-    WishlistPageClass.prototype.addWishlistNote =  function(node) {
+    WishlistPageClass.prototype.addUserNote =  function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
 
         let appid = node.dataset.appId;
@@ -2794,8 +2805,8 @@ let WishlistPageClass = (function(){
             noteText = `"${userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
-            noteText = Localization.str.add_wishlist_note;
-            cssClass = "esi-empty-note";
+            noteText = Localization.str.add_user_note;
+            cssClass = "esi-user-note esi-user-note--empty";
         }
 
         HTML.afterEnd(node.querySelector(".mid_container"),
@@ -2803,16 +2814,15 @@ let WishlistPageClass = (function(){
         node.classList.add("esi-has-note");
     };
 
-    WishlistPageClass.prototype.addWishlistNotesHandlers =  function() {
+    WishlistPageClass.prototype.addUserNotesHandlers =  function() {
         if (!isMyWishlist()) { return; }
 
-        let instance = this;
         document.addEventListener("click", function(e) {
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
             let appid = row.dataset.appId;
-            userNotes.showModalDialog(row.querySelector("a.title").textContent, appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
+            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note")
         });
     };
 
@@ -2861,7 +2871,7 @@ let UserNotes = (function(){
                     </div>
                 </div>`;
         
-        this.notes = SyncedStorage.get("wishlist_notes");
+        this.notes = SyncedStorage.get("user_notes");
     }
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
@@ -2872,7 +2882,7 @@ let UserNotes = (function(){
             let fnOK = () => deferred.resolve();
 
             let Modal = _BuildDialog(
-                "${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}",
+                "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
                 \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
                 [], fnOK);
             deferred.always(() => Modal.Dismiss());
@@ -2963,19 +2973,21 @@ let UserNotes = (function(){
 
             if (note.length !== 0) {
                 that.setNote(appid, note);
-
-                node.classList.remove("esi-empty-note");
-                node.classList.add("esi-user-note");
+                node.classList.remove("esi-user-note--empty");
                 HTML.inner(node, `"${note}"`);
             } else {
                 that.deleteNote(appid);
-
-                node.classList.remove("esi-user-note");
-                node.classList.add("esi-empty-note");
-                node.textContent = Localization.str.add_wishlist_note;
+                node.classList.add("esi-user-note--empty");
+                node.textContent = "";
             }
 
         }
+    };
+
+    UserNotes.prototype.toggleButton = function(active) {
+        let button = document.querySelector(".js-user-note-button");
+        button.querySelector(".queue_btn_inactive").style.display = active ? "none" : null;
+        button.querySelector(".queue_btn_active").style.display = active ? null : "none";
     };
 
     UserNotes.prototype.getNote = function(appid) {
@@ -2984,12 +2996,14 @@ let UserNotes = (function(){
 
     UserNotes.prototype.setNote = function(appid, note) {
         this.notes[appid] = note;
-        SyncedStorage.set("wishlist_notes", this.notes);
+        SyncedStorage.set("user_notes", this.notes);
+        this.toggleButton(true);
     };
 
     UserNotes.prototype.deleteNote = function(appid) {
         delete this.notes[appid];
-        SyncedStorage.set("wishlist_notes", this.notes);
+        SyncedStorage.set("user_notes", this.notes);
+        this.toggleButton(false);
     };
 
     UserNotes.prototype.exists = function(appid) {
