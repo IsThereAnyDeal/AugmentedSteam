@@ -216,11 +216,6 @@
     "concepts": "Koncepty",
     "collections": "Kolekce",
     "discussions": "Diskuze",
-    "add_user_note": "Přidat k seznamu přání",
-    "update_user_note": "Aktualizovat seznam přání",
-    "add_user_note_prompt": "Přidat poznámku přání",
-    "update_user_note_prompt": "Aktualizovat své přání",
-    "add_user_note_for_game": "Poznámka pro __gamename__",
     "results": "__num__ Výsledků",
     "all_results": "Všech __num__ výsledků je zobrazeno",
     "see_more": "Zobrazit více",
@@ -528,5 +523,12 @@
         "wallet": "Zadaný kód produktu patří k dárkovému kupónu nebo jde o kód pro Steam peněženku",
         "toomany": "Proběhlo příliš mnoho pokusů o aktivaci z tohoto účtu. Počkejte prosím a zkuste to znovu později.",
         "default": "Došlo k neočekávané chybě. Váš klíč nebyl použit. Počkejte prosím 30 minut a zkuste jej aktivovat znovu."
+    },
+    "user_note": {
+        "add": "Přidat poznámku",
+        "update": "Aktualizovat poznámku",
+        "add_prompt": "Vyplňte poznámku",
+        "update_prompt": "Aktualizovat poznámku",
+        "add_for_game": "Poznámka pro __gamename__"
     }
 }

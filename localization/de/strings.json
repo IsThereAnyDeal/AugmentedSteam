@@ -216,11 +216,6 @@
     "concepts": "Konzepte",
     "collections": "Kollektionen",
     "discussions": "Diskussionen",
-    "add_user_note": "Notiz hinzufügen",
-    "update_user_note": "Notiz aktualisieren",
-    "add_user_note_prompt": "Gib deine Notiz ein",
-    "update_user_note_prompt": "Aktualisiere deine Notiz",
-    "add_user_note_for_game": "Notiz für __gamename__",
     "results": "__num__ Ergebnisse",
     "all_results": "Alle __num__ Ergebnisse angezeigt",
     "see_more": "Mehr ansehen",
@@ -529,5 +524,12 @@
         "wallet": "Der von Ihnen eingelöste Schlüssel stammt von einer Steam-Geschenkkarte oder einer Steam-Guthabenkarte",
         "toomany": "Von diesem Account wurden kürzlich zu viele Aktivierungsversuche unternommen. Bitte warten Sie eine Weile, bevor Sie es erneut versuchen.",
         "default": "Ein unerwarteter Fehler ist aufgetreten. Ihr Produktschlüssel konnte nicht aktiviert werden. Bitte warten Sie 30 Minuten und versuchen Sie es dann erneut."
+    },
+    "user_note": {
+        "add": "Notiz hinzufügen",
+        "update": "Notiz aktualisieren",
+        "add_prompt": "Gib deine Notiz ein",
+        "update_prompt": "Aktualisiere deine Notiz",
+        "add_for_game": "Notiz für __gamename__"
     }
 }
