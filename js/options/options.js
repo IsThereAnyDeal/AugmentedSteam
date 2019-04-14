@@ -1,4 +1,15 @@
 
+class SaveIndicator {
+
+    static show() {
+        let node = document.getElementById('saved');
+        if (!node) { return; }
+        HTML.fadeIn(node)
+            .then(() => sleep(600))
+            .then(() => HTML.fadeOut(node));
+    }
+
+}
 
 class CustomLinks {
 
@@ -59,7 +70,9 @@ class CustomLinks {
             }
             links.push(link);
         }
+
         SyncedStorage.set('profile_custom_link', links);
+        SaveIndicator.show();
     }
 
     static remove(ev) {
@@ -341,14 +354,7 @@ let Options = (function(){
 
         Region.populateRegionalSelects();
 
-        // FIXME $("#saved").stop(true,true).fadeIn().delay(600).fadeOut();
-        let node = document.getElementById('saved');
-        if (node) {
-            HTML.fadeIn(node)
-                .then(() => sleep(600))
-                .then(() => HTML.fadeOut(node))
-                ;
-        }
+        SaveIndicator.show();
     }
 
     function saveOptionFromEvent(e) {
@@ -405,15 +411,7 @@ let Options = (function(){
         }
 
         SyncedStorage.set(option, value);
-
-        // FIXME $("#saved").stop(true, true).fadeIn().delay(600).fadeOut();
-        let node = document.getElementById('saved');
-        if (node) {
-            HTML.fadeIn(node)
-                .then(() => sleep(600))
-                .then(() => HTML.fadeOut(node))
-                ;
-        }
+        SaveIndicator.show();
     }
 
     function changeFlag(node, selectnode) {
