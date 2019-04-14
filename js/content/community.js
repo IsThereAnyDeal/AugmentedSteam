@@ -508,7 +508,7 @@ let ProfileHomePageClass = (function(){
 
             HTML.afterEnd(profileBadges, html);
 
-            ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
         });
     };
 
@@ -622,7 +622,7 @@ let ProfileHomePageClass = (function(){
 
         let node = document.querySelector(".profile_in_game_name");
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
-        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
     };
 
     ProfileHomePageClass.prototype.addProfileStyle = function() {
@@ -694,7 +694,7 @@ let ProfileHomePageClass = (function(){
                     document.body.append(script);
 
                     script.addEventListener("load", function(){
-                        ExtensionLayer.runInPageContext("function() { StartAnimation(); }");
+                        ExtensionLayer.runInPageContext(() => StartAnimation());
                     });
 
                     break;
@@ -803,7 +803,7 @@ let ProfileHomePageClass = (function(){
         sendButton.remove();
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
-            ExtensionLayer.runInPageContext("function(){ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' )}");
+            ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
         });
     };
 
@@ -1110,7 +1110,7 @@ let ProfileEditPageClass = (function(){
             </div>`;
 
         HTML.beforeBegin(".group_content_bodytext", html);
-        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
 
         let response = await Background.action('profile.background.games');
 
@@ -1187,7 +1187,7 @@ let ProfileEditPageClass = (function(){
 
         HTML.beforeBegin(".group_content_bodytext", html);
 
-        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
 
         let styleSelectNode = document.querySelector("#es_style");
 
@@ -1458,22 +1458,22 @@ let InventoryPageClass = (function(){
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(`function() {
-                        var rgAJAXParams = {
-                            sessionid: g_sessionID,
-                            appid: ${appid},
-                            assetid: ${assetId},
-                            contextid: 6
-                        };
+                var rgAJAXParams = {
+                    sessionid: g_sessionID,
+                    appid: ${appid},
+                    assetid: ${assetId},
+                    contextid: 6
+                };
 
-                        var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
-                        $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
-                            strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
-                            rgAJAXParams.goo_value_expected = data.goo_value;
-                            $J.post( strActionURL, rgAJAXParams).done( function( data ) {
-                                ReloadCommunityInventory();
-                            });
-                        });
-                    }`);
+                var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
+                $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
+                    strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+                    rgAJAXParams.goo_value_expected = data.goo_value;
+                    $J.post( strActionURL, rgAJAXParams).done( function( data ) {
+                        ReloadCommunityInventory();
+                    });
+                });
+            }`);
         });
     }
 
@@ -1586,7 +1586,10 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext("function() { var fee_info = CalculateFeeAmount(" + sellPrice + ", 0.10); window.postMessage({ type: 'es_sendfee_" + assetId + "', information: fee_info, sessionID: '" + sessionId + "', global_id: '" + globalId + "', contextID: '" + contextId + "', assetID: '" + assetId + "' }, '*'); }");
+                ExtensionLayer.runInPageContext(`function() {
+                    var fee_info = CalculateFeeAmount(${sellPrice}, 0.10);
+                    window.postMessage({ type: "es_sendfee_${assetId}", information: fee_info, sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"}, '*');
+                }`);
             });
         }
     }
@@ -1711,7 +1714,7 @@ let InventoryPageClass = (function(){
     }
 
     function prepareMarketForInventory() {
-        ExtensionLayer.runInPageContext(`function(){
+        ExtensionLayer.runInPageContext(function(){
             $J(document).on("click", ".inventory_item_link, .newitem", function(){
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
@@ -1738,7 +1741,7 @@ let InventoryPageClass = (function(){
                     ]
                 }, "*");
             });
-	    }`);
+	    });
 
         window.addEventListener("message", function(e) {
             if (e.source !== window) { return; }
@@ -2211,7 +2214,7 @@ let BadgesPageClass = (function(){
                 </div>
             </span>`);
 
-        ExtensionLayer.runInPageContext(function() { BindAutoFlyoutEvents(); });
+        ExtensionLayer.runInPageContext(() => BindAutoFlyoutEvents());
 
         if (isOwnProfile) {
             let that = this;
@@ -2579,7 +2582,7 @@ let FriendsThatPlayPageClass = (function(){
         HTML.beforeEnd(".friends_that_play_content", html);
 
         // Reinitialize miniprofiles by injecting the function call.
-        ExtensionLayer.runInPageContext("function(){ InitMiniprofileHovers(); }");
+        ExtensionLayer.runInPageContext(() => InitMiniprofileHovers());
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
@@ -3186,12 +3189,12 @@ let MarketPageClass = (function(){
 
         toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        ExtensionLayer.runInPageContext(function() { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
 
         function toggleRefresh(state) {
             document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
             LocalStorage.set("popular_refresh", state);
-            ExtensionLayer.runInPageContext("function(){ g_bMarketWindowHidden = " + state +"; }");
+            ExtensionLayer.runInPageContext(`() => g_bMarketWindowHidden = ${state}`);
         }
     };
 
@@ -3409,13 +3412,13 @@ class WorkshopPageClass {
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
                 .textContent.trim().replace(/\d/g, "");
 
-            ExtensionLayer.runInPageContext("function() { \
-                $J('#booster_game_selector option').each(function(index) {\
-                    if ($J(this).val()) {\
-                        $J(this).append(' - ' + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + ' " + gemWord + "');\
-                    }\
-                });\
-            }");
+            ExtensionLayer.runInPageContext(`function() {
+                $J("#booster_game_selector option").each(function(index) {
+                    if ($J(this).val()) {
+                        $J(this).append(" - " + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + " ${gemWord}");
+                    }
+                });
+            }`);
             break;
     }
 

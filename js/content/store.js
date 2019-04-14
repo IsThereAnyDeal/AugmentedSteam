@@ -764,7 +764,7 @@ class AppPageClass extends StorePageClass {
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext("function(){ GDynamicStore.InvalidateCache(); }");
+                    ExtensionLayer.runInPageContext(() => GDynamicStore.InvalidateCache());
                 }).finally(() => {
                     parent.classList.remove("loading");
                 });
@@ -940,7 +940,7 @@ class AppPageClass extends StorePageClass {
                 }
 
                 HTML.beforeEnd("#es_opencritic_reviews", review_text);
-                ExtensionLayer.runInPageContext("function() { BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ); }");
+                ExtensionLayer.runInPageContext(() => BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ));
             }
         });
     }
@@ -1865,14 +1865,14 @@ let RegisterKeyPageClass = (function(){
         document.querySelector("#register_btn").addEventListener("click", function(e) {
             if (document.querySelector("#product_key").value.indexOf(",") > 0) {
                 e.preventDefault();
-                ExtensionLayer.runInPageContext('function() { ShowDialog("' + Localization.str.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n")) + '\`); }');
+                ExtensionLayer.runInPageContext(`() => ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`)`);
             }
         });
 
         // Show note input modal
         document.addEventListener("click", function(e){
             if (!e.target.closest("#es_activate_multiple")) { return; }
-            ExtensionLayer.runInPageContext('function() { ShowDialog("' + Localization.str.activate_multiple_header + '", \`' + activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n")) + '\`); }');
+            ExtensionLayer.runInPageContext(`() => ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`)`);
         });
 
         // Insert the "activate multiple products" button
@@ -1968,7 +1968,7 @@ let RegisterKeyPageClass = (function(){
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", function(e) {
             if (!e.target.closest(".es_activate_modal_close")) { return; }
-            ExtensionLayer.runInPageContext(function(){ CModal.DismissActiveModal(); });
+            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
         })
     };
 
@@ -2054,7 +2054,7 @@ let FundsPageClass = (function(){
             if (giftcard) {
 
                 if (e.target.closest(".giftcard_cont")) {
-                    ExtensionLayer.runInPageContext('function(){ submitSelectGiftCard(' + jsvalue + '); }');
+                    ExtensionLayer.runInPageContext(`() => submitSelectGiftCard(${jsvalue})`);
                 }
 
             } else {
@@ -2063,7 +2063,7 @@ let FundsPageClass = (function(){
                 btn.removeAttribute("onclick");
                 btn.dataset.amount = jsvalue;
 
-                ExtensionLayer.runInPageContext('function(){ submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); }');
+                ExtensionLayer.runInPageContext(() => submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")));
             }
 
         }, true);
@@ -2144,13 +2144,11 @@ let SearchPageClass = (function(){
             searchPage = searchPage + 1;
             processing = false;
 
-            let inContext = function () {
+            ExtensionLayer.runInPageContext(function() {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
                 GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
-            };
-
-            ExtensionLayer.runInPageContext(inContext);
+            });
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
@@ -2251,15 +2249,15 @@ let SearchPageClass = (function(){
 
                 control.classList.toggle('checked');
                 document.querySelector("#tags").value = rgValues.join(',');
-                ExtensionLayer.runInPageContext(function() {AjaxSearchResults();});
+                ExtensionLayer.runInPageContext(() => AjaxSearchResults());
             });
 
             excludeContainer.append(excludeItem);
         }
 
-        ExtensionLayer.runInPageContext(function() {
-            $J('#es_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value });
-        });
+        ExtensionLayer.runInPageContext(() =>
+            $J('#es_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value })
+        );
 
         let observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation){
@@ -2275,7 +2273,7 @@ let SearchPageClass = (function(){
             });
         });
         observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
-        ExtensionLayer.runInPageContext(function() {UpdateTags()});
+        ExtensionLayer.runInPageContext(() => UpdateTags());
     };
 
     function applyPriceFilter(node) {
@@ -2368,9 +2366,9 @@ let SearchPageClass = (function(){
         let expander = document.querySelector("#es_hide_expander");
         expander.addEventListener("click", function(e) {
             e.preventDefault();
-            ExtensionLayer.runInPageContext(function(){
+            ExtensionLayer.runInPageContext(() =>
                 ExpandOptions(document.querySelector("#es_hide_expander"), 'es_hide_options')
-            });
+            );
         });
 
         let all = document.querySelectorAll(".see_all_expander");
@@ -2826,7 +2824,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addRemoveHandler = function() {
-        ExtensionLayer.runInPageContext(function(){
+        ExtensionLayer.runInPageContext(() =>
             $J(document).ajaxSuccess(function( event, xhr, settings ) {
                 if (settings.url.endsWith("/remove/")) {
                     window.postMessage({
@@ -2834,8 +2832,8 @@ let WishlistPageClass = (function(){
                         removed_wl_entry: settings.data.match(/(?!appid=)\d+/)[0]
                     }, "*");
                 }
-              });
-        });
+            })
+        );
 
         window.addEventListener("message", function(e) {
             if (e.source !== window) { return; }
@@ -2875,56 +2873,55 @@ let UserNotes = (function(){
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector) {
 
-        ExtensionLayer.runInPageContext(
-            `function() {
-                // Partly copied from shared_global.js
-                let deferred = new jQuery.Deferred();
-                let fnOK = () => deferred.resolve();
+        ExtensionLayer.runInPageContext(`function() {
+            // Partly copied from shared_global.js
+            let deferred = new jQuery.Deferred();
+            let fnOK = () => deferred.resolve();
 
-                let Modal = _BuildDialog(
-                    "${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}",
-                    \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
-                    [], fnOK);
-                deferred.always(() => Modal.Dismiss());
+            let Modal = _BuildDialog(
+                "${Localization.str.add_wishlist_note_for_game.replace("__gamename__", appname)}",
+                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
+                [], fnOK);
+            deferred.always(() => Modal.Dismiss());
 
-                Modal.OnDismiss(() => {
-                    window.postMessage({
-                        type: "es_modal_dismissed"
-                    }, "*");
-                });
-                Modal.m_fnBackgroundClick = () => {
-                    function messageListener(e) {
-                        if (e.source !== window) { return; }
-                        if (!e.data.type) { return; }
+            Modal.OnDismiss(() => {
+                window.postMessage({
+                    type: "es_modal_dismissed"
+                }, "*");
+            });
+            Modal.m_fnBackgroundClick = () => {
+                function messageListener(e) {
+                    if (e.source !== window) { return; }
+                    if (!e.data.type) { return; }
 
-                        if (e.data.type === "es_note_saved") {
-                            Modal.Dismiss();
-                            window.removeEventListener("message", messageListener);
-                        }
-                    }
-                    window.addEventListener("message", messageListener);
-
-                    window.postMessage({
-                        type: "es_background_click"
-                    }, "*");
-                }
-
-                Modal.Show();
-
-                // attach the deferred's events to the modal
-                deferred.promise(Modal);
-                
-                let note_input = document.getElementById("es_note_input");
-                note_input.focus();
-                note_input.setSelectionRange(0, note_input.textLength);
-                note_input.addEventListener("keydown", e => {
-                    if (e.key === "Enter") {
-                        $J(".es_note_modal_submit").click();
-                    } else if (e.key === "Escape") {
+                    if (e.data.type === "es_note_saved") {
                         Modal.Dismiss();
+                        window.removeEventListener("message", messageListener);
                     }
-                });
-            }`);
+                }
+                window.addEventListener("message", messageListener);
+
+                window.postMessage({
+                    type: "es_background_click"
+                }, "*");
+            }
+
+            Modal.Show();
+
+            // attach the deferred's events to the modal
+            deferred.promise(Modal);
+            
+            let note_input = document.getElementById("es_note_input");
+            note_input.focus();
+            note_input.setSelectionRange(0, note_input.textLength);
+            note_input.addEventListener("keydown", e => {
+                if (e.key === "Enter") {
+                    $J(".es_note_modal_submit").click();
+                } else if (e.key === "Escape") {
+                    Modal.Dismiss();
+                }
+            });
+        }`);
 
         window.addEventListener("message", messageListener);
         document.addEventListener("click", clickListener);
@@ -2958,9 +2955,9 @@ let UserNotes = (function(){
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
                 saveNote();
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             } else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext( function(){ CModal.DismissActiveModal(); } );
+                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             }
         }
 

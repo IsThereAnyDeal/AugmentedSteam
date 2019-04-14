@@ -131,9 +131,9 @@ class UpdateHandler {
                 let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
                 let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
                 ExtensionLayer.runInPageContext(
-                    "function() {\
-                        ShowAlertDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "'); \
-					}"
+                    `function() {
+                        ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
+					}`
                 );
             }
         );
