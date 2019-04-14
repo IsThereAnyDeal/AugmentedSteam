@@ -112,17 +112,16 @@ class Version {
 class UpdateHandler {
 
     static checkVersion() {
-        let lastVersion = Version.fromString(SyncedStorage.get("version"));
-        let currentVersion = Version.fromString(Info.version);
-
-        if (!lastVersion.isSame(currentVersion)) {
-            if (SyncedStorage.get("version_show")) {
-                this._showChangelog();
+        Background.action("version.previous").then(
+            previousVersion => {
+                if (previousVersion && !Version.fromString(previousVersion).isCurrent()) {
+                    if (SyncedStorage.get("version_show")) {
+                        this._showChangelog();
+                    }
+                    this._migrateSettings(previousVersion);
+                }
             }
-            this._migrateSettings();
-        }
-
-        SyncedStorage.set("version", Info.version);
+        )
     };
 
     static _showChangelog() {
@@ -133,30 +132,15 @@ class UpdateHandler {
                 let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
                 ExtensionLayer.runInPageContext(
                     "function() {\
-                        var prompt = ShowConfirmDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "' , 'OK', '" + Localization.str.close.replace(/'/g, "\\'") + "', '" + Localization.str.update.dont_show.replace(/'/g, "\\'") + "'); \
-						prompt.done(function(result) {\
-							if (result == 'SECONDARY') { window.postMessage({ type: 'es_sendmessage_change', information: [ true ]}, '*'); }\
-						});\
+                        ShowAlertDialog(\"" + Localization.str.update.updated.replace("__version__", Info.version) + "\", '" + dialog + "'); \
 					}"
                 );
             }
         );
-
-        window.addEventListener("message", function(event) {
-            if (event.source !== window) return;
-            if (event.data.type && (event.data.type === "es_sendmessage_change")) {
-                SyncedStorage.set("version_show", false);
-            }
-        }, false);
     }
 
-    static _migrateSettings() {
-        let oldVersion = SyncedStorage.get("version"); // default is Info.version
-        oldVersion = Version.fromString(oldVersion);
-
-        if (oldVersion.isCurrent()) {
-            return;
-        }
+    static _migrateSettings(lastVersion) {
+        let oldVersion = Version.fromString(lastVersion);
 
         if (oldVersion.isSameOrBefore("0.9.4")) {
 
@@ -213,6 +197,7 @@ class UpdateHandler {
             }
             SyncedStorage.set('customize_apppage', settings);
         } else if (oldVersion.isSameOrBefore("0.9.5")) {
+            SyncedStorage.remove("version");
             SyncedStorage.remove("showesbg");
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
             SyncedStorage.remove("hideinstallsteambutton");
@@ -408,7 +393,6 @@ class SyncedStorage {
 SyncedStorage.adapter = chrome.storage.sync || chrome.storage.local;
 SyncedStorage.cache = {};
 SyncedStorage.defaults = {
-    'version': Info.version,
     'language': "english",
 
     'version_show': true,
