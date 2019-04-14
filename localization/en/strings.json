@@ -129,6 +129,7 @@
     "negative_item": "Negative rating items",
     "price_above":"Items that cost more than",
     "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
+    "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Steam Client",

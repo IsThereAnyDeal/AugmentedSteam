@@ -2481,7 +2481,7 @@ let SearchPageClass = (function(){
                 SyncedStorage.set("priceabove_value", notpriceabove_val.value.replace(',', '.'));
                 filtersChanged();
             } else {
-                notpriceabove_val.setCustomValidity(Localization.str.price_above_tooltip);
+                notpriceabove_val.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
             }
 
             notpriceabove_val.reportValidity();
