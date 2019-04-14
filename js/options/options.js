@@ -189,10 +189,11 @@ let Options = (function(){
             node = insertion_point.insertAdjacentElement('beforebegin', node);
 
             node.addEventListener('change', saveCustomLinks);
-            node.querySelector('.close_button').addEventListener('click', removeCustomLink, false);
+            node.querySelector('.custom-link__close').addEventListener('click', removeCustomLink, false);
     
             return node;
         }
+
         function readCustomLink(node) {
             return {
                 'enabled': node.querySelector(`[name="profile_custom_enabled"]`).checked,
@@ -201,10 +202,11 @@ let Options = (function(){
                 'icon': node.querySelector(`[name="profile_custom_icon"]`).value,
             };
         }
+
         function saveCustomLinks() {
-            let custom_links = document.querySelectorAll('.es_custom_link');
+            let customLinks = document.querySelectorAll('.custom-link');
             let links = [];
-            for (let row of custom_links) {
+            for (let row of customLinks) {
                 let link = readCustomLink(row);
                 if (!link.enabled && !link.name && !link.url && !link.icon) {
                     continue;
@@ -213,22 +215,23 @@ let Options = (function(){
             }
             SyncedStorage.set('profile_custom_link', links);
 
-            if (custom_links.length > 0) {
-                let link = readCustomLink(custom_links[custom_links.length - 1]);
+            if (customLinks.length > 0) {
+                let link = readCustomLink(customLinks[customLinks.length - 1]);
                 if (link.enabled || link.name || link.url || link.icon) {
                     createCustomLink();
                 }
-            } else if (custom_links.length == 0) {
+            } else if (customLinks.length === 0) {
                 let link = SyncedStorage.defaults.profile_custom_link[0];
                 createCustomLink(link.enabled, link.name, link.url, link.icon);
                 createCustomLink();
             }
         }
+
         function removeCustomLink(ev) {
             if (!ev.target || !(ev.target instanceof Element)) { return; }
             //if (!ev.target.matches('.close_button')) { return; }
 
-            let row = ev.target.closest('.es_custom_link');
+            let row = ev.target.closest('.custom-link');
             if (row) {
                 row.remove();
                 row = null;

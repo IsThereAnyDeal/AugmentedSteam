@@ -15,15 +15,25 @@
     <title>Options - Augmented Steam</title>
     <base target="_blank">
     <template id='add_custom_profile_link'>
-        <div class="es_custom_link">
+        <div class="custom-link">
             <input type="checkbox" name="profile_custom_enabled" />
-            <label data-locale-text="options.name">Name</label>:
-            <input type="text" name="profile_custom_name" maxlength="30" class="textbox">
-            <label>URL</label>:
-            <input type="text" name="profile_custom_url" class="textbox">
-            <label data-locale-text="options.icon">Icon</label>:
-            <input type="text" name="profile_custom_icon" class="textbox">
-            <input type="button" name="profile_custom_remove" class="close_button">
+            <div>
+                <div>
+                    <label class="custom-link__label" data-locale-text="options.name">Name</label>
+                    <input class="custom-link__input" type="text" name="profile_custom_name" maxlength="30">
+                </div>
+
+                <div>
+                    <label class="custom-link__label" >URL</label>
+                    <input class="custom-link__input"  type="text" name="profile_custom_url">
+                </div>
+
+                <div>
+                    <label class="custom-link__label"  data-locale-text="options.icon">Icon</label>
+                    <input class="custom-link__input"  type="text" name="profile_custom_icon">
+                </div>
+            </div>
+            <button type="button" name="profile_custom_remove" class="custom-link__close"></button>
         </div>
     </template>
 </head>
