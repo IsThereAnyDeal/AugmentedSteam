@@ -3012,21 +3012,22 @@ let MarketPageClass = (function(){
             let rows = [];
             nodes = parentNode.querySelectorAll(".es_selling .market_listing_row");
             for (let node of nodes) {
-                let buttons = node.querySelector(".market_listing_edit_buttons");
-                buttons.style.width = "200px"; // TODO do we still need to change width?
                 if (node.querySelector(".market_listing_es_lowest")) { continue; }
+                let button = node.querySelector(".market_listing_edit_buttons");
+                button.style.width = "200px"; // TODO do we still need to change width?
 
                 HTML.afterEnd(node.querySelector(".market_listing_edit_buttons"),
                     "<div class='market_listing_right_cell market_listing_my_price market_listing_es_lowest'>&nbsp;</div>");
 
                 // we do this because of changed width, right?
-                let actualButtons = node.querySelector(".market_listing_edit_buttons.actual_content");
-                actualButtons.style.width = "inherit";
-                buttons.append(actualButtons);
+                let actualButton = node.querySelector(".market_listing_edit_buttons.actual_content");
+                actualButton.style.width = "inherit";
+                button.append(actualButton);
 
                 rows.push(node);
             }
 
+            rowIteration:
             for (let node of rows) {
                 let linkNode = node.querySelector(".market_listing_item_name_link");
                 if (!linkNode) { continue; }
@@ -3037,17 +3038,42 @@ let MarketPageClass = (function(){
                 let marketHashName = m[2];
 
                 let priceData;
+                let done;
                 if (loadedMarketPrices[marketHashName]) {
                     priceData = loadedMarketPrices[marketHashName];
                 } else {
-                    let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
-                    if (!data.success) { continue; }
+                    do {
+                        function sleep(ms) {
+                            return new Promise(resolve => setTimeout(resolve, ms));
+                        }
+                        try {
+                            let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`);
 
-                    loadedMarketPrices[marketHashName] = data;
-                    priceData = data;
+                            await sleep(1000);
+
+                            done = true;
+                            loadedMarketPrices[marketHashName] = data;
+                            priceData = data;
+                        } catch(errorCode) {
+                            // Too Many Requests
+                            if (errorCode === 429) {
+                                await sleep(30000);
+                                if (node) {
+                                    done = false;
+                                } else {
+                                    return;
+                                }
+                            } else {
+                                console.error("Failed to retrieve price overview for item %s!", marketHashName);
+                                continue rowIteration;
+                            }
+                            
+                        }
+                    } while (!done);
                 }
 
                 insertPrice(node, priceData);
+                
             }
         };
 
