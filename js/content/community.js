@@ -234,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, Inventory,]);
+        await Promise.all([DynamicStore, Inventory, User]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -244,44 +244,46 @@ let ProfileActivityPageClass = (function(){
             let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
             for (let link of links) {
                 let appid = GameId.getAppid(link.href);
-                if (!appid) { continue; }
-
-                if (Inventory.hasGuestPass(appid)) {
-                    Highlights.highlightInvGuestpass(link);
-                }
-                if (Inventory.getCouponByAppId(appid)) {
-                    Highlights.highlightCoupon(link);
-                }
-                if (Inventory.hasGift(appid)) {
-                    Highlights.highlightInvGift(link);
-                }
-
-                if (DynamicStore.isWishlisted(appid)) {
-                    Highlights.highlightWishlist(link);
-                }
+                if (!appid || link.childElementCount !== 0) { continue; }
 
                 if (DynamicStore.isOwned(appid)) {
                     Highlights.highlightOwned(link);
 
                     addAchievementComparisonLink(link, appid);
+                } else if (Inventory.hasGuestPass(appid)) {
+                    Highlights.highlightInvGuestpass(link);
+                } else if (Inventory.getCouponByAppId(appid)) {
+                    Highlights.highlightCoupon(link);
+                } else if (Inventory.hasGift(appid)) {
+                    Highlights.highlightInvGift(link);
+                } else if (DynamicStore.isWishlisted(appid)) {
+                    Highlights.highlightWishlist(link);
+                } else if (DynamicStore.isIgnored(appid)) {
+                    Highlights.highlightNotInterested(link);
+                } else {
+                    continue;
                 }
 
-                // TODO (tomas.fedor) this behaves differently than other highlights - check is being done in highlight method
-                Highlights.highlightNotInterested(link);
+                link.style = "border-radius: 5px";
             }
         }
     };
 
     function addAchievementComparisonLink(node, appid) {
         if (!SyncedStorage.get("showcomparelinks")) { return; }
-        node.classList.add("es_achievements");
 
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
-        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href;
+        if (node.parentNode.nextElementSibling.tagName !== "IMG") { return; }
+
+        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href + '/';
+        if (friendProfileUrl === User.profileUrl) { return; }
+
+        node.classList.add("es_achievements");
+
         let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
-        HTML.beforeEnd(node, `<br><a class='es_achievement_compare' href='${compareLink}' target='_blank'>${Localization.str.compare}</a>`);
+        HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
     }
 
     ProfileActivityPageClass.prototype.observeChanges = function() {
@@ -3383,7 +3385,7 @@ class WorkshopPageClass {
             (new MarketPageClass());
             break;
 
-        case /^\/(?:id|profiles)\/[^\/]+?\/?[^\/]*$/.test(path):
+        case /^\/(?:id|profiles)\/[^\/]+?\/?$/.test(path):
             (new ProfileHomePageClass());
             break;
 

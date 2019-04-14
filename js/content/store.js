@@ -2483,9 +2483,40 @@ let SearchPageClass = (function(){
     };
 
     SearchPageClass.prototype.observeChanges = function() {
-        if (!SyncedStorage.get("contscroll")) {
 
-            let pageObserver = new MutationObserver(() => {
+        let contscrollObserver;
+        if (SyncedStorage.get("contscroll")) {
+            contscrollObserver = new MutationObserver(mutations => {
+                EarlyAccess.showEarlyAccess();
+                mutations.forEach(mutation => {
+                    Highlights.highlightAndTag(mutation.addedNodes);
+                    filtersChanged(mutation.addedNodes);
+                });
+            });
+            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        }
+        
+        let observer = new MutationObserver(mutations => {
+            if (SyncedStorage.get("contscroll")) {
+                mutations.forEach(mutation => {
+                    for (let node of mutation.removedNodes) {
+                        // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                        if (node.id && node.id === "search_result_container") {
+                            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+                            break;
+                        }
+                    }
+                })
+            }
+            
+            EarlyAccess.showEarlyAccess();
+            Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
+
+            /*if (SyncedStorage.get("contscroll")) {
+                if (mutations[0].addedNodes[0].classList.contains("Loading"))
+            }*/
+
+            if (!SyncedStorage.get("contscroll")) {
                 // When loading a new page, every element in the tab_filter_control class gets unchecked
                 if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
                 if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
@@ -2495,23 +2526,10 @@ let SearchPageClass = (function(){
                 if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
                 if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
                 if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
-
-                Highlights.startHighlightsAndTags();
-                EarlyAccess.showEarlyAccess();
-                filtersChanged();
-            });
-            pageObserver.observe(document.getElementById("search_results"), {childList: true});
-        }
-
-        let observer = new MutationObserver(mutations => {
-            Highlights.startHighlightsAndTags();
-            EarlyAccess.showEarlyAccess();
-
-            mutations.forEach(mutation => {
-                filtersChanged(mutation.addedNodes);
-            });
+            }
+            filtersChanged();
         });
-        observer.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        observer.observe(document.getElementById("search_results"), {childList: true});
     };
 
     return SearchPageClass;
@@ -2994,63 +3012,23 @@ let UserNotes = (function(){
 
 let TagPageClass = (function(){
 
-    let rows = [
-        "NewReleasesRows",
-        "TopSellersRows",
-        "ConcurrentUsersRows",
-        "ComingSoonRows"
-    ];
-
     function TagPageClass() {
-        if (SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored")) {
-            this.addHiding();
-            this.observeChanges();
-        }
-    }
-
-    TagPageClass.prototype.addHiding = function() {
-        rows.forEach(row => {
-            for (let node of document.getElementById(row).children) {
-                hideNode(node);
-            }
-        });
-    };
-
-    TagPageClass.prototype.observeChanges = function() {
-        let observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeName === "A") {
-                        hideNode(node);
-                    }
-                })
-            });
-        });
         
-        rows.forEach(row => {
-            observer.observe(document.getElementById(row), {childList: true});
-        })
-    };
-
-    function hideNode(node) {
-        if (SyncedStorage.get("hide_owned") && node.classList.contains("ds_owned")) {
-            node.style.display = "none";
-        }
-        if (SyncedStorage.get("hide_ignored") && node.classList.contains("ds_ignored")) {
-            node.style.display = "none";
-        }
     }
 
     return TagPageClass;
-
 })();
 
 
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
+        User.then(() => {
+            if (User.isSignedIn) {
+                this.highlightDelayed();
+            }
+        });
         this.setHomePageTab();
-        this.highlightRecommendations();
         this.customizeHomePage();
     }
 
@@ -3074,36 +3052,33 @@ let StoreFrontPageClass = (function(){
         tab.click();
     };
 
-    // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
-    StoreFrontPageClass.prototype.highlightRecommendations = function() {
-        let contentNode = document.querySelector("#content_more");
-        if (!contentNode) { return; }
-
-        let observer = new MutationObserver(function(mutations){
-            mutations.forEach(mutation => {
-                if (!mutation["addedNodes"]) { return; }
-
-                let addedNodes = mutation["addedNodes"];
-                for (let i=0; i<addedNodes.length; i++) {
-                    let node = addedNodes[i];
-                    if (!node.querySelector) { continue; }
-
-                    let wishlistedNode = node.querySelector(".home_content_item.ds_wishlist");
-                    if (wishlistedNode) {
-                        Highlights.highlightWishlist(wishlistedNode);
-                        continue;
-                    }
-
-                    wishlistedNode = node.querySelector(".gamelink.ds_wishlist");
-                    if (wishlistedNode) {
-                        Highlights.highlightWishlist(wishlistedNode.parentNode);
-                        continue;
-                    }
+    StoreFrontPageClass.prototype.highlightDelayed = function() {
+        
+        // The "Recently updated" section will only get loaded once the user scrolls down
+        let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
+        if (recentlyUpdatedNode) {
+            let observer = new MutationObserver(mutations => {
+                if (mutations[0].oldValue === "display: none") {
+                    Highlights.highlightAndTag(recentlyUpdatedNode.querySelectorAll(".store_capsule"));
                 }
             });
-        });
+            observer.observe(recentlyUpdatedNode, {attributes: true, attributeFilter: ["style"], attributeOldValue: true});
+        }
 
-        observer.observe(contentNode, {childList:true, subtree: true});
+        // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
+        let contentNode = document.querySelector("#content_more");
+        if (contentNode) {
+            let observer = new MutationObserver(function(mutations){
+                mutations.forEach(mutation =>
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType !== Node.ELEMENT_NODE) { return; }
+                        Highlights.highlightAndTag(node.querySelectorAll(".home_content_item, .home_content.single"));
+                    })
+                );
+            });
+    
+            observer.observe(contentNode, {childList:true, subtree: true});
+        }
     };
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
@@ -3168,15 +3143,15 @@ let TabAreaObserver = (function(){
 
     self.observeChanges = function() {
 
-        let tabAreaNode = document.querySelector(".tabarea, .browse_ctn_background");
-        if (!tabAreaNode) { return; }
+        let tabAreaNodes = document.querySelectorAll(".tag_browse_ctn, .tabarea, .browse_ctn_background");
+        if (!tabAreaNodes) { return; }
 
         let observer = new MutationObserver(() => {
             Highlights.startHighlightsAndTags();
             EarlyAccess.showEarlyAccess();
         });
 
-        observer.observe(tabAreaNode, {childList: true, subtree: true});
+        tabAreaNodes.forEach(tabAreaNode => observer.observe(tabAreaNode, {childList: true, subtree: true}));
     };
 
     return self;
@@ -3223,7 +3198,7 @@ let TabAreaObserver = (function(){
             (new SearchPageClass());
             break;
 
-        case /^\/tags\//.test(path):
+        case /^\/(tags|genre)\//.test(path):
             (new TagPageClass());
             break;
 
@@ -3252,4 +3227,3 @@ let TabAreaObserver = (function(){
     TabAreaObserver.observeChanges();
 
 })();
-

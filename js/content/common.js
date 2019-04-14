@@ -1443,7 +1443,9 @@ let Highlights = (function(){
 
             ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
-                hlCss.push(`.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }`);
+                hlCss.push(
+                   `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
+                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }`);
             });
 
             let style = document.createElement('style');
@@ -1456,21 +1458,38 @@ let Highlights = (function(){
         // Carousel item
         if (node.classList.contains("cluster_capsule")) {
             node = node.querySelector(".main_cap_content").parentNode;
+        } else if (node.classList.contains("large_cap")) {
+            // Genre Carousel items
+            node = node.querySelector(".large_cap_content");
+        } else if (node.parentNode.classList.contains("steam_curator_recommendation") && node.parentNode.classList.contains("big")) {
+            node = node.previousElementSibling;
         }
 
-        // Genre Carousel items
-        if (node.classList.contains("large_cap")) {
-            node = node.querySelector(".large_cap_content");
+        switch(true) {
+            // Recommendations on front page when scrolling down
+            case node.classList.contains("single"):
+                node = node.querySelector(".gamelink");
+
+            case node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
+                let r = node.querySelectorAll(".ds_flag");
+                r.forEach(node => node.remove());
+                r = node.querySelectorAll(".ds_flagged");
+                r.forEach(node => node.classList.remove("ds_flagged"));
+                break;
+            }
+
+            default: {
+                let r = node.querySelector(".ds_flag");
+                if (r) { r.remove(); }
+                r = node.querySelector(".ds_flagged");
+                if (r) {
+                    r.classList.remove("ds_flagged");
+                }
+            }
+            
         }
 
         node.classList.remove("ds_flagged");
-        let r = node.querySelector(".ds_flag");
-        if (r) { r.remove(); }
-
-        r = node.querySelector(".ds_flagged");
-        if (r) {
-            r.classList.remove("ds_flagged");
-        }
     }
 
 
@@ -1487,15 +1506,7 @@ let Highlights = (function(){
         }
     }
 
-    self.highlightOwned = function(node) {
-        node.classList.add("es_highlight_checked");
-
-        highlightItem(node, "owned");
-    };
-
     self.highlightWishlist = function(node) {
-        node.classList.add("es_highlight_checked");
-
         highlightItem(node, "wishlist");
     };
 
@@ -1518,106 +1529,124 @@ let Highlights = (function(){
         node.style.display = "none";
     };
 
-    self.highlightNotInterested = async function(node) {
-        await DynamicStore;
-
-        let aNode = node.querySelector("a");
-        let appid = GameId.getAppid(node.href, aNode && aNode.href) || GameId.getAppidWishlist(node.id);
-        if (!appid || !DynamicStore.isIgnored(appid)) { return; }
-
-        if (node.classList.contains("home_area_spotlight")) {
-            node = node.querySelector(".spotlight_content");
-        }
-
-        node.classList.add("es_highlight_checked");
-
-        if (SyncedStorage.get("hide_ignored") && node.closest(".search_result_row")) {
+    self.highlightOwned = function(node) {
+        if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
-            return;
-        }
+        } 
+        highlightItem(node, "owned");
+    };
 
+    self.highlightNotInterested = function(node) {
+        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
+            node.style.display = "none";
+        }
         highlightItem(node, "notinterested");
     };
+
+    self.highlightAndTag = function(nodes) {
+        for (let i=0, len=nodes.length; i<len; i++) {
+            let node = nodes[i];
+            let nodeToHighlight = node;
+
+            if (node.classList.contains("item")) {
+                nodeToHighlight = node.querySelector(".info");
+            } else if (node.classList.contains("home_area_spotlight")) {
+                nodeToHighlight = node.querySelector(".spotlight_content");
+            } else if (node.parentNode.classList.contains("steam_curator_recommendation") && node.parentNode.classList.contains("big")) {
+                nodeToHighlight = node.nextElementSibling;
+            } else if (node.parentNode.parentNode.classList.contains("curations")) {
+                nodeToHighlight = node.parentNode;
+            }
+
+            if (node.querySelector(".ds_owned_flag")) {
+                self.highlightOwned(nodeToHighlight);
+            }
+
+            if (node.querySelector(".ds_wishlist_flag")) {
+                self.highlightWishlist(nodeToHighlight);
+            }
+
+            if (node.querySelector(".ds_ignored_flag")) {
+                self.highlightNotInterested(nodeToHighlight);
+            }
+
+            if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
+                self.highlightNonDiscounts(nodeToHighlight);
+            }
+
+            let aNode = node.querySelector("a");
+            let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
+            if (appid) {
+                if (Inventory.hasGuestPass(appid)) {
+                    self.highlightInvGuestpass(node);
+                }
+                if (Inventory.getCouponByAppId(appid)) {
+                    self.highlightCoupon(node);
+                }
+                if (Inventory.hasGift(appid)) {
+                    self.highlightInvGift(node);
+                }
+            }
+        }
+    }
 
     self.startHighlightsAndTags = async function(parent) {
         await Inventory;
 
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
-            "div.tab_row",					// Storefront rows
+            "div.tab_row",					                // Storefront rows
             "div.dailydeal_ctn",
-            "div.wishlistRow",				// Wishlist rows
-            "a.game_area_dlc_row",			// DLC on app pages
-            "a.small_cap",					// Featured storefront items and "recommended" section on app pages
+            ".store_main_capsule",                          // "Featured & Recommended"
+            "div.wishlistRow",				                // Wishlist rows
+            "a.game_area_dlc_row",			                // DLC on app pages
+            "a.small_cap",					                // Featured storefront items and "recommended" section on app pages
             "a.home_smallcap",
-            "a.search_result_row",			// Search result rows
-            "a.match",						// Search suggestions rows
-            "a.cluster_capsule",			// Carousel items
-            "div.recommendation_highlight",	// Recommendation pages
-            "div.recommendation_carousel_item",	// Recommendation pages
-            "div.friendplaytime_game",		// Recommendation pages
-            "div.recommendation",           // Curator pages and the new DLC pages
-            "div.carousel_items.curator_featured > div", // Carousel items on Curator pages
-            "div.item_ctn",                 // Curator list item
-            "div.dlc_page_purchase_dlc",	// DLC page rows
-            "div.sale_page_purchase_item",	// Sale pages
-            "div.item",						// Sale pages / featured pages
-            "div.home_area_spotlight",		// Midweek and weekend deals
-            "div.browse_tag_game",			// Tagged games
-            "div.similar_grid_item",		// Items on the "Similarly tagged" pages
-            ".tab_item",					// Items on new homepage
-            "a.special",					// new homepage specials
-            "div.curated_app_item",			// curated app items!
-            "a.summersale_dailydeal"		// Summer sale daily deal
+            ".home_content_item",                           // Small items under "Keep scrolling for more recommendations"
+            ".home_content.single",                         // Big items under "Keep scrolling for more recommendations"
+            ".home_area_spotlight",                         // "Special offers" big items
+            "a.search_result_row",			                // Search result rows
+            "a.match",						                // Search suggestions rows
+            ".highlighted_app",                             // For example "Recently Recommended" on curators page
+            "a.cluster_capsule",			                // Carousel items
+            "div.recommendation_highlight",	                // Recommendation pages
+            "div.recommendation_carousel_item",             // Recommendation pages
+            "div.friendplaytime_game",		                // Recommendation pages
+            ".recommendation_row",                          // "Recent recommendations by friends"
+            ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
+            ".friend_game_block",                           // "Friends recently bought"
+            "div.recommendation",                           // Curator pages and the new DLC pages
+            "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
+            ".store_capsule",                               // All sorts of items on almost every page
+            ".home_marketing_message",                      // "Updates and offers"
+            "div.item_ctn",                                 // Curator list item
+            "div.dlc_page_purchase_dlc",	                // DLC page rows
+            "div.sale_page_purchase_item",	                // Sale pages
+            "div.item",						                // Sale pages / featured pages
+            "div.home_area_spotlight",		                // Midweek and weekend deals
+            "div.browse_tag_game",			                // Tagged games
+            "div.similar_grid_item",		                // Items on the "Similarly tagged" pages
+            ".tab_item",					                // Items on new homepage
+            "a.special",					                // new homepage specials
+            "div.curated_app_item",			                // curated app items!
+            "a.summersale_dailydeal"		                // Summer sale daily deal
         ];
 
         parent = parent || document;
 
-        setTimeout(function() {
+        setTimeout(() => {
             selectors.forEach(selector => {
-
-                let nodes = parent.querySelectorAll(selector+":not(.es_highlighted)");
-                for (let i=0, len=nodes.length; i<len; i++) {
-                    let node = nodes[i];
-                    let nodeToHighlight = node;
-
-                    if (node.classList.contains("item")) {
-                        nodeToHighlight = node.querySelector(".info");
-                    }
-                    if (node.classList.contains("home_area_spotlight")) {
-                        nodeToHighlight = node.querySelector(".spotlight_content");
-                    }
-
-                    if (node.querySelector(".ds_owned_flag")) {
-                        self.highlightOwned(nodeToHighlight);
-                    }
-
-                    if (node.querySelector(".ds_wishlist_flag")) {
-                        self.highlightWishlist(nodeToHighlight);
-                    }
-
-                    if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
-                        self.highlightNonDiscounts(nodeToHighlight);
-                    }
-
-                    let aNode = node.querySelector("a");
-                    let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
-                    if (appid) {
-                        if (Inventory.hasGuestPass(appid)) {
-                            self.highlightInvGuestpass(node);
-                        }
-                        if (Inventory.getCouponByAppId(appid)) {
-                            self.highlightCoupon(node);
-                        }
-                        if (Inventory.hasGift(appid)) {
-                            self.highlightInvGift(node);
-                        }
-                    }
-
-                    self.highlightNotInterested(node);
-                }
+                self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
             });
-        }, 500);
+    
+            let searchBoxContents = parent.getElementById("search_suggestion_contents");
+            if (searchBoxContents) {
+                let observer = new MutationObserver(records => {
+                    self.highlightAndTag(records[0].addedNodes);
+                });
+                observer.observe(searchBoxContents, {childList: true});
+            }
+        }, 1000);
     };
 
     return self;

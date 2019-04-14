@@ -1757,7 +1757,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 #search_suggestion_contents .es_tags {
 	float: right;
-	margin-top: 30px;
+	margin-left: 5px;
 }
 /*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
 	color: rgba(255, 255, 255, 0.8) !important;
