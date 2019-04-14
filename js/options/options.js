@@ -1,4 +1,82 @@
 
+
+class CustomLinks {
+
+    static init() {
+
+        let links = SyncedStorage.get('profile_custom_link');
+        for (let link of links) {
+            CustomLinks.create(link);
+        }
+
+        document
+            .querySelector("#add-custom-link")
+            .addEventListener("click", function() {
+                CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
+            });
+    }
+
+    // TODO (KarlCastle?) Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
+    static create(link) {
+        let customLinkTemplate = document.getElementById('add_custom_profile_link');
+        let node = document.importNode(customLinkTemplate.content, true).firstElementChild;
+
+        let url = link.url;
+        if (url && !url.includes("[ID]")) {
+            url += "[ID]";
+        }
+        node.querySelector(`[name="profile_custom_enabled"]`).checked = link.enabled;
+        node.querySelector(`[name="profile_custom_name"]`).value = link.name;
+        node.querySelector(`[name="profile_custom_url"]`).value = url;
+        node.querySelector(`[name="profile_custom_icon"]`).value = link.icon;
+
+        let insertionPoint = document.getElementById('add-custom-link').closest('div');
+        node = insertionPoint.insertAdjacentElement('beforebegin', node);
+
+        node.addEventListener('change', CustomLinks.save);
+        node.querySelector('.custom-link__close')
+            .addEventListener('click', CustomLinks.remove, false);
+
+        return node;
+    }
+
+    static read(node) {
+        return {
+            'enabled': node.querySelector(`[name="profile_custom_enabled"]`).checked,
+            'name': node.querySelector(`[name="profile_custom_name"]`).value,
+            'url': node.querySelector(`[name="profile_custom_url"]`).value,
+            'icon': node.querySelector(`[name="profile_custom_icon"]`).value,
+        };
+    }
+
+    static save() {
+        let customLinks = document.querySelectorAll('.custom-link');
+        let links = [];
+        for (let row of customLinks) {
+            let link = CustomLinks.read(row);
+            if (!link.enabled && !link.name && !link.url && !link.icon) {
+                continue;
+            }
+            links.push(link);
+        }
+        SyncedStorage.set('profile_custom_link', links);
+    }
+
+    static remove(ev) {
+        if (!ev.target || !(ev.target instanceof Element)) { return; }
+        //if (!ev.target.matches('.close_button')) { return; }
+
+        let row = ev.target.closest('.custom-link');
+        if (row) {
+            row.remove();
+            row = null;
+        }
+
+        CustomLinks.save();
+    }
+
+}
+
 let Options = (function(){
     let self = {};
 
@@ -45,12 +123,22 @@ let Options = (function(){
             // Localize elements with text
             let nodes = document.querySelectorAll("[data-locale-text]");
             for (let node of nodes) {
-                node.textContent = Localization.getString(node.dataset.localeText);
+                let translation = Localization.getString(node.dataset.localeText);
+                if (translation) {
+                    node.textContent = translation;
+                } else {
+                    console.warn(`Missing translation ${node.dataset.localeText}`);
+                }
             }
 
             nodes = document.querySelectorAll("[data-locale-html]");
             for (let node of nodes) {
-                HTML.inner(node, Localization.getString(node.dataset.localeHtml));
+                let translation = Localization.getString(node.dataset.localeHtml);
+                if (translation) {
+                    HTML.inner(node, translation);
+                } else {
+                    console.warn(`Missing translation ${node.dataset.localeHtml}`);
+                }
             }
 
             nodes = document.querySelectorAll("#warning_language option");
@@ -172,79 +260,8 @@ let Options = (function(){
             }
         });
 */
-        // Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
-        function createCustomLink(enabled=false, name="", url="", icon="") {
-            let custom_link_template = document.getElementById('add_custom_profile_link');
-            let node = document.importNode(custom_link_template.content, true).firstElementChild;
 
-            if (url && !url.includes("[ID]")) {
-                url += "[ID]";
-            }
-            node.querySelector(`[name="profile_custom_enabled"]`).checked = enabled;
-            node.querySelector(`[name="profile_custom_name"]`).value = name;
-            node.querySelector(`[name="profile_custom_url"]`).value = url;
-            node.querySelector(`[name="profile_custom_icon"]`).value = icon;
-            
-            let insertion_point = document.getElementById('show_profile_link_images_text').closest('div');
-            node = insertion_point.insertAdjacentElement('beforebegin', node);
-
-            node.addEventListener('change', saveCustomLinks);
-            node.querySelector('.custom-link__close').addEventListener('click', removeCustomLink, false);
-    
-            return node;
-        }
-
-        function readCustomLink(node) {
-            return {
-                'enabled': node.querySelector(`[name="profile_custom_enabled"]`).checked,
-                'name': node.querySelector(`[name="profile_custom_name"]`).value,
-                'url': node.querySelector(`[name="profile_custom_url"]`).value,
-                'icon': node.querySelector(`[name="profile_custom_icon"]`).value,
-            };
-        }
-
-        function saveCustomLinks() {
-            let customLinks = document.querySelectorAll('.custom-link');
-            let links = [];
-            for (let row of customLinks) {
-                let link = readCustomLink(row);
-                if (!link.enabled && !link.name && !link.url && !link.icon) {
-                    continue;
-                }
-                links.push(link);
-            }
-            SyncedStorage.set('profile_custom_link', links);
-
-            if (customLinks.length > 0) {
-                let link = readCustomLink(customLinks[customLinks.length - 1]);
-                if (link.enabled || link.name || link.url || link.icon) {
-                    createCustomLink();
-                }
-            } else if (customLinks.length === 0) {
-                let link = SyncedStorage.defaults.profile_custom_link[0];
-                createCustomLink(link.enabled, link.name, link.url, link.icon);
-                createCustomLink();
-            }
-        }
-
-        function removeCustomLink(ev) {
-            if (!ev.target || !(ev.target instanceof Element)) { return; }
-            //if (!ev.target.matches('.close_button')) { return; }
-
-            let row = ev.target.closest('.custom-link');
-            if (row) {
-                row.remove();
-                row = null;
-            }
-            saveCustomLinks();
-        }
-
-        let links = SyncedStorage.get('profile_custom_link');
-        for (let link of links) {
-            createCustomLink(link.enabled, link.name, link.url, link.icon);
-        }
-        createCustomLink();
-
+        CustomLinks.init();
 
         // Set the value or state for each input
         nodes = document.querySelectorAll("[data-setting]");
