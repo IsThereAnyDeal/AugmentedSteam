@@ -1463,7 +1463,7 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }`);
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name} { outline: solid ${color}; }`);
             });
 
             let style = document.createElement('style');
@@ -1636,6 +1636,7 @@ let Highlights = (function(){
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
             "div.recommendation",                           // Curator pages and the new DLC pages
+            ".curator_giant_capsule",
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             ".store_capsule",                               // All sorts of items on almost every page
             ".home_marketing_message",                      // "Updates and offers"
