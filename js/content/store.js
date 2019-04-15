@@ -2293,23 +2293,13 @@ let SearchPageClass = (function(){
     };
 
     function applyPriceFilter(node) {
-        let hidePriceAbove = SyncedStorage.get("hide_priceabove");
-        let priceAboveValue = SyncedStorage.get("priceabove_value");
+        let priceAboveValue = document.getElementById("es_notpriceabove_val").value.replace(',', '.');
 
-        if (hidePriceAbove
-            && priceAboveValue !== ""
-            && !(Number.isNaN(priceAboveValue))) {
-
-            let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
-            let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-            let parsed = Price.parseFromString(intern.trim(), Currency.storeCurrency);
-            if (parsed && parsed.value > priceAboveValue) {
-                node.style.display = "none";
-            }
-        }
-
-        if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
-            loadSearchResults();
+        let html = node.querySelector(".search_price").innerText;
+        let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
+        let parsed = Price.parseFromString(intern.trim(), Currency.storeCurrency);
+        if (parsed && parsed.value > priceAboveValue) {
+            node.style.display = "none";
         }
     }
 
@@ -2379,43 +2369,6 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        if (User.isSignedIn) {
-            if (SyncedStorage.get("hide_owned")) {
-                document.querySelector("#es_owned_games").classList.add("checked");
-            }
-    
-            if (SyncedStorage.get("hide_wishlist")) {
-                document.querySelector("#es_wishlist_games").classList.add("checked");
-            }
-    
-            if (SyncedStorage.get("hide_ignored")) {
-                document.querySelector("#es_notinterested").classList.add("checked");
-            }
-        }
-
-        if (SyncedStorage.get("hide_cart")) {
-            document.querySelector("#es_cart_games").classList.add("checked");
-        }
-
-        if (SyncedStorage.get("hide_notdiscounted")) {
-            document.querySelector("#es_notdiscounted").classList.add("checked");
-        }
-
-        if (SyncedStorage.get("hide_mixed")) {
-            document.querySelector("#es_notmixed").classList.add("checked");
-            document.querySelector("#es_hide_options").style.height="auto";
-        }
-
-        if (SyncedStorage.get("hide_negative")) {
-            document.querySelector("#es_notnegative").classList.add("checked");
-            document.querySelector("#es_hide_options").style.height = "auto";
-        }
-
-        if (SyncedStorage.get("hide_priceabove")) {
-            document.querySelector("#es_notpriceabove").classList.add("checked");
-            document.querySelector("#es_hide_options").style.height = "auto";
-        }
-
         let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
         let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
 
@@ -2425,31 +2378,36 @@ let SearchPageClass = (function(){
             HTML.beforeBegin(notpriceabove_val, html);
         }
 
-        if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
-        }
-
-        let map = new Map([
-            ["es_cart_games", "hide_cart"],
-            ["es_notdiscounted", "hide_notdiscounted"],
-            ["es_notmixed", "hide_mixed"],
-            ["es_notnegative", "hide_negative"],
-            ["es_notpriceabove", "hide_priceabove"]
-        ]);
+        let ids = [
+            "es_cart_games",
+            "es_notdiscounted",
+            "es_notmixed",
+            "es_notnegative"
+        ];
 
         if (User.isSignedIn) {
-            map.set("es_owned_games", "hide_owned");
-            map.set("es_wishlist_games", "hide_wishlist");
-            map.set("es_notinterested", "hide_notinterested");
+            ids.push("es_owned_games");
+            ids.push("es_wishlist_games");
+            ids.push("es_notinterested");
         }
 
-        for (let [id, setting] of map) {
+        for (let id of ids) {
             let option = document.getElementById(id);
             option.addEventListener("click", () => {
                 let state = !option.classList.contains("checked");
                 option.classList.toggle("checked", state);
-                SyncedStorage.set(setting, state);
                 filtersChanged();
+            });
+        }
+
+        {
+            let option = document.getElementById("es_notpriceabove");
+            option.addEventListener("click", () => {
+                let state = !option.classList.contains("checked");
+                option.classList.toggle("checked", state);
+                if (option.querySelector("#es_notpriceabove_val").value) {
+                    filtersChanged();
+                }
             });
         }
 
@@ -2465,23 +2423,21 @@ let SearchPageClass = (function(){
             }
         });
         notpriceabove_val.addEventListener("input", () => {
-            let toggleValue = (notpriceabove_val.value !== "");
+            let newValue = notpriceabove_val.value;
+            let toggleValue = (newValue !== "");
             priceFilterCheckbox.classList.toggle("checked", toggleValue);
-            SyncedStorage.set("hide_priceabove", toggleValue);
 
-            if (inputPattern.test(notpriceabove_val.value)) {
+            if (inputPattern.test(newValue)) {
+                if (toggleValue) {
+                    filtersChanged();
+                }
                 notpriceabove_val.setCustomValidity('');
-                SyncedStorage.set("priceabove_value", notpriceabove_val.value.replace(',', '.'));
-                filtersChanged();
             } else {
                 notpriceabove_val.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
             }
 
             notpriceabove_val.reportValidity();
         });
-
-        filtersChanged();
-
     };
 
     SearchPageClass.prototype.observeChanges = function() {
@@ -2497,7 +2453,7 @@ let SearchPageClass = (function(){
             });
             contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
         }
-        
+
         let observer = new MutationObserver(mutations => {
             if (SyncedStorage.get("contscroll")) {
                 mutations.forEach(mutation => {
@@ -2510,27 +2466,10 @@ let SearchPageClass = (function(){
                     }
                 })
             }
-            
+
             EarlyAccess.showEarlyAccess();
+
             Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-
-            /*if (SyncedStorage.get("contscroll")) {
-                if (mutations[0].addedNodes[0].classList.contains("Loading"))
-            }*/
-
-            if (!SyncedStorage.get("contscroll")) {
-                // When loading a new page, every element in the tab_filter_control class gets unchecked
-                if (User.isSignedIn) {
-                    if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
-                    if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
-                    if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
-                }
-                if (SyncedStorage.get("hide_cart")) { document.querySelector("#es_cart_games").classList.add("checked"); }
-                if (SyncedStorage.get("hide_notdiscounted")) { document.querySelector("#es_notdiscounted").classList.add("checked"); }
-                if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
-                if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
-                if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
-            }
             filtersChanged();
         });
         observer.observe(document.getElementById("search_results"), {childList: true});
