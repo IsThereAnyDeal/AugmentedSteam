@@ -1594,10 +1594,7 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext(`function() {
-                    var fee_info = CalculateFeeAmount(${sellPrice}, 0.10);
-                    window.postMessage({ type: "es_sendfee_${assetId}", information: fee_info, sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"}, '*');
-                }`);
+                ExtensionLayer.runInPageContext(`() => Messenger.sendMessage("sendFee", {feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"})`);
             });
         }
     }
@@ -1731,61 +1728,54 @@ let InventoryPageClass = (function(){
                 if (g_ActiveInventory.selectedItem.description) {
                     market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
-                window.postMessage({
-                    type: "es_sendmessage",
-                    information: [
-                        iActiveSelectView,
-                        g_ActiveInventory.selectedItem.description.marketable,
-                        g_ActiveInventory.appid,
-                        g_ActiveInventory.selectedItem.description.market_hash_name,
-                        g_ActiveInventory.selectedItem.description.type,
-                        g_ActiveInventory.selectedItem.assetid,
-                        g_sessionID,
-                        g_ActiveInventory.selectedItem.contextid,
-                        g_rgWalletInfo.wallet_currency,
-                        g_ActiveInventory.m_owner.strSteamId,
-                        g_ActiveInventory.selectedItem.description.market_marketable_restriction,
-                        market_expired
-                    ]
-                }, "*");
+
+                Messenger.sendMessage("sendMessage", [
+                    iActiveSelectView,
+                    g_ActiveInventory.selectedItem.description.marketable,
+                    g_ActiveInventory.appid,
+                    g_ActiveInventory.selectedItem.description.market_hash_name,
+                    g_ActiveInventory.selectedItem.description.type,
+                    g_ActiveInventory.selectedItem.assetid,
+                    g_sessionID,
+                    g_ActiveInventory.selectedItem.contextid,
+                    g_rgWalletInfo.wallet_currency,
+                    g_ActiveInventory.m_owner.strSteamId,
+                    g_ActiveInventory.selectedItem.description.market_marketable_restriction,
+                    market_expired
+                ]);
             });
-	    });
+        });
+        
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
 
-        window.addEventListener("message", function(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
+        Messenger.addMessageListener("sendFee", info => {
+            let sellPrice = info.amount - info.fees;
+            let formData = new FormData();
+            formData.append("sessionid", info.sessionID);
+            formData.append("appid", info.global_id);
+            formData.append("contextid", info.contextID);
+            formData.append("assetid", info.assetID);
+            formData.append("amount", 1);
+            formData.append("price", sellPrice);
 
-            if (e.data.type === "es_sendmessage") {
-                inventoryMarketHelper(e.data.information);
-            } else if (e.data.type === "es_sendfee_" + e.data.assetID) {
-                let sellPrice = e.data.information.amount - e.data.information.fees;
-                let formData = new FormData();
-                formData.append('sessionid', e.data.sessionID);
-                formData.append('appid', e.data.global_id);
-                formData.append('contextid', e.data.contextID);
-                formData.append('assetid', e.data.assetID);
-                formData.append('amount', 1);
-                formData.append('price', sellPrice);
+            /*
+            * TODO test what we need to send in request, this is original:
+            * mode: "cors", // CORS to cover requests sent from http://steamcommunity.com
+            * credentials: "include",
+            * headers: { origin: window.location.origin },
+            * referrer: window.location.origin + window.location.pathname
+            */
 
-                /*
-                 * TODO test what we need to send in request, this is original:
-                 * mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
-                 * credentials: 'include',
-                 * headers: { origin: window.location.origin },
-                 * referrer: window.location.origin + window.location.pathname
-                 */
+            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
+                withCredentials: true
+            }).then(() => {
+                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
 
-                RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                    withCredentials: true
-                }).then(() => {
-                    document.querySelector("#es_instantsell" + e.data.assetID).parentNode.style.display = "none";
-
-                    let id = e.data.global_id + "_" + e.data.contextID + "_" + e.data.assetID;
-                    let node = document.querySelector("[id='"+id+"']");
-                    node.classList.add("btn_disabled", "activeInfo");
-                    node.style.pointerEvents = "none";
-                });
-            }
+                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
+                let node = document.querySelector("[id='" + id + "']");
+                node.classList.add("btn_disabled", "activeInfo");
+                node.style.pointerEvents = "none";
+            });
         }, false);
     }
 

@@ -196,9 +196,9 @@ let ExtensionLayer = (function() {
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun){
-        let script  = document.createElement('script');
-        script.textContent = '(' + fun + ')();';
+    self.runInPageContext = function(fun) {
+        let script  = document.createElement("script");
+        script.textContent = '(' + fun + ")();";
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
     };
@@ -206,6 +206,35 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
+class Messenger {
+    static sendMessage(msgID, info) {
+        window.postMessage({
+            type: "es_" + msgID,
+            information: info
+        }, '*');
+    }
+
+    static addMessageListener(msgID, fn, autoRemove) {
+        let callback = function(e) {
+            if (e.source !== window) { return; }
+            if (!e.data.type) { return; }
+            if (e.data.type === "es_" + msgID) {
+                fn(e.data.information);
+                if (autoRemove) {
+                    window.removeEventListener("message", callback);
+                }
+            }
+        }
+        window.addEventListener("message", callback);
+    }
+}
+
+// Inject the Messenger class into the DOM, providing the same interface for the page context side
+(function() {
+    let script = document.createElement("script");
+    script.textContent = Messenger;
+    document.documentElement.appendChild(script);
+})();
 
 class CookieStorage {
     static get(name, defaultValue) {
@@ -637,26 +666,16 @@ let Currency = (function() {
     function getCurrencyFromWallet() {
         return new Promise((resolve, reject) => {
             ExtensionLayer.runInPageContext(() =>
-                window.postMessage({
-                    type: "es_walletcurrency",
-                    wallet_currency: typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null
-                }, "*")
+                Messenger.sendMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
             );
 
-            function listener(e) {
-                if (e.source !== window) { return; }
-                if (!e.data.type || e.data.type !== "es_walletcurrency") { return; }
-
-                if (e.data.wallet_currency !== null) {
-                    resolve(Currency.currencyNumberToType(e.data.wallet_currency));
+            Messenger.addMessageListener("walletCurrency", walletCurrency => {
+                if (walletCurrency !== null) {
+                    resolve(Currency.currencyNumberToType(walletCurrency));
                 } else {
                     reject();
                 }
-
-                window.removeEventListener("message", listener, false);
-            }
-
-            window.addEventListener("message", listener, false);
+            }, true);
         });
     }
 
