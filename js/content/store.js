@@ -2292,22 +2292,30 @@ let SearchPageClass = (function(){
         ExtensionLayer.runInPageContext(() => UpdateTags());
     };
 
-    function applyPriceFilter(node) {
-        let priceAboveValue = document.getElementById("es_notpriceabove_val").value.replace(',', '.');
-
-        let html = node.querySelector(".search_price").innerText;
-        let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-        let parsed = Price.parseFromString(intern.trim(), Currency.storeCurrency);
-        if (parsed && parsed.value > priceAboveValue) {
-            node.style.display = "none";
+    function isPriceAbove(node, priceAbove) {
+        
+        let priceValues = node.querySelector(".search_price").innerText.replace(/,/g, '.').trim().match(/^\d+\.\d*/gm);
+        let priceString;
+        
+        if (priceValues) {
+            // Discounted price
+            if (priceValues[1]) {
+                priceString = priceValues[1];
+            // Non-discounted
+            } else if (priceValues[0]) {
+                priceString = priceValues[0];
+            }
+        } else {
+            // App without price
+            return false;
         }
+
+        return Number(priceString) > priceAbove ? true : false;
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-
-            node.style.display = "block";
+        let priceAbove = Number(document.getElementById("es_notpriceabove_val").value.replace(',', '.'));
+        for (let node of nodes) {
             if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
@@ -2315,7 +2323,8 @@ let SearchPageClass = (function(){
             if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
+            if (document.querySelector("#es_notpriceabove.checked") && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
+            node.style.display = "block";
         }
     }
 
@@ -2428,9 +2437,7 @@ let SearchPageClass = (function(){
             priceFilterCheckbox.classList.toggle("checked", toggleValue);
 
             if (inputPattern.test(newValue)) {
-                if (toggleValue) {
-                    filtersChanged();
-                }
+                filtersChanged();
                 notpriceabove_val.setCustomValidity('');
             } else {
                 notpriceabove_val.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
