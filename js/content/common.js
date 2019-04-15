@@ -1654,7 +1654,7 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        setTimeout(() => {
+        ExtensionLayer.addMessageListener("dynamicStoreReady", () => {
             selectors.forEach(selector => {
                 self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
             });
@@ -1666,7 +1666,11 @@ let Highlights = (function(){
                 });
                 observer.observe(searchBoxContents, {childList: true});
             }
-        }, 1000);
+        }, true);
+
+        ExtensionLayer.runInPageContext(() => {
+            GDynamicStore.OnReady(() => AugmentedSteam.sendMessage("dynamicStoreReady"));
+        });
     };
 
     return self;
