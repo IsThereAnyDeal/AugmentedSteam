@@ -798,18 +798,18 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             ` <div class="queue_control_button js-user-note-button">
-                <div class="btnv6_blue_hoverfade  btn_medium queue_btn_inactive" style="${inactiveStyle}">
+                <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
                 </div>
-                <div class="btnv6_blue_hoverfade  btn_medium queue_btn_active" style="${activeStyle}">
+                <div id="es_update_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${activeStyle}">
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
-            button.querySelector(".queue_btn_inactive").style.display = active ? "none" : null;
-            button.querySelector(".queue_btn_active").style.display = active ? null : "none";
+            button.querySelector("#es_add_note").style.display = active ? "none" : null;
+            button.querySelector("#es_update_note").style.display = active ? null : "none";
 
             node.classList.toggle("esi-note--hidden", !active);
         }
