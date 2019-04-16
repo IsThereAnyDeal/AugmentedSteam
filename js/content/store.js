@@ -2335,115 +2335,232 @@ let SearchPageClass = (function(){
         let pricePlaceholder = currency.placeholder();
 
         await User;
+
         HTML.afterBegin("#advsearchform .rightcol",
-            `<div class='block' id='es_hide_menu'>
-                <div class='block_header'><div>${Localization.str.hide}</div></div>
-                <div class='block_content block_content_inner' id='es_hide_options'>
-                    ${User.isSignedIn ? `<div class='tab_filter_control' id='es_owned_games'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.options.owned}</span>
+            `<div class="block" id="es_hide_menu">
+                <div class="block_header"><div>${Localization.str.hide}</div></div>
+                <div class="block_content block_content_inner" id="es_hide_options">
+                    ${User.isSignedIn ? `<div class="tab_filter_control" id="es_owned_games" data-param="es_hide" data-value="owned">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.options.owned}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_wishlist_games'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.options.wishlist}</span>
+                    <div class="tab_filter_control" id="es_wishlist_games" data-param="es_hide" data-value="wishlisted">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.options.wishlist}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notinterested'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.notinterested}</span>
+                    <div class="tab_filter_control" id="es_notinterested" data-param="es_hide" data-value="ignored">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.notinterested}</span>
                     </div>` : ""}
-                    <div class='tab_filter_control' id='es_cart_games'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.options.cart}</span>
+                    <div class="tab_filter_control" id="es_cart_games" data-param="es_hide" data-value="cart">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notdiscounted'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.notdiscounted}</span>
+                    <div class="tab_filter_control" id="es_notdiscounted" data-param="es_hide" data-value="not-discounted">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.notdiscounted}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notmixed'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.mixed_item}</span>
+                    <div class="tab_filter_control" id="es_notmixed" data-param="es_hide" data-value="mixed">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notnegative'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.negative_item}</span>
+                    <div class="tab_filter_control" id="es_notnegative" data-param="es_hide" data-value="negative">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notpriceabove'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.price_above}</span>
+                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id='es_notpriceabove_val' class='es_input' pattern='${inputPattern.source}' placeholder=${pricePlaceholder}>
+                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder=${pricePlaceholder}>
                         </div>
+                    </div>
+                    <div>
+                        <input type="hidden" id="es_hide" name="es_hide" value>
                     </div>
                 </div>
             </div>
         `);
 
-        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
-        let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
-
-        if (currency.format.postfix) {
-            HTML.afterEnd(notpriceabove_val, html);
-        } else {
-            HTML.beforeBegin(notpriceabove_val, html);
+        if (!SyncedStorage.get("contscroll")) {
+            let hiddenInput = document.getElementById("es_hide");
+            function modifyLinks() {
+                for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
+                    let params = new URLSearchParams(linkElement.href.substring(linkElement.href.indexOf('?')));
+                    if (hiddenInput.value) {
+                        params.set("es_hide", hiddenInput.value);
+                    } else {
+                        params.delete("es_hide");
+                    }
+                    linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+                }
+            }
+            let observer = new MutationObserver(modifyLinks);
+            observer.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
+            ExtensionLayer.addMessageListener("ajaxCompleted", modifyLinks, false);
         }
 
-        let ids = [
-            "es_cart_games",
-            "es_notdiscounted",
-            "es_notmixed",
-            "es_notnegative"
-        ];
+        ExtensionLayer.addMessageListener("filtersChanged", filtersChanged, false);
 
-        if (User.isSignedIn) {
-            ids.push("es_owned_games");
-            ids.push("es_wishlist_games");
-            ids.push("es_notinterested");
-        }
+        // Thrown together from sources of searchpage.js
+        ExtensionLayer.runInPageContext(`() => {
 
-        for (let id of ids) {
-            let option = document.getElementById(id);
-            option.addEventListener("click", () => {
-                let state = !option.classList.contains("checked");
-                option.classList.toggle("checked", state);
-                filtersChanged();
-            });
-        }
+            GDynamicStore.OnReady(() => {
 
-        {
-            let option = document.getElementById("es_notpriceabove");
-            option.addEventListener("click", () => {
-                let state = !option.classList.contains("checked");
-                option.classList.toggle("checked", state);
-                if (option.querySelector("#es_notpriceabove_val").value) {
-                    filtersChanged();
+                // Callback that will fire when the user browses through pages
+                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => AugmentedSteam.sendMessage("ajaxCompleted") });` : ""}
+                
+                // For each AS hide filter
+                $J(".tab_filter_control[id^='es_']").each(function() {
+                    let $Control = $J(this);
+                    let strParam = $Control.data("param");
+                    let value = $Control.data("value");
+        
+                    $Control.click(() => {
+                        let strValues = decodeURIComponent($J('#' + strParam).val());
+                        value = String(value); // Javascript: Dynamic types except sometimes not.
+                        if (!$Control.hasClass("checked")) {
+                            let rgValues;
+                            if(!strValues) {
+                                rgValues = [value];
+                            } else {
+                                rgValues = strValues.split(',');
+                                if($J.inArray(value, rgValues) === -1) {
+                                    rgValues.push(value)
+                                }  
+                            }
+        
+                            $J('#' + strParam).val(rgValues.join(','));
+                            $Control.addClass("checked");
+                        } else {
+                            let rgValues = strValues.split(',');
+                            if(rgValues.indexOf(value) !== -1) {
+                                rgValues.splice( rgValues.indexOf(value), 1 );
+                            }
+    
+                            $J('#' + strParam).val(rgValues.join(','));
+                            $Control.removeClass("checked");
+                        }
+    
+                        let rgParameters = GatherSearchParameters();
+    
+                        // remove snr for history purposes
+                        delete rgParameters["snr"];
+                        if (rgParameters["sort_by"] === "_ASC") {
+                            delete rgParameters["sort_by"];
+                        }
+                        if (rgParameters["page"] === 1 || rgParameters["page"] === '1')
+                            delete rgParameters["page"];
+    
+                        // don't want this on the url either
+                        delete rgParameters["hide_filtered_results_warning"];
+    
+                        if (g_bUseHistoryAPI) {
+                            history.pushState({ params: rgParameters}, '', '?' + Object.toQueryString( rgParameters ) );
+                        } else {
+                            window.location = '#' + Object.toQueryString( rgParameters );
+                        }
+    
+                        (function UpdateCustomTags() {
+                            $J(".tag_dynamic").remove();
+                            $J("#termsnone").show();
+                            let rgActiveTags = $J(".tab_filter_control.checked");
+    
+                            // Search term
+                            let strTerm = $J("#realterm").val();
+                            if( strTerm )
+                            {
+                                AddSearchTag( "term", strTerm, '"'+strTerm+'"', function(tag) { $J("#realterm").val(''); $J("#term").val(''); AjaxSearchResults(); return false; } );
+                                $J("#termsnone").hide();
+                            }
+    
+                            // Publisher
+                            let strPublisher = $J("#publisher").val();
+                            if( strPublisher )
+                            {
+                                AddSearchTag( "publisher", strPublisher, "Publisher" + ": "+strPublisher, function(tag) { $J("#publisher").val(''); AjaxSearchResults(); return false; } );
+                                $J("#termsnone").hide();
+                            }
+    
+                            // Developer
+                            let strDeveloper = $J("#developer").val();
+                            if( strDeveloper )
+                            {
+                                AddSearchTag("publisher", strDeveloper, "Developer" + ": " + strDeveloper, function(tag) { $J("#developer").val(''); AjaxSearchResults(); return false; } );
+                                $J("#termsnone").hide();
+                            }
+    
+                            rgActiveTags.each(function() {
+                                let Tag = this;
+                                let $Tag = $J(this);
+                                let label;
+    
+                                if ($Tag.is("[id*='es_']")) {
+                                    label = "${Localization.str.hide_filter}".replace("__filter__", $J(".tab_filter_control_label", Tag).text());
+                                } else {
+                                    label = $J(".tab_filter_control_label", Tag).text();
+                                }
+                                AddSearchTag($Tag.data("param"), $Tag.data("value"), label, function(tag) { return function() { tag.click(); return false; } }(Tag) );
+                                if (!$Tag.is(":visible"))
+                                {
+                                    $Tag.parent().prepend($Tag.show());
+                                    $Tag.trigger( "tablefilter_update" );
+                                }
+                                $J("#termsnone").hide();
+                            });
+                        })();
+                        AugmentedSteam.sendMessage("filtersChanged");
+                    });
+                });
+    
+                for (let [key, value] of new URLSearchParams(window.location.search)) {
+                    if (key === "es_hide") {
+                        for (let filterValue of value.split(',')) {
+                            let filter = $J(".tab_filter_control[data-value='" + filterValue + "']");
+                            if (filter) {
+                                filter.click();
+                            } else {
+                                console.warn("Invalid filter value %s", filterValue);
+                            }
+                        }
+                    }
                 }
             });
+        }`);
+
+        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
+        let priceAboveVal = document.querySelector("#es_notpriceabove_val");
+
+        if (currency.format.postfix) {
+            HTML.afterEnd(priceAboveVal, html);
+        } else {
+            HTML.beforeBegin(priceAboveVal, html);
         }
 
         let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
         priceFilterCheckbox.title = Localization.str.price_above_tooltip;
 
-        notpriceabove_val.title = Localization.str.price_above_tooltip;
-        notpriceabove_val.addEventListener("click", e => e.stopPropagation());
-        notpriceabove_val.addEventListener("keydown", e => {
+        priceAboveVal.title = Localization.str.price_above_tooltip;
+        priceAboveVal.addEventListener("click", e => e.stopPropagation());
+        priceAboveVal.addEventListener("keydown", e => {
             if(e.key === "Enter") {
-                // This would normally trigger a call to AjaxSearchResults() and reload the page, invalidating all AS filters
+                // This would normally trigger a call to AjaxSearchResults() which is not required here
                 e.preventDefault();
             }
         });
-        notpriceabove_val.addEventListener("input", () => {
-            let newValue = notpriceabove_val.value;
+        priceAboveVal.addEventListener("input", () => {
+            let newValue = priceAboveVal.value;
             let toggleValue = (newValue !== "");
             priceFilterCheckbox.classList.toggle("checked", toggleValue);
 
             if (inputPattern.test(newValue)) {
                 filtersChanged();
-                notpriceabove_val.setCustomValidity('');
+                priceAboveVal.setCustomValidity('');
             } else {
-                notpriceabove_val.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
+                priceAboveVal.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
             }
 
-            notpriceabove_val.reportValidity();
+            priceAboveVal.reportValidity();
         });
     };
 
