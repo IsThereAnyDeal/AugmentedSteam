@@ -583,22 +583,43 @@ let ProfileHomePageClass = (function(){
             };
 
             // Build SteamRep section
-            let statusInfo = document.querySelector("div.responsive_status_info");
+            let statusInfo = document.querySelector(".profile_header_content");
             if (!statusInfo) return;
 
-            HTML.beforeEnd(statusInfo, '<div id="es_steamrep"></div>');
+            HTML.beforeBegin(statusInfo, '<div id="es_steamrep"></div>');
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
                 for (let [img, regex] of Object.entries(repimgs)) {
                     if (!value.match(regex)) { continue; }
 
+                    let steamrep = document.getElementById("es_steamrep");
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    HTML.afterEnd("#es_steamrep",
-                        `<div class="${img}">
+                    let cssClass;
+
+                    switch (img) {
+                        case "banned":
+                            cssClass = "bad";
+                            break;
+                        case "caution":
+                            cssClass = "caution";
+                            break;
+                        case "valve":
+                        case "okay":
+                            cssClass = "good";
+                            break;
+                        case "donate":
+                            cssClass = "neutral";
+                            break;
+                    }
+                    steamrep.classList.add(cssClass);
+
+                    HTML.beforeEnd(steamrep,
+                        `<div>
                             <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
+                        
                     return;
                 }
             });
