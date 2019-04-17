@@ -3,26 +3,31 @@ v0.9.6
 -----
 Consider this to be RC1 for version 1.0 :)
 
-- A lot of fixes for the things we broke in last version due to making extension safer
-- Added options to better control Twitch showcase on profile pages
-- Updated Astats icon
-- Added link to Completionist.me to store game pages (turned off by default)
-- Improved currency handling/detection
-- You can now add more than one profile link
-- Fixes in key registration
-- Improved style of notes on store game pages
-- Progress bar should now more accurately reflect progress
-- Added option to enlarge workshop items' screenshot
-- Fixed market stats
-- Multiple layout fixes
 - Fixed game highlighting
-- Fixed OpenCritic score showing "null" when score couldn't be found
-- Multiple fixes regarding achievements stats
-- Achievements stats added to Recent games page
+- Fixed market stats
 - Fixed page customizer issues
 - Fixed "Zooming in on badge pages creates a vertical offset between items"
 - Fixed clicking "Show all badges" on badge page only showing the first one
+- Fixed OpenCritic score showing "null" when score couldn't be found
 - Profile background/style should now properly reload after save, without need to revisit Edit page again
+- Fixes in key registration
+- Progress bar should now more accurately reflect progress
+- Multiple layout fixes
+- Multiple fixes regarding achievements stats
+- And a lot of other fixes for things we broke in last version due to making extension safer
+
+- Added options to better control Twitch showcase on profile pages
+- Added link to Completionist.me to store game pages (turned off by default)
+- You can now add more than one profile link
+- Achievements stats added to Recent games page
+
+- Updated Astats icon
+- Improved currency handling/detection
+- Improved style of notes on store game pages
+- Added option to enlarge workshop items' screenshot
+
+Known issues:
+- Options reset will kinda break custom links, but you should be good if you reload the page
 
 v0.9.5
 -----
