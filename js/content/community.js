@@ -2282,8 +2282,10 @@ let BadgesPageClass = (function(){
         HTML.afterBegin("#wishlist_sort_options",
             "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
-        document.querySelector("#es_badge_all").addEventListener("click", function(e) {
-            document.querySelector(".is_link").style.display = "block";
+        document.querySelector("#es_badge_all").addEventListener("click", () => {
+            for (let badge of document.querySelectorAll(".is_link")) {
+                badge.style.display = "block";
+            }
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
             document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeout
             resetLazyLoader();
