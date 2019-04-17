@@ -112,16 +112,17 @@ class Version {
 class UpdateHandler {
 
     static checkVersion() {
-        Background.action("version.previous").then(
-            previousVersion => {
-                if (previousVersion && !Version.fromString(previousVersion).isCurrent()) {
-                    if (SyncedStorage.get("version_show")) {
-                        this._showChangelog();
-                    }
-                    this._migrateSettings(previousVersion);
-                }
+        let lastVersion = Version.fromString(SyncedStorage.get("version"));
+        let currentVersion = Version.fromString(Info.version);
+
+        if (currentVersion.isAfter(lastVersion)) {
+            if (SyncedStorage.get("version_show")) {
+                this._showChangelog();
             }
-        )
+            this._migrateSettings(lastVersion);
+        }
+
+        SyncedStorage.set("version", Info.version);
     };
 
     static _showChangelog() {
@@ -139,8 +140,7 @@ class UpdateHandler {
         );
     }
 
-    static _migrateSettings(lastVersion) {
-        let oldVersion = Version.fromString(lastVersion);
+    static _migrateSettings(oldVersion) {
 
         if (oldVersion.isSameOrBefore("0.9.4")) {
 
@@ -220,7 +220,7 @@ class UpdateHandler {
             SyncedStorage.remove('profile_custom_name');
             SyncedStorage.remove('profile_custom_url');
             SyncedStorage.remove('profile_custom_icon');
-    }
+        }
     
     }
 }
@@ -414,6 +414,7 @@ SyncedStorage.cache = {};
 SyncedStorage.defaults = {
     'language': "english",
 
+    'version': Info.version,
     'version_show': true,
 
     'highlight_owned_color': "#598400",

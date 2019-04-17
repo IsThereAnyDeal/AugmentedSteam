@@ -634,12 +634,6 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
-class ASVersion {
-    static previous() {
-        return ASVersion._previous;
-    }
-}
-ASVersion._previous = null;
 
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
@@ -683,17 +677,9 @@ let actionCallbacks = new Map([
     ['inventory.coupons', SteamCommunity.coupons], // #3
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
-
-    ['version.previous', ASVersion.previous]
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
-
-chrome.runtime.onInstalled.addListener(({reason, previousVersion}) => {
-    if (reason === "update") {
-        ASVersion._previous = previousVersion;
-    }
-});
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (!sender || !sender.tab) { return false; } // not from a tab, ignore
@@ -709,8 +695,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     Promise.resolve(callback(message))
         .then(response => sendResponse({ 'response': response, }))
         .catch(function(err) {
-            console.error(err);
-            sendResponse({ 'error': "An error occurred in the background context.", }) // can't JSONify most exceptions
+            console.error(err, message.action);
+            sendResponse({ 'error': "An error occurred in the background context." + message.action}) // can't JSONify most exceptions
         });
 
     // keep channel open until callback resolves
