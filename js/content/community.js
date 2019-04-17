@@ -888,7 +888,6 @@ let GamesPageClass = (function(){
             let hadNodesInView = false;
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
-                if (node.querySelector(".recentAchievements")) { continue; }
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
