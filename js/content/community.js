@@ -589,7 +589,7 @@ let ProfileHomePageClass = (function(){
             HTML.beforeBegin(statusInfo, '<div id="es_steamrep"></div>');
 
             let currentHighestPriority = 4;
-            let steamrep = document.getElementById("es_steamrep");
+            let steamrepElement = document.getElementById("es_steamrep");
             let priorities = ["bad", "caution", "good", "neutral"];
             let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
 
@@ -618,12 +618,12 @@ let ProfileHomePageClass = (function(){
                     }
 
                     if (priority < currentHighestPriority) {
-                        steamrep.className = priorities[priority];
+                        steamrepElement.className = priorities[priority];
                         currentHighestPriority = priority;
                     }
 
-                    HTML.beforeEnd(steamrep,
-                        `<div>
+                    HTML.beforeEnd(steamrepElement,
+                        `<div class="${priorities[priority]}">
                             <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);

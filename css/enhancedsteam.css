@@ -2326,22 +2326,27 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 #es_steamrep.bad {
 	border-color: red;
-	color: red;
 }
 #es_steamrep.caution {
 	border-color: orangered;
-	color: orangered;
 }
 #es_steamrep.good {
 	border-color: green;
-	color: green;
 }
 #es_steamrep.neutral {
 	border-color: gray;
-	color: gray;
 }
-#es_steamrep a {
-	color: inherit;
+#es_steamrep .bad a {
+	color: red;
+}
+#es_steamrep .caution a {
+	color: orangered;
+}
+#es_steamrep .good a {
+	color: green;
+}
+#es_steamrep .neutral a {
+	color: gray;
 }
 
 /***************************************
