@@ -48,6 +48,8 @@ class CustomLinks {
         node.querySelector('.custom-link__close')
             .addEventListener('click', CustomLinks.remove, false);
 
+        CustomLinks.save();
+
         return node;
     }
 
