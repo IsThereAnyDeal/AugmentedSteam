@@ -588,31 +588,39 @@ let ProfileHomePageClass = (function(){
 
             HTML.beforeBegin(statusInfo, '<div id="es_steamrep"></div>');
 
+            let currentHighestPriority = 4;
+            let steamrep = document.getElementById("es_steamrep");
+            let priorities = ["bad", "caution", "good", "neutral"];
+            let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
+
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
                 for (let [img, regex] of Object.entries(repimgs)) {
                     if (!value.match(regex)) { continue; }
 
-                    let steamrep = document.getElementById("es_steamrep");
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    let cssClass;
+                    let priority;
 
                     switch (img) {
                         case "banned":
-                            cssClass = "bad";
+                            priority = 0;
                             break;
                         case "caution":
-                            cssClass = "caution";
+                            priority = 1;
                             break;
                         case "valve":
                         case "okay":
-                            cssClass = "good";
+                            priority = 2;
                             break;
                         case "donate":
-                            cssClass = "neutral";
+                            priority = 3;
                             break;
                     }
-                    steamrep.classList.add(cssClass);
+
+                    if (priority < currentHighestPriority) {
+                        steamrep.className = priorities[priority];
+                        currentHighestPriority = priority;
+                    }
 
                     HTML.beforeEnd(steamrep,
                         `<div>
@@ -620,7 +628,6 @@ let ProfileHomePageClass = (function(){
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
 
-                    let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
                     backgroundStyle.paddingBottom = "20px";
                     backgroundStyle.backgroundSize = "cover";
                         
