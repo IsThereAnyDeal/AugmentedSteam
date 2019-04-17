@@ -824,22 +824,13 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(?:\?tab=(all|recent))?/);
+        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
 
-        switch(page[2]) {
-            case "recent":
-            case undefined:
-                User.then(() => {
-                    if (User.profilePath === page[1]) {
-                        this.addGamelistAchievements(page[1]);
-                    }
-                });
-                break;
-            case "all":
-                this.computeStats();
-                this.handleCommonGames();
-                this.addGamelistAchievements(page[1]);
-        }        
+        if (page[2]) {
+            this.computeStats();
+            this.handleCommonGames();
+            this.addGamelistAchievements(page[1]);
+        }
     }
 
     // Display total time played for all games
@@ -897,7 +888,6 @@ let GamesPageClass = (function(){
             let hadNodesInView = false;
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
-                if (node.querySelector(".recentAchievements")) { continue; }
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
