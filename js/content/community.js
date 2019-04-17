@@ -303,6 +303,16 @@ let ProfileActivityPageClass = (function(){
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
+        if (window.location.hash === "#as-success") {
+            /* TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
+             *      That's why when we clear profile before going to API to store changes we don't get updated images
+             *      when we get back.
+             *      clearOwn shouldn't immediately reload.
+             *
+             *      Also, we are hoping for the best here, we should probably await?
+             */
+            ProfileData.clearOwn();
+        }
         ProfileData.promise();
         this.addCommunityProfileLinks();
         this.addWishlistProfileLink();
