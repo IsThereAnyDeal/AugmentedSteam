@@ -619,6 +619,10 @@ let ProfileHomePageClass = (function(){
                             <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
+
+                    let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
+                    backgroundStyle.paddingBottom = "20px";
+                    backgroundStyle.backgroundSize = "cover";
                         
                     return;
                 }
