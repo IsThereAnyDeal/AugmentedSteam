@@ -209,17 +209,19 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("0.9.5")) {
             // Update structure for custom profile links to allow multiple
-            let custom_link = {
-                'enabled': SyncedStorage.get('profile_custom'),
-                'name': SyncedStorage.get('profile_custom_name'),
-                'url': SyncedStorage.get('profile_custom_url'),
-                'icon':  SyncedStorage.get('profile_custom_icon'),
-            };
-            SyncedStorage.set('profile_custom_link', [custom_link,]);
-            SyncedStorage.remove('profile_custom');
-            SyncedStorage.remove('profile_custom_name');
-            SyncedStorage.remove('profile_custom_url');
-            SyncedStorage.remove('profile_custom_icon');
+            if (SyncedStorage.get('profile_custom_name')) {
+                let custom_link = {
+                    'enabled': SyncedStorage.get('profile_custom'),
+                    'name': SyncedStorage.get('profile_custom_name'),
+                    'url': SyncedStorage.get('profile_custom_url'),
+                    'icon':  SyncedStorage.get('profile_custom_icon'),
+                };
+                SyncedStorage.set('profile_custom_link', [custom_link,]);
+                SyncedStorage.remove('profile_custom');
+                SyncedStorage.remove('profile_custom_name');
+                SyncedStorage.remove('profile_custom_url');
+                SyncedStorage.remove('profile_custom_icon');
+            }
         }
     
     }
