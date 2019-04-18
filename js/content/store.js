@@ -2888,7 +2888,6 @@ let UserNotes = (function(){
 
         // Partly copied from shared_global.js
         ExtensionLayer.runInPageContext(`function() {
-            debugger;
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
 
