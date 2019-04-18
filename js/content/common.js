@@ -1655,7 +1655,7 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        ExtensionLayer.addMessageListener("dynamicStoreReady", () => {
+        Messenger.addMessageListener("dynamicStoreReady", () => {
             selectors.forEach(selector => {
                 self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
             });
@@ -1670,7 +1670,7 @@ let Highlights = (function(){
         }, true);
 
         ExtensionLayer.runInPageContext(() => {
-            GDynamicStore.OnReady(() => AugmentedSteam.sendMessage("dynamicStoreReady"));
+            GDynamicStore.OnReady(() => Messenger.sendMessage("dynamicStoreReady"));
         });
     };
 
