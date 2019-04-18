@@ -2397,10 +2397,10 @@ let SearchPageClass = (function(){
             }
             let observer = new MutationObserver(modifyLinks);
             observer.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
-            ExtensionLayer.addMessageListener("ajaxCompleted", modifyLinks, false);
+            Messenger.addMessageListener("ajaxCompleted", modifyLinks, false);
         }
 
-        ExtensionLayer.addMessageListener("filtersChanged", filtersChanged, false);
+        Messenger.addMessageListener("filtersChanged", filtersChanged, false);
 
         // Thrown together from sources of searchpage.js
         ExtensionLayer.runInPageContext(`() => {
@@ -2408,7 +2408,7 @@ let SearchPageClass = (function(){
             GDynamicStore.OnReady(() => {
 
                 // Callback that will fire when the user browses through pages
-                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => AugmentedSteam.sendMessage("ajaxCompleted") });` : ""}
+                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.sendMessage("ajaxCompleted") });` : ""}
                 
                 // For each AS hide filter
                 $J(".tab_filter_control[id^='es_']").each(function() {
@@ -2509,7 +2509,7 @@ let SearchPageClass = (function(){
                                 $J("#termsnone").hide();
                             });
                         })();
-                        AugmentedSteam.sendMessage("filtersChanged");
+                        Messenger.sendMessage("filtersChanged");
                     });
                 });
     
