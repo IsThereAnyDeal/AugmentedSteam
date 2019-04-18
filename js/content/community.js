@@ -700,12 +700,8 @@ let ProfileHomePageClass = (function(){
 
                     let script = document.createElement("script");
                     script.type = "text/javascript";
-                    script.src = "https://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js";
+                    script.src = ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js");
                     document.body.append(script);
-
-                    script.addEventListener("load", function(){
-                        ExtensionLayer.runInPageContext(() => StartAnimation());
-                    });
 
                     break;
                 case "clear":
