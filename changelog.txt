@@ -1,4 +1,8 @@
 ﻿
+v0.9.7
+-----
+A hotfix for v0.9.6.
+
 v0.9.6
 -----
 Consider this to be RC1 for version 1.0 :)
