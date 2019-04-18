@@ -2893,7 +2893,7 @@ let UserNotes = (function(){
                     </div>
                 </div>`;
         
-        this.notes = SyncedStorage.get("user_notes");
+        this.notes = SyncedStorage.get("user_notes") || {};
     }
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector, onNoteUpdate) {
