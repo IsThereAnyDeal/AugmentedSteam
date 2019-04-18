@@ -777,7 +777,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addUserNote() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showusernotes")) { return; }
 
         let noteText = "";
         let cssClass = "esi-note--hidden";
@@ -2646,7 +2646,7 @@ let WishlistPageClass = (function(){
                         if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
                             continue;
                         }
-                        if (myWishlist && SyncedStorage.get("showwlnotes")) {
+                        if (myWishlist && SyncedStorage.get("showusernotes")) {
                             instance.addUserNote(node);
                         } else {
                             instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist

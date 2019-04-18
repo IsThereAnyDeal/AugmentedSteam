@@ -536,7 +536,7 @@ SyncedStorage.defaults = {
     'hideaboutlinks': false,
     'keepssachecked': false,
     'showemptywishlist': true,
-    'showwlnotes': true,
+    'showusernotes': true,
     'user_notes': {},
     'replaceaccountname': true,
     'showfakeccwarning': true,
