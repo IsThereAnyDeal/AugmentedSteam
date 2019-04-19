@@ -107,8 +107,9 @@ class Background {
                     return;
                 }
                 if (typeof response.error !== 'undefined') {
-                    ProgressBar.failed(response.error);
-                    reject(response.error);
+                    ProgressBar.failed(response.message);
+                    response.localStack = (new Error(message.action)).stack;
+                    reject(response);
                     return;
                 }
                 resolve(response.response);
@@ -122,6 +123,21 @@ class Background {
         return Background.message({ 'action': requested, 'params': params, });
     }
 }
+
+/**
+ * Event handler for uncaught Background errors
+ */
+window.addEventListener('unhandledrejection', function(ev) {
+    let err = ev.reason;
+    if (!err || !err.error) return; // Not a background error
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.group("An error occurred in the background context.");
+    console.error(err.localStack);
+    console.error(err.stack);
+    console.groupEnd();
+});
+
 
 let TimeHelper = (function(){
 
