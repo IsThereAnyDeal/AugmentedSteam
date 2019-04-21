@@ -2859,27 +2859,18 @@ let MarketPageClass = (function(){
         let purchaseTotal = 0;
         let saleTotal = 0;
         let transactions = new Set();
-        let transaction_debug = new Map();
-        let duplicateTransactions = 0;
 
-        function updatePrices(dom, start) {
+        function updatePrices(dom) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
-            console.log('Found', nodes.length, 'nodes')
-
-            let pos = start - 1;
             for (let node of nodes) {
-                ++pos;
                 if (node.id) {
                     if (transactions.has(node.id)) {
-                        duplicateTransactions += 1;
-                        console.warn('Market appears to have duplicate transaction:', pos, node.id);
-                        console.warn('Previously:', transaction_debug.get(node.id));
+                        // Duplicate transaction, don't count in totals twice.
                         continue;
                     } else {
                         transactions.add(node.id);
                     }
-                    transaction_debug.set(node.id, { 'id': node.id, 'position': pos, })
                 } else {
                     console.error('Could not find id of transaction', node);
                 }
@@ -2942,8 +2933,8 @@ let MarketPageClass = (function(){
             request.lastAttempt = Date.now();
             if (request.attempt > 1) {
                 await sleep(2000);
-            } else if (request.attempt > 3) {
-                // Give up after three tries
+            } else if (request.attempt > 4) {
+                // Give up after four tries
                 throw new Error("Could not retrieve market transactions.");
             }
             console.log(url.toString());
@@ -2955,7 +2946,8 @@ let MarketPageClass = (function(){
             let message = dom.querySelector('.market_listing_table_message');
             if (message && message.textContent.includes("try again later")) {
                 pageRequests.push(request);
-                return nextRequest();
+                failedRequests += 1;
+                return;
             }
             
             updatePrices(dom, request.start);
@@ -2974,23 +2966,19 @@ let MarketPageClass = (function(){
                         pageRequests.push({ 'start': start, 'attempt': 0, 'lastAttempt': 0, });
                     }
                 }
-                failedRequests = pageRequests.filter(q => q.attempt > 0).length;
 
-                progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages} (${transactions.size}/${totalCount})`;
+                progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
             }
         } catch (err) {
             console.error(err);
         }
 
-        if (transactions.size == totalCount) {
+        if (failedRequests == 0) {
             progressNode.textContent = '';
             return true;
         }
-        if (failedRequests.length > 0) {
-            progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
-        } else {
-            progressNode.textContent = `Retrieved ${transactions.size} of ${totalCount} transactions.`;
-        }
+
+        progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
         return false;
     }
 
