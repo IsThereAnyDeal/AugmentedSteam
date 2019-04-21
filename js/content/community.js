@@ -2859,13 +2859,29 @@ let MarketPageClass = (function(){
         let purchaseTotal = 0;
         let saleTotal = 0;
         let transactions = new Set();
+        let transaction_debug = new Map();
+        let duplicateTransactions = 0;
 
-        function updatePrices(dom) {
+        function updatePrices(dom, start) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
+            console.log('Found', nodes.length, 'nodes')
+
+            let pos = start - 1;
             for (let node of nodes) {
+                ++pos;
                 if (node.id) {
-                    transactions.add(node);
+                    if (transactions.has(node.id)) {
+                        duplicateTransactions += 1;
+                        console.warn('Market appears to have duplicate transaction:', pos, node.id);
+                        console.warn('Previously:', transaction_debug.get(node.id));
+                        continue;
+                    } else {
+                        transactions.add(node.id);
+                    }
+                    transaction_debug.set(node.id, { 'id': node.id, 'position': pos, })
+                } else {
+                    console.error('Could not find id of transaction', node);
                 }
                 let type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
@@ -2911,28 +2927,71 @@ let MarketPageClass = (function(){
         let pages = -1;
         let currentPage = 0;
         let currentCount = 0;
-        let totalCount;
+        let totalCount = null;
+        let pageRequests = [];
+        let failedRequests = 0;
 
         let progressNode = document.querySelector("#esi_market_stats_progress");
         let url = new URL("/market/myhistory/render/", "https://steamcommunity.com/");
         url.searchParams.set('count', pageSize);
 
-        do {
-            url.searchParams.set('start', currentCount);
-            let data = await RequestData.getJson(url.toString());
-            if (pages < 0) {
-                totalCount = data.total_count;
-                pages = Math.ceil(totalCount / pageSize);
+        async function nextRequest() {
+            let request = pageRequests.shift();
+            url.searchParams.set('start', request.start);
+            request.attempt += 1;
+            request.lastAttempt = Date.now();
+            if (request.attempt > 1) {
+                await sleep(2000);
+            } else if (request.attempt > 3) {
+                // Give up after three tries
+                throw new Error("Could not retrieve market transactions.");
             }
-
-            currentCount += data.pagesize + 1;
+            console.log(url.toString());
+            let data = await RequestData.getJson(url.toString());
 
             let dom = HTMLParser.htmlToDOM(data.results_html);
-            updatePrices(dom);
 
-            progressNode.textContent = `${++currentPage}/${pages} (${transactions.size}/${totalCount})`;
-        } while (currentCount < totalCount);
-        console.log(`Retrieved ${transactions.size} of ${totalCount} transactions.`);
+            // Request may fail with results_html == "\t\t\t\t\t\t<div class=\"market_listing_table_message\">There was an error loading your market history. Please try again later.</div>\r\n\t"
+            let message = dom.querySelector('.market_listing_table_message');
+            if (message && message.textContent.includes("try again later")) {
+                pageRequests.push(request);
+                return nextRequest();
+            }
+            
+            updatePrices(dom, request.start);
+
+            return data.total_count;
+        }
+
+        try {
+            pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
+            while (pageRequests.length > 0) {
+                let t = await nextRequest();
+                if (pages < 0 && t > 0) {
+                    totalCount = t;
+                    pages = Math.ceil(totalCount / pageSize);
+                    for (let start = pageSize; start < totalCount; start += pageSize) {
+                        pageRequests.push({ 'start': start, 'attempt': 0, 'lastAttempt': 0, });
+                    }
+                }
+                failedRequests = pageRequests.filter(q => q.attempt > 0).length;
+
+                progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages} (${transactions.size}/${totalCount})`;
+            }
+        } catch (err) {
+            console.error(err);
+        }
+
+        if (transactions.size == totalCount) {
+            progressNode.textContent = '';
+            return true;
+        }
+        if (failedRequests.length > 0) {
+            progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
+        } else {
+            progressNode.textContent = `Retrieved ${transactions.size} of ${totalCount} transactions.`;
+        }
+        return false;
     }
 
     MarketPageClass.prototype.addMarketStats = async function() {
@@ -2948,15 +3007,23 @@ let MarketPageClass = (function(){
                 </div>`);
 
         let node = document.querySelector("#es_market_summary_status");
-        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`);
+        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`); // FIXME Localize
 
         async function startLoadingStats() {
-            HTML.inner(node, `<img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
-                                <span>${Localization.str.loading} <span id="esi_market_stats_progress"></span>
+            HTML.inner(node, `<img id="es_market_summary_throbber" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                                <span><span id="esi_market_stats_progress_description">${Localization.str.loading} </span><span id="esi_market_stats_progress"></span>
                               </span>`);
-            document.querySelector("#es_market_summary").style.display="block";
-            await loadMarketStats();
-            document.querySelector("#es_market_summary_status").style.display = "none";
+            document.querySelector("#es_market_summary").style.display = null;
+            let success = await loadMarketStats();
+            if (node && success) {
+                node.remove();
+                // node.style.display = "none";
+            } else {
+                let el = document.getElementById('es_market_summary_throbber');
+                if (el) el.remove();
+                el = document.getElementById('esi_market_stats_progress_description');
+                if (el) el.remove();
+            }
         }
 
         document.querySelector("#es_market_summary_button").addEventListener("click", startLoadingStats);
