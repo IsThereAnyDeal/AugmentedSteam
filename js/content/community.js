@@ -2712,6 +2712,12 @@ let FriendsPageClass = (function(){
                 node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
             }
 
+            // Remove the current offline nodes
+            for (let node of document.querySelectorAll('div.persona.offline[data-steamid]')) {
+                node.remove();
+            }
+
+            // So we can replace them in sorted order
             let offlineNode = document.querySelector("#state_offline");
             for (let item of sorted[sortBy]) {
                 offlineNode.insertAdjacentElement("afterend", item[0]);
