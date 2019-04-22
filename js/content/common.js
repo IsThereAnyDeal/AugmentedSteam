@@ -207,20 +207,20 @@ let ExtensionLayer = (function() {
 })();
 
 class Messenger {
-    static sendMessage(msgID, info) {
+    static postMessage(msgID, info) {
         window.postMessage({
             type: "es_" + msgID,
             information: info
-        }, '*');
+        }, window.location.origin);
     }
 
-    static addMessageListener(msgID, fn, autoRemove) {
+    static addMessageListener(msgID, fn, once) {
         let callback = function(e) {
             if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
+            if (!e.data || !e.data.type) { return; }
             if (e.data.type === "es_" + msgID) {
                 fn(e.data.information);
-                if (autoRemove) {
+                if (once) {
                     window.removeEventListener("message", callback);
                 }
             }
@@ -232,7 +232,7 @@ class Messenger {
 // Inject the Messenger class into the DOM, providing the same interface for the page context side
 (function() {
     let script = document.createElement("script");
-    script.textContent = Messenger;
+    script.textContent = Messenger.toString();
     document.documentElement.appendChild(script);
 })();
 
@@ -666,7 +666,7 @@ let Currency = (function() {
     function getCurrencyFromWallet() {
         return new Promise((resolve, reject) => {
             ExtensionLayer.runInPageContext(() =>
-                Messenger.sendMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
+                Messenger.postMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
             );
 
             Messenger.addMessageListener("walletCurrency", walletCurrency => {
@@ -1670,7 +1670,7 @@ let Highlights = (function(){
         }, true);
 
         ExtensionLayer.runInPageContext(() => {
-            GDynamicStore.OnReady(() => Messenger.sendMessage("dynamicStoreReady"));
+            GDynamicStore.OnReady(() => Messenger.postMessage("dynamicStoreReady"));
         });
     };
 

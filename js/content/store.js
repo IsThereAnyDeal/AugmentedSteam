@@ -2731,7 +2731,7 @@ let WishlistPageClass = (function(){
             var prompt = ShowConfirmDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_confirm}\`);
             prompt.done(function(result) {
                 if (result == "OK") {
-                    Messenger.sendMessage("emptyWishlist");
+                    Messenger.postMessage("emptyWishlist");
                     ShowBlockingWaitDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_loading}\`);
                 }
             });
@@ -2756,13 +2756,7 @@ let WishlistPageClass = (function(){
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
-            let promises = [];
-            for (let i=0; i<wishlistData.length; i++) {
-                let appid = wishlistData[i].appid;
-                promises.push(removeApp(appid));
-            }
-
-            Promise.all(promises).finally(() => {
+            Promise.all(wishlistData.map(app => removeApp(app.appid))).finally(() => {
                 DynamicStore.clear();
                 location.reload();
             });
@@ -2850,7 +2844,7 @@ let WishlistPageClass = (function(){
         ExtensionLayer.runInPageContext(() =>
             $J(document).ajaxSuccess(function( event, xhr, settings ) {
                 if (settings.url.endsWith("/remove/")) {
-                    Messenger.sendMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
+                    Messenger.postMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
                 }
             })
         );
@@ -2899,7 +2893,7 @@ let UserNotes = (function(){
 
             Modal.m_fnBackgroundClick = () => {
                 Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
-                Messenger.sendMessage("backgroundClick");
+                Messenger.postMessage("backgroundClick");
             }
 
             Modal.Show();
@@ -2923,7 +2917,7 @@ let UserNotes = (function(){
 
         Messenger.addMessageListener("backgroundClick", () => {
             onNoteUpdate.apply(null, saveNote());
-            Messenger.sendMessage("noteSaved");
+            Messenger.postMessage("noteSaved");
         }, true);
 
         function clickListener(e) {

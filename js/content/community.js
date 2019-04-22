@@ -1594,7 +1594,7 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext(`() => Messenger.sendMessage("sendFee", {feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"})`);
+                ExtensionLayer.runInPageContext(`() => Messenger.postMessage("sendFee", {feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"})`);
             });
         }
     }
@@ -1729,7 +1729,7 @@ let InventoryPageClass = (function(){
                     market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
 
-                Messenger.sendMessage("sendMessage", [
+                Messenger.postMessage("sendMessage", [
                     iActiveSelectView,
                     g_ActiveInventory.selectedItem.description.marketable,
                     g_ActiveInventory.appid,
