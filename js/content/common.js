@@ -1618,9 +1618,9 @@ let Highlights = (function(){
             ".friend_game_block",                           // "Friends recently bought"
             "div.recommendation",                           // Curator pages and the new DLC pages
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
+            "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
             ".home_marketing_message",                      // "Updates and offers"
-            "div.item_ctn",                                 // Curator list item
             "div.dlc_page_purchase_dlc",	                // DLC page rows
             "div.sale_page_purchase_item",	                // Sale pages
             "div.item",						                // Sale pages / featured pages
