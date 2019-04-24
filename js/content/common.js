@@ -1444,7 +1444,8 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }`);
+                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }
+                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
             });
 
             let style = document.createElement('style');
