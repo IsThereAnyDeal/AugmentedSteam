@@ -455,7 +455,8 @@
             "turkish": "Turkish",
             "ukrainian": "Ukrainian"
         },
-        "add_custom_link": "Add custom link"
+        "add_custom_link": "Add custom link",
+        "auto_detect": "Auto-detect"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",

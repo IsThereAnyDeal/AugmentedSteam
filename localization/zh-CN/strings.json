@@ -455,7 +455,8 @@
             "turkish": "土耳其语",
             "ukrainian": "乌克兰语"
         },
-        "add_custom_link": "添加自定义链接"
+        "add_custom_link": "添加自定义链接",
+        "auto_detect": "自动检测"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
