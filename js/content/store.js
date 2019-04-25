@@ -929,10 +929,12 @@ class AppPageClass extends StorePageClass {
 
             HTML.beforeEnd("#game_area_opencritic",
             `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
-                   <div><img src='${opencriticImg}'></div>
-                   <div class='oc_text'>${award} -
-                       <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                   </div>`);
+                <div><img src='${opencriticImg}'></div>
+                <div class='oc_text'>
+                    ${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>
+                        ${Localization.str.read_reviews}
+                    </a>
+                </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
