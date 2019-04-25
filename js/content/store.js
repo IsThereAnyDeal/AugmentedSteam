@@ -930,7 +930,7 @@ class AppPageClass extends StorePageClass {
             HTML.beforeEnd("#game_area_opencritic",
             `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
                    <div><img src='${opencriticImg}'></div>
-                   <div class='oc_text'>${award} - 
+                   <div class='oc_text'>${award} -
                        <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
                    </div>`);
 
@@ -1200,7 +1200,7 @@ class AppPageClass extends StorePageClass {
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-        
+
         if (SyncedStorage.get("showcompletionistme")) {
             let cls = "completionistme_btn";
             let url = "https://completionist.me/steam/app/" + this.appid;
@@ -1220,7 +1220,7 @@ class AppPageClass extends StorePageClass {
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-        
+
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
             let cls = "cardexchange_btn";
@@ -1294,7 +1294,9 @@ class AppPageClass extends StorePageClass {
                 html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
             html += '</div>';
-            html += '<span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span>';
+            html += '<span class="chart-footer">';
+                html += Localization.str.powered_by.replace('__link__', '<a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a>');
+            html += '</span>';
             html += '</div>';
 
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
@@ -1335,7 +1337,9 @@ class AppPageClass extends StorePageClass {
                 html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
             html += "</div>";
-            html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
+            html += "<span class='chart-footer' style='padding-right: 13px;'>";
+                html += Localization.str.powered_by.replace("__link__", "<a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a>")
+            html += "</span>";
             html += "</div>";
 
         HTML.beforeBegin(".sys_req", html);
@@ -1567,7 +1571,7 @@ class AppPageClass extends StorePageClass {
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
-            
+
             // grap badge and game cards
             // when there is no badge (e.g. dlc), badge_gamecard_page class won't appear
             let badge = dummy.querySelector(".badge_gamecard_page");
@@ -1599,7 +1603,7 @@ class AppPageClass extends StorePageClass {
 
             let show_card_num = (card_num_owned > 0 && !badge_completed);
             let is_normal_badge = targetSelector === ".es_normal_badge_progress";
-            
+
             if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
                 document.querySelector(".es_badges_progress_block").style.display = 'block';
                 blockSel.style.display = "block";
@@ -1705,7 +1709,7 @@ class AppPageClass extends StorePageClass {
         style.textContent = `body.v6 h2 { letter-spacing: normal; text-transform: none; }`;
         document.head.appendChild(style);
         style = null;
-    
+
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
         });
@@ -1731,7 +1735,7 @@ class AppPageClass extends StorePageClass {
         customizer.add("reviews", "#game_area_reviews");
         customizer.add("about", "#game_area_description");
         customizer.add("contentwarning", "#game_area_content_descriptors");
-        
+
         customizer.add("steamchart", "#steam-charts");
         customizer.add("surveys", "#performance_survey");
         customizer.add("steamspy", "#steam-spy");
@@ -2509,7 +2513,7 @@ let SearchPageClass = (function(){
             });
             contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
         }
-        
+
         let observer = new MutationObserver(mutations => {
             if (SyncedStorage.get("contscroll")) {
                 mutations.forEach(mutation => {
@@ -2522,7 +2526,7 @@ let SearchPageClass = (function(){
                     }
                 })
             }
-            
+
             EarlyAccess.showEarlyAccess();
             Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
 
@@ -2650,7 +2654,7 @@ let WishlistPageClass = (function(){
                 HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
-        
+
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
@@ -2892,7 +2896,7 @@ let UserNotes = (function(){
                         </div>
                     </div>
                 </div>`;
-        
+
         this.notes = SyncedStorage.get("user_notes") || {};
     }
 
@@ -2935,7 +2939,7 @@ let UserNotes = (function(){
 
             // attach the deferred's events to the modal
             deferred.promise(Modal);
-            
+
             let note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
@@ -3030,7 +3034,7 @@ let UserNotes = (function(){
 let TagPageClass = (function(){
 
     function TagPageClass() {
-        
+
     }
 
     return TagPageClass;
@@ -3070,7 +3074,7 @@ let StoreFrontPageClass = (function(){
     };
 
     StoreFrontPageClass.prototype.highlightDelayed = function() {
-        
+
         // The "Recently updated" section will only get loaded once the user scrolls down
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
@@ -3093,7 +3097,7 @@ let StoreFrontPageClass = (function(){
                     })
                 );
             });
-    
+
             observer.observe(contentNode, {childList:true, subtree: true});
         }
     };

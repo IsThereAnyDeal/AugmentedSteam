@@ -560,5 +560,9 @@
         "add_prompt": "Enter your note",
         "update_prompt": "Update your note",
         "add_for_game": "Note for __gamename__"
-    }
+    },
+    "this_version": "This version",
+    "original_authors": "Original authors",
+    "powered_by": "Powered by __link__"
+
 }
