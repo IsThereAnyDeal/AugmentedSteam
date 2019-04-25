@@ -2768,7 +2768,7 @@ let MarketListingPageClass = (function(){
                 ${Localization.str.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
             </div>`;
 
-        HTML.beforeEnd(".market_commodity_orders_header, .jqplot-title, .market_section_title", soldHtml);
+        HTML.beforeBegin(".market_commodity_buy_button", soldHtml);
 
         /* TODO where is this observer applied?
         let observer = new MutationObserver(function(){
