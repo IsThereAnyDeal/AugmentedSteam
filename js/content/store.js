@@ -1338,7 +1338,7 @@ class AppPageClass extends StorePageClass {
                 html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
             html += "</div>";
             html += "<span class='chart-footer' style='padding-right: 13px;'>";
-                html += Localization.str.powered_by.replace("__link__", "<a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a>")
+                html += Localization.str.powered_by.replace("__link__", "<a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a>");
             html += "</span>";
             html += "</div>";
 
