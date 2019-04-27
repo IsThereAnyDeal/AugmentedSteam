@@ -1491,18 +1491,18 @@ let InventoryPageClass = (function(){
     }
 
     function updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency) {
-
+        let quickSell = document.getElementById("es_quicksell" + assetId);
+        let instantSell = document.getElementById("es_instantsell" + assetId);
+        
         // Add Quick Sell button
-        if (priceHighValue && priceHighValue > priceLowValue) {
-            let quickSell = document.querySelector("#es_quicksell" + assetId);
+        if (quickSell && priceHighValue && priceHighValue > priceLowValue) {
             quickSell.dataset.price = priceHighValue;
             quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
             quickSell.style.display = "block";
         }
 
         // Add Instant Sell button
-        if (priceLowValue) {
-            let instantSell = document.querySelector("#es_instantsell" + assetId);
+        if (instantSell && priceLowValue) {
             instantSell.dataset.price = priceLowValue;
             instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
             instantSell.style.display = "block";
@@ -1531,8 +1531,6 @@ let InventoryPageClass = (function(){
                 let priceLowValue = thisItem.dataset.priceLow;
 
                 updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency);
-
-                thisItem.classList.remove("es-loading");
             } else {
                 let result = await RequestData.getHttp(url);
 
@@ -1560,13 +1558,14 @@ let InventoryPageClass = (function(){
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
-                        thisItem.classList.add("es-price-loaded");
                         updateMarketButtons(assetId, priceHigh, priceLow, walletCurrency);
                     }
 
-                    thisItem.classList.remove("es-loading");
+                    thisItem.classList.add("es-price-loaded");
                 }
             }
+            // Loading request either succeeded or failed, no need to flag as still in progress
+            thisItem.classList.remove("es-loading");
         }
 
         // Bind actions to "Quick Sell" and "Instant Sell" buttons
