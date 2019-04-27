@@ -1493,7 +1493,7 @@ let InventoryPageClass = (function(){
     function updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency) {
 
         // Add Quick Sell button
-        if (priceHighValue) {
+        if (priceHighValue && priceHighValue > priceLowValue) {
             let quickSell = document.querySelector("#es_quicksell" + assetId);
             quickSell.dataset.price = priceHighValue;
             quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
