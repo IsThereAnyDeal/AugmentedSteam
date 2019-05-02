@@ -455,7 +455,8 @@
             "turkish": "Turkish",
             "ukrainian": "Ukrainian"
         },
-        "add_custom_link": "Add custom link"
+        "add_custom_link": "Add custom link",
+        "auto_detect": "Auto-detect"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
@@ -560,5 +561,9 @@
         "add_prompt": "Enter your note",
         "update_prompt": "Update your note",
         "add_for_game": "Note for __gamename__"
-    }
+    },
+    "this_version": "This version",
+    "original_authors": "Original authors",
+    "powered_by": "Powered by __link__"
+
 }
