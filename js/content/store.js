@@ -2101,8 +2101,7 @@ let SearchPageClass = (function(){
     function SearchPageClass() {
         this.endlessScrolling();
         this.addExcludeTagsToSearch();
-        this.addHideButtonsToSearch();
-        this.observeChanges();
+        this.addHideButtonsToSearch().then(() => this.observeChanges());
     }
 
     let processing = false;
@@ -2382,25 +2381,18 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        if (!SyncedStorage.get("contscroll")) {
-            let hiddenInput = document.getElementById("es_hide");
-            function modifyLinks() {
-                for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
-                    let params = new URLSearchParams(linkElement.href.substring(linkElement.href.indexOf('?')));
-                    if (hiddenInput.value) {
-                        params.set("es_hide", hiddenInput.value);
-                    } else {
-                        params.delete("es_hide");
-                    }
-                    linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
-                }
-            }
-            let observer = new MutationObserver(modifyLinks);
-            observer.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
-            Messenger.addMessageListener("ajaxCompleted", modifyLinks, false);
-        }
-
         Messenger.addMessageListener("filtersChanged", filtersChanged, false);
+        Messenger.addMessageListener("priceAbove", priceVal => {
+            if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
+                if (currency.format.decimalSeparator === ',') {
+                    priceVal = priceVal.replace('.', ',');
+                }
+                document.getElementById("es_notpriceabove_val").value = priceVal;
+                Messenger.sendMessage("priceValueChanged");
+            } else {
+                console.warn("Failed to validate price %s from URL params!", priceVal);
+            }
+        }, true);
 
         // Thrown together from sources of searchpage.js
         ExtensionLayer.runInPageContext(`() => {
@@ -2409,122 +2401,188 @@ let SearchPageClass = (function(){
 
                 // Callback that will fire when the user browses through pages
                 ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.sendMessage("ajaxCompleted") });` : ""}
-                
+
                 // For each AS hide filter
                 $J(".tab_filter_control[id^='es_']").each(function() {
                     let $Control = $J(this);
+                    $Control.click(() => updateURL($Control));
+                });
+
+                function updateURL($Control, forcedState) {
+
                     let strParam = $Control.data("param");
                     let value = $Control.data("value");
-        
-                    $Control.click(() => {
-                        let strValues = decodeURIComponent($J('#' + strParam).val());
-                        value = String(value); // Javascript: Dynamic types except sometimes not.
-                        if (!$Control.hasClass("checked")) {
-                            let rgValues;
-                            if(!strValues) {
-                                rgValues = [value];
+                    let strValues = decodeURIComponent($J('#' + strParam).val());
+                    value = String(value); // Javascript: Dynamic types except sometimes not.
+                    if (!$Control.hasClass("checked")) {
+                        let rgValues;
+                        if(!strValues) {
+                            if (typeof forcedState !== "undefined" && !forcedState) {
+                                rgValues = [];
                             } else {
-                                rgValues = strValues.split(',');
-                                if($J.inArray(value, rgValues) === -1) {
-                                    rgValues.push(value)
-                                }  
+                                if (value === "price-above") {
+                                    rgValues = [value + $J("#es_notpriceabove_val").val().replace(',', '.')];
+                                } else {
+                                    rgValues = [value];
+                                }
                             }
-        
-                            $J('#' + strParam).val(rgValues.join(','));
-                            $Control.addClass("checked");
                         } else {
-                            let rgValues = strValues.split(',');
-                            if(rgValues.indexOf(value) !== -1) {
-                                rgValues.splice( rgValues.indexOf(value), 1 );
+                            rgValues = strValues.split(',');
+
+                            if (!(typeof forcedState !== "undefined" && !forcedState)) {
+                                if (value === "price-above") {
+                                    let found = false;
+                                    for (let rgValue in rgValues) {
+                                        if (rgValue.startsWith(value)) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        rgValues.push(value + $J("#es_notpriceabove_val").val().replace(',', '.'));
+                                    }
+                                } else {
+                                    if ($J.inArray(value, rgValues) === -1) {
+                                        rgValues.push(value)
+                                    }
+                                }
                             }
+                            
+                        }
     
-                            $J('#' + strParam).val(rgValues.join(','));
+                        $J('#' + strParam).val(rgValues.join(','));
+
+                        if (typeof forcedState !== "undefined") {
+                            if (forcedState) {
+                                $Control.addClass("checked");
+                            }
+                        } else {
+                            $Control.addClass("checked");
+                        }
+                    } else {
+                        let rgValues = strValues.split(',');
+
+                        if (value === "price-above") {
+                            for (let i = 0; i < rgValues.length; ++i) {
+                                if (rgValues[i].startsWith("price-above")) {
+                                    if (typeof forcedState !== "undefined" && forcedState) {
+                                        rgValues[i] = "price-above" + $J("#es_notpriceabove_val").val().replace(',', '.');
+                                    } else {
+                                        rgValues.splice(i, 1);
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (!(typeof forcedState !== "undefined" && forcedState)) {
+                                if (rgValues.indexOf(value) !== -1) {
+                                    rgValues.splice(rgValues.indexOf(value), 1);
+                                }
+                            }
+                        }
+
+                        $J('#' + strParam).val(rgValues.join(','));
+
+                        if (typeof forcedState !== "undefined") {
+                            if (!forcedState) {
+                                $Control.removeClass("checked");
+                            }
+                        } else {
                             $Control.removeClass("checked");
                         }
-    
-                        let rgParameters = GatherSearchParameters();
-    
-                        // remove snr for history purposes
-                        delete rgParameters["snr"];
-                        if (rgParameters["sort_by"] === "_ASC") {
-                            delete rgParameters["sort_by"];
-                        }
-                        if (rgParameters["page"] === 1 || rgParameters["page"] === '1')
-                            delete rgParameters["page"];
-    
-                        // don't want this on the url either
-                        delete rgParameters["hide_filtered_results_warning"];
-    
-                        if (g_bUseHistoryAPI) {
-                            history.pushState({ params: rgParameters}, '', '?' + Object.toQueryString( rgParameters ) );
+                    }
+
+                    let rgParameters = GatherSearchParameters();
+
+                    // remove snr for history purposes
+                    delete rgParameters["snr"];
+                    if (rgParameters["sort_by"] === "_ASC") {
+                        delete rgParameters["sort_by"];
+                    }
+                    if (rgParameters["page"] === 1 || rgParameters["page"] === '1')
+                        delete rgParameters["page"];
+
+                    // don't want this on the url either
+                    delete rgParameters["hide_filtered_results_warning"];
+
+                    if (g_bUseHistoryAPI) {
+                        history.pushState({ params: rgParameters}, '', '?' + Object.toQueryString(rgParameters));
+                    } else {
+                        window.location = '#' + Object.toQueryString(rgParameters);
+                    }
+
+                    $J(".tag_dynamic").remove();
+                    $J("#termsnone").show();
+                    let rgActiveTags = $J(".tab_filter_control.checked");
+
+                    // Search term
+                    let strTerm = $J("#realterm").val();
+                    if(strTerm) {
+                        AddSearchTag("term", strTerm, '"'+strTerm+'"', function(tag) { $J("#realterm").val(''); $J("#term").val(''); AjaxSearchResults(); return false; });
+                        $J("#termsnone").hide();
+                    }
+
+                    // Publisher
+                    let strPublisher = $J("#publisher").val();
+                    if(strPublisher) {
+                        AddSearchTag("publisher", strPublisher, "Publisher" + ": "+strPublisher, function(tag) { $J("#publisher").val(''); AjaxSearchResults(); return false; });
+                        $J("#termsnone").hide();
+                    }
+
+                    // Developer
+                    let strDeveloper = $J("#developer").val();
+                    if(strDeveloper) {
+                        AddSearchTag("publisher", strDeveloper, "Developer" + ": " + strDeveloper, function(tag) { $J("#developer").val(''); AjaxSearchResults(); return false; });
+                        $J("#termsnone").hide();
+                    }
+
+                    rgActiveTags.each(function() {
+                        let Tag = this;
+                        let $Tag = $J(this);
+                        let label;
+
+                        if ($Tag.is("[id*='es_']")) {
+                            label = "${Localization.str.hide_filter}".replace("__filter__", $J(".tab_filter_control_label", Tag).text());
                         } else {
-                            window.location = '#' + Object.toQueryString( rgParameters );
+                            label = $J(".tab_filter_control_label", Tag).text();
                         }
-    
-                        (function UpdateCustomTags() {
-                            $J(".tag_dynamic").remove();
-                            $J("#termsnone").show();
-                            let rgActiveTags = $J(".tab_filter_control.checked");
-    
-                            // Search term
-                            let strTerm = $J("#realterm").val();
-                            if( strTerm )
-                            {
-                                AddSearchTag( "term", strTerm, '"'+strTerm+'"', function(tag) { $J("#realterm").val(''); $J("#term").val(''); AjaxSearchResults(); return false; } );
-                                $J("#termsnone").hide();
-                            }
-    
-                            // Publisher
-                            let strPublisher = $J("#publisher").val();
-                            if( strPublisher )
-                            {
-                                AddSearchTag( "publisher", strPublisher, "Publisher" + ": "+strPublisher, function(tag) { $J("#publisher").val(''); AjaxSearchResults(); return false; } );
-                                $J("#termsnone").hide();
-                            }
-    
-                            // Developer
-                            let strDeveloper = $J("#developer").val();
-                            if( strDeveloper )
-                            {
-                                AddSearchTag("publisher", strDeveloper, "Developer" + ": " + strDeveloper, function(tag) { $J("#developer").val(''); AjaxSearchResults(); return false; } );
-                                $J("#termsnone").hide();
-                            }
-    
-                            rgActiveTags.each(function() {
-                                let Tag = this;
-                                let $Tag = $J(this);
-                                let label;
-    
-                                if ($Tag.is("[id*='es_']")) {
-                                    label = "${Localization.str.hide_filter}".replace("__filter__", $J(".tab_filter_control_label", Tag).text());
-                                } else {
-                                    label = $J(".tab_filter_control_label", Tag).text();
-                                }
-                                AddSearchTag($Tag.data("param"), $Tag.data("value"), label, function(tag) { return function() { tag.click(); return false; } }(Tag) );
-                                if (!$Tag.is(":visible"))
-                                {
-                                    $Tag.parent().prepend($Tag.show());
-                                    $Tag.trigger( "tablefilter_update" );
-                                }
-                                $J("#termsnone").hide();
-                            });
-                        })();
-                        Messenger.sendMessage("filtersChanged");
+                        AddSearchTag($Tag.data("param"), $Tag.data("value"), label, function(tag) { return function() { tag.click(); return false; } }(Tag) );
+                        if (!$Tag.is(":visible"))
+                        {
+                            $Tag.parent().prepend($Tag.show());
+                            $Tag.trigger( "tablefilter_update" );
+                        }
+                        $J("#termsnone").hide();
                     });
-                });
+                    Messenger.sendMessage("filtersChanged");
+                }
     
                 for (let [key, value] of new URLSearchParams(window.location.search)) {
                     if (key === "es_hide") {
                         for (let filterValue of value.split(',')) {
                             let filter = $J(".tab_filter_control[data-value='" + filterValue + "']");
-                            if (filter) {
-                                filter.click();
-                            } else {
-                                console.warn("Invalid filter value %s", filterValue);
+                            if (!filter.length) {
+                                if (filterValue.startsWith("price-above")) {
+                                    let priceValue = /price-above(.+)/.exec(filterValue)[1];
+                                    if (!priceValue) {
+                                        console.warn("Didn't set a value for the price filter!");
+                                        continue;
+                                    }
+                                    filter = $J(".tab_filter_control[data-value=price-above]");
+                                    Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
+                                    Messenger.sendMessage("priceAbove", priceValue);
+                                    continue;
+                                } else {
+                                    console.warn("Invalid filter value %s", filterValue);
+                                    continue;
+                                }
                             }
+                            filter.click();
                         }
                     }
                 }
+
+                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
             });
         }`);
 
@@ -2551,12 +2609,13 @@ let SearchPageClass = (function(){
         priceAboveVal.addEventListener("input", () => {
             let newValue = priceAboveVal.value;
             let toggleValue = (newValue !== "");
-            priceFilterCheckbox.classList.toggle("checked", toggleValue);
 
             if (inputPattern.test(newValue)) {
-                filtersChanged();
+                // The "checked" class will be toggled by the page context code
+                Messenger.sendMessage("priceChanged", toggleValue);
                 priceAboveVal.setCustomValidity('');
             } else {
+                priceFilterCheckbox.classList.toggle("checked", toggleValue);
                 priceAboveVal.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
             }
 
@@ -2565,6 +2624,34 @@ let SearchPageClass = (function(){
     };
 
     SearchPageClass.prototype.observeChanges = function() {
+
+        let hiddenInput = document.getElementById("es_hide");
+
+        function modifyLinks() {
+            for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
+                let params = new URLSearchParams(linkElement.href.substring(linkElement.href.indexOf('?')));
+                if (hiddenInput.value) {
+                    params.set("es_hide", hiddenInput.value);
+                } else {
+                    params.delete("es_hide");
+                }
+                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+            }
+        }
+
+        function togglePriceAboveFilter() {
+            let params = new URLSearchParams(window.location.search);
+            if (params.has("es_hide")) {
+                decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
+                    if (filter.startsWith("price-above")) {
+                        document.getElementById("es_notpriceabove").classList.add("checked");
+                    }
+                });
+            }
+        }
+            
+        let inputObserver = new MutationObserver(modifyLinks);
+        inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
         let contscrollObserver;
         if (SyncedStorage.get("contscroll")) {
@@ -2578,7 +2665,7 @@ let SearchPageClass = (function(){
             contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
         }
 
-        let observer = new MutationObserver(mutations => {
+        Messenger.addMessageListener("ajaxCompleted", () => {
             if (SyncedStorage.get("contscroll")) {
                 mutations.forEach(mutation => {
                     for (let node of mutation.removedNodes) {
@@ -2589,14 +2676,16 @@ let SearchPageClass = (function(){
                         }
                     }
                 })
+            } else {
+                togglePriceAboveFilter();
+                modifyLinks();
             }
 
             EarlyAccess.showEarlyAccess();
 
             Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
             filtersChanged();
-        });
-        observer.observe(document.getElementById("search_results"), {childList: true});
+        }, false);
     };
 
     return SearchPageClass;
