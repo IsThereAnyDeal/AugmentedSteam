@@ -89,7 +89,7 @@ class AugmentedSteamApi extends Api {
         return super.getEndpoint(endpoint, query)
             .then(function(json) {
                 if (!json.result || json.result !== "success") {
-                    throw `Could not retrieve '${endpoint}'`;
+                    throw new Error(`Could not retrieve '${endpoint}'`);
                 }
                 delete json.result;
                 return json; // 'response': response, 
@@ -109,7 +109,7 @@ class AugmentedSteamApi extends Api {
                 key = keyfn(params);
             }
             if (typeof key == 'undefined') {
-                throw `Can't cache '${endpoint}' with undefined key`;
+                throw new Error(`Can't cache '${endpoint}' with undefined key`);
             }
             if (self._progressingRequests.has(key)) {
                 return self._progressingRequests.get(key);
@@ -137,7 +137,7 @@ class AugmentedSteamApi extends Api {
                 key = keyfn(params);
             }
             if (typeof key == 'undefined') {
-                throw `Can't clear undefined key from cache`;
+                throw new Error(`Can't clear undefined key from cache`);
             }
             self._progressingRequests.delete(key);
             CacheStorage.remove(key);
@@ -271,7 +271,7 @@ class SteamStore extends Api {
 
         let currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
-            throw "Store currency could not be determined from app 220";
+            throw new Error("Store currency could not be determined from app 220");
         }
 
         return currency.getAttribute("content");
@@ -283,7 +283,7 @@ class SteamStore extends Api {
         if (cache) return cache;
         let currency = await self.currencyFromWallet();
         if (!currency) { currency = await self.currencyFromApp(); }
-        if (!currency) { throw "Could not retrieve store currency"; }
+        if (!currency) { throw new Error("Could not retrieve store currency"); }
         CacheStorage.set('currency', currency);
         return currency;
     }
@@ -299,7 +299,7 @@ class SteamStore extends Api {
         let node = dummyPage.querySelector("#dselect_user_country");
         if (node && node.value)
             return node.value;
-        throw "Could not retrieve country";
+        throw new Error("Could not retrieve country");
     }
 
     static async sessionId() {
@@ -350,10 +350,10 @@ class SteamStore extends Api {
     static async purchase({ 'params': params, }) {
         let self = SteamStore;
         if (!params || !params.appName) {
-            throw 'Purchases endpoint expects an appName';
+            throw new Error('Purchases endpoint expects an appName');
         }
         if (!params || !params.lang) {
-            throw 'Purchases endpoint requires language to be specified';
+            throw new Error('Purchases endpoint requires language to be specified');
         }
         let lang = params.lang;
         let key = `purchases_${lang}`;
@@ -405,12 +405,12 @@ class SteamCommunity extends Api {
     static async coupons() { // context#3
         let self = SteamCommunity;
         let login = LocalStorage.get('login');
-        if (!login) throw `Must be signed in to access Inventory`;
+        if (!login) throw new Error(`Must be signed in to access Inventory`);
 
         let coupons = CacheStorage.get('inventory_3', 3600);
         if (!coupons) {
             let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/3/`, { 'l': 'en', });
-            if (!data || !data.success) throw `Could not retrieve Inventory 753/3`;
+            if (!data || !data.success) throw new Error(`Could not retrieve Inventory 753/3`);
             coupons = {};
 
             for(let [id, obj] of Object.entries(data.rgDescriptions)) {
@@ -462,7 +462,7 @@ class SteamCommunity extends Api {
             let gifts = [], passes = [];
 
             let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/1/`, { 'l': 'en', });
-            if (!data || !data.success) throw `Could not retrieve Inventory 753/1`;
+            if (!data || !data.success) throw new Error(`Could not retrieve Inventory 753/1`);
 
             for(let [key, obj] of Object.entries(data.rgDescriptions)) {
                 let isPackage = false;
@@ -513,7 +513,7 @@ class SteamCommunity extends Api {
         let inventory = CacheStorage.get('inventory_6', 3600);
         if (!inventory) {
             inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/`, { 'l': 'en', });
-            if (!inventory || !inventory.success) throw `Could not retrieve Inventory 753/6`;
+            if (!inventory || !inventory.success) throw new Error(`Could not retrieve Inventory 753/6`);
 
             CacheStorage.set('inventory_6', inventory);
         }
@@ -528,12 +528,12 @@ class SteamCommunity extends Api {
         let self = SteamCommunity;
         if (!params || !params.path) {
             self.logout();
-            throw "Login endpoint needs profile url";
+            throw new Error("Login endpoint needs profile url");
         }
         let url = new URL(params.path, "https://steamcommunity.com/");
         if (!params.path.startsWith('/id/') && !params.path.startsWith('/profiles/')) {
             self.logout();
-            throw `Could not interpret '${params.path}' as a profile`;
+            throw new Error(`Could not interpret '${params.path}' as a profile`);
         }
         let login = LocalStorage.get('login');
         if (login && login.profilePath === params.path) {
@@ -586,7 +586,7 @@ class Steam {
         self._dynamicstore_promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
             .then(function(dynamicstore) {
                 if (!dynamicstore.rgOwnedApps) {
-                    throw "Could not fetch DynamicStore UserData";
+                    throw new Error("Could not fetch DynamicStore UserData");
                 }
                 CacheStorage.set("dynamicstore", dynamicstore);
                 self._dynamicstore_promise = null; // no request in progress
@@ -677,6 +677,8 @@ let actionCallbacks = new Map([
     ['inventory.coupons', SteamCommunity.coupons], // #3
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
+
+    ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
@@ -696,7 +698,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         .then(response => sendResponse({ 'response': response, }))
         .catch(function(err) {
             console.error(err, message.action);
-            sendResponse({ 'error': "An error occurred in the background context." + message.action}) // can't JSONify most exceptions
+            let response = {
+                'error': true,
+                'message': "An unknown error occurred.",
+                'action': message.action,
+            };
+            if (typeof err == 'string') {
+                response.message = err;
+            } else if (err instanceof Error) {
+                // JSON.stringify(Error) == "{}"
+                response.message = err.message;
+                response.stack = err.stack;
+            } else {
+                response.message = err.toString();
+                response.stack = (new Error()).stack;
+            }
+            sendResponse(response);
         });
 
     // keep channel open until callback resolves
