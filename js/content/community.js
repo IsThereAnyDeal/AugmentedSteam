@@ -303,6 +303,16 @@ let ProfileActivityPageClass = (function(){
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
+        if (window.location.hash === "#as-success") {
+            /* TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
+             *      That's why when we clear profile before going to API to store changes we don't get updated images
+             *      when we get back.
+             *      clearOwn shouldn't immediately reload.
+             *
+             *      Also, we are hoping for the best here, we should probably await?
+             */
+            ProfileData.clearOwn();
+        }
         ProfileData.promise();
         this.addCommunityProfileLinks();
         this.addWishlistProfileLink();
@@ -690,12 +700,8 @@ let ProfileHomePageClass = (function(){
 
                     let script = document.createElement("script");
                     script.type = "text/javascript";
-                    script.src = "https://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js";
+                    script.src = ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js");
                     document.body.append(script);
-
-                    script.addEventListener("load", function(){
-                        ExtensionLayer.runInPageContext(() => StartAnimation());
-                    });
 
                     break;
                 case "clear":
@@ -814,22 +820,13 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(?:\?tab=(all|recent))?/);
+        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
 
-        switch(page[2]) {
-            case "recent":
-            case undefined:
-                User.then(() => {
-                    if (User.profilePath === page[1]) {
-                        this.addGamelistAchievements(page[1]);
-                    }
-                });
-                break;
-            case "all":
-                this.computeStats();
-                this.handleCommonGames();
-                this.addGamelistAchievements(page[1]);
-        }        
+        if (page[2]) {
+            this.computeStats();
+            this.handleCommonGames();
+            this.addGamelistAchievements(page[1]);
+        }
     }
 
     // Display total time played for all games
@@ -2272,8 +2269,10 @@ let BadgesPageClass = (function(){
         HTML.afterBegin("#wishlist_sort_options",
             "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
-        document.querySelector("#es_badge_all").addEventListener("click", function(e) {
-            document.querySelector(".is_link").style.display = "block";
+        document.querySelector("#es_badge_all").addEventListener("click", () => {
+            for (let badge of document.querySelectorAll(".is_link")) {
+                badge.style.display = "block";
+            }
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
             document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeout
             resetLazyLoader();

@@ -1,5 +1,5 @@
 const Info = {
-    'version': "0.9.5",
+    'version': "0.9.7",
 };
 
 /**
@@ -112,16 +112,17 @@ class Version {
 class UpdateHandler {
 
     static checkVersion() {
-        Background.action("version.previous").then(
-            previousVersion => {
-                if (previousVersion && !Version.fromString(previousVersion).isCurrent()) {
-                    if (SyncedStorage.get("version_show")) {
-                        this._showChangelog();
-                    }
-                    this._migrateSettings(previousVersion);
-                }
+        let lastVersion = Version.fromString(SyncedStorage.get("version"));
+        let currentVersion = Version.fromString(Info.version);
+
+        if (currentVersion.isAfter(lastVersion)) {
+            if (SyncedStorage.get("version_show")) {
+                this._showChangelog();
             }
-        )
+            this._migrateSettings(lastVersion);
+        }
+
+        SyncedStorage.set("version", Info.version);
     };
 
     static _showChangelog() {
@@ -139,8 +140,7 @@ class UpdateHandler {
         );
     }
 
-    static _migrateSettings(lastVersion) {
-        let oldVersion = Version.fromString(lastVersion);
+    static _migrateSettings(oldVersion) {
 
         if (oldVersion.isSameOrBefore("0.9.4")) {
 
@@ -419,6 +419,7 @@ SyncedStorage.cache = {};
 SyncedStorage.defaults = {
     'language': "english",
 
+    'version': Info.version,
     'version_show': true,
 
     'highlight_owned_color': "#598400",
@@ -613,7 +614,7 @@ class ExtensionResources {
  * Default RegExp: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i;
  */
 (function() {
-    DOMPurify.setConfig({ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i});
+    DOMPurify.setConfig({ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i});
 })();
 
 class HTML {
