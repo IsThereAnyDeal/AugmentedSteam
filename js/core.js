@@ -218,7 +218,7 @@ class UpdateHandler {
             }
             SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
             SyncedStorage.remove("wishlist_notes");
-        } else if (oldVersion.isSameOrBefore("0.9.6")) {
+        } else if (oldVersion.isSameOrBefore("0.9.7")) {
             SyncedStorage.remove("hide_wishlist");
             SyncedStorage.remove("hide_cart");
             SyncedStorage.remove("hide_notdiscounted");
