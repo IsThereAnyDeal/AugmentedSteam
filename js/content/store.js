@@ -1714,7 +1714,6 @@ class AppPageClass extends StorePageClass {
         document.head.appendChild(stylesheet);
 
         let style = document.createElement('style');
-        style.textContent = `body.v6 h2 { letter-spacing: normal; text-transform: none; }`;
         document.head.appendChild(style);
         style = null;
     
