@@ -2341,12 +2341,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #market_commodity_orders_header {
 	position: relative;
 }
-.market_commodity_orders_header .es_sold_amount {
-	position: absolute;
-	top: 36px;
-	right: 0;
-	left: 0;
-}
 .market_section_title .es_sold_amount {
 	font-size: 16px !important;
 }
