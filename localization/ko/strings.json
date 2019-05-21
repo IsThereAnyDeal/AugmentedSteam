@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Augmented Steam 데이터 로딩 오류",
         "loading": "Augmented Steam 데이터 로딩중...",
-        "ready": "Augmented Steam 준비",
-        "failed": "하나 이상의 요청이 실패함:"
+        "ready": "Augmented Steam 준비"
     },
     "twitch": {
         "now_streaming": "__username__는 트위치에서 라이브 스트리밍 중",

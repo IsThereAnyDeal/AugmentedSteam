@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Chyba při načítání Augmented Steam dat",
         "loading": "Augmented Steam načítá data...",
-        "ready": "Augmented Steam je připravený.",
-        "failed": "Jeden nebo více požadavků selhalo:"
+        "ready": "Augmented Steam je připravený."
     },
     "twitch": {
         "now_streaming": "__username__ živě steamuje na Twitch",

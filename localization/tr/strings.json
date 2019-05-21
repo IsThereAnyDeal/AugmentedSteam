@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
         "loading": "Augmented Steam verileri yüklüyor...",
-        "ready": "Augmented Steam hazır",
-        "failed": "Bir veya daha fazla istek başarısız oldu:"
+        "ready": "Augmented Steam hazır"
     },
     "twitch": {
         "now_streaming": "__username__ Twitch üzerinden canlı yayın yapıyor",

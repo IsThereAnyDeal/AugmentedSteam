@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Hiba az Augmented Steam adatbetöltése közben",
         "loading": "Augmented Steam betölti az adatokat...",
-        "ready": "Augmented Steam kész",
-        "failed": "Egy vagy több lekérés sikertelen:"
+        "ready": "Augmented Steam kész"
     },
     "twitch": {
         "now_streaming": "__username__ éppen közvetít a Twitch-en",

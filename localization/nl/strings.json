@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
         "loading": "Augmented Steam is gegevens aan het laden...",
-        "ready": "Augmented Steam gereed",
-        "failed": "Een of meer aanvragen mislukt:"
+        "ready": "Augmented Steam gereed"
     },
     "twitch": {
         "now_streaming": "__username__ is aan het livestreamen op Twitch",

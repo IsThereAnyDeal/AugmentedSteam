@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Virhe ladatessa Augmented Steamin tietoja",
         "loading": "Augmented Steam lataa tietoja...",
-        "ready": "Augmented Steam on valmis",
-        "failed": "Yksi tai useampi pyyntö epäonnistui:"
+        "ready": "Augmented Steam on valmis"
     },
     "twitch": {
         "now_streaming": "__username__ on lähettämässä suoraa lähetystä Twitchissä",

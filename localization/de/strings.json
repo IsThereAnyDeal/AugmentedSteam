@@ -444,8 +444,7 @@
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
         "loading": "Augmented Steam lädt Daten...",
-        "ready": "Augmented Steam ist bereit",
-        "failed": "Eine oder mehrere Anfragen sind gescheitert:"
+        "ready": "Augmented Steam ist bereit"
     },
     "twitch": {
         "now_streaming": "__username__ ist live auf Twitch",

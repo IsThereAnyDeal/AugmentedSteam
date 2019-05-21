@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Грешка при зареждане на данните на Augmented Steam",
         "loading": "Зареждане на данните на Augmented Steam...",
-        "ready": "Augmented Steam e готов",
-        "failed": "Една или повече заявки не успя:"
+        "ready": "Augmented Steam e готов"
     },
     "twitch": {
         "now_streaming": "__username__ стриймва в Twitch",
