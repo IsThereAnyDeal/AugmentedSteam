@@ -27,15 +27,9 @@ body {
 }
 
 .notification {
-	float:right;
-	font-size: 2em;
-	font-weight: bold;
-	padding:24px;
+	height: 4em;
+	padding: 24px;
 	display:none;
-}
-
-#saved {
-	color:#8BC53F;
 }
 
 #reset_note {
