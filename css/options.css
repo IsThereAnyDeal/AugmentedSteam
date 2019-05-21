@@ -20,6 +20,12 @@ body {
 	margin-left: 170px;
 }
 
+#notifications {
+	position: sticky;
+	top: 0;
+	margin-left: auto;
+}
+
 .notification {
 	float:right;
 	font-size: 2em;
