@@ -263,8 +263,6 @@ let ProfileActivityPageClass = (function(){
                 } else {
                     continue;
                 }
-
-                link.style = "border-radius: 5px";
             }
         }
     };
