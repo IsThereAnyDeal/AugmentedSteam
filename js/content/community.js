@@ -303,6 +303,16 @@ let ProfileActivityPageClass = (function(){
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
+        if (window.location.hash === "#as-success") {
+            /* TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
+             *      That's why when we clear profile before going to API to store changes we don't get updated images
+             *      when we get back.
+             *      clearOwn shouldn't immediately reload.
+             *
+             *      Also, we are hoping for the best here, we should probably await?
+             */
+            ProfileData.clearOwn();
+        }
         ProfileData.promise();
         this.addCommunityProfileLinks();
         this.addWishlistProfileLink();
@@ -722,12 +732,8 @@ let ProfileHomePageClass = (function(){
 
                     let script = document.createElement("script");
                     script.type = "text/javascript";
-                    script.src = "https://steamcommunity-a.akamaihd.net/public/javascript/holidayprofile.js";
+                    script.src = ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js");
                     document.body.append(script);
-
-                    script.addEventListener("load", function(){
-                        ExtensionLayer.runInPageContext(() => StartAnimation());
-                    });
 
                     break;
                 case "clear":
@@ -846,22 +852,13 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(?:\?tab=(all|recent))?/);
+        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
 
-        switch(page[2]) {
-            case "recent":
-            case undefined:
-                User.then(() => {
-                    if (User.profilePath === page[1]) {
-                        this.addGamelistAchievements(page[1]);
-                    }
-                });
-                break;
-            case "all":
-                this.computeStats();
-                this.handleCommonGames();
-                this.addGamelistAchievements(page[1]);
-        }        
+        if (page[2]) {
+            this.computeStats();
+            this.handleCommonGames();
+            this.addGamelistAchievements(page[1]);
+        }
     }
 
     // Display total time played for all games
@@ -1526,18 +1523,18 @@ let InventoryPageClass = (function(){
     }
 
     function updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency) {
-
+        let quickSell = document.getElementById("es_quicksell" + assetId);
+        let instantSell = document.getElementById("es_instantsell" + assetId);
+        
         // Add Quick Sell button
-        if (priceHighValue) {
-            let quickSell = document.querySelector("#es_quicksell" + assetId);
+        if (quickSell && priceHighValue && priceHighValue > priceLowValue) {
             quickSell.dataset.price = priceHighValue;
             quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
             quickSell.style.display = "block";
         }
 
         // Add Instant Sell button
-        if (priceLowValue) {
-            let instantSell = document.querySelector("#es_instantsell" + assetId);
+        if (instantSell && priceLowValue) {
             instantSell.dataset.price = priceLowValue;
             instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
             instantSell.style.display = "block";
@@ -1566,8 +1563,6 @@ let InventoryPageClass = (function(){
                 let priceLowValue = thisItem.dataset.priceLow;
 
                 updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency);
-
-                thisItem.classList.remove("es-loading");
             } else {
                 let result = await RequestData.getHttp(url);
 
@@ -1595,13 +1590,14 @@ let InventoryPageClass = (function(){
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
-                        thisItem.classList.add("es-price-loaded");
                         updateMarketButtons(assetId, priceHigh, priceLow, walletCurrency);
                     }
 
-                    thisItem.classList.remove("es-loading");
+                    thisItem.classList.add("es-price-loaded");
                 }
             }
+            // Loading request either succeeded or failed, no need to flag as still in progress
+            thisItem.classList.remove("es-loading");
         }
 
         // Bind actions to "Quick Sell" and "Instant Sell" buttons
@@ -2314,8 +2310,10 @@ let BadgesPageClass = (function(){
         HTML.afterBegin("#wishlist_sort_options",
             "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
 
-        document.querySelector("#es_badge_all").addEventListener("click", function(e) {
-            document.querySelector(".is_link").style.display = "block";
+        document.querySelector("#es_badge_all").addEventListener("click", () => {
+            for (let badge of document.querySelectorAll(".is_link")) {
+                badge.style.display = "block";
+            }
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
             document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeout
             resetLazyLoader();
@@ -2745,6 +2743,12 @@ let FriendsPageClass = (function(){
                 node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
             }
 
+            // Remove the current offline nodes
+            for (let node of document.querySelectorAll('div.persona.offline[data-steamid]')) {
+                node.remove();
+            }
+
+            // So we can replace them in sorted order
             let offlineNode = document.querySelector("#state_offline");
             for (let item of sorted[sortBy]) {
                 offlineNode.insertAdjacentElement("afterend", item[0]);
@@ -2801,7 +2805,7 @@ let MarketListingPageClass = (function(){
                 ${Localization.str.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
             </div>`;
 
-        HTML.beforeEnd(".market_commodity_orders_header, .jqplot-title, .market_section_title", soldHtml);
+        HTML.beforeBegin(".market_commodity_buy_button", soldHtml);
 
         /* TODO where is this observer applied?
         let observer = new MutationObserver(function(){

@@ -107,8 +107,9 @@ class Background {
                     return;
                 }
                 if (typeof response.error !== 'undefined') {
-                    ProgressBar.failed(response.error);
-                    reject(response.error);
+                    ProgressBar.failed(response.message);
+                    response.localStack = (new Error(message.action)).stack;
+                    reject(response);
                     return;
                 }
                 resolve(response.response);
@@ -122,6 +123,21 @@ class Background {
         return Background.message({ 'action': requested, 'params': params, });
     }
 }
+
+/**
+ * Event handler for uncaught Background errors
+ */
+window.addEventListener('unhandledrejection', function(ev) {
+    let err = ev.reason;
+    if (!err || !err.error) return; // Not a background error
+    ev.preventDefault();
+    ev.stopPropagation();
+    console.group("An error occurred in the background context.");
+    console.error(err.localStack);
+    console.error(err.stack);
+    console.groupEnd();
+});
+
 
 let TimeHelper = (function(){
 
@@ -1444,7 +1460,8 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }`);
+                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }
+                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
             });
 
             let style = document.createElement('style');
@@ -1618,9 +1635,9 @@ let Highlights = (function(){
             ".friend_game_block",                           // "Friends recently bought"
             "div.recommendation",                           // Curator pages and the new DLC pages
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
+            "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
             ".home_marketing_message",                      // "Updates and offers"
-            "div.item_ctn",                                 // Curator list item
             "div.dlc_page_purchase_dlc",	                // DLC page rows
             "div.sale_page_purchase_item",	                // Sale pages
             "div.item",						                // Sale pages / featured pages
