@@ -4,9 +4,7 @@ class SaveIndicator {
     static show() {
         let node = document.getElementById('saved');
         if (!node) { return; }
-        HTML.fadeIn(node)
-            .then(() => sleep(600))
-            .then(() => HTML.fadeOut(node));
+        HTML.fadeInFadeOut(node);
     }
 
 }
@@ -340,10 +338,7 @@ let Options = (function(){
         // FIXME $("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
         let node = document.getElementById('reset_note');
         if (node) {
-            HTML.fadeIn(node)
-                .then(() => sleep(600))
-                .then(() => HTML.fadeOut(node))
-                ;
+            HTML.fadeInFadeOut(node);
         }
     }
 

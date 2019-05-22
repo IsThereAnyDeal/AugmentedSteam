@@ -738,13 +738,19 @@ class HTML {
         });
     }
 
-    static fadeIn(node, duration=400) {
+    static fadeIn(node, duration = 400) {
         return HTML.applyCSSTransition(node, 'opacity', 0, 1, duration, null);
     }
 
-    static fadeOut(node, duration=400) {
+    static fadeOut(node, duration = 400) {
         return HTML.applyCSSTransition(node, 'opacity', 1, 0, duration, null)
             .then((node) => { node.style.display = 'none'; return node; });
+    }
+
+    static fadeInFadeOut(node, fadeInDuration = 400, fadeOutDuration = 400, idleDuration = 600) {
+        return HTML.fadeIn(node, fadeInDuration)
+            .then(() => sleep(idleDuration))
+            .then(() => HTML.fadeOut(node, fadeOutDuration));
     }
 }
 
