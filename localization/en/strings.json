@@ -560,5 +560,9 @@
         "add_prompt": "Enter your note",
         "update_prompt": "Update your note",
         "add_for_game": "Note for __gamename__"
+    },
+    "queue": {
+        "new": "New Queue",
+        "new_tooltip": "Remove this product from your queue and start a new queue."
     }
 }
