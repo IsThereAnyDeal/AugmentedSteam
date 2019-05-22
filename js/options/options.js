@@ -351,7 +351,7 @@ let Options = (function(){
 
         let nodes = document.querySelectorAll("#region_selects div.country_parent");
         for (let node of nodes) {
-            nodes[i].remove();
+            node.remove();
         }
 
         Region.populateRegionalSelects();
