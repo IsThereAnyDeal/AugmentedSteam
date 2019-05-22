@@ -524,7 +524,7 @@ class AppPageClass extends StorePageClass {
 
         this.moveUsefulLinks();
         this.addLinks("app");
-        this.addHighlights();
+        this.addTitleHighlight();
         this.addFamilySharingWarning();
         this.removeAboutLink();
 
@@ -1235,11 +1235,23 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    addHighlights() {
-        if (!SyncedStorage.get("highlight_owned")) { return; }
+    async addTitleHighlight() {
+        await Promise.all([DynamicStore, Inventory]);
 
-        if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
-            document.querySelector(".apphub_AppName").style.color = SyncedStorage.get("highlight_owned_color");
+        let title = document.querySelector(".apphub_AppName");
+
+        if (DynamicStore.isOwned(this.appid)) {
+            Highlights.highlightOwned(title);
+        } else if (Inventory.hasGuestPass(this.appid)) {
+            Highlights.highlightInvGuestpass(title);
+        } else if (Inventory.getCouponByAppId(this.appid)) {
+            Highlights.highlightCoupon(title);
+        } else if (Inventory.hasGift(this.appid)) {
+            Highlights.highlightInvGift(title);
+        } else if (DynamicStore.isWishlisted(this.appid)) {
+            Highlights.highlightWishlist(title);
+        } else if (DynamicStore.isIgnored(this.appid)) {
+            Highlights.highlightNotInterested(title);
         }
     }
 
@@ -2875,7 +2887,7 @@ let UserNotes = (function(){
                     </div>
                 </div>`;
         
-        this.notes = SyncedStorage.get("user_notes");
+        this.notes = SyncedStorage.get("user_notes") || {};
     }
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector, onNoteUpdate) {
