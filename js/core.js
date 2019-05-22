@@ -725,8 +725,11 @@ class HTML {
         node.style[prop] = finalValue;
 
         return new Promise(function (resolve, reject) {
-            function transitionEnd(ev) {
-                node.style.transition = '';
+            function transitionEnd() {
+                // Check if there isn't already another transition for the same property ongoing
+                if (node.style[prop] == finalValue) {
+                    node.style.transition = '';
+                }
                 resolve(node);
                 if (callback) {
                     callback(node);
@@ -744,13 +747,23 @@ class HTML {
 
     static fadeOut(node, duration = 400) {
         return HTML.applyCSSTransition(node, 'opacity', 1, 0, duration, null)
-            .then((node) => { node.style.display = 'none'; return node; });
+            .then(() => {
+                // Setting display to none while another transition is running causes unwanted behavior
+                if (!node.style.transition || node.style.transition === "none") {
+                    node.style.display = "none";
+                }
+            });
     }
 
     static fadeInFadeOut(node, fadeInDuration = 400, fadeOutDuration = 400, idleDuration = 600) {
         return HTML.fadeIn(node, fadeInDuration)
             .then(() => sleep(idleDuration))
-            .then(() => HTML.fadeOut(node, fadeOutDuration));
+            .then(() => {
+                // Don't fade out when there's already another transition fading in
+                if (!node.style.transition || node.style.transition === "none") {
+                    return HTML.fadeOut(node, fadeOutDuration);
+                }
+            });
     }
 }
 
