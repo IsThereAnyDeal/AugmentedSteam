@@ -593,15 +593,14 @@ let ProfileHomePageClass = (function(){
             };
 
             // Build SteamRep section
-            let statusInfo = document.querySelector(".profile_header_content");
-            if (!statusInfo) return;
+            HTML.beforeEnd(".profile_header_summary", '<div id="es_steamrep"></div>');
 
-            HTML.beforeBegin(statusInfo, '<div id="es_steamrep"></div>');
-
-            let currentHighestPriority = 4;
             let steamrepElement = document.getElementById("es_steamrep");
             let priorities = ["bad", "caution", "good", "neutral"];
             let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
+
+            backgroundStyle.paddingBottom = "20px";
+            backgroundStyle.backgroundSize = "cover";
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
@@ -627,19 +626,11 @@ let ProfileHomePageClass = (function(){
                             break;
                     }
 
-                    if (priority < currentHighestPriority) {
-                        steamrepElement.className = priorities[priority];
-                        currentHighestPriority = priority;
-                    }
-
                     HTML.beforeEnd(steamrepElement,
                         `<div class="${priorities[priority]}">
                             <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
-
-                    backgroundStyle.paddingBottom = "20px";
-                    backgroundStyle.backgroundSize = "cover";
                         
                     return;
                 }
