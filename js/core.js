@@ -573,7 +573,7 @@ SyncedStorage.defaults = {
     'profile_astatsnl': true,
     'profile_permalink': true,
     'profile_custom_link': [
-        { 'enabled': false, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
+        { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
     'steamcardexchange': true,
     'purchase_dates': true,
