@@ -518,6 +518,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.addYouTubeGameplay();
         this.addYouTubeReviews();
         this.displayPurchaseDate();
 
@@ -1004,6 +1005,55 @@ class AppPageClass extends StorePageClass {
         });
     }
 
+    addYouTubeGameplay() {
+
+        document.querySelector(".highlight_ctn").insertAdjacentHTML("afterend",
+            `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
+                src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
+                allowfullscreen>
+            </iframe>`);
+
+        HTML.afterBegin("#game_highlights",
+            `<div id="es_media_tabs">
+                <div class="store_horizontal_minislider_ctn" style="height: 31px;">
+                    <div class="home_tabs_row">
+                        <div id="es_tab_steammedia" class="home_tab active">
+                            <div class="tab_content">Steam</div>
+                        </div>
+                        <div id="es_tab_youtubemedia" class="home_tab">
+                            <div class="tab_content">YouTube Gameplay</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+
+        let youTubeTab = document.getElementById("es_tab_youtubemedia");
+        let steamTab = document.getElementById("es_tab_steammedia");
+
+        let youTubeMedia = document.getElementById("es_youtube_gameplay_player");
+        let steamMedia = document.querySelector(".highlight_ctn");
+
+        youTubeTab.addEventListener("click", () => {
+            steamMedia.style.display = "none";
+            steamTab.classList.remove("active");
+
+            youTubeMedia.style.display = "block";
+            youTubeTab.classList.add("active");
+
+            ExtensionLayer.runInPageContext(() => SteamOnWebPanelHidden());
+        });
+
+        steamTab.addEventListener("click", () => {
+            youTubeMedia.style.display = "none";
+            youTubeTab.classList.remove("active");
+
+            steamMedia.style.display = "block";
+            steamTab.classList.add("active");
+
+            ExtensionLayer.runInPageContext(() => SteamOnWebPanelShown());
+        });
+    }
+
     addYouTubeReviews() {
         let reviewsNode = document.querySelector("#game_area_reviews");
         if (!reviewsNode) {
@@ -1021,8 +1071,8 @@ class AppPageClass extends StorePageClass {
         }
 
         document.getElementById("es_youtube_reviews").innerHTML = 
-            `<iframe id="es_youtube_player" type="text/html"
-                src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game_review)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
+            `<iframe id="es_youtube_reviews_player" class="es_youtube_player" type="text/html"
+                src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.review)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
                 allowfullscreen>
             </iframe>`;
     }

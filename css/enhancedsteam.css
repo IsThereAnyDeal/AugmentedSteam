@@ -80,14 +80,14 @@ img.platform_small, .platform_img {
 	display: block !important;
 }
 
-#es_youtube_reviews {
-	margin-top: 20px;
+.es_youtube_player {
+	border: none;
+	width: 600px;
+	height: 337.5px;
 }
 
-#es_youtube_player {
-	width: 600px;
-	height: 338px;
-	border: none;
+#es_youtube_reviews {
+	margin-top: 20px;
 }
 
 .chart-stat {
