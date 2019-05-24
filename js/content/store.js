@@ -1017,10 +1017,10 @@ class AppPageClass extends StorePageClass {
             `<div id="es_media_tabs">
                 <div class="store_horizontal_minislider_ctn" style="height: 31px;">
                     <div class="home_tabs_row">
-                        <div id="es_tab_steammedia" class="home_tab active">
+                        <div id="es_tab_steammedia" class="es_media_tab home_tab active">
                             <div class="tab_content">Steam</div>
                         </div>
-                        <div id="es_tab_youtubemedia" class="home_tab">
+                        <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
                             <div class="tab_content">YouTube Gameplay</div>
                         </div>
                     </div>

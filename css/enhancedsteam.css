@@ -90,6 +90,10 @@ img.platform_small, .platform_img {
 	margin-top: 20px;
 }
 
+.es_media_tab.active .tab_content {
+	background-color: #0003 !important;
+}
+
 .chart-stat {
 	float: left;
 	text-align: center;
