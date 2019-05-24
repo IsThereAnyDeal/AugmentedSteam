@@ -518,6 +518,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.addYouTubeReviews();
         this.displayPurchaseDate();
 
         this.addWidescreenCertification();
@@ -966,16 +967,24 @@ class AppPageClass extends StorePageClass {
             if (data.reviews.length > 0) {
                 let reviewsNode = document.querySelector("#game_area_reviews");
                 if (reviewsNode) {
-                    let node = reviewsNode.querySelector("p");
-                    HTML.afterBegin(node, "<div id='es_opencritic_reviews'></div>");
-                    HTML.beforeEnd(node,  `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`);
+                    HTML.beforeBegin(reviewsNode.querySelector("p"), "<div id='es_opencritic_reviews'></div>");
+
+                    let youTubeReviews = document.getElementById("es_youtube_reviews");
+                    let htmlString = `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`;
+
+                    if (youTubeReviews) {
+                        HTML.beforeBegin(youTubeReviews, htmlString);
+                    } else {
+                        HTML.beforeEnd(reviewsNode);
+                    }
                 } else {
-                    HTML.beforeBegin("#game_area_description",
-                    `<div id='game_area_reviews' class='game_area_description'>
+                    HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
+                        `<div id='game_area_reviews' class='game_area_description'>
                             <h2>${Localization.str.reviews}</h2>
-                            <div id='es_opencritic_reviews'></div>
-                            <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
-                          </div>`);
+                            <div id='es_opencritic_reviews'>
+                                <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
+                            </div>
+                        </div>`);
 
                     if (!SyncedStorage.get("customize_apppage").reviews) {
                         document.querySelector("#game_area_reviews").style.display = "none";
@@ -989,10 +998,33 @@ class AppPageClass extends StorePageClass {
                     review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
                 }
 
-                HTML.beforeEnd("#es_opencritic_reviews", review_text);
+                HTML.afterBegin("#es_opencritic_reviews", review_text);
                 ExtensionLayer.runInPageContext(() => BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ));
             }
         });
+    }
+
+    addYouTubeReviews() {
+        let reviewsNode = document.querySelector("#game_area_reviews");
+        if (!reviewsNode) {
+            HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
+                `<div id="game_area_reviews" class="game_area_description">
+                    <h2>${Localization.str.reviews}</h2>
+                    <p id="es_youtube_reviews"></p>
+                </div>`);
+
+            if (!SyncedStorage.get("customize_apppage").reviews) {
+                document.querySelector("#game_area_reviews").style.display = "none";
+            }
+        } else {
+            HTML.beforeEnd(reviewsNode, '<p id="es_youtube_reviews"></p>');
+        }
+
+        document.getElementById("es_youtube_reviews").innerHTML = 
+            `<iframe id="es_youtube_player" type="text/html"
+                src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game_review)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
+                allowfullscreen>
+            </iframe>`;
     }
 
     displayPurchaseDate() {

@@ -80,6 +80,16 @@ img.platform_small, .platform_img {
 	display: block !important;
 }
 
+#es_youtube_reviews {
+	margin-top: 20px;
+}
+
+#es_youtube_player {
+	width: 600px;
+	height: 338px;
+	border: none;
+}
+
 .chart-stat {
 	float: left;
 	text-align: center;
@@ -106,6 +116,7 @@ img.platform_small, .platform_img {
 	font-size: 11px;
 	float: right;
 	padding-top: 5px;
+	margin-bottom: 20px;
 }
 .apphub_HeaderTop.es_greenlight {
 	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
