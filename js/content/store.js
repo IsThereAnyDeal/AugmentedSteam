@@ -1010,14 +1010,14 @@ class AppPageClass extends StorePageClass {
             HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
                 `<div id="game_area_reviews" class="game_area_description">
                     <h2>${Localization.str.reviews}</h2>
-                    <p id="es_youtube_reviews"></p>
+                    <div id="es_youtube_reviews"></div>
                 </div>`);
 
             if (!SyncedStorage.get("customize_apppage").reviews) {
                 document.querySelector("#game_area_reviews").style.display = "none";
             }
         } else {
-            HTML.beforeEnd(reviewsNode, '<p id="es_youtube_reviews"></p>');
+            HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
         }
 
         document.getElementById("es_youtube_reviews").innerHTML = 

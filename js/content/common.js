@@ -1067,7 +1067,7 @@ let EnhancedSteam = (function() {
         if(community){
             selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
         } else {
-            selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
+            selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
         }
 
         // Replaces "R", "C" and "TM" signs
