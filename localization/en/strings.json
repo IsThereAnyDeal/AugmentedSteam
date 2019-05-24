@@ -380,6 +380,8 @@
         "saved_note": "Options saved",
         "regional_hideworld": "Hide globe indicator",
         "show_astatslink": "Show AStats link on app pages",
+        "show_youtubegameplay": "Show YouTube gameplay videos on app pages",
+        "show_youtubereviews": "Show YouTube review videos on app pages",
         "showclient": "Show Steam Client links",
         "guest": "Items you have a guest pass for",
         "show_steamchart_info": "Show SteamCharts.com info",

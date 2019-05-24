@@ -1007,6 +1007,8 @@ class AppPageClass extends StorePageClass {
 
     addYouTubeGameplay() {
 
+        if (!SyncedStorage.get("showyoutubegameplay")) { return; }
+
         document.querySelector(".highlight_ctn").insertAdjacentHTML("afterend",
             `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
                 src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
@@ -1055,6 +1057,9 @@ class AppPageClass extends StorePageClass {
     }
 
     addYouTubeReviews() {
+
+        if (!SyncedStorage.get("showyoutubereviews")) { return; }
+
         let reviewsNode = document.querySelector("#game_area_reviews");
         if (!reviewsNode) {
             HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
