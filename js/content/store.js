@@ -3265,7 +3265,7 @@ let StoreFrontPageClass = (function(){
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
                 .add("gamesstreamingnow", ".live_streams_ctn")
                 .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
-                .add("updatesandoffers", ".marketingmessage_area")
+                .add("updatesandoffers", ".marketingmessage_area", null, true)
                 .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
