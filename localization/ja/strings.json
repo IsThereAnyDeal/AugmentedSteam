@@ -444,8 +444,7 @@
     "ready": {
         "errormsg": "Augmented Steam のデータロードエラー",
         "loading": "Augmented Steam がデータをロード中……",
-        "ready": "Augmented Steam 準備完了",
-        "failed": "1つ以上のリクエストが失敗しました:"
+        "ready": "Augmented Steam 準備完了"
     },
     "twitch": {
         "now_streaming": "__username__ はTwitchで配信中です",

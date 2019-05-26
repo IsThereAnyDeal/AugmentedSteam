@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Σφάλμα κατά τη φόρτωση δεδομένων Augmented Steam",
         "loading": "Φόρτωση δεδομένων Augmented Steam...",
-        "ready": "Το Augmented Steam είναι έτοιμο",
-        "failed": "Μία ή περισσότερες αιτήσεις απέτυχαν:"
+        "ready": "Το Augmented Steam είναι έτοιμο"
     },
     "twitch": {
         "now_streaming": "__username__ κάνει απευθείας μετάδοση στο Twitch",

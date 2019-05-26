@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "พบข้อผิดพลาดในการโหลดข้อมูล Augmented Steam",
         "loading": "Augmented Steam กำลังโหลดข้อมูล...",
-        "ready": "Augmented Steam พร้อมใช้งาน",
-        "failed": "คำร้องล้มเหลวหนึ่งคำร้องหรือมากกว่า:"
+        "ready": "Augmented Steam พร้อมใช้งาน"
     },
     "twitch": {
         "now_streaming": "__username__ กำลังสตรีมสดบน Twitch",

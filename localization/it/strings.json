@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Errore nel caricamento di Augmented Steam",
         "loading": "Caricamento di Augmented Steam in corso...",
-        "ready": "Augmented Steam pronto",
-        "failed": "Una o più richieste sono fallite:"
+        "ready": "Augmented Steam pronto"
     },
     "twitch": {
         "now_streaming": "__username__ è in diretta su Twitch",

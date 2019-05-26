@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Błąd wczytywania danych Augmented Steam",
         "loading": "Wczytywanie danych Augmented Steam...",
-        "ready": "Augmented Steam jest gotowy",
-        "failed": "Jedno lub więcej żądań nie powiodło się:"
+        "ready": "Augmented Steam jest gotowy"
     },
     "twitch": {
         "now_streaming": "__username__ streamuje teraz na Twitchu",

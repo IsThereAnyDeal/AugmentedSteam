@@ -779,7 +779,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addUserNote() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showusernotes")) { return; }
 
         let noteText = "";
         let cssClass = "esi-note--hidden";
@@ -800,18 +800,18 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterEnd(".queue_control_button.queue_btn_ignore",
             ` <div class="queue_control_button js-user-note-button">
-                <div class="btnv6_blue_hoverfade  btn_medium queue_btn_inactive" style="${inactiveStyle}">
+                <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
                 </div>
-                <div class="btnv6_blue_hoverfade  btn_medium queue_btn_active" style="${activeStyle}">
+                <div id="es_update_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${activeStyle}">
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
-            button.querySelector(".queue_btn_inactive").style.display = active ? "none" : null;
-            button.querySelector(".queue_btn_active").style.display = active ? null : "none";
+            button.querySelector("#es_add_note").style.display = active ? "none" : null;
+            button.querySelector("#es_update_note").style.display = active ? null : "none";
 
             node.classList.toggle("esi-note--hidden", !active);
         }
@@ -957,10 +957,10 @@ class AppPageClass extends StorePageClass {
 
             HTML.beforeEnd("#game_area_opencritic",
             `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
-                   <div><img src='${opencriticImg}'></div>
-                   <div class='oc_text'>${award} - 
-                       <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                   </div>`);
+                <div><img src='${opencriticImg}'></div>
+                <div class='oc_text'>
+                    ${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
+                </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
@@ -1228,7 +1228,7 @@ class AppPageClass extends StorePageClass {
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-        
+
         if (SyncedStorage.get("showcompletionistme")) {
             let cls = "completionistme_btn";
             let url = "https://completionist.me/steam/app/" + this.appid;
@@ -1248,7 +1248,7 @@ class AppPageClass extends StorePageClass {
                 `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
-        
+
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
             let cls = "cardexchange_btn";
@@ -1334,7 +1334,9 @@ class AppPageClass extends StorePageClass {
                 html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
             html += '</div>';
-            html += '<span class="chart-footer">Powered by <a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a></span>';
+            html += '<span class="chart-footer">';
+                html += Localization.str.powered_by.replace('__link__', '<a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a>');
+            html += '</span>';
             html += '</div>';
 
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
@@ -1375,7 +1377,9 @@ class AppPageClass extends StorePageClass {
                 html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
                 html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
             html += "</div>";
-            html += "<span class='chart-footer' style='padding-right: 13px;'>Powered by <a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a></span>";
+            html += "<span class='chart-footer' style='padding-right: 13px;'>";
+                html += Localization.str.powered_by.replace("__link__", "<a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a>");
+            html += "</span>";
             html += "</div>";
 
         HTML.beforeBegin(".sys_req", html);
@@ -1607,7 +1611,7 @@ class AppPageClass extends StorePageClass {
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
-            
+
             // grap badge and game cards
             // when there is no badge (e.g. dlc), badge_gamecard_page class won't appear
             let badge = dummy.querySelector(".badge_gamecard_page");
@@ -1639,7 +1643,7 @@ class AppPageClass extends StorePageClass {
 
             let show_card_num = (card_num_owned > 0 && !badge_completed);
             let is_normal_badge = targetSelector === ".es_normal_badge_progress";
-            
+
             if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
                 document.querySelector(".es_badges_progress_block").style.display = 'block';
                 blockSel.style.display = "block";
@@ -1741,11 +1745,6 @@ class AppPageClass extends StorePageClass {
         stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
         document.head.appendChild(stylesheet);
 
-        let style = document.createElement('style');
-        style.textContent = `body.v6 h2 { letter-spacing: normal; text-transform: none; }`;
-        document.head.appendChild(style);
-        style = null;
-    
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
         });
@@ -1771,7 +1770,7 @@ class AppPageClass extends StorePageClass {
         customizer.add("reviews", "#game_area_reviews");
         customizer.add("about", "#game_area_description");
         customizer.add("contentwarning", "#game_area_content_descriptors");
-        
+
         customizer.add("steamchart", "#steam-charts");
         customizer.add("surveys", "#performance_survey");
         customizer.add("steamspy", "#steam-spy");
@@ -2141,8 +2140,7 @@ let SearchPageClass = (function(){
     function SearchPageClass() {
         this.endlessScrolling();
         this.addExcludeTagsToSearch();
-        this.addHideButtonsToSearch();
-        this.observeChanges();
+        this.addHideButtonsToSearch().then(() => this.observeChanges());
     }
 
     let processing = false;
@@ -2260,7 +2258,7 @@ let SearchPageClass = (function(){
                  </div>
                  <div class='block_content block_content_inner'>
                     <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
-                    <input type="text" id="es_tagfilter_exclude_suggest" class="blur es_input_text">
+                    <input type="text" id="es_tagfilter_exclude_suggest" class="es_input">
                 </div>
             </div>`);
 
@@ -2312,7 +2310,7 @@ let SearchPageClass = (function(){
         }
 
         ExtensionLayer.runInPageContext(() =>
-            $J('#es_tagfilter_exclude_container').tableFilter({ maxvisible: 15, control: '#es_tagfilter_exclude_suggest', dataattribute: 'loc', 'defaultText': jQuery("#TagSuggest")[0].value })
+            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value")})
         );
 
         let observer = new MutationObserver(function(mutations) {
@@ -2332,32 +2330,30 @@ let SearchPageClass = (function(){
         ExtensionLayer.runInPageContext(() => UpdateTags());
     };
 
-    function applyPriceFilter(node) {
-        let hidePriceAbove = SyncedStorage.get("hide_priceabove");
-        let priceAboveValue = SyncedStorage.get("priceabove_value");
-
-        if (hidePriceAbove
-            && priceAboveValue !== ""
-            && !(Number.isNaN(priceAboveValue))) {
-
-            let html = node.querySelector("div.col.search_price.responsive_secondrow").innerHTML;
-            let intern = html.replace(/<([^ >]+)[^>]*>.*?<\/\1>/, "").replace(/<\/?.+>/, "");
-            let parsed = Price.parseFromString(intern.trim(), Currency.storeCurrency);
-            if (parsed && parsed.value > priceAboveValue) {
-                node.style.display = "none";
+    function isPriceAbove(node, priceAbove) {
+        
+        let priceValues = node.querySelector(".search_price").innerText.replace(/,/g, '.').trim().match(/^\d+\.\d*/gm);
+        let priceString;
+        
+        if (priceValues) {
+            // Discounted price
+            if (priceValues[1]) {
+                priceString = priceValues[1];
+            // Non-discounted
+            } else if (priceValues[0]) {
+                priceString = priceValues[0];
             }
+        } else {
+            // App without price
+            return false;
         }
 
-        if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
-            loadSearchResults();
-        }
+        return Number(priceString) > priceAbove ? true : false;
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-
-            node.style.display = "block";
+        let priceAbove = Number(document.getElementById("es_notpriceabove_val").value.replace(',', '.'));
+        for (let node of nodes) {
             if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
@@ -2365,178 +2361,336 @@ let SearchPageClass = (function(){
             if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notpriceabove.checked")) { applyPriceFilter(node); }
+            if (document.querySelector("#es_notpriceabove.checked") && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
+            node.style.display = "block";
         }
     }
 
-    SearchPageClass.prototype.addHideButtonsToSearch = function() {
+    SearchPageClass.prototype.addHideButtonsToSearch = async function() {
 
         let currency = CurrencyRegistry.storeCurrency;
         let inputPattern = currency.regExp();
         let pricePlaceholder = currency.placeholder();
 
+        await User;
+
         HTML.afterBegin("#advsearchform .rightcol",
-            `<div class='block' id='es_hide_menu'>
-                <div class='block_header'><div>${Localization.str.hide}</div></div>
-                <div class='block_content block_content_inner' style='height: 150px;' id='es_hide_options'>
-                    <div class='tab_filter_control' id='es_owned_games'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.options.owned}</span>
+            `<div class="block" id="es_hide_menu">
+                <div class="block_header"><div>${Localization.str.hide}</div></div>
+                <div class="block_content block_content_inner" id="es_hide_options">
+                    ${User.isSignedIn ? `<div class="tab_filter_control" id="es_owned_games" data-param="es_hide" data-value="owned">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.options.owned}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_wishlist_games'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.options.wishlist}</span>
+                    <div class="tab_filter_control" id="es_wishlist_games" data-param="es_hide" data-value="wishlisted">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.options.wishlist}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_cart_games'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.options.cart}</span>
+                    <div class="tab_filter_control" id="es_notinterested" data-param="es_hide" data-value="ignored">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.notinterested}</span>
+                    </div>` : ""}
+                    <div class="tab_filter_control" id="es_cart_games" data-param="es_hide" data-value="cart">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notdiscounted'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.notdiscounted}</span>
+                    <div class="tab_filter_control" id="es_notdiscounted" data-param="es_hide" data-value="not-discounted">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.notdiscounted}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notinterested'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.notinterested}</span>
+                    <div class="tab_filter_control" id="es_notmixed" data-param="es_hide" data-value="mixed">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notmixed'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.mixed_item}</span>
+                    <div class="tab_filter_control" id="es_notnegative" data-param="es_hide" data-value="negative">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
                     </div>
-                    <div class='tab_filter_control' id='es_notnegative'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.negative_item}</span>
-                    </div>
-                    <div class='tab_filter_control' id='es_notpriceabove'>
-                        <div class='tab_filter_control_checkbox'></div>
-                        <span class='tab_filter_control_label'>${Localization.str.price_above}</span>
+                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id='es_notpriceabove_val' class='es_input_number' pattern='${inputPattern.source}' placeholder=${pricePlaceholder}>
+                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder=${pricePlaceholder}>
                         </div>
                     </div>
+                    <div>
+                        <input type="hidden" id="es_hide" name="es_hide" value>
+                    </div>
                 </div>
-                <a class="see_all_expander" href="#" id="es_hide_expander"></a>
             </div>
         `);
 
-        let expander = document.querySelector("#es_hide_expander");
-        expander.addEventListener("click", function(e) {
-            e.preventDefault();
-            ExtensionLayer.runInPageContext(() =>
-                ExpandOptions(document.querySelector("#es_hide_expander"), 'es_hide_options')
-            );
-        });
+        Messenger.addMessageListener("filtersChanged", filtersChanged, false);
+        Messenger.addMessageListener("priceAbove", priceVal => {
+            if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
+                if (currency.format.decimalSeparator === ',') {
+                    priceVal = priceVal.replace('.', ',');
+                }
+                document.getElementById("es_notpriceabove_val").value = priceVal;
+                Messenger.sendMessage("priceValueChanged");
+            } else {
+                console.warn("Failed to validate price %s from URL params!", priceVal);
+            }
+        }, true);
 
-        let all = document.querySelectorAll(".see_all_expander");
-        expander.textContent = all[all.length-1].textContent;
+        // Thrown together from sources of searchpage.js
+        ExtensionLayer.runInPageContext(`() => {
 
-        if (SyncedStorage.get("hide_owned")) {
-            document.querySelector("#es_owned_games").classList.add("checked");
-        }
+            GDynamicStore.OnReady(() => {
 
-        if (SyncedStorage.get("hide_wishlist")) {
-            document.querySelector("#es_wishlist_games").classList.add("checked");
-        }
+                // Callback that will fire when the user browses through pages
+                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.sendMessage("ajaxCompleted") });` : ""}
 
-        if (SyncedStorage.get("hide_cart")) {
-            document.querySelector("#es_cart_games").classList.add("checked");
-        }
+                // For each AS hide filter
+                $J(".tab_filter_control[id^='es_']").each(function() {
+                    let $Control = $J(this);
+                    $Control.click(() => updateURL($Control));
+                });
 
-        if (SyncedStorage.get("hide_notdiscounted")) {
-            document.querySelector("#es_notdiscounted").classList.add("checked");
-        }
+                function updateURL($Control, forcedState) {
 
-        if (SyncedStorage.get("hide_ignored")) {
-            document.querySelector("#es_notinterested").classList.add("checked");
-        }
+                    let strParam = $Control.data("param");
+                    let value = $Control.data("value");
+                    let strValues = decodeURIComponent($J('#' + strParam).val());
+                    value = String(value); // Javascript: Dynamic types except sometimes not.
+                    if (!$Control.hasClass("checked")) {
+                        let rgValues;
+                        if(!strValues) {
+                            if (typeof forcedState !== "undefined" && !forcedState) {
+                                rgValues = [];
+                            } else {
+                                if (value === "price-above") {
+                                    rgValues = [value + $J("#es_notpriceabove_val").val().replace(',', '.')];
+                                } else {
+                                    rgValues = [value];
+                                }
+                            }
+                        } else {
+                            rgValues = strValues.split(',');
 
-        if (SyncedStorage.get("hide_mixed")) {
-            document.querySelector("#es_notmixed").classList.add("checked");
-            document.querySelector("#es_hide_options").style.height="auto";
-            document.querySelector("#es_hide_expander").style.display="none";
-        }
+                            if (!(typeof forcedState !== "undefined" && !forcedState)) {
+                                if (value === "price-above") {
+                                    let found = false;
+                                    for (let rgValue in rgValues) {
+                                        if (rgValue.startsWith(value)) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        rgValues.push(value + $J("#es_notpriceabove_val").val().replace(',', '.'));
+                                    }
+                                } else {
+                                    if ($J.inArray(value, rgValues) === -1) {
+                                        rgValues.push(value)
+                                    }
+                                }
+                            }
+                            
+                        }
+    
+                        $J('#' + strParam).val(rgValues.join(','));
 
-        if (SyncedStorage.get("hide_negative")) {
-            document.querySelector("#es_notnegative").classList.add("checked");
-            document.querySelector("#es_hide_options").style.height = "auto";
-            document.querySelector("#es_hide_expander").style.display = "none";
-        }
+                        if (typeof forcedState !== "undefined") {
+                            if (forcedState) {
+                                $Control.addClass("checked");
+                            }
+                        } else {
+                            $Control.addClass("checked");
+                        }
+                    } else {
+                        let rgValues = strValues.split(',');
 
-        if (SyncedStorage.get("hide_priceabove")) {
-            document.querySelector("#es_notpriceabove").classList.add("checked");
-            document.querySelector("#es_hide_options").style.height = "auto";
-            document.querySelector("#es_hide_expander").style.display = "none";
-        }
+                        if (value === "price-above") {
+                            for (let i = 0; i < rgValues.length; ++i) {
+                                if (rgValues[i].startsWith("price-above")) {
+                                    if (typeof forcedState !== "undefined" && forcedState) {
+                                        rgValues[i] = "price-above" + $J("#es_notpriceabove_val").val().replace(',', '.');
+                                    } else {
+                                        rgValues.splice(i, 1);
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (!(typeof forcedState !== "undefined" && forcedState)) {
+                                if (rgValues.indexOf(value) !== -1) {
+                                    rgValues.splice(rgValues.indexOf(value), 1);
+                                }
+                            }
+                        }
+
+                        $J('#' + strParam).val(rgValues.join(','));
+
+                        if (typeof forcedState !== "undefined") {
+                            if (!forcedState) {
+                                $Control.removeClass("checked");
+                            }
+                        } else {
+                            $Control.removeClass("checked");
+                        }
+                    }
+
+                    let rgParameters = GatherSearchParameters();
+
+                    // remove snr for history purposes
+                    delete rgParameters["snr"];
+                    if (rgParameters["sort_by"] === "_ASC") {
+                        delete rgParameters["sort_by"];
+                    }
+                    if (rgParameters["page"] === 1 || rgParameters["page"] === '1')
+                        delete rgParameters["page"];
+
+                    // don't want this on the url either
+                    delete rgParameters["hide_filtered_results_warning"];
+
+                    if (g_bUseHistoryAPI) {
+                        history.pushState({ params: rgParameters}, '', '?' + Object.toQueryString(rgParameters));
+                    } else {
+                        window.location = '#' + Object.toQueryString(rgParameters);
+                    }
+
+                    $J(".tag_dynamic").remove();
+                    $J("#termsnone").show();
+                    let rgActiveTags = $J(".tab_filter_control.checked");
+
+                    // Search term
+                    let strTerm = $J("#realterm").val();
+                    if(strTerm) {
+                        AddSearchTag("term", strTerm, '"'+strTerm+'"', function(tag) { $J("#realterm").val(''); $J("#term").val(''); AjaxSearchResults(); return false; });
+                        $J("#termsnone").hide();
+                    }
+
+                    // Publisher
+                    let strPublisher = $J("#publisher").val();
+                    if(strPublisher) {
+                        AddSearchTag("publisher", strPublisher, "Publisher" + ": "+strPublisher, function(tag) { $J("#publisher").val(''); AjaxSearchResults(); return false; });
+                        $J("#termsnone").hide();
+                    }
+
+                    // Developer
+                    let strDeveloper = $J("#developer").val();
+                    if(strDeveloper) {
+                        AddSearchTag("publisher", strDeveloper, "Developer" + ": " + strDeveloper, function(tag) { $J("#developer").val(''); AjaxSearchResults(); return false; });
+                        $J("#termsnone").hide();
+                    }
+
+                    rgActiveTags.each(function() {
+                        let Tag = this;
+                        let $Tag = $J(this);
+                        let label;
+
+                        if ($Tag.is("[id*='es_']")) {
+                            label = "${Localization.str.hide_filter}".replace("__filter__", $J(".tab_filter_control_label", Tag).text());
+                        } else {
+                            label = $J(".tab_filter_control_label", Tag).text();
+                        }
+                        AddSearchTag($Tag.data("param"), $Tag.data("value"), label, function(tag) { return function() { tag.click(); return false; } }(Tag) );
+                        if (!$Tag.is(":visible"))
+                        {
+                            $Tag.parent().prepend($Tag.show());
+                            $Tag.trigger( "tablefilter_update" );
+                        }
+                        $J("#termsnone").hide();
+                    });
+                    Messenger.sendMessage("filtersChanged");
+                }
+    
+                for (let [key, value] of new URLSearchParams(window.location.search)) {
+                    if (key === "es_hide") {
+                        for (let filterValue of value.split(',')) {
+                            let filter = $J(".tab_filter_control[data-value='" + filterValue + "']");
+                            if (!filter.length) {
+                                if (filterValue.startsWith("price-above")) {
+                                    let priceValue = /price-above(.+)/.exec(filterValue)[1];
+                                    if (!priceValue) {
+                                        console.warn("Didn't set a value for the price filter!");
+                                        continue;
+                                    }
+                                    filter = $J(".tab_filter_control[data-value=price-above]");
+                                    Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
+                                    Messenger.sendMessage("priceAbove", priceValue);
+                                    continue;
+                                } else {
+                                    console.warn("Invalid filter value %s", filterValue);
+                                    continue;
+                                }
+                            }
+                            filter.click();
+                        }
+                    }
+                }
+
+                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
+            });
+        }`);
 
         let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
-        let notpriceabove_val = document.querySelector("#es_notpriceabove_val");
+        let priceAboveVal = document.querySelector("#es_notpriceabove_val");
 
         if (currency.format.postfix) {
-            HTML.afterEnd(notpriceabove_val, html);
+            HTML.afterEnd(priceAboveVal, html);
         } else {
-            HTML.beforeBegin(notpriceabove_val, html);
+            HTML.beforeBegin(priceAboveVal, html);
         }
-
-        if (SyncedStorage.get("priceabove_value")) {
-            notpriceabove_val.value = new Price(SyncedStorage.get("priceabove_value"), Currency.storeCurrency).toString().replace(/[^\d,\.]/, '');
-        }
-
-        [
-            ["#es_owned_games", "hide_owned"],
-            ["#es_wishlist_games", "hide_wishlist"],
-            ["#es_cart_games", "hide_cart"],
-            ["#es_notdiscounted", "hide_notdiscounted"],
-            ["#es_notinterested", "hide_notinterested"],
-            ["#es_notmixed", "hide_mixed"],
-            ["#es_notnegative", "hide_negative"],
-            ["#es_notpriceabove", "hide_priceabove"],
-        ].forEach(a => {
-            document.querySelector(a[0]).addEventListener("click", function(e) {
-                let node = document.querySelector(a[0]);
-                let value = !node.classList.contains("checked");
-                node.classList.toggle("checked", value);
-                SyncedStorage.set(a[1], value);
-                filtersChanged();
-            });
-        });
 
         let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
         priceFilterCheckbox.title = Localization.str.price_above_tooltip;
 
-        let elem = document.getElementById("es_notpriceabove_val");
-        if (elem !== undefined && elem !== null) {
-            elem.title = Localization.str.price_above_tooltip;
-            elem.addEventListener("click", function(e) {
-                e.stopPropagation()
-            });
-            elem.addEventListener("keydown", function(e){
-                if(e.key === "Enter") {
-                    // This would normally trigger a call to AjaxSearchResults() and reload the page, invalidating all AS filters
-                    e.preventDefault();
-                }
-            });
-            elem.addEventListener("input", function(e){
-                let toggleValue = (elem.value !== "");
+        priceAboveVal.title = Localization.str.price_above_tooltip;
+        priceAboveVal.addEventListener("click", e => e.stopPropagation());
+        priceAboveVal.addEventListener("keydown", e => {
+            if(e.key === "Enter") {
+                // This would normally trigger a call to AjaxSearchResults() which is not required here
+                e.preventDefault();
+            }
+        });
+        priceAboveVal.addEventListener("input", () => {
+            let newValue = priceAboveVal.value;
+            let toggleValue = (newValue !== "");
+
+            if (inputPattern.test(newValue)) {
+                // The "checked" class will be toggled by the page context code
+                Messenger.sendMessage("priceChanged", toggleValue);
+                priceAboveVal.setCustomValidity('');
+            } else {
                 priceFilterCheckbox.classList.toggle("checked", toggleValue);
-                SyncedStorage.set("hide_priceabove", toggleValue);
+                priceAboveVal.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
+            }
 
-                if (inputPattern.test(elem.value)) {
-                    elem.setCustomValidity('');
-                    SyncedStorage.set("priceabove_value", elem.value.replace(',', '.'));
-                    filtersChanged();
-                } else {
-                    elem.setCustomValidity(Localization.str.price_above_tooltip);
-                }
-
-                elem.reportValidity();
-            });
-        }
-
-        filtersChanged();
-
+            priceAboveVal.reportValidity();
+        });
     };
 
     SearchPageClass.prototype.observeChanges = function() {
+
+        let hiddenInput = document.getElementById("es_hide");
+
+        function modifyLinks() {
+            for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
+                let params = new URLSearchParams(linkElement.href.substring(linkElement.href.indexOf('?')));
+                if (hiddenInput.value) {
+                    params.set("es_hide", hiddenInput.value);
+                } else {
+                    params.delete("es_hide");
+                }
+                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+            }
+        }
+
+        function togglePriceAboveFilter() {
+            let params = new URLSearchParams(window.location.search);
+            if (params.has("es_hide")) {
+                decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
+                    if (filter.startsWith("price-above")) {
+                        document.getElementById("es_notpriceabove").classList.add("checked");
+                    }
+                });
+            }
+        }
+            
+        let inputObserver = new MutationObserver(modifyLinks);
+        inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
         let contscrollObserver;
         if (SyncedStorage.get("contscroll")) {
@@ -2549,8 +2703,8 @@ let SearchPageClass = (function(){
             });
             contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
         }
-        
-        let observer = new MutationObserver(mutations => {
+
+        Messenger.addMessageListener("ajaxCompleted", () => {
             if (SyncedStorage.get("contscroll")) {
                 mutations.forEach(mutation => {
                     for (let node of mutation.removedNodes) {
@@ -2561,29 +2715,16 @@ let SearchPageClass = (function(){
                         }
                     }
                 })
+            } else {
+                togglePriceAboveFilter();
+                modifyLinks();
             }
-            
+
             EarlyAccess.showEarlyAccess();
+
             Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-
-            /*if (SyncedStorage.get("contscroll")) {
-                if (mutations[0].addedNodes[0].classList.contains("Loading"))
-            }*/
-
-            if (!SyncedStorage.get("contscroll")) {
-                // When loading a new page, every element in the tab_filter_control class gets unchecked
-                if (SyncedStorage.get("hide_owned")) { document.querySelector("#es_owned_games").classList.add("checked"); }
-                if (SyncedStorage.get("hide_wishlist")) { document.querySelector("#es_wishlist_games").classList.add("checked"); }
-                if (SyncedStorage.get("hide_cart")) { document.querySelector("#es_cart_games").classList.add("checked"); }
-                if (SyncedStorage.get("hide_notdiscounted")) { document.querySelector("#es_notdiscounted").classList.add("checked"); }
-                if (SyncedStorage.get("hide_ignored")) { document.querySelector("#es_notinterested").classList.add("checked"); }
-                if (SyncedStorage.get("hide_mixed")) { document.querySelector("#es_notmixed").classList.add("checked"); }
-                if (SyncedStorage.get("hide_negative")) { document.querySelector("#es_notnegative").classList.add("checked"); }
-                if (SyncedStorage.get("hide_priceabove")) { document.querySelector("#es_notpriceabove").classList.add("checked"); }
-            }
             filtersChanged();
-        });
-        observer.observe(document.getElementById("search_results"), {childList: true});
+        }, false);
     };
 
     return SearchPageClass;
@@ -2633,7 +2774,7 @@ let WishlistPageClass = (function(){
                         if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
                             continue;
                         }
-                        if (myWishlist && SyncedStorage.get("showwlnotes")) {
+                        if (myWishlist && SyncedStorage.get("showusernotes")) {
                             instance.addUserNote(node);
                         } else {
                             instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
@@ -2690,7 +2831,7 @@ let WishlistPageClass = (function(){
                 HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
             }
         }
-        
+
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
@@ -2770,8 +2911,8 @@ let WishlistPageClass = (function(){
         ExtensionLayer.runInPageContext(`function(){
             var prompt = ShowConfirmDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_confirm}\`);
             prompt.done(function(result) {
-                if (result == 'OK') {
-                    window.postMessage({ type: 'es_empty_wishlist', information: [ true ] }, '*');
+                if (result == "OK") {
+                    Messenger.postMessage("emptyWishlist");
                     ShowBlockingWaitDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_loading}\`);
                 }
             });
@@ -2792,23 +2933,15 @@ let WishlistPageClass = (function(){
             });
         }
 
-        window.addEventListener("message", function(event) {
-            if (event.source === window && event.data.type && event.data.type === "es_empty_wishlist") {
-                let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
-                if (!wishlistData) { return; }
+        Messenger.addMessageListener("emptyWishlist", () => {
+            let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+            if (!wishlistData) { return; }
 
-                let promises = [];
-                for (let i=0; i<wishlistData.length; i++) {
-                    let appid = wishlistData[i].appid;
-                    promises.push(removeApp(appid));
-                }
-
-                Promise.all(promises).finally(() => {
-                    DynamicStore.clear();
-                    location.reload();
-                });
-            }
-        }, false);
+            Promise.all(wishlistData.map(app => removeApp(app.appid))).finally(() => {
+                DynamicStore.clear();
+                location.reload();
+            });
+        }, true)
     }
 
     function addWishlistPrice(node) {
@@ -2892,22 +3025,12 @@ let WishlistPageClass = (function(){
         ExtensionLayer.runInPageContext(() =>
             $J(document).ajaxSuccess(function( event, xhr, settings ) {
                 if (settings.url.endsWith("/remove/")) {
-                    window.postMessage({
-                        type: "es_remove_wl_entry",
-                        removed_wl_entry: settings.data.match(/(?!appid=)\d+/)[0]
-                    }, "*");
+                    Messenger.postMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
                 }
             })
         );
 
-        window.addEventListener("message", function(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
-
-            if (e.data.type === "es_remove_wl_entry") {
-                userNotes.deleteNote(e.data.removed_wl_entry);
-            }
-        });
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry), false);
     };
 
     return WishlistPageClass;
@@ -2932,14 +3055,14 @@ let UserNotes = (function(){
                         </div>
                     </div>
                 </div>`;
-        
+
         this.notes = SyncedStorage.get("user_notes") || {};
     }
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector, onNoteUpdate) {
 
+        // Partly copied from shared_global.js
         ExtensionLayer.runInPageContext(`function() {
-            // Partly copied from shared_global.js
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
 
@@ -2949,33 +3072,16 @@ let UserNotes = (function(){
                 [], fnOK);
             deferred.always(() => Modal.Dismiss());
 
-            Modal.OnDismiss(() => {
-                window.postMessage({
-                    type: "es_modal_dismissed"
-                }, "*");
-            });
             Modal.m_fnBackgroundClick = () => {
-                function messageListener(e) {
-                    if (e.source !== window) { return; }
-                    if (!e.data.type) { return; }
-
-                    if (e.data.type === "es_note_saved") {
-                        Modal.Dismiss();
-                        window.removeEventListener("message", messageListener);
-                    }
-                }
-                window.addEventListener("message", messageListener);
-
-                window.postMessage({
-                    type: "es_background_click"
-                }, "*");
+                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.postMessage("backgroundClick");
             }
 
             Modal.Show();
 
             // attach the deferred's events to the modal
             deferred.promise(Modal);
-            
+
             let note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
@@ -2988,33 +3094,12 @@ let UserNotes = (function(){
             });
         }`);
 
-        window.addEventListener("message", messageListener);
         document.addEventListener("click", clickListener);
 
-        function messageListener(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
-
-            if (e.data.type === "es_modal_dismissed") {
-                document.removeEventListener("click", clickListener);
-                window.removeEventListener("message", messageListener);
-            } else if (e.data.type === "es_background_click") {
-                onNoteUpdate.apply(null, saveNote());
-                window.postMessage({
-                    type: "es_note_saved"
-                }, "*");
-            }
-        }
-
-        function backgroundClickListener(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
-
-            if (e.data.type === "es_modal_dismissed") {
-                document.removeEventListener("click", clickListener);
-                window.removeEventListener("message", messageListener);
-            }
-        }
+        Messenger.addMessageListener("backgroundClick", () => {
+            onNoteUpdate.apply(null, saveNote());
+            Messenger.postMessage("noteSaved");
+        }, true);
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {
@@ -3023,7 +3108,10 @@ let UserNotes = (function(){
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            } else {
+                return;
             }
+            document.removeEventListener("click", clickListener);
         }
 
         let that = this;
@@ -3070,7 +3158,7 @@ let UserNotes = (function(){
 let TagPageClass = (function(){
 
     function TagPageClass() {
-        
+
     }
 
     return TagPageClass;
@@ -3110,7 +3198,7 @@ let StoreFrontPageClass = (function(){
     };
 
     StoreFrontPageClass.prototype.highlightDelayed = function() {
-        
+
         // The "Recently updated" section will only get loaded once the user scrolls down
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
@@ -3133,7 +3221,7 @@ let StoreFrontPageClass = (function(){
                     })
                 );
             });
-    
+
             observer.observe(contentNode, {childList:true, subtree: true});
         }
     };

@@ -202,12 +202,6 @@ class UpdateHandler {
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
             SyncedStorage.remove("hideinstallsteambutton");
             SyncedStorage.remove("hideaboutmenu");
-
-            SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
-            SyncedStorage.remove("wishlist_notes");
-        }
-
-        if (oldVersion.isSameOrBefore("0.9.5")) {
             // Update structure for custom profile links to allow multiple
             if (SyncedStorage.get('profile_custom_name')) {
                 let custom_link = {
@@ -222,8 +216,17 @@ class UpdateHandler {
                 SyncedStorage.remove('profile_custom_url');
                 SyncedStorage.remove('profile_custom_icon');
             }
-        }
-    
+            SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
+            SyncedStorage.remove("wishlist_notes");
+        } else if (oldVersion.isSameOrBefore("0.9.7")) {
+            SyncedStorage.remove("hide_wishlist");
+            SyncedStorage.remove("hide_cart");
+            SyncedStorage.remove("hide_notdiscounted");
+            SyncedStorage.remove("hide_mixed");
+            SyncedStorage.remove("hide_negative");
+            SyncedStorage.remove("hide_priceabove");
+            SyncedStorage.remove("priceabove_value");
+        }    
     }
 }
 
@@ -534,7 +537,7 @@ SyncedStorage.defaults = {
     'hideaboutlinks': false,
     'keepssachecked': false,
     'showemptywishlist': true,
-    'showwlnotes': true,
+    'showusernotes': true,
     'user_notes': {},
     'replaceaccountname': true,
     'showfakeccwarning': true,

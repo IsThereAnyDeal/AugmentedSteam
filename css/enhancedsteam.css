@@ -1994,27 +1994,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Search result filter
  * add_hide_buttons_to_search()
  *************************************/
-.es_input_number {
-	background-color: rgba( 103, 193, 245, 0.2 );
+.es_input {
+	background-color: rgba( 0, 0, 0, 0.2 );
 	color: #fff;
-	border: 1px solid #000;
 	border-radius: 3px;
-	box-shadow: 1px 1px 0px rgba( 103, 193, 245, 0.15 );
-	width: calc(100% - 50px);
-	padding: 5px;
-}
-.es_input_text {
-	background-color: #2a3f5a;
-	color: #fff;
-	border: 1px solid #000;
-	border-radius: 3px;
-	box-shadow: 1px 1px 0px #45556c;
+	border: 1px solid rgba( 0, 0, 0, 0.3);
+	box-shadow: 1px 1px 0px rgba( 255, 255, 255, 0.2);
 	width: 200px;
 	padding: 5px;
 	margin: 5px;
 }
-.es_input_text.blur {
-	color:#62696e;
+
+.es_input:placeholder-shown, .es_input.blur {
+	font-style: italic;
+    color: #7092a5;
+    text-shadow: -1px -1px 0px rgba( 0, 0, 0, 0.4);
+}
+
+#es_notpriceabove_val {
+	width: calc(100% - 50px);
 }
 
 #es_notpriceabove_val_currency {
@@ -2316,24 +2314,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_steamrep_api()
  **************************************/
 #es_steamrep {
-	font-size: 11px;
+	display: flex;
+	font-size: 13px;
 	font-family: Verdana;
-	margin-bottom: 10px;
+	margin-top: 10px;
 }
-#es_steamrep .banned a {
-	color: #FF0000;
+#es_steamrep div {
+	margin: 0 8px;
 }
-#es_steamrep .valve a {
-	color: #A50F79;
+#es_steamrep .bad a {
+	color: red;
 }
 #es_steamrep .caution a {
-	color: #FC970A;
+	color: orangered;
 }
-#es_steamrep .okay a {
-	color: #008000;
+#es_steamrep .good a {
+	color: green;
 }
-#es_steamrep .donate a {
-	color: #0F67A1;
+#es_steamrep .neutral a {
+	color: gray;
 }
 
 /***************************************

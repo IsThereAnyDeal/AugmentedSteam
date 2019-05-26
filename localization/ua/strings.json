@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
         "loading": "Augmented Steam завантажує дані...",
-        "ready": "Augmented Steam готовий",
-        "failed": "Помилка одного або кількох запитів:"
+        "ready": "Augmented Steam готовий"
     },
     "twitch": {
         "now_streaming": "__username__ зараз віщає на каналі Twitch",

@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Ошибка загрузки данных Augmented Steam",
         "loading": "«Augmented Steam» загружается...",
-        "ready": "\"Augmented Steam\" готов",
-        "failed": "Не удалось выполнить запрос(ы):"
+        "ready": "\"Augmented Steam\" готов"
     },
     "twitch": {
         "now_streaming": "__username__ начал трансляцию на Twich",

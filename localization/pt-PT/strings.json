@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Erro ao carregar os dados do Augmented Steam",
         "loading": "O Augmented Steam está a carregar dados...",
-        "ready": "O Augmented Steam está pronto",
-        "failed": "Um ou mais pedidos falharam:"
+        "ready": "O Augmented Steam está pronto"
     },
     "twitch": {
         "now_streaming": "__username__ está a transmitir em directo no Twitch",
