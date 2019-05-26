@@ -1712,10 +1712,6 @@ class AppPageClass extends StorePageClass {
         stylesheet.type = 'text/css';
         stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
         document.head.appendChild(stylesheet);
-
-        let style = document.createElement('style');
-        document.head.appendChild(style);
-        style = null;
     
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
