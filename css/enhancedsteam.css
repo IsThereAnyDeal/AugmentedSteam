@@ -2316,24 +2316,25 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_steamrep_api()
  **************************************/
 #es_steamrep {
-	font-size: 11px;
+	display: flex;
+	font-size: 13px;
 	font-family: Verdana;
-	margin-bottom: 10px;
+	margin-top: 10px;
 }
-#es_steamrep .banned a {
-	color: #FF0000;
+#es_steamrep div {
+	margin: 0 8px;
 }
-#es_steamrep .valve a {
-	color: #A50F79;
+#es_steamrep .bad a {
+	color: red;
 }
 #es_steamrep .caution a {
-	color: #FC970A;
+	color: orangered;
 }
-#es_steamrep .okay a {
-	color: #008000;
+#es_steamrep .good a {
+	color: green;
 }
-#es_steamrep .donate a {
-	color: #0F67A1;
+#es_steamrep .neutral a {
+	color: gray;
 }
 
 /***************************************

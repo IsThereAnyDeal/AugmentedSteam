@@ -593,10 +593,14 @@ let ProfileHomePageClass = (function(){
             };
 
             // Build SteamRep section
-            let statusInfo = document.querySelector("div.responsive_status_info");
-            if (!statusInfo) return;
+            HTML.beforeEnd(".profile_header_summary", '<div id="es_steamrep"></div>');
 
-            HTML.beforeEnd(statusInfo, '<div id="es_steamrep"></div>');
+            let steamrepElement = document.getElementById("es_steamrep");
+            let priorities = ["bad", "caution", "good", "neutral"];
+            let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
+
+            backgroundStyle.paddingBottom = "20px";
+            backgroundStyle.backgroundSize = "cover";
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
@@ -604,11 +608,30 @@ let ProfileHomePageClass = (function(){
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    HTML.afterEnd("#es_steamrep",
-                        `<div class="${img}">
+                    let priority;
+
+                    switch (img) {
+                        case "banned":
+                            priority = 0;
+                            break;
+                        case "caution":
+                            priority = 1;
+                            break;
+                        case "valve":
+                        case "okay":
+                            priority = 2;
+                            break;
+                        case "donate":
+                            priority = 3;
+                            break;
+                    }
+
+                    HTML.beforeEnd(steamrepElement,
+                        `<div class="${priorities[priority]}">
                             <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
+                        
                     return;
                 }
             });
