@@ -117,6 +117,7 @@
     "highlight": "Highlight",
     "save": "Save",
     "not": "Not __tag__",
+    "hide_filter": "Hide __filter__",
     "add_to_cart": "Add to Cart",
     "view": "View",
     "games_all": "All Games",
@@ -129,6 +130,7 @@
     "negative_item": "Negative rating items",
     "price_above":"Items that cost more than",
     "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
+    "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Steam Client",
@@ -397,7 +399,7 @@
         "profile_link_images_color": "Colored",
         "hide_about_links": "Hide \"Install Steam\" button / \"About\" link",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
-        "show_wl_notes": "Show notes on wishlist",
+        "show_user_notes": "Show user notes on wishlist and app pages",
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "carousel_description": "Show app descriptions on storefront carousel",
         "market_total": "Show transaction summary on Market",
@@ -455,7 +457,8 @@
             "turkish": "Turkish",
             "ukrainian": "Ukrainian"
         },
-        "add_custom_link": "Add custom link"
+        "add_custom_link": "Add custom link",
+        "auto_detect": "Auto-detect"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
@@ -560,5 +563,9 @@
         "add_prompt": "Enter your note",
         "update_prompt": "Update your note",
         "add_for_game": "Note for __gamename__"
-    }
+    },
+    "this_version": "This version",
+    "original_authors": "Original authors",
+    "powered_by": "Powered by __link__"
+
 }
