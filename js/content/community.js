@@ -593,10 +593,14 @@ let ProfileHomePageClass = (function(){
             };
 
             // Build SteamRep section
-            let statusInfo = document.querySelector("div.responsive_status_info");
-            if (!statusInfo) return;
+            HTML.beforeEnd(".profile_header_summary", '<div id="es_steamrep"></div>');
 
-            HTML.beforeEnd(statusInfo, '<div id="es_steamrep"></div>');
+            let steamrepElement = document.getElementById("es_steamrep");
+            let priorities = ["bad", "caution", "good", "neutral"];
+            let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
+
+            backgroundStyle.paddingBottom = "20px";
+            backgroundStyle.backgroundSize = "cover";
 
             steamrep.forEach(function(value) {
                 if (value.trim() == "") { return; }
@@ -604,11 +608,30 @@ let ProfileHomePageClass = (function(){
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    HTML.afterEnd("#es_steamrep",
-                        `<div class="${img}">
+                    let priority;
+
+                    switch (img) {
+                        case "banned":
+                            priority = 0;
+                            break;
+                        case "caution":
+                            priority = 1;
+                            break;
+                        case "valve":
+                        case "okay":
+                            priority = 2;
+                            break;
+                        case "donate":
+                            priority = 3;
+                            break;
+                    }
+
+                    HTML.beforeEnd(steamrepElement,
+                        `<div class="${priorities[priority]}">
                             <img src="${imgUrl}" />
                             <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                         </div>`);
+                        
                     return;
                 }
             });
@@ -1491,18 +1514,18 @@ let InventoryPageClass = (function(){
     }
 
     function updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency) {
-
+        let quickSell = document.getElementById("es_quicksell" + assetId);
+        let instantSell = document.getElementById("es_instantsell" + assetId);
+        
         // Add Quick Sell button
-        if (priceHighValue) {
-            let quickSell = document.querySelector("#es_quicksell" + assetId);
+        if (quickSell && priceHighValue && priceHighValue > priceLowValue) {
             quickSell.dataset.price = priceHighValue;
             quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
             quickSell.style.display = "block";
         }
 
         // Add Instant Sell button
-        if (priceLowValue) {
-            let instantSell = document.querySelector("#es_instantsell" + assetId);
+        if (instantSell && priceLowValue) {
             instantSell.dataset.price = priceLowValue;
             instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
             instantSell.style.display = "block";
@@ -1531,8 +1554,6 @@ let InventoryPageClass = (function(){
                 let priceLowValue = thisItem.dataset.priceLow;
 
                 updateMarketButtons(assetId, priceHighValue, priceLowValue, walletCurrency);
-
-                thisItem.classList.remove("es-loading");
             } else {
                 let result = await RequestData.getHttp(url);
 
@@ -1560,13 +1581,14 @@ let InventoryPageClass = (function(){
 
                     // Fixes multiple buttons
                     if (document.querySelector(".item.activeInfo") === thisItem) {
-                        thisItem.classList.add("es-price-loaded");
                         updateMarketButtons(assetId, priceHigh, priceLow, walletCurrency);
                     }
 
-                    thisItem.classList.remove("es-loading");
+                    thisItem.classList.add("es-price-loaded");
                 }
             }
+            // Loading request either succeeded or failed, no need to flag as still in progress
+            thisItem.classList.remove("es-loading");
         }
 
         // Bind actions to "Quick Sell" and "Instant Sell" buttons
@@ -1591,10 +1613,7 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext(`function() {
-                    var fee_info = CalculateFeeAmount(${sellPrice}, 0.10);
-                    window.postMessage({ type: "es_sendfee_${assetId}", information: fee_info, sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"}, '*');
-                }`);
+                ExtensionLayer.runInPageContext(`() => Messenger.postMessage("sendFee", {feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"})`);
             });
         }
     }
@@ -1728,61 +1747,54 @@ let InventoryPageClass = (function(){
                 if (g_ActiveInventory.selectedItem.description) {
                     market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
-                window.postMessage({
-                    type: "es_sendmessage",
-                    information: [
-                        iActiveSelectView,
-                        g_ActiveInventory.selectedItem.description.marketable,
-                        g_ActiveInventory.appid,
-                        g_ActiveInventory.selectedItem.description.market_hash_name,
-                        g_ActiveInventory.selectedItem.description.type,
-                        g_ActiveInventory.selectedItem.assetid,
-                        g_sessionID,
-                        g_ActiveInventory.selectedItem.contextid,
-                        g_rgWalletInfo.wallet_currency,
-                        g_ActiveInventory.m_owner.strSteamId,
-                        g_ActiveInventory.selectedItem.description.market_marketable_restriction,
-                        market_expired
-                    ]
-                }, "*");
+
+                Messenger.postMessage("sendMessage", [
+                    iActiveSelectView,
+                    g_ActiveInventory.selectedItem.description.marketable,
+                    g_ActiveInventory.appid,
+                    g_ActiveInventory.selectedItem.description.market_hash_name,
+                    g_ActiveInventory.selectedItem.description.type,
+                    g_ActiveInventory.selectedItem.assetid,
+                    g_sessionID,
+                    g_ActiveInventory.selectedItem.contextid,
+                    g_rgWalletInfo.wallet_currency,
+                    g_ActiveInventory.m_owner.strSteamId,
+                    g_ActiveInventory.selectedItem.description.market_marketable_restriction,
+                    market_expired
+                ]);
             });
-	    });
+        });
+        
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
 
-        window.addEventListener("message", function(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
+        Messenger.addMessageListener("sendFee", info => {
+            let sellPrice = info.amount - info.fees;
+            let formData = new FormData();
+            formData.append("sessionid", info.sessionID);
+            formData.append("appid", info.global_id);
+            formData.append("contextid", info.contextID);
+            formData.append("assetid", info.assetID);
+            formData.append("amount", 1);
+            formData.append("price", sellPrice);
 
-            if (e.data.type === "es_sendmessage") {
-                inventoryMarketHelper(e.data.information);
-            } else if (e.data.type === "es_sendfee_" + e.data.assetID) {
-                let sellPrice = e.data.information.amount - e.data.information.fees;
-                let formData = new FormData();
-                formData.append('sessionid', e.data.sessionID);
-                formData.append('appid', e.data.global_id);
-                formData.append('contextid', e.data.contextID);
-                formData.append('assetid', e.data.assetID);
-                formData.append('amount', 1);
-                formData.append('price', sellPrice);
+            /*
+            * TODO test what we need to send in request, this is original:
+            * mode: "cors", // CORS to cover requests sent from http://steamcommunity.com
+            * credentials: "include",
+            * headers: { origin: window.location.origin },
+            * referrer: window.location.origin + window.location.pathname
+            */
 
-                /*
-                 * TODO test what we need to send in request, this is original:
-                 * mode: 'cors', // CORS to cover requests sent from http://steamcommunity.com
-                 * credentials: 'include',
-                 * headers: { origin: window.location.origin },
-                 * referrer: window.location.origin + window.location.pathname
-                 */
+            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
+                withCredentials: true
+            }).then(() => {
+                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
 
-                RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                    withCredentials: true
-                }).then(() => {
-                    document.querySelector("#es_instantsell" + e.data.assetID).parentNode.style.display = "none";
-
-                    let id = e.data.global_id + "_" + e.data.contextID + "_" + e.data.assetID;
-                    let node = document.querySelector("[id='"+id+"']");
-                    node.classList.add("btn_disabled", "activeInfo");
-                    node.style.pointerEvents = "none";
-                });
-            }
+                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
+                let node = document.querySelector("[id='" + id + "']");
+                node.classList.add("btn_disabled", "activeInfo");
+                node.style.pointerEvents = "none";
+            });
         }, false);
     }
 
@@ -2712,6 +2724,12 @@ let FriendsPageClass = (function(){
                 node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
             }
 
+            // Remove the current offline nodes
+            for (let node of document.querySelectorAll('div.persona.offline[data-steamid]')) {
+                node.remove();
+            }
+
+            // So we can replace them in sorted order
             let offlineNode = document.querySelector("#state_offline");
             for (let item of sorted[sortBy]) {
                 offlineNode.insertAdjacentElement("afterend", item[0]);
@@ -2768,7 +2786,7 @@ let MarketListingPageClass = (function(){
                 ${Localization.str.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
             </div>`;
 
-        HTML.beforeEnd(".market_commodity_orders_header, .jqplot-title, .market_section_title", soldHtml);
+        HTML.beforeBegin(".market_commodity_buy_button", soldHtml);
 
         /* TODO where is this observer applied?
         let observer = new MutationObserver(function(){
@@ -2858,11 +2876,22 @@ let MarketPageClass = (function(){
 
         let purchaseTotal = 0;
         let saleTotal = 0;
+        let transactions = new Set();
 
         function updatePrices(dom) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
             for (let node of nodes) {
+                if (node.id) {
+                    if (transactions.has(node.id)) {
+                        // Duplicate transaction, don't count in totals twice.
+                        continue;
+                    } else {
+                        transactions.add(node.id);
+                    }
+                } else {
+                    console.error('Could not find id of transaction', node);
+                }
                 let type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
                 if (type.includes("+")) {
@@ -2907,24 +2936,68 @@ let MarketPageClass = (function(){
         let pages = -1;
         let currentPage = 0;
         let currentCount = 0;
-        let totalCount;
+        let totalCount = null;
+        let pageRequests = [];
+        let failedRequests = 0;
 
         let progressNode = document.querySelector("#esi_market_stats_progress");
+        let url = new URL("/market/myhistory/render/", "https://steamcommunity.com/");
+        url.searchParams.set('count', pageSize);
 
-        do {
-            let data = await RequestData.getJson(`https://steamcommunity.com/market/myhistory/render/?start=${currentCount}&count=${pageSize}`);
-            if (pages < 0) {
-                totalCount = data.total_count;
-                pages = Math.ceil(totalCount / pageSize);
+        async function nextRequest() {
+            let request = pageRequests.shift();
+            url.searchParams.set('start', request.start);
+            request.attempt += 1;
+            request.lastAttempt = Date.now();
+            if (request.attempt > 1) {
+                await sleep(2000);
+            } else if (request.attempt > 4) {
+                // Give up after four tries
+                throw new Error("Could not retrieve market transactions.");
             }
-
-            currentCount += data.pagesize + 1;
+            console.log(url.toString());
+            let data = await RequestData.getJson(url.toString());
 
             let dom = HTMLParser.htmlToDOM(data.results_html);
-            updatePrices(dom);
 
-            progressNode.textContent = `${++currentPage}/${pages}`;
-        } while (currentCount < totalCount);
+            // Request may fail with results_html == "\t\t\t\t\t\t<div class=\"market_listing_table_message\">There was an error loading your market history. Please try again later.</div>\r\n\t"
+            let message = dom.querySelector('.market_listing_table_message');
+            if (message && message.textContent.includes("try again later")) {
+                pageRequests.push(request);
+                failedRequests += 1;
+                return;
+            }
+            
+            updatePrices(dom, request.start);
+
+            return data.total_count;
+        }
+
+        try {
+            pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
+            while (pageRequests.length > 0) {
+                let t = await nextRequest();
+                if (pages < 0 && t > 0) {
+                    totalCount = t;
+                    pages = Math.ceil(totalCount / pageSize);
+                    for (let start = pageSize; start < totalCount; start += pageSize) {
+                        pageRequests.push({ 'start': start, 'attempt': 0, 'lastAttempt': 0, });
+                    }
+                }
+
+                progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
+            }
+        } catch (err) {
+            console.error(err);
+        }
+
+        if (failedRequests == 0) {
+            progressNode.textContent = '';
+            return true;
+        }
+
+        progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
+        return false;
     }
 
     MarketPageClass.prototype.addMarketStats = async function() {
@@ -2940,15 +3013,23 @@ let MarketPageClass = (function(){
                 </div>`);
 
         let node = document.querySelector("#es_market_summary_status");
-        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`);
+        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`); // FIXME Localize
 
         async function startLoadingStats() {
-            HTML.inner(node, `<img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
-                                <span>${Localization.str.loading} <span id="esi_market_stats_progress"></span>
+            HTML.inner(node, `<img id="es_market_summary_throbber" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                                <span><span id="esi_market_stats_progress_description">${Localization.str.loading} </span><span id="esi_market_stats_progress"></span>
                               </span>`);
-            document.querySelector("#es_market_summary").style.display="block";
-            await loadMarketStats();
-            document.querySelector("#es_market_summary_status").style.display = "none";
+            document.querySelector("#es_market_summary").style.display = null;
+            let success = await loadMarketStats();
+            if (node && success) {
+                node.remove();
+                // node.style.display = "none";
+            } else {
+                let el = document.getElementById('es_market_summary_throbber');
+                if (el) el.remove();
+                el = document.getElementById('esi_market_stats_progress_description');
+                if (el) el.remove();
+            }
         }
 
         document.querySelector("#es_market_summary_button").addEventListener("click", startLoadingStats);
