@@ -530,5 +530,9 @@
         "add_prompt": "Gib deine Notiz ein",
         "update_prompt": "Aktualisiere deine Notiz",
         "add_for_game": "Notiz für __gamename__"
+    },
+    "queue": {
+        "new": "<b>Neue</b> Liste",
+        "new_tooltip": "Entfernen Sie dieses Produkt aus Ihrer Liste und fahren Sie mit einer neuen Liste fort."
     }
 }
