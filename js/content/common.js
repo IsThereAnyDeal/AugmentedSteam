@@ -204,9 +204,9 @@ let ExtensionLayer = (function() {
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun){
-        let script  = document.createElement('script');
-        script.textContent = '(' + fun + ')();';
+    self.runInPageContext = function(fun) {
+        let script  = document.createElement("script");
+        script.textContent = '(' + fun + ")();";
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
     };
@@ -214,6 +214,35 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
+class Messenger {
+    static postMessage(msgID, info) {
+        window.postMessage({
+            type: "es_" + msgID,
+            information: info
+        }, window.location.origin);
+    }
+
+    static addMessageListener(msgID, fn, once) {
+        let callback = function(e) {
+            if (e.source !== window) { return; }
+            if (!e.data || !e.data.type) { return; }
+            if (e.data.type === "es_" + msgID) {
+                fn(e.data.information);
+                if (once) {
+                    window.removeEventListener("message", callback);
+                }
+            }
+        }
+        window.addEventListener("message", callback);
+    }
+}
+
+// Inject the Messenger class into the DOM, providing the same interface for the page context side
+(function() {
+    let script = document.createElement("script");
+    script.textContent = Messenger.toString();
+    document.documentElement.appendChild(script);
+})();
 
 class CookieStorage {
     static get(name, defaultValue) {
@@ -540,9 +569,13 @@ let CurrencyRegistry = (function() {
         }
         placeholder() {
             if (this.format.decimalPlaces == 0 || this.format.hidePlacesWhenZero) {
-                return "0";
+                return '0';
             }
-            return (0).toFixed(this.format.decimalPlaces);
+            let placeholder = '0' + this.format.decimalSeparator;
+            for (let i = 0; i < this.format.decimalPlaces; ++i) {
+                placeholder += '0';
+            }
+            return placeholder;
         }
         regExp() {
             let regex = ["^("];
@@ -645,26 +678,16 @@ let Currency = (function() {
     function getCurrencyFromWallet() {
         return new Promise((resolve, reject) => {
             ExtensionLayer.runInPageContext(() =>
-                window.postMessage({
-                    type: "es_walletcurrency",
-                    wallet_currency: typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null
-                }, "*")
+                Messenger.postMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
             );
 
-            function listener(e) {
-                if (e.source !== window) { return; }
-                if (!e.data.type || e.data.type !== "es_walletcurrency") { return; }
-
-                if (e.data.wallet_currency !== null) {
-                    resolve(Currency.currencyNumberToType(e.data.wallet_currency));
+            Messenger.addMessageListener("walletCurrency", walletCurrency => {
+                if (walletCurrency !== null) {
+                    resolve(Currency.currencyNumberToType(walletCurrency));
                 } else {
                     reject();
                 }
-
-                window.removeEventListener("message", listener, false);
-            }
-
-            window.addEventListener("message", listener, false);
+            }, true);
         });
     }
 
@@ -1452,7 +1475,7 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline { outline: solid ${color}; }
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name} { outline: solid ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
             });
 
@@ -1626,6 +1649,7 @@ let Highlights = (function(){
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
             "div.recommendation",                           // Curator pages and the new DLC pages
+            ".curator_giant_capsule",
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
@@ -1644,7 +1668,7 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        setTimeout(() => {
+        Messenger.addMessageListener("dynamicStoreReady", () => {
             selectors.forEach(selector => {
                 self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
             });
@@ -1656,7 +1680,11 @@ let Highlights = (function(){
                 });
                 observer.observe(searchBoxContents, {childList: true});
             }
-        }, 1000);
+        }, true);
+
+        ExtensionLayer.runInPageContext(() => {
+            GDynamicStore.OnReady(() => Messenger.postMessage("dynamicStoreReady"));
+        });
     };
 
     return self;
