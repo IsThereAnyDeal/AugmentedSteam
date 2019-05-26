@@ -67,31 +67,23 @@ class ProgressBar {
         }
     }
 
-    static failed(message, url, status, error) {
+    static failed() {
         let node = document.getElementById('es_progress');
         if (!node) { return; }
 
         node.classList.add("error");
-        node.setAttribute("title", "");
         ProgressBar.requests = null;
         
         let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
-        if (!nodeError) {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed + "<ul></ul></div>");
-            nodeError = node.nextElementSibling;
+        if (nodeError) {
+            nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests);
+        } else {
+            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests) + "</div>");
         }
-
-        if (!message) {
-            message = "<span>" + url + "</span>";
-            if (status) {
-                message += "(" + status +": "+ error +")";
-            }
-        }
-
-        HTML.beforeEnd(nodeError.querySelector("ul"), "<li>" + message + "</li>");
     }
 }
 
+ProgressBar.failedRequests = 0;
 
 class Background {
     static async message(message) {
@@ -102,12 +94,12 @@ class Background {
                 ProgressBar.finishRequest();
 
                 if (!response) {
-                    ProgressBar.failed("No response from extension background context.");
+                    ProgressBar.failed();
                     reject("No response from extension background context.");
                     return;
                 }
                 if (typeof response.error !== 'undefined') {
-                    ProgressBar.failed(response.message);
+                    ProgressBar.failed();
                     response.localStack = (new Error(message.action)).stack;
                     reject(response);
                     return;
@@ -311,7 +303,7 @@ let RequestData = (function(){
                 if (state.status === 200) {
                     resolve(JSON.parse(state.responseText));
                 } else {
-                    ProgressBar.failed(null, url, state.status, state.statusText);
+                    ProgressBar.failed();
                     reject(state.status);
                 }
             }
@@ -354,7 +346,7 @@ let RequestData = (function(){
                         resolve(state.responseText);
                     }
                 } else {
-                    ProgressBar.failed(null, url, state.status, state.statusText);
+                    ProgressBar.failed();
                     reject(state.status);
                 }
             }

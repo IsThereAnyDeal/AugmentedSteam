@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
         "loading": "Augmented Steam đang tải dữ liệu...",
-        "ready": "Augmented Steam sẵn sàng",
-        "failed": "Một hoặc nhiều yêu cầu thất bại:"
+        "ready": "Augmented Steam sẵn sàng"
     },
     "twitch": {
         "now_streaming": "__username__ đang phát sóng trực tiếp trên Twitch",

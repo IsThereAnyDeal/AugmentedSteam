@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Fejl under indlæsning af Augmented Steam data",
         "loading": "Augmented Steam indlæser data...",
-        "ready": "Augmented Steam er klar",
-        "failed": "Én eller flere anmodninger mislykkedes:"
+        "ready": "Augmented Steam er klar"
     },
     "twitch": {
         "now_streaming": "__username__ live streamer på Twitch",

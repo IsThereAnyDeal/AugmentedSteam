@@ -464,7 +464,7 @@
         "errormsg": "Error loading Augmented Steam data",
         "loading": "Augmented Steam loading data...",
         "ready": "Augmented Steam ready",
-        "failed": "One or more requests failed:"
+        "failed": "__amount__ request(s) failed, check browser console for more information"
     },
     "twitch": {
         "now_streaming": "__username__ is live streaming on Twitch",

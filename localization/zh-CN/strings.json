@@ -460,8 +460,7 @@
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
         "loading": "Augmented Steam 数据载入中……",
-        "ready": "Augmented Steam 已就绪",
-        "failed": "一个或多个请求失败:"
+        "ready": "Augmented Steam 已就绪"
     },
     "twitch": {
         "now_streaming": "__username__ 正在 Twitch 上直播",

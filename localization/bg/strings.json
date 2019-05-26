@@ -461,7 +461,6 @@
         "errormsg": "Грешка при зареждане на данните за Augmented Steam",
         "loading": "Зареждане на данните за Augmented Steam…",
         "ready": "Augmented Steam e готов",
-        "failed": "Една или повече заявки не успя:"
     },
     "twitch": {
         "now_streaming": "__username__ излъчва на живо в Twitch",

@@ -443,8 +443,7 @@
     "ready": {
         "errormsg": "Eroare la încărcarea datelor Augmented Steam",
         "loading": "Augmented Steam încarcă datele...",
-        "ready": "Augmented Steam pregătit",
-        "failed": "Una sau mai multe solicitări au eșuat:"
+        "ready": "Augmented Steam pregătit"
     },
     "twitch": {
         "now_streaming": "__username__ este live pe Twitch",
