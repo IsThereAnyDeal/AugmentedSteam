@@ -2742,8 +2742,8 @@ let WishlistPageClass = (function(){
         ExtensionLayer.runInPageContext(`function(){
             var prompt = ShowConfirmDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_confirm}\`);
             prompt.done(function(result) {
-                if (result == 'OK') {
-                    window.postMessage({ type: 'es_empty_wishlist', information: [ true ] }, '*');
+                if (result == "OK") {
+                    Messenger.postMessage("emptyWishlist");
                     ShowBlockingWaitDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_loading}\`);
                 }
             });
@@ -2764,23 +2764,15 @@ let WishlistPageClass = (function(){
             });
         }
 
-        window.addEventListener("message", function(event) {
-            if (event.source === window && event.data.type && event.data.type === "es_empty_wishlist") {
-                let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
-                if (!wishlistData) { return; }
+        Messenger.addMessageListener("emptyWishlist", () => {
+            let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+            if (!wishlistData) { return; }
 
-                let promises = [];
-                for (let i=0; i<wishlistData.length; i++) {
-                    let appid = wishlistData[i].appid;
-                    promises.push(removeApp(appid));
-                }
-
-                Promise.all(promises).finally(() => {
-                    DynamicStore.clear();
-                    location.reload();
-                });
-            }
-        }, false);
+            Promise.all(wishlistData.map(app => removeApp(app.appid))).finally(() => {
+                DynamicStore.clear();
+                location.reload();
+            });
+        }, true)
     }
 
     function addWishlistPrice(node) {
@@ -2864,22 +2856,12 @@ let WishlistPageClass = (function(){
         ExtensionLayer.runInPageContext(() =>
             $J(document).ajaxSuccess(function( event, xhr, settings ) {
                 if (settings.url.endsWith("/remove/")) {
-                    window.postMessage({
-                        type: "es_remove_wl_entry",
-                        removed_wl_entry: settings.data.match(/(?!appid=)\d+/)[0]
-                    }, "*");
+                    Messenger.postMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
                 }
             })
         );
 
-        window.addEventListener("message", function(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
-
-            if (e.data.type === "es_remove_wl_entry") {
-                userNotes.deleteNote(e.data.removed_wl_entry);
-            }
-        });
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry), false);
     };
 
     return WishlistPageClass;
@@ -2910,8 +2892,8 @@ let UserNotes = (function(){
 
     UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector, onNoteUpdate) {
 
+        // Partly copied from shared_global.js
         ExtensionLayer.runInPageContext(`function() {
-            // Partly copied from shared_global.js
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
 
@@ -2921,26 +2903,9 @@ let UserNotes = (function(){
                 [], fnOK);
             deferred.always(() => Modal.Dismiss());
 
-            Modal.OnDismiss(() => {
-                window.postMessage({
-                    type: "es_modal_dismissed"
-                }, "*");
-            });
             Modal.m_fnBackgroundClick = () => {
-                function messageListener(e) {
-                    if (e.source !== window) { return; }
-                    if (!e.data.type) { return; }
-
-                    if (e.data.type === "es_note_saved") {
-                        Modal.Dismiss();
-                        window.removeEventListener("message", messageListener);
-                    }
-                }
-                window.addEventListener("message", messageListener);
-
-                window.postMessage({
-                    type: "es_background_click"
-                }, "*");
+                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.postMessage("backgroundClick");
             }
 
             Modal.Show();
@@ -2960,33 +2925,12 @@ let UserNotes = (function(){
             });
         }`);
 
-        window.addEventListener("message", messageListener);
         document.addEventListener("click", clickListener);
 
-        function messageListener(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
-
-            if (e.data.type === "es_modal_dismissed") {
-                document.removeEventListener("click", clickListener);
-                window.removeEventListener("message", messageListener);
-            } else if (e.data.type === "es_background_click") {
-                onNoteUpdate.apply(null, saveNote());
-                window.postMessage({
-                    type: "es_note_saved"
-                }, "*");
-            }
-        }
-
-        function backgroundClickListener(e) {
-            if (e.source !== window) { return; }
-            if (!e.data.type) { return; }
-
-            if (e.data.type === "es_modal_dismissed") {
-                document.removeEventListener("click", clickListener);
-                window.removeEventListener("message", messageListener);
-            }
-        }
+        Messenger.addMessageListener("backgroundClick", () => {
+            onNoteUpdate.apply(null, saveNote());
+            Messenger.postMessage("noteSaved");
+        }, true);
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {
@@ -2995,7 +2939,10 @@ let UserNotes = (function(){
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            } else {
+                return;
             }
+            document.removeEventListener("click", clickListener);
         }
 
         let that = this;
