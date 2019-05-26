@@ -140,6 +140,7 @@
     "badge_foil_progress": "查看闪亮徽章进度",
     "net_gain": "净收益:",
     "apppage_legal": "法律信息",
+    "apppage_franchise": "系列作品",
     "bug_feature": "报告错误/提出建议",
     "always": "总是",
     "compare": "比较",
@@ -365,6 +366,7 @@
         "inventory_market_text": "在库存页面显示市场价格",
         "send_age_info": "自动填写年龄验证",
         "pcgw": "显示 PCGamingWiki 链接",
+        "completionistme": "显示 Completionist.me 链接",
         "protondb": "显示 ProtonDB 链接",
         "store_steamcards": "在商店页面显示 SteamCardExchange 链接",
         "spamcommentregex": "正则表达式字符串：",
@@ -393,6 +395,7 @@
         "friends_wishlist": "好友愿望单中的物品",
         "showspeechsearch": "为搜索框添加语音输入功能",
         "profile_link_images_color": "彩色",
+        "hide_about_links": "隐藏“安装 Steam”按钮和“关于”链接",
         "show_empty_wishlist": "显示“清空愿望单”按钮",
         "inventory_nav_text": "在库存页面启用高级导航功能",
         "carousel_description": "在商店首页轮盘中显示简介",
@@ -419,6 +422,9 @@
         "show_badge_progress": "在商店页面显示徽章进度",
         "show_wishlist_link": "在个人资料页面显示愿望单链接",
         "show_wishlist_count": "在愿望单页面显示物品数量",
+        "profile_showcase_twitch": "如果有 Twitch.tv 链接，则为其添加一个展柜",
+        "profile_showcase_own_twitch": "... 包括您自己的个人资料",
+        "profile_showcase_twitch_profileonly": "... 仅当链接出现在个人资料概要中时",
         "lang": {
             "english": "英语",
             "brazilian": "葡萄牙语——巴西",
@@ -447,7 +453,9 @@
             "thai": "泰语",
             "turkish": "土耳其语",
             "ukrainian": "乌克兰语"
-        }
+        },
+        "add_custom_link": "添加自定义链接",
+        "auto_detect": "自动检测"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -545,5 +553,15 @@
         "in_collection": "拥有",
         "played": "已玩过",
         "never_played": "未玩过"
-    }
+    },
+    "user_note": {
+        "add": "添加备注",
+        "update": "更新备注",
+        "add_prompt": "输入备注内容",
+        "update_prompt": "更新您的备注",
+        "add_for_game": "__gamename__ 的备注1"
+    },
+    "this_version": "当前版本",
+    "original_authors": "原版作者",
+    "powered_by": "数据来自 __link__"
 }
