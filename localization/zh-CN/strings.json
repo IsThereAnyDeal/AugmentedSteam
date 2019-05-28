@@ -117,6 +117,7 @@
     "highlight": "高亮显示",
     "save": "保存",
     "not": "不包含 __tag__",
+    "hide_filter": "隐藏 __filter__",
     "add_to_cart": "添加至购物车",
     "view": "查看",
     "games_all": "全部游戏",
@@ -129,6 +130,7 @@
     "negative_item": "差评物品",
     "price_above": "物品价格高于",
     "price_above_tooltip": "输入 0 显示免费或是未定价的物品，留空禁用该功能",
+    "price_above_wrong_format": "格式错误，应以 __pattern__ 形式输入",
     "news": "新闻",
     "check_system": "检查系统",
     "viewinclient": "在 Steam 客户端中查看",
@@ -397,6 +399,7 @@
         "profile_link_images_color": "彩色",
         "hide_about_links": "隐藏“安装 Steam”按钮和“关于”链接",
         "show_empty_wishlist": "显示“清空愿望单”按钮",
+        "show_user_notes": "在愿望单与商店页面显示用户备注",
         "inventory_nav_text": "在库存页面启用高级导航功能",
         "carousel_description": "在商店首页轮盘中显示简介",
         "market_total": "显示市场交易总额",
@@ -460,7 +463,8 @@
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
         "loading": "Augmented Steam 数据载入中……",
-        "ready": "Augmented Steam 已就绪"
+        "ready": "Augmented Steam 已就绪",
+        "failed": "__amount__ 个请求发送失败，请打开浏览器开发者控制台以了解详情"
     },
     "twitch": {
         "now_streaming": "__username__ 正在 Twitch 上直播",
@@ -558,7 +562,11 @@
         "update": "更新备注",
         "add_prompt": "输入备注内容",
         "update_prompt": "更新您的备注",
-        "add_for_game": "__gamename__ 的备注1"
+        "add_for_game": "__gamename__ 的备注"
+    },
+    "queue": {
+        "new": "开始新队列",
+        "new_tooltip": "从您的队列中移除此产品，并开始一个新队列。"
     },
     "this_version": "当前版本",
     "original_authors": "原版作者",
