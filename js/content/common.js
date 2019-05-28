@@ -923,8 +923,8 @@ let EnhancedSteam = (function() {
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             HTML.afterEnd("#global_header",
-                `<div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
-                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
+                `<div class="es_language_warning">` + Localization.str.using_language.replace("__current__", Localization.str.options.lang[currentLanguage] || currentLanguage) + `
+                    <a href="#" id="es_reset_language_code">` + Localization.str.using_language_return.replace("__base__", Localization.str.options.lang[warningLanguage] || warningLanguage) + `</a>
                 </div>`);
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
