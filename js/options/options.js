@@ -4,16 +4,13 @@ class SaveIndicator {
     static show() {
         let node = document.getElementById('saved');
         if (!node) { return; }
+
         Fader.fadeInFadeOut(node);
     }
 
 }
 
 class Fader {
-
-    /*
-     * TODO (tfedor) I think we can move this completely to CSS
-     */
 
     static async applyCSSTransition(node, property, initialValue, finalValue, durationMs) {
         node.style.transition = '';
@@ -23,22 +20,6 @@ class Fader {
 
         node.style.transition = `${property} ${durationMs}ms`;
         node.style[property] = finalValue;
-
-        // TODO (tfedor) I'm not sure about this promise, when we reset transitions how/when will it resolve
-        return new Promise((resolve, reject) => {
-            function transitionEnd() {
-                // Check if there isn't already another transition for the same property ongoing
-                if (node.style[property] == finalValue) {
-                    node.style.transition = '';
-                }
-
-                resolve(node);
-            }
-
-            node.addEventListener('transitionend', transitionEnd, { 'once': true, });
-            node.addEventListener('mozTransitionEnd', transitionEnd, { 'once': true, }); // FF52, deprefixed in FF53
-            node.addEventListener('webkitTransitionEnd', transitionEnd, { 'once': true, }); // Chrome <74
-        });
     }
 
     static async fadeIn(node, duration = 400) {
@@ -50,12 +31,14 @@ class Fader {
     }
 
     static async fadeInFadeOut(node, fadeInDuration = 400, fadeOutDuration = 400, idleDuration = 600) {
-        await this.fadeIn(node, fadeInDuration);
-        await sleep(idleDuration);
+        let controlId = Date.now().toString();
+        node.dataset.fadeControl = controlId;
 
-        // Don't fade out when there's already another transition fading in
-        if (!node.style.transition || node.style.transition === "none") {
-            return Fader.fadeOut(node, fadeOutDuration);
+        Fader.fadeIn(node, fadeInDuration);
+        await sleep(fadeInDuration + idleDuration);
+
+        if (node.dataset.fadeControl === controlId) {
+            Fader.fadeOut(node, fadeOutDuration);
         }
     }
 }
