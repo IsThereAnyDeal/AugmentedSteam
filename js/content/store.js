@@ -2427,7 +2427,7 @@ let SearchPageClass = (function(){
                     priceVal = priceVal.replace('.', ',');
                 }
                 document.getElementById("es_notpriceabove_val").value = priceVal;
-                Messenger.sendMessage("priceValueChanged");
+                Messenger.postMessage("priceValueChanged");
             } else {
                 console.warn("Failed to validate price %s from URL params!", priceVal);
             }
@@ -2439,7 +2439,7 @@ let SearchPageClass = (function(){
             GDynamicStore.OnReady(() => {
 
                 // Callback that will fire when the user browses through pages
-                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.sendMessage("ajaxCompleted") });` : ""}
+                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.postMessage("ajaxCompleted") });` : ""}
 
                 // For each AS hide filter
                 $J(".tab_filter_control[id^='es_']").each(function() {
@@ -2593,7 +2593,7 @@ let SearchPageClass = (function(){
                         }
                         $J("#termsnone").hide();
                     });
-                    Messenger.sendMessage("filtersChanged");
+                    Messenger.postMessage("filtersChanged");
                 }
     
                 for (let [key, value] of new URLSearchParams(window.location.search)) {
@@ -2609,7 +2609,7 @@ let SearchPageClass = (function(){
                                     }
                                     filter = $J(".tab_filter_control[data-value=price-above]");
                                     Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
-                                    Messenger.sendMessage("priceAbove", priceValue);
+                                    Messenger.postMessage("priceAbove", priceValue);
                                     continue;
                                 } else {
                                     console.warn("Invalid filter value %s", filterValue);
@@ -2651,7 +2651,7 @@ let SearchPageClass = (function(){
 
             if (inputPattern.test(newValue)) {
                 // The "checked" class will be toggled by the page context code
-                Messenger.sendMessage("priceChanged", toggleValue);
+                Messenger.postMessage("priceChanged", toggleValue);
                 priceAboveVal.setCustomValidity('');
             } else {
                 priceFilterCheckbox.classList.toggle("checked", toggleValue);
