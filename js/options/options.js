@@ -4,10 +4,57 @@ class SaveIndicator {
     static show() {
         let node = document.getElementById('saved');
         if (!node) { return; }
-        HTML.fadeInFadeOut(node);
+        Fader.fadeInFadeOut(node);
     }
 
 }
+
+class Fader {
+
+    static async applyCSSTransition(node, property, initialValue, finalValue, durationMs) {
+        node.style.transition = '';
+        node.style[property] = initialValue;
+
+        await sleep(0);
+
+        node.style.transition = `${property} ${durationMs}ms`;
+        node.style[property] = finalValue;
+
+        return new Promise((resolve, reject) => {
+            function transitionEnd() {
+                // Check if there isn't already another transition for the same property ongoing
+                if (node.style[property] == finalValue) {
+                    node.style.transition = '';
+                }
+
+                resolve(node);
+            }
+
+            node.addEventListener('transitionend', transitionEnd, { 'once': true, });
+            node.addEventListener('mozTransitionEnd', transitionEnd, { 'once': true, }); // FF52, deprefixed in FF53
+            node.addEventListener('webkitTransitionEnd', transitionEnd, { 'once': true, }); // Chrome <74
+        });
+    }
+
+    static async fadeIn(node, duration = 400) {
+        return Fader.applyCSSTransition(node, 'opacity', 0, 1, duration);
+    }
+
+    static async fadeOut(node, duration = 400) {
+        await Fader.applyCSSTransition(node, 'opacity', 1, 0, duration);
+    }
+
+    static async fadeInFadeOut(node, fadeInDuration = 400, fadeOutDuration = 400, idleDuration = 600) {
+        await this.fadeIn(node, fadeInDuration);
+        await sleep(idleDuration);
+
+        // Don't fade out when there's already another transition fading in
+        if (!node.style.transition || node.style.transition === "none") {
+            return Fader.fadeOut(node, fadeOutDuration);
+        }
+    }
+}
+
 
 class CustomLinks {
 
@@ -335,10 +382,10 @@ let Options = (function(){
         if (!confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
         SyncedStorage.then(loadOptions);
-        // FIXME $("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
+
         let node = document.getElementById('reset_note');
         if (node) {
-            HTML.fadeInFadeOut(node);
+            Fader.fadeInFadeOut(node);
         }
     }
 

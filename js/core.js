@@ -710,64 +710,6 @@ class HTML {
     static afterEnd(node, html) {
         HTML.adjacent(node, "afterend", html);
     }
-
-
-    static async applyCSSTransition(node, prop, initialValue, finalValue, duration, callback) {
-        if (typeof node == 'string') {
-            node = document.querySelector(node);
-        }
-        node.style.transition = '';
-        node.style[prop] = initialValue;
-
-        if (window.getComputedStyle(node).display == 'none') {
-            node.style.display = 'inherit';
-            await sleep(0); // transition events don't fire if the element is display: none
-        }
-
-        node.style.transition = `${prop} ${duration}ms`;
-        node.style[prop] = finalValue;
-
-        return new Promise(function (resolve, reject) {
-            function transitionEnd() {
-                // Check if there isn't already another transition for the same property ongoing
-                if (node.style[prop] == finalValue) {
-                    node.style.transition = '';
-                }
-                resolve(node);
-                if (callback) {
-                    callback(node);
-                }
-            }
-            node.addEventListener('transitionend', transitionEnd, { 'once': true, });
-            node.addEventListener('mozTransitionEnd', transitionEnd, { 'once': true, }); // FF52, deprefixed in FF53
-            node.addEventListener('webkitTransitionEnd', transitionEnd, { 'once': true, }); // Chrome <74
-        });
-    }
-
-    static fadeIn(node, duration = 400) {
-        return HTML.applyCSSTransition(node, 'opacity', 0, 1, duration, null);
-    }
-
-    static fadeOut(node, duration = 400) {
-        return HTML.applyCSSTransition(node, 'opacity', 1, 0, duration, null)
-            .then(() => {
-                // Setting display to none while another transition is running causes unwanted behavior
-                if (!node.style.transition || node.style.transition === "none") {
-                    node.style.display = "none";
-                }
-            });
-    }
-
-    static fadeInFadeOut(node, fadeInDuration = 400, fadeOutDuration = 400, idleDuration = 600) {
-        return HTML.fadeIn(node, fadeInDuration)
-            .then(() => sleep(idleDuration))
-            .then(() => {
-                // Don't fade out when there's already another transition fading in
-                if (!node.style.transition || node.style.transition === "none") {
-                    return HTML.fadeOut(node, fadeOutDuration);
-                }
-            });
-    }
 }
 
 class HTMLParser {
