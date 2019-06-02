@@ -75,7 +75,7 @@
     "add_to_wishlist": "Добавяне към списъка Ви с желания",
     "language": "Език",
     "theworddefault": "По подразбиране",
-    "coupon_learn_more": "<a title="Steam поддръжка | Steam ваучери" href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Научете още</a> относно Steam ваучерите",
+    "coupon_learn_more": "<a title=\"Steam поддръжка | Steam ваучери\" href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Научете още</a> относно Steam ваучерите",
     "show": "Показване",
     "badges_all": "Всички значки",
     "comparison_mode": "Включете обзора на всички игри, за да виждате сравняване",
@@ -293,7 +293,7 @@
         "error_loading_library": "Библиотеката Ви не може да бъде заредена.",
         "categories": "Категории…",
         "genres": "Жанрове…",
-        "private_profile": "Променете своя профилен статус към публичен <a title="Профилни настройки за поверителност" href='http://steamcommunity.com/my/edit/settings'>в настройките</a>, за да използвате тази характеристика."
+        "private_profile": "Променете своя профилен статус към публичен <a title=\"Профилни настройки за поверителност\" href='http://steamcommunity.com/my/edit/settings'>в настройките</a>, за да използвате тази характеристика."
     },
     "spy": {
         "player_data": "Данни за играчите",
@@ -500,12 +500,12 @@
         "wishlist": "Списък с желания",
         "friends_own": "__friendcount__ притежават",
         "coupon": "Ваучер",
-        "friends_rec": "<a title="Препоръчани от приятели" href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ приятелски рецензии",
+        "friends_rec": "<a title=\"Препоръчани от приятели\" href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ приятелски рецензии",
         "inv_gift": "Подарък",
         "inv_guestpass": "Временен пропуск",
         "owned": "Притежавано",
         "notinterested": "Не се интересувам",
-        "friends_want": "<a title="Приятели, които играят" href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ желаят</a>"
+        "friends_want": "<a title=\"Приятели, които играят\" href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ желаят</a>"
     },
     "wallet": {
         "custom_amount": "Добавяне на персонализирана сума",
