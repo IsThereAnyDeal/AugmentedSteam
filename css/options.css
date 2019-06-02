@@ -20,16 +20,16 @@ body {
 	margin-left: 170px;
 }
 
-.notification {
-	float:right;
-	font-size: 2em;
-	font-weight: bold;
-	padding:24px;
-	display:none;
+#notifications {
+	position: sticky;
+	top: 0;
+	margin-left: auto;
 }
 
-#saved {
-	color:#8BC53F;
+.notification {
+	height: 4em;
+	padding: 24px;
+	display:none;
 }
 
 #reset_note {

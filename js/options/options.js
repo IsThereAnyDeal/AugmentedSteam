@@ -4,9 +4,7 @@ class SaveIndicator {
     static show() {
         let node = document.getElementById('saved');
         if (!node) { return; }
-        HTML.fadeIn(node)
-            .then(() => sleep(600))
-            .then(() => HTML.fadeOut(node));
+        HTML.fadeInFadeOut(node);
     }
 
 }
@@ -17,7 +15,7 @@ class CustomLinks {
 
         let links = SyncedStorage.get('profile_custom_link');
         for (let link of links) {
-            CustomLinks.create(link);
+            CustomLinks.show(link);
         }
 
         document
@@ -28,7 +26,7 @@ class CustomLinks {
     }
 
     // TODO (KarlCastle?) Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
-    static create(link) {
+    static show(link) {
         let customLinkTemplate = document.getElementById('add_custom_profile_link');
         let node = document.importNode(customLinkTemplate.content, true).firstElementChild;
 
@@ -47,10 +45,11 @@ class CustomLinks {
         node.addEventListener('change', CustomLinks.save);
         node.querySelector('.custom-link__close')
             .addEventListener('click', CustomLinks.remove, false);
+    }
 
+    static create(link) {
+        CustomLinks.show(link);
         CustomLinks.save();
-
-        return node;
     }
 
     static read(node) {
@@ -339,10 +338,7 @@ let Options = (function(){
         // FIXME $("#reset_note").stop(true,true).fadeIn().delay(600).fadeOut();
         let node = document.getElementById('reset_note');
         if (node) {
-            HTML.fadeIn(node)
-                .then(() => sleep(600))
-                .then(() => HTML.fadeOut(node))
-                ;
+            HTML.fadeInFadeOut(node);
         }
     }
 
