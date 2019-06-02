@@ -2828,10 +2828,13 @@ let MarketListingPageClass = (function(){
     };
 
     MarketListingPageClass.prototype.addPriceHistoryZoomControl = function() {
-        // DOMPurify would delete the onclick property
-        document.querySelectorAll(".zoomopt")[1].insertAdjacentHTML("afterend",
-            `<a class="zoomopt" onclick="return pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);" href="javascript:void(0)">${Localization.str.year}</a>`);
-    }
+        HTML.afterEnd(document.querySelectorAll(".zoomopt")[1], `<a class="zoomopt as-zoomcontrol">${Localization.str.year}</a>`);
+        document.querySelector(".as-zoomcontrol").addEventListener("click", function() {
+            ExtensionLayer.runInPageContext(() => {
+                pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
+            })
+        });
+    };
 
     return MarketListingPageClass;
 })();
