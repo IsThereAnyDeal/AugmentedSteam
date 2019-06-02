@@ -2767,6 +2767,7 @@ let MarketListingPageClass = (function(){
         }
 
         this.addBadgePageLink();
+        this.addPriceHistoryZoomControl();
     }
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
@@ -2826,6 +2827,14 @@ let MarketListingPageClass = (function(){
         }
     };
 
+    MarketListingPageClass.prototype.addPriceHistoryZoomControl = function() {
+        HTML.afterEnd(document.querySelectorAll(".zoomopt")[1], `<a class="zoomopt as-zoomcontrol">${Localization.str.year}</a>`);
+        document.querySelector(".as-zoomcontrol").addEventListener("click", function() {
+            ExtensionLayer.runInPageContext(() => {
+                pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
+            })
+        });
+    };
 
     return MarketListingPageClass;
 })();
