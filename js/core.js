@@ -1,5 +1,5 @@
 const Info = {
-    'version': "0.9.7",
+    'version': "1.0.0",
 };
 
 /**

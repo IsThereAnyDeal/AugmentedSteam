@@ -1,4 +1,20 @@
 ﻿
+v1.0.0
+-----
+First major Augemented Steam release!
+
+- Improved Steam search filters
+- Improved the way SteamRep is shown
+- Market stats should be more reliable
+- Added one year filter for market history
+- Fixed highlights on publishers and developers pages
+- Fixed game title highlights, highlighting all variations, not just owned games
+- Fixed duplicates during friends sorting
+- Improved translations Chinese, Polish and Bulgarian translations
+- Improved error handling
+- Other minor fixes
+
+
 v0.9.7
 -----
 A hotfix for v0.9.6.
