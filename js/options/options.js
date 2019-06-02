@@ -11,6 +11,10 @@ class SaveIndicator {
 
 class Fader {
 
+    /*
+     * TODO (tfedor) I think we can move this completely to CSS
+     */
+
     static async applyCSSTransition(node, property, initialValue, finalValue, durationMs) {
         node.style.transition = '';
         node.style[property] = initialValue;
@@ -20,6 +24,7 @@ class Fader {
         node.style.transition = `${property} ${durationMs}ms`;
         node.style[property] = finalValue;
 
+        // TODO (tfedor) I'm not sure about this promise, when we reset transitions how/when will it resolve
         return new Promise((resolve, reject) => {
             function transitionEnd() {
                 // Check if there isn't already another transition for the same property ongoing
