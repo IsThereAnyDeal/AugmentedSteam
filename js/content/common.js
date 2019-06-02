@@ -733,6 +733,10 @@ let Currency = (function() {
         return _promise = CurrencyRegistry
             .then(_getCurrency)
             .then(_getRates)
+            .catch(e => {
+                console.error("Failed to initialize Currency");
+                console.error(e);
+            });
             ;
     };
 
