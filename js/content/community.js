@@ -1842,10 +1842,10 @@ let InventoryPageClass = (function(){
         document.documentElement.appendChild(es_gotopage);
 
         // Go to first page
-        HTML.afterEnd("#pagebtn_previous", "<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled' style='margin:0 3px'>&lt;&lt;</a>");
+        document.getElementById("pagebtn_previous").insertAdjacentHTML("afterend", "<a href='javascript:InventoryFirstPage();' id='pagebtn_first' class='pagebtn pagecontrol_element disabled' style='margin:0 3px'>&lt;&lt;</a>");
 
         // Go to last page
-        HTML.beforeBegin("#pagebtn_next", "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
+        document.getElementById("pagebtn_next").insertAdjacentHTML("beforebegin", "<a href='javascript:InventoryLastPage();' id='pagebtn_last' class='pagebtn pagecontrol_element' style='margin:0 3px'>&gt;&gt;</a>");
 
         let pageGo = document.createElement("div");
         pageGo.id = "es_pagego";
