@@ -1015,8 +1015,8 @@ class AppPageClass extends StorePageClass {
         if (this.isDlc()) { return; }
 
         this.data.then(result => {
-            if (!result || result.wsgf) { return; }
-            let node = document.querySelector("game_details");
+            if (!result || !result.wsgf) { return; }
+            let node = document.querySelector(".game_details");
 
             let data = result.wsgf;
             if (!data) { return; }
