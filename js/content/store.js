@@ -1009,12 +1009,6 @@ class AppPageClass extends StorePageClass {
 
         if (!SyncedStorage.get("showyoutubegameplay")) { return; }
 
-        document.querySelector(".highlight_ctn").insertAdjacentHTML("afterend",
-            `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
-                src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
-                allowfullscreen>
-            </iframe>`);
-
         HTML.afterBegin("#game_highlights",
             `<div id="es_media_tabs">
                 <div class="store_horizontal_minislider_ctn" style="height: 31px;">
@@ -1036,6 +1030,17 @@ class AppPageClass extends StorePageClass {
         let steamMedia = document.querySelector(".highlight_ctn");
 
         youTubeTab.addEventListener("click", () => {
+
+            if (!youTubeMedia) {
+                document.querySelector(".highlight_ctn").insertAdjacentHTML("afterend",
+                    `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
+                        src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
+                        allowfullscreen>
+                    </iframe>`);
+
+                youTubeMedia = document.getElementById("es_youtube_gameplay_player");
+            }
+
             steamMedia.style.display = "none";
             steamTab.classList.remove("active");
 
@@ -1046,13 +1051,16 @@ class AppPageClass extends StorePageClass {
         });
 
         steamTab.addEventListener("click", () => {
-            youTubeMedia.style.display = "none";
-            youTubeTab.classList.remove("active");
 
-            steamMedia.style.display = "block";
-            steamTab.classList.add("active");
+            if (youTubeMedia) {
+                youTubeMedia.style.display = "none";
+                youTubeTab.classList.remove("active");
 
-            ExtensionLayer.runInPageContext(() => SteamOnWebPanelShown());
+                steamMedia.style.display = "block";
+                steamTab.classList.add("active");
+
+                ExtensionLayer.runInPageContext(() => SteamOnWebPanelShown());
+            }
         });
     }
 
