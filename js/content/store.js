@@ -1038,7 +1038,7 @@ class AppPageClass extends StorePageClass {
             if (!youTubeMedia) {
                 document.querySelector(".highlight_ctn").insertAdjacentHTML("beforeend",
                     `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
-                        src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
+                        src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&enablejsapi=1&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
                         allowfullscreen>
                     </iframe>`);
 
@@ -1057,6 +1057,9 @@ class AppPageClass extends StorePageClass {
         steamTab.addEventListener("click", () => {
 
             if (youTubeMedia) {
+
+                youTubeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
+
                 youTubeMedia.style.display = "none";
                 youTubeTab.classList.remove("active");
 
