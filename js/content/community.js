@@ -1766,7 +1766,7 @@ let InventoryPageClass = (function(){
         Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
 
         Messenger.addMessageListener("sendFee", info => {
-            let sellPrice = info.amount - info.fees;
+            let sellPrice = info.feeInfo.amount - info.feeInfo.fees;
             let formData = new FormData();
             formData.append("sessionid", info.sessionID);
             formData.append("appid", info.global_id);
