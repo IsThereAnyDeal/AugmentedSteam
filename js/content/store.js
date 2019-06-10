@@ -504,8 +504,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        let media = new MediaPage();
-        media.mediaSliderExpander();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -518,9 +516,11 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
-        this.displayPurchaseDate();
+
+        new MediaPage().appPage();
 
         this.addWidescreenCertification();
 
@@ -1009,7 +1009,7 @@ class AppPageClass extends StorePageClass {
 
         if (!SyncedStorage.get("showyoutubegameplay")) { return; }
 
-        HTML.afterBegin("#game_highlights",
+        HTML.afterBegin(".leftcol",
             `<div id="es_media_tabs">
                 <div class="store_horizontal_minislider_ctn" style="height: 31px;">
                     <div class="home_tabs_row">
@@ -1023,16 +1023,20 @@ class AppPageClass extends StorePageClass {
                 </div>
             </div>`);
 
+        /*  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
+            This empty div is inserted here in order to keep the same height difference between the left and the right column. */
+        HTML.afterBegin(".rightcol", "<div style='height: 31px;'></div>")
+
         let youTubeTab = document.getElementById("es_tab_youtubemedia");
         let steamTab = document.getElementById("es_tab_steammedia");
 
         let youTubeMedia = document.getElementById("es_youtube_gameplay_player");
-        let steamMedia = document.querySelector(".highlight_ctn");
+        let steamMedia = document.querySelector(".highlight_overflow");
 
         youTubeTab.addEventListener("click", () => {
 
             if (!youTubeMedia) {
-                document.querySelector(".highlight_ctn").insertAdjacentHTML("afterend",
+                document.querySelector(".highlight_ctn").insertAdjacentHTML("beforeend",
                     `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
                         src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
                         allowfullscreen>

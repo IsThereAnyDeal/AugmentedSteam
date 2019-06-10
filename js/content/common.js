@@ -2064,14 +2064,28 @@ let Common = (function(){
 
 
 class MediaPage {
-    mediaSliderExpander() {
+
+    appPage() {
+        if (SyncedStorage.get("showyoutubegameplay")) {
+            this._mediaSliderExpander(HTML.beforeEnd, ".home_tabs_row");
+        } else {
+            this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
+        }
+    }
+
+    workshopPage() {
+        this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
+    }
+
+    _mediaSliderExpander(insertFunction, selector) {
+
         let detailsBuilt = false;
         let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
 
         if (!details) { return; }
         // If we can't identify a details block to move out of the way, not much point to the rest of this function.
 
-        HTML.beforeEnd("#highlight_player_area",
+        insertFunction(selector,
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
                 <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
                 <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
