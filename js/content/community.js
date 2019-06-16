@@ -3471,8 +3471,7 @@ let GuidesPageClass = (function(){
 
 class WorkshopPageClass {
     constructor() {
-        let media = new MediaPage();
-        media.mediaSliderExpander();
+        new MediaPage().workshopPage();
         //media.initHdPlayer();
     }
 }

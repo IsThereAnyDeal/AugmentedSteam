@@ -504,8 +504,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        let media = new MediaPage();
-        media.mediaSliderExpander();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -519,6 +517,10 @@ class AppPageClass extends StorePageClass {
         this.addMetacriticUserScore();
         this.addOpenCritic();
         this.displayPurchaseDate();
+        this.addYouTubeGameplay();
+        this.addYouTubeReviews();
+
+        new MediaPage().appPage();
 
         this.addWidescreenCertification();
 
@@ -966,16 +968,24 @@ class AppPageClass extends StorePageClass {
             if (data.reviews.length > 0) {
                 let reviewsNode = document.querySelector("#game_area_reviews");
                 if (reviewsNode) {
-                    let node = reviewsNode.querySelector("p");
-                    HTML.afterBegin(node, "<div id='es_opencritic_reviews'></div>");
-                    HTML.beforeEnd(node,  `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`);
+                    HTML.beforeBegin(reviewsNode.querySelector("p"), "<div id='es_opencritic_reviews'></div>");
+
+                    let youTubeReviews = document.getElementById("es_youtube_reviews");
+                    let htmlString = `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`;
+
+                    if (youTubeReviews) {
+                        HTML.beforeBegin(youTubeReviews, htmlString);
+                    } else {
+                        HTML.beforeEnd(reviewsNode);
+                    }
                 } else {
-                    HTML.beforeBegin("#game_area_description",
-                    `<div id='game_area_reviews' class='game_area_description'>
+                    HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
+                        `<div id='game_area_reviews' class='game_area_description'>
                             <h2>${Localization.str.reviews}</h2>
-                            <div id='es_opencritic_reviews'></div>
-                            <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
-                          </div>`);
+                            <div id='es_opencritic_reviews'>
+                                <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
+                            </div>
+                        </div>`);
 
                     if (!SyncedStorage.get("customize_apppage").reviews) {
                         document.querySelector("#game_area_reviews").style.display = "none";
@@ -989,10 +999,113 @@ class AppPageClass extends StorePageClass {
                     review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
                 }
 
-                HTML.beforeEnd("#es_opencritic_reviews", review_text);
+                HTML.afterBegin("#es_opencritic_reviews", review_text);
                 ExtensionLayer.runInPageContext(() => BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ));
             }
         });
+    }
+
+    _getYoutubeIframeNode(appName) {
+
+        let listParam = encodeURIComponent(appName)
+            + "+" + encodeURIComponent(Localization.str.game)
+            + "+" + encodeURIComponent(Localization.str.gameplay);
+
+        let hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
+
+        let node = document.createElement("iframe");
+        node.id = "es_youtube_gameplay_player";
+        node.classList.add("es_youtube_player");
+        node.type = "text/html";
+        node.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&enablejsapi=1&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}`;
+        node.allowFullscreen = true;
+
+        return node;
+    }
+
+    addYouTubeGameplay() {
+
+        if (!SyncedStorage.get("showyoutubegameplay")) { return; }
+
+        HTML.afterBegin(".leftcol",
+            `<div id="es_media_tabs">
+                <div class="store_horizontal_minislider_ctn" style="height: 31px;">
+                    <div class="home_tabs_row">
+                        <div id="es_tab_steammedia" class="es_media_tab home_tab active">
+                            <div class="tab_content">Steam</div>
+                        </div>
+                        <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
+                            <div class="tab_content">YouTube Gameplay</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`);
+
+        /*  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
+            This empty div is inserted here in order to keep the same height difference between the left and the right column. */
+        HTML.afterBegin(".rightcol", "<div style='height: 31px;'></div>");
+
+        let youTubeTab = document.getElementById("es_tab_youtubemedia");
+        let steamTab = document.getElementById("es_tab_steammedia");
+
+        let youTubeMedia = document.getElementById("es_youtube_gameplay_player");
+        let steamMedia = document.querySelector(".highlight_overflow");
+
+        youTubeTab.addEventListener("click", () => {
+
+            if (!youTubeMedia) {
+                youTubeMedia = this._getYoutubeIframeNode(this.appName);
+                youTubeMedia.style.display = "none";
+
+                document.querySelector(".highlight_ctn")
+                    .insertAdjacentElement("beforeend", youTubeMedia);
+            }
+
+            steamMedia.style.display = "none";
+            steamTab.classList.remove("active");
+
+            youTubeMedia.style.display = "block";
+            youTubeTab.classList.add("active");
+
+            ExtensionLayer.runInPageContext(() => SteamOnWebPanelHidden());
+        });
+
+        steamTab.addEventListener("click", () => {
+
+            if (youTubeMedia) {
+
+                youTubeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
+
+                youTubeMedia.style.display = "none";
+                youTubeTab.classList.remove("active");
+
+                steamMedia.style.display = "block";
+                steamTab.classList.add("active");
+
+                ExtensionLayer.runInPageContext(() => SteamOnWebPanelShown());
+            }
+        });
+    }
+
+    addYouTubeReviews() {
+        if (!SyncedStorage.get("showyoutubereviews")) { return; }
+
+        let reviewsNode = document.querySelector("#game_area_reviews");
+        if (!reviewsNode) {
+            HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
+                `<div id="game_area_reviews" class="game_area_description">
+                    <h2>${Localization.str.reviews}</h2>
+                    <div id="es_youtube_reviews"></div>
+                </div>`);
+
+            if (!SyncedStorage.get("customize_apppage").reviews) {
+                document.querySelector("#game_area_reviews").style.display = "none";
+            }
+        } else {
+            HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
+        }
+
+        document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName));
     }
 
     displayPurchaseDate() {

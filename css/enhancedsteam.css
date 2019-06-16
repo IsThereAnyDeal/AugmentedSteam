@@ -80,6 +80,20 @@ img.platform_small, .platform_img {
 	display: block !important;
 }
 
+.es_youtube_player {
+	border: none;
+	width: 600px;
+	height: 337.5px;
+}
+
+#es_youtube_reviews {
+	margin-top: 20px;
+}
+
+.es_media_tab.active .tab_content {
+	background-color: #0003 !important;
+}
+
 .chart-stat {
 	float: left;
 	text-align: center;
@@ -106,6 +120,7 @@ img.platform_small, .platform_img {
 	font-size: 11px;
 	float: right;
 	padding-top: 5px;
+	margin-bottom: 20px;
 }
 .apphub_HeaderTop.es_greenlight {
 	background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
@@ -1091,7 +1106,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .workshop_item_header #highlight_player_area,
 .workshop_item_header .highlight_player_item iframe,
 .workshop_item_header .workshopItemPreviewImageEnlargeable,
-.workshop_item_header .workshopItemPreviewImageEnlargeableContainer {
+.workshop_item_header .workshopItemPreviewImageEnlargeableContainer,
+#es_youtube_gameplay_player {
 	transition: width 0.25s ease, max-width 0.25s ease, height 0.25s ease;
 }
 .es_slider_toggle {
@@ -1103,6 +1119,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	transition: top 0.15s, opacity 0.15s ease;
 	background: rgba(103, 193, 245, 0.8) !important;
 	border: 1px solid rgba(0,0,0,0.50) !important;
+}
+.home_tabs_row .es_slider_toggle {
+	opacity: 1;
+}
+.home_tabs_row .es_slider_toggle:not(.es_expanded) {
+	margin-right: 16px;
 }
 .es_slider_toggle:hover {
 	border: 1px solid rgba(255,255,255,0.75) !important;
@@ -1167,8 +1189,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	#game_highlights .highlight_ctn {
 		width: 616px;
 	}
-	#game_highlights.es_expanded .highlight_ctn {
+	#game_highlights.es_expanded .highlight_ctn,
+	#game_highlights.es_expanded #es_youtube_gameplay_player {
 		width: 940px;
+	}
+	#game_highlights.es_expanded #es_youtube_gameplay_player {
+		height: 528.75px;
 	}
 	#game_highlights.es_expanded .highlight_overflow {
 		margin-right: 0;
