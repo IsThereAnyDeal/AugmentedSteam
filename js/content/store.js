@@ -1005,11 +1005,11 @@ class AppPageClass extends StorePageClass {
         });
     }
 
-    _getYoutubeIframeNode(appName) {
+    _getYoutubeIframeNode(appName, searchQuery) {
 
         let listParam = encodeURIComponent(appName)
             + "+" + encodeURIComponent(Localization.str.game)
-            + "+" + encodeURIComponent(Localization.str.gameplay);
+            + "+" + encodeURIComponent(searchQuery);
 
         let hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
@@ -1054,7 +1054,7 @@ class AppPageClass extends StorePageClass {
         youTubeTab.addEventListener("click", () => {
 
             if (!youTubeMedia) {
-                youTubeMedia = this._getYoutubeIframeNode(this.appName);
+                youTubeMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
                 youTubeMedia.style.display = "none";
 
                 document.querySelector(".highlight_ctn")
@@ -1105,7 +1105,7 @@ class AppPageClass extends StorePageClass {
             HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
         }
 
-        document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName));
+        document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
     displayPurchaseDate() {
