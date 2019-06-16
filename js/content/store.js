@@ -1005,6 +1005,25 @@ class AppPageClass extends StorePageClass {
         });
     }
 
+    _getYoutubeIframeNode(appName) {
+
+        let listParam = encodeURIComponent(appName)
+            + "+" + encodeURIComponent(Localization.str.game)
+            + "+" + encodeURIComponent(Localization.str.gameplay);
+
+        let hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
+
+        let node = document.createElement("iframe");
+        node.style.display = "none";
+        node.id = "es_youtube_gameplay_player";
+        node.classList.add("es_youtube_player");
+        node.type = "text/html";
+        node.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&enablejsapi=1&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}`;
+        node.allowFullscreen = true;
+
+        return node;
+    }
+
     addYouTubeGameplay() {
 
         if (!SyncedStorage.get("showyoutubegameplay")) { return; }
@@ -1025,7 +1044,7 @@ class AppPageClass extends StorePageClass {
 
         /*  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
             This empty div is inserted here in order to keep the same height difference between the left and the right column. */
-        HTML.afterBegin(".rightcol", "<div style='height: 31px;'></div>")
+        HTML.afterBegin(".rightcol", "<div style='height: 31px;'></div>");
 
         let youTubeTab = document.getElementById("es_tab_youtubemedia");
         let steamTab = document.getElementById("es_tab_steammedia");
@@ -1036,13 +1055,8 @@ class AppPageClass extends StorePageClass {
         youTubeTab.addEventListener("click", () => {
 
             if (!youTubeMedia) {
-                document.querySelector(".highlight_ctn").insertAdjacentHTML("beforeend",
-                    `<iframe style="display: none;" id="es_youtube_gameplay_player" class="es_youtube_player" type="text/html"
-                        src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.gameplay)}&enablejsapi=1&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
-                        allowfullscreen>
-                    </iframe>`);
-
-                youTubeMedia = document.getElementById("es_youtube_gameplay_player");
+                document.querySelector(".highlight_ctn")
+                    .insertAdjacentElement("beforeend", this._getYoutubeIframeNode(this.appName));
             }
 
             steamMedia.style.display = "none";
@@ -1072,7 +1086,6 @@ class AppPageClass extends StorePageClass {
     }
 
     addYouTubeReviews() {
-
         if (!SyncedStorage.get("showyoutubereviews")) { return; }
 
         let reviewsNode = document.querySelector("#game_area_reviews");
@@ -1090,11 +1103,7 @@ class AppPageClass extends StorePageClass {
             HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
         }
 
-        document.getElementById("es_youtube_reviews").innerHTML = 
-            `<iframe id="es_youtube_reviews_player" class="es_youtube_player" type="text/html"
-                src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(this.appName)}+${encodeURIComponent(Localization.str.game)}+${encodeURIComponent(Localization.str.review)}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()))}"
-                allowfullscreen>
-            </iframe>`;
+        document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName));
     }
 
     displayPurchaseDate() {
