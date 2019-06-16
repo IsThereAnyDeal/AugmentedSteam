@@ -488,6 +488,8 @@ SyncedStorage.defaults = {
     'showitadlinks': true,
     'showsteamdb': true,
     'showastatslink': true,
+    'showyoutubegameplay': true,
+    'showyoutubereviews': true,
     'showwsgf': true,
     'exfgls': true,
 

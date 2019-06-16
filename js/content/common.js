@@ -1073,7 +1073,7 @@ let EnhancedSteam = (function() {
         if(community){
             selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
         } else {
-            selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
+            selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
         }
 
         // Replaces "R", "C" and "TM" signs
@@ -2070,14 +2070,28 @@ let Common = (function(){
 
 
 class MediaPage {
-    mediaSliderExpander() {
+
+    appPage() {
+        if (SyncedStorage.get("showyoutubegameplay")) {
+            this._mediaSliderExpander(HTML.beforeEnd, ".home_tabs_row");
+        } else {
+            this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
+        }
+    }
+
+    workshopPage() {
+        this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
+    }
+
+    _mediaSliderExpander(insertFunction, selector) {
+
         let detailsBuilt = false;
         let details  = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
 
         if (!details) { return; }
         // If we can't identify a details block to move out of the way, not much point to the rest of this function.
 
-        HTML.beforeEnd("#highlight_player_area",
+        insertFunction(selector,
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
                 <div data-slider-tooltip="` + Localization.str.expand_slider + `" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
                 <div data-slider-tooltip="` + Localization.str.contract_slider + `" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
