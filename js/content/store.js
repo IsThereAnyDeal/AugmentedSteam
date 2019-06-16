@@ -1014,7 +1014,6 @@ class AppPageClass extends StorePageClass {
         let hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
         let node = document.createElement("iframe");
-        node.style.display = "none";
         node.id = "es_youtube_gameplay_player";
         node.classList.add("es_youtube_player");
         node.type = "text/html";
@@ -1055,8 +1054,11 @@ class AppPageClass extends StorePageClass {
         youTubeTab.addEventListener("click", () => {
 
             if (!youTubeMedia) {
+                youTubeMedia = this._getYoutubeIframeNode(this.appName);
+                youTubeMedia.style.display = "none";
+
                 document.querySelector(".highlight_ctn")
-                    .insertAdjacentElement("beforeend", this._getYoutubeIframeNode(this.appName));
+                    .insertAdjacentElement("beforeend", youTubeMedia);
             }
 
             steamMedia.style.display = "none";
