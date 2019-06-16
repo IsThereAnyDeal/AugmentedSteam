@@ -2615,3 +2615,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
  **************************************/
 .game_page_autocollapse_ctn { margin-top: 30px; }
 .game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
+
+
+#pagebtn_first,
+#pagebtn_last
+{
+	margin: 0 3px;
+}
