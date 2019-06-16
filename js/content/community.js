@@ -478,7 +478,7 @@ let ProfileHomePageClass = (function(){
         if (SyncedStorage.get("show_wishlist_count")) {
             if (document.querySelector(".gamecollector_showcase")) {
                 let nodes = document.querySelectorAll(".gamecollector_showcase .showcase_stat");
-                document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent.match(/\d+/)[0];
+                document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent.match(/\d+,\d+/)[0];
             }
         }
     };
