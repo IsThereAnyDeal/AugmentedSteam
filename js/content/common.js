@@ -214,6 +214,12 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
+
+/**
+ * NOTE FOR ADDON REVIEWER:
+ * This class is meant to simplify communication between extension context and page context.
+ * Basically, we have wrapped postMessage API in this class.
+ */
 class Messenger {
     static postMessage(msgID, info) {
         window.postMessage({
@@ -232,7 +238,7 @@ class Messenger {
                     window.removeEventListener("message", callback);
                 }
             }
-        }
+        };
         window.addEventListener("message", callback);
     }
 }
