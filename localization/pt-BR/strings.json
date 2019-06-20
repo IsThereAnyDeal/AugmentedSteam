@@ -49,6 +49,7 @@
     "apppage_sections": "Selecione as seções que deseja ver nesta página",
     "search_error": "Erro ao carregar mais resultados.",
     "website": "Site",
+    "game": "Jogo",
     "games": "Jogos",
     "total_time": "Tempo total",
     "dlc_suggest": "Sugerir uma nova categoria",
@@ -62,6 +63,7 @@
     "homepage_tabs": "Abas da página inicial",
     "store": "Loja",
     "view_in_store": "Ver em Loja",
+    "view_on_website": "Ver no __website__",
     "drm_third_party": "Aviso: Este título usa GDD/DRM de terceiros __drmlist__.",
     "stores": "Lojas",
     "game_transactions": "Transações em jogos",
@@ -93,9 +95,11 @@
     "apppage_purchase": "Opções de compra",
     "search_error_retry": "Clique aqui para tentar novamente.",
     "contribute": "Colaborar (GitHub)",
+    "review": "Análise",
     "reviews": "Análises",
     "read_reviews": "Ler análises",
     "read_more_reviews": "Ler mais análises em",
+    "gameplay": "Gameplay",
     "size": "Tamanho",
     "package_info": "Informações do pacote",
     "badge_completion_avg": "Custo aprox. para fabricar: __cost__",
@@ -116,6 +120,7 @@
     "highlight": "Destacar",
     "save": "Salvar",
     "not": "Excluir __tag__",
+    "hide_filter": "Esconder __filter__",
     "add_to_cart": "+ Carrinho",
     "view": "Ver",
     "games_all": "Todos os jogos",
@@ -128,6 +133,7 @@
     "negative_item": "Itens de avaliação negativa",
     "price_above": "Itens que custam mais do que",
     "price_above_tooltip": "Insira zero para itens gratuitos ou sem preço; deixe em branco para desativar",
+    "price_above_wrong_format": "Formato incorreto, é esperado um valor da seguinte forma: __pattern__",
     "news": "Notícias",
     "check_system": "Analisar requisitos",
     "viewinclient": "Ver no cliente Steam",
@@ -139,6 +145,7 @@
     "badge_foil_progress": "Ver progresso da insígnia brilhante",
     "net_gain": "Lucro final:",
     "apppage_legal": "Informações jurídicas",
+    "apppage_franchise": "Franquia",
     "bug_feature": "Relatar bug / Sugerir recurso",
     "always": "Sempre",
     "compare": "Comparar",
@@ -155,6 +162,7 @@
     "visit_store": "Visitar a página da loja",
     "all": "Tudo",
     "total_spent": "Total gasto",
+    "external_funds": "Fundos Externos Utilizados",
     "games_with_drops": "__dropsgames__ jogos darão cartas",
     "binder_view": "Grade",
     "view_stats": "Ver estatísticas",
@@ -248,6 +256,7 @@
     "user_reviews": "Análises de usuários",
     "review_summary": "__percent__ das __num__ análises de usuários deste jogo são positivas.",
     "market_popular_items_toggle": "Alternar atualização em tempo real para itens populares",
+    "show_progressbar": "Exibir barra de status e progresso do Augmented Steam",
     "achievements": {
         "option": "Exibir conquistas na página da loja",
         "achievements": "Conquistas",
@@ -324,6 +333,7 @@
         "wlbuttoncommunityapp": "Exibir botão \"Adicionar à lista de desejos\" em Centrais da Comunidade",
         "removeguideslanguagefilter": "Não filtrar automaticamente guias pelo idioma do usuário",
         "disablelinkfilter": "Desativar a confirmação ao acessar sites externos",
+        "showallfriendsthatown": "Exibir \"Todos os amigos que possuem\"",
         "regional_price_on": "Exibir comparação de preços regionais",
         "cart": "Itens no seu carrinho",
         "friends_own": "Itens que os seus amigos possuem",
@@ -338,6 +348,7 @@
         "hltb": "Exibir informações do site HowLongToBeat.com",
         "hidespamcomments": "Ocultar comentários de spam em perfis e páginas da Oficina",
         "hide_owned": "Itens que você possui nas páginas de marcadores e de busca",
+        "hide_ignored": "Itens que você ignorou nas páginas de marcadores e de busca",
         "reset": "Redefinir opções",
         "api_key": "Chave da API",
         "gift": "Itens no seu inventário",
@@ -359,12 +370,16 @@
         "inventory_market_text": "Exibir preço do Mercado na página do inventário",
         "send_age_info": "Enviar verificação de idade automaticamente quando solicitado",
         "pcgw": "Exibir links para a PCGamingWiki",
+        "completionistme": "Exibir links para o Completionist.me",
+        "protondb": "Exibir links para o ProtonDB",
         "store_steamcards": "Exibir links para o site SteamCardExchange em páginas da loja",
         "spamcommentregex": "String de expressão regular:",
         "hide_owned_homepage": "Itens que você possui na página inicial",
         "saved_note": "Opções salvas",
         "regional_hideworld": "Ocultar indicador de globo",
         "show_astatslink": "Exibir link para o site AStats em páginas de aplicativos",
+        "show_youtubegameplay": "Exibir vídeos de gameplay do YouTube em páginas de aplicativos",
+        "show_youtubereviews": "Exibir vídeos de análise do YouTube em páginas de aplicativos",
         "showclient": "Exibir links do cliente Steam",
         "guest": "Itens dos quais você possui um passe de convidado",
         "show_steamchart_info": "Exibir informações do site SteamCharts.com",
@@ -386,6 +401,7 @@
         "showspeechsearch": "Adicionar busca por voz em caixas de busca",
         "profile_link_images_color": "Coloridas",
         "show_empty_wishlist": "Exibir botão \"Esvaziar lista de desejos\"",
+        "show_user_notes": "Exibir notas de usuários na lista de desejos e páginas de aplicativos",
         "inventory_nav_text": "Exibir navegação avançada na página do inventário",
         "carousel_description": "Exibir descrições de aplicativos no carrossel da página inicial da loja",
         "market_total": "Exibir resumo de transações no Mercado",
@@ -411,6 +427,9 @@
         "show_badge_progress": "Exibir progresso da insígnia em páginas da loja",
         "show_wishlist_link": "Exibir um link para a lista de desejos em perfis",
         "show_wishlist_count": "Exibir o número de itens na lista de desejos",
+        "profile_showcase_twitch": "Exibir um painel para a Twitch.tv se houver um link",
+        "profile_showcase_own_twitch": "... incluindo seu próprio perfil",
+        "profile_showcase_twitch_profileonly": "... somente se o link estiver no Resumo de Perfil",
         "lang": {
             "english": "Inglês",
             "brazilian": "Português (Brasil)",
@@ -433,17 +452,21 @@
             "romanian": "Romeno",
             "schinese": "Chinês simplificado",
             "spanish": "Espanhol",
+            "latam": "Espanhol Latino-Americano",
             "swedish": "Sueco",
             "tchinese": "Chinês Tradicional",
             "thai": "Tailandês",
             "turkish": "Turco",
             "ukrainian": "Ucraniano"
-        }
+        },
+        "add_custom_link": "Adicionar link customizado",
+        "auto_detect": "Detectar automaticamente"
     },
     "ready": {
         "errormsg": "Erro ao carregar dados do Augmented Steam",
         "loading": "Augmented Steam está carregando dados...",
-        "ready": "Augmented Steam pronto"
+        "ready": "Augmented Steam pronto",
+        "failed": "__amount__ requisições falharam, confira o console do seu navegador para mais informações"
     },
     "twitch": {
         "now_streaming": "__username__ está transmitindo ao vivo na Twitch",
@@ -488,7 +511,8 @@
     },
     "wallet": {
         "custom_amount": "Adicionar quantia personalizada",
-        "custom_amount_text": "Adicione qualquer quantia acima de __minamount__"
+        "custom_amount_text": "Adicione qualquer quantia acima de __minamount__",
+        "custom_giftcard_amount": "Selecione um valor customizado (acima de __minamount__) para o vale-presente: __input__"
     },
     "wsgf": {
         "incomplete": "Incompleto",
@@ -522,5 +546,31 @@
         "wallet": "O código inserido é de um vale-presente Steam ou código da Carteira Steam.",
         "toomany": "Houve muitas tentativas de ativação realizadas a partir desta conta ou endereço IP. Por favor, aguarde e tente usar o seu código de produto novamente mais tarde.",
         "default": "Um erro inesperado ocorreu. O código de produto não foi ativado. Por favor, tente ativá-lo novamente daqui a 30 minutos."
-    }
+    },
+    "wl": {
+        "compute": "Clique para calcular a status",
+        "total_price": "valor atual",
+        "in_wishlist": "na lista de desejos",
+        "on_sale": "em promoção",
+        "no_price": "sem preço"
+    },
+    "coll": {
+        "in_collection": "Na Coleção",
+        "played": "Jogados",
+        "never_played": "Nunca Jogados"
+    },
+    "user_note": {
+        "add": "Adicionar uma nota",
+        "update": "Atualizar nota",
+        "add_prompt": "Insira sua nota",
+        "update_prompt": "Atualize sua nota",
+        "add_for_game": "Nota para o jogo __gamename__"
+    },
+    "queue": {
+        "new": "Nova lista",
+        "new_tooltip": "Remover esse produto da sua lista e iniciar uma nova lista."
+    },
+    "this_version": "Esta versão",
+    "original_authors": "Autores Originais",
+    "powered_by": "Distribuído por __link__"
 }
