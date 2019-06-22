@@ -119,7 +119,7 @@ class Background {
 /**
  * Event handler for uncaught Background errors
  */
-window.addEventListener('unhandledrejection', function(ev) {
+function unhandledrejection(ev) {
     let err = ev.reason;
     if (!err || !err.error) return; // Not a background error
     ev.preventDefault();
@@ -128,8 +128,9 @@ window.addEventListener('unhandledrejection', function(ev) {
     console.error(err.localStack);
     console.error(err.stack);
     console.groupEnd();
-});
+}
 
+window.addEventListener('unhandledrejection', unhandledrejection);
 
 let TimeHelper = (function(){
 
@@ -920,6 +921,10 @@ let EnhancedSteam = (function() {
         });
     };
 
+    function addWarning(innerHTML) {
+        HTML.afterEnd("#global_header", `<div class="es_warning">${innerHTML}</div>`);
+    }
+
     /**
      * Display warning if browsing using a different language
      */
@@ -932,10 +937,9 @@ let EnhancedSteam = (function() {
         if (currentLanguage === warningLanguage) { return; }
 
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
-            HTML.afterEnd("#global_header",
-                `<div class="es_language_warning">` + strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage) + `
-                    <a href="#" id="es_reset_language_code">` + strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage) + `</a>
-                </div>`);
+            addWarning(
+                `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
+                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`);
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
@@ -943,6 +947,10 @@ let EnhancedSteam = (function() {
             });
         });
     };
+
+    self.addLoginWarning = function() {
+        addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
+    }
 
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
@@ -1304,10 +1312,16 @@ let Inventory = (function(){
                 }
             }
         }
+        function loginWarning(err) {
+            EnhancedSteam.addLoginWarning();
+            
+            // Triggers the unhandledrejection handler, so that the error is not fully suppressed
+            Promise.reject(err);
+        }
         _promise = Promise.all([
-            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }),
-            Background.action('inventory.coupons').then(handleCoupons),
-            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)),
+            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, loginWarning),
+            Background.action('inventory.coupons').then(handleCoupons, loginWarning),
+            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), loginWarning),
             ]);
         return _promise;
     };

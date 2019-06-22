@@ -1376,24 +1376,24 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    async addTitleHighlight() {
-        await Promise.all([DynamicStore, Inventory]);
+    addTitleHighlight() {
+        Promise.all([DynamicStore, Inventory]).then(() => {
+            let title = document.querySelector(".apphub_AppName");
 
-        let title = document.querySelector(".apphub_AppName");
-
-        if (DynamicStore.isOwned(this.appid)) {
-            Highlights.highlightOwned(title);
-        } else if (Inventory.hasGuestPass(this.appid)) {
-            Highlights.highlightInvGuestpass(title);
-        } else if (Inventory.getCouponByAppId(this.appid)) {
-            Highlights.highlightCoupon(title);
-        } else if (Inventory.hasGift(this.appid)) {
-            Highlights.highlightInvGift(title);
-        } else if (DynamicStore.isWishlisted(this.appid)) {
-            Highlights.highlightWishlist(title);
-        } else if (DynamicStore.isIgnored(this.appid)) {
-            Highlights.highlightNotInterested(title);
-        }
+            if (DynamicStore.isOwned(this.appid)) {
+                Highlights.highlightOwned(title);
+            } else if (Inventory.hasGuestPass(this.appid)) {
+                Highlights.highlightInvGuestpass(title);
+            } else if (Inventory.getCouponByAppId(this.appid)) {
+                Highlights.highlightCoupon(title);
+            } else if (Inventory.hasGift(this.appid)) {
+                Highlights.highlightInvGift(title);
+            } else if (DynamicStore.isWishlisted(this.appid)) {
+                Highlights.highlightWishlist(title);
+            } else if (DynamicStore.isIgnored(this.appid)) {
+                Highlights.highlightNotInterested(title);
+            }
+        });
     }
 
     addFamilySharingWarning() {
