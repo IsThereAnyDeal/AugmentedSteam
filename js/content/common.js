@@ -304,33 +304,26 @@ let RequestData = (function(){
 
         ProgressBar.startRequest();
 
-        return new Promise(function(resolve, reject) {
+        if (url.startsWith("//")) { // TODO remove when not needed
+            url = window.location.protocol + url;
+            console.warn("Requesting URL without protocol, please update");
+        }
 
-            if (url.startsWith("//")) { // TODO remove when not needed
-                url = window.location.protocol + url;
-                console.warn("Requesting URL without protocol, please update");
+        return fetch(url, settings).then(response => {
+
+            ProgressBar.finishRequest();
+
+            if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
+
+            if (returnJSON) {
+                return response.json();
+            } else {
+                return response.text();
             }
-
-            fetch(url, settings).then(response => {
-
-                ProgressBar.finishRequest();
-
-                if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
-
-                if (returnJSON) {
-                    response.json().then(json => {
-                        resolve(json);
-                    });
-                } else {
-                    response.text().then(text => {
-                        resolve(text);
-                    });
-                }
-                
-            }).catch(err => {
-                ProgressBar.failed();
-                reject(err);
-            });
+            
+        }).catch(err => {
+            ProgressBar.failed();
+            throw err;
         });
     };
 
