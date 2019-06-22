@@ -948,8 +948,15 @@ let EnhancedSteam = (function() {
         });
     };
 
-    self.addLoginWarning = function() {
-        addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
+    let loginWarningAdded = false;
+    self.addLoginWarning = function(err) {
+        if (!loginWarningAdded) {
+            addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
+            loginWarningAdded = true;
+        }
+
+        // Triggers the unhandledrejection handler, so that the error is not fully suppressed
+        Promise.reject(err);
     }
 
     self.removeAboutLinks = function() {
@@ -1312,16 +1319,11 @@ let Inventory = (function(){
                 }
             }
         }
-        function loginWarning(err) {
-            EnhancedSteam.addLoginWarning();
-            
-            // Triggers the unhandledrejection handler, so that the error is not fully suppressed
-            Promise.reject(err);
-        }
+        
         _promise = Promise.all([
-            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, loginWarning),
-            Background.action('inventory.coupons').then(handleCoupons, loginWarning),
-            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), loginWarning),
+            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, EnhancedSteam.addLoginWarning),
+            Background.action('inventory.coupons').then(handleCoupons, EnhancedSteam.addLoginWarning),
+            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), EnhancedSteam.addLoginWarning),
             ]);
         return _promise;
     };
