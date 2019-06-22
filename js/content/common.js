@@ -295,86 +295,42 @@ CookieStorage.cache = new Map();
 let RequestData = (function(){
     let self = {};
 
-    self.getJson = function(url) {
-        ProgressBar.startRequest();
-
-        return new Promise(function(resolve, reject) {
-            function requestHandler(state) {
-                if (state.readyState !== 4) {
-                    return;
-                }
-
-                ProgressBar.finishRequest();
-
-                if (state.status === 200) {
-                    resolve(JSON.parse(state.responseText));
-                } else {
-                    ProgressBar.failed();
-                    reject(state.status);
-                }
-            }
-
-            if (url.startsWith("//")) { // TODO remove when not needed
-                url = window.location.protocol + url;
-                console.warn("Requesting URL without protocol, please update");
-            }
-
-            let request = new XMLHttpRequest();
-            request.onreadystatechange = function() { requestHandler(request); };
-            request.overrideMimeType("application/json");
-            request.open("GET", url);
-            request.send();
-        });
-    };
-
-    self.getHttp = function(url, settings, returnHtml) {
+    self.getHttp = function(url, settings, returnJSON) {
         settings = settings || {};
-        settings.withCredentials = settings.withCredentials || false;
-        settings.type = settings.type || "text/html";
         settings.method = settings.method || "GET";
-        settings.body = settings.body || null;
+        settings.credentials = settings.credentials || "include";
+        settings.headers = settings.headers || { origin: window.location.origin };
+        settings.referrer = settings.referrer || window.location.origin + window.location.pathname;
 
         ProgressBar.startRequest();
 
         return new Promise(function(resolve, reject) {
-
-            function requestHandler(state) {
-                if (state.readyState !== 4) {
-                    return;
-                }
-
-                ProgressBar.finishRequest();
-
-                if (state.status === 200) {
-                    if (returnHtml) {
-                        resolve(state.responseXML);
-                    } else {
-                        resolve(state.responseText);
-                    }
-                } else {
-                    ProgressBar.failed();
-                    reject(state.status);
-                }
-            }
 
             if (url.startsWith("//")) { // TODO remove when not needed
                 url = window.location.protocol + url;
                 console.warn("Requesting URL without protocol, please update");
             }
 
-            let request = new XMLHttpRequest();
-            request.onreadystatechange = function() { requestHandler(request); };
-            request.overrideMimeType(settings.type);
-            request.withCredentials = settings.withCredentials;
-            request.open(settings.method, url);
+            fetch(url, settings).then(response => {
 
-            if (settings.headers) {
-                for (let i=0; i<settings.headers.length; i++) {
-                    request.setRequestHeader(settings.headers[i][0], settings.headers[i][1]);
+                ProgressBar.finishRequest();
+
+                if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
+
+                if (returnJSON) {
+                    response.json().then(json => {
+                        resolve(json);
+                    });
+                } else {
+                    response.text().then(text => {
+                        resolve(text);
+                    });
                 }
-            }
-
-            request.send(settings.body);
+                
+            }).catch(err => {
+                ProgressBar.failed();
+                reject(err);
+            });
         });
     };
 
@@ -383,6 +339,10 @@ let RequestData = (function(){
             method: "POST",
             body: formData
         }));
+    };
+
+    self.getJson = function(url, settings) {
+        return self.getHttp(url, settings, true);
     };
 
     return self;
