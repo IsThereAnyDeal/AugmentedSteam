@@ -29,7 +29,16 @@ class Customizer {
 
     add(name, targets, text, forceShow) {
 
-        let elements = Array.from((typeof targets === "string" ? document.querySelectorAll(targets) : targets));
+        let elements;
+
+        if (typeof targets === "string") {
+            elements = document.querySelectorAll(targets);
+        } else if (targets instanceof NodeList) {
+            elements = Array.from(targets);
+        } else {
+            elements = targets ? [targets] : [];
+        }
+
         if (!elements.length) return this;
 
         let state = this._getValue(name);
@@ -1915,6 +1924,7 @@ class AppPageClass extends StorePageClass {
         customizer.add("recommendedbycurators", ".steam_curators_block");
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
+        customizer.add("workshop", document.querySelector("[href^='https://steamcommunity.com/workshop/browse']").closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
         customizer.add("about", "[data-parent-of='#game_area_description']");
         customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
         customizer.add("steamchart", "#steam-charts");
