@@ -2434,6 +2434,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .esi-hidden {
 	display:none !important;
 }
+/* Ensures that the top most shown section always has the same margin */
+.esi-hidden ~ .esi-shown {
+	margin-top: 32px;
+}
 
 #es_review_section {
 	max-height:400px;
