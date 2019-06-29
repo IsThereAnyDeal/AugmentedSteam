@@ -3379,14 +3379,15 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
-        HTML.beforeEnd(".home_page_content",
-            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px 10px">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
-                <div class='home_viewsettings_popup'>
-                    <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
+        HTML.afterEnd(".home_page_content",
+            `<div class="home_pagecontent_ctn clearfix" style="margin-bottom: 5px; margin-top: 3px;">
+                <div id="es_customize_btn" class="home_actions_ctn">
+                    <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
+                    <div class='home_viewsettings_popup'>
+                        <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
+                    </div>
                 </div>
-            </div>
-            <div style="clear: both;"></div>`);
+            </div>`);
 
         document.querySelector(".home_page_body_ctn").style.overflow = "visible";
         document.querySelector("#es_customize_btn").addEventListener("click", function(e){
