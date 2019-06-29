@@ -1485,7 +1485,7 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name} { outline: solid ${color}; }
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
             });
 
@@ -1673,7 +1673,8 @@ let Highlights = (function(){
             ".tab_item",					                // Items on new homepage
             "a.special",					                // new homepage specials
             "div.curated_app_item",			                // curated app items!
-            "a.summersale_dailydeal"		                // Summer sale daily deal
+            ".hero_capsule",                                // Summer sale "Featured"
+            ".sale_capsule"                                 // Summer sale general capsules
         ];
 
         parent = parent || document;

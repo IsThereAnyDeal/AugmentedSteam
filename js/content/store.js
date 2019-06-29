@@ -3283,7 +3283,7 @@ let StoreFrontPageClass = (function(){
     function StoreFrontPageClass() {
         User.then(() => {
             if (User.isSignedIn) {
-                this.highlightDelayed();
+                this.highlightDynamic();
             }
         });
         this.setHomePageTab();
@@ -3310,13 +3310,24 @@ let StoreFrontPageClass = (function(){
         tab.click();
     };
 
-    StoreFrontPageClass.prototype.highlightDelayed = function() {
+    StoreFrontPageClass.prototype.highlightDynamic = function() {
+
+        let discountObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes));
+        });
+
+        document.querySelectorAll("[id='10off_tier'], [id='75pct_tier']").forEach(el => discountObserver.observe(el, { childList: true }));
+
+        let moreFeaturedObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => mutation.addedNodes.forEach(salerow => Highlights.highlightAndTag(salerow.children)));
+        });
+        document.querySelectorAll("#tier1_target, #tier2_target").forEach(el => moreFeaturedObserver.observe(el, { childList: true }));
 
         // The "Recently updated" section will only get loaded once the user scrolls down
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
             let observer = new MutationObserver(mutations => {
-                if (mutations[0].oldValue === "display: none") {
+                if (mutations[0].oldValue.display === "none") {
                     Highlights.highlightAndTag(recentlyUpdatedNode.querySelectorAll(".store_capsule"));
                 }
             });
