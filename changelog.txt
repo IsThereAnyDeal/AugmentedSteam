@@ -1,4 +1,11 @@
-﻿v1.1.0
+﻿v1.1.1
+-----
+- Added highlighting support for Summer Sale 2019
+- Fixed Quick/Instant sell in Firefox
+- Other minor fixes and localization updates
+
+
+v1.1.0
 -----
 - Added YouTube videos and reviews to app pages
 - Fixed quick and instant sell
