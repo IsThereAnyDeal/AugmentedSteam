@@ -1296,7 +1296,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_language_warning(),
  * add_fake_country_code_warning()
  **************************************/
-.es_language_warning {
+.es_warning {
 	font-size: 12px;
 	color: #fff;
 	padding: 8px 0;

@@ -1376,24 +1376,24 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    async addTitleHighlight() {
-        await Promise.all([DynamicStore, Inventory]);
+    addTitleHighlight() {
+        Promise.all([DynamicStore, Inventory]).then(() => {
+            let title = document.querySelector(".apphub_AppName");
 
-        let title = document.querySelector(".apphub_AppName");
-
-        if (DynamicStore.isOwned(this.appid)) {
-            Highlights.highlightOwned(title);
-        } else if (Inventory.hasGuestPass(this.appid)) {
-            Highlights.highlightInvGuestpass(title);
-        } else if (Inventory.getCouponByAppId(this.appid)) {
-            Highlights.highlightCoupon(title);
-        } else if (Inventory.hasGift(this.appid)) {
-            Highlights.highlightInvGift(title);
-        } else if (DynamicStore.isWishlisted(this.appid)) {
-            Highlights.highlightWishlist(title);
-        } else if (DynamicStore.isIgnored(this.appid)) {
-            Highlights.highlightNotInterested(title);
-        }
+            if (DynamicStore.isOwned(this.appid)) {
+                Highlights.highlightOwned(title);
+            } else if (Inventory.hasGuestPass(this.appid)) {
+                Highlights.highlightInvGuestpass(title);
+            } else if (Inventory.getCouponByAppId(this.appid)) {
+                Highlights.highlightCoupon(title);
+            } else if (Inventory.hasGift(this.appid)) {
+                Highlights.highlightInvGift(title);
+            } else if (DynamicStore.isWishlisted(this.appid)) {
+                Highlights.highlightWishlist(title);
+            } else if (DynamicStore.isIgnored(this.appid)) {
+                Highlights.highlightNotInterested(title);
+            }
+        });
     }
 
     addFamilySharingWarning() {
@@ -1718,9 +1718,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
         Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -1838,7 +1838,7 @@ class AppPageClass extends StorePageClass {
                 .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
                 .replace("::", ":");
             HTML.inner(node, resultHtml);
-        });
+        }, EnhancedSteam.addLoginWarning);
     }
 
     customizeAppPage() {

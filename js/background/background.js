@@ -392,11 +392,15 @@ class SteamCommunity extends Api {
     // static params = { 'credentials': 'include', };
 
     static cards({ 'params': params, }) {
-        return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined));
+        return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined)).catch(() => {
+            throw new Error("Could not retrieve cards for appid " + params.appid);
+        });
     }
 
     static stats({ 'params': params, }) {
-        return SteamCommunity.getPage(`/my/stats/${params.appid}`);
+        return SteamCommunity.getPage(`/my/stats/${params.appid}`).catch(() => {
+            throw new Error("Could not retrieve stats for appid " + params.appid);
+        });
     }
 
     /**
@@ -560,6 +564,15 @@ class SteamCommunity extends Api {
 
     static logout() {
         LocalStorage.remove('login');
+    }
+
+    static getPage(endpoint, query) {
+        return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
+            if (response.url.startsWith("https://steamcommunity.com/login/")) {
+                throw new Error("Got redirected onto login page, the user is not logged into steamcommunity.com")
+            }
+            return response.text();
+        });
     }
 }
 SteamCommunity.origin = "https://steamcommunity.com/";
