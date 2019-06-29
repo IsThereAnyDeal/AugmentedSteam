@@ -7,14 +7,14 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return "";
+        if (!node) return null;
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
-        return str;
+        return str || null;
     };
 
     _updateValue(name, value) {
@@ -27,59 +27,40 @@ class Customizer {
         return (typeof value === "undefined") || value;
     }
 
-    add(name, targets, text, forceShow, callback) {
+    add(name, targets, text, forceShow) {
 
-        let elements = (typeof targets === "string" ? document.querySelectorAll(targets) : targets);
+        let elements = Array.from((typeof targets === "string" ? document.querySelectorAll(targets) : targets));
         if (!elements.length) return this;
 
         let state = this._getValue(name);
 
-        for (let element of elements) {
+        let isValid = false;
+
+        elements.forEach((element, i) => {
             if (getComputedStyle(element).display === "none" && !forceShow) {
-                return this;
+                elements.splice(i, 1);
+                return;
             }
     
-            text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
-            if (text === "") {
-                console.warn("Failed to find text for customizer entry %s", name);
-                return this;
+            if (!text) {
+                text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
+                if (!text) return;
             }
 
-            if (element) {
-                element.classList.toggle("esi-shown", state);
-                element.classList.toggle("esi-hidden", !state);
-                element.classList.add("esi-customizer"); // for dynamic entries on home page
-            }
-        }
-    
-        HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
-            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
-                <div class="home_viewsettings_label">${text}</div>
-            </div>`);
-
-        document.querySelector("#" + name).addEventListener("click", e => {
-            state = !state;
-
-            elements.forEach(element => {
-                if (element) {
-                    element.classList.toggle("esi-shown", state);
-                    element.classList.toggle("esi-hidden", !state);
-                }
-            });
-
-            e.target.closest(".home_viewsettings_checkboxrow")
-                .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-
-            this._updateValue(name, state);
-
-            if (callback) {
-                callback();
-            }
+            isValid = true;
         });
 
+        if (!isValid) return this;
+
+        for (let element of elements) {
+            element.classList.toggle("esi-shown", state);
+            element.classList.toggle("esi-hidden", !state);
+            element.classList.add("esi-customizer"); // for dynamic entries on home page
+            element.dataset.es_name = name;
+            element.dataset.es_text = text;
+        }
+
         return this;
-        
     };
 
     addDynamic(titleNode, targetNode) {
@@ -89,7 +70,50 @@ class Customizer {
         let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
         if (option === "") { return; }
 
-        this.add("dynamic_"+option, targetNode, textValue);
+        this.add("dynamic_" + option, targetNode, textValue);
+    }
+
+    build() {
+
+        let customizerEntries = new Map();
+
+        for (let element of document.querySelectorAll(".esi-customizer")) {
+
+            let name = element.dataset.es_name;
+
+            if (customizerEntries.has(name)) {
+                customizerEntries.get(name).push(element);
+            } else {
+
+                let state = element.classList.contains("esi-shown");
+                let text = element.dataset.es_text;
+
+                HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
+                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>`);
+
+                customizerEntries.set(name, [element]);
+            }            
+        }
+
+        for (let [name, elements] of customizerEntries) {
+            let checkboxrow = document.getElementById(name);
+            checkboxrow.addEventListener("click", e => {
+                let state = !checkboxrow.querySelector(".checked");
+
+                elements.forEach(element => {
+                    element.classList.toggle("esi-shown", state);
+                    element.classList.toggle("esi-hidden", !state);
+                });
+
+                e.target.closest(".home_viewsettings_checkboxrow")
+                    .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+
+                this._updateValue(name, state);
+            });
+        }
     }
 }
 
@@ -1913,6 +1937,7 @@ class AppPageClass extends StorePageClass {
             );
         }
 
+        customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
     }
 
@@ -3445,6 +3470,8 @@ let StoreFrontPageClass = (function(){
 
                 customizer.addDynamic(headerNode, node);
             }
+
+            customizer.build();
         }, 1000);
     };
 
