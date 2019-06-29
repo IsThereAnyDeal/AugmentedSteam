@@ -3327,9 +3327,14 @@ let StoreFrontPageClass = (function(){
         document.querySelectorAll("[id='10off_tier'], [id='75pct_tier']").forEach(el => discountObserver.observe(el, { childList: true }));
 
         let moreFeaturedObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => mutation.addedNodes.forEach(salerow => Highlights.highlightAndTag(salerow.children)));
+            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].children));
         });
         document.querySelectorAll("#tier1_target, #tier2_target").forEach(el => moreFeaturedObserver.observe(el, { childList: true }));
+
+        let tagCategoriesObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].querySelector(".salerow").children));
+        })
+        tagCategoriesObserver.observe(document.getElementById("sale_tag_categories"), { childList: true });
 
         // The "Recently updated" section will only get loaded once the user scrolls down
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
