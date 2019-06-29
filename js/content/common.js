@@ -938,14 +938,24 @@ let EnhancedSteam = (function() {
         removeLinksFilter();
 
         let observer = new MutationObserver(removeLinksFilter);
-        observer.observe(document, {attributes: true, childList: true});
+        observer.observe(document, {childList: true, subtree: true});
 
-        function removeLinksFilter() {
-            let nodes = document.querySelectorAll("a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
-                if (!node.hasAttribute("href")) { continue; }
-                node.setAttribute("href", node.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
+        function removeLinksFilter(mutations) {
+            let selector = "a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']";
+            if (mutations) {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            node.querySelectorAll(selector).forEach(matchedNode => {
+                                matchedNode.setAttribute("href", matchedNode.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
+                            });
+                        }
+                    });
+                });
+            } else {
+                document.querySelectorAll(selector).forEach(node => {
+                    node.setAttribute("href", node.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
+                });
             }
         }
     };
