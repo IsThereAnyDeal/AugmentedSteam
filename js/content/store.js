@@ -1527,7 +1527,7 @@ class AppPageClass extends StorePageClass {
             html += "</span>";
             html += "</div>";
 
-        HTML.beforeBegin(".sys_req", html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentElement, html);
     }
 
     addSurveyData(result) {
