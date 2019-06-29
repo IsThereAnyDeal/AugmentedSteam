@@ -1917,28 +1917,15 @@ class AppPageClass extends StorePageClass {
         customizer.add("reviews", "#game_area_reviews");
         customizer.add("about", "[data-parent-of='#game_area_description']");
         customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
-
         customizer.add("steamchart", "#steam-charts");
         customizer.add("surveys", "#performance_survey");
         customizer.add("steamspy", "#steam-spy");
         customizer.add("sysreq", "[data-parent-of='.sys_req");
         customizer.add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal);
         customizer.add("moredlcfrombasegame", "#moredlcfrombasegame_block");
-
-        if (document.querySelector("#franchise_block")) {
-            customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
-        }
-        if (document.querySelector("#recommended_block")) {
-            customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
-        }
-
-        if (document.querySelector(".user_reviews_header")) {
-            customizer.add(
-                "customerreviews",
-                "#app_reviews_hash",
-                document.querySelector(".user_reviews_header").textContent
-            );
-        }
+        customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
+        customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
+        customizer.add("customerreviews", "#app_reviews_hash");
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
