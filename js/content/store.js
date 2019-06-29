@@ -3336,7 +3336,21 @@ let StoreFrontPageClass = (function(){
         })
         tagCategoriesObserver.observe(document.getElementById("sale_tag_categories"), { childList: true });
 
-        // The "Recently updated" section will only get loaded once the user scrolls down
+        document.querySelectorAll(".franchise_capsule").forEach(el => el.addEventListener("mouseenter", franchisesListener, { once: true }));
+
+        let franchisesObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes.length === 1) {
+                    mutation.addedNodes[0].addEventListener("mouseenter", franchisesListener, { once: true });
+                }
+            });
+        })
+        franchisesObserver.observe(document.querySelector(".franchise_flex"), { childList: true });
+
+        function franchisesListener(e) {
+            Highlights.highlightAndTag(e.target.querySelectorAll(".sale_capsule"));
+        }
+
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
             let observer = new MutationObserver(mutations => {
