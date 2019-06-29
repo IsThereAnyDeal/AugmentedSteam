@@ -7,13 +7,14 @@ class Customizer {
     }
 
     _textValue(node) {
+        if (!node) return null;
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
-        return str;
+        return str || null;
     };
 
     _updateValue(name, value) {
@@ -26,50 +27,38 @@ class Customizer {
         return (typeof value === "undefined") || value;
     }
 
-    add(name, target, text, forceShow, callback) {
+    add(name, targets, text, forceShow) {
 
-        let element = (typeof target === "string" ? document.querySelector(target) : target);
-        if ((!element || element.style.display === "none") && !forceShow) {
-            return this;
-        }
-
-        text = (typeof text === "string" && text) || this._textValue(element.querySelector("h2")).toLowerCase();
-        if (text === "") {
-            return this;
-        }
+        let elements = Array.from((typeof targets === "string" ? document.querySelectorAll(targets) : targets));
+        if (!elements.length) return this;
 
         let state = this._getValue(name);
 
-        if (element) {
+        let isValid = false;
+
+        elements.forEach((element, i) => {
+            if (getComputedStyle(element).display === "none" && !forceShow) {
+                elements.splice(i, 1);
+                return;
+            }
+    
+            if (!text) {
+                text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
+                if (!text) return;
+            }
+
+            isValid = true;
+        });
+
+        if (!isValid) return this;
+
+        for (let element of elements) {
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
             element.classList.add("esi-customizer"); // for dynamic entries on home page
+            element.dataset.es_name = name;
+            element.dataset.es_text = text;
         }
-
-        HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
-            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>`);
-
-        let that = this;
-        document.querySelector("#" + name).addEventListener("click", function(e) {
-            state = !state;
-
-            if (element) {
-                element.classList.toggle("esi-shown", state);
-                element.classList.toggle("esi-hidden", !state);
-            }
-
-            e.target.closest(".home_viewsettings_checkboxrow")
-                .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
-
-            that._updateValue(name, state);
-
-            if (callback) {
-                callback();
-            }
-        });
 
         return this;
     };
@@ -81,7 +70,50 @@ class Customizer {
         let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
         if (option === "") { return; }
 
-        this.add("dynamic_"+option, targetNode, textValue);
+        this.add("dynamic_" + option, targetNode, textValue);
+    }
+
+    build() {
+
+        let customizerEntries = new Map();
+
+        for (let element of document.querySelectorAll(".esi-customizer")) {
+
+            let name = element.dataset.es_name;
+
+            if (customizerEntries.has(name)) {
+                customizerEntries.get(name).push(element);
+            } else {
+
+                let state = element.classList.contains("esi-shown");
+                let text = element.dataset.es_text;
+
+                HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
+                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
+                    <div class="home_viewsettings_label">${text}</div>
+                </div>`);
+
+                customizerEntries.set(name, [element]);
+            }            
+        }
+
+        for (let [name, elements] of customizerEntries) {
+            let checkboxrow = document.getElementById(name);
+            checkboxrow.addEventListener("click", e => {
+                let state = !checkboxrow.querySelector(".checked");
+
+                elements.forEach(element => {
+                    element.classList.toggle("esi-shown", state);
+                    element.classList.toggle("esi-hidden", !state);
+                });
+
+                e.target.closest(".home_viewsettings_checkboxrow")
+                    .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+
+                this._updateValue(name, state);
+            });
+        }
     }
 }
 
@@ -968,7 +1000,7 @@ class AppPageClass extends StorePageClass {
             if (data.reviews.length > 0) {
                 let reviewsNode = document.querySelector("#game_area_reviews");
                 if (reviewsNode) {
-                    HTML.beforeBegin(reviewsNode.querySelector("p"), "<div id='es_opencritic_reviews'></div>");
+                    HTML.beforeBegin(reviewsNode.querySelector("p, div"), "<div id='es_opencritic_reviews'></div>");
 
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
                     let htmlString = `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`;
@@ -1905,6 +1937,7 @@ class AppPageClass extends StorePageClass {
             );
         }
 
+        customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
     }
 
@@ -3281,11 +3314,11 @@ let TagPageClass = (function(){
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
-        User.then(() => {
-            if (User.isSignedIn) {
-                this.highlightDelayed();
-            }
-        });
+        
+        if (User.isSignedIn) {
+            this.highlightDynamic();
+        }
+        
         this.setHomePageTab();
         this.customizeHomePage();
     }
@@ -3310,13 +3343,43 @@ let StoreFrontPageClass = (function(){
         tab.click();
     };
 
-    StoreFrontPageClass.prototype.highlightDelayed = function() {
+    StoreFrontPageClass.prototype.highlightDynamic = function() {
 
-        // The "Recently updated" section will only get loaded once the user scrolls down
+        let discountObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes));
+        });
+
+        document.querySelectorAll("[id='10off_tier'], [id='75pct_tier']").forEach(el => discountObserver.observe(el, { childList: true }));
+
+        let moreFeaturedObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].children));
+        });
+        document.querySelectorAll("#tier1_target, #tier2_target").forEach(el => moreFeaturedObserver.observe(el, { childList: true }));
+
+        let tagCategoriesObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].querySelector(".salerow").children));
+        })
+        tagCategoriesObserver.observe(document.getElementById("sale_tag_categories"), { childList: true });
+
+        document.querySelectorAll(".franchise_capsule").forEach(el => el.addEventListener("mouseenter", franchisesListener, { once: true }));
+
+        let franchisesObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes.length === 1) {
+                    mutation.addedNodes[0].addEventListener("mouseenter", franchisesListener, { once: true });
+                }
+            });
+        })
+        franchisesObserver.observe(document.querySelector(".franchise_flex"), { childList: true });
+
+        function franchisesListener(e) {
+            Highlights.highlightAndTag(e.target.querySelectorAll(".sale_capsule"));
+        }
+
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
             let observer = new MutationObserver(mutations => {
-                if (mutations[0].oldValue === "display: none") {
+                if (mutations[0].oldValue.display === "none") {
                     Highlights.highlightAndTag(recentlyUpdatedNode.querySelectorAll(".store_capsule"));
                 }
             });
@@ -3341,14 +3404,15 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
-        HTML.beforeEnd(".home_page_content",
-            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: -10px 0px 10px">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
-                <div class='home_viewsettings_popup'>
-                    <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
+        HTML.afterEnd(".home_page_content",
+            `<div class="home_pagecontent_ctn clearfix" style="margin-bottom: 5px; margin-top: 3px;">
+                <div id="es_customize_btn" class="home_actions_ctn">
+                    <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
+                    <div class='home_viewsettings_popup'>
+                        <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
+                    </div>
                 </div>
-            </div>
-            <div style="clear: both;"></div>`);
+            </div>`);
 
         document.querySelector(".home_page_body_ctn").style.overflow = "visible";
         document.querySelector("#es_customize_btn").addEventListener("click", function(e){
@@ -3363,23 +3427,38 @@ let StoreFrontPageClass = (function(){
         });
 
         setTimeout(() => {
+            let specialoffers = document.querySelector(".special_offers");
+            let browsesteam = document.querySelector(".big_buttons.home_page_content");
+            let recentlyupdated = document.querySelector(".recently_updated_block");
+            let under = document.querySelector("[class*='specials_under']");
+
             let customizer = new Customizer("customize_frontpage");
-            customizer
-                .add("featuredrecommended", ".home_cluster_ctn")
-                .add("specialoffers", document.querySelector(".special_offers").parentElement)
-                .add("trendingamongfriends", ".friends_recently_purchased")
-                .add("discoveryqueue", ".discovery_queue_ctn")
-                .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
-                .add("curators", ".steam_curators_ctn")
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
-                .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
-                .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
-                .add("popularvrgames", ".best_selling_vr_ctn")
-                .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn")
-                .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
-                .add("updatesandoffers", ".marketingmessage_area", null, true)
-                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+
+            // Summer Sale 2019
+            customizer.add("featured", ".home_featured_ctn")
+            .add("morefeatured", ".home_morefeatured_ctn")
+            .add("tagcategories", "#sale_tag_categories", Localization.str.tag_categories)
+            .add("franchises", ".home_franchises_ctn")
+            .add("discounts", "#sale_discounts_area", Localization.str.discounts)
+            .add("browsemore", ".home_browsemore_ctn")
+            .add("topsellers", ".home_topsellers_ctn")
+            .add("newupcoming", ".home_newupcoming_ctn", Localization.str.new_and_upcoming);
+
+            customizer.add("featuredrecommended", ".home_cluster_ctn");
+            if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement)
+            customizer.add("trendingamongfriends", ".friends_recently_purchased")
+            .add("discoveryqueue", ".discovery_queue_ctn");
+            if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
+            customizer.add("curators", ".steam_curators_ctn")
+            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn");
+            if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
+            customizer.add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+            .add("popularvrgames", ".best_selling_vr_ctn")
+            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("gamesstreamingnow", ".live_streams_ctn");
+            if (under) customizer.add("under", under.parentElement.parentElement);
+            customizer.add("updatesandoffers", ".marketingmessage_area")
+            .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
             for (let i = 0; i < dynamicNodes.length; ++i) {
@@ -3391,6 +3470,8 @@ let StoreFrontPageClass = (function(){
 
                 customizer.addDynamic(headerNode, node);
             }
+
+            customizer.build();
         }, 1000);
     };
 
