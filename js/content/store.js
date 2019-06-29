@@ -565,7 +565,7 @@ class AppPageClass extends StorePageClass {
         this.removeAboutLink();
 
         this.addPackageInfoButton();
-        this.addStats().then(() => this.customizeAppPage());
+        this.addStats().then(this.customizeAppPage);
 
         this.addDlcCheckboxes();
         this.addBadgeProgress();
@@ -1612,7 +1612,7 @@ class AppPageClass extends StorePageClass {
 
     addStats() {
         let that = this;
-        if (this.isDlc()) { return; }
+        if (this.isDlc()) { return Promise.resolve(); }
         return this.data.then(result => {
 
             that.addSteamChart(result);
