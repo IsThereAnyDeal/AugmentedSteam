@@ -7,6 +7,7 @@ class Customizer {
     }
 
     _textValue(node) {
+        if (!node) return "";
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
@@ -26,45 +27,51 @@ class Customizer {
         return (typeof value === "undefined") || value;
     }
 
-    add(name, target, text, forceShow, callback) {
+    add(name, targets, text, forceShow, callback) {
 
-        let element = (typeof target === "string" ? document.querySelector(target) : target);
-        if ((!element || element.style.display === "none") && !forceShow) {
-            return this;
-        }
-
-        text = (typeof text === "string" && text) || this._textValue(element.querySelector("h2")).toLowerCase();
-        if (text === "") {
-            return this;
-        }
+        let elements = (typeof targets === "string" ? document.querySelectorAll(targets) : targets);
+        if (!elements.length) return this;
 
         let state = this._getValue(name);
 
-        if (element) {
-            element.classList.toggle("esi-shown", state);
-            element.classList.toggle("esi-hidden", !state);
-            element.classList.add("esi-customizer"); // for dynamic entries on home page
-        }
-
-        HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
-            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>`);
-
-        let that = this;
-        document.querySelector("#" + name).addEventListener("click", function(e) {
-            state = !state;
+        for (let element of elements) {
+            if (element.style.display === "none" && !forceShow) {
+                return this;
+            }
+    
+            text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
+            if (text === "") {
+                console.warn("Failed to find text for customizer entry %s", name);
+                return this;
+            }
 
             if (element) {
                 element.classList.toggle("esi-shown", state);
                 element.classList.toggle("esi-hidden", !state);
+                element.classList.add("esi-customizer"); // for dynamic entries on home page
             }
+        }
+    
+        HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
+            `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
+                <div class="home_viewsettings_label">${text}</div>
+            </div>`);
+
+        document.querySelector("#" + name).addEventListener("click", e => {
+            state = !state;
+
+            elements.forEach(element => {
+                if (element) {
+                    element.classList.toggle("esi-shown", state);
+                    element.classList.toggle("esi-hidden", !state);
+                }
+            });
 
             e.target.closest(".home_viewsettings_checkboxrow")
                 .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
 
-            that._updateValue(name, state);
+            this._updateValue(name, state);
 
             if (callback) {
                 callback();
@@ -72,6 +79,7 @@ class Customizer {
         });
 
         return this;
+        
     };
 
     addDynamic(titleNode, targetNode) {
@@ -3374,23 +3382,38 @@ let StoreFrontPageClass = (function(){
         });
 
         setTimeout(() => {
+            let specialoffers = document.querySelector(".special_offers");
+            let browsesteam = document.querySelector(".big_buttons.home_page_content");
+            let recentlyupdated = document.querySelector(".recently_updated_block");
+            let under = document.querySelector("[class*='specials_under']");
+
             let customizer = new Customizer("customize_frontpage");
-            customizer
-                .add("featuredrecommended", ".home_cluster_ctn")
-                .add("specialoffers", document.querySelector(".special_offers").parentElement)
-                .add("trendingamongfriends", ".friends_recently_purchased")
-                .add("discoveryqueue", ".discovery_queue_ctn")
-                .add("browsesteam", document.querySelector(".big_buttons.home_page_content").parentElement)
-                .add("curators", ".steam_curators_ctn")
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
-                .add("recentlyupdated", document.querySelector(".recently_updated_block").parentElement)
-                .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
-                .add("popularvrgames", ".best_selling_vr_ctn")
-                .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn")
-                .add("under", document.querySelector("[class*='specials_under']").parentElement.parentElement)
-                .add("updatesandoffers", ".marketingmessage_area", null, true)
-                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+
+            // Summer Sale 2019
+            customizer.add("featured", ".home_featured_ctn")
+            .add("morefeatured", ".home_morefeatured_ctn")
+            .add("tagcategories", "#sale_tag_categories", Localization.str.tag_categories)
+            .add("franchises", ".home_franchises_ctn")
+            .add("discounts", "#sale_discounts_area", Localization.str.discounts)
+            .add("browsemore", ".home_browsemore_ctn")
+            .add("topsellers", ".home_topsellers_ctn")
+            .add("newupcoming", ".home_newupcoming_ctn", Localization.str.new_and_upcoming);
+
+            customizer.add("featuredrecommended", ".home_cluster_ctn");
+            if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement)
+            customizer.add("trendingamongfriends", ".friends_recently_purchased")
+            .add("discoveryqueue", ".discovery_queue_ctn");
+            if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
+            customizer.add("curators", ".steam_curators_ctn")
+            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn");
+            if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
+            customizer.add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+            .add("popularvrgames", ".best_selling_vr_ctn")
+            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("gamesstreamingnow", ".live_streams_ctn");
+            if (under) customizer.add("under", under.parentElement.parentElement);
+            customizer.add("updatesandoffers", ".marketingmessage_area")
+            .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
             for (let i = 0; i < dynamicNodes.length; ++i) {
