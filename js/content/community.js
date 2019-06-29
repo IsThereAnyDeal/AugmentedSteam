@@ -3417,7 +3417,7 @@ let CommunityAppPageClass = (function(){
         let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
 
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDb</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
