@@ -3289,11 +3289,11 @@ let TagPageClass = (function(){
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
-        User.then(() => {
-            if (User.isSignedIn) {
-                this.highlightDynamic();
-            }
-        });
+        
+        if (User.isSignedIn) {
+            this.highlightDynamic();
+        }
+        
         this.setHomePageTab();
         this.customizeHomePage();
     }
