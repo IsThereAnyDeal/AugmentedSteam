@@ -35,7 +35,7 @@ class Customizer {
         let state = this._getValue(name);
 
         for (let element of elements) {
-            if (element.style.display === "none" && !forceShow) {
+            if (getComputedStyle(element).display === "none" && !forceShow) {
                 return this;
             }
     
