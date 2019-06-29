@@ -1876,13 +1876,15 @@ class AppPageClass extends StorePageClass {
     customizeAppPage() {
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
-            `<div id="es_customize_btn" class="home_actions_ctn" style="margin: 0px;">
+            `<div id="es_customize_btn" class="home_actions_ctn">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${ Localization.str.customize }</div>
                 <div class='home_viewsettings_popup'>
                     <div class='home_viewsettings_instructions' style='font-size: 12px;'>${ Localization.str.apppage_sections }</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
+
+        document.querySelector(".purchase_area_spacer").style.marginBottom = "30px";
 
         let stylesheet = document.createElement('link');
         stylesheet.rel = 'stylesheet';
@@ -1913,14 +1915,15 @@ class AppPageClass extends StorePageClass {
         customizer.add("recommendedbycurators", ".steam_curators_block");
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
-        customizer.add("about", "#game_area_description");
-        customizer.add("contentwarning", "#game_area_content_descriptors");
+        customizer.add("about", "[data-parent-of='#game_area_description']");
+        customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
 
         customizer.add("steamchart", "#steam-charts");
         customizer.add("surveys", "#performance_survey");
         customizer.add("steamspy", "#steam-spy");
-        customizer.add("sysreq", ".sys_req");
-        customizer.add("legal", "#game_area_legal", Localization.str.apppage_legal);
+        customizer.add("sysreq", "[data-parent-of='.sys_req");
+        customizer.add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal);
+        customizer.add("moredlcfrombasegame", "#moredlcfrombasegame_block");
 
         if (document.querySelector("#franchise_block")) {
             customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
