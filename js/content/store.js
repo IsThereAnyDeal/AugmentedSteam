@@ -976,7 +976,7 @@ class AppPageClass extends StorePageClass {
             if (data.reviews.length > 0) {
                 let reviewsNode = document.querySelector("#game_area_reviews");
                 if (reviewsNode) {
-                    HTML.beforeBegin(reviewsNode.querySelector("p"), "<div id='es_opencritic_reviews'></div>");
+                    HTML.beforeBegin(reviewsNode.querySelector("p, div"), "<div id='es_opencritic_reviews'></div>");
 
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
                     let htmlString = `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`;
