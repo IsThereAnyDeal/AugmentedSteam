@@ -3435,30 +3435,44 @@ let StoreFrontPageClass = (function(){
             let customizer = new Customizer("customize_frontpage");
 
             // Summer Sale 2019
-            customizer.add("featured", ".home_featured_ctn")
-            .add("morefeatured", ".home_morefeatured_ctn")
-            .add("tagcategories", "#sale_tag_categories", Localization.str.tag_categories)
-            .add("franchises", ".home_franchises_ctn")
-            .add("discounts", "#sale_discounts_area", Localization.str.discounts)
-            .add("browsemore", ".home_browsemore_ctn")
-            .add("topsellers", ".home_topsellers_ctn")
-            .add("newupcoming", ".home_newupcoming_ctn", Localization.str.new_and_upcoming);
+            customizer
+                .add("featured", ".home_featured_ctn")
+                .add("morefeatured", ".home_morefeatured_ctn")
+                .add("tagcategories", "#sale_tag_categories", Localization.str.tag_categories)
+                .add("franchises", ".home_franchises_ctn")
+                .add("discounts", "#sale_discounts_area", Localization.str.discounts)
+                .add("browsemore", ".home_browsemore_ctn")
+                .add("topsellers", ".home_topsellers_ctn")
+                .add("newupcoming", ".home_newupcoming_ctn", Localization.str.new_and_upcoming);
 
-            customizer.add("featuredrecommended", ".home_cluster_ctn");
-            if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement)
-            customizer.add("trendingamongfriends", ".friends_recently_purchased")
-            .add("discoveryqueue", ".discovery_queue_ctn");
-            if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
-            customizer.add("curators", ".steam_curators_ctn")
-            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn");
-            if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
-            customizer.add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
-            .add("popularvrgames", ".best_selling_vr_ctn")
-            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-            .add("gamesstreamingnow", ".live_streams_ctn");
-            if (under) customizer.add("under", under.parentElement.parentElement);
-            customizer.add("updatesandoffers", ".marketingmessage_area")
-            .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+            customizer
+                .add("featuredrecommended", ".home_cluster_ctn");
+
+            if (specialoffers)  { customizer.add("specialoffers", specialoffers.parentElement); }
+
+            customizer
+                .add("trendingamongfriends", ".friends_recently_purchased")
+                .add("discoveryqueue", ".discovery_queue_ctn");
+
+            if (browsesteam) { customizer.add("browsesteam", browsesteam.parentElement); }
+
+            customizer
+                .add("curators", ".steam_curators_ctn")
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn");
+
+            if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
+
+            customizer
+                .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+                .add("popularvrgames", ".best_selling_vr_ctn")
+                .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+                .add("gamesstreamingnow", ".live_streams_ctn");
+
+            if (under) { customizer.add("under", under.parentElement.parentElement); }
+
+            customizer
+                .add("updatesandoffers", ".marketingmessage_area")
+                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
             for (let i = 0; i < dynamicNodes.length; ++i) {
