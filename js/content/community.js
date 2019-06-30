@@ -929,27 +929,37 @@ let GamesPageClass = (function(){
                     let achNode = dummy.querySelector("#topSummaryAchievements");
 
                     if (!achNode) { return; }
-                    node.append(achNode);
 
-                    document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
+                    achNode.style.whiteSpace = "nowrap";
 
-                    // The size of the achievement bars for games without leaderboards/other stats is fine, return
-                    if (!node.innerHTML.includes("achieveBarFull.gif")) { return; }
+                    if (!achNode.querySelector("img")) {
+                        HTML.beforeEnd(node, achNode.innerHTML);
 
-                    let barFull = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/)[1];
-                    let barEmpty = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/)[1];
-                    barFull = barFull * .58;
-                    barEmpty = barEmpty * .58;
+                        // The size of the achievement bars for games without leaderboards/other stats is fine, return
+                        return;
+                    }
 
-                    let resultHtml = node.innerHTML
-                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/, "width=\"" + HTML.escape(barFull.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarFull.gif")
-                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/, "width=\"" + HTML.escape(barEmpty.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarEmpty.gif")
-                        .replace("::", ":");
-                    HTML.inner(node, resultHtml);
+                    let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
 
-                }, () => {
+                    // 1 full match, 3 group matches
+                    if (!stats || stats.length !== 4) {
+                        console.warn("Failed to find achievement stats for appid", appid);
+                        return;
+                    }
+
+                    HTML.inner(node,
+                        `<div>${Localization.str.achievements.summary
+                            .replace("__unlocked__", stats[1])
+                            .replace("__total__", stats[2])
+                            .replace("__percentage__", stats[3])}</div>
+                        <div class="achieveBar">
+                            <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
+                        </div>`);
+
+                }, err => {
                     let node = document.querySelector("#es_app_" + appid);
                     node.innerHTML = "error";
+                    console.err(err);
                 });
             }
         }
