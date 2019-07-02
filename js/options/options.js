@@ -178,7 +178,7 @@ let Options = (function(){
                     row.classList.add("selected");
                     document.querySelector(row.dataset.blockSel).classList.add("selected");
 
-                    window.scrollTo(0, 0);
+                    window.scrollTo({ top: 0, left: 0, behavior: "smooth"});
 
                     if (active.classList.contains("expanded")) {
                         active.classList.toggle("expanded");
@@ -220,7 +220,7 @@ let Options = (function(){
                                     document.querySelector(row.dataset.blockSel).classList.add("selected");
                                 }
 
-                                document.querySelector(subentry.dataset.blockSel).scrollIntoView();
+                                document.querySelector(subentry.dataset.blockSel).scrollIntoView({ behavior: "smooth" });
                             })
                         });
                     }
