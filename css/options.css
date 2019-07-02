@@ -62,14 +62,29 @@ body {
 #side_bar a:hover { color: white; text-decoration: none; }
 
 .tab_row {
-	display:block;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	border-right: 3px solid transparent;
-	padding:10px;
+	padding: 10px;
 }
 
 .tab_row.selected, .tab_row:hover {
 	background:#0b4267;
 	border-color:#036db1;
+}
+
+.tab_row .arrow {
+	width: 12px;
+	height: 12px;
+}
+
+.tab_row .arrow.expanded {
+	content: url("../img/arrow_expanded.svg");
+}
+
+.tab_row .arrow.collapsed {
+	content: url("../img/arrow_collapsed.svg")
 }
 
 .content {

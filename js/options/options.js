@@ -164,6 +164,39 @@ let Options = (function(){
         HTML.inner(node, html);
     }
 
+    function loadSideBar() {
+        document.querySelectorAll(".tab_row").forEach(row => {
+
+            row.addEventListener("click", () => {
+                let active = document.querySelector(".tab_row.selected");
+                if (active !== row) {
+                    active.classList.remove("selected");
+                    document.querySelector(".content.selected").classList.remove("selected");
+                    row.classList.add("selected");
+                    document.querySelector(row.dataset.blockSel).classList.add("selected");
+                }
+            });
+
+            let block = document.querySelector(row.dataset.blockSel);
+            if (block) {
+                let headings = block.querySelectorAll("h2");
+                if (headings.length > 0) {
+                    row.classList.add("accordion");
+
+                    HTML.beforeEnd(row, `<img class="arrow expanded"></img>`);
+
+                    HTML.afterEnd(row, `<div class="subentries"></div>`);
+                    let subentries = row.nextElementSibling;
+                    headings.forEach(heading => {
+                        HTML.beforeEnd(subentries, `<div>${heading.textContent}</div>`);
+                    });
+                }
+            } else {
+                console.warn("Missing data-block-sel attribute on sidebar entry");
+            }
+        });
+    }
+
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
         Localization.then(() => {
@@ -482,6 +515,7 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
+        loadSideBar();
         loadStores();
         loadOptions();
         loadProfileLinkImages();
@@ -547,17 +581,6 @@ let Options = (function(){
 
             document.querySelector("#region_selects").style.display = node.value === "off" ? "none" : "block";
             document.querySelector("#regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
-        });
-
-        // Toggle tabs content
-        document.querySelector("#side_bar").addEventListener("click", function(e){
-            let node = e.target.closest("a.tab_row");
-            if (!node) { return; }
-            let sel = node.dataset.blockSel;
-            document.querySelector("a.tab_row.selected").classList.remove("selected");
-            document.querySelector(".content.selected").classList.remove("selected");
-            document.querySelector(sel).classList.add("selected");
-            node.classList.add("selected");
         });
 
         document.querySelector("#reset").addEventListener("click", clearSettings);
