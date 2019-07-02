@@ -178,6 +178,8 @@ let Options = (function(){
                     row.classList.add("selected");
                     document.querySelector(row.dataset.blockSel).classList.add("selected");
 
+                    window.scrollTo(0, 0);
+
                     if (active.classList.contains("expanded")) {
                         active.classList.toggle("expanded");
                         active.classList.toggle("collapsed");
@@ -193,17 +195,35 @@ let Options = (function(){
 
             let block = document.querySelector(row.dataset.blockSel);
             if (block) {
-                let headings = block.querySelectorAll("h2");
-                if (headings.length > 0) {
-                    row.classList.add("collapsed");
+                // Only create subentries for the settings
+                if (block.classList.contains("settings")) {
+                    let headings = block.querySelectorAll("h2");
+                    if (headings.length > 0) {
+                        row.classList.add("collapsed");
 
-                    HTML.beforeEnd(row, `<img></img>`);
+                        HTML.beforeEnd(row, `<img></img>`);
 
-                    HTML.afterEnd(row, `<div class="subentries"></div>`);
-                    let subentries = row.nextElementSibling;
-                    headings.forEach(heading => {
-                        HTML.beforeEnd(subentries, `<div>${heading.textContent}</div>`);
-                    });
+                        HTML.afterEnd(row, `<div class="subentries"></div>`);
+                        let subentries = row.nextElementSibling;
+                        headings.forEach(heading => {
+
+                            HTML.beforeEnd(subentries, `<div data-block-sel="#${heading.id}">${heading.textContent}</div>`);
+
+                            let subentry = subentries.lastElementChild;
+                            subentry.addEventListener("click", () => {
+
+                                let active = document.querySelector(".tab_row.selected");
+                                if (!active.contains(subentry)) {
+                                    active.classList.remove("selected");
+                                    document.querySelector(".content.selected").classList.remove("selected");
+                                    row.classList.add("selected");
+                                    document.querySelector(row.dataset.blockSel).classList.add("selected");
+                                }
+
+                                document.querySelector(subentry.dataset.blockSel).scrollIntoView();
+                            })
+                        });
+                    }
                 }
             } else {
                 console.warn("Missing data-block-sel attribute on sidebar entry");
