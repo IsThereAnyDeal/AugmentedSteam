@@ -169,11 +169,25 @@ let Options = (function(){
 
             row.addEventListener("click", () => {
                 let active = document.querySelector(".tab_row.selected");
-                if (active !== row) {
+                if (active === row) {
+                    row.classList.toggle("expanded");
+                    row.classList.toggle("collapsed");
+                } else {
                     active.classList.remove("selected");
                     document.querySelector(".content.selected").classList.remove("selected");
                     row.classList.add("selected");
                     document.querySelector(row.dataset.blockSel).classList.add("selected");
+
+                    if (active.classList.contains("expanded")) {
+                        active.classList.toggle("expanded");
+                        active.classList.toggle("collapsed");
+                    }
+
+                    // If the entry is already expanded, don't collapse it when it's getting selected
+                    if (row.classList.contains("collapsed")) {
+                        row.classList.toggle("expanded");
+                        row.classList.toggle("collapsed");
+                    }
                 }
             });
 
@@ -181,7 +195,7 @@ let Options = (function(){
             if (block) {
                 let headings = block.querySelectorAll("h2");
                 if (headings.length > 0) {
-                    row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
+                    row.classList.add("collapsed");
 
                     HTML.beforeEnd(row, `<img></img>`);
 
