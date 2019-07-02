@@ -74,17 +74,21 @@ body {
 	border-color:#036db1;
 }
 
-.tab_row .arrow {
+.tab_row img {
 	width: 12px;
 	height: 12px;
 }
 
-.tab_row .arrow.expanded {
+.tab_row.expanded img {
 	content: url("../img/arrow_expanded.svg");
 }
 
-.tab_row .arrow.collapsed {
+.tab_row.collapsed img {
 	content: url("../img/arrow_collapsed.svg")
+}
+
+.tab_row.collapsed + .subentries {
+	display: none;
 }
 
 .content {

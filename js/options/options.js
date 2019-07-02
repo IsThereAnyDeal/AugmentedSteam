@@ -181,9 +181,9 @@ let Options = (function(){
             if (block) {
                 let headings = block.querySelectorAll("h2");
                 if (headings.length > 0) {
-                    row.classList.add("accordion");
+                    row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 
-                    HTML.beforeEnd(row, `<img class="arrow expanded"></img>`);
+                    HTML.beforeEnd(row, `<img></img>`);
 
                     HTML.afterEnd(row, `<div class="subentries"></div>`);
                     let subentries = row.nextElementSibling;
