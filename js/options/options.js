@@ -181,7 +181,7 @@ let Options = (function(){
 
                     window.scrollTo({ top: 0, left: 0, behavior: "smooth"});
 
-                    if (active.classList.contains("expanded")) {
+                    if (active.classList.contains("expanded") && !active.classList.contains("explicit")) {
                         active.classList.toggle("expanded");
                         active.classList.toggle("collapsed");
                     }
@@ -203,6 +203,16 @@ let Options = (function(){
                         row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 
                         HTML.beforeEnd(row.firstElementChild, `<div class="triangle">&#9665;</div>`);
+                        row.querySelector(".triangle").addEventListener("click", e => {
+                            if (row.classList.contains("collapsed")) {
+                                row.classList.add("explicit");
+                            } else {
+                                row.classList.remove("explicit");
+                            }
+                            row.classList.toggle("expanded");
+                            row.classList.toggle("collapsed");
+                            e.stopPropagation();
+                        })
 
                         HTML.beforeEnd(row, `<div class="subentries"></div>`);
                         let subentries = row.lastElementChild;
