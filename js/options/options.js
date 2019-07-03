@@ -175,11 +175,17 @@ let Options = (function(){
                     row.classList.toggle("collapsed");
                 } else {
                     active.classList.remove("selected");
-                    document.querySelector(".content.selected").classList.remove("selected");
                     row.classList.add("selected");
-                    document.querySelector(row.dataset.blockSel).classList.add("selected");
 
-                    window.scrollTo({ top: 0, left: 0, behavior: "smooth"});
+                    let selectedContent = document.querySelector(".content.selected");
+                    let scrollTo = document.querySelector(row.dataset.blockSel);
+                    let newContent = scrollTo.closest(".content");
+                    if (newContent !== selectedContent) {
+                        selectedContent.classList.remove("selected");
+                        newContent.classList.add("selected");
+                    }
+
+                    scrollTo.scrollIntoView({ behavior: "smooth" });
 
                     if (active.classList.contains("expanded") && !active.classList.contains("explicit")) {
                         active.classList.toggle("expanded");
@@ -224,14 +230,28 @@ let Options = (function(){
                             subentry.addEventListener("click", () => {
 
                                 let active = document.querySelector(".tab_row.selected");
-                                if (!active.contains(subentry)) {
-                                    active.classList.remove("selected");
-                                    document.querySelector(".content.selected").classList.remove("selected");
+                                let scrollTo = document.querySelector(subentry.dataset.blockSel);
+                                
+                                if (active !== row) {
                                     row.classList.add("selected");
-                                    document.querySelector(row.dataset.blockSel).classList.add("selected");
+                                    if (active.querySelector(".subentries") && !active.classList.contains("explicit")) {
+                                        active.classList.remove("expanded");
+                                        active.classList.add("collapsed");
+                                    }
+                                    active.classList.remove("selected");
+
+                                    let selectedContent = document.querySelector(".content.selected");
+                                    let newContent = scrollTo.closest(".content");
+                                    if (newContent !== selectedContent) {
+                                        selectedContent.classList.remove("selected");
+                                        newContent.classList.add("selected");
+                                    }
+
+                                    selectedContent.classList.remove("selected");
+                                    newContent.classList.add("selected");
                                 }
 
-                                document.querySelector(subentry.dataset.blockSel).scrollIntoView({ behavior: "smooth" });
+                                scrollTo.scrollIntoView({ behavior: "smooth" });
                             })
                         });
                     }
