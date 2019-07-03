@@ -167,7 +167,8 @@ let Options = (function(){
     function loadSideBar() {
         document.querySelectorAll(".tab_row").forEach(row => {
 
-            row.addEventListener("click", () => {
+            let category = row.firstElementChild;
+            category.addEventListener("click", () => {
                 let active = document.querySelector(".tab_row.selected");
                 if (active === row) {
                     row.classList.toggle("expanded");
@@ -199,15 +200,15 @@ let Options = (function(){
                 if (block.classList.contains("settings")) {
                     let headings = block.querySelectorAll("h2");
                     if (headings.length > 0) {
-                        row.classList.add("collapsed");
+                        row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 
-                        HTML.beforeEnd(row, `<img></img>`);
+                        HTML.beforeEnd(row.firstElementChild, `<div class="triangle">&#9665;</div>`);
 
-                        HTML.afterEnd(row, `<div class="subentries"></div>`);
-                        let subentries = row.nextElementSibling;
+                        HTML.beforeEnd(row, `<div class="subentries"></div>`);
+                        let subentries = row.lastElementChild;
                         headings.forEach(heading => {
 
-                            HTML.beforeEnd(subentries, `<div data-block-sel="#${heading.id}">${heading.textContent}</div>`);
+                            HTML.beforeEnd(subentries, `<div class="sidebar_entry subentry" data-block-sel="#${heading.id}">${heading.textContent}</div>`);
 
                             let subentry = subentries.lastElementChild;
                             subentry.addEventListener("click", () => {
