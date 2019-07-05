@@ -203,7 +203,7 @@ let Options = (function(){
             let block = document.querySelector(row.dataset.blockSel);
             if (block) {
                 // Only create subentries for the settings
-                if (block.classList.contains("settings")) {
+                if (block.querySelector(".settings")) {
                     let headings = block.querySelectorAll("h2");
                     if (headings.length > 0) {
                         row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");

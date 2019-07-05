@@ -27,7 +27,7 @@ body {
 	position: fixed;
 	padding: 15px;
 	bottom: 0;
-	left: 200px;
+	left: 300px;
 	right: 0;
 	display: flex;
 	align-items: center;
@@ -60,6 +60,10 @@ body {
 }
 #side_bar a { color: white; text-decoration: none; }
 #side_bar a:hover { color: white; text-decoration: none; }
+
+#side_bar hr {
+	margin: 5px 0;
+}
 
 .category {
 	padding: 10px;
@@ -134,6 +138,11 @@ body {
 	line-height:1.5;
 }
 
+h1 {
+	margin: 15px 0;
+	text-decoration: underline;
+}
+
 h2 {
 	font-weight: bold;
 	margin-top:25px;
@@ -203,6 +212,10 @@ input[type=checkbox] {
 	margin:0 3px 0 0;
 	position:relative;
 	top:2px;
+}
+
+.settings {
+	margin-left: 10px;
 }
 
 .settings > div {
