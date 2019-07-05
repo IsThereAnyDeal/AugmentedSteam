@@ -350,7 +350,7 @@
         "add_wallet_balance": "Afficher les fonds du Porte-monnaie Steam dans l'en-tête",
         "add_to_cart_wishlist": "Afficher le bouton \"Ajouter au panier\" dans la liste de souhaits",
         "stores_all": "Comparer tous les magasins",
-        "show_early_access_text": "Afficher des bannières d'images pour l'accès anticipé",
+        "show_early_access": "Afficher des bannières d'images pour l'accès anticipé",
         "author_info": "par jshackles",
         "profile_link_images_gray": "Niveaux de gris",
         "quickinv": "Afficher les boutons pour la vente rapide d'objets de la communauté Steam dans l'inventaire",
