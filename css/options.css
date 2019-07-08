@@ -130,6 +130,12 @@ body {
 	display:block;
 }
 
+.content_section {
+	margin-top: 25px;
+	outline: 2px solid transparent;
+	transition: outline-color 1s;
+}
+
 #footer {
 	position:fixed;
 	bottom: 10px;
@@ -145,13 +151,9 @@ h1 {
 
 h2 {
 	font-weight: bold;
-	margin-top:25px;
-	margin-bottom:5px;
-	padding:0;
+	margin-bottom: 5px;
+	padding: 0;
 	font-size: medium;
-}
-h2:first-child {
-	margin-top:0;
 }
 
 input[type=color] {
@@ -222,7 +224,7 @@ input[type=checkbox] {
 	margin-left: 10px;
 }
 
-.settings > div {
+.settings > .content_section > div {
 	display:flex;
 	width:550px;
 	align-items: baseline;
@@ -231,15 +233,15 @@ input[type=checkbox] {
 	border-left:3px solid transparent;
 	padding-left:3px;
 }
-.settings > div .buttons {
+.settings > .content_section > div .buttons {
 	flex-grow:2;
 	text-align:right;
 }
-.settings > div:hover {
+.settings > .content_section > div:hover {
 	border-left-color:#036db1;
 }
 
-.settings > div label {
+.settings > .content_section > div label {
 	display:inline-flex;
 	flex-grow:1;
 	cursor:pointer;

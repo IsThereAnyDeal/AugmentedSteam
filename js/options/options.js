@@ -204,8 +204,8 @@ let Options = (function(){
             if (block) {
                 // Only create subentries for the settings
                 if (block.querySelector(".settings")) {
-                    let headings = block.querySelectorAll("h2");
-                    if (headings.length > 0) {
+                    let sections = block.querySelectorAll(".content_section");
+                    if (sections.length > 0) {
                         row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 
                         HTML.beforeEnd(row.firstElementChild, `<div class="triangle">&#9665;</div>`);
@@ -218,13 +218,13 @@ let Options = (function(){
                             row.classList.toggle("expanded");
                             row.classList.toggle("collapsed");
                             e.stopPropagation();
-                        })
+                        });
 
                         HTML.beforeEnd(row, `<div class="subentries"></div>`);
                         let subentries = row.lastElementChild;
-                        headings.forEach(heading => {
+                        sections.forEach(section => {
 
-                            HTML.beforeEnd(subentries, `<div class="sidebar_entry subentry" data-block-sel="#${heading.id}">${heading.textContent}</div>`);
+                            HTML.beforeEnd(subentries, `<div class="sidebar_entry subentry" data-block-sel="#${section.id}">${section.firstElementChild.textContent}</div>`);
 
                             let subentry = subentries.lastElementChild;
                             subentry.addEventListener("click", () => {
@@ -251,7 +251,32 @@ let Options = (function(){
                                     newContent.classList.add("selected");
                                 }
 
-                                scrollTo.scrollIntoView({ behavior: "smooth" });
+                                let sectionY = scrollTo.offsetTop - parseInt(getComputedStyle(scrollTo).outlineWidth, 10);
+                                let atTheBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight;
+                                
+                                if (((window.scrollY !== sectionY) && !atTheBottom) || atTheBottom && window.scrollY > sectionY) {
+                                    window.addEventListener("scroll", scrollHandler);
+                                    // Prevent user scrolling
+                                    document.body.style.overflow = "hidden";
+                                    window.scrollTo({ top: sectionY, left: 0, behavior: "smooth" });
+                                } else {
+                                    highlightSection();
+                                }
+                                
+                                function scrollHandler() {
+                                    if (window.scrollY === sectionY || (window.innerHeight + window.scrollY) >= document.body.scrollHeight) {
+                                        highlightSection();
+                                        window.removeEventListener("scroll", scrollHandler);
+                                    }
+                                }
+
+                                function highlightSection() {
+                                    document.body.style.overflow = '';
+                                    scrollTo.addEventListener("transitionend", () => {
+                                        scrollTo.style.outlineColor = '';
+                                    }, { once: true });
+                                    scrollTo.style.outlineColor = "#0b4267";
+                                }
                             })
                         });
                     }
