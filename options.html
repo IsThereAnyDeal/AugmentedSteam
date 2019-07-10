@@ -34,7 +34,7 @@
 <body>
 
 <div id="header">
-    <div id="header_logo"><img src="img/logo.png"></div>
+    <img src="img/logo.png">
 </div>
 
 <div id="page">
@@ -472,7 +472,7 @@
                             <input type="checkbox" id="stores_all" data-setting="showallstores">
                             <label for="stores_all" data-locale-text="options.stores_all">Compare all stores</label>
                         </div>
-                        <div id="store_stores" style="display:none"></div>
+                        <div id="store_stores" class="indented" style="display:none"></div>
             
                         <div id="view_price_li">
                             <div>
@@ -534,7 +534,7 @@
                             <label for="quickinv" data-locale-text="options.quickinv">Show Quick Sale buttons on Steam Community items in inventory</label>
                             <button id="show_quickinv_diff" data-locale-text="customize">Customize</button>
                         </div>
-                        <div id="quickinv_opt" class="esi-hidden">
+                        <div id="quickinv_opt" class="esi-hidden indented">
                             <label for="quickinv_diff" data-locale-text="options.quickinv_diff">Quick Sale modifier:</label>
                             <input type="text" id="quickinv_diff" data-setting="quickinv_diff" class="textbox">
                             <button id="quickinv_default" data-locale-text="theworddefault">Default</button>
@@ -573,11 +573,11 @@
                             <input type="checkbox" id="profile_showcase_twitch" data-setting="profile_showcase_twitch">
                             <label for="profile_showcase_twitch" data-locale-text="options.profile_showcase_twitch">Add a showcase for Twitch.tv if the profile has a link</label>
                         </div>
-                        <div>
+                        <div class="indented">
                             <input type="checkbox" id="profile_showcase_own_twitch" data-setting="profile_showcase_own_twitch">
                             <label for="profile_showcase_own_twitch" data-locale-text="options.profile_showcase_own_twitch">... including your own profile</label>
                         </div>
-                        <div>
+                        <div class="indented">
                             <input type="checkbox" id="profile_showcase_twitch_profileonly" data-setting="profile_showcase_twitch_profileonly">
                             <label for="profile_showcase_twitch_profileonly" data-locale-text="options.profile_showcase_twitch_profileonly">... only if the link is in the Profile Summary</label>
                         </div>
@@ -646,7 +646,7 @@
                             <label for="hidespamcomments" data-locale-text="options.hidespamcomments">Hide spam comments from Workshop &amp; profiles</label>
                             <button id="show_spamcommentregex" data-locale-text="customize">Customize</button>
                         </div>
-                        <div id="spamcommentregex_list" class="esi-hidden">
+                        <div id="spamcommentregex_list" class="esi-hidden indented">
                             <label for="spamcommentregex" data-locale-text="options.spamcommentregex">Regular Expression string:</label>
                             <input type="text" id="spamcommentregex" data-setting="spamcommentregex" class="textbox">
                             <button id="spamcommentregex_default" data-locale-text="theworddefault">Default</button>
@@ -715,7 +715,7 @@
             </ul>
 
             <h3 id="translation_text" data-locale-text="translation">Translation</h3>
-            <table class="translation">
+            <table class="indented">
                 <tr>
                     <td class="language brazilian">Portuguese-Brazil:</td>
                     <td>Berna, Mougevit, Ricci, Rubens Vinícius, Scopel, Titoncio, Yachagon, xAranda
