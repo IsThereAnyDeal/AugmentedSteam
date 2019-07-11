@@ -220,11 +220,11 @@ let Options = (function(){
                             e.stopPropagation();
                         });
 
-                        HTML.beforeEnd(row, `<div class="subentries"></div>`);
+                        HTML.beforeEnd(row, `<ul class="subentries"></ul>`);
                         let subentries = row.lastElementChild;
                         sections.forEach(section => {
 
-                            HTML.beforeEnd(subentries, `<div class="sidebar_entry subentry" data-block-sel="#${section.id}">${section.firstElementChild.textContent}</div>`);
+                            HTML.beforeEnd(subentries, `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">${section.firstElementChild.textContent}</li>`);
 
                             let subentry = subentries.lastElementChild;
                             subentry.addEventListener("click", () => {

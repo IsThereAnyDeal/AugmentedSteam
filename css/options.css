@@ -69,15 +69,10 @@ body {
 	font-style: italic;
 }
 
-.subentry::before {
-	content: "- ";
-}
-
 .subentries {
-	transition: opacity 2s;
-	height: 0;
-	opacity: 0;
-	overflow: hidden;
+	display: none;
+	margin: 0;
+	padding-left: 1.5em;
 }
 
 .triangle {
@@ -98,8 +93,7 @@ body {
 }
 
 .tab_row.expanded .subentries {
-	opacity: 1;
-	height: auto;
+	display: block;
 }
 
 .sidebar_entry:hover {
