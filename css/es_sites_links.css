@@ -2,6 +2,10 @@
  * Users profiles
  * add_community_profile_links()
  **************************************/
+.es_sites_icons {
+	display: inline-flex;
+	align-items: center;
+}
 .es_sites_icons:not(.es_none):after, .es_sites_custom_icon {
 	content: "";
 	display: inline-block;

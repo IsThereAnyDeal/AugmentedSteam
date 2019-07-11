@@ -358,11 +358,6 @@ let Options = (function(){
         // SyncedStorage.set("show_profile_link_images", node.value); // TODO what were these two lines doing?
         // node.value = SyncedStorage.set("show_profile_link_images", node.value);
 
-        let nodes = document.querySelectorAll(".es_sites_icons");
-        for (let node of nodes) {
-            node.style.display = "block";
-        }
-
         // FIXME document.querySelector("#profile_links").classList.toggle("es_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
 
         if (!SyncedStorage.get("show_profile_link_images")) {
