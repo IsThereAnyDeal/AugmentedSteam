@@ -129,25 +129,10 @@ class CustomLinks {
 let Options = (function(){
     let self = {};
 
-    function toggleStores() {
-        if (document.querySelector("#stores_all").checked) {
-            document.querySelector("#store_stores").style.display = "none";
-        } else {
-            let store_stores = document.querySelector("#store_stores");
-            store_stores.style.display = "flex";
-            store_stores.classList.add("es_checks_loaded");
-
-            let stores = SyncedStorage.get("stores");
-            let nodes = store_stores.querySelectorAll("input[type='checkbox']");
-            for (let node of nodes) {
-                node.checked = (stores.length == 0 || stores.indexOf(node.id) !== -1);
-            }
-        }
-    }
-
     function loadStores() {
         let cols = 4;
         let node = document.querySelector("#store_stores");
+        let stores = SyncedStorage.get("stores");
 
         let perCol = Math.ceil(StoreList.length / cols);
 
@@ -155,8 +140,8 @@ let Options = (function(){
         let i = 0;
         for (let c=0; c<cols; c++) {
             html += "<div class='store_col'>";
-            for (let len = Math.min(StoreList.length, (c+1)*perCol); i<len; i++) {
-                html += `<div><input type="checkbox" id="${StoreList[i].id}"><label for="steam">${StoreList[i].title}</label></div>`;
+            for (let len = Math.min(StoreList.length, (c+1) * perCol); i < len; ++i) {
+                html += `<div><input type="checkbox" id="${StoreList[i].id}"${(stores.length === 0 || stores.indexOf(StoreList[i].id) !== -1) ? " checked" : ''}><label for="steam">${StoreList[i].title}</label></div>`;
             }
             html += "</div>";
         }
@@ -388,29 +373,10 @@ let Options = (function(){
         }
     }
 
-    function initParentOf(node) {
-        let groupSel = node.dataset.parentOf;
-        let state = !node.checked;
-
-        let groupNode = document.querySelector(groupSel);
-        groupNode.classList.toggle("disabled", state);
-
-        let nodes = groupNode.querySelectorAll("input,select");
-        for (let node of nodes) {
-            node.disabled = state;
-        }
-    }
-
     // Restores select box state to saved value from SyncStorage.
     let changelogLoaded;
 
     function loadOptions() {
-        let nodes = document.querySelectorAll("[data-parent-of]");
-        for (let node of nodes) {
-            node.addEventListener("change", function(){
-                initParentOf(node);
-            })
-        }
 /*
         document.querySelector("#add_custom_link").addEventListener("click", function(e) {
             document.querySelector("#profile_custom").checked = true;
@@ -440,16 +406,20 @@ let Options = (function(){
             let setting = node.dataset.setting;
             let value = SyncedStorage.get(setting);
 
-            if (value) {
-                if (node.type && node.type === "checkbox") {
-                    node.checked = value;
-                } else {
-                    node.value = value;
-                }
-            }
+            if (node.type && node.type === "checkbox") {
+                node.checked = value;
 
-            if (node.dataset.parentOf) {
-                initParentOf(node);
+                let parentOption = node.closest(".parent_option");
+                if (parentOption) {
+                    if (node.id === "stores_all") value = !value;
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                        nextSibling.classList.toggle("disabled", !value);
+                    }
+                }
+            } else {
+                if (value) {
+                    node.value = value;
+               }
             }
         }
 
@@ -469,7 +439,6 @@ let Options = (function(){
             }
         }
 
-        toggleStores();
         Region.populateRegionalSelects();
 
         if (!changelogLoaded) {
@@ -645,15 +614,6 @@ let Options = (function(){
             }
         });
 
-        document.querySelector("#show_spamcommentregex").addEventListener("click", function(e){
-            let listNode = document.querySelector("#spamcommentregex_list");
-            listNode.classList.toggle("esi-hidden");
-        });
-        document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
-            let node = document.querySelector("#quickinv_opt");
-            node.classList.toggle("esi-hidden");
-        });
-        document.querySelector("#stores_all").addEventListener("change", toggleStores);
         document.querySelector("#reset_countries").addEventListener("click", loadDefaultCountries);
 
         document.querySelector('#region_selects').addEventListener('change', function(e) {
@@ -670,6 +630,14 @@ let Options = (function(){
 
             document.querySelector("#region_selects").style.display = node.value === "off" ? "none" : "block";
             document.querySelector("#regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
+        });
+
+        document.querySelectorAll(".parent_option").forEach(parentOption => {
+            parentOption.querySelector("input").addEventListener("change", () => {
+                for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                    nextSibling.classList.toggle("disabled");
+                }
+            });
         });
 
         document.querySelector("#reset").addEventListener("click", clearSettings);
