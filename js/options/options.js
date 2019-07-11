@@ -348,7 +348,6 @@ let Options = (function(){
             return `<div class="country_parent">
             <span class='es_flag ${countryClass}'></span>
             <select class='regional_country'>${options}</select>
-            <a class="select2-search-choise-close remove_region"></a>
             </div>`;
         }
 

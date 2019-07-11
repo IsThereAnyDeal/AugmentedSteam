@@ -1,14 +1,14 @@
 body {
 	font-size: 90%;
-	color: #efffef;
-	background: #131519;
+	color: white;
+	background-color: #131519;
 	margin: 0;
 	font-family: 'Open Sans', sans-serif;
 	text-align: left;
 }
 
 #header {
-	background-color:#000000;
+	background-color: black;
 }
 
 #header > img {
@@ -26,7 +26,7 @@ body {
 	display: flex;
 	align-items: center;
 	font-weight: bold;
-	background-color: #02ba55;
+	background-color: #0b4267;
 	z-index: 999;
 	pointer-events: none;
 }
@@ -107,7 +107,7 @@ body {
 }
 
 .tab_row.selected .category {
-	background:#0b4267;
+	background-color: #0b4267;
 }
 
 .tab_row.expanded .triangle {
@@ -165,7 +165,7 @@ input[type=color] {
 }
 button {
 	background-color: #162c3e;
-	border: 2px solid #1b4a6b;
+	border: 2px solid #0b4267;
 	border-radius: 2px;
 	color: white;
 	height: 2em;
@@ -177,22 +177,22 @@ button {
 }
 button:hover {
 	background-color:#0b4267;
-	border-color:#036db1;
+	border-color:#162c3e;
 }
 
 select, input[type=text] {
-	background-color: #282a2f;
+	background-color: #1a1c21;
 	color: white;
 	padding: 0.15em;
 	margin-left: 1em;
 	font-size: 90%;
 	border: 1px solid #555;
-	border-radius:2px;
+	border-radius: 2px;
 }
 li {
 	padding-bottom: 0.5em;
 }
-#region_selects :last-child {
+#region_selects > :last-child {
 	margin-top: 1em;
 	margin-left: 2.3em;
 }
@@ -220,8 +220,8 @@ input[type=checkbox] {
 	justify-content: flex-end;
 }
 .content_section > div:hover {
-	border-left-color: #036db1;
-	background-color: #5a5a5a78
+	border-left-color: #0b4267;
+	background-color: #5a5a5a78;
 }
 
 .content_section > div label {
@@ -249,10 +249,6 @@ a:hover {
 #reset {
 	margin-top: 0.5em;
 	width: auto;
-}
-#show_spamcommentregex,
-#show_quickinv_diff {
-	color: #EFFFEF;
 }
 #quickinv_diff {
 	width: 6em;
