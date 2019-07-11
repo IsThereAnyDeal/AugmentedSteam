@@ -143,7 +143,8 @@ let Options = (function(){
         for (let c=0; c<cols; c++) {
             html += "<div class='store_col'>";
             for (let len = Math.min(StoreList.length, (c+1) * perCol); i < len; ++i) {
-                html += `<div><input type="checkbox" id="${StoreList[i].id}"${(stores.length === 0 || stores.indexOf(StoreList[i].id) !== -1) ? " checked" : ''}><label for="steam">${StoreList[i].title}</label></div>`;
+                let id = StoreList[i].id;
+                html += `<div class="option"><input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ''}><label for="${id}">${StoreList[i].title}</label></div>`;
             }
             html += "</div>";
         }

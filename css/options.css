@@ -209,6 +209,7 @@ input[type=checkbox] {
 	margin: 0.5em 0;
 	line-height: 2;
 	padding-left: 0.3em;
+	padding-right: 0.5em;
 	border-left: 3px solid transparent;
 }
 .option:hover {
@@ -238,10 +239,11 @@ input[type=checkbox] {
 #store_stores {
 	display: flex;
 	justify-content: space-between;
-}
-.store_col div {
-	display: flex;
 	align-items: baseline;
+}
+.store_col > div {
+	display: flex;
+	align-items: center;
 }
 
 a {
