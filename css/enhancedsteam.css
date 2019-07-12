@@ -90,10 +90,6 @@ img.platform_small, .platform_img {
 	margin-top: 20px;
 }
 
-.es_media_tab.active .tab_content {
-	background-color: #0003 !important;
-}
-
 .chart-stat {
 	float: left;
 	text-align: center;
@@ -2646,4 +2642,47 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	content: "";
 	display: block;
 	clear: both;
+}
+
+/* Styles copied from home.css in order to load faster */
+#es_media_tabs .store_horizontal_minislider_ctn {
+    position: relative;
+    overflow: hidden;
+}
+#es_media_tabs .home_tabs_row {
+    position: relative;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.es_media_tab.home_tab {
+    display: inline-block;
+    margin-right: 0px;
+	background: transparent;
+    font-size: 13px;
+    color: #2f89bc;
+    line-height: 24px;
+    cursor: pointer;
+    vertical-align: top;
+    margin-top: 3px;
+}
+.es_media_tab.home_tab.active {
+	margin-top: 0;
+	padding: 1px;
+}
+.es_media_tab.home_tab .tab_content {
+    font-size: 13px;
+    color: #4f94bc;
+    line-height: 24px;
+    padding: 0 10px;
+    cursor: pointer;
+    vertical-align: top;
+}
+.es_media_tab.home_tab.active .tab_content {
+	line-height: 29px;
+    font-size: 14px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.2);
+    text-shadow: -1px -1px rgba( 0, 0, 0, 0.25 );
+    cursor: default;
+    margin-top: 0;
 }
