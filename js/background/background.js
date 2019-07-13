@@ -227,7 +227,12 @@ class SteamStore extends Api {
 
         function addKnownPackage(data) {
             for (let [subid, details] of Object.entries(data)) {
-                if (!details || !details.success) return;
+                if (!details || !details.success) {
+                    if (coupons[subid]) {
+                        coupons[subid].appids = [];
+                        continue;
+                    }
+                }
                 details = details.data;
                 packages[subid] = { 'appids': details.apps, 'timestamp': CacheStorage.timestamp(), };
                 // .apps is an array of { 'id': ##, 'name': "", }, TODO check if we need to clearSpecialSymbols(name)
