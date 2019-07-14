@@ -921,45 +921,18 @@ let GamesPageClass = (function(){
                 // Copy achievement stats to row
                 HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
 
-                RequestData.getHttp(statsLink + appid).then(result => {
+                Stats.getAchievementBar(appid).then(achieveBar => {
                     let node = document.querySelector("#es_app_" + appid);
                     node.innerHTML = "";
 
-                    let dummy = HTMLParser.htmlToDOM(result);
-                    let achNode = dummy.querySelector("#topSummaryAchievements");
+                    if (!achieveBar) return;
 
-                    if (!achNode) { return; }
-
-                    achNode.style.whiteSpace = "nowrap";
-
-                    if (!achNode.querySelector("img")) {
-                        HTML.beforeEnd(node, achNode.innerHTML);
-
-                        // The size of the achievement bars for games without leaderboards/other stats is fine, return
-                        return;
-                    }
-
-                    let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
-
-                    // 1 full match, 3 group matches
-                    if (!stats || stats.length !== 4) {
-                        console.warn("Failed to find achievement stats for appid", appid);
-                        return;
-                    }
-
-                    HTML.inner(node,
-                        `<div>${Localization.str.achievements.summary
-                            .replace("__unlocked__", stats[1])
-                            .replace("__total__", stats[2])
-                            .replace("__percentage__", stats[3])}</div>
-                        <div class="achieveBar">
-                            <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
-                        </div>`);
+                    HTML.inner(node, achieveBar);
 
                 }, err => {
                     let node = document.querySelector("#es_app_" + appid);
                     node.innerHTML = "error";
-                    console.err(err);
+                    console.error(err);
                 });
             }
         }
