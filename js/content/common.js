@@ -2026,7 +2026,7 @@ let Common = (function(){
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion();
+        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeAboutLinks();

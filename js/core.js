@@ -111,7 +111,7 @@ class Version {
 
 class UpdateHandler {
 
-    static checkVersion() {
+    static checkVersion(onUpdate) {
         let lastVersion = Version.fromString(SyncedStorage.get("version"));
         let currentVersion = Version.fromString(Info.version);
 
@@ -119,6 +119,7 @@ class UpdateHandler {
             if (SyncedStorage.get("version_show")) {
                 this._showChangelog();
             }
+            onUpdate();
             this._migrateSettings(lastVersion);
         }
 
