@@ -470,12 +470,16 @@ class SubPageClass extends StorePageClass {
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
 
-                let priceContainer = node.querySelector(".discount_final_price").textContent.trim();
-                if (!priceContainer) { continue; }
+                let priceNode = node.querySelector(".discount_final_price");
+                // Only present when the product has a price associated with (so it's not free or N/A)
+                if (priceNode) {
+                    let priceContainer = priceNode.textContent.trim();
+                    if (!priceContainer) { continue; }
 
-                let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
-                if (price) {
-                    notOwnedTotalPrice += price.value;
+                    let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                    if (price) {
+                        notOwnedTotalPrice += price.value;
+                    }
                 }
             }
 
