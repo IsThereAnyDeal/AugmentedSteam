@@ -919,19 +919,16 @@ let GamesPageClass = (function(){
                 if (!node.querySelector("h5.hours_played")) { continue; }
 
                 // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
 
                 Stats.getAchievementBar(appid).then(achieveBar => {
                     let node = document.querySelector("#es_app_" + appid);
-                    node.innerHTML = "";
 
                     if (!achieveBar) return;
 
                     HTML.inner(node, achieveBar);
 
                 }, err => {
-                    let node = document.querySelector("#es_app_" + appid);
-                    node.innerHTML = "error";
                     console.error(err);
                 });
             }
