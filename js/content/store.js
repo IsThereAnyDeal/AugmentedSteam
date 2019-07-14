@@ -466,7 +466,7 @@ class SubPageClass extends StorePageClass {
         setTimeout(function() {
             let notOwnedTotalPrice = 0;
 
-            let nodes = document.querySelectorAll(".tab_idem");
+            let nodes = document.querySelectorAll(".tab_item");
             for (let i=0, len=nodes.length; i<len; i++) {
                 let node = nodes[i];
 
