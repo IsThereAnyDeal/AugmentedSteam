@@ -521,18 +521,19 @@ class SteamCommunity extends Api {
 
     static async items() { // context#6, community items
         let self = SteamCommunity;
-        let login = LocalStorage.get('login');
-        if (!login) throw `Must be signed in to access Inventory`;
+        let login = LocalStorage.get("login");
+        if (!login) throw "Must be signed in to access Inventory";
 
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
-        let inventory = CacheStorage.get('inventory_6', 3600);
+        let inventory = CacheStorage.get("inventory_6", 3600);
         if (!inventory) {
-            inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/`, { 'l': 'en', });
-            if (!inventory || !inventory.success) throw new Error(`Could not retrieve Inventory 753/6`);
+            inventory = await self.getEndpoint(`/inventory/${login.steamId}/753/6`, { "l": "english", "count": 5000 });
+            if (!inventory || !inventory.success) throw new Error("Could not retrieve Inventory 753/6");
 
-            CacheStorage.set('inventory_6', inventory);
+            inventory = inventory.descriptions.map(item => item.market_hash_name);
+            CacheStorage.set("inventory_6", inventory);
         }
-        return Object.values(inventory.rgDescriptions || {}).map(item => item['market_hash_name']);
+        return inventory;
     }
 
     /**
