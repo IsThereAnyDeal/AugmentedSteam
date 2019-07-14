@@ -422,7 +422,7 @@ class SteamCommunity extends Api {
             if (!data || !data.success) throw new Error("Could not retrieve Inventory 753/3");
             coupons = {};
 
-            for(let description of data.descriptions) {
+            for (let description of data.descriptions) {
                 if (!description.type || description.type !== "Coupon") { continue; }
                 if (!description.actions) { continue; }
 
@@ -469,27 +469,27 @@ class SteamCommunity extends Api {
     }
     static async gifts() { // context#1, gifts and guest passes
         let self = SteamCommunity;
-        let login = LocalStorage.get('login');
-        if (!login) throw `Must be signed in to access Inventory`;
+        let login = LocalStorage.get("login");
+        if (!login) throw "Must be signed in to access Inventory";
 
-        let value = CacheStorage.get('inventory_1', 3600);
+        let value = CacheStorage.get("inventory_1", 3600);
         if (!value) {
             let gifts = [], passes = [];
 
-            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/1/`, { 'l': 'en', });
+            let data = await self.getEndpoint(`/inventory/${login.steamId}/753/1`, { "l": "english", "count": 5000 });
             if (!data || !data.success) throw new Error(`Could not retrieve Inventory 753/1`);
 
-            for(let [key, obj] of Object.entries(data.rgDescriptions)) {
+            for (let description of data.descriptions) {
                 let isPackage = false;
-                if (obj.descriptions) {
-                    for (let desc of obj.descriptions) {
+                if (description.descriptions) {
+                    for (let desc of description.descriptions) {
                         if (desc.type === "html") {
                             let appids = GameId.getAppids(desc.value);
                             // Gift package with multiple apps
                             isPackage = true;
                             for (let appid of appids) {
                                 if (!appid) { continue; }
-                                if (obj.type === "Gift") {
+                                if (description.type === "Gift") {
                                     gifts.push(appid);
                                 } else {
                                     passes.push(appid);
@@ -501,10 +501,10 @@ class SteamCommunity extends Api {
                 }
 
                 // Single app
-                if (!isPackage && obj.actions) {
-                    let appid = GameId.getAppid(obj.actions[0].link);
+                if (!isPackage && description.actions) {
+                    let appid = GameId.getAppid(description.actions[0].link);
                     if (appid) {
-                        if (obj.type === "Gift") {
+                        if (description.type === "Gift") {
                             gifts.push(appid);
                         } else {
                             passes.push(appid);
@@ -513,8 +513,8 @@ class SteamCommunity extends Api {
                 }
             }
 
-            value = { 'gifts': gifts, 'passes': passes, };
-            CacheStorage.set('inventory_1', value);
+            value = { "gifts": gifts, "passes": passes, };
+            CacheStorage.set("inventory_1", value);
         }
         return value;
     }
