@@ -316,7 +316,7 @@ let Options = (function(){
                     node.textContent = Localization.str.options.lang[lang] + ":";
                 }
             }
-        });
+        }).then(loadSideBar);
     }
 
     let Region = (function() {
@@ -560,7 +560,6 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadSideBar();
         loadOptions();
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
