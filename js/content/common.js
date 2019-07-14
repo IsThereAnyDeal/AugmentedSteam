@@ -1949,7 +1949,7 @@ let Prices = (function(){
                                 </div>
                             </div>`;
 
-            purchase += '<div class="game_purchase_action_bg">';
+            purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
                     purchase += new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency).toString();
