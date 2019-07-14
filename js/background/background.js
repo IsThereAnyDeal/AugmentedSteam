@@ -408,19 +408,47 @@ class SteamCommunity extends Api {
         });
     }
 
+    static async getInventory(contextId) {
+        let login = LocalStorage.get("login");
+        if (!login) throw new Error("Must be signed in to access Inventory");
+
+        let params = { "l": "english", "count": 2000 };
+        let data = null;
+        let result, last_assetid;
+
+        do {
+            let thisParams = Object.assign(params, last_assetid ? { "start_assetid": last_assetid } : null);
+            result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams);
+            if (result && result.success) {
+                if (!data) data = { "assets": [], "descriptions": [] };
+                data.assets = data.assets.concat(result.assets);
+                data.descriptions = data.descriptions.concat(result.descriptions);
+            }
+            last_assetid = result.last_assetid;
+        } while (result.more_items);
+
+        if (!data) {
+            throw new Error(`Could not retrieve Inventory 753/${contextId}`);
+        }
+        return data;
+    }
+
     /**
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
         let self = SteamCommunity;
-        let login = LocalStorage.get("login");
-        if (!login) throw new Error("Must be signed in to access Inventory");
 
         let coupons = CacheStorage.get("inventory_3", 3600);
         if (!coupons) {
-            let data = await self.getEndpoint(`/inventory/${login.steamId}/753/3`, { "l": "english", "count": 5000 });
-            if (!data || !data.success) throw new Error("Could not retrieve Inventory 753/3");
             coupons = {};
+            let data;
+            try {
+                data = await self.getInventory(3);
+            } catch(err) {
+                console.error(err);
+                return coupons;
+            }
 
             for (let description of data.descriptions) {
                 if (!description.type || description.type !== "Coupon") { continue; }
@@ -469,15 +497,18 @@ class SteamCommunity extends Api {
     }
     static async gifts() { // context#1, gifts and guest passes
         let self = SteamCommunity;
-        let login = LocalStorage.get("login");
-        if (!login) throw "Must be signed in to access Inventory";
 
         let value = CacheStorage.get("inventory_1", 3600);
         if (!value) {
             let gifts = [], passes = [];
 
-            let data = await self.getEndpoint(`/inventory/${login.steamId}/753/1`, { "l": "english", "count": 5000 });
-            if (!data || !data.success) throw new Error(`Could not retrieve Inventory 753/1`);
+            let data;
+            try {
+                data = await self.getInventory(1);
+            } catch(err) {
+                console.error(err);
+                return { "gifts": gifts, "passes": passes };
+            }
 
             for (let description of data.descriptions) {
                 let isPackage = false;
@@ -521,14 +552,16 @@ class SteamCommunity extends Api {
 
     static async items() { // context#6, community items
         let self = SteamCommunity;
-        let login = LocalStorage.get("login");
-        if (!login) throw "Must be signed in to access Inventory";
 
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
         let inventory = CacheStorage.get("inventory_6", 3600);
         if (!inventory) {
-            inventory = await self.getEndpoint(`/inventory/${login.steamId}/753/6`, { "l": "english", "count": 5000 });
-            if (!inventory || !inventory.success) throw new Error("Could not retrieve Inventory 753/6");
+            try {
+                inventory = await self.getInventory(6);
+            } catch(err) {
+                console.error(err);
+                return [];
+            }
 
             inventory = inventory.descriptions.map(item => item.market_hash_name);
             CacheStorage.set("inventory_6", inventory);
