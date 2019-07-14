@@ -138,14 +138,16 @@ h1 {
 	margin: 0.5em 0;
 	text-decoration: underline;
 }
-
 h2 {
-	font-size: 110%;
+	font-size: 130%;
 	font-weight: bold;
 	margin: 0.8em 0;
 }
 .content_section > h2 {
 	margin-top: 0;
+}
+h3 {
+	font-size: 110%;
 }
 
 input[type=color] {
