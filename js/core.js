@@ -584,6 +584,7 @@ SyncedStorage.defaults = {
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,
+    'show_coupon': true,
     'show_wishlist_link': true,
     'show_wishlist_count': true,
     'show_progressbar': true,

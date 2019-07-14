@@ -892,6 +892,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addCoupon() {
+        if (!SyncedStorage.get("show_coupon")) return;
         let inst = this;
         Inventory.then(() => {
 

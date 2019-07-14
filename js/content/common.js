@@ -1289,7 +1289,7 @@ let Inventory = (function(){
                 promises.push(Background.action('inventory.gifts').then(({ "gifts": x, "passes": y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, EnhancedSteam.addLoginWarning));
         }
 
-        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon")) {
+        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
             promises.push(Background.action('inventory.coupons').then(handleCoupons, EnhancedSteam.addLoginWarning));
         }
 
