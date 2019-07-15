@@ -466,7 +466,7 @@ class SubPageClass extends StorePageClass {
         setTimeout(function() {
             let notOwnedTotalPrice = 0;
 
-            for (let node of document.querySelectorAll(".tab_item")) {
+            for (let node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
                 let priceNode = node.querySelector(".discount_final_price");
                 // Only present when the product has a price associated with (so it's not free or N/A)
                 if (priceNode) {
