@@ -1360,7 +1360,7 @@ class AppPageClass extends StorePageClass {
             let str = Localization.str.viewinclient;
 
             HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
         }
 
