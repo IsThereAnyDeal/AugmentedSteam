@@ -537,6 +537,7 @@ SyncedStorage.defaults = {
     'skip_got_steam': false,
 
     'hideaboutlinks': false,
+    'openinnewtab': true,
     'keepssachecked': false,
     'showemptywishlist': true,
     'showusernotes': true,
@@ -626,20 +627,24 @@ class ExtensionResources {
      * The addition of the "target" attribute to the allowed attributes is done in order to be able to open links in a new tab,
      * while considering security concerns (see hook and https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/)
      */
-    DOMPurify.setConfig({
-        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-        ADD_ATTR: ["target"]
-    });
+    let purifyConfig = { ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i };
+    SyncedStorage.then(() => {
+        if (SyncedStorage.get("openinnewtab")) {
+            purifyConfig.ADD_ATTR = ["target"];
 
-    DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
-        if (data.attrName === "target") {
-            if (data.attrValue === "_blank") {
-                node.setAttribute("rel", "noreferrer noopener");
-            } else {
-                data.keepAttr = false;
-            }
+            DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+                if (data.attrName === "target") {
+                    if (data.attrValue === "_blank") {
+                        node.setAttribute("rel", "noreferrer noopener");
+                    } else {
+                        data.keepAttr = false;
+                    }
+                }
+            });
         }
-    });
+
+        DOMPurify.setConfig(purifyConfig);
+    }, err => console.error(err));
 })();
 
 class HTML {

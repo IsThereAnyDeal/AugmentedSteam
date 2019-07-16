@@ -386,6 +386,7 @@
         "show_astatslink": "Show AStats link on app pages",
         "show_youtubegameplay": "Show YouTube gameplay videos on app pages",
         "show_youtubereviews": "Show YouTube review videos on app pages",
+        "openinnewtab": "Open external links in a new tab",
         "showclient": "Show Steam Client links",
         "guest": "Items you have a guest pass for",
         "show_steamchart_info": "Show SteamCharts.com info",
