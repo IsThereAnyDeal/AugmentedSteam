@@ -737,7 +737,7 @@ let ProfileHomePageClass = (function(){
                     document.head.appendChild(stylesheet);
 
                     document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
-                    document.querySelector(".profile_customization").style.backgroundImage = "url('" + showcase + "')";
+                    document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = "url('" + showcase + "')");
                     break;
             }
             stylesheet = null;
