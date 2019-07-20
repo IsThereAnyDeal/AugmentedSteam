@@ -1,6 +1,16 @@
 /**
  * Common functions that may be used on any pages
  */
+class ITAD {
+    constructor() {
+        HTML.afterBegin("#global_action_menu",
+            `<div id="es_itad">
+                <img id="es_itad_logo" src="${ExtensionLayer.getLocalUrl("img/itad.jpg")}" height="24px">
+                <span id="es_itad_status"></span>
+            </div>`);
+    }
+}
+
 class ProgressBar {
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
@@ -2098,6 +2108,7 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
+        new ITAD();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeAboutLinks();
