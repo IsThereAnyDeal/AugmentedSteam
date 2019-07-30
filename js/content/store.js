@@ -1631,8 +1631,8 @@ class AppPageClass extends StorePageClass {
     }
 
     addDlcCheckboxes() {
-        let nodes = document.querySelectorAll(".game_area_dlc_row");
-        if (nodes.length === 0) { return; }
+        let dlcs = document.querySelectorAll(".game_area_dlc_row");
+        if (dlcs.length === 0) { return; }
         let expandedNode = document.querySelector("#game_area_dlc_expanded");
 
         if (expandedNode) {
@@ -1654,17 +1654,15 @@ class AppPageClass extends StorePageClass {
             document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
         });
 
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-
-            if (node.querySelector("input")) {
-                let value = node.querySelector("input").value;
+        for (let dlc of dlcs) {
+            if (dlc.querySelector("input")) {
+                let value = dlc.querySelector("input").value;
 
                 HTML.afterBegin(
-                    node.querySelector(".game_area_dlc_name"),
+                    dlc.querySelector(".game_area_dlc_name"),
                     "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
             } else {
-                node.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
+                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
         }
 
@@ -1714,7 +1712,19 @@ class AppPageClass extends StorePageClass {
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
             let cartNode = document.querySelector("#es_selected_cart");
-            HTML.inner(cartNode, `<input type="hidden" name="action" value="add_to_cart"><input type="hidden" name="sessionid" value="${User.getSessionId()}">`);
+
+            let inputAction = document.createElement("input");
+            inputAction.type = "hidden";
+            inputAction.name = "action";
+            inputAction.value = "add_to_cart";
+
+            let inputSessionId = document.createElement("input");
+            inputSessionId.type = "hidden";
+            inputSessionId.name = "sessionid";
+            inputSessionId.value = User.getSessionId();
+
+            cartNode.appendChild(inputAction);
+            cartNode.appendChild(inputSessionId);
 
             let nodes = document.querySelectorAll(".es_dlc_selection:checked");
             for (let i=0, len=nodes.length; i<len; i++) {
