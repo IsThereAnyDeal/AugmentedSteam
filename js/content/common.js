@@ -1868,6 +1868,8 @@ let Prices = (function(){
         if (info["bundles"]["live"].length == 0) { return; }
 
         let length = info["bundles"]["live"].length;
+        let purchase = "";
+
         for (let i = 0; i < length; i++) {
             let bundle = info["bundles"]["live"][i];
             let endDate;
@@ -1894,13 +1896,12 @@ let Prices = (function(){
             if (this._bundles.indexOf(bundle_normalized) >= 0) { continue; }
             this._bundles.push(bundle_normalized);
 
-            let purchase = "";
             if (bundle.page) {
                 let bundlePage = Localization.str.buy_package.replace("__package__", bundle.page + ' ' + bundle.title);
-                purchase = `<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>${bundlePage}</h1>`;
+                purchase += `<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>${bundlePage}</h1>`;
             } else {
                 let bundleTitle = Localization.str.buy_package.replace("__package__", bundle.title);
-                purchase = `<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"></div><div class="game_area_purchase_platform"></div><h1>${bundleTitle}</h1>`;
+                purchase += `<div class="game_area_purchase_game_wrapper"><div class="game_area_purchase_game"></div><div class="game_area_purchase_platform"></div><h1>${bundleTitle}</h1>`;
             }
 
             if (endDate) {
@@ -1948,7 +1949,7 @@ let Prices = (function(){
                                 </div>
                             </div>`;
 
-            purchase += '<div class="game_purchase_action_bg">';
+            purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
                     purchase += new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency).toString();
@@ -1959,9 +1960,9 @@ let Prices = (function(){
             purchase += '<a class="btnv6_green_white_innerfade btn_medium" href="' + bundle["url"] + '" target="_blank">';
             purchase += '<span>' + Localization.str.buy + '</span>';
             purchase += '</a></div></div></div></div>';
-
-            this.bundleCallback(purchase);
         }
+
+        if (purchase) this.bundleCallback(purchase);
     };
 
     Prices.prototype.load = function() {
