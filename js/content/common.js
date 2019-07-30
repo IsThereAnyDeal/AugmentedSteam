@@ -972,6 +972,12 @@ let EnhancedSteam = (function() {
         let accountName = accountNameNode.textContent.trim();
         let communityName = document.querySelector("#global_header .username").textContent.trim();
 
+        // Present on https://store.steampowered.com/account/history/
+        let pageHeader = document.querySelector("h2.pageheader");
+        if (pageHeader) {
+            pageHeader.textContent = pageHeader.textContent.replace(accountName, communityName);
+        }
+
         accountNameNode.textContent = communityName;
         document.title = document.title.replace(accountName, communityName);
     };
