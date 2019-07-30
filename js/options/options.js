@@ -369,6 +369,11 @@ let Options = (function(){
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
+
+        for (let el of document.querySelectorAll(".country_parent")) {
+            el.remove();
+        }
+
         SyncedStorage.then(loadOptions);
 
         let node = document.getElementById('reset_note');
