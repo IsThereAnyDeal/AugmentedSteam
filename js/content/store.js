@@ -1048,20 +1048,19 @@ class AppPageClass extends StorePageClass {
 
     _getYoutubeIframeNode(appName, searchQuery) {
 
-        let listParam = encodeURIComponent(appName)
-            + "+" + encodeURIComponent(Localization.str.game)
-            + "+" + encodeURIComponent(searchQuery);
+        let listParam = encodeURIComponent(
+            // Remove trademarks etc
+            `intitle:"${appName.replace(/[\u00AE\u00A9\u2122]/g, "")} ${searchQuery}" "PC"`);
 
         let hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
-        let node = document.createElement("iframe");
-        node.id = "es_youtube_gameplay_player";
-        node.classList.add("es_youtube_player");
-        node.type = "text/html";
-        node.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&enablejsapi=1&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}`;
-        node.allowFullscreen = true;
+        let player = document.createElement("iframe");
+        player.classList.add("es_youtube_player");
+        player.type = "text/html";
+        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}`;
+        player.allowFullscreen = true;
 
-        return node;
+        return player;
     }
 
     addYouTubeGameplay() {
@@ -1096,7 +1095,7 @@ class AppPageClass extends StorePageClass {
 
             if (!youTubeMedia) {
                 youTubeMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
-                youTubeMedia.style.display = "none";
+                youTubeMedia.id = "es_youtube_gameplay_player";
 
                 document.querySelector(".highlight_ctn")
                     .insertAdjacentElement("beforeend", youTubeMedia);
