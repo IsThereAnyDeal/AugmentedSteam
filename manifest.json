@@ -55,6 +55,7 @@
         "*://help.steampowered.com/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -76,6 +77,7 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -102,6 +104,7 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -124,6 +127,7 @@
   ],
   "background": {
     "scripts": [
+      "js/lib/webextension-polyfill/browser-polyfill.js",
       "js/lib/DOMPurify/purify.js",
       "js/config.js",
       "js/core.js",

@@ -803,7 +803,7 @@ class AppPageClass extends StorePageClass {
 
         imgNode.classList.add("es-in-wl");
         HTML.beforeBegin(imgNode,
-            `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />
+            `<img class='es-remove-wl' src='${ExtensionResources.getURL("img/remove.png")}' style='display:none' />
              <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
         successNode.addEventListener("click", function(e){
@@ -1013,7 +1013,7 @@ class AppPageClass extends StorePageClass {
             }
             HTML.afterEnd(node.parentNode,  "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
 
-            let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
+            let opencriticImg = ExtensionResources.getURL("img/opencritic.png");
             let award = data.award || "NA";
 
             HTML.beforeEnd("#game_area_opencritic",
@@ -1202,92 +1202,92 @@ class AppPageClass extends StorePageClass {
 
             switch (wsg) {
                 case "A":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-gold.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-gold.png");
                     wsg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Widescreen");
                     break;
                 case "B":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-silver.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-silver.png");
                     wsg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Widescreen");
                     break;
                 case "C":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-limited.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-limited.png");
                     wsg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Widescreen");
                     break;
                 case "Incomplete":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-incomplete.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-incomplete.png");
                     wsg_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-unsupported.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-unsupported.png");
                     wsg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Widescreen");
                     break;
             }
 
             switch (mmg) {
                 case "A":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-gold.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-gold.png");
                     mmg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
                     break;
                 case "B":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-silver.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-silver.png");
                     mmg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
                     break;
                 case "C":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-limited.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-limited.png");
                     mmg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
                     break;
                 case "Incomplete":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-incomplete.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-incomplete.png");
                     mmg_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-unsupported.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-unsupported.png");
                     mmg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
                     break;
             }
 
             switch (uws) {
                 case "A":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-gold.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-gold.png");
                     uws_text = Localization.str.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
                     break;
                 case "B":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-silver.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-silver.png");
                     uws_text = Localization.str.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
                     break;
                 case "C":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-limited.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-limited.png");
                     uws_text = Localization.str.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
                     break;
                 case "Incomplete":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-incomplete.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-incomplete.png");
                     uws_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-unsupported.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-unsupported.png");
                     uws_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
                     break;
             }
 
             switch (fkg) {
                 case "A":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-gold.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-gold.png");
                     fkg_text = Localization.str.wsgf.gold.replace(/__type__/g, "4k UHD");
                     break;
                 case "B":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-silver.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-silver.png");
                     fkg_text = Localization.str.wsgf.silver.replace(/__type__/g, "4k UHD");
                     break;
                 case "C":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-limited.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-limited.png");
                     fkg_text = Localization.str.wsgf.limited.replace(/__type__/g, "4k UHD");
                     break;
                 case "Incomplete":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-incomplete.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-incomplete.png");
                     fkg_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-unsupported.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-unsupported.png");
                     fkg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "4k UHD");
                     break;
             }
@@ -1678,7 +1678,7 @@ class AppPageClass extends StorePageClass {
 
                 HTML.afterBegin(
                     dlc.querySelector(".game_area_dlc_name"),
-                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
+                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionResources.getURL("img/check_sheet.png") + ");'></label>");
             } else {
                 dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
@@ -1860,7 +1860,7 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
-        let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
+        let imgUrl = ExtensionResources.getURL("img/ico/astatsnl.png");
         let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.communityAppid;
 
         HTML.beforeEnd("#achievement_block",
@@ -2116,7 +2116,7 @@ let RegisterKeyPageClass = (function(){
                 }
                 keys.push(attempt);
 
-                let url = ExtensionLayer.getLocalUrl("img/questionmark.png");
+                let url = ExtensionResources.getURL("img/questionmark.png");
 
                 HTML.beforeEnd("#es_activate_results",
                     "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
@@ -2142,7 +2142,7 @@ let RegisterKeyPageClass = (function(){
                     let attempted = current_key;
                     let message = Localization.str.register.default;
                     if (data["success"] === 1) {
-                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
+                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
                             document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
@@ -2157,14 +2157,14 @@ let RegisterKeyPageClass = (function(){
                             case 50: message = Localization.str.register.wallet; break;
                             case 53: message = Localization.str.register.toomany; break;
                         }
-                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
+                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                         document.querySelector("#attempt_" + attempted + "_result").textContent = message;
                         document.querySelector("#attempt_" + attempted + "_result").style.display="block";
                     }
 
                 }, () => {
                     let attempted = current_key;
-                    document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
+                    document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                     document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.error;
                     document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
                 });

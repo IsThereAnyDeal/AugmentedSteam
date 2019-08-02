@@ -5,7 +5,7 @@ class ITAD {
     static create() {
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
-                <img id="es_itad_logo" src="${ExtensionLayer.getLocalUrl("img/itad.jpg")}" height="24px">
+                <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.jpg")}" height="24px">
                 <span id="es_itad_status"></span>
             </div>`);
 
@@ -129,26 +129,15 @@ class ProgressBar {
 ProgressBar.failedRequests = 0;
 
 class Background {
-    static async message(message) {
+    static message(message) {
         ProgressBar.startRequest();
 
-        return new Promise(function (resolve, reject) {
-            chrome.runtime.sendMessage(message, function(response) {
-                ProgressBar.finishRequest();
-
-                if (!response) {
-                    ProgressBar.failed();
-                    reject("No response from extension background context.");
-                    return;
-                }
-                if (typeof response.error !== 'undefined') {
-                    ProgressBar.failed();
-                    response.localStack = (new Error(message.action)).stack;
-                    reject(response);
-                    return;
-                }
-                resolve(response.response);
-            });
+        return browser.runtime.sendMessage(message).then(result => {
+            ProgressBar.finishRequest();
+            return result;
+        }, err => {
+            ProgressBar.failed();
+            throw err;
         });
     }
     
@@ -241,10 +230,6 @@ let DateParser = (function(){
 let ExtensionLayer = (function() {
 
     let self = {};
-
-    self.getLocalUrl = function(url) {
-        return chrome.runtime.getURL(url);
-    };
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
@@ -913,7 +898,7 @@ let EnhancedSteam = (function() {
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
+                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam">${Localization.str.contribute}</a>
@@ -1138,7 +1123,7 @@ let EnhancedSteam = (function() {
 
     self.alternateLinuxIcon = function(){
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
-        let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
+        let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
         let style = document.createElement('style');
         style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
         document.head.appendChild(style);
@@ -1350,7 +1335,7 @@ let EarlyAccess = (function(){
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
             imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
         }
-        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+        imageUrl = ExtensionResources.getURL(imageName);
 
         switch (window.location.host) {
             case "store.steampowered.com":
@@ -1970,7 +1955,7 @@ let Prices = (function(){
             line2 = `${Localization.str.historical_low} ${historicalStr} ${infoStr2}`;
         }
 
-        let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
+        let chartImg = ExtensionResources.getURL("img/line_chart.png");
         html = `<div class='es_lowest_price' id='es_price_${id}'><div class='gift_icon' id='es_line_chart_${id}'><img src='${chartImg}'></div>`;
 
         // "Number of times this game has been in a bundle"

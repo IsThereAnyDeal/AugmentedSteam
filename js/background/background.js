@@ -189,28 +189,27 @@ AugmentedSteamApi._earlyAccessAppIds_promise = null;
 class ITAD_Api extends Api{
     static authorize({ params: hash }) {
         return new Promise(resolve => {
-            chrome.permissions.request({ permissions: ["identity"] }, granted => {
+            browser.permissions.request({ permissions: ["identity"] }).then(granted => {
                 if (granted) {
-                    chrome.identity.launchWebAuthFlow(
-                        { url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=wait_read%20coll_read&redirect_uri=https://${chrome.runtime.id}.chromiumapp.org/itad`, interactive: true },
-                        url => {
-                        if (url) {
-                            let hashFragment = new URL(url).hash;
-                            if (hashFragment) {
-                                let params = new URLSearchParams(hashFragment.substr(1));
-
-                                if (parseInt(params.get("state"), 10) === hash) {
-                                    let accessToken = params.get("access_token");
-                                    let expiresIn = params.get("expires_in");
+                    browser.identity.launchWebAuthFlow(
+                        { url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=wait_read%20coll_read&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`, interactive: true }).then(url => {
+                            if (url) {
+                                let hashFragment = new URL(url).hash;
+                                if (hashFragment) {
+                                    let params = new URLSearchParams(hashFragment.substr(1));
         
-                                    if (accessToken && expiresIn) {
-                                        localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: CacheStorage.timestamp() + parseInt(expiresIn, 10) }));
-                                        resolve();
-                                    } else throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'");
-                                } else throw new Error("Failed to verify state parameter from URL fragment");
-                            } else throw new Error("URL " + url + " doesn't contain a fragment");
-                        } else throw new Error("Couldn't retrieve access token for ITAD authorization");
-                    });
+                                    if (parseInt(params.get("state"), 10) === hash) {
+                                        let accessToken = params.get("access_token");
+                                        let expiresIn = params.get("expires_in");
+            
+                                        if (accessToken && expiresIn) {
+                                            localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: CacheStorage.timestamp() + parseInt(expiresIn, 10) }));
+                                            resolve();
+                                        } else throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'");
+                                    } else throw new Error("Failed to verify state parameter from URL fragment");
+                                } else throw new Error("URL " + url + " doesn't contain a fragment");
+                            } else throw new Error("Couldn't retrieve access token for ITAD authorization");
+                        });
                 } else throw new Error("Denied accessing identity API, can't authorize app");
             });
         });
@@ -776,39 +775,20 @@ let actionCallbacks = new Map([
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
 
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    if (!sender || !sender.tab) { return false; } // not from a tab, ignore
-    if (!message || !message.action) { return false; }
+browser.runtime.onMessage.addListener(async (message, sender) => {
+    if (!sender || !sender.tab) { return; } // not from a tab, ignore
+    if (!message || !message.action) { return; }
   
     let callback = actionCallbacks.get(message.action);
     if (!callback) {
         // requested action not recognized, reply with error immediately
-        sendResponse({ 'error': `Did not recognize '${message.action}' as an action.`, });
-        return false;
+        throw new Error(`Did not recognize '${message.action}' as an action.`);
     }
 
-    Promise.resolve(callback(message))
-        .then(response => sendResponse({ 'response': response, }))
-        .catch(function(err) {
-            console.error(err, message.action);
-            let response = {
-                'error': true,
-                'message': "An unknown error occurred.",
-                'action': message.action,
-            };
-            if (typeof err == 'string') {
-                response.message = err;
-            } else if (err instanceof Error) {
-                // JSON.stringify(Error) == "{}"
-                response.message = err.message;
-                response.stack = err.stack;
-            } else {
-                response.message = err.toString();
-                response.stack = (new Error()).stack;
-            }
-            sendResponse(response);
-        });
-
-    // keep channel open until callback resolves
-    return true;
+    try {
+        return await callback(message);
+    } catch(err) {
+        console.error(err);
+        throw err;
+    }
 });

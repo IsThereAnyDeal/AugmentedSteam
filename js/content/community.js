@@ -209,7 +209,7 @@ let CommunityCommon = (function() {
             HTML.afterBegin(node,
                 `<div class="es_steamcardexchange_link">
                     <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
-                        <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
+                        <img src="${ExtensionResources.getURL('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
                     </a>
                 </div>`);
 
@@ -425,7 +425,7 @@ let ProfileHomePageClass = (function(){
 
         // profile permalink
         if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
             htmlstr +=
                 `<div id="es_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${Localization.str.permalink}</span>
@@ -605,7 +605,7 @@ let ProfileHomePageClass = (function(){
                 for (let [img, regex] of Object.entries(repimgs)) {
                     if (!value.match(regex)) { continue; }
 
-                    let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
+                    let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
                     let priority;
 
                     switch (img) {
@@ -721,7 +721,7 @@ let ProfileHomePageClass = (function(){
 
                     let script = document.createElement("script");
                     script.type = "text/javascript";
-                    script.src = ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js");
+                    script.src = ExtensionResources.getURL("js/steam/holidayprofile.js");
                     document.body.append(script);
 
                     break;
@@ -729,9 +729,9 @@ let ProfileHomePageClass = (function(){
                     document.body.classList.add("es_style_clear");
                     break;
                 default:
-                    let styleUrl = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/style.css");
-                    let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
-                    let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
+                    let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
+                    let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
+                    let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
 
                     stylesheet.href = styleUrl;
                     document.head.appendChild(stylesheet);
@@ -1203,7 +1203,7 @@ let ProfileEditPageClass = (function(){
             styleSelectNode.value = currentStyle;
 
             let imgNode = document.querySelector("#es_style_preview");
-            imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+            imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
 
             if (currentStyle === "remove") {
                 imgNode.style.display = "none";
@@ -1216,7 +1216,7 @@ let ProfileEditPageClass = (function(){
                 imgNode.style.display = "none";
             } else {
                 imgNode.style.display = "block";
-                imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
             }
 
             // Enable the "save" button
@@ -3397,7 +3397,7 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
+        let bgUrl = ExtensionResources.getURL("img/steamdb_store.png");
 
         HTML.beforeEnd(".apphub_OtherSiteInfo",
             ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
@@ -3405,7 +3405,7 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
+        let bgUrl = ExtensionResources.getURL("img/line_chart.png");
 
         HTML.beforeEnd(".apphub_OtherSiteInfo",
             ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);

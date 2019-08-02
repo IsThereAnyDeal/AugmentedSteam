@@ -127,10 +127,10 @@ class UpdateHandler {
     };
 
     static _showChangelog() {
-        RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
+        RequestData.getHttp(ExtensionResources.getURL("changelog_new.html")).then(
             changelog => {
                 changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
+                let logo = ExtensionResources.getURL("img/es_128.png");
                 let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
                 ExtensionLayer.runInPageContext(
                     `function() {
@@ -231,15 +231,6 @@ class UpdateHandler {
     }
 }
 
-
-function checkError() {
-    if (!chrome.runtime.lastError) {
-        return;
-    }
-    throw chrome.runtime.lastError.message;
-}
-
-
 class GameId {
     static parseId(id) {
         if (!id) { return null; }
@@ -332,11 +323,8 @@ class LocalStorage {
 
 
 class SyncedStorage {
-    // static adapter = chrome.storage.sync || chrome.storage.local;
-    // static cache = {};
-
     /**
-     * chrome.storage.sync limits
+     * browser.storage.sync limits
      * QUOTA_BYTES = 102400 // 100KB
      * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
      * MAX_ITEMS = 512
@@ -357,24 +345,17 @@ class SyncedStorage {
     }
 
     static set(key, value) {
-        let that = this;
-        that.cache[key] = value;
-        return new Promise((resolve, reject) => {
-            that.adapter.set({ [key]: value, }, () => { checkError(); resolve(true); });
-            // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
-        });
-        
+        this.cache[key] = value;
+        return this.adapter.set({ [key]: value, });
+        // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
     static remove(key) {
-        let that = this;
-        if (typeof that.cache[key]) {
-            delete that.cache[key];
+        if (typeof this.cache[key]) {
+            delete this.cache[key];
         }
-        return new Promise((resolve, reject) => {
-            that.adapter.remove(key, () => { checkError(); resolve(true); });
-            // can throw if MAX_WRITE* is exceeded
-        });
+        return this.adapter.remove(key);
+        // can throw if MAX_WRITE* is exceeded
     }
 
     static keys(prefix='') {
@@ -383,39 +364,34 @@ class SyncedStorage {
 
     static clear() {
         this.cache = {};
-        return new Promise((resolve, reject) => {
-            this.adapter.clear(() => { checkError(); resolve(true); });
-            // can throw if MAX_WRITE* is exceeded
-        });
+        return this.adapter.clear();
+        // can throw if MAX_WRITE* is exceeded
     }
 
     // load whole storage and make local copy
     static async init() {
-        let that = this;
-        function onChange(changes, namespace) {
-            let that = SyncedStorage;
-            for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
-                that.cache[key] = val;
+        browser.storage.onChanged.addListener(changes => {
+            for (let [key, { newValue: val, }] of Object.entries(changes)) {
+                this.cache[key] = val;
             }
-        }
-        chrome.storage.onChanged.addListener(onChange);
-        let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
-        Object.assign(that.cache, storage);
+        });
 
-        return that.cache;
+        let storage = await this.adapter.get(null);
+        Object.assign(this.cache, storage);
+
+        return this.cache;
     }
     static then(onDone, onCatch) {
         return this.init().then(onDone, onCatch);
     }
 
     static async quota() {
-        let that = this;
         let maxBytes = this.adapter.QUOTA_BYTES;
-        let bytes = await new Promise((resolve, reject) => that.adapter.getBytesInUse(bytes => resolve(bytes)));
+        let bytes = await this.adapter.getBytesInUse();
         return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
     }
 }
-SyncedStorage.adapter = chrome.storage.sync || chrome.storage.local;
+SyncedStorage.adapter = browser.storage.sync || browser.storage.local;
 SyncedStorage.cache = {};
 SyncedStorage.defaults = {
     'language': "english",
@@ -598,7 +574,7 @@ SyncedStorage.defaults = {
 
 class ExtensionResources {
     static getURL(pathname) {
-        return chrome.runtime.getURL(pathname);
+        return browser.runtime.getURL(pathname);
     }
 
     static get(pathname) {
