@@ -2,12 +2,45 @@
  * Common functions that may be used on any pages
  */
 class ITAD {
-    constructor() {
+    static create() {
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
                 <img id="es_itad_logo" src="${ExtensionLayer.getLocalUrl("img/itad.jpg")}" height="24px">
                 <span id="es_itad_status"></span>
             </div>`);
+
+        Background.action("itad.checkexpiry").then(expired => {
+            let itadStatus = document.getElementById("es_itad_status");
+            let itadDiv = itadStatus.parentElement;
+            if (expired) {
+                itadStatus.textContent = Localization.str.sign_in;
+                itadDiv.classList.add("not_authorized");
+                itadDiv.addEventListener("click", ITAD.authorize);
+            } else {
+                itadStatus.textContent = '\u2713';
+                itadDiv.classList.add("authorized");
+            }
+        });
+    }
+
+    static authorize() {
+        let sessionId = User.getSessionId();
+        // Avoid predictable hash when string is empty
+        if (sessionId) {
+            Background.action("itad.authorize", StringUtils.hashCode(sessionId)).then(
+                () => {
+                    let itadStatus = document.getElementById("es_itad_status");
+                    let itadDiv = itadStatus.parentElement;
+
+                    itadStatus.textContent = '\u2713';
+                    itadDiv.classList.add("authorized");
+                    itadDiv.classList.remove("not_authorized");
+                    itadDiv.removeEventListener("click", ITAD.authorize);
+                }, err => console.error(err)
+            );
+        } else {
+            console.error("Can't retrieve Session ID, unable to authorize app");
+        }
     }
 }
 
@@ -451,6 +484,18 @@ let StringUtils = (function(){
     self.clearSpecialSymbols = function(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");
     };
+
+    // https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+    self.hashCode = function(string){
+        var hash = 0;
+        if (string.length == 0) return hash;
+        for (i = 0; i < string.length; i++) {
+            char = string.charCodeAt(i);
+            hash = ((hash<<5)-hash)+char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
+    }
 
     return self;
 })();
@@ -2108,7 +2153,9 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        new ITAD();
+        if (User.isSignedIn) {
+            ITAD.create();
+        }
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeAboutLinks();

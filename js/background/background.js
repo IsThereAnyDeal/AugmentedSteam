@@ -186,6 +186,56 @@ AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
 AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
+class ITAD_Api extends Api{
+    static authorize({ params: hash }) {
+        return new Promise(resolve => {
+            chrome.permissions.request({ permissions: ["identity"] }, granted => {
+                if (granted) {
+                    chrome.identity.launchWebAuthFlow(
+                        { url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=wait_read%20coll_read&redirect_uri=https://${chrome.runtime.id}.chromiumapp.org/itad`, interactive: true },
+                        url => {
+                        if (url) {
+                            let hashFragment = new URL(url).hash;
+                            if (hashFragment) {
+                                let params = new URLSearchParams(hashFragment.substr(1));
+
+                                if (parseInt(params.get("state"), 10) === hash) {
+                                    let accessToken = params.get("access_token");
+                                    let expiresIn = params.get("expires_in");
+        
+                                    if (accessToken && expiresIn) {
+                                        localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: CacheStorage.timestamp() + parseInt(expiresIn, 10) }));
+                                        resolve();
+                                    } else throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'");
+                                } else throw new Error("Failed to verify state parameter from URL fragment");
+                            } else throw new Error("URL " + url + " doesn't contain a fragment");
+                        } else throw new Error("Couldn't retrieve access token for ITAD authorization");
+                    });
+                } else throw new Error("Denied accessing identity API, can't authorize app");
+            });
+        });
+    }
+
+    static isExpired() {
+        let lsEntry = localStorage.getItem("access_token");
+        if (!lsEntry) return true;
+
+        let item;
+        try {
+            item = JSON.parse(lsEntry);
+        } catch(err) {
+            return true;
+        }
+
+        if (item.expiry <= CacheStorage.timestamp()) {
+            localStorage.removeItem("access_token");
+            return true;
+        }
+        return false;
+    }
+}
+ITAD_Api.origin = Config.ITAD_ApiServerHost;
+ITAD_Api.clientId = "5fe78af07889f43a";
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
@@ -717,6 +767,9 @@ let actionCallbacks = new Map([
     ['inventory.coupons', SteamCommunity.coupons], // #3
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
+
+    ['itad.authorize', ITAD_Api.authorize],
+    ['itad.checkexpiry', ITAD_Api.isExpired],
 
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
