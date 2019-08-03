@@ -1930,21 +1930,22 @@ class AppPageClass extends StorePageClass {
         }
 
         let customizer = new Customizer("customize_apppage");
-        customizer.add("recommendedbycurators", ".steam_curators_block");
-        customizer.add("recentupdates", ".early_access_announcements");
-        customizer.add("reviews", "#game_area_reviews");
-        customizer.add("workshop", document.querySelector("[href^='https://steamcommunity.com/workshop/browse']").closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
-        customizer.add("about", "[data-parent-of='#game_area_description']");
-        customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
-        customizer.add("steamchart", "#steam-charts");
-        customizer.add("surveys", "#performance_survey");
-        customizer.add("steamspy", "#steam-spy");
-        customizer.add("sysreq", "[data-parent-of='.sys_req");
-        customizer.add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal);
-        customizer.add("moredlcfrombasegame", "#moredlcfrombasegame_block");
-        customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
-        customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
-        customizer.add("customerreviews", "#app_reviews_hash");
+        customizer.add("recommendedbycurators", ".steam_curators_block")
+            .add("recentupdates", ".early_access_announcements")
+            .add("reviews", "#game_area_reviews");
+        let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        customizer.add("about", "[data-parent-of='#game_area_description']")
+            .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
+            .add("steamchart", "#steam-charts")
+            .add("surveys", "#performance_survey")
+            .add("steamspy", "#steam-spy")
+            .add("sysreq", "[data-parent-of='.sys_req")
+            .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
+            .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
+            .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent)
+            .add("customerreviews", "#app_reviews_hash");
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
