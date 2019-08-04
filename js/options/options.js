@@ -136,12 +136,18 @@ class Sidebar {
     }
 
     static _highlight(node) {
-        if (!node.id) { return; }
+        let currentSelected = document.querySelector(".subentry.is-selected");
+
+        if (!node.id) {
+            if (currentSelected) {
+                currentSelected.classList.remove(".is-selected");
+            }
+            return;
+        }
         
         let sidebarEntry = document.querySelector(`.subentry[data-block-sel='#${node.id}']`);
         if (!sidebarEntry) { return; }
 
-        let currentSelected = document.querySelector(".subentry.is-selected");
         if (currentSelected === sidebarEntry) {
             return;
         } else if (currentSelected) {
@@ -170,15 +176,32 @@ class Sidebar {
 
         let row = category.closest(".tab_row");
 
-        /* I can't decide whether it's good idea to have scroll on category or not, it doesn' feel right with scroll
-        let isExpanded = row.classList.contains("expanded");
-        if (!isExpanded) {
-            Sidebar._scrollTo(row.dataset.blockSel);
-        }
-        */
+        let contentNode = document.querySelector(row.dataset.blockSel);
+        let selectedContent = document.querySelector(".content.selected");
+        let newContent = contentNode.closest(".content");
 
-        row.classList.toggle("expanded");
-        row.classList.toggle("collapsed");
+        let hasSubentries = row.querySelector(".subentries");
+
+        if (newContent !== selectedContent) {
+            selectedContent.classList.remove("selected");
+            
+            let nodes = document.querySelectorAll(".tab_row.expanded");
+            for (let node of nodes) {
+                node.classList.remove("expanded");
+            }
+            
+            newContent.classList.add("selected");
+
+            // scroll only when changing content
+            if (hasSubentries) {
+                Sidebar._scrollTo(row.dataset.blockSel);
+            } else {
+                window.scrollTo(0, 0);
+            }
+        }
+
+        let wasExpanded = row.classList.toggle("expanded", !row.classList.contains("expanded") || !hasSubentries);
+        row.classList.toggle("collapsed", !wasExpanded);
     }
 
     static _handleSubentryClick(e) {
