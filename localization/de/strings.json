@@ -411,6 +411,7 @@
         "store_general_thirdparty": "Optionen für Informationen von Seiten von Dritten",
         "purchase_dates": "Kaufdatum auf Store-Seiten zeigen",
         "show_badge_progress": "Zeige Abzeichen-Fortschritt von Apps auf Shop-Seiten",
+        "show_coupon": "Zeige anwendbaren Gutschein von Apps auf Shop-Seiten",
         "show_wishlist_link": "Wunschlisten-Link auf Profilen anzeigen",
         "show_wishlist_count": "Anzahl der Artikel auf Wunschliste zeigen",
         "lang": {

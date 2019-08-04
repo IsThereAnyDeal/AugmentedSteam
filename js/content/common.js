@@ -1322,17 +1322,27 @@ let Inventory = (function(){
         function handleCoupons(data) {
             coupons = data;
             for (let [subid, details] of Object.entries(coupons)) {
-                for (let { 'id': appid, } of details.appids) {
+                for (let { "id": appid, } of details.appids) {
                     coupon_appids.set(appid, parseInt(subid, 10));
                 }
             }
         }
+
+        let promises = [];
+
+        if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
+                promises.push(Background.action('inventory.gifts').then(({ "gifts": x, "passes": y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, EnhancedSteam.addLoginWarning));
+        }
+
+        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
+            promises.push(Background.action('inventory.coupons').then(handleCoupons, EnhancedSteam.addLoginWarning));
+        }
+
+        if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
+            promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), EnhancedSteam.addLoginWarning));
+        }
         
-        _promise = Promise.all([
-            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, EnhancedSteam.addLoginWarning),
-            Background.action('inventory.coupons').then(handleCoupons, EnhancedSteam.addLoginWarning),
-            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), EnhancedSteam.addLoginWarning),
-            ]);
+        _promise = Promise.all(promises);
         return _promise;
     };
 
@@ -2076,7 +2086,7 @@ let Common = (function(){
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion();
+        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeAboutLinks();
