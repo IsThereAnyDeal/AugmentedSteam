@@ -350,7 +350,7 @@
         "add_wallet_balance": "헤더에 스팀 지갑 자금 표시",
         "add_to_cart_wishlist": "찜 목록에서 \"장바구니에 추가\" 버튼 보이기",
         "stores_all": "모든 상점 판매가 비교하기",
-        "show_early_access_text": "앞서 해보기 게임을 배너에 표시",
+        "show_early_access": "앞서 해보기 게임을 배너에 표시",
         "author_info": "저작자 : jshackles",
         "profile_link_images_gray": "그레이스케일",
         "quickinv": "인벤토리에 스팀 커뮤니티 아이템의 빠른 판매 버튼을 표시",

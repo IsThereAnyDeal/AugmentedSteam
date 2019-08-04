@@ -737,7 +737,7 @@ let ProfileHomePageClass = (function(){
                     document.head.appendChild(stylesheet);
 
                     document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
-                    document.querySelector(".profile_customization").style.backgroundImage = "url('" + showcase + "')";
+                    document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = "url('" + showcase + "')");
                     break;
             }
             stylesheet = null;
@@ -919,37 +919,17 @@ let GamesPageClass = (function(){
                 if (!node.querySelector("h5.hours_played")) { continue; }
 
                 // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
 
-                RequestData.getHttp(statsLink + appid).then(result => {
+                Stats.getAchievementBar(appid).then(achieveBar => {
                     let node = document.querySelector("#es_app_" + appid);
-                    node.innerHTML = "";
 
-                    let dummy = HTMLParser.htmlToDOM(result);
-                    let achNode = dummy.querySelector("#topSummaryAchievements");
+                    if (!achieveBar) return;
 
-                    if (!achNode) { return; }
-                    node.append(achNode);
+                    HTML.inner(node, achieveBar);
 
-                    document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
-
-                    // The size of the achievement bars for games without leaderboards/other stats is fine, return
-                    if (!node.innerHTML.includes("achieveBarFull.gif")) { return; }
-
-                    let barFull = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/)[1];
-                    let barEmpty = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/)[1];
-                    barFull = barFull * .58;
-                    barEmpty = barEmpty * .58;
-
-                    let resultHtml = node.innerHTML
-                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/, "width=\"" + HTML.escape(barFull.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarFull.gif")
-                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/, "width=\"" + HTML.escape(barEmpty.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarEmpty.gif")
-                        .replace("::", ":");
-                    HTML.inner(node, resultHtml);
-
-                }, () => {
-                    let node = document.querySelector("#es_app_" + appid);
-                    node.innerHTML = "error";
+                }, err => {
+                    console.error(err);
                 });
             }
         }
