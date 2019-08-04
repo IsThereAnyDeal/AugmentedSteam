@@ -1544,6 +1544,10 @@ let Highlights = (function(){
                 break;
             }
 
+            case node.classList.contains("spotlight_content"):
+                node = node.parentElement;
+                // don't break
+
             default: {
                 let r = node.querySelector(".ds_flag");
                 if (r) { r.remove(); }

@@ -3375,37 +3375,6 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.highlightDynamic = function() {
 
-        let discountObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes));
-        });
-
-        document.querySelectorAll("[id='10off_tier'], [id='75pct_tier']").forEach(el => discountObserver.observe(el, { childList: true }));
-
-        let moreFeaturedObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].children));
-        });
-        document.querySelectorAll("#tier1_target, #tier2_target").forEach(el => moreFeaturedObserver.observe(el, { childList: true }));
-
-        let tagCategoriesObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].querySelector(".salerow").children));
-        })
-        tagCategoriesObserver.observe(document.getElementById("sale_tag_categories"), { childList: true });
-
-        document.querySelectorAll(".franchise_capsule").forEach(el => el.addEventListener("mouseenter", franchisesListener, { once: true }));
-
-        let franchisesObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.addedNodes.length === 1) {
-                    mutation.addedNodes[0].addEventListener("mouseenter", franchisesListener, { once: true });
-                }
-            });
-        })
-        franchisesObserver.observe(document.querySelector(".franchise_flex"), { childList: true });
-
-        function franchisesListener(e) {
-            Highlights.highlightAndTag(e.target.querySelectorAll(".sale_capsule"));
-        }
-
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
             let observer = new MutationObserver(mutations => {
@@ -3434,7 +3403,7 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
-        HTML.afterEnd(".home_page_content",
+        HTML.beforeEnd(".home_page_content",
             `<div class="home_pagecontent_ctn clearfix" style="margin-bottom: 5px; margin-top: 3px;">
                 <div id="es_customize_btn" class="home_actions_ctn">
                     <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
@@ -3449,7 +3418,7 @@ let StoreFrontPageClass = (function(){
             e.target.classList.toggle("active");
         });
 
-        document.querySelector("body").addEventListener("click", function(e){
+        document.body.addEventListener("click", function(e){
             if (e.target.closest("#es_customize_btn")) { return; }
             let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
@@ -3463,17 +3432,6 @@ let StoreFrontPageClass = (function(){
             let under = document.querySelector("[class*='specials_under']");
 
             let customizer = new Customizer("customize_frontpage");
-
-            // Summer Sale 2019
-            customizer
-                .add("featured", ".home_featured_ctn")
-                .add("morefeatured", ".home_morefeatured_ctn")
-                .add("tagcategories", "#sale_tag_categories", Localization.str.tag_categories)
-                .add("franchises", ".home_franchises_ctn")
-                .add("discounts", "#sale_discounts_area", Localization.str.discounts)
-                .add("browsemore", ".home_browsemore_ctn")
-                .add("topsellers", ".home_topsellers_ctn")
-                .add("newupcoming", ".home_newupcoming_ctn", Localization.str.new_and_upcoming);
 
             customizer
                 .add("featuredrecommended", ".home_cluster_ctn");
