@@ -1470,7 +1470,7 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
         if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
-            document.querySelector(".game_area_already_owned_btn > [href='https://store.steampowered.com/about/']").remove();
+            document.querySelector(".game_area_already_owned_btn > [href^='https://store.steampowered.com/about/']").remove();
         }
     }
 
