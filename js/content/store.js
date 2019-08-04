@@ -311,6 +311,7 @@ class StorePageClass {
 
     addLinks(type) {
         if (!SyncedStorage.get("showsteamdb")
+         && !SyncedStorage.get('showprotondblinks')
          && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
@@ -337,6 +338,15 @@ class StorePageClass {
         }
 
         if (!node) { return; }
+
+        if (SyncedStorage.get("showprotondblink")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    'protondb_ico',
+                    `https://www.protondb.com/${type}/${gameid}`,
+                    Localization.str.view_on_website.replace('__website__', 'ProtonDB')
+                ))
+        }
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,

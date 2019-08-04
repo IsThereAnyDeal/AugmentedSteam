@@ -2386,6 +2386,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
 }
 
+.protondb_ico i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/protondb.png');
+}
+.protondb_ico:hover i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/protondb.png');
+}
+
 .itad_ico i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
 }
