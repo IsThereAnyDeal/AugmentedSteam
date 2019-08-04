@@ -149,6 +149,7 @@
     "net_gain": "Net gain:",
     "apppage_legal": "Legal Information",
     "apppage_franchise": "Franchise",
+    "workshop": "Workshop",
     "bug_feature": "Report Bug / Suggest Feature",
     "always": "Always",
     "compare": "Compare",
@@ -267,7 +268,8 @@
         "option": "Show achievement completion on store pages",
         "achievements": "Achievements",
         "includes": "Includes __num__ Steam Achievements",
-        "view_all": "View All Achievements"
+        "view_all": "View All Achievements",
+        "summary": "__unlocked__ of __total__ (__percentage__%) achievements earned:"
     },
     "bundle": {
         "offer_ends": "Offer ends",
@@ -367,7 +369,7 @@
         "add_to_cart_wishlist": "Show \"Add to Cart\" button on Wishlists",
         "stores_all": "Compare all stores",
         "view_in_currency": "View in:",
-        "show_early_access_text": "Show Early Access image banners",
+        "show_early_access": "Show Early Access image banners",
         "author_info": "by jshackles",
         "profile_link_images_gray": "Grayscale",
         "quickinv": "Show Quick Sale buttons on Steam Community items in inventory",

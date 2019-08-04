@@ -126,28 +126,162 @@ class CustomLinks {
 
 }
 
+class Sidebar {
+
+    static _scrollTo(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        let topOffset = window.scrollY + node.getBoundingClientRect().top - 50;
+        window.scrollTo({top: topOffset, left: 0, behavior: "smooth"});
+    }
+
+    static _highlight(node) {
+        let currentSelected = document.querySelector(".subentry.is-selected");
+
+        if (!node.id) {
+            if (currentSelected) {
+                currentSelected.classList.remove(".is-selected");
+            }
+            return;
+        }
+        
+        let sidebarEntry = document.querySelector(`.subentry[data-block-sel='#${node.id}']`);
+        if (!sidebarEntry) { return; }
+
+        if (currentSelected === sidebarEntry) {
+            return;
+        } else if (currentSelected) {
+            currentSelected.classList.remove("is-selected");
+        }
+
+        sidebarEntry.classList.add("is-selected");
+
+        let currentHighlight = document.querySelector(".content_section.is-highlighted");
+        if (currentHighlight) {
+            currentHighlight.classList.remove("is-highlighted");
+        }
+        node.classList.add("is-highlighted");
+    }
+    
+    static _handleClick(e) {
+        Sidebar._handleCategoryClick(e);
+        Sidebar._handleSubentryClick(e);
+    }
+
+    static _handleCategoryClick(e) {
+        let category = e.target.closest(".category.sidebar_entry");
+        if (category == null) {
+            return;
+        }
+
+        let row = category.closest(".tab_row");
+
+        let contentNode = document.querySelector(row.dataset.blockSel);
+        let selectedContent = document.querySelector(".content.selected");
+        let newContent = contentNode.closest(".content");
+
+        let hasSubentries = row.querySelector(".subentries");
+
+        if (newContent !== selectedContent) {
+            selectedContent.classList.remove("selected");
+            
+            let nodes = document.querySelectorAll(".tab_row.expanded");
+            for (let node of nodes) {
+                node.classList.remove("expanded");
+            }
+            
+            newContent.classList.add("selected");
+
+            // scroll only when changing content
+            if (hasSubentries) {
+                Sidebar._scrollTo(row.dataset.blockSel);
+            } else {
+                window.scrollTo(0, 0);
+            }
+        }
+
+        let wasExpanded = row.classList.toggle("expanded", !row.classList.contains("expanded") || !hasSubentries);
+        row.classList.toggle("collapsed", !wasExpanded);
+    }
+
+    static _handleSubentryClick(e) {
+
+        let subentry = e.target.closest(".subentry");
+        if (!subentry) { return; }
+
+        let row = subentry.closest(".tab_row");
+        if (!row) { return; }
+
+        Sidebar._scrollTo(subentry.dataset.blockSel);
+    }
+
+    static _scrollHandler() {
+
+        if (Sidebar._scrollTimeout) {
+            return;
+        }
+
+        Sidebar._scrollTimeout = window.setTimeout(() => {
+            Sidebar._scrollTimeout = null;
+
+            for (let node of Sidebar._contentNodes) {
+                let rect = node.getBoundingClientRect();
+
+                if ((rect.top < 0 && rect.bottom > window.innerHeight) || rect.top > 0) {
+                    Sidebar._highlight(node);
+                    return;
+                }
+            }
+        }, 100);
+    }
+
+    static create() {
+
+        Sidebar._contentNodes = [];
+
+        document.querySelectorAll(".tab_row").forEach(row => {
+
+            let block = document.querySelector(row.dataset.blockSel);
+            if (!block) {
+                console.warn("Missing data-block-sel attribute on sidebar entry");
+                return;
+            }
+
+            // Only create subentries for the settings
+            let sections = block.querySelectorAll(".settings .content_section");
+            if (sections.length === 0) {
+                console.warn("Missing data-block-sel attribute on sidebar entry", block);
+                return;
+            }
+
+            row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
+
+            HTML.beforeEnd(row.firstElementChild, `<div class="category__triangle">&#9664;</div>`);
+
+            let subentries = "";
+            sections.forEach(section => {
+                subentries +=`<li class="sidebar_entry subentry" data-block-sel="#${section.id}">${section.firstElementChild.textContent}</li>`;
+                Sidebar._contentNodes.push(section);
+            });
+            HTML.beforeEnd(row, `<ul class="subentries">${subentries}</ul>`);
+        });
+
+        document.querySelector("#side_bar").addEventListener("click", Sidebar._handleClick);
+        document.addEventListener("scroll", Sidebar._scrollHandler);
+        Sidebar._scrollHandler();
+    }
+
+}
+
 let Options = (function(){
     let self = {};
 
-    function toggleStores() {
-        if (document.querySelector("#stores_all").checked) {
-            document.querySelector("#store_stores").style.display = "none";
-        } else {
-            let store_stores = document.querySelector("#store_stores");
-            store_stores.style.display = "flex";
-            store_stores.classList.add("es_checks_loaded");
-
-            let stores = SyncedStorage.get("stores");
-            let nodes = store_stores.querySelectorAll("input[type='checkbox']");
-            for (let node of nodes) {
-                node.checked = (stores.length == 0 || stores.indexOf(node.id) !== -1);
-            }
-        }
-    }
+    let profileLinkImagesSelect = document.getElementById("profile_link_images_dropdown");
 
     function loadStores() {
         let cols = 4;
-        let node = document.querySelector("#store_stores");
+        let stores_node = document.getElementById("store_stores");
+        let stores = SyncedStorage.get("stores");
 
         let perCol = Math.ceil(StoreList.length / cols);
 
@@ -155,13 +289,14 @@ let Options = (function(){
         let i = 0;
         for (let c=0; c<cols; c++) {
             html += "<div class='store_col'>";
-            for (let len = Math.min(StoreList.length, (c+1)*perCol); i<len; i++) {
-                html += `<div><input type="checkbox" id="${StoreList[i].id}"><label for="steam">${StoreList[i].title}</label></div>`;
+            for (let len = Math.min(StoreList.length, (c+1) * perCol); i < len; ++i) {
+                let id = StoreList[i].id;
+                html += `<div class="option"><input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ''}><label for="${id}">${StoreList[i].title}</label></div>`;
             }
             html += "</div>";
         }
 
-        HTML.inner(node, html);
+        HTML.inner(stores_node, html);
     }
 
     function loadTranslation() {
@@ -205,7 +340,7 @@ let Options = (function(){
                     node.textContent = Localization.str.options.lang[lang] + ":";
                 }
             }
-        });
+        }).then(Sidebar.create);
     }
 
     let Region = (function() {
@@ -225,7 +360,6 @@ let Options = (function(){
             return `<div class="country_parent">
             <span class='es_flag ${countryClass}'></span>
             <select class='regional_country'>${options}</select>
-            <a class="select2-search-choise-close remove_region"></a>
             </div>`;
         }
 
@@ -246,36 +380,26 @@ let Options = (function(){
     })();
 
     function loadProfileLinkImages() {
-        // let node = document.querySelector("#profile_link_images_dropdown");
 
-        // SyncedStorage.set("show_profile_link_images", node.value); // TODO what were these two lines doing?
-        // node.value = SyncedStorage.set("show_profile_link_images", node.value);
-
-        let nodes = document.querySelectorAll(".es_sites_icons");
-        for (let node of nodes) {
-            node.style.display = "block";
-        }
-
-        // FIXME document.querySelector("#profile_links").classList.toggle("es_gray", (SyncedStorage.get("show_profile_link_images") == "gray"));
-
-        if (!SyncedStorage.get("show_profile_link_images")) {
-            let nodes = document.querySelectorAll(".es_sites_icons");
-            for (let node of nodes) {
-                node.style.display = "none";
+        let icons = document.querySelectorAll(".es_sites_icons");
+        switch (profileLinkImagesSelect.value) {
+            case "color": {
+                icons.forEach(icon => {
+                    icon.classList.toggle("es_gray", false);
+                    icon.style.display = '';
+                });
+                break;
             }
-        }
-    }
-
-    function initParentOf(node) {
-        let groupSel = node.dataset.parentOf;
-        let state = !node.checked;
-
-        let groupNode = document.querySelector(groupSel);
-        groupNode.classList.toggle("disabled", state);
-
-        let nodes = groupNode.querySelectorAll("input,select");
-        for (let node of nodes) {
-            node.disabled = state;
+            case "gray": {
+                icons.forEach(icon => {
+                    icon.classList.toggle("es_gray", true);
+                    icon.style.display = '';
+                });
+                break;
+            }
+            case "false": {
+                icons.forEach(icon => icon.style.display = "none");
+            }
         }
     }
 
@@ -283,32 +407,6 @@ let Options = (function(){
     let changelogLoaded;
 
     function loadOptions() {
-        let nodes = document.querySelectorAll("[data-parent-of]");
-        for (let node of nodes) {
-            node.addEventListener("change", function(){
-                initParentOf(node);
-            })
-        }
-/*
-        document.querySelector("#add_custom_link").addEventListener("click", function(e) {
-            document.querySelector("#profile_custom").checked = true;
-            document.querySelector("#es_custom_settings").style.display="flex";
-            document.querySelector("#add_custom_link").style.display="none";
-            saveOption("profile_custom");
-        });
-
-        if (SyncedStorage.get("profile_custom")) {
-            document.querySelector("#es_custom_settings").style.display="flex";
-            document.querySelector("#add_custom_link").style.display="none";
-        }
-
-        document.querySelector("#profile_custom").addEventListener("click", function(e) {
-            if (!document.querySelector("#profile_custom").checked) {
-                document.querySelector("#es_custom_settings").style.display="none";
-                document.querySelector("#add_custom_link").style.display="block";
-            }
-        });
-*/
 
         CustomLinks.init();
 
@@ -318,24 +416,28 @@ let Options = (function(){
             let setting = node.dataset.setting;
             let value = SyncedStorage.get(setting);
 
-            if (value) {
-                if (node.type && node.type === "checkbox") {
-                    node.checked = value;
-                } else {
-                    node.value = value;
-                }
-            }
+            if (node.type && node.type === "checkbox") {
+                node.checked = value;
 
-            if (node.dataset.parentOf) {
-                initParentOf(node);
+                let parentOption = node.closest(".parent_option");
+                if (parentOption) {
+                    if (node.id === "stores_all") value = !value;
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                        nextSibling.classList.toggle("disabled", !value);
+                    }
+                }
+            } else {
+                if (value) {
+                    node.value = value;
+               }
             }
         }
 
         if (SyncedStorage.get("showregionalprice")) {
-            document.querySelector("#region_selects").style.display = "block";
+            document.getElementById("region_selects").style.display = "block";
         }
         if (SyncedStorage.get("showregionalprice") !== "mouse") {
-            document.querySelector("#regional_price_hideworld").style.display = "block";
+            document.getElementById("regional_price_hideworld").style.display = "block";
         }
 
         let language = Language.getCurrentSteamLanguage();
@@ -347,14 +449,13 @@ let Options = (function(){
             }
         }
 
-        toggleStores();
         Region.populateRegionalSelects();
 
         if (!changelogLoaded) {
             ExtensionResources.getText('changelog.txt')
             .then(data => {
                 HTML.inner(
-                    document.querySelector("#changelog_text"),
+                    document.getElementById("changelog_text"),
                     data.replace(/\n/g, "\n<br>")
                 );
             });
@@ -363,12 +464,18 @@ let Options = (function(){
 
         loadTranslation();
         loadProfileLinkImages();
+        loadStores();
     }
 
 
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
+
+        for (let el of document.querySelectorAll(".country_parent")) {
+            el.remove();
+        }
+
         SyncedStorage.then(loadOptions);
 
         let node = document.getElementById('reset_note');
@@ -482,12 +589,9 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadStores();
         loadOptions();
-        loadProfileLinkImages();
 
-        // document.querySelector("#language").addEventListener("change", loadTranslation);
-        document.querySelector("#profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
+        document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 
         let addHandlerToSetDefaultColor = (key) => {
             document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
@@ -506,61 +610,43 @@ let Options = (function(){
             'tag_notinterested',
         ].forEach(addHandlerToSetDefaultColor);
 
-        document.querySelector("#tag_owned_color_default").addEventListener("click", function(){
-            setValue("#tag_owned_color", Defaults.tag_owned_color);
-        });
+        document.getElementById("tag_owned_color_default").addEventListener("click", () => setValue("#tag_owned_color", Defaults.tag_owned_color));
+        document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
+        document.getElementById("quickinv_default").addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
 
-        document.querySelector("#spamcommentregex_default").addEventListener("click", function(){
-            setValue("#spamcommentregex", "[\\u2500-\\u25FF]");
-        });
-        document.querySelector("#quickinv_default").addEventListener("click", function() {
-            setValue("#quickinv_diff", "-0.01");
-        });
-        document.querySelector("#quickinv_diff").addEventListener("blur", function() {
-            if (isNaN(parseFloat(document.querySelector("#quickinv_diff").value))) {
+        document.getElementById("quickinv_diff").addEventListener("blur", () => {
+            if (isNaN(parseFloat(document.getElementById("quickinv_diff").value))) {
                 setValue("#quickinv_diff", "-0.01");
             }
         });
 
-        document.querySelector("#show_spamcommentregex").addEventListener("click", function(e){
-            let listNode = document.querySelector("#spamcommentregex_list");
-            listNode.classList.toggle("esi-hidden");
-        });
-        document.querySelector("#show_quickinv_diff").addEventListener("click", function(e) {
-            let node = document.querySelector("#quickinv_opt");
-            node.classList.toggle("esi-hidden");
-        });
-        document.querySelector("#stores_all").addEventListener("change", toggleStores);
-        document.querySelector("#reset_countries").addEventListener("click", loadDefaultCountries);
+        document.getElementById("reset_countries").addEventListener("click", loadDefaultCountries);
 
-        document.querySelector('#region_selects').addEventListener('change', function(e) {
+        document.getElementById("region_selects").addEventListener("change", e => {
             let node = e.target.closest(".country_parent");
             if (node) {
-                changeFlag(node.querySelector('.es_flag'), e.target);
+                changeFlag(node.querySelector(".es_flag"), e.target);
             }
             saveOption("regional_countries");
         });
-        document.querySelector('#add_another_region').addEventListener("click", Region.addRegionSelector);
+        document.getElementById("add_another_region").addEventListener("click", Region.addRegionSelector);
 
-        document.querySelector("#regional_price_on").addEventListener("change", function(e) {
+        document.getElementById("regional_price_on").addEventListener("change", e => {
             let node = e.target.closest("#regional_price_on");
 
-            document.querySelector("#region_selects").style.display = node.value === "off" ? "none" : "block";
-            document.querySelector("#regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
+            document.getElementById("region_selects").style.display = node.value === "off" ? "none" : "block";
+            document.getElementById("regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
         });
 
-        // Toggle tabs content
-        document.querySelector("#side_bar").addEventListener("click", function(e){
-            let node = e.target.closest("a.tab_row");
-            if (!node) { return; }
-            let sel = node.dataset.blockSel;
-            document.querySelector("a.tab_row.selected").classList.remove("selected");
-            document.querySelector(".content.selected").classList.remove("selected");
-            document.querySelector(sel).classList.add("selected");
-            node.classList.add("selected");
+        document.querySelectorAll(".parent_option").forEach(parentOption => {
+            parentOption.querySelector("input").addEventListener("change", () => {
+                for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                    nextSibling.classList.toggle("disabled");
+                }
+            });
         });
 
-        document.querySelector("#reset").addEventListener("click", clearSettings);
+        document.getElementById("reset").addEventListener("click", clearSettings);
 
         document.addEventListener("change", saveOptionFromEvent);
         document.addEventListener("blur", saveOptionFromEvent);

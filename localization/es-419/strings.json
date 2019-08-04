@@ -350,7 +350,7 @@
         "add_wallet_balance": "Mostrar fondos de la cartera de Steam en la cabecera de la página",
         "add_to_cart_wishlist": "Mostrar el botón \"Añadir al carro\" en la lista de deseos",
         "stores_all": "Comparar todas las tiendas",
-        "show_early_access_text": "Mostrar banners de Acceso Anticipado en las imágenes",
+        "show_early_access": "Mostrar banners de Acceso Anticipado en las imágenes",
         "author_info": "por jshackles",
         "profile_link_images_gray": "Escala de grises",
         "quickinv": "Mostrar botones de venta rápida en los elementos del inventario de la comunidad de Steam",
