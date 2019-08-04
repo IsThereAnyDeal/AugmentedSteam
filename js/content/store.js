@@ -2899,10 +2899,10 @@ let WishlistPageClass = (function(){
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
         let delayedWork = new Set();
-        let observer = new MutationObserver(function(mutationList){
-            mutationList.forEach(record => {
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(record => {
                 if (record.addedNodes.length === 1) {
-                    delayedWork.add(record.addedNodes[0])
+                    delayedWork.add(record.addedNodes[0]);
                 }
             });
             lastRequest = window.performance.now();
@@ -2925,10 +2925,32 @@ let WishlistPageClass = (function(){
                         }
                         instance.addPriceHandler(node);
                     }
-                    window.dispatchEvent(new Event("resize"))
+                    window.dispatchEvent(new Event("resize"));
                 }, 50);
             }
         });
+
+        if (SyncedStorage.get("showlowestprice_onwishlist")) {
+            // If the mouse is still inside an entry while scrolling or resizing, wishlist.js's event handler will put back the elements to their original position
+            window.addEventListener("scroll", scrollResizeHandler);
+            window.addEventListener("resize", scrollResizeHandler);
+
+            function scrollResizeHandler() {
+                let hover = document.querySelectorAll(":hover");
+                if (hover.length) {
+                    let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
+                    if (activeEntry) {
+                        let priceNode = activeEntry.querySelector(".es_lowest_price");
+                        if (priceNode) {
+                            getNodesBelow(activeEntry).forEach(row => {
+                                row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
         observer.observe(container, { 'childList': true, });
 
         this.addStatsArea();
@@ -3088,41 +3110,51 @@ let WishlistPageClass = (function(){
         }, true)
     }
 
-    function addWishlistPrice(node) {
-        let appid = node.dataset.appId;
+    function getNodesBelow(node) {
+        let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        if (typeof cachedPrices[appid] == 'undefined') {
-            cachedPrices[appid] = new Promise(function(resolve, reject) {
-                let prices = new Prices();
-                prices.appids = [appid,];
-                prices.priceCallback = function(type, id, html) {
-                    resolve(html);
-                };
-                prices.load();
-            });
-        }
-
-        cachedPrices[appid].then(function(html) {
-            if (node.querySelector(".es_lowest_price")) { return; }
-
-            HTML.beforeEnd(node, html);
-
-            let priceNode = node.querySelector(".es_lowest_price");
-            priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
-        });
-        return;
+        // Limit the selection to the rows that are positioned below the row (including the row itself) where the price is being shown
+        return nodes.filter(row => parseInt(row.style.top, 10) >= parseInt(node.style.top, 10));
     }
 
-    WishlistPageClass.prototype.addPriceHandler = function(node){
-        if (!SyncedStorage.get("showlowestprice_onwishlist")) { return; }
+    WishlistPageClass.prototype.addPriceHandler = function(node) {
+        if (!SyncedStorage.get("showlowestprice_onwishlist")) return;
 
-        if (!node.dataset.appId) { return; }
+        let appId = node.dataset.appId;
+        if (!appId || typeof cachedPrices[appId] !== "undefined") return;
 
-        if (!node.querySelector(".es_lowest_price")) {
-            node.addEventListener("mouseenter", (e) => addWishlistPrice(e.target), { 'capture': false, 'once': true, });
-        }
+        cachedPrices[appId] = null;
+
+        node.addEventListener("mouseenter", () => {
+            if (cachedPrices[appId] === null) {
+                cachedPrices[appId] = new Promise(resolve => {
+                    let prices = new Prices();
+                    prices.appids = [appId];
+                    prices.priceCallback = (type, id, html) => {
+                        HTML.beforeEnd(node, html);
+                        let priceNode = node.querySelector(".es_lowest_price");
+                        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+                        resolve();
+                    }
+                    prices.load();
+                });
+            }
+            cachedPrices[appId].then(() => {
+                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
+            });
+        });
+        
+        node.addEventListener("mouseleave", () => {
+            // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
+            if (cachedPrices[appId]) {
+                cachedPrices[appId].then(() => {
+                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
+                });
+            }
+        });
     };
-
 
     WishlistPageClass.prototype.addUserNote =  function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
