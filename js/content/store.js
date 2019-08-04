@@ -475,38 +475,52 @@ class SubPageClass extends StorePageClass {
         setTimeout(function() {
             let notOwnedTotalPrice = 0;
 
-            let nodes = document.querySelectorAll(".tab_idem");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
-
-                let priceContainer = node.querySelector(".discount_final_price").textContent.trim();
-                if (!priceContainer) { continue; }
-
-                let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
-                if (price) {
-                    notOwnedTotalPrice += price.value;
+            for (let node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
+                let priceNode = node.querySelector(".discount_final_price");
+                // Only present when the product has a price associated with (so it's not free or N/A)
+                if (priceNode) {
+                    let priceContainer = priceNode.textContent.trim();
+                    if (priceContainer) { 
+                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                        if (price) {
+                            notOwnedTotalPrice += price.value;
+                            continue;
+                        }
+                    }
+                } else {
+                    let finalPrice = node.querySelector(".final_price");
+                    if (finalPrice) {
+                        if (finalPrice.textContent === "N/A") {
+                            notOwnedTotalPrice = null;
+                            break;
+                        }
+                    }
+                    continue;
                 }
+                console.warn("Couldn't find any price information for appid", node.dataset.dsAppid);
             }
 
+            if (notOwnedTotalPrice !== null) {
+                let priceNodes = document.querySelectorAll(".package_totals_area .price");
+                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                if (!packagePrice) { return; }
 
-            let priceNodes = document.querySelectorAll(".package_totals_area .price");
-            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
-            if (!packagePrice) { return; }
+                notOwnedTotalPrice -= packagePrice.value;
 
-            notOwnedTotalPrice -= packagePrice.value;
+                if (!document.querySelector("#package_savings_bar")) {
+                    HTML.beforeEnd(".package_totals_area",
+                        "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                }
 
-            if (!document.querySelector("#package_savings_bar")) {
-                HTML.beforeEnd(".package_totals_area",
-                    "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
+                let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
+                let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
+
+                let savingsNode = document.querySelector(".savings");
+                HTML.beforeBegin(savingsNode, html);
+                savingsNode.remove();
             }
-
-            notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency)
-            let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
-            let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
-
-            let savingsNode = document.querySelector(".savings");
-            HTML.beforeBegin(savingsNode, html);
-            savingsNode.remove();
+            
         }, 500); // why is this here?
     }
 }
