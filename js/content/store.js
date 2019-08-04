@@ -1918,7 +1918,12 @@ class AppPageClass extends StorePageClass {
         customizer.add("recommendedbycurators", ".steam_curators_block");
         customizer.add("recentupdates", ".early_access_announcements");
         customizer.add("reviews", "#game_area_reviews");
-        customizer.add("workshop", document.querySelector("[href^='https://steamcommunity.com/workshop/browse']").closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+
+        let workshopNode = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
+        if (workshopNode) {
+            customizer.add("workshop", workshopNode.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        }
+        
         customizer.add("about", "[data-parent-of='#game_area_description']");
         customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
         customizer.add("steamchart", "#steam-charts");
