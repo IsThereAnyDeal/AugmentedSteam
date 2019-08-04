@@ -421,8 +421,8 @@ class SteamCommunity extends Api {
             result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams);
             if (result && result.success) {
                 if (!data) data = { "assets": [], "descriptions": [] };
-                data.assets = data.assets.concat(result.assets);
-                data.descriptions = data.descriptions.concat(result.descriptions);
+                if (result.assets) data.assets = data.assets.concat(result.assets);
+                if (result.descriptions) data.descriptions = data.descriptions.concat();
             }
             last_assetid = result.last_assetid;
         } while (result.more_items);
