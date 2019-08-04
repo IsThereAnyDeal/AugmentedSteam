@@ -249,10 +249,7 @@ class Sidebar {
 
             // Only create subentries for the settings
             let sections = block.querySelectorAll(".settings .content_section");
-            if (sections.length === 0) {
-                console.warn("Missing data-block-sel attribute on sidebar entry", block);
-                return;
-            }
+            if (sections.length === 0) return;
 
             row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 

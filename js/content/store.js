@@ -1928,27 +1928,27 @@ class AppPageClass extends StorePageClass {
             parent.setAttribute('data-parent-of', sel);
         }
 
-        let customizer = new Customizer("customize_apppage");
-        customizer.add("recommendedbycurators", ".steam_curators_block");
-        customizer.add("recentupdates", ".early_access_announcements");
-        customizer.add("reviews", "#game_area_reviews");
+        let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
+        let morelikethis = document.querySelector("#recommended_block h2");
 
-        let workshopNode = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
-        if (workshopNode) {
-            customizer.add("workshop", workshopNode.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
-        }
-        
-        customizer.add("about", "[data-parent-of='#game_area_description']");
-        customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
-        customizer.add("steamchart", "#steam-charts");
-        customizer.add("surveys", "#performance_survey");
-        customizer.add("steamspy", "#steam-spy");
-        customizer.add("sysreq", "[data-parent-of='.sys_req");
-        customizer.add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal);
-        customizer.add("moredlcfrombasegame", "#moredlcfrombasegame_block");
-        customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
-        customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
-        customizer.add("customerreviews", "#app_reviews_hash");
+        let customizer = new Customizer("customize_apppage");
+        customizer
+            .add("recommendedbycurators", ".steam_curators_block")
+            .add("recentupdates", ".early_access_announcements")
+            .add("reviews", "#game_area_reviews")
+            .add("about", "[data-parent-of='#game_area_description']")
+            .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
+            .add("steamchart", "#steam-charts")
+            .add("surveys", "#performance_survey")
+            .add("steamspy", "#steam-spy")
+            .add("sysreq", "[data-parent-of='.sys_req")
+            .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
+            .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
+            .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("customerreviews", "#app_reviews_hash");
+
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
@@ -3443,35 +3443,23 @@ let StoreFrontPageClass = (function(){
             let under = document.querySelector("[class*='specials_under']");
 
             let customizer = new Customizer("customize_frontpage");
-
             customizer
-                .add("featuredrecommended", ".home_cluster_ctn");
-
-            if (specialoffers)  { customizer.add("specialoffers", specialoffers.parentElement); }
-
-            customizer
+                .add("featuredrecommended", ".home_cluster_ctn")
                 .add("trendingamongfriends", ".friends_recently_purchased")
-                .add("discoveryqueue", ".discovery_queue_ctn");
-
-            if (browsesteam) { customizer.add("browsesteam", browsesteam.parentElement); }
-
-            customizer
+                .add("discoveryqueue", ".discovery_queue_ctn")
                 .add("curators", ".steam_curators_ctn")
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn");
-
-            if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
-
-            customizer
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
                 .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
                 .add("popularvrgames", ".best_selling_vr_ctn")
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn");
-
-            if (under) { customizer.add("under", under.parentElement.parentElement); }
-
-            customizer
+                .add("gamesstreamingnow", ".live_streams_ctn")
                 .add("updatesandoffers", ".marketingmessage_area")
                 .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+
+            if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
+            if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
+            if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
+            if (under) customizer.add("under", under.parentElement.parentElement);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
             for (let i = 0; i < dynamicNodes.length; ++i) {
