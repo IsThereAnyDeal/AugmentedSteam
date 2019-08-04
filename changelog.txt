@@ -1,4 +1,24 @@
-﻿v1.1.1
+﻿v1.2.0
+-----
+- Complete rework of Options page. Feels so fresh now.
+- Added option to open external links in new tab
+- Improved YouTube search query
+- Added option to show applicable coupon on app pages and improved inventory handling
+- Updated localizations
+
+Fixes
+- Fixed highlighting on front page after summer sale
+- Fixed "Add selected DLC to cart" button
+- Fixed profile theme not being applied to every showcase
+- Fixed achievement sorting not working in other languages than English
+- Fixed "Install Steam" button not being properly handled (which was breaking other things)
+- Fixed achievement bars sometimes using different styles
+- Fixed price data overlay info staying visible on wishlist after game was removed
+- Fixed account name on being replaced on purchase history page
+
+
+
+v1.1.1
 -----
 - Added highlighting support for Summer Sale 2019
 - Fixed Quick/Instant sell in Firefox
