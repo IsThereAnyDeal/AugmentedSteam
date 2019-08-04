@@ -62,6 +62,7 @@ body {
 	padding: 0 0.5em;
 	transition: transform 0.1s ease-in-out;
 	pointer-events: none;
+	user-select: none;
 }
 
 .subentries {
