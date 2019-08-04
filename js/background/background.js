@@ -227,7 +227,12 @@ class SteamStore extends Api {
 
         function addKnownPackage(data) {
             for (let [subid, details] of Object.entries(data)) {
-                if (!details || !details.success) return;
+                if (!details || !details.success) {
+                    if (coupons[subid]) {
+                        coupons[subid].appids = [];
+                        continue;
+                    }
+                }
                 details = details.data;
                 packages[subid] = { 'appids': details.apps, 'timestamp': CacheStorage.timestamp(), };
                 // .apps is an array of { 'id': ##, 'name': "", }, TODO check if we need to clearSpecialSymbols(name)
@@ -403,82 +408,119 @@ class SteamCommunity extends Api {
         });
     }
 
+    static async getInventory(contextId) {
+        let login = LocalStorage.get("login");
+        if (!login) throw new Error("Must be signed in to access Inventory");
+
+        let params = { "l": "english", "count": 2000 };
+        let data = null;
+        let result, last_assetid;
+
+        do {
+            let thisParams = Object.assign(params, last_assetid ? { "start_assetid": last_assetid } : null);
+            result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams);
+            if (result && result.success) {
+                if (!data) data = { "assets": [], "descriptions": [] };
+                data.assets = data.assets.concat(result.assets);
+                data.descriptions = data.descriptions.concat(result.descriptions);
+            }
+            last_assetid = result.last_assetid;
+        } while (result.more_items);
+
+        if (!data) {
+            throw new Error(`Could not retrieve Inventory 753/${contextId}`);
+        }
+        return data;
+    }
+
     /**
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
         let self = SteamCommunity;
-        let login = LocalStorage.get('login');
-        if (!login) throw new Error(`Must be signed in to access Inventory`);
 
-        let coupons = CacheStorage.get('inventory_3', 3600);
+        let coupons = CacheStorage.get("inventory_3", 3600);
         if (!coupons) {
-            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/3/`, { 'l': 'en', });
-            if (!data || !data.success) throw new Error(`Could not retrieve Inventory 753/3`);
             coupons = {};
+            let data;
+            try {
+                data = await self.getInventory(3);
+            } catch(err) {
+                console.error(err);
+                return coupons;
+            }
 
-            for(let [id, obj] of Object.entries(data.rgDescriptions)) {
-                if (!obj.type || obj.type !== "Coupon") { continue; }
-                if (!obj.actions) { continue; }
+            for (let description of data.descriptions) {
+                if (!description.type || description.type !== "Coupon") { continue; }
+                if (!description.actions) { continue; }
 
                 let coupon = {
-                    'image_url': obj.icon_url,
-                    'title': obj.name,
-                    'discount': obj.name.match(/([1-9][0-9])%/)[1],
-                    'id': id
+                    "image_url": description.icon_url,
+                    "title": description.name,
+                    "discount": description.name.match(/([1-9][0-9])%/)[1],
+                    "id": description.classid + '_' + description.instanceid
                 };
-                for (let i = 0; i < obj.descriptions.length; i++) {
-                    let value = obj.descriptions[i].value;
+                description.descriptions.forEach((desc, i) => {
+                    let value = desc.value;
                     if (value.startsWith("Can't be applied with other discounts.")) {
                         Object.assign(coupon, {
-                            'discount_note': value,
-                            'discount_note_id': i,
-                            'discount_doesnt_stack': true,
+                            "discount_note": value,
+                            "discount_note_id": i,
+                            "discount_doesnt_stack": true,
                         });
                     } else if (value.startsWith("(Valid")) {
                         Object.assign(coupon, {
-                            'valid_id': i,
-                            'valid': value,
+                            "valid_id": i,
+                            "valid": value,
                         });
                     }
-                }
-                for (let action of obj.actions) {
-                    let packageid = /http:\/\/store.steampowered.com\/search\/\?list_of_subs=([0-9]+)/.exec(action.link)[1];
-    
-                    if (!coupons[packageid] || coupons[packageid].discount < coupon.discount) {
-                        coupons[packageid] = coupon;
+                });
+                
+                for (let action of description.actions) {
+                    let match = action.link.match(/[1-9][0-9]*(?:,[1-9][0-9]*)*/);
+                    if (!match) {
+                        console.warn("Couldn't find packageid(s) for link %s", action.link);
+                        continue;
+                    }
+
+                    for (let packageid of match[0].split(',')) {
+                        if (!coupons[packageid] || coupons[packageid].discount < coupon.discount) {
+                            coupons[packageid] = coupon;
+                        }
                     }
                 }
             }
 
-            CacheStorage.set('inventory_3', coupons);
+            CacheStorage.set("inventory_3", coupons);
         }
-        await SteamStore.addCouponAppIds(coupons);
-        return coupons;
+        return await SteamStore.addCouponAppIds(coupons);
     }
     static async gifts() { // context#1, gifts and guest passes
         let self = SteamCommunity;
-        let login = LocalStorage.get('login');
-        if (!login) throw `Must be signed in to access Inventory`;
 
-        let value = CacheStorage.get('inventory_1', 3600);
+        let value = CacheStorage.get("inventory_1", 3600);
         if (!value) {
             let gifts = [], passes = [];
 
-            let data = await self.getEndpoint(`${login.profilePath}inventory/json/753/1/`, { 'l': 'en', });
-            if (!data || !data.success) throw new Error(`Could not retrieve Inventory 753/1`);
+            let data;
+            try {
+                data = await self.getInventory(1);
+            } catch(err) {
+                console.error(err);
+                return { "gifts": gifts, "passes": passes };
+            }
 
-            for(let [key, obj] of Object.entries(data.rgDescriptions)) {
+            for (let description of data.descriptions) {
                 let isPackage = false;
-                if (obj.descriptions) {
-                    for (let desc of obj.descriptions) {
+                if (description.descriptions) {
+                    for (let desc of description.descriptions) {
                         if (desc.type === "html") {
                             let appids = GameId.getAppids(desc.value);
                             // Gift package with multiple apps
                             isPackage = true;
                             for (let appid of appids) {
                                 if (!appid) { continue; }
-                                if (obj.type === "Gift") {
+                                if (description.type === "Gift") {
                                     gifts.push(appid);
                                 } else {
                                     passes.push(appid);
@@ -490,10 +532,10 @@ class SteamCommunity extends Api {
                 }
 
                 // Single app
-                if (!isPackage && obj.actions) {
-                    let appid = GameId.getAppid(obj.actions[0].link);
+                if (!isPackage && description.actions) {
+                    let appid = GameId.getAppid(description.actions[0].link);
                     if (appid) {
-                        if (obj.type === "Gift") {
+                        if (description.type === "Gift") {
                             gifts.push(appid);
                         } else {
                             passes.push(appid);
@@ -502,26 +544,29 @@ class SteamCommunity extends Api {
                 }
             }
 
-            value = { 'gifts': gifts, 'passes': passes, };
-            CacheStorage.set('inventory_1', value);
+            value = { "gifts": gifts, "passes": passes, };
+            CacheStorage.set("inventory_1", value);
         }
         return value;
     }
 
     static async items() { // context#6, community items
         let self = SteamCommunity;
-        let login = LocalStorage.get('login');
-        if (!login) throw `Must be signed in to access Inventory`;
 
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
-        let inventory = CacheStorage.get('inventory_6', 3600);
+        let inventory = CacheStorage.get("inventory_6", 3600);
         if (!inventory) {
-            inventory = await self.getEndpoint(`${login.profilePath}inventory/json/753/6/`, { 'l': 'en', });
-            if (!inventory || !inventory.success) throw new Error(`Could not retrieve Inventory 753/6`);
+            try {
+                inventory = await self.getInventory(6);
+            } catch(err) {
+                console.error(err);
+                return [];
+            }
 
-            CacheStorage.set('inventory_6', inventory);
+            inventory = inventory.descriptions.map(item => item.market_hash_name);
+            CacheStorage.set("inventory_6", inventory);
         }
-        return Object.values(inventory.rgDescriptions || {}).map(item => item['market_hash_name']);
+        return inventory;
     }
 
     /**

@@ -351,7 +351,7 @@
         "add_wallet_balance": "Zeige Steam-Guthaben im Header",
         "add_to_cart_wishlist": "Zeige \"Zum Warenkorb hinzufügen\"-Knopf in Wunschlisten",
         "stores_all": "Alle Shops vergleichen",
-        "show_early_access_text": "Early-Access-Banner anzeigen",
+        "show_early_access": "Early-Access-Banner anzeigen",
         "author_info": "von jshackles",
         "profile_link_images_gray": "Graustufen",
         "quickinv": "Zeige Schnellverkauf-Schaltflächen bei Steam-Community-Gegenständen im Inventar",
@@ -411,6 +411,7 @@
         "store_general_thirdparty": "Optionen für Informationen von Seiten von Dritten",
         "purchase_dates": "Kaufdatum auf Store-Seiten zeigen",
         "show_badge_progress": "Zeige Abzeichen-Fortschritt von Apps auf Shop-Seiten",
+        "show_coupon": "Zeige anwendbaren Gutschein von Apps auf Shop-Seiten",
         "show_wishlist_link": "Wunschlisten-Link auf Profilen anzeigen",
         "show_wishlist_count": "Anzahl der Artikel auf Wunschliste zeigen",
         "lang": {

@@ -919,37 +919,17 @@ let GamesPageClass = (function(){
                 if (!node.querySelector("h5.hours_played")) { continue; }
 
                 // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'>" + Localization.str.loading + "</div>");
+                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
 
-                RequestData.getHttp(statsLink + appid).then(result => {
+                Stats.getAchievementBar(appid).then(achieveBar => {
                     let node = document.querySelector("#es_app_" + appid);
-                    node.innerHTML = "";
 
-                    let dummy = HTMLParser.htmlToDOM(result);
-                    let achNode = dummy.querySelector("#topSummaryAchievements");
+                    if (!achieveBar) return;
 
-                    if (!achNode) { return; }
-                    node.append(achNode);
+                    HTML.inner(node, achieveBar);
 
-                    document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
-
-                    // The size of the achievement bars for games without leaderboards/other stats is fine, return
-                    if (!node.innerHTML.includes("achieveBarFull.gif")) { return; }
-
-                    let barFull = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/)[1];
-                    let barEmpty = node.innerHTML.match(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/)[1];
-                    barFull = barFull * .58;
-                    barEmpty = barEmpty * .58;
-
-                    let resultHtml = node.innerHTML
-                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarFull\.gif/, "width=\"" + HTML.escape(barFull.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarFull.gif")
-                        .replace(/width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])" src="https:\/\/steamcommunity-a\.akamaihd\.net\/public\/images\/skin_1\/achieveBarEmpty\.gif/, "width=\"" + HTML.escape(barEmpty.toString()) + "\" src=\"https://steamcommunity-a.akamaihd.net/public/images/skin_1/achieveBarEmpty.gif")
-                        .replace("::", ":");
-                    HTML.inner(node, resultHtml);
-
-                }, () => {
-                    let node = document.querySelector("#es_app_" + appid);
-                    node.innerHTML = "error";
+                }, err => {
+                    console.error(err);
                 });
             }
         }
@@ -1279,44 +1259,44 @@ let StatsPageClass = (function(){
         "time": []
     };
 
-    function addSortMetaData(achievements) {
-        if (_nodes['default'].length !== 0) { return; }
+    function addSortMetaData(key, achievements) {
+        if (key === "default") {
+            achievements.forEach((row, i) => _nodes.default.push([i, row]));
+            return Promise.resolve();
+        } else if (key === "time") {
+            let url = new URL(window.location.href);
+            url.searchParams.append("xml", 1);
+            return RequestData.getHttp(url.toString()).then(result => {
+                let xmlDoc = new DOMParser().parseFromString(result, "text/xml");
+                let xmlTags = xmlDoc.getElementsByTagName("achievement");
+                for (let i = 0; i < _nodes.default.length; ++i) {
+                    let node = _nodes.default[i][1];
+                    let unlockTime = 0;
+                    let unlockTimestamp = xmlTags[i].querySelector("unlockTimestamp");
+                    if (unlockTimestamp) {
+                        unlockTime = unlockTimestamp.textContent;
+                    }
+                    _nodes.time.push([unlockTime, node]);
 
-        let nodes = achievements.querySelectorAll(".achieveRow");
-
-        let language = Language.getLanguageCode(Language.getCurrentSteamLanguage());
-        let dateParser = new DateParser(language);
-
-        let sort = 0;
-        for (let node of nodes) {
-            _nodes['default'].push([sort++, node]);
-
-            let unlockTime = 0;
-            let unlockTimeNode = node.querySelector(".achieveUnlockTime");
-            if (unlockTimeNode) {
-                unlockTime = dateParser.parseUnlockTime(unlockTimeNode.textContent);
-            }
-            _nodes['time'].push([unlockTime, node]);
-
-            node.classList.add(unlockTime === 0 ? "esi_ach_locked" : "esi_ach_unlocked");
-        }
-
-        _nodes['time'] = _nodes['time'].sort(function(a, b) {
-            return b[0] - a[0]; // descending sort
-        });
-
-        let brs = achievements.querySelectorAll(":scope > br");
-        for (let br of brs) {
-            br.remove();
+                    node.classList.add(unlockTime === 0 ? "esi_ach_locked" : "esi_ach_unlocked");
+                }
+            }).then(() => _nodes.time = _nodes.time.sort((a, b) => {
+                return b[0] - a[0]; // descending sort
+            })).catch(err => console.error("Failed to retrieve timestamps for the achievements", err));
         }
     }
 
-    function sortBy(key, achievements) {
-        addSortMetaData(achievements);
-
+    async function sortBy(key, personal) {
+        if (key === "time") {
+            if (!_nodes.time.length) {
+                await addSortMetaData(key, personal.querySelectorAll(".achieveRow"));
+            }
+        }
+        
+        for (let br of personal.querySelectorAll(":scope > br")) br.remove();
         for (let item of _nodes[key]) {
             let node = item[1];
-            achievements.insertAdjacentElement("beforeend", node);
+            personal.insertAdjacentElement("beforeend", node);
         }
     }
 
@@ -1331,13 +1311,15 @@ let StatsPageClass = (function(){
                 <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
             </div>`);
 
-        document.querySelector("#achievement_sort_default").addEventListener("click", function(e) {
+        addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
+
+        document.querySelector("#achievement_sort_default").addEventListener("click", e => {
             document.querySelector("#achievement_sort_date").classList.add("es_achievement_sort_link");
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("default", personal);
         });
 
-        document.querySelector("#achievement_sort_date").addEventListener("click", function(e) {
+        document.querySelector("#achievement_sort_date").addEventListener("click", e => {
             document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);

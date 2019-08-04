@@ -809,6 +809,45 @@ let Viewport = (function(){
     return self;
 })();
 
+let Stats = (function() {
+
+    let self = {};
+
+    self.getAchievementBar = function(appid) {
+        return Background.action("stats", { "appid": appid }).then(response => {
+            let dummy = HTMLParser.htmlToDOM(response);
+            let achNode = dummy.querySelector("#topSummaryAchievements");
+
+            if (!achNode) return null;
+
+            achNode.style.whiteSpace = "nowrap";
+
+            if (!achNode.querySelector("img")) {
+                // The size of the achievement bars for games without leaderboards/other stats is fine, return
+                return achNode.innerHTML;
+            }
+
+            let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
+
+            // 1 full match, 3 group matches
+            if (!stats || stats.length !== 4) {
+                return null;
+            }
+
+            return `<div>${Localization.str.achievements.summary
+                .replace("__unlocked__", stats[1])
+                .replace("__total__", stats[2])
+                .replace("__percentage__", stats[3])}</div>
+            <div class="achieveBar">
+                <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
+            </div>`;
+        });
+    };
+
+    return self;
+
+})();
+
 let EnhancedSteam = (function() {
 
     let self = {};
@@ -1114,6 +1153,14 @@ let DOMHelper = (function(){
         return nodes.length !== 0 ? nodes[nodes.length-1] : null;
     };
 
+    self.insertStylesheet = function(href) {
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = href;
+        document.head.appendChild(stylesheet);
+    }
+
     return self;
 })();
 
@@ -1283,17 +1330,27 @@ let Inventory = (function(){
         function handleCoupons(data) {
             coupons = data;
             for (let [subid, details] of Object.entries(coupons)) {
-                for (let { 'id': appid, } of details.appids) {
+                for (let { "id": appid, } of details.appids) {
                     coupon_appids.set(appid, parseInt(subid, 10));
                 }
             }
         }
+
+        let promises = [];
+
+        if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
+                promises.push(Background.action('inventory.gifts').then(({ "gifts": x, "passes": y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, EnhancedSteam.addLoginWarning));
+        }
+
+        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
+            promises.push(Background.action('inventory.coupons').then(handleCoupons, EnhancedSteam.addLoginWarning));
+        }
+
+        if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
+            promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), EnhancedSteam.addLoginWarning));
+        }
         
-        _promise = Promise.all([
-            Background.action('inventory.gifts').then(({ 'gifts': x, 'passes': y, }) => { gifts = new Set(x); guestpasses = new Set(y); }, EnhancedSteam.addLoginWarning),
-            Background.action('inventory.coupons').then(handleCoupons, EnhancedSteam.addLoginWarning),
-            Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6), EnhancedSteam.addLoginWarning),
-            ]);
+        _promise = Promise.all(promises);
         return _promise;
     };
 
@@ -1504,6 +1561,10 @@ let Highlights = (function(){
                 r.forEach(node => node.classList.remove("ds_flagged"));
                 break;
             }
+
+            case node.classList.contains("spotlight_content"):
+                node = node.parentElement;
+                // don't break
 
             default: {
                 let r = node.querySelector(".ds_flag");
@@ -2033,7 +2094,7 @@ let Common = (function(){
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion();
+        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeAboutLinks();

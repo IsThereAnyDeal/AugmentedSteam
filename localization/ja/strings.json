@@ -351,7 +351,7 @@
         "add_wallet_balance": "ヘッダーにSteamウォレットの残高を表示する",
         "add_to_cart_wishlist": "ウィッシュリストに「カートに追加」ボタンを表示",
         "stores_all": "すべてのストアを比較",
-        "show_early_access_text": "早期アクセスの画像バナーを表示",
+        "show_early_access": "早期アクセスの画像バナーを表示",
         "author_info": "製作: jshackles",
         "profile_link_images_gray": "グレースケール",
         "quickinv": "「今すぐ売却」ボタンをインベントリ内のSteamコミュニティアイテムに表示する",

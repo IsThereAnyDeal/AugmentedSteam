@@ -475,38 +475,52 @@ class SubPageClass extends StorePageClass {
         setTimeout(function() {
             let notOwnedTotalPrice = 0;
 
-            let nodes = document.querySelectorAll(".tab_idem");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
-
-                let priceContainer = node.querySelector(".discount_final_price").textContent.trim();
-                if (!priceContainer) { continue; }
-
-                let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
-                if (price) {
-                    notOwnedTotalPrice += price.value;
+            for (let node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
+                let priceNode = node.querySelector(".discount_final_price");
+                // Only present when the product has a price associated with (so it's not free or N/A)
+                if (priceNode) {
+                    let priceContainer = priceNode.textContent.trim();
+                    if (priceContainer) { 
+                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                        if (price) {
+                            notOwnedTotalPrice += price.value;
+                            continue;
+                        }
+                    }
+                } else {
+                    let finalPrice = node.querySelector(".final_price");
+                    if (finalPrice) {
+                        if (finalPrice.textContent === "N/A") {
+                            notOwnedTotalPrice = null;
+                            break;
+                        }
+                    }
+                    continue;
                 }
+                console.warn("Couldn't find any price information for appid", node.dataset.dsAppid);
             }
 
+            if (notOwnedTotalPrice !== null) {
+                let priceNodes = document.querySelectorAll(".package_totals_area .price");
+                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                if (!packagePrice) { return; }
 
-            let priceNodes = document.querySelectorAll(".package_totals_area .price");
-            let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
-            if (!packagePrice) { return; }
+                notOwnedTotalPrice -= packagePrice.value;
 
-            notOwnedTotalPrice -= packagePrice.value;
+                if (!document.querySelector("#package_savings_bar")) {
+                    HTML.beforeEnd(".package_totals_area",
+                        "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                }
 
-            if (!document.querySelector("#package_savings_bar")) {
-                HTML.beforeEnd(".package_totals_area",
-                    "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
+                let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
+                let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
+
+                let savingsNode = document.querySelector(".savings");
+                HTML.beforeBegin(savingsNode, html);
+                savingsNode.remove();
             }
-
-            notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency)
-            let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
-            let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
-
-            let savingsNode = document.querySelector(".savings");
-            HTML.beforeBegin(savingsNode, html);
-            savingsNode.remove();
+            
         }, 500); // why is this here?
     }
 }
@@ -545,6 +559,9 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
+        // Required for "Customize" button and YouTube / Steam tabs
+        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -901,6 +918,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addCoupon() {
+        if (!SyncedStorage.get("show_coupon")) return;
         let inst = this;
         Inventory.then(() => {
 
@@ -1868,26 +1886,15 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterEnd(details_block,"<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
-            let dummy = HTMLParser.htmlToDOM(response);
-
+        Stats.getAchievementBar(this.communityAppid).then(achieveBar => {
+            if (!achieveBar) {
+                console.warn("Failed to find achievement stats for appid", this.communityAppid);
+                return;
+            }
+            
             let node = document.querySelector("#es_ach_stats");
-            node.append(dummy.querySelector("#topSummaryAchievements"));
+            HTML.inner(node, achieveBar)
 
-            document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
-
-            if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
-
-            let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-            let barEmpty = node.innerHTML.match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-            barFull = barFull * .75;
-            barEmpty = barEmpty * .75;
-
-            let resultHtml = node.innerHTML
-                .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
-                .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
-                .replace("::", ":");
-            HTML.inner(node, resultHtml);
         }, EnhancedSteam.addLoginWarning);
     }
 
@@ -1901,14 +1908,6 @@ class AppPageClass extends StorePageClass {
                 </div>
             </div>
             <div style="clear: both;"></div>`);
-
-        document.querySelector(".purchase_area_spacer").style.marginBottom = "30px";
-
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
-        document.head.appendChild(stylesheet);
 
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
@@ -1930,22 +1929,26 @@ class AppPageClass extends StorePageClass {
         }
 
         let customizer = new Customizer("customize_apppage");
-        customizer.add("recommendedbycurators", ".steam_curators_block")
-            .add("recentupdates", ".early_access_announcements")
-            .add("reviews", "#game_area_reviews");
-        let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
-        customizer.add("about", "[data-parent-of='#game_area_description']")
-            .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
-            .add("steamchart", "#steam-charts")
-            .add("surveys", "#performance_survey")
-            .add("steamspy", "#steam-spy")
-            .add("sysreq", "[data-parent-of='.sys_req")
-            .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
-            .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
-            .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
-            .add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent)
-            .add("customerreviews", "#app_reviews_hash");
+        customizer.add("recommendedbycurators", ".steam_curators_block");
+        customizer.add("recentupdates", ".early_access_announcements");
+        customizer.add("reviews", "#game_area_reviews");
+
+        let workshopNode = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
+        if (workshopNode) {
+            customizer.add("workshop", workshopNode.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        }
+        
+        customizer.add("about", "[data-parent-of='#game_area_description']");
+        customizer.add("contentwarning", "[data-parent-of='#game_area_content_descriptors']");
+        customizer.add("steamchart", "#steam-charts");
+        customizer.add("surveys", "#performance_survey");
+        customizer.add("steamspy", "#steam-spy");
+        customizer.add("sysreq", "[data-parent-of='.sys_req");
+        customizer.add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal);
+        customizer.add("moredlcfrombasegame", "#moredlcfrombasegame_block");
+        customizer.add("franchise", "#franchise_block", Localization.str.apppage_franchise);
+        customizer.add("morelikethis", "#recommended_block", document.querySelector("#recommended_block h2").textContent);
+        customizer.add("customerreviews", "#app_reviews_hash");
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
@@ -2375,11 +2378,8 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.endlessScrolling = function() {
         if (!SyncedStorage.get("contscroll")) { return; }
 
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
-        document.head.appendChild(stylesheet);
+        // Required for the loading wrapper
+        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
 
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";
@@ -2911,10 +2911,10 @@ let WishlistPageClass = (function(){
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
         let delayedWork = new Set();
-        let observer = new MutationObserver(function(mutationList){
-            mutationList.forEach(record => {
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(record => {
                 if (record.addedNodes.length === 1) {
-                    delayedWork.add(record.addedNodes[0])
+                    delayedWork.add(record.addedNodes[0]);
                 }
             });
             lastRequest = window.performance.now();
@@ -2937,10 +2937,32 @@ let WishlistPageClass = (function(){
                         }
                         instance.addPriceHandler(node);
                     }
-                    window.dispatchEvent(new Event("resize"))
+                    window.dispatchEvent(new Event("resize"));
                 }, 50);
             }
         });
+
+        if (SyncedStorage.get("showlowestprice_onwishlist")) {
+            // If the mouse is still inside an entry while scrolling or resizing, wishlist.js's event handler will put back the elements to their original position
+            window.addEventListener("scroll", scrollResizeHandler);
+            window.addEventListener("resize", scrollResizeHandler);
+
+            function scrollResizeHandler() {
+                let hover = document.querySelectorAll(":hover");
+                if (hover.length) {
+                    let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
+                    if (activeEntry) {
+                        let priceNode = activeEntry.querySelector(".es_lowest_price");
+                        if (priceNode) {
+                            getNodesBelow(activeEntry).forEach(row => {
+                                row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
         observer.observe(container, { 'childList': true, });
 
         this.addStatsArea();
@@ -3100,41 +3122,51 @@ let WishlistPageClass = (function(){
         }, true)
     }
 
-    function addWishlistPrice(node) {
-        let appid = node.dataset.appId;
+    function getNodesBelow(node) {
+        let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        if (typeof cachedPrices[appid] == 'undefined') {
-            cachedPrices[appid] = new Promise(function(resolve, reject) {
-                let prices = new Prices();
-                prices.appids = [appid,];
-                prices.priceCallback = function(type, id, html) {
-                    resolve(html);
-                };
-                prices.load();
-            });
-        }
-
-        cachedPrices[appid].then(function(html) {
-            if (node.querySelector(".es_lowest_price")) { return; }
-
-            HTML.beforeEnd(node, html);
-
-            let priceNode = node.querySelector(".es_lowest_price");
-            priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
-        });
-        return;
+        // Limit the selection to the rows that are positioned below the row (including the row itself) where the price is being shown
+        return nodes.filter(row => parseInt(row.style.top, 10) >= parseInt(node.style.top, 10));
     }
 
-    WishlistPageClass.prototype.addPriceHandler = function(node){
-        if (!SyncedStorage.get("showlowestprice_onwishlist")) { return; }
+    WishlistPageClass.prototype.addPriceHandler = function(node) {
+        if (!SyncedStorage.get("showlowestprice_onwishlist")) return;
 
-        if (!node.dataset.appId) { return; }
+        let appId = node.dataset.appId;
+        if (!appId || typeof cachedPrices[appId] !== "undefined") return;
 
-        if (!node.querySelector(".es_lowest_price")) {
-            node.addEventListener("mouseenter", (e) => addWishlistPrice(e.target), { 'capture': false, 'once': true, });
-        }
+        cachedPrices[appId] = null;
+
+        node.addEventListener("mouseenter", () => {
+            if (cachedPrices[appId] === null) {
+                cachedPrices[appId] = new Promise(resolve => {
+                    let prices = new Prices();
+                    prices.appids = [appId];
+                    prices.priceCallback = (type, id, html) => {
+                        HTML.beforeEnd(node, html);
+                        let priceNode = node.querySelector(".es_lowest_price");
+                        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+                        resolve();
+                    }
+                    prices.load();
+                });
+            }
+            cachedPrices[appId].then(() => {
+                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
+            });
+        });
+        
+        node.addEventListener("mouseleave", () => {
+            // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
+            if (cachedPrices[appId]) {
+                cachedPrices[appId].then(() => {
+                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
+                });
+            }
+        });
     };
-
 
     WishlistPageClass.prototype.addUserNote =  function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
@@ -3355,37 +3387,6 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.highlightDynamic = function() {
 
-        let discountObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes));
-        });
-
-        document.querySelectorAll("[id='10off_tier'], [id='75pct_tier']").forEach(el => discountObserver.observe(el, { childList: true }));
-
-        let moreFeaturedObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].children));
-        });
-        document.querySelectorAll("#tier1_target, #tier2_target").forEach(el => moreFeaturedObserver.observe(el, { childList: true }));
-
-        let tagCategoriesObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].querySelector(".salerow").children));
-        })
-        tagCategoriesObserver.observe(document.getElementById("sale_tag_categories"), { childList: true });
-
-        document.querySelectorAll(".franchise_capsule").forEach(el => el.addEventListener("mouseenter", franchisesListener, { once: true }));
-
-        let franchisesObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.addedNodes.length === 1) {
-                    mutation.addedNodes[0].addEventListener("mouseenter", franchisesListener, { once: true });
-                }
-            });
-        })
-        franchisesObserver.observe(document.querySelector(".franchise_flex"), { childList: true });
-
-        function franchisesListener(e) {
-            Highlights.highlightAndTag(e.target.querySelectorAll(".sale_capsule"));
-        }
-
         let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
         if (recentlyUpdatedNode) {
             let observer = new MutationObserver(mutations => {
@@ -3414,7 +3415,7 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.customizeHomePage = function(){
 
-        HTML.afterEnd(".home_page_content",
+        HTML.beforeEnd(".home_page_content",
             `<div class="home_pagecontent_ctn clearfix" style="margin-bottom: 5px; margin-top: 3px;">
                 <div id="es_customize_btn" class="home_actions_ctn">
                     <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
@@ -3429,7 +3430,7 @@ let StoreFrontPageClass = (function(){
             e.target.classList.toggle("active");
         });
 
-        document.querySelector("body").addEventListener("click", function(e){
+        document.body.addEventListener("click", function(e){
             if (e.target.closest("#es_customize_btn")) { return; }
             let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
@@ -3443,17 +3444,6 @@ let StoreFrontPageClass = (function(){
             let under = document.querySelector("[class*='specials_under']");
 
             let customizer = new Customizer("customize_frontpage");
-
-            // Summer Sale 2019
-            customizer
-                .add("featured", ".home_featured_ctn")
-                .add("morefeatured", ".home_morefeatured_ctn")
-                .add("tagcategories", "#sale_tag_categories", Localization.str.tag_categories)
-                .add("franchises", ".home_franchises_ctn")
-                .add("discounts", "#sale_discounts_area", Localization.str.discounts)
-                .add("browsemore", ".home_browsemore_ctn")
-                .add("topsellers", ".home_topsellers_ctn")
-                .add("newupcoming", ".home_newupcoming_ctn", Localization.str.new_and_upcoming);
 
             customizer
                 .add("featuredrecommended", ".home_cluster_ctn");
