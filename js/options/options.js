@@ -169,11 +169,13 @@ class Sidebar {
         }
 
         let row = category.closest(".tab_row");
-        let isExpanded = row.classList.contains("expanded");
 
+        /* I can't decide whether it's good idea to have scroll on category or not, it doesn' feel right with scroll
+        let isExpanded = row.classList.contains("expanded");
         if (!isExpanded) {
             Sidebar._scrollTo(row.dataset.blockSel);
         }
+        */
 
         row.classList.toggle("expanded");
         row.classList.toggle("collapsed");
@@ -193,7 +195,6 @@ class Sidebar {
     static _scrollHandler() {
 
         if (Sidebar._scrollTimeout) {
-            console.log(Sidebar._scrollTimeout);
             return;
         }
 
@@ -232,7 +233,7 @@ class Sidebar {
 
             row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 
-            HTML.beforeEnd(row.firstElementChild, `<div class="category__triangle">&#9665;</div>`);
+            HTML.beforeEnd(row.firstElementChild, `<div class="category__triangle">&#9664;</div>`);
 
             let subentries = "";
             sections.forEach(section => {
@@ -244,6 +245,7 @@ class Sidebar {
 
         document.querySelector("#side_bar").addEventListener("click", Sidebar._handleClick);
         document.addEventListener("scroll", Sidebar._scrollHandler);
+        Sidebar._scrollHandler();
     }
 
 }
