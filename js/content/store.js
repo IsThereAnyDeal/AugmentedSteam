@@ -545,6 +545,9 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
+        // Required for "Customize" button and YouTube / Steam tabs
+        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -1892,14 +1895,6 @@ class AppPageClass extends StorePageClass {
             </div>
             <div style="clear: both;"></div>`);
 
-        document.querySelector(".purchase_area_spacer").style.marginBottom = "30px";
-
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
-        document.head.appendChild(stylesheet);
-
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
         });
@@ -2364,11 +2359,8 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.endlessScrolling = function() {
         if (!SyncedStorage.get("contscroll")) { return; }
 
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamstore-a.akamaihd.net/public/css/v6/home.css';
-        document.head.appendChild(stylesheet);
+        // Required for the loading wrapper
+        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
 
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";

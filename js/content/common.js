@@ -1153,6 +1153,14 @@ let DOMHelper = (function(){
         return nodes.length !== 0 ? nodes[nodes.length-1] : null;
     };
 
+    self.insertStylesheet = function(href) {
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = href;
+        document.head.appendChild(stylesheet);
+    }
+
     return self;
 })();
 
