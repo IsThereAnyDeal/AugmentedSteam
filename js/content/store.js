@@ -3375,20 +3375,19 @@ let StoreFrontPageClass = (function(){
 
     StoreFrontPageClass.prototype.highlightDynamic = function() {
 
-        let recentlyUpdatedNode = document.querySelector(".recently_updated_block");
-        if (recentlyUpdatedNode) {
+        let recentlyUpdated = document.querySelector(".recently_updated");
+        if (recentlyUpdated) {
             let observer = new MutationObserver(mutations => {
-                if (mutations[0].oldValue.display === "none") {
-                    Highlights.highlightAndTag(recentlyUpdatedNode.querySelectorAll(".store_capsule"));
-                }
+                mutations.forEach(mutation => Highlights.highlightAndTag(mutation.addedNodes[0].children));
+                observer.disconnect();
             });
-            observer.observe(recentlyUpdatedNode, {attributes: true, attributeFilter: ["style"], attributeOldValue: true});
+            observer.observe(recentlyUpdated, { childList: true });
         }
 
         // Monitor and highlight wishlishted recommendations at the bottom of Store's front page
         let contentNode = document.querySelector("#content_more");
         if (contentNode) {
-            let observer = new MutationObserver(function(mutations){
+            let observer = new MutationObserver(mutations => {
                 mutations.forEach(mutation =>
                     mutation.addedNodes.forEach(node => {
                         if (node.nodeType !== Node.ELEMENT_NODE) { return; }
