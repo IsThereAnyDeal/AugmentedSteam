@@ -1868,26 +1868,15 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterEnd(details_block,"<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Background.action('stats', { 'appid': this.communityAppid, } ).then(response => {
-            let dummy = HTMLParser.htmlToDOM(response);
-
+        Stats.getAchievementBar(this.communityAppid).then(achieveBar => {
+            if (!achieveBar) {
+                console.warn("Failed to find achievement stats for appid", this.communityAppid);
+                return;
+            }
+            
             let node = document.querySelector("#es_ach_stats");
-            node.append(dummy.querySelector("#topSummaryAchievements"));
+            HTML.inner(node, achieveBar)
 
-            document.querySelector("#topSummaryAchievements").style.whiteSpace="nowrap";
-
-            if (!node.innerHTML.match(/achieveBarFull\.gif/)) { return; }
-
-            let barFull = node.innerHTML.match(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-            let barEmpty = node.innerHTML.match(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/)[1];
-            barFull = barFull * .75;
-            barEmpty = barEmpty * .75;
-
-            let resultHtml = node.innerHTML
-                .replace(/achieveBarFull\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarFull.gif\" width=\"" + HTML.escape(barFull.toString()) + "\"")
-                .replace(/achieveBarEmpty\.gif" width="([0-9]|[1-9][0-9]|[1-9][0-9][0-9])"/, "achieveBarEmpty.gif\" width=\"" + HTML.escape(barEmpty.toString()) + "\"")
-                .replace("::", ":");
-            HTML.inner(node, resultHtml);
         }, EnhancedSteam.addLoginWarning);
     }
 

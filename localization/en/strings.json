@@ -268,7 +268,8 @@
         "option": "Show achievement completion on store pages",
         "achievements": "Achievements",
         "includes": "Includes __num__ Steam Achievements",
-        "view_all": "View All Achievements"
+        "view_all": "View All Achievements",
+        "summary": "__unlocked__ of __total__ (__percentage__%) achievements earned:"
     },
     "bundle": {
         "offer_ends": "Offer ends",

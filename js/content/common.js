@@ -809,6 +809,45 @@ let Viewport = (function(){
     return self;
 })();
 
+let Stats = (function() {
+
+    let self = {};
+
+    self.getAchievementBar = function(appid) {
+        return Background.action("stats", { "appid": appid }).then(response => {
+            let dummy = HTMLParser.htmlToDOM(response);
+            let achNode = dummy.querySelector("#topSummaryAchievements");
+
+            if (!achNode) return null;
+
+            achNode.style.whiteSpace = "nowrap";
+
+            if (!achNode.querySelector("img")) {
+                // The size of the achievement bars for games without leaderboards/other stats is fine, return
+                return achNode.innerHTML;
+            }
+
+            let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
+
+            // 1 full match, 3 group matches
+            if (!stats || stats.length !== 4) {
+                return null;
+            }
+
+            return `<div>${Localization.str.achievements.summary
+                .replace("__unlocked__", stats[1])
+                .replace("__total__", stats[2])
+                .replace("__percentage__", stats[3])}</div>
+            <div class="achieveBar">
+                <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
+            </div>`;
+        });
+    };
+
+    return self;
+
+})();
+
 let EnhancedSteam = (function() {
 
     let self = {};
