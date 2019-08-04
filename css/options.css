@@ -51,11 +51,6 @@ body {
 	min-height: 100vh;
 }
 
-#side_bar hr {
-	display: none;
-	margin: 0.5em 0;
-}
-
 .category {
 	padding: 0.7em;
 	display: flex;
@@ -147,8 +142,14 @@ body {
 h1 {
 	font-size: 180%;
 	font-weight: bold;
+	margin: 3em 0 0.5em 0;
+	border-bottom: 2px solid #036db1;
+}
+
+.content div:first-child h1 {
 	margin: 0.5em 0;
 }
+
 h2 {
 	font-size: 130%;
 	font-weight: bold;
