@@ -111,7 +111,7 @@ class Version {
 
 class UpdateHandler {
 
-    static checkVersion() {
+    static checkVersion(onUpdate) {
         let lastVersion = Version.fromString(SyncedStorage.get("version"));
         let currentVersion = Version.fromString(Info.version);
 
@@ -119,6 +119,7 @@ class UpdateHandler {
             if (SyncedStorage.get("version_show")) {
                 this._showChangelog();
             }
+            onUpdate();
             this._migrateSettings(lastVersion);
         }
 
@@ -583,6 +584,7 @@ SyncedStorage.defaults = {
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,
+    'show_coupon': true,
     'show_wishlist_link': true,
     'show_wishlist_count': true,
     'show_progressbar': true,
