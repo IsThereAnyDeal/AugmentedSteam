@@ -32,7 +32,7 @@ class Customizer {
         let elements;
 
         if (typeof targets === "string") {
-            elements = document.querySelectorAll(targets);
+            elements = Array.from(document.querySelectorAll(targets));
         } else if (targets instanceof NodeList) {
             elements = Array.from(targets);
         } else {
