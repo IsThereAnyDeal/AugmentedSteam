@@ -442,13 +442,7 @@ class SteamCommunity extends Api {
         let coupons = CacheStorage.get("inventory_3", 3600);
         if (!coupons) {
             coupons = {};
-            let data;
-            try {
-                data = await self.getInventory(3);
-            } catch(err) {
-                console.error(err);
-                return coupons;
-            }
+            let data = await self.getInventory(3);
 
             for (let description of data.descriptions) {
                 if (!description.type || description.type !== "Coupon") { continue; }
@@ -502,13 +496,7 @@ class SteamCommunity extends Api {
         if (!value) {
             let gifts = [], passes = [];
 
-            let data;
-            try {
-                data = await self.getInventory(1);
-            } catch(err) {
-                console.error(err);
-                return { "gifts": gifts, "passes": passes };
-            }
+            let data = await self.getInventory(1);
 
             for (let description of data.descriptions) {
                 let isPackage = false;
@@ -556,13 +544,7 @@ class SteamCommunity extends Api {
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
         let inventory = CacheStorage.get("inventory_6", 3600);
         if (!inventory) {
-            try {
-                inventory = await self.getInventory(6);
-            } catch(err) {
-                console.error(err);
-                return [];
-            }
-
+            inventory = await self.getInventory(6);
             inventory = inventory.descriptions.map(item => item.market_hash_name);
             CacheStorage.set("inventory_6", inventory);
         }
