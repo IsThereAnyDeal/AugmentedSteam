@@ -189,7 +189,7 @@ button:hover {
 	border-color:#162c3e;
 }
 
-select, input[type=text] {
+select, input[type=text], input[type=number] {
 	background-color: #1a1c21;
 	color: white;
 	padding: 0.15em;
