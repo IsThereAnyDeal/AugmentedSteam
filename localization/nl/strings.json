@@ -179,6 +179,7 @@
     "item_type": "Itemtype",
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
+    "export_wishlist": "Verlanglijst exporteren",
     "empty_wishlist": "Verlanglijst leegmaken",
     "empty_wishlist_confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
     "empty_wishlist_loading": "Verlanglijst aan het legen, even geduld a. u. b...",

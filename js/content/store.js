@@ -2966,6 +2966,7 @@ let WishlistPageClass = (function(){
         observer.observe(container, { 'childList': true, });
 
         this.addStatsArea();
+        this.addExportWishlistButton();
         this.addEmptyWishlistButton();
         this.addUserNotesHandlers();
         this.addRemoveHandler();
@@ -3119,7 +3120,38 @@ let WishlistPageClass = (function(){
                 DynamicStore.clear();
                 location.reload();
             });
-        }, true)
+        }, true);
+    }
+
+    WishlistPageClass.prototype.addExportWishlistButton = function() {
+        if (!SyncedStorage.get("showexportwishlist")) { return; }
+
+        HTML.beforeEnd("div.wishlist_header", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
+
+        document.querySelector("#es_export_wishlist").addEventListener("click", function(e) {
+            exportWishlist();
+        });
+    };
+
+    function exportWishlist() {
+        ExtensionLayer.runInPageContext(`function(){
+            let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo };
+            Messenger.postMessage("exportWishlist", JSON.stringify(data));
+        }`);
+        
+        Messenger.addMessageListener("exportWishlist", (data) => {
+            data = JSON.parse(data);
+            if (!data || !data.rgAllApps || !data.g_rgAppInfo) { return; }
+    
+            let win = window.open("", "", "width=480,height=640");
+            let notes = SyncedStorage.get("user_notes") || {};
+            data.rgAllApps.forEach(appid => win.document.write(data.g_rgAppInfo[appid].name + (notes[appid] ? " (" + notes[appid] + ")" : "") + "<br>"));
+            let range = win.document.createRange();
+            range.selectNodeContents(win.document.body);
+            let selection = win.window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }, true);
     }
 
     function getNodesBelow(node) {

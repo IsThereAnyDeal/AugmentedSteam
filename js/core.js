@@ -541,6 +541,7 @@ SyncedStorage.defaults = {
     'openinnewtab': false,
     'keepssachecked': false,
     'showemptywishlist': true,
+    'showexportwishlist': true,
     'showusernotes': true,
     'user_notes': {},
     'replaceaccountname': true,
