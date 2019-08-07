@@ -180,6 +180,17 @@
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
     "export_wishlist": "Verlanglijst exporteren",
+    "export_text": "Tekst",
+    "export_JSON": "JSON",
+    "export_download": "Download .txt",
+    "export_clipboard": "Kopieer naar klembord",
+    "export_props": {
+        "name": "Titel",
+        "appid": "Appid",
+        "type": "Type",
+        "release_string": "Releasedatum",
+        "note": "Opgeslagen notitie"
+    },
     "empty_wishlist": "Verlanglijst leegmaken",
     "empty_wishlist_confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
     "empty_wishlist_loading": "Verlanglijst aan het legen, even geduld a. u. b...",
@@ -387,6 +398,7 @@
         "showspeechsearch": "Voeg spraak invoegen toe aan zoeken",
         "profile_link_images_color": "Gekleurd",
         "show_empty_wishlist": "Knop \"Verlanglijst Leegmaken\" weergeven",
+        "show_user_notes": "Gebruiker notities op verlanglijst en app paginas weergeven",
         "inventory_nav_text": "Toon geavanceerde navigatie in inventory pagina",
         "carousel_description": "Laat app beschrijving op de winkel front zien",
         "market_total": "Toon transactie samenvatting op de Market",
@@ -523,5 +535,31 @@
         "wallet": "De code die je hebt ingevuld is een Steam-cadeaukaart of Steam-portemonnee code",
         "toomany": "Er zijn recent teveel pogingen geweest om een product te activeren van dit account. Probeer het later opnieuw.",
         "default": "Er is een onverwachte fout opgetreden. De productcode is niet geactiveerd. Probeer het over 30 minuten opnieuw."
-    }
+    },
+    "wl": {
+        "compute": "Klik om statistieken te berekenen",
+        "total_price": "huidige waarde",
+        "in_wishlist": "in verlanglijst",
+        "on_sale": "in de verkoop",
+        "no_price": "zonder prijs"
+    },
+    "coll": {
+        "in_collection": "In Verzameling",
+        "played": "Gespeeld",
+        "never_played": "Nooit Gespeeld"
+    },
+    "user_note": {
+        "add": "Een notitie toevoegen",
+        "update": "Notitie updaten",
+        "add_prompt": "Notitie schrijven",
+        "update_prompt": "Notitie updaten",
+        "add_for_game": "Notitie voor __gamename__"
+    },
+    "queue": {
+        "new": "Nieuwe Queue",
+        "new_tooltip": "Verwijder dit product van jouw Queue en start een nieuwe Queue."
+    },
+    "this_version": "Deze version",
+    "original_authors": "Originele makers",
+    "powered_by": "Mede mogelijk gemaakt door __link__"
 }

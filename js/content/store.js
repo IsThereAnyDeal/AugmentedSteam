@@ -3459,9 +3459,9 @@ let UserNotes = (function(){
             note_input.setSelectionRange(0, note_input.textLength);
             note_input.addEventListener("keydown", e => {
                 if (e.key === "Enter") {
-                    $J(".es_export_modal_submit").click();
+                    $J(".es_note_modal_submit").click();
                 } else if (e.key === "Escape") {
-                    Modal.Dismiss();
+                    M   odal.Dismiss();
                 }
             });
         }`);
