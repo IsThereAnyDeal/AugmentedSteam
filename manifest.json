@@ -14,6 +14,7 @@
     "open_in_tab": true
   },
   "permissions": [
+    "downloads",
     "storage",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",

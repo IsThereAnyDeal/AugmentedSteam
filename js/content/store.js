@@ -2907,6 +2907,45 @@ let WishlistPageClass = (function(){
         let instance = this;
         userNotes = new UserNotes();
 
+        let exportProps = ["name", "appid", "type", "release_string", "note"];
+        this.exportModalTemplate = `
+            <div id="es_export_modal">
+                <div id="es_export_modal_content">
+                    <form id="es_export_form">
+                    <table>
+                        <tr>
+                            <td>Export type:</td>
+                            <td>
+                                <input type="radio" name="export_type" value="text" id="text" onclick="$J('#es_text_options').show()" checked> <label for="text" onclick="$J('#es_text_options').show()"> ${Localization.str.export_text}</label>
+                                &nbsp;
+                                <input type="radio" name="export_type" value="JSON" id="JSON" onclick="$J('#es_text_options').hide()"> <label for="JSON" onclick="$J('#es_text_options').hide()"> ${Localization.str.export_JSON}</label>
+                            </td>
+                        </tr>
+                        <tr id="es_text_options">
+                            <td>Text format:</td>
+                            <td>${buildExportModalOptions(exportProps)}</td>
+                        </tr>
+                        <tr>
+                            <td>Export method:</td>
+                            <td>
+                                <input type="radio" name="export_method" value="download" id="download" checked> <label for="download"> ${Localization.str.export_download}</label>
+                                &nbsp;
+                                <input type="radio" name="export_method" value="clipboard" id="clipboard"> <label for="clipboard"> ${Localization.str.export_clipboard}</label>
+                            </td>
+                        </tr>
+                        </table>
+                    </form>
+                    <div style="float: right">
+                        <div class="es_export_modal_submit btn_green_white_innerfade btn_medium">
+                            <span>${Localization.str.save}</span>
+                        </div>
+                        <div class="es_export_modal_close btn_grey_white_innerfade btn_medium">
+                            <span>${Localization.str.cancel}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
         let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
@@ -2979,6 +3018,21 @@ let WishlistPageClass = (function(){
         let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
         return myWishlistUrlRegex.test(window.location.href)
             || window.location.href.includes("/profiles/" + User.steamId);
+    }
+
+    function buildExportModalOptions(props) {
+        if (!props || props.length === 0) { return ""; }
+        return props.map((_, i) => {
+            let html = "<select id='prop" + i + "' name='prop" + i + "'><option value=''>" + Localization.str.none + "</option>";
+            props.forEach(prop => html += "<option value='" + prop + "'>" + Localization.str.export_props[prop] + "</option>");
+            html += "</select>";
+
+            if (i + 1 < props.length) {
+                html += "<input type='text' id='sep" + i + "' name='sep" + i + "' placeholder='" + Localization.str.separator + "'>"
+            }
+
+            return html;
+        }).join("");
     }
 
     WishlistPageClass.prototype.highlightApps = async function(node) {
@@ -3123,36 +3177,134 @@ let WishlistPageClass = (function(){
         }, true);
     }
 
+    WishlistPageClass.prototype.showModalDialog = function() {
+        // Partly copied from shared_global.js
+        ExtensionLayer.runInPageContext(`function() {
+            let deferred = new jQuery.Deferred();
+            let fnOK = () => deferred.resolve();
+
+            let Modal = _BuildDialog(
+                "${Localization.str.export_wishlist}",
+                \`${this.exportModalTemplate}\`,
+                [], fnOK);
+            deferred.always(() => Modal.Dismiss());
+
+            Modal.m_fnBackgroundClick = () => Modal.Dismiss();
+            Modal.Show();
+
+            $J("#es_export_modal input[placeholder]").each(function() {
+                $J(this).attr('size', $J(this).attr('placeholder').length);
+            });
+
+            // attach the deferred's events to the modal
+            deferred.promise(Modal);
+        }`);
+
+        document.addEventListener("click", clickListener);
+
+        function clickListener(e) {
+            if (e.target.closest(".es_export_modal_submit")) {
+                e.preventDefault();
+                exportWishlist();
+                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            } else if (e.target.closest(".es_export_modal_close")) {
+                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            } else {
+                return;
+            }
+            document.removeEventListener("click", clickListener);
+        }
+
+        function exportWishlist() {
+            ExtensionLayer.runInPageContext(`function(){
+                let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options: {} };
+                $J("#es_export_form").serializeArray().forEach((item) => data.options[item.name] = item.value);
+                Messenger.postMessage("exportWishlist", JSON.stringify(data));
+            }`);
+            
+            Messenger.addMessageListener("exportWishlist", (data) => {
+                if (!data) { return; }
+                let { rgAllApps, g_rgAppInfo, options } = JSON.parse(data);
+                if (!rgAllApps || !g_rgAppInfo || !options) { return; }
+
+                let toexport;
+                let notes = SyncedStorage.get("user_notes") || {};
+                let json = rgAllApps.map(appid => {
+                    let appinfo = g_rgAppInfo[appid];
+                    appinfo.appid = appid;
+                    if (notes[appid]) {
+                        appinfo.note = notes[appid];
+                    }
+                    return appinfo;
+                });
+
+                if (options.export_type === "JSON") {
+                    toexport = JSON.stringify(json, null, 4);
+                    doExport(options.export_method, toexport);
+                    return;
+                }
+
+                let props = [];
+                let seps = [];
+                for (let key in options) {
+                    if (key.includes("prop")) {
+                        props[+key.replace("prop", "")] = options[key];
+                    }
+                    if (key.includes("sep")) {
+                        seps[+key.replace("sep", "")] = options[key];
+                    }
+                }
+
+                toexport = json.map(app => {
+                    let line = "";
+                    for (let i = 0; i <= props.length; i++) {
+                        if (props[i]) {
+                            line += app[props[i]];
+                        }
+                        if (seps[i]) {
+                            line += seps[i];
+                        }
+                    }
+                    return line;
+                }).join("\n");
+                doExport(options.export_method, toexport);
+            }, true);
+
+            function doExport(method, content) {
+                switch (method) {
+                    case "clipboard":
+                        setClipboard(content)
+                        break;
+                    case "download":
+                        Background.action('download', { content, filename: "wishlist_export.txt" });
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            function setClipboard(content) {
+                // Based on https://stackoverflow.com/a/12693636
+                document.oncopy = function(event) {
+                    event.clipboardData.setData("Text", content);
+                    event.preventDefault();
+                };
+                document.execCommand("Copy");
+                document.oncopy = undefined;
+            }
+        }
+    };
+
     WishlistPageClass.prototype.addExportWishlistButton = function() {
         if (!SyncedStorage.get("showexportwishlist")) { return; }
 
         HTML.beforeEnd("div.wishlist_header", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
 
+        let that = this;
         document.querySelector("#es_export_wishlist").addEventListener("click", function(e) {
-            exportWishlist();
+            that.showModalDialog();
         });
     };
-
-    function exportWishlist() {
-        ExtensionLayer.runInPageContext(`function(){
-            let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo };
-            Messenger.postMessage("exportWishlist", JSON.stringify(data));
-        }`);
-        
-        Messenger.addMessageListener("exportWishlist", (data) => {
-            data = JSON.parse(data);
-            if (!data || !data.rgAllApps || !data.g_rgAppInfo) { return; }
-    
-            let win = window.open("", "", "width=480,height=640");
-            let notes = SyncedStorage.get("user_notes") || {};
-            data.rgAllApps.forEach(appid => win.document.write(data.g_rgAppInfo[appid].name + (notes[appid] ? " (" + notes[appid] + ")" : "") + "<br>"));
-            let range = win.document.createRange();
-            range.selectNodeContents(win.document.body);
-            let selection = win.window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }, true);
-    }
 
     function getNodesBelow(node) {
         let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
@@ -3307,7 +3459,7 @@ let UserNotes = (function(){
             note_input.setSelectionRange(0, note_input.textLength);
             note_input.addEventListener("keydown", e => {
                 if (e.key === "Enter") {
-                    $J(".es_note_modal_submit").click();
+                    $J(".es_export_modal_submit").click();
                 } else if (e.key === "Escape") {
                     Modal.Dismiss();
                 }
