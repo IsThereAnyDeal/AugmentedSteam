@@ -57,7 +57,7 @@ class IndexedDB {
                     let db = request.result;
                     let oldVersion = event.oldVersion;
                     if (oldVersion < 1) {
-                        db.createObjectStore("inventories", { keyPath: "id" });
+                        db.createObjectStore("inventories");
                         db.createObjectStore("packages", { keyPath: "id" });
                         db.createObjectStore("earlyAccessAppids");
                         db.createObjectStore("apps", { keyPath: "id" });
@@ -74,23 +74,87 @@ class IndexedDB {
         }
         return this._promise;
     }
+    static then(onDone, onCatch) {
+        return IndexedDB.init().then(onDone, onCatch);
+    }
 
-    static addData(objectStoreName, data) {
+    static putCached(objectStoreName, data, key) {
+        return IndexedDB.put(objectStoreName, data, key, true);
+    }
+
+    static put(objectStoreName, data, key, cached) {
         return new Promise((resolve, reject) => {
-            this.init().then(() => {
-                let transaction = this.db.transaction(objectStoreName, "readwrite");
+            IndexedDB.then(() => {
+                let transaction = IndexedDB.db.transaction(objectStoreName, "readwrite");
                 transaction.oncomplete = () => resolve();
-                transaction.onerror = () => reject(transaction.error);
+                transaction.onerror = event => reject(event.target.error);
     
                 let objectStore = transaction.objectStore(objectStoreName);
-                if (typeof data === Array) {
-                    data.forEach(value => objectStore.add(value));
+                if (cached) data = { value: data, timestamp: IndexedDB.timestamp() };
+                objectStore.put(data, key);
+            });
+        });
+    }
+
+    static get(objectStoreName, keys, ttl) {
+        return new Promise((resolve, reject) => {
+            IndexedDB.then(() => {
+                let isArray = Array.isArray(keys);
+                let results;
+                if (isArray) results = [];
+
+                let transaction = IndexedDB.db.transaction(objectStoreName);
+                transaction.oncomplete = () => resolve(results);
+                transaction.onerror = event => reject(event.target.error);
+    
+                let objectStore = transaction.objectStore(objectStoreName);
+                if (isArray) {
+                    keys.forEach((key, i) => objectStore.get(key).onsuccess = event => {
+                        let result = event.target.result;
+                        if (!result) {
+                            results[i] = null;
+                            return;
+                        }
+                        if(ttl && result.timestamp) {
+                            if (IndexedDB.isExpired(result.timestamp, ttl)) {
+                                results[i] = null;
+                                return;
+                            } else {
+                                result = result.value;
+                            }
+                        }
+                        results[i] = result;
+                    });
                 } else {
-                    objectStore.add(data);
+                    objectStore.get(keys).onsuccess = event => {
+                        let result = event.target.result;
+                        if (!result) {
+                            results = null;
+                            return;
+                        }
+                        if(ttl && result.timestamp) {
+                            if (IndexedDB.isExpired(result.timestamp, ttl)) {
+                                results = null;
+                                return;
+                            } else {
+                                result = result.value;
+                            }
+                        }
+                        results = result;
+                    };
                 }
             });
         });
     }
+
+    static isExpired(timestamp, ttl) {
+        if (typeof ttl != 'number' || ttl < 0) ttl = 0;
+
+        return timestamp + ttl <= IndexedDB.timestamp();
+    }
+
+    static timestamp() { return Math.trunc(Date.now() / 1000); }
+    
 }
 
 class Api {
@@ -539,7 +603,7 @@ class SteamCommunity extends Api {
     static async coupons() { // context#3
         let self = SteamCommunity;
 
-        let coupons = CacheStorage.get("inventory_3", 3600);
+        let coupons = await IndexedDB.get("inventories", 3, 3600);
         if (!coupons) {
             coupons = {};
             let data = await self.getInventory(3);
@@ -585,14 +649,14 @@ class SteamCommunity extends Api {
                 }
             }
 
-            CacheStorage.set("inventory_3", coupons);
+            IndexedDB.putCached("inventories", coupons, 3);
         }
         return await SteamStore.addCouponAppIds(coupons);
     }
     static async gifts() { // context#1, gifts and guest passes
         let self = SteamCommunity;
 
-        let value = CacheStorage.get("inventory_1", 3600);
+        let value = await IndexedDB.get("inventories", 1, 3600);
         if (!value) {
             let gifts = [], passes = [];
 
@@ -633,7 +697,7 @@ class SteamCommunity extends Api {
             }
 
             value = { "gifts": gifts, "passes": passes, };
-            CacheStorage.set("inventory_1", value);
+            IndexedDB.putCached("inventories", value, 1);
         }
         return value;
     }
@@ -642,11 +706,10 @@ class SteamCommunity extends Api {
         let self = SteamCommunity;
 
         // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
-        let inventory = CacheStorage.get("inventory_6", 3600);
+        let inventory = await IndexedDB.get("inventories", 6, 3600);
         if (!inventory) {
-            inventory = await self.getInventory(6);
-            inventory = inventory.descriptions.map(item => item.market_hash_name);
-            CacheStorage.set("inventory_6", inventory);
+            inventory = (await self.getInventory(6)).descriptions.map(item => item.market_hash_name);
+            IndexedDB.putCached("inventories", inventory, 6);
         }
         return inventory;
     }
