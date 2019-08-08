@@ -817,7 +817,7 @@ let ProfileHomePageClass = (function(){
             </span>
             <div class="popup_block" id="profile_chat_dropdown" style="visibility: visible; top: 168px; left: 679px; display: none; opacity: 1;">
                 <div class="popup_body popup_menu shadow_content" style="box-shadow: 0 0 12px #000">
-                    <a class="popup_menu_item webchat" href="${href}">
+                    <a id="btnWebChat" class="popup_menu_item webchat">
                         <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">
                         &nbsp; ${Localization.str.web_browser_chat}
                     </a>
@@ -828,6 +828,7 @@ let ProfileHomePageClass = (function(){
                 </div>
             </div>`);
         sendButton.remove();
+        document.getElementById("btnWebChat").href = href.replace("OpenFriendChat", "OpenFriendChatInWebChat"); // Workaround: 'onclick' and js-href gets removed when inserting HTML
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
