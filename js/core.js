@@ -1,5 +1,6 @@
 const Info = {
     'version': "1.2.1",
+    'db_version': 1,
 };
 
 /**

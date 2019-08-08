@@ -41,6 +41,57 @@ class CacheStorage {
     }
 }
 
+class IndexedDB {
+    _promise = null;
+    static init() {
+        if (!this._promise) {
+            this._promise = new Promise((resolve, reject) => {
+                let request = indexedDB.open("Augmented Steam", Info.db_version);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    this.db = request.result;
+                    this.db.onerror = event => console.error("Database error:", event.target.errorCode);
+                    resolve();
+                }
+                request.onupgradeneeded = event => {
+                    let db = request.result;
+                    let oldVersion = event.oldVersion;
+                    if (oldVersion < 1) {
+                        db.createObjectStore("inventories", { keyPath: "id" });
+                        db.createObjectStore("packages", { keyPath: "id" });
+                        db.createObjectStore("earlyAccessAppids");
+                        db.createObjectStore("apps", { keyPath: "id" });
+                        db.createObjectStore("purchases", { keyPath: "name" });
+                        db.createObjectStore("profiles", { keyPath: "id" });
+                        db.createObjectStore("rates", { keyPath: "currency" });
+                        db.createObjectStore("dynamicStore");
+                        db.createObjectStore("notes", { keyPath: "id" });
+                        db.createObjectStore("itadWishlist", { keyPath: "id" });
+                        db.createObjectStore("itadCollection", { keyPath: "id" });
+                    }
+                }
+            });
+        }
+        return this._promise;
+    }
+
+    static addData(objectStoreName, data) {
+        return new Promise((resolve, reject) => {
+            this.init().then(() => {
+                let transaction = this.db.transaction(objectStoreName, "readwrite");
+                transaction.oncomplete = () => resolve();
+                transaction.onerror = () => reject(transaction.error);
+    
+                let objectStore = transaction.objectStore(objectStoreName);
+                if (typeof data === Array) {
+                    data.forEach(value => objectStore.add(value));
+                } else {
+                    objectStore.add(data);
+                }
+            });
+        });
+    }
+}
 
 class Api {
     // FF doesn't support static members

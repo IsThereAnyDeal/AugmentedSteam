@@ -1362,7 +1362,7 @@ let Inventory = (function(){
     let coupon_appids = new Map();
 
     let _promise = null;
-    self.promise = async function() {
+    self.promise = function() {
         if (_promise) { return _promise; }
 
         if (!User.isSignedIn) {
