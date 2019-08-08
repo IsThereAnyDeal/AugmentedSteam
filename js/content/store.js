@@ -2996,11 +2996,23 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        this.addStatsArea();
-        this.addExportWishlistButton();
         this.addEmptyWishlistButton();
-        this.addUserNotesHandlers();
-        this.addRemoveHandler();
+
+        ExtensionLayer.runInPageContext(`function() {
+            let old = g_Wishlist.LoadSettings;
+            g_Wishlist.LoadSettings = function(arguments) {
+                let ret = old.apply(this, arguments);
+                Messenger.postMessage("wishlistLoaded");        
+                return ret;
+            };
+        }`);
+
+        Messenger.addMessageListener("wishlistLoaded", () => {
+            this.addStatsArea();
+            this.addExportWishlistButton();
+            this.addUserNotesHandlers();
+            this.addRemoveHandler();
+        }, true);
     }
 
     function isMyWishlist() {
@@ -3268,7 +3280,7 @@ let WishlistPageClass = (function(){
         HTML.beforeEnd("div.wishlist_header", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
 
         let that = this;
-        document.querySelector("#es_export_wishlist").addEventListener("click", function(e) {
+        document.querySelector("#es_export_wishlist").addEventListener("click", function() {
             that.showModalDialog();
         });
     };
