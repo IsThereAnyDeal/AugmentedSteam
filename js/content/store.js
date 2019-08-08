@@ -2933,16 +2933,8 @@ let WishlistPageClass = (function(){
                                 <input type="radio" name="export_method" value="clipboard" id="clipboard"> <label for="clipboard"> ${Localization.str.export_clipboard}</label>
                             </td>
                         </tr>
-                        </table>
+                    </table>
                     </form>
-                    <div style="float: right">
-                        <div class="es_export_modal_submit btn_green_white_innerfade btn_medium">
-                            <span>${Localization.str.save}</span>
-                        </div>
-                        <div class="es_export_modal_close btn_grey_white_innerfade btn_medium">
-                            <span>${Localization.str.cancel}</span>
-                        </div>
-                    </div>
                 </div>
             </div>`;
 
@@ -3131,7 +3123,6 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!isMyWishlist()) { return; }
-        if (!SyncedStorage.get("showemptywishlist")) { return; }
 
         HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
 
@@ -3178,126 +3169,102 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.showModalDialog = function() {
-        // Partly copied from shared_global.js
         ExtensionLayer.runInPageContext(`function() {
-            let deferred = new jQuery.Deferred();
-            let fnOK = () => deferred.resolve();
-
-            let Modal = _BuildDialog(
+            let options = {};
+            let Modal = ShowConfirmDialog(
                 "${Localization.str.export_wishlist}",
                 \`${this.exportModalTemplate}\`,
-                [], fnOK);
-            deferred.always(() => Modal.Dismiss());
-
-            Modal.m_fnBackgroundClick = () => Modal.Dismiss();
-            Modal.Show();
+                "${Localization.str.save}",
+                "${Localization.str.cancel}");
 
             $J("#es_export_modal input[placeholder]").each(function() {
                 $J(this).attr('size', $J(this).attr('placeholder').length);
             });
 
-            // attach the deferred's events to the modal
-            deferred.promise(Modal);
+            $J('#es_export_form').change(function() {
+                $J("#es_export_form").serializeArray().forEach((item) => options[item.name] = item.value);
+            });
+
+            Modal.done(function() {
+                let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options };
+                Messenger.postMessage("exportWishlist", data);
+            });
         }`);
 
-        document.addEventListener("click", clickListener);
+        Messenger.addMessageListener("exportWishlist", (data) => {
+            let { rgAllApps, g_rgAppInfo, options } = data || {};
+            if (!rgAllApps || !g_rgAppInfo || !options) { return; }
 
-        function clickListener(e) {
-            if (e.target.closest(".es_export_modal_submit")) {
-                e.preventDefault();
-                exportWishlist();
-                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
-            } else if (e.target.closest(".es_export_modal_close")) {
-                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
-            } else {
+            let toexport, filename;
+            let notes = SyncedStorage.get("user_notes") || {};
+            let json = rgAllApps.map(appid => {
+                let appinfo = g_rgAppInfo[appid];
+                appinfo.appid = appid;
+                if (notes[appid]) {
+                    appinfo.note = notes[appid];
+                }
+                return appinfo;
+            });
+
+            if (options.export_type === "JSON") {
+                filename = "wishlist_export.json";
+                toexport = JSON.stringify(json, null, 4);
+                doExport(options.export_method, toexport, filename);
                 return;
             }
-            document.removeEventListener("click", clickListener);
+
+            let props = [];
+            let seps = [];
+            for (let key in options) {
+                if (key.includes("prop")) {
+                    props[+key.replace("prop", "")] = options[key];
+                }
+                if (key.includes("sep")) {
+                    seps[+key.replace("sep", "")] = options[key];
+                }
+            }
+
+            filename = "wishlist_export.txt";
+            toexport = json.map(app => {
+                let line = "";
+                for (let i = 0; i <= props.length; i++) {
+                    if (props[i]) {
+                        line += app[props[i]];
+                    }
+                    if (seps[i]) {
+                        line += seps[i];
+                    }
+                }
+                return line;
+            }).join("\n");
+            doExport(options.export_method, toexport, filename);
+        }, true);
+
+        function doExport(method, content, filename) {
+            switch (method) {
+                case "clipboard":
+                    setClipboard(content)
+                    break;
+                case "download":
+                    Background.action('download', { content, filename });
+                    break;
+                default:
+                    break;
+            }
         }
 
-        function exportWishlist() {
-            ExtensionLayer.runInPageContext(`function(){
-                let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options: {} };
-                $J("#es_export_form").serializeArray().forEach((item) => data.options[item.name] = item.value);
-                Messenger.postMessage("exportWishlist", JSON.stringify(data));
-            }`);
-            
-            Messenger.addMessageListener("exportWishlist", (data) => {
-                if (!data) { return; }
-                let { rgAllApps, g_rgAppInfo, options } = JSON.parse(data);
-                if (!rgAllApps || !g_rgAppInfo || !options) { return; }
-
-                let toexport;
-                let notes = SyncedStorage.get("user_notes") || {};
-                let json = rgAllApps.map(appid => {
-                    let appinfo = g_rgAppInfo[appid];
-                    appinfo.appid = appid;
-                    if (notes[appid]) {
-                        appinfo.note = notes[appid];
-                    }
-                    return appinfo;
-                });
-
-                if (options.export_type === "JSON") {
-                    toexport = JSON.stringify(json, null, 4);
-                    doExport(options.export_method, toexport);
-                    return;
-                }
-
-                let props = [];
-                let seps = [];
-                for (let key in options) {
-                    if (key.includes("prop")) {
-                        props[+key.replace("prop", "")] = options[key];
-                    }
-                    if (key.includes("sep")) {
-                        seps[+key.replace("sep", "")] = options[key];
-                    }
-                }
-
-                toexport = json.map(app => {
-                    let line = "";
-                    for (let i = 0; i <= props.length; i++) {
-                        if (props[i]) {
-                            line += app[props[i]];
-                        }
-                        if (seps[i]) {
-                            line += seps[i];
-                        }
-                    }
-                    return line;
-                }).join("\n");
-                doExport(options.export_method, toexport);
-            }, true);
-
-            function doExport(method, content) {
-                switch (method) {
-                    case "clipboard":
-                        setClipboard(content)
-                        break;
-                    case "download":
-                        Background.action('download', { content, filename: "wishlist_export.txt" });
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            function setClipboard(content) {
-                // Based on https://stackoverflow.com/a/12693636
-                document.oncopy = function(event) {
-                    event.clipboardData.setData("Text", content);
-                    event.preventDefault();
-                };
-                document.execCommand("Copy");
-                document.oncopy = undefined;
-            }
+        function setClipboard(content) {
+            // Based on https://stackoverflow.com/a/12693636
+            document.oncopy = function(event) {
+                event.clipboardData.setData("Text", content);
+                event.preventDefault();
+            };
+            document.execCommand("Copy");
+            document.oncopy = undefined;
         }
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        if (!SyncedStorage.get("showexportwishlist")) { return; }
-
         HTML.beforeEnd("div.wishlist_header", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
 
         let that = this;
@@ -3461,7 +3428,7 @@ let UserNotes = (function(){
                 if (e.key === "Enter") {
                     $J(".es_note_modal_submit").click();
                 } else if (e.key === "Escape") {
-                    M   odal.Dismiss();
+                    Modal.Dismiss();
                 }
             });
         }`);

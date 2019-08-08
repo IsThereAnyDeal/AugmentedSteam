@@ -182,7 +182,7 @@
     "export_wishlist": "Verlanglijst exporteren",
     "export_text": "Tekst",
     "export_JSON": "JSON",
-    "export_download": "Download .txt",
+    "export_download": "Download bestand",
     "export_clipboard": "Kopieer naar klembord",
     "export_props": {
         "name": "Titel",

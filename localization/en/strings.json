@@ -195,7 +195,7 @@
     "export_wishlist": "Export wishlist",
     "export_text": "Text",
     "export_JSON": "JSON",
-    "export_download": "Download .txt",
+    "export_download": "Download file",
     "export_clipboard": "Copy to clipboard",
     "export_props": {
         "name": "Title",

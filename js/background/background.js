@@ -676,14 +676,22 @@ Steam._supportedCurrencies = null;
 
 class Downloader {
     static download(message) {
-        let options = message.params;
-        if (!options.url) {
-            var blob = new Blob([ options.content ], {type : "text/plain;charset=UTF-8"});
-            options.url = URL.createObjectURL(blob);
-        }
-        chrome.downloads.download({
-            url: options.url,
-            filename: options.filename
+        chrome.permissions.request({
+            permissions: ["downloads"]
+        }, function(granted) {
+            if (!granted) {
+                return;
+            }
+
+            let options = message.params;
+            if (!options.url) {
+                var blob = new Blob([ options.content ], {type : "text/plain;charset=UTF-8"});
+                options.url = URL.createObjectURL(blob);
+            }
+            chrome.downloads.download({
+                url: options.url,
+                filename: options.filename
+            });
         });
     }
 }

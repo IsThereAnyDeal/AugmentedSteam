@@ -14,11 +14,13 @@
     "open_in_tab": true
   },
   "permissions": [
-    "downloads",
     "storage",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
+  ],
+  "optional_permissions": [
+    "downloads"
   ],
   "web_accessible_resources": [
     "img/*.png",
