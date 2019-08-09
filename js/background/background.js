@@ -422,7 +422,7 @@ class SteamCommunity extends Api {
             if (result && result.success) {
                 if (!data) data = { "assets": [], "descriptions": [] };
                 if (result.assets) data.assets = data.assets.concat(result.assets);
-                if (result.descriptions) data.descriptions = data.descriptions.concat();
+                if (result.descriptions) data.descriptions = data.descriptions.concat(result.descriptions);
             }
             last_assetid = result.last_assetid;
         } while (result.more_items);
