@@ -2743,6 +2743,9 @@ let FriendsPageClass = (function(){
     };
 
     FriendsPageClass.prototype.addPoster = function() {
+        let manage = document.querySelectorAll("#manage_friends");
+        if (manage.length === 0) { return; }
+
         let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
                 <div class="commentthread_entry_quotebox">
                     <textarea rows="3" class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}" style="overflow: hidden; height: 20px;"></textarea>
