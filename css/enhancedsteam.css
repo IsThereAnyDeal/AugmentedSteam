@@ -393,6 +393,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	color: white;
 }
 
+.emoticon_popup_ctn {
+	z-index: 999;
+}
+
 .es_friends_sort_link {
 	text-decoration: underline;
 	cursor: pointer;

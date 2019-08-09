@@ -2668,6 +2668,7 @@ let FriendsPageClass = (function(){
 
     function FriendsPageClass() {
         this.addSort();
+        this.addPoster();
     }
 
     FriendsPageClass.prototype.addSort = async function() {
@@ -2739,6 +2740,65 @@ let FriendsPageClass = (function(){
         });
 
         sortFriends(SyncedStorage.get("sortfriendsby"));
+    };
+
+    FriendsPageClass.prototype.addPoster = function() {
+        let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
+                <div class="commentthread_entry_quotebox">
+                    <textarea rows="3" class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}" style="overflow: hidden; height: 20px;"></textarea>
+                </div>
+                <div class="commentthread_entry_submitlink">
+                    <a class="btn_grey_black btn_small_thin" id="FormattingHelpPopup">
+                        <span>Formatting help</span>
+                    </a>
+                    <span class="emoticon_container">
+                        <span class="emoticon_button small" id="emoticonbtn">
+                        </span>
+                    </span>
+                    <span class="btn_green_white_innerfade btn_small" id="comment_submit">
+                        <span>${Localization.str.friends_commenter}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="row" id="log">
+                <span id="log_head"></span>
+                <span id="log_body"></span>
+            </div>`
+
+        HTML.beforeBegin("#manage_friends > div:nth-child(3)", commentArea);
+        ExtensionLayer.runInPageContext(`function() {
+            let delay = 7000;
+            ToggleManageFriends();
+            new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
+            $J("#comment_submit").click(() => {
+                const total = $J(".selected").length;
+                const msg = $J("#comment_textarea").val();
+                if (total === 0 || msg.length === 0) {
+                    ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_warning}");
+                    return;
+                }
+            
+                $J("#log_head, #log_body").html("");
+                $J(".selected").each((i, elem) => {
+                    let profileID = $J(elem).data("steamid");
+                    let profileName = $J(elem).data("search").split(" ; ")[0];
+                    setTimeout(() => $J.post("//steamcommunity.com/comment/Profile/post/" + profileID + "/-1/", {
+                            comment: msg,
+                            count: 6,
+                            sessionid: g_sessionID
+                        })
+                        .done(response => {
+                            $J("#log_body").get(0).innerHTML += "<br>" + (response.success === false ? response.error : "${Localization.str.posted_at_success} <a href='https://steamcommunity.com/profiles/" + profileID + "/allcomments/'>" + profileName + "</a>.");
+                            $J(".friend_block_v2[data-steamid=" + profileID + "]").removeClass("selected").find(".select_friend_checkbox").prop("checked", false);
+                            UpdateSelection();
+                        })
+                        .fail(() => $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail} <a href='http://steamcommunity.com/profiles/" + profileID + "/'>" + profileName + "</a>.")
+                        .always(() => $J("#log_head").html("<br><b>Processed " + (i + 1) + " out of " + total + (total.length === 1 ? "${Localization.str.friend}" : "${Localization.str.friends}") + ".<b>")), delay * i);
+                });
+            });
+        }`);
+
+        document.querySelector("#FormattingHelpPopup").href = "javascript:CCommentThread.FormattingHelpPopup('Profile')";
     };
 
     return FriendsPageClass;
