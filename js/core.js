@@ -271,6 +271,12 @@ class GameId {
         return m && GameId.parseId(m[2]);
     }
     
+    static getAppidUriQuery(text) {
+        if (!text) { return null; }
+        let m = text.match(/appid=(\d+)/);
+        return m && GameId.parseId(m[1]);
+    }
+    
     static getAppids(text) {
         let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
         let res = [];
