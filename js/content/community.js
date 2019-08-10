@@ -3527,7 +3527,7 @@ let WorkshopBrowseClass = (function(){
                     formData.append("appid", appid);
                     formData.append("id", id);
 
-                    RequestData.post("//steamcommunity.com/sharedfiles/" + info.method, formData, {
+                    RequestData.post("https://steamcommunity.com/sharedfiles/" + info.method, formData, {
                         withCredentials: true
                     }).then(function() {
                         updateWaitDialog();
