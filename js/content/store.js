@@ -2366,7 +2366,7 @@ let SearchPageClass = (function(){
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_results.error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_results.error_retry + "</a></div>");
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search.error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_results.error_retry + "</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
