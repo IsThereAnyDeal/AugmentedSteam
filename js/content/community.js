@@ -356,6 +356,11 @@ let ProfileHomePageClass = (function(){
                 "name": "SteamTrades",
             },
             {
+                "id": "bartervg",
+                "link": `//barter.vg/steam/${steamId}`,
+                "name": "Barter.vg",
+            },
+            {
                 "id": "astats",
                 "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",

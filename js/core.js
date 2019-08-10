@@ -573,6 +573,7 @@ SyncedStorage.defaults = {
     'profile_steamrepcn': true,
     'profile_steamgifts': true,
     'profile_steamtrades': true,
+    'profile_bartervg': true,
     'profile_steamrep': true,
     'profile_steamdbcalc': true,
     'profile_astats': true,
