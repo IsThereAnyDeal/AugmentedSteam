@@ -1487,7 +1487,7 @@ class AppPageClass extends StorePageClass {
 
             HTML.afterBegin(".game_purchase_action",
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
-                 <button class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
+                 <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
         }
     }
