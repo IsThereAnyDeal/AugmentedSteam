@@ -1487,7 +1487,7 @@ class AppPageClass extends StorePageClass {
 
             HTML.afterBegin(".game_purchase_action",
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
-                 <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
+                 <button class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
         }
     }
@@ -2300,6 +2300,7 @@ let SearchPageClass = (function(){
         this.endlessScrolling();
         this.addExcludeTagsToSearch();
         this.addHideButtonsToSearch().then(() => this.observeChanges());
+        this.addSearchResultActions();
     }
 
     let processing = false;
@@ -2365,7 +2366,7 @@ let SearchPageClass = (function(){
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
+                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_results.error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_results.error_retry + "</a></div>");
 
             document.querySelector("es_retry").addEventListener("click", function(e) {
                 processing = false;
@@ -2881,6 +2882,70 @@ let SearchPageClass = (function(){
             Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
             filtersChanged();
         }, false);
+    };
+
+    SearchPageClass.prototype.addSearchResultActions = function() {
+        let buttonsHtml = `
+            <div id="es_search_result_actions" class="block">
+                <div class="block_header">
+                    <div>${Localization.str.search_results.actions}</div>
+                </div>
+                <div class="block_content block_content_inner">
+                    <button class="btnv6_blue_hoverfade btn_medium es_search_action" style="width:100%;text-align:center;margin-bottom:3px;" data-url="/api/addtowishlist">
+                        <span>${Localization.str.search_results.wishlist_add}</span>
+                    </button>
+                    <button class="btnv6_blue_hoverfade btn_medium es_search_action" style="width:100%;text-align:center;margin-bottom:3px;" data-url="/api/removefromwishlist">
+                        <span>${Localization.str.search_results.wishlist_remove}</span>
+                    </button>
+                    <hr class="block_content" style="margin-bottom:3px;">
+                    <button class="btnv6_blue_hoverfade btn_medium es_search_action" style="width:100%;text-align:center;margin-bottom:3px;" data-url="/explore/followgame/">
+                        <span>${Localization.str.search_results.follow}</span>
+                    </button>
+                    <button class="btnv6_blue_hoverfade btn_medium es_search_action" style="width:100%;text-align:center;margin-bottom:3px;" data-url="/explore/followgame/" data-form='{"unfollow":1}'>
+                        <span>${Localization.str.search_results.unfollow}</span>
+                    </button>
+                    <hr class="block_content" style="margin-bottom:3px;">
+                    <button class="btnv6_blue_hoverfade btn_medium es_search_action" style="width:100%;text-align:center;margin-bottom:3px;" data-url="/recommended/ignorerecommendation/">
+                        <span>${Localization.str.search_results.ignore}</span>
+                    </button>
+                    <button class="btnv6_blue_hoverfade btn_medium es_search_action" style="width:100%;text-align:center;margin-bottom:3px;" data-url="/recommended/ignorerecommendation/" data-form='{"remove":1}'>
+                        <span>${Localization.str.search_results.unignore}</span>
+                    </button>
+                </div>
+            </div>`;
+
+        HTML.beforeBegin("#additional_search_options > .block", buttonsHtml);
+        ExtensionLayer.runInPageContext(`function() {
+            $J("button.es_search_action").on("click", function(event) {
+                let appids = $J(".search_result_row[data-ds-appid]:not(:hidden)").get().map(e => parseInt($J(e).data("ds-appid")));
+                let n = appids.length;
+                let btn = $J(event.target).closest("button.es_search_action");
+                let text = btn.text();
+                let prompt = ShowConfirmDialog(text, "${Localization.str.search_results.confirm}".replace("__n__", n));
+                prompt.done(function(result) {
+                    if (result !== "OK") {
+                        return;
+                    }
+
+                    let wait = ShowBlockingWaitDialog(text, "${Localization.str.loading} " + (appids.length - n) + "/" + appids.length);
+                    let url = btn.data("url");
+                    let formData = btn.data("form") || {};
+                    formData.sessionid = g_sessionID;
+                    appids.forEach(function(appid) {
+                        formData.appid = appid;
+                        $J.post(url, formData).always(function() {
+                            n--;
+                            wait.Dismiss();
+                            wait = ShowBlockingWaitDialog(text, "${Localization.str.loading} " + (appids.length - n) + "/" + appids.length);
+                            if (n === 0) {
+                                wait.Dismiss();
+                                ShowAlertDialog(text, "${Localization.str.search_results.success}");
+                            }
+                        });
+                    });
+                });
+            });
+        }`);
     };
 
     return SearchPageClass;

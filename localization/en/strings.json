@@ -1,4 +1,15 @@
 {
+    "search_results": {
+        "confirm": "Are you sure you want to perform this action on all __n__ products?",
+        "actions": "Actions for displayed search results",
+        "wishlist_add": "Add to your wishlist",
+        "wishlist_remove": "Remove from your wishlist",
+        "follow": "Follow",
+        "unfollow": "Unfollow",
+        "ignore": "Ignore",
+        "unignore": "Unignore",
+        "success": "Successfully completed this action!"
+    },
     "post_history": "View post history",
     "add_nickname": "Add Nickname",
     "total_size": "Total Size",

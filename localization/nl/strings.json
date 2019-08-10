@@ -1,4 +1,15 @@
 {
+    "search_results": {
+        "confirm": "Weet u zeker dat u deze actie wilt toepassen op alle __n__ producten?",
+        "actions": "Acties voor weergegeven zoekresultaten",
+        "wishlist_add": "Voeg aan verlanglijstje toe",
+        "wishlist_remove": "Verwijder van verlanglijstje",
+        "follow": "Volgen",
+        "unfollow": "Ontvolgen",
+        "ignore": "Negeren",
+        "unignore": "Negeren stoppen",
+        "success": "Deze actie is succcesvol voltooid!"
+    },
     "post_history": "Bekijk post geschiedenis",
     "add_nickname": "Bijnaam toevoegen",
     "total_size": "Totale grote",
