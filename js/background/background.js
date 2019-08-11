@@ -564,20 +564,14 @@ class SteamStore extends Api {
             purchases[appName] = node.textContent;
         }
 
-        CacheStorage.set(`purchases_${lang}`, purchases);
+        IndexedDB.putCached("purchases", purchases, lang);
         return purchases;
     }
-    static purchase(appName, lang) {
+    static async purchaseDate(appName, lang) {
         let key = `purchases_${lang}`;
-
         appName = HTMLParser.clearSpecialSymbols(appName);
-        let purchases = CacheStorage.get(key, 5 * 60);
+        let purchases = await IndexedDB.get("purchases", lang, 24 * 60 * 60);
         if (purchases) return purchases[appName];
-
-        // Purchase Data is more than 5 minutes old
-        purchases = LocalStorage.get(`cache_${key}`);
-        if (purchases && purchases.data[appName]) return purchases.data[appName];
-        // ... and doesn't include the title
 
         // If a request is in flight, piggyback our response on that result
         if (SteamStore._progressingRequests.has(key)) {
@@ -585,8 +579,8 @@ class SteamStore extends Api {
         }
 
         // fetch updated Purchase Data
-        let promise = Steam._fetchPurchases(lang)
-            .then(function(purchases) {
+        let promise = SteamStore._fetchPurchases(lang)
+            .then(purchases => {
                 SteamStore._progressingRequests.delete(key);
                 return purchases;
             });
@@ -926,7 +920,7 @@ let actionCallbacks = new Map([
     ['appuserdetails', SteamStore.endpointFactory("api/appuserdetails/")],
     ['currency', SteamStore.currency],
     ['sessionid', SteamStore.sessionId],
-    ['purchase', SteamStore.purchase],
+    ['purchasedate', SteamStore.purchaseDate],
 
     ['login', SteamCommunity.login],
     ['logout', SteamCommunity.logout],

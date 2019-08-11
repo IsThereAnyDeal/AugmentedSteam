@@ -455,7 +455,7 @@ let User = (function(){
     };
 
     self.getPurchaseDate = function(lang, appName) {
-        return Background.action("purchase", appName, lang);
+        return Background.action("purchasedate", appName, lang);
     };
 
     return self;
