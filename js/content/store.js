@@ -1357,7 +1357,7 @@ class AppPageClass extends StorePageClass {
             if (suggest) { // FIXME consequence of the above FIXME
                 suggest.addEventListener("click", function(){
                     LocalStorage.remove("storePageData_" + this.appid);
-                    Background.action('storepagedata.expire', { 'appid': this.appid, });
+                    Background.action('storepagedata.expire', this.appid);
                 });
             }
         });
@@ -1785,9 +1785,9 @@ class AppPageClass extends StorePageClass {
 
         let appid = this.communityAppid;
 
-        Background.action('cards', { 'appid': appid, } )
+        Background.action('cards', appid)
             .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
-        Background.action('cards', { 'appid': appid, 'border': 1, } )
+        Background.action('cards', appid, true)
             .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
 
         function loadBadgeContent(targetSelector, result) {

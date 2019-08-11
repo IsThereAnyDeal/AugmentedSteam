@@ -141,10 +141,10 @@ class Background {
         });
     }
     
-    static action(requested, params) {
-        if (typeof params == 'undefined')
-            return Background.message({ 'action': requested, });
-        return Background.message({ 'action': requested, 'params': params, });
+    static action(requested, ...params) {
+        if (!params.length)
+            return Background.message({ "action": requested, });
+        return Background.message({ "action": requested, "params": params, });
     }
 }
 
@@ -394,12 +394,12 @@ let User = (function(){
 
         // If profilePath is not available, we're not logged in
         if (!self.profilePath) {
-            Background.action('logout');
+            Background.action("logout");
             _promise = Promise.resolve();
             return _promise;
         }
 
-        _promise = Background.action('login', { 'path': self.profilePath, })
+        _promise = Background.action("login", self.profilePath)
             .then(function (login) {
                 if (!login) return;
                 self.isSignedIn = true;
@@ -433,7 +433,7 @@ let User = (function(){
         return sessionId;
     };
 
-    self.getStoreSessionId = async function() {
+    self.getStoreSessionId = function() {
         return Background.action('sessionid');
     };
 
@@ -454,8 +454,8 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    self.getPurchaseDate = async function(lang, appName) {
-        return Background.action('purchase', { 'lang': lang, 'appName': appName, });
+    self.getPurchaseDate = function(lang, appName) {
+        return Background.action("purchase", appName, lang);
     };
 
     return self;
@@ -854,7 +854,7 @@ let Stats = (function() {
     let self = {};
 
     self.getAchievementBar = function(appid) {
-        return Background.action("stats", { "appid": appid }).then(response => {
+        return Background.action("stats", appid).then(response => {
             let dummy = HTMLParser.htmlToDOM(response);
             let achNode = dummy.querySelector("#topSummaryAchievements");
 

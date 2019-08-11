@@ -172,14 +172,15 @@ class IndexedDB {
         });
     }
 
-    static clear() {
+    static clear(objectStoreNames) {
         return new Promise((resolve, reject) => {
             IndexedDB.then(() => {
-                let transaction = IndexedDB.db.transaction(IndexedDB.cacheObjectStores, "readwrite");
+                let objectStores = objectStoreNames || IndexedDB.cacheObjectStores;
+                let transaction = IndexedDB.db.transaction(objectStores, "readwrite");
                 transaction.oncomplete = () => resolve();
                 transaction.onerror = event => reject(event.target.error);
 
-                IndexedDB.cacheObjectStores.forEach(objectStoreName => {
+                objectStores.forEach(objectStoreName => {
                     transaction.objectStore(objectStoreName).clear();
                 });
             });
@@ -244,7 +245,47 @@ class Api {
         if (!endpoint.endsWith('/'))
             endpoint += '/';
         return this._fetchWithDefaults(endpoint, query, { 'method': 'POST', }).then(response => response.json());
-    }    
+    }
+    static endpointFactory(endpoint) {
+        return async params => this.getEndpoint(endpoint, params).then(result => result.data);
+    }
+    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper) {
+        return async params => {
+            let key = keyMapper.map(params, false);
+            if (!key) {
+                throw new Error(`Can't cache '${endpoint}' with invalid key`);
+            }
+            let requestKey = keyMapper.map(params, true);
+            if (this._progressingRequests.has(requestKey)) {
+                return this._progressingRequests.get(requestKey);
+            }
+            let val = await IndexedDB.get(objectStore, key, ttl);
+            if (val) return val;
+            let req = this.getEndpoint(endpoint, params)
+                .then(result => {
+                    IndexedDB.putCached(objectStore, result.data, key);
+                    this._progressingRequests.delete(requestKey);
+                    return result;
+                });
+            this._progressingRequests.set(requestKey, req);
+            return req;
+        };
+    }
+
+    static clearEndpointCache(keyMapper, objectStore) {
+        return async params => {
+            let key = keyMapper.map(params, true);
+            if (!key) {
+                throw new Error(`Can't clear invalid key from cache`);
+            }
+            this._progressingRequests.delete(key);
+            return IndexedDB.delete(objectStore, keyMapper.map(params, false));
+        };
+    }
+
+    static clear() {
+        return IndexedDB.clear();
+    }
 }
 Api.params = {};
 
@@ -262,52 +303,7 @@ class AugmentedSteamApi extends Api {
                 }
                 delete json.result;
                 return json; // 'response': response, 
-            })
-        ;
-    }
-
-    static endpointFactory(endpoint) {
-        return async ({ 'params': params }) => AugmentedSteamApi.getEndpoint(endpoint, params).then(result => result.data);
-    }
-
-    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper) {
-        let self = AugmentedSteamApi;
-        return async function({ "params": params }) {
-            let key = keyMapper.map(params, false);
-            if (!key) {
-                throw new Error(`Can't cache '${endpoint}' with invalid key`);
-            }
-            let requestKey = keyMapper.map(params, true);
-            if (self._progressingRequests.has(requestKey)) {
-                return self._progressingRequests.get(requestKey);
-            }
-            let val = await IndexedDB.get(objectStore, key, ttl);
-            if (val) return val;
-            let req = self.getEndpoint(endpoint, params)
-                .then(result => {
-                    IndexedDB.putCached(objectStore, result.data, key);
-                    self._progressingRequests.delete(requestKey);
-                    return result;
-                });
-            self._progressingRequests.set(requestKey, req);
-            return req;
-        };
-    }
-
-    static clearEndpointCache(keyMapper, objectStore) {
-        let self = AugmentedSteamApi;
-        return async function({ 'params': params }) {
-            let key = keyMapper.map(params, true);
-            if (!key) {
-                throw new Error(`Can't clear invalid key from cache`);
-            }
-            self._progressingRequests.delete(key);
-            return IndexedDB.delete(objectStore, keyMapper.map(params, false));
-        };
-    }
-
-    static clear() {
-        return IndexedDB.clear();
+            });
     }
 
     static _earlyAccessAppIds() {
@@ -332,16 +328,12 @@ class AugmentedSteamApi extends Api {
         return self._earlyAccessAppIds_promise;
     }
 
-    static async earlyAccessAppIds() {
+    static earlyAccessAppIds() {
         return AugmentedSteamApi._earlyAccessAppIds();    
     }
 
-    static async dlcInfo({ 'params': params, }) {
-        return AugmentedSteamApi.getEndpoint("v01/dlcinfo", params).then(result => result.data);
-    }
-
-    static async expireStorePageData({ 'params': params, }) {
-        CacheStorage.remove(`app_${params.appid}`);
+    static expireStorePageData(appid) {
+        CacheStorage.remove(`app_${appid}`);
     }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
@@ -349,7 +341,7 @@ AugmentedSteamApi._progressingRequests = new Map();
 AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 class ITAD_Api extends Api{
-    static authorize({ params: hash }) {
+    static authorize(hash) {
         return new Promise(resolve => {
             browser.permissions.request({ permissions: ["identity"] }).then(granted => {
                 if (granted) {
@@ -402,18 +394,6 @@ class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
     // static params = { 'credentials': 'include', };
     // static _progressingRequests = new Map();
-    
-    static async appDetails({ 'params': params, }) {
-        return SteamStore.getEndpoint("/api/appdetails/", params);
-    }
-
-    static async appUserDetails({ 'params': params, }) {
-        return SteamStore.getEndpoint("/api/appuserdetails/", params);
-    }
-
-    static async packageDetails({ 'params': params, }) {
-        return SteamStore.getEndpoint("/api/packagedetails/", params);
-    }
 
     static async addCouponAppIds(coupons) {
         let package_queue = [];
@@ -461,7 +441,7 @@ class SteamStore extends Api {
         return coupons;
     }
     
-    static async wishlistAdd({ 'params': params, }) {
+    static async wishlistAdd(params) {
         return SteamStore.postEndpoint("/api/addtowishlist", params);
     }
 
@@ -554,18 +534,10 @@ class SteamStore extends Api {
         CacheStorage.set(`purchases_${lang}`, purchases);
         return purchases;
     }
-    static async purchase({ 'params': params, }) {
-        let self = SteamStore;
-        if (!params || !params.appName) {
-            throw new Error('Purchases endpoint expects an appName');
-        }
-        if (!params || !params.lang) {
-            throw new Error('Purchases endpoint requires language to be specified');
-        }
-        let lang = params.lang;
+    static purchase(appName, lang) {
         let key = `purchases_${lang}`;
 
-        let appName = HTMLParser.clearSpecialSymbols(params.appName);
+        appName = HTMLParser.clearSpecialSymbols(appName);
         let purchases = CacheStorage.get(key, 5 * 60);
         if (purchases) return purchases[appName];
 
@@ -575,17 +547,17 @@ class SteamStore extends Api {
         // ... and doesn't include the title
 
         // If a request is in flight, piggyback our response on that result
-        if (self._progressingRequests.has(key)) {
-            return self._progressingRequests.get(key).then(purchases => purchases[appName]);
+        if (SteamStore._progressingRequests.has(key)) {
+            return SteamStore._progressingRequests.get(key).then(purchases => purchases[appName]);
         }
 
         // fetch updated Purchase Data
-        let promise = self._fetchPurchases(lang)
+        let promise = Steam._fetchPurchases(lang)
             .then(function(purchases) {
-                self._progressingRequests.delete(key);
+                SteamStore._progressingRequests.delete(key);
                 return purchases;
             });
-        self._progressingRequests.set(key, promise);
+        SteamStore._progressingRequests.set(key, promise);
         return promise.then(purchases => purchases[appName]);
     }
 }
@@ -598,15 +570,15 @@ class SteamCommunity extends Api {
     // static origin = "https://steamcommunity.com/";
     // static params = { 'credentials': 'include', };
 
-    static cards({ 'params': params, }) {
-        return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined)).catch(() => {
-            throw new Error("Could not retrieve cards for appid " + params.appid);
+    static cards(appid, border) {
+        return SteamCommunity.getPage(`/my/gamecards/${appid}`, (border ? { 'border': 1, } : undefined)).catch(() => {
+            throw new Error("Could not retrieve cards for appid " + appid);
         });
     }
 
-    static stats({ 'params': params, }) {
-        return SteamCommunity.getPage(`/my/stats/${params.appid}`).catch(() => {
-            throw new Error("Could not retrieve stats for appid " + params.appid);
+    static stats(appid) {
+        return SteamCommunity.getPage(`/my/stats/${appid}`).catch(() => {
+            throw new Error("Could not retrieve stats for appid " + appid);
         });
     }
 
@@ -756,19 +728,19 @@ class SteamCommunity extends Api {
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
-    static async login({ 'params': params, }) {
+    static async login(path) {
         let self = SteamCommunity;
-        if (!params || !params.path) {
+        if (!path) {
             self.logout();
             throw new Error("Login endpoint needs profile url");
         }
-        let url = new URL(params.path, "https://steamcommunity.com/");
-        if (!params.path.startsWith('/id/') && !params.path.startsWith('/profiles/')) {
+        let url = new URL(path, "https://steamcommunity.com/");
+        if (!path.startsWith('/id/') && !path.startsWith('/profiles/')) {
             self.logout();
-            throw new Error(`Could not interpret '${params.path}' as a profile`);
+            throw new Error(`Could not interpret '${path}' as a profile`);
         }
         let login = LocalStorage.get('login');
-        if (login && login.profilePath === params.path) {
+        if (login && login.profilePath === path) {
             // Profile path from the currently loading page matches existing login information, return cached steamId
             return login;
         }
@@ -782,7 +754,7 @@ class SteamCommunity extends Api {
             return;
         }
 
-        let value = { 'steamId': steamId, 'profilePath': params.path, };
+        let value = { 'steamId': steamId, 'profilePath': path, };
         LocalStorage.set('login', value);
 
         // As this is a new login, also retrieve country information from store account page
@@ -791,7 +763,7 @@ class SteamCommunity extends Api {
     }
 
     static logout() {
-        LocalStorage.remove('login');
+        LocalStorage.remove("login");
     }
 
     static getPage(endpoint, query) {
@@ -842,27 +814,27 @@ class Steam {
     // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
     // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
 
-    static async ignored() {
+    static ignored() {
         return Steam._dynamicstore().then(userdata => Object.keys(userdata.rgIgnoredApps));
     }
-    static async owned() {
+    static owned() {
         return Steam._dynamicstore().then(userdata => userdata.rgOwnedApps);       
     }
-    static async wishlist() {
+    static wishlist() {
         return Steam._dynamicstore().then(userdata => userdata.rgWishlist);        
     }
-    static async dynamicStore() {
+    static dynamicStore() {
         // FIXME, reduce dependence on whole object
         return Steam._dynamicstore();
     }
-    static async clearDynamicStore() {
+    static clearDynamicStore() {
         CacheStorage.remove('dynamicstore');
         Steam._dynamicstore_promise = null;
     }
 
     static fetchCurrencies() {
         // https://partner.steamgames.com/doc/store/pricing/currencies
-        return ExtensionResources.getJSON('json/currency.json');
+        return ExtensionResources.getJSON("json/currency.json");
     }
     static async currencies() {
         let self = Steam;
@@ -903,7 +875,7 @@ let actionCallbacks = new Map([
     
     ['cache.clear', IndexedDB.clear],
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
-    ['dlcinfo', AugmentedSteamApi.dlcInfo],
+    ['dlcinfo', AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, "storePageData", storePageDataMapper)],
     ['storepagedata.expire', AugmentedSteamApi.expireStorePageData],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
@@ -917,8 +889,8 @@ let actionCallbacks = new Map([
     ['market.averagecardprice', AugmentedSteamApi.endpointFactory('v01/market/averagecardprice')], // FIXME deprecated
     ['market.averagecardprices', AugmentedSteamApi.endpointFactory('v01/market/averagecardprices')],
 
-    ['appdetails', SteamStore.appDetails],
-    ['appuserdetails', SteamStore.appUserDetails],
+    ['appdetails', SteamStore.endpointFactory("api/appdetails/")],
+    ['appuserdetails', SteamStore.endpointFactory("api/appuserdetails/")],
     ['currency', SteamStore.currency],
     ['sessionid', SteamStore.sessionId],
     ['purchase', SteamStore.purchase],
@@ -949,8 +921,9 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         throw new Error(`Did not recognize '${message.action}' as an action.`);
     }
 
+    message.params = message.params || [];
     try {
-        return await callback(message);
+        return await callback(...message.params);
     } catch(err) {
         console.error(err);
         throw err;
