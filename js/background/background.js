@@ -42,37 +42,27 @@ class CacheStorage {
 }
 
 class IndexedDB {
-    _promise = null;
     static init() {
-        if (!this._promise) {
-            this._promise = new Promise((resolve, reject) => {
+        if (!IndexedDB._promise) {
+            IndexedDB._promise = new Promise((resolve, reject) => {
                 let request = indexedDB.open("Augmented Steam", Info.db_version);
                 request.onerror = () => reject(request.error);
                 request.onsuccess = () => {
-                    this.db = request.result;
-                    this.db.onerror = event => console.error("Database error:", event.target.errorCode);
+                    IndexedDB.db = request.result;
+                    IndexedDB.db.onerror = event => console.error("Database error:", event.target.errorCode);
                     resolve();
                 }
                 request.onupgradeneeded = event => {
                     let db = request.result;
                     let oldVersion = event.oldVersion;
                     if (oldVersion < 1) {
-                        db.createObjectStore("inventories");
-                        db.createObjectStore("packages");
-                        db.createObjectStore("earlyAccessAppids");
-                        db.createObjectStore("apps", { keyPath: "id" });
-                        db.createObjectStore("purchases", { keyPath: "name" });
-                        db.createObjectStore("profiles", { keyPath: "id" });
-                        db.createObjectStore("rates", { keyPath: "currency" });
-                        db.createObjectStore("dynamicStore");
-                        db.createObjectStore("notes", { keyPath: "id" });
-                        db.createObjectStore("itadWishlist", { keyPath: "id" });
-                        db.createObjectStore("itadCollection", { keyPath: "id" });
+                        IndexedDB.cacheObjectStores.forEach(objectStore => db.createObjectStore(objectStore));
+                        db.createObjectStore("notes");
                     }
                 }
             });
         }
-        return this._promise;
+        return IndexedDB._promise;
     }
     static then(onDone, onCatch) {
         return IndexedDB.init().then(onDone, onCatch);
@@ -163,6 +153,39 @@ class IndexedDB {
         });
     }
 
+    static delete(objectStoreName, keys) {
+        return new Promise((resolve, reject) => {
+            IndexedDB.then(() => {
+                let multipleKeys = Array.isArray(keys);
+
+                let transaction = IndexedDB.db.transaction(objectStoreName);
+                transaction.oncomplete = () => resolve();
+                transaction.onerror = event => reject(event.target.error);
+
+                let objectStore = transaction.objectStore(objectStoreName);
+                if (multipleKeys) {
+                    keys.forEach(key => objectStore.delete(key));
+                } else {
+                    objectStore.delete(keys);
+                }
+            });
+        });
+    }
+
+    static clear() {
+        return new Promise((resolve, reject) => {
+            IndexedDB.then(() => {
+                let transaction = IndexedDB.db.transaction(IndexedDB.cacheObjectStores, "readwrite");
+                transaction.oncomplete = () => resolve();
+                transaction.onerror = event => reject(event.target.error);
+
+                IndexedDB.cacheObjectStores.forEach(objectStoreName => {
+                    transaction.objectStore(objectStoreName).clear();
+                });
+            });
+        });
+    }
+
     static expiryCheck(result, ttl) {
         if (!result) return null;
         if (!ttl) return result;
@@ -174,6 +197,19 @@ class IndexedDB {
     static timestamp() { return Math.trunc(Date.now() / 1000); }
     
 }
+IndexedDB._promise = null;
+IndexedDB.cacheObjectStores = [
+    "inventories",
+    "packages",
+    "earlyAccessAppids",
+    "purchases",
+    "storePageData",
+    "profiles",
+    "rates",
+    "dynamicStore",
+    "itadWishlist",
+    "itadCollection",
+];
 
 class Api {
     // FF doesn't support static members
@@ -234,51 +270,44 @@ class AugmentedSteamApi extends Api {
         return async ({ 'params': params }) => AugmentedSteamApi.getEndpoint(endpoint, params).then(result => result.data);
     }
 
-    static endpointFactoryCached(endpoint, ttl, keyfn) {
+    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper) {
         let self = AugmentedSteamApi;
-        return async function({ 'params': params }) {
-            let key = keyfn;
-            if (typeof keyfn == 'function') {
-                key = keyfn(params);
+        return async function({ "params": params }) {
+            let key = keyMapper.map(params, false);
+            if (!key) {
+                throw new Error(`Can't cache '${endpoint}' with invalid key`);
             }
-            if (typeof key == 'undefined') {
-                throw new Error(`Can't cache '${endpoint}' with undefined key`);
+            let requestKey = keyMapper.map(params, true);
+            if (self._progressingRequests.has(requestKey)) {
+                return self._progressingRequests.get(requestKey);
             }
-            if (self._progressingRequests.has(key)) {
-                return self._progressingRequests.get(key);
-            }
-            let val = CacheStorage.get(key, ttl);
-            if (typeof val !== 'undefined') {
-                return val;
-            }
+            let val = await IndexedDB.get(objectStore, key, ttl);
+            if (val) return val;
             let req = self.getEndpoint(endpoint, params)
-                .then(function(result) {
-                    CacheStorage.set(key, result.data);
-                    self._progressingRequests.delete(key);
-                    return result.data;
+                .then(result => {
+                    IndexedDB.putCached(objectStore, result.data, key);
+                    self._progressingRequests.delete(requestKey);
+                    return result;
                 });
-                self._progressingRequests.set(key, req);
+            self._progressingRequests.set(requestKey, req);
             return req;
         };
     }
 
-    static clearEndpointCache(keyfn) {
+    static clearEndpointCache(keyMapper, objectStore) {
         let self = AugmentedSteamApi;
         return async function({ 'params': params }) {
-            let key = keyfn;
-            if (typeof keyfn == 'function') {
-                key = keyfn(params);
-            }
-            if (typeof key == 'undefined') {
-                throw new Error(`Can't clear undefined key from cache`);
+            let key = keyMapper.map(params, true);
+            if (!key) {
+                throw new Error(`Can't clear invalid key from cache`);
             }
             self._progressingRequests.delete(key);
-            CacheStorage.remove(key);
+            return IndexedDB.delete(objectStore, keyMapper.map(params, false));
         };
     }
 
     static clear() {
-        CacheStorage.clear();
+        return IndexedDB.clear();
     }
 
     static _earlyAccessAppIds() {
@@ -846,10 +875,22 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
+class KeyMapper {
+    constructor(keyPath, prefix) {
+        this.keyPath = keyPath;
+        this.prefix = prefix;
+    }
 
-let profileCacheKey = (params => `profile_${params.profile}`);
-let appCacheKey = (params => `app_${params.appid}`);
-let ratesCacheKey = (params => `rates_${params.to}`);
+    map(params, withPrefix) {
+        let key = '';
+        if (withPrefix) key = this.prefix;
+        return key += params[this.keyPath];
+    }
+}
+
+let storePageDataMapper = new KeyMapper("appid", "app_");
+let ratesMapper = new KeyMapper("to", "rates_");
+let profilesMapper = new KeyMapper("profile", "profile_");
 
 let actionCallbacks = new Map([
     ['ignored', Steam.ignored],
@@ -860,15 +901,15 @@ let actionCallbacks = new Map([
     ['dynamicstore.clear', Steam.clearDynamicStore],
     ['steam.currencies', Steam.currencies],
     
-    ['api.cache.clear', AugmentedSteamApi.clear],
+    ['cache.clear', IndexedDB.clear],
     ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
     ['dlcinfo', AugmentedSteamApi.dlcInfo],
-    ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, appCacheKey)],
+    ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, "storePageData", storePageDataMapper)],
     ['storepagedata.expire', AugmentedSteamApi.expireStorePageData],
     ['prices', AugmentedSteamApi.endpointFactory('v01/prices')],
-    ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 60*60, ratesCacheKey)],
-    ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, profileCacheKey)],
-    ['profile.clear', AugmentedSteamApi.clearEndpointCache(profileCacheKey)],
+    ['rates', AugmentedSteamApi.endpointFactoryCached('v01/rates', 60*60, "rates", ratesMapper)],
+    ['profile', AugmentedSteamApi.endpointFactoryCached('v01/profile/profile', 24*60*60, "profiles", profilesMapper)],
+    ['profile.clear', AugmentedSteamApi.clearEndpointCache(profilesMapper, "profiles")],
     ['profile.background', AugmentedSteamApi.endpointFactory('v01/profile/background/background')],
     ['profile.background.games', AugmentedSteamApi.endpointFactory('v01/profile/background/games')],
     ['twitch.stream', AugmentedSteamApi.endpointFactory('v01/twitch/stream')],
