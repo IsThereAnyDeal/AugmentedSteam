@@ -96,8 +96,6 @@ class IndexedDB {
                     results = {};
                 } else if (multipleKeys) {
                     results = [];
-                } else {
-                    results = null;
                 }
 
                 let transaction = IndexedDB.db.transaction(objectStoreName);
@@ -129,7 +127,7 @@ class IndexedDB {
     static getAll(objectStoreName, ttl, withKey = false) {
         return new Promise((resolve, reject) => {
             IndexedDB.then(() => {
-                let results = withKey ? {} : [];
+                let results = withKey ? {} : null;
 
                 let transaction = IndexedDB.db.transaction(objectStoreName);
                 transaction.oncomplete = () => resolve(results);
@@ -158,7 +156,7 @@ class IndexedDB {
             IndexedDB.then(() => {
                 let multipleKeys = Array.isArray(keys);
 
-                let transaction = IndexedDB.db.transaction(objectStoreName);
+                let transaction = IndexedDB.db.transaction(objectStoreName, "readwrite");
                 transaction.oncomplete = () => resolve();
                 transaction.onerror = event => reject(event.target.error);
 
@@ -184,6 +182,41 @@ class IndexedDB {
                     transaction.objectStore(objectStoreName).clear();
                 });
             });
+        });
+    }
+
+    static contains(objectStoreName, keys) {
+        return new Promise((resolve, reject) => {
+            let multipleKeys = Array.isArray(keys);
+            let contained;
+            if (multipleKeys) contained = [];
+
+            let transaction = IndexedDB.db.transaction(objectStoreName);
+            transaction.oncomplete = () => resolve(contained);
+            transaction.onerror = event => reject(event.target.error);
+
+            let objectStore = transaction.objectStore(objectStoreName);
+            if (multipleKeys) {
+                keys.forEach((key, i) => {
+                    objectStore.openKeyCursor(key).onsuccess = event => {
+                        let cursor = event.target.result;
+                        if (cursor) {
+                            contained[i] = true;
+                        } else {
+                            contained[i] = false;
+                        }
+                    }
+                })
+            } else {
+                objectStore.openKeyCursor(keys).onsuccess = event => {
+                    let cursor = event.target.result;
+                    if (cursor) {
+                        contained = true;
+                    } else {
+                        contained = false;
+                    }
+                }
+            }           
         });
     }
 
@@ -418,7 +451,7 @@ class SteamStore extends Api {
                 }
                 details = details.data;
                 // .apps is an array of { 'id': ##, 'name': "", }, TODO check if we need to clearSpecialSymbols(name)
-                IndexedDB.putCached("packages", details.apps, subid);
+                IndexedDB.putCached("packages", details.apps, parseInt(subid, 10));
                 
                 if (coupons[subid])
                     coupons[subid].appids = details.apps;
@@ -905,6 +938,11 @@ let actionCallbacks = new Map([
 
     ['itad.authorize', ITAD_Api.authorize],
     ['itad.checkexpiry', ITAD_Api.isExpired],
+
+    ['idb.get', IndexedDB.get],
+    ['idb.put', IndexedDB.put],
+    ['idb.delete', IndexedDB.delete],
+    ['idb.contains', IndexedDB.contains],
 
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
