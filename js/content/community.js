@@ -3459,6 +3459,95 @@ class WorkshopPageClass {
     }
 }
 
+let GroupMembersManagePage = (function(){
+
+    function GroupMembersManagePage() {
+        this.addMemberKicker();
+    }
+
+    GroupMembersManagePage.prototype.addMemberKicker = function() {
+        if (!document.querySelector(".groupadmin_content")) { return; }
+        
+        let total = Number(document.querySelector(".group_paging").innerText.split(/\d+ - \d+/g)[1].match(/\d+/g).join(""));
+        if (total === 1) { return; } // Only you is left
+
+        let subscriberButtons = `
+            <div class="content">
+                <div class="rightbox_list_option">
+                    <div class="rightbox_list_selection_background"></div>
+                    <div class="rightbox_list_option_content">
+                        <button id="es_kick_all" class="btn_green_white_innerfade btn_medium" style="width:100%;">
+                            <span>${Localization.str.kick_all_members}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+
+        HTML.afterEnd(".rightbox > .rightbox_content_header", subscriberButtons);
+        document.querySelector("#es_kick_all").addEventListener("click", kickEmAll, false);
+
+        function kickEmAll() {
+            let i = -1;
+
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${Localization.str.kick_all_members}", \`${Localization.str.kick_all_confirm}\`);
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("kickEmAll");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str.kick_all_members}", \`${Localization.str.kick_all_loading.replace("__i__", ++i).replace("__total__", total - 1)}\`);
+                }`)
+            }
+
+            function kickMember(steamid) {
+                return new Promise(function(resolve) {
+                    let formData = new FormData();
+                    formData.append("sessionID", HTMLParser.getVariableFromDom("g_sessionID", "string"));
+                    formData.append("action", "kick");
+                    formData.append("memberId", steamid);
+                    formData.append("queryString", "");
+
+                    RequestData.post(window.location.href, formData, {
+                        withCredentials: true
+                    }).then(function() {
+                        updateWaitDialog();
+                        resolve();
+                    });
+                });
+            }
+
+            Messenger.addMessageListener("kickEmAll", async function() {
+                updateWaitDialog();
+
+                let members = [];
+                let lastpage = 1;
+                let url = window.location.href.split("/membersManage")[0] + "/memberslistxml/?xml=1&p=";
+                for (let p = 1; p <= lastpage; p++) {
+                    let result = await RequestData.getHttp(url + p);
+                    let xmlDoc = new DOMParser().parseFromString(result, "text/xml");
+                    lastpage = Number(xmlDoc.getElementsByTagName("totalPages")[0].innerHTML);
+                    members = members.concat(Array.from(xmlDoc.getElementsByTagName("steamID64")).map(node => node.innerHTML));
+                }
+    
+                Promise.all(members.filter(id => id !== User.steamId).map(id => kickMember(id))).finally(() => {
+                    location.reload();
+                });
+            }, true)
+        }
+    }
+
+    return GroupMembersManagePage;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3528,6 +3617,18 @@ class WorkshopPageClass {
 
         case /^\/sharedfiles\/.*/.test(path):
             (new WorkshopPageClass());
+            break;
+
+        case /^\/(?:gid|groups)\/[^\/]+\/membersManage\/?$/g.test(path):
+            (new GroupMembersManagePage());
+            break;
+
+        case /^\/(?:gid|groups)\/[^\/]+\/?$/g.test(path):
+            let membersCount = Number(document.querySelector(".membercount.members .count").innerText);
+            if (membersCount > 1) { return; }
+
+            let webLink = document.querySelector("[href*=ConfirmLeaveGroup]");
+            webLink.innerHTML = `<img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"> ${Localization.str.delete_group}`
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

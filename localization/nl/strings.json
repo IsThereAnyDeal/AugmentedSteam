@@ -1,4 +1,8 @@
 {
+    "kick_all_confirm": "Weet u zeker dat u alle groepleden wilt kicken?<br>Deze actie kan niet ongedaan worden gemaakt!",
+    "kick_all_loading": "Uitvoeren... __i__ van de __total__ groepleden gekickt",
+    "kick_all_members": "Alle Groepleden Kicken",
+    "delete_group": "Groep verwijderen",
     "post_history": "Bekijk post geschiedenis",
     "add_nickname": "Bijnaam toevoegen",
     "total_size": "Totale grote",
