@@ -2203,7 +2203,7 @@ let AccountPageClass = (function(){
 
         let lastLink = links[links.length-1];
         HTML.afterEnd(lastLink.parentNode,
-            `<div><a class='account_manage_link' href='https://help.steampowered.com/en/accountdata/AccountSpend'>${Localization.str.external_funds}</a></div>`);
+            `<div><a class='account_manage_link' href='https://help.steampowered.com/accountdata/AccountSpend'>${Localization.str.external_funds}</a></div>`);
     };
 
     return AccountPageClass;
