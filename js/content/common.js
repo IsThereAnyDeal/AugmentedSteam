@@ -853,6 +853,8 @@ let EnhancedSteam = (function() {
     let self = {};
 
     self.addMenu = function() {
+        if (!document.querySelector("#global_action_menu")) { return; };
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
