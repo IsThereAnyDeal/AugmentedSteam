@@ -3500,6 +3500,7 @@ let TabAreaObserver = (function(){
 
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
+    let search = window.location.search;
 
     await SyncedStorage.init().catch(err => console.error(err));
     await Promise.all([Localization, User, Currency]);
@@ -3553,6 +3554,13 @@ let TabAreaObserver = (function(){
 
         case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
             (new WishlistPageClass());
+            break;
+
+        case (/^\/checkout\/sendgift\/.*/.test(path) || (/^\/checkout\/?$/g.test(path) && /.*purchasetype=gift.*/g.test(search))):
+            Array.from(document.querySelectorAll(".friend_block")).forEach(block => {
+                block.querySelector("[name=friend_radio]").disabled = false;
+                block.classList.remove("disabled");
+            });
             break;
 
         // Storefront-front only

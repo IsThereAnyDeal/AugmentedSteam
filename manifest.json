@@ -43,7 +43,6 @@
       ],
       "exclude_matches": [
         "*://store.steampowered.com/dynamicstore/*",
-        "*://store.steampowered.com/checkout/*",
         "*://store.steampowered.com/widget/*",
         "*://store.steampowered.com/login/*",
         "*://store.steampowered.com/join/*",
