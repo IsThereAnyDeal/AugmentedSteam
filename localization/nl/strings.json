@@ -1,4 +1,8 @@
 {
+    "del_announcements": "Alle Aankondigingen Verwijderen",
+    "del_hidden_announcements": "Alle Verborgen Aankondigingen Verwijderen",
+    "del_announcements_confirm": "Weet u zeker dat u al deze aankondigingen wilt verwijderen?",
+    "del_announcements_loading": "Aan het uitvoeren... __i__/__total__ aankondigingen verwijderd!",
     "post_history": "Bekijk post geschiedenis",
     "add_nickname": "Bijnaam toevoegen",
     "total_size": "Totale grote",

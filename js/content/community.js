@@ -3459,6 +3459,114 @@ class WorkshopPageClass {
     }
 }
 
+
+
+let GroupAnnouncementsPage = (function(){
+
+    function GroupAnnouncementsPage() {
+        this.addAnnouncementsDeleter();
+    }
+
+    GroupAnnouncementsPage.prototype.addAnnouncementsDeleter = function() {
+        let adminTools = document.querySelectorAll("a[href*='/announcements/create']");
+        if (adminTools.length === 0) { return; }
+
+        let delAnnouncementsBtns = `
+            <div class="content">
+                <div class="rightbox_list_option">
+                    <div class="rightbox_list_selection_background"></div>
+                    <div class="rightbox_list_option_content">
+                        <button id="es_del_announcements" class="btn_green_white_innerfade btn_medium" style="width:100%;">
+                            <span>${Localization.str.del_announcements}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="rightbox_list_option">
+                    <div class="rightbox_list_selection_background"></div>
+                    <div class="rightbox_list_option_content">
+                        <button id="es_del_hidden" class="btn_green_white_innerfade btn_medium" style="width:100%;">
+                            <span>${Localization.str.del_hidden_announcements}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+
+        Array.from(adminTools).forEach(node => {
+            node = node.parentNode.parentNode.parentNode.parentNode.querySelector(".rightbox_content_header");
+            HTML.afterEnd(node, delAnnouncementsBtns);
+        
+            node.parentNode.querySelector("[id=es_del_announcements]").addEventListener("click", () => deleteAnnouncements(false), false);
+            node.parentNode.querySelector("[id=es_del_hidden]").addEventListener("click", () => deleteAnnouncements(true), false);
+        });
+
+        function deleteAnnouncements(hidden = false) {
+            let i = 0;
+            let total = 0;
+            let modalTitle = hidden ? Localization.str.del_hidden_announcements : Localization.str.del_announcements;
+
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${modalTitle}", \`${Localization.str.del_announcements_confirm}\`);
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("delEmAll");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+
+                    window.dialog = ShowBlockingWaitDialog("${modalTitle}", \`${Localization.str.del_announcements_loading.replace("__i__", i).replace("__total__", total)}\`);
+                }`)
+            }
+
+            function deleteAnnouncement(url) {
+                return new Promise(async resolve => {
+                    await RequestData.getHttp(url);
+                    i++;
+                    updateWaitDialog();
+                    resolve();
+                });
+            }
+
+            function getAnnouncements(page, hidden) {
+                return new Promise(async resolve => {
+                    let pathSplit = location.pathname.split("/")
+                    let groupUrl = "https://steamcommunity.com/" + pathSplit[1] + "/" + pathSplit[2];
+                    let result = await RequestData.getHttp(groupUrl + "/announcements" + (hidden ? "/hidden?p=" : "?p=") + page);
+                    let doc = new DOMParser().parseFromString(result, "text/html");
+                    console.log(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]"));
+                    let urls = Array.from(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]")).map(node => node.href.split("'")[1]);
+                    resolve(urls);
+                });
+            }
+
+            Messenger.addMessageListener("delEmAll", async function() {
+                updateWaitDialog();
+                let page = 0;
+                let newUrls = [];
+                let announcements = [];
+                do {
+                    let urls = await getAnnouncements(++page, hidden);
+                    newUrls = urls.filter(url => !announcements.includes(url));
+                    announcements = announcements.concat(newUrls);
+                    total = announcements.length;
+                    updateWaitDialog();
+                } while (newUrls.length !== 0);
+
+                Promise.all(announcements.map(url => deleteAnnouncement(url))).finally(() => {
+                    location.reload();
+                });
+            }, true)
+        }
+    }
+
+    return GroupAnnouncementsPage;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3528,6 +3636,10 @@ class WorkshopPageClass {
 
         case /^\/sharedfiles\/.*/.test(path):
             (new WorkshopPageClass());
+            break;
+
+        case /^\/(?:gid|groups)\/.*/g.test(path):
+            (new GroupAnnouncementsPage());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

@@ -1,4 +1,8 @@
 {
+    "del_announcements": "Delete All Announcements",
+    "del_hidden_announcements": "Delete All Hidden Announcements",
+    "del_announcements_confirm": "Are you sure you want to delete all these announcement?",
+    "del_announcements_loading": "Executing... Deleted __i__/__total__ announcements!",
     "post_history": "View post history",
     "add_nickname": "Add Nickname",
     "total_size": "Total Size",
