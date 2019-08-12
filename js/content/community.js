@@ -3465,6 +3465,18 @@ let GroupAnnouncementsPage = (function(){
 
     function GroupAnnouncementsPage() {
         this.addAnnouncementsDeleter();
+
+        ExtensionLayer.runInPageContext(function() {
+            let originalFn = ScrollToIfNotInView;
+            ScrollToIfNotInView = (...arguments) => {
+                originalFn(...arguments);
+                Messenger.postMessage("newContent");
+            };
+        });
+        
+        Messenger.addMessageListener("newContent", () => {
+            this.addAnnouncementsDeleter();
+        }, true);
     }
 
     GroupAnnouncementsPage.prototype.addAnnouncementsDeleter = function() {
@@ -3492,9 +3504,11 @@ let GroupAnnouncementsPage = (function(){
             </div>`;
 
         Array.from(adminTools).forEach(node => {
-            node = node.parentNode.parentNode.parentNode.parentNode.querySelector(".rightbox_content_header");
+            node = node.parentNode.parentNode.parentNode.parentNode;
+            if (node.querySelector("#es_del_announcements")) { return };
+            node = node.querySelector(".rightbox_content_header");
+
             HTML.afterEnd(node, delAnnouncementsBtns);
-        
             node.parentNode.querySelector("[id=es_del_announcements]").addEventListener("click", () => deleteAnnouncements(false), false);
             node.parentNode.querySelector("[id=es_del_hidden]").addEventListener("click", () => deleteAnnouncements(true), false);
         });
@@ -3536,7 +3550,7 @@ let GroupAnnouncementsPage = (function(){
                 return new Promise(async resolve => {
                     let pathSplit = location.pathname.split("/")
                     let groupUrl = "https://steamcommunity.com/" + pathSplit[1] + "/" + pathSplit[2];
-                    let result = await RequestData.getHttp(groupUrl + "/announcements" + (hidden ? "/hidden?p=" : "?p=") + page);
+                    let result = await RequestData.getHttp(groupUrl + "/announcements" + (hidden ? "/hidden" : "") + "?content_only=true&p=" + page);
                     let doc = new DOMParser().parseFromString(result, "text/html");
                     console.log(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]"));
                     let urls = Array.from(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]")).map(node => node.href.split("'")[1]);
