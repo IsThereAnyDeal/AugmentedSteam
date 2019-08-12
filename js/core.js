@@ -788,3 +788,10 @@ function sleep(duration) {
         setTimeout(function() { resolve(); }, duration);
     });
 }
+
+async function executionTime(fn, label) {
+    let start = performance.now();
+    await fn();
+    let end = performance.now();
+    console.debug("Took", end - start, "ms to execute", label);
+}
