@@ -3459,92 +3459,106 @@ class WorkshopPageClass {
     }
 }
 
-(async function(){
-    let path = window.location.pathname.replace(/\/+/g, "/");
+(async function() {
 
     await SyncedStorage.init().catch(err => console.error(err));
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
 
-    switch (true) {
+    let init = function() {
+        let path = window.location.pathname.replace(/\/+/g, "/");
+        SpamCommentHandler.hideSpamComments();
 
-        case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
-            (new ProfileActivityPageClass());
-            break;
+        switch (true) {
 
-        case /^\/(?:id|profiles)\/.+\/games/.test(path):
-            (new GamesPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
+                (new ProfileActivityPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/edit/.test(path):
-            (new ProfileEditPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/games/.test(path):
+                (new GamesPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
-            (new BadgesPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/edit/.test(path):
+                (new ProfileEditPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-            (new GameCardPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/badges(?!\/[0-9]+$)/.test(path):
+                (new BadgesPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
-            (new FriendsThatPlayPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
+                (new GameCardPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-            (new FriendsPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
+                (new FriendsThatPlayPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
-            (new InventoryPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
+                (new FriendsPageClass());
+                break;
 
-        case /^\/market\/listings\/.*/.test(path):
-            (new MarketListingPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
+                (new InventoryPageClass());
+                break;
 
-        case /^\/market\/.*/.test(path):
-            (new MarketPageClass());
-            break;
+            case /^\/market\/listings\/.*/.test(path):
+                (new MarketListingPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/[^\/]+?\/?$/.test(path):
-            (new ProfileHomePageClass());
-            break;
+            case /^\/market\/.*/.test(path):
+                (new MarketPageClass());
+                break;
 
-        case /^\/app\/[^\/]*\/guides/.test(path):
-            (new GuidesPageClass());
-            break;
+            case /^\/(?:id|profiles)\/[^\/]+?\/?$/.test(path):
+                (new ProfileHomePageClass());
+                break;
 
-        case /^\/app\/.*/.test(path):
-            (new CommunityAppPageClass());
-            break;
+            case /^\/app\/[^\/]*\/guides/.test(path):
+                (new GuidesPageClass());
+                break;
 
-        case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-            (new StatsPageClass());
-            break;
+            case /^\/app\/.*/.test(path):
+                (new CommunityAppPageClass());
+                break;
 
-        case /^\/sharedfiles\/.*/.test(path):
-            (new WorkshopPageClass());
-            break;
+            case /^\/(?:id|profiles)\/.+\/stats/.test(path):
+                (new StatsPageClass());
+                break;
 
-        case /^\/tradingcards\/boostercreator/.test(path):
-            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+            case /^\/sharedfiles\/.*/.test(path):
+                (new WorkshopPageClass());
+                break;
 
-            ExtensionLayer.runInPageContext(`function() {
-                $J("#booster_game_selector option").each(function(index) {
-                    if ($J(this).val()) {
-                        $J(this).append(" - " + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + " ${gemWord}");
-                    }
-                });
-            }`);
-            break;
-    }
+            case /^\/tradingcards\/boostercreator/.test(path):
+                let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
+                    .textContent.trim().replace(/\d/g, "");
 
-    EnhancedSteam.hideTrademarkSymbol(true);
+                ExtensionLayer.runInPageContext(`function() {
+                    $J("#booster_game_selector option").each(function(index) {
+                        if ($J(this).val()) {
+                            $J(this).append(" - " + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + " ${gemWord}");
+                        }
+                    });
+                }`);
+                break;
+        }
+
+        EnhancedSteam.hideTrademarkSymbol(true);
+
+    };
+
+    let loc = window.location.href;
+    let observer = new MutationObserver(() => {
+        if (window.location.href !== loc) {
+            loc = window.location.href;
+            init();
+        }
+    });
+
+    observer.observe(document, { subtree: true, childList: true });
+    init();
 
 })();
-
