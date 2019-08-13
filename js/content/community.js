@@ -3493,7 +3493,6 @@ class WorkshopPageClass {
 
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
-    console.log(Modules.SteamID);
 
     await SyncedStorage.init().catch(err => console.error(err));
     await Promise.all([Localization, User, Currency]);
