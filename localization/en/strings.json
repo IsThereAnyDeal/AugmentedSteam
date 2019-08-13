@@ -1,4 +1,8 @@
 {
+    "click_to_copy": "Click to copy",
+    "copied": "'__text__' has been copied to your clipboard.",
+    "profile_steamid": "Show SteamID on profiles",
+    "view_steamid": "View SteamID",
     "post_history": "View post history",
     "add_nickname": "Add Nickname",
     "total_size": "Total Size",

@@ -74,6 +74,7 @@
       ],
       "js": [
         "js/lib/DOMPurify/purify.js",
+        "js/lib/SteamID/modules.min.js",
         "js/config.js",
         "js/core.js",
         "js/language.js",

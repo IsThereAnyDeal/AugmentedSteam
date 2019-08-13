@@ -423,17 +423,44 @@ let ProfileHomePageClass = (function(){
                 </div>`;
         }
 
-        // profile permalink
-        if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
-            htmlstr +=
-                `<div id="es_permalink_div" class="profile_count_link">
-					<span class="count_link_label">${Localization.str.permalink}</span>
-					<div class="es_copy_wrap">
-						<input id="es_permalink" type="text" value="https://steamcommunity.com/profiles/${steamId}" readonly />
-						<button id="es_permalink_copy"><img src="${imgUrl}" /></button>
-					</div>
-				</div>`;
+        // profile steamid
+        if (SyncedStorage.get("profile_steamid")) {
+            let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
+            if (dropdown) {
+                dropdown.innerHTML += 
+                    `<a class="popup_menu_item" id="es_steamid">
+                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    </a>`;
+            } else {
+                let actions = document.querySelector(".profile_header_actions");
+                if (actions) {
+                    actions.innerHTML +=
+                        `<a class="btn_profile_action btn_medium" id="es_steamid">
+                            <span>${Localization.str.view_steamid}</span>
+                        </a>`;
+                }
+            }
+
+            document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
+            ExtensionLayer.runInPageContext(`function() {
+                $J(document).on("click", ".es_copy", function(event) {
+                    let elem = $J(event.target).closest(".es_copy");
+                    let text = elem.data("copy");
+                    setClipboard(text);
+                    window.idDialog.Dismiss();
+                    ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${Localization.str.copied}\`.replace("__text__", text));
+                });
+
+                function setClipboard(content) {
+                    // Based on https://stackoverflow.com/a/12693636
+                    document.oncopy = function(event) {
+                        event.clipboardData.setData("Text", content);
+                        event.preventDefault();
+                    };
+                    document.execCommand("Copy");
+                    document.oncopy = undefined;
+                }
+            }`)
         }
 
         // Insert the links HMTL into the page
@@ -448,14 +475,19 @@ let ProfileHomePageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("profile_permalink")) {
-            document.querySelector("#es_permalink").addEventListener("click", function(e) {
-                e.target.select();
-            });
-            document.querySelector("#es_permalink_copy").addEventListener("click", function(e) {
-                document.querySelector("#es_permalink").select();
-                document.execCommand('copy');
-            });
+        function showSteamIdDialog() {
+            let sid = new Modules.SteamID(steamId);
+            let html =
+               `<div class="bb_h1">${Localization.str.click_to_copy}</div>
+                <p><a data-copy="${sid.getSteam2RenderedID()}" class="es_copy">${sid.getSteam2RenderedID()}</a></p>
+                <p><a data-copy="${sid.getSteam3RenderedID()}" class="es_copy">${sid.getSteam3RenderedID()}</a></p>
+                <p><a data-copy="${sid.getSteamID64()}" class="es_copy">${sid.getSteamID64()}</a></p>
+                <p><a data-copy="https://steamcommunity.com/profiles/${sid.getSteamID64()}" class="es_copy">https://steamcommunity.com/profiles/${sid.getSteamID64()}</a></p>`;
+
+            ExtensionLayer.runInPageContext(`function() {
+                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+                window.idDialog = ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${html}\`, "${Localization.str.close}");
+            }`);
         }
     };
 
@@ -3461,6 +3493,7 @@ class WorkshopPageClass {
 
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
+    console.log(Modules.SteamID);
 
     await SyncedStorage.init().catch(err => console.error(err));
     await Promise.all([Localization, User, Currency]);
