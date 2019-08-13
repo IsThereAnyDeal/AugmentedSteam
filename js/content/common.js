@@ -1357,7 +1357,6 @@ let Inventory = (function(){
 
     let gifts = new Set();
     let guestpasses = new Set();
-    let coupons = {};
     let inv6set = new Set();
     let coupon_appids = new Map();
 
@@ -1370,15 +1369,6 @@ let Inventory = (function(){
             return _promise;
         }
 
-        function handleCoupons(data) {
-            coupons = data;
-            for (let [subid, details] of Object.entries(coupons)) {
-                for (let { "id": appid, } of details.appids) {
-                    coupon_appids.set(appid, parseInt(subid, 10));
-                }
-            }
-        }
-
         let promises = [];
 
         if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
@@ -1386,7 +1376,7 @@ let Inventory = (function(){
         }
 
         if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
-            promises.push(Background.action('inventory.coupons').then(handleCoupons));
+            promises.push(Background.action('inventory.coupons'));
         }
 
         if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
@@ -1402,14 +1392,15 @@ let Inventory = (function(){
     };
 
     self.getCoupon = function(subid) {
-        return coupons && coupons[subid];
+        return Background.action("idb.get", "coupons", subid);
     };
 
     self.getCouponByAppId = function(appid) {
+        /*return Background.action("inventory.getcouponbyappid");
         if (!coupon_appids.has(appid))
             return false;
         let subid = coupon_appids.get(appid);
-        return self.getCoupon(subid);
+        return self.getCoupon(subid);*/
     };
 
     self.hasGift = function(subid) {
@@ -1675,7 +1666,7 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
-    self.highlightAndTag = function(nodes) {
+    self.highlightAndTag = async function(nodes) {
         for (let i=0, len=nodes.length; i<len; i++) {
             let node = nodes[i];
             let nodeToHighlight = node;
@@ -1712,7 +1703,7 @@ let Highlights = (function(){
                 if (Inventory.hasGuestPass(appid)) {
                     self.highlightInvGuestpass(node);
                 }
-                if (Inventory.getCouponByAppId(appid)) {
+                if (await Inventory.getCouponByAppId(appid)) {
                     self.highlightCoupon(node);
                 }
                 if (Inventory.hasGift(appid)) {

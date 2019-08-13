@@ -916,15 +916,15 @@ class AppPageClass extends StorePageClass {
 
     getFirstSubid() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
-        return node && node.value;
+        return node && parseInt(node.value, 10);
     }
 
     addCoupon() {
         if (!SyncedStorage.get("show_coupon")) return;
         let inst = this;
-        Inventory.then(() => {
+        Inventory.then(async () => {
 
-            let coupon = Inventory.getCoupon(inst.getFirstSubid());
+            let coupon = await Inventory.getCoupon(inst.getFirstSubid());
             if (!coupon) { return; }
 
             let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
@@ -1437,14 +1437,14 @@ class AppPageClass extends StorePageClass {
     }
 
     addTitleHighlight() {
-        Promise.all([DynamicStore, Inventory]).then(() => {
+        Promise.all([DynamicStore, Inventory]).then(async () => {
             let title = document.querySelector(".apphub_AppName");
 
             if (DynamicStore.isOwned(this.appid)) {
                 Highlights.highlightOwned(title);
             } else if (Inventory.hasGuestPass(this.appid)) {
                 Highlights.highlightInvGuestpass(title);
-            } else if (Inventory.getCouponByAppId(this.appid)) {
+            } else if (await Inventory.getCouponByAppId(this.appid)) {
                 Highlights.highlightCoupon(title);
             } else if (Inventory.hasGift(this.appid)) {
                 Highlights.highlightInvGift(title);

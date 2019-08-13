@@ -252,7 +252,7 @@ let ProfileActivityPageClass = (function(){
                     addAchievementComparisonLink(link, appid);
                 } else if (Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
-                } else if (Inventory.getCouponByAppId(appid)) {
+                } else if (await Inventory.getCouponByAppId(appid)) {
                     Highlights.highlightCoupon(link);
                 } else if (Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
