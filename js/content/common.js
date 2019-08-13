@@ -1023,7 +1023,7 @@ let EnhancedSteam = (function() {
          // Don't replace title on user pages that aren't mine
         if (!isUserPage(location.pathname)) {
             document.title = document.title.replace(accountName, communityName);
-        } else if (location.path.includes(User.profilePath)) {
+        } else if (location.pathname.includes(User.profilePath)) {
             document.title = document.title.replace(accountName, communityName);
         }
     };
