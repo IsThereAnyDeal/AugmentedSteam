@@ -949,17 +949,20 @@ let EnhancedSteam = (function() {
 
         // Triggers the unhandledrejection handler, so that the error is not fully suppressed
         Promise.reject(err);
-    }
+    };
 
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        document.querySelector("div.header_installsteam_btn").remove();
+        let node = document.querySelector("div.header_installsteam_btn");
+        if (node) { node.remove(); }
 
         if (User.isSignedIn) {
-            document.querySelector(".submenuitem[href='https://store.steampowered.com/about/']").remove();
+            let node = document.querySelector(".submenuitem[href^='https://store.steampowered.com/about/']");
+            if (node) { node.remove(); }
         } else {
-            document.querySelector(".menuitem[href='https://store.steampowered.com/about/']").remove();
+            let node = document.querySelector(".menuitem[href^='https://store.steampowered.com/about/']");
+            if (node) { node.remove(); }
         }
     };
 

@@ -1,4 +1,8 @@
-﻿v1.2.0
+﻿v1.2.1
+-----
+- Hotfix after latest Steam changes
+
+v1.2.0
 -----
 - Complete rework of Options page. Feels so fresh now.
 - Added option to open external links in new tab
