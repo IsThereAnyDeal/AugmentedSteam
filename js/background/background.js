@@ -869,8 +869,8 @@ class SteamCommunity extends Api {
 
             let promises = [];
 
-            if (gifts.length)   promises.push(IndexedDB.putCached("gifts", gifts, gifts, true));
-            if (passes.length)  promises.push(IndexedDB.putCached("passes", passes, passes, true));
+            if (gifts.length)   promises.push(IndexedDB.putCached("gifts", undefined, gifts, true));
+            if (passes.length)  promises.push(IndexedDB.putCached("passes", undefined, passes, true));
             return Promise.all(promises);
         }
     }
