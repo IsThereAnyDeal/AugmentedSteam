@@ -1442,11 +1442,11 @@ class AppPageClass extends StorePageClass {
 
             if (DynamicStore.isOwned(this.appid)) {
                 Highlights.highlightOwned(title);
-            } else if (Inventory.hasGuestPass(this.appid)) {
+            } else if (await Inventory.hasGuestPass(this.appid)) {
                 Highlights.highlightInvGuestpass(title);
             } else if (await Inventory.getCouponByAppId(this.appid)) {
                 Highlights.highlightCoupon(title);
-            } else if (Inventory.hasGift(this.appid)) {
+            } else if (await Inventory.hasGift(this.appid)) {
                 Highlights.highlightInvGift(title);
             } else if (DynamicStore.isWishlisted(this.appid)) {
                 Highlights.highlightWishlist(title);

@@ -1353,6 +1353,8 @@ let Inventory = (function(){
 
     let self = {};
 
+    let inventoryTTL = 60 * 60;
+
     let gifts = new Set();
     let guestpasses = new Set();
     let inv6set = new Set();
@@ -1389,20 +1391,20 @@ let Inventory = (function(){
         return self.promise().then(onDone, onCatch);
     };
 
-    self.getCoupon = function(subid) {
-        return Background.action("idb.get", "coupons", subid);
+    self.getCoupon = async function(subid) {
+        return Background.action("idb.get", "coupons", subid, inventoryTTL);
     };
 
     self.getCouponByAppId = function(appid) {
-        return Background.action("idb.getfromindex", "coupons", "appid", appid)
+        return Background.action("idb.getfromindex", "coupons", "appid", appid, inventoryTTL);
     };
 
-    self.hasGift = function(subid) {
-        return gifts.has(subid);
+    self.hasGift = async function(subid) {
+        return Background.action("idb.contains", "gifts", subid);
     };
 
     self.hasGuestPass = function(subid) {
-        return guestpasses.has(subid);
+        return Background.action("idb.contains", "passes", subid);
     };
 
     self.hasInInventory6 = function(marketHash) {
@@ -1694,13 +1696,13 @@ let Highlights = (function(){
             let aNode = node.querySelector("a");
             let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
             if (appid) {
-                if (Inventory.hasGuestPass(appid)) {
+                if (await Inventory.hasGuestPass(appid)) {
                     self.highlightInvGuestpass(node);
                 }
                 if (await Inventory.getCouponByAppId(appid)) {
                     self.highlightCoupon(node);
                 }
-                if (Inventory.hasGift(appid)) {
+                if (await Inventory.hasGift(appid)) {
                     self.highlightInvGift(node);
                 }
             }

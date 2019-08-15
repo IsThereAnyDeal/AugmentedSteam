@@ -250,11 +250,11 @@ let ProfileActivityPageClass = (function(){
                     Highlights.highlightOwned(link);
 
                     addAchievementComparisonLink(link, appid);
-                } else if (Inventory.hasGuestPass(appid)) {
+                } else if (await Inventory.hasGuestPass(appid)) {
                     Highlights.highlightInvGuestpass(link);
                 } else if (await Inventory.getCouponByAppId(appid)) {
                     Highlights.highlightCoupon(link);
-                } else if (Inventory.hasGift(appid)) {
+                } else if (await Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
                 } else if (DynamicStore.isWishlisted(appid)) {
                     Highlights.highlightWishlist(link);
