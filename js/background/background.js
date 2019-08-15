@@ -94,8 +94,12 @@ class IndexedDB {
                 let timestamp = IndexedDB.timestamp();
                 if (IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
                     objectStore.put(timestamp, "timestamp");
-                } else if (multiple) {
-                    if (data) data.map(value => ({ "value": value, "timestamp": timestamp }));
+                } else {
+                    if (multiple) {
+                        if (data) data.map(value => ({ "value": value, "timestamp": timestamp }));
+                    } else {
+                        data = { "value": data, "timestamp": timestamp };
+                    }
                 }
             }
             if (multiple) {
