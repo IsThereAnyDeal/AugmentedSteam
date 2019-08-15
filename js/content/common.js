@@ -1778,46 +1778,36 @@ let DynamicStore = (function(){
 
     let self = {};
 
-    let _data = {};
+    let ttl = 15 * 60;
     let _promise = null;
-    let _owned = new Set();
-    let _wishlisted = new Set();
 
-    self.clear = function() {
-        _data = {};
-        _promise = null;
-        _owned = new Set();
-        _wishlisted = new Set();
+    self.clear = async function() {
         LocalStorage.remove("dynamicstore");
         LocalStorage.remove("dynamicstore_update");
+        await Background.action("dynamicstore.clear");
     };
 
     self.isIgnored = function(appid) {
-        let list = _data.rgIgnoredApps || {};
-        return list.hasOwnProperty(appid);
+        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
+            .then(result => result.includes("ignored"));
     };
 
     self.isOwned = function(appid) {
-        return _owned.has(appid);
+        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
+            .then(result => result.includes("owned"));
     };
 
     self.isWishlisted = function(appid) {
-        return _wishlisted.has(appid);
+        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
+            .then(result => result.includes("wishlisted"));
     };
-
-    Object.defineProperty(self, 'wishlist', {
-        get() { return new Set(_wishlisted); },
-    });
 
     async function _fetch() {
         if (!User.isSignedIn) {
             self.clear();
-            return _data;
+            return;
         }
-        _data = await Background.action('dynamicstore');
-        _owned = new Set(_data.rgOwnedApps);
-        _wishlisted = new Set(_data.rgWishlist);
-        return _data;
+        await Background.action("dynamicstore");
     }
 
     self.then = function(onDone, onCatch) {

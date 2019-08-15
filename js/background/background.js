@@ -56,13 +56,13 @@ class IndexedDB {
                     let db = request.result;
                     let oldVersion = event.oldVersion;
                     if (oldVersion < 1) {
-                        db.createObjectStore("coupons").createIndex("appid", "appids", { multiEntry: true });
+                        db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
                         db.createObjectStore("gifts");
                         db.createObjectStore("passes");
                         db.createObjectStore("items");
                         db.createObjectStore("earlyAccessAppids");
                         db.createObjectStore("purchases");
-                        db.createObjectStore("dynamicStore");
+                        db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
                         db.createObjectStore("packages");
                         db.createObjectStore("storePageData");
                         db.createObjectStore("profiles");
@@ -199,16 +199,12 @@ class IndexedDB {
         });
     }
 
-    static getFromIndex(objectStoreName, indexName, key, ttl, withKey) {
+    static getFromIndex(objectStoreName, indexName, key, ttl, asKey) {
         return new Promise(async (resolve, reject) => {
             let multiple = Array.isArray(key);
             let results;
 
-            if (withKey) {
-                results = {};
-            } else if (multiple) {
-                results = [];
-            }
+            if (multiple) results = [];
 
             if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
                 resolve(null);
@@ -222,22 +218,54 @@ class IndexedDB {
             let index = transaction.objectStore(objectStoreName).index(indexName);
 
             if (multiple) {
-                for (let i = 0; i < key.length; ++i) {
-                    index.get(key[i]).onsuccess = event => {
-                        if (withKey) {
-                            results[key[i]] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                        } else {
-                            results[i] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                        }
-                    };
+                function successHandler(event) {
+                    for (let i = 0; i < key.length; ++i) {
+                        results[i] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                    }
+                }
+                
+                if (asKey) {
+                    index.getKey(key[i]).onsuccess = successHandler;
+                } else {
+                    index.get(key[i]).onsuccess = successHandler;
                 }
             } else {
-                index.get(key).onsuccess = event => {
-                    if (withKey) {
-                        results[key] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                    } else {
-                        results = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                    }
+                function successHandler(event) {
+                    results = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                }
+                if (asKey) {
+                    index.getKey(key).onsuccess = successHandler;
+                } else {
+                    index.get(key).onsuccess = successHandler;
+                }
+            }
+        });
+    }
+
+    static getAllFromIndex(objectStoreName, indexName, key, ttl, asKey) {
+        return new Promise(async (resolve, reject) => {
+            let results = [];
+
+            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
+                resolve(null);
+                return;
+            }
+
+            let transaction = IndexedDB.db.transaction(objectStoreName);
+            transaction.onerror = event => reject(event.target.error);
+
+            let index = transaction.objectStore(objectStoreName).index(indexName);
+
+            if (asKey) {
+                index.getAllKeys(key).onsuccess = event => {
+                    resolve(event.target.result);
+                }
+            } else {
+                index.getAll(key).onsuccess = event => {
+                    event.target.result.forEach(result => {
+                        results.push(IndexedDB.resultExpiryCheck(result, ttl, objectStoreName));
+                    });
+                    resolve(results);
                 };
             }
         });
@@ -951,52 +979,37 @@ class Steam {
     // static _dynamicstore_promise = null;
     // static _supportedCurrencies = null;
     
-    /**
-     * Requires user to be signed in, can we validate this from background?
-     */
-    static async _dynamicstore() {
+    static dynamicStore() {
+        // FIXME, reduce dependence on whole object
         let self = Steam;
         // Is a request in progress?
         if (self._dynamicstore_promise) { return self._dynamicstore_promise; }
         
-        // Get data from localStorage
-        let dynamicstore = CacheStorage.get('dynamicstore', 15 * 60); // dynamicstore userdata expires after 15 minutes
-        if (dynamicstore) { return dynamicstore; }
-
-        // Cache miss, need to fetch
-        self._dynamicstore_promise = SteamStore.getEndpoint('/dynamicstore/userdata/')
-            .then(function(dynamicstore) {
-                if (!dynamicstore.rgOwnedApps) {
+        if (IndexedDB.isObjectStoreExpired("dynamicStore", 15 * 60)) {
+            // Cache miss, need to fetch
+            self._dynamicstore_promise = SteamStore.getEndpoint("/dynamicstore/userdata/")
+            .then(dynamicStore => {
+                if (!dynamicStore.rgOwnedApps) {
                     throw new Error("Could not fetch DynamicStore UserData");
                 }
-                CacheStorage.set("dynamicstore", dynamicstore);
-                self._dynamicstore_promise = null; // no request in progress
-                return dynamicstore;
-            })
-            ;
-        return self._dynamicstore_promise;
-    }       
+                return Promise.all([
+                    IndexedDB.putCached("dynamicStore", Object.keys(dynamicStore.rgIgnoredApps).map(value => parseInt(value, 10)), "ignored"),
+                    IndexedDB.putCached("dynamicStore", dynamicStore.rgOwnedApps, "owned"),
+                    IndexedDB.putCached("dynamicStore", dynamicStore.rgWishlist, "wishlisted"),
+                ]);
+            }).then(() => self._dynamicstore_promise = null);
+
+            return self._dynamicstore_promise;
+        }
+    }
     // dynamicstore keys are:
     // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
     // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
     // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
     // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
 
-    static ignored() {
-        return Steam._dynamicstore().then(userdata => Object.keys(userdata.rgIgnoredApps));
-    }
-    static owned() {
-        return Steam._dynamicstore().then(userdata => userdata.rgOwnedApps);       
-    }
-    static wishlist() {
-        return Steam._dynamicstore().then(userdata => userdata.rgWishlist);        
-    }
-    static dynamicStore() {
-        // FIXME, reduce dependence on whole object
-        return Steam._dynamicstore();
-    }
-    static clearDynamicStore() {
-        CacheStorage.remove('dynamicstore');
+    static async clearDynamicStore() {
+        await IndexedDB.clear("dynamicStore");
         Steam._dynamicstore_promise = null;
     }
 
@@ -1033,9 +1046,6 @@ let ratesMapper = new KeyMapper("to", "rates_");
 let profilesMapper = new KeyMapper("profile", "profile_");
 
 let actionCallbacks = new Map([
-    ['ignored', Steam.ignored],
-    ['owned', Steam.owned],
-    ['wishlist', Steam.wishlist],
     ['wishlist.add', SteamStore.wishlistAdd],
     ['dynamicstore', Steam.dynamicStore],
     ['dynamicstore.clear', Steam.clearDynamicStore],
@@ -1076,6 +1086,7 @@ let actionCallbacks = new Map([
 
     ['idb.get', IndexedDB.get],
     ['idb.getfromindex', IndexedDB.getFromIndex],
+    ['idb.getallfromindex', IndexedDB.getAllFromIndex],
     ['idb.put', IndexedDB.put],
     ['idb.delete', IndexedDB.delete],
     ['idb.contains', IndexedDB.contains],

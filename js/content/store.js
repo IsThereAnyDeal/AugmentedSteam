@@ -1434,7 +1434,7 @@ class AppPageClass extends StorePageClass {
         Promise.all([DynamicStore, Inventory]).then(async () => {
             let title = document.querySelector(".apphub_AppName");
 
-            if (DynamicStore.isOwned(this.appid)) {
+            if (await DynamicStore.isOwned(this.appid)) {
                 Highlights.highlightOwned(title);
             } else if (await Inventory.hasGuestPass(this.appid)) {
                 Highlights.highlightInvGuestpass(title);
@@ -1442,9 +1442,9 @@ class AppPageClass extends StorePageClass {
                 Highlights.highlightCoupon(title);
             } else if (await Inventory.hasGift(this.appid)) {
                 Highlights.highlightInvGift(title);
-            } else if (DynamicStore.isWishlisted(this.appid)) {
+            } else if (await DynamicStore.isWishlisted(this.appid)) {
                 Highlights.highlightWishlist(title);
-            } else if (DynamicStore.isIgnored(this.appid)) {
+            } else if (await DynamicStore.isIgnored(this.appid)) {
                 Highlights.highlightNotInterested(title);
             }
         });
@@ -2987,7 +2987,7 @@ let WishlistPageClass = (function(){
 
         let appid = Number(node.dataset.appId);
 
-        if (DynamicStore.isOwned(appid)) {
+        if (await DynamicStore.isOwned(appid)) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
             if (SyncedStorage.get("highlight_owned")) {
                 Highlights.highlightOwned(node);
@@ -2996,7 +2996,7 @@ let WishlistPageClass = (function(){
             }
         }
 
-        if (DynamicStore.isWishlisted(appid)) {
+        if (await DynamicStore.isWishlisted(appid)) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
             if (SyncedStorage.get("highlight_wishlist")) {
