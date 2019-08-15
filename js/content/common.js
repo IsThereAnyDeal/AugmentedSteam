@@ -1370,7 +1370,7 @@ let Inventory = (function(){
         let promises = [];
 
         if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
-            promises.push(Background.action('inventory.gifts').then(({ "gifts": x, "passes": y, }) => { gifts = new Set(x); guestpasses = new Set(y); }));
+            promises.push(Background.action('inventory.gifts'));
         }
 
         if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
@@ -1378,7 +1378,7 @@ let Inventory = (function(){
         }
 
         if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
-            promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
+            promises.push(Background.action('inventory.community'));
         }
         
         _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
