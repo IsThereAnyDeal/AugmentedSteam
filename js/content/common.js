@@ -1391,11 +1391,7 @@ let Inventory = (function(){
         return self.promise().then(onDone, onCatch);
     };
 
-    self.getCoupon = async function(subid) {
-        return Background.action("idb.get", "coupons", subid, inventoryTTL);
-    };
-
-    self.getCouponByAppId = function(appid) {
+    self.getCoupon = function(appid) {
         return Background.action("idb.getfromindex", "coupons", "appid", appid, inventoryTTL);
     };
 
@@ -1699,7 +1695,7 @@ let Highlights = (function(){
                 if (await Inventory.hasGuestPass(appid)) {
                     self.highlightInvGuestpass(node);
                 }
-                if (await Inventory.getCouponByAppId(appid)) {
+                if (await Inventory.getCoupon(appid)) {
                     self.highlightCoupon(node);
                 }
                 if (await Inventory.hasGift(appid)) {
