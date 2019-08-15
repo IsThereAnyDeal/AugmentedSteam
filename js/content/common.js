@@ -861,8 +861,8 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam">${Localization.str.contribute}</a>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam/issues">${Localization.str.bug_feature}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://es.isthereanydeal.com/">${Localization.str.website}</a>
                         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
