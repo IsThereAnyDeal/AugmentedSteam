@@ -563,7 +563,7 @@ class SteamStore extends Api {
 
     static async addCouponAppids(coupons) {
         let package_queue = [];
-        let packages = await IndexedDB.get("packages", Object.keys(coupons), 7 * 24 * 60 * 60, true);
+        let packages = await IndexedDB.get("packages", Object.keys(coupons).map(value => parseInt(value, 10)), 7 * 24 * 60 * 60, true);
         
         for (let [subid, coupon] of Object.entries(coupons)) {
             let details = packages[subid];
