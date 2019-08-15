@@ -195,6 +195,50 @@ class IndexedDB {
         });
     }
 
+    static getFromIndex(objectStoreName, indexName, key, ttl, withKey) {
+        return new Promise(async (resolve, reject) => {
+            let multiple = Array.isArray(key);
+            let results;
+
+            if (withKey) {
+                results = {};
+            } else if (multiple) {
+                results = [];
+            }
+
+            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
+                resolve(null);
+                return;
+            }
+
+            let transaction = IndexedDB.db.transaction(objectStoreName);
+            transaction.oncomplete = () => resolve(results);
+            transaction.onerror = event => reject(event.target.error);
+
+            let index = transaction.objectStore(objectStoreName).index(indexName);
+
+            if (multiple) {
+                for (let i = 0; i < key.length; ++i) {
+                    index.get(key[i]).onsuccess = event => {
+                        if (withKey) {
+                            results[key[i]] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                        } else {
+                            results[i] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                        }
+                    };
+                }
+            } else {
+                index.get(key).onsuccess = event => {
+                    if (withKey) {
+                        results[key] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                    } else {
+                        results = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                    }
+                };
+            }
+        });
+    }
+
     static delete(objectStoreName, key) {
         return new Promise((resolve, reject) => {
             let multiple = Array.isArray(key);
@@ -1026,6 +1070,7 @@ let actionCallbacks = new Map([
     ['itad.checkexpiry', ITAD_Api.isExpired],
 
     ['idb.get', IndexedDB.get],
+    ['idb.getfromindex', IndexedDB.getFromIndex],
     ['idb.put', IndexedDB.put],
     ['idb.delete', IndexedDB.delete],
     ['idb.contains', IndexedDB.contains],

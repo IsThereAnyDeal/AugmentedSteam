@@ -1394,11 +1394,7 @@ let Inventory = (function(){
     };
 
     self.getCouponByAppId = function(appid) {
-        /*return Background.action("inventory.getcouponbyappid");
-        if (!coupon_appids.has(appid))
-            return false;
-        let subid = coupon_appids.get(appid);
-        return self.getCoupon(subid);*/
+        return Background.action("idb.getfromindex", "coupons", "appid", appid)
     };
 
     self.hasGift = function(subid) {
