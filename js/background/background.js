@@ -95,20 +95,28 @@ class IndexedDB {
                 if (IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
                     objectStore.put(timestamp, "timestamp");
                 } else if (multiple) {
-                    data.map(value => ({ "value": value, "timestamp": timestamp }));
+                    if (data) data.map(value => ({ "value": value, "timestamp": timestamp }));
                 }
             }
             if (multiple) {
                 if (key) {
                     for (let i = 0; i < key.length; ++i) {
-                        objectStore.put(data[i], key[i]);
+                        if (data) {
+                            objectStore.put(data[i], key[i]);
+                        } else {
+                            objectStore.put(undefined, key[i]);
+                        }
                     }
                 } else {
                     data.forEach(value => objectStore.put(value));
                 }
             } else {
                 if (key) {
-                    objectStore.put(data, key);
+                    if (data) {
+                        objectStore.put(data, key);
+                    } else {
+                        objectStore.put(undefined, key);
+                    }
                 } else {
                     objectStore.put(data);
                 }
@@ -127,16 +135,17 @@ class IndexedDB {
                 results = [];
             }
 
+            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
+                resolve(null);
+                return;
+            }
+
             let transaction = IndexedDB.db.transaction(objectStoreName);
             transaction.oncomplete = () => resolve(results);
             transaction.onerror = event => reject(event.target.error);
 
             let objectStore = transaction.objectStore(objectStoreName);
 
-            if (await IndexedDB.isObjectStoreExpired(objectStore, ttl)) {
-                results = null;
-                return;
-            }
             if (multiple) {
                 for (let i = 0; i < key.length; ++i) {
                     objectStore.get(key[i]).onsuccess = event => {
@@ -163,17 +172,16 @@ class IndexedDB {
         return new Promise(async (resolve, reject) => {
             let results = withKey ? {} : [];
 
+            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
+                resolve(null);
+                return;
+            }
+
             let transaction = IndexedDB.db.transaction(objectStoreName);
             transaction.oncomplete = () => resolve(results);
             transaction.onerror = event => reject(event.target.error);
 
-            let objectStore = transaction.objectStore(objectStoreName);
-
-            if (await IndexedDB.isObjectStoreExpired(objectStore, ttl)) {
-                results = null;
-                return;
-            }
-            objectStore.openCursor().onsuccess = event => {
+            transaction.objectStore(objectStoreName).openCursor().onsuccess = event => {
                 let cursor = event.target.result;
                 if (cursor && cursor.key !== "timestamp") {
                     if (withKey) {
@@ -223,10 +231,7 @@ class IndexedDB {
         });
     }
 
-    static containsKey(objectStoreName, key)      { return IndexedDB.contains(objectStoreName, key, IndexedDB.key) }
-    static containsValue(objectStoreName, value)  { return IndexedDB.contains(objectStoreName, value, IndexedDB.value) }
-
-    static contains(objectStoreName, toBeChecked, type) {
+    static contains(objectStoreName, toBeChecked) {
         return new Promise((resolve, reject) => {
             let multiple = Array.isArray(toBeChecked);
             let contained;
@@ -275,11 +280,8 @@ class IndexedDB {
         return timestamp + ttl <= IndexedDB.timestamp();
     }
 
-    static isObjectStoreExpired(objectStore, ttl) {
+    static isObjectStoreExpired(objectStoreName, ttl) {
         return new Promise((resolve, reject) => {
-            let isObject = objectStore instanceof IDBObjectStore;
-
-            let objectStoreName = isObject ? objectStore.name : objectStore;
             if (!IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
                 resolve(false);
                 return;
@@ -290,29 +292,19 @@ class IndexedDB {
                 return;
             }
             
-            if (!isObject) {
-                let transaction = IndexedDB.db.transaction(objectStoreName);
-                transaction.onerror = event => reject(event.target.error);
+            let transaction = IndexedDB.db.transaction(objectStoreName);
+            transaction.onerror = event => reject(event.target.error);
 
-                objectStore = transaction.objectStore(objectStoreName);
-            }
-
-            let request = objectStore.get("timestamp");
-            if (isObject) {
-                request.onerror = event => reject(event.target.error);
-            }
-
-            request.onsuccess = async event => {
+            transaction.objectStore(objectStoreName).get("timestamp").onsuccess = async event => {
                 let result = event.target.result;
                 let expired;
                 if (!result) {
                     expired = true;
                 } else {
                     expired = IndexedDB.isExpired(result, ttl);
-                }
-
-                if (expired) {
-                    await IndexedDB.clear(objectStore.name);
+                    if (expired) {
+                        await IndexedDB.clear(objectStoreName);
+                    }
                 }
 
                 resolve(expired);
@@ -352,9 +344,6 @@ IndexedDB.cacheObjectStores = IndexedDB.timestampedObjectStores.concat([
     "rates",
 ]);
 
-IndexedDB.key = Symbol("key");
-IndexedDB.value = Symbol("value");
-
 class Api {
     // FF doesn't support static members
     // static origin; // this *must* be overridden
@@ -392,22 +381,36 @@ class Api {
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
     }
-    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper) {
+    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper, oneDimensional, resultFn) {
         return async params => {
-            let key = keyMapper.map(params, false);
-            if (!key) {
-                throw new Error(`Can't cache '${endpoint}' with invalid key`);
-            }
-            let requestKey = keyMapper.map(params, true);
+            let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStore);
+            let key = keyMapper ? keyMapper.map(params, false) : null;
+            let multiple = !keyMapper;
+            
+            let requestKey = timestampedObjectStore ? key : keyMapper.map(params, true);
             if (this._progressingRequests.has(requestKey)) {
                 return this._progressingRequests.get(requestKey);
             }
-            let val = await IndexedDB.get(objectStore, key, ttl);
+            let val;
+            if (timestampedObjectStore) {
+                val = await IndexedDB.getAll(objectStore, ttl);
+            } else {
+                val = await IndexedDB.get(objectStore, key, ttl);
+            }
             if (val) return val;
             let req = this.getEndpoint(endpoint, params)
                 .then(result => {
-                    IndexedDB.putCached(objectStore, result.data, key);
-                    return result;
+                    if (resultFn) return resultFn(result.data);
+                    return result.data;
+                })
+                .then(finalResult => {
+                    IndexedDB.putCached(
+                        objectStore,
+                        oneDimensional ? null : finalResult,
+                        oneDimensional ? finalResult : key,
+                        multiple
+                    );
+                    return finalResult;
                 })
                 .finally(() => this._progressingRequests.delete(requestKey));
             this._progressingRequests.set(requestKey, req);
@@ -432,7 +435,6 @@ Api.params = {};
 class AugmentedSteamApi extends Api {
     // static origin = Config.ApiServerHost;
     // static _progressingRequests = new Map();
-    // static _earlyAccessAppIds_promise = null;
     
     static getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
         return super.getEndpoint(endpoint, query)
@@ -443,33 +445,7 @@ class AugmentedSteamApi extends Api {
                 delete json.result;
                 return json; // 'response': response, 
             });
-    }
-
-    static _earlyAccessAppIds() {
-        let self = AugmentedSteamApi;
-        // Is a request in progress?
-        if (self._earlyAccessAppIds_promise) { return self._earlyAccessAppIds_promise; }
-        
-        // Get data from localStorage
-        let appids = CacheStorage.get('early_access_appids', 60 * 60); // appids expires after an hour
-        if (appids) { return appids; }
-
-        // Cache expired, need to fetch
-        self._earlyAccessAppIds_promise = self.getEndpoint("v01/earlyaccess")
-            //.then(response => response.json().then(data => ({ 'result': data.result, 'data': data.data, 'timestamp': CacheStorage.timestamp(), })))
-            .then(function(appids) {
-                appids = Object.keys(appids.data).map(x => parseInt(x, 10)); // convert { "570": 570, } to [570,]
-                CacheStorage.set("early_access_appids", appids);
-                self._earlyAccessAppIds_promise = null; // no request in progress
-                return appids;
-            })
-            ;
-        return self._earlyAccessAppIds_promise;
-    }
-
-    static earlyAccessAppIds() {
-        return AugmentedSteamApi._earlyAccessAppIds();    
-    }
+    }    
 
     static expireStorePageData(appid) {
         CacheStorage.remove(`app_${appid}`);
@@ -477,7 +453,6 @@ class AugmentedSteamApi extends Api {
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
-AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 class ITAD_Api extends Api{
     static authorize(hash) {
@@ -1018,7 +993,7 @@ let actionCallbacks = new Map([
     ['steam.currencies', Steam.currencies],
     
     ['cache.clear', IndexedDB.clear],
-    ['early_access_appids', AugmentedSteamApi.earlyAccessAppIds],
+    ['earlyAccessAppids', AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", 60*60, "earlyAccessAppids", null, true, result => Object.keys(result).map(x => parseInt(x, 10)))],
     ['dlcinfo', AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, "storePageData", storePageDataMapper)],
     ['storepagedata.expire', AugmentedSteamApi.expireStorePageData],

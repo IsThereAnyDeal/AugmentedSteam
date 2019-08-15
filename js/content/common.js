@@ -1212,7 +1212,6 @@ let EarlyAccess = (function(){
 
     let self = {};
 
-    let cache = new Set();
     let imageUrl;
 
     function checkNodes(selectors, selectorModifier) {
@@ -1220,8 +1219,7 @@ let EarlyAccess = (function(){
 
         selectors.forEach(selector => {
             let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
-            for (let i=0; i<nodes.length; i++) {
-                let node = nodes[i];
+            nodes.forEach(async node => {
                 node.classList.add("es_ea_checked");
 
                 let linkNode = node.querySelector("a");
@@ -1229,7 +1227,7 @@ let EarlyAccess = (function(){
                 let imgHeader = node.querySelector("img" + selectorModifier);
                 let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && cache.has(appid)) {
+                if (appid && await Background.action("idb.contains", "earlyAccessAppids", appid)) {
                     node.classList.add("es_early_access");
 
                     let container = document.createElement("span");
@@ -1238,7 +1236,7 @@ let EarlyAccess = (function(){
 
                     HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
                 }
-            }
+            });
         });
     }
 
@@ -1329,7 +1327,7 @@ let EarlyAccess = (function(){
     self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        cache = new Set(await Background.action('early_access_appids'));
+        await Background.action('earlyAccessAppids');
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
