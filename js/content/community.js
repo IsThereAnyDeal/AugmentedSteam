@@ -246,7 +246,9 @@ let ProfileActivityPageClass = (function(){
                 let appid = GameId.getAppid(link.href);
                 if (!appid || link.childElementCount !== 0) { continue; }
 
-                if (await DynamicStore.isOwned(appid)) {
+                let appStatus = await DynamicStore.getAppStatus(appid);
+
+                if (appStatus.owned) {
                     Highlights.highlightOwned(link);
 
                     addAchievementComparisonLink(link, appid);
@@ -256,9 +258,9 @@ let ProfileActivityPageClass = (function(){
                     Highlights.highlightCoupon(link);
                 } else if (await Inventory.hasGift(appid)) {
                     Highlights.highlightInvGift(link);
-                } else if (await DynamicStore.isWishlisted(appid)) {
+                } else if (appStatus.wishlisted) {
                     Highlights.highlightWishlist(link);
-                } else if (await DynamicStore.isIgnored(appid)) {
+                } else if (appStatus.ignored) {
                     Highlights.highlightNotInterested(link);
                 } else {
                     continue;
@@ -3363,12 +3365,14 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        if (await DynamicStore.isOwned(this.appid)) {
+        let appStatus = await DynamicStore.getAppStatus(this.appid);
+
+        if (appStatus.owned) {
             nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
 
-        if (await DynamicStore.isWishlisted(this.appid)) {
+        if (appStatus.wishlisted) {
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
             return;
         }

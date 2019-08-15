@@ -1787,20 +1787,17 @@ let DynamicStore = (function(){
         await Background.action("dynamicstore.clear");
     };
 
-    self.isIgnored = function(appid) {
+    // This function exists in order to avoid making three background calls (ignored, owned, wishlisted) for example during highlighting
+    self.getAppStatus = function(appid) {
         return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
-            .then(result => result.includes("ignored"));
-    };
-
-    self.isOwned = function(appid) {
-        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
-            .then(result => result.includes("owned"));
-    };
-
-    self.isWishlisted = function(appid) {
-        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
-            .then(result => result.includes("wishlisted"));
-    };
+            .then(statusList => {
+                let appStatus = {};
+                ["ignored", "owned", "wishlisted"].forEach(status => {
+                    appStatus[status] = statusList.includes(status);
+                });
+                return appStatus;
+            } );
+    }
 
     async function _fetch() {
         if (!User.isSignedIn) {
