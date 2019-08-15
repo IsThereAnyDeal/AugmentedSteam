@@ -1404,7 +1404,7 @@ let Inventory = (function(){
     };
 
     self.hasInInventory6 = function(marketHash) {
-        return inv6set.has(marketHash);
+        return Background.action("idb.contains", "items", marketHash);
     };
 
     return self;

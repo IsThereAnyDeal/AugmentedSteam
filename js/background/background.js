@@ -886,13 +886,10 @@ class SteamCommunity extends Api {
     static async items() { // context#6, community items
         let self = SteamCommunity;
 
-        // only used for market highlighting, need to be able to return a Set() of ['market_hash_name']
-        /*let inventory = await IndexedDB.get("inventories", 6, 3600);
-        if (!inventory) {
-            inventory = (await self.getInventory(6)).descriptions.map(item => item.market_hash_name);
-            IndexedDB.putCached("inventories", inventory, 6);
+        if (IndexedDB.isObjectStoreExpired("items", 60 * 60)) {
+            // only used for market highlighting
+            return IndexedDB.putCached("items", undefined, (await self.getInventory(6)).descriptions.map(item => item.market_hash_name), true);
         }
-        return inventory;*/
     }
 
     /**
