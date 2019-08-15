@@ -428,7 +428,11 @@ class Api {
     static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper, oneDimensional, resultFn) {
         return async params => {
             let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStore);
+
             let key = keyMapper ? keyMapper.map(params, false) : null;
+            let intKey = Number(key);
+            if (intKey) key = intKey;
+            
             let multiple = !keyMapper;
             
             let requestKey = timestampedObjectStore ? key : keyMapper.map(params, true);
