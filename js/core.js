@@ -550,7 +550,7 @@ SyncedStorage.defaults = {
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
     'send_age_info': true,
-    'html5video': true,
+    'mp4video': false,
     'contscroll': true,
     'showdrm': true,
     'regional_hideworld': false,

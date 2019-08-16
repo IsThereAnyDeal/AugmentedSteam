@@ -455,6 +455,25 @@ class StorePageClass {
             })
         });
     }
+
+    forceVideoMP4() {
+        if (!SyncedStorage.get("mp4video")) { return; }
+
+        Array.from(document.querySelectorAll("[data-webm-source]")).forEach(function(node) {
+            let mp4 = node.dataset.mp4Source;
+            let mp4hd = node.dataset.mp4HdSource;
+            if (!mp4 || !mp4hd) return;
+
+            node.dataset.webmSource = mp4;
+            node.dataset.webmHdSource = mp4hd;
+
+            let video = node.querySelector("video");
+            if (!video) { return; }
+
+            video.dataset.sdSrc = mp4;
+            video.dataset.hdSrc = mp4hd;
+        });
+    }
 }
 
 
@@ -562,6 +581,7 @@ class AppPageClass extends StorePageClass {
         // Required for "Customize" button and YouTube / Steam tabs
         DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
         
+        this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
