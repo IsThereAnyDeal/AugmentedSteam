@@ -68,6 +68,7 @@ class IndexedDB {
                         db.createObjectStore("profiles");
                         db.createObjectStore("rates");
                         db.createObjectStore("notes");
+                        db.createObjectStore("itad");
                     }
                 }
             });
@@ -412,6 +413,7 @@ IndexedDB.timestampedObjectStores = [
     "earlyAccessAppids",
     "purchases",
     "dynamicStore",
+    "itad",
 ];
 IndexedDB.cacheObjectStores = IndexedDB.timestampedObjectStores.concat([
     "packages",
@@ -457,17 +459,17 @@ class Api {
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
     }
-    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, ttl, objectStore, key, oneDimensional, resultFn) {
         return async params => {
             let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStore);
 
-            let key = keyMapper ? keyMapper.map(params, false) : null;
-            let intKey = Number(key);
-            if (intKey) key = intKey;
+            let dbKey = key instanceof KeyMapper ? key.map(params, false) : key;
+            let intKey = Number(dbKey);
+            if (intKey) dbKey = intKey;
             
-            let multiple = !keyMapper;
+            let multiple = Array.isArray(key);
             
-            let requestKey = timestampedObjectStore ? key : keyMapper.map(params, true);
+            let requestKey = key instanceof KeyMapper ? key.map(params, true) : key;
             if (this._progressingRequests.has(requestKey)) {
                 return this._progressingRequests.get(requestKey);
             }
@@ -475,7 +477,7 @@ class Api {
             if (timestampedObjectStore) {
                 val = await IndexedDB.getAll(objectStore, ttl);
             } else {
-                val = await IndexedDB.get(objectStore, key, ttl);
+                val = await IndexedDB.get(objectStore, dbKey, ttl);
             }
             if (val) return val;
             let req = this.getEndpoint(endpoint, params)
@@ -483,11 +485,11 @@ class Api {
                     if (resultFn) return resultFn(result.data);
                     return result.data;
                 })
-                .then(finalResult => {
-                    IndexedDB.putCached(
+                .then(async finalResult => {
+                    await IndexedDB.putCached(
                         objectStore,
                         oneDimensional ? null : finalResult,
-                        oneDimensional ? finalResult : key,
+                        oneDimensional ? finalResult : dbKey,
                         multiple
                     );
                     return finalResult;
@@ -534,13 +536,13 @@ class AugmentedSteamApi extends Api {
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
 
-class ITAD_Api extends Api{
+class ITAD_Api extends Api {
     static authorize(hash) {
         return new Promise(resolve => {
             browser.permissions.request({ permissions: ["identity"] }).then(granted => {
                 if (granted) {
-                    browser.identity.launchWebAuthFlow(
-                        { url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=wait_read%20coll_read&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`, interactive: true }).then(url => {
+                    browser.identity.launchWebAuthFlow({ url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=wait_read%20coll_read&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`, interactive: true })
+                        .then(url => {
                             if (url) {
                                 let hashFragment = new URL(url).hash;
                                 if (hashFragment) {
@@ -564,25 +566,36 @@ class ITAD_Api extends Api{
     }
 
     static isExpired() {
-        let lsEntry = localStorage.getItem("access_token");
+        let lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) return true;
 
-        let item;
-        try {
-            item = JSON.parse(lsEntry);
-        } catch(err) {
+        if (lsEntry.expiry <= CacheStorage.timestamp()) {
+            LocalStorage.remove("access_token");
             return true;
         }
-
-        if (item.expiry <= CacheStorage.timestamp()) {
-            localStorage.removeItem("access_token");
-            return true;
-        }
+        ITAD_Api.accessToken = lsEntry.token;
+        ITAD_Api.fetchWaitlistAndCollection()
         return false;
     }
+
+    static endpointFactoryCached(endpoint, ttl, objectStore, keyMapper, oneDimensional, resultFn) {
+        return async params => {
+            super.endpointFactoryCached(endpoint, ttl, objectStore, keyMapper, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }))
+        }
+    }
+
+    static fetchWaitlistAndCollection() {
+        return Promise.all([
+            ITAD_Api.endpointFactoryCached("v01/user/wait/all/", 60 * 60, "itad", "waitlist")(),
+            ITAD_Api.endpointFactoryCached("v01/user/coll/all/", 60 * 60, "itad", "collection")(),
+        ]);
+    }
 }
-ITAD_Api.origin = Config.ITAD_ApiServerHost;
+ITAD_Api.accessToken = null;
 ITAD_Api.clientId = "5fe78af07889f43a";
+
+ITAD_Api.origin = Config.ITAD_ApiServerHost;
+ITAD_Api._progressingRequests = new Map();
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
