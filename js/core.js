@@ -789,6 +789,10 @@ function sleep(duration) {
     });
 }
 
+function timestamp() {
+    return Math.trunc(Date.now() / 1000);
+}
+
 async function executionTime(fn, label) {
     let start = performance.now();
     await fn();

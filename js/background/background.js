@@ -1,9 +1,8 @@
 class CacheStorage {
-    static timestamp() { return Math.trunc(Date.now() / 1000); }
     static isExpired (timestamp, ttl) {
         if (!timestamp) return true;
         if (typeof ttl != 'number' || ttl < 0) ttl = 0;
-        return timestamp + ttl <= CacheStorage.timestamp();
+        return timestamp + ttl <= timestamp();
     }
 
     static get(key, ttl, defaultValue) {
@@ -20,7 +19,7 @@ class CacheStorage {
     }
 
     static set (key, value) {
-        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': CacheStorage.timestamp(), }));
+        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': timestamp(), }));
     }
 
     static remove(key) {
@@ -92,7 +91,7 @@ class IndexedDB {
 
             let objectStore = transaction.objectStore(objectStoreName);
             if (cached) {
-                let timestamp = IndexedDB.timestamp();
+                let timestamp = timestamp();
                 if (IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
                     objectStore.put(timestamp, "timestamp");
                 } else {
@@ -354,7 +353,7 @@ class IndexedDB {
     }
 
     static isExpired(timestamp, ttl) {
-        return timestamp + ttl <= IndexedDB.timestamp();
+        return timestamp + ttl <= timestamp();
     }
 
     static isObjectStoreExpired(objectStoreName, ttl) {
@@ -389,10 +388,7 @@ class IndexedDB {
             
             
         });
-    }
-
-    static timestamp() { return Math.trunc(Date.now() / 1000); }
-    
+    }    
 }
 IndexedDB._promise = null;
 
@@ -553,8 +549,8 @@ class ITAD_Api extends Api {
                                         let expiresIn = params.get("expires_in");
             
                                         if (accessToken && expiresIn) {
-                                            localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: CacheStorage.timestamp() + parseInt(expiresIn, 10) }));
                                             resolve();
+                                            localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: timestamp() + parseInt(expiresIn, 10) }));
                                         } else throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'");
                                     } else throw new Error("Failed to verify state parameter from URL fragment");
                                 } else throw new Error("URL " + url + " doesn't contain a fragment");
@@ -569,7 +565,7 @@ class ITAD_Api extends Api {
         let lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) return true;
 
-        if (lsEntry.expiry <= CacheStorage.timestamp()) {
+        if (lsEntry.expiry <= timestamp()) {
             LocalStorage.remove("access_token");
             return true;
         }
