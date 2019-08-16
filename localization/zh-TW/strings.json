@@ -62,7 +62,7 @@
     "hardwareads": "硬體廣告",
     "homepage_tabs": "首頁標籤",
     "tag_categories": "標籤分類",
-    "discounts": "特惠",
+    "discounts": "折扣",
     "new_and_upcoming": "新品與話題商品",
     "store": "商店",
     "view_in_store": "在商店中檢視",
@@ -107,8 +107,8 @@
     "package_info": "套件資訊",
     "badge_completion_avg": "完成徽章的平均花費：__cost__",
     "using_store": "你正在使用__current__地區的 Steam 商店。",
-    "volume_sold_last_24": "數量：有 __sold__ 件在 24 小時內售出",
-    "sold_last_24": "有 __sold__ 件在 24 小時內售出",
+    "volume_sold_last_24": "數量：最近 24 小時內售出 __sold__ 個",
+    "sold_last_24": "最近 24 小時內售出 __sold__ 個",
     "homepage_sidebar": "側欄",
     "drop_calc": "按此計算剩餘的卡片掉落數",
     "price": "價格",
@@ -523,15 +523,15 @@
     },
     "wallet": {
         "custom_amount": "新增自訂金額",
-        "custom_amount_text": "新增任意多於 __minamount__ 的金額",
-        "custom_giftcard_amount": "選擇 __input__ 自訂禮物卡（任意多於 __minamount__ 的金額）"
+        "custom_amount_text": "新增大於 __minamount__ 的任意金額",
+        "custom_giftcard_amount": "選擇 __input__ 自訂禮物卡（大於 __minamount__ 的任意金額）"
     },
     "wsgf": {
         "incomplete": "不完全",
         "unsupported": "此遊戲因為不支援 __type__ 而獲得此評分，遊戲可能無法在 __type__ 下遊玩，或畫面會被延展來填滿螢幕，無法維持正確的長寬比。",
         "gold": "此遊戲的 __type__ 支援獲得 WSGF 的完美評分，並且經過 __type__ 認證。",
-        "silver": "此遊戲的 __type__ 支援獲得 B 等評分，遊戲並沒有重大缺陷，但是至少有一個瑕疵讓它無法拿到完美評分。",
-        "limited": "此遊戲的 __type__ 支援獲得 C 等評分，遊戲有一定程度的 __type__ 支援，但是有嚴重的問題。",
+        "silver": "此遊戲的 __type__ 支援獲得 B 級評分，遊戲並沒有重大缺陷，但是至少有一個瑕疵讓其無法拿到完美評分。",
+        "limited": "此遊戲的 __type__ 支援獲得 C 級評分，遊戲有一定程度的 __type__ 支援，但是有嚴重的問題。",
         "certifications": "WSGF 寬螢幕認證"
     },
     "itad": {
@@ -564,7 +564,7 @@
         "total_price": "目前價值",
         "in_wishlist": "在願望清單中",
         "on_sale": "特價中",
-        "no_price": "無價格"
+        "no_price": "未標價"
     },
     "coll": {
         "in_collection": "在收藏庫中",
