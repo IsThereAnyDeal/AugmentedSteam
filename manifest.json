@@ -41,8 +41,9 @@
       "matches": [
         "*://*.steampowered.com/*"
       ],
-      "exclude_matches": [
+      "exclude_globs": [
         "*://store.steampowered.com/dynamicstore/*",
+        "*://store.steampowered.com/checkout/.*[^purchasetype=gift].*",
         "*://store.steampowered.com/widget/*",
         "*://store.steampowered.com/login/*",
         "*://store.steampowered.com/join/*",
