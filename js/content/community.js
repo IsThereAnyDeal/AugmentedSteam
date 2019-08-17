@@ -323,6 +323,7 @@ let ProfileHomePageClass = (function(){
         this.addProfileStyle();
         this.addTwitchInfo();
         this.chatDropdownOptions();
+        this.addNicknameLink();
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
@@ -835,6 +836,21 @@ let ProfileHomePageClass = (function(){
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
         });
+    };
+
+    ProfileHomePageClass.prototype.addNicknameLink = function() {
+        if (!User.isSignedIn) { return; }
+
+        let alreadyHave = document.querySelector(".popup_menu_item[onclick*=ShowNicknameModal]");
+        if (alreadyHave) { return; }
+
+        let nicknameMenuItem = `<a class="popup_menu_item" href="#" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`;
+
+        let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
+        if (!node) { return; }
+
+        HTML.afterEnd(node, nicknameMenuItem);
+        document.querySelector("#es_nickname").setAttribute("onclick", "ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false;");
     };
 
     return ProfileHomePageClass;
