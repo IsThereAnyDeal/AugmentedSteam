@@ -304,6 +304,8 @@ class Api {
         return async params => {
             let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStore);
 
+            // Only return a value for a specified key (other results will get cached in the DB)
+            let returnValue = key instanceof KeyMapper || key;
             let dbKey = key instanceof KeyMapper ? key.map(params, false) : key;
             let intKey = Number(dbKey);
             if (intKey) dbKey = intKey;
@@ -318,7 +320,10 @@ class Api {
             } else {
                 val = await IndexedDB.get(objectStore, dbKey, ttl);
             }
-            if (val) return val;
+            if (val) {
+                if (returnValue) return val;
+                return;
+            }
             let req = this.getEndpoint(endpoint, params)
                 .then(result => {
                     if (resultFn) return resultFn(result.data);
@@ -331,7 +336,8 @@ class Api {
                         oneDimensional ? finalResult : dbKey,
                         multiple
                     );
-                    return finalResult;
+                    if (returnValue) return finalResult;
+                    return;
                 })
                 .finally(() => this._progressingRequests.delete(requestKey));
             this._progressingRequests.set(requestKey, req);
