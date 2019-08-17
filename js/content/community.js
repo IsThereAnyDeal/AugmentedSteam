@@ -476,7 +476,7 @@ let ProfileHomePageClass = (function(){
         }
 
         function showSteamIdDialog() {
-            let sid = new Modules.SteamID(steamId);
+            let sid = new SteamID(steamId);
             let html =
                `<div class="bb_h1">${Localization.str.click_to_copy}</div>
                 <p><a data-copy="${sid.getSteam2RenderedID()}" class="es_copy">${sid.getSteam2RenderedID()}</a></p>
