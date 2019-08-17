@@ -954,15 +954,12 @@ let EnhancedSteam = (function() {
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        let node = document.querySelector("div.header_installsteam_btn");
-        if (node) { node.remove(); }
+        DOMHelper.remove("div.header_installsteam_btn");
 
         if (User.isSignedIn) {
-            let node = document.querySelector(".submenuitem[href^='https://store.steampowered.com/about/']");
-            if (node) { node.remove(); }
+            DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
         } else {
-            let node = document.querySelector(".menuitem[href^='https://store.steampowered.com/about/']");
-            if (node) { node.remove(); }
+            DOMHelper.remove(".menuitem[href^='https://store.steampowered.com/about/']");
         }
     };
 
