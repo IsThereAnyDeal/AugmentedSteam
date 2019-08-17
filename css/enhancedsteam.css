@@ -2396,6 +2396,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .steam_client_btn i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/icon-steamos.png'); /* //steamcdn-a.akamaihd.net/store/about/icon-steamos.svg */
 }
+
+.bartervg_ico i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/bartervg.png');
+}
+.bartervg_ico:hover i {
+	background-image:url('chrome-extension://__MSG_@@extension_id__/img/bartervg.png');
+}
+
 .pcgw_btn i {
 	background-image:url('chrome-extension://__MSG_@@extension_id__/img/pcgw.png');
 }

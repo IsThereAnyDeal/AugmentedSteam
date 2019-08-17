@@ -3346,6 +3346,7 @@ let CommunityAppPageClass = (function(){
         this.addAppPageWishlist();
         this.addSteamDbLink();
         this.addItadLink();
+        this.addBartervgLink();
         AgeCheck.sendVerification();
 
         let node = document.querySelector(".apphub_background");
@@ -3409,6 +3410,14 @@ let CommunityAppPageClass = (function(){
 
         HTML.beforeEnd(".apphub_OtherSiteInfo",
             ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addBartervgLink = function() {
+        if (!SyncedStorage.get("showbartervg")) { return; }
+        let bgUrl = ExtensionLayer.getLocalUrl("img/bartervg.png");
+
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;

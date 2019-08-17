@@ -488,6 +488,7 @@ SyncedStorage.defaults = {
     'showsteamcardexchange': false,
     'showitadlinks': true,
     'showsteamdb': true,
+    'showbartervg': false,
     'showastatslink': true,
     'showyoutubegameplay': true,
     'showyoutubereviews': true,
