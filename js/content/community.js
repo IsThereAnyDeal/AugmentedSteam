@@ -318,12 +318,11 @@ let ProfileHomePageClass = (function(){
         this.changeUserBackground();
         this.addProfileStoreLinks();
         this.addSteamRepApi();
-        this.addPostHistoryLink();
+        this.userDropdownOptions();
         this.inGameNameLink();
         this.addProfileStyle();
         this.addTwitchInfo();
         this.chatDropdownOptions();
-        this.addNicknameLink();
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
@@ -637,9 +636,27 @@ let ProfileHomePageClass = (function(){
         });
     };
 
-    ProfileHomePageClass.prototype.addPostHistoryLink = function() {
+    ProfileHomePageClass.prototype.userDropdownOptions = function() {
+
         let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         if (!node) { return; }
+
+        // add nickname option for non-friends
+        if (User.isSignedIn) {
+
+            // check whether we can chat => if we can we are friends => we have nickname option
+            let canChat = document.querySelector("#profile_chat_dropdown_link");
+            if (!canChat) {
+
+                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
+
+                node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
+                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                });
+            }
+        }
+
+        // post history link
         HTML.afterEnd(node,
                 `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
@@ -836,21 +853,6 @@ let ProfileHomePageClass = (function(){
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
         });
-    };
-
-    ProfileHomePageClass.prototype.addNicknameLink = function() {
-        if (!User.isSignedIn) { return; }
-
-        let alreadyHave = document.querySelector(".popup_menu_item[onclick*=ShowNicknameModal]");
-        if (alreadyHave) { return; }
-
-        let nicknameMenuItem = `<a class="popup_menu_item" href="#" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`;
-
-        let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
-        if (!node) { return; }
-
-        HTML.afterEnd(node, nicknameMenuItem);
-        document.querySelector("#es_nickname").setAttribute("onclick", "ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false;");
     };
 
     return ProfileHomePageClass;
