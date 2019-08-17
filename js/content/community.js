@@ -645,8 +645,8 @@ let ProfileHomePageClass = (function(){
         if (User.isSignedIn) {
 
             // check whether we can chat => if we can we are friends => we have nickname option
-            let canChat = document.querySelector("#profile_chat_dropdown_link");
-            if (!canChat) {
+            let canAddFriend = document.querySelector("#btn_add_friend");
+            if (canAddFriend) {
 
                 HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
 
