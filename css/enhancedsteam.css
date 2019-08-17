@@ -2647,3 +2647,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	display: block;
 	clear: both;
 }
+
+/***************************************
+ * Fix long-shaped artwork thumbnails
+ * 
+ **************************************/
+.publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
+	min-height: 100px;
+}
