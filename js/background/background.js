@@ -2,7 +2,7 @@ class CacheStorage {
     static isExpired (timestamp, ttl) {
         if (!timestamp) return true;
         if (typeof ttl != 'number' || ttl < 0) ttl = 0;
-        return timestamp + ttl <= timestamp();
+        return timestamp + ttl <= window.timestamp();
     }
 
     static get(key, ttl, defaultValue) {
@@ -19,7 +19,7 @@ class CacheStorage {
     }
 
     static set (key, value) {
-        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': timestamp(), }));
+        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': window.timestamp(), }));
     }
 
     static remove(key) {
@@ -43,303 +43,165 @@ class CacheStorage {
 class IndexedDB {
     static init() {
         if (!IndexedDB._promise) {
-            IndexedDB._promise = new Promise((resolve, reject) => {
-                let request = indexedDB.open("Augmented Steam", Info.db_version);
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => {
-                    IndexedDB.db = request.result;
-                    IndexedDB.db.onerror = event => console.error("Database error:", event.target.errorCode);
-                    resolve();
-                }
-                request.onupgradeneeded = event => {
-                    let db = request.result;
-                    let oldVersion = event.oldVersion;
-                    if (oldVersion < 1) {
-                        db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
-                        db.createObjectStore("gifts");
-                        db.createObjectStore("passes");
-                        db.createObjectStore("items");
-                        db.createObjectStore("earlyAccessAppids");
-                        db.createObjectStore("purchases");
-                        db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
-                        db.createObjectStore("packages");
-                        db.createObjectStore("storePageData");
-                        db.createObjectStore("profiles");
-                        db.createObjectStore("rates");
-                        db.createObjectStore("notes");
-                        db.createObjectStore("itad");
-                    }
-                }
-            });
+            IndexedDB._promise = async () => {
+                IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
+                    upgrade(db, oldVersion) {
+                        switch(oldVersion) {
+                            case 0: {
+                                db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
+                                db.createObjectStore("gifts");
+                                db.createObjectStore("passes");
+                                db.createObjectStore("items");
+                                db.createObjectStore("earlyAccessAppids");
+                                db.createObjectStore("purchases");
+                                db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
+                                db.createObjectStore("packages");
+                                db.createObjectStore("storePageData");
+                                db.createObjectStore("profiles");
+                                db.createObjectStore("rates");
+                                db.createObjectStore("notes");
+                                db.createObjectStore("itad");
+                                break;
+                            }
+                            default: {
+                                console.warn("Unknown oldVersion", oldVersion);
+                                break;
+                            }
+                        }
+                    },
+                    blocked() {
+                        console.error("Failed to upgrade database, there is already an open connection");
+                    },
+                });
+            };
         }
         return IndexedDB._promise;
     }
     static catch(onCatch) {
-        return IndexedDB.init().catch(onCatch);
+        return IndexedDB.init()().catch(onCatch);
     }
 
     static putCached(objectStoreName, data, key, multiple) {
         return IndexedDB.put(objectStoreName, data, key, multiple, true);
     }
 
-    static put(objectStoreName, data, key, multiple, cached) {
-        return new Promise((resolve, reject) => {
-
-            let transaction = IndexedDB.db.transaction(objectStoreName, "readwrite");
-            transaction.oncomplete = () => resolve();
-            transaction.onerror = event => reject(event.target.error);
-
-            let objectStore = transaction.objectStore(objectStoreName);
-            if (cached) {
-                let timestamp = timestamp();
-                if (IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
-                    objectStore.put(timestamp, "timestamp");
-                } else {
-                    if (multiple) {
-                        if (data) data.map(value => ({ "value": value, "timestamp": timestamp }));
-                    } else {
-                        data = { "value": data, "timestamp": timestamp };
-                    }
-                }
-            }
-            if (multiple) {
-                if (key) {
-                    for (let i = 0; i < key.length; ++i) {
-                        if (data) {
-                            objectStore.put(data[i], key[i]);
-                        } else {
-                            objectStore.put(undefined, key[i]);
-                        }
-                    }
-                } else {
-                    data.forEach(value => objectStore.put(value));
-                }
+    static async put(objectStoreName, data, key, multiple, cached) {
+        if (cached) {
+            let timestamp = window.timestamp();
+            if (IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
+                await IndexedDB.db.put(objectStoreName, timestamp, "timestamp");
             } else {
-                if (key) {
-                    if (data) {
-                        objectStore.put(data, key);
-                    } else {
-                        objectStore.put(undefined, key);
-                    }
+                if (multiple) {
+                    if (data) data.map(value => ({ "value": value, "timestamp": timestamp }));
                 } else {
-                    objectStore.put(data);
+                    data = { "value": data, "timestamp": timestamp };
                 }
             }
-        });
-    }
-
-    static get(objectStoreName, key, ttl, withKey) {
-        return new Promise(async (resolve, reject) => {
-            let multiple = Array.isArray(key);
-            let results;
-
-            if (withKey) {
-                results = {};
-            } else if (multiple) {
-                results = [];
-            }
-
-            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
-                resolve(null);
-                return;
-            }
-
-            let transaction = IndexedDB.db.transaction(objectStoreName);
-            transaction.oncomplete = () => resolve(results);
-            transaction.onerror = event => reject(event.target.error);
-
-            let objectStore = transaction.objectStore(objectStoreName);
-
-            if (multiple) {
+        }
+        if (multiple) {
+            let promises = [];
+            if (key) {
                 for (let i = 0; i < key.length; ++i) {
-                    objectStore.get(key[i]).onsuccess = event => {
-                        if (withKey) {
-                            results[key[i]] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                        } else {
-                            results[i] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                        }
-                    };
-                }
-            } else {
-                objectStore.get(key).onsuccess = event => {
-                    if (withKey) {
-                        results[key] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                    if (data) {
+                        promises.push(IndexedDB.db.put(objectStoreName, data[i], key[i]));
                     } else {
-                        results = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
+                        promises.push(IndexedDB.db.put(objectStoreName, undefined, key[i]));
                     }
-                };
-            }
-        });
-    }
-
-    static getAll(objectStoreName, ttl, withKey = false) {
-        return new Promise(async (resolve, reject) => {
-            let results = withKey ? {} : [];
-
-            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
-                resolve(null);
-                return;
-            }
-
-            let transaction = IndexedDB.db.transaction(objectStoreName);
-            transaction.oncomplete = () => resolve(results);
-            transaction.onerror = event => reject(event.target.error);
-
-            transaction.objectStore(objectStoreName).openCursor().onsuccess = event => {
-                let cursor = event.target.result;
-                if (cursor && cursor.key !== "timestamp") {
-                    if (withKey) {
-                        results[cursor.key] = IndexedDB.resultExpiryCheck(cursor.value, ttl, objectStoreName);
-                    } else {
-                        results.push(IndexedDB.resultExpiryCheck(cursor.value, ttl, objectStoreName));
-                    }
-                    cursor.continue();
-                }
-            }
-        });
-    }
-
-    static getFromIndex(objectStoreName, indexName, key, ttl, asKey) {
-        return new Promise(async (resolve, reject) => {
-            let multiple = Array.isArray(key);
-            let results;
-
-            if (multiple) results = [];
-
-            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
-                resolve(null);
-                return;
-            }
-
-            let transaction = IndexedDB.db.transaction(objectStoreName);
-            transaction.oncomplete = () => resolve(results);
-            transaction.onerror = event => reject(event.target.error);
-
-            let index = transaction.objectStore(objectStoreName).index(indexName);
-
-            if (multiple) {
-                function successHandler(event) {
-                    for (let i = 0; i < key.length; ++i) {
-                        results[i] = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                    }
-                }
-                
-                if (asKey) {
-                    index.getKey(key[i]).onsuccess = successHandler;
-                } else {
-                    index.get(key[i]).onsuccess = successHandler;
                 }
             } else {
-                function successHandler(event) {
-                    results = IndexedDB.resultExpiryCheck(event.target.result, ttl, objectStoreName);
-                }
-                if (asKey) {
-                    index.getKey(key).onsuccess = successHandler;
+                data.forEach(value => promises.push(IndexedDB.db.put(objectStoreName, value)));
+            }
+            return Promise.all(promises);
+        } else {
+            if (key) {
+                if (data) {
+                    return IndexedDB.db.put(objectStoreName, data, key);
                 } else {
-                    index.get(key).onsuccess = successHandler;
-                }
-            }
-        });
-    }
-
-    static getAllFromIndex(objectStoreName, indexName, key, ttl, asKey) {
-        return new Promise(async (resolve, reject) => {
-            let results = [];
-
-            if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) {
-                resolve(null);
-                return;
-            }
-
-            let transaction = IndexedDB.db.transaction(objectStoreName);
-            transaction.onerror = event => reject(event.target.error);
-
-            let index = transaction.objectStore(objectStoreName).index(indexName);
-
-            if (asKey) {
-                index.getAllKeys(key).onsuccess = event => {
-                    resolve(event.target.result);
+                    return IndexedDB.db.put(objectStoreName, undefined, key);
                 }
             } else {
-                index.getAll(key).onsuccess = event => {
-                    event.target.result.forEach(result => {
-                        results.push(IndexedDB.resultExpiryCheck(result, ttl, objectStoreName));
-                    });
-                    resolve(results);
-                };
+                return IndexedDB.db.put(objectStoreName, data);
             }
-        });
+        }
+    }
+
+    static async get(objectStoreName, key, ttl) {
+        let multiple = Array.isArray(key);
+
+        if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) { return; }
+
+        if (multiple) {
+            let promises = [];
+            for (let i = 0; i < key.length; ++i) {
+                promises.push(IndexedDB.db.get(objectStoreName, key[i])
+                    .then(result => IndexedDB.resultExpiryCheck(result, ttl, objectStoreName)));
+            }
+            return Promise.all(promises);
+        } else {
+            return IndexedDB.db.get(objectStoreName, key)
+                .then(result => IndexedDB.resultExpiryCheck(result, ttl, objectStoreName));
+        }
+    }
+
+    static async getAll(objectStoreName, ttl, withKeys) {
+        if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) { return; }
+
+        let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor();
+
+        let results = withKeys ? {} : [];
+        while (cursor && cursor.key !== "timestamp") {
+            if (withKeys) {
+                results[cursor.key] = IndexedDB.resultExpiryCheck(cursor.value, ttl, objectStoreName);
+            } else {
+                results.push(IndexedDB.resultExpiryCheck(cursor.value, ttl, objectStoreName));
+            }
+            cursor = await cursor.continue();
+        }
+        return results;
+    }
+
+    static async getFromIndex(objectStoreName, indexName, key, ttl, asKey) {
+        if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) { return; }
+
+        if (asKey) {
+            return IndexedDB.db.getKeyFromIndex(objectStoreName, indexName, key);
+        } else {
+            return IndexedDB.db.getFromIndex(objectStoreName, indexName, key).then(result => IndexedDB.resultExpiryCheck(result, ttl, objectStoreName));
+        }
+    }
+
+    static async getAllFromIndex(objectStoreName, indexName, key, ttl, asKey) {
+        if (await IndexedDB.isObjectStoreExpired(objectStoreName, ttl)) { return; }
+
+        if (asKey) {
+            return IndexedDB.db.getAllKeysFromIndex(objectStoreName, indexName, key);
+        } else {
+            let results = await IndexedDB.db.getAllFromIndex(objectStoreName, indexName, key);
+            return results.map(value => IndexedDB.resultExpiryCheck(value, ttl, objectStoreName));
+        }
     }
 
     static delete(objectStoreName, key) {
-        return new Promise((resolve, reject) => {
-            let multiple = Array.isArray(key);
-
-            let transaction = IndexedDB.db.transaction(objectStoreName, "readwrite");
-            transaction.oncomplete = () => resolve();
-            transaction.onerror = event => reject(event.target.error);
-
-            let objectStore = transaction.objectStore(objectStoreName);
-            if (multiple) {
-                key.forEach(key => objectStore.delete(key));
-            } else {
-                objectStore.delete(key);
-            }
-        });
+        return IndexedDB.db.delete(objectStoreName, key);
     }
 
     static clear(objectStoreNames) {
-        return new Promise((resolve, reject) => {
-            let objectStores = objectStoreNames || IndexedDB.cacheObjectStores;
-            let multiple = Array.isArray(objectStores);
+        let objectStores = objectStoreNames || IndexedDB.cacheObjectStores;
+        let multiple = Array.isArray(objectStores);
 
-            let transaction = IndexedDB.db.transaction(objectStores, "readwrite");
-            transaction.oncomplete = () => resolve();
-            transaction.onerror = event => reject(event.target.error);
-
-            if (multiple) {
-                objectStores.forEach(objectStoreName => {
-                    transaction.objectStore(objectStoreName).clear();
-                });
-            } else {
-                transaction.objectStore(objectStoreNames).clear();
-            }
-        });
+        if (multiple) {
+            let promises = [];
+            objectStores.forEach(objectStoreName => {
+                promises.push(IndexedDB.db.clear(objectStoreName));
+            });
+            return Promise.all(promises);
+        } else {
+            return IndexedDB.db.clear(objectStoreNames);
+        }
     }
 
-    static contains(objectStoreName, toBeChecked) {
-        return new Promise((resolve, reject) => {
-            let multiple = Array.isArray(toBeChecked);
-            let contained;
-            if (multiple) contained = [];
-
-            let transaction = IndexedDB.db.transaction(objectStoreName);
-            transaction.oncomplete = () => resolve(contained);
-            transaction.onerror = event => reject(event.target.error);
-
-            let objectStore = transaction.objectStore(objectStoreName);
-            if (multiple) {
-                toBeChecked.forEach((key, i) => {
-                    objectStore.openKeyCursor(key).onsuccess = event => {
-                        let cursor = event.target.result;
-                        if (cursor) {
-                            contained[i] = true;
-                        } else {
-                            contained[i] = false;
-                        }
-                    }
-                })
-            } else {
-                objectStore.openKeyCursor(toBeChecked).onsuccess = event => {
-                    let cursor = event.target.result;
-                    if (cursor) {
-                        contained = true;
-                    } else {
-                        contained = false;
-                    }
-                }
-            }           
-        });
+    static contains(objectStoreName, key) {
+        return IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key).then(cursor => Boolean(cursor));
     }
 
     static resultExpiryCheck(result, ttl, objectStoreName) {
@@ -353,41 +215,24 @@ class IndexedDB {
     }
 
     static isExpired(timestamp, ttl) {
-        return timestamp + ttl <= timestamp();
+        return timestamp + ttl <= window.timestamp();
     }
 
-    static isObjectStoreExpired(objectStoreName, ttl) {
-        return new Promise((resolve, reject) => {
-            if (!IndexedDB.timestampedObjectStores.includes(objectStoreName)) {
-                resolve(false);
-                return;
+    static async isObjectStoreExpired(objectStoreName, ttl) {
+        if (!IndexedDB.timestampedObjectStores.includes(objectStoreName)) { return false; }
+        if (!ttl) { return false; }
+        
+        let timestamp = await IndexedDB.db.get(objectStoreName, "timestamp");
+        let expired;
+        if (!timestamp) {
+            expired = true;
+        } else {
+            expired = IndexedDB.isExpired(timestamp, ttl);
+            if (expired) {
+                await IndexedDB.clear(objectStoreName);
             }
-
-            if (!ttl) {
-                resolve(false);
-                return;
-            }
-            
-            let transaction = IndexedDB.db.transaction(objectStoreName);
-            transaction.onerror = event => reject(event.target.error);
-
-            transaction.objectStore(objectStoreName).get("timestamp").onsuccess = async event => {
-                let result = event.target.result;
-                let expired;
-                if (!result) {
-                    expired = true;
-                } else {
-                    expired = IndexedDB.isExpired(result, ttl);
-                    if (expired) {
-                        await IndexedDB.clear(objectStoreName);
-                    }
-                }
-
-                resolve(expired);
-            };
-            
-            
-        });
+        }
+        return expired;
     }    
 }
 IndexedDB._promise = null;
@@ -455,15 +300,13 @@ class Api {
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
     }
-    static endpointFactoryCached(endpoint, ttl, objectStore, key, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, ttl, objectStore, key, multiple, oneDimensional, resultFn) {
         return async params => {
             let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStore);
 
             let dbKey = key instanceof KeyMapper ? key.map(params, false) : key;
             let intKey = Number(dbKey);
             if (intKey) dbKey = intKey;
-            
-            let multiple = Array.isArray(key);
             
             let requestKey = key instanceof KeyMapper ? key.map(params, true) : key;
             if (this._progressingRequests.has(requestKey)) {
@@ -484,7 +327,7 @@ class Api {
                 .then(async finalResult => {
                     await IndexedDB.putCached(
                         objectStore,
-                        oneDimensional ? null : finalResult,
+                        oneDimensional ? undefined : finalResult,
                         oneDimensional ? finalResult : dbKey,
                         multiple
                     );
@@ -550,7 +393,7 @@ class ITAD_Api extends Api {
             
                                         if (accessToken && expiresIn) {
                                             resolve();
-                                            localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: timestamp() + parseInt(expiresIn, 10) }));
+                                            localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: window.timestamp() + parseInt(expiresIn, 10) }));
                                         } else throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'");
                                     } else throw new Error("Failed to verify state parameter from URL fragment");
                                 } else throw new Error("URL " + url + " doesn't contain a fragment");
@@ -565,7 +408,7 @@ class ITAD_Api extends Api {
         let lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) return true;
 
-        if (lsEntry.expiry <= timestamp()) {
+        if (lsEntry.expiry <= window.timestamp()) {
             LocalStorage.remove("access_token");
             return true;
         }
@@ -600,8 +443,14 @@ class SteamStore extends Api {
 
     static async addCouponAppids(coupons) {
         let package_queue = [];
-        let packages = await IndexedDB.get("packages", Object.keys(coupons).map(value => parseInt(value, 10)), 7 * 24 * 60 * 60, true);
+        let packagesKeys = Object.keys(coupons).map(value => parseInt(value, 10));
+        let packagesArr = await IndexedDB.get("packages", packagesKeys, 7 * 24 * 60 * 60);
+        let packages = {};
         
+        for (let i = 0; i < packagesArr.length; ++i) {
+            packages[packagesKeys[i]] = packagesArr[i];
+        }
+
         for (let [subid, coupon] of Object.entries(coupons)) {
             let details = packages[subid];
             if (!details) {
@@ -1061,7 +910,7 @@ let actionCallbacks = new Map([
     ['steam.currencies', Steam.currencies],
     
     ['cache.clear', IndexedDB.clear],
-    ['earlyAccessAppids', AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", 60*60, "earlyAccessAppids", null, true, result => Object.keys(result).map(x => parseInt(x, 10)))],
+    ['earlyAccessAppids', AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", 60*60, "earlyAccessAppids", null, true, true, result => Object.keys(result).map(x => parseInt(x, 10)))],
     ['dlcinfo', AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
     ['storepagedata', AugmentedSteamApi.endpointFactoryCached('v01/storepagedata', 60*60, "storePageData", storePageDataMapper)],
     ['storepagedata.expire', AugmentedSteamApi.expireStorePageData],
