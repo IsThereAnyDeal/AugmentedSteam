@@ -3451,8 +3451,29 @@ let GuidesPageClass = (function(){
     return GuidesPageClass;
 })();
 
+let WorkshopPageClass = (function(){
 
-class WorkshopPageClass {
+    function WorkshopPageClass() {
+        this.loadLastState();
+    }
+
+    WorkshopPageClass.prototype.loadLastState = function() {
+        let url = new URL(window.location.href);
+
+        if (url.searchParams && url.searchParams.has("browsesort")) {
+            LocalStorage.set("workshop_state", url.search);
+            return;
+        }
+
+        window.stop();
+        let state = LocalStorage.get("workshop_state");
+        window.location.search = state;
+    };
+
+    return WorkshopPageClass;
+})();
+
+class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
@@ -3469,6 +3490,10 @@ class WorkshopPageClass {
     SpamCommentHandler.hideSpamComments();
 
     switch (true) {
+
+        case /^\/workshop\/?$/.test(path):
+            (new WorkshopPageClass());
+            break;
 
         case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
             (new ProfileActivityPageClass());
@@ -3527,7 +3552,7 @@ class WorkshopPageClass {
             break;
 
         case /^\/sharedfiles\/.*/.test(path):
-            (new WorkshopPageClass());
+            (new SharedFilesPageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
