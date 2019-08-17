@@ -803,10 +803,9 @@ let ProfileHomePageClass = (function(){
         let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let href = sendButton.href;
-
-        let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
+        let chatId = m[1];
 
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
@@ -828,7 +827,10 @@ let ProfileHomePageClass = (function(){
                 </div>
             </div>`);
         sendButton.remove();
-        document.getElementById("btnWebChat").href = href.replace("OpenFriendChat", "OpenFriendChatInWebChat"); // Workaround: 'onclick' and js-href gets removed when inserting HTML
+
+        document.querySelector("#btnWebChat").addEventListener("click", function(){
+            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+        });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
