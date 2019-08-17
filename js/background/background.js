@@ -300,15 +300,21 @@ class Api {
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
     }
-    static endpointFactoryCached(endpoint, ttl, objectStore, key, multiple, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, ttl, objectStoreName, key, multiple, oneDimensional, resultFn) {
         return async params => {
-            let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStore);
+            let timestampedObjectStore = IndexedDB.timestampedObjectStores.includes(objectStoreName);
 
             // Only return a value for a specified key (other results will get cached in the DB)
             let returnValue = key instanceof KeyMapper || key;
             let dbKey = key instanceof KeyMapper ? key.map(params, false) : key;
-            let intKey = Number(dbKey);
-            if (intKey) dbKey = intKey;
+
+            // The Steam IDs are greater than 2^53, so they can't be safely converted to a Number
+            if (objectStoreName !== "profiles") {
+                let intKey = Number(dbKey);
+                if (intKey) {
+                    dbKey = intKey;
+                }
+            }
             
             let requestKey = key instanceof KeyMapper ? key.map(params, true) : key;
             if (this._progressingRequests.has(requestKey)) {
@@ -316,9 +322,9 @@ class Api {
             }
             let val;
             if (timestampedObjectStore) {
-                val = await IndexedDB.getAll(objectStore, ttl);
+                val = await IndexedDB.getAll(objectStoreName, ttl);
             } else {
-                val = await IndexedDB.get(objectStore, dbKey, ttl);
+                val = await IndexedDB.get(objectStoreName, dbKey, ttl);
             }
             if (val) {
                 if (returnValue) return val;
@@ -331,7 +337,7 @@ class Api {
                 })
                 .then(async finalResult => {
                     await IndexedDB.putCached(
-                        objectStore,
+                        objectStoreName,
                         oneDimensional ? undefined : finalResult,
                         oneDimensional ? finalResult : dbKey,
                         multiple
