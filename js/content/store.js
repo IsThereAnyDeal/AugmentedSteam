@@ -2510,17 +2510,19 @@ let SearchPageClass = (function(){
     function isReviewsBelow(node, reviewsBelow) {
         if (!node.querySelector(".search_review_summary")) {
             // App without reviews
-            return false;
+            return true;
         }
 
-        let reviewsString = node.querySelector(".search_review_summary").dataset.tooltipHtml.replace(/\d+%/g, "").match(/\d+/g).join("");
+        let reviewsString = node.querySelector(".search_review_summary").dataset.tooltipHtml
+            .replace(/\d+%/g, "")
+            .match(/\d+/g).join("");
 
         return Number(reviewsString) < reviewsBelow;
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        let priceAbove = Number(document.getElementById("es_notpriceabove_val").value.replace(',', '.'));
-        let reviewsBelow = Number(document.getElementById("es_noreviewsbelow_val").value);
+        let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
+        let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
         for (let node of nodes) {
             if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
@@ -2575,18 +2577,18 @@ let SearchPageClass = (function(){
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
                     </div>
-                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above">
+                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above" title="${Localization.str.price_above_tooltip}">
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
                             <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder=${pricePlaceholder}>
                         </div>
                     </div>
-                    <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below">
+                    <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" title="${Localization.str.reviews_below_tooltip}">
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.reviews_below}</span>
                         <div>
-                            <input type="number" id="es_noreviewsbelow_val" class="es_input" min="0">
+                            <input type="number" id="es_noreviewsbelow_val" class="es_input" min="0" step="1">
                         </div>
                     </div>
                     <div>
@@ -2613,6 +2615,7 @@ let SearchPageClass = (function(){
             Messenger.postMessage("reviewsValueChanged");
         }, true);
 
+        // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
         ExtensionLayer.runInPageContext(`() => {
 
@@ -2849,55 +2852,41 @@ let SearchPageClass = (function(){
             HTML.beforeBegin(priceAboveVal, html);
         }
 
-        let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
-        priceFilterCheckbox.title = Localization.str.price_above_tooltip;
+        addFilterInputEvents(
+            priceAboveVal,
+            document.querySelector("#es_notpriceabove"),
+            "priceChanged", inputPattern,
+            Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
 
-        priceAboveVal.title = Localization.str.price_above_tooltip;
-        priceAboveVal.addEventListener("click", e => e.stopPropagation());
-        priceAboveVal.addEventListener("keydown", e => {
-            if(e.key === "Enter") {
-                // This would normally trigger a call to AjaxSearchResults() which is not required here
-                e.preventDefault();
-            }
-        });
-        priceAboveVal.addEventListener("input", () => {
-            let newValue = priceAboveVal.value;
-            let toggleValue = (newValue !== "");
-
-            if (inputPattern.test(newValue)) {
-                // The "checked" class will be toggled by the page context code
-                Messenger.postMessage("priceChanged", toggleValue);
-                priceAboveVal.setCustomValidity('');
-            } else {
-                priceFilterCheckbox.classList.toggle("checked", toggleValue);
-                priceAboveVal.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
-            }
-
-            priceAboveVal.reportValidity();
-        });
-
-        
-        let reviewsFilterCheckbox = document.querySelector("#es_noreviewsbelow");
-        reviewsFilterCheckbox.title = Localization.str.reviews_below_tooltip;
-
-        let reviewsBelowVal = document.querySelector("#es_noreviewsbelow_val");
-        reviewsBelowVal.title = Localization.str.reviews_below_tooltip;
-        reviewsBelowVal.addEventListener("click", e => e.stopPropagation());
-        reviewsBelowVal.addEventListener("keydown", e => {
-            if(e.key === "Enter") {
-                // This would normally trigger a call to AjaxSearchResults() which is not required here
-                e.preventDefault();
-            }
-        });
-        reviewsBelowVal.addEventListener("input", () => {
-            let newValue = reviewsBelowVal.value;
-            let toggleValue = (newValue !== "");
-
-            // The "checked" class will be toggled by the page context code
-            reviewsFilterCheckbox.classList.toggle("checked", toggleValue);
-            Messenger.postMessage("reviewsChanged", toggleValue);
-        });
+        addFilterInputEvents(
+            document.querySelector("#es_noreviewsbelow_val"),
+            document.querySelector("#es_noreviewsbelow"),
+            "reviewsChanged", /^\d+$/, "");
     };
+
+    function addFilterInputEvents(node, checkboxNode, messageId, inputPattern, errorMessage) {
+        node.addEventListener("click", e => e.stopPropagation());
+        node.addEventListener("keydown", e => {
+            if(e.key === "Enter") {
+                // This would normally trigger a call to AjaxSearchResults() which is not required here
+                e.preventDefault();
+            }
+        });
+        node.addEventListener("input", () => {
+            let newValue = node.value;
+
+            if (!inputPattern || inputPattern.test(newValue)) {
+                // The "checked" class will be toggled by the page context code
+                Messenger.postMessage(messageId, newValue !== "");
+                node.setCustomValidity('');
+            } else {
+                Messenger.postMessage(messageId, false);
+                node.setCustomValidity(errorMessage);
+            }
+
+            node.reportValidity();
+        });
+    }
 
     SearchPageClass.prototype.observeChanges = function() {
 
@@ -2915,28 +2904,17 @@ let SearchPageClass = (function(){
             }
         }
 
-        function togglePriceAboveFilter() {
+        function toggleFilter(name, selector) {
             let params = new URLSearchParams(window.location.search);
             if (params.has("es_hide")) {
                 decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
-                    if (filter.startsWith("price-above")) {
-                        document.getElementById("es_notpriceabove").classList.add("checked");
+                    if (filter.startsWith(name)) {
+                        document.querySelector(selector).classList.add("checked");
                     }
                 });
             }
         }
 
-        function toggleReviewsBelowFilter() {
-            let params = new URLSearchParams(window.location.search);
-            if (params.has("es_hide")) {
-                decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
-                    if (filter.startsWith("reviews-below")) {
-                        document.getElementById("es_noreviewsbelow").classList.add("checked");
-                    }
-                });
-            }
-        }
-            
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
@@ -2964,8 +2942,8 @@ let SearchPageClass = (function(){
                     }
                 })
             } else {
-                togglePriceAboveFilter();
-                toggleReviewsBelowFilter();
+                toggleFilter("price-above", "#es_notpriceabove");
+                toggleFilter("reviews-below", "#es_noreviewsbelow");
                 modifyLinks();
             }
 
