@@ -584,6 +584,7 @@ class AppPageClass extends StorePageClass {
 
         this.addHltb();
 
+        this.addSupport();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -1361,6 +1362,39 @@ class AppPageClass extends StorePageClass {
                 });
             }
         });
+    }
+
+    async addSupport() {
+        if (!this.isAppPage()) { return; }
+        if (this.isDlc()) { return; }
+
+        let appid = this.appid;
+        let response = await Background.action("appdetails", { "appids": appid, "filters": "support_info" })
+        if (!response || !response[appid] || !response[appid].success) { return; }
+
+        let data = response[appid].data;
+        let url = data.support_info.url;
+        let email = data.support_info.email;
+        if (!email && !url) { return; }
+
+        // From https://emailregex.com/
+        let email_regex =
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        let isEmail = (text) => email_regex.test(text);
+
+        let block = document.querySelector(".glance_ctn .user_reviews");
+        let support = ``;
+
+        if (url) { support += `<a href="${url}">${Localization.str.website}</a>`; }
+        if (url && email) { support += `, `; }
+        if (email && isEmail(email)) { support += `<a href="MAILTO:${email}">${Localization.str.email}</a>`; }
+        if (email && !isEmail(email)) { support += `<a href="${email}">${Localization.str.contact}</a>`; }
+
+        HTML.beforeEnd(block,
+            `<div class="release_date">
+                <div class="subtitle column">${Localization.str.support}:</div>
+                <div class="summary column" id="es_support_list">${support}</div>
+            </div>`);
     }
 
     moveUsefulLinks() {
