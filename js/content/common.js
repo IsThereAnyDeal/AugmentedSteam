@@ -1353,13 +1353,6 @@ let Inventory = (function(){
 
     let self = {};
 
-    let inventoryTTL = 60 * 60;
-
-    let gifts = new Set();
-    let guestpasses = new Set();
-    let inv6set = new Set();
-    let coupon_appids = new Map();
-
     let _promise = null;
     self.promise = function() {
         if (_promise) { return _promise; }
@@ -1392,7 +1385,7 @@ let Inventory = (function(){
     };
 
     self.getCoupon = function(appid) {
-        return Background.action("idb.getfromindex", "coupons", "appid", appid, inventoryTTL);
+        return Background.action("idb.getfromindex", "coupons", "appid", appid);
     };
 
     self.hasGift = async function(subid) {
@@ -1778,7 +1771,6 @@ let DynamicStore = (function(){
 
     let self = {};
 
-    let ttl = 15 * 60;
     let _promise = null;
 
     self.clear = async function() {
@@ -1789,7 +1781,7 @@ let DynamicStore = (function(){
 
     // This function exists in order to avoid making three background calls (ignored, owned, wishlisted) for example during highlighting
     self.getAppStatus = function(appid) {
-        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, ttl, true)
+        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, true)
             .then(statusList => {
                 let appStatus = {};
                 ["ignored", "owned", "wishlisted"].forEach(status => {
