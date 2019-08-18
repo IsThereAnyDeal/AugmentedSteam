@@ -3493,14 +3493,6 @@ let WorkshopPageClass = (function(){
         if (tab.hasAttribute("disabled")) { return false; }
 
         tab.setAttribute("disabled", "disabled");
-
-        let container = document.querySelector("#workshop_appsRows");
-        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
-
-        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
-        let result = JSON.parse(await RequestData.getHttp(url));
-        HTML.inner(container, result.results_html);
-        tab.removeAttribute("disabled");
         
         let image = document.querySelector(".browseOptionImage");
         let clone = image.cloneNode(true);
@@ -3509,6 +3501,14 @@ let WorkshopPageClass = (function(){
 
         Array.from(document.querySelectorAll(".browseOption")).forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");
+
+        let container = document.querySelector("#workshop_appsRows");
+        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+
+        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        let result = JSON.parse(await RequestData.getHttp(url));
+        HTML.inner(container, result.results_html);
+        tab.removeAttribute("disabled");
 
         ExtensionLayer.runInPageContext(`function() {
             g_oSearchResults.m_iCurrentPage = 0;
