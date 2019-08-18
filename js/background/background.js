@@ -209,6 +209,8 @@ class IndexedDB {
         if (IndexedDB.timestampedObjectStores.has(objectStoreName)) return result;
         if (!IndexedDB.cacheObjectStores.get(objectStoreName)) return result;
 
+        // This check is for hybrid object stores (some entries are cached, some are not)
+        if (!result.expiry) return result;
         if (IndexedDB.isExpired(result.expiry)) return null;
 
         return result.value;
@@ -220,7 +222,6 @@ class IndexedDB {
 
     static async isObjectStoreExpired(objectStoreName) {
         if (!IndexedDB.timestampedObjectStores.has(objectStoreName)) { return false; }
-        if (!IndexedDB.cacheObjectStores.get(objectStoreName)) { return false; }
         
         let expiry = await IndexedDB.db.get(objectStoreName, "expiry");
         let expired;
@@ -253,13 +254,13 @@ IndexedDB.timestampedObjectStores = new Map([
     ["earlyAccessAppids", 60 * 60],
     ["purchases", 24 * 60 * 60],
     ["dynamicStore", 15 * 60],
-    ["itad", 15 * 60],
 ]);
 IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores,
     ["packages", 7 * 24 * 60 * 60],
     ["storePageData", 60 * 60],
     ["profiles", 24 * 60 * 60],
     ["rates", 60 * 60],
+    ["itad", 15 * 60],
 ]);
 
 class Api {
@@ -438,40 +439,54 @@ class ITAD_Api extends Api {
     static async sync() {
         await Steam.dynamicStore();
         let [ownedApps, ownedPackages, wishlistedApps] = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
+        let [lastOwnedApps, lastOwnedPackages, lastWishlistedApps] = await IndexedDB.get("itad", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
 
         let baseJSON = {
             "version": "02",
             "data": [],
         }
 
+        function removeDuplicates(from, other) {
+            if (!from) return [];
+            if (!other) return from;
+            return from.filter(el => !other.includes(el));
+        }
+
         let promises = [];
-        if ((ownedApps && ownedApps.length) || (ownedPackages && ownedPackages.length)) {
+
+        let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
+        let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
+        if (newOwnedApps.length || newOwnedPackages.length) {
             let collectionJSON = JSON.parse(JSON.stringify(baseJSON));
-            ownedApps.forEach(appid => {
+            newOwnedApps.forEach(appid => {
                 collectionJSON.data.push({
                     "gameid": ["steam", `app/${appid}`],
                     "copies": [{ "type": "steam" }],
                 });
             });
 
-            ownedPackages.forEach(subid => {
+            newOwnedPackages.forEach(subid => {
                 collectionJSON.data.push({
                     "gameid": ["steam", `sub/${subid}`],
                     "copies": [{ "type": "steam" }],
                 });
             });
 
-            promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) }));
+            promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) })
+                .then(() => IndexedDB.put("itad", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
         }
-        if (wishlistedApps && wishlistedApps.length) {
+
+        let newWishlistedApps = removeDuplicates(wishlistedApps, lastWishlistedApps);
+        if (newWishlistedApps.length) {
             let wailistJSON = JSON.parse(JSON.stringify(baseJSON));
-            wishlistedApps.forEach(appid => {
+            newWishlistedApps.forEach(appid => {
                 wailistJSON.data.push({
                     "gameid": ["steam", `app/${appid}`],
                 });
             });
 
-            promises.push(this.postEndpoint("v01/waitlist/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(wailistJSON) }));
+            promises.push(this.postEndpoint("v01/waitlist/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(wailistJSON) })
+                .then(() => IndexedDB.put("itad", wishlistedApps, "lastWishlisted")));
         }
         return Promise.all(promises);
     }
