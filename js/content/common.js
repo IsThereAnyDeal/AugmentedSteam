@@ -2282,5 +2282,34 @@ class MediaPage {
                 node.classList.toggle("es_expanded");
             }
         }
+
+        let strip = document.querySelector("#highlight_strip");
+        if (!strip) { return; }
+
+		let lastScroll = Date.now();
+        strip.addEventListener("wheel", scrollStrip, false);
+        function scrollStrip(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+			
+			if (Date.now() - lastScroll < 200) {
+				return;
+			} 
+    
+            lastScroll = Date.now();
+            let allElem = document.querySelectorAll(".highlight_strip_item");
+			let isScrollDown = ev.deltaY > 0;
+			let siblingProp = isScrollDown ? "previousSibling" : "nextSibling";
+			
+            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
+            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
+                targetElem = targetElem[siblingProp];
+                if (!targetElem) {
+                    targetElem = allElem[isScrollDown ? allElem.length - 1: 0];
+                }
+            }
+            
+			targetElem.click();
+        }
     }
 }
