@@ -1,4 +1,15 @@
 {
+    "currently": "Currently",
+    "status": {
+        "offline": "Offline",
+        "online": "Online",
+        "busy": "Busy",
+        "away": "Away",
+        "snooze": "Snooze",
+        "looking_to_trade": "Looking to trade",
+        "looking_to_play": "Looking to play",
+        "streaming": "Streaming"
+    },
     "post_history": "View post history",
     "add_nickname": "Add Nickname",
     "total_size": "Total Size",
