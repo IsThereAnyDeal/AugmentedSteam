@@ -283,18 +283,18 @@ class Api {
         }
         return fetch(url, params);
     }
-    static getEndpoint(endpoint, query) {
+    static getEndpoint(endpoint, query, params = {}) {
         if (!endpoint.endsWith('/'))
             endpoint += '/';
-        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.json());
+        return this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', })).then(response => response.json());
     }    
-    static getPage(endpoint, query) {
-        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.text());
+    static getPage(endpoint, query, params = {}) {
+        return this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', })).then(response => response.text());
     }
-    static postEndpoint(endpoint, query) {
+    static postEndpoint(endpoint, query, params = {}) {
         if (!endpoint.endsWith('/'))
             endpoint += '/';
-        return this._fetchWithDefaults(endpoint, query, { 'method': 'POST', }).then(response => response.json());
+        return this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'POST', })).then(response => response.json());
     }
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
