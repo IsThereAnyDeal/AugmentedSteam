@@ -3479,6 +3479,31 @@ class WorkshopPageClass {
     }
 }
 
+let OpenIdPageClass = (function(){
+    function OpenIdPageClass() {
+        this.addPhisingSecure();
+    }
+
+    OpenIdPageClass.prototype.addPhisingSecure = function() {
+        let header = document.querySelector(".OpenID_MainHeader");
+        if (!header) { return; }
+
+        header.style.height = "160px";
+        let img = ExtensionLayer.getLocalUrl("img/check.png");
+        let notice =
+            `<div style="float: left; margin-top: -20px;">
+                <div style="float:left; padding: 6px 6px 20px 18px">
+                    <img src="${img}" width="26" height="26" border="0">
+                </div>
+                <h2 style="color: #00f800;">${Localization.str.phising_secure}</h2>
+            </div>`;
+        
+        HTML.beforeEnd(header, notice);
+    };
+
+    return OpenIdPageClass;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3548,6 +3573,10 @@ class WorkshopPageClass {
 
         case /^\/sharedfiles\/.*/.test(path):
             (new WorkshopPageClass());
+            break;
+
+        case /^\/openid\/login/.test(path):
+            (new OpenIdPageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
