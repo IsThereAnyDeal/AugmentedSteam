@@ -1435,7 +1435,7 @@ class AppPageClass extends StorePageClass {
             let title = document.querySelector(".apphub_AppName");
             let appStatus = await DynamicStore.getAppStatus(this.appid);
 
-            if (appStatus.owned) {
+            if (appStatus.ownedApps) {
                 Highlights.highlightOwned(title);
             } else if (await Inventory.hasGuestPass(this.appid)) {
                 Highlights.highlightInvGuestpass(title);
@@ -2988,7 +2988,7 @@ let WishlistPageClass = (function(){
 
         let appStatus = await DynamicStore.getAppStatus(Number(node.dataset.appId));
 
-        if (appStatus.owned) {
+        if (appStatus.ownedApps) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
             if (SyncedStorage.get("highlight_owned")) {
                 Highlights.highlightOwned(node);

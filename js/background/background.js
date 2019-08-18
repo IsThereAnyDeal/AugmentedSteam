@@ -437,7 +437,7 @@ class ITAD_Api extends Api {
 
     static async sync() {
         await Steam.dynamicStore();
-        let [ownedApps, wishlistedApps] = await IndexedDB.get("dynamicStore", ["owned", "wishlisted"]);
+        let [ownedApps, ownedPackages, wishlistedApps] = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
 
         let baseJSON = {
             "version": "02",
@@ -445,7 +445,7 @@ class ITAD_Api extends Api {
         }
 
         let promises = [];
-        if (ownedApps) {
+        if ((ownedApps && ownedApps.length) || (ownedPackages && ownedPackages.length)) {
             let collectionJSON = JSON.parse(JSON.stringify(baseJSON));
             ownedApps.forEach(appid => {
                 collectionJSON.data.push({
@@ -454,9 +454,16 @@ class ITAD_Api extends Api {
                 });
             });
 
+            ownedPackages.forEach(subid => {
+                collectionJSON.data.push({
+                    "gameid": ["steam", `sub/${subid}`],
+                    "copies": [{ "type": "steam" }],
+                });
+            });
+
             promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) }));
         }
-        if (wishlistedApps) {
+        if (wishlistedApps && wishlistedApps.length) {
             let wailistJSON = JSON.parse(JSON.stringify(baseJSON));
             wishlistedApps.forEach(appid => {
                 wailistJSON.data.push({
@@ -817,7 +824,7 @@ class SteamCommunity extends Api {
     static async items() { // context#6, community items
         let self = SteamCommunity;
 
-        if (IndexedDB.isObjectStoreExpired("items")) {
+        if (await IndexedDB.isObjectStoreExpired("items")) {
             // only used for market highlighting
             return IndexedDB.putCached("items", null, (await self.getInventory(6)).descriptions.map(item => item.market_hash_name), true);
         }
@@ -882,13 +889,13 @@ class Steam {
     // static _dynamicstore_promise = null;
     // static _supportedCurrencies = null;
     
-    static dynamicStore() {
+    static async dynamicStore() {
         // FIXME, reduce dependence on whole object
         let self = Steam;
         // Is a request in progress?
         if (self._dynamicstore_promise) { return self._dynamicstore_promise; }
         
-        if (IndexedDB.isObjectStoreExpired("dynamicStore", 15 * 60)) {
+        if (await IndexedDB.isObjectStoreExpired("dynamicStore", 15 * 60)) {
             // Cache miss, need to fetch
             self._dynamicstore_promise = SteamStore.getEndpoint("/dynamicstore/userdata/")
             .then(dynamicStore => {
@@ -897,7 +904,8 @@ class Steam {
                 }
                 let data = {
                     "ignored": Object.keys(dynamicStore.rgIgnoredApps).map(value => parseInt(value, 10)),
-                    "owned": dynamicStore.rgOwnedApps,
+                    "ownedApps": dynamicStore.rgOwnedApps,
+                    "ownedPackages": dynamicStore.rgOwnedPackages,
                     "wishlisted": dynamicStore.rgWishlist,
                 };
                 return IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true);

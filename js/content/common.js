@@ -1784,7 +1784,7 @@ let DynamicStore = (function(){
         return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, true)
             .then(statusList => {
                 let appStatus = {};
-                ["ignored", "owned", "wishlisted"].forEach(status => {
+                ["ignored", "ownedApps", "wishlisted"].forEach(status => {
                     appStatus[status] = statusList.includes(status);
                 });
                 return appStatus;

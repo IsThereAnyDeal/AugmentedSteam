@@ -248,7 +248,7 @@ let ProfileActivityPageClass = (function(){
 
                 let appStatus = await DynamicStore.getAppStatus(appid);
 
-                if (appStatus.owned) {
+                if (appStatus.ownedApps) {
                     Highlights.highlightOwned(link);
 
                     addAchievementComparisonLink(link, appid);
@@ -3367,7 +3367,7 @@ let CommunityAppPageClass = (function(){
 
         let appStatus = await DynamicStore.getAppStatus(this.appid);
 
-        if (appStatus.owned) {
+        if (appStatus.ownedApps) {
             nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
