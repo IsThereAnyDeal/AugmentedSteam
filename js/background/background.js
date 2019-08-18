@@ -387,11 +387,12 @@ AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
 
 class ITAD_Api extends Api {
+
     static authorize(hash) {
         return new Promise(resolve => {
             browser.permissions.request({ permissions: ["identity"] }).then(granted => {
                 if (granted) {
-                    browser.identity.launchWebAuthFlow({ url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=wait_read%20coll_read&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`, interactive: true })
+                    browser.identity.launchWebAuthFlow({ url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`, interactive: true })
                         .then(url => {
                             if (url) {
                                 let hashFragment = new URL(url).hash;
@@ -424,7 +425,7 @@ class ITAD_Api extends Api {
             return true;
         }
         ITAD_Api.accessToken = lsEntry.token;
-        ITAD_Api.fetchWaitlistAndCollection()
+        ITAD_Api.sync();
         return false;
     }
 
@@ -434,15 +435,55 @@ class ITAD_Api extends Api {
         }
     }
 
-    static fetchWaitlistAndCollection() {
+    static async sync() {
+        await Steam.dynamicStore();
+        let [ownedApps, wishlistedApps] = await IndexedDB.get("dynamicStore", ["owned", "wishlisted"]);
+
+        let baseJSON = {
+            "version": "02",
+            "data": [],
+        }
+
+        let promises = [];
+        if (ownedApps) {
+            let collectionJSON = JSON.parse(JSON.stringify(baseJSON));
+            ownedApps.forEach(appid => {
+                collectionJSON.data.push({
+                    "gameid": ["steam", `app/${appid}`],
+                    "copies": [{ "type": "steam" }],
+                });
+            });
+
+            promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) }));
+        }
+        if (wishlistedApps) {
+            let wailistJSON = JSON.parse(JSON.stringify(baseJSON));
+            wishlistedApps.forEach(appid => {
+                wailistJSON.data.push({
+                    "gameid": ["steam", `app/${appid}`],
+                });
+            });
+
+            promises.push(this.postEndpoint("v01/waitlist/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(wailistJSON) }));
+        }
+        return Promise.all(promises);
+    }
+
+    /*static fetchWaitlistAndCollection() {
         return Promise.all([
             ITAD_Api.endpointFactoryCached("v01/user/wait/all/", "itad", "waitlist")(),
             ITAD_Api.endpointFactoryCached("v01/user/coll/all/", "itad", "collection")(),
         ]);
-    }
+    }*/
 }
 ITAD_Api.accessToken = null;
 ITAD_Api.clientId = "5fe78af07889f43a";
+ITAD_Api.requiredScopes = [
+    "wait_read",
+    "wait_write",
+    "coll_read",
+    "coll_write",
+];
 
 ITAD_Api.origin = Config.ITAD_ApiServerHost;
 ITAD_Api._progressingRequests = new Map();
