@@ -181,6 +181,7 @@
     "mods": "Modificaties. ",
     "export_wishlist": "Verlanglijst exporteren",
     "export_text": "Tekst",
+    "export_CSV": "CSV",
     "export_JSON": "JSON",
     "export_download": "Download bestand",
     "export_clipboard": "Kopieer naar klembord",

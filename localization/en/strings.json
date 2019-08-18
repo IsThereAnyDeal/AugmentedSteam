@@ -194,6 +194,7 @@
     "mods": "Mods",
     "export_wishlist": "Export wishlist",
     "export_text": "Text",
+    "export_CSV": "CSV",
     "export_JSON": "JSON",
     "export_download": "Download file",
     "export_clipboard": "Copy to clipboard",

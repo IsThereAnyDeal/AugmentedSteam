@@ -2916,7 +2916,9 @@ let WishlistPageClass = (function(){
                         <tr>
                             <td>Export type:</td>
                             <td>
-                                <input type="radio" name="export_type" value="text" id="text" onclick="$J('#es_text_options').show()" checked> <label for="text" onclick="$J('#es_text_options').show()"> ${Localization.str.export_text}</label>
+                                <input type="radio" name="export_type" value="text" id="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()" checked> <label for="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()"> ${Localization.str.export_text}</label>
+                                &nbsp;
+                                <input type="radio" name="export_type" value="CSV" id="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> <label for="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> ${Localization.str.export_CSV}</label>
                                 &nbsp;
                                 <input type="radio" name="export_type" value="JSON" id="JSON" onclick="$J('#es_text_options').hide()"> <label for="JSON" onclick="$J('#es_text_options').hide()"> ${Localization.str.export_JSON}</label>
                             </td>
@@ -3032,7 +3034,7 @@ let WishlistPageClass = (function(){
             html += "</select>";
 
             if (i + 1 < props.length) {
-                html += "<input type='text' id='sep" + i + "' name='sep" + i + "' placeholder='" + Localization.str.separator + "'>"
+                html += "<input type='text' class='es_sep' id='sep" + i + "' name='sep" + i + "' placeholder='" + Localization.str.separator + "'>"
             }
 
             return html;
@@ -3236,15 +3238,16 @@ let WishlistPageClass = (function(){
                 }
             }
 
-            filename = "wishlist_export.txt";
+            filename = "wishlist_export." + (options.export_type === "CSV" ? "csv" : "txt");
             toexport = json.map(app => {
                 let line = "";
-                for (let i = 0; i <= props.length; i++) {
+                for (let i = 0; i < props.length; i++) {
                     if (props[i]) {
-                        line += app[props[i]];
+                        let prop = app[props[i]] || "";
+                        line += (options.export_type === "CSV" ? prop.replace(/,/g, "") : prop);
                     }
-                    if (seps[i]) {
-                        line += seps[i];
+                    if (i !== props.length - 1) {
+                        line += (options.export_type === "CSV" ? "," : seps[i] || "");
                     }
                 }
                 return line;
@@ -3258,7 +3261,7 @@ let WishlistPageClass = (function(){
                     setClipboard(content)
                     break;
                 case "download":
-                    Background.action('download', { content, filename });
+                    Background.action("download", { content, filename });
                     break;
                 default:
                     break;
