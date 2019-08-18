@@ -764,9 +764,10 @@ class SteamCommunity extends Api {
                 }
             }
 
-            data = {};
-            if (gifts.length) data.gifts = gifts;
-            if (passes.length) data.passes = passes;
+            data = {
+                "gifts": gifts,
+                "passes": passes,
+            };
 
             return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data), true);
         }
