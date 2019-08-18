@@ -3,7 +3,7 @@ Augmented Steam
 
 Enhanced Steam fork by IsThereAnyDeal.
 
-This is an extension repository, find [server repository here](https://github.com/tfedor/Enhanced_Steam_API_Server).
+This is an extension repository, find [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
 
 We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
 
