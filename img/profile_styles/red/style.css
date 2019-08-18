@@ -17,3 +17,6 @@
 	background-color: rgba(22,22,23, 0.6) !important;
 	box-shadow: none !important;
 }
+.profile_customization.customization_edit.none_selected {
+	border: 1px dashed #C83939 !important;
+}

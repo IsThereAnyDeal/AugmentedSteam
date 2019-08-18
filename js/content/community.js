@@ -318,7 +318,7 @@ let ProfileHomePageClass = (function(){
         this.changeUserBackground();
         this.addProfileStoreLinks();
         this.addSteamRepApi();
-        this.addPostHistoryLink();
+        this.userDropdownOptions();
         this.inGameNameLink();
         this.addProfileStyle();
         this.addTwitchInfo();
@@ -636,9 +636,27 @@ let ProfileHomePageClass = (function(){
         });
     };
 
-    ProfileHomePageClass.prototype.addPostHistoryLink = function() {
+    ProfileHomePageClass.prototype.userDropdownOptions = function() {
+
         let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         if (!node) { return; }
+
+        // add nickname option for non-friends
+        if (User.isSignedIn) {
+
+            // check whether we can chat => if we can we are friends => we have nickname option
+            let canAddFriend = document.querySelector("#btn_add_friend");
+            if (canAddFriend) {
+
+                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
+
+                node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
+                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                });
+            }
+        }
+
+        // post history link
         HTML.afterEnd(node,
                 `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
@@ -803,10 +821,9 @@ let ProfileHomePageClass = (function(){
         let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let href = sendButton.href;
-
-        let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
+        let chatId = m[1];
 
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
@@ -817,7 +834,7 @@ let ProfileHomePageClass = (function(){
             </span>
             <div class="popup_block" id="profile_chat_dropdown" style="visibility: visible; top: 168px; left: 679px; display: none; opacity: 1;">
                 <div class="popup_body popup_menu shadow_content" style="box-shadow: 0 0 12px #000">
-                    <a class="popup_menu_item webchat" href="${href}">
+                    <a id="btnWebChat" class="popup_menu_item webchat">
                         <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">
                         &nbsp; ${Localization.str.web_browser_chat}
                     </a>
@@ -828,6 +845,10 @@ let ProfileHomePageClass = (function(){
                 </div>
             </div>`);
         sendButton.remove();
+
+        document.querySelector("#btnWebChat").addEventListener("click", function(){
+            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+        });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
