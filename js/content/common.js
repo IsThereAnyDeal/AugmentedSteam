@@ -1388,12 +1388,12 @@ let Inventory = (function(){
         return Background.action("idb.getfromindex", "coupons", "appid", appid);
     };
 
-    self.hasGift = async function(subid) {
-        return Background.action("idb.contains", "gifts", subid);
-    };
+    self.hasGift = function(appid) {
+        return Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true).then(result => result.includes("gifts"));
+    }
 
-    self.hasGuestPass = function(subid) {
-        return Background.action("idb.contains", "passes", subid);
+    self.hasGuestPass = function(appid) {
+        return Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true).then(result => result.includes("passes"));
     };
 
     self.hasInInventory6 = function(marketHash) {

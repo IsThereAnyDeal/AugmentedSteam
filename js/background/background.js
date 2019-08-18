@@ -49,8 +49,7 @@ class IndexedDB {
                         switch(oldVersion) {
                             case 0: {
                                 db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
-                                db.createObjectStore("gifts");
-                                db.createObjectStore("passes");
+                                db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
                                 db.createObjectStore("items");
                                 db.createObjectStore("earlyAccessAppids");
                                 db.createObjectStore("purchases");
@@ -249,8 +248,7 @@ IndexedDB._promise = null;
 */
 IndexedDB.timestampedObjectStores = new Map([
     ["coupons", 60 * 60],
-    ["gifts", 60 * 60],
-    ["passes", 60 * 60],
+    ["giftsAndPasses", 60 * 60],
     ["items", 60 * 60],
     ["earlyAccessAppids", 60 * 60],
     ["purchases", 24 * 60 * 60],
@@ -726,19 +724,11 @@ class SteamCommunity extends Api {
         return SteamStore.addCouponAppids(coupons);
     }
     static async giftsAndPasses() { // context#1, gifts and guest passes
-        let self = SteamCommunity;
+        if (await IndexedDB.isObjectStoreExpired("giftsAndPasses")) {
+            let gifts = [];
+            let passes = [];
 
-        let gifts, passes;
-        let [giftsExpired, passesExpired] = await Promise.all([
-            IndexedDB.isObjectStoreExpired("gifts", 60 * 60),
-            IndexedDB.isObjectStoreExpired("passes", 60 * 60),
-        ]);
-
-        if (giftsExpired || passesExpired) {
-            gifts = [];
-            passes = [];
-
-            let data = await self.getInventory(1);
+            let data = await SteamCommunity.getInventory(1);
 
             for (let description of data.descriptions) {
                 let isPackage = false;
@@ -774,11 +764,11 @@ class SteamCommunity extends Api {
                 }
             }
 
-            let promises = [];
+            data = {};
+            if (gifts.length) data.gifts = gifts;
+            if (passes.length) data.passes = passes;
 
-            if (gifts.length)   promises.push(IndexedDB.putCached("gifts", null, gifts, true));
-            if (passes.length)  promises.push(IndexedDB.putCached("passes", null, passes, true));
-            return Promise.all(promises);
+            return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data), true);
         }
     }
 
