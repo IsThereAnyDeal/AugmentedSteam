@@ -76,8 +76,8 @@ class IndexedDB {
         }
         return IndexedDB._promise;
     }
-    static catch(onCatch) {
-        return IndexedDB.init()().catch(onCatch);
+    static then(onDone, onCatch) {
+        return IndexedDB.init()().then(onDone, onCatch);
     }
 
     static putCached(objectStoreName, data, key, multiple) {
@@ -959,23 +959,22 @@ let actionCallbacks = new Map([
 // new Map() for Map.prototype.get() in lieu of:
 // Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
 
-IndexedDB
-    .catch(err => console.error("Failed to open database!", err))
-    .then(() => browser.runtime.onMessage.addListener(async (message, sender) => {
-        if (!sender || !sender.tab) { return; } // not from a tab, ignore
-        if (!message || !message.action) { return; }
-      
-        let callback = actionCallbacks.get(message.action);
-        if (!callback) {
-            // requested action not recognized, reply with error immediately
-            throw new Error(`Did not recognize '${message.action}' as an action.`);
-        }
-    
-        message.params = message.params || [];
-        try {
-            return await callback(...message.params);
-        } catch(err) {
-            console.error(`Failed to execute callback ${message.action}: ${err.name}: ${err.message}\n${err.stack}`);
-            throw err;
-        }
-    }));
+browser.runtime.onMessage.addListener(async (message, sender) => {
+    if (!sender || !sender.tab) { return; } // not from a tab, ignore
+    if (!message || !message.action) { return; }
+  
+    let callback = actionCallbacks.get(message.action);
+    if (!callback) {
+        // requested action not recognized, reply with error immediately
+        throw new Error(`Did not recognize '${message.action}' as an action.`);
+    }
+
+    message.params = message.params || [];
+    try {
+        await IndexedDB;
+        return await callback(...message.params);
+    } catch(err) {
+        console.error(`Failed to execute callback ${message.action}: ${err.name}: ${err.message}\n${err.stack}`);
+        throw err;
+    }
+});
