@@ -3455,6 +3455,7 @@ let WorkshopPageClass = (function(){
 
     function WorkshopPageClass() {
         this.loadLastState();
+        this.initAjaxBrowse();
     }
 
     WorkshopPageClass.prototype.loadLastState = function() {
@@ -3465,9 +3466,57 @@ let WorkshopPageClass = (function(){
             return;
         }
 
-        window.stop();
-        let state = LocalStorage.get("workshop_state");
-        window.location.search = state;
+        let search = LocalStorage.get("workshop_state");
+        url = new URL("https://steamcommunity.com/workshop/" + search);
+        let query = url.searchParams.get("browsesort");
+        this.changeTab(query);
+    };
+
+    WorkshopPageClass.prototype.initAjaxBrowse = function() {
+        ExtensionLayer.runInPageContext(function() {
+            $J(".browseOption").get().forEach(node => node.onclick = () => false);
+        });
+
+        Array.from(document.querySelectorAll(".browseOption")).forEach(tab => {
+            tab.addEventListener("click", () => {
+                let a = tab.querySelector("a[href]");
+                let url = new URL("https://steamcommunity.com/workshop/" + a.href);
+                let query = url.searchParams.get("browsesort");
+                LocalStorage.set("workshop_state", url.search);
+                this.changeTab(query);
+            });
+        });
+    };
+
+    WorkshopPageClass.prototype.changeTab = async function(query, start=0, count=8) {
+        let tab = document.querySelector("." + query);
+        if (tab.hasAttribute("disabled")) { return false; }
+
+        tab.setAttribute("disabled", "disabled");
+
+        let container = document.querySelector("#workshop_appsRows");
+        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+
+        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        let result = JSON.parse(await RequestData.getHttp(url));
+        HTML.inner(container, result.results_html);
+        tab.removeAttribute("disabled");
+        
+        let image = document.querySelector(".browseOptionImage");
+        let clone = image.cloneNode(true);
+        image.remove();
+        tab.parentNode.insertAdjacentElement("afterbegin", clone);
+
+        Array.from(document.querySelectorAll(".browseOption")).forEach(tab => tab.classList.add("notSelected"));
+        tab.classList.remove("notSelected");
+
+        ExtensionLayer.runInPageContext(`function() {
+            g_oSearchResults.m_iCurrentPage = 0;
+            g_oSearchResults.m_strQuery = "${query}";
+            g_oSearchResults.m_cTotalCount = ${result.total_count};
+            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.UpdatePagingDisplay();
+        }`);
     };
 
     return WorkshopPageClass;
