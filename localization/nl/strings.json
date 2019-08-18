@@ -1,4 +1,15 @@
 {
+    "currently": "",
+    "status": {
+        "offline": "Offline",
+        "online": "Online",
+        "busy": "Bezig",
+        "away": "Afwezig",
+        "snooze": "Aan het dutten",
+        "looking_to_trade": "Wilt ruilen",
+        "looking_to_play": "Wilt spelen",
+        "streaming": "Aan het streamen"
+    },
     "game": "Spel",
     "tag_categories": "Tag Categorieën",
     "discounts": "Kortingen",
