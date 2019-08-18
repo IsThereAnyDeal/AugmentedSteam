@@ -968,6 +968,7 @@ let EnhancedSteam = (function() {
 
         let submenuUsername = document.querySelector(".supernav_container .submenu_username");
         HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.afterEnd(submenuUsername.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`)
         HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
