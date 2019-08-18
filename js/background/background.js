@@ -722,7 +722,7 @@ class SteamCommunity extends Api {
         let self = SteamCommunity;
 
         let coupons;
-        if (await IndexedDB.isObjectStoreExpired("coupons", 60 * 60)) {
+        if (await IndexedDB.isObjectStoreExpired("coupons")) {
             coupons = {};
             let data = await self.getInventory(3);
 
@@ -895,7 +895,7 @@ class Steam {
         // Is a request in progress?
         if (self._dynamicstore_promise) { return self._dynamicstore_promise; }
         
-        if (await IndexedDB.isObjectStoreExpired("dynamicStore", 15 * 60)) {
+        if (await IndexedDB.isObjectStoreExpired("dynamicStore")) {
             // Cache miss, need to fetch
             self._dynamicstore_promise = SteamStore.getEndpoint("/dynamicstore/userdata/")
             .then(dynamicStore => {
