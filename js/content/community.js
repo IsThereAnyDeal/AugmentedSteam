@@ -3507,21 +3507,18 @@ let WorkshopBrowseClass = (function(){
             </div>`;
 
         HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
-        Messenger.addMessageListener("sendMessage", startSubscriber, false);
 
-        ExtensionLayer.runInPageContext(function(){
-            $J(document).on("click", ".es_subscriber", function(event){
-                let method = $J(event.target).closest(".es_subscriber").data("method");
-                let total = parseInt($J(".workshopBrowsePagingInfo").text().replace(/\d+-\d+/g, "").match(/\d+/g).join(""));
-                Messenger.postMessage("sendMessage", { method, sessionId: g_sessionID, total });
-            });
+        document.querySelector(".es_subscriber").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            startSubscriber(method, total);
         });
 
-        function startSubscriber(info) {
+        function startSubscriber(method, total) {
             let i = -1;
 
             ExtensionLayer.runInPageContext(`function(){
-                var prompt = ShowConfirmDialog("${Localization.str[info.method + "_all"]}", \`${Localization.str[info.method + "_confirm"].replace("__count__", info.total)}\`);
+                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
                 prompt.done(function(result) {
                     if (result == "OK") {
                         Messenger.postMessage("startSubscriber");
@@ -3535,18 +3532,18 @@ let WorkshopBrowseClass = (function(){
                         window.dialog.Dismiss();
                     }
 
-                    window.dialog = ShowBlockingWaitDialog("${Localization.str[info.method + "_all"]}", \`${Localization.str[info.method + "_loading"].replace("__i__", ++i).replace("__count__", info.total)}\`);
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
                 }`)
             }
 
             function changeSubscription(id) {
                 return new Promise(function(resolve) {
                     let formData = new FormData();
-                    formData.append("sessionid", info.sessionId);
+                    formData.append("sessionid", User.getSessionId());
                     formData.append("appid", appid);
                     formData.append("id", id);
 
-                    RequestData.post("https://steamcommunity.com/sharedfiles/" + info.method, formData, {
+                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
                         withCredentials: true
                     }).then(function() {
                         updateWaitDialog();
@@ -3559,7 +3556,7 @@ let WorkshopBrowseClass = (function(){
                 updateWaitDialog();
 
                 let workshopItems = [];
-                for (let p = 1; p <= Math.ceil(info.total / 30); p++) {
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
                     let url = new URL(window.location.href);
                     url.searchParams.set("p", p);
                     url.searchParams.set("numperpage", 30);
