@@ -144,6 +144,8 @@
     "price_above":"Items that cost more than",
     "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
     "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
+    "reviews_below":"Items with less reviews than",
+    "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Steam Client",
