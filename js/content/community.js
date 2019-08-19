@@ -3546,8 +3546,12 @@ class WorkshopPageClass {
             (new StatsPageClass());
             break;
 
-        case /^\/sharedfiles\/.*/.test(path):
+        case /^\/sharedfiles\/filedetails\/?$/.test(path):
             (new WorkshopPageClass());
+            break;
+
+        case /^\/sharedfiles\/editguide\/?$/.test(path):
+            Array.from(document.getElementsByName("tags[]")).forEach(tag => tag.type = "checkbox");
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
