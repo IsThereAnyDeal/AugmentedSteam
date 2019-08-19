@@ -59,7 +59,7 @@ class IndexedDB {
                                 db.createObjectStore("profiles");
                                 db.createObjectStore("rates");
                                 db.createObjectStore("notes");
-                                db.createObjectStore("itad");
+                                db.createObjectStore("itad").createIndex("collectionGames", "value.games", { unique: true, multiEntry: true });
                                 break;
                             }
                             default: {
@@ -305,10 +305,12 @@ class Api {
             let timestampedObjectStore = IndexedDB.timestampedObjectStores.has(objectStoreName);
 
             // Only return a value for a specified key (other results will get cached in the DB)
+            // todo Use some other method to determine whether to return a value (in the worst case just add another parameter)
             let returnValue = key instanceof KeyMapper || key;
             let dbKey = key instanceof KeyMapper ? key.map(params, false) : key;
 
             // The Steam IDs are greater than 2^53, so they can't be safely converted to a Number
+            // todo Do we need integers?
             if (objectStoreName !== "profiles") {
                 let intKey = Number(dbKey);
                 if (intKey) {
@@ -454,6 +456,8 @@ class ITAD_Api extends Api {
 
         let promises = [];
 
+        promises.push(ITAD_Api.endpointFactoryCached("v02/user/coll/all/", "itad", "collection")({ "shop": "steam", "optional": "gameid" }));
+
         let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
         let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
         if (newOwnedApps.length || newOwnedPackages.length) {
@@ -490,13 +494,6 @@ class ITAD_Api extends Api {
         }
         return Promise.all(promises);
     }
-
-    /*static fetchWaitlistAndCollection() {
-        return Promise.all([
-            ITAD_Api.endpointFactoryCached("v01/user/wait/all/", "itad", "waitlist")(),
-            ITAD_Api.endpointFactoryCached("v01/user/coll/all/", "itad", "collection")(),
-        ]);
-    }*/
 }
 ITAD_Api.accessToken = null;
 ITAD_Api.clientId = "5fe78af07889f43a";
