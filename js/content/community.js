@@ -3487,7 +3487,8 @@ let WorkshopBrowseClass = (function(){
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
         let appid = GameId.getAppidUriQuery(window.location.search);
-        if (!appid) { return; }
+        if (!appid) return;
+        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
 
         let subscriberButtons = `
             <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
