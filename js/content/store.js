@@ -459,7 +459,7 @@ class StorePageClass {
     forceVideoMP4() {
         if (!SyncedStorage.get("mp4video")) { return; }
 
-        Array.from(document.querySelectorAll("[data-webm-source]")).forEach(function(node) {
+        document.querySelectorAll("[data-webm-source]").forEach(function(node) {
             let mp4 = node.dataset.mp4Source;
             let mp4hd = node.dataset.mp4HdSource;
             if (!mp4 || !mp4hd) return;
