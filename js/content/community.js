@@ -244,7 +244,8 @@ let ProfileActivityPageClass = (function(){
             let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
             for (let link of links) {
                 let appid = GameId.getAppid(link.href);
-                if (!appid || link.childElementCount !== 0) { continue; }
+                if (!appid || link.childElementCount > 1) { continue; }
+                if (link.childElementCount === 1 && link.children[0].tagName !== 'IMG') { continue; }
 
                 if (DynamicStore.isOwned(appid)) {
                     Highlights.highlightOwned(link);
