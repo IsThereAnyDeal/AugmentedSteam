@@ -372,7 +372,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addProfileAge = function(date) {
-        if (!date) { return; }
+        if (!date || !(date instanceof Date)) { return; }
 
         let node = document.querySelector(".header_real_name");
         if (!node) { return; }
