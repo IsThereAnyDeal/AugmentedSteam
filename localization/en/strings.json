@@ -1,4 +1,5 @@
 {
+    "on_steam_since": "On Steam since",
     "currently": "Currently",
     "status": {
         "offline": "Offline",
@@ -8,6 +9,7 @@
         "snooze": "Snooze",
         "looking_to_trade": "Looking to trade",
         "looking_to_play": "Looking to play",
+        "ingame": "In-game",
         "streaming": "Streaming"
     },
     "post_history": "View post history",

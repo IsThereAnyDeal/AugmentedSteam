@@ -312,7 +312,7 @@ let ProfileHomePageClass = (function(){
             ProfileData.clearOwn();
         }
         ProfileData.promise();
-        this.addUserStatus();
+        this.getPlayerSummary();
         this.addCommunityProfileLinks();
         this.addWishlistProfileLink();
         this.addSupporterBadges();
@@ -326,45 +326,67 @@ let ProfileHomePageClass = (function(){
         this.chatDropdownOptions();
     }
 
-    ProfileHomePageClass.prototype.addUserStatus = async function(status) {
+    ProfileHomePageClass.prototype.addProfileStatus = async function() {
+        let steamId = SteamId.getSteamId();
+        // API NOT WORKING YET
+        // let result = await RequestData.getHttp(Config.ApiServerHost + "/v01/steamapi/GetPlayerSummaries/?steamids=" + steamId);
+        let result = {"response":{"players":{"player":[{
+            "steamid": "76561198003100316",
+            "communityvisibilitystate": 3,
+            "profilestate": 1,
+            "personaname": "Madjoki",
+            "lastlogoff": 1566144763,
+            "commentpermission": 1,
+            "profileurl": "https://steamcommunity.com/id/madjoki/",
+            "avatar": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/c8/c8b5e1a4320376939e8577053646d5ff4f045df5.jpg",
+            "avatarmedium": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/c8/c8b5e1a4320376939e8577053646d5ff4f045df5_medium.jpg",
+            "avatarfull": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/c8/c8b5e1a4320376939e8577053646d5ff4f045df5_full.jpg",
+            "personastate": 3,
+            "primaryclanid": "103582791433666425",
+            "timecreated": 1227287889,
+            "personastateflags": 0,
+            "loccountrycode": "FI"
+        }	]}}};
+
+        if (!result || !result.response || !result.response.players) { return; }
+
+        let playerInfo = result.response.players.player[0];
+        if (playerInfo.timecreated) {
+            this.addProfileAge(new Date(playerInfo.timecreated * 1000));
+        }
+
+        if (playerInfo.gameid) { return; }
+
+        let personastates = {
+            "0": "offline",
+            "1": "online",
+            "2": "busy",
+            "3": "away",
+            "4": "snooze",
+            "5": "looking_to_trade",
+            "6": "looking_to_play"
+        };
+    
+        status = personastates[playerInfo.personastate];
+        this.addProfileStatus(status);
+    }
+
+    ProfileHomePageClass.prototype.addProfileAge = function(date) {
+        if (!date) { return; }
+
+        let node = document.querySelector(".profile_header_centered_persona");
+        if (!node) { return; }
+
+        let cc = Language.getLanguageCode(Language.getCurrentSteamLanguage());
+        let datestr = date.getDate() + " " + date.toLocaleString(cc, { month: "long" }) + " " + date.getFullYear();
+        HTML.beforeEnd(node, `<div class="es_age">${Localization.str.on_steam_since} ${datestr}`);
+    }
+
+    ProfileHomePageClass.prototype.addProfileStatus = function(status) {
+        if (!status) { return; }
+
         let node = document.querySelector(".profile_in_game_header");
         if (!node) { return; }
-    
-        if (!status) {
-            let steamId = SteamId.getSteamId();
-            // API NOT WORKING YET
-            // let result = await RequestData.getHttp(Config.ApiServerHost + "/v01/steamapi/GetPlayerSummaries/?steamids=" + steamId);
-            let result = {"response":{"players":{"player":[{
-                "steamid": "76561198003100316",
-                "communityvisibilitystate": 3,
-                "profilestate": 1,
-                "personaname": "Madjoki",
-                "lastlogoff": 1566144763,
-                "commentpermission": 1,
-                "profileurl": "https://steamcommunity.com/id/madjoki/",
-                "avatar": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/c8/c8b5e1a4320376939e8577053646d5ff4f045df5.jpg",
-                "avatarmedium": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/c8/c8b5e1a4320376939e8577053646d5ff4f045df5_medium.jpg",
-                "avatarfull": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/c8/c8b5e1a4320376939e8577053646d5ff4f045df5_full.jpg",
-                "personastate": 3,
-                "primaryclanid": "103582791433666425",
-                "timecreated": 1227287889,
-                "personastateflags": 0,
-                "loccountrycode": "FI"
-            }	]}}};
-
-            let playerInfo = result.response.players.player[0];
-            let personastates = {
-                "0": "offline",
-                "1": "online",
-                "2": "busy",
-                "3": "away",
-                "4": "snooze",
-                "5": "looking_to_trade",
-                "6": "looking_to_play"
-            };
-        
-            status = personastates[playerInfo.personastate];
-        }
         
         let personacolors = {
             "offline": "#898989",
@@ -378,10 +400,6 @@ let ProfileHomePageClass = (function(){
         };
         node.textContent = Localization.str.currently + " " + Localization.str.status[status];
         node.style.color = personacolors[status];
-
-        // TESTING
-        // let states = Object.keys(personacolors);
-        // setTimeout(() => this.addUserStatus(states[Math.floor(Math.random() * states.length)]), 500);
     };
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
@@ -873,7 +891,7 @@ let ProfileHomePageClass = (function(){
                     </a>
                 </div>`);
 
-        this.addUserStatus("streaming");
+        this.addProfileStatus("streaming");
     };
 
     ProfileHomePageClass.prototype.chatDropdownOptions = function() {
