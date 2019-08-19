@@ -326,7 +326,7 @@ let ProfileHomePageClass = (function(){
         this.chatDropdownOptions();
     }
 
-    ProfileHomePageClass.prototype.addProfileStatus = async function() {
+    ProfileHomePageClass.prototype.getPlayerSummary = async function() {
         let steamId = SteamId.getSteamId();
         // API NOT WORKING YET
         // let result = await RequestData.getHttp(Config.ApiServerHost + "/v01/steamapi/GetPlayerSummaries/?steamids=" + steamId);
@@ -374,12 +374,12 @@ let ProfileHomePageClass = (function(){
     ProfileHomePageClass.prototype.addProfileAge = function(date) {
         if (!date) { return; }
 
-        let node = document.querySelector(".profile_header_centered_persona");
+        let node = document.querySelector(".header_real_name");
         if (!node) { return; }
 
         let cc = Language.getLanguageCode(Language.getCurrentSteamLanguage());
         let datestr = date.getDate() + " " + date.toLocaleString(cc, { month: "long" }) + " " + date.getFullYear();
-        HTML.beforeEnd(node, `<div class="es_age">${Localization.str.on_steam_since} ${datestr}`);
+        HTML.beforeBegin(node, `<div class="es_age" style="margin-bottom: 10px;">${Localization.str.on_steam_since} ${datestr}`);
     }
 
     ProfileHomePageClass.prototype.addProfileStatus = function(status) {
