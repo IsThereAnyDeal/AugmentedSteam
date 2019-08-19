@@ -3477,12 +3477,13 @@ let WorkshopPageClass = (function(){
             $J(".browseOption").get().forEach(node => node.onclick = () => false);
         });
 
-        Array.from(document.querySelectorAll(".browseOption")).forEach(tab => {
+        document.querySelectorAll(".browseOption").forEach(tab => {
             tab.addEventListener("click", () => {
                 let a = tab.querySelector("a[href]");
                 let url = new URL("https://steamcommunity.com/workshop/" + a.href);
                 let query = url.searchParams.get("browsesort");
                 LocalStorage.set("workshop_state", url.search);
+                window.history.pushState(null, null, url.search);
                 this.changeTab(query);
             });
         });
