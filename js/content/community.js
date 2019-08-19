@@ -318,7 +318,7 @@ let ProfileHomePageClass = (function(){
         this.changeUserBackground();
         this.addProfileStoreLinks();
         this.addSteamRepApi();
-        this.addPostHistoryLink();
+        this.userDropdownOptions();
         this.inGameNameLink();
         this.addProfileStyle();
         this.addTwitchInfo();
@@ -636,9 +636,27 @@ let ProfileHomePageClass = (function(){
         });
     };
 
-    ProfileHomePageClass.prototype.addPostHistoryLink = function() {
+    ProfileHomePageClass.prototype.userDropdownOptions = function() {
+
         let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         if (!node) { return; }
+
+        // add nickname option for non-friends
+        if (User.isSignedIn) {
+
+            // check whether we can chat => if we can we are friends => we have nickname option
+            let canAddFriend = document.querySelector("#btn_add_friend");
+            if (canAddFriend) {
+
+                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
+
+                node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
+                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                });
+            }
+        }
+
+        // post history link
         HTML.afterEnd(node,
                 `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
@@ -803,10 +821,9 @@ let ProfileHomePageClass = (function(){
         let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let href = sendButton.href;
-
-        let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
+        let chatId = m[1];
 
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
@@ -828,7 +845,10 @@ let ProfileHomePageClass = (function(){
                 </div>
             </div>`);
         sendButton.remove();
-        document.getElementById("btnWebChat").href = href.replace("OpenFriendChat", "OpenFriendChatInWebChat"); // Workaround: 'onclick' and js-href gets removed when inserting HTML
+
+        document.querySelector("#btnWebChat").addEventListener("click", function(){
+            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+        });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
@@ -3459,6 +3479,103 @@ class WorkshopPageClass {
     }
 }
 
+let WorkshopBrowseClass = (function(){
+
+    function WorkshopBrowseClass() {
+        this.addSubscriberButtons();
+    }
+
+    WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        let appid = GameId.getAppidUriQuery(window.location.search);
+        if (!appid) return;
+        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
+
+        let subscriberButtons = `
+            <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
+            <div id="es_subscriber" class="rightDetailsBlock">
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
+                    </div>
+                </div>
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
+                    </div>
+                </div>
+                <hr>
+            </div>`;
+
+        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
+
+        document.querySelector(".es_subscriber").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            startSubscriber(method, total);
+        });
+
+        function startSubscriber(method, total) {
+            let i = -1;
+
+            ExtensionLayer.runInPageContext(`function(){
+                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("startSubscriber");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
+                }`)
+            }
+
+            function changeSubscription(id) {
+                return new Promise(function(resolve) {
+                    let formData = new FormData();
+                    formData.append("sessionid", User.getSessionId());
+                    formData.append("appid", appid);
+                    formData.append("id", id);
+
+                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                        withCredentials: true
+                    }).then(function() {
+                        updateWaitDialog();
+                        resolve();
+                    });
+                });
+            }
+
+            Messenger.addMessageListener("startSubscriber", async function() {
+                updateWaitDialog();
+
+                let workshopItems = [];
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                    let url = new URL(window.location.href);
+                    url.searchParams.set("p", p);
+                    url.searchParams.set("numperpage", 30);
+    
+                    let result = await RequestData.getHttp(url.toString());
+                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    workshopItems = workshopItems.concat(Array.from(xmlDoc.querySelectorAll(".workshopItemPreviewHolder")).map(node => node.id.replace("sharedfile_", "")));
+                }
+    
+                Promise.all(workshopItems.map(id => changeSubscription(id))).finally(() => {
+                    location.reload();
+                });
+            }, true)
+        }
+    }
+
+    return WorkshopBrowseClass;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3528,6 +3645,10 @@ class WorkshopPageClass {
 
         case /^\/sharedfiles\/.*/.test(path):
             (new WorkshopPageClass());
+            break;
+
+        case /^\/workshop\/browse/.test(path):
+            (new WorkshopBrowseClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

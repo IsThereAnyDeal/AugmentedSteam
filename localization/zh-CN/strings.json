@@ -268,7 +268,8 @@
         "option": "在商店页面显示成就",
         "achievements": "成就",
         "includes": "拥有 __num__ 个 Steam 成就",
-        "view_all": "显示所有成就"
+        "view_all": "显示所有成就",
+        "summary": "已解锁 __total__ 个成就中的 __unlocked__ 个（__percentage__%）："
     },
     "bundle": {
         "offer_ends": "特惠结束",
@@ -387,6 +388,7 @@
         "show_astatslink": "在游戏页面显示 AStats 链接",
         "show_youtubegameplay": "在商店页面显示 YouTube 实况视频",
         "show_youtubereviews": "在商店页面显示 YouTube 评测视频",
+        "openinnewtab": "在新标签页打开外部链接",
         "showclient": "显示 Steam 客户端链接",
         "guest": "拥有玩家通行证的物品",
         "show_steamchart_info": "显示 SteamCharts.com 信息",
@@ -433,6 +435,7 @@
         "store_general_thirdparty": "第三方网站信息选项",
         "purchase_dates": "在商店页面上显示购买日期",
         "show_badge_progress": "在商店页面显示徽章进度",
+        "show_coupon": "在商店页面显示可用的优惠券",
         "show_wishlist_link": "在个人资料页面显示愿望单链接",
         "show_wishlist_count": "在愿望单页面显示物品数量",
         "profile_showcase_twitch": "如果有 Twitch.tv 链接，则为其添加一个展柜",
