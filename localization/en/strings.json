@@ -1,4 +1,3 @@
-{
     "search_results": {
         "confirm": "Are you sure you want to perform this action on all __n__ products?",
         "actions": "Actions for displayed search results",
@@ -10,6 +9,13 @@
         "unignore": "Unignore",
         "success": "Successfully completed this action!"
     },
+    "subscriptions": "Subscriptions",
+    "subscribe_all": "Subscribe All",
+    "unsubscribe_all": "Unsubscribe All",
+    "subscribe_confirm": "Are you sure you want to subscribe to all __count__ workshop items with these filters?",
+    "unsubscribe_confirm": "Are you sure you want to unsubscribe to all __count__ workshop items with these filters?",
+    "subscribe_loading": "Subscribing to __i__/__count__ workshop items, please wait...",
+    "unsubscribe_loading": "Unsubscribing to __i__/__count__ workshop items, please wait...",
     "post_history": "View post history",
     "add_nickname": "Add Nickname",
     "total_size": "Total Size",
@@ -148,6 +154,8 @@
     "price_above":"Items that cost more than",
     "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
     "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
+    "reviews_below":"Items with less reviews than",
+    "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Steam Client",
