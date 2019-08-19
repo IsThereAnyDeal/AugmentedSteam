@@ -1273,6 +1273,7 @@ let StatsPageClass = (function(){
         }
 
         this.addAchievementSort();
+        this.showEntireDescriptions();
     }
 
     let _nodes = {
@@ -1346,6 +1347,11 @@ let StatsPageClass = (function(){
             sortBy("time", personal);
         });
     };
+    
+
+    StatsPageClass.prototype.showEntireDescriptions = function() {
+        Array.from(document.querySelectorAll("h5.ellipsis")).forEach(node.removeClass("ellipsis"));
+    }
 
     return StatsPageClass;
 })();
