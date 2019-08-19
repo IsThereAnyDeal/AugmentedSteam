@@ -456,7 +456,7 @@ class ITAD_Api extends Api {
 
         let promises = [];
 
-        promises.push(ITAD_Api.endpointFactoryCached("v02/user/coll/all/", "itad", "collection")({ "shop": "steam", "optional": "gameid" }));
+        promises.push(ITAD_Api.endpointFactoryCached("v02/user/coll/all/", "itad", "collection")({ "shop": "steam", "optional": "gameid,copy_type" }));
 
         let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
         let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
