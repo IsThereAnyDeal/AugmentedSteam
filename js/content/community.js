@@ -3493,13 +3493,11 @@ let WorkshopBrowseClass = (function(){
             <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
             <div id="es_subscriber" class="rightDetailsBlock">
                 <div style="position:relative;">
-                    <img class="browseOptionImage" src="//steamcommunity-a.akamaihd.net/public/images/sharedfiles/filterselect_blue.png?v=1">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
                     </div>
                 </div>
                 <div style="position:relative;">
-                    <img class="browseOptionImage" src="//steamcommunity-a.akamaihd.net/public/images/sharedfiles/filterselect_blue.png?v=1">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
                     </div>
