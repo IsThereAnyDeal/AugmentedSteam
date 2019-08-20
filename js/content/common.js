@@ -1652,8 +1652,10 @@ let Highlights = (function(){
     };
 
     self.highlightAndTag = async function(nodes) {
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+
+        let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
+
+        for (let node of nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -1666,8 +1668,19 @@ let Highlights = (function(){
                 nodeToHighlight = node.parentNode;
             }
 
+            let aNode = node.querySelector("a");
+            let appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
+            let subid = GameId.getSubid(node) || GameId.getSubid(aNode);
             if (node.querySelector(".ds_owned_flag")) {
                 self.highlightOwned(nodeToHighlight);
+            } else if (includeOtherGames) {
+                let key;
+                if (appid) key = `app/${appid}`;
+                else if (subid) key = `sub/${subid}`;
+
+                Background.action("idb.contains", "ownedElsewhere", key).then(result => {
+                    if (result) self.highlightOwned(nodeToHighlight);
+                });
             }
 
             if (node.querySelector(".ds_wishlist_flag")) {
@@ -1682,8 +1695,6 @@ let Highlights = (function(){
                 self.highlightNonDiscounts(nodeToHighlight);
             }
 
-            let aNode = node.querySelector("a");
-            let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
             if (appid) {
                 if (await Inventory.hasGuestPass(appid)) {
                     self.highlightInvGuestpass(node);

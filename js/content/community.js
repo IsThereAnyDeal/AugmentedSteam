@@ -916,7 +916,7 @@ let GamesPageClass = (function(){
 
                 hadNodesInView = true;
 
-                let appid = GameId.getAppidWishlist(node.id);
+                let appid = GameId.getAppidFromId(node.id);
                 node.classList.add("es_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
                 if (!node.querySelector("h5.hours_played")) { continue; }

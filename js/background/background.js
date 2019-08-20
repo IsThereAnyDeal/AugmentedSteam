@@ -202,7 +202,18 @@ class IndexedDB {
     }
 
     static contains(objectStoreName, key) {
-        return IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key).then(cursor => Boolean(cursor));
+        let multiple = Array.isArray(key);
+
+        if (multiple) {
+            let objectStore = IndexedDB.db.transaction(objectStoreName).store;
+            let promises = [];
+            key.forEach(_key => {
+                promises.push(objectStore.openKeyCursor(key).then(cursor => Boolean(cursor)));
+            });
+            return Promise.all(promises);
+        } else {
+            return IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key).then(cursor => Boolean(cursor));
+        }
     }
 
     static resultExpiryCheck(result, objectStoreName) {

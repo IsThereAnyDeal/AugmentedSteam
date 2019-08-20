@@ -244,7 +244,14 @@ class GameId {
     
     static getAppid(text) {
         if (!text) { return null; }
-        
+
+        if (text instanceof HTMLElement) {
+            let appid = text.dataset.dsAppid;
+            if (appid) return GameId.parseId(appid);
+            text = text.href;
+            if (!text) return null;
+        }
+
         // app, market/listing
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
         return m && GameId.parseId(m[2]);
@@ -252,6 +259,13 @@ class GameId {
     
     static getSubid(text) {
         if (!text) { return null; }
+
+        if (text instanceof HTMLElement) {
+            let subid = text.dataset.dsPackageid;
+            if (subid) return GameId.parseId(subid);
+            text = text.href;
+            if (!text) return null;
+        }
         
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
         return m && GameId.parseId(m[2]);
@@ -276,7 +290,7 @@ class GameId {
         return res;
     }
     
-    static getAppidWishlist(text) {
+    static getAppidFromId(text) {
         if (!text) { return null; }
         let m = text.match(/game_(\d+)/);
         return m && GameId.parseId(m[1]);
