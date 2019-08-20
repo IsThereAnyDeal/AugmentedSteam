@@ -438,7 +438,7 @@ let Options = (function(){
         }
 
         let language = Language.getCurrentSteamLanguage();
-        if (language !== "schinese" && language !== "tchinese") {
+        if (language !== "schinese" || language !== "tchinese") {
             let n = document.getElementById('profile_steamrepcn');
             if (n) {
                 // Hide SteamRepCN option if language isn't Chinese
