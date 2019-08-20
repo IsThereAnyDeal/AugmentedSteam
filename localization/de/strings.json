@@ -443,7 +443,8 @@
             "thai": "Thai",
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
-        }
+        },
+        "include_owned_elsewhere": "Integriere Spiele, die du woanders besitzt"
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",

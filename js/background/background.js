@@ -912,24 +912,33 @@ class Steam {
                 SteamStore.getEndpoint("/dynamicstore/userdata/"),
                 ITAD_Api.endpointFactoryCached("v02/user/coll/all/", "itad", "collection")({ "shop": "steam", "optional": "gameid,copy_type" }),
             ])
-            .then(([dynamicStore, { games, typemap }]) => {
-                if (!dynamicStore.rgOwnedApps) {
+            .then(([{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, { games, typemap }]) => {
+                if (!rgOwnedApps) {
                     throw new Error("Could not fetch DynamicStore UserData");
                 }
                 let ownedElsewhere = {};
+                let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
                 games.forEach(({ gameid, types }) => {
                     types = types.filter(type => type !== "steam");
                     if (!types.length) return;
 
                     types = types.map(type => typemap[type]);
 
+                    if (includeOtherGames) {
+                        if (gameid.startsWith("app/")) {
+                            rgOwnedApps.push(parseInt(gameid.slice(gameid.indexOf('/') + 1), 10));
+                        } else if (gameid.startsWith("sub/")) {
+                            rgOwnedPackages.push(parseInt(gameid.slice(gameid.indexOf('/') + 1), 10));
+                        }
+                    }
+
                     ownedElsewhere[gameid] = types;
                 });
                 let data = {
-                    "ignored": Object.keys(dynamicStore.rgIgnoredApps).map(value => parseInt(value, 10)),
-                    "ownedApps": dynamicStore.rgOwnedApps,
-                    "ownedPackages": dynamicStore.rgOwnedPackages,
-                    "wishlisted": dynamicStore.rgWishlist,
+                    "ignored": Object.keys(rgIgnoredApps).map(value => parseInt(value, 10)),
+                    "ownedApps": rgOwnedApps,
+                    "ownedPackages": rgOwnedPackages,
+                    "wishlisted": rgWishlist,
                 };
                 return Promise.all([
                     IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true),

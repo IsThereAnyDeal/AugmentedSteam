@@ -1183,7 +1183,6 @@ class AppPageClass extends StorePageClass {
 
         Background.action("idb.get", "ownedElsewhere", `app/${this.appid}`).then(result => {
             if (!result) return;
-
             
             HTML.afterEnd(".queue_overflow_ctn",
                 `<div class="game_area_already_owned page_content">

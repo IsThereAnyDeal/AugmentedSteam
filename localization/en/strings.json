@@ -475,7 +475,8 @@
             "ukrainian": "Ukrainian"
         },
         "add_custom_link": "Add custom link",
-        "auto_detect": "Auto-detect"
+        "auto_detect": "Auto-detect",
+        "include_owned_elsewhere": "Integrate games that you own elsewhere"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",

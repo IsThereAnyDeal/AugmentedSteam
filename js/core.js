@@ -570,6 +570,8 @@ SyncedStorage.defaults = {
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
+
+    'include_owned_elsewhere': true,
 };
 
 
