@@ -574,6 +574,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.addOwnedElsewhere();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -1175,6 +1176,21 @@ class AppPageClass extends StorePageClass {
             HTML.beforeEnd(".game_area_already_owned .already_in_library",
                 ` ${Localization.str.purchase_date.replace("__date__", date)}`);
         });
+    }
+
+    addOwnedElsewhere() {
+        if (document.querySelector(".game_area_already_owned")) return;
+
+        Background.action("idb.get", "ownedElsewhere", `app/${this.appid}`).then(result => {
+            if (!result) return;
+
+            
+            HTML.afterEnd(".queue_overflow_ctn",
+                `<div class="game_area_already_owned page_content">
+                    <div class="ds_owned_flag ds_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>
+                    <div class="already_in_library">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
+                </div>`)
+        })
     }
 
     addWidescreenCertification() {

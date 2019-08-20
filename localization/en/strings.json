@@ -92,6 +92,7 @@
     "community": "Community",
     "dlc_data_header": "Downloadable Content Details",
     "graphics": "Graphics",
+    "owned_elsewhere": "You already own __gametitle__ on __storelist__",
     "trading_cards": "Steam Trading Cards",
     "view_badge": "View Badge",
     "purchase_total": "Purchase total:",

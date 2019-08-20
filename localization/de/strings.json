@@ -86,6 +86,7 @@
     "community": "Community",
     "dlc_data_header": "Details zu herunterladbaren Inhalten",
     "graphics": "Grafik",
+    "owned_elsewhere": "Sie besitzen __gametitle__ bereits auf __storelist__",
     "trading_cards": "Steam-Sammelkarten",
     "view_badge": "Abzeichen ansehen",
     "purchase_total": "Gesamtkosten:",
