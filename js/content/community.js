@@ -410,14 +410,23 @@ let ProfileHomePageClass = (function(){
 
             let name =  HTML.escape(customLink.name);
             let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
-            let icon = "//" + HTML.escape(customLink.icon);
+            let icon;
+            if (customLink.icon) {
+                icon = "//" + HTML.escape(customLink.icon);
+            } else {
+                iconType = "none";
+            }
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
                     <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
+                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});`
+                        if (iconType === "gray") {
+                            htmlstr += ` filter: grayscale(100%);`;
+                        }
+                        htmlstr += `"></i>`;
                     }
                     htmlstr += `</a>
                 </div>`;
