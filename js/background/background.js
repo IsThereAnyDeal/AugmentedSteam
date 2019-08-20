@@ -59,7 +59,8 @@ class IndexedDB {
                                 db.createObjectStore("profiles");
                                 db.createObjectStore("rates");
                                 db.createObjectStore("notes");
-                                db.createObjectStore("itad").createIndex("collectionGames", "value.games", { unique: true, multiEntry: true });
+                                db.createObjectStore("itad");
+                                db.createObjectStore("ownedElsewhere");
                                 break;
                             }
                             default: {
@@ -434,7 +435,7 @@ class ITAD_Api extends Api {
 
     static endpointFactoryCached(endpoint, objectStore, keyMapper, oneDimensional, resultFn) {
         return async params => {
-            super.endpointFactoryCached(endpoint, objectStore, keyMapper, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }))
+            return super.endpointFactoryCached(endpoint, objectStore, keyMapper, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }))
         }
     }
 
@@ -455,8 +456,6 @@ class ITAD_Api extends Api {
         }
 
         let promises = [];
-
-        promises.push(ITAD_Api.endpointFactoryCached("v02/user/coll/all/", "itad", "collection")({ "shop": "steam", "optional": "gameid,copy_type" }));
 
         let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
         let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
@@ -908,19 +907,34 @@ class Steam {
         if (self._dynamicstore_promise) { return self._dynamicstore_promise; }
         
         if (await IndexedDB.isObjectStoreExpired("dynamicStore")) {
-            // Cache miss, need to fetch
-            self._dynamicstore_promise = SteamStore.getEndpoint("/dynamicstore/userdata/")
-            .then(dynamicStore => {
+            
+            self._dynamicstore_promise = Promise.all([
+                SteamStore.getEndpoint("/dynamicstore/userdata/"),
+                ITAD_Api.endpointFactoryCached("v02/user/coll/all/", "itad", "collection")({ "shop": "steam", "optional": "gameid,copy_type" }),
+            ])
+            .then(([dynamicStore, { games, typemap }]) => {
                 if (!dynamicStore.rgOwnedApps) {
                     throw new Error("Could not fetch DynamicStore UserData");
                 }
+                let ownedElsewhere = {};
+                games.forEach(({ gameid, types }) => {
+                    types = types.filter(type => type !== "steam");
+                    if (!types.length) return;
+
+                    types = types.map(type => typemap[type]);
+
+                    ownedElsewhere[gameid] = types;
+                });
                 let data = {
                     "ignored": Object.keys(dynamicStore.rgIgnoredApps).map(value => parseInt(value, 10)),
                     "ownedApps": dynamicStore.rgOwnedApps,
                     "ownedPackages": dynamicStore.rgOwnedPackages,
                     "wishlisted": dynamicStore.rgWishlist,
                 };
-                return IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true);
+                return Promise.all([
+                    IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true),
+                    IndexedDB.putCached("ownedElsewhere", Object.values(ownedElsewhere), Object.keys(ownedElsewhere), true),
+                ]) ;
             }).then(() => self._dynamicstore_promise = null);
 
             return self._dynamicstore_promise;
