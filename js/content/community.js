@@ -3455,6 +3455,23 @@ let CommunityAppPageClass = (function(){
     return CommunityAppPageClass;
 })();
 
+let FileDetailsPageClass = (function(){
+    function FileDetailsPageClass() {
+        this.addSteamClientLink();
+    }
+
+    FileDetailsPageClass.prototype.addSteamClientLink = function() {
+        if (!SyncedStorage.get("showclient")) { return; }
+        let bgUrl = "https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png";
+        let id = new URL(window.location.href).searchParams.get("id");
+
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="steam://url/CommunityFilePage/${id}"><span><i class="ico16" style="background-image:url('${bgUrl}');background-position:center;opacity:.7;"></i>&nbsp; Steam Client</span></a>`);
+    }
+
+    return FileDetailsPageClass;
+})();
+
 let GuidesPageClass = (function(){
 
     let Super = CommunityAppPageClass;
@@ -3662,6 +3679,10 @@ let WorkshopBrowseClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/stats/.test(path):
             (new StatsPageClass());
+            break;
+
+        case /^\/(workshop|sharedfiles)\/filedetails\/?$/.test(path):
+            (new FileDetailsPageClass());
             break;
 
         case /^\/sharedfiles\/.*/.test(path):
