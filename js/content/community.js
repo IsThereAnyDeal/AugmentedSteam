@@ -888,7 +888,6 @@ let GroupHomePageClass = (function(){
     GroupHomePageClass.prototype.addExtraLinks = function() {
 
         let groupId = GroupID.getGroupId();
-            console.log(groupId);
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
         if (images !== false) {
@@ -917,7 +916,6 @@ let GroupHomePageClass = (function(){
                 </div>`;
 
         });
-	    console.log(htmlstr);
 
         // Insert the links HMTL into the page
         if (htmlstr) {
