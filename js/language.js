@@ -87,10 +87,10 @@ class Localization {
         function deepAssign(target, source) {
             // Object.assign() but deep-assigning objects recursively
             for (let [key, val] of Object.entries(source)) {
-                if (typeof val === "object") {
-                    deepAssign(target[key], val);
-                } else {
+                if (target[key] === undefined || typeof val !== "object") {
                     target[key] = val;
+                } else {
+                    deepAssign(target[key], val);
                 }
             }
             return target;
