@@ -3558,6 +3558,103 @@ class WorkshopPageClass {
     }
 }
 
+let WorkshopBrowseClass = (function(){
+
+    function WorkshopBrowseClass() {
+        this.addSubscriberButtons();
+    }
+
+    WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        let appid = GameId.getAppidUriQuery(window.location.search);
+        if (!appid) return;
+        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
+
+        let subscriberButtons = `
+            <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
+            <div id="es_subscriber" class="rightDetailsBlock">
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
+                    </div>
+                </div>
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
+                    </div>
+                </div>
+                <hr>
+            </div>`;
+
+        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
+
+        document.querySelector(".es_subscriber").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            startSubscriber(method, total);
+        });
+
+        function startSubscriber(method, total) {
+            let i = -1;
+
+            ExtensionLayer.runInPageContext(`function(){
+                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("startSubscriber");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
+                }`)
+            }
+
+            function changeSubscription(id) {
+                return new Promise(function(resolve) {
+                    let formData = new FormData();
+                    formData.append("sessionid", User.getSessionId());
+                    formData.append("appid", appid);
+                    formData.append("id", id);
+
+                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                        withCredentials: true
+                    }).then(function() {
+                        updateWaitDialog();
+                        resolve();
+                    });
+                });
+            }
+
+            Messenger.addMessageListener("startSubscriber", async function() {
+                updateWaitDialog();
+
+                let workshopItems = [];
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                    let url = new URL(window.location.href);
+                    url.searchParams.set("p", p);
+                    url.searchParams.set("numperpage", 30);
+    
+                    let result = await RequestData.getHttp(url.toString());
+                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    workshopItems = workshopItems.concat(Array.from(xmlDoc.querySelectorAll(".workshopItemPreviewHolder")).map(node => node.id.replace("sharedfile_", "")));
+                }
+    
+                Promise.all(workshopItems.map(id => changeSubscription(id))).finally(() => {
+                    location.reload();
+                });
+            }, true)
+        }
+    }
+
+    return WorkshopBrowseClass;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3627,6 +3724,10 @@ class WorkshopPageClass {
 
         case /^\/sharedfiles\/.*/.test(path):
             (new WorkshopPageClass());
+            break;
+
+        case /^\/workshop\/browse/.test(path):
+            (new WorkshopBrowseClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

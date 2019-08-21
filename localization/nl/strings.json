@@ -11,6 +11,13 @@
         "ingame": "Aan het spelen",
         "streaming": "Aan het streamen"
     },
+    "subscriptions": "Abonnementen",
+    "subscribe_all": "Aboneer Op Alles",
+    "unsubscribe_all": "Alles Afmelden",
+    "subscribe_confirm": "Weet u zeker dat u op alle __count__ workshop items met deze filters wilt abonneren?",
+    "unsubscribe_confirm": "Weet u zeker dat u van alle __count__ workshop items met deze filters af wilt melden?",
+    "subscribe_loading": "Abonneren op __i__/__count__ workshop items, een ogenblik geduld astublieft...",
+    "unsubscribe_loading": "Afmelden van __i__/__count__ workshop items, een ogenblik geduld astublieft...",
     "game": "Spel",
     "tag_categories": "Tag Categorieën",
     "discounts": "Kortingen",
