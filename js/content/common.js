@@ -2104,8 +2104,16 @@ let Notifications = (function(){
             container.dataset.id = id;
 
             let href = "steam://openurl/" + node.href;
-            if (id === 9) {
-                href = "steam://open/friends";
+            switch (id) {
+                case 4:
+                    href = "steam://url/CommentNotifications";
+                    break;
+                case 8:
+                    href = "steam://guestpasses";
+                    break;
+                case 9:
+                    href = "steam://open/friends";
+                    break;
             }
 
             HTML.afterBegin(container, `<a class="popup_menu_item notification_ctn" style="padding-right:12px;" href="${href}">
