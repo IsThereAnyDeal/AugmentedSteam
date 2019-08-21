@@ -2084,28 +2084,40 @@ let Notifications = (function(){
     let self = {};
 
     self.addClientLinks = function() {
-        let body = document.querySelector("#header_notification_area .popup_body");
-        if (!body) { return; }
+        let menu = document.querySelector("#header_notification_area .popup_body");
+        if (!menu) { return; }
 
-        document.querySelectorAll(".hide_when_empty").forEach(node => node.classList.remove("hide_when_empty"));
+        let seps = menu.querySelectorAll("div.header_notification_dropdown_seperator");
+        menu.querySelectorAll("a.popup_menu_item").forEach(function(node, i) {
+            if (node.classList.contains("hide_when_empty")) {
+                node.classList.remove("hide_when_empty");
+            }
 
-        /* TEMPLATE EXAMPLE:
-        
-        <div style="display:flex;">
-            <a data-notification-type="9" class="popup_menu_item notification_ctn header_notification_offlinemessages" href="javascript:void(0)" onclick="LaunchWebChat(); HideMenu( 'header_notification_link', 'header_notification_dropdown' ); return false;">
-				<span style="
-                    background-image: url(https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png);
-                    opacity: .7;
-                    margin-right: 0px;
-                    background-position: center;
-                " class="notification_icon"></span>
-            </a>
-            <a data-notification-type="9" class="popup_menu_item notification_ctn header_notification_offlinemessages" href="javascript:void(0)" onclick="LaunchWebChat(); HideMenu( 'header_notification_link', 'header_notification_dropdown' ); return false;">
-                <span class="notification_icon"></span><span class="notification_count_string singular" style="display: none;">1 unread chat message</span><span class="notification_count_string plural" style=""><span class="notification_count">0</span> unread chat messages</span>
-            </a>
-        </div>
-                
-                */
+            if (!SyncedStorage.get("showclient")) { return; }
+            
+            let id = Number(node.dataset.notificationType);
+            node.style.width = "100%";
+            
+            let container = document.createElement("div");
+            container.style.display = "flex";
+            container.classList.add("es_menu_item");
+            container.dataset.id = id;
+
+            let href = "steam://openurl/" + node.href;
+            if (id === 9) {
+                href = "steam://open/friends";
+            }
+
+            HTML.afterBegin(container, `<a class="popup_menu_item notification_ctn" style="padding-right:12px;" href="${href}">
+                <span style="background-image:url(https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png);opacity:.7;margin-right:0px;background-position:center;" class="notification_icon"></span>
+            </a>`);
+            container.appendChild(node);
+            menu.appendChild(container);
+
+            if (seps[i]) {
+                menu.appendChild(seps[i]);
+            }
+        });
     }
 
     return self;
