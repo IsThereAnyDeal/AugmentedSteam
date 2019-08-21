@@ -3434,10 +3434,22 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamClientLink = function() {
         if (!SyncedStorage.get("showclient")) { return; }
+        let path = window.location.pathname.split("/")[3];
         let bgUrl = "https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png";
+        let url = "steam://openurl/" + window.location.href;
+
+        switch (path) {
+            case "workshop":
+                url = "steam://url/SteamWorkshopPage/" + this.appid;
+                break;
+            case "":
+            case undefined:
+                url = "steam://url/GameHub/" + this.appid;
+                break;
+        }
 
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="steam://url/GameHub/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}');background-position:center;opacity:.7;"></i>&nbsp; Steam Client</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="${url}"><span><i class="ico16" style="background-image:url('${bgUrl}');background-position:center;opacity:.7;"></i>&nbsp; Steam Client</span></a>`);
     };
 
     return CommunityAppPageClass;
