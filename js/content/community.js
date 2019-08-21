@@ -3366,6 +3366,7 @@ let CommunityAppPageClass = (function(){
         this.addAppPageWishlist();
         this.addSteamDbLink();
         this.addItadLink();
+        this.addSteamClientLink();
         AgeCheck.sendVerification();
 
         let node = document.querySelector(".apphub_background");
@@ -3429,6 +3430,14 @@ let CommunityAppPageClass = (function(){
 
         HTML.beforeEnd(".apphub_OtherSiteInfo",
             ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addSteamClientLink = function() {
+        if (!SyncedStorage.get("showclient")) { return; }
+        let bgUrl = "https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png";
+
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="steam://url/GameHub/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}');background-position:center;opacity:.7;"></i>&nbsp; Steam Client</span></a>`);
     };
 
     return CommunityAppPageClass;
