@@ -61,6 +61,7 @@ class IndexedDB {
                                 db.createObjectStore("notes");
                                 db.createObjectStore("itad");
                                 db.createObjectStore("ownedElsewhere");
+                                db.createObjectStore("lastItadSync");
                                 break;
                             }
                             default: {
@@ -221,8 +222,6 @@ class IndexedDB {
         if (IndexedDB.timestampedObjectStores.has(objectStoreName)) return result;
         if (!IndexedDB.cacheObjectStores.get(objectStoreName)) return result;
 
-        // This check is for hybrid object stores (some entries are cached, some are not)
-        if (!result.expiry) return result;
         if (IndexedDB.isExpired(result.expiry)) return null;
 
         return result.value;
@@ -266,6 +265,7 @@ IndexedDB.timestampedObjectStores = new Map([
     ["earlyAccessAppids", 60 * 60],
     ["purchases", 24 * 60 * 60],
     ["dynamicStore", 15 * 60],
+    ["ownedElsewhere", 15 * 60],
 ]);
 IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores,
     ["packages", 7 * 24 * 60 * 60],
@@ -453,7 +453,7 @@ class ITAD_Api extends Api {
     static async sync() {
         await Steam.dynamicStore();
         let [ownedApps, ownedPackages, wishlistedApps] = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
-        let [lastOwnedApps, lastOwnedPackages, lastWishlistedApps] = await IndexedDB.get("itad", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
+        let [lastOwnedApps, lastOwnedPackages, lastWishlistedApps] = await IndexedDB.get("lastItadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
 
         let baseJSON = {
             "version": "02",
@@ -487,7 +487,7 @@ class ITAD_Api extends Api {
             });
 
             promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) })
-                .then(() => IndexedDB.put("itad", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
+                .then(() => IndexedDB.put("lastItadSync", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
         }
 
         let newWishlistedApps = removeDuplicates(wishlistedApps, lastWishlistedApps);
@@ -500,7 +500,7 @@ class ITAD_Api extends Api {
             });
 
             promises.push(this.postEndpoint("v01/waitlist/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(wailistJSON) })
-                .then(() => IndexedDB.put("itad", wishlistedApps, "lastWishlisted")));
+                .then(() => IndexedDB.put("lastItadSync", wishlistedApps, "lastWishlisted")));
         }
         return Promise.all(promises);
     }
@@ -1066,7 +1066,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
 
     message.params = message.params || [];
     try {
-        await IndexedDB;
+        await Promise.all([IndexedDB, SyncedStorage]);
         return await callback(...message.params);
     } catch(err) {
         console.error(`Failed to execute callback ${message.action}: ${err.name}: ${err.message}\n${err.stack}`);
