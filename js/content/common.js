@@ -2080,6 +2080,37 @@ let AgeCheck = (function(){
     return self;
 })();
 
+let Notifications = (function(){
+    let self = {};
+
+    self.addClientLinks = function() {
+        let body = document.querySelector("#header_notification_area .popup_body");
+        if (!body) { return; }
+
+        document.querySelectorAll(".hide_when_empty").forEach(node => node.classList.remove("hide_when_empty"));
+
+        /* TEMPLATE EXAMPLE:
+        
+        <div style="display:flex;">
+            <a data-notification-type="9" class="popup_menu_item notification_ctn header_notification_offlinemessages" href="javascript:void(0)" onclick="LaunchWebChat(); HideMenu( 'header_notification_link', 'header_notification_dropdown' ); return false;">
+				<span style="
+                    background-image: url(https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png);
+                    opacity: .7;
+                    margin-right: 0px;
+                    background-position: center;
+                " class="notification_icon"></span>
+            </a>
+            <a data-notification-type="9" class="popup_menu_item notification_ctn header_notification_offlinemessages" href="javascript:void(0)" onclick="LaunchWebChat(); HideMenu( 'header_notification_link', 'header_notification_dropdown' ); return false;">
+                <span class="notification_icon"></span><span class="notification_count_string singular" style="display: none;">1 unread chat message</span><span class="notification_count_string plural" style=""><span class="notification_count">0</span> unread chat messages</span>
+            </a>
+        </div>
+                
+                */
+    }
+
+    return self;
+})();
+
 let Common = (function(){
 
     let self = {};
@@ -2096,6 +2127,7 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
+        Notifications.addClientLinks();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.removeAboutLinks();
