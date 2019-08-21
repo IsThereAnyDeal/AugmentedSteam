@@ -24,6 +24,26 @@ let SteamId = (function(){
     return self;
 })();
 
+let GroupID = (function(){
+
+    let self = {};
+    let _groupId = null;
+
+    self.getGroupId = function() {
+        if (_groupId) { return _groupId; }
+
+        if (document.querySelector("#leave_group_form")) {
+            _groupId = document.querySelector("input[name=groupId]").value;
+        } else {
+            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
+        }
+
+        return _groupId;
+    };
+
+    return self;
+})();
+
 let ProfileData = (function(){
 
     let self = {};
@@ -857,6 +877,61 @@ let ProfileHomePageClass = (function(){
 
     return ProfileHomePageClass;
 })();
+
+
+let GroupHomePageClass = (function(){
+
+    function GroupHomePageClass() {
+        this.addExtraLinks();
+    }
+
+    GroupHomePageClass.prototype.addExtraLinks = function() {
+
+        let groupId = GroupID.getGroupId();
+            console.log(groupId);
+        let iconType = "none";
+        let images = SyncedStorage.get("show_profile_link_images");
+        if (images !== false) {
+            iconType = images === "color" ? "color" : "gray";
+        }
+
+        let links = [
+            {
+                "id": "steamgifts",
+                "link": `//www.steamgifts.com/go/group/${groupId}`,
+                "name": "SteamGifts",
+            }
+        ];
+
+
+        // Build the links HTML
+        let htmlstr = "";
+
+        links.forEach(link => {
+            if (!SyncedStorage.get("group_" + link.id)) { return; }
+            htmlstr +=
+                `<div class="es_profile_link profile_count_link">
+                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
+                        <span class="count_link_label">${link.name}</span>
+                    </a>
+                </div>`;
+
+        });
+	    console.log(htmlstr);
+
+        // Insert the links HMTL into the page
+        if (htmlstr) {
+            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
+            if (linksNode) {
+		HTML.afterEnd(linksNode,'<div class="rightbox_header"></div><div class="rightbox"><div class="content">'+htmlstr+
+					'</div></div></div><div class="rightbox_footer"></div>');
+	    }
+        }
+
+    };
+    return GroupHomePageClass;
+})();
+
 
 let GamesPageClass = (function(){
 
@@ -3629,6 +3704,10 @@ let WorkshopBrowseClass = (function(){
 
         case /^\/(?:id|profiles)\/[^\/]+?\/?$/.test(path):
             (new ProfileHomePageClass());
+            break;
+
+        case /^\/groups\/.+/.test(path):
+            (new GroupHomePageClass());
             break;
 
         case /^\/app\/[^\/]*\/guides/.test(path):
