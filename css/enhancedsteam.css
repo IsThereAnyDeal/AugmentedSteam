@@ -2647,3 +2647,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	display: block;
 	clear: both;
 }
+
+/***************************************
+ * Shows all "View all comments" links
+ * on the friends activity page
+ * 
+ **************************************/
+.blotter_viewallcomments_container {
+	display: block !important;
+}
