@@ -3619,16 +3619,16 @@ let GroupMembersManagePage = (function(){
             (new WorkshopPageClass());
             break;
 
-        case /^\/(?:gid|groups)\/[^\/]+\/membersManage\/?$/g.test(path):
+        case /^\/groups\/[^\/]+\/membersManage\/?$/.test(path):
             (new GroupMembersManagePage());
             break;
 
-        case /^\/(?:gid|groups)\/[^\/]+\/?$/g.test(path):
+        case /^\/groups\/[^\/]+\/?$/.test(path):
             let membersCount = Number(document.querySelector(".membercount.members .count").innerText);
             if (membersCount > 1) { return; }
 
             let webLink = document.querySelector("[href*=ConfirmLeaveGroup]");
-            webLink.innerHTML = `<img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"> ${Localization.str.delete_group}`
+            HTML.inner(webLink, `<img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"> ${Localization.str.delete_group}`);
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
