@@ -643,7 +643,7 @@ class ContextMenu {
                 chrome.tabs.create({url: "https://store.steampowered.com/search/?term=" + encodeURIComponent(info.selectionText)});
                 break;
             case "context_steam_market":
-                chrome.tabs.create({url: "https://store.steampowered.com/search/?term=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({url: "https://steamcommunity.com/market/search?q=" + encodeURIComponent(info.selectionText)});
                 break;
             case "context_itad":
                 chrome.tabs.create({url: "https://isthereanydeal.com/#/filter:&search/" + encodeURIComponent(info.selectionText) + ";/scroll:%23gamelist"});
