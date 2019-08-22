@@ -14,6 +14,7 @@
     "open_in_tab": true
   },
   "permissions": [
+    "contextMenus",
     "storage",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
@@ -125,7 +126,6 @@
       "js/config.js",
       "js/core.js",
       "js/background/background.js"
-    ],
-    "persistent": false
+    ]
   }
 }

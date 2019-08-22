@@ -324,6 +324,13 @@
         "formatted_time": "__hours__ hours, __minutes__ minutes"
     },
     "options": {
+        "context_menu": "Context Menu",
+        "context_steam_store": "Search Steam Store for",
+        "context_steam_market": "Search Steam Market for",
+        "context_itad": "Search IsThereAnyDeal for",
+        "context_steamdb": "Search SteamDB for",
+        "context_steamdb_instant": "Instant Search SteamDB for",
+        "context_steam_keys": "Activate steam keys within selection",
         "wsgf": "Show WSGF (Widescreen) info",
         "version_show": "Show change log when Augmented Steam updates",
         "steamcardexchange": "Show SteamCardExchange links on badges",

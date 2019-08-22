@@ -599,6 +599,13 @@ SyncedStorage.defaults = {
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
+
+    'context_steam_store': true,
+    'context_steam_market': false,
+    'context_itad': true,
+    'context_steamdb': true,
+    'context_steamdb_instant': false,
+    'context_steam_keys': true,
 };
 
 
@@ -619,11 +626,53 @@ class ExtensionResources {
     }
 }
 
+class ContextMenu {
+    static async init() {
+        ContextMenu.updateContextMenu();
+        chrome.contextMenus.onClicked.addListener(ContextMenu.genericOnClick);
+        chrome.storage.onChanged.addListener(ContextMenu.updateContextMenu);
+    }
+
+    static genericOnClick(info, tab) {
+        console.log("item " + info.menuItemId + " was clicked");
+        console.log("info: " + JSON.stringify(info));
+        console.log("tab: " + JSON.stringify(tab));
+    
+        switch (info.menuItemId) {
+            case "context_steam_store":
+                chrome.tabs.create({url: "https://store.steampowered.com/search/?term=" + encodeURIComponent(info.selectionText)});
+                break;
+            case "es_context_steamkeys":
+                break;
+        }
+    }
+    
+    static buildContextMenu() {
+        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+        for (let option of options) {
+            if (!SyncedStorage.get(option)) { return; }
+            console.log("ADDING " + option);
+            chrome.contextMenus.create({
+                "id": option,
+                "title": option || Localization.str.options[option] + (option === "context_steam_keys" ? "" : "'%s'"),
+                "contexts": ["selection"]
+            });
+        }
+    }
+    
+    static updateContextMenu() {
+        console.log("updateContextMenu");
+        chrome.contextMenus.removeAll(ContextMenu.buildContextMenu);
+    }
+}
+
 /**
  * DOMPurify setup
  * @see https://github.com/cure53/DOMPurify
  */
 (async function() {
+    ContextMenu.init();
+
     let allowOpenInNewTab = SyncedStorage.defaults.openinnewtab;
     try {
         await SyncedStorage;
