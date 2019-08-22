@@ -921,7 +921,7 @@ let GroupHomePageClass = (function(){
         if (htmlstr) {
             let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
             if (linksNode) {
-                HTML.afterEnd(linksNode,'<div class="rightbox_header"></div><div class="rightbox"><div class="content">${htmlstr}</div></div></div><div class="rightbox_footer"></div>');
+                HTML.afterEnd(linksNode,`<div class="rightbox_header"></div><div class="rightbox"><div class="content">${htmlstr}</div></div></div><div class="rightbox_footer"></div>`);
             }
         }
 
