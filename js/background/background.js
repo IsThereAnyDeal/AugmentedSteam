@@ -187,6 +187,68 @@ AugmentedSteamApi._progressingRequests = new Map();
 AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 
+class ContextMenu {
+    static async init() {
+        await Localization;
+        ContextMenu.updateContextMenu();
+        chrome.contextMenus.onClicked.addListener(ContextMenu.genericOnClick);
+        chrome.storage.onChanged.addListener(ContextMenu.updateContextMenu);
+    }
+
+    static genericOnClick(info, tab) {
+        console.log("item " + info.menuItemId + " was clicked");
+        console.log("info: " + JSON.stringify(info));
+        console.log("tab: " + JSON.stringify(tab));
+    
+        switch (info.menuItemId) {
+            case "context_steam_store":
+                chrome.tabs.create({url: "https://store.steampowered.com/search/?term=" + encodeURIComponent(info.selectionText)});
+                break;
+            case "context_steam_market":
+                chrome.tabs.create({url: "https://steamcommunity.com/market/search?q=" + encodeURIComponent(info.selectionText)});
+                break;
+            case "context_itad":
+                chrome.tabs.create({url: "https://isthereanydeal.com/#/filter:&search/" + encodeURIComponent(info.selectionText) + ";/scroll:%23gamelist"});
+                break;
+            case "context_steamdb":
+                chrome.tabs.create({url: "https://steamdb.info/search/?q=" + encodeURIComponent(info.selectionText)});
+                break;
+            case "context_steamdb_instant":
+                chrome.tabs.create({url: "https://steamdb.info/instantsearch/?idx=steamdb&q=" + encodeURIComponent(info.selectionText)});
+                break;
+            case "context_steam_keys":
+                let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
+                if (!steamkeys || steamkeys.length === 0) {
+                    window.alert("No keys found!"); // doesn't work??
+                    return;
+                }
+
+                let param = steamkeys.length === 1 ? "key=" : "keys=";
+                chrome.tabs.create({url: "https://store.steampowered.com/account/registerkey?" + param + encodeURIComponent(steamkeys.join())});
+                break;
+        }
+    }
+    
+    static buildContextMenu() {
+        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+        for (let option of options) {
+            if (!SyncedStorage.get(option)) { continue; }
+            console.log("ADDING " + option);
+            chrome.contextMenus.create({
+                // "id": option,
+                "title": Localization.str.options[option] + (option === "context_steam_keys" ? "" : " '%s'"),
+                "contexts": ["selection"]
+            });
+        }
+    }
+    
+    static updateContextMenu() {
+        console.log("updateContextMenu");
+        chrome.contextMenus.removeAll(ContextMenu.buildContextMenu);
+    }
+}
+
+
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
     // static params = { 'credentials': 'include', };
@@ -718,6 +780,8 @@ let actionCallbacks = new Map([
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
 
+    ['contextmenu.update', ContextMenu.updateContextMenu],
+
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
@@ -759,3 +823,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // keep channel open until callback resolves
     return true;
 });
+
+
+ContextMenu.init();

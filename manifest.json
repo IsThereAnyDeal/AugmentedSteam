@@ -122,10 +122,12 @@
   ],
   "background": {
     "scripts": [
+      "js/language.js",
       "js/lib/DOMPurify/purify.js",
       "js/config.js",
       "js/core.js",
       "js/background/background.js"
-    ]
+    ],
+    "persistent": false
   }
 }
