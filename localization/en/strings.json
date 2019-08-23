@@ -328,6 +328,7 @@
         "context_steam_store": "Search Steam Store for",
         "context_steam_market": "Search Steam Market for",
         "context_itad": "Search IsThereAnyDeal for",
+        "context_bartervg": "Search Barter.vg for",
         "context_steamdb": "Search SteamDB for",
         "context_steamdb_instant": "Instant Search SteamDB for",
         "context_steam_keys": "Activate steam product keys within selection",

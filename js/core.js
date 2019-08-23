@@ -631,7 +631,6 @@ class ExtensionResources {
  * @see https://github.com/cure53/DOMPurify
  */
 (async function() {
-
     let allowOpenInNewTab = SyncedStorage.defaults.openinnewtab;
     try {
         await SyncedStorage;

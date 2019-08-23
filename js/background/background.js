@@ -202,13 +202,16 @@ class ContextMenu {
                 chrome.tabs.create({url: "https://steamcommunity.com/market/search?q=" + encodeURIComponent(info.selectionText)});
                 break;
             case "context_itad":
-                chrome.tabs.create({url: "https://isthereanydeal.com/#/filter:&search/" + encodeURIComponent(info.selectionText) + ";/scroll:%23gamelist"});
+                chrome.tabs.create({url: "https://isthereanydeal.com/search/?q=" + encodeURIComponent(info.selectionText)});
+                break;
+            case "context_bartervg":
+                chrome.tabs.create({url: "https://barter.vg/search?q=" + encodeURIComponent(info.selectionText.trim())});
                 break;
             case "context_steamdb":
                 chrome.tabs.create({url: "https://steamdb.info/search/?q=" + encodeURIComponent(info.selectionText)});
                 break;
             case "context_steamdb_instant":
-                chrome.tabs.create({url: "https://steamdb.info/instantsearch/?idx=steamdb&q=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({url: "https://steamdb.info/instantsearch/?query=" + encodeURIComponent(info.selectionText)});
                 break;
             case "context_steam_keys":
                 let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
@@ -238,7 +241,7 @@ class ContextMenu {
         chrome.contextMenus.removeAll(ContextMenu.build);
     }
 }
-(async function(){
+(async function() {
     await Localization;
     ContextMenu.init();
 })();
