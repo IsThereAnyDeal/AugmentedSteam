@@ -188,18 +188,12 @@ AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 
 class ContextMenu {
-    static async init() {
-        await Localization;
-        ContextMenu.updateContextMenu();
-        chrome.contextMenus.onClicked.addListener(ContextMenu.genericOnClick);
-        chrome.storage.onChanged.addListener(ContextMenu.updateContextMenu);
+    static init() {
+        ContextMenu.update();
+        chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
     }
 
-    static genericOnClick(info, tab) {
-        console.log("item " + info.menuItemId + " was clicked");
-        console.log("info: " + JSON.stringify(info));
-        console.log("tab: " + JSON.stringify(tab));
-    
+    static onClick(info) {
         switch (info.menuItemId) {
             case "context_steam_store":
                 chrome.tabs.create({url: "https://store.steampowered.com/search/?term=" + encodeURIComponent(info.selectionText)});
@@ -219,21 +213,19 @@ class ContextMenu {
             case "context_steam_keys":
                 let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
                 if (!steamkeys || steamkeys.length === 0) {
-                    window.alert("No keys found!"); // doesn't work??
+                    window.alert(Localization.str.options.no_keys_found);
                     return;
                 }
-
                 let param = steamkeys.length === 1 ? "key=" : "keys=";
                 chrome.tabs.create({url: "https://store.steampowered.com/account/registerkey?" + param + encodeURIComponent(steamkeys.join())});
                 break;
         }
     }
     
-    static buildContextMenu() {
+    static build() {
         let options = ["context_steam_store", "context_steam_market", "context_itad", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
         for (let option of options) {
             if (!SyncedStorage.get(option)) { continue; }
-            console.log("ADDING " + option);
             chrome.contextMenus.create({
                 "id": option,
                 "title": Localization.str.options[option] + (option === "context_steam_keys" ? "" : " '%s'"),
@@ -242,11 +234,14 @@ class ContextMenu {
         }
     }
     
-    static updateContextMenu() {
-        console.log("updateContextMenu");
-        chrome.contextMenus.removeAll(ContextMenu.buildContextMenu);
+    static update() {
+        chrome.contextMenus.removeAll(ContextMenu.build);
     }
 }
+(async function(){
+    await Localization;
+    ContextMenu.init();
+})();
 
 
 class SteamStore extends Api {
@@ -780,7 +775,7 @@ let actionCallbacks = new Map([
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
 
-    ['contextmenu.update', ContextMenu.updateContextMenu],
+    ['contextmenu.update', ContextMenu.update],
 
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
@@ -823,6 +818,3 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // keep channel open until callback resolves
     return true;
 });
-
-
-ContextMenu.init();
