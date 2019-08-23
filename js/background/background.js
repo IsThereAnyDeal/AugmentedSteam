@@ -226,7 +226,7 @@ class ContextMenu {
     }
     
     static build() {
-        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
         for (let option of options) {
             if (!SyncedStorage.get(option)) { continue; }
             chrome.contextMenus.create({

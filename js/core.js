@@ -603,6 +603,7 @@ SyncedStorage.defaults = {
     'context_steam_store': true,
     'context_steam_market': false,
     'context_itad': true,
+    'context_bartervg': false,
     'context_steamdb': true,
     'context_steamdb_instant': false,
     'context_steam_keys': true,
