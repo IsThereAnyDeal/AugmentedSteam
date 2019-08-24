@@ -59,8 +59,8 @@
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
-        "js/language.js",
         "js/content/common.js",
+        "js/language.js",
         "js/content/store.js"
       ],
       "css": [
@@ -81,8 +81,8 @@
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
-        "js/language.js",
         "js/content/common.js",
+        "js/language.js",
         "js/content/community.js"
       ],
       "css": [
@@ -108,8 +108,8 @@
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
-        "js/language.js",
         "js/content/common.js",
+        "js/language.js",
         "js/content/tradeoffer.js"
       ],
       "css": [

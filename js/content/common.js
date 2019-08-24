@@ -455,7 +455,8 @@ let User = (function(){
     };
 
     self.getPurchaseDate = function(lang, appName) {
-        return Background.action("purchasedate", appName, lang);
+        appName = HTMLParser.clearSpecialSymbols(appName);
+        return Background.action("idb.get", "purchases", appName, lang);
     };
 
     return self;
@@ -653,19 +654,8 @@ let Currency = (function() {
     self.customCurrency = null;
     self.storeCurrency = null;
 
-    let _rates = {};
+    let _params = {};
     let _promise = null;
-
-    function _getRates() {
-        let target = [self.storeCurrency,];
-        if (self.customCurrency !== self.storeCurrency) {
-            target.push(self.customCurrency);
-        }
-        // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-        target.sort();
-        return Background.action('rates', { 'to': target.join(","), })
-            .then(rates => _rates = rates);
-    }
 
     function getCurrencyFromDom() {
         let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
@@ -732,7 +722,14 @@ let Currency = (function() {
         if (_promise) { return _promise; }
         return _promise = CurrencyRegistry
             .then(_getCurrency)
-            .then(_getRates)
+            .then(() => {
+                let target = [self.storeCurrency,];
+                if (self.customCurrency !== self.storeCurrency) {
+                    target.push(self.customCurrency);
+                }
+                // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
+                _params = { "to": target.sort().join(','), };
+            })
             .catch(e => {
                 console.error("Failed to initialize Currency");
                 console.error(e);
@@ -744,11 +741,12 @@ let Currency = (function() {
         return self.init().then(onDone, onCatch);
     };
 
-    self.getRate = function(from, to) {
+    self.getRate = async function(from, to) {
         if (from === to) { return 1; }
 
-        if (_rates[from] && _rates[from][to]) {
-            return _rates[from][to];
+        let rates = await Background.action("idb.get", "rates", from, _params);
+        if (rates && rates[to]) {
+            return rates[to];
         }
 
         return null;
@@ -792,31 +790,31 @@ let Price = (function() {
 
     // Not currently in use
     // totalValue = totalValue.add(somePrice)
-    Price.prototype.add = function(otherPrice) {
+    Price.prototype.add = async function(otherPrice) {
         if (otherPrice.currency !== this.currency) {
-            otherPrice = otherPrice.inCurrency(this.currency);
+            otherPrice = await otherPrice.inCurrency(this.currency);
         }
         return new Price(this.value + otherPrice.value, this.currency);
     };
 
-    Price.prototype.inCurrency = function(desiredCurrency) {
+    Price.prototype.inCurrency = async function(desiredCurrency) {
         if (this.currency === desiredCurrency) {
             return new Price(this.value, this.currency);
         }
-        let rate = Currency.getRate(this.currency, desiredCurrency);
+        let rate = await Currency.getRate(this.currency, desiredCurrency);
         if (!rate) {
             throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
         }
         return new Price(this.value * rate, desiredCurrency);
     };
 
-    Price.parseFromString = function(str, desiredCurrency) {
+    Price.parseFromString = async function(str, desiredCurrency) {
         let currency = CurrencyRegistry.fromString(str);
         let value = currency.valueOf(str);
         if (value !== null) {
             value = new Price(value, currency.abbr);
             if (currency.abbr !== desiredCurrency) {
-                value = value.inCurrency(desiredCurrency);
+                value = await value.inCurrency(desiredCurrency);
             }
         }
         return value;
@@ -1214,12 +1212,13 @@ let EarlyAccess = (function(){
 
     let imageUrl;
 
-    function checkNodes(selectors, selectorModifier) {
+    async function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+        let appidsMap = new Map();
 
         selectors.forEach(selector => {
             let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
-            nodes.forEach(async node => {
+            nodes.forEach(node => {
                 node.classList.add("es_ea_checked");
 
                 let linkNode = node.querySelector("a");
@@ -1227,17 +1226,28 @@ let EarlyAccess = (function(){
                 let imgHeader = node.querySelector("img" + selectorModifier);
                 let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && await Background.action("idb.contains", "earlyAccessAppids", appid)) {
-                    node.classList.add("es_early_access");
-
-                    let container = document.createElement("span");
-                    container.classList.add("es_overlay_container");
-                    DOMHelper.wrap(container, imgHeader);
-
-                    HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
-                }
+                if (appid) appidsMap.set(appid, node);
             });
         });
+
+        let appids = Array.from(appidsMap.keys()).map(key => Number(key));
+        let eaAppids = (await Background.action("idb.contains", "earlyAccessAppids", appids)).reduce((accumulator, current, i) => {
+            accumulator[appids[i]] = current;
+            return accumulator;
+        }, {});
+
+        for (let [appid, node] of appidsMap) {
+            if (!eaAppids[appid]) continue;
+
+            node.classList.add("es_early_access");
+
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let container = document.createElement("span");
+            container.classList.add("es_overlay_container");
+            DOMHelper.wrap(container, imgHeader);
+
+            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+        }
     }
 
     function handleStore() {
@@ -1327,8 +1337,6 @@ let EarlyAccess = (function(){
     self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        await Background.action('earlyAccessAppids');
-
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
             imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
@@ -1352,37 +1360,6 @@ let EarlyAccess = (function(){
 let Inventory = (function(){
 
     let self = {};
-
-    let _promise = null;
-    self.promise = function() {
-        if (_promise) { return _promise; }
-
-        if (!User.isSignedIn) {
-            _promise = Promise.resolve();
-            return _promise;
-        }
-
-        let promises = [];
-
-        if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
-            promises.push(Background.action('inventory.gifts'));
-        }
-
-        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
-            promises.push(Background.action('inventory.coupons'));
-        }
-
-        if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
-            promises.push(Background.action('inventory.community'));
-        }
-        
-        _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
-        return _promise;
-    };
-
-    self.then = function(onDone, onCatch) {
-        return self.promise().then(onDone, onCatch);
-    };
 
     self.getCoupon = function(appid) {
         return Background.action("idb.getfromindex", "coupons", "appid", appid);
@@ -1654,6 +1631,8 @@ let Highlights = (function(){
     self.highlightAndTag = async function(nodes) {
 
         let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
+        let appids;
+        if (includeOtherGames) appids = [];
 
         for (let node of nodes) {
             let nodeToHighlight = node;
@@ -1710,8 +1689,6 @@ let Highlights = (function(){
     }
 
     self.startHighlightsAndTags = async function(parent) {
-        await Inventory;
-
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
             "div.tab_row",					                // Storefront rows
@@ -1804,10 +1781,8 @@ let DynamicStore = (function(){
 
     async function _fetch() {
         if (!User.isSignedIn) {
-            self.clear();
-            return;
+            return self.clear();
         }
-        await Background.action("dynamicstore");
     }
 
     self.then = function(onDone, onCatch) {
@@ -1858,7 +1833,7 @@ let Prices = (function(){
         return apiParams;
     };
 
-    Prices.prototype._processPrices = function(gameid, meta, info) {
+    Prices.prototype._processPrices = async function(gameid, meta, info) {
         if (!this.priceCallback) { return; }
 
         let a = gameid.split("/");
@@ -1884,16 +1859,16 @@ let Prices = (function(){
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
+                lowest = await new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
                 let voucher = HTML.escape(info['price']['voucher']);
                 voucherStr = Localization.str.after_coupon.replace("__voucher__", `<b>${voucher}</b>`);
             } else {
-                lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
+                lowest = await new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             }
 
             let prices = lowest.toString();
             if (Currency.customCurrency != Currency.storeCurrency) {
-                let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
+                let lowest_alt = await lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
 
@@ -1908,12 +1883,12 @@ let Prices = (function(){
 
         // "Historical Low"
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency']).inCurrency(Currency.customCurrency);
+            let historical = await new Price(info['lowest']['price'], meta['currency']).inCurrency(Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
             let prices = historical.toString();
             if (Currency.customCurrency != Currency.storeCurrency) {
-                let historical_alt = historical.inCurrency(Currency.storeCurrency);
+                let historical_alt = await historical.inCurrency(Currency.storeCurrency);
                 prices += ` (${historical_alt.toString()})`;
             }
 
@@ -1946,7 +1921,7 @@ let Prices = (function(){
         }
     };
 
-    Prices.prototype._processBundles = function(gameid, meta, info) {
+    Prices.prototype._processBundles = async function(meta, info) {
         if (!this.bundleCallback) { return; }
         if (info["bundles"]["live"].length == 0) { return; }
 
@@ -2003,7 +1978,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency']).inCurrency(Currency.customCurrency).toString();
+                    let tierPrice = (await new Price(tier.price, meta['currency']).inCurrency(Currency.customCurrency)).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2035,7 +2010,7 @@ let Prices = (function(){
             purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency).toString();
+                    purchase += (await new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 
@@ -2059,7 +2034,7 @@ let Prices = (function(){
 
             for (let [gameid, info] of Object.entries(response.data)) {
                 that._processPrices(gameid, meta, info);
-                that._processBundles(gameid, meta, info);
+                that._processBundles(meta, info);
             }
         });
     };

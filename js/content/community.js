@@ -234,7 +234,7 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, Inventory, User]);
+        await Promise.all([DynamicStore, User]);
 
         // Get all appids and nodes from selectors
         let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
@@ -2834,29 +2834,24 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.then(() => {
-            this.highlightMarketItems();
+        this.highlightMarketItems();
 
-            let that = this;
-            let observer = new MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.addedNodes) {
-                        if (node.classList && node.classList.contains("market_listing_row_link")) {
-                            that.highlightMarketItems();
-                            return;
-                        }
+        let that = this;
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    if (node.classList && node.classList.contains("market_listing_row_link")) {
+                        that.highlightMarketItems();
+                        return;
                     }
-                });
+                }
             });
-
-            observer.observe(
-                document.querySelector("#mainContents"),
-                {childList: true, subtree: true}
-            );
-
-        }).catch(result => {
-            console.error("Failed to load inventory", result);
         });
+
+        observer.observe(
+            document.querySelector("#mainContents"),
+            {childList: true, subtree: true}
+        );
 
         // TODO shouldn't this be global? Do we want to run on other pages?
         if (window.location.pathname.match(/^\/market\/$/)) {

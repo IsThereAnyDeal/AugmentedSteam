@@ -385,14 +385,14 @@ class StorePageClass {
                 promises.push(promise);
             });
 
-            Promise.all(promises).then(result => {
+            Promise.all(promises).then(async () => {
 
                 let node = document.querySelector("input[name=subid][value='"+subid+"']")
                     .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                let priceLocal = await new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -402,13 +402,13 @@ class StorePageClass {
                     HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
                 }
 
-                countries.forEach(country => {
+                countries.forEach(async country => {
                     let apiPrice = prices[country];
                     let html = "";
 
                     if (apiPrice) {
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                        let priceUser = await priceRegion.inCurrency(Currency.customCurrency);
 
 
                         let percentageIndicator = "equal";
@@ -472,7 +472,7 @@ class SubPageClass extends StorePageClass {
     }
 
     subscriptionSavingsCheck() {
-        setTimeout(function() {
+        setTimeout(async () => {
             let notOwnedTotalPrice = 0;
 
             for (let node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
@@ -481,7 +481,7 @@ class SubPageClass extends StorePageClass {
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
                     if (priceContainer) { 
-                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                        let price = await Price.parseFromString(priceContainer, Currency.storeCurrency);
                         if (price) {
                             notOwnedTotalPrice += price.value;
                             continue;
@@ -502,7 +502,7 @@ class SubPageClass extends StorePageClass {
 
             if (notOwnedTotalPrice !== null) {
                 let priceNodes = document.querySelectorAll(".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                let packagePrice = await Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
@@ -767,7 +767,7 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    async storePageDataPromise() {
+    storePageDataPromise() {
         let apiparams = { 'appid': this.appid, };
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
@@ -775,7 +775,7 @@ class AppPageClass extends StorePageClass {
         if (SyncedStorage.get("showoc")) {
             apiparams.oc = 1;
         }
-        return Background.action('storepagedata', apiparams);
+        return Background.action("idb.get", "storePageData", this.appid, apiparams);
     }
 
     /**
@@ -915,36 +915,34 @@ class AppPageClass extends StorePageClass {
         });
     }
 
-    addCoupon() {
+    async addCoupon() {
         if (!SyncedStorage.get("show_coupon")) return;
-        Inventory.then(async () => {
+        
+        let coupon = await Inventory.getCoupon(this.appid);
+        if (!coupon) { return; }
 
-            let coupon = await Inventory.getCoupon(this.appid);
-            if (!coupon) { return; }
+        let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
 
-            let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
-
-            HTML.beforeBegin("#game_area_purchase",
-                `<div class="early_access_header">
-                    <div class="heading">
-                        <h1 class="inset">${Localization.str.coupon_available}</h1>
-                        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
-                        <p>${Localization.str.coupon_learn_more}</p>
-                    </div>
-                    <div class="devnotes">
-                        <div style="display:flex;padding-top:10px">
-                            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
-                            <div style="display:flex;flex-direction:column;margin-left:10px">
-                                <h1>${coupon.title}</h1>
-                                <div>${coupon.discount_note || ""}</div>
-                                <div style="color:#a75124">${couponDate}</div>
-                            </div>
+        HTML.beforeBegin("#game_area_purchase",
+            `<div class="early_access_header">
+                <div class="heading">
+                    <h1 class="inset">${Localization.str.coupon_available}</h1>
+                    <h2 class="inset">${Localization.str.coupon_application_note}</h2>
+                    <p>${Localization.str.coupon_learn_more}</p>
+                </div>
+                <div class="devnotes">
+                    <div style="display:flex;padding-top:10px">
+                        <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
+                        <div style="display:flex;flex-direction:column;margin-left:10px">
+                            <h1>${coupon.title}</h1>
+                            <div>${coupon.discount_note || ""}</div>
+                            <div style="color:#a75124">${couponDate}</div>
                         </div>
                     </div>
-                </div>`);
+                </div>
+            </div>`);
 
-            // TODO show price in purchase box
-        });
+        // TODO show price in purchase box
     }
 
     addDlcInfo() {
@@ -1446,7 +1444,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addTitleHighlight() {
-        Promise.all([DynamicStore, Inventory]).then(async () => {
+        DynamicStore.then(async () => {
             let title = document.querySelector(".apphub_AppName");
             let appStatus = await DynamicStore.getAppStatus(this.appid);
 
@@ -2228,7 +2226,7 @@ let FundsPageClass = (function(){
         this.addCustomMoneyAmount();
     }
 
-    FundsPageClass.prototype.addCustomMoneyAmount = function() {
+    FundsPageClass.prototype.addCustomMoneyAmount = async function() {
         let giftcard = document.querySelector(".giftcard_amounts");
 
         let newel = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game").cloneNode(true);
@@ -2250,7 +2248,7 @@ let FundsPageClass = (function(){
             );
         }
 
-        let currency = Price.parseFromString(price, Currency.storeCurrency);
+        let currency = await Price.parseFromString(price, Currency.storeCurrency);
 
         let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
         HTML.inner(inputel, "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>");
