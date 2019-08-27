@@ -303,8 +303,8 @@ class StorePageClass {
         prices.load();
     }
 
-    getRightColLinkHtml(cls, url, str) {
-        return `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+    getRightColLinkHtml(cls, url, str, id) {
+        return `<a ${id ? `id="${id}"` : ""} class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
                 </a>`;
     }
@@ -2299,11 +2299,70 @@ let SearchPageClass = (function(){
     function SearchPageClass() {
         this.endlessScrolling();
         this.addExcludeTagsToSearch();
-        this.addHideButtonsToSearch().then(() => this.observeChanges());
+        this.addHideButtonsToSearch().then(() => {
+            this.addSteamDBLink();
+            this.observeChanges();
+        });
     }
 
     let processing = false;
     let searchPage = 2;
+
+    function getSteamDBLink() {
+        let link = "https://steamdb.info/search/?";
+        let params = new URLSearchParams(window.location.search);
+        let types = { 999: 8, 998: 1, 997: 1, 994: 2, 10: 3, 21: 4, 992: 13, 993: 16 };
+        let typeparam = params.has("category1") && types[params.get("category1")] ? "&type=" + types[params.get("category1")] : "";
+
+        switch (true) {
+            case params.has("filter") && params.get("filter") === "comingsoon":
+                link = "https://steamdb.info/upcoming/"; 
+                break;
+            case params.has("category2"):
+                link += "a=app&q=" + encodeURIComponent(params.get("term") || "") + "&category=" + params.get("category2") + typeparam;
+                break;
+            case params.has("category3"):
+                link += "a=app&q=" + encodeURIComponent(params.get("term") || "") + "&category=" + params.get("category3") + typeparam;
+                break;
+            case params.has("vrsupport"):
+                link += "a=app&q=" + encodeURIComponent(params.get("term") || "") + "&category=" + params.get("vrsupport") + typeparam;
+                break;
+            case params.has("term"):
+                link += "a=app&q=" + encodeURIComponent(params.get("term") || "") + "&category=0" + typeparam;
+                break;
+            case params.has("os"):
+                link += "a=app_keynames&keyname=92&operator=1&keyvalue=" + params.get("os") + typeparam;
+                break;
+            case params.has("developer"):
+                link += "a=app_keynames&keyname=23&operator=3&keyvalue=" + params.get("developer") + typeparam;
+                break;
+            case params.has("pubisher"):
+                link += "a=app_keynames&keyname=241&operator=3&keyvalue=" + params.get("pubisher") + typeparam;
+                break;
+            case params.has("supportedlang"):
+                link += "a=app_keynames&keyname=444&operator=1&keyvalue=" + params.get("supportedlang") + typeparam;
+                break;
+            default:
+                link += "a=app&q=&category=0" + typeparam;
+                break;
+        }
+
+        return link;
+    }
+
+    SearchPageClass.prototype.addSteamDBLink = function() {
+        if (!SyncedStorage.get("showsteamdb")) {
+            return;
+        }
+
+        HTML.afterBegin("#advsearchform .rightcol",
+            (new StorePageClass).getRightColLinkHtml(
+                "steamdb_ico",
+                getSteamDBLink(),
+                Localization.str.view_on_website.replace("__website__", "Steam Database"),
+                "es_steamdb_search"
+            ));
+    }
 
     function loadSearchResults () {
         if (processing) { return; }
@@ -2901,6 +2960,11 @@ let SearchPageClass = (function(){
                     params.delete("es_hide");
                 }
                 linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+            }
+
+            let btn = document.querySelector("#es_steamdb_search");
+            if (btn) {
+                btn.href = getSteamDBLink();
             }
         }
 
