@@ -584,6 +584,7 @@ class AppPageClass extends StorePageClass {
 
         this.addHltb();
 
+        this.replaceDevPubLinks();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -1361,6 +1362,25 @@ class AppPageClass extends StorePageClass {
                 });
             }
         });
+    }
+
+    replaceDevPubLinks() {
+        if (!this.isAppPage()) { return; }
+
+        let rows = document.querySelectorAll(".dev_row");
+        for (let i=0, len=rows.length; i<len; i++) {
+            let linkNode = rows[i].querySelector("a");
+            let homepageLink = new URL(linkNode.href);
+            if (homepageLink.pathname === "/search/") {
+                continue;
+            }
+
+            let parts = homepageLink.pathname.split(`/`);
+            let searchLink = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
+            linkNode.href = searchLink;
+            HTML.afterEnd(linkNode, ` (<a style="color: inherit;" href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
+        }
+
     }
 
     moveUsefulLinks() {
