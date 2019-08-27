@@ -2,6 +2,28 @@
     "support": "Ondersteuning",
     "email": "E-mail",
     "contact": "Contact",
+    "subscriptions": "Abonnementen",
+    "subscribe_all": "Aboneer Op Alles",
+    "unsubscribe_all": "Alles Afmelden",
+    "subscribe_confirm": "Weet u zeker dat u op alle __count__ workshop items met deze filters wilt abonneren?",
+    "unsubscribe_confirm": "Weet u zeker dat u van alle __count__ workshop items met deze filters af wilt melden?",
+    "subscribe_loading": "Abonneren op __i__/__count__ workshop items, een ogenblik geduld astublieft...",
+    "unsubscribe_loading": "Afmelden van __i__/__count__ workshop items, een ogenblik geduld astublieft...",
+    "game": "Spel",
+    "tag_categories": "Tag Categorieën",
+    "discounts": "Kortingen",
+    "new_and_upcoming": "Nieuw & New & Opkomend",
+    "view_on_website": "Kijk op __website__",
+    "review": "Recensie",
+    "gameplay": "Gameplay",
+    "hide_filter": "Verberg __filter__",
+    "apppage_franchise": "Franchise",
+    "workshop": "Workshop",
+    "external_funds": "Externe Middelen Gebruikt",
+    "community_login": "Zorg ervoor dat u ingelogd bent op __link___ om alle functies van Augmented Steam te gebruiken.",
+    "playtime": "Speeltijd",
+    "year": "Jaar",
+    "show_progressbar": "Toon Augmented Steam progressie en statusbalk",
     "post_history": "Bekijk post geschiedenis",
     "add_nickname": "Bijnaam toevoegen",
     "total_size": "Totale grote",
@@ -131,6 +153,9 @@
     "negative_item": "Negatief beoordelde voorwerpen",
     "price_above": "Voorwerpen die meer kosten dan",
     "price_above_tooltip": "Voer een nul in voor kosteloze voorwerpen of voorwerpen zonder prijsaanduiding; laat dit veld leeg om dit onderdeel uit te schakelen",
+    "price_above_wrong_format": "Verkeerd formaat, verwachte invoer in formaat: __pattern__",
+    "reviews_below":"Voorwerpen met minder beoordelingen dan",
+    "reviews_below_tooltip":"Voer nul in voor voorwerpen zonder beoordelingen: laat dit veld leeg om dit onderdeel uit te schakelen",
     "news": "Nieuws",
     "check_system": "Controleer Je Systeem",
     "viewinclient": "Bekijk in Steam Client",
@@ -182,6 +207,18 @@
     "item_type": "Itemtype",
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
+    "export_wishlist": "Verlanglijst exporteren",
+    "export_text": "Tekst",
+    "export_JSON": "JSON",
+    "export_download": "Download bestand",
+    "export_clipboard": "Kopieer naar klembord",
+    "export_props": {
+        "name": "Titel",
+        "appid": "Appid",
+        "type": "Type",
+        "release_string": "Releasedatum",
+        "note": "Opgeslagen notitie"
+    },
     "empty_wishlist": "Verlanglijst leegmaken",
     "empty_wishlist_confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
     "empty_wishlist_loading": "Verlanglijst aan het legen, even geduld a. u. b...",
@@ -389,6 +426,7 @@
         "showspeechsearch": "Voeg spraak invoegen toe aan zoeken",
         "profile_link_images_color": "Gekleurd",
         "show_empty_wishlist": "Knop \"Verlanglijst Leegmaken\" weergeven",
+        "show_user_notes": "Gebruiker notities op verlanglijst en app paginas weergeven",
         "inventory_nav_text": "Toon geavanceerde navigatie in inventory pagina",
         "carousel_description": "Laat app beschrijving op de winkel front zien",
         "market_total": "Toon transactie samenvatting op de Market",
@@ -525,5 +563,31 @@
         "wallet": "De code die je hebt ingevuld is een Steam-cadeaukaart of Steam-portemonnee code",
         "toomany": "Er zijn recent teveel pogingen geweest om een product te activeren van dit account. Probeer het later opnieuw.",
         "default": "Er is een onverwachte fout opgetreden. De productcode is niet geactiveerd. Probeer het over 30 minuten opnieuw."
-    }
+    },
+    "wl": {
+        "compute": "Klik om statistieken te berekenen",
+        "total_price": "huidige waarde",
+        "in_wishlist": "in verlanglijst",
+        "on_sale": "in de verkoop",
+        "no_price": "zonder prijs"
+    },
+    "coll": {
+        "in_collection": "In Verzameling",
+        "played": "Gespeeld",
+        "never_played": "Nooit Gespeeld"
+    },
+    "user_note": {
+        "add": "Een notitie toevoegen",
+        "update": "Notitie updaten",
+        "add_prompt": "Notitie schrijven",
+        "update_prompt": "Notitie updaten",
+        "add_for_game": "Notitie voor __gamename__"
+    },
+    "queue": {
+        "new": "Nieuwe Queue",
+        "new_tooltip": "Verwijder dit product van jouw Queue en start een nieuwe Queue."
+    },
+    "this_version": "Deze version",
+    "original_authors": "Originele makers",
+    "powered_by": "Mede mogelijk gemaakt door __link__"
 }
