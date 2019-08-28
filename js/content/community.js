@@ -91,9 +91,10 @@ let ProfileData = (function(){
     return self;
 })();
 
-let SpamCommentHandler = (function(){
+let CommentHandler = (function(){
 
     let spamRegex = null;
+    let self = {};
 
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
@@ -159,8 +160,6 @@ let SpamCommentHandler = (function(){
         }
     }
 
-    let self = {};
-
     self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
 
@@ -181,6 +180,115 @@ let SpamCommentHandler = (function(){
             handleAllCommentThreads(latestFrame.document);
         });
         observer.observe(modalWait, {attributes: true});
+    };
+
+    function updateFavs(favs, emoticonPopup, favBox, favRemove) {
+        LocalStorage.set("fav_emoticons", favs);
+
+        let favsHtml = buildFavBox(favs);
+        HTML.inner(favBox, favsHtml);
+        favBox.querySelectorAll(".emoticon_option").forEach(node => {
+            node.draggable = true;
+            node.querySelector("img").draggable = false;
+            node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+            node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove))
+        });
+    }
+
+    function dragFavEmoticon(ev) {
+        ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+    }
+
+    function clickFavEmoticon(ev, emoticonPopup, favRemove) {
+        let name = ev.target.closest(".emoticon_option").dataset.emoticon;
+        let noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        noFav.click();
+    }
+
+    function buildFavBox(favs=[]) {
+        let favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("")
+        if (favs.length === 0) {
+            favsHtml = Localization.str.fav_emoticons_dragging;
+        }
+        return favsHtml;
+    }
+
+    function buildEmoticonOption(name) {
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="https://steamcommunity-a.akamaihd.net/economy/emoticon/${name}" class="emoticon"></div>`;
+    }
+
+    self.addFavoriteEmoticons = function() {
+        let observer = new MutationObserver(() => {
+            let emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
+            if (!emoticonPopup) { return; }
+
+            emoticonPopup.classList.add("es_emoticons");
+            emoticonPopup.style.maxWidth = "352px";
+            emoticonPopup.querySelectorAll(".emoticon_option").forEach(function(node) {
+                node.draggable = true;
+                node.querySelector("img").draggable = false;
+                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
+            });
+            
+            let favs = LocalStorage.get("fav_emoticons", []);
+            HTML.afterBegin(emoticonPopup, 
+                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
+                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                </div>`);
+                
+            let favBox = emoticonPopup.querySelector("#es_fav_emoticons");
+            let favRemove = emoticonPopup.querySelector("#es_fav_remove");
+            updateFavs(favs, emoticonPopup, favBox, favRemove);
+
+            favBox.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragenter", function(ev) {
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragleave", function(ev) {
+                favBox.style.backgroundColor = null;
+            });
+
+            favBox.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favBox.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                if (favs.includes(name)) { return; }
+
+                favs.push(name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove);
+            });
+
+            favRemove.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favRemove.style.backgroundColor = "black";
+            });
+            
+            favRemove.addEventListener("dragenter", function(ev) {
+                favRemove.style.backgroundColor = "black";
+            });
+
+            favRemove.addEventListener("dragleave", function(ev) {
+                favRemove.style.backgroundColor = null;
+            });
+
+            favRemove.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favRemove.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                favs = favs.filter(fav => fav !== name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove);
+            });
+        });
+
+        observer.observe(document.body, { childList: true });
     };
 
     return self;
@@ -289,7 +397,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
-            SpamCommentHandler.hideSpamComments();
+            CommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -3583,7 +3691,8 @@ let WorkshopBrowseClass = (function(){
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
+    CommentHandler.hideSpamComments();
+    CommentHandler.addFavoriteEmoticons();
 
     switch (true) {
 
