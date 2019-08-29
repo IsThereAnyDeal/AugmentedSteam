@@ -1019,7 +1019,14 @@ let EnhancedSteam = (function() {
         }
 
         accountNameNode.textContent = communityName;
-        document.title = document.title.replace(accountName, communityName);
+        let isUserPage = (path) => /.*(id|profiles)\/.+/g.test(path);
+
+         // Don't replace title on user pages that aren't mine
+        if (!isUserPage(location.pathname)) {
+            document.title = document.title.replace(accountName, communityName);
+        } else if (location.pathname.includes(User.profilePath)) {
+            document.title = document.title.replace(accountName, communityName);
+        }
     };
 
     self.launchRandomButton = function() {

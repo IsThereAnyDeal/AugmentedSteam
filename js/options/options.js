@@ -298,7 +298,7 @@ let Options = (function(){
 
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        Localization.then(() => {
+        Localization.then(async () => {
             document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
             // Localize elements with text
@@ -331,11 +331,32 @@ let Options = (function(){
                 }
             }
 
+
+            let total = deepCount(Localization.str);
             for (let lang in Localization.str.options.lang) {
+                let code = Language.languages[lang];
+                let locale = await Localization.loadLocalization(code);
+                let count = deepCount(locale);
+                let percentage = 100 * count / total;
                 let node = document.querySelector(".language." + lang);
                 if (node) {
-                    node.textContent = Localization.str.options.lang[lang] + ":";
+                    HTML.inner(node, `${Localization.str.options.lang[lang]} (<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>):`);
                 }
+            }
+
+            function deepCount(obj) {
+                let cnt = 0;
+                for (let key in obj) {
+                    if (!Localization.str[key]) { // don't count "made up" translations
+                        continue;
+                    }
+                    if (typeof obj[key] === "object") {
+                        cnt += deepCount(obj[key]);
+                    } else {
+                        cnt += 1;
+                    }
+                }
+                return cnt;
             }
         }).then(Sidebar.create);
     }
