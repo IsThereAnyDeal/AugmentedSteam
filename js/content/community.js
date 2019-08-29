@@ -3700,6 +3700,19 @@ let WorkshopBrowseClass = (function(){
     return WorkshopBrowseClass;
 })();
 
+let EditGuidePageClass = (function(){
+
+    function EditGuidePageClass() {
+        this.allowMultipleLanguages();
+    }
+
+    EditGuidePageClass.prototype.allowMultipleLanguages = function() {
+        document.getElementsByName("tags[]").forEach(tag => tag.type = "checkbox");
+    };
+
+    return EditGuidePageClass;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3772,12 +3785,12 @@ let WorkshopBrowseClass = (function(){
             (new WorkshopPageClass());
             break;
 
-        case /^\/sharedfiles\/editguide\/?$/.test(path):
-            Array.from(document.getElementsByName("tags[]")).forEach(tag => tag.type = "checkbox");
-            break;
-
         case /^\/workshop\/browse/.test(path):
             (new WorkshopBrowseClass());
+            break;
+
+        case /^\/sharedfiles\/editguide\/?$/.test(path):
+            (new EditGuidePageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
