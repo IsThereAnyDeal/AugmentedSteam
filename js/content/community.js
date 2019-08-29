@@ -220,9 +220,11 @@ let CommentHandler = (function(){
     }
 
     function buildFavBox(favs=[]) {
-        let favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("")
-        if (favs.length === 0) {
+        let favsHtml;
+        if (!favs.length) {
             favsHtml = Localization.str.fav_emoticons_dragging;
+        } else {
+            favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("");
         }
         return favsHtml;
     }
