@@ -182,17 +182,31 @@ let CommentHandler = (function(){
         observer.observe(modalWait, {attributes: true});
     };
 
-    function updateFavs(favs, emoticonPopup, favBox, favRemove) {
+    function updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
         LocalStorage.set("fav_emoticons", favs);
 
-        let favsHtml = buildFavBox(favs);
-        HTML.inner(favBox, favsHtml);
-        favBox.querySelectorAll(".emoticon_option").forEach(node => {
-            node.draggable = true;
-            node.querySelector("img").draggable = false;
-            node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
-            node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove))
-        });
+        if (name && favs.includes(name) && favs.length > 1) {
+            HTML.beforeEnd(favBox, buildEmoticonOption(name));
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            finalizeFav(node, emoticonPopup, favRemove);
+        } else if (name && !favs.includes(name) && favs.length > 0) {
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            if (!node) { return; }
+            node.parentNode.removeChild(node);             
+        } else {
+            let favsHtml = buildFavBox(favs);
+            HTML.inner(favBox, favsHtml);
+            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+                finalizeFav(node, emoticonPopup, favRemove);
+            });
+        }
+    }
+
+    function finalizeFav(node, emoticonPopup, favRemove) {
+        node.draggable = true;
+        node.querySelector("img").draggable = false;
+        node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+        node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove));
     }
 
     function dragFavEmoticon(ev) {
@@ -262,7 +276,7 @@ let CommentHandler = (function(){
                 if (favs.includes(name)) { return; }
 
                 favs.push(name);
-                updateFavs(favs, emoticonPopup, favBox, favRemove);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
             });
 
             favRemove.addEventListener("dragover", function(ev) {
@@ -284,7 +298,7 @@ let CommentHandler = (function(){
                 favRemove.style.backgroundColor = null;
                 let name = ev.dataTransfer.getData("emoticon");
                 favs = favs.filter(fav => fav !== name);
-                updateFavs(favs, emoticonPopup, favBox, favRemove);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
             });
         });
 
