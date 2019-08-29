@@ -1684,23 +1684,23 @@ let Highlights = (function(){
 
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
-            "div.tab_row",					                // Storefront rows
+            "div.tab_row",                                  // Storefront rows
             "div.dailydeal_ctn",
             ".store_main_capsule",                          // "Featured & Recommended"
-            "div.wishlistRow",				                // Wishlist rows
-            "a.game_area_dlc_row",			                // DLC on app pages
-            "a.small_cap",					                // Featured storefront items and "recommended" section on app pages
+            "div.wishlistRow",                              // Wishlist rows
+            "a.game_area_dlc_row",                          // DLC on app pages
+            "a.small_cap",                                  // Featured storefront items and "recommended" section on app pages
             "a.home_smallcap",
             ".home_content_item",                           // Small items under "Keep scrolling for more recommendations"
             ".home_content.single",                         // Big items under "Keep scrolling for more recommendations"
             ".home_area_spotlight",                         // "Special offers" big items
-            "a.search_result_row",			                // Search result rows
-            "a.match",						                // Search suggestions rows
+            "a.search_result_row",                          // Search result rows
+            "a.match",                                      // Search suggestions rows
             ".highlighted_app",                             // For example "Recently Recommended" on curators page
-            "a.cluster_capsule",			                // Carousel items
-            "div.recommendation_highlight",	                // Recommendation pages
+            "a.cluster_capsule",                            // Carousel items
+            "div.recommendation_highlight",                 // Recommendation pages
             "div.recommendation_carousel_item",             // Recommendation pages
-            "div.friendplaytime_game",		                // Recommendation pages
+            "div.friendplaytime_game",                      // Recommendation pages
             ".recommendation_row",                          // "Recent recommendations by friends"
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
@@ -1710,15 +1710,15 @@ let Highlights = (function(){
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
             ".home_marketing_message",                      // "Updates and offers"
-            "div.dlc_page_purchase_dlc",	                // DLC page rows
-            "div.sale_page_purchase_item",	                // Sale pages
-            "div.item",						                // Sale pages / featured pages
-            "div.home_area_spotlight",		                // Midweek and weekend deals
-            "div.browse_tag_game",			                // Tagged games
-            "div.similar_grid_item",		                // Items on the "Similarly tagged" pages
-            ".tab_item",					                // Items on new homepage
-            "a.special",					                // new homepage specials
-            "div.curated_app_item",			                // curated app items!
+            "div.dlc_page_purchase_dlc",                    // DLC page rows
+            "div.sale_page_purchase_item",                  // Sale pages
+            "div.item",                                     // Sale pages / featured pages
+            "div.home_area_spotlight",                      // Midweek and weekend deals
+            "div.browse_tag_game",                          // Tagged games
+            "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
+            ".tab_item",                                    // Items on new homepage
+            "a.special",                                    // new homepage specials
+            "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
         ];
@@ -2286,21 +2286,21 @@ class MediaPage {
         let strip = document.querySelector("#highlight_strip");
         if (!strip) { return; }
 
-		let lastScroll = Date.now();
+        let lastScroll = Date.now();
         strip.addEventListener("wheel", scrollStrip, false);
         function scrollStrip(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-			
-			if (Date.now() - lastScroll < 200) {
-				return;
-			} 
+            
+            if (Date.now() - lastScroll < 200) {
+                return;
+            } 
     
             lastScroll = Date.now();
             let allElem = document.querySelectorAll(".highlight_strip_item");
-			let isScrollDown = ev.deltaY > 0;
-			let siblingProp = isScrollDown ? "previousSibling" : "nextSibling";
-			
+            let isScrollDown = ev.deltaY > 0;
+            let siblingProp = isScrollDown ? "previousSibling" : "nextSibling";
+            
             let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
             while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
                 targetElem = targetElem[siblingProp];
@@ -2309,7 +2309,7 @@ class MediaPage {
                 }
             }
             
-			targetElem.click();
+            targetElem.click();
         }
     }
 }
