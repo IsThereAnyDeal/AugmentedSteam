@@ -3704,10 +3704,33 @@ let EditGuidePageClass = (function(){
 
     function EditGuidePageClass() {
         this.allowMultipleLanguages();
+        this.addCustomTags();
     }
 
     EditGuidePageClass.prototype.allowMultipleLanguages = function() {
         document.getElementsByName("tags[]").forEach(tag => tag.type = "checkbox");
+    };
+
+    EditGuidePageClass.prototype.addCustomTags = function() {
+        let langSection = document.querySelector("#checkboxgroup_1");
+        if (!langSection) { return; }
+
+        let tag = `
+        <div><input type="checkbox" name="tags[]" value="Bulgarian" class="inputTagsFilter">Bulgarian</div>`
+        
+        HTML.afterEnd(langSection,
+            `<div class="tag_category_container" id="checkboxgroup_2">
+                <div class="tag_category_desc">${Localization.str.custom_tags}</div>
+                <div><a class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
+                    <span>${Localization.str.add_tag}</span>
+                </a></div>
+            </div>`);
+
+        document.querySelector("#es_add_tag").addEventListener("click", function() {
+            ExtensionLayer.runInPageContext(function() {
+
+            });
+        });
     };
 
     return EditGuidePageClass;
