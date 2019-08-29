@@ -458,6 +458,7 @@ class StorePageClass {
 
     forceVideoMP4() {
         if (!SyncedStorage.get("mp4video")) { return; }
+        let self = this;
 
         document.querySelectorAll("[data-webm-source]").forEach(function(node) {
             let mp4 = node.dataset.mp4Source;
@@ -472,6 +473,7 @@ class StorePageClass {
 
             video.dataset.sdSrc = mp4;
             video.dataset.hdSrc = mp4hd;
+            self.toggleVideoDefinition(video, false);
         });
     }
 }
@@ -626,6 +628,7 @@ class AppPageClass extends StorePageClass {
     }
 
     initHdPlayer() {
+        let self = this;
         let movieNode = document.querySelector('div.highlight_movie');
         if (!movieNode) { return; }
 
@@ -659,11 +662,11 @@ class AppPageClass extends StorePageClass {
             ev.stopPropagation();
 
             let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
-            let playInHD = toggleVideoDefinition(videoControl);
+            let playInHD = self.toggleVideoDefinition(videoControl);
 
             for (let n of document.querySelectorAll('video.highlight_movie')) {
                 if (n === videoControl) continue;
-                toggleVideoDefinition(n, playInHD);
+                self.toggleVideoDefinition(n, playInHD);
             }
 
             LocalStorage.set('playback_hd', playInHD);
@@ -677,7 +680,7 @@ class AppPageClass extends StorePageClass {
             ev.currentTarget.removeEventListener('click', clickInitialHD, false);
             if (!ev.target.classList.contains('es_expanded')) return;
             for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
-                toggleVideoDefinition(node, true);
+                self.toggleVideoDefinition(node, true);
             }
             LocalStorage.set('playback_hd', true);
         }
@@ -688,7 +691,7 @@ class AppPageClass extends StorePageClass {
             function _addHDControl() {
                 // Add "HD" button and "sd-src" to the video and set definition
                 if (videoControl.dataset.hdSrc) {
-                    videoControl.dataset.sdSrc = videoControl.src;
+                    // videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
                         HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
@@ -709,7 +712,7 @@ class AppPageClass extends StorePageClass {
                 // Toggle fullscreen on video double click
                 videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
 
-                toggleVideoDefinition(videoControl, playInHD);
+                self.toggleVideoDefinition(videoControl, playInHD);
             }
             setTimeout(_addHDControl, 150);
             // prevents a bug in Chrome which causes videos to stop playing after changing the src
@@ -743,47 +746,47 @@ class AppPageClass extends StorePageClass {
                 Promise.resolve(response).catch(err => console.error(err));
             }
         }
+    }
 
-        function toggleVideoDefinition(videoControl, setHD) {
-            let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
-                videoIsHD = false,
-                loadedSrc = videoControl.classList.contains("es_loaded_src"),
-                playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+    toggleVideoDefinition(videoControl, setHD) {
+        let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
+            videoIsHD = false,
+            loadedSrc = videoControl.classList.contains("es_loaded_src"),
+            playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
-            let videoPosition = videoControl.currentTime || 0,
-                videoPaused = videoControl.paused;
-            if (videoIsVisible) {
-                videoControl.preload = "metadata";
-                videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
-            }
-            function onLoadedMetaData() {
-                this.currentTime = videoPosition;
-                if (!videoPaused && videoControl.play) {
-                    // if response is a promise, suppress any errors it throws
-                    Promise.resolve(videoControl.play()).catch(err => {});
-                }
-                videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
-            }
-
-            if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
-                videoIsHD = true;
-                videoControl.src = videoControl.dataset.hdSrc;
-            } else if (loadedSrc) {
-                videoControl.src = videoControl.dataset.sdSrc;
-            }
-
-            if (videoIsVisible && loadedSrc) {
-                videoControl.load();
-            }
-
-            videoControl.classList.add("es_loaded_src");
-            videoControl.classList.toggle("es_video_sd", !videoIsHD);
-            videoControl.classList.toggle("es_video_hd", videoIsHD);
-            videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
-            videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
-
-            return videoIsHD;
+        let videoPosition = videoControl.currentTime || 0,
+            videoPaused = videoControl.paused;
+        if (videoIsVisible) {
+            videoControl.preload = "metadata";
+            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
         }
+        function onLoadedMetaData() {
+            this.currentTime = videoPosition;
+            if (!videoPaused && videoControl.play) {
+                // if response is a promise, suppress any errors it throws
+                Promise.resolve(videoControl.play()).catch(err => {});
+            }
+            videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+        }
+
+        if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
+            videoIsHD = true;
+            videoControl.src = videoControl.dataset.hdSrc;
+        } else if (loadedSrc) {
+            videoControl.src = videoControl.dataset.sdSrc;
+        }
+
+        if (videoIsVisible && loadedSrc) {
+            videoControl.load();
+        }
+
+        videoControl.classList.add("es_loaded_src");
+        videoControl.classList.toggle("es_video_sd", !videoIsHD);
+        videoControl.classList.toggle("es_video_hd", videoIsHD);
+        videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
+        videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
+
+        return videoIsHD;
     }
 
     async storePageDataPromise() {
