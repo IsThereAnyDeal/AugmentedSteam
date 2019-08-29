@@ -1686,6 +1686,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Regional Price Bugfix
+ **************************************/
+ .ds_options_tooltip {
+	 z-index: 99999 !important;
+ }
+
+/***************************************
  * Version update dialog
  **************************************/
 .es_changelog {
