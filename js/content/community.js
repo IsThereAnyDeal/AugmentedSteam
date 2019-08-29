@@ -91,9 +91,10 @@ let ProfileData = (function(){
     return self;
 })();
 
-let SpamCommentHandler = (function(){
+let CommentHandler = (function(){
 
     let spamRegex = null;
+    let self = {};
 
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
@@ -159,8 +160,6 @@ let SpamCommentHandler = (function(){
         }
     }
 
-    let self = {};
-
     self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
 
@@ -181,6 +180,131 @@ let SpamCommentHandler = (function(){
             handleAllCommentThreads(latestFrame.document);
         });
         observer.observe(modalWait, {attributes: true});
+    };
+
+    function updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+        LocalStorage.set("fav_emoticons", favs);
+
+        if (name && favs.includes(name) && favs.length > 1) {
+            HTML.beforeEnd(favBox, buildEmoticonOption(name));
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            finalizeFav(node, emoticonPopup, favRemove);
+        } else if (name && !favs.includes(name) && favs.length > 0) {
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            if (!node) { return; }
+            node.parentNode.removeChild(node);             
+        } else {
+            let favsHtml = buildFavBox(favs);
+            HTML.inner(favBox, favsHtml);
+            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+                finalizeFav(node, emoticonPopup, favRemove);
+            });
+        }
+    }
+
+    function finalizeFav(node, emoticonPopup, favRemove) {
+        node.draggable = true;
+        node.querySelector("img").draggable = false;
+        node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+        node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove));
+    }
+
+    function dragFavEmoticon(ev) {
+        ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+    }
+
+    function clickFavEmoticon(ev, emoticonPopup, favRemove) {
+        let name = ev.target.closest(".emoticon_option").dataset.emoticon;
+        let noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        noFav.click();
+    }
+
+    function buildFavBox(favs=[]) {
+        let favsHtml;
+        if (!favs.length) {
+            favsHtml = Localization.str.fav_emoticons_dragging;
+        } else {
+            favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("");
+        }
+        return favsHtml;
+    }
+
+    function buildEmoticonOption(name) {
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="https://steamcommunity-a.akamaihd.net/economy/emoticon/${name}" class="emoticon"></div>`;
+    }
+
+    self.addFavoriteEmoticons = function() {
+        let observer = new MutationObserver(() => {
+            let emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
+            if (!emoticonPopup) { return; }
+
+            emoticonPopup.classList.add("es_emoticons");
+            emoticonPopup.style.maxWidth = "352px";
+            emoticonPopup.querySelectorAll(".emoticon_option").forEach(function(node) {
+                node.draggable = true;
+                node.querySelector("img").draggable = false;
+                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
+            });
+            
+            let favs = LocalStorage.get("fav_emoticons", []);
+            HTML.afterBegin(emoticonPopup, 
+                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
+                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                </div>`);
+                
+            let favBox = emoticonPopup.querySelector("#es_fav_emoticons");
+            let favRemove = emoticonPopup.querySelector("#es_fav_remove");
+            updateFavs(favs, emoticonPopup, favBox, favRemove);
+
+            favBox.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragenter", function(ev) {
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragleave", function(ev) {
+                favBox.style.backgroundColor = null;
+            });
+
+            favBox.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favBox.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                if (favs.includes(name)) { return; }
+
+                favs.push(name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+
+            favRemove.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favRemove.style.backgroundColor = "black";
+            });
+            
+            favRemove.addEventListener("dragenter", function(ev) {
+                favRemove.style.backgroundColor = "black";
+            });
+
+            favRemove.addEventListener("dragleave", function(ev) {
+                favRemove.style.backgroundColor = null;
+            });
+
+            favRemove.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favRemove.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                favs = favs.filter(fav => fav !== name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+        });
+
+        observer.observe(document.body, { childList: true });
     };
 
     return self;
@@ -289,7 +413,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
-            SpamCommentHandler.hideSpamComments();
+            CommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -3487,19 +3611,18 @@ let WorkshopBrowseClass = (function(){
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
         let appid = GameId.getAppidUriQuery(window.location.search);
-        if (!appid) { return; }
+        if (!appid) return;
+        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
 
         let subscriberButtons = `
             <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
             <div id="es_subscriber" class="rightDetailsBlock">
                 <div style="position:relative;">
-                    <img class="browseOptionImage" src="//steamcommunity-a.akamaihd.net/public/images/sharedfiles/filterselect_blue.png?v=1">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
                     </div>
                 </div>
                 <div style="position:relative;">
-                    <img class="browseOptionImage" src="//steamcommunity-a.akamaihd.net/public/images/sharedfiles/filterselect_blue.png?v=1">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
                     </div>
@@ -3508,21 +3631,18 @@ let WorkshopBrowseClass = (function(){
             </div>`;
 
         HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
-        Messenger.addMessageListener("sendMessage", startSubscriber, false);
 
-        ExtensionLayer.runInPageContext(function(){
-            $J(document).on("click", ".es_subscriber", function(event){
-                let method = $J(event.target).closest(".es_subscriber").data("method");
-                let total = parseInt($J(".workshopBrowsePagingInfo").text().replace(/\d+-\d+/g, "").match(/\d+/g).join(""));
-                Messenger.postMessage("sendMessage", { method, sessionId: g_sessionID, total });
-            });
+        document.querySelector(".es_subscriber").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            startSubscriber(method, total);
         });
 
-        function startSubscriber(info) {
+        function startSubscriber(method, total) {
             let i = -1;
 
             ExtensionLayer.runInPageContext(`function(){
-                var prompt = ShowConfirmDialog("${Localization.str[info.method + "_all"]}", \`${Localization.str[info.method + "_confirm"].replace("__count__", info.total)}\`);
+                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
                 prompt.done(function(result) {
                     if (result == "OK") {
                         Messenger.postMessage("startSubscriber");
@@ -3536,18 +3656,18 @@ let WorkshopBrowseClass = (function(){
                         window.dialog.Dismiss();
                     }
 
-                    window.dialog = ShowBlockingWaitDialog("${Localization.str[info.method + "_all"]}", \`${Localization.str[info.method + "_loading"].replace("__i__", ++i).replace("__count__", info.total)}\`);
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
                 }`)
             }
 
             function changeSubscription(id) {
                 return new Promise(function(resolve) {
                     let formData = new FormData();
-                    formData.append("sessionid", info.sessionId);
+                    formData.append("sessionid", User.getSessionId());
                     formData.append("appid", appid);
                     formData.append("id", id);
 
-                    RequestData.post("https://steamcommunity.com/sharedfiles/" + info.method, formData, {
+                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
                         withCredentials: true
                     }).then(function() {
                         updateWaitDialog();
@@ -3560,7 +3680,7 @@ let WorkshopBrowseClass = (function(){
                 updateWaitDialog();
 
                 let workshopItems = [];
-                for (let p = 1; p <= Math.ceil(info.total / 30); p++) {
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
                     let url = new URL(window.location.href);
                     url.searchParams.set("p", p);
                     url.searchParams.set("numperpage", 30);
@@ -3587,7 +3707,8 @@ let WorkshopBrowseClass = (function(){
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
+    CommentHandler.hideSpamComments();
+    CommentHandler.addFavoriteEmoticons();
 
     switch (true) {
 
