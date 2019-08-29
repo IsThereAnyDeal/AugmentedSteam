@@ -93,6 +93,7 @@ let ProfileData = (function(){
 
 let CommentHandler = (function(){
 
+    let scriptsLoaded = false;
     let spamRegex = null;
     let self = {};
 
@@ -289,6 +290,96 @@ let CommentHandler = (function(){
         });
 
         observer.observe(document.body, { childList: true });
+    };
+
+    function loadScripts() {
+        return new Promise(async function(res) {
+            scriptsLoaded = true;
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
+            res();
+        })
+    }
+
+    async function addEditors() {
+        if (!scriptsLoaded) { await loadScripts(); }
+    
+        ExtensionLayer.runInPageContext(function() {
+            BBCode_SpoilerSelection = function() {
+                g_textarea.wrapSelection("[spoiler]", "[/spoiler]");
+            }
+
+            BBCode_HyperlinkSelection = function() {
+                let text = g_textarea.getSelection();
+                let Modal = ShowConfirmDialog("URL", `<div class="commentthread_entry_quotebox"><textarea class="commentthread_textarea" id="es_url" rows="1"></textarea></div>`);
+                
+                let url = "";
+                $J("#es_url").on("keyup paste input", function() {
+                    url = $J("#es_url").val();
+                });
+
+                Modal.done(function() {
+                    BBCode_MakeURLFromSelection(url, text);
+                });
+            }
+
+            $J(".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)").each(function(i, elem) {
+                $J(elem).addClass("es_textarea");
+                let parent = $J(elem).parents(".commentthread_entry_quotebox, .forumtopic_reply_entry");
+
+                let leftmargin = parseFloat($J(parent).css("margin-left"));
+                if (leftmargin === 0) {
+                    let avatar = $J(parent).prev(".playerAvatar");
+                    leftmargin = parseFloat(avatar.css("margin-left")) + parseFloat(avatar.css("width")) + parseFloat(avatar.css("margin-right"));
+                }
+
+                $J(parent).after(
+                    `<div style="float: left; margin-left: ${leftmargin}px; margin-top: 4px; display: none;" class="es_editor">
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_BoldSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bold.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_UnderlineSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_underline.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_ItalicizeSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_italic.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_StrikethroughSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_strike.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_SpoilerSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/breaker.gif"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_HyperlinkSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_link.png"></span>
+                        </a>
+                    </div>`
+                );
+
+                let editor = $J(parent).next(".es_editor");
+                $J(elem).on("keyup paste input", function() {
+                    InitSectionDescriptionTextArea(elem);
+                    if ($J(elem).val().length > 0) {
+                        setTimeout(() => editor.show(), 200);
+                    } else {
+                        editor.hide();
+                    }
+                });
+            });
+        });
+    }
+
+    self.addEditor = async function() {
+        let observer = new MutationObserver(function() {
+            let textAreas = document.querySelectorAll(".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)");
+            if (textAreas.length > 0) { addEditors(); } 
+        });
+        observer.observe(document, {childList: true, subtree: true});
+
+        let textAreas = document.querySelectorAll(".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)");
+        if (textAreas.length > 0) { addEditors(); }        
     };
 
     return self;
@@ -3693,6 +3784,7 @@ let WorkshopBrowseClass = (function(){
     Common.init();
     CommentHandler.hideSpamComments();
     CommentHandler.addFavoriteEmoticons();
+    CommentHandler.addEditor();
 
     switch (true) {
 
