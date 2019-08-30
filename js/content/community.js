@@ -3705,6 +3705,12 @@ let EditGuidePageClass = (function(){
     function EditGuidePageClass() {
         this.allowMultipleLanguages();
         this.addCustomTags();
+        this.rememberTags();
+    }
+
+    function addTag(name) {
+        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter" checked>${name}</div>`;
+        HTML.beforeBegin("#es_add_tag", tag);
     }
 
     EditGuidePageClass.prototype.allowMultipleLanguages = function() {
@@ -3715,21 +3721,68 @@ let EditGuidePageClass = (function(){
         let langSection = document.querySelector("#checkboxgroup_1");
         if (!langSection) { return; }
 
-        let tag = `
-        <div><input type="checkbox" name="tags[]" value="Bulgarian" class="inputTagsFilter">Bulgarian</div>`
+        Messenger.addMessageListener("addtag", function(name) {
+            addTag(name);
+        });
         
         HTML.afterEnd(langSection,
             `<div class="tag_category_container" id="checkboxgroup_2">
                 <div class="tag_category_desc">${Localization.str.custom_tags}</div>
-                <div><a class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
+                <div><a style="margin-top: 8px;" class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
                     <span>${Localization.str.add_tag}</span>
                 </a></div>
             </div>`);
 
         document.querySelector("#es_add_tag").addEventListener("click", function() {
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(`function() {
+                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea" id="es_tag" rows="1"></textarea></div>\`);
+                
+                let tag = "";
+                function done() {
+                    if (tag.length === 0) { return; }
+                    tag = tag[0].toUpperCase() + tag.slice(1).toLowerCase();
+                    Messenger.postMessage("addtag", tag);
+                }
 
-            });
+                $J("#es_tag").on("keyup paste input", function(e) {
+                    let code = e.keyCode || e.which;
+                    if (code == 13) {
+                        Modal.Dismiss();
+                        done();
+                        return;
+                    }
+
+                    tag = $J("#es_tag").val();
+                });
+
+                Modal.done(done);
+            }`);
+        });
+    };
+
+    EditGuidePageClass.prototype.rememberTags = function() {
+        let submitBtn = document.querySelector("[href*=SubmitGuide]");
+        if (!submitBtn) { return; }
+
+        let params = new URLSearchParams(window.location.search);
+        let id = params.get("id");
+        let savedTags = JSON.parse(LocalStorage.get("es_guide_tags") || "{}");
+        if (!savedTags[id]) { savedTags[id] = []; }
+
+        for (let tag of savedTags[id]) {
+            let node = document.querySelector(`[name="tags[]"][value="${tag}"]`);
+            if (node) {
+                node.checked = true;
+            } else {
+                addTag(tag);
+            }
+        }
+
+        submitBtn.removeAttribute("href");
+        submitBtn.addEventListener("click", function() {
+            savedTags[id] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
+            LocalStorage.set("es_guide_tags", JSON.stringify(savedTags));
+            ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
         });
     };
 
