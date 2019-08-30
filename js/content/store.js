@@ -914,7 +914,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addFullscreenScreenshotView() {
-        function es_toggleFullScreen(event) {
+        function toggleFullScreen(event) {
             if (!document.fullscreenElement) {
                 let element = event.target.closest(".screenshot_popup_modal_content");
                 element.requestFullscreen();
@@ -923,7 +923,7 @@ class AppPageClass extends StorePageClass {
             }
         }
 
-        function es_initFSVButtons(event) {
+        function initFSVButtons(event) {
             if (event.animationName !== "es_screenshot_popup_modal_hook") return;
 
             let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
@@ -937,7 +937,7 @@ class AppPageClass extends StorePageClass {
             HTML.beforeEnd(modalFooter,
                 `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
             let fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
-            fsvButton.addEventListener("click", es_toggleFullScreen);
+            fsvButton.addEventListener("click", toggleFullScreen);
 
             let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
             HTML.beforeEnd(modalFooter,
@@ -948,7 +948,7 @@ class AppPageClass extends StorePageClass {
             });
         }
 
-        document.addEventListener("animationstart", es_initFSVButtons);
+        document.addEventListener("animationstart", initFSVButtons);
     }
 
     getFirstSubid() {
