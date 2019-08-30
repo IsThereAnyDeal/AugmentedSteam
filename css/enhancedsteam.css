@@ -1686,6 +1686,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Regional Price Bugfix
+ **************************************/
+ .ds_options_tooltip {
+	 z-index: 99999 !important;
+ }
+
+/***************************************
  * Version update dialog
  **************************************/
 .es_changelog {
@@ -2655,4 +2662,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
  **************************************/
 .blotter_viewallcomments_container {
 	display: block !important;
+}
+
+/***************************************
+ * Fix long-shaped artwork thumbnails
+ * 
+ **************************************/
+.publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
+	min-height: 100px;
+}
+
+#modalContent.modal_frame {
+	min-width: 720px !important;
 }
