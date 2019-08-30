@@ -307,27 +307,52 @@ let CommentHandler = (function(){
         if (!scriptsLoaded) { await loadScripts(); }
     
         ExtensionLayer.runInPageContext(function() {
+            let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
+
             BBCode_SpoilerSelection = function() {
                 g_textarea.wrapSelection("[spoiler]", "[/spoiler]");
-            }
+            };
+
+            BBCode_NoParseSelection = function() {
+                g_textarea.wrapSelection("[noparse]", "[/noparse]");
+            };
+
+            BBCode_QuoteSelection = function() {
+                g_textarea.wrapSelection("[quote]", "[/quote]");
+            };
+
+            BBCode_MakeOListFromSelection = function() {
+                g_textarea.collectFromEachSelectedLine(function(line) {
+                    return (line.match(/\*+\s/) ? "[*]" : "[*] ") + line;
+                }, "[olist]\n", "\n[/olist]");
+            };
 
             BBCode_HyperlinkSelection = function() {
                 let text = g_textarea.getSelection();
                 let Modal = ShowConfirmDialog("URL", `<div class="commentthread_entry_quotebox"><textarea class="commentthread_textarea" id="es_url" rows="1"></textarea></div>`);
                 
                 let url = "";
-                $J("#es_url").on("keyup paste input", function() {
+                function done() {
+                    BBCode_MakeURLFromSelection(url, text);
+                }
+
+                $J("#es_url").on("keydown paste input", function(e) {
+                    let code = e.keyCode || e.which;
+                    if (code == 13) {
+                        Modal.Dismiss();
+                        done();
+                        return;
+                    }
+
                     url = $J("#es_url").val();
                 });
 
-                Modal.done(function() {
-                    BBCode_MakeURLFromSelection(url, text);
-                });
-            }
+                Modal.done(done);
+            };
 
-            $J(".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)").each(function(i, elem) {
+            $J(textAreaSelector).each(function(i, elem) {
                 $J(elem).addClass("es_textarea");
-                let parent = $J(elem).parents(".commentthread_entry_quotebox, .forumtopic_reply_entry");
+                let parent = $J(elem).parents(".commentthread_entry_quotebox, .forumtopic_reply_entry, .commentthread_comment_edit_textarea_ctn");
 
                 let leftmargin = parseFloat($J(parent).css("margin-left"));
                 if (leftmargin === 0) {
@@ -337,32 +362,70 @@ let CommentHandler = (function(){
 
                 $J(parent).after(
                     `<div style="float: left; margin-left: ${leftmargin}px; margin-top: 4px; display: none;" class="es_editor">
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_H1Selection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_header1.png"></span>
+                        </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_BoldSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bold.png"></span>
                         </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_UnderlineSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_underline.png"></span>
-                        </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_ItalicizeSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_italic.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_UnderlineSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_underline.png"></span>
                         </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_StrikethroughSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_strike.png"></span>
                         </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_SpoilerSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/breaker.gif"></span>
+                            <span style="color: #b7b7b7; font-weight: bold;">██</span>
                         </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_HyperlinkSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_link.png"></span>
                         </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_MakeListFromSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bullet.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_MakeOListFromSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%;">&sup1;☰</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_QuoteSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/comment_quoteicon.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_CodeSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold;">&lt;/&gt;</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_NoParseSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"></span>
+                        </a>
                     </div>`
                 );
 
+
                 let editor = $J(parent).next(".es_editor");
-                $J(elem).on("keyup paste input", function() {
+                if (editor.parent().is(":hidden")) {
+                    editor.show();
+                }
+
+                $J(elem).on("keyup paste input", function(e) {
                     InitSectionDescriptionTextArea(elem);
+                    
+                    if (e.type === "paste") {
+                        let pastedData = (e.originalEvent || e).clipboardData.getData("text/plain");
+                        if (pastedData &&
+                            /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
+                            !/^https?:\/\/(www\.)?youtube\.com\/.*/i.test(pastedData) &&
+                            !/^https?:\/\/store\.steampowered\.com\/app\/.*/i.test(pastedData) &&
+                            !/^https?:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/.*/i.test(pastedData)) {
+                            e.preventDefault();
+                            BBCode_MakeURLFromSelection(pastedData, "");
+                        }
+                    }
+
+                    if (editor.parent().is(":hidden")) { return; }
+
                     if ($J(elem).val().length > 0) {
-                        setTimeout(() => editor.show(), 200);
+                        setTimeout(() => editor.show(), 120);
                     } else {
                         editor.hide();
                     }
@@ -372,13 +435,14 @@ let CommentHandler = (function(){
     }
 
     self.addEditor = async function() {
+        let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
         let observer = new MutationObserver(function() {
-            let textAreas = document.querySelectorAll(".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)");
+            let textAreas = document.querySelectorAll(textAreaSelector);
             if (textAreas.length > 0) { addEditors(); } 
         });
         observer.observe(document, {childList: true, subtree: true});
 
-        let textAreas = document.querySelectorAll(".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)");
+        let textAreas = document.querySelectorAll(textAreaSelector);
         if (textAreas.length > 0) { addEditors(); }        
     };
 
