@@ -2307,7 +2307,7 @@ class MediaPage {
             lastScroll = Date.now();
             let allElem = document.querySelectorAll(".highlight_strip_item");
             let isScrollDown = ev.deltaY > 0;
-            let siblingProp = !isScrollDown ? "previousSibling" : "nextSibling";
+            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
             
             let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
             while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
