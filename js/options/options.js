@@ -298,7 +298,7 @@ let Options = (function(){
 
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        Localization.then(async () => {
+        return Localization.then(async () => {
             document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
             // Localize elements with text
@@ -358,7 +358,7 @@ let Options = (function(){
                 }
                 return cnt;
             }
-        }).then(Sidebar.create);
+        });
     }
 
     let Region = (function() {
@@ -479,10 +479,10 @@ let Options = (function(){
             });
             changelogLoaded = true;
         }
-
-        loadTranslation();
+        
         loadProfileLinkImages();
         loadStores();
+        return loadTranslation();
     }
 
 
@@ -607,7 +607,7 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadOptions();
+        loadOptions().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 
