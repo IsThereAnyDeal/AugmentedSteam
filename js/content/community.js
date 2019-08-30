@@ -3739,8 +3739,8 @@ let EditGuidePageClass = (function(){
                 
                 let tag = "";
                 function done() {
-                    if (tag.length === 0) { return; }
-                    tag = tag[0].toUpperCase() + tag.slice(1).toLowerCase();
+                    if (tag.trim().length === 0) { return; }
+                    tag = tag[0].toUpperCase() + tag.slice(1);
                     Messenger.postMessage("addtag", tag);
                 }
 
@@ -3765,9 +3765,11 @@ let EditGuidePageClass = (function(){
         if (!submitBtn) { return; }
 
         let params = new URLSearchParams(window.location.search);
-        let id = params.get("id");
+        let id = params.get("id") || "recent";
         let savedTags = JSON.parse(LocalStorage.get("es_guide_tags") || "{}");
-        if (!savedTags[id]) { savedTags[id] = []; }
+        if (!savedTags[id]) {
+            savedTags[id] = savedTags.recent || [];
+        }
 
         for (let tag of savedTags[id]) {
             let node = document.querySelector(`[name="tags[]"][value="${tag}"]`);
@@ -3781,6 +3783,7 @@ let EditGuidePageClass = (function(){
         submitBtn.removeAttribute("href");
         submitBtn.addEventListener("click", function() {
             savedTags[id] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
+            savedTags.recent = [];
             LocalStorage.set("es_guide_tags", JSON.stringify(savedTags));
             ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
         });
