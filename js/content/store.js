@@ -923,13 +923,10 @@ class AppPageClass extends StorePageClass {
             }
         }
 
-        function es_initFSVButton(event) {
+        function es_initFSVButtons(event) {
             if (event.animationName !== "es_screenshot_popup_modal_hook") return;
 
             let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
-            let fsvButton = document.createElement('div');
-            fsvButton.classList.add("btnv6_blue_hoverfade", "btn_medium", "es_screenshot_fullscreen_toggle");
-            fsvButton.innerHTML = "<i></i>";
             let nextButton = modalFooter.querySelector(".next");
             let nextButtonOffsetWidth = nextButton.offsetWidth;
             if (nextButton.style.display === "none") {
@@ -937,23 +934,21 @@ class AppPageClass extends StorePageClass {
                 nextButtonOffsetWidth = nextButton.offsetWidth;
                 nextButton.style.display = "none";
             }
-            fsvButton.style.right = `calc(${nextButtonOffsetWidth}px + 0.5em)`;
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
+            let fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
             fsvButton.addEventListener("click", es_toggleFullScreen);
-            modalFooter.appendChild(fsvButton);
 
-            let downloadButton = document.createElement('a');
-            downloadButton.classList.add("btnv6_blue_hoverfade", "btn_medium", "es_screenshot_download_btn");
             let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
-            downloadButton.title = modalTitleLink.textContent.trim();
-            downloadButton.innerHTML = "<i></i>";
-            downloadButton.style.right = `calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)`;
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
+            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
             downloadButton.addEventListener("click", () => {
                 modalTitleLink.click();
             });
-            modalFooter.appendChild(downloadButton);
         }
 
-        document.addEventListener("animationstart", es_initFSVButton);
+        document.addEventListener("animationstart", es_initFSVButtons);
     }
 
     getFirstSubid() {
