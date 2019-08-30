@@ -422,11 +422,7 @@ let ProfileHomePageClass = (function(){
                     <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});`
-                        if (iconType === "gray") {
-                            htmlstr += ` filter: grayscale(100%);`;
-                        }
-                        htmlstr += `"></i>`;
+                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
                     }
                     htmlstr += `</a>
                 </div>`;
