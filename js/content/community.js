@@ -3744,7 +3744,7 @@ let EditGuidePageClass = (function(){
                     Messenger.postMessage("addtag", tag);
                 }
 
-                $J("#es_tag").on("keyup paste input", function(e) {
+                $J("#es_tag").on("keydown paste input", function(e) {
                     let code = e.keyCode || e.which;
                     if (code == 13) {
                         Modal.Dismiss();
