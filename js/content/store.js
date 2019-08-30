@@ -1530,19 +1530,17 @@ class AppPageClass extends StorePageClass {
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (node.querySelector(".btn_packageinfo")) { continue; }
+        document.querySelectorAll(".game_area_purchase_game_wrapper").forEach(node => {
+            if (node.querySelector(".btn_packageinfo")) return;
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) { continue; }
+            if (!subid) return;
 
-            HTML.afterBegin(".game_purchase_action",
+            HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
-        }
+        });
     }
 
     addSteamChart(result) {
