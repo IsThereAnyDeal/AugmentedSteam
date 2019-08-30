@@ -330,7 +330,7 @@ let ProfileHomePageClass = (function(){
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== "false") {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 

@@ -394,7 +394,7 @@ let Options = (function(){
                 });
                 break;
             }
-            case "false": {
+            case "none": {
                 icons.forEach(icon => icon.style.display = "none");
             }
         }
