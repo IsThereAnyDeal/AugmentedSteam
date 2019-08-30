@@ -2656,6 +2656,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Shows all "View all comments" links
+ * on the friends activity page
+ * 
+ **************************************/
+.blotter_viewallcomments_container {
+	display: block !important;
+}
+
+/***************************************
  * Fix long-shaped artwork thumbnails
  * 
  **************************************/
