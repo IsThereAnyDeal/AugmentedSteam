@@ -585,7 +585,6 @@ class AppPageClass extends StorePageClass {
         this.addHltb();
 
         this.replaceDevPubLinks();
-        this.addSupport();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -604,7 +603,7 @@ class AppPageClass extends StorePageClass {
 
         this.addReviewToggleButton();
         this.addHelpButton();
-
+        this.addSupport();
     }
 
     initHdPlayer() {
