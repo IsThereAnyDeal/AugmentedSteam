@@ -444,13 +444,20 @@ let CommentHandler = (function(){
             };
 
             $J(textAreaSelector).each(function(i, elem) {
-                $J(elem).addClass("es_textarea");
-                let parent = $J(elem).parents(".commentthread_entry_quotebox, .forumtopic_reply_entry, .commentthread_comment_edit_textarea_ctn");
-                let uncle = $J(parent).next(".commentthread_entry_submitlink");
-                let insertButtons = (html) => uncle.length > 0 ? $J(uncle).prepend(html) : $J(parent).after(html);
+                let textarea = $J(elem);
+                textarea.addClass("es_textarea");
 
-                insertButtons(
-                    `<div style="text-align: right; margin-bottom: 5px;" class="es_editor">
+                let parent = textarea.parents(".commentthread_entry_quotebox, .forumtopic_reply_entry, .commentthread_comment_edit_textarea_ctn");
+                let grandparent = $J(parent).parents(".commentthread_entry, .forum_newtopic_box, .commentthread_comment_editcontrols");
+                let hidden = grandparent.is(":hidden");
+                let leftmargin = 5 + parseFloat($J(parent).css("margin-left"));
+                if (leftmargin === 5) {
+                    let avatar = $J(parent).prev(".playerAvatar");
+                    leftmargin = 5 + parseFloat(avatar.css("margin-left")) + parseFloat(avatar.css("width")) + parseFloat(avatar.css("margin-right"));
+                }
+
+                $J(grandparent).prepend(
+                    `<div style="margin-left: ${leftmargin}px; margin-bottom: 5px;${hidden ? `` : ` display: none;`}" class="es_editor">
                         <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_H1Selection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_header1.png"></span>
                         </a>
@@ -493,7 +500,23 @@ let CommentHandler = (function(){
                     </div>`
                 );
 
-                $J(elem).on("paste", function(e) {
+                let editor = grandparent.find(".es_editor");
+                let postbtn = grandparent.find("[id*='_submit'].btn_small");
+                if (!hidden) {
+                    postbtn.on("blur unload mouseleave", function() {
+                        editor.toggle(postbtn.is(":visible"));
+                    });
+                }
+
+                textarea.on("keyup input change click paste select focus load", function() {
+                    if (!hidden) { editor.toggle(postbtn.is(":visible")); }
+
+                    if (typeof InitSectionDescriptionTextArea !== "undefined") {
+                        InitSectionDescriptionTextArea(elem);
+                    }                    
+                });
+
+                textarea.on("paste", function(e) {
                     let pastedData = (e.originalEvent || e).clipboardData.getData("text/plain");
                     if (pastedData &&
                         /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
@@ -505,15 +528,9 @@ let CommentHandler = (function(){
                         BBCode_MakeURLFromSelection(pastedData, "");
                     }
                 });
-
-                $J(elem).on("keyup paste input focus click load", function() {
-                    if (typeof InitSectionDescriptionTextArea !== "undefined") {
-                        InitSectionDescriptionTextArea(elem);
-                    }
-                });
-
-                if (!supportPlus()) { $J(".es_editor_plus").hide(); }
             });
+
+            if (!supportPlus()) { $J(".es_editor_plus").hide(); }
         });
     }
 
