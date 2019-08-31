@@ -1019,12 +1019,10 @@ let EnhancedSteam = (function() {
         }
 
         accountNameNode.textContent = communityName;
-        let isUserPage = (path) => /.*(id|profiles)\/.+/g.test(path);
 
          // Don't replace title on user pages that aren't mine
-        if (!isUserPage(location.pathname)) {
-            document.title = document.title.replace(accountName, communityName);
-        } else if (location.pathname.includes(User.profilePath)) {
+        let isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
+        if (!isUserPage || location.pathname.includes(User.profilePath)) {
             document.title = document.title.replace(accountName, communityName);
         }
     };
