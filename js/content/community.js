@@ -391,31 +391,27 @@ let CommentHandler = (function(){
                     <br><br>`
                 );
                 
-                $J("#es_width").on("keydown paste input change", function(e) {
-                    w = parseInt($J("#es_width").val());
-                });
-                
-                $J("#es_height").on("keydown paste input change", function(e) {
-                    h = parseInt($J("#es_height").val());
-                });
+                $J("#es_width").on("keydown paste input change", () => w = parseInt($J("#es_width").val()));
+                $J("#es_height").on("keydown paste input change", () => h = parseInt($J("#es_height").val()));
 
                 Modal.done(function() {
                     let n = 0;
+                    let tab = "    ";
 
                     let c = "";
                     while (w > 1) {
-                        c += "        [td][/td]\n";
+                        c += `${tab}${tab}[td][/td]\n`;
                         w--;
                     }
 
                     g_textarea.collectFromEachSelectedLine(function(line) {
                         n++;
-                        return "    [tr]\n        [td]" + line + "[/td]\n" + c + "    [/tr]";
-                    }, "", "");
+                        return `${tab}[tr]\n${tab}${tab}[td]${line}[/td]\n${c}${tab}[/tr]`;
+                    }, ``, ``);
 
-                    let r = "";
+                    let r = ``;
                     while (h > n) {
-                        r += "\n    [tr]\n        [td][/td]\n" + c + "    [/tr]";
+                        r += `\n${tab}[tr]\n${tab}${tab}[td][/td]\n${c}${tab}[/tr]`;
                         h--;
                     }
 
@@ -426,25 +422,25 @@ let CommentHandler = (function(){
 
             BBCode_HyperlinkSelection = function() {
                 let text = g_textarea.getSelection();
-                let Modal = ShowConfirmDialog("URL", `<div class="commentthread_entry_quotebox"><textarea class="commentthread_textarea" id="es_url" rows="1"></textarea></div>`);
+                let Modal = ShowConfirmDialog("URL",
+                    `<div class="commentthread_entry_quotebox">
+                        <textarea class="commentthread_textarea" id="es_url" rows="1">
+                    </textarea></div>`
+                );
                 
                 let url = "";
-                function done() {
-                    BBCode_MakeURLFromSelection(url, text);
-                }
-
                 $J("#es_url").on("keydown paste input", function(e) {
                     let code = e.keyCode || e.which;
                     if (code == 13) {
                         Modal.Dismiss();
-                        done();
+                        BBCode_MakeURLFromSelection(url, text);
                         return;
                     }
 
                     url = $J("#es_url").val();
                 });
 
-                Modal.done(done);
+                Modal.done(() => BBCode_MakeURLFromSelection(url, text));
             };
 
             $J(textAreaSelector).each(function(i, elem) {
@@ -511,14 +507,12 @@ let CommentHandler = (function(){
                 });
 
                 $J(elem).on("keyup paste input focus click load", function() {
-                    if (InitSectionDescriptionTextArea) {
+                    if (typeof InitSectionDescriptionTextArea !== "undefined") {
                         InitSectionDescriptionTextArea(elem);
                     }
                 });
 
-                if (!supportPlus()) {
-                    $J(".es_editor_plus").hide();
-                }
+                if (!supportPlus()) { $J(".es_editor_plus").hide(); }
             });
         });
     }
