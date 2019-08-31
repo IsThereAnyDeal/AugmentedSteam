@@ -309,6 +309,55 @@ let CommentHandler = (function(){
         ExtensionLayer.runInPageContext(function() {
             let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
 
+            // Credits go to https://github.com/ZeroUnderscoreOu/SteamBBCodes/blob/master/SteamBBCodes.js#L153
+            function supportPlus() {
+                let URLPath = document.location.pathname;
+                switch (true) { // needs to be true
+                    case URLPath.includes("/home"): // new status, new comment in activity; trailing slash omitted just in case; no break for the next case
+                    case URLPath.includes("/status/"): // new comment in status
+                    case URLPath.includes("/friendactivitydetail/"): // new comment in purchase
+                        return false;
+                        break;
+                    case URLPath.includes("/recommended/"): // new comment in review, review edit; no break
+                        return true;
+                        break;
+                    case !!URLPath.match(/\/(id|profiles|groups)\/[^\/]+\/?$/): // new comment in profile/group
+                    case URLPath.includes("/sharedfiles/filedetails/"): // new comment in screenshot/artwork/Workshop/Greenlight
+                    case document.location.href.includes("announcements/detail/"): // new comment in announcement of a group/game; may be either path or hash
+                    case URLPath.includes("/news/"): // new comment in news; Store & Community has separate news
+                    //case URLHash.includes("events/"): // new comment in group event; falls under group path match
+                    //case URLHash.includes("comments"): // new comment on group's comments page; falls under group path match
+                    case URLPath.includes("/allcomments"): // new comment on profile's comments page
+                        return false;
+                        break;
+                    case !!URLPath.match(/\/discussions(\/forum)?\/\d{1,2}\/\d+/): // new comment, comment edit on forum; no break
+                    case URLPath.includes("/reporteddiscussions/"): // new comment in report
+                        return true;
+                        break;
+                    case URLPath.includes("/discussions"): // new topic, topic edit on forum; report edit; trailing slash omitted to work with group forum index
+                        return true;
+                        break;
+                    case document.location.href.includes("store.steampowered.com/app/"): // new review
+                        return true;
+                        break;
+                    case !!URLPath.match(/\/announcements\/(create|edit)/): // new group announcement
+                        return true;
+                        break;
+                    case !!URLPath.match(/\/edit(\/profile)?$/): // user/group profile edit
+                        return false;
+                        break;
+                    case URLPath.includes("/sharedfiles/itemedittext/"): // screenshot/artwork/workshop edit
+                        return true;
+                        break;
+                    case URLPath.includes("/sharedfiles/edititem/"): // new artwork
+                        return true;
+                        break;
+                    default: // kinda default
+                        return false;
+                        break;
+                }
+            }
+
             BBCode_SpoilerSelection = function() {
                 g_textarea.wrapSelection("[spoiler]", "[/spoiler]");
             };
@@ -321,10 +370,58 @@ let CommentHandler = (function(){
                 g_textarea.wrapSelection("[quote]", "[/quote]");
             };
 
+            BBCode_CodeSelection = function() {
+                g_textarea.wrapSelection("[code]", "[/code]");
+            };
+
             BBCode_MakeOListFromSelection = function() {
                 g_textarea.collectFromEachSelectedLine(function(line) {
                     return (line.match(/\*+\s/) ? "[*]" : "[*] ") + line;
                 }, "[olist]\n", "\n[/olist]");
+            };
+
+            BBCode_MakeTableFromSelection = function() {
+                let w = 1;
+                let h = 1;
+
+                let Modal = ShowConfirmDialog("",
+                    `W:<input type="number" min="1" style="width: 50px;" value="${w}" id="es_width">
+                    &nbsp; X &nbsp;
+                    H:<input type="number" min="1" style="width: 50px;" value="${h}" id="es_height">
+                    <br><br>`
+                );
+                
+                $J("#es_width").on("keydown paste input change", function(e) {
+                    w = parseInt($J("#es_width").val());
+                });
+                
+                $J("#es_height").on("keydown paste input change", function(e) {
+                    h = parseInt($J("#es_height").val());
+                });
+
+                Modal.done(function() {
+                    let n = 0;
+
+                    let c = "";
+                    while (w > 1) {
+                        c += "        [td][/td]\n";
+                        w--;
+                    }
+
+                    g_textarea.collectFromEachSelectedLine(function(line) {
+                        n++;
+                        return "    [tr]\n        [td]" + line + "[/td]\n" + c + "    [/tr]";
+                    }, "", "");
+
+                    let r = "";
+                    while (h > n) {
+                        r += "\n    [tr]\n        [td][/td]\n" + c + "    [/tr]";
+                        h--;
+                    }
+
+                    g_textarea.wrapSelection("", r);
+                    g_textarea.wrapSelection("[table]\n", "\n[/table]");
+                });
             };
 
             BBCode_HyperlinkSelection = function() {
@@ -353,16 +450,12 @@ let CommentHandler = (function(){
             $J(textAreaSelector).each(function(i, elem) {
                 $J(elem).addClass("es_textarea");
                 let parent = $J(elem).parents(".commentthread_entry_quotebox, .forumtopic_reply_entry, .commentthread_comment_edit_textarea_ctn");
+                let uncle = $J(parent).next(".commentthread_entry_submitlink");
+                let insertButtons = (html) => uncle.length > 0 ? $J(uncle).prepend(html) : $J(parent).after(html);
 
-                let leftmargin = parseFloat($J(parent).css("margin-left"));
-                if (leftmargin === 0) {
-                    let avatar = $J(parent).prev(".playerAvatar");
-                    leftmargin = parseFloat(avatar.css("margin-left")) + parseFloat(avatar.css("width")) + parseFloat(avatar.css("margin-right"));
-                }
-
-                $J(parent).after(
-                    `<div style="float: left; margin-left: ${leftmargin}px; margin-top: 4px; display: none;" class="es_editor">
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_H1Selection();">
+                insertButtons(
+                    `<div style="text-align: right; margin-bottom: 5px;" class="es_editor">
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_H1Selection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_header1.png"></span>
                         </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_BoldSelection();">
@@ -383,16 +476,19 @@ let CommentHandler = (function(){
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_HyperlinkSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_link.png"></span>
                         </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_MakeListFromSelection();">
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeListFromSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bullet.png"></span>
                         </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_MakeOListFromSelection();">
-                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%;">&sup1;☰</span>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeOListFromSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%; padding-bottom: 2px;">&sup1;☰</span>
                         </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_QuoteSelection();">
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeTableFromSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%;">&plusb;</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_QuoteSelection();">
                             <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/comment_quoteicon.png"></span>
                         </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_CodeSelection();">
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_CodeSelection();">
                             <span style="color: #b7b7b7; font-weight: bold;">&lt;/&gt;</span>
                         </a>
                         <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_NoParseSelection();">
@@ -401,35 +497,27 @@ let CommentHandler = (function(){
                     </div>`
                 );
 
-
-                let editor = $J(parent).next(".es_editor");
-                if (editor.parent().is(":hidden")) {
-                    editor.show();
-                }
-
-                $J(elem).on("keyup paste input", function(e) {
-                    InitSectionDescriptionTextArea(elem);
-                    
-                    if (e.type === "paste") {
-                        let pastedData = (e.originalEvent || e).clipboardData.getData("text/plain");
-                        if (pastedData &&
-                            /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
-                            !/^https?:\/\/(www\.)?youtube\.com\/.*/i.test(pastedData) &&
-                            !/^https?:\/\/store\.steampowered\.com\/app\/.*/i.test(pastedData) &&
-                            !/^https?:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/.*/i.test(pastedData)) {
-                            e.preventDefault();
-                            BBCode_MakeURLFromSelection(pastedData, "");
-                        }
-                    }
-
-                    if (editor.parent().is(":hidden")) { return; }
-
-                    if ($J(elem).val().length > 0) {
-                        setTimeout(() => editor.show(), 120);
-                    } else {
-                        editor.hide();
+                $J(elem).on("paste", function(e) {
+                    let pastedData = (e.originalEvent || e).clipboardData.getData("text/plain");
+                    if (pastedData &&
+                        /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
+                        !/^https?:\/\/(www\.)?youtube\.com\/.*/i.test(pastedData) &&
+                        !/^https?:\/\/store\.steampowered\.com\/app\/.*/i.test(pastedData) &&
+                        !/^https?:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/.*/i.test(pastedData)) {
+                        e.preventDefault();
+                        BBCode_MakeURLFromSelection(pastedData, "");
                     }
                 });
+
+                $J(elem).on("keyup paste input focus click load", function() {
+                    if (InitSectionDescriptionTextArea) {
+                        InitSectionDescriptionTextArea(elem);
+                    }
+                });
+
+                if (!supportPlus()) {
+                    $J(".es_editor_plus").hide();
+                }
             });
         });
     }
