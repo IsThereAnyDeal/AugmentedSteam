@@ -212,6 +212,18 @@ let ExtensionLayer = (function() {
         script.parentNode.removeChild(script);
     };
 
+    // NOTE: use cautiously!
+    // Load remote script in the context of the current tab
+    self.loadInPageContext = function(fun) {
+        return new Promise(function(res) {
+            let script  = document.createElement("script");
+            script.src = fun;
+            script.onload = res;
+            document.documentElement.appendChild(script);
+            script.parentNode.removeChild(script);
+        });
+    };
+
     return self;
 })();
 

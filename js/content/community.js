@@ -93,6 +93,7 @@ let ProfileData = (function(){
 
 let CommentHandler = (function(){
 
+    let scriptsLoaded = false;
     let spamRegex = null;
     let self = {};
 
@@ -305,6 +306,260 @@ let CommentHandler = (function(){
         });
 
         observer.observe(document.body, { childList: true });
+    };
+
+    function loadScripts() {
+        return new Promise(async function(res) {
+            scriptsLoaded = true;
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
+            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
+            res();
+        })
+    }
+
+    async function addEditors() {
+        if (!scriptsLoaded) { await loadScripts(); }
+    
+        ExtensionLayer.runInPageContext(function() {
+            let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
+
+            // Credits go to https://github.com/ZeroUnderscoreOu/SteamBBCodes/blob/master/SteamBBCodes.js#L153
+            function supportPlus() {
+                let URLPath = document.location.pathname;
+                switch (true) { // needs to be true
+                    case URLPath.includes("/home"): // new status, new comment in activity; trailing slash omitted just in case; no break for the next case
+                    case URLPath.includes("/status/"): // new comment in status
+                    case URLPath.includes("/friendactivitydetail/"): // new comment in purchase
+                        return false;
+                        break;
+                    case URLPath.includes("/recommended/"): // new comment in review, review edit; no break
+                        return true;
+                        break;
+                    case !!URLPath.match(/\/(id|profiles|groups)\/[^\/]+\/?$/): // new comment in profile/group
+                    case URLPath.includes("/sharedfiles/filedetails/"): // new comment in screenshot/artwork/Workshop/Greenlight
+                    case document.location.href.includes("announcements/detail/"): // new comment in announcement of a group/game; may be either path or hash
+                    case URLPath.includes("/news/"): // new comment in news; Store & Community has separate news
+                    //case URLHash.includes("events/"): // new comment in group event; falls under group path match
+                    //case URLHash.includes("comments"): // new comment on group's comments page; falls under group path match
+                    case URLPath.includes("/allcomments"): // new comment on profile's comments page
+                        return false;
+                        break;
+                    case !!URLPath.match(/\/discussions(\/forum)?\/\d{1,2}\/\d+/): // new comment, comment edit on forum; no break
+                    case URLPath.includes("/reporteddiscussions/"): // new comment in report
+                        return true;
+                        break;
+                    case URLPath.includes("/discussions"): // new topic, topic edit on forum; report edit; trailing slash omitted to work with group forum index
+                        return true;
+                        break;
+                    case document.location.href.includes("store.steampowered.com/app/"): // new review
+                        return true;
+                        break;
+                    case !!URLPath.match(/\/announcements\/(create|edit)/): // new group announcement
+                        return true;
+                        break;
+                    case !!URLPath.match(/\/edit(\/profile)?$/): // user/group profile edit
+                        return false;
+                        break;
+                    case URLPath.includes("/sharedfiles/itemedittext/"): // screenshot/artwork/workshop edit
+                        return true;
+                        break;
+                    case URLPath.includes("/sharedfiles/edititem/"): // new artwork
+                        return true;
+                        break;
+                    default: // kinda default
+                        return false;
+                        break;
+                }
+            }
+
+            BBCode_SpoilerSelection = function() {
+                g_textarea.wrapSelection("[spoiler]", "[/spoiler]");
+            };
+
+            BBCode_NoParseSelection = function() {
+                g_textarea.wrapSelection("[noparse]", "[/noparse]");
+            };
+
+            BBCode_QuoteSelection = function() {
+                g_textarea.wrapSelection("[quote]", "[/quote]");
+            };
+
+            BBCode_CodeSelection = function() {
+                g_textarea.wrapSelection("[code]", "[/code]");
+            };
+
+            BBCode_MakeOListFromSelection = function() {
+                g_textarea.collectFromEachSelectedLine(function(line) {
+                    return (line.match(/\*+\s/) ? "[*]" : "[*] ") + line;
+                }, "[olist]\n", "\n[/olist]");
+            };
+
+            BBCode_MakeTableFromSelection = function() {
+                let w = 1;
+                let h = 1;
+
+                let Modal = ShowConfirmDialog("",
+                    `W:<input type="number" min="1" style="width: 50px;" value="${w}" id="es_width">
+                    &nbsp; X &nbsp;
+                    H:<input type="number" min="1" style="width: 50px;" value="${h}" id="es_height">
+                    <br><br>`
+                );
+                
+                $J("#es_width").on("keydown paste input change", () => w = parseInt($J("#es_width").val()));
+                $J("#es_height").on("keydown paste input change", () => h = parseInt($J("#es_height").val()));
+
+                Modal.done(function() {
+                    let n = 0;
+                    let tab = "    ";
+
+                    let c = "";
+                    while (w > 1) {
+                        c += `${tab}${tab}[td][/td]\n`;
+                        w--;
+                    }
+
+                    g_textarea.collectFromEachSelectedLine(function(line) {
+                        n++;
+                        return `${tab}[tr]\n${tab}${tab}[td]${line}[/td]\n${c}${tab}[/tr]`;
+                    }, ``, ``);
+
+                    let r = ``;
+                    while (h > n) {
+                        r += `\n${tab}[tr]\n${tab}${tab}[td][/td]\n${c}${tab}[/tr]`;
+                        h--;
+                    }
+
+                    g_textarea.wrapSelection("", r);
+                    g_textarea.wrapSelection("[table]\n", "\n[/table]");
+                });
+            };
+
+            BBCode_HyperlinkSelection = function() {
+                let text = g_textarea.getSelection();
+                let Modal = ShowConfirmDialog("URL",
+                    `<div class="commentthread_entry_quotebox">
+                        <textarea class="commentthread_textarea" id="es_url" rows="1">
+                    </textarea></div>`
+                );
+                
+                let url = "";
+                $J("#es_url").on("keydown paste input", function(e) {
+                    let code = e.keyCode || e.which;
+                    if (code == 13) {
+                        Modal.Dismiss();
+                        BBCode_MakeURLFromSelection(url, text);
+                        return;
+                    }
+
+                    url = $J("#es_url").val();
+                });
+
+                Modal.done(() => BBCode_MakeURLFromSelection(url, text));
+            };
+
+            $J(textAreaSelector).each(function(i, elem) {
+                let textarea = $J(elem);
+                textarea.addClass("es_textarea");
+
+                let parent = textarea.parents(".commentthread_entry_quotebox, .forumtopic_reply_entry, .commentthread_comment_edit_textarea_ctn");
+                let grandparent = $J(parent).parents(".commentthread_entry, .forum_newtopic_box, .commentthread_comment_editcontrols");
+                let hidden = grandparent.is(":hidden");
+                let leftmargin = 5 + parseFloat($J(parent).css("margin-left"));
+                if (leftmargin === 5) {
+                    let avatar = $J(parent).prev(".playerAvatar");
+                    leftmargin = 5 + parseFloat(avatar.css("margin-left")) + parseFloat(avatar.css("width")) + parseFloat(avatar.css("margin-right"));
+                }
+
+                $J(grandparent).prepend(
+                    `<div style="margin-left: ${leftmargin}px; margin-bottom: 5px;${hidden ? `` : ` display: none;`}" class="es_editor">
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_H1Selection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_header1.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_BoldSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bold.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_ItalicizeSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_italic.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_UnderlineSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_underline.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_StrikethroughSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_strike.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_SpoilerSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold;">██</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_HyperlinkSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_link.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeListFromSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bullet.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeOListFromSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%; padding-bottom: 2px;">&sup1;☰</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeTableFromSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%;">&plusb;</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_QuoteSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/comment_quoteicon.png"></span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_CodeSelection();">
+                            <span style="color: #b7b7b7; font-weight: bold;">&lt;/&gt;</span>
+                        </a>
+                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_NoParseSelection();">
+                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"></span>
+                        </a>
+                    </div>`
+                );
+
+                let editor = grandparent.find(".es_editor");
+                let postbtn = grandparent.find("[id*='_submit'].btn_small");
+                if (!hidden) {
+                    postbtn.on("blur unload mouseleave", function() {
+                        editor.toggle(postbtn.is(":visible"));
+                    });
+                }
+
+                textarea.on("keyup input change click paste select focus load", function() {
+                    if (!hidden) { editor.toggle(postbtn.is(":visible")); }
+
+                    if (typeof InitSectionDescriptionTextArea !== "undefined") {
+                        InitSectionDescriptionTextArea(elem);
+                    }                    
+                });
+
+                textarea.on("paste", function(e) {
+                    let pastedData = (e.originalEvent || e).clipboardData.getData("text/plain");
+                    if (pastedData &&
+                        /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
+                        !/^https?:\/\/(www\.)?youtube\.com\/.*/i.test(pastedData) &&
+                        !/^https?:\/\/youtu\.be\/.*/i.test(pastedData) &&
+                        !/^https?:\/\/store\.steampowered\.com\/app\/.*/i.test(pastedData) &&
+                        !/^https?:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/.*/i.test(pastedData)) {
+                        e.preventDefault();
+                        BBCode_MakeURLFromSelection(pastedData, "");
+                    }
+                });
+            });
+
+            if (!supportPlus()) { $J(".es_editor_plus").hide(); }
+        });
+    }
+
+    self.addEditor = async function() {
+        let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
+        let observer = new MutationObserver(function() {
+            let textAreas = document.querySelectorAll(textAreaSelector);
+            if (textAreas.length > 0) { addEditors(); } 
+        });
+        observer.observe(document, {childList: true, subtree: true});
+
+        let textAreas = document.querySelectorAll(textAreaSelector);
+        if (textAreas.length > 0) { addEditors(); }        
     };
 
     return self;
@@ -3727,6 +3982,7 @@ let WorkshopBrowseClass = (function(){
     Common.init();
     CommentHandler.hideSpamComments();
     CommentHandler.addFavoriteEmoticons();
+    CommentHandler.addEditor();
 
     switch (true) {
 

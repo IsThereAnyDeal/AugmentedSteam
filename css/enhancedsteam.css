@@ -2543,6 +2543,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
     margin-top:72px;
 }
 
+/* comment editor */
+.blotter_poststatus_avatar {
+	top:  auto !important;
+}
+
 /* market action buttons */
 .item_market_actions {
 	display:flex;
