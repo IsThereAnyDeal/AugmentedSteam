@@ -3618,12 +3618,12 @@ let WorkshopBrowseClass = (function(){
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
         let appid = GameId.getAppidUriQuery(window.location.search);
-        if (!appid) return;
-        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
+        if (!appid) { return; }
+        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
 
         let subscriberButtons = `
             <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
-            <div id="es_subscriber" class="rightDetailsBlock">
+            <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
@@ -3639,9 +3639,13 @@ let WorkshopBrowseClass = (function(){
 
         HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
 
-        document.querySelector(".es_subscriber").addEventListener("click", event => {
+        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
             let method = event.target.closest(".es_subscriber").dataset.method;
-            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            let total = parseInt(
+                document.querySelector(".workshopBrowsePagingInfo").textContent
+                    .replace(/\d+-\d+/g, "")
+                    .match(/\d+/g)[0]);
+
             startSubscriber(method, total);
         });
 
@@ -3694,15 +3698,19 @@ let WorkshopBrowseClass = (function(){
     
                     let result = await RequestData.getHttp(url.toString());
                     let xmlDoc = new DOMParser().parseFromString(result, "text/html");
-                    workshopItems = workshopItems.concat(Array.from(xmlDoc.querySelectorAll(".workshopItemPreviewHolder")).map(node => node.id.replace("sharedfile_", "")));
+
+                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                        workshopItems.push(node.id.replace("sharedfile_", ""))
+                    }
                 }
     
-                Promise.all(workshopItems.map(id => changeSubscription(id))).finally(() => {
-                    location.reload();
-                });
+                Promise.all(
+                    workshopItems
+                        .map(id => changeSubscription(id)))
+                        .finally(() => { location.reload(); });
             }, true)
         }
-    }
+    };
 
     return WorkshopBrowseClass;
 })();
