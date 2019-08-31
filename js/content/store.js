@@ -1388,7 +1388,6 @@ class AppPageClass extends StorePageClass {
         let cache = JSON.parse(LocalStorage.get("support_infos") || "{}");
         let supportInfo = cache[appid];
         if (!supportInfo) {
-            console.log("GET Appdetails")
             let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
             if (!response || !response[appid] || !response[appid].success) { return; }
 
