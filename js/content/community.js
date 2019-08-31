@@ -502,6 +502,7 @@ let CommentHandler = (function(){
                     if (pastedData &&
                         /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
                         !/^https?:\/\/(www\.)?youtube\.com\/.*/i.test(pastedData) &&
+                        !/^https?:\/\/youtu\.be\/.*/i.test(pastedData) &&
                         !/^https?:\/\/store\.steampowered\.com\/app\/.*/i.test(pastedData) &&
                         !/^https?:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/.*/i.test(pastedData)) {
                         e.preventDefault();
