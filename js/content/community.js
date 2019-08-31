@@ -1475,8 +1475,11 @@ let StatsPageClass = (function(){
 
     StatsPageClass.prototype.showEntireDescriptions = function() {
         // .ellipsis is only added by Steam on personal stats pages
-        document.querySelectorAll("h5.ellipsis").forEach(node => node.classList.remove("ellipsis"));
-    }
+        let nodes = document.querySelectorAll("h5.ellipsis");
+        for (let node of nodes) {
+            node.classList.remove("ellipsis");
+        }
+    };
 
     return StatsPageClass;
 })();

@@ -1367,17 +1367,15 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        let rows = document.querySelectorAll(".dev_row");
-        for (let i=0, len=rows.length; i<len; i++) {
-            let linkNode = rows[i].querySelector("a");
+        let rows = document.querySelectorAll(".dev_row a");
+        for (let linkNode of rows) {
             let homepageLink = new URL(linkNode.href);
             if (homepageLink.pathname === "/search/") {
                 continue;
             }
 
             let parts = homepageLink.pathname.split(`/`);
-            let searchLink = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
-            linkNode.href = searchLink;
+            linkNode.href = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
     }
@@ -1538,7 +1536,8 @@ class AppPageClass extends StorePageClass {
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        document.querySelectorAll(".game_area_purchase_game_wrapper").forEach(node => {
+        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
+        for (let node of nodes) {
             if (node.querySelector(".btn_packageinfo")) return;
 
             let subid = node.querySelector("input[name=subid]").value;
@@ -1548,13 +1547,13 @@ class AppPageClass extends StorePageClass {
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
-        });
+        }
     }
 
     addSteamChart(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
         let chart = result.charts.chart;

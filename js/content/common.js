@@ -2311,7 +2311,7 @@ class MediaPage {
             while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
                 targetElem = targetElem[siblingProp];
                 if (!targetElem) {
-                    targetElem = allElem[!isScrollDown ? allElem.length - 1: 0];
+                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
                 }
             }
             

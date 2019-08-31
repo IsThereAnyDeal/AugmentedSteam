@@ -2621,7 +2621,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Store curator pages
- * 
  **************************************/
 .capsule.smallcapsule .es_overlay_container {
 	position: absolute;
@@ -2637,7 +2636,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Layout around Customizer on App Pages
- * 
  **************************************/
 .game_page_autocollapse_ctn { margin-top: 30px; }
 .game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
@@ -2658,7 +2656,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 /***************************************
  * Shows all "View all comments" links
  * on the friends activity page
- * 
  **************************************/
 .blotter_viewallcomments_container {
 	display: block !important;
@@ -2666,7 +2663,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Fix long-shaped artwork thumbnails
- * 
  **************************************/
 .publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
 	min-height: 100px;
