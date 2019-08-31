@@ -3796,7 +3796,7 @@ let WorkshopBrowseClass = (function(){
 
         case /^\/tradingcards\/boostercreator/.test(path):
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+                .textContent.trim().replace(/[\d]+,?/g, "");
 
             ExtensionLayer.runInPageContext(`function() {
                 $J("#booster_game_selector option").each(function(index) {
