@@ -333,15 +333,16 @@ let Options = (function(){
 
 
             let total = deepCount(Localization.str);
-            for (let lang in Localization.str.options.lang) {
+            for (let lang of Object.keys(Localization.str.options.lang)) {
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
                 let count = deepCount(locale);
                 let percentage = 100 * count / total;
-                let node = document.querySelector(".language." + lang);
-                if (node) {
-                    HTML.inner(node, `${Localization.str.options.lang[lang]} (<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>):`);
-                }
+
+                HTML.inner(
+                    document.querySelector(".lang-perc." + lang),
+                    `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
+                );
             }
 
             function deepCount(obj) {

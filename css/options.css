@@ -279,6 +279,9 @@ a:hover {
 .language {
 	padding-right: 1em;
 }
+.lang-perc {
+	text-align: right;
+}
 .credits li {
 	font-size: 1rem;
 }
