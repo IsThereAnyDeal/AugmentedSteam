@@ -1385,15 +1385,23 @@ class AppPageClass extends StorePageClass {
         if (this.isDlc()) { return; }
 
         let appid = this.appid;
-        let cache = JSON.parse(LocalStorage.get("support_infos") || "{}");
+        let cache = LocalStorage.get("support_infos", {});
+        for (let id in cache) {
+            if (!cache[id].expiry || cache[id].expiry < Date.now()) {
+                delete cache[id];
+            }
+        }
+
         let supportInfo = cache[appid];
         if (!supportInfo) {
+            console.log("appdetails")
             let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
             if (!response || !response[appid] || !response[appid].success) { return; }
 
             supportInfo = response[appid].data.support_info;
+            supportInfo.expiry = Date.now() + 2592000000; // 30 days
             cache[appid] = supportInfo;
-            LocalStorage.set("support_infos", JSON.stringify(cache));
+            LocalStorage.set("support_infos", cache);
         }
 
         let url = supportInfo.url;
