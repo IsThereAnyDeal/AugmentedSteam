@@ -213,28 +213,44 @@ let ExtensionLayer = (function() {
     };
 
     // NOTE: use cautiously!
-    // Load remote script in the context of the current tab
-    self.loadInPageContext = function(url) {
-        if (url.startsWith("//")) { // TODO remove when not needed
-            url = window.location.protocol + url;
-            console.warn("Requesting URL without protocol, please update");
+    // Load remote script(s) in the context of the current tab
+    self.loadInPageContext = async function(srcs, sync=false) {
+        function _makeScript(src) {
+            return new Promise(function(resolve, reject) {
+                let script = document.createElement("script");
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.documentElement.appendChild(script);
+                script.parentNode.removeChild(script);
+            });
         }
 
-        return new Promise(function(resolve, reject) {
-            let whitelist = ["steamcommunity-a.akamaihd.net"];
-            let domain = new URL(url).hostname;
+        if (!Array.isArray(srcs)) {
+            srcs = [srcs];
+        }
+
+        let whitelist = ["steamcommunity-a.akamaihd.net"];
+        let promise = sync ? Promise.resolve(true) : [];
+        for (let src of srcs) {
+            if (src.startsWith("//")) { // TODO remove when not needed
+                src = window.location.protocol + src;
+                console.warn("Requesting URL without protocol, please update");
+            }
+    
+            let domain = new URL(src).hostname;
             if (!whitelist.includes(domain)) {
-                reject(new Error("Script host not allowed"));
-                return;
+                throw new Error("Script host not allowed");
             }
 
-            let script  = document.createElement("script");
-            script.src = url;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.documentElement.appendChild(script);
-            script.parentNode.removeChild(script);
-        });
+            if (sync) {
+                promise = promise.then(function() { return _makeScript(src); });
+            } else {
+                promise.push(_makeScript(src));
+            }
+        }
+
+        return promise;
     };
 
     return self;

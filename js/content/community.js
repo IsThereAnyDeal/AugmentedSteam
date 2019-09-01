@@ -308,12 +308,15 @@ let CommentHandler = (function(){
         observer.observe(document.body, { childList: true });
     };
 
-    async function loadScripts() {
+    function loadScripts() {
         scriptsLoading = true;
-        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
-        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
-        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
-        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
+        let scripts = [
+            "https://steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q",
+            "https://steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5",
+            "https://steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO",
+            "https://steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb"
+        ];
+        return ExtensionLayer.loadInPageContext(scripts, true);
     }
 
     async function addEditors() {
