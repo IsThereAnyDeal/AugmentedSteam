@@ -3332,7 +3332,7 @@ let WishlistPageClass = (function(){
                     setClipboard(content)
                     break;
                 case "download":
-                    Background.action("download", { content, filename });
+                    Downloader.download({ content, filename });
                     break;
                 default:
                     break;

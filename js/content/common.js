@@ -2116,6 +2116,27 @@ let Common = (function(){
     return self;
 })();
 
+let Downloader = (function(){
+
+    let self = {};
+
+    self.download = function(options) {
+        if (!options.url) {
+            let blob = new Blob([ options.content ], {type : "text/plain;charset=UTF-8"});
+            options.url = URL.createObjectURL(blob);
+        }
+
+        let element = document.createElement('a');
+        element.setAttribute('href', options.url);
+        element.setAttribute('download', options.filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+    
+    return self;
+})();
 
 class MediaPage {
 

@@ -19,9 +19,6 @@
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
   ],
-  "optional_permissions": [
-    "downloads"
-  ],
   "web_accessible_resources": [
     "img/*.png",
     "img/*.gif",
