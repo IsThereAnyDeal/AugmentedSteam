@@ -1387,7 +1387,7 @@ class AppPageClass extends StorePageClass {
         let appid = this.appid;
         let cache = LocalStorage.get("support_infos", {});
         for (let id in cache) {
-            if (!cache[id].expiry || cache[id].expiry < Date.now()) {
+            if (!cache[id].expiry || cache[id].expiry < Math.trunc(Date.now() / 1000)) {
                 delete cache[id];
             }
         }
