@@ -3546,16 +3546,18 @@ let GroupAnnouncementsPage = (function(){
                 });
             }
 
-            function getAnnouncements(page, hidden) {
-                return new Promise(async resolve => {
-                    let pathSplit = location.pathname.split("/")
-                    let groupUrl = "https://steamcommunity.com/" + pathSplit[1] + "/" + pathSplit[2];
-                    let result = await RequestData.getHttp(groupUrl + "/announcements" + (hidden ? "/hidden" : "") + "?content_only=true&p=" + page);
-                    let doc = new DOMParser().parseFromString(result, "text/html");
-                    console.log(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]"));
-                    let urls = Array.from(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]")).map(node => node.href.split("'")[1]);
-                    resolve(urls);
-                });
+            async function getAnnouncements(page, hidden) {
+                let pathSplit = location.pathname.split("/");
+                let groupUrl = "https://steamcommunity.com/" + pathSplit[1] + "/" + pathSplit[2];
+                let url = groupUrl + "/announcements" + (hidden ? "/hidden" : "") + "?content_only=true&p=" + page;
+                let result = await RequestData.getHttp(url).catch(console.error);
+                if (!result) {
+                    throw new Error("Failed to request " + url);
+                }
+
+                let doc = new DOMParser().parseFromString(result, "text/html");
+                let urls = Array.from(doc.querySelectorAll("[href*=ConfirmDeleteAnnouncement]")).map(node => node.href.split("'")[1]);
+                return urls;
             }
 
             Messenger.addMessageListener("delEmAll", async function() {
@@ -3564,7 +3566,13 @@ let GroupAnnouncementsPage = (function(){
                 let newUrls = [];
                 let announcements = [];
                 do {
-                    let urls = await getAnnouncements(++page, hidden);
+                    let urls = await getAnnouncements(++page, hidden).catch(console.error);
+                    if (!urls) {
+                        page--;
+                        await sleep(10000);
+                        continue;
+                    }
+
                     newUrls = urls.filter(url => !announcements.includes(url));
                     announcements = announcements.concat(newUrls);
                     total = announcements.length;
