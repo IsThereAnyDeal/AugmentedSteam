@@ -231,7 +231,7 @@ class ContextMenu {
             if (!SyncedStorage.get(option)) { continue; }
             chrome.contextMenus.create({
                 "id": option,
-                "title": Localization.str.options[option] + (option === "context_steam_keys" ? "" : " '%s'"),
+                "title": Localization.str.options[option].replace("__query__", "%s"),
                 "contexts": ["selection"]
             });
         }
