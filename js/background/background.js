@@ -781,16 +781,23 @@ class IndexedDB {
 
         let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor();
 
-        let results = withKeys ? {} : [];
-        while (cursor && cursor.key !== "expiry") {
-            if (withKeys) {
-                results[cursor.key] = IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-            } else {
-                results.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params));
-            }
+        let promises = [];
+        let keys;
+        if (withKeys) keys = [];
+        while (cursor) {
+            if (cursor.key !== "expiry") {
+                if (withKeys) keys.push(cursor.key);
+                promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params));
+            }            
             cursor = await cursor.continue();
         }
-        return results;
+        if (withKeys) {
+            return (await Promise.all(promises)).reduce((acc, cur, i) => {
+                acc[keys[i]] = cur;
+                return acc;
+            }, {});
+        }
+        return Promise.all(promises);
     }
 
     static async getFromIndex(objectStoreName, indexName, key, asKey, params) {
