@@ -306,7 +306,7 @@ let Options = (function(){
             for (let node of nodes) {
                 let translation = Localization.getString(node.dataset.localeText);
                 if (translation) {
-                    node.textContent = translation;
+                    node.textContent = translation.replace("__query__", "...");
                 } else {
                     console.warn(`Missing translation ${node.dataset.localeText}`);
                 }
