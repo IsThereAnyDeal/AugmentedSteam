@@ -1568,6 +1568,7 @@ let Highlights = (function(){
                 break;
             }
 
+            case node.classList.contains("info"):
             case node.classList.contains("spotlight_content"):
                 node = node.parentElement;
                 // don't break
