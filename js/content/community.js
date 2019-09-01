@@ -310,10 +310,10 @@ let CommentHandler = (function(){
 
     async function loadScripts() {
         scriptsLoading = true;
-        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
-        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
-        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
-        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
+        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
+        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
+        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
+        await ExtensionLayer.loadInPageContext("https://steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
     }
 
     async function addEditors() {

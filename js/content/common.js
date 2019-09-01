@@ -215,6 +215,11 @@ let ExtensionLayer = (function() {
     // NOTE: use cautiously!
     // Load remote script in the context of the current tab
     self.loadInPageContext = function(url) {
+        if (url.startsWith("//")) { // TODO remove when not needed
+            url = window.location.protocol + url;
+            console.warn("Requesting URL without protocol, please update");
+        }
+
         return new Promise(function(resolve, reject) {
             let domain = new URL(url).hostname;
             if (!whitelist.includes(domain)) {
