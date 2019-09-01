@@ -1635,8 +1635,6 @@ let Highlights = (function(){
     self.highlightAndTag = async function(nodes) {
 
         let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
-        let appids;
-        if (includeOtherGames) appids = [];
 
         for (let node of nodes) {
             let nodeToHighlight = node;

@@ -194,7 +194,9 @@ class ITAD_Api extends Api {
 
     static endpointFactoryCached(endpoint, objectStore, multiple, oneDimensional, resultFn) {
         return async (params, dbKey) => {
-            return super.endpointFactoryCached(endpoint, objectStore, multiple, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey)
+            if (ITAD_Api.isConnected()) {
+                return super.endpointFactoryCached(endpoint, objectStore, multiple, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
+            }
         }
     }
 
@@ -612,34 +614,39 @@ class Steam {
             if (!rgOwnedApps) {
                 throw new Error("Could not fetch DynamicStore UserData");
             }
-            let ownedElsewhere = {};
-            let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
-            games.forEach(({ gameid, types }) => {
-                types = types.filter(type => type !== "steam");
-                if (!types.length) return;
 
-                types = types.map(type => typemap[type]);
+            let promises = [];
+            if (games) {
+                let ownedElsewhere = {};
+                let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
+                games.forEach(({ gameid, types }) => {
+                    types = types.filter(type => type !== "steam");
+                    if (!types.length) return;
 
-                if (includeOtherGames) {
-                    if (gameid.startsWith("app/")) {
-                        rgOwnedApps.push(Number(gameid.slice(gameid.indexOf('/') + 1)));
-                    } else if (gameid.startsWith("sub/")) {
-                        rgOwnedPackages.push(Number(gameid.slice(gameid.indexOf('/') + 1)));
+                    types = types.map(type => typemap[type]);
+
+                    if (includeOtherGames) {
+                        if (gameid.startsWith("app/")) {
+                            rgOwnedApps.push(Number(gameid.slice(gameid.indexOf('/') + 1)));
+                        } else if (gameid.startsWith("sub/")) {
+                            rgOwnedPackages.push(Number(gameid.slice(gameid.indexOf('/') + 1)));
+                        }
                     }
-                }
 
-                ownedElsewhere[gameid] = types;
-            });
+                    ownedElsewhere[gameid] = types;
+                    promises.push(IndexedDB.putCached("ownedElsewhere", Object.values(ownedElsewhere), Object.keys(ownedElsewhere), true));
+                });
+            }
+
             let data = {
                 "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
                 "ownedApps": rgOwnedApps,
                 "ownedPackages": rgOwnedPackages,
                 "wishlisted": rgWishlist,
             };
-            return Promise.all([
-                IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true),
-                IndexedDB.putCached("ownedElsewhere", Object.values(ownedElsewhere), Object.keys(ownedElsewhere), true),
-            ]);
+            promises.push(IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true));
+
+            return Promise.all(promises);
         })
         .finally(() => Steam._dynamicstore_promise = null);
 
