@@ -1398,7 +1398,7 @@ class AppPageClass extends StorePageClass {
             if (!response || !response[appid] || !response[appid].success) { return; }
 
             supportInfo = response[appid].data.support_info;
-            supportInfo.expiry = Date.now() + 2592000000; // 30 days
+            supportInfo.expiry = Math.trunc(Date.now() / 1000) + 30 * 24 * 60 * 60;
             cache[appid] = supportInfo;
             LocalStorage.set("support_infos", cache);
         }
