@@ -884,7 +884,7 @@ class IndexedDB {
             
             return Promise.all(promises);
         } else {
-            return IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key)
+            return IndexedDB.db.transaction(objectStoreName).store.openCursor(key)
                 .then(cursor => {
                     if (cursor) {
                         return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
