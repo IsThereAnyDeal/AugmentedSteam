@@ -403,7 +403,9 @@ class SyncedStorage {
             for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
                 that.cache[key] = val;
             }
-            ContextMenu.update();
+            if (typeof ContextMenu !== "undefined") {
+                ContextMenu.update();
+            }
         }
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
