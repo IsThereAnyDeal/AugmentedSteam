@@ -566,25 +566,7 @@ let ProfileHomePageClass = (function(){
             }
 
             document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
-            ExtensionLayer.runInPageContext(`function() {
-                $J(document).on("click", ".es_copy", function(event) {
-                    let elem = $J(event.target).closest(".es_copy");
-                    let text = elem.data("copy");
-                    setClipboard(text);
-                    window.idDialog.Dismiss();
-                    ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${Localization.str.copied}\`.replace("__text__", text));
-                });
-
-                function setClipboard(content) {
-                    // Based on https://stackoverflow.com/a/12693636
-                    document.oncopy = function(event) {
-                        event.clipboardData.setData("Text", content);
-                        event.preventDefault();
-                    };
-                    document.execCommand("Copy");
-                    document.oncopy = undefined;
-                }
-            }`)
+            document.addEventListener("click", copySteamId);
         }
 
         // Insert the links HMTL into the page
@@ -597,6 +579,19 @@ let ProfileHomePageClass = (function(){
                 HTML.beforeEnd(rightColNode, '<div class="profile_item_links">' + htmlstr + '</div>');
                 HTML.afterEnd(rightColNode, '<div style="clear: both;"></div>');
             }
+        }
+
+        function copySteamId(e) {
+            let elem = e.target.closest(".es_copy");
+            if (!elem) { return }
+
+            let text = elem.dataset.copy;
+            Clipboard.set(text);
+
+            ExtensionLayer.runInPageContext(`function() {
+                window.idDialog.Dismiss();
+                ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${Localization.str.copied}\`.replace("__text__", "${text}"));
+            }`)
         }
 
         function showSteamIdDialog() {

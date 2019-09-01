@@ -2123,6 +2123,22 @@ let Common = (function(){
     return self;
 })();
 
+let Clipboard = (function(){
+    
+    let self = {};
+
+    self.set = function(content) {
+        // Based on https://stackoverflow.com/a/12693636
+        document.oncopy = function(event) {
+            event.clipboardData.setData("Text", content);
+            event.preventDefault();
+        };
+        document.execCommand("Copy");
+        document.oncopy = undefined;
+    };
+
+    return self;
+})();
 
 class MediaPage {
 
