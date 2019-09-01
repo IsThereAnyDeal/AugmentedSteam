@@ -246,7 +246,6 @@ class Messenger {
 
 // Inject the Messenger class into the DOM, providing the same interface for the page context side
 (function() {
-    if (location.pathname === "/options.html") { return; }
     let script = document.createElement("script");
     script.textContent = Messenger.toString();
     document.documentElement.appendChild(script);

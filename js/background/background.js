@@ -778,8 +778,6 @@ let actionCallbacks = new Map([
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
 
-    ['contextmenu.update', ContextMenu.update],
-
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 // new Map() for Map.prototype.get() in lieu of:

@@ -549,10 +549,6 @@ let Options = (function(){
 
         SyncedStorage.set(option, value);
         SaveIndicator.show();
-
-        if (option.startsWith("context_")) {
-            Background.action("contextmenu.update");
-        }
     }
 
     function changeFlag(node, selectnode) {

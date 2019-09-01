@@ -403,6 +403,7 @@ class SyncedStorage {
             for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
                 that.cache[key] = val;
             }
+            ContextMenu.update();
         }
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
@@ -600,13 +601,13 @@ SyncedStorage.defaults = {
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
 
-    'context_steam_store': true,
+    'context_steam_store': false,
     'context_steam_market': false,
-    'context_itad': true,
+    'context_itad': false,
     'context_bartervg': false,
-    'context_steamdb': true,
+    'context_steamdb': false,
     'context_steamdb_instant': false,
-    'context_steam_keys': true,
+    'context_steam_keys': false,
 };
 
 
