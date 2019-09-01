@@ -91,9 +91,10 @@ let ProfileData = (function(){
     return self;
 })();
 
-let SpamCommentHandler = (function(){
+let CommentHandler = (function(){
 
     let spamRegex = null;
+    let self = {};
 
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
@@ -159,8 +160,6 @@ let SpamCommentHandler = (function(){
         }
     }
 
-    let self = {};
-
     self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
 
@@ -181,6 +180,131 @@ let SpamCommentHandler = (function(){
             handleAllCommentThreads(latestFrame.document);
         });
         observer.observe(modalWait, {attributes: true});
+    };
+
+    function updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+        LocalStorage.set("fav_emoticons", favs);
+
+        if (name && favs.includes(name) && favs.length > 1) {
+            HTML.beforeEnd(favBox, buildEmoticonOption(name));
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            finalizeFav(node, emoticonPopup, favRemove);
+        } else if (name && !favs.includes(name) && favs.length > 0) {
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            if (!node) { return; }
+            node.parentNode.removeChild(node);             
+        } else {
+            let favsHtml = buildFavBox(favs);
+            HTML.inner(favBox, favsHtml);
+            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+                finalizeFav(node, emoticonPopup, favRemove);
+            });
+        }
+    }
+
+    function finalizeFav(node, emoticonPopup, favRemove) {
+        node.draggable = true;
+        node.querySelector("img").draggable = false;
+        node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+        node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove));
+    }
+
+    function dragFavEmoticon(ev) {
+        ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+    }
+
+    function clickFavEmoticon(ev, emoticonPopup, favRemove) {
+        let name = ev.target.closest(".emoticon_option").dataset.emoticon;
+        let noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        noFav.click();
+    }
+
+    function buildFavBox(favs=[]) {
+        let favsHtml;
+        if (!favs.length) {
+            favsHtml = Localization.str.fav_emoticons_dragging;
+        } else {
+            favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("");
+        }
+        return favsHtml;
+    }
+
+    function buildEmoticonOption(name) {
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="https://steamcommunity-a.akamaihd.net/economy/emoticon/${name}" class="emoticon"></div>`;
+    }
+
+    self.addFavoriteEmoticons = function() {
+        let observer = new MutationObserver(() => {
+            let emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
+            if (!emoticonPopup) { return; }
+
+            emoticonPopup.classList.add("es_emoticons");
+            emoticonPopup.style.maxWidth = "352px";
+            emoticonPopup.querySelectorAll(".emoticon_option").forEach(function(node) {
+                node.draggable = true;
+                node.querySelector("img").draggable = false;
+                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
+            });
+            
+            let favs = LocalStorage.get("fav_emoticons", []);
+            HTML.afterBegin(emoticonPopup, 
+                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
+                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                </div>`);
+                
+            let favBox = emoticonPopup.querySelector("#es_fav_emoticons");
+            let favRemove = emoticonPopup.querySelector("#es_fav_remove");
+            updateFavs(favs, emoticonPopup, favBox, favRemove);
+
+            favBox.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragenter", function(ev) {
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragleave", function(ev) {
+                favBox.style.backgroundColor = null;
+            });
+
+            favBox.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favBox.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                if (favs.includes(name)) { return; }
+
+                favs.push(name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+
+            favRemove.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favRemove.style.backgroundColor = "black";
+            });
+            
+            favRemove.addEventListener("dragenter", function(ev) {
+                favRemove.style.backgroundColor = "black";
+            });
+
+            favRemove.addEventListener("dragleave", function(ev) {
+                favRemove.style.backgroundColor = null;
+            });
+
+            favRemove.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favRemove.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                favs = favs.filter(fav => fav !== name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+        });
+
+        observer.observe(document.body, { childList: true });
     };
 
     return self;
@@ -289,7 +413,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
-            SpamCommentHandler.hideSpamComments();
+            CommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -318,7 +442,7 @@ let ProfileHomePageClass = (function(){
         this.changeUserBackground();
         this.addProfileStoreLinks();
         this.addSteamRepApi();
-        this.addPostHistoryLink();
+        this.userDropdownOptions();
         this.inGameNameLink();
         this.addProfileStyle();
         this.addTwitchInfo();
@@ -668,9 +792,27 @@ let ProfileHomePageClass = (function(){
         });
     };
 
-    ProfileHomePageClass.prototype.addPostHistoryLink = function() {
+    ProfileHomePageClass.prototype.userDropdownOptions = function() {
+
         let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         if (!node) { return; }
+
+        // add nickname option for non-friends
+        if (User.isSignedIn) {
+
+            // check whether we can chat => if we can we are friends => we have nickname option
+            let canAddFriend = document.querySelector("#btn_add_friend");
+            if (canAddFriend) {
+
+                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
+
+                node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
+                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                });
+            }
+        }
+
+        // post history link
         HTML.afterEnd(node,
                 `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
@@ -835,10 +977,9 @@ let ProfileHomePageClass = (function(){
         let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let href = sendButton.href;
-
-        let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
+        let chatId = m[1];
 
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
@@ -860,7 +1001,10 @@ let ProfileHomePageClass = (function(){
                 </div>
             </div>`);
         sendButton.remove();
-        document.getElementById("btnWebChat").href = href.replace("OpenFriendChat", "OpenFriendChatInWebChat"); // Workaround: 'onclick' and js-href gets removed when inserting HTML
+
+        document.querySelector("#btnWebChat").addEventListener("click", function(){
+            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+        });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
@@ -1285,6 +1429,7 @@ let StatsPageClass = (function(){
         }
 
         this.addAchievementSort();
+        this.showEntireDescriptions();
     }
 
     let _nodes = {
@@ -1357,6 +1502,15 @@ let StatsPageClass = (function(){
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);
         });
+    };
+    
+
+    StatsPageClass.prototype.showEntireDescriptions = function() {
+        // .ellipsis is only added by Steam on personal stats pages
+        let nodes = document.querySelectorAll("h5.ellipsis");
+        for (let node of nodes) {
+            node.classList.remove("ellipsis");
+        }
     };
 
     return StatsPageClass;
@@ -3491,6 +3645,111 @@ class WorkshopPageClass {
     }
 }
 
+let WorkshopBrowseClass = (function(){
+
+    function WorkshopBrowseClass() {
+        this.addSubscriberButtons();
+    }
+
+    WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        let appid = GameId.getAppidUriQuery(window.location.search);
+        if (!appid) { return; }
+        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
+
+        let subscriberButtons = `
+            <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
+            <div id="es_subscriber_container" class="rightDetailsBlock">
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
+                    </div>
+                </div>
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
+                    </div>
+                </div>
+                <hr>
+            </div>`;
+
+        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
+
+        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(
+                document.querySelector(".workshopBrowsePagingInfo").textContent
+                    .replace(/\d+-\d+/g, "")
+                    .match(/\d+/g)[0]);
+
+            startSubscriber(method, total);
+        });
+
+        function startSubscriber(method, total) {
+            let i = -1;
+
+            ExtensionLayer.runInPageContext(`function(){
+                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("startSubscriber");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
+                }`)
+            }
+
+            function changeSubscription(id) {
+                return new Promise(function(resolve) {
+                    let formData = new FormData();
+                    formData.append("sessionid", User.getSessionId());
+                    formData.append("appid", appid);
+                    formData.append("id", id);
+
+                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                        withCredentials: true
+                    }).then(function() {
+                        updateWaitDialog();
+                        resolve();
+                    });
+                });
+            }
+
+            Messenger.addMessageListener("startSubscriber", async function() {
+                updateWaitDialog();
+
+                let workshopItems = [];
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                    let url = new URL(window.location.href);
+                    url.searchParams.set("p", p);
+                    url.searchParams.set("numperpage", 30);
+    
+                    let result = await RequestData.getHttp(url.toString());
+                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+
+                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                        workshopItems.push(node.id.replace("sharedfile_", ""))
+                    }
+                }
+    
+                Promise.all(
+                    workshopItems
+                        .map(id => changeSubscription(id)))
+                        .finally(() => { location.reload(); });
+            }, true)
+        }
+    };
+
+    return WorkshopBrowseClass;
+})();
+
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -3498,7 +3757,8 @@ class WorkshopPageClass {
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
+    CommentHandler.hideSpamComments();
+    CommentHandler.addFavoriteEmoticons();
 
     switch (true) {
 
@@ -3562,9 +3822,13 @@ class WorkshopPageClass {
             (new WorkshopPageClass());
             break;
 
+        case /^\/workshop\/browse/.test(path):
+            (new WorkshopBrowseClass());
+            break;
+
         case /^\/tradingcards\/boostercreator/.test(path):
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+                .textContent.trim().replace(/[\d]+,?/g, "");
 
             ExtensionLayer.runInPageContext(`function() {
                 $J("#booster_game_selector option").each(function(index) {

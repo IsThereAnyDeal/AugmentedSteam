@@ -10,7 +10,14 @@
 .btn_profile_action:hover > span, .btn_profile_action.focus > span {
 	background: linear-gradient( to bottom, #6e6e6e 5%, #272727 95%) !important;
 }
+.profile_customization_header {
+	color: #868686 !important;
+}
 .profile_header_badge {
 	background-color: rgba(22,22,22, 0.6) !important;
 	box-shadow: none !important;
+}
+.profile_customization.customization_edit.none_selected {
+	background: #404040 !important;
+	border: 1px dashed #868686 !important;
 }
