@@ -3538,12 +3538,10 @@ let GroupAnnouncementsPage = (function(){
             }
 
             function deleteAnnouncement(url) {
-                return new Promise(async resolve => {
-                    await RequestData.getHttp(url);
+                return RequestData.getHttp(url).then(function() {
                     i++;
                     updateWaitDialog();
-                    resolve();
-                });
+                }).catch(console.error);
             }
 
             async function getAnnouncements(page, hidden) {
