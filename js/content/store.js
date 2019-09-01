@@ -1420,8 +1420,9 @@ class AppPageClass extends StorePageClass {
                 continue;
             }
 
-            let parts = homepageLink.pathname.split(`/`);
-            linkNode.href = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
+            let name = homepageLink.pathname.split("/")[1];
+            let value = linkNode.innerText;
+            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
     }
