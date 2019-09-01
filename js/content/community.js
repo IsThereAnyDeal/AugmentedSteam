@@ -3676,31 +3676,14 @@ let WorkshopBrowseClass = (function(){
             }
 
             function changeSubscription(id) {
-                return new Promise(function(resolve, reject) {
-                    let formData = new FormData();
-                    formData.append("sessionid", User.getSessionId());
-                    formData.append("appid", appid);
-                    formData.append("id", id);
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid);
+                formData.append("id", id);
 
-                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
-                        withCredentials: true
-                    }, true).then(function(res) {
-                        completed++;
-                        if (res && res.success && res.success === 1) {
-                            updateWaitDialog();
-                            resolve();
-                        } else {
-                            failed++;
-                            updateWaitDialog();
-                            reject(new Error("Bad response"))
-                        }
-                    }).catch(function(err) {
-                        completed++;
-                        failed++;
-                        updateWaitDialog();
-                        reject(err);
-                    });
-                });
+                return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                    withCredentials: true
+                }, true)
             }
 
             Messenger.addMessageListener("startSubscriber", async function() {
@@ -3724,9 +3707,14 @@ let WorkshopBrowseClass = (function(){
                     url.searchParams.set("p", p);
                     url.searchParams.set("numperpage", 30);
     
-                    let result = await RequestData.getHttp(url.toString());
-                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                    if (!result) {
+                        await sleep(10000);
+                        p--;
+                        continue;
+                    }
 
+                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
                     for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
                         let subNode = node.querySelector(".user_action_history_icon.subscribed");
                         if (canSkip(method, subNode)) { continue; }
@@ -3741,8 +3729,21 @@ let WorkshopBrowseClass = (function(){
     
                 Promise.all(
                     workshopItems
-                        .map(id => changeSubscription(id)))
-                        .catch((err) => console.error(err))
+                        .map(id => changeSubscription(id)
+                        .then(function(res) {
+                            if (!res || !res.success || res.success !== 1) {
+                                failed++;
+                                console.error(new Error("Bad response"))
+                            }
+                            completed++;
+                            updateWaitDialog();
+                        })
+                        .catch(function(err) {
+                            failed++;
+                            completed++;
+                            updateWaitDialog();
+                            console.error(err);
+                        })))
                         .finally(() => { location.reload(); });
             }, true)
         }
