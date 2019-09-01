@@ -3329,7 +3329,7 @@ let WishlistPageClass = (function(){
         function doExport(method, content, filename) {
             switch (method) {
                 case "clipboard":
-                    setClipboard(content)
+                    Clipboard.set(content)
                     break;
                 case "download":
                     Downloader.download({ content, filename });
@@ -3337,16 +3337,6 @@ let WishlistPageClass = (function(){
                 default:
                     break;
             }
-        }
-
-        function setClipboard(content) {
-            // Based on https://stackoverflow.com/a/12693636
-            document.oncopy = function(event) {
-                event.clipboardData.setData("Text", content);
-                event.preventDefault();
-            };
-            document.execCommand("Copy");
-            document.oncopy = undefined;
         }
     };
 
