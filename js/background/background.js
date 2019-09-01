@@ -79,35 +79,36 @@ class Api {
     }
     static endpointFactoryCached(endpoint, objectStoreName, multiple, oneDimensional, resultFn) {
         return async (params, dbKey) => {
-            let req = this.getEndpoint(endpoint, params)
-                .then(result => {
-                    if (resultFn) return resultFn(result.data);
-                    return result.data;
-                })
-                .then(async finalResult => {
-                    if (!dbKey) {
-                        dbKey = Object.keys(finalResult).map(key => {
-                            let intKey = Number(key);
-                            if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
-                                return intKey;
-                            }
-                            return key;
-                        });
-                        finalResult = Object.values(finalResult);
-                    } else {
-                        let intKey = Number(dbKey);
-                        if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
-                            dbKey = intKey;
-                        }
+            let result = await this.getEndpoint(endpoint, params);
+
+            let finalResult;
+            if (resultFn) {
+                finalResult = resultFn(result.data);
+            } else {
+                finalResult = result.data;
+            }
+            
+            if (!dbKey) {
+                dbKey = Object.keys(finalResult).map(key => {
+                    let intKey = Number(key);
+                    if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
+                        return intKey;
                     }
-                    await IndexedDB.putCached(
-                        objectStoreName,
-                        oneDimensional ? null : finalResult,
-                        oneDimensional ? finalResult : dbKey,
-                        multiple,
-                    );
+                    return key;
                 });
-            return req;
+                finalResult = Object.values(finalResult);
+            } else {
+                let intKey = Number(dbKey);
+                if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
+                    dbKey = intKey;
+                }
+            }
+            return IndexedDB.putCached(
+                objectStoreName,
+                oneDimensional ? null : finalResult,
+                oneDimensional ? finalResult : dbKey,
+                multiple,
+            );
         };
     }
 
@@ -149,32 +150,30 @@ AugmentedSteamApi._progressingRequests = new Map();
 
 class ITAD_Api extends Api {
 
-    static authorize(hash) {
-        return new Promise(resolve => {
-            browser.permissions.request({ permissions: ["identity"] }).then(granted => {
-                if (granted) {
-                    browser.identity.launchWebAuthFlow({ url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`, interactive: true })
-                        .then(url => {
-                            if (url) {
-                                let hashFragment = new URL(url).hash;
-                                if (hashFragment) {
-                                    let params = new URLSearchParams(hashFragment.substr(1));
-        
-                                    if (parseInt(params.get("state"), 10) === hash) {
-                                        let accessToken = params.get("access_token");
-                                        let expiresIn = params.get("expires_in");
-            
-                                        if (accessToken && expiresIn) {
-                                            resolve();
-                                            localStorage.setItem("access_token", JSON.stringify({ token: accessToken, expiry: window.timestamp() + parseInt(expiresIn, 10) }));
-                                        } else throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'");
-                                    } else throw new Error("Failed to verify state parameter from URL fragment");
-                                } else throw new Error("URL " + url + " doesn't contain a fragment");
-                            } else throw new Error("Couldn't retrieve access token for ITAD authorization");
-                        });
-                } else throw new Error("Denied accessing identity API, can't authorize app");
+    static async authorize(hash) {
+        let granted = await browser.permissions.request({ permissions: ["identity"] });
+        if (!granted) { throw new Error("Denied accessing identity API, can't authorize app"); }
+
+        let url = await browser.identity.launchWebAuthFlow(
+            {
+                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`,
+                interactive: true
             });
-        });
+        if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
+
+        let hashFragment = new URL(url).hash;
+        if (!hashFragment) { throw new Error("URL " + url + " doesn't contain a fragment"); }
+
+        let params = new URLSearchParams(hashFragment.substr(1));
+
+        if (parseInt(params.get("state"), 10) !== hash) { throw new Error("Failed to verify state parameter from URL fragment"); }
+
+        let accessToken = params.get("access_token");
+        let expiresIn = params.get("expires_in");
+
+        if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
+            
+        LocalStorage.set("access_token", { token: accessToken, expiry: window.timestamp() + parseInt(expiresIn, 10) });
     }
 
     static isConnected() {
@@ -680,42 +679,40 @@ Steam._supportedCurrencies = null;
 
 class IndexedDB {
     static init() {
-        if (!IndexedDB._promise) {
-            IndexedDB._promise = async () => {
-                IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
-                    upgrade(db, oldVersion) {
-                        switch(oldVersion) {
-                            case 0: {
-                                db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
-                                db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
-                                db.createObjectStore("items");
-                                db.createObjectStore("earlyAccessAppids");
-                                db.createObjectStore("purchases");
-                                db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
-                                db.createObjectStore("packages");
-                                db.createObjectStore("storePageData");
-                                db.createObjectStore("profiles");
-                                db.createObjectStore("rates");
-                                db.createObjectStore("notes");
-                                db.createObjectStore("collection");
-                                db.createObjectStore("waitlist");
-                                db.createObjectStore("ownedElsewhere");
-                                db.createObjectStore("itadSync").createIndex("id", '', { unique: false, multiEntry: true });
-                                break;
-                            }
-                            default: {
-                                console.warn("Unknown oldVersion", oldVersion);
-                                break;
-                            }
+        if (IndexedDB._promise) { return IndexedDB._promise; }
+        return IndexedDB._promise = async () => {
+            IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
+                upgrade(db, oldVersion) {
+                    switch(oldVersion) {
+                        case 0: {
+                            db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
+                            db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
+                            db.createObjectStore("items");
+                            db.createObjectStore("earlyAccessAppids");
+                            db.createObjectStore("purchases");
+                            db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
+                            db.createObjectStore("packages");
+                            db.createObjectStore("storePageData");
+                            db.createObjectStore("profiles");
+                            db.createObjectStore("rates");
+                            db.createObjectStore("notes");
+                            db.createObjectStore("collection");
+                            db.createObjectStore("waitlist");
+                            db.createObjectStore("ownedElsewhere");
+                            db.createObjectStore("itadSync").createIndex("id", '', { unique: false, multiEntry: true });
+                            break;
                         }
-                    },
-                    blocked() {
-                        console.error("Failed to upgrade database, there is already an open connection");
-                    },
-                });
-            };
-        }
-        return IndexedDB._promise;
+                        default: {
+                            console.warn("Unknown oldVersion", oldVersion);
+                            break;
+                        }
+                    }
+                },
+                blocked() {
+                    console.error("Failed to upgrade database, there is already an open connection");
+                },
+            });
+        };
     }
     static then(onDone, onCatch) {
         return IndexedDB.init()().then(onDone, onCatch);

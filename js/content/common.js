@@ -1219,18 +1219,17 @@ let EarlyAccess = (function(){
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
         let appidsMap = new Map();
 
-        selectors.forEach(selector => {
-            let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
-            nodes.forEach(node => {
-                node.classList.add("es_ea_checked");
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(',');
+        let nodes = document.querySelectorAll(selector);
+        nodes.forEach(node => {
+            node.classList.add("es_ea_checked");
 
-                let linkNode = node.querySelector("a");
-                let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
-                let imgHeader = node.querySelector("img" + selectorModifier);
-                let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
+            let linkNode = node.querySelector("a");
+            let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid) appidsMap.set(appid, node);
-            });
+            if (appid) appidsMap.set(appid, node);
         });
 
         let appids = Array.from(appidsMap.keys()).map(key => Number(key));
