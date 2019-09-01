@@ -2471,8 +2471,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 .esi-note {
 	font-size: 11px;
-	overflow: hidden;
-	height: 19px;
+	height: fit-content;
 	margin-top:5px;
 	flex-grow:2;
 	margin-right:5px;
