@@ -437,8 +437,8 @@ let CommentHandler = (function(){
                 let text = g_textarea.getSelection();
                 let Modal = ShowConfirmDialog("URL",
                     `<div class="commentthread_entry_quotebox">
-                        <textarea class="commentthread_textarea" id="es_url" rows="1">
-                    </textarea></div>`
+                        <textarea class="commentthread_textarea" id="es_url" rows="1"></textarea>
+                    </div>`
                 );
                 
                 let url = "";
