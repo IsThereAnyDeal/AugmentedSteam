@@ -3253,7 +3253,7 @@ let WishlistPageClass = (function(){
         }, true);
     }
 
-    WishlistPageClass.prototype.showModalDialog = function() {
+    WishlistPageClass.prototype.showExportModalDialog = function() {
         ExtensionLayer.runInPageContext(`function() {
             let options = {};
             let Modal = ShowConfirmDialog(
@@ -3355,7 +3355,7 @@ let WishlistPageClass = (function(){
 
         let that = this;
         document.querySelector("#es_export_wishlist").addEventListener("click", function() {
-            that.showModalDialog();
+            that.showExportModalDialog();
         });
     };
 
