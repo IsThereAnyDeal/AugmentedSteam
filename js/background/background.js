@@ -269,7 +269,7 @@ class SteamStore extends Api {
     // static params = { 'credentials': 'include', };
     // static _progressingRequests = new Map();
 
-    static async fetchPackage(subid) {
+    static async fetchPackage(params, subid) {
         let data = await SteamStore.getEndpoint("/api/packagedetails/", { "packageids": subid, });
         let promises = [];
         for (let [subid, details] of Object.entries(data)) {
@@ -470,11 +470,12 @@ class SteamCommunity extends Api {
             }
         }
 
-        let packagesKeys = Object.keys(coupons);
+        let packagesKeys = Object.keys(coupons).map(key => Number(key));
         let packagesArr = await IndexedDB.get("packages", packagesKeys);
         
         let packages = packagesArr.reduce((accumulator, current, i) => {
             accumulator[packagesKeys[i]] = current;
+            return accumulator;
         }, {});
 
         for (let [subid, coupon] of Object.entries(coupons)) {
