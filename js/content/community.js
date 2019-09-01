@@ -3684,6 +3684,20 @@ let WorkshopBrowseClass = (function(){
                 return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
                     withCredentials: true
                 }, true)
+                .then(function(res) {
+                    if (!res || !res.success || res.success !== 1) {
+                        failed++;
+                        console.error(new Error("Bad response"))
+                    }
+                    completed++;
+                    updateWaitDialog();
+                })
+                .catch(function(err) {
+                    failed++;
+                    completed++;
+                    updateWaitDialog();
+                    console.error(err);
+                })
             }
 
             Messenger.addMessageListener("startSubscriber", async function() {
@@ -3729,21 +3743,7 @@ let WorkshopBrowseClass = (function(){
     
                 Promise.all(
                     workshopItems
-                        .map(id => changeSubscription(id)
-                        .then(function(res) {
-                            if (!res || !res.success || res.success !== 1) {
-                                failed++;
-                                console.error(new Error("Bad response"))
-                            }
-                            completed++;
-                            updateWaitDialog();
-                        })
-                        .catch(function(err) {
-                            failed++;
-                            completed++;
-                            updateWaitDialog();
-                            console.error(err);
-                        })))
+                        .map(id => changeSubscription(id)))
                         .finally(() => { location.reload(); });
             }, true)
         }
