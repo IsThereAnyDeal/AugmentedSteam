@@ -1,4 +1,15 @@
 {
+    "support": "客服",
+    "email": "電子信箱",
+    "contact": "聯絡方式",
+    "fav_emoticons_dragging": "拖曳表情符號至此以將其加入最愛",
+    "subscriptions": "訂閱項目",
+    "subscribe_all": "訂閱全部",
+    "unsubscribe_all": "取消訂閱全部",
+    "subscribe_confirm": "你確定要套用這些篩選條件訂閱全部 __count__ 個工作坊物品？",
+    "unsubscribe_confirm": "你確定要套用這些篩選條件取消訂閱全部 __count__ 個工作坊物品？",
+    "subscribe_loading": "正在訂閱工作坊物品 __i__/__count__，請稍候…",
+    "unsubscribe_loading": "正在取消訂閱工作坊物品 __i__/__count__，請稍候…",
     "post_history": "檢視發佈歷史",
     "add_nickname": "新增暱稱",
     "total_size": "總共大小",
@@ -158,7 +169,7 @@
     "discount": "折扣",
     "discountper": "折扣（百分比）",
     "discountabs": "折扣（金額）",
-    "rating_details": "檢視分級資訊",
+    "rating_details": "檢視評分詳情",
     "drops_worth_avg": "大約值",
     "using_store_return": "按此返回 __base__ 地區的商店",
     "family_sharing_notice": "<b>注意：</b>這款遊戲不支援 Steam 親友同享服務。",
@@ -440,7 +451,7 @@
         "show_badge_progress": "在商店頁面中顯示徽章進度",
         "show_coupon": "在商店頁面中顯示可用的優惠券",
         "show_wishlist_link": "在個人檔案中顯示願望清單連結",
-        "show_wishlist_count": "在願望清單中顯示總數量",
+        "show_wishlist_count": "顯示願望清單總數",
         "profile_showcase_twitch": "如果有連結，顯示 Twitch.tv 展示欄",
         "profile_showcase_own_twitch": "…包括你自己的個人檔案",
         "profile_showcase_twitch_profileonly": "…僅當連結位於個人檔案摘要中時",
@@ -490,7 +501,7 @@
     },
     "survey": {
         "performance_survey": "效能調查",
-        "users": "__users__ 位使用者已完成這款遊戲的效能調查",
+        "users": "__users__ 位使用者已完成這款遊戲的效能調查。",
         "framerate": "幀率",
         "framerate_response": "使用者反應幀率",
         "framerate_30": "固定在每秒 30 幀以下",
@@ -504,7 +515,7 @@
         "satisfaction": "GPU 效能表現",
         "gs_y": "有內建圖形設定或圖形選單",
         "gs_n": "無內建圖形設定或圖形選單",
-        "nobody": "尚未有人參與這款遊戲的效能調查",
+        "nobody": "尚未有人參與這款遊戲的效能調查。",
         "take": "參與調查"
     },
     "select": {
@@ -586,5 +597,6 @@
     },
     "this_version": "此版本",
     "original_authors": "原版作者",
+    "acknowledgements": "致謝",
     "powered_by": "由 __link__ 提供"
 }

@@ -453,7 +453,7 @@
     },
     "survey": {
         "performance_survey": "Průzkum",
-        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru",
+        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru.",
         "framerate": "Snímková frekvence",
         "framerate_response": "odpovědělo že snímková frekvence byla",
         "framerate_30": "uzamčena na 30 FPS nebo méně",
@@ -467,7 +467,7 @@
         "satisfaction": "Poměr mezi grafickými kartami",
         "gs_y": "Má možnost nastavení grafiky",
         "gs_n": "Nemá možnost nastavení grafiky",
-        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru",
+        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru.",
         "take": "Vyplnit dotazník"
     },
     "select": {

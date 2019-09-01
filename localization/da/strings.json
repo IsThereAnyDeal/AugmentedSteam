@@ -453,7 +453,7 @@
     },
     "survey": {
         "performance_survey": "Præstationsundersøgelse",
-        "users": "__users__ brugere har gennemført præstationsundersøgelsen for dette spil",
+        "users": "__users__ brugere har gennemført præstationsundersøgelsen for dette spil.",
         "framerate": "Framerate",
         "framerate_response": "svarede at frameraten var",
         "framerate_30": "fixed ved 30fps eller lavere",
@@ -467,7 +467,7 @@
         "satisfaction": "Ydeevne tilfredshed af GPU",
         "gs_y": "Har indbygget grafisk muligheder eller en grafik menu",
         "gs_n": "Har ikke indbygget grafik indstillinger eller en grafik menu",
-        "nobody": "Ingen har taget en performance-undersøgelse for dette spil endnu",
+        "nobody": "Ingen har taget en performance-undersøgelse for dette spil endnu.",
         "take": "Tag undersøgelsen"
     },
     "select": {
