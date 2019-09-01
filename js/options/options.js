@@ -547,6 +547,22 @@ let Options = (function(){
             }
         }
 
+        if (option.startsWith("context_")) {
+            chrome.permissions.request({
+                permissions: ["contextMenus"]
+            }, function(granted) {
+                if (!granted) {
+                    let node = document.querySelector("[data-setting='"+option+"']");
+                    if (!node) { return; }
+                    node.checked = false;
+                    return;
+                }
+                SyncedStorage.set(option, value);
+                SaveIndicator.show();
+            });
+            return;
+        }
+
         SyncedStorage.set(option, value);
         SaveIndicator.show();
     }

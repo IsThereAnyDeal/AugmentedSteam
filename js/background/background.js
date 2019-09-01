@@ -189,6 +189,7 @@ AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 class ContextMenu {
     static init() {
+        if (!chrome.contextMenus) { return; }
         ContextMenu.update();
         chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
     }
@@ -226,6 +227,7 @@ class ContextMenu {
     }
     
     static build() {
+        if (!chrome.contextMenus) { return; }
         let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
         for (let option of options) {
             if (!SyncedStorage.get(option)) { continue; }
@@ -238,6 +240,7 @@ class ContextMenu {
     }
     
     static update() {
+        if (!chrome.contextMenus) { return; }
         chrome.contextMenus.removeAll(ContextMenu.build);
     }
 }
