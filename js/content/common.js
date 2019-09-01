@@ -221,6 +221,7 @@ let ExtensionLayer = (function() {
         }
 
         return new Promise(function(resolve, reject) {
+            let whitelist = ["steamcommunity-a.akamaihd.net"];
             let domain = new URL(url).hostname;
             if (!whitelist.includes(domain)) {
                 reject(new Error("Script host not allowed"));
