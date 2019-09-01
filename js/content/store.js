@@ -3069,23 +3069,23 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        this.addEmptyWishlistButton();
+        instance.addEmptyWishlistButton();
 
-        ExtensionLayer.runInPageContext(`function() {
-            let old = g_Wishlist.LoadSettings;
-            g_Wishlist.LoadSettings = function(arguments) {
-                let ret = old.apply(this, arguments);
-                Messenger.postMessage("wishlistLoaded");        
-                return ret;
-            };
-        }`);
-
-        Messenger.addMessageListener("wishlistLoaded", () => {
-            this.addStatsArea();
-            this.addExportWishlistButton();
-            this.addUserNotesHandlers();
-            this.addRemoveHandler();
-        }, true);
+        let throbber = document.querySelector("#throbber");
+        let wishlistLoaded = function() {
+            if (throbber.style.display !== "none") { return; }
+            instance.addStatsArea();
+            instance.addExportWishlistButton();
+            instance.addUserNotesHandlers();
+            instance.addRemoveHandler();
+        };
+        
+        if (throbber.style.display === "none") { 
+            wishlistLoaded();
+        } else {
+            observer = new MutationObserver(wishlistLoaded);
+            observer.observe(throbber, { "attributes": true });
+        }
     }
 
     function isMyWishlist() {
@@ -3315,7 +3315,7 @@ let WishlistPageClass = (function(){
                 for (let i = 0; i < props.length; i++) {
                     if (props[i]) {
                         let prop = app[props[i]] || "";
-                        line += (options.export_type === "CSV" ? prop.replace(/,/g, "") : prop);
+                        line += (options.export_type === "CSV" ? `"${prop.replace(/"/g, `""`)}"` : prop);
                     }
                     if (i !== props.length - 1) {
                         line += (options.export_type === "CSV" ? "," : seps[i] || "");
@@ -3351,7 +3351,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        HTML.beforeEnd("div.wishlist_header", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
+        HTML.afterEnd("div.wishlist_header h2", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
 
         let that = this;
         document.querySelector("#es_export_wishlist").addEventListener("click", function() {
