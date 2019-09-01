@@ -924,9 +924,7 @@ class AppPageClass extends StorePageClass {
             }
         }
 
-        function initFSVButtons(event) {
-            if (event.animationName !== "es_screenshot_popup_modal_hook") return;
-
+        function initFSVButtons() {
             let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
             let nextButton = modalFooter.querySelector(".next");
             let nextButtonOffsetWidth = nextButton.offsetWidth;
@@ -949,7 +947,16 @@ class AppPageClass extends StorePageClass {
             });
         }
 
-        document.addEventListener("animationstart", initFSVButtons);
+        let observer = new MutationObserver(records => {
+            for (let record of records) {
+                for (let node of record.addedNodes) {
+                    if (node.classList.contains("screenshot_popup_modal")) {
+                        initFSVButtons();
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true });
     }
 
     getFirstSubid() {

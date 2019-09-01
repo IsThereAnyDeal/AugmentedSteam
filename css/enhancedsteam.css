@@ -1359,18 +1359,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	width: 40vw;
 	height: 100vh;
 }
-@keyframes es_screenshot_popup_modal_hook {
-	from {
-		opacity: 0.99;
-	}
-	to {
-		opacity: 1;
-	}
-}
-.screenshot_popup_modal {
-	animation-duration: 0.001s;
-	animation-name: es_screenshot_popup_modal_hook;
-}
 
 /***************************************
  * Store and Community
