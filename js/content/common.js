@@ -2121,13 +2121,13 @@ let Downloader = (function(){
     let self = {};
 
     self.download = async function(options) {
+        if (options.url && !options.url.startsWith("blob:") && !options.url.startsWith("data:")) {
+            options.url = await self.toDataURL(options.url).catch(console.error);
+        }
+
         if (options.content) {
             let blob = new Blob([ options.content ], {type : "text/plain;charset=UTF-8"});
             options.url = URL.createObjectURL(blob);
-        }
-
-        if (options.url && !options.url.startsWith("data:")) {
-            options.url = await self.toDataURL(options.url).catch(console.error);
         }
 
         let element = document.createElement("a");
