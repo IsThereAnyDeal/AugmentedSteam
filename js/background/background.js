@@ -177,17 +177,19 @@ class ITAD_Api extends Api {
         });
     }
 
-    static isExpired() {
+    static isConnected() {
+        if (ITAD_Api.accessToken) return true;
         let lsEntry = LocalStorage.get("access_token");
-        if (!lsEntry) return true;
+        if (!lsEntry) return false;
 
         if (lsEntry.expiry <= window.timestamp()) {
             LocalStorage.remove("access_token");
-            return true;
+            return false;
         }
         ITAD_Api.accessToken = lsEntry.token;
+        // todo Periodically sync
         ITAD_Api.sync();
-        return false;
+        return true;
     }
 
     static endpointFactoryCached(endpoint, objectStore, multiple, oneDimensional, resultFn) {
@@ -198,7 +200,7 @@ class ITAD_Api extends Api {
 
     static async sync() {
         let [ownedApps, ownedPackages, wishlistedApps] = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
-        let [lastOwnedApps, lastOwnedPackages, lastWishlistedApps] = await IndexedDB.get("lastItadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
+        let [lastOwnedApps, lastOwnedPackages, lastWishlistedApps] = await IndexedDB.get("itadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
 
         let baseJSON = {
             "version": "02",
@@ -232,7 +234,7 @@ class ITAD_Api extends Api {
             });
 
             promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) })
-                .then(() => IndexedDB.put("lastItadSync", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
+                .then(() => IndexedDB.put("itadSync", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
         }
 
         let newWishlistedApps = removeDuplicates(wishlistedApps, lastWishlistedApps);
@@ -245,7 +247,7 @@ class ITAD_Api extends Api {
             });
 
             promises.push(this.postEndpoint("v01/waitlist/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(wailistJSON) })
-                .then(() => IndexedDB.put("lastItadSync", wishlistedApps, "lastWishlisted")));
+                .then(() => IndexedDB.put("itadSync", wishlistedApps, "lastWishlisted")));
         }
         return Promise.all(promises);
     }
@@ -603,7 +605,7 @@ class Steam {
 
         Steam._dynamicstore_promise = Promise.all([
             SteamStore.getEndpoint("/dynamicstore/userdata/"),
-            IndexedDB.get("itad", "collection", { "shop": "steam", "optional": "gameid,copy_type" }),
+            IndexedDB.getAll("collection", true, { "shop": "steam", "optional": "gameid,copy_type" }),
         ])
         .then(([{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, { games, typemap }]) => {
             if (!rgOwnedApps) {
@@ -687,9 +689,10 @@ class IndexedDB {
                                 db.createObjectStore("profiles");
                                 db.createObjectStore("rates");
                                 db.createObjectStore("notes");
-                                db.createObjectStore("itad");
+                                db.createObjectStore("collection");
+                                db.createObjectStore("waitlist");
                                 db.createObjectStore("ownedElsewhere");
-                                db.createObjectStore("lastItadSync");
+                                db.createObjectStore("itadSync").createIndex("id", '', { unique: false, multiEntry: true });
                                 break;
                             }
                             default: {
@@ -959,12 +962,13 @@ IndexedDB.timestampedObjectStores = new Map([
     ["dynamicStore", 15 * 60],
     ["ownedElsewhere", 15 * 60],
     ["rates", 60 * 60],
+    ["collection", 15 * 60],
+    ["waitlist", 15 * 60],
 ]);
 IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores,
     ["packages", 7 * 24 * 60 * 60],
     ["storePageData", 60 * 60],
     ["profiles", 24 * 60 * 60],
-    ["itad", 15 * 60],
 ]);
 
 // Functions that are called when an object store (or one of its entries) has expired
@@ -980,7 +984,8 @@ IndexedDB.objStoreFetchFns = new Map([
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates", true)],
-    ["itad", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "itad")],
+    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", true)],
+    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist")],
 ]);
 
 let actionCallbacks = new Map([
@@ -1012,7 +1017,7 @@ let actionCallbacks = new Map([
     ["stats", SteamCommunity.stats],
 
     ["itad.authorize", ITAD_Api.authorize],
-    ["itad.checkexpiry", ITAD_Api.isExpired],
+    ["itad.isconnected", ITAD_Api.isConnected],
 
     ["idb.get", IndexedDB.get],
     ["idb.getfromindex", IndexedDB.getFromIndex],

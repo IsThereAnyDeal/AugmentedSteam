@@ -2,25 +2,25 @@
  * Common functions that may be used on any pages
  */
 class ITAD {
-    static create() {
+    static async create() {
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
                 <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.jpg")}" height="24px">
                 <span id="es_itad_status"></span>
             </div>`);
 
-        Background.action("itad.checkexpiry").then(expired => {
-            let itadStatus = document.getElementById("es_itad_status");
-            let itadDiv = itadStatus.parentElement;
-            if (expired) {
-                itadStatus.textContent = Localization.str.sign_in;
-                itadDiv.classList.add("not_authorized");
-                itadDiv.addEventListener("click", ITAD.authorize);
-            } else {
-                itadStatus.textContent = '\u2713';
-                itadDiv.classList.add("authorized");
-            }
-        });
+        let connected = await Background.action("itad.isconnected");
+        
+        let itadStatus = document.getElementById("es_itad_status");
+        let itadDiv = itadStatus.parentElement;
+        if (connected) {
+            itadStatus.textContent = '\u2713';
+            itadDiv.classList.add("authorized");
+        } else {
+            itadStatus.textContent = Localization.str.sign_in;
+            itadDiv.classList.add("not_authorized");
+            itadDiv.addEventListener("click", ITAD.authorize);
+        }
     }
 
     static authorize() {
