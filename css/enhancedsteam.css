@@ -2544,8 +2544,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /* comment editor */
-.blotter_poststatus_avatar {
-	top:  auto !important;
+#blotter_statuspost_form > div.commentthread_entry > div.blotter_poststatus_avatar {
+	top:  auto;
 }
 
 /* market action buttons */

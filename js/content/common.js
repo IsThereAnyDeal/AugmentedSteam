@@ -214,11 +214,18 @@ let ExtensionLayer = (function() {
 
     // NOTE: use cautiously!
     // Load remote script in the context of the current tab
-    self.loadInPageContext = function(fun) {
-        return new Promise(function(res) {
+    self.loadInPageContext = function(url) {
+        return new Promise(function(resolve, reject) {
+            let domain = new URL(url).hostname;
+            if (!whitelist.includes(domain)) {
+                reject(new Error("Script host not allowed"));
+                return;
+            }
+
             let script  = document.createElement("script");
-            script.src = fun;
-            script.onload = res;
+            script.src = url;
+            script.onload = resolve;
+            script.onerror = reject;
             document.documentElement.appendChild(script);
             script.parentNode.removeChild(script);
         });

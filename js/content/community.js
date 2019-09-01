@@ -93,7 +93,7 @@ let ProfileData = (function(){
 
 let CommentHandler = (function(){
 
-    let scriptsLoaded = false;
+    let scriptsLoading = false;
     let spamRegex = null;
     let self = {};
 
@@ -308,19 +308,16 @@ let CommentHandler = (function(){
         observer.observe(document.body, { childList: true });
     };
 
-    function loadScripts() {
-        return new Promise(async function(res) {
-            scriptsLoaded = true;
-            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
-            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
-            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
-            await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
-            res();
-        })
+    async function loadScripts() {
+        scriptsLoading = true;
+        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q");
+        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5");
+        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO");
+        await ExtensionLayer.loadInPageContext("//steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb");
     }
 
     async function addEditors() {
-        if (!scriptsLoaded) { await loadScripts(); }
+        if (!scriptsLoading) { await loadScripts(); }
     
         ExtensionLayer.runInPageContext(function() {
             let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
