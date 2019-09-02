@@ -865,22 +865,27 @@ class IndexedDB {
         if (multiple) {
             let objectStore = IndexedDB.db.transaction(objectStoreName).store;
             let promises = [];
-            key.forEach(_key =>
-                promises.push(objectStore.openCursor(_key)
-                    .then(cursor => {
-                        if (cursor) {
-                            return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                        }
-                    })
-                    .then(result => {
-                        if (!IndexedDB.cacheObjectStores.has(objectStoreName) || IndexedDB.timestampedObjectStores.has(objectStoreName)) return typeof result !== "undefined";
-                        return Boolean(result.value);
-                    })
-                )
-            );
+            key.forEach(_key => {
+                if (_key) {
+                    promises.push(objectStore.openCursor(_key)
+                        .then(cursor => {
+                            if (cursor) {
+                                return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
+                            }
+                        })
+                        .then(result => {
+                            if (!IndexedDB.cacheObjectStores.has(objectStoreName) || IndexedDB.timestampedObjectStores.has(objectStoreName)) return typeof result !== "undefined";
+                            return Boolean(result.value);
+                        })
+                    );
+                } else {
+                    promises.push(Promise.resolve(false));
+                }
+            });
             
             return Promise.all(promises);
         } else {
+            if (!key) return false;
             return IndexedDB.db.transaction(objectStoreName).store.openCursor(key)
                 .then(cursor => {
                     if (cursor) {

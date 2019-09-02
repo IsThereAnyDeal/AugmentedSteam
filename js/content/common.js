@@ -1658,9 +1658,11 @@ let Highlights = (function(){
                 if (appid) key = `app/${appid}`;
                 else if (subid) key = `sub/${subid}`;
 
-                Background.action("idb.contains", "ownedElsewhere", key).then(result => {
-                    if (result) self.highlightOwned(nodeToHighlight);
-                });
+                if (key) {
+                    Background.action("idb.contains", "ownedElsewhere", key).then(result => {
+                        if (result) self.highlightOwned(nodeToHighlight);
+                    });
+                }
             }
 
             if (node.querySelector(".ds_wishlist_flag")) {
