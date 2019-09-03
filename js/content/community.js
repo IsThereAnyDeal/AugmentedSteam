@@ -1645,8 +1645,8 @@ let InventoryPageClass = (function(){
         });
     }
 
-    function makeMarketButton(id) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+    function makeMarketButton(id, tooltip) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display:none">
                     <span class="item_market_action_button_edge item_market_action_button_left"></span>
                     <span class="item_market_action_button_contents"></span>
                     <span class="item_market_action_button_edge item_market_action_button_right"></span>
@@ -1685,8 +1685,10 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
-            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
+
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
