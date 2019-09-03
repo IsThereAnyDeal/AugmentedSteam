@@ -1233,7 +1233,7 @@ class AppPageClass extends StorePageClass {
     addOwnedElsewhere() {
         if (document.querySelector(".game_area_already_owned")) return;
 
-        Background.action("idb.get", "collection", `app/${this.appid}`).then(result => {
+        Background.action("idb.get", "collection", `app/${this.appid}`, { "shop": "steam", "optional": "gameid,copy_type" }).then(result => {
             if (!result) return;
             
             HTML.afterEnd(".queue_overflow_ctn",
