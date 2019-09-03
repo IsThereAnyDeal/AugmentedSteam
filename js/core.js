@@ -267,8 +267,26 @@ class GameId {
             if (!text) return null;
         }
         
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
         return m && GameId.parseId(m[2]);
+    }
+
+    static getBundleid(text) {
+        if (!text) { return null; }
+
+        if (text instanceof HTMLElement) {
+            let bundleid = text.dataset.dsBundleid;
+            if (bundleid) return GameId.parseId(bundleid);
+            text = text.href;
+            if (!text) return null;
+        }
+
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
+        return m && GameId.parseId(m[2]);
+    }
+
+    static trimStoreId(storeId) {
+        return Number(storeId.slice(storeId.indexOf('/') + 1));
     }
     
     static getAppidImgSrc(text) {

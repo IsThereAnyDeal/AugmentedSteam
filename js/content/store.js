@@ -530,7 +530,7 @@ class BundlePageClass extends StorePageClass {
     constructor(url) {
         super();
 
-        this.bundleid = GameId.getSubid(url);
+        this.bundleid = GameId.getBundleid(url);
 
         this.addDrmWarnings();
         this.addPrices();
@@ -1233,7 +1233,7 @@ class AppPageClass extends StorePageClass {
     addOwnedElsewhere() {
         if (document.querySelector(".game_area_already_owned")) return;
 
-        Background.action("idb.get", "ownedElsewhere", `app/${this.appid}`).then(result => {
+        Background.action("idb.get", "collection", `app/${this.appid}`).then(result => {
             if (!result) return;
             
             HTML.afterEnd(".queue_overflow_ctn",
@@ -1555,25 +1555,21 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    addTitleHighlight() {
-        DynamicStore.then(async () => {
-            let title = document.querySelector(".apphub_AppName");
-            let appStatus = await DynamicStore.getAppStatus(this.appid);
+    async addTitleHighlight() {
+        await DynamicStore;
+        
+        let [{ owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+            DynamicStore.getAppStatus(`app/${this.appid}`),
+            Inventory.getAppStatus(`app/${this.appid}`),
+        ]);
+        let title = document.querySelector(".apphub_AppName");
 
-            if (appStatus.ownedApps) {
-                Highlights.highlightOwned(title);
-            } else if (await Inventory.hasGuestPass(this.appid)) {
-                Highlights.highlightInvGuestpass(title);
-            } else if (await Inventory.getCoupon(this.appid)) {
-                Highlights.highlightCoupon(title);
-            } else if (await Inventory.hasGift(this.appid)) {
-                Highlights.highlightInvGift(title);
-            } else if (appStatus.wishlisted) {
-                Highlights.highlightWishlist(title);
-            } else if (appStatus.ignored) {
-                Highlights.highlightNotInterested(title);
-            }
-        });
+        if (owned) Highlights.highlightOwned(title);
+        if (guestPass) Highlights.highlightInvGuestpass(title);
+        if (coupon) Highlights.highlightCoupon(title);
+        if (gift) Highlights.highlightInvGift(title);
+        if (wishlisted) Highlights.highlightWishlist(title);
+        if (ignored) Highlights.highlightNotInterested(title);
     }
 
     addFamilySharingWarning() {
@@ -3181,9 +3177,9 @@ let WishlistPageClass = (function(){
 
         await DynamicStore;
 
-        let appStatus = await DynamicStore.getAppStatus(Number(node.dataset.appId));
+        let appStatus = await DynamicStore.getAppStatus(`app/${node.dataset.appId}`);
 
-        if (appStatus.ownedApps) {
+        if (appStatus.owned) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
             if (SyncedStorage.get("highlight_owned")) {
                 Highlights.highlightOwned(node);

@@ -360,42 +360,27 @@ let ProfileActivityPageClass = (function(){
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
         await Promise.all([DynamicStore, User]);
 
-        // Get all appids and nodes from selectors
-        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
-        for (let node of nodes) {
-            node.classList.add("es_highlight_checked");
+        let blotterBlocks = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        blotterBlocks.forEach(node => node.classList.add("es_highlight_checked"));
 
-            let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
-            for (let link of links) {
-                let appid = GameId.getAppid(link.href);
-                if (!appid || link.childElementCount !== 0) { continue; }
+        let aNodes = Array.from(blotterBlocks).reduce((acc, cur) => {
+            acc.push(...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo)")).filter(link =>
+                GameId.getAppid(link) && !link.childElementCount
+            ));
+            return acc;
+        }, []);
 
-                let appStatus = await DynamicStore.getAppStatus(appid);
+        await Highlights.highlightAndTag(aNodes);
 
-                if (appStatus.ownedApps) {
-                    Highlights.highlightOwned(link);
-
-                    addAchievementComparisonLink(link, appid);
-                } else if (await Inventory.hasGuestPass(appid)) {
-                    Highlights.highlightInvGuestpass(link);
-                } else if (await Inventory.getCoupon(appid)) {
-                    Highlights.highlightCoupon(link);
-                } else if (await Inventory.hasGift(appid)) {
-                    Highlights.highlightInvGift(link);
-                } else if (appStatus.wishlisted) {
-                    Highlights.highlightWishlist(link);
-                } else if (appStatus.ignored) {
-                    Highlights.highlightNotInterested(link);
-                } else {
-                    continue;
-                }
-            }
-        }
+        if (!SyncedStorage.get("showcomparelinks")) { return; }
+        blotterBlocks.forEach(blotter => {
+            blotter.querySelectorAll("a.es_highlighted_owned").forEach(aNode => {
+                addAchievementComparisonLink(aNode);
+            })
+        });
     };
 
-    function addAchievementComparisonLink(node, appid) {
-        if (!SyncedStorage.get("showcomparelinks")) { return; }
-
+    function addAchievementComparisonLink(node) {
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
@@ -406,7 +391,7 @@ let ProfileActivityPageClass = (function(){
 
         node.classList.add("es_achievements");
 
-        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        let compareLink = friendProfileUrl + "/stats/" + GameId.getAppid(node) + "/compare/#es-compare";
         HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
     }
 
@@ -3515,9 +3500,9 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        let appStatus = await DynamicStore.getAppStatus(this.appid);
+        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
 
-        if (appStatus.ownedApps) {
+        if (appStatus.owned) {
             nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }

@@ -1363,12 +1363,29 @@ let Inventory = (function(){
         return Background.action("idb.getfromindex", "coupons", "appid", appid);
     };
 
-    self.hasGift = function(appid) {
-        return Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true).then(result => result.includes("gifts"));
-    }
+    self.getAppStatus = async function(appid) {
+        function getStatusObject(giftsAndPasses, coupon) {
+            return {
+                "gift": giftsAndPasses.includes("gifts"),
+                "guestPass": giftsAndPasses.includes("passes"),
+                "coupon": coupon,
+            };
+        }
 
-    self.hasGuestPass = function(appid) {
-        return Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true).then(result => result.includes("passes"));
+        let [ giftsAndPasses, coupon ] = await Promise.all([
+            Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true),
+            Background.action("idb.contains", "coupons", appid),
+        ]);
+        if (Array.isArray(appid)) {
+            let results = {};
+            
+            for (let id of appid.values()) {
+                results[id] = getStatusObject(giftsAndPasses[id], coupon[id]);
+            }
+            
+            return results;
+        }
+        return getStatusObject(giftsAndPasses, coupon);
     };
 
     self.hasInInventory6 = function(marketHash) {
@@ -1630,6 +1647,7 @@ let Highlights = (function(){
     self.highlightAndTag = async function(nodes) {
 
         let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
+        let storeIdsMap = new Map();
 
         for (let node of nodes) {
             let nodeToHighlight = node;
@@ -1645,22 +1663,34 @@ let Highlights = (function(){
             }
 
             let aNode = node.querySelector("a");
+
             let appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
             let subid = GameId.getSubid(node) || GameId.getSubid(aNode);
-            if (node.querySelector(".ds_owned_flag")) {
-                self.highlightOwned(nodeToHighlight);
-            } else if (includeOtherGames) {
-                let key;
-                if (appid) key = `app/${appid}`;
-                else if (subid) key = `sub/${subid}`;
+            let bundleid = GameId.getBundleid(node) || GameId.getBundleid(aNode);
 
-                if (key) {
-                    Background.action("idb.contains", "ownedElsewhere", key).then(result => {
-                        if (result) self.highlightOwned(nodeToHighlight);
-                    });
+            let storeId;
+            if (appid) {
+                storeId = `app/${appid}`;
+            } else if (bundleid) {
+                storeId = `bundle/${bundleid}`;
+            } else if (subid) {
+                storeId = `sub/${subid}`;
+            }
+
+            if (storeId) {
+                if (storeIdsMap.has(storeId)) {
+                    let arr = storeIdsMap.get(storeId);
+                    arr.push(nodeToHighlight);
+                    storeIdsMap.set(storeId, arr);
+                } else {
+                    storeIdsMap.set(storeId, [ nodeToHighlight ]);
                 }
             }
 
+            if (node.querySelector(".ds_owned_flag")) {
+                self.highlightOwned(nodeToHighlight);
+            }
+            
             if (node.querySelector(".ds_wishlist_flag")) {
                 self.highlightWishlist(nodeToHighlight);
             }
@@ -1672,24 +1702,31 @@ let Highlights = (function(){
             if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                 self.highlightNonDiscounts(nodeToHighlight);
             }
-
-            if (appid) {
-                if (await Inventory.hasGuestPass(appid)) {
-                    self.highlightInvGuestpass(node);
-                }
-                if (await Inventory.getCoupon(appid)) {
-                    self.highlightCoupon(node);
-                }
-                if (await Inventory.hasGift(appid)) {
-                    self.highlightInvGift(node);
-                }
-            }
         }
+
+        let storeIds = Array.from(storeIdsMap.keys());
+
+        let [ dsStatus, invStatus ] = await Promise.all([
+            includeOtherGames ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
+            Inventory.getAppStatus(storeIds),
+        ]);
+
+        for (let [storeid, nodes] of storeIdsMap) {
+            if (dsStatus) {
+                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
+                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
+                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
+            }
+            if (invStatus[storeid].gift) nodes.forEach(node => self.highlightInvGift(node));
+            if (invStatus[storeid].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+            if (invStatus[storeid].coupon) nodes.forEach(node => self.highlightCoupon(node));
+        }
+        
     }
 
     self.startHighlightsAndTags = async function(parent) {
         // Batch all the document.ready appid lookups into one storefront call.
-        let selectors = [
+        let selector = [
             "div.tab_row",                                  // Storefront rows
             "div.dailydeal_ctn",
             ".store_main_capsule",                          // "Featured & Recommended"
@@ -1727,14 +1764,14 @@ let Highlights = (function(){
             "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
-        ];
+        ].map(sel => `${sel}:not(.es_highlighted)`)
+        .join(',');
 
         parent = parent || document;
 
         Messenger.addMessageListener("dynamicStoreReady", () => {
-            selectors.forEach(selector => {
-                self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
-            });
+
+            self.highlightAndTag(parent.querySelectorAll(selector));
     
             let searchBoxContents = parent.getElementById("search_suggestion_contents");
             if (searchBoxContents) {
@@ -1760,22 +1797,55 @@ let DynamicStore = (function(){
 
     let _promise = null;
 
-    self.clear = async function() {
+    self.clear = function() {
         LocalStorage.remove("dynamicstore");
         LocalStorage.remove("dynamicstore_update");
-        await Background.action("dynamicstore.clear");
+        return Background.action("dynamicstore.clear");
     };
 
-    // This function exists in order to avoid making three background calls (ignored, owned, wishlisted) for example during highlighting
-    self.getAppStatus = function(appid) {
-        return Background.action("idb.getallfromindex", "dynamicStore", "appid", appid, true)
-            .then(statusList => {
-                let appStatus = {};
-                ["ignored", "ownedApps", "wishlisted"].forEach(status => {
-                    appStatus[status] = statusList.includes(status);
-                });
-                return appStatus;
-            } );
+    self.getAppStatus = async function(storeId) {
+        let multiple = Array.isArray(storeId);
+        let promise;
+        let trimmedIds;
+
+        if (multiple) {
+            trimmedIds = storeId.map(id => GameId.trimStoreId(id));
+            promise = Background.action("idb.getallfromindex", "dynamicStore", "appid", trimmedIds, true);
+        } else {
+            promise = Background.action("idb.getallfromindex", "dynamicStore", "appid", GameId.trimStoreId(storeId), true);
+        }
+
+        let statusList;
+        let dsStatusList = await promise;
+
+        if (multiple) {
+            statusList = {};
+            for (let i = 0; i < storeId.length; ++i) {
+                let trimmedId = trimmedIds[i];
+                let id = storeId[i];
+                statusList[id] = {
+                    "ignored": dsStatusList[trimmedId].includes("ignored"),
+                    "wishlisted": dsStatusList[trimmedId].includes("wishlisted"),
+                }
+                if (id.startsWith("app/")) {
+                    statusList[id].owned = dsStatusList[trimmedId].includes("ownedApps");
+                } else if (id.startsWith("sub/")) {
+                    statusList[id].owned = dsStatusList[trimmedId].includes("ownedPackages");
+                }
+            }
+        } else {
+            statusList = {
+                "ignored": dsStatusList.includes("ignored"),
+                "wishlisted": dsStatusList.includes("wishlisted"),
+            }
+            if (storeId.startsWith("app/")) {
+                statusList.owned = dsStatusList.includes("ownedApps");
+            } else if (storeId.startsWith("sub/")) {
+                statusList.owned = dsStatusList.includes("ownedPackages");
+            }
+        }
+
+        return statusList;
     }
 
     async function _fetch() {
