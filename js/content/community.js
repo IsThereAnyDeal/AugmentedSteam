@@ -3500,6 +3500,7 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
+        // todo add other highlights
         let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
 
         if (appStatus.owned) {

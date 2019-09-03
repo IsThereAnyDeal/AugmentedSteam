@@ -1560,7 +1560,7 @@ class AppPageClass extends StorePageClass {
         
         let [{ owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
             DynamicStore.getAppStatus(`app/${this.appid}`),
-            Inventory.getAppStatus(`app/${this.appid}`),
+            Inventory.getAppStatus(this.appid),
         ]);
         let title = document.querySelector(".apphub_AppName");
 
@@ -3177,27 +3177,51 @@ let WishlistPageClass = (function(){
 
         await DynamicStore;
 
-        let appStatus = await DynamicStore.getAppStatus(`app/${node.dataset.appId}`);
+        let [{ owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
+            DynamicStore.getAppStatus(`app/${node.dataset.appId}`),
+            Inventory.getAppStatus(Number(node.dataset.appId)),
+        ]);
 
-        if (appStatus.owned) {
+        if (owned) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
             if (SyncedStorage.get("highlight_owned")) {
                 Highlights.highlightOwned(node);
             } else {
-                HTML.beforeEnd(node, '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
             }
         }
 
-        if (appStatus.wishlisted) {
+        if (wishlisted) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
             if (SyncedStorage.get("highlight_wishlist")) {
                 Highlights.highlightWishlist(node);
             } else {
-                HTML.beforeEnd(node,'<div class="ds_flag ds_wishlist_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
             }
         }
 
+        if (ignored) {
+            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_ignored");
+
+            if (SyncedStorage.get("highlight_notinterested")) {
+                Highlights.highlightNotInterested(node);
+            } else {
+                HTML.beforeEnd(node, `<div class="ds_flag ds_ignored_flag">${Localization.str.ignored.toUpperCase()}&nbsp;&nbsp;</div>`);
+            }
+        }
+
+        if (coupon && SyncedStorage.get("highlight_coupon")) {
+            Highlights.highlightCoupon(node);
+        }
+
+        if (guestPass && SyncedStorage.get("highlight_inv_guestpass")) {
+            Highlights.highlightInvGuestpass(node);
+        }
+
+        if (gift && SyncedStorage.get("highlight_inv_gift")) {
+            Highlights.highlightInvGift(node);
+        }
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {

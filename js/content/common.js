@@ -1364,28 +1364,28 @@ let Inventory = (function(){
     };
 
     self.getAppStatus = async function(appid) {
-        function getStatusObject(giftsAndPasses, coupon) {
+        function getStatusObject(giftsAndPasses, hasCoupon) {
             return {
                 "gift": giftsAndPasses.includes("gifts"),
                 "guestPass": giftsAndPasses.includes("passes"),
-                "coupon": coupon,
+                "coupon": hasCoupon,
             };
         }
 
-        let [ giftsAndPasses, coupon ] = await Promise.all([
+        let [ giftsAndPasses, coupons ] = await Promise.all([
             Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true),
-            Background.action("idb.contains", "coupons", appid),
+            Background.action("idb.indexcontainskey", "coupons", "appid", appid),
         ]);
         if (Array.isArray(appid)) {
             let results = {};
             
             for (let id of appid.values()) {
-                results[id] = getStatusObject(giftsAndPasses[id], coupon[id]);
+                results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
             }
             
             return results;
         }
-        return getStatusObject(giftsAndPasses, coupon);
+        return getStatusObject(giftsAndPasses, coupons);
     };
 
     self.hasInInventory6 = function(marketHash) {
@@ -1705,21 +1705,24 @@ let Highlights = (function(){
         }
 
         let storeIds = Array.from(storeIdsMap.keys());
+        let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
         let [ dsStatus, invStatus ] = await Promise.all([
             includeOtherGames ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
-            Inventory.getAppStatus(storeIds),
+            Inventory.getAppStatus(trimmedStoreIds)
         ]);
-
+        
+        let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
             if (dsStatus) {
                 if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
                 if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
                 if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
             }
-            if (invStatus[storeid].gift) nodes.forEach(node => self.highlightInvGift(node));
-            if (invStatus[storeid].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
-            if (invStatus[storeid].coupon) nodes.forEach(node => self.highlightCoupon(node));
+            let trimmedId = it.next().value;
+            if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
+            if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+            if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
         }
         
     }

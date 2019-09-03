@@ -860,6 +860,44 @@ class IndexedDB {
         return Promise.all(promises);
     }
 
+    static async indexContainsKey(objectStoreName, indexName, key, params) {
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+
+        if (Array.isArray(key)) {
+            let promises = [];
+            let index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
+            key.forEach(_key => {
+                if (_key) {
+                    promises.push(index.openCursor(_key)
+                        .then(cursor => {
+                            if (cursor) {
+                                return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params);
+                            }
+                        })
+                        .then(result => typeof result !== "undefined")
+                    );
+                } else {
+                    promises.push(Promise.resolve(false));
+                }
+            });
+
+            let resolved = await Promise.all(promises);
+            return key.reduce((acc, cur, i) => {
+                acc[cur] = resolved[i];
+                return acc;
+            }, {});
+        } else {
+            if (!key) return false;
+            let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
+            
+            let result;
+            if (cursor) {
+                result = await IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params);
+            }
+            return typeof result !== "undefined";
+        }
+    }
+
     static delete(objectStoreName, key) {
         return IndexedDB.db.delete(objectStoreName, key);
     }
@@ -893,10 +931,7 @@ class IndexedDB {
                                 return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
                             }
                         })
-                        .then(result => {
-                            if (!IndexedDB.cacheObjectStores.has(objectStoreName) || IndexedDB.timestampedObjectStores.has(objectStoreName)) return typeof result !== "undefined";
-                            return Boolean(result.value);
-                        })
+                        .then(result => typeof result !== "undefined")
                     );
                 } else {
                     promises.push(Promise.resolve(false));
@@ -910,16 +945,12 @@ class IndexedDB {
             }, {});
         } else {
             if (!key) return false;
-            return IndexedDB.db.transaction(objectStoreName).store.openCursor(key)
-                .then(cursor => {
-                    if (cursor) {
-                        return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                    }
-                })
-                .then(result => {
-                    if (!IndexedDB.cacheObjectStores.has(objectStoreName) || IndexedDB.timestampedObjectStores.has(objectStoreName)) return typeof result !== "undefined";
-                    return Boolean(result.value);
-                });
+            let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor(key);
+            
+            if (cursor) {
+                let result = await IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
+                return typeof result !== "undefined";
+            }
         }
     }
 
@@ -1065,6 +1096,7 @@ let actionCallbacks = new Map([
     ["idb.delete", IndexedDB.delete],
     ["idb.clear", IndexedDB.clear],
     ["idb.contains", IndexedDB.contains],
+    ["idb.indexcontainskey", IndexedDB.indexContainsKey],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
