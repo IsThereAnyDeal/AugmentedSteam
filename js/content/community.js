@@ -3480,6 +3480,7 @@ let MarketPageClass = (function(){
             let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
             if (!m) { continue; }
 
+            // todo Collect hashes and query them all at once
             if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
                 Highlights.highlightOwned(node.querySelector("div"));
             }

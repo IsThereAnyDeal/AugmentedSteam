@@ -1232,11 +1232,7 @@ let EarlyAccess = (function(){
             if (appid) appidsMap.set(appid, node);
         });
 
-        let appids = Array.from(appidsMap.keys()).map(key => Number(key));
-        let eaAppids = (await Background.action("idb.contains", "earlyAccessAppids", appids)).reduce((accumulator, current, i) => {
-            accumulator[appids[i]] = current;
-            return accumulator;
-        }, {});
+        let eaAppids = await Background.action("idb.contains", "earlyAccessAppids", Array.from(appidsMap.keys()).map(key => Number(key)));
 
         for (let [appid, node] of appidsMap) {
             if (!eaAppids[appid]) continue;

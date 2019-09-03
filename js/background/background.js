@@ -200,8 +200,8 @@ class ITAD_Api extends Api {
     }
 
     static async sync() {
-        let [ownedApps, ownedPackages, wishlistedApps] = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
-        let [lastOwnedApps, lastOwnedPackages, lastWishlistedApps] = await IndexedDB.get("itadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
+        let { ownedApps, ownedPackages, wishlistedApps } = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
+        let { lastOwnedApps, lastOwnedPackages, lastWishlistedApps } = await IndexedDB.get("itadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
 
         let baseJSON = {
             "version": "02",
@@ -251,6 +251,22 @@ class ITAD_Api extends Api {
                 .then(() => IndexedDB.put("itadSync", wishlistedApps, "lastWishlisted")));
         }
         return Promise.all(promises);
+    }
+
+    static filterCollection(result) {
+        if (!result) return;
+        let { games, typemap } = result;
+        
+        let ownedElsewhere = {};
+        games.forEach(({ gameid, types }) => {
+            types = types.filter(type => type !== "steam");
+            if (!types.length) return;
+
+            types = types.map(type => typemap[type]);
+
+            ownedElsewhere[gameid] = types;
+        });
+        return ownedElsewhere;
     }
 }
 ITAD_Api.accessToken = null;
@@ -471,13 +487,7 @@ class SteamCommunity extends Api {
             }
         }
 
-        let packagesKeys = Object.keys(coupons).map(key => Number(key));
-        let packagesArr = await IndexedDB.get("packages", packagesKeys);
-        
-        let packages = packagesArr.reduce((accumulator, current, i) => {
-            accumulator[packagesKeys[i]] = current;
-            return accumulator;
-        }, {});
+        let packages = await IndexedDB.get("packages", Object.keys(coupons).map(key => Number(key)));
 
         for (let [subid, coupon] of Object.entries(coupons)) {
             let details = packages[subid];
@@ -607,34 +617,21 @@ class Steam {
 
         Steam._dynamicstore_promise = Promise.all([
             SteamStore.getEndpoint("/dynamicstore/userdata/"),
-            IndexedDB.getAll("collection", true, { "shop": "steam", "optional": "gameid,copy_type" }),
+            SyncedStorage.get("include_owned_elsewhere") ? IndexedDB.getAll("collection", { "shop": "steam", "optional": "gameid,copy_type" }) : Promise.resolve(),
         ])
-        .then(([{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, { games, typemap }]) => {
+        .then(([{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, ownedElsewhere]) => {
             if (!rgOwnedApps) {
                 throw new Error("Could not fetch DynamicStore UserData");
             }
 
-            let promises = [];
-            if (games) {
-                let ownedElsewhere = {};
-                let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
-                games.forEach(({ gameid, types }) => {
-                    types = types.filter(type => type !== "steam");
-                    if (!types.length) return;
-
-                    types = types.map(type => typemap[type]);
-
-                    if (includeOtherGames) {
-                        if (gameid.startsWith("app/")) {
-                            rgOwnedApps.push(Number(gameid.slice(gameid.indexOf('/') + 1)));
-                        } else if (gameid.startsWith("sub/")) {
-                            rgOwnedPackages.push(Number(gameid.slice(gameid.indexOf('/') + 1)));
-                        }
+            if (ownedElsewhere) {
+                for (let storeId of Object.keys(ownedElsewhere)) {
+                    if (storeId.startsWith("app/")) {
+                        rgOwnedApps.push(GameId.trimStoreId(storeId));
+                    } else if (storeId.startsWith("sub/")) {
+                        rgOwnedPackages.push(GameId.trimStoreId(storeId));
                     }
-
-                    ownedElsewhere[gameid] = types;
-                    promises.push(IndexedDB.putCached("ownedElsewhere", Object.values(ownedElsewhere), Object.keys(ownedElsewhere), true));
-                });
+                }
             }
 
             let data = {
@@ -643,9 +640,8 @@ class Steam {
                 "ownedPackages": rgOwnedPackages,
                 "wishlisted": rgWishlist,
             };
-            promises.push(IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true));
-
-            return Promise.all(promises);
+            
+            return IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true);
         })
         .finally(() => Steam._dynamicstore_promise = null);
 
@@ -698,7 +694,6 @@ class IndexedDB {
                             db.createObjectStore("notes");
                             db.createObjectStore("collection");
                             db.createObjectStore("waitlist");
-                            db.createObjectStore("ownedElsewhere");
                             db.createObjectStore("itadSync").createIndex("id", '', { unique: false, multiEntry: true });
                             break;
                         }
@@ -764,45 +759,43 @@ class IndexedDB {
     }
 
     static async get(objectStoreName, key, params) {
-        let multiple = Array.isArray(key);
-
         await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
 
-        if (multiple) {
+        if (Array.isArray(key)) {
             let promises = [];
             for (let i = 0; i < key.length; ++i) {
                 promises.push(IndexedDB.db.get(objectStoreName, key[i])
                     .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key[i], params)));
             }
-            return Promise.all(promises);
+            let resolved = await Promise.all(promises);
+            return key.reduce((acc, cur, i) => {
+                acc[cur] = resolved[i];
+                return acc;
+            }, {});
         } else {
             return IndexedDB.db.get(objectStoreName, key)
                 .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params));
         }
     }
 
-    static async getAll(objectStoreName, withKeys, params) {
+    static async getAll(objectStoreName, params) {
         await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
 
         let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor();
 
         let promises = [];
-        let keys;
-        if (withKeys) keys = [];
+        let keys = [];
         while (cursor) {
             if (cursor.key !== "expiry") {
-                if (withKeys) keys.push(cursor.key);
+                keys.push(cursor.key);
                 promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params));
             }            
             cursor = await cursor.continue();
         }
-        if (withKeys) {
-            return (await Promise.all(promises)).reduce((acc, cur, i) => {
-                acc[keys[i]] = cur;
-                return acc;
-            }, {});
-        }
-        return Promise.all(promises);
+        return (await Promise.all(promises)).reduce((acc, cur, i) => {
+            acc[keys[i]] = cur;
+            return acc;
+        }, {});
     }
 
     static async getFromIndex(objectStoreName, indexName, key, asKey, params) {
@@ -823,18 +816,47 @@ class IndexedDB {
         await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
 
         let promises = [];
-        let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-        while (cursor) {
-            promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
-                .then(result => {
-                    if (result && asKey) {
-                        return cursor.primaryKey;
-                    } else {
-                        return result;
+        if (Array.isArray(key)) {
+            let index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
+            key.forEach(_key => {
+                promises.push((async () => {
+                    let cursorPromises = [];
+                    let cursor = await index.openCursor(_key);
+                    while (cursor) {
+                        cursorPromises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
+                            .then(result => {
+                                if (result && asKey) {
+                                    return cursor.primaryKey;
+                                } else {
+                                    return result;
+                                }
+                            }));
+                        cursor = await cursor.continue();
                     }
-                }));
-            cursor = await cursor.continue();
+                    return Promise.all(cursorPromises);
+                })());
+            });
+
+            let resolved = await Promise.all(promises);
+            return key.reduce((acc, cur, i) => {
+                acc[cur] = resolved[i];
+                return acc;
+            }, {});
+        } else {
+            let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
+            while (cursor) {
+                promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
+                    .then(result => {
+                        if (result && asKey) {
+                            return cursor.primaryKey;
+                        } else {
+                            return result;
+                        }
+                    }));
+                cursor = await cursor.continue();
+            }
         }
+        
         return Promise.all(promises);
     }
 
@@ -858,11 +880,9 @@ class IndexedDB {
     }
 
     static async contains(objectStoreName, key, params) {
-        let multiple = Array.isArray(key);
-
         await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
 
-        if (multiple) {
+        if (Array.isArray(key)) {
             let objectStore = IndexedDB.db.transaction(objectStoreName).store;
             let promises = [];
             key.forEach(_key => {
@@ -883,7 +903,11 @@ class IndexedDB {
                 }
             });
             
-            return Promise.all(promises);
+            let resolved = await Promise.all(promises);
+            return key.reduce((acc, cur, i) => {
+                acc[cur] = resolved[i];
+                return acc;
+            }, {});
         } else {
             if (!key) return false;
             return IndexedDB.db.transaction(objectStoreName).store.openCursor(key)
@@ -977,7 +1001,6 @@ IndexedDB.timestampedObjectStores = new Map([
     ["earlyAccessAppids", 60 * 60],
     ["purchases", 24 * 60 * 60],
     ["dynamicStore", 15 * 60],
-    ["ownedElsewhere", 15 * 60],
     ["rates", 60 * 60],
     ["collection", 15 * 60],
     ["waitlist", 15 * 60],
@@ -996,12 +1019,11 @@ IndexedDB.objStoreFetchFns = new Map([
     ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true, true)],
     ["purchases", SteamStore.purchaseDate],
     ["dynamicStore", Steam.dynamicStore],
-    ["ownedElsewhere", Steam.dynamicStore],
     ["packages", SteamStore.fetchPackage],
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates", true)],
-    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", true)],
+    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", true, false, ITAD_Api.filterCollection)],
     ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist")],
 ]);
 
