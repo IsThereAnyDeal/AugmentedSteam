@@ -1297,19 +1297,24 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	height: 16px;
 	margin: 5px;
 }
-.es_screenshot_download_btn {
+.es_screenshot_download_btn, .es_screenshot_open_btn {
 	position: absolute;
 	right: 24%;
 	bottom: 0;
 }
-.es_screenshot_download_btn i {
+.es_screenshot_download_btn i, .es_screenshot_open_btn i {
 	display: block;
-	background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1);
 	background-position: center;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 	margin: 5px;
+}
+.es_screenshot_download_btn i {
+	background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1);
+}
+.es_screenshot_open_btn i {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAmJLR0QA/4ePzL8AAAC1SURBVChTlYwxDgFRFEXvmMQStKKQWM+wCzoiEhISkUyHLViJVqGg0igUqkl+MSGSIY7CTPz/p3Je9d45eZIFTR64bOVCROYEmXyIeNmFCBlwxGAwjCRmzgfEBHhiMMRlDeLCjXr+vqRBwCnXXc+9/WDn6DUdMjdYWHpFINHmYQchm1wvCehJEi0rkKgwZ89QYkpSHK3gB8kfwZWUmqcbPDkUSwyknJ25A/0iqBJzxeXCmPDrP4LlL/iR+JDnAAAAAElFTkSuQmCC');
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
 	background-position: bottom left;
