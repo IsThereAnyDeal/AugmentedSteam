@@ -1,4 +1,8 @@
 {
+    "support": "Поддръжка",
+    "email": "Е-поща",
+    "contact": "Свързване",
+    "fav_emoticons_dragging": "Провлечете емотиконите тук, за да ги добавите към любими",
     "subscriptions": "Абонаменти",
     "subscribe_all": "Абониране към всички",
     "unsubscribe_all": "Премахване на абонамента към всички",
@@ -593,5 +597,6 @@
     },
     "this_version": "Тази версия",
     "original_authors": "Оригинални автори",
+    "acknowledgements": "Признания",
     "powered_by": "Осъществено чрез __link__"
 }
