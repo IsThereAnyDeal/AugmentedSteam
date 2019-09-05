@@ -495,7 +495,7 @@
     },
     "survey": {
         "performance_survey": "Prestatie enquete",
-        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel",
+        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel.",
         "framerate": "Framerate",
         "framerate_response": "antwoordde dat de framerate was",
         "framerate_30": "vastgesteld op 30fps of lager",
@@ -509,7 +509,7 @@
         "satisfaction": "Prestatie Tevredenheid van GPU",
         "gs_y": "Heeft ingebouwde grafische opties of een grafische menu",
         "gs_n": "Heeft geen ingebouwde grafische opties of een grafische menu",
-        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen",
+        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen.",
         "take": "Deelnemen aan de enquête"
     },
     "select": {

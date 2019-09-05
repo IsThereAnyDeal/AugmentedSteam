@@ -1671,7 +1671,7 @@ class AppPageClass extends StorePageClass {
         let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
             html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
             switch (survey["fr"]) {
                 case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
@@ -1728,7 +1728,7 @@ class AppPageClass extends StorePageClass {
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+            html += "<p>" + Localization.str.survey.nobody + "</p>";
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {

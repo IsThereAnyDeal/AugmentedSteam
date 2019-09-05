@@ -453,7 +453,7 @@
     },
     "survey": {
         "performance_survey": "Teljesítmény kérdőív",
-        "users": "__users__ felhasználók töltötték ki a teljesítmény kérdőívet ehhez a játékohoz",
+        "users": "__users__ felhasználók töltötték ki a teljesítmény kérdőívet ehhez a játékohoz.",
         "framerate": "Képkockák száma másodpercenként",
         "framerate_response": "állítja azt hogy a képkockák száma másodpercenként",
         "framerate_30": "30fps-re vagy annál kevesebbre van korlátozva",
@@ -467,7 +467,7 @@
         "satisfaction": "Teljesítménybeli megelégedettség videokártya márka szerint",
         "gs_y": "Vannak beépített grafikai beállítások vagy grafikai menü",
         "gs_n": "Nincsenek beépített grafikai beállítások vagy grafikai menü",
-        "nobody": "Még senki nem töltötte ki a teljesítmény kérdőívet ezzel a játékkal kapcsolatban",
+        "nobody": "Még senki nem töltötte ki a teljesítmény kérdőívet ezzel a játékkal kapcsolatban.",
         "take": "Töltsd ki a kérdőívet"
     },
     "select": {
