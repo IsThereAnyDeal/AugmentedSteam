@@ -131,7 +131,7 @@
     "price_above_tooltip": "Gib Null für kostenlose Items oder Items ohne Preis ein; Lass das Feld leer um dieses Feature zu deaktivieren",
     "news": "Neuigkeiten",
     "check_system": "Dein System überprüfen",
-    "viewinclient": "Im Steam-Client anzeigen",
+    "viewinclient": "Im Client anzeigen",
     "custom_background": "Eigener Hintergrund",
     "custom_style": "Eigener Stil",
     "custom_style_help": "Alle Benutzer von Augmented Steam werden diesen Stil auf deinem Profil sehen. Personen, die Augmented Steam nicht verwenden, werden keine Veränderungen sehen.",

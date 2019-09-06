@@ -154,7 +154,7 @@
     "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
-    "viewinclient": "View in Steam Client",
+    "viewinclient": "View in Client",
     "custom_background": "Custom Background",
     "custom_style": "Custom Theme",
     "custom_style_help": "All users of Augmented Steam will see this theme on your profile.  Non-Augmented Steam users will not see any theme changes made here.",
