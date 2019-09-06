@@ -3714,6 +3714,7 @@ let WorkshopBrowseClass = (function(){
                     return false;
                 }
 
+                let parser = new DOMParser();
                 let workshopItems = [];
                 for (let p = 1; p <= Math.ceil(total / 30); p++) {
                     let url = new URL(window.location.href);
@@ -3726,7 +3727,7 @@ let WorkshopBrowseClass = (function(){
                         continue;
                     }
 
-                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    let xmlDoc = parser.parseFromString(result, "text/html");
                     for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
                         let subNode = node.querySelector(".user_action_history_icon.subscribed");
                         if (canSkip(method, subNode)) { continue; }
