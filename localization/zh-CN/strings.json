@@ -488,7 +488,7 @@
     },
     "survey": {
         "performance_survey": "性能调查",
-        "users": "__users__ 位用户已完成此游戏的性能调查",
+        "users": "__users__ 位用户已完成此游戏的性能调查。",
         "framerate": "帧率",
         "framerate_response": "用户反馈帧率",
         "framerate_30": "固定在 30 帧或 30 帧以下",
@@ -502,7 +502,7 @@
         "satisfaction": "GPU 性能表现",
         "gs_y": "具有内置图像选项或图像菜单",
         "gs_n": "没有内置图像选项或图像菜单",
-        "nobody": "尚未有人参与此游戏的性能调查",
+        "nobody": "尚未有人参与此游戏的性能调查。",
         "take": "参与调查"
     },
     "select": {

@@ -453,7 +453,7 @@
     },
     "survey": {
         "performance_survey": "Inquérito de Desempenho",
-        "users": "__users__ utilizadores completaram o inquérito de desempenho para este jogo",
+        "users": "__users__ utilizadores completaram o inquérito de desempenho para este jogo.",
         "framerate": "Rácio de fotogramas",
         "framerate_response": "responderam que o rácio de fotogramas foi",
         "framerate_30": "fixo a 30fps ou menos",
@@ -467,7 +467,7 @@
         "satisfaction": "Satisfação de Desempenho por GPU",
         "gs_y": "Tem um menu ou opções embutidas que permitem alterar os gráficos",
         "gs_n": "Não tem um menu ou opções embutidas que permitam alterar os gráficos",
-        "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo",
+        "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo.",
         "take": "Faz o Inquérito"
     },
     "select": {

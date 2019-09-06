@@ -11,6 +11,10 @@
         "ingame": "Aan het spelen",
         "streaming": "Aan het streamen"
     },
+    "support": "Ondersteuning",
+    "email": "E-mail",
+    "contact": "Contact",
+    "fav_emoticons_dragging": "Sleep emoticons hier om favoriet te maken",
     "subscriptions": "Abonnementen",
     "subscribe_all": "Aboneer Op Alles",
     "unsubscribe_all": "Alles Afmelden",
@@ -503,7 +507,7 @@
     },
     "survey": {
         "performance_survey": "Prestatie enquete",
-        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel",
+        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel.",
         "framerate": "Framerate",
         "framerate_response": "antwoordde dat de framerate was",
         "framerate_30": "vastgesteld op 30fps of lager",
@@ -517,7 +521,7 @@
         "satisfaction": "Prestatie Tevredenheid van GPU",
         "gs_y": "Heeft ingebouwde grafische opties of een grafische menu",
         "gs_n": "Heeft geen ingebouwde grafische opties of een grafische menu",
-        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen",
+        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen.",
         "take": "Deelnemen aan de enquête"
     },
     "select": {

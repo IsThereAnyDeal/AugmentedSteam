@@ -91,9 +91,10 @@ let ProfileData = (function(){
     return self;
 })();
 
-let SpamCommentHandler = (function(){
+let CommentHandler = (function(){
 
     let spamRegex = null;
+    let self = {};
 
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
@@ -159,8 +160,6 @@ let SpamCommentHandler = (function(){
         }
     }
 
-    let self = {};
-
     self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
 
@@ -181,6 +180,131 @@ let SpamCommentHandler = (function(){
             handleAllCommentThreads(latestFrame.document);
         });
         observer.observe(modalWait, {attributes: true});
+    };
+
+    function updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+        LocalStorage.set("fav_emoticons", favs);
+
+        if (name && favs.includes(name) && favs.length > 1) {
+            HTML.beforeEnd(favBox, buildEmoticonOption(name));
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            finalizeFav(node, emoticonPopup, favRemove);
+        } else if (name && !favs.includes(name) && favs.length > 0) {
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            if (!node) { return; }
+            node.parentNode.removeChild(node);             
+        } else {
+            let favsHtml = buildFavBox(favs);
+            HTML.inner(favBox, favsHtml);
+            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+                finalizeFav(node, emoticonPopup, favRemove);
+            });
+        }
+    }
+
+    function finalizeFav(node, emoticonPopup, favRemove) {
+        node.draggable = true;
+        node.querySelector("img").draggable = false;
+        node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+        node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove));
+    }
+
+    function dragFavEmoticon(ev) {
+        ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+    }
+
+    function clickFavEmoticon(ev, emoticonPopup, favRemove) {
+        let name = ev.target.closest(".emoticon_option").dataset.emoticon;
+        let noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        noFav.click();
+    }
+
+    function buildFavBox(favs=[]) {
+        let favsHtml;
+        if (!favs.length) {
+            favsHtml = Localization.str.fav_emoticons_dragging;
+        } else {
+            favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("");
+        }
+        return favsHtml;
+    }
+
+    function buildEmoticonOption(name) {
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="https://steamcommunity-a.akamaihd.net/economy/emoticon/${name}" class="emoticon"></div>`;
+    }
+
+    self.addFavoriteEmoticons = function() {
+        let observer = new MutationObserver(() => {
+            let emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
+            if (!emoticonPopup) { return; }
+
+            emoticonPopup.classList.add("es_emoticons");
+            emoticonPopup.style.maxWidth = "352px";
+            emoticonPopup.querySelectorAll(".emoticon_option").forEach(function(node) {
+                node.draggable = true;
+                node.querySelector("img").draggable = false;
+                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
+            });
+            
+            let favs = LocalStorage.get("fav_emoticons", []);
+            HTML.afterBegin(emoticonPopup, 
+                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
+                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                </div>`);
+                
+            let favBox = emoticonPopup.querySelector("#es_fav_emoticons");
+            let favRemove = emoticonPopup.querySelector("#es_fav_remove");
+            updateFavs(favs, emoticonPopup, favBox, favRemove);
+
+            favBox.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragenter", function(ev) {
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragleave", function(ev) {
+                favBox.style.backgroundColor = null;
+            });
+
+            favBox.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favBox.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                if (favs.includes(name)) { return; }
+
+                favs.push(name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+
+            favRemove.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favRemove.style.backgroundColor = "black";
+            });
+            
+            favRemove.addEventListener("dragenter", function(ev) {
+                favRemove.style.backgroundColor = "black";
+            });
+
+            favRemove.addEventListener("dragleave", function(ev) {
+                favRemove.style.backgroundColor = null;
+            });
+
+            favRemove.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favRemove.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                favs = favs.filter(fav => fav !== name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+        });
+
+        observer.observe(document.body, { childList: true });
     };
 
     return self;
@@ -289,7 +413,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
-            SpamCommentHandler.hideSpamComments();
+            CommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -407,7 +531,7 @@ let ProfileHomePageClass = (function(){
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== false) {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
@@ -487,14 +611,19 @@ let ProfileHomePageClass = (function(){
 
             let name =  HTML.escape(customLink.name);
             let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
-            let icon = "//" + HTML.escape(customLink.icon);
+            let icon;
+            if (customLink.icon) {
+                icon = "//" + HTML.escape(customLink.icon);
+            } else {
+                iconType = "none";
+            }
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
                     <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
+                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
                     }
                     htmlstr += `</a>
                 </div>`;
@@ -1352,6 +1481,7 @@ let StatsPageClass = (function(){
         }
 
         this.addAchievementSort();
+        this.showEntireDescriptions();
     }
 
     let _nodes = {
@@ -1424,6 +1554,15 @@ let StatsPageClass = (function(){
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);
         });
+    };
+    
+
+    StatsPageClass.prototype.showEntireDescriptions = function() {
+        // .ellipsis is only added by Steam on personal stats pages
+        let nodes = document.querySelectorAll("h5.ellipsis");
+        for (let node of nodes) {
+            node.classList.remove("ellipsis");
+        }
     };
 
     return StatsPageClass;
@@ -3566,12 +3705,12 @@ let WorkshopBrowseClass = (function(){
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
         let appid = GameId.getAppidUriQuery(window.location.search);
-        if (!appid) return;
-        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
+        if (!appid) { return; }
+        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
 
         let subscriberButtons = `
             <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
-            <div id="es_subscriber" class="rightDetailsBlock">
+            <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
@@ -3587,9 +3726,13 @@ let WorkshopBrowseClass = (function(){
 
         HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
 
-        document.querySelector(".es_subscriber").addEventListener("click", event => {
+        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
             let method = event.target.closest(".es_subscriber").dataset.method;
-            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            let total = parseInt(
+                document.querySelector(".workshopBrowsePagingInfo").textContent
+                    .replace(/\d+-\d+/g, "")
+                    .match(/\d+/g)[0]);
+
             startSubscriber(method, total);
         });
 
@@ -3642,15 +3785,19 @@ let WorkshopBrowseClass = (function(){
     
                     let result = await RequestData.getHttp(url.toString());
                     let xmlDoc = new DOMParser().parseFromString(result, "text/html");
-                    workshopItems = workshopItems.concat(Array.from(xmlDoc.querySelectorAll(".workshopItemPreviewHolder")).map(node => node.id.replace("sharedfile_", "")));
+
+                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                        workshopItems.push(node.id.replace("sharedfile_", ""))
+                    }
                 }
     
-                Promise.all(workshopItems.map(id => changeSubscription(id))).finally(() => {
-                    location.reload();
-                });
+                Promise.all(
+                    workshopItems
+                        .map(id => changeSubscription(id)))
+                        .finally(() => { location.reload(); });
             }, true)
         }
-    }
+    };
 
     return WorkshopBrowseClass;
 })();
@@ -3662,7 +3809,8 @@ let WorkshopBrowseClass = (function(){
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
+    CommentHandler.hideSpamComments();
+    CommentHandler.addFavoriteEmoticons();
 
     switch (true) {
 
@@ -3732,7 +3880,7 @@ let WorkshopBrowseClass = (function(){
 
         case /^\/tradingcards\/boostercreator/.test(path):
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+                .textContent.trim().replace(/[\d]+,?/g, "");
 
             ExtensionLayer.runInPageContext(`function() {
                 $J("#booster_game_selector option").each(function(index) {

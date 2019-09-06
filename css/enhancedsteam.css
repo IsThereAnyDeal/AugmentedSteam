@@ -1281,6 +1281,86 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * App pages
+ * addFullscreenScreenshotView()
+ **************************************/
+.es_screenshot_fullscreen_toggle {
+	position: absolute;
+	right: 18%;
+	bottom: 0;
+}
+.es_screenshot_fullscreen_toggle i {
+	display: block;
+	background-image: url('data:image/gif;base64,R0lGODlhEAAgAIABAP///////yH5BAEAAAEALAAAAAAQACAAAAJAjH+gC+jB1HNxpmqjnHVz31iQOIoh5D0Spmom+y0kypDaOWf2hVMNjLi9asNUTFZECpO9FjIDDLqOvyYvscsVAAA7');
+	background-position: top left;
+	width: 16px;
+	height: 16px;
+	margin: 5px;
+}
+.es_screenshot_download_btn {
+	position: absolute;
+	right: 24%;
+	bottom: 0;
+}
+.es_screenshot_download_btn i {
+	display: block;
+	background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1);
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	margin: 5px;
+}
+.screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
+	background-position: bottom left;
+}
+.screenshot_popup_modal_content:fullscreen {
+	padding: 0;
+	background: none;
+}
+.screenshot_popup_modal_content .screenshot_popup_modal_title {
+	display: none;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_img_ctn {
+	width: 100%;
+	height: 100%;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_img_ctn > img {
+	max-width: 100% !important;
+	max-height: 100% !important;
+	object-fit: scale-down;
+	width: 100%;
+	height: 100%;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	overflow: visible;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .btn_medium {
+	opacity: 0;
+	transition: opacity 0.25s ease-in-out;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer:hover > .btn_medium {
+	opacity: 1;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > div:first-child {
+	display: inline-block;
+	background: rgba(103, 193, 245, 0.2);
+	border-radius: 100px;
+	padding: 0 1em;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .previous::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 40vw;
+	height: 100vh;
+}
+
+/***************************************
  * Store and Community
  * add_language_warning(),
  * add_fake_country_code_warning()
@@ -1684,6 +1764,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_regional_unavailable {
 	font-size: 12px;
 }
+
+/***************************************
+ * Regional Price Bugfix
+ **************************************/
+ .ds_options_tooltip {
+	 z-index: 99999 !important;
+ }
 
 /***************************************
  * Version update dialog
@@ -2464,8 +2551,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 .esi-note {
 	font-size: 11px;
-	overflow: hidden;
-	height: 19px;
+	height: fit-content;
 	margin-top:5px;
 	flex-grow:2;
 	margin-right:5px;
@@ -2614,7 +2700,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Store curator pages
- * 
  **************************************/
 .capsule.smallcapsule .es_overlay_container {
 	position: absolute;
@@ -2630,7 +2715,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Layout around Customizer on App Pages
- * 
  **************************************/
 .game_page_autocollapse_ctn { margin-top: 30px; }
 .game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
@@ -2646,4 +2730,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	content: "";
 	display: block;
 	clear: both;
+}
+
+/***************************************
+ * Shows all "View all comments" links
+ * on the friends activity page
+ **************************************/
+.blotter_viewallcomments_container {
+	display: block !important;
+}
+
+/***************************************
+ * Fix long-shaped artwork thumbnails
+ **************************************/
+.publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
+	min-height: 100px;
+}
+
+#modalContent.modal_frame {
+	min-width: 720px !important;
 }
