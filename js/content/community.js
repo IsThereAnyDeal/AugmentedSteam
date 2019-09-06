@@ -3690,7 +3690,7 @@ let WorkshopBrowseClass = (function(){
                     withCredentials: true
                 }, true)
                 .then(function(res) {
-                    if (!res || !res.success || res.success !== 1) {
+                    if (!res || !res.success) {
                         throw new Error("Bad response");
                     }
                 })
