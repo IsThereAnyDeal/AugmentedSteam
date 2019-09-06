@@ -3498,7 +3498,7 @@ let WorkshopPageClass = (function(){
         let image = document.querySelector(".browseOptionImage");
         tab.parentNode.insertAdjacentElement("afterbegin", image);
 
-        Array.from(document.querySelectorAll(".browseOption")).forEach(tab => tab.classList.add("notSelected"));
+        document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");
 
         let container = document.querySelector("#workshop_appsRows");
