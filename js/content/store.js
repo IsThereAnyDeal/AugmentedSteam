@@ -575,6 +575,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -1213,6 +1214,20 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showclient")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
+    }
+
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
@@ -1499,16 +1514,6 @@ class AppPageClass extends StorePageClass {
 
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
 
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";

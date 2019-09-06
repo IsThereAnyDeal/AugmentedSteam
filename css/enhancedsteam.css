@@ -2750,3 +2750,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #modalContent.modal_frame {
 	min-width: 720px !important;
 }
+
+/***************************************
+ * Global Steam Client button
+ **************************************/
+.header_installsteam_btn_content.es_steamclient_btn {
+	background-image: url(https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png);
+    background-position: 5px;
+    padding-left: 28px;
+}
