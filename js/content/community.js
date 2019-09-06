@@ -3689,15 +3689,15 @@ let WorkshopBrowseClass = (function(){
                         failed++;
                         console.error(new Error("Bad response"))
                     }
-                    completed++;
-                    updateWaitDialog();
                 })
                 .catch(function(err) {
                     failed++;
-                    completed++;
-                    updateWaitDialog();
                     console.error(err);
                 })
+                .finally(function() {
+                    completed++;
+                    updateWaitDialog();
+                });
             }
 
             Messenger.addMessageListener("startSubscriber", async function() {
