@@ -3496,9 +3496,7 @@ let WorkshopPageClass = (function(){
         tab.setAttribute("disabled", "disabled");
         
         let image = document.querySelector(".browseOptionImage");
-        let clone = image.cloneNode(true);
-        image.remove();
-        tab.parentNode.insertAdjacentElement("afterbegin", clone);
+        tab.parentNode.insertAdjacentElement("afterbegin", image);
 
         Array.from(document.querySelectorAll(".browseOption")).forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");
