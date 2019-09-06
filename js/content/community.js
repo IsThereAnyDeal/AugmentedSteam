@@ -3722,8 +3722,7 @@ let WorkshopBrowseClass = (function(){
     
                     let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
                     if (!result) {
-                        await sleep(10000);
-                        p--;
+                        console.error("Failed to request " + url.toString())
                         continue;
                     }
 
