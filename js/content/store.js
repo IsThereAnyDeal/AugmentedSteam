@@ -3043,6 +3043,7 @@ let SearchPageClass = (function(){
             $J("button.es_search_action").on("click", function(event) {
                 let appids = $J(".search_result_row[data-ds-appid]:not(:hidden)").get().map(e => parseInt($J(e).data("ds-appid")));
                 let n = appids.length;
+                let fails = 0;
                 let btn = $J(event.target).closest("button.es_search_action");
                 let text = btn.text();
                 let prompt = ShowConfirmDialog(text, "${Localization.str.search_results.confirm}".replace("__n__", n));
@@ -3055,12 +3056,12 @@ let SearchPageClass = (function(){
                     let url = btn.data("url");
                     let formData = btn.data("form") || {};
                     formData.sessionid = g_sessionID;
-                    appids.forEach(function(appid) {
+                    appids.forEach(appid => {
                         formData.appid = appid;
-                        $J.post(url, formData).always(function() {
+                        $J.post(url, formData).fail(() => fails++).always(() => {
                             n--;
                             wait.Dismiss();
-                            wait = ShowBlockingWaitDialog(text, "${Localization.str.loading} " + (appids.length - n) + "/" + appids.length);
+                            wait = ShowBlockingWaitDialog(text, "${Localization.str.loading} " + (appids.length - n) + "/" + appids.length + (fails > 0 ? " (${Localization.str.failed})".replace("__n__", fails) : ""));
                             if (n === 0) {
                                 wait.Dismiss();
                                 ShowAlertDialog(text, "${Localization.str.search_results.success}");
