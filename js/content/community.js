@@ -3658,10 +3658,11 @@ let WorkshopBrowseClass = (function(){
         });
 
         function startSubscriber(method, total) {
-            let i = -1;
+            let completed = 0;
+            let failed = 0;
 
             ExtensionLayer.runInPageContext(`function(){
-                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                let prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
                 prompt.done(function(result) {
                     if (result == "OK") {
                         Messenger.postMessage("startSubscriber");
@@ -3675,42 +3676,74 @@ let WorkshopBrowseClass = (function(){
                         window.dialog.Dismiss();
                     }
 
-                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
+                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", completed).replace("__count__", total)}${failed ? ` (${Localization.str.failed.replace("__n__", failed)})` : ""}\`);
                 }`)
             }
 
             function changeSubscription(id) {
-                return new Promise(function(resolve) {
-                    let formData = new FormData();
-                    formData.append("sessionid", User.getSessionId());
-                    formData.append("appid", appid);
-                    formData.append("id", id);
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid);
+                formData.append("id", id);
 
-                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
-                        withCredentials: true
-                    }).then(function() {
-                        updateWaitDialog();
-                        resolve();
-                    });
+                return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                    withCredentials: true
+                }, true)
+                .then(function(res) {
+                    if (!res || !res.success || res.success !== 1) {
+                        throw new Error("Bad response");
+                    }
+                })
+                .catch(function(err) {
+                    failed++;
+                    console.error(err);
+                })
+                .finally(function() {
+                    completed++;
+                    updateWaitDialog();
                 });
             }
 
             Messenger.addMessageListener("startSubscriber", async function() {
                 updateWaitDialog();
 
+                function canSkip(method, node) {
+                    if (method === "subscribe") {
+                        return node && node.style.display !== "none";
+                    }
+
+                    if (method === "unsubscribe") {
+                        return !node || node.style.display === "none";
+                    }
+
+                    return false;
+                }
+
+                let parser = new DOMParser();
                 let workshopItems = [];
                 for (let p = 1; p <= Math.ceil(total / 30); p++) {
                     let url = new URL(window.location.href);
                     url.searchParams.set("p", p);
                     url.searchParams.set("numperpage", 30);
     
-                    let result = await RequestData.getHttp(url.toString());
-                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                    if (!result) {
+                        console.error("Failed to request " + url.toString())
+                        continue;
+                    }
 
-                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                    let xmlDoc = parser.parseFromString(result, "text/html");
+                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                        if (canSkip(method, subNode)) { continue; }
+                    
+                        node = node.querySelector(".workshopItemPreviewHolder");
                         workshopItems.push(node.id.replace("sharedfile_", ""))
                     }
                 }
+
+                total = workshopItems.length;
+                updateWaitDialog();
     
                 Promise.all(
                     workshopItems

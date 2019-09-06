@@ -328,11 +328,11 @@ let RequestData = (function(){
         });
     };
 
-    self.post = function(url, formData, settings) {
+    self.post = function(url, formData, settings, returnJSON) {
         return self.getHttp(url, Object.assign(settings || {}, {
             method: "POST",
             body: formData
-        }));
+        }), returnJSON);
     };
 
     self.getJson = function(url, settings) {
