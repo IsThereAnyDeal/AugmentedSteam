@@ -474,7 +474,7 @@
     },
     "survey": {
         "performance_survey": "Badanie wydajności",
-        "users": "__users__ użytkowników ukończyło badanie wydajności tej gry",
+        "users": "__users__ użytkowników ukończyło badanie wydajności tej gry.",
         "framerate": "Liczba klatek na sekundę",
         "framerate_response": "ankietowanych odpowiedziało, że liczba klatek na sekundę była",
         "framerate_30": "stała (30 kl./s lub mniej)",
@@ -488,7 +488,7 @@
         "satisfaction": "Satysfakcja z wydajności GPU (wg producenta)",
         "gs_y": "Posiada wbudowane menu opcji graficznych",
         "gs_n": "Nie posiada wbudowanego menu opcji graficznych",
-        "nobody": "Jeszcze nikt nie podjął się badania wydajności tej gry",
+        "nobody": "Jeszcze nikt nie podjął się badania wydajności tej gry.",
         "take": "Weź udział w badaniu"
     },
     "select": {

@@ -454,7 +454,7 @@ let ProfileHomePageClass = (function(){
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== false) {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
@@ -534,14 +534,19 @@ let ProfileHomePageClass = (function(){
 
             let name =  HTML.escape(customLink.name);
             let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
-            let icon = "//" + HTML.escape(customLink.icon);
+            let icon;
+            if (customLink.icon) {
+                icon = "//" + HTML.escape(customLink.icon);
+            } else {
+                iconType = "none";
+            }
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
                     <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
+                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
                     }
                     htmlstr += `</a>
                 </div>`;
@@ -1397,6 +1402,7 @@ let StatsPageClass = (function(){
         }
 
         this.addAchievementSort();
+        this.showEntireDescriptions();
     }
 
     let _nodes = {
@@ -1469,6 +1475,15 @@ let StatsPageClass = (function(){
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);
         });
+    };
+    
+
+    StatsPageClass.prototype.showEntireDescriptions = function() {
+        // .ellipsis is only added by Steam on personal stats pages
+        let nodes = document.querySelectorAll("h5.ellipsis");
+        for (let node of nodes) {
+            node.classList.remove("ellipsis");
+        }
     };
 
     return StatsPageClass;
@@ -3611,12 +3626,12 @@ let WorkshopBrowseClass = (function(){
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
         let appid = GameId.getAppidUriQuery(window.location.search);
-        if (!appid) return;
-        if (!document.querySelector(".workshopBrowsePagingInfo")) return;
+        if (!appid) { return; }
+        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
 
         let subscriberButtons = `
             <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
-            <div id="es_subscriber" class="rightDetailsBlock">
+            <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
@@ -3632,9 +3647,13 @@ let WorkshopBrowseClass = (function(){
 
         HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
 
-        document.querySelector(".es_subscriber").addEventListener("click", event => {
+        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
             let method = event.target.closest(".es_subscriber").dataset.method;
-            let total = parseInt(document.querySelector(".workshopBrowsePagingInfo").textContent.replace(/\d+-\d+/g, "").match(/\d+/g)[0]);;
+            let total = parseInt(
+                document.querySelector(".workshopBrowsePagingInfo").textContent
+                    .replace(/\d+-\d+/g, "")
+                    .match(/\d+/g)[0]);
+
             startSubscriber(method, total);
         });
 
@@ -3687,15 +3706,19 @@ let WorkshopBrowseClass = (function(){
     
                     let result = await RequestData.getHttp(url.toString());
                     let xmlDoc = new DOMParser().parseFromString(result, "text/html");
-                    workshopItems = workshopItems.concat(Array.from(xmlDoc.querySelectorAll(".workshopItemPreviewHolder")).map(node => node.id.replace("sharedfile_", "")));
+
+                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                        workshopItems.push(node.id.replace("sharedfile_", ""))
+                    }
                 }
     
-                Promise.all(workshopItems.map(id => changeSubscription(id))).finally(() => {
-                    location.reload();
-                });
+                Promise.all(
+                    workshopItems
+                        .map(id => changeSubscription(id)))
+                        .finally(() => { location.reload(); });
             }, true)
         }
-    }
+    };
 
     return WorkshopBrowseClass;
 })();
@@ -3881,7 +3904,7 @@ let EditGuidePageClass = (function(){
 
         case /^\/tradingcards\/boostercreator/.test(path):
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+                .textContent.trim().replace(/[\d]+,?/g, "");
 
             ExtensionLayer.runInPageContext(`function() {
                 $J("#booster_game_selector option").each(function(index) {

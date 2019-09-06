@@ -504,7 +504,7 @@
     },
     "survey": {
         "performance_survey": "Performance Survey",
-        "users": "__users__ users have completed the performance survey for this game",
+        "users": "__users__ users have completed the performance survey for this game.",
         "framerate": "Framerate",
         "framerate_response": "responded that the framerate was",
         "framerate_30": "fixed at 30fps or lower",
@@ -518,7 +518,7 @@
         "satisfaction": "Performance Satisfaction by GPU",
         "gs_y": "Has built-in graphic options or a graphics menu",
         "gs_n": "Does not have built-in graphic options or a graphics menu",
-        "nobody": "Nobody has taken a performance survey for this game yet",
+        "nobody": "Nobody has taken a performance survey for this game yet.",
         "take": "Take The Survey"
     },
     "select": {
@@ -600,5 +600,6 @@
     },
     "this_version": "This version",
     "original_authors": "Original authors",
+    "acknowledgements": "Acknowledgments",
     "powered_by": "Powered by __link__"
 }

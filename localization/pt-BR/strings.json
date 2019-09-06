@@ -476,7 +476,7 @@
     },
     "survey": {
         "performance_survey": "Pesquisa de desempenho",
-        "users": "__users__ usuários responderam a pesquisa de desempenho deste jogo",
+        "users": "__users__ usuários responderam a pesquisa de desempenho deste jogo.",
         "framerate": "Taxa de quadros",
         "framerate_response": "respondeu que a taxa de quadros era",
         "framerate_30": "fixada a 30qps ou menor",
@@ -490,7 +490,7 @@
         "satisfaction": "Satisfação de desempenho por GPU",
         "gs_y": "Possui opções gráficas ou menu de gráficos embutidos",
         "gs_n": "Não possui opções gráficas ou menu de gráficos embutidos",
-        "nobody": "Ninguém respondeu a pesquisa de desempenho deste jogo",
+        "nobody": "Ninguém respondeu a pesquisa de desempenho deste jogo.",
         "take": "Responder a pesquisa"
     },
     "select": {

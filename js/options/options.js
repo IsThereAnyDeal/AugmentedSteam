@@ -298,7 +298,7 @@ let Options = (function(){
 
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        Localization.then(async () => {
+        return Localization.then(async () => {
             document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
             // Localize elements with text
@@ -333,15 +333,16 @@ let Options = (function(){
 
 
             let total = deepCount(Localization.str);
-            for (let lang in Localization.str.options.lang) {
+            for (let lang of Object.keys(Localization.str.options.lang)) {
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
                 let count = deepCount(locale);
                 let percentage = 100 * count / total;
-                let node = document.querySelector(".language." + lang);
-                if (node) {
-                    HTML.inner(node, `${Localization.str.options.lang[lang]} (<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>):`);
-                }
+
+                HTML.inner(
+                    document.querySelector(".lang-perc." + lang),
+                    `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
+                );
             }
 
             function deepCount(obj) {
@@ -358,7 +359,7 @@ let Options = (function(){
                 }
                 return cnt;
             }
-        }).then(Sidebar.create);
+        });
     }
 
     let Region = (function() {
@@ -415,7 +416,7 @@ let Options = (function(){
                 });
                 break;
             }
-            case "false": {
+            case "none": {
                 icons.forEach(icon => icon.style.display = "none");
             }
         }
@@ -479,10 +480,10 @@ let Options = (function(){
             });
             changelogLoaded = true;
         }
-
-        loadTranslation();
+        
         loadProfileLinkImages();
         loadStores();
+        return loadTranslation();
     }
 
 
@@ -607,7 +608,7 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadOptions();
+        loadOptions().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 
