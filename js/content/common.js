@@ -1038,7 +1038,7 @@ let EnhancedSteam = (function() {
     self.launchRandomButton = function() {
 
         HTML.beforeEnd("#es_popup .popup_menu",
-        `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+            `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
             let result = await DynamicStore;
@@ -2118,7 +2118,6 @@ let Common = (function(){
         EnhancedSteam.disableLinkFilter();
         EnhancedSteam.skipGotSteam();
         EnhancedSteam.keepSteamSubscriberAgreementState();
-        EnhancedSteam.viewInSteamButton();
 
         if (User.isSignedIn) {
             EnhancedSteam.addRedeemLink();
