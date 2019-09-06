@@ -3773,7 +3773,7 @@ let EditGuidePageClass = (function(){
 
                 elem.on("keydown paste input", function(e) {
                     tag = elem.val();
-                    if (e.key == "Enter" || e.which == 13) {
+                    if (e.key == "Enter") {
                         Modal.Dismiss();
                         done();
                         return;
