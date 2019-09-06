@@ -3794,7 +3794,6 @@ let EditGuidePageClass = (function(){
         let params = new URLSearchParams(window.location.search);
         let curId = params.get("id") || "recent";
         let savedTags = LocalStorage.get("es_guide_tags");
-        savedTags = !savedTags || typeof savedTags !== "object" ? {} : savedTags;
         if (!savedTags[curId]) {
             savedTags[curId] = savedTags.recent || [];
         }
