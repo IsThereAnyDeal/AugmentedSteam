@@ -3041,7 +3041,7 @@ let SearchPageClass = (function(){
         HTML.beforeBegin("#additional_search_options > .block", buttonsHtml);
         ExtensionLayer.runInPageContext(`function() {
             $J("button.es_search_action").on("click", function(event) {
-                let appids = $J(".search_result_row[data-ds-appid]:not(:hidden)").get().map(e => parseInt($J(e).data("ds-appid")));
+                let appids = $J(".search_result_row[data-ds-appid]:visible").get().map(e => parseInt($J(e).data("ds-appid")));
                 let n = appids.length;
                 let fails = 0;
                 let btn = $J(event.target).closest("button.es_search_action");
