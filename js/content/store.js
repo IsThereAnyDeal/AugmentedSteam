@@ -1432,10 +1432,24 @@ class AppPageClass extends StorePageClass {
         if (this.isDlc()) { return; }
 
         let appid = this.appid;
-        let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
-        if (!response || !response[appid] || !response[appid].success) { return; }
+        let cache = LocalStorage.get("support_infos", {});
+        for (let id in cache) {
+            if (cache[id].expiry < Math.trunc(Date.now() / 1000)) {
+                delete cache[id];
+            }
+        }
 
-        let supportInfo = response[appid].data.support_info;
+        let supportInfo = cache[appid];
+        if (!supportInfo) {
+            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            if (!response || !response[appid] || !response[appid].success) { return; }
+
+            supportInfo = response[appid].data.support_info;
+            supportInfo.expiry = Math.trunc(Date.now() / 1000) + 30 * 24 * 60 * 60;
+            cache[appid] = supportInfo;
+            LocalStorage.set("support_infos", cache);
+        }
+
         let url = supportInfo.url;
         let email = supportInfo.email;
         if (!email && !url) { return; }
