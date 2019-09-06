@@ -131,7 +131,7 @@
     "price_above_tooltip": "Gib Null für kostenlose Items oder Items ohne Preis ein; Lass das Feld leer um dieses Feature zu deaktivieren",
     "news": "Neuigkeiten",
     "check_system": "Dein System überprüfen",
-    "viewinclient": "Im Steam-Client anzeigen",
+    "viewinclient": "Im Client anzeigen",
     "custom_background": "Eigener Hintergrund",
     "custom_style": "Eigener Stil",
     "custom_style_help": "Alle Benutzer von Augmented Steam werden diesen Stil auf deinem Profil sehen. Personen, die Augmented Steam nicht verwenden, werden keine Veränderungen sehen.",
@@ -457,7 +457,7 @@
     },
     "survey": {
         "performance_survey": "Leistungsumfrage",
-        "users": "__users__ Benutzer haben die Leistungsumfrage für dieses Spiel abgeschlossen",
+        "users": "__users__ Benutzer haben die Leistungsumfrage für dieses Spiel abgeschlossen.",
         "framerate": "Bildrate",
         "framerate_response": "antworteten mit der Bildrate",
         "framerate_30": "festgelegt auf 30 fps oder niedriger",
@@ -471,7 +471,7 @@
         "satisfaction": "Leistungszufriedenheit nach GPU",
         "gs_y": "Hat Grafikeinstellungen oder Grafik-Menü eingebaut",
         "gs_n": "Hat weder Grafikeinstellungen noch Grafik-Menü eingebaut",
-        "nobody": "Noch niemand hat die Leistungsumfrage für dieses Spiel abgeschlossen",
+        "nobody": "Noch niemand hat die Leistungsumfrage für dieses Spiel abgeschlossen.",
         "take": "Nimm an der Umfrage teil"
     },
     "select": {

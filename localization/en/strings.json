@@ -3,6 +3,7 @@
     "copied": "'__text__' has been copied to your clipboard.",
     "profile_steamid": "Show SteamID on profiles",
     "view_steamid": "View SteamID",
+    "view_in_library": "View in Library",
     "support": "Support",
     "email": "E-mail",
     "contact": "Contact",
@@ -14,6 +15,7 @@
     "unsubscribe_confirm": "Are you sure you want to unsubscribe to all __count__ workshop items with these filters?",
     "subscribe_loading": "Subscribing to __i__/__count__ workshop items, please wait...",
     "unsubscribe_loading": "Unsubscribing to __i__/__count__ workshop items, please wait...",
+    "failed": "__n__ failed",
     "post_history": "View post history",
     "add_nickname": "Add Nickname",
     "total_size": "Total Size",
@@ -156,7 +158,7 @@
     "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
-    "viewinclient": "View in Steam Client",
+    "viewinclient": "View in Client",
     "custom_background": "Custom Background",
     "custom_style": "Custom Theme",
     "custom_style_help": "All users of Augmented Steam will see this theme on your profile.  Non-Augmented Steam users will not see any theme changes made here.",
@@ -505,7 +507,7 @@
     },
     "survey": {
         "performance_survey": "Performance Survey",
-        "users": "__users__ users have completed the performance survey for this game",
+        "users": "__users__ users have completed the performance survey for this game.",
         "framerate": "Framerate",
         "framerate_response": "responded that the framerate was",
         "framerate_30": "fixed at 30fps or lower",
@@ -519,7 +521,7 @@
         "satisfaction": "Performance Satisfaction by GPU",
         "gs_y": "Has built-in graphic options or a graphics menu",
         "gs_n": "Does not have built-in graphic options or a graphics menu",
-        "nobody": "Nobody has taken a performance survey for this game yet",
+        "nobody": "Nobody has taken a performance survey for this game yet.",
         "take": "Take The Survey"
     },
     "select": {

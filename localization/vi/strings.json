@@ -453,7 +453,7 @@
     },
     "survey": {
         "performance_survey": "Khảo sát Hiệu năng",
-        "users": "__users__ người dùng đã hoàn thành khảo sát hiệu năng cho trò chơi này",
+        "users": "__users__ người dùng đã hoàn thành khảo sát hiệu năng cho trò chơi này.",
         "framerate": "Khung hình",
         "framerate_response": "trả lời rằng khung hình",
         "framerate_30": "cố định tại 30fps hoặc thấp hơn",
@@ -467,7 +467,7 @@
         "satisfaction": "Performance Satisfaction by GPU",
         "gs_y": "Has built-in graphic options or a graphics menu",
         "gs_n": "Does not have built-in graphic options or a graphics menu",
-        "nobody": "Nobody has taken a performance survey for this game yet",
+        "nobody": "Nobody has taken a performance survey for this game yet.",
         "take": "Take The Survey"
     },
     "select": {

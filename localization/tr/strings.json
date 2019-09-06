@@ -453,7 +453,7 @@
     },
     "survey": {
         "performance_survey": "Performans Araştırması",
-        "users": "__users__ kullanıcı bu oyun için performans araştırmasını tamamladı",
+        "users": "__users__ kullanıcı bu oyun için performans araştırmasını tamamladı.",
         "framerate": "Kare hızı",
         "framerate_response": "kare hızı için şöyle dedi:",
         "framerate_30": "30fps sabit veya daha düşük",
@@ -467,7 +467,7 @@
         "satisfaction": "GPU'ya göre Performans Memnuniyeti",
         "gs_y": "Yerleşik grafik seçenekleri ya da bir grafik menüsü mevcut",
         "gs_n": "Yerleşik grafik seçenekleri veya bir grafik menüsü yok",
-        "nobody": "Hiç kimse henüz bu oyun için performans araştırmasını almamıştır",
+        "nobody": "Hiç kimse henüz bu oyun için performans araştırmasını almamıştır.",
         "take": "Anketimize Katılın"
     },
     "select": {

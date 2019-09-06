@@ -575,6 +575,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -1213,6 +1214,20 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showclient")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
+    }
+
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
@@ -1420,8 +1435,9 @@ class AppPageClass extends StorePageClass {
                 continue;
             }
 
-            let parts = homepageLink.pathname.split(`/`);
-            linkNode.href = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
+            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let value = linkNode.innerText;
+            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
     }
@@ -1431,10 +1447,24 @@ class AppPageClass extends StorePageClass {
         if (this.isDlc()) { return; }
 
         let appid = this.appid;
-        let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
-        if (!response || !response[appid] || !response[appid].success) { return; }
+        let cache = LocalStorage.get("support_infos", {});
+        for (let id in cache) {
+            if (cache[id].expiry < Math.trunc(Date.now() / 1000)) {
+                delete cache[id];
+            }
+        }
 
-        let supportInfo = response[appid].data.support_info;
+        let supportInfo = cache[appid];
+        if (!supportInfo) {
+            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            if (!response || !response[appid] || !response[appid].success) { return; }
+
+            supportInfo = response[appid].data.support_info;
+            supportInfo.expiry = Math.trunc(Date.now() / 1000) + 30 * 24 * 60 * 60;
+            cache[appid] = supportInfo;
+            LocalStorage.set("support_infos", cache);
+        }
+
         let url = supportInfo.url;
         let email = supportInfo.email;
         if (!email && !url) { return; }
@@ -1484,16 +1514,6 @@ class AppPageClass extends StorePageClass {
 
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
 
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
@@ -1671,7 +1691,7 @@ class AppPageClass extends StorePageClass {
         let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
             html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
             switch (survey["fr"]) {
                 case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
@@ -1728,7 +1748,7 @@ class AppPageClass extends StorePageClass {
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+            html += "<p>" + Localization.str.survey.nobody + "</p>";
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
@@ -2423,7 +2443,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2432,14 +2452,10 @@ let SearchPageClass = (function(){
             let lastNode = document.querySelector(".search_result_row:last-child");
 
             // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = `,"public":1`;
-            if (User.isSignedIn) {
-                publicAttr = '';
-            }
+            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let i=0, len=rows.length; i<len; i++) {
-                let row = rows[i];
+            rows.forEach(row => {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2454,18 +2470,20 @@ let SearchPageClass = (function(){
                 }
                 lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
                 lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
-            }
+            });
 
             document.querySelector(".LoadingWrapper").remove();
 
             searchPage = searchPage + 1;
             processing = false;
 
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(() => {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
             });
+
+            Highlights.highlightAndTag(rows);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
