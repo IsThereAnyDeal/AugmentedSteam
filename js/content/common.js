@@ -957,9 +957,7 @@ let EnhancedSteam = (function() {
         let btn = document.querySelector("div.header_installsteam_btn > a");
         btn.textContent = Localization.str.viewinclient;
         btn.href =  `steam://openurl/${window.location.href}`;
-        btn.style.backgroundImage = "url(https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png)";
-        btn.style.backgroundPosition = "5px";
-        btn.style.paddingLeft = "28px";
+        btn.classList.add("es_steamclient_btn")
     };
 
     self.removeAboutLinks = function() {
