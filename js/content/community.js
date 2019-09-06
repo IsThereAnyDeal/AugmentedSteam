@@ -3491,7 +3491,7 @@ let WorkshopPageClass = (function(){
 
     WorkshopPageClass.prototype.changeTab = async function(query, start=0, count=8) {
         let tab = document.querySelector("." + query);
-        if (tab.hasAttribute("disabled")) { return false; }
+        if (tab.hasAttribute("disabled")) { return; }
 
         tab.setAttribute("disabled", "disabled");
         
