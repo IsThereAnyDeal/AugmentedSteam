@@ -3763,7 +3763,6 @@ let EditGuidePageClass = (function(){
                 let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
                 
                 let elem = $J(".es_tag");
-                console.log({elem, target: e.target})
                 let tag = elem.val();
 
                 function done() {
