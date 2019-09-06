@@ -951,10 +951,23 @@ let EnhancedSteam = (function() {
         Promise.reject(err);
     };
 
+    self.viewInSteamButton = function() {
+        if (!SyncedStorage.get("showclient")) { return; }
+
+        let btn = document.querySelector("div.header_installsteam_btn > a");
+        btn.textContent = Localization.str.viewinclient;
+        btn.href =  `steam://openurl/${window.location.href}`;
+        btn.style.backgroundImage = "url(https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png)";
+        btn.style.backgroundPosition = "5px";
+        btn.style.paddingLeft = "28px";
+    };
+
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        DOMHelper.remove("div.header_installsteam_btn");
+        if (!SyncedStorage.get("showclient")) {
+            DOMHelper.remove("div.header_installsteam_btn");
+        }
 
         if (User.isSignedIn) {
             DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
@@ -1025,7 +1038,7 @@ let EnhancedSteam = (function() {
     self.launchRandomButton = function() {
 
         HTML.beforeEnd("#es_popup .popup_menu",
-            `<a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+        `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
             let result = await DynamicStore;
@@ -1057,11 +1070,6 @@ let EnhancedSteam = (function() {
             });
 
         });
-    };
-
-    self.viewInSteamButton = function() {
-        HTML.beforeEnd("#es_popup .popup_menu",
-            `<div class='hr'></div><a id='es_steam_client' class='popup_menu_item' href='steam://openurl/${window.location.href}' >${Localization.str.viewinclient}</a>`);
     };
 
     self.skipGotSteam = function() {
@@ -2103,6 +2111,7 @@ let Common = (function(){
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
+        EnhancedSteam.viewInSteamButton();
         EnhancedSteam.removeAboutLinks();
         EnhancedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
