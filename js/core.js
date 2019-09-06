@@ -197,7 +197,9 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
-        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+        }
+        
+        if (oldVersion.isSameOrBefore("0.9.5")) {
             SyncedStorage.remove("version");
             SyncedStorage.remove("showesbg");
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
@@ -219,7 +221,9 @@ class UpdateHandler {
             }
             SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
             SyncedStorage.remove("wishlist_notes");
-        } else if (oldVersion.isSameOrBefore("0.9.7")) {
+        }
+        
+        if (oldVersion.isSameOrBefore("0.9.7")) {
             SyncedStorage.remove("hide_wishlist");
             SyncedStorage.remove("hide_cart");
             SyncedStorage.remove("hide_notdiscounted");
@@ -227,7 +231,13 @@ class UpdateHandler {
             SyncedStorage.remove("hide_negative");
             SyncedStorage.remove("hide_priceabove");
             SyncedStorage.remove("priceabove_value");
-        }    
+        }
+        
+        if (oldVersion.isSameOrBefore("1.2.1")) {
+            if (!SyncedStorage.get("show_profile_link_images")) {
+                SyncedStorage.set("show_profile_link_images", "none");
+            }
+        }
     }
 }
 

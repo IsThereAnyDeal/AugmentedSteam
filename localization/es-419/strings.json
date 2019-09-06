@@ -454,7 +454,7 @@
     },
     "survey": {
         "performance_survey": "Encuesta de rendimiento",
-        "users": "__users__ usuarios han completado la encuesta de rendimiento para este juego",
+        "users": "__users__ usuarios han completado la encuesta de rendimiento para este juego.",
         "framerate": "Framerate",
         "framerate_response": "han respondido que el framerate era",
         "framerate_30": "fijo a 30fps o menor",
@@ -468,7 +468,7 @@
         "satisfaction": "Satisfacción del rendimiento de la GPU",
         "gs_y": "Tiene opciones gráficas o menú de gráficos incorporado",
         "gs_n": "No tiene incorporado opciones gráficas o menú de gráficos",
-        "nobody": "Hasta el momento nadie ha hecho la encuesta de rendimiento para este juego",
+        "nobody": "Hasta el momento nadie ha hecho la encuesta de rendimiento para este juego.",
         "take": "Hacer la encuesta"
     },
     "select": {
