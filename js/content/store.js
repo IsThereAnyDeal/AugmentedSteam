@@ -1380,16 +1380,6 @@ class AppPageClass extends StorePageClass {
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
 
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
-
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
             let url = "http://pcgamingwiki.com/api/appid.php?appid=" + this.appid;
