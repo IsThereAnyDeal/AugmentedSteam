@@ -940,6 +940,7 @@ let EnhancedSteam = (function() {
         });
     };
 
+    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
     self.addLoginWarning = function(err) {
         if (!loginWarningAdded) {
@@ -1367,7 +1368,7 @@ let Inventory = (function(){
             promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
         }
         
-        _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
+        _promise = Promise.all(promises);
         return _promise;
     };
 

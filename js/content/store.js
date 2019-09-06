@@ -1910,9 +1910,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -2019,7 +2019,7 @@ class AppPageClass extends StorePageClass {
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
 
-        }, EnhancedSteam.addLoginWarning);
+        });
     }
 
     customizeAppPage() {
