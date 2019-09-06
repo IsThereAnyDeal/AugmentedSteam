@@ -50,7 +50,8 @@
         "*://store.steampowered.com/api/*",
         "*://support.steampowered.com/*",
         "*://help.steampowered.com/*",
-        "*://translation.steampowered.com/*"
+        "*://translation.steampowered.com/*",
+        "*://partner.steampowered.com/*"        
       ],
       "js": [
         "js/lib/DOMPurify/purify.js",
