@@ -500,7 +500,7 @@ SyncedStorage.defaults = {
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
-    'showclient': true,
+    'showclient': false,
     'showsteamcardexchange': false,
     'showitadlinks': true,
     'showsteamdb': true,
