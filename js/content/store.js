@@ -2424,7 +2424,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2433,14 +2433,10 @@ let SearchPageClass = (function(){
             let lastNode = document.querySelector(".search_result_row:last-child");
 
             // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = `,"public":1`;
-            if (User.isSignedIn) {
-                publicAttr = '';
-            }
+            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let i=0, len=rows.length; i<len; i++) {
-                let row = rows[i];
+            rows.forEach(row => {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2455,18 +2451,20 @@ let SearchPageClass = (function(){
                 }
                 lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
                 lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
-            }
+            });
 
             document.querySelector(".LoadingWrapper").remove();
 
             searchPage = searchPage + 1;
             processing = false;
 
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(() => {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
             });
+
+            Highlights.highlightAndTag(rows);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
