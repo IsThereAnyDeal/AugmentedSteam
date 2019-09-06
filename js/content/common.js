@@ -957,7 +957,7 @@ let EnhancedSteam = (function() {
         let btn = document.querySelector("div.header_installsteam_btn > a");
         btn.textContent = Localization.str.viewinclient;
         btn.href =  `steam://openurl/${window.location.href}`;
-        btn.classList.add("es_steamclient_btn")
+        btn.classList.add("es_steamclient_btn");
     };
 
     self.removeAboutLinks = function() {
