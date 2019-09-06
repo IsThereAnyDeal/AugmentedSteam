@@ -2666,3 +2666,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #modalContent.modal_frame {
 	min-width: 720px !important;
 }
+
+/***************************************
+ * addCustomTags() to community guides
+ * 
+ **************************************/
+.es_tag {
+	text-transform: capitalize;
+}
+.es_tag::placeholder {
+	text-transform: none;
+}

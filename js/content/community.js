@@ -3708,8 +3708,10 @@ let EditGuidePageClass = (function(){
         this.rememberTags();
     }
 
-    function addTag(name) {
-        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter" checked>${name}</div>`;
+    function addTag(name, checked=true) {
+        name = HTML.escape(name);
+        let attr = checked ? " checked" : "";
+        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
         HTML.beforeBegin("#es_add_tag", tag);
     }
 
@@ -3722,7 +3724,7 @@ let EditGuidePageClass = (function(){
         if (!langSection) { return; }
 
         Messenger.addMessageListener("addtag", function(name) {
-            addTag(name);
+            addTag(name, true);
         });
         
         HTML.afterEnd(langSection,
@@ -3733,31 +3735,33 @@ let EditGuidePageClass = (function(){
                 </a></div>
             </div>`);
 
-        document.querySelector("#es_add_tag").addEventListener("click", function() {
-            ExtensionLayer.runInPageContext(`function() {
-                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea" id="es_tag" rows="1"></textarea></div>\`);
+        ExtensionLayer.runInPageContext(`function() {
+            $J("#es_add_tag").on("click", function(e) {
+                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
                 
-                let tag = "";
+                let elem = $J(".es_tag");
+                console.log({elem, target: e.target})
+                let tag = elem.val();
+
                 function done() {
                     if (tag.trim().length === 0) { return; }
                     tag = tag[0].toUpperCase() + tag.slice(1);
                     Messenger.postMessage("addtag", tag);
                 }
 
-                $J("#es_tag").on("keydown paste input", function(e) {
-                    let code = e.keyCode || e.which;
+                elem.on("keydown paste input", function(e) {
+                    tag = elem.val();
+                    let code = e.key || e.which;
                     if (code == 13) {
                         Modal.Dismiss();
                         done();
                         return;
                     }
-
-                    tag = $J("#es_tag").val();
                 });
 
                 Modal.done(done);
-            }`);
-        });
+            });
+        }`);
     };
 
     EditGuidePageClass.prototype.rememberTags = function() {
@@ -3765,26 +3769,29 @@ let EditGuidePageClass = (function(){
         if (!submitBtn) { return; }
 
         let params = new URLSearchParams(window.location.search);
-        let id = params.get("id") || "recent";
-        let savedTags = JSON.parse(LocalStorage.get("es_guide_tags") || "{}");
-        if (!savedTags[id]) {
-            savedTags[id] = savedTags.recent || [];
+        let curId = params.get("id") || "recent";
+        let savedTags = LocalStorage.get("es_guide_tags");
+        savedTags = !savedTags || typeof savedTags !== "object" ? {} : savedTags;
+        if (!savedTags[curId]) {
+            savedTags[curId] = savedTags.recent || [];
         }
 
-        for (let tag of savedTags[id]) {
-            let node = document.querySelector(`[name="tags[]"][value="${tag}"]`);
-            if (node) {
-                node.checked = true;
-            } else {
-                addTag(tag);
+        for (let id in savedTags) {
+            for (let tag of savedTags[id]) {
+                let node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
+                if (node && curId == id) {
+                    node.checked = true;
+                } else if (!node) {
+                    addTag(tag, curId == id);
+                }
             }
         }
 
         submitBtn.removeAttribute("href");
         submitBtn.addEventListener("click", function() {
-            savedTags[id] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
             savedTags.recent = [];
-            LocalStorage.set("es_guide_tags", JSON.stringify(savedTags));
+            savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
+            LocalStorage.set("es_guide_tags", savedTags);
             ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
         });
     };
