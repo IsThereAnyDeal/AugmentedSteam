@@ -3745,10 +3745,8 @@ let WorkshopBrowseClass = (function(){
                 total = workshopItems.length;
                 updateWaitDialog();
     
-                Promise.all(
-                    workshopItems
-                        .map(id => changeSubscription(id)))
-                        .finally(() => { location.reload(); });
+                Promise.all(workshopItems.map(id => changeSubscription(id)))
+                    .finally(() => { location.reload(); });
             }, true)
         }
     };
