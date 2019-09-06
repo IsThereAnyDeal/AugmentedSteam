@@ -574,6 +574,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -1164,6 +1165,20 @@ class AppPageClass extends StorePageClass {
         }
 
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
+    }
+
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showclient")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
     }
 
     displayPurchaseDate() {
