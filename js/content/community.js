@@ -3686,8 +3686,7 @@ let WorkshopBrowseClass = (function(){
                 }, true)
                 .then(function(res) {
                     if (!res || !res.success || res.success !== 1) {
-                        failed++;
-                        console.error(new Error("Bad response"))
+                        throw new Error("Bad response");
                     }
                 })
                 .catch(function(err) {
