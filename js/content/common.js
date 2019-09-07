@@ -952,21 +952,20 @@ let EnhancedSteam = (function() {
         Promise.reject(err);
     };
 
-    self.viewInSteamButton = function() {
-        if (!SyncedStorage.get("showclient")) { return; }
-
-        let btn = document.querySelector("div.header_installsteam_btn > a");
-        btn.textContent = Localization.str.viewinclient;
-        btn.href =  `steam://openurl/${window.location.href}`;
-        btn.classList.add("es_steamclient_btn");
+    self.handleInstallSteamButton = function() {
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            DOMHelper.remove("div.header_installsteam_btn");
+        } else if (option === "replace") {
+            let btn = document.querySelector("div.header_installsteam_btn > a");
+            btn.textContent = Localization.str.viewinclient;
+            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.classList.add("es_steamclient_btn");
+        }
     };
 
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
-
-        if (!SyncedStorage.get("showclient")) {
-            DOMHelper.remove("div.header_installsteam_btn");
-        }
 
         if (User.isSignedIn) {
             DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
@@ -2116,7 +2115,7 @@ let Common = (function(){
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.viewInSteamButton();
+        EnhancedSteam.handleInstallSteamButton();
         EnhancedSteam.removeAboutLinks();
         EnhancedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();

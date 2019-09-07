@@ -1215,7 +1215,7 @@ class AppPageClass extends StorePageClass {
     }
 
     displayViewInLibrary() {
-        if (!User.isSignedIn || !SyncedStorage.get("showclient")) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
 
         let node = document.querySelector(".already_owned_actions");
         if (!node) { return; }

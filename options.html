@@ -229,7 +229,15 @@
                         </div>
                         <div class="option">
                             <input type="checkbox" id="hideaboutlinks" data-setting="hideaboutlinks">
-                            <label for="hideaboutlinks" data-locale-text="options.hide_about_links">Hide "Install Steam" button / "About" links</label>
+                            <label for="hideaboutlinks" data-locale-text="options.hide_about_links">Hide "About" links</label>
+                        </div>
+                        <div class="option">
+                            <label for="installsteam" data-locale-text="options.install_steam_button">"Install Steam" button</label>
+                            <select id="installsteam" data-setting="installsteam">
+                                <option value="show" data-locale-text="options.show">Show</option>
+                                <option value="hide" data-locale-text="options.hide">Hide</option>
+                                <option value="replace" data-locale-text="options.replace_view_client">Replace with "View in Client"</option>
+                            </select>
                         </div>
                     </div>
         
@@ -329,8 +337,8 @@
                             <label for="openinnewtab" data-locale-text="options.openinnewtab">Open external links in a new tab</label>
                         </div>
                         <div class="option">
-                            <input type="checkbox" id="showclient" data-setting="showclient">
-                            <label for="showclient" data-locale-text="options.showclient">Show Steam Client links</label>
+                            <input type="checkbox" id="showviewinlibrary" data-setting="showviewinlibrary">
+                            <label for="showviewinlibrary" data-locale-text="options.show_view_in_library">Show "View in library" button for owned games</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="show_package_info" data-setting="show_package_info">

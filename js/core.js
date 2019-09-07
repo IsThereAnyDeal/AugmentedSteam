@@ -237,6 +237,13 @@ class UpdateHandler {
             if (!SyncedStorage.get("show_profile_link_images")) {
                 SyncedStorage.set("show_profile_link_images", "none");
             }
+
+            if (SyncedStorage.get("showclient")) {
+                SyncedStorage.set("showviewinlibrary", "replace");
+                SyncedStorage.set("installsteam", true);
+            }
+
+            SyncedStorage.remove("html5video");
         }
     }
 }
@@ -500,7 +507,7 @@ SyncedStorage.defaults = {
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
-    'showclient': false,
+    'showviewinlibrary': false,
     'showsteamcardexchange': false,
     'showitadlinks': true,
     'showsteamdb': true,
@@ -554,6 +561,7 @@ SyncedStorage.defaults = {
     'skip_got_steam': false,
 
     'hideaboutlinks': false,
+    'installsteam': "show",
     'openinnewtab': false,
     'keepssachecked': false,
     'showemptywishlist': true,
