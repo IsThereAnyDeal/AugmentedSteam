@@ -494,6 +494,10 @@ let Options = (function(){
             el.remove();
         }
 
+        for (let el of document.querySelectorAll(".custom-link__close")) {
+            el.click();
+        }
+
         SyncedStorage.then(loadOptions);
 
         let node = document.getElementById('reset_note');
