@@ -239,11 +239,12 @@ class UpdateHandler {
             }
 
             if (SyncedStorage.get("showclient")) {
-                SyncedStorage.set("showviewinlibrary", "replace");
-                SyncedStorage.set("installsteam", true);
+                SyncedStorage.set("showviewinlibrary", true);
+                SyncedStorage.set("installsteam", "replace");
             }
 
             SyncedStorage.remove("html5video");
+            SyncedStorage.remove("showclient");
         }
     }
 }
