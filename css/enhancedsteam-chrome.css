@@ -7,10 +7,10 @@
 }
 
 .itad_ico i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/itad_small.png');
 }
 .itad_ico:hover i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/line_chart.png');
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/itad_small_black.png');
 }
 
 .steam_client_btn i {
@@ -18,9 +18,6 @@
 }
 
 .bartervg_ico i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/bartervg.png');
-}
-.bartervg_ico:hover i {
   background-image: url('chrome-extension://__MSG_@@extension_id__/img/bartervg.png');
 }
 

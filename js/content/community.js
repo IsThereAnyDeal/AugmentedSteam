@@ -3504,8 +3504,8 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
-        this.addItadLink();
         this.addBartervgLink();
+        this.addItadLink();
         AgeCheck.sendVerification();
 
         let node = document.querySelector(".apphub_background");
@@ -3557,26 +3557,20 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addBartervgLink = function() {
         if (!SyncedStorage.get("showbartervg")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/bartervg.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; Barter.vg</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;

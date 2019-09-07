@@ -18,19 +18,19 @@ span.platform_img {
 
 span.platform_img.steamplay {
   width: 72px;
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png');
 }
 
 span.platform_img.win {
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png');
 }
 
 span.platform_img.mac {
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png');
 }
 
 span.platform_img.linux {
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png');
 }
 
 img.platform_small, .platform_img {
@@ -118,14 +118,14 @@ img.platform_small, .platform_img {
   margin-bottom: 20px;
 }
 .apphub_HeaderTop.es_greenlight {
-  background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
+  background-image: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
   background-position: left center;
 }
 .apphub_HeaderTop.es_greenlight.es_greenlit {
-  background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green.jpg');
+  background-image: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green.jpg');
 }
 .apphub_HeaderTop.es_greenlight.es_released {
-  background-image: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
+  background-image: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_green_shiny.jpg');
 }
 .wishlistRowItem {
   overflow: initial !important;
@@ -250,7 +250,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_dlc_option_panel {
-  background: url('//steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
+  background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
   border-bottom: 1px solid black;
 }
 
@@ -728,19 +728,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
   background-position: 0px -60px;
 }
 .gh_vote_up:before {
-  content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
+  content: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_yes.png');
 }
 .gh_vote_down:before {
-  content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
+  content: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_vote_no.png');
 }
 .gh_vote_later:before {
-  content: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
+  content: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/nav_remind_later.png');
 }
 .gh_favorited {
-  background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_fav_tiled.png');
+  background: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_fav_tiled.png');
 }
 .gh_followed {
-  background: url('//steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
+  background: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ico_follow_tiled_lrg.png');
 }
 .performance-graph {
   margin-top: -10px;
@@ -1307,7 +1307,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_screenshot_download_btn i {
   display: block;
-  background-image: url('//steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
+  background-image: url('https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
   background-position: center;
   background-repeat: no-repeat;
   width: 16px;
@@ -1625,20 +1625,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
   height: 12px;
   padding: 0;
   display: inline-block;
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png');
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
   vertical-align: text-bottom;
 }
 #wishlist_sort_options .store_nav .tab:hover > span.pulldown > span {
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
 }
 #wishlist_sort_options .popup_block_new .popup_body {
   border: none !important;
   position: relative;
   background: #417a9b !important;
-  padding: 6px 0px;
+  padding: 6px 0;
 }
 #wishlist_sort_options .popup_menu_item {
   color: #e5e4dc;
@@ -2724,7 +2724,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Global Steam Client button
  **************************************/
 .header_installsteam_btn_content.es_steamclient_btn {
-  background-image: url('//steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png');
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png');
   background-position: 5px;
   padding-left: 28px;
 }
