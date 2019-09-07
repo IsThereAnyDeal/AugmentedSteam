@@ -3,13 +3,6 @@
     "email": "電子信箱",
     "contact": "聯絡方式",
     "fav_emoticons_dragging": "拖曳表情符號至此以將其加入最愛",
-    "subscriptions": "訂閱項目",
-    "subscribe_all": "訂閱全部",
-    "unsubscribe_all": "取消訂閱全部",
-    "subscribe_confirm": "你確定要套用這些篩選條件訂閱全部 __count__ 個工作坊物品？",
-    "unsubscribe_confirm": "你確定要套用這些篩選條件取消訂閱全部 __count__ 個工作坊物品？",
-    "subscribe_loading": "正在訂閱工作坊物品 __i__/__count__，請稍候…",
-    "unsubscribe_loading": "正在取消訂閱工作坊物品 __i__/__count__，請稍候…",
     "post_history": "檢視發佈歷史",
     "add_nickname": "新增暱稱",
     "total_size": "總共大小",
@@ -162,7 +155,6 @@
     "net_gain": "淨收益：",
     "apppage_legal": "法律資訊",
     "apppage_franchise": "系列作",
-    "workshop": "工作坊",
     "bug_feature": "回報問題/建議新功能",
     "always": "總是",
     "compare": "比較",
@@ -594,6 +586,16 @@
     "queue": {
         "new": "開始新佇列",
         "new_tooltip": "將此產品從你的佇列中移除，並開始新佇列"
+    },
+    "workshop": {
+        "workshop": "工作坊",
+        "subscriptions": "訂閱項目",
+        "subscribe_all": "訂閱全部",
+        "unsubscribe_all": "取消訂閱全部",
+        "subscribe_confirm": "你確定要套用這些篩選條件訂閱全部 __count__ 個工作坊物品？",
+        "unsubscribe_confirm": "你確定要套用這些篩選條件取消訂閱全部 __count__ 個工作坊物品？",
+        "subscribe_loading": "正在訂閱工作坊物品 __i__/__count__，請稍候…",
+        "unsubscribe_loading": "正在取消訂閱工作坊物品 __i__/__count__，請稍候…"
     },
     "this_version": "此版本",
     "original_authors": "原版作者",

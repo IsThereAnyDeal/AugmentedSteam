@@ -2071,7 +2071,7 @@ class AppPageClass extends StorePageClass {
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
         if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
 
         customizer.build();

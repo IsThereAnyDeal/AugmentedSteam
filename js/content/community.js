@@ -3698,17 +3698,19 @@ let WorkshopBrowseClass = (function(){
         if (!appid) { return; }
         if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
 
+        let workshopStr = Localization.str.workshop;
+
         let subscriberButtons = `
-            <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
+            <div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
             <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
+                        <a class="es_subscriber" data-method="subscribe">${workshopStr.subscribe_all}</a>
                     </div>
                 </div>
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
+                        <a class="es_subscriber" data-method="unsubscribe">${workshopStr.unsubscribe_all}</a>
                     </div>
                 </div>
                 <hr>
@@ -3730,8 +3732,12 @@ let WorkshopBrowseClass = (function(){
             let completed = 0;
             let failed = 0;
 
+            let statusTitle = workshopStr[method + "_all"];
+            let statusString = workshopStr[method + "_confirm"]
+                .replace("__count__", total);
+
             ExtensionLayer.runInPageContext(`function(){
-                let prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
                 prompt.done(function(result) {
                     if (result == "OK") {
                         Messenger.postMessage("startSubscriber");
@@ -3740,13 +3746,47 @@ let WorkshopBrowseClass = (function(){
             }`);
 
             function updateWaitDialog() {
+                let statusString = workshopStr[method + "_loading"]
+                    .replace("__i__", completed)
+                    .replace("__count__", total);
+
+                if (failed) {
+                    statusString += workshopStr.failed.replace("__n__", failed);
+                }
+
+                let modal = document.querySelector(".newmodal_content");
+                if (!modal) {
+                    let statusTitle = workshopStr[method + "_all"];
+                    ExtensionLayer.runInPageContext(`function() {
+                        if (window.dialog) {
+                            window.dialog.Dismiss();
+                        }
+                        
+                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
+                    }`);
+                } else {
+                    modal.innerText = statusString;
+                }
+            }
+
+            function showResults() {
+                let statusTitle = workshopStr[method + "_all"];
+                let statusString = workshopStr.finished
+                    .replace("__success__", completed - failed)
+                    .replace("__fail__", failed);
+
                 ExtensionLayer.runInPageContext(`function() {
                     if (window.dialog) {
                         window.dialog.Dismiss();
                     }
-
-                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", completed).replace("__count__", total)}${failed ? ` (${Localization.str.failed.replace("__n__", failed)})` : ""}\`);
-                }`)
+                    
+                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
+                        .done(function(result) {
+                            if (result == "OK") {
+                                window.location.reload();
+                            }
+                        });
+                }`);
             }
 
             function changeSubscription(id) {
@@ -3797,7 +3837,7 @@ let WorkshopBrowseClass = (function(){
     
                     let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
                     if (!result) {
-                        console.error("Failed to request " + url.toString())
+                        console.error("Failed to request " + url.toString());
                         continue;
                     }
 
@@ -3815,7 +3855,7 @@ let WorkshopBrowseClass = (function(){
                 updateWaitDialog();
     
                 Promise.all(workshopItems.map(id => changeSubscription(id)))
-                    .finally(() => { location.reload(); });
+                    .finally(showResults);
             }, true)
         }
     };

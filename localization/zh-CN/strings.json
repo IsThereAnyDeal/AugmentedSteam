@@ -149,7 +149,6 @@
     "net_gain": "净收益:",
     "apppage_legal": "法律信息",
     "apppage_franchise": "系列作品",
-    "workshop": "创意工坊",
     "bug_feature": "报告错误/提出建议",
     "always": "总是",
     "compare": "比较",
@@ -581,6 +580,9 @@
     "queue": {
         "new": "开始新队列",
         "new_tooltip": "从您的队列中移除此产品，并开始一个新队列。"
+    },
+    "workshop": {
+        "workshop": "创意工坊"
     },
     "this_version": "当前版本",
     "original_authors": "原版作者",
