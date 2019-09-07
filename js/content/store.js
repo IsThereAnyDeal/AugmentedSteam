@@ -1443,26 +1443,26 @@ class AppPageClass extends StorePageClass {
     }
 
     async addSupport() {
-        if (!this.isAppPage()) { return; }
-        if (this.isDlc()) { return; }
+        if (!this.isAppPage() || this.isDlc()) { return; }
 
-        let appid = this.appid;
-        let cache = LocalStorage.get("support_infos", {});
-        for (let id in cache) {
-            if (cache[id].expiry < Math.trunc(Date.now() / 1000)) {
-                delete cache[id];
+        let cache = LocalStorage.get("support_info", null);
+        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
+            cache = {
+                "data": {},
+                "expiry": Date.now() + (31*86400 * 1000) // 31 days
             }
         }
 
+        let appid = this.appid;
         let supportInfo = cache[appid];
         if (!supportInfo) {
             let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
             if (!response || !response[appid] || !response[appid].success) { return; }
 
             supportInfo = response[appid].data.support_info;
-            supportInfo.expiry = Math.trunc(Date.now() / 1000) + 30 * 24 * 60 * 60;
-            cache[appid] = supportInfo;
-            LocalStorage.set("support_infos", cache);
+
+            cache['data'][appid] = supportInfo;
+            LocalStorage.set("support_info", cache);
         }
 
         let url = supportInfo.url;
@@ -2455,7 +2455,7 @@ let SearchPageClass = (function(){
             let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            rows.forEach(row => {
+            for (let row of rows) {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2470,7 +2470,7 @@ let SearchPageClass = (function(){
                 }
                 lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
                 lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
-            });
+            }
 
             document.querySelector(".LoadingWrapper").remove();
 
