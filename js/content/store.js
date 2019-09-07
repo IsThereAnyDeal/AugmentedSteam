@@ -576,6 +576,7 @@ class AppPageClass extends StorePageClass {
         this.addWishlistRemove();
         this.addUserNote();
         this.addNewQueueButton();
+        this.addFullscreenScreenshotView();
 
         this.addCoupon();
         this.addPrices();
@@ -584,6 +585,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -594,6 +596,7 @@ class AppPageClass extends StorePageClass {
 
         this.addHltb();
 
+        this.replaceDevPubLinks();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -612,7 +615,7 @@ class AppPageClass extends StorePageClass {
 
         this.addReviewToggleButton();
         this.addHelpButton();
-
+        this.addSupport();
     }
 
     initHdPlayer() {
@@ -865,10 +868,7 @@ class AppPageClass extends StorePageClass {
             activeStyle = "";
         }
 
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
+        HTML.beforeBegin(".queue_actions_ctn > :last-child",
             ` <div class="queue_control_button js-user-note-button">
                 <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
@@ -877,6 +877,9 @@ class AppPageClass extends StorePageClass {
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
+
+        HTML.beforeEnd(".queue_actions_ctn",
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
@@ -920,6 +923,51 @@ class AppPageClass extends StorePageClass {
                 });
             });
         });
+    }
+
+    addFullscreenScreenshotView() {
+        function toggleFullScreen(event) {
+            if (!document.fullscreenElement) {
+                let element = event.target.closest(".screenshot_popup_modal_content");
+                element.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function initFSVButtons() {
+            let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
+            let nextButton = modalFooter.querySelector(".next");
+            let nextButtonOffsetWidth = nextButton.offsetWidth;
+            if (nextButton.style.display === "none") {
+                nextButton.style.display = "";
+                nextButtonOffsetWidth = nextButton.offsetWidth;
+                nextButton.style.display = "none";
+            }
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
+            let fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
+            fsvButton.addEventListener("click", toggleFullScreen);
+
+            let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
+            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
+            downloadButton.addEventListener("click", () => {
+                modalTitleLink.click();
+            });
+        }
+
+        let observer = new MutationObserver(records => {
+            for (let record of records) {
+                for (let node of record.addedNodes) {
+                    if (node.classList.contains("screenshot_popup_modal")) {
+                        initFSVButtons();
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true });
     }
 
     getFirstSubid() {
@@ -1176,6 +1224,20 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
+    }
+
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
@@ -1373,6 +1435,79 @@ class AppPageClass extends StorePageClass {
         });
     }
 
+    replaceDevPubLinks() {
+        if (!this.isAppPage()) { return; }
+
+        let rows = document.querySelectorAll(".dev_row a");
+        for (let linkNode of rows) {
+            let homepageLink = new URL(linkNode.href);
+            if (homepageLink.pathname === "/search/") {
+                continue;
+            }
+
+            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let value = linkNode.innerText;
+            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
+            HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
+        }
+    }
+
+    async addSupport() {
+        if (!this.isAppPage() || this.isDlc()) { return; }
+
+        let cache = LocalStorage.get("support_info", null);
+        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
+            cache = {
+                "data": {},
+                "expiry": Date.now() + (31*86400 * 1000) // 31 days
+            }
+        }
+
+        let appid = this.appid;
+        let supportInfo = cache[appid];
+        if (!supportInfo) {
+            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            if (!response || !response[appid] || !response[appid].success) { return; }
+
+            supportInfo = response[appid].data.support_info;
+
+            cache['data'][appid] = supportInfo;
+            LocalStorage.set("support_info", cache);
+        }
+
+        let url = supportInfo.url;
+        let email = supportInfo.email;
+        if (!email && !url) { return; }
+
+        let support = "";
+        if (url) {
+            support += `<a href="${url}">${Localization.str.website}</a>`;
+        }
+
+        if (email) {
+            if (url) {
+                support += ", ";
+            }
+
+            // From https://emailregex.com/
+            let emailRegex =
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (emailRegex.test(email)) {
+                support += `<a href="mailto:${email}">${Localization.str.email}</a>`;
+            } else {
+                support += `<a href="${email}">${Localization.str.contact}</a>`;
+            }
+        }
+
+        let block = document.querySelector(".glance_ctn .user_reviews");
+        HTML.beforeEnd(block,
+            `<div class="release_date">
+                <div class="subtitle column">${Localization.str.support}:</div>
+                <div class="summary column" id="es_support_list">${support}</div>
+            </div>`);
+    }
+
     moveUsefulLinks() {
         if (!this.isAppPage()) { return; }
 
@@ -1389,16 +1524,6 @@ class AppPageClass extends StorePageClass {
 
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
 
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
@@ -1488,14 +1613,13 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (node.querySelector(".btn_packageinfo")) { continue; }
+        for (let node of nodes) {
+            if (node.querySelector(".btn_packageinfo")) return;
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) { continue; }
+            if (!subid) return;
 
-            HTML.afterBegin(".game_purchase_action",
+            HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
@@ -1505,7 +1629,7 @@ class AppPageClass extends StorePageClass {
     addSteamChart(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
         let chart = result.charts.chart;
@@ -1577,7 +1701,7 @@ class AppPageClass extends StorePageClass {
         let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
             html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
             switch (survey["fr"]) {
                 case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
@@ -1634,7 +1758,7 @@ class AppPageClass extends StorePageClass {
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+            html += "<p>" + Localization.str.survey.nobody + "</p>";
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
@@ -1796,9 +1920,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -1905,7 +2029,7 @@ class AppPageClass extends StorePageClass {
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
 
-        }, EnhancedSteam.addLoginWarning);
+        });
     }
 
     customizeAppPage() {
@@ -1957,7 +2081,7 @@ class AppPageClass extends StorePageClass {
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
         if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
 
         customizer.build();
@@ -2329,7 +2453,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2338,14 +2462,10 @@ let SearchPageClass = (function(){
             let lastNode = document.querySelector(".search_result_row:last-child");
 
             // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = `,"public":1`;
-            if (User.isSignedIn) {
-                publicAttr = '';
-            }
+            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let i=0, len=rows.length; i<len; i++) {
-                let row = rows[i];
+            for (let row of rows) {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2367,11 +2487,13 @@ let SearchPageClass = (function(){
             searchPage = searchPage + 1;
             processing = false;
 
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(() => {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
             });
+
+            Highlights.highlightAndTag(rows);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
@@ -2514,11 +2636,25 @@ let SearchPageClass = (function(){
             return false;
         }
 
-        return Number(priceString) > priceAbove ? true : false;
+        return Number(priceString) > priceAbove;
+    }
+
+    function isReviewsBelow(node, reviewsBelow) {
+        if (!node.querySelector(".search_review_summary")) {
+            // App without reviews
+            return true;
+        }
+
+        let reviewsString = node.querySelector(".search_review_summary").dataset.tooltipHtml
+            .replace(/\d+%/g, "")
+            .match(/\d+/g).join("");
+
+        return Number(reviewsString) < reviewsBelow;
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        let priceAbove = Number(document.getElementById("es_notpriceabove_val").value.replace(',', '.'));
+        let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
+        let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
         for (let node of nodes) {
             if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
@@ -2528,6 +2664,7 @@ let SearchPageClass = (function(){
             if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
             if (document.querySelector("#es_notpriceabove.checked") && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
+            if (document.querySelector("#es_noreviewsbelow.checked") && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
             node.style.display = "block";
         }
     }
@@ -2572,11 +2709,18 @@ let SearchPageClass = (function(){
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
                     </div>
-                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above">
+                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above" title="${Localization.str.price_above_tooltip}">
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
                             <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder=${pricePlaceholder}>
+                        </div>
+                    </div>
+                    <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" title="${Localization.str.reviews_below_tooltip}">
+                        <div class="tab_filter_control_checkbox"></div>
+                        <span class="tab_filter_control_label">${Localization.str.reviews_below}</span>
+                        <div>
+                            <input type="number" id="es_noreviewsbelow_val" class="es_input" min="0" step="1">
                         </div>
                     </div>
                     <div>
@@ -2598,7 +2742,12 @@ let SearchPageClass = (function(){
                 console.warn("Failed to validate price %s from URL params!", priceVal);
             }
         }, true);
+        Messenger.addMessageListener("reviewsBelow", reviewsVal => {
+            document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
+            Messenger.postMessage("reviewsValueChanged");
+        }, true);
 
+        // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
         ExtensionLayer.runInPageContext(`() => {
 
@@ -2627,6 +2776,8 @@ let SearchPageClass = (function(){
                             } else {
                                 if (value === "price-above") {
                                     rgValues = [value + $J("#es_notpriceabove_val").val().replace(',', '.')];
+                                } else if (value === "reviews-below") {
+                                    rgValues = [value + $J("#es_noreviewsbelow_val").val()];
                                 } else {
                                     rgValues = [value];
                                 }
@@ -2645,6 +2796,17 @@ let SearchPageClass = (function(){
                                     }
                                     if (!found) {
                                         rgValues.push(value + $J("#es_notpriceabove_val").val().replace(',', '.'));
+                                    }
+                                } else if (value === "reviews-below") {
+                                    let found = false;
+                                    for (let rgValue in rgValues) {
+                                        if (rgValue.startsWith(value)) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        rgValues.push(value + $J("#es_noreviewsbelow_val").val());
                                     }
                                 } else {
                                     if ($J.inArray(value, rgValues) === -1) {
@@ -2672,6 +2834,17 @@ let SearchPageClass = (function(){
                                 if (rgValues[i].startsWith("price-above")) {
                                     if (typeof forcedState !== "undefined" && forcedState) {
                                         rgValues[i] = "price-above" + $J("#es_notpriceabove_val").val().replace(',', '.');
+                                    } else {
+                                        rgValues.splice(i, 1);
+                                    }
+                                    break;
+                                }
+                            }
+                        } else if (value === "reviews-below") {
+                            for (let i = 0; i < rgValues.length; ++i) {
+                                if (rgValues[i].startsWith("reviews-below")) {
+                                    if (typeof forcedState !== "undefined" && forcedState) {
+                                        rgValues[i] = "reviews-below" + $J("#es_noreviewsbelow_val").val();
                                     } else {
                                         rgValues.splice(i, 1);
                                     }
@@ -2777,6 +2950,16 @@ let SearchPageClass = (function(){
                                     Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
                                     Messenger.postMessage("priceAbove", priceValue);
                                     continue;
+                                } else if (filterValue.startsWith("reviews-below")) {
+                                    let reviewsValue = /reviews-below(.+)/.exec(filterValue)[1];
+                                    if (!reviewsValue) {
+                                        console.warn("Didn't set a value for the reviews filter!");
+                                        continue;
+                                    }
+                                    filter = $J(".tab_filter_control[data-value=reviews-below]");
+                                    Messenger.addMessageListener("reviewsValueChanged", () => filter.click(), true);
+                                    Messenger.postMessage("reviewsBelow", reviewsValue);
+                                    continue;
                                 } else {
                                     console.warn("Invalid filter value %s", filterValue);
                                     continue;
@@ -2788,6 +2971,7 @@ let SearchPageClass = (function(){
                 }
 
                 Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
+                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState), false);
             });
         }`);
 
@@ -2800,33 +2984,41 @@ let SearchPageClass = (function(){
             HTML.beforeBegin(priceAboveVal, html);
         }
 
-        let priceFilterCheckbox = document.querySelector("#es_notpriceabove");
-        priceFilterCheckbox.title = Localization.str.price_above_tooltip;
+        addFilterInputEvents(
+            priceAboveVal,
+            document.querySelector("#es_notpriceabove"),
+            "priceChanged", inputPattern,
+            Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
 
-        priceAboveVal.title = Localization.str.price_above_tooltip;
-        priceAboveVal.addEventListener("click", e => e.stopPropagation());
-        priceAboveVal.addEventListener("keydown", e => {
+        addFilterInputEvents(
+            document.querySelector("#es_noreviewsbelow_val"),
+            document.querySelector("#es_noreviewsbelow"),
+            "reviewsChanged", /^\d+$/, "");
+    };
+
+    function addFilterInputEvents(node, checkboxNode, messageId, inputPattern, errorMessage) {
+        node.addEventListener("click", e => e.stopPropagation());
+        node.addEventListener("keydown", e => {
             if(e.key === "Enter") {
                 // This would normally trigger a call to AjaxSearchResults() which is not required here
                 e.preventDefault();
             }
         });
-        priceAboveVal.addEventListener("input", () => {
-            let newValue = priceAboveVal.value;
-            let toggleValue = (newValue !== "");
+        node.addEventListener("input", () => {
+            let newValue = node.value;
 
-            if (inputPattern.test(newValue)) {
+            if (!inputPattern || inputPattern.test(newValue)) {
                 // The "checked" class will be toggled by the page context code
-                Messenger.postMessage("priceChanged", toggleValue);
-                priceAboveVal.setCustomValidity('');
+                Messenger.postMessage(messageId, newValue !== "");
+                node.setCustomValidity('');
             } else {
-                priceFilterCheckbox.classList.toggle("checked", toggleValue);
-                priceAboveVal.setCustomValidity(Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
+                Messenger.postMessage(messageId, false);
+                node.setCustomValidity(errorMessage);
             }
 
-            priceAboveVal.reportValidity();
+            node.reportValidity();
         });
-    };
+    }
 
     SearchPageClass.prototype.observeChanges = function() {
 
@@ -2844,17 +3036,17 @@ let SearchPageClass = (function(){
             }
         }
 
-        function togglePriceAboveFilter() {
+        function toggleFilter(name, selector) {
             let params = new URLSearchParams(window.location.search);
             if (params.has("es_hide")) {
                 decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
-                    if (filter.startsWith("price-above")) {
-                        document.getElementById("es_notpriceabove").classList.add("checked");
+                    if (filter.startsWith(name)) {
+                        document.querySelector(selector).classList.add("checked");
                     }
                 });
             }
         }
-            
+
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
@@ -2882,7 +3074,8 @@ let SearchPageClass = (function(){
                     }
                 })
             } else {
-                togglePriceAboveFilter();
+                toggleFilter("price-above", "#es_notpriceabove");
+                toggleFilter("reviews-below", "#es_noreviewsbelow");
                 modifyLinks();
             }
 

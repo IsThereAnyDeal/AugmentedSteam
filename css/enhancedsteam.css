@@ -1123,7 +1123,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_slider_toggle i {
 	display: block;
-	background-image: url('data:image/gif;base64,R0lGODlhEAAgAIABAP///////yH5BAEAAAEALAAAAAAQACAAAAJAjH+gC+jB1HNxpmqjnHVz31iQOIoh5D0Spmom+y0kypDaOWf2hVMNjLi9asNUTFZECpO9FjIDDLqOvyYvscsVAAA7');
+	background-image: url("chrome-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
 	background-position: top left;
 	display: block;
 	width: 16px;
@@ -1278,6 +1278,86 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_playback_sd .es_hd_toggle span {
 	opacity: 0.4;
+}
+
+/***************************************
+ * App pages
+ * addFullscreenScreenshotView()
+ **************************************/
+.es_screenshot_fullscreen_toggle {
+	position: absolute;
+	right: 18%;
+	bottom: 0;
+}
+.es_screenshot_fullscreen_toggle i {
+	display: block;
+	background-image: url("chrome-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
+	background-position: top left;
+	width: 16px;
+	height: 16px;
+	margin: 5px;
+}
+.es_screenshot_download_btn {
+	position: absolute;
+	right: 24%;
+	bottom: 0;
+}
+.es_screenshot_download_btn i {
+	display: block;
+	background-image: url('//steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	margin: 5px;
+}
+.screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
+	background-position: bottom left;
+}
+.screenshot_popup_modal_content:fullscreen {
+	padding: 0;
+	background: none;
+}
+.screenshot_popup_modal_content .screenshot_popup_modal_title {
+	display: none;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_img_ctn {
+	width: 100%;
+	height: 100%;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_img_ctn > img {
+	max-width: 100% !important;
+	max-height: 100% !important;
+	object-fit: scale-down;
+	width: 100%;
+	height: 100%;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	overflow: visible;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .btn_medium {
+	opacity: 0;
+	transition: opacity 0.25s ease-in-out;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer:hover > .btn_medium {
+	opacity: 1;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > div:first-child {
+	display: inline-block;
+	background: rgba(103, 193, 245, 0.2);
+	border-radius: 100px;
+	padding: 0 1em;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .previous::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 40vw;
+	height: 100vh;
 }
 
 /***************************************
@@ -1684,6 +1764,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_regional_unavailable {
 	font-size: 12px;
 }
+
+/***************************************
+ * Regional Price Bugfix
+ **************************************/
+ .ds_options_tooltip {
+	 z-index: 99999 !important;
+ }
 
 /***************************************
  * Version update dialog
@@ -2202,7 +2289,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	background-color: #FF0000;
 }
 #game_area_userscore .logo {
-	background-image: url(/public/images/v6/mc_logo_no_text.png);
+	background-image: url('https://store.steampowered.com/public/images/v6/mc_logo_no_text.png');
 	background-repeat: no-repeat;
 	height: 35px;
 	width: 35px;
@@ -2266,7 +2353,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin-top: -21px;
 }
 #game_area_opencritic .oc_text:after {
-	content: url(/public/images/ico/iconExternalLink.gif);
+	content: url("https://store.steampowered.com/public/images/ico/iconExternalLink.gif");
 }
 
 /***************************************
@@ -2472,8 +2559,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 .esi-note {
 	font-size: 11px;
-	overflow: hidden;
-	height: 19px;
+	height: fit-content;
 	margin-top:5px;
 	flex-grow:2;
 	margin-right:5px;
@@ -2622,7 +2708,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Store curator pages
- * 
  **************************************/
 .capsule.smallcapsule .es_overlay_container {
 	position: absolute;
@@ -2638,7 +2723,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Layout around Customizer on App Pages
- * 
  **************************************/
 .game_page_autocollapse_ctn { margin-top: 30px; }
 .game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
@@ -2654,4 +2738,32 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	content: "";
 	display: block;
 	clear: both;
+}
+
+/***************************************
+ * Shows all "View all comments" links
+ * on the friends activity page
+ **************************************/
+.blotter_viewallcomments_container {
+	display: block !important;
+}
+
+/***************************************
+ * Fix long-shaped artwork thumbnails
+ **************************************/
+.publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
+	min-height: 100px;
+}
+
+#modalContent.modal_frame {
+	min-width: 720px !important;
+}
+
+/***************************************
+ * Global Steam Client button
+ **************************************/
+.header_installsteam_btn_content.es_steamclient_btn {
+	background-image: url('//steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png');
+	background-position: 5px;
+	padding-left: 28px;
 }

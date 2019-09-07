@@ -328,11 +328,11 @@ let RequestData = (function(){
         });
     };
 
-    self.post = function(url, formData, settings) {
+    self.post = function(url, formData, settings, returnJSON) {
         return self.getHttp(url, Object.assign(settings || {}, {
             method: "POST",
             body: formData
-        }));
+        }), returnJSON);
     };
 
     self.getJson = function(url, settings) {
@@ -861,8 +861,8 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam">${Localization.str.contribute}</a>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/Enhanced_Steam/issues">${Localization.str.bug_feature}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://es.isthereanydeal.com/">${Localization.str.website}</a>
                         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
@@ -940,6 +940,7 @@ let EnhancedSteam = (function() {
         });
     };
 
+    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
     self.addLoginWarning = function(err) {
         if (!loginWarningAdded) {
@@ -951,18 +952,25 @@ let EnhancedSteam = (function() {
         Promise.reject(err);
     };
 
+    self.handleInstallSteamButton = function() {
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            DOMHelper.remove("div.header_installsteam_btn");
+        } else if (option === "replace") {
+            let btn = document.querySelector("div.header_installsteam_btn > a");
+            btn.textContent = Localization.str.viewinclient;
+            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.classList.add("es_steamclient_btn");
+        }
+    };
+
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        let node = document.querySelector("div.header_installsteam_btn");
-        if (node) { node.remove(); }
-
         if (User.isSignedIn) {
-            let node = document.querySelector(".submenuitem[href^='https://store.steampowered.com/about/']");
-            if (node) { node.remove(); }
+            DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
         } else {
-            let node = document.querySelector(".menuitem[href^='https://store.steampowered.com/about/']");
-            if (node) { node.remove(); }
+            DOMHelper.remove(".menuitem[href^='https://store.steampowered.com/about/']");
         }
     };
 
@@ -971,6 +979,7 @@ let EnhancedSteam = (function() {
 
         let submenuUsername = document.querySelector(".supernav_container .submenu_username");
         HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.afterEnd(submenuUsername.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`)
         HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
@@ -1021,7 +1030,12 @@ let EnhancedSteam = (function() {
         }
 
         accountNameNode.textContent = communityName;
-        document.title = document.title.replace(accountName, communityName);
+
+         // Don't replace title on user pages that aren't mine
+        let isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
+        if (!isUserPage || location.pathname.includes(User.profilePath)) {
+            document.title = document.title.replace(accountName, communityName);
+        }
     };
 
     self.launchRandomButton = function() {
@@ -1353,7 +1367,7 @@ let Inventory = (function(){
             promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
         }
         
-        _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
+        _promise = Promise.all(promises);
         return _promise;
     };
 
@@ -1565,6 +1579,7 @@ let Highlights = (function(){
                 break;
             }
 
+            case node.classList.contains("info"):
             case node.classList.contains("spotlight_content"):
                 node = node.parentElement;
                 // don't break
@@ -1687,23 +1702,23 @@ let Highlights = (function(){
 
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
-            "div.tab_row",					                // Storefront rows
+            "div.tab_row",                                  // Storefront rows
             "div.dailydeal_ctn",
             ".store_main_capsule",                          // "Featured & Recommended"
-            "div.wishlistRow",				                // Wishlist rows
-            "a.game_area_dlc_row",			                // DLC on app pages
-            "a.small_cap",					                // Featured storefront items and "recommended" section on app pages
+            "div.wishlistRow",                              // Wishlist rows
+            "a.game_area_dlc_row",                          // DLC on app pages
+            "a.small_cap",                                  // Featured storefront items and "recommended" section on app pages
             "a.home_smallcap",
             ".home_content_item",                           // Small items under "Keep scrolling for more recommendations"
             ".home_content.single",                         // Big items under "Keep scrolling for more recommendations"
             ".home_area_spotlight",                         // "Special offers" big items
-            "a.search_result_row",			                // Search result rows
-            "a.match",						                // Search suggestions rows
+            "a.search_result_row",                          // Search result rows
+            "a.match",                                      // Search suggestions rows
             ".highlighted_app",                             // For example "Recently Recommended" on curators page
-            "a.cluster_capsule",			                // Carousel items
-            "div.recommendation_highlight",	                // Recommendation pages
+            "a.cluster_capsule",                            // Carousel items
+            "div.recommendation_highlight",                 // Recommendation pages
             "div.recommendation_carousel_item",             // Recommendation pages
-            "div.friendplaytime_game",		                // Recommendation pages
+            "div.friendplaytime_game",                      // Recommendation pages
             ".recommendation_row",                          // "Recent recommendations by friends"
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
@@ -1713,15 +1728,15 @@ let Highlights = (function(){
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
             ".home_marketing_message",                      // "Updates and offers"
-            "div.dlc_page_purchase_dlc",	                // DLC page rows
-            "div.sale_page_purchase_item",	                // Sale pages
-            "div.item",						                // Sale pages / featured pages
-            "div.home_area_spotlight",		                // Midweek and weekend deals
-            "div.browse_tag_game",			                // Tagged games
-            "div.similar_grid_item",		                // Items on the "Similarly tagged" pages
-            ".tab_item",					                // Items on new homepage
-            "a.special",					                // new homepage specials
-            "div.curated_app_item",			                // curated app items!
+            "div.dlc_page_purchase_dlc",                    // DLC page rows
+            "div.sale_page_purchase_item",                  // Sale pages
+            "div.item",                                     // Sale pages / featured pages
+            "div.home_area_spotlight",                      // Midweek and weekend deals
+            "div.browse_tag_game",                          // Tagged games
+            "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
+            ".tab_item",                                    // Items on new homepage
+            "a.special",                                    // new homepage specials
+            "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
         ];
@@ -2100,6 +2115,7 @@ let Common = (function(){
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
+        EnhancedSteam.handleInstallSteamButton();
         EnhancedSteam.removeAboutLinks();
         EnhancedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
@@ -2284,6 +2300,35 @@ class MediaPage {
             for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
                 node.classList.toggle("es_expanded");
             }
+        }
+
+        let strip = document.querySelector("#highlight_strip");
+        if (!strip) { return; }
+
+        let lastScroll = Date.now();
+        strip.addEventListener("wheel", scrollStrip, false);
+        function scrollStrip(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            
+            if (Date.now() - lastScroll < 200) {
+                return;
+            } 
+    
+            lastScroll = Date.now();
+            let allElem = document.querySelectorAll(".highlight_strip_item");
+            let isScrollDown = ev.deltaY > 0;
+            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
+            
+            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
+            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
+                targetElem = targetElem[siblingProp];
+                if (!targetElem) {
+                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
+                }
+            }
+            
+            targetElem.click();
         }
     }
 }

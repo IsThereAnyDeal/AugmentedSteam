@@ -365,7 +365,6 @@
         "saved_note": "Opções guardadas",
         "regional_hideworld": "Ocultar indicador regional",
         "show_astatslink": "Mostrar link para o site AStats em páginas de aplicações",
-        "showclient": "Mostrar links da aplicação Steam",
         "guest": "Itens que tens um passe de convidado",
         "show_steamchart_info": "Mostrar informações do SteamCharts.com",
         "show_steamspy_info": "Mostrar informação de steamspy.com",
@@ -380,7 +379,6 @@
         "steamdb": "Mostrar hiperligações da SteamDB",
         "hide_early_access": "Ocultar jogos com Acesso Antecipado na página inicial, de marcadores e de pesquisa",
         "reset_note": "Repor opções",
-        "html5video": "Exibir vídeos com HTML5 em vez de Flash",
         "profiles_link_group_game": "Jogo exclusivo",
         "friends_wishlist": "Itens que os teus amigos têm na Lista de Desejos",
         "showspeechsearch": "Adicionar entrada de discurso nas caixa de pesquisa",
@@ -453,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Inquérito de Desempenho",
-        "users": "__users__ utilizadores completaram o inquérito de desempenho para este jogo",
+        "users": "__users__ utilizadores completaram o inquérito de desempenho para este jogo.",
         "framerate": "Rácio de fotogramas",
         "framerate_response": "responderam que o rácio de fotogramas foi",
         "framerate_30": "fixo a 30fps ou menos",
@@ -467,7 +465,7 @@
         "satisfaction": "Satisfação de Desempenho por GPU",
         "gs_y": "Tem um menu ou opções embutidas que permitem alterar os gráficos",
         "gs_n": "Não tem um menu ou opções embutidas que permitam alterar os gráficos",
-        "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo",
+        "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo.",
         "take": "Faz o Inquérito"
     },
     "select": {
