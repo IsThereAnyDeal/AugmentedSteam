@@ -311,6 +311,7 @@ class StorePageClass {
 
     addLinks(type) {
         if (!SyncedStorage.get("showsteamdb")
+         && !SyncedStorage.get("showbarter")
          && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
@@ -337,6 +338,15 @@ class StorePageClass {
         }
 
         if (!node) { return; }
+
+        if (SyncedStorage.get("showbartervg")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "bartervg_ico",
+                    `https://barter.vg/steam/${type}/${gameid}`,
+                    Localization.str.view_on_website.replace("__website__", 'Barter.vg'))
+                );
+        }
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,
