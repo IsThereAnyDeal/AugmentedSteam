@@ -925,6 +925,13 @@ let EnhancedSteam = (function() {
 
         let currentLanguage = Language.getCurrentSteamLanguage().toLowerCase();
         let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage").toLowerCase();
+        let firstTime = !SyncedStorage.get("languagewarningchecked");
+
+        if (firstTime) {
+            SyncedStorage.set("languagewarningchecked", true);
+            SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
+            warningLanguage = currentLanguage;
+        }
 
         if (currentLanguage === warningLanguage) { return; }
 
