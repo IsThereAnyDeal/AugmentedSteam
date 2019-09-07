@@ -1,66 +1,71 @@
-.es_user_note:before {
-	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/pinn.png");
-}
-.es_birthday #logo_holder img {
-	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_logo_bg.gif") no-repeat;
-}
-.es_birthday.es_store_front #global_header:before {
-	background: url("moz-extension://__MSG_@@extension_id__/img/birthday_bg.png") repeat-x;
-}
-.es_regional_icon {
-	background: no-repeat url("moz-extension://__MSG_@@extension_id__/img/flags/world.png") 8px 8px !important;
-}
 #es_progress::-moz-progress-bar {
-	background-color: #51771d;
+  background-color: #51771d;
 }
 #es_progress.error::-moz-progress-bar {
-	background-color: #B31414;
-}
-span.platform_img.steamplay {
-  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_steamplay.png") !important;
-}
-span.platform_img.win {
-  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_win.png")  !important;
-}
-span.platform_img.mac {
-  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_mac.png")  !important;
-}
-span.platform_img.linux {
-  background-image: url("https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png") !important;
+  background-color: #b31414;
 }
 
+
 .steamdb_ico i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/steamdb_store.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/steamdb_store.png');
 }
 .steamdb_ico:hover i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
 }
 
 .itad_ico i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/line_chart.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/line_chart.png');
 }
 .itad_ico:hover i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/line_chart.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/line_chart.png');
 }
 
 .steam_client_btn i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/icon-steamos.png'); /* //steamcdn-a.akamaihd.net/store/about/icon-steamos.svg */
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/icon-steamos.png'); /* //steamcdn-a.akamaihd.net/store/about/icon-steamos.svg */
 }
 
 .bartervg_ico i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/bartervg.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/bartervg.png');
 }
 .bartervg_ico:hover i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/bartervg.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/bartervg.png');
 }
 
 .pcgw_btn i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/pcgw.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/pcgw.png');
+}
+
+.completionistme_btn i {
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/icon-completionistme.png');
 }
 
 .protondb_btn i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/icon-protondb.png'); /* //www.protondb.com/images/protondb-logo.svg */
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/icon-protondb.png'); /* //www.protondb.com/images/protondb-logo.svg */
 }
+
 .cardexchange_btn i {
-	background-image:url('moz-extension://__MSG_@@extension_id__/img/steamcardexchange.png');
+  background-image: url('moz-extension://__MSG_@@extension_id__/img/steamcardexchange.png');
+}
+
+.es_slider_toggle i {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
+}
+
+.es_screenshot_fullscreen_toggle i {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
+}
+
+.es_user_note:before {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/pinn.png");
+}
+
+.es_birthday #logo_holder img {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/birthday_logo_bg.gif");
+}
+.es_birthday.es_store_front #global_header:before {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/birthday_bg.png");
+}
+
+.es_regional_icon {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/flags/world.png");
 }
