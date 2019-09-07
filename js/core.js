@@ -570,7 +570,7 @@ SyncedStorage.defaults = {
     'user_notes': {},
     'replaceaccountname': true,
     'showfakeccwarning': true,
-    'showlanguagewarning': true,
+    'showlanguagewarning': false,
     'showlanguagewarninglanguage': "English",
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
