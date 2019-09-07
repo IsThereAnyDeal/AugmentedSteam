@@ -49,7 +49,9 @@
         "*://store.steampowered.com/join/*",
         "*://store.steampowered.com/api/*",
         "*://support.steampowered.com/*",
-        "*://help.steampowered.com/*"
+        "*://help.steampowered.com/*",
+        "*://translation.steampowered.com/*",
+        "*://partner.steampowered.com/*"        
       ],
       "js": [
         "js/lib/DOMPurify/purify.js",
