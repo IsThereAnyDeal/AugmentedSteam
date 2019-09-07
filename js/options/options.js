@@ -483,7 +483,6 @@ let Options = (function(){
         
         loadProfileLinkImages();
         loadStores();
-        return loadTranslation();
     }
 
 
@@ -608,7 +607,8 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadOptions().then(Sidebar.create);
+        loadOptions();
+        loadTranslation().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 
