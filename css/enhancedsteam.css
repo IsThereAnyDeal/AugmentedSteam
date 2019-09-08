@@ -1652,6 +1652,48 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Wishlist
+ * addExportWishlistButton()
+ **************************************/
+ #es_export_wishlist {
+	flex-grow:100;
+	align-self:center;
+	text-align:right;
+}
+#es_export_wishlist div {
+	width: auto;
+	display: inline-block;
+	padding: 10px;
+	border: 2px solid #fff !important;
+	border-radius: 3px;
+	color: #fff;
+	float: right;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: bold;
+}
+#es_export_modal .es_export_section {
+	margin-top: 15px;
+	margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    padding: 10px;
+}
+#es_export_modal small {
+	margin: 3px;
+}
+#es_export_modal input[name=export_text] {
+	padding: 7px 10px;
+	width: 100%;
+	box-sizing: border-box;
+	background-color: rgba(0,0,0,0.1);
+	border: 1px solid #000;
+	color: #fff;
+	border-radius: 3px;
+	box-shadow: 0 0 3px rgba(0,0,0,0.5) inset, 1px 1px 0 0 rgba(255,255,255,0.2);
+}
+
+/***************************************
  * Front Store page and Community
  * add_birthday_celebration()
  **************************************/
