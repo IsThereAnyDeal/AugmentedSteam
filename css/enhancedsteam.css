@@ -1605,6 +1605,37 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	font-weight: bold;
 }
 
+
+.es-wexport {
+  margin-bottom: 30px;
+}
+
+.es-wexport__label {
+  margin-right: 30px;
+  vertical-align: baseline;
+}
+
+.es-wexport__label input[type=radio] {
+  position: relative;
+  top: 2px;
+}
+
+.es-wexport__input {
+  width: 400px;
+  color: #b9bfc6;
+  background-color: #313c48;
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.2) inset;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 3px 4px;
+  border: none;
+}
+
+.es-wexport__symbols {
+  margin-top: 2px;
+  font-size: 11px;
+}
+
 /***************************************
  * Front Store page and Community
  * add_birthday_celebration()

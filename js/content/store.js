@@ -3106,39 +3106,6 @@ let WishlistPageClass = (function(){
         let instance = this;
         userNotes = new UserNotes();
 
-        let exportProps = ["name", "appid", "type", "release_string", "note"];
-        this.exportModalTemplate = `
-            <div id="es_export_modal">
-                <div id="es_export_modal_content">
-                    <form id="es_export_form">
-                    <table>
-                        <tr>
-                            <td>Export type:</td>
-                            <td>
-                                <input type="radio" name="export_type" value="text" id="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()" checked> <label for="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()"> ${Localization.str.export_text}</label>
-                                &nbsp;
-                                <input type="radio" name="export_type" value="CSV" id="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> <label for="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> ${Localization.str.export_CSV}</label>
-                                &nbsp;
-                                <input type="radio" name="export_type" value="JSON" id="JSON" onclick="$J('#es_text_options').hide()"> <label for="JSON" onclick="$J('#es_text_options').hide()"> ${Localization.str.export_JSON}</label>
-                            </td>
-                        </tr>
-                        <tr id="es_text_options">
-                            <td>Text format:</td>
-                            <td>${buildExportModalOptions(exportProps)}</td>
-                        </tr>
-                        <tr>
-                            <td>Export method:</td>
-                            <td>
-                                <input type="radio" name="export_method" value="download" id="download" checked> <label for="download"> ${Localization.str.export_download}</label>
-                                &nbsp;
-                                <input type="radio" name="export_method" value="clipboard" id="clipboard"> <label for="clipboard"> ${Localization.str.export_clipboard}</label>
-                            </td>
-                        </tr>
-                    </table>
-                    </form>
-                </div>
-            </div>`;
-
         let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
@@ -3223,21 +3190,6 @@ let WishlistPageClass = (function(){
         let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
         return myWishlistUrlRegex.test(window.location.href)
             || window.location.href.includes("/profiles/" + User.steamId);
-    }
-
-    function buildExportModalOptions(props) {
-        if (!props || props.length === 0) { return ""; }
-        return props.map((_, i) => {
-            let html = "<select id='prop" + i + "' name='prop" + i + "'><option value=''>" + Localization.str.none + "</option>";
-            props.forEach(prop => html += "<option value='" + prop + "'>" + Localization.str.export_props[prop] + "</option>");
-            html += "</select>";
-
-            if (i + 1 < props.length) {
-                html += "<input type='text' class='es_sep' id='sep" + i + "' name='sep" + i + "' placeholder='" + Localization.str.separator + "'>"
-            }
-
-            return html;
-        }).join("");
     }
 
     WishlistPageClass.prototype.highlightApps = async function(node) {
@@ -3382,89 +3334,141 @@ let WishlistPageClass = (function(){
         }, true);
     }
 
+    class WishlistExporter {
+
+        constructor(appInfo) {
+            this.appInfo = appInfo;
+            this.notes = SyncedStorage.get("user_notes") || {};
+        }
+
+        toJson() {
+            let json = {
+                version: "02",
+                data: []
+            };
+
+            for (let [appid, data] of Object.entries(this.appInfo)) {
+                json.data.push({
+                    gameid: ["steam", "app/"+appid],
+                    title: data.name,
+                    url: `https://store.steampowered.com/app/${appid}/`,
+                    release_date: data.release_string,
+                    note: this.notes[appid] || null
+                });
+            }
+
+            return JSON.stringify(json, null, 4);
+        }
+
+        toText(format) {
+            let result = [];
+            for (let [appid, data] of Object.entries(this.appInfo)) {
+                result.push(
+                    format
+                        .replace("%appid%", appid)
+                        .replace("%id%", "app/"+appid)
+                        .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
+                        .replace("%title%", data.name)
+                        .replace("%release_date%", data.release_string)
+                        .replace("%type%", data.type)
+                        .replace("%note%", this.notes[appid] || "")
+                );
+            }
+
+            return result.join("\n");
+        }
+    }
+
     WishlistPageClass.prototype.showExportModalDialog = function() {
+
         ExtensionLayer.runInPageContext(`function() {
             let options = {};
-            let Modal = ShowConfirmDialog(
+            window.AS_WishlistExportModal = ShowConfirmDialog(
                 "${Localization.str.export_wishlist}",
-                \`${this.exportModalTemplate}\`,
+                "<div id='es_export_form'></div>",
                 "${Localization.str.save}",
-                "${Localization.str.cancel}");
-
-            $J("#es_export_modal input[placeholder]").each(function() {
-                $J(this).attr('size', $J(this).attr('placeholder').length);
-            });
-
-            $J('#es_export_form').change(function() {
-                $J("#es_export_form").serializeArray().forEach((item) => options[item.name] = item.value);
-            });
-
-            Modal.done(function() {
-                let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options };
-                Messenger.postMessage("exportWishlist", data);
-            });
+                "${Localization.str.cancel}"
+            );
         }`);
 
+        let formNode = document.querySelector("#es_export_form");
+
+        HTML.inner(
+            formNode,
+            `<div class="es-wexport">
+                <h2>Export type:</h2>
+                <div>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${Localization.str.export_text}</label>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> ${Localization.str.export_JSON}</label>
+                </div>
+            </div>
+        
+            <div class="es-wexport">
+                <h2>Text format</h2>
+                <div>
+                    <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
+                    <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                </div>
+            </div>`);
+
+        let buttonsNode = formNode.closest(".newmodal_content").querySelector(".newmodal_buttons");
+
+        HTML.inner(buttonsNode,
+            `<div id="as_export_download" class="btn_green_white_innerfade btn_medium"><span>Download</span></div>
+             <div id="as_export_copy" class="btn_green_white_innerfade btn_medium"><span>Copy to clipboard</span></div>
+             <div id="as_export_cancel" class="btn_grey_white_innerfade btn_medium"><span>Cancel</span></div>`);
+
+        // events
+
+        function dismissModal() {
+            ExtensionLayer.runInPageContext(`function() { 
+                window.AS_WishlistExportModal.Dismiss();
+                window.AS_WishlistExportModal = null;
+            }`);
+        }
+
+        function handleExport(method) {
+            let type = document.querySelector("input[name='es_wexport_type']:checked").value;
+            let format = encodeURIComponent(document.querySelector("#es-wexport-format").value);
+            ExtensionLayer.runInPageContext(`function() { 
+                Messenger.postMessage("exportWishlist", {format: "${format}", method: "${method}", type: "${type}", appInfo: g_rgAppInfo});
+            }`);
+            dismissModal();
+        }
+
+        document.querySelector("#as_export_download").addEventListener("click", function() { handleExport("download"); });
+        document.querySelector("#as_export_copy").addEventListener("click", function() { handleExport("clipboard"); });
+        document.querySelector("#as_export_cancel").addEventListener("click", dismissModal);
+
+        // handle messages
+
         Messenger.addMessageListener("exportWishlist", (data) => {
-            let { rgAllApps, g_rgAppInfo, options } = data || {};
-            if (!rgAllApps || !g_rgAppInfo || !options) { return; }
+            let appInfo = data.appInfo;
+            if (!appInfo) { return; }
+            let type = data.type;
+            let method = data.method;
+            let format = decodeURIComponent(data.format);
 
-            let toexport, filename;
-            let notes = SyncedStorage.get("user_notes") || {};
-            let json = rgAllApps.map(appid => {
-                let appinfo = g_rgAppInfo[appid];
-                appinfo.appid = appid;
-                if (notes[appid]) {
-                    appinfo.note = notes[appid];
-                }
-                return appinfo;
-            });
-
-            if (options.export_type === "JSON") {
-                filename = "wishlist_export.json";
-                toexport = JSON.stringify(json, null, 4);
-                doExport(options.export_method, toexport, filename);
-                return;
-            }
-
-            let props = [];
-            let seps = [];
-            for (let key in options) {
-                if (key.includes("prop")) {
-                    props[+key.replace("prop", "")] = options[key];
-                }
-                if (key.includes("sep")) {
-                    seps[+key.replace("sep", "")] = options[key];
-                }
-            }
-
-            filename = "wishlist_export." + (options.export_type === "CSV" ? "csv" : "txt");
-            toexport = json.map(app => {
-                let line = "";
-                for (let i = 0; i < props.length; i++) {
-                    if (props[i]) {
-                        let prop = app[props[i]] || "";
-                        line += (options.export_type === "CSV" ? `"${prop.replace(/"/g, `""`)}"` : prop);
-                    }
-                    if (i !== props.length - 1) {
-                        line += (options.export_type === "CSV" ? "," : seps[i] || "");
-                    }
-                }
-                return line;
-            }).join("\n");
-            doExport(options.export_method, toexport, filename);
+            exportWishlist(appInfo, type, method, format);
         }, true);
 
-        function doExport(method, content, filename) {
-            switch (method) {
-                case "clipboard":
-                    Clipboard.set(content)
-                    break;
-                case "download":
-                    Downloader.download({ content, filename });
-                    break;
-                default:
-                    break;
+        function exportWishlist(appInfo, type, method, format) {
+            let wishlist = new WishlistExporter(appInfo);
+
+            let result = "";
+            let filename = "";
+            if (type === "json") {
+                result = wishlist.toJson();
+                filename = "wishlist.json";
+            } else if (type === "text" && format) {
+                result = wishlist.toText(format);
+                filename = "wishlist.txt";
+            }
+
+            if (method === "clipboard") {
+                Clipboard.set(result);
+            } else if (method === "download") {
+                Downloader.download({result, filename});
             }
         }
     };
