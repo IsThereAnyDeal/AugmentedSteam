@@ -174,7 +174,6 @@ class ITAD_Api extends Api {
     }
 
     static isConnected() {
-        if (ITAD_Api.accessToken) return true;
         let lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) return false;
 
