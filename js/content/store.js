@@ -3164,13 +3164,12 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        instance.addEmptyWishlistButton();
-
         let throbber = document.querySelector("#throbber");
         let wishlistLoaded = function() {
             if (throbber.style.display !== "none") { return; }
             instance.addStatsArea();
             instance.addExportWishlistButton();
+            instance.addEmptyWishlistButton();
             instance.addUserNotesHandlers();
             instance.addRemoveHandler();
         };
@@ -3290,9 +3289,9 @@ let WishlistPageClass = (function(){
         if (!isMyWishlist()) { return; }
         if (!SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist + "</div>");
 
-        document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
             emptyWishlist();
         });
     };
@@ -3479,7 +3478,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        HTML.afterEnd("div.wishlist_header h2", "<div id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
 
         let that = this;
         document.querySelector("#es_export_wishlist").addEventListener("click", function() {

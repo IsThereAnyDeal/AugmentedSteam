@@ -1564,46 +1564,40 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Wishlist
- * addEmptyWishlistButton()
  **************************************/
-#es_empty_wishlist {
-  flex-grow: 2;
-  align-self: center;
-  text-align: right;
-}
-#es_empty_wishlist div {
-  width: auto;
-  display: inline-block;
-  padding: 10px;
-  border: 2px solid rgb(175, 25, 0) !important;
-  border-radius: 3px;
-  color: #af1900;
-  float: right;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: bold;
+
+#cart_status_data {
+  display: flex;
+  align-items: center;
 }
 
-/***************************************
- * Wishlist
- * addExportWishlistButton()
- **************************************/
-#es_export_wishlist {
-	flex-grow:100;
-	align-self:center;
-	text-align:right;
+
+.es-wbtn {
+  color: #fff;
+  float: right;
+  cursor: pointer;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 0 25px;
+  line-height: 20px;
 }
-#es_export_wishlist div {
-	width: auto;
-	display: inline-block;
-	padding: 10px;
-	border: 2px solid #fff !important;
-	border-radius: 3px;
-	color: #fff;
-	float: right;
-	cursor: pointer;
-	font-size: 15px;
-	font-weight: bold;
+
+#es_empty_wishlist {
+  margin-right: 3px;
+  background-color: #bf5a5a;
+}
+#es_empty_wishlist:hover {
+  background-color: #ffd1d1;
+  color: black;
+}
+
+#es_export_wishlist {
+  background-color: #6c94a0;
+  margin-right: 15px;
+}
+#es_export_wishlist:hover {
+  background-color: #dbdee1;
+  color: black;
 }
 
 
