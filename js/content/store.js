@@ -3457,18 +3457,21 @@ let WishlistPageClass = (function(){
 
             let result = "";
             let filename = "";
+            let filetype = "";
             if (type === "json") {
                 result = wishlist.toJson();
                 filename = "wishlist.json";
+                filetype = "application/json";
             } else if (type === "text" && format) {
                 result = wishlist.toText(format);
                 filename = "wishlist.txt";
+                filetype = "text/plain";
             }
 
             if (method === "clipboard") {
                 Clipboard.set(result);
             } else if (method === "download") {
-                Downloader.download({result, filename});
+                Downloader.download(new Blob([result], { type : filetype+";charset=UTF-8" }), filename);
             }
         }
     };
